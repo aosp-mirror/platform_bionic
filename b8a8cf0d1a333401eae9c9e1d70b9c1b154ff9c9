@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b31a7d3_0aa2db39",
+        "filename": "libc/bionic/error.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-26T21:08:14Z",
+      "side": 1,
+      "message": "Are these functions supposed to be thread safe? I don\u0027t know if it matters that much that this value might be wrong (and the ones below too) if multiple threads are calling the error functions and updating the value at the same time.",
+      "range": {
+        "startLine": 35,
+        "startChar": 13,
+        "endLine": 35,
+        "endChar": 32
+      },
+      "revId": "b8a8cf0d1a333401eae9c9e1d70b9c1b154ff9c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
