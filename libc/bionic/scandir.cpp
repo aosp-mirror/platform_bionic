@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "private/bionic_macros.h"
 #include "private/ScopedReaddir.h"

@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 unsigned int error_message_count = 0;
 void (*error_print_progname)(void) = NULL;
