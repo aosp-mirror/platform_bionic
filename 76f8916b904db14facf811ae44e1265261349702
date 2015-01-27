@@ -16,6 +16,24 @@
       "revId": "76f8916b904db14facf811ae44e1265261349702",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57fbd733_720a00cc",
+        "filename": "libc/upstream-openbsd/lib/libc/string/memcpy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-27T18:46:11Z",
+      "side": 1,
+      "message": "oops. sorry. for now i\u0027ll move this into the mips directory (since no one else needs it) and just hack out the problematic piece. you can come along with your memcpy.S later and we\u0027ll just remove this completely.",
+      "parentUuid": "2b47db3f_72a99018",
+      "revId": "76f8916b904db14facf811ae44e1265261349702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
