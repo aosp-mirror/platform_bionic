@@ -1,3 +1,6 @@
+/*	$OpenBSD: wmemcpy.c,v 1.3 2005/08/08 08:05:37 espie Exp $	*/
+/*	$NetBSD: wmemcpy.c,v 1.2 2001/01/03 14:29:37 lukem Exp $	*/
+
 /*-
  * Copyright (c)1999 Citrus Project,
  * All rights reserved.
@@ -26,19 +29,12 @@
  *	citrus Id: wmemcpy.c,v 1.2 2000/12/20 14:08:31 itojun Exp
  */
 
-#include <sys/cdefs.h>
-#if 0
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: wmemcpy.c,v 1.1 2000/12/23 23:14:37 itojun Exp $");
-#endif /* LIBC_SCCS and not lint */
-#endif
-__FBSDID("$FreeBSD$");
-
 #include <string.h>
 #include <wchar.h>
 
 wchar_t *
-wmemcpy(wchar_t * __restrict d, const wchar_t * __restrict s, size_t n)
+wmemcpy(wchar_t *d, const wchar_t *s, size_t n)
 {
+
 	return (wchar_t *)memcpy(d, s, n * sizeof(wchar_t));
 }
