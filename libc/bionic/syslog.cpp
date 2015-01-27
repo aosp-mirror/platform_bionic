@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 
 #include "private/libc_logging.h"

@@ -235,6 +235,12 @@ extern "C" sighandler_t bsd_signal(int signum, sighandler_t handler) {
   return signal(signum, handler);
 }
 
+// This was removed from POSIX 2008.
+#undef bcopy
+extern "C" void bcopy(const void* src, void* dst, size_t n) {
+  memcpy(dst, src, n);
+}
+
 // sysv_signal() was never in POSIX.
 extern sighandler_t _signal(int signum, sighandler_t handler, int flags);
 extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {

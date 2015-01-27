@@ -25,15 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _STDLIB_H_
-#define _STDLIB_H_
+
+#ifndef _STDLIB_H
+#define _STDLIB_H
 
 #include <sys/cdefs.h>
+#include <xlocale.h>
 
-#include <stddef.h>
 #include <alloca.h>
-#include <strings.h>
-#include <memory.h>
+#include <malloc.h>
+#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -173,4 +174,4 @@ extern size_t __ctype_get_mb_cur_max(void);
 
 __END_DECLS
 
-#endif /* _STDLIB_H_ */
+#endif /* _STDLIB_H */

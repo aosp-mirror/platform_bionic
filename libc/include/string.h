@@ -36,6 +36,10 @@
 
 __BEGIN_DECLS
 
+#if defined(__USE_BSD)
+#include <strings.h>
+#endif
+
 extern void*  memccpy(void* __restrict, const void* __restrict, int, size_t);
 extern void*  memchr(const void *, int, size_t) __purefunc;
 extern void*  memrchr(const void *, int, size_t) __purefunc;
