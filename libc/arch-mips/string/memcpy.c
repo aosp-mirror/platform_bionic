@@ -57,14 +57,6 @@ memcpy(void *dst0, const void *src0, size_t length)
 	if (length == 0 || dst == src)		/* nothing to do */
 		goto done;
 
-	if ((dst < src && dst + length > src) ||
-	    (src < dst && src + length > dst)) {
-		struct syslog_data sdata = SYSLOG_DATA_INIT;
-
-		syslog_r(LOG_CRIT, &sdata, "backwards memcpy");
-		abort();
-	}
-
 	/*
 	 * Macros: loop-t-times; and loop-t-times, t>0
 	 */
