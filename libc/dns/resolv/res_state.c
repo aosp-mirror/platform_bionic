@@ -34,6 +34,7 @@
 #include "resolv_cache.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>

@@ -9,4 +9,6 @@ libc_bionic_src_files_arm += \
     arch-arm/cortex-a15/bionic/strcpy.S \
     arch-arm/cortex-a15/bionic/__strcpy_chk.S \
     arch-arm/cortex-a15/bionic/strlen.S \
-    bionic/memmove.c \
+
+libc_openbsd_src_files_arm += \
+    upstream-openbsd/lib/libc/string/memmove.c \
