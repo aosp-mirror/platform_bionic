@@ -28,6 +28,9 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
 include $(BUILD_STATIC_LIBRARY)
 
+# Only supported on linux systems.
+ifeq ($(HOST_OS),linux)
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := libbenchmark
 LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror
@@ -36,6 +39,8 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
 LOCAL_MULTILIB := both
 include $(BUILD_HOST_STATIC_LIBRARY)
+
+endif
 
 # -----------------------------------------------------------------------------
 # Benchmarks.
@@ -76,6 +81,9 @@ include $(BUILD_EXECUTABLE)
 # performance of the old release's libc, and a static benchmark isn't
 # going to let you do that.
 
+# Only supported on linux systems.
+ifeq ($(HOST_OS),linux)
+
 # Build benchmarks for the host (against glibc!). Run with:
 include $(CLEAR_VARS)
 LOCAL_MODULE := bionic-benchmarks-glibc
@@ -87,6 +95,8 @@ LOCAL_LDFLAGS += -lrt
 LOCAL_SRC_FILES := $(benchmark_src_files)
 LOCAL_STATIC_LIBRARIES += libbenchmark
 include $(BUILD_HOST_EXECUTABLE)
+
+endif
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 include $(LOCAL_PATH)/../build/run-on-host.mk
