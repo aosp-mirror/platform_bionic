@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1705dffd_bfda931d",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-01-27T18:28:58Z",
+      "side": 1,
+      "message": "mips32 and mips64 do save and restore the callee-saved fp registers, across setjmp/longjmp.\n\nThe set of registers saved, is different for mips32 and mips64.\n\nToday I plan to upload a new setjmp for mips.",
+      "range": {
+        "startLine": 196,
+        "startChar": 12,
+        "endLine": 196,
+        "endChar": 13
+      },
+      "revId": "87dd503018c075a7afe5f0c0613262aca3861d21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
