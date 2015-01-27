@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d7e7c792_683b37cd",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-27T00:21:05Z",
+      "side": 1,
+      "message": "Yes, unnecessary check here.",
+      "parentUuid": "ab2cab7b_11692edc",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7e7c792_25c0b84d",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b7ec137b_e7ee568e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-27T00:21:05Z",
+      "side": 1,
+      "message": "I struggled when deciding where to put the check. Previously I thought RunTestInSeparateProc was very long, no need to make it more complex. But now, I think you are right. It may confuse people and should use comment if we put the check in OnTestIterationEndXmlPrint.",
+      "parentUuid": "d7e7c792_25c0b84d",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7e7c792_2597985b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2015-01-26T23:10:08Z",
       "side": 1,
       "message": "do you actually want this end time to include the time spent in OnTestIterationEndPrint? don\u0027t you want to compute the end time before you start any printing?",
+      "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7ec137b_a7160ee8",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-27T00:21:05Z",
+      "side": 1,
+      "message": "Done. I hesitated a little to name a new variable.",
+      "parentUuid": "d7e7c792_2597985b",
       "revId": "fd3652c0ff21f60b8b14501f03a5f596446bd993",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
