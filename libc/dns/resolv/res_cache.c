@@ -28,6 +28,8 @@
 
 #include "resolv_cache.h"
 #include <resolv.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -44,6 +46,8 @@
 #include "resolv_private.h"
 #include "resolv_netid.h"
 #include "res_private.h"
+
+#include "private/libc_logging.h"
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
@@ -152,13 +156,21 @@
 /* set to 1 to debug query data */
 #define  DEBUG_DATA  0
 
-#undef XLOG
 #if DEBUG
-#  include "private/libc_logging.h"
-#  define XLOG(...)  __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__)
+#define __DEBUG__
+#else
+#define __DEBUG__ __attribute__((unused))
+#endif
 
-#include <stdio.h>
-#include <stdarg.h>
+#undef XLOG
+
+#define XLOG(...) ({ \
+    if (DEBUG) { \
+        __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__); \
+    } else { \
+        ((void)0); \
+    } \
+})
 
 /** BOUNDED BUFFER FORMATTING
  **/
@@ -205,7 +217,7 @@
  */
 
 /* add a char to a bounded buffer */
-static char*
+char*
 _bprint_c( char*  p, char*  end, int  c )
 {
     if (p < end) {
@@ -220,7 +232,7 @@ _bprint_c( char*  p, char*  end, int  c )
 }
 
 /* add a sequence of bytes to a bounded buffer */
-static char*
+char*
 _bprint_b( char*  p, char*  end, const char*  buf, int  len )
 {
     int  avail = end - p;
@@ -243,15 +255,15 @@ _bprint_b( char*  p, char*  end, const char*  buf, int  len )
 }
 
 /* add a string to a bounded buffer */
-static char*
+char*
 _bprint_s( char*  p, char*  end, const char*  str )
 {
     return _bprint_b(p, end, str, strlen(str));
 }
 
 /* add a formatted string to a bounded buffer */
-static char*
-_bprint( char*  p, char*  end, const char*  format, ... )
+char* _bprint( char*  p, char*  end, const char*  format, ... ) __DEBUG__;
+char* _bprint( char*  p, char*  end, const char*  format, ... )
 {
     int      avail, n;
     va_list  args;
@@ -278,7 +290,7 @@ _bprint( char*  p, char*  end, const char*  format, ... )
 }
 
 /* add a hex value to a bounded buffer, up to 8 digits */
-static char*
+char*
 _bprint_hex( char*  p, char*  end, unsigned  value, int  numDigits )
 {
     char   text[sizeof(unsigned)*2];
@@ -291,7 +303,7 @@ _bprint_hex( char*  p, char*  end, unsigned  value, int  numDigits )
 }
 
 /* add the hexadecimal dump of some memory area to a bounded buffer */
-static char*
+char*
 _bprint_hexdump( char*  p, char*  end, const uint8_t*  data, int  datalen )
 {
     int   lineSize = 16;
@@ -330,20 +342,17 @@ _bprint_hexdump( char*  p, char*  end, const uint8_t*  data, int  datalen )
 }
 
 /* dump the content of a query of packet to the log */
-static void
-XLOG_BYTES( const void*  base, int  len )
+void XLOG_BYTES( const void*  base, int  len ) __DEBUG__;
+void XLOG_BYTES( const void*  base, int  len )
 {
-    char  buff[1024];
-    char*  p = buff, *end = p + sizeof(buff);
+    if (DEBUG_DATA) {
+        char  buff[1024];
+        char*  p = buff, *end = p + sizeof(buff);
 
-    p = _bprint_hexdump(p, end, base, len);
-    XLOG("%s",buff);
-}
-
-#else /* !DEBUG */
-#  define  XLOG(...)        ((void)0)
-#  define  XLOG_BYTES(a,b)  ((void)0)
-#endif
+        p = _bprint_hexdump(p, end, base, len);
+        XLOG("%s",buff);
+    }
+} __DEBUG__
 
 static time_t
 _time_now( void )
