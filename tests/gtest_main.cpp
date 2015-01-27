@@ -336,7 +336,7 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   std::vector<std::pair<std::string, int64_t>> timeout_test_list;
 
   // For tests run exceed warnline but not timeout.
-  std::vector<std::tuple<std::string, int64_t, int>> timewarn_test_list;
+  std::vector<std::tuple<std::string, int64_t, int>> slow_test_list;
   size_t testcase_count = testcase_list.size();
   size_t test_count = 0;
   size_t success_test_count = 0;
@@ -355,9 +355,9 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
       }
       if (result != TEST_TIMEOUT &&
           testcase.GetTestTime(i) / 1000000 >= GetWarnlineInfo(testcase.GetTestName(i))) {
-        timewarn_test_list.push_back(std::make_tuple(testcase.GetTestName(i),
-                                                     testcase.GetTestTime(i),
-                                                     GetWarnlineInfo(testcase.GetTestName(i))));
+        slow_test_list.push_back(std::make_tuple(testcase.GetTestName(i),
+                                                 testcase.GetTestTime(i),
+                                                 GetWarnlineInfo(testcase.GetTestName(i))));
       }
     }
   }
@@ -369,16 +369,16 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     printf(" (%" PRId64 " ms total)", elapsed_time_ns / 1000000);
   }
   printf("\n");
-  ColoredPrintf(COLOR_GREEN,  "[  PASSED  ] ");
+  ColoredPrintf(COLOR_GREEN,  "[   PASS   ] ");
   printf("%zu %s.\n", success_test_count, (success_test_count == 1) ? "test" : "tests");
 
   // Print tests failed.
   size_t fail_test_count = fail_test_name_list.size();
   if (fail_test_count > 0) {
-    ColoredPrintf(COLOR_RED,  "[  FAILED  ] ");
+    ColoredPrintf(COLOR_RED,  "[   FAIL   ] ");
     printf("%zu %s, listed below:\n", fail_test_count, (fail_test_count == 1) ? "test" : "tests");
     for (const auto& name : fail_test_name_list) {
-      ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
+      ColoredPrintf(COLOR_RED, "[   FAIL   ] ");
       printf("%s\n", name.c_str());
     }
   }
@@ -396,14 +396,14 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   }
 
   // Print tests run exceed warnline.
-  size_t timewarn_test_count = timewarn_test_list.size();
-  if (timewarn_test_count > 0) {
-    ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
-    printf("%zu %s, listed below:\n", timewarn_test_count, (timewarn_test_count == 1) ? "test" : "tests");
-    for (const auto& timewarn_tuple : timewarn_test_list) {
-      ColoredPrintf(COLOR_YELLOW, "[ TIMEWARN ] ");
-      printf("%s (%" PRId64 " ms, exceed warnline %d ms)\n", std::get<0>(timewarn_tuple).c_str(),
-             std::get<1>(timewarn_tuple) / 1000000, std::get<2>(timewarn_tuple));
+  size_t slow_test_count = slow_test_list.size();
+  if (slow_test_count > 0) {
+    ColoredPrintf(COLOR_YELLOW, "[   SLOW   ] ");
+    printf("%zu %s, listed below:\n", slow_test_count, (slow_test_count == 1) ? "test" : "tests");
+    for (const auto& slow_tuple : slow_test_list) {
+      ColoredPrintf(COLOR_YELLOW, "[   SLOW   ] ");
+      printf("%s (%" PRId64 " ms, exceed warnline %d ms)\n", std::get<0>(slow_tuple).c_str(),
+             std::get<1>(slow_tuple) / 1000000, std::get<2>(slow_tuple));
     }
   }
 
@@ -413,8 +413,8 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   if (timeout_test_count > 0) {
     printf("%2zu TIMEOUT %s\n", timeout_test_count, (timeout_test_count == 1) ? "TEST" : "TESTS");
   }
-  if (timewarn_test_count > 0) {
-    printf("%2zu TIMEWARN %s\n", timewarn_test_count, (timewarn_test_count == 1) ? "TEST" : "TESTS");
+  if (slow_test_count > 0) {
+    printf("%2zu SLOW %s\n", slow_test_count, (slow_test_count == 1) ? "TEST" : "TESTS");
   }
   fflush(stdout);
 }
