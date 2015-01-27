@@ -49,8 +49,8 @@
 #define _JB_X19         (_JB_X20_X21 + 2)
 #define _JB_D14_D15     (_JB_X19 + 1)
 #define _JB_D12_D13     (_JB_D14_D15 + 2)
-#define _JB_D10_D11     (_JB_D12_D13 + 1)
-#define _JB_D8_D9       (_JB_D10_D11 + 1)
+#define _JB_D10_D11     (_JB_D12_D13 + 2)
+#define _JB_D8_D9       (_JB_D10_D11 + 2)
 
 ENTRY(setjmp)
   mov w1, #1
