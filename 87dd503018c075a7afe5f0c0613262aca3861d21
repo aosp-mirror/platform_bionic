@@ -22,6 +22,30 @@
       "revId": "87dd503018c075a7afe5f0c0613262aca3861d21",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b715f330_794ae76c",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-27T18:32:52Z",
+      "side": 1,
+      "message": "unsurprisingly, you\u0027re right:\n\n  #ifdef __LP64__\n\t# callee-saved fp regs on mips n64 ABI are $f24..$f31\n\tl.d\t$f24, SC_FPREGS+0*REGSZ_FP(a0)\n\tl.d\t$f25, SC_FPREGS+1*REGSZ_FP(a0)\n\tl.d\t$f26, SC_FPREGS+2*REGSZ_FP(a0)\n\tl.d\t$f27, SC_FPREGS+3*REGSZ_FP(a0)\n\tl.d\t$f28, SC_FPREGS+4*REGSZ_FP(a0)\n\tl.d\t$f29, SC_FPREGS+5*REGSZ_FP(a0)\n\tl.d\t$f30, SC_FPREGS+6*REGSZ_FP(a0)\n\tl.d\t$f31, SC_FPREGS+7*REGSZ_FP(a0)\n  #else\n\t# callee-saved fp regs on mips o32 ABI are\n\t#   the even-numbered fp regs $f20,$f22,...$f30\n\tl.d\t$f20, SC_FPREGS+0*REGSZ_FP(a0)\n\tl.d\t$f22, SC_FPREGS+1*REGSZ_FP(a0)\n\tl.d\t$f24, SC_FPREGS+2*REGSZ_FP(a0)\n\tl.d\t$f26, SC_FPREGS+3*REGSZ_FP(a0)\n\tl.d\t$f28, SC_FPREGS+4*REGSZ_FP(a0)\n\tl.d\t$f30, SC_FPREGS+5*REGSZ_FP(a0)\n  #endif\n\nguess i didn\u0027t scroll down far enough. sorry! i\u0027ll get this committed so it\u0027s easier for you to add the mips test if you want.",
+      "parentUuid": "1705dffd_bfda931d",
+      "range": {
+        "startLine": 196,
+        "startChar": 12,
+        "endLine": 196,
+        "endChar": 13
+      },
+      "revId": "87dd503018c075a7afe5f0c0613262aca3861d21",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
