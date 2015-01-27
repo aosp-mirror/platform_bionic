@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b47db3f_72a99018",
+        "filename": "libc/upstream-openbsd/lib/libc/string/memcpy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-01-27T18:40:49Z",
+      "side": 1,
+      "message": "syslog_data and SYSLOG_DATA_INIT are not defined in bionic\u0027s copy of \u003csyslog.h\u003e.  Mips32r6 and mips64r6 libc do not build.  Other mips, arm, or x86 arches are unaffected, since they do not use bionic\u0027s generic c-coded memcpy.",
+      "revId": "76f8916b904db14facf811ae44e1265261349702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
