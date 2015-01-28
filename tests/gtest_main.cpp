@@ -91,6 +91,8 @@ static void PrintHelpInfo() {
          "  --warnline=[TIME_IN_MS]\n"
          "      Test running longer than [TIME_IN_MS] will be warned.\n"
          "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
+         "  --gtest-filter=POSITIVE_PATTERNS[-NEGATIVE_PATTERNS]\n"
+         "      Used as a synonym for --gtest_filter option in gtest.\n"
          "\nDefault bionic unit test option is -j.\n"
          "\n");
 }
@@ -720,6 +722,15 @@ static size_t GetProcessorCount() {
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
+static void AddGtestFilterSynonym(std::vector<char*>& args) {
+  // Support --gtest-filter as a synonym for --gtest_filter.
+  for (size_t i = 1; i < args.size(); ++i) {
+    if (strncmp(args[i], "--gtest-filter", strlen("--gtest-filter")) == 0) {
+      args[i][7] = '_';
+    }
+  }
+}
+
 struct IsolationTestOptions {
   bool isolate;
   size_t job_count;
@@ -747,6 +758,8 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
       return true;
     }
   }
+
+  AddGtestFilterSynonym(args);
 
   // if --bionic-selftest argument is used, only enable self tests, otherwise remove self tests.
   bool enable_selftest = false;
