@@ -46,6 +46,30 @@
       "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9739cf03_e0f8c2d3",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T23:24:42Z",
+      "side": 1,
+      "message": "why does it cause a warning? off_t should be 64 bits for MIPS64. (as you can see, aarch64 and x86-64 are LP64 and use off_t for st_size and the linker.cpp code compiles fine for them.)",
+      "parentUuid": "37c2e31e_6da0150d",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 27
+      },
+      "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
