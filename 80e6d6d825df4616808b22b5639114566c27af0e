@@ -34,6 +34,24 @@
       "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17a15f5e_7ce3d9a9",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T05:19:02Z",
+      "side": 1,
+      "message": "don\u0027t we _want_ to re-read in the case where the cas fails? we know we only try the cas if the state\u0027s not COMPLETE, and we know it failed so it\u0027s changed since we first read. so won\u0027t we just spin now?",
+      "parentUuid": "17a15f5e_1c5ad5eb",
+      "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
