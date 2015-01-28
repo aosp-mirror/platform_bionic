@@ -16,6 +16,24 @@
       "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17a15f5e_1c5ad5eb",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-28T04:55:31Z",
+      "side": 1,
+      "message": "As far as I can see, if we move L49-54 inside the loop, we will have to reread the value when atomic_compare_exchange_weak_explicit fails, which is a duplication. The change may make cleaner code, but may not be better in showing the logic of the code. So I prefer current version.",
+      "parentUuid": "57975702_deaea5ff",
+      "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
