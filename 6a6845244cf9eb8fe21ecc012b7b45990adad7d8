@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7ba679b_6a6eb71c",
+        "filename": "libc/kernel/uapi/asm-arm/asm/bitsperlong.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T19:04:17Z",
+      "side": 0,
+      "message": "why all these deletions?",
+      "revId": "6a6845244cf9eb8fe21ecc012b7b45990adad7d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7bfb38b_4963c102",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T19:04:17Z",
+      "side": 0,
+      "message": "!",
+      "revId": "6a6845244cf9eb8fe21ecc012b7b45990adad7d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

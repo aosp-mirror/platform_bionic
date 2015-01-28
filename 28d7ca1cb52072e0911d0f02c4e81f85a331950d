@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57c59722_54c7e49a",
+        "filename": "libc/kernel/tools/uapi.diff",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T19:04:17Z",
+      "side": 1,
+      "message": "no, we don\u0027t really care at all.\n\nfor this change minimizing the diff would be good, but only if it\u0027s not too much work. obviously there\u0027s a trade-off there, and it\u0027s not worth spending months and ending up with a more complicated script just to make a one-time review easier.",
+      "parentUuid": "3794a3fe_83e3e2a8",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "28d7ca1cb52072e0911d0f02c4e81f85a331950d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97db8f05_b663b02a",
         "filename": "libc/kernel/tools/uapi.diff",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2015-01-28T18:27:13Z",
       "side": 1,
       "message": "missing",
+      "range": {
+        "startLine": 2303,
+        "startChar": 1,
+        "endLine": 2303,
+        "endChar": 15
+      },
+      "revId": "28d7ca1cb52072e0911d0f02c4e81f85a331950d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7bfb38b_e92cf5bf",
+        "filename": "libc/kernel/tools/uapi.diff",
+        "patchSetId": 1
+      },
+      "lineNbr": 2303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T19:04:17Z",
+      "side": 1,
+      "message": "i think that\u0027s a bug fix. iirc, we\u0027re not supposed to include inline functions. macros are fine, inline functions aren\u0027t.",
+      "parentUuid": "97db8f05_7655483a",
       "range": {
         "startLine": 2303,
         "startChar": 1,
