@@ -22,6 +22,30 @@
       "revId": "82e4cef7b761202b2fc7f3fabf489d8719d8998a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "775d3b31_2ae89f03",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-28T02:28:24Z",
+      "side": 1,
+      "message": "Done. I thought it may be clear to me, as I am not familiar with atomic_compare_exchange_weak_explicit.",
+      "parentUuid": "5752f723_46f9920a",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 38
+      },
+      "revId": "82e4cef7b761202b2fc7f3fabf489d8719d8998a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
