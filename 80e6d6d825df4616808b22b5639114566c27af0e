@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57975702_deaea5ff",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-28T04:25:11Z",
+      "side": 1,
+      "message": "move L49-54 inside the loop and remove L83?",
+      "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
