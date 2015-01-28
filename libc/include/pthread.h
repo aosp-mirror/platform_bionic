@@ -112,7 +112,7 @@ typedef struct {
 
 typedef int pthread_key_t;
 
-typedef volatile int pthread_once_t;
+typedef int pthread_once_t;
 
 #define PTHREAD_ONCE_INIT 0
 

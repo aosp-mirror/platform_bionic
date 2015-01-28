@@ -27,74 +27,59 @@
  */
 
 #include <pthread.h>
+#include <stdatomic.h>
 
-#include "private/bionic_atomic_inline.h"
 #include "private/bionic_futex.h"
 
-#define ONCE_INITIALIZING           (1 << 0)
-#define ONCE_COMPLETED              (1 << 1)
+#define ONCE_INITIALIZATION_NOT_YET_STARTED   0
+#define ONCE_INITIALIZATION_UNDERWAY          1
+#define ONCE_INITIALIZATION_COMPLETE          2
 
 /* NOTE: this implementation doesn't support a init function that throws a C++ exception
  *       or calls fork()
  */
 int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
-  volatile pthread_once_t* once_control_ptr = once_control;
+  static_assert(sizeof(atomic_int) == sizeof(pthread_once_t),
+                "pthread_once_t should actually be atomic_int in implementation.");
 
-  // PTHREAD_ONCE_INIT is 0, we use the following bit flags
-  //   bit 0 set  -> initialization is under way
-  //   bit 1 set  -> initialization is complete
+  // We prefer casting to atomic_int instead of declaring pthread_once_t to be atomic_int directly.
+  // Because using the second method pollutes pthread.h, and causes an error when compiling libcxx.
+  atomic_int* once_control_ptr = reinterpret_cast<atomic_int*>(once_control);
 
   // First check if the once is already initialized. This will be the common
   // case and we want to make this as fast as possible. Note that this still
   // requires a load_acquire operation here to ensure that all the
   // stores performed by the initialization function are observable on
   // this CPU after we exit.
-  if (__predict_true((*once_control_ptr & ONCE_COMPLETED) != 0)) {
-    ANDROID_MEMBAR_FULL();
-    return 0;
-  }
+  int old_value = atomic_load_explicit(once_control_ptr, memory_order_acquire);
 
   while (true) {
-    // Try to atomically set the INITIALIZING flag.
-    // This requires a cmpxchg loop, and we may need
-    // to exit prematurely if we detect that
-    // COMPLETED is now set.
-    int32_t  old_value, new_value;
-
-    do {
-      old_value = *once_control_ptr;
-      if ((old_value & ONCE_COMPLETED) != 0) {
-        break;
-      }
-
-      new_value = old_value | ONCE_INITIALIZING;
-    } while (__bionic_cmpxchg(old_value, new_value, once_control_ptr) != 0);
-
-    if ((old_value & ONCE_COMPLETED) != 0) {
-      // We detected that COMPLETED was set while in our loop.
-      ANDROID_MEMBAR_FULL();
+    if (__predict_true(old_value == ONCE_INITIALIZATION_COMPLETE)) {
       return 0;
     }
 
-    if ((old_value & ONCE_INITIALIZING) == 0) {
-      // We got there first, we can jump out of the loop to handle the initialization.
-      break;
+    // Try to atomically set the initialization underway flag. This requires a compare exchange
+    // in a loop, and we may need to exit prematurely if the initialization is complete.
+    if (!atomic_compare_exchange_weak_explicit(once_control_ptr, &old_value,
+                                               ONCE_INITIALIZATION_UNDERWAY,
+                                               memory_order_acquire, memory_order_acquire)) {
+      continue;
     }
 
-    // Another thread is running the initialization and hasn't completed
-    // yet, so wait for it, then try again.
+    if (old_value == ONCE_INITIALIZATION_NOT_YET_STARTED) {
+      // We got here first, we can handle the initialization.
+      (*init_routine)();
+
+      // Do a store_release indicating that initialization is complete.
+      atomic_store_explicit(once_control_ptr, ONCE_INITIALIZATION_COMPLETE, memory_order_release);
+
+      // Wake up any waiters, if any.
+      __futex_wake_ex(once_control_ptr, 0, INT_MAX);
+      return 0;
+    }
+
+    // The initialization is underway, wait for its finish.
     __futex_wait_ex(once_control_ptr, 0, old_value, NULL);
+    old_value = atomic_load_explicit(once_control_ptr, memory_order_acquire);
   }
-
-  // Call the initialization function.
-  (*init_routine)();
-
-  // Do a store_release indicating that initialization is complete.
-  ANDROID_MEMBAR_FULL();
-  *once_control_ptr = ONCE_COMPLETED;
-
-  // Wake up any waiters, if any.
-  __futex_wake_ex(once_control_ptr, 0, INT_MAX);
-
-  return 0;
 }
