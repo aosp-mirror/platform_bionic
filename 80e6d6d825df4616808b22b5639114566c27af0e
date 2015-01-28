@@ -52,6 +52,24 @@
       "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3794a3fe_bdd15fd2",
+        "filename": "libc/bionic/pthread_once.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-28T06:35:19Z",
+      "side": 1,
+      "message": "According to http://en.cppreference.com/w/c/atomic/atomic_compare_exchange, if atomic_compare_exchange_weak_explicit fails, the actually value will be loaded into old_value, so we may not need another read for it.",
+      "parentUuid": "17a15f5e_7ce3d9a9",
+      "revId": "80e6d6d825df4616808b22b5639114566c27af0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
