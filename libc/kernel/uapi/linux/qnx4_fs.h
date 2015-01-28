@@ -48,54 +48,54 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define QNX4_NAME_MAX 48
 struct qnx4_inode_entry {
- char di_fname[QNX4_SHORT_NAME_MAX];
- qnx4_off_t di_size;
+  char di_fname[QNX4_SHORT_NAME_MAX];
+  qnx4_off_t di_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- qnx4_xtnt_t di_first_xtnt;
- __le32 di_xblk;
- __le32 di_ftime;
- __le32 di_mtime;
+  qnx4_xtnt_t di_first_xtnt;
+  __le32 di_xblk;
+  __le32 di_ftime;
+  __le32 di_mtime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 di_atime;
- __le32 di_ctime;
- qnx4_nxtnt_t di_num_xtnts;
- qnx4_mode_t di_mode;
+  __le32 di_atime;
+  __le32 di_ctime;
+  qnx4_nxtnt_t di_num_xtnts;
+  qnx4_mode_t di_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- qnx4_muid_t di_uid;
- qnx4_mgid_t di_gid;
- qnx4_nlink_t di_nlink;
- __u8 di_zero[4];
+  qnx4_muid_t di_uid;
+  qnx4_mgid_t di_gid;
+  qnx4_nlink_t di_nlink;
+  __u8 di_zero[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- qnx4_ftype_t di_type;
- __u8 di_status;
+  qnx4_ftype_t di_type;
+  __u8 di_status;
 };
 struct qnx4_link_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char dl_fname[QNX4_NAME_MAX];
- __le32 dl_inode_blk;
- __u8 dl_inode_ndx;
- __u8 dl_spare[10];
+  char dl_fname[QNX4_NAME_MAX];
+  __le32 dl_inode_blk;
+  __u8 dl_inode_ndx;
+  __u8 dl_spare[10];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dl_status;
+  __u8 dl_status;
 };
 struct qnx4_xblk {
- __le32 xblk_next_xblk;
+  __le32 xblk_next_xblk;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 xblk_prev_xblk;
- __u8 xblk_num_xtnts;
- __u8 xblk_spare[3];
- __le32 xblk_num_blocks;
+  __le32 xblk_prev_xblk;
+  __u8 xblk_num_xtnts;
+  __u8 xblk_spare[3];
+  __le32 xblk_num_blocks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- qnx4_xtnt_t xblk_xtnts[QNX4_MAX_XTNTS_PER_XBLK];
- char xblk_signature[8];
- qnx4_xtnt_t xblk_first_xtnt;
+  qnx4_xtnt_t xblk_xtnts[QNX4_MAX_XTNTS_PER_XBLK];
+  char xblk_signature[8];
+  qnx4_xtnt_t xblk_first_xtnt;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct qnx4_super_block {
- struct qnx4_inode_entry RootDir;
- struct qnx4_inode_entry Inode;
- struct qnx4_inode_entry Boot;
+  struct qnx4_inode_entry RootDir;
+  struct qnx4_inode_entry Inode;
+  struct qnx4_inode_entry Boot;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct qnx4_inode_entry AltBoot;
+  struct qnx4_inode_entry AltBoot;
 };
 #endif

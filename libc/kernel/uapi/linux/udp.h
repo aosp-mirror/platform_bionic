@@ -21,10 +21,10 @@
 #include <linux/types.h>
 struct udphdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 source;
- __be16 dest;
- __be16 len;
- __sum16 check;
+  __be16 source;
+  __be16 dest;
+  __be16 len;
+  __sum16 check;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define UDP_CORK 1

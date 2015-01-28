@@ -24,71 +24,71 @@
 #include <linux/atm.h>
 #include <linux/types.h>
 #define ATMMPC_CTRL _IO('a', ATMIOC_MPOA)
-#define ATMMPC_DATA _IO('a', ATMIOC_MPOA+1)
+#define ATMMPC_DATA _IO('a', ATMIOC_MPOA + 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MPC_SOCKET_INGRESS 1
 #define MPC_SOCKET_EGRESS 2
 struct atmmpc_ioc {
- int dev_num;
+  int dev_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 ipaddr;
- int type;
+  __be32 ipaddr;
+  int type;
 };
 typedef struct in_ctrl_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 Last_NHRP_CIE_code;
- __u8 Last_Q2931_cause_value;
- __u8 eg_MPC_ATM_addr[ATM_ESA_LEN];
- __be32 tag;
+  __u8 Last_NHRP_CIE_code;
+  __u8 Last_Q2931_cause_value;
+  __u8 eg_MPC_ATM_addr[ATM_ESA_LEN];
+  __be32 tag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 in_dst_ip;
- __u16 holding_time;
- __u32 request_id;
+  __be32 in_dst_ip;
+  __u16 holding_time;
+  __u32 request_id;
 } in_ctrl_info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct eg_ctrl_info {
- __u8 DLL_header[256];
- __u8 DH_length;
- __be32 cache_id;
+  __u8 DLL_header[256];
+  __u8 DH_length;
+  __be32 cache_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 tag;
- __be32 mps_ip;
- __be32 eg_dst_ip;
- __u8 in_MPC_data_ATM_addr[ATM_ESA_LEN];
+  __be32 tag;
+  __be32 mps_ip;
+  __be32 eg_dst_ip;
+  __u8 in_MPC_data_ATM_addr[ATM_ESA_LEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 holding_time;
+  __u16 holding_time;
 } eg_ctrl_info;
 struct mpc_parameters {
- __u16 mpc_p1;
+  __u16 mpc_p1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 mpc_p2;
- __u8 mpc_p3[8];
- __u16 mpc_p4;
- __u16 mpc_p5;
+  __u16 mpc_p2;
+  __u8 mpc_p3[8];
+  __u16 mpc_p4;
+  __u16 mpc_p5;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 mpc_p6;
-} ;
+  __u16 mpc_p6;
+};
 struct k_message {
- __u16 type;
+  __u16 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 ip_mask;
- __u8 MPS_ctrl[ATM_ESA_LEN];
- union {
- in_ctrl_info in_info;
+  __be32 ip_mask;
+  __u8 MPS_ctrl[ATM_ESA_LEN];
+  union {
+    in_ctrl_info in_info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- eg_ctrl_info eg_info;
- struct mpc_parameters params;
- } content;
- struct atm_qos qos;
+    eg_ctrl_info eg_info;
+    struct mpc_parameters params;
+  } content;
+  struct atm_qos qos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __ATM_API_ALIGN;
 struct llc_snap_hdr {
- __u8 dsap;
- __u8 ssap;
+  __u8 dsap;
+  __u8 ssap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ui;
- __u8 org[3];
- __u8 type[2];
+  __u8 ui;
+  __u8 org[3];
+  __u8 type[2];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TLV_MPOA_DEVICE_TYPE 0x00a03e2a

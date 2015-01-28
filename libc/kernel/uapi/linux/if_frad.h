@@ -19,78 +19,76 @@
 #ifndef _UAPI_FRAD_H_
 #define _UAPI_FRAD_H_
 #include <linux/if.h>
-struct dlci_add
+struct dlci_add {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- char devname[IFNAMSIZ];
- short dlci;
+  char devname[IFNAMSIZ];
+  short dlci;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DLCI_GET_CONF (SIOCDEVPRIVATE + 2)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DLCI_SET_CONF (SIOCDEVPRIVATE + 3)
 struct dlci_conf {
- short flags;
+  short flags;
+  short CIR_fwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short CIR_fwd;
- short Bc_fwd;
- short Be_fwd;
- short CIR_bwd;
+  short Bc_fwd;
+  short Be_fwd;
+  short CIR_bwd;
+  short Bc_bwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Bc_bwd;
- short Be_bwd;
- short Tc_fwd;
- short Tc_bwd;
+  short Be_bwd;
+  short Tc_fwd;
+  short Tc_bwd;
+  short Tf_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Tf_max;
- short Tb_max;
+  short Tb_max;
 };
 #define DLCI_GET_SLAVE (SIOCDEVPRIVATE + 4)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DLCI_IGNORE_CIR_OUT 0x0001
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DLCI_ACCOUNT_CIR_IN 0x0002
 #define DLCI_BUFFER_IF 0x0008
 #define DLCI_VALID_FLAGS 0x000B
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_GET_CONF (SIOCDEVPRIVATE)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_SET_CONF (SIOCDEVPRIVATE + 1)
 #define FRAD_LAST_IOCTL FRAD_SET_CONF
-struct frad_conf
+struct frad_conf {
+  short station;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- short station;
- short flags;
- short kbaud;
+  short flags;
+  short kbaud;
+  short clocking;
+  short mtu;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short clocking;
- short mtu;
- short T391;
- short T392;
+  short T391;
+  short T392;
+  short N391;
+  short N392;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short N391;
- short N392;
- short N393;
- short CIR_fwd;
+  short N393;
+  short CIR_fwd;
+  short Bc_fwd;
+  short Be_fwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Bc_fwd;
- short Be_fwd;
- short CIR_bwd;
- short Bc_bwd;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Be_bwd;
+  short CIR_bwd;
+  short Bc_bwd;
+  short Be_bwd;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_STATION_CPE 0x0000
 #define FRAD_STATION_NODE 0x0001
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_TX_IGNORE_CIR 0x0001
 #define FRAD_RX_ACCOUNT_CIR 0x0002
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_DROP_ABORTED 0x0004
 #define FRAD_BUFFERIF 0x0008
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_STATS 0x0010
 #define FRAD_MCI 0x0100
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_AUTODLCI 0x8000
 #define FRAD_VALID_FLAGS 0x811F
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FRAD_CLOCK_INT 0x0001
 #define FRAD_CLOCK_EXT 0x0000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

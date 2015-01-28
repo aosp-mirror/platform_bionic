@@ -28,108 +28,108 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIDEO_MAX_FRAME 32
 #define VIDEO_MAX_PLANES 8
-#define v4l2_fourcc(a, b, c, d)  ((__u32)(a) | ((__u32)(b) << 8) | ((__u32)(c) << 16) | ((__u32)(d) << 24))
-#define v4l2_fourcc_be(a, b, c, d) (v4l2_fourcc(a, b, c, d) | (1 << 31))
+#define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
+#define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1 << 31))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum v4l2_field {
- V4L2_FIELD_ANY = 0,
- V4L2_FIELD_NONE = 1,
- V4L2_FIELD_TOP = 2,
+  V4L2_FIELD_ANY = 0,
+  V4L2_FIELD_NONE = 1,
+  V4L2_FIELD_TOP = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_FIELD_BOTTOM = 3,
- V4L2_FIELD_INTERLACED = 4,
- V4L2_FIELD_SEQ_TB = 5,
- V4L2_FIELD_SEQ_BT = 6,
+  V4L2_FIELD_BOTTOM = 3,
+  V4L2_FIELD_INTERLACED = 4,
+  V4L2_FIELD_SEQ_TB = 5,
+  V4L2_FIELD_SEQ_BT = 6,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_FIELD_ALTERNATE = 7,
- V4L2_FIELD_INTERLACED_TB = 8,
- V4L2_FIELD_INTERLACED_BT = 9,
+  V4L2_FIELD_ALTERNATE = 7,
+  V4L2_FIELD_INTERLACED_TB = 8,
+  V4L2_FIELD_INTERLACED_BT = 9,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_FIELD_HAS_TOP(field)   ((field) == V4L2_FIELD_TOP ||  (field) == V4L2_FIELD_INTERLACED ||  (field) == V4L2_FIELD_INTERLACED_TB ||  (field) == V4L2_FIELD_INTERLACED_BT ||  (field) == V4L2_FIELD_SEQ_TB ||  (field) == V4L2_FIELD_SEQ_BT)
-#define V4L2_FIELD_HAS_BOTTOM(field)   ((field) == V4L2_FIELD_BOTTOM ||  (field) == V4L2_FIELD_INTERLACED ||  (field) == V4L2_FIELD_INTERLACED_TB ||  (field) == V4L2_FIELD_INTERLACED_BT ||  (field) == V4L2_FIELD_SEQ_TB ||  (field) == V4L2_FIELD_SEQ_BT)
-#define V4L2_FIELD_HAS_BOTH(field)   ((field) == V4L2_FIELD_INTERLACED ||  (field) == V4L2_FIELD_INTERLACED_TB ||  (field) == V4L2_FIELD_INTERLACED_BT ||  (field) == V4L2_FIELD_SEQ_TB ||  (field) == V4L2_FIELD_SEQ_BT)
-#define V4L2_FIELD_HAS_T_OR_B(field)   ((field) == V4L2_FIELD_BOTTOM ||  (field) == V4L2_FIELD_TOP ||  (field) == V4L2_FIELD_ALTERNATE)
+#define V4L2_FIELD_HAS_TOP(field) ((field) == V4L2_FIELD_TOP || (field) == V4L2_FIELD_INTERLACED || (field) == V4L2_FIELD_INTERLACED_TB || (field) == V4L2_FIELD_INTERLACED_BT || (field) == V4L2_FIELD_SEQ_TB || (field) == V4L2_FIELD_SEQ_BT)
+#define V4L2_FIELD_HAS_BOTTOM(field) ((field) == V4L2_FIELD_BOTTOM || (field) == V4L2_FIELD_INTERLACED || (field) == V4L2_FIELD_INTERLACED_TB || (field) == V4L2_FIELD_INTERLACED_BT || (field) == V4L2_FIELD_SEQ_TB || (field) == V4L2_FIELD_SEQ_BT)
+#define V4L2_FIELD_HAS_BOTH(field) ((field) == V4L2_FIELD_INTERLACED || (field) == V4L2_FIELD_INTERLACED_TB || (field) == V4L2_FIELD_INTERLACED_BT || (field) == V4L2_FIELD_SEQ_TB || (field) == V4L2_FIELD_SEQ_BT)
+#define V4L2_FIELD_HAS_T_OR_B(field) ((field) == V4L2_FIELD_BOTTOM || (field) == V4L2_FIELD_TOP || (field) == V4L2_FIELD_ALTERNATE)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum v4l2_buf_type {
- V4L2_BUF_TYPE_VIDEO_CAPTURE = 1,
- V4L2_BUF_TYPE_VIDEO_OUTPUT = 2,
- V4L2_BUF_TYPE_VIDEO_OVERLAY = 3,
+  V4L2_BUF_TYPE_VIDEO_CAPTURE = 1,
+  V4L2_BUF_TYPE_VIDEO_OUTPUT = 2,
+  V4L2_BUF_TYPE_VIDEO_OVERLAY = 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_BUF_TYPE_VBI_CAPTURE = 4,
- V4L2_BUF_TYPE_VBI_OUTPUT = 5,
- V4L2_BUF_TYPE_SLICED_VBI_CAPTURE = 6,
- V4L2_BUF_TYPE_SLICED_VBI_OUTPUT = 7,
+  V4L2_BUF_TYPE_VBI_CAPTURE = 4,
+  V4L2_BUF_TYPE_VBI_OUTPUT = 5,
+  V4L2_BUF_TYPE_SLICED_VBI_CAPTURE = 6,
+  V4L2_BUF_TYPE_SLICED_VBI_OUTPUT = 7,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,
- V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
- V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE = 10,
- V4L2_BUF_TYPE_SDR_CAPTURE = 11,
+  V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,
+  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
+  V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE = 10,
+  V4L2_BUF_TYPE_SDR_CAPTURE = 11,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_BUF_TYPE_PRIVATE = 0x80,
+  V4L2_BUF_TYPE_PRIVATE = 0x80,
 };
-#define V4L2_TYPE_IS_MULTIPLANAR(type)   ((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE   || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-#define V4L2_TYPE_IS_OUTPUT(type)   ((type) == V4L2_BUF_TYPE_VIDEO_OUTPUT   || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE   || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY   || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY   || (type) == V4L2_BUF_TYPE_VBI_OUTPUT   || (type) == V4L2_BUF_TYPE_SLICED_VBI_OUTPUT)
+#define V4L2_TYPE_IS_MULTIPLANAR(type) ((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+#define V4L2_TYPE_IS_OUTPUT(type) ((type) == V4L2_BUF_TYPE_VIDEO_OUTPUT || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY || (type) == V4L2_BUF_TYPE_VBI_OUTPUT || (type) == V4L2_BUF_TYPE_SLICED_VBI_OUTPUT)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum v4l2_tuner_type {
- V4L2_TUNER_RADIO = 1,
- V4L2_TUNER_ANALOG_TV = 2,
- V4L2_TUNER_DIGITAL_TV = 3,
+  V4L2_TUNER_RADIO = 1,
+  V4L2_TUNER_ANALOG_TV = 2,
+  V4L2_TUNER_DIGITAL_TV = 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_TUNER_ADC = 4,
- V4L2_TUNER_RF = 5,
+  V4L2_TUNER_ADC = 4,
+  V4L2_TUNER_RF = 5,
 };
 enum v4l2_memory {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_MEMORY_MMAP = 1,
- V4L2_MEMORY_USERPTR = 2,
- V4L2_MEMORY_OVERLAY = 3,
- V4L2_MEMORY_DMABUF = 4,
+  V4L2_MEMORY_MMAP = 1,
+  V4L2_MEMORY_USERPTR = 2,
+  V4L2_MEMORY_OVERLAY = 3,
+  V4L2_MEMORY_DMABUF = 4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum v4l2_colorspace {
- V4L2_COLORSPACE_SMPTE170M = 1,
- V4L2_COLORSPACE_SMPTE240M = 2,
+  V4L2_COLORSPACE_SMPTE170M = 1,
+  V4L2_COLORSPACE_SMPTE240M = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_COLORSPACE_REC709 = 3,
- V4L2_COLORSPACE_BT878 = 4,
- V4L2_COLORSPACE_470_SYSTEM_M = 5,
- V4L2_COLORSPACE_470_SYSTEM_BG = 6,
+  V4L2_COLORSPACE_REC709 = 3,
+  V4L2_COLORSPACE_BT878 = 4,
+  V4L2_COLORSPACE_470_SYSTEM_M = 5,
+  V4L2_COLORSPACE_470_SYSTEM_BG = 6,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_COLORSPACE_JPEG = 7,
- V4L2_COLORSPACE_SRGB = 8,
+  V4L2_COLORSPACE_JPEG = 7,
+  V4L2_COLORSPACE_SRGB = 8,
 };
 enum v4l2_priority {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_PRIORITY_UNSET = 0,
- V4L2_PRIORITY_BACKGROUND = 1,
- V4L2_PRIORITY_INTERACTIVE = 2,
- V4L2_PRIORITY_RECORD = 3,
+  V4L2_PRIORITY_UNSET = 0,
+  V4L2_PRIORITY_BACKGROUND = 1,
+  V4L2_PRIORITY_INTERACTIVE = 2,
+  V4L2_PRIORITY_RECORD = 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_PRIORITY_DEFAULT = V4L2_PRIORITY_INTERACTIVE,
+  V4L2_PRIORITY_DEFAULT = V4L2_PRIORITY_INTERACTIVE,
 };
 struct v4l2_rect {
- __s32 left;
+  __s32 left;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 top;
- __u32 width;
- __u32 height;
+  __s32 top;
+  __u32 width;
+  __u32 height;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_fract {
- __u32 numerator;
- __u32 denominator;
+  __u32 numerator;
+  __u32 denominator;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_capability {
- __u8 driver[16];
- __u8 card[32];
- __u8 bus_info[32];
+  __u8 driver[16];
+  __u8 card[32];
+  __u8 bus_info[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 version;
- __u32 capabilities;
- __u32 device_caps;
- __u32 reserved[3];
+  __u32 version;
+  __u32 capabilities;
+  __u32 device_caps;
+  __u32 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_CAP_VIDEO_CAPTURE 0x00000001
@@ -164,17 +164,17 @@ struct v4l2_capability {
 #define V4L2_CAP_STREAMING 0x04000000
 #define V4L2_CAP_DEVICE_CAPS 0x80000000
 struct v4l2_pix_format {
- __u32 width;
+  __u32 width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 height;
- __u32 pixelformat;
- __u32 field;
- __u32 bytesperline;
+  __u32 height;
+  __u32 pixelformat;
+  __u32 field;
+  __u32 bytesperline;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sizeimage;
- __u32 colorspace;
- __u32 priv;
- __u32 flags;
+  __u32 sizeimage;
+  __u32 colorspace;
+  __u32 priv;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_PIX_FMT_RGB332 v4l2_fourcc('R', 'G', 'B', '1')
@@ -343,88 +343,88 @@ struct v4l2_pix_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_FLAG_PREMUL_ALPHA 0x00000001
 struct v4l2_fmtdesc {
- __u32 index;
- __u32 type;
+  __u32 index;
+  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __u8 description[32];
- __u32 pixelformat;
- __u32 reserved[4];
+  __u32 flags;
+  __u8 description[32];
+  __u32 pixelformat;
+  __u32 reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_FMT_FLAG_COMPRESSED 0x0001
 #define V4L2_FMT_FLAG_EMULATED 0x0002
 enum v4l2_frmsizetypes {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_FRMSIZE_TYPE_DISCRETE = 1,
- V4L2_FRMSIZE_TYPE_CONTINUOUS = 2,
- V4L2_FRMSIZE_TYPE_STEPWISE = 3,
+  V4L2_FRMSIZE_TYPE_DISCRETE = 1,
+  V4L2_FRMSIZE_TYPE_CONTINUOUS = 2,
+  V4L2_FRMSIZE_TYPE_STEPWISE = 3,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_frmsize_discrete {
- __u32 width;
- __u32 height;
+  __u32 width;
+  __u32 height;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_frmsize_stepwise {
- __u32 min_width;
- __u32 max_width;
- __u32 step_width;
+  __u32 min_width;
+  __u32 max_width;
+  __u32 step_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 min_height;
- __u32 max_height;
- __u32 step_height;
+  __u32 min_height;
+  __u32 max_height;
+  __u32 step_height;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_frmsizeenum {
- __u32 index;
- __u32 pixel_format;
- __u32 type;
+  __u32 index;
+  __u32 pixel_format;
+  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct v4l2_frmsize_discrete discrete;
- struct v4l2_frmsize_stepwise stepwise;
- };
+  union {
+    struct v4l2_frmsize_discrete discrete;
+    struct v4l2_frmsize_stepwise stepwise;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[2];
+  __u32 reserved[2];
 };
 enum v4l2_frmivaltypes {
- V4L2_FRMIVAL_TYPE_DISCRETE = 1,
+  V4L2_FRMIVAL_TYPE_DISCRETE = 1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_FRMIVAL_TYPE_CONTINUOUS = 2,
- V4L2_FRMIVAL_TYPE_STEPWISE = 3,
+  V4L2_FRMIVAL_TYPE_CONTINUOUS = 2,
+  V4L2_FRMIVAL_TYPE_STEPWISE = 3,
 };
 struct v4l2_frmival_stepwise {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_fract min;
- struct v4l2_fract max;
- struct v4l2_fract step;
+  struct v4l2_fract min;
+  struct v4l2_fract max;
+  struct v4l2_fract step;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_frmivalenum {
- __u32 index;
- __u32 pixel_format;
- __u32 width;
+  __u32 index;
+  __u32 pixel_format;
+  __u32 width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 height;
- __u32 type;
- union {
- struct v4l2_fract discrete;
+  __u32 height;
+  __u32 type;
+  union {
+    struct v4l2_fract discrete;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_frmival_stepwise stepwise;
- };
- __u32 reserved[2];
+    struct v4l2_frmival_stepwise stepwise;
+  };
+  __u32 reserved[2];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_timecode {
- __u32 type;
- __u32 flags;
- __u8 frames;
+  __u32 type;
+  __u32 flags;
+  __u8 frames;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 seconds;
- __u8 minutes;
- __u8 hours;
- __u8 userbits[4];
+  __u8 seconds;
+  __u8 minutes;
+  __u8 hours;
+  __u8 userbits[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_TC_TYPE_24FPS 1
@@ -441,67 +441,67 @@ struct v4l2_timecode {
 #define V4L2_TC_USERBITS_8BITCHARS 0x0008
 struct v4l2_jpegcompression {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int quality;
- int APPn;
- int APP_len;
- char APP_data[60];
+  int quality;
+  int APPn;
+  int APP_len;
+  char APP_data[60];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int COM_len;
- char COM_data[60];
- __u32 jpeg_markers;
-#define V4L2_JPEG_MARKER_DHT (1<<3)
+  int COM_len;
+  char COM_data[60];
+  __u32 jpeg_markers;
+#define V4L2_JPEG_MARKER_DHT (1 << 3)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_JPEG_MARKER_DQT (1<<4)
-#define V4L2_JPEG_MARKER_DRI (1<<5)
-#define V4L2_JPEG_MARKER_COM (1<<6)
-#define V4L2_JPEG_MARKER_APP (1<<7)
+#define V4L2_JPEG_MARKER_DQT (1 << 4)
+#define V4L2_JPEG_MARKER_DRI (1 << 5)
+#define V4L2_JPEG_MARKER_COM (1 << 6)
+#define V4L2_JPEG_MARKER_APP (1 << 7)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct v4l2_requestbuffers {
- __u32 count;
- __u32 type;
+  __u32 count;
+  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 memory;
- __u32 reserved[2];
+  __u32 memory;
+  __u32 reserved[2];
 };
 struct v4l2_plane {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bytesused;
- __u32 length;
- union {
- __u32 mem_offset;
+  __u32 bytesused;
+  __u32 length;
+  union {
+    __u32 mem_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long userptr;
- __s32 fd;
- } m;
- __u32 data_offset;
+    unsigned long userptr;
+    __s32 fd;
+  } m;
+  __u32 data_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[11];
+  __u32 reserved[11];
 };
 struct v4l2_buffer {
- __u32 index;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- __u32 bytesused;
- __u32 flags;
- __u32 field;
+  __u32 type;
+  __u32 bytesused;
+  __u32 flags;
+  __u32 field;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct timeval timestamp;
- struct v4l2_timecode timecode;
- __u32 sequence;
- __u32 memory;
+  struct timeval timestamp;
+  struct v4l2_timecode timecode;
+  __u32 sequence;
+  __u32 memory;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- __u32 offset;
- unsigned long userptr;
- struct v4l2_plane *planes;
+  union {
+    __u32 offset;
+    unsigned long userptr;
+    struct v4l2_plane * planes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 fd;
- } m;
- __u32 length;
- __u32 reserved2;
+    __s32 fd;
+  } m;
+  __u32 length;
+  __u32 reserved2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved;
+  __u32 reserved;
 };
 #define V4L2_BUF_FLAG_MAPPED 0x00000001
 #define V4L2_BUF_FLAG_QUEUED 0x00000002
@@ -527,32 +527,32 @@ struct v4l2_buffer {
 #define V4L2_BUF_FLAG_TSTAMP_SRC_SOE 0x00010000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_exportbuffer {
- __u32 type;
- __u32 index;
- __u32 plane;
+  __u32 type;
+  __u32 index;
+  __u32 plane;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __s32 fd;
- __u32 reserved[11];
+  __u32 flags;
+  __s32 fd;
+  __u32 reserved[11];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_framebuffer {
- __u32 capability;
- __u32 flags;
- void *base;
+  __u32 capability;
+  __u32 flags;
+  void * base;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u32 width;
- __u32 height;
- __u32 pixelformat;
+  struct {
+    __u32 width;
+    __u32 height;
+    __u32 pixelformat;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 field;
- __u32 bytesperline;
- __u32 sizeimage;
- __u32 colorspace;
+    __u32 field;
+    __u32 bytesperline;
+    __u32 sizeimage;
+    __u32 colorspace;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 priv;
- } fmt;
+    __u32 priv;
+  } fmt;
 };
 #define V4L2_FBUF_CAP_EXTERNOVERLAY 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -574,157 +574,157 @@ struct v4l2_framebuffer {
 #define V4L2_FBUF_FLAG_LOCAL_INV_ALPHA 0x0020
 #define V4L2_FBUF_FLAG_SRC_CHROMAKEY 0x0040
 struct v4l2_clip {
- struct v4l2_rect c;
+  struct v4l2_rect c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_clip __user *next;
+  struct v4l2_clip __user * next;
 };
 struct v4l2_window {
- struct v4l2_rect w;
+  struct v4l2_rect w;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 field;
- __u32 chromakey;
- struct v4l2_clip __user *clips;
- __u32 clipcount;
+  __u32 field;
+  __u32 chromakey;
+  struct v4l2_clip __user * clips;
+  __u32 clipcount;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *bitmap;
- __u8 global_alpha;
+  void __user * bitmap;
+  __u8 global_alpha;
 };
 struct v4l2_captureparm {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 capability;
- __u32 capturemode;
- struct v4l2_fract timeperframe;
- __u32 extendedmode;
+  __u32 capability;
+  __u32 capturemode;
+  struct v4l2_fract timeperframe;
+  __u32 extendedmode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 readbuffers;
- __u32 reserved[4];
+  __u32 readbuffers;
+  __u32 reserved[4];
 };
 #define V4L2_MODE_HIGHQUALITY 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CAP_TIMEPERFRAME 0x1000
 struct v4l2_outputparm {
- __u32 capability;
- __u32 outputmode;
+  __u32 capability;
+  __u32 outputmode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_fract timeperframe;
- __u32 extendedmode;
- __u32 writebuffers;
- __u32 reserved[4];
+  struct v4l2_fract timeperframe;
+  __u32 extendedmode;
+  __u32 writebuffers;
+  __u32 reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct v4l2_cropcap {
- __u32 type;
- struct v4l2_rect bounds;
+  __u32 type;
+  struct v4l2_rect bounds;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_rect defrect;
- struct v4l2_fract pixelaspect;
+  struct v4l2_rect defrect;
+  struct v4l2_fract pixelaspect;
 };
 struct v4l2_crop {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- struct v4l2_rect c;
+  __u32 type;
+  struct v4l2_rect c;
 };
 struct v4l2_selection {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- __u32 target;
- __u32 flags;
- struct v4l2_rect r;
+  __u32 type;
+  __u32 target;
+  __u32 flags;
+  struct v4l2_rect r;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[9];
+  __u32 reserved[9];
 };
 typedef __u64 v4l2_std_id;
-#define V4L2_STD_PAL_B ((v4l2_std_id)0x00000001)
+#define V4L2_STD_PAL_B ((v4l2_std_id) 0x00000001)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_PAL_B1 ((v4l2_std_id)0x00000002)
-#define V4L2_STD_PAL_G ((v4l2_std_id)0x00000004)
-#define V4L2_STD_PAL_H ((v4l2_std_id)0x00000008)
-#define V4L2_STD_PAL_I ((v4l2_std_id)0x00000010)
+#define V4L2_STD_PAL_B1 ((v4l2_std_id) 0x00000002)
+#define V4L2_STD_PAL_G ((v4l2_std_id) 0x00000004)
+#define V4L2_STD_PAL_H ((v4l2_std_id) 0x00000008)
+#define V4L2_STD_PAL_I ((v4l2_std_id) 0x00000010)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_PAL_D ((v4l2_std_id)0x00000020)
-#define V4L2_STD_PAL_D1 ((v4l2_std_id)0x00000040)
-#define V4L2_STD_PAL_K ((v4l2_std_id)0x00000080)
-#define V4L2_STD_PAL_M ((v4l2_std_id)0x00000100)
+#define V4L2_STD_PAL_D ((v4l2_std_id) 0x00000020)
+#define V4L2_STD_PAL_D1 ((v4l2_std_id) 0x00000040)
+#define V4L2_STD_PAL_K ((v4l2_std_id) 0x00000080)
+#define V4L2_STD_PAL_M ((v4l2_std_id) 0x00000100)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_PAL_N ((v4l2_std_id)0x00000200)
-#define V4L2_STD_PAL_Nc ((v4l2_std_id)0x00000400)
-#define V4L2_STD_PAL_60 ((v4l2_std_id)0x00000800)
-#define V4L2_STD_NTSC_M ((v4l2_std_id)0x00001000)
+#define V4L2_STD_PAL_N ((v4l2_std_id) 0x00000200)
+#define V4L2_STD_PAL_Nc ((v4l2_std_id) 0x00000400)
+#define V4L2_STD_PAL_60 ((v4l2_std_id) 0x00000800)
+#define V4L2_STD_NTSC_M ((v4l2_std_id) 0x00001000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_NTSC_M_JP ((v4l2_std_id)0x00002000)
-#define V4L2_STD_NTSC_443 ((v4l2_std_id)0x00004000)
-#define V4L2_STD_NTSC_M_KR ((v4l2_std_id)0x00008000)
-#define V4L2_STD_SECAM_B ((v4l2_std_id)0x00010000)
+#define V4L2_STD_NTSC_M_JP ((v4l2_std_id) 0x00002000)
+#define V4L2_STD_NTSC_443 ((v4l2_std_id) 0x00004000)
+#define V4L2_STD_NTSC_M_KR ((v4l2_std_id) 0x00008000)
+#define V4L2_STD_SECAM_B ((v4l2_std_id) 0x00010000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_SECAM_D ((v4l2_std_id)0x00020000)
-#define V4L2_STD_SECAM_G ((v4l2_std_id)0x00040000)
-#define V4L2_STD_SECAM_H ((v4l2_std_id)0x00080000)
-#define V4L2_STD_SECAM_K ((v4l2_std_id)0x00100000)
+#define V4L2_STD_SECAM_D ((v4l2_std_id) 0x00020000)
+#define V4L2_STD_SECAM_G ((v4l2_std_id) 0x00040000)
+#define V4L2_STD_SECAM_H ((v4l2_std_id) 0x00080000)
+#define V4L2_STD_SECAM_K ((v4l2_std_id) 0x00100000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_SECAM_K1 ((v4l2_std_id)0x00200000)
-#define V4L2_STD_SECAM_L ((v4l2_std_id)0x00400000)
-#define V4L2_STD_SECAM_LC ((v4l2_std_id)0x00800000)
-#define V4L2_STD_ATSC_8_VSB ((v4l2_std_id)0x01000000)
+#define V4L2_STD_SECAM_K1 ((v4l2_std_id) 0x00200000)
+#define V4L2_STD_SECAM_L ((v4l2_std_id) 0x00400000)
+#define V4L2_STD_SECAM_LC ((v4l2_std_id) 0x00800000)
+#define V4L2_STD_ATSC_8_VSB ((v4l2_std_id) 0x01000000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_ATSC_16_VSB ((v4l2_std_id)0x02000000)
-#define V4L2_STD_NTSC (V4L2_STD_NTSC_M |  V4L2_STD_NTSC_M_JP |  V4L2_STD_NTSC_M_KR)
-#define V4L2_STD_SECAM_DK (V4L2_STD_SECAM_D |  V4L2_STD_SECAM_K |  V4L2_STD_SECAM_K1)
-#define V4L2_STD_SECAM (V4L2_STD_SECAM_B |  V4L2_STD_SECAM_G |  V4L2_STD_SECAM_H |  V4L2_STD_SECAM_DK |  V4L2_STD_SECAM_L |  V4L2_STD_SECAM_LC)
+#define V4L2_STD_ATSC_16_VSB ((v4l2_std_id) 0x02000000)
+#define V4L2_STD_NTSC (V4L2_STD_NTSC_M | V4L2_STD_NTSC_M_JP | V4L2_STD_NTSC_M_KR)
+#define V4L2_STD_SECAM_DK (V4L2_STD_SECAM_D | V4L2_STD_SECAM_K | V4L2_STD_SECAM_K1)
+#define V4L2_STD_SECAM (V4L2_STD_SECAM_B | V4L2_STD_SECAM_G | V4L2_STD_SECAM_H | V4L2_STD_SECAM_DK | V4L2_STD_SECAM_L | V4L2_STD_SECAM_LC)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_PAL_BG (V4L2_STD_PAL_B |  V4L2_STD_PAL_B1 |  V4L2_STD_PAL_G)
-#define V4L2_STD_PAL_DK (V4L2_STD_PAL_D |  V4L2_STD_PAL_D1 |  V4L2_STD_PAL_K)
-#define V4L2_STD_PAL (V4L2_STD_PAL_BG |  V4L2_STD_PAL_DK |  V4L2_STD_PAL_H |  V4L2_STD_PAL_I)
-#define V4L2_STD_B (V4L2_STD_PAL_B |  V4L2_STD_PAL_B1 |  V4L2_STD_SECAM_B)
+#define V4L2_STD_PAL_BG (V4L2_STD_PAL_B | V4L2_STD_PAL_B1 | V4L2_STD_PAL_G)
+#define V4L2_STD_PAL_DK (V4L2_STD_PAL_D | V4L2_STD_PAL_D1 | V4L2_STD_PAL_K)
+#define V4L2_STD_PAL (V4L2_STD_PAL_BG | V4L2_STD_PAL_DK | V4L2_STD_PAL_H | V4L2_STD_PAL_I)
+#define V4L2_STD_B (V4L2_STD_PAL_B | V4L2_STD_PAL_B1 | V4L2_STD_SECAM_B)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_G (V4L2_STD_PAL_G |  V4L2_STD_SECAM_G)
-#define V4L2_STD_H (V4L2_STD_PAL_H |  V4L2_STD_SECAM_H)
-#define V4L2_STD_L (V4L2_STD_SECAM_L |  V4L2_STD_SECAM_LC)
-#define V4L2_STD_GH (V4L2_STD_G |  V4L2_STD_H)
+#define V4L2_STD_G (V4L2_STD_PAL_G | V4L2_STD_SECAM_G)
+#define V4L2_STD_H (V4L2_STD_PAL_H | V4L2_STD_SECAM_H)
+#define V4L2_STD_L (V4L2_STD_SECAM_L | V4L2_STD_SECAM_LC)
+#define V4L2_STD_GH (V4L2_STD_G | V4L2_STD_H)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_DK (V4L2_STD_PAL_DK |  V4L2_STD_SECAM_DK)
-#define V4L2_STD_BG (V4L2_STD_B |  V4L2_STD_G)
-#define V4L2_STD_MN (V4L2_STD_PAL_M |  V4L2_STD_PAL_N |  V4L2_STD_PAL_Nc |  V4L2_STD_NTSC)
-#define V4L2_STD_MTS (V4L2_STD_NTSC_M |  V4L2_STD_PAL_M |  V4L2_STD_PAL_N |  V4L2_STD_PAL_Nc)
+#define V4L2_STD_DK (V4L2_STD_PAL_DK | V4L2_STD_SECAM_DK)
+#define V4L2_STD_BG (V4L2_STD_B | V4L2_STD_G)
+#define V4L2_STD_MN (V4L2_STD_PAL_M | V4L2_STD_PAL_N | V4L2_STD_PAL_Nc | V4L2_STD_NTSC)
+#define V4L2_STD_MTS (V4L2_STD_NTSC_M | V4L2_STD_PAL_M | V4L2_STD_PAL_N | V4L2_STD_PAL_Nc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_525_60 (V4L2_STD_PAL_M |  V4L2_STD_PAL_60 |  V4L2_STD_NTSC |  V4L2_STD_NTSC_443)
-#define V4L2_STD_625_50 (V4L2_STD_PAL |  V4L2_STD_PAL_N |  V4L2_STD_PAL_Nc |  V4L2_STD_SECAM)
-#define V4L2_STD_ATSC (V4L2_STD_ATSC_8_VSB |  V4L2_STD_ATSC_16_VSB)
+#define V4L2_STD_525_60 (V4L2_STD_PAL_M | V4L2_STD_PAL_60 | V4L2_STD_NTSC | V4L2_STD_NTSC_443)
+#define V4L2_STD_625_50 (V4L2_STD_PAL | V4L2_STD_PAL_N | V4L2_STD_PAL_Nc | V4L2_STD_SECAM)
+#define V4L2_STD_ATSC (V4L2_STD_ATSC_8_VSB | V4L2_STD_ATSC_16_VSB)
 #define V4L2_STD_UNKNOWN 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_STD_ALL (V4L2_STD_525_60 |  V4L2_STD_625_50)
+#define V4L2_STD_ALL (V4L2_STD_525_60 | V4L2_STD_625_50)
 struct v4l2_standard {
- __u32 index;
- v4l2_std_id id;
+  __u32 index;
+  v4l2_std_id id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name[24];
- struct v4l2_fract frameperiod;
- __u32 framelines;
- __u32 reserved[4];
+  __u8 name[24];
+  struct v4l2_fract frameperiod;
+  __u32 framelines;
+  __u32 reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct v4l2_bt_timings {
- __u32 width;
- __u32 height;
+  __u32 width;
+  __u32 height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 interlaced;
- __u32 polarities;
- __u64 pixelclock;
- __u32 hfrontporch;
+  __u32 interlaced;
+  __u32 polarities;
+  __u64 pixelclock;
+  __u32 hfrontporch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 hsync;
- __u32 hbackporch;
- __u32 vfrontporch;
- __u32 vsync;
+  __u32 hsync;
+  __u32 hbackporch;
+  __u32 vfrontporch;
+  __u32 vsync;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 vbackporch;
- __u32 il_vfrontporch;
- __u32 il_vsync;
- __u32 il_vbackporch;
+  __u32 vbackporch;
+  __u32 il_vfrontporch;
+  __u32 il_vsync;
+  __u32 il_vbackporch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 standards;
- __u32 flags;
- __u32 reserved[14];
-} __attribute__ ((packed));
+  __u32 standards;
+  __u32 flags;
+  __u32 reserved[14];
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_DV_PROGRESSIVE 0
 #define V4L2_DV_INTERLACED 1
@@ -741,70 +741,70 @@ struct v4l2_bt_timings {
 #define V4L2_DV_FL_REDUCED_FPS (1 << 2)
 #define V4L2_DV_FL_HALF_LINE (1 << 3)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_DV_BT_BLANKING_WIDTH(bt)   ((bt)->hfrontporch + (bt)->hsync + (bt)->hbackporch)
-#define V4L2_DV_BT_FRAME_WIDTH(bt)   ((bt)->width + V4L2_DV_BT_BLANKING_WIDTH(bt))
-#define V4L2_DV_BT_BLANKING_HEIGHT(bt)   ((bt)->vfrontporch + (bt)->vsync + (bt)->vbackporch +   (bt)->il_vfrontporch + (bt)->il_vsync + (bt)->il_vbackporch)
-#define V4L2_DV_BT_FRAME_HEIGHT(bt)   ((bt)->height + V4L2_DV_BT_BLANKING_HEIGHT(bt))
+#define V4L2_DV_BT_BLANKING_WIDTH(bt) ((bt)->hfrontporch + (bt)->hsync + (bt)->hbackporch)
+#define V4L2_DV_BT_FRAME_WIDTH(bt) ((bt)->width + V4L2_DV_BT_BLANKING_WIDTH(bt))
+#define V4L2_DV_BT_BLANKING_HEIGHT(bt) ((bt)->vfrontporch + (bt)->vsync + (bt)->vbackporch + (bt)->il_vfrontporch + (bt)->il_vsync + (bt)->il_vbackporch)
+#define V4L2_DV_BT_FRAME_HEIGHT(bt) ((bt)->height + V4L2_DV_BT_BLANKING_HEIGHT(bt))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_dv_timings {
- __u32 type;
- union {
- struct v4l2_bt_timings bt;
+  __u32 type;
+  union {
+    struct v4l2_bt_timings bt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[32];
- };
-} __attribute__ ((packed));
+    __u32 reserved[32];
+  };
+} __attribute__((packed));
 #define V4L2_DV_BT_656_1120 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_enum_dv_timings {
- __u32 index;
- __u32 pad;
- __u32 reserved[2];
+  __u32 index;
+  __u32 pad;
+  __u32 reserved[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_dv_timings timings;
+  struct v4l2_dv_timings timings;
 };
 struct v4l2_bt_timings_cap {
- __u32 min_width;
+  __u32 min_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 max_width;
- __u32 min_height;
- __u32 max_height;
- __u64 min_pixelclock;
+  __u32 max_width;
+  __u32 min_height;
+  __u32 max_height;
+  __u64 min_pixelclock;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 max_pixelclock;
- __u32 standards;
- __u32 capabilities;
- __u32 reserved[16];
+  __u64 max_pixelclock;
+  __u32 standards;
+  __u32 capabilities;
+  __u32 reserved[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define V4L2_DV_BT_CAP_INTERLACED (1 << 0)
 #define V4L2_DV_BT_CAP_PROGRESSIVE (1 << 1)
 #define V4L2_DV_BT_CAP_REDUCED_BLANKING (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_DV_BT_CAP_CUSTOM (1 << 3)
 struct v4l2_dv_timings_cap {
- __u32 type;
- __u32 pad;
+  __u32 type;
+  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[2];
- union {
- struct v4l2_bt_timings_cap bt;
- __u32 raw_data[32];
+  __u32 reserved[2];
+  union {
+    struct v4l2_bt_timings_cap bt;
+    __u32 raw_data[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- };
+  };
 };
 struct v4l2_input {
- __u32 index;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name[32];
- __u32 type;
- __u32 audioset;
- __u32 tuner;
+  __u8 name[32];
+  __u32 type;
+  __u32 audioset;
+  __u32 tuner;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- v4l2_std_id std;
- __u32 status;
- __u32 capabilities;
- __u32 reserved[3];
+  v4l2_std_id std;
+  __u32 status;
+  __u32 capabilities;
+  __u32 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_INPUT_TYPE_TUNER 1
@@ -831,15 +831,15 @@ struct v4l2_input {
 #define V4L2_IN_CAP_STD 0x00000004
 struct v4l2_output {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 index;
- __u8 name[32];
- __u32 type;
- __u32 audioset;
+  __u32 index;
+  __u8 name[32];
+  __u32 type;
+  __u32 audioset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 modulator;
- v4l2_std_id std;
- __u32 capabilities;
- __u32 reserved[3];
+  __u32 modulator;
+  v4l2_std_id std;
+  __u32 capabilities;
+  __u32 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_OUTPUT_TYPE_MODULATOR 1
@@ -851,34 +851,34 @@ struct v4l2_output {
 #define V4L2_OUT_CAP_STD 0x00000004
 struct v4l2_control {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __s32 value;
+  __u32 id;
+  __s32 value;
 };
 struct v4l2_ext_control {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u32 size;
- __u32 reserved2[1];
- union {
+  __u32 id;
+  __u32 size;
+  __u32 reserved2[1];
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 value;
- __s64 value64;
- char __user *string;
- __u8 __user *p_u8;
+    __s32 value;
+    __s64 value64;
+    char __user * string;
+    __u8 __user * p_u8;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 __user *p_u16;
- __u32 __user *p_u32;
- void __user *ptr;
- };
+    __u16 __user * p_u16;
+    __u32 __user * p_u32;
+    void __user * ptr;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 struct v4l2_ext_controls {
- __u32 ctrl_class;
- __u32 count;
+  __u32 ctrl_class;
+  __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 error_idx;
- __u32 reserved[2];
- struct v4l2_ext_control *controls;
+  __u32 error_idx;
+  __u32 reserved[2];
+  struct v4l2_ext_control * controls;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CTRL_ID_MASK (0x0fffffff)
@@ -887,67 +887,67 @@ struct v4l2_ext_controls {
 #define V4L2_CTRL_MAX_DIMS (4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum v4l2_ctrl_type {
- V4L2_CTRL_TYPE_INTEGER = 1,
- V4L2_CTRL_TYPE_BOOLEAN = 2,
- V4L2_CTRL_TYPE_MENU = 3,
+  V4L2_CTRL_TYPE_INTEGER = 1,
+  V4L2_CTRL_TYPE_BOOLEAN = 2,
+  V4L2_CTRL_TYPE_MENU = 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_CTRL_TYPE_BUTTON = 4,
- V4L2_CTRL_TYPE_INTEGER64 = 5,
- V4L2_CTRL_TYPE_CTRL_CLASS = 6,
- V4L2_CTRL_TYPE_STRING = 7,
+  V4L2_CTRL_TYPE_BUTTON = 4,
+  V4L2_CTRL_TYPE_INTEGER64 = 5,
+  V4L2_CTRL_TYPE_CTRL_CLASS = 6,
+  V4L2_CTRL_TYPE_STRING = 7,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_CTRL_TYPE_BITMASK = 8,
- V4L2_CTRL_TYPE_INTEGER_MENU = 9,
- V4L2_CTRL_COMPOUND_TYPES = 0x0100,
- V4L2_CTRL_TYPE_U8 = 0x0100,
+  V4L2_CTRL_TYPE_BITMASK = 8,
+  V4L2_CTRL_TYPE_INTEGER_MENU = 9,
+  V4L2_CTRL_COMPOUND_TYPES = 0x0100,
+  V4L2_CTRL_TYPE_U8 = 0x0100,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_CTRL_TYPE_U16 = 0x0101,
- V4L2_CTRL_TYPE_U32 = 0x0102,
+  V4L2_CTRL_TYPE_U16 = 0x0101,
+  V4L2_CTRL_TYPE_U32 = 0x0102,
 };
 struct v4l2_queryctrl {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u32 type;
- __u8 name[32];
- __s32 minimum;
+  __u32 id;
+  __u32 type;
+  __u8 name[32];
+  __s32 minimum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 maximum;
- __s32 step;
- __s32 default_value;
- __u32 flags;
+  __s32 maximum;
+  __s32 step;
+  __s32 default_value;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[2];
+  __u32 reserved[2];
 };
 struct v4l2_query_ext_ctrl {
- __u32 id;
+  __u32 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- char name[32];
- __s64 minimum;
- __s64 maximum;
+  __u32 type;
+  char name[32];
+  __s64 minimum;
+  __s64 maximum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 step;
- __s64 default_value;
- __u32 flags;
- __u32 elem_size;
+  __u64 step;
+  __s64 default_value;
+  __u32 flags;
+  __u32 elem_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 elems;
- __u32 nr_of_dims;
- __u32 dims[V4L2_CTRL_MAX_DIMS];
- __u32 reserved[32];
+  __u32 elems;
+  __u32 nr_of_dims;
+  __u32 dims[V4L2_CTRL_MAX_DIMS];
+  __u32 reserved[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct v4l2_querymenu {
- __u32 id;
- __u32 index;
+  __u32 id;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- __u8 name[32];
- __s64 value;
- };
+  union {
+    __u8 name[32];
+    __s64 value;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved;
-} __attribute__ ((packed));
+  __u32 reserved;
+} __attribute__((packed));
 #define V4L2_CTRL_FLAG_DISABLED 0x0001
 #define V4L2_CTRL_FLAG_GRABBED 0x0002
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -966,30 +966,30 @@ struct v4l2_querymenu {
 #define V4L2_CID_PRIVATE_BASE 0x08000000
 struct v4l2_tuner {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 index;
- __u8 name[32];
- __u32 type;
- __u32 capability;
+  __u32 index;
+  __u8 name[32];
+  __u32 type;
+  __u32 capability;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rangelow;
- __u32 rangehigh;
- __u32 rxsubchans;
- __u32 audmode;
+  __u32 rangelow;
+  __u32 rangehigh;
+  __u32 rxsubchans;
+  __u32 audmode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 signal;
- __s32 afc;
- __u32 reserved[4];
+  __s32 signal;
+  __s32 afc;
+  __u32 reserved[4];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_modulator {
- __u32 index;
- __u8 name[32];
- __u32 capability;
+  __u32 index;
+  __u8 name[32];
+  __u32 capability;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rangelow;
- __u32 rangehigh;
- __u32 txsubchans;
- __u32 reserved[4];
+  __u32 rangelow;
+  __u32 rangehigh;
+  __u32 txsubchans;
+  __u32 reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_TUNER_CAP_LOW 0x0001
@@ -1026,10 +1026,10 @@ struct v4l2_modulator {
 #define V4L2_TUNER_MODE_LANG1_LANG2 0x0004
 struct v4l2_frequency {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tuner;
- __u32 type;
- __u32 frequency;
- __u32 reserved[8];
+  __u32 tuner;
+  __u32 type;
+  __u32 frequency;
+  __u32 reserved[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_BAND_MODULATION_VSB (1 << 1)
@@ -1037,36 +1037,36 @@ struct v4l2_frequency {
 #define V4L2_BAND_MODULATION_AM (1 << 3)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_frequency_band {
- __u32 tuner;
- __u32 type;
- __u32 index;
+  __u32 tuner;
+  __u32 type;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 capability;
- __u32 rangelow;
- __u32 rangehigh;
- __u32 modulation;
+  __u32 capability;
+  __u32 rangelow;
+  __u32 rangehigh;
+  __u32 modulation;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[9];
+  __u32 reserved[9];
 };
 struct v4l2_hw_freq_seek {
- __u32 tuner;
+  __u32 tuner;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- __u32 seek_upward;
- __u32 wrap_around;
- __u32 spacing;
+  __u32 type;
+  __u32 seek_upward;
+  __u32 wrap_around;
+  __u32 spacing;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rangelow;
- __u32 rangehigh;
- __u32 reserved[5];
+  __u32 rangelow;
+  __u32 rangehigh;
+  __u32 reserved[5];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_rds_data {
- __u8 lsb;
- __u8 msb;
- __u8 block;
+  __u8 lsb;
+  __u8 msb;
+  __u8 block;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define V4L2_RDS_BLOCK_MSK 0x7
 #define V4L2_RDS_BLOCK_A 0
 #define V4L2_RDS_BLOCK_B 1
@@ -1079,12 +1079,12 @@ struct v4l2_rds_data {
 #define V4L2_RDS_BLOCK_CORRECTED 0x40
 #define V4L2_RDS_BLOCK_ERROR 0x80
 struct v4l2_audio {
- __u32 index;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name[32];
- __u32 capability;
- __u32 mode;
- __u32 reserved[2];
+  __u8 name[32];
+  __u32 capability;
+  __u32 mode;
+  __u32 reserved[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_AUDCAP_STEREO 0x00001
@@ -1092,12 +1092,12 @@ struct v4l2_audio {
 #define V4L2_AUDMODE_AVL 0x00001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_audioout {
- __u32 index;
- __u8 name[32];
- __u32 capability;
+  __u32 index;
+  __u8 name[32];
+  __u32 capability;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 mode;
- __u32 reserved[2];
+  __u32 mode;
+  __u32 reserved[2];
 };
 #define V4L2_ENC_IDX_FRAME_I (0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1106,20 +1106,20 @@ struct v4l2_audioout {
 #define V4L2_ENC_IDX_FRAME_MASK (0xf)
 struct v4l2_enc_idx_entry {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 offset;
- __u64 pts;
- __u32 length;
- __u32 flags;
+  __u64 offset;
+  __u64 pts;
+  __u32 length;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[2];
+  __u32 reserved[2];
 };
 #define V4L2_ENC_IDX_ENTRIES (64)
 struct v4l2_enc_idx {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 entries;
- __u32 entries_cap;
- __u32 reserved[4];
- struct v4l2_enc_idx_entry entry[V4L2_ENC_IDX_ENTRIES];
+  __u32 entries;
+  __u32 entries_cap;
+  __u32 reserved[4];
+  struct v4l2_enc_idx_entry entry[V4L2_ENC_IDX_ENTRIES];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_ENC_CMD_START (0)
@@ -1129,15 +1129,15 @@ struct v4l2_enc_idx {
 #define V4L2_ENC_CMD_RESUME (3)
 #define V4L2_ENC_CMD_STOP_AT_GOP_END (1 << 0)
 struct v4l2_encoder_cmd {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- union {
- struct {
- __u32 data[8];
+  __u32 flags;
+  union {
+    struct {
+      __u32 data[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } raw;
- };
+    } raw;
+  };
 };
 #define V4L2_DEC_CMD_START (0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1153,36 +1153,36 @@ struct v4l2_encoder_cmd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_DEC_START_FMT_GOP (1)
 struct v4l2_decoder_cmd {
- __u32 cmd;
- __u32 flags;
+  __u32 cmd;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- __u64 pts;
- } stop;
+  union {
+    struct {
+      __u64 pts;
+    } stop;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __s32 speed;
- __u32 format;
- } start;
+    struct {
+      __s32 speed;
+      __u32 format;
+    } start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u32 data[16];
- } raw;
- };
+    struct {
+      __u32 data[16];
+    } raw;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct v4l2_vbi_format {
- __u32 sampling_rate;
- __u32 offset;
+  __u32 sampling_rate;
+  __u32 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 samples_per_line;
- __u32 sample_format;
- __s32 start[2];
- __u32 count[2];
+  __u32 samples_per_line;
+  __u32 sample_format;
+  __s32 start[2];
+  __u32 count[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __u32 reserved[2];
+  __u32 flags;
+  __u32 reserved[2];
 };
 #define V4L2_VBI_UNSYNC (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1193,11 +1193,11 @@ struct v4l2_vbi_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_VBI_ITU_625_F2_START (314)
 struct v4l2_sliced_vbi_format {
- __u16 service_set;
- __u16 service_lines[2][24];
+  __u16 service_set;
+  __u16 service_lines[2][24];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 io_size;
- __u32 reserved[2];
+  __u32 io_size;
+  __u32 reserved[2];
 };
 #define V4L2_SLICED_TELETEXT_B (0x0001)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1208,20 +1208,20 @@ struct v4l2_sliced_vbi_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_SLICED_VBI_625 (V4L2_SLICED_TELETEXT_B | V4L2_SLICED_VPS | V4L2_SLICED_WSS_625)
 struct v4l2_sliced_vbi_cap {
- __u16 service_set;
- __u16 service_lines[2][24];
+  __u16 service_set;
+  __u16 service_lines[2][24];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- __u32 reserved[3];
+  __u32 type;
+  __u32 reserved[3];
 };
 struct v4l2_sliced_vbi_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u32 field;
- __u32 line;
- __u32 reserved;
+  __u32 id;
+  __u32 field;
+  __u32 line;
+  __u32 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 data[48];
+  __u8 data[48];
 };
 #define V4L2_MPEG_VBI_IVTV_TELETEXT_B (1)
 #define V4L2_MPEG_VBI_IVTV_CAPTION_525 (4)
@@ -1229,80 +1229,80 @@ struct v4l2_sliced_vbi_data {
 #define V4L2_MPEG_VBI_IVTV_WSS_625 (5)
 #define V4L2_MPEG_VBI_IVTV_VPS (7)
 struct v4l2_mpeg_vbi_itv0_line {
- __u8 id;
+  __u8 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 data[42];
-} __attribute__ ((packed));
+  __u8 data[42];
+} __attribute__((packed));
 struct v4l2_mpeg_vbi_itv0 {
- __le32 linemask[2];
+  __le32 linemask[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_mpeg_vbi_itv0_line line[35];
-} __attribute__ ((packed));
+  struct v4l2_mpeg_vbi_itv0_line line[35];
+} __attribute__((packed));
 struct v4l2_mpeg_vbi_ITV0 {
- struct v4l2_mpeg_vbi_itv0_line line[36];
+  struct v4l2_mpeg_vbi_itv0_line line[36];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define V4L2_MPEG_VBI_IVTV_MAGIC0 "itv0"
 #define V4L2_MPEG_VBI_IVTV_MAGIC1 "ITV0"
 struct v4l2_mpeg_vbi_fmt_ivtv {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 magic[4];
- union {
- struct v4l2_mpeg_vbi_itv0 itv0;
- struct v4l2_mpeg_vbi_ITV0 ITV0;
+  __u8 magic[4];
+  union {
+    struct v4l2_mpeg_vbi_itv0 itv0;
+    struct v4l2_mpeg_vbi_ITV0 ITV0;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- };
-} __attribute__ ((packed));
+  };
+} __attribute__((packed));
 struct v4l2_plane_pix_format {
- __u32 sizeimage;
+  __u32 sizeimage;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 bytesperline;
- __u16 reserved[7];
-} __attribute__ ((packed));
+  __u16 bytesperline;
+  __u16 reserved[7];
+} __attribute__((packed));
 struct v4l2_pix_format_mplane {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 width;
- __u32 height;
- __u32 pixelformat;
- __u32 field;
+  __u32 width;
+  __u32 height;
+  __u32 pixelformat;
+  __u32 field;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 colorspace;
- struct v4l2_plane_pix_format plane_fmt[VIDEO_MAX_PLANES];
- __u8 num_planes;
- __u8 flags;
+  __u32 colorspace;
+  struct v4l2_plane_pix_format plane_fmt[VIDEO_MAX_PLANES];
+  __u8 num_planes;
+  __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 reserved[10];
-} __attribute__ ((packed));
+  __u8 reserved[10];
+} __attribute__((packed));
 struct v4l2_sdr_format {
- __u32 pixelformat;
+  __u32 pixelformat;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 buffersize;
- __u8 reserved[24];
-} __attribute__ ((packed));
+  __u32 buffersize;
+  __u8 reserved[24];
+} __attribute__((packed));
 struct v4l2_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- union {
- struct v4l2_pix_format pix;
- struct v4l2_pix_format_mplane pix_mp;
+  __u32 type;
+  union {
+    struct v4l2_pix_format pix;
+    struct v4l2_pix_format_mplane pix_mp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_window win;
- struct v4l2_vbi_format vbi;
- struct v4l2_sliced_vbi_format sliced;
- struct v4l2_sdr_format sdr;
+    struct v4l2_window win;
+    struct v4l2_vbi_format vbi;
+    struct v4l2_sliced_vbi_format sliced;
+    struct v4l2_sdr_format sdr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 raw_data[200];
- } fmt;
+    __u8 raw_data[200];
+  } fmt;
 };
 struct v4l2_streamparm {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- union {
- struct v4l2_captureparm capture;
- struct v4l2_outputparm output;
+  __u32 type;
+  union {
+    struct v4l2_captureparm capture;
+    struct v4l2_outputparm output;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 raw_data[200];
- } parm;
+    __u8 raw_data[200];
+  } parm;
 };
 #define V4L2_EVENT_ALL 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1316,73 +1316,73 @@ struct v4l2_streamparm {
 #define V4L2_EVENT_PRIVATE_START 0x08000000
 struct v4l2_event_vsync {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 field;
-} __attribute__ ((packed));
+  __u8 field;
+} __attribute__((packed));
 #define V4L2_EVENT_CTRL_CH_VALUE (1 << 0)
 #define V4L2_EVENT_CTRL_CH_FLAGS (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_EVENT_CTRL_CH_RANGE (1 << 2)
 struct v4l2_event_ctrl {
- __u32 changes;
- __u32 type;
+  __u32 changes;
+  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- __s32 value;
- __s64 value64;
- };
+  union {
+    __s32 value;
+    __s64 value64;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __s32 minimum;
- __s32 maximum;
- __s32 step;
+  __u32 flags;
+  __s32 minimum;
+  __s32 maximum;
+  __s32 step;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 default_value;
+  __s32 default_value;
 };
 struct v4l2_event_frame_sync {
- __u32 frame_sequence;
+  __u32 frame_sequence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_EVENT_SRC_CH_RESOLUTION (1 << 0)
 struct v4l2_event_src_change {
- __u32 changes;
+  __u32 changes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ (1 << 0)
 struct v4l2_event_motion_det {
- __u32 flags;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 frame_sequence;
- __u32 region_mask;
+  __u32 frame_sequence;
+  __u32 region_mask;
 };
 struct v4l2_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type;
- union {
- struct v4l2_event_vsync vsync;
- struct v4l2_event_ctrl ctrl;
+  __u32 type;
+  union {
+    struct v4l2_event_vsync vsync;
+    struct v4l2_event_ctrl ctrl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_event_frame_sync frame_sync;
- struct v4l2_event_src_change src_change;
- struct v4l2_event_motion_det motion_det;
- __u8 data[64];
+    struct v4l2_event_frame_sync frame_sync;
+    struct v4l2_event_src_change src_change;
+    struct v4l2_event_motion_det motion_det;
+    __u8 data[64];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } u;
- __u32 pending;
- __u32 sequence;
- struct timespec timestamp;
+  } u;
+  __u32 pending;
+  __u32 sequence;
+  struct timespec timestamp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u32 reserved[8];
+  __u32 id;
+  __u32 reserved[8];
 };
 #define V4L2_EVENT_SUB_FL_SEND_INITIAL (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_EVENT_SUB_FL_ALLOW_FEEDBACK (1 << 1)
 struct v4l2_event_subscription {
- __u32 type;
- __u32 id;
+  __u32 type;
+  __u32 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __u32 reserved[5];
+  __u32 flags;
+  __u32 reserved[5];
 };
 #define V4L2_CHIP_MATCH_BRIDGE 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -1393,38 +1393,38 @@ struct v4l2_event_subscription {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_CHIP_MATCH_AC97 3
 struct v4l2_dbg_match {
- __u32 type;
- union {
+  __u32 type;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 addr;
- char name[32];
- };
-} __attribute__ ((packed));
+    __u32 addr;
+    char name[32];
+  };
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_dbg_register {
- struct v4l2_dbg_match match;
- __u32 size;
- __u64 reg;
+  struct v4l2_dbg_match match;
+  __u32 size;
+  __u64 reg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 val;
-} __attribute__ ((packed));
+  __u64 val;
+} __attribute__((packed));
 #define V4L2_CHIP_FL_READABLE (1 << 0)
 #define V4L2_CHIP_FL_WRITABLE (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_dbg_chip_info {
- struct v4l2_dbg_match match;
- char name[32];
- __u32 flags;
+  struct v4l2_dbg_match match;
+  char name[32];
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[32];
-} __attribute__ ((packed));
+  __u32 reserved[32];
+} __attribute__((packed));
 struct v4l2_create_buffers {
- __u32 index;
+  __u32 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 count;
- __u32 memory;
- struct v4l2_format format;
- __u32 reserved[8];
+  __u32 count;
+  __u32 memory;
+  struct v4l2_format format;
+  __u32 reserved[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define VIDIOC_QUERYCAP _IOR('V', 0, struct v4l2_capability)

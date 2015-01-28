@@ -19,35 +19,35 @@
 #ifndef _B1LLI_H_
 #define _B1LLI_H_
 typedef struct avmb1_t4file {
- int len;
+  int len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char *data;
+  unsigned char * data;
 } avmb1_t4file;
 typedef struct avmb1_loaddef {
- int contr;
+  int contr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- avmb1_t4file t4file;
+  avmb1_t4file t4file;
 } avmb1_loaddef;
 typedef struct avmb1_loadandconfigdef {
- int contr;
+  int contr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- avmb1_t4file t4file;
- avmb1_t4file t4config;
+  avmb1_t4file t4file;
+  avmb1_t4file t4config;
 } avmb1_loadandconfigdef;
 typedef struct avmb1_resetdef {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int contr;
+  int contr;
 } avmb1_resetdef;
 typedef struct avmb1_getdef {
- int contr;
+  int contr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int cardtype;
- int cardstate;
+  int cardtype;
+  int cardstate;
 } avmb1_getdef;
 typedef struct avmb1_carddef {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int port;
- int irq;
+  int port;
+  int irq;
 } avmb1_carddef;
 #define AVM_CARDTYPE_B1 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -56,10 +56,10 @@ typedef struct avmb1_carddef {
 #define AVM_CARDTYPE_M2 3
 typedef struct avmb1_extcarddef {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int port;
- int irq;
- int cardtype;
- int cardnr;
+  int port;
+  int irq;
+  int cardtype;
+  int cardnr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } avmb1_extcarddef;
 #define AVMB1_LOAD 0

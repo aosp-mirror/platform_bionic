@@ -23,42 +23,42 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ISDN_MAX_DRIVERS 32
 #define ISDN_MAX_CHANNELS 64
-#define IIOCNETAIF _IO('I',1)
-#define IIOCNETDIF _IO('I',2)
+#define IIOCNETAIF _IO('I', 1)
+#define IIOCNETDIF _IO('I', 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETSCF _IO('I',3)
-#define IIOCNETGCF _IO('I',4)
-#define IIOCNETANM _IO('I',5)
-#define IIOCNETDNM _IO('I',6)
+#define IIOCNETSCF _IO('I', 3)
+#define IIOCNETGCF _IO('I', 4)
+#define IIOCNETANM _IO('I', 5)
+#define IIOCNETDNM _IO('I', 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETGNM _IO('I',7)
-#define IIOCGETSET _IO('I',8)
-#define IIOCSETSET _IO('I',9)
-#define IIOCSETVER _IO('I',10)
+#define IIOCNETGNM _IO('I', 7)
+#define IIOCGETSET _IO('I', 8)
+#define IIOCSETSET _IO('I', 9)
+#define IIOCSETVER _IO('I', 10)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETHUP _IO('I',11)
-#define IIOCSETGST _IO('I',12)
-#define IIOCSETBRJ _IO('I',13)
-#define IIOCSIGPRF _IO('I',14)
+#define IIOCNETHUP _IO('I', 11)
+#define IIOCSETGST _IO('I', 12)
+#define IIOCSETBRJ _IO('I', 13)
+#define IIOCSIGPRF _IO('I', 14)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCGETPRF _IO('I',15)
-#define IIOCSETPRF _IO('I',16)
-#define IIOCGETMAP _IO('I',17)
-#define IIOCSETMAP _IO('I',18)
+#define IIOCGETPRF _IO('I', 15)
+#define IIOCSETPRF _IO('I', 16)
+#define IIOCGETMAP _IO('I', 17)
+#define IIOCSETMAP _IO('I', 18)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETASL _IO('I',19)
-#define IIOCNETDIL _IO('I',20)
-#define IIOCGETCPS _IO('I',21)
-#define IIOCGETDVR _IO('I',22)
+#define IIOCNETASL _IO('I', 19)
+#define IIOCNETDIL _IO('I', 20)
+#define IIOCGETCPS _IO('I', 21)
+#define IIOCGETDVR _IO('I', 22)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETLCR _IO('I',23)
-#define IIOCNETDWRSET _IO('I',24)
-#define IIOCNETALN _IO('I',32)
-#define IIOCNETDLN _IO('I',33)
+#define IIOCNETLCR _IO('I', 23)
+#define IIOCNETDWRSET _IO('I', 24)
+#define IIOCNETALN _IO('I', 32)
+#define IIOCNETDLN _IO('I', 33)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IIOCNETGPN _IO('I',34)
-#define IIOCDBGVAR _IO('I',127)
-#define IIOCDRVCTL _IO('I',128)
+#define IIOCNETGPN _IO('I', 34)
+#define IIOCDBGVAR _IO('I', 127)
+#define IIOCDRVCTL _IO('I', 128)
 #define SIOCGKEEPPERIOD (SIOCDEVPRIVATE + 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIOCSKEEPPERIOD (SIOCDEVPRIVATE + 1)
@@ -98,48 +98,48 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define INF_DV 0x01
 typedef struct {
- char drvid[25];
- unsigned long arg;
+  char drvid[25];
+  unsigned long arg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } isdn_ioctl_struct;
 typedef struct {
- char name[10];
- char phone[ISDN_MSNLEN];
+  char name[10];
+  char phone[ISDN_MSNLEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int outgoing;
+  int outgoing;
 } isdn_net_ioctl_phone;
 typedef struct {
- char name[10];
+  char name[10];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char master[10];
- char slave[10];
- char eaz[256];
- char drvid[25];
+  char master[10];
+  char slave[10];
+  char eaz[256];
+  char drvid[25];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int onhtime;
- int charge;
- int l2_proto;
- int l3_proto;
+  int onhtime;
+  int charge;
+  int l2_proto;
+  int l3_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int p_encap;
- int exclusive;
- int dialmax;
- int slavedelay;
+  int p_encap;
+  int exclusive;
+  int dialmax;
+  int slavedelay;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int cbdelay;
- int chargehup;
- int ihup;
- int secure;
+  int cbdelay;
+  int chargehup;
+  int ihup;
+  int secure;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int callback;
- int cbhup;
- int pppbind;
- int chargeint;
+  int callback;
+  int cbhup;
+  int pppbind;
+  int chargeint;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int triggercps;
- int dialtimeout;
- int dialwait;
- int dialmode;
+  int triggercps;
+  int dialtimeout;
+  int dialwait;
+  int dialmode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } isdn_net_ioctl_cfg;
 #define ISDN_NET_DIALMODE_MASK 0xC0
@@ -147,5 +147,5 @@ typedef struct {
 #define ISDN_NET_DM_MANUAL 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ISDN_NET_DM_AUTO 0x80
-#define ISDN_NET_DIALMODE(x) ((&(x))->flags & ISDN_NET_DIALMODE_MASK)
+#define ISDN_NET_DIALMODE(x) ((& (x))->flags & ISDN_NET_DIALMODE_MASK)
 #endif

@@ -22,27 +22,44 @@
 #include <linux/atm.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/atmioc.h>
-#define ATMSIGD_CTRL _IO('a',ATMIOC_SPECIAL)
-enum atmsvc_msg_type { as_catch_null, as_bind, as_connect, as_accept, as_reject,
- as_listen, as_okay, as_error, as_indicate, as_close,
+#define ATMSIGD_CTRL _IO('a', ATMIOC_SPECIAL)
+enum atmsvc_msg_type {
+  as_catch_null,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- as_itf_notify, as_modify, as_identify, as_terminate,
- as_addparty, as_dropparty };
+  as_bind,
+  as_connect,
+  as_accept,
+  as_reject,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  as_listen,
+  as_okay,
+  as_error,
+  as_indicate,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  as_close,
+  as_itf_notify,
+  as_modify,
+  as_identify,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  as_terminate,
+  as_addparty,
+  as_dropparty
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct atmsvc_msg {
- enum atmsvc_msg_type type;
+  enum atmsvc_msg_type type;
+  atm_kptr_t vcc;
+  atm_kptr_t listen_vcc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- atm_kptr_t vcc;
- atm_kptr_t listen_vcc;
- int reply;
- struct sockaddr_atmpvc pvc;
+  int reply;
+  struct sockaddr_atmpvc pvc;
+  struct sockaddr_atmsvc local;
+  struct atm_qos qos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr_atmsvc local;
- struct atm_qos qos;
- struct atm_sap sap;
- unsigned int session;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr_atmsvc svc;
+  struct atm_sap sap;
+  unsigned int session;
+  struct sockaddr_atmsvc svc;
 } __ATM_API_ALIGN;
-#define SELECT_TOP_PCR(tp) ((tp).pcr ? (tp).pcr :   (tp).max_pcr && (tp).max_pcr != ATM_MAX_PCR ? (tp).max_pcr :   (tp).min_pcr ? (tp).min_pcr : ATM_MAX_PCR)
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SELECT_TOP_PCR(tp) ((tp).pcr ? (tp).pcr : (tp).max_pcr && (tp).max_pcr != ATM_MAX_PCR ? (tp).max_pcr : (tp).min_pcr ? (tp).min_pcr : ATM_MAX_PCR)
+#endif

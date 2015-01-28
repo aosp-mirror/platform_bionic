@@ -24,13 +24,13 @@
 #define XT_NFLOG_DEFAULT_THRESHOLD 0
 #define XT_NFLOG_MASK 0x0
 struct xt_nflog_info {
- __u32 len;
+  __u32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 group;
- __u16 threshold;
- __u16 flags;
- __u16 pad;
+  __u16 group;
+  __u16 threshold;
+  __u16 flags;
+  __u16 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char prefix[64];
+  char prefix[64];
 };
 #endif

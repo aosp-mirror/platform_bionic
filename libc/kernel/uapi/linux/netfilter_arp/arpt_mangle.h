@@ -21,26 +21,25 @@
 #include <linux/netfilter_arp/arp_tables.h>
 #define ARPT_MANGLE_ADDR_LEN_MAX sizeof(struct in_addr)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct arpt_mangle
-{
- char src_devaddr[ARPT_DEV_ADDR_LEN_MAX];
- char tgt_devaddr[ARPT_DEV_ADDR_LEN_MAX];
+struct arpt_mangle {
+  char src_devaddr[ARPT_DEV_ADDR_LEN_MAX];
+  char tgt_devaddr[ARPT_DEV_ADDR_LEN_MAX];
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct in_addr src_ip;
- } u_s;
- union {
+    struct in_addr src_ip;
+  } u_s;
+  union {
+    struct in_addr tgt_ip;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in_addr tgt_ip;
- } u_t;
- __u8 flags;
- int target;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  } u_t;
+  __u8 flags;
+  int target;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_MANGLE_SDEV 0x01
 #define ARPT_MANGLE_TDEV 0x02
 #define ARPT_MANGLE_SIP 0x04
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_MANGLE_TIP 0x08
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_MANGLE_MASK 0x0f
 #endif

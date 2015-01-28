@@ -21,9 +21,9 @@
 #include <linux/types.h>
 #include <linux/videodev2.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIDIOC_VSP1_LUT_CONFIG   _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct vsp1_lut_config)
+#define VIDIOC_VSP1_LUT_CONFIG _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct vsp1_lut_config)
 struct vsp1_lut_config {
- u32 lut[256];
+  u32 lut[256];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -21,10 +21,10 @@
 #include <linux/types.h>
 struct ip6t_ah {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 spis[2];
- __u32 hdrlen;
- __u8 hdrres;
- __u8 invflags;
+  __u32 spis[2];
+  __u32 hdrlen;
+  __u8 hdrres;
+  __u8 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IP6T_AH_SPI 0x01

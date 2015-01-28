@@ -26,7 +26,7 @@
 #define __KVM_HAVE_IRQ_LINE
 #define __KVM_HAVE_READONLY_MEM
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define KVM_REG_SIZE(id)   (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+#define KVM_REG_SIZE(id) (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
 #define KVM_ARM_SVC_sp svc_regs[0]
 #define KVM_ARM_SVC_lr svc_regs[1]
 #define KVM_ARM_SVC_spsr svc_regs[2]
@@ -53,13 +53,13 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_ARM_FIQ_spsr fiq_regs[7]
 struct kvm_regs {
- struct pt_regs usr_regs;
- unsigned long svc_regs[3];
+  struct pt_regs usr_regs;
+  unsigned long svc_regs[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long abt_regs[3];
- unsigned long und_regs[3];
- unsigned long irq_regs[3];
- unsigned long fiq_regs[8];
+  unsigned long abt_regs[3];
+  unsigned long und_regs[3];
+  unsigned long irq_regs[3];
+  unsigned long fiq_regs[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define KVM_ARM_TARGET_CORTEX_A15 0
@@ -81,8 +81,8 @@ struct kvm_regs {
 #define KVM_ARM_VCPU_PSCI_0_2 1
 struct kvm_vcpu_init {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 target;
- __u32 features[7];
+  __u32 target;
+  __u32 features[7];
 };
 struct kvm_sregs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -112,11 +112,11 @@ struct kvm_arch_memory_slot {
 #define KVM_REG_ARM_32_CRN_MASK 0x0000000000007800
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_REG_ARM_32_CRN_SHIFT 11
-#define ARM_CP15_REG_SHIFT_MASK(x,n)   (((x) << KVM_REG_ARM_ ## n ## _SHIFT) & KVM_REG_ARM_ ## n ## _MASK)
-#define __ARM_CP15_REG(op1,crn,crm,op2)   (KVM_REG_ARM | (15 << KVM_REG_ARM_COPROC_SHIFT) |   ARM_CP15_REG_SHIFT_MASK(op1, OPC1) |   ARM_CP15_REG_SHIFT_MASK(crn, 32_CRN) |   ARM_CP15_REG_SHIFT_MASK(crm, CRM) |   ARM_CP15_REG_SHIFT_MASK(op2, 32_OPC2))
+#define ARM_CP15_REG_SHIFT_MASK(x,n) (((x) << KVM_REG_ARM_ ##n ##_SHIFT) & KVM_REG_ARM_ ##n ##_MASK)
+#define __ARM_CP15_REG(op1,crn,crm,op2) (KVM_REG_ARM | (15 << KVM_REG_ARM_COPROC_SHIFT) | ARM_CP15_REG_SHIFT_MASK(op1, OPC1) | ARM_CP15_REG_SHIFT_MASK(crn, 32_CRN) | ARM_CP15_REG_SHIFT_MASK(crm, CRM) | ARM_CP15_REG_SHIFT_MASK(op2, 32_OPC2))
 #define ARM_CP15_REG32(...) (__ARM_CP15_REG(__VA_ARGS__) | KVM_REG_SIZE_U32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __ARM_CP15_REG64(op1,crm)   (__ARM_CP15_REG(op1, 0, crm, 0) | KVM_REG_SIZE_U64)
+#define __ARM_CP15_REG64(op1,crm) (__ARM_CP15_REG(op1, 0, crm, 0) | KVM_REG_SIZE_U64)
 #define ARM_CP15_REG64(...) __ARM_CP15_REG64(__VA_ARGS__)
 #define KVM_REG_ARM_TIMER_CTL ARM_CP15_REG32(0, 14, 3, 1)
 #define KVM_REG_ARM_TIMER_CNT ARM_CP15_REG64(1, 14)

@@ -60,12 +60,7 @@
 #   using them anyway.
 #
 #
-# 3. Whitespace cleanup:
-#
-#   The final pass removes any comments and empty lines from the final headers.
-#
-#
-# 4. Add a standard disclaimer:
+# 3. Add a standard disclaimer:
 #
 #   The message:
 #
@@ -141,8 +136,9 @@ def cleanupFile(path, original_path):
 
     # now, let's parse the file
     #
-    blocks = cpp.BlockParser().parseFile(path)
-    if not blocks:
+    parser = cpp.BlockParser()
+    blocks = parser.parseFile(path)
+    if not parser.parsed:
         sys.stderr.write( "error: can't parse '%s'" % path )
         sys.exit(1)
 
@@ -157,9 +153,7 @@ def cleanupFile(path, original_path):
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs( statics )
     blocks.replaceTokens( kernel_token_replacements )
-    blocks.removeComments()
     blocks.removeMacroDefines( kernel_ignored_macros )
-    blocks.removeWhiteSpace()
 
     out = StringOutput()
     out.write( kernel_disclaimer )

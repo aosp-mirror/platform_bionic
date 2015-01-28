@@ -49,10 +49,10 @@
 #define PTRACE_LISTEN 0x4208
 #define PTRACE_PEEKSIGINFO 0x4209
 struct ptrace_peeksiginfo_args {
- __u64 off;
+  __u64 off;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __s32 nr;
+  __u32 flags;
+  __s32 nr;
 };
 #define PTRACE_GETSIGMASK 0x420a
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

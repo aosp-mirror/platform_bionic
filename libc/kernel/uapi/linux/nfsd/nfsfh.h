@@ -26,33 +26,33 @@
 #include <linux/nfs4.h>
 struct nfs_fhbase_old {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fb_dcookie;
- __u32 fb_ino;
- __u32 fb_dirino;
- __u32 fb_dev;
+  __u32 fb_dcookie;
+  __u32 fb_ino;
+  __u32 fb_dirino;
+  __u32 fb_dev;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fb_xdev;
- __u32 fb_xino;
- __u32 fb_generation;
+  __u32 fb_xdev;
+  __u32 fb_xino;
+  __u32 fb_generation;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nfs_fhbase_new {
- __u8 fb_version;
- __u8 fb_auth_type;
- __u8 fb_fsid_type;
+  __u8 fb_version;
+  __u8 fb_auth_type;
+  __u8 fb_fsid_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 fb_fileid_type;
- __u32 fb_auth[1];
+  __u8 fb_fileid_type;
+  __u32 fb_auth[1];
 };
 struct knfsd_fh {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int fh_size;
- union {
- struct nfs_fhbase_old fh_old;
- __u32 fh_pad[NFS4_FHSIZE/4];
+  unsigned int fh_size;
+  union {
+    struct nfs_fhbase_old fh_old;
+    __u32 fh_pad[NFS4_FHSIZE / 4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct nfs_fhbase_new fh_new;
- } fh_base;
+    struct nfs_fhbase_new fh_new;
+  } fh_base;
 };
 #define ofh_dcookie fh_base.fh_old.fb_dcookie
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

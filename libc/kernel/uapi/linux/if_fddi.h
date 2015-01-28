@@ -56,38 +56,38 @@
 #define FDDI_UI_CMD 0x03
 struct fddi_8022_1_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dsap;
- __u8 ssap;
- __u8 ctrl;
+  __u8 dsap;
+  __u8 ssap;
+  __u8 ctrl;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct fddi_8022_2_hdr {
- __u8 dsap;
- __u8 ssap;
- __u8 ctrl_1;
+  __u8 dsap;
+  __u8 ssap;
+  __u8 ctrl_1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ctrl_2;
+  __u8 ctrl_2;
 } __attribute__((packed));
 struct fddi_snap_hdr {
- __u8 dsap;
+  __u8 dsap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ssap;
- __u8 ctrl;
- __u8 oui[FDDI_K_OUI_LEN];
- __be16 ethertype;
+  __u8 ssap;
+  __u8 ctrl;
+  __u8 oui[FDDI_K_OUI_LEN];
+  __be16 ethertype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct fddihdr {
- __u8 fc;
- __u8 daddr[FDDI_K_ALEN];
+  __u8 fc;
+  __u8 daddr[FDDI_K_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 saddr[FDDI_K_ALEN];
- union {
- struct fddi_8022_1_hdr llc_8022_1;
- struct fddi_8022_2_hdr llc_8022_2;
+  __u8 saddr[FDDI_K_ALEN];
+  union {
+    struct fddi_8022_1_hdr llc_8022_1;
+    struct fddi_8022_2_hdr llc_8022_2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct fddi_snap_hdr llc_snap;
- } hdr;
+    struct fddi_snap_hdr llc_snap;
+  } hdr;
 } __attribute__((packed));
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -23,28 +23,28 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_STRING_MAX_ALGO_NAME_SIZE 16
 enum {
- XT_STRING_FLAG_INVERT = 0x01,
- XT_STRING_FLAG_IGNORECASE = 0x02
+  XT_STRING_FLAG_INVERT = 0x01,
+  XT_STRING_FLAG_IGNORECASE = 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct xt_string_info {
- __u16 from_offset;
- __u16 to_offset;
+  __u16 from_offset;
+  __u16 to_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char algo[XT_STRING_MAX_ALGO_NAME_SIZE];
- char pattern[XT_STRING_MAX_PATTERN_SIZE];
- __u8 patlen;
- union {
+  char algo[XT_STRING_MAX_ALGO_NAME_SIZE];
+  char pattern[XT_STRING_MAX_PATTERN_SIZE];
+  __u8 patlen;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u8 invert;
- } v0;
- struct {
+    struct {
+      __u8 invert;
+    } v0;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 flags;
- } v1;
- } u;
- struct ts_config __attribute__((aligned(8))) *config;
+      __u8 flags;
+    } v1;
+  } u;
+  struct ts_config __attribute__((aligned(8))) * config;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

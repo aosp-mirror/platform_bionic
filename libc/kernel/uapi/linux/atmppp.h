@@ -24,8 +24,8 @@
 #define PPPOATM_ENCAPS_VC (1)
 #define PPPOATM_ENCAPS_LLC (2)
 struct atm_backend_ppp {
- atm_backend_t backend_num;
+  atm_backend_t backend_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int encaps;
+  int encaps;
 };
 #endif

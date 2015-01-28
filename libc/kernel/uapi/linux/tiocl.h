@@ -29,12 +29,12 @@
 #define TIOCL_SELMOUSEREPORT 16
 #define TIOCL_SELBUTTONMASK 15
 struct tiocl_selection {
- unsigned short xs;
+  unsigned short xs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short ys;
- unsigned short xe;
- unsigned short ye;
- unsigned short sel_mode;
+  unsigned short ys;
+  unsigned short xe;
+  unsigned short ye;
+  unsigned short sel_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TIOCL_PASTESEL 3

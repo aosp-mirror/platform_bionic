@@ -36,14 +36,14 @@
 #define __KVM_HAVE_IRQ_LINE
 #define __KVM_HAVE_READONLY_MEM
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define KVM_REG_SIZE(id)   (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+#define KVM_REG_SIZE(id) (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
 struct kvm_regs {
- struct user_pt_regs regs;
- __u64 sp_el1;
+  struct user_pt_regs regs;
+  __u64 sp_el1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 elr_el1;
- __u64 spsr[KVM_NR_SPSR];
- struct user_fpsimd_state fp_regs;
+  __u64 elr_el1;
+  __u64 spsr[KVM_NR_SPSR];
+  struct user_fpsimd_state fp_regs;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_ARM_TARGET_AEM_V8 0
@@ -69,9 +69,9 @@ struct kvm_regs {
 #define KVM_ARM_VCPU_EL1_32BIT 1
 #define KVM_ARM_VCPU_PSCI_0_2 2
 struct kvm_vcpu_init {
- __u32 target;
+  __u32 target;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 features[7];
+  __u32 features[7];
 };
 struct kvm_sregs {
 };
@@ -114,9 +114,9 @@ struct kvm_arch_memory_slot {
 #define KVM_REG_ARM64_SYSREG_CRM_SHIFT 3
 #define KVM_REG_ARM64_SYSREG_OP2_MASK 0x0000000000000007
 #define KVM_REG_ARM64_SYSREG_OP2_SHIFT 0
-#define ARM64_SYS_REG_SHIFT_MASK(x,n)   (((x) << KVM_REG_ARM64_SYSREG_ ## n ## _SHIFT) &   KVM_REG_ARM64_SYSREG_ ## n ## _MASK)
+#define ARM64_SYS_REG_SHIFT_MASK(x,n) (((x) << KVM_REG_ARM64_SYSREG_ ##n ##_SHIFT) & KVM_REG_ARM64_SYSREG_ ##n ##_MASK)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __ARM64_SYS_REG(op0,op1,crn,crm,op2)   (KVM_REG_ARM64 | KVM_REG_ARM64_SYSREG |   ARM64_SYS_REG_SHIFT_MASK(op0, OP0) |   ARM64_SYS_REG_SHIFT_MASK(op1, OP1) |   ARM64_SYS_REG_SHIFT_MASK(crn, CRN) |   ARM64_SYS_REG_SHIFT_MASK(crm, CRM) |   ARM64_SYS_REG_SHIFT_MASK(op2, OP2))
+#define __ARM64_SYS_REG(op0,op1,crn,crm,op2) (KVM_REG_ARM64 | KVM_REG_ARM64_SYSREG | ARM64_SYS_REG_SHIFT_MASK(op0, OP0) | ARM64_SYS_REG_SHIFT_MASK(op1, OP1) | ARM64_SYS_REG_SHIFT_MASK(crn, CRN) | ARM64_SYS_REG_SHIFT_MASK(crm, CRM) | ARM64_SYS_REG_SHIFT_MASK(op2, OP2))
 #define ARM64_SYS_REG(...) (__ARM64_SYS_REG(__VA_ARGS__) | KVM_REG_SIZE_U64)
 #define KVM_REG_ARM_TIMER_CTL ARM64_SYS_REG(3, 3, 14, 3, 1)
 #define KVM_REG_ARM_TIMER_CNT ARM64_SYS_REG(3, 3, 14, 3, 2)

@@ -183,31 +183,31 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FB_CAP_FOURCC 1
 struct fb_fix_screeninfo {
- char id[16];
- unsigned long smem_start;
+  char id[16];
+  unsigned long smem_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 smem_len;
- __u32 type;
- __u32 type_aux;
- __u32 visual;
+  __u32 smem_len;
+  __u32 type;
+  __u32 type_aux;
+  __u32 visual;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 xpanstep;
- __u16 ypanstep;
- __u16 ywrapstep;
- __u32 line_length;
+  __u16 xpanstep;
+  __u16 ypanstep;
+  __u16 ywrapstep;
+  __u32 line_length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long mmio_start;
- __u32 mmio_len;
- __u32 accel;
- __u16 capabilities;
+  unsigned long mmio_start;
+  __u32 mmio_len;
+  __u32 accel;
+  __u16 capabilities;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 reserved[2];
+  __u16 reserved[2];
 };
 struct fb_bitfield {
- __u32 offset;
+  __u32 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 length;
- __u32 msb_right;
+  __u32 length;
+  __u32 msb_right;
 };
 #define FB_NONSTD_HAM 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -247,61 +247,61 @@ struct fb_bitfield {
 #define FB_ROTATE_UD 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FB_ROTATE_CCW 3
-#define PICOS2KHZ(a) (1000000000UL/(a))
-#define KHZ2PICOS(a) (1000000000UL/(a))
+#define PICOS2KHZ(a) (1000000000UL / (a))
+#define KHZ2PICOS(a) (1000000000UL / (a))
 struct fb_var_screeninfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 xres;
- __u32 yres;
- __u32 xres_virtual;
- __u32 yres_virtual;
+  __u32 xres;
+  __u32 yres;
+  __u32 xres_virtual;
+  __u32 yres_virtual;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 xoffset;
- __u32 yoffset;
- __u32 bits_per_pixel;
- __u32 grayscale;
+  __u32 xoffset;
+  __u32 yoffset;
+  __u32 bits_per_pixel;
+  __u32 grayscale;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct fb_bitfield red;
- struct fb_bitfield green;
- struct fb_bitfield blue;
- struct fb_bitfield transp;
+  struct fb_bitfield red;
+  struct fb_bitfield green;
+  struct fb_bitfield blue;
+  struct fb_bitfield transp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 nonstd;
- __u32 activate;
- __u32 height;
- __u32 width;
+  __u32 nonstd;
+  __u32 activate;
+  __u32 height;
+  __u32 width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 accel_flags;
- __u32 pixclock;
- __u32 left_margin;
- __u32 right_margin;
+  __u32 accel_flags;
+  __u32 pixclock;
+  __u32 left_margin;
+  __u32 right_margin;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 upper_margin;
- __u32 lower_margin;
- __u32 hsync_len;
- __u32 vsync_len;
+  __u32 upper_margin;
+  __u32 lower_margin;
+  __u32 hsync_len;
+  __u32 vsync_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sync;
- __u32 vmode;
- __u32 rotate;
- __u32 colorspace;
+  __u32 sync;
+  __u32 vmode;
+  __u32 rotate;
+  __u32 colorspace;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[4];
+  __u32 reserved[4];
 };
 struct fb_cmap {
- __u32 start;
+  __u32 start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 len;
- __u16 *red;
- __u16 *green;
- __u16 *blue;
+  __u32 len;
+  __u16 * red;
+  __u16 * green;
+  __u16 * blue;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 *transp;
+  __u16 * transp;
 };
 struct fb_con2fbmap {
- __u32 console;
+  __u32 console;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 framebuffer;
+  __u32 framebuffer;
 };
 #define VESA_NO_BLANKING 0
 #define VESA_VSYNC_SUSPEND 1
@@ -309,12 +309,12 @@ struct fb_con2fbmap {
 #define VESA_HSYNC_SUSPEND 2
 #define VESA_POWERDOWN 3
 enum {
- FB_BLANK_UNBLANK = VESA_NO_BLANKING,
+  FB_BLANK_UNBLANK = VESA_NO_BLANKING,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FB_BLANK_NORMAL = VESA_NO_BLANKING + 1,
- FB_BLANK_VSYNC_SUSPEND = VESA_VSYNC_SUSPEND + 1,
- FB_BLANK_HSYNC_SUSPEND = VESA_HSYNC_SUSPEND + 1,
- FB_BLANK_POWERDOWN = VESA_POWERDOWN + 1
+  FB_BLANK_NORMAL = VESA_NO_BLANKING + 1,
+  FB_BLANK_VSYNC_SUSPEND = VESA_VSYNC_SUSPEND + 1,
+  FB_BLANK_HSYNC_SUSPEND = VESA_HSYNC_SUSPEND + 1,
+  FB_BLANK_POWERDOWN = VESA_POWERDOWN + 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define FB_VBLANK_VBLANKING 0x001
@@ -329,49 +329,49 @@ enum {
 #define FB_VBLANK_VSYNCING 0x080
 #define FB_VBLANK_HAVE_VSYNC 0x100
 struct fb_vblank {
- __u32 flags;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 count;
- __u32 vcount;
- __u32 hcount;
- __u32 reserved[4];
+  __u32 count;
+  __u32 vcount;
+  __u32 hcount;
+  __u32 reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ROP_COPY 0
 #define ROP_XOR 1
 struct fb_copyarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dx;
- __u32 dy;
- __u32 width;
- __u32 height;
+  __u32 dx;
+  __u32 dy;
+  __u32 width;
+  __u32 height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sx;
- __u32 sy;
+  __u32 sx;
+  __u32 sy;
 };
 struct fb_fillrect {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dx;
- __u32 dy;
- __u32 width;
- __u32 height;
+  __u32 dx;
+  __u32 dy;
+  __u32 width;
+  __u32 height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 color;
- __u32 rop;
+  __u32 color;
+  __u32 rop;
 };
 struct fb_image {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dx;
- __u32 dy;
- __u32 width;
- __u32 height;
+  __u32 dx;
+  __u32 dy;
+  __u32 width;
+  __u32 height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fg_color;
- __u32 bg_color;
- __u8 depth;
- const char *data;
+  __u32 fg_color;
+  __u32 bg_color;
+  __u8 depth;
+  const char * data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct fb_cmap cmap;
+  struct fb_cmap cmap;
 };
 #define FB_CUR_SETIMAGE 0x01
 #define FB_CUR_SETPOS 0x02
@@ -383,17 +383,17 @@ struct fb_image {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FB_CUR_SETALL 0xFF
 struct fbcurpos {
- __u16 x, y;
+  __u16 x, y;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct fb_cursor {
- __u16 set;
- __u16 enable;
- __u16 rop;
+  __u16 set;
+  __u16 enable;
+  __u16 rop;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- const char *mask;
- struct fbcurpos hot;
- struct fb_image image;
+  const char * mask;
+  struct fbcurpos hot;
+  struct fb_image image;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

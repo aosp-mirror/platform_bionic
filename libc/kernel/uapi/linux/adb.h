@@ -21,8 +21,8 @@
 #define ADB_BUSRESET 0
 #define ADB_FLUSH(id) (0x01 | ((id) << 4))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ADB_WRITEREG(id, reg) (0x08 | (reg) | ((id) << 4))
-#define ADB_READREG(id, reg) (0x0C | (reg) | ((id) << 4))
+#define ADB_WRITEREG(id,reg) (0x08 | (reg) | ((id) << 4))
+#define ADB_READREG(id,reg) (0x0C | (reg) | ((id) << 4))
 #define ADB_DONGLE 1
 #define ADB_KEYBOARD 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

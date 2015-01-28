@@ -51,28 +51,28 @@
 #ifndef __ASSEMBLY__
 struct user_pt_regs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 regs[31];
- __u64 sp;
- __u64 pc;
- __u64 pstate;
+  __u64 regs[31];
+  __u64 sp;
+  __u64 pc;
+  __u64 pstate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct user_fpsimd_state {
- __uint128_t vregs[32];
- __u32 fpsr;
+  __uint128_t vregs[32];
+  __u32 fpsr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fpcr;
+  __u32 fpcr;
 };
 struct user_hwdebug_state {
- __u32 dbg_info;
+  __u32 dbg_info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
- struct {
- __u64 addr;
- __u32 ctrl;
+  __u32 pad;
+  struct {
+    __u64 addr;
+    __u32 ctrl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
- } dbg_regs[16];
+    __u32 pad;
+  } dbg_regs[16];
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

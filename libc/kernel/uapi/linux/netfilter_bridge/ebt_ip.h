@@ -27,22 +27,22 @@
 #define EBT_IP_SPORT 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EBT_IP_DPORT 0x20
-#define EBT_IP_MASK (EBT_IP_SOURCE | EBT_IP_DEST | EBT_IP_TOS | EBT_IP_PROTO |  EBT_IP_SPORT | EBT_IP_DPORT )
+#define EBT_IP_MASK (EBT_IP_SOURCE | EBT_IP_DEST | EBT_IP_TOS | EBT_IP_PROTO | EBT_IP_SPORT | EBT_IP_DPORT)
 #define EBT_IP_MATCH "ip"
 struct ebt_ip_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 saddr;
- __be32 daddr;
- __be32 smsk;
- __be32 dmsk;
+  __be32 saddr;
+  __be32 daddr;
+  __be32 smsk;
+  __be32 dmsk;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 tos;
- __u8 protocol;
- __u8 bitmask;
- __u8 invflags;
+  __u8 tos;
+  __u8 protocol;
+  __u8 bitmask;
+  __u8 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sport[2];
- __u16 dport[2];
+  __u16 sport[2];
+  __u16 dport[2];
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -23,10 +23,10 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PPP_FCSLEN 2
 #define PPP_MRU 1500
-#define PPP_ADDRESS(p) (((__u8 *)(p))[0])
-#define PPP_CONTROL(p) (((__u8 *)(p))[1])
+#define PPP_ADDRESS(p) (((__u8 *) (p))[0])
+#define PPP_CONTROL(p) (((__u8 *) (p))[1])
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PPP_PROTOCOL(p) ((((__u8 *)(p))[2] << 8) + ((__u8 *)(p))[3])
+#define PPP_PROTOCOL(p) ((((__u8 *) (p))[2] << 8) + ((__u8 *) (p))[3])
 #define PPP_ALLSTATIONS 0xff
 #define PPP_UI 0x03
 #define PPP_FLAG 0x7e
@@ -67,68 +67,68 @@
 typedef __u32 ext_accm[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum NPmode {
- NPMODE_PASS,
- NPMODE_DROP,
- NPMODE_ERROR,
+  NPMODE_PASS,
+  NPMODE_DROP,
+  NPMODE_ERROR,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- NPMODE_QUEUE
+  NPMODE_QUEUE
 };
 struct pppstat {
- __u32 ppp_discards;
+  __u32 ppp_discards;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ppp_ibytes;
- __u32 ppp_ioctects;
- __u32 ppp_ipackets;
- __u32 ppp_ierrors;
+  __u32 ppp_ibytes;
+  __u32 ppp_ioctects;
+  __u32 ppp_ipackets;
+  __u32 ppp_ierrors;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ppp_ilqrs;
- __u32 ppp_obytes;
- __u32 ppp_ooctects;
- __u32 ppp_opackets;
+  __u32 ppp_ilqrs;
+  __u32 ppp_obytes;
+  __u32 ppp_ooctects;
+  __u32 ppp_opackets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ppp_oerrors;
- __u32 ppp_olqrs;
+  __u32 ppp_oerrors;
+  __u32 ppp_olqrs;
 };
 struct vjstat {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 vjs_packets;
- __u32 vjs_compressed;
- __u32 vjs_searches;
- __u32 vjs_misses;
+  __u32 vjs_packets;
+  __u32 vjs_compressed;
+  __u32 vjs_searches;
+  __u32 vjs_misses;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 vjs_uncompressedin;
- __u32 vjs_compressedin;
- __u32 vjs_errorin;
- __u32 vjs_tossed;
+  __u32 vjs_uncompressedin;
+  __u32 vjs_compressedin;
+  __u32 vjs_errorin;
+  __u32 vjs_tossed;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct compstat {
- __u32 unc_bytes;
- __u32 unc_packets;
+  __u32 unc_bytes;
+  __u32 unc_packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 comp_bytes;
- __u32 comp_packets;
- __u32 inc_bytes;
- __u32 inc_packets;
+  __u32 comp_bytes;
+  __u32 comp_packets;
+  __u32 inc_bytes;
+  __u32 inc_packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 in_count;
- __u32 bytes_out;
- double ratio;
+  __u32 in_count;
+  __u32 bytes_out;
+  double ratio;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ppp_stats {
- struct pppstat p;
- struct vjstat vj;
+  struct pppstat p;
+  struct vjstat vj;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ppp_comp_stats {
- struct compstat c;
- struct compstat d;
+  struct compstat c;
+  struct compstat d;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ppp_idle {
- __kernel_time_t xmit_idle;
- __kernel_time_t recv_idle;
+  __kernel_time_t xmit_idle;
+  __kernel_time_t recv_idle;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

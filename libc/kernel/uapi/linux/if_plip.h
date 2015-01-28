@@ -22,9 +22,9 @@
 #define SIOCDEVPLIP SIOCDEVPRIVATE
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct plipconf {
- unsigned short pcmd;
- unsigned long nibble;
- unsigned long trigger;
+  unsigned short pcmd;
+  unsigned long nibble;
+  unsigned long trigger;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PLIP_GET_TIMEOUT 0x1

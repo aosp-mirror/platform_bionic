@@ -48,38 +48,38 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SNDRV_SB_CSP_MAX_MICROCODE_FILE_SIZE 0x3000
 struct snd_sb_csp_mc_header {
- char codec_name[16];
- unsigned short func_req;
+  char codec_name[16];
+  unsigned short func_req;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct snd_sb_csp_microcode {
- struct snd_sb_csp_mc_header info;
- unsigned char data[SNDRV_SB_CSP_MAX_MICROCODE_FILE_SIZE];
+  struct snd_sb_csp_mc_header info;
+  unsigned char data[SNDRV_SB_CSP_MAX_MICROCODE_FILE_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct snd_sb_csp_start {
- int sample_width;
- int channels;
+  int sample_width;
+  int channels;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct snd_sb_csp_info {
- char codec_name[16];
- unsigned short func_nr;
+  char codec_name[16];
+  unsigned short func_nr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int acc_format;
- unsigned short acc_channels;
- unsigned short acc_width;
- unsigned short acc_rates;
+  unsigned int acc_format;
+  unsigned short acc_channels;
+  unsigned short acc_width;
+  unsigned short acc_rates;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short csp_mode;
- unsigned short run_channels;
- unsigned short run_width;
- unsigned short version;
+  unsigned short csp_mode;
+  unsigned short run_channels;
+  unsigned short run_width;
+  unsigned short version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short state;
+  unsigned short state;
 };
 #define SNDRV_SB_CSP_IOCTL_INFO _IOR('H', 0x10, struct snd_sb_csp_info)
-#define SNDRV_SB_CSP_IOCTL_LOAD_CODE   _IOC(_IOC_WRITE, 'H', 0x11, sizeof(struct snd_sb_csp_microcode))
+#define SNDRV_SB_CSP_IOCTL_LOAD_CODE _IOC(_IOC_WRITE, 'H', 0x11, sizeof(struct snd_sb_csp_microcode))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SNDRV_SB_CSP_IOCTL_UNLOAD_CODE _IO('H', 0x12)
 #define SNDRV_SB_CSP_IOCTL_START _IOW('H', 0x13, struct snd_sb_csp_start)

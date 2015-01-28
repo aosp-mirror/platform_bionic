@@ -21,9 +21,9 @@
 #include <linux/atmioc.h>
 struct eni_multipliers {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int tx,rx;
+  int tx, rx;
 };
-#define ENI_MEMDUMP _IOW('a',ATMIOC_SARPRV,struct atmif_sioc)
-#define ENI_SETMULT _IOW('a',ATMIOC_SARPRV+7,struct atmif_sioc)
+#define ENI_MEMDUMP _IOW('a', ATMIOC_SARPRV, struct atmif_sioc)
+#define ENI_SETMULT _IOW('a', ATMIOC_SARPRV + 7, struct atmif_sioc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

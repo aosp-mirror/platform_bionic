@@ -27,22 +27,22 @@
 #define NETROM_T4 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NETROM_IDLE 7
-#define SIOCNRDECOBS (SIOCPROTOPRIVATE+2)
+#define SIOCNRDECOBS (SIOCPROTOPRIVATE + 2)
 struct nr_route_struct {
 #define NETROM_NEIGH 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NETROM_NODE 1
- int type;
- ax25_address callsign;
- char device[16];
+  int type;
+  ax25_address callsign;
+  char device[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int quality;
- char mnemonic[7];
- ax25_address neighbour;
- unsigned int obs_count;
+  unsigned int quality;
+  char mnemonic[7];
+  ax25_address neighbour;
+  unsigned int obs_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int ndigis;
- ax25_address digipeaters[AX25_MAX_DIGIS];
+  unsigned int ndigis;
+  ax25_address digipeaters[AX25_MAX_DIGIS];
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -58,13 +58,13 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PKT_CTRL_CMD_STATUS 2
 struct pkt_ctrl_command {
- __u32 command;
- __u32 dev_index;
+  __u32 command;
+  __u32 dev_index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dev;
- __u32 pkt_dev;
- __u32 num_devices;
- __u32 padding;
+  __u32 dev;
+  __u32 pkt_dev;
+  __u32 num_devices;
+  __u32 padding;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PACKET_IOCTL_MAGIC ('X')

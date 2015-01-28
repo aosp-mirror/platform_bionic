@@ -87,7 +87,7 @@
 #ifndef __ASSEMBLY__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- unsigned long sig[_NSIG_WORDS];
+  unsigned long sig[_NSIG_WORDS];
 } sigset_t;
 typedef unsigned long old_sigset_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -97,19 +97,19 @@ typedef unsigned long old_sigset_t;
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sigaction {
- __sighandler_t sa_handler;
- unsigned long sa_flags;
+  __sighandler_t sa_handler;
+  unsigned long sa_flags;
 #ifdef SA_RESTORER
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __sigrestore_t sa_restorer;
+  __sigrestore_t sa_restorer;
 #endif
- sigset_t sa_mask;
+  sigset_t sa_mask;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct sigaltstack {
- void __user *ss_sp;
- int ss_flags;
- size_t ss_size;
+  void __user * ss_sp;
+  int ss_flags;
+  size_t ss_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } stack_t;
 #endif

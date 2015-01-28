@@ -43,32 +43,32 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIOCPNDELRESOURCE (SIOCPROTOPRIVATE + 15)
 struct phonethdr {
- __u8 pn_rdev;
- __u8 pn_sdev;
+  __u8 pn_rdev;
+  __u8 pn_sdev;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 pn_res;
- __be16 pn_length;
- __u8 pn_robj;
- __u8 pn_sobj;
+  __u8 pn_res;
+  __be16 pn_length;
+  __u8 pn_robj;
+  __u8 pn_sobj;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct phonetmsg {
- __u8 pn_trans_id;
- __u8 pn_msg_id;
+  __u8 pn_trans_id;
+  __u8 pn_msg_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- __u8 pn_submsg_id;
- __u8 pn_data[5];
+  union {
+    struct {
+      __u8 pn_submsg_id;
+      __u8 pn_data[5];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } base;
- struct {
- __u16 pn_e_res_id;
- __u8 pn_e_submsg_id;
+    } base;
+    struct {
+      __u16 pn_e_res_id;
+      __u8 pn_e_submsg_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 pn_e_data[3];
- } ext;
- } pn_msg_u;
+      __u8 pn_e_data[3];
+    } ext;
+  } pn_msg_u;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PN_COMMON_MESSAGE 0xF0
@@ -89,12 +89,12 @@ struct phonetmsg {
 #define pn_e_orig_msg_id pn_e_data[0]
 #define pn_e_status pn_e_data[1]
 struct sockaddr_pn {
- __kernel_sa_family_t spn_family;
+  __kernel_sa_family_t spn_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 spn_obj;
- __u8 spn_dev;
- __u8 spn_resource;
- __u8 spn_zero[sizeof(struct sockaddr) - sizeof(__kernel_sa_family_t) - 3];
+  __u8 spn_obj;
+  __u8 spn_dev;
+  __u8 spn_resource;
+  __u8 spn_zero[sizeof(struct sockaddr) - sizeof(__kernel_sa_family_t) - 3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 #define PN_DEV_PC 0x10

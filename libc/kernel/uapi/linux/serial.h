@@ -22,28 +22,28 @@
 #include <linux/tty_flags.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct serial_struct {
- int type;
- int line;
- unsigned int port;
+  int type;
+  int line;
+  unsigned int port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int irq;
- int flags;
- int xmit_fifo_size;
- int custom_divisor;
+  int irq;
+  int flags;
+  int xmit_fifo_size;
+  int custom_divisor;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int baud_base;
- unsigned short close_delay;
- char io_type;
- char reserved_char[1];
+  int baud_base;
+  unsigned short close_delay;
+  char io_type;
+  char reserved_char[1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int hub6;
- unsigned short closing_wait;
- unsigned short closing_wait2;
- unsigned char *iomem_base;
+  int hub6;
+  unsigned short closing_wait;
+  unsigned short closing_wait2;
+  unsigned char * iomem_base;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short iomem_reg_shift;
- unsigned int port_high;
- unsigned long iomap_base;
+  unsigned short iomem_reg_shift;
+  unsigned int port_high;
+  unsigned long iomap_base;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ASYNC_CLOSING_WAIT_INF 0
@@ -77,40 +77,40 @@ struct serial_struct {
 #define UART_NATSEMI 0x08
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct serial_multiport_struct {
- int irq;
- int port1;
- unsigned char mask1, match1;
+  int irq;
+  int port1;
+  unsigned char mask1, match1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int port2;
- unsigned char mask2, match2;
- int port3;
- unsigned char mask3, match3;
+  int port2;
+  unsigned char mask2, match2;
+  int port3;
+  unsigned char mask3, match3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int port4;
- unsigned char mask4, match4;
- int port_monitor;
- int reserved[32];
+  int port4;
+  unsigned char mask4, match4;
+  int port_monitor;
+  int reserved[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct serial_icounter_struct {
- int cts, dsr, rng, dcd;
- int rx, tx;
+  int cts, dsr, rng, dcd;
+  int rx, tx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int frame, overrun, parity, brk;
- int buf_overrun;
- int reserved[9];
+  int frame, overrun, parity, brk;
+  int buf_overrun;
+  int reserved[9];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct serial_rs485 {
- __u32 flags;
+  __u32 flags;
 #define SER_RS485_ENABLED (1 << 0)
 #define SER_RS485_RTS_ON_SEND (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SER_RS485_RTS_AFTER_SEND (1 << 2)
 #define SER_RS485_RX_DURING_TX (1 << 4)
- __u32 delay_rts_before_send;
- __u32 delay_rts_after_send;
+  __u32 delay_rts_before_send;
+  __u32 delay_rts_after_send;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 padding[5];
+  __u32 padding[5];
 };
 #endif

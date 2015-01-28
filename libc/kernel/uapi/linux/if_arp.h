@@ -111,19 +111,19 @@
 #define ARPOP_NAK 10
 struct arpreq {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr arp_pa;
- struct sockaddr arp_ha;
- int arp_flags;
- struct sockaddr arp_netmask;
+  struct sockaddr arp_pa;
+  struct sockaddr arp_ha;
+  int arp_flags;
+  struct sockaddr arp_netmask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char arp_dev[16];
+  char arp_dev[16];
 };
 struct arpreq_old {
- struct sockaddr arp_pa;
+  struct sockaddr arp_pa;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr arp_ha;
- int arp_flags;
- struct sockaddr arp_netmask;
+  struct sockaddr arp_ha;
+  int arp_flags;
+  struct sockaddr arp_netmask;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATF_COM 0x02
@@ -134,12 +134,12 @@ struct arpreq_old {
 #define ATF_NETMASK 0x20
 #define ATF_DONTPUB 0x40
 struct arphdr {
- __be16 ar_hrd;
+  __be16 ar_hrd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 ar_pro;
- unsigned char ar_hln;
- unsigned char ar_pln;
- __be16 ar_op;
+  __be16 ar_pro;
+  unsigned char ar_hln;
+  unsigned char ar_pln;
+  __be16 ar_op;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

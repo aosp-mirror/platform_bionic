@@ -74,51 +74,51 @@
 #define ATM_MC_H221 5
 #define ATM_MAX_HLI 8
 struct atm_blli {
- unsigned char l2_proto;
+  unsigned char l2_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- unsigned char mode;
- unsigned char window;
+  union {
+    struct {
+      unsigned char mode;
+      unsigned char window;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } itu;
- unsigned char user;
- } l2;
- unsigned char l3_proto;
+    } itu;
+    unsigned char user;
+  } l2;
+  unsigned char l3_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- unsigned char mode;
- unsigned char def_size;
+  union {
+    struct {
+      unsigned char mode;
+      unsigned char def_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char window;
- } itu;
- unsigned char user;
- struct {
+      unsigned char window;
+    } itu;
+    unsigned char user;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char term_type;
- unsigned char fw_mpx_cap;
- unsigned char bw_mpx_cap;
- } h310;
+      unsigned char term_type;
+      unsigned char fw_mpx_cap;
+      unsigned char bw_mpx_cap;
+    } h310;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- unsigned char ipi;
- unsigned char snap[5];
- } tr9577;
+    struct {
+      unsigned char ipi;
+      unsigned char snap[5];
+    } tr9577;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } l3;
+  } l3;
 } __ATM_API_ALIGN;
 struct atm_bhli {
- unsigned char hl_type;
+  unsigned char hl_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char hl_length;
- unsigned char hl_info[ATM_MAX_HLI];
+  unsigned char hl_length;
+  unsigned char hl_info[ATM_MAX_HLI];
 };
 #define ATM_MAX_BLLI 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct atm_sap {
- struct atm_bhli bhli;
- struct atm_blli blli[ATM_MAX_BLLI] __ATM_API_ALIGN;
+  struct atm_bhli bhli;
+  struct atm_blli blli[ATM_MAX_BLLI] __ATM_API_ALIGN;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

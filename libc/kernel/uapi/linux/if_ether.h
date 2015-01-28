@@ -128,9 +128,9 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ETH_P_XDSA 0x00F8
 struct ethhdr {
- unsigned char h_dest[ETH_ALEN];
- unsigned char h_source[ETH_ALEN];
+  unsigned char h_dest[ETH_ALEN];
+  unsigned char h_source[ETH_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 h_proto;
+  __be16 h_proto;
 } __attribute__((packed));
 #endif

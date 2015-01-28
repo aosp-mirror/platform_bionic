@@ -109,35 +109,35 @@
 #define TIPC_DEF_LINK_WIN 50
 #define TIPC_MAX_LINK_WIN 8191
 struct tipc_node_info {
- __be32 addr;
+  __be32 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 up;
+  __be32 up;
 };
 struct tipc_link_info {
- __be32 dest;
+  __be32 dest;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 up;
- char str[TIPC_MAX_LINK_NAME];
+  __be32 up;
+  char str[TIPC_MAX_LINK_NAME];
 };
 struct tipc_bearer_config {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 priority;
- __be32 disc_domain;
- char name[TIPC_MAX_BEARER_NAME];
+  __be32 priority;
+  __be32 disc_domain;
+  char name[TIPC_MAX_BEARER_NAME];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tipc_link_config {
- __be32 value;
- char name[TIPC_MAX_LINK_NAME];
+  __be32 value;
+  char name[TIPC_MAX_LINK_NAME];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TIPC_NTQ_ALLTYPES 0x80000000
 struct tipc_name_table_query {
- __be32 depth;
- __be32 type;
+  __be32 depth;
+  __be32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 lowbound;
- __be32 upbound;
+  __be32 lowbound;
+  __be32 upbound;
 };
 #define TIPC_CFG_TLV_ERROR "\x80"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -148,46 +148,46 @@ struct tipc_name_table_query {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TIPC_CFG_INVALID_VALUE "\x85"
 struct tlv_desc {
- __be16 tlv_len;
- __be16 tlv_type;
+  __be16 tlv_len;
+  __be16 tlv_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TLV_ALIGNTO 4
-#define TLV_ALIGN(datalen) (((datalen)+(TLV_ALIGNTO-1)) & ~(TLV_ALIGNTO-1))
+#define TLV_ALIGN(datalen) (((datalen) + (TLV_ALIGNTO - 1)) & ~(TLV_ALIGNTO - 1))
 #define TLV_LENGTH(datalen) (sizeof(struct tlv_desc) + (datalen))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TLV_SPACE(datalen) (TLV_ALIGN(TLV_LENGTH(datalen)))
-#define TLV_DATA(tlv) ((void *)((char *)(tlv) + TLV_LENGTH(0)))
+#define TLV_DATA(tlv) ((void *) ((char *) (tlv) + TLV_LENGTH(0)))
 struct tlv_list_desc {
- struct tlv_desc *tlv_ptr;
+  struct tlv_desc * tlv_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tlv_space;
+  __u32 tlv_space;
 };
 #define TIPC_GENL_NAME "TIPC"
 #define TIPC_GENL_VERSION 0x1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TIPC_GENL_CMD 0x1
 struct tipc_genlmsghdr {
- __u32 dest;
- __u16 cmd;
+  __u32 dest;
+  __u16 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 reserved;
+  __u16 reserved;
 };
 #define TIPC_GENL_HDRLEN NLMSG_ALIGN(sizeof(struct tipc_genlmsghdr))
 struct tipc_cfg_msg_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 tcm_len;
- __be16 tcm_type;
- __be16 tcm_flags;
- char tcm_reserved[8];
+  __be32 tcm_len;
+  __be16 tcm_type;
+  __be16 tcm_flags;
+  char tcm_reserved[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TCM_F_REQUEST 0x1
 #define TCM_F_MORE 0x2
-#define TCM_ALIGN(datalen) (((datalen)+3) & ~3)
+#define TCM_ALIGN(datalen) (((datalen) + 3) & ~3)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TCM_LENGTH(datalen) (sizeof(struct tipc_cfg_msg_hdr) + datalen)
 #define TCM_SPACE(datalen) (TCM_ALIGN(TCM_LENGTH(datalen)))
-#define TCM_DATA(tcm_hdr) ((void *)((char *)(tcm_hdr) + TCM_LENGTH(0)))
+#define TCM_DATA(tcm_hdr) ((void *) ((char *) (tcm_hdr) + TCM_LENGTH(0)))
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

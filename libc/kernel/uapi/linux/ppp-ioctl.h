@@ -61,30 +61,30 @@
 #define SC_DC_ERROR 0x00400000
 struct npioctl {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int protocol;
- enum NPmode mode;
+  int protocol;
+  enum NPmode mode;
 };
 struct ppp_option_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 __user *ptr;
- __u32 length;
- int transmit;
+  __u8 __user * ptr;
+  __u32 length;
+  int transmit;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct pppol2tp_ioc_stats {
- __u16 tunnel_id;
- __u16 session_id;
- __u32 using_ipsec:1;
+  __u16 tunnel_id;
+  __u16 session_id;
+  __u32 using_ipsec : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __aligned_u64 tx_packets;
- __aligned_u64 tx_bytes;
- __aligned_u64 tx_errors;
- __aligned_u64 rx_packets;
+  __aligned_u64 tx_packets;
+  __aligned_u64 tx_bytes;
+  __aligned_u64 tx_errors;
+  __aligned_u64 rx_packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __aligned_u64 rx_bytes;
- __aligned_u64 rx_seq_discards;
- __aligned_u64 rx_oos_packets;
- __aligned_u64 rx_errors;
+  __aligned_u64 rx_bytes;
+  __aligned_u64 rx_seq_discards;
+  __aligned_u64 rx_oos_packets;
+  __aligned_u64 rx_errors;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PPPIOCGFLAGS _IOR('t', 90, int)

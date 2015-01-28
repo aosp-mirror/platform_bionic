@@ -51,9 +51,9 @@
 #define POLL_BUSY_LOOP 0x8000
 struct pollfd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int fd;
- short events;
- short revents;
+  int fd;
+  short events;
+  short revents;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

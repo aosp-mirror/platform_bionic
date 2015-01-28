@@ -21,14 +21,14 @@
 #include <linux/types.h>
 #include <linux/videodev2.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIDIOC_OMAP3ISP_CCDC_CFG   _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct omap3isp_ccdc_update_config)
-#define VIDIOC_OMAP3ISP_PRV_CFG   _IOWR('V', BASE_VIDIOC_PRIVATE + 2, struct omap3isp_prev_update_config)
-#define VIDIOC_OMAP3ISP_AEWB_CFG   _IOWR('V', BASE_VIDIOC_PRIVATE + 3, struct omap3isp_h3a_aewb_config)
-#define VIDIOC_OMAP3ISP_HIST_CFG   _IOWR('V', BASE_VIDIOC_PRIVATE + 4, struct omap3isp_hist_config)
+#define VIDIOC_OMAP3ISP_CCDC_CFG _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct omap3isp_ccdc_update_config)
+#define VIDIOC_OMAP3ISP_PRV_CFG _IOWR('V', BASE_VIDIOC_PRIVATE + 2, struct omap3isp_prev_update_config)
+#define VIDIOC_OMAP3ISP_AEWB_CFG _IOWR('V', BASE_VIDIOC_PRIVATE + 3, struct omap3isp_h3a_aewb_config)
+#define VIDIOC_OMAP3ISP_HIST_CFG _IOWR('V', BASE_VIDIOC_PRIVATE + 4, struct omap3isp_hist_config)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIDIOC_OMAP3ISP_AF_CFG   _IOWR('V', BASE_VIDIOC_PRIVATE + 5, struct omap3isp_h3a_af_config)
-#define VIDIOC_OMAP3ISP_STAT_REQ   _IOWR('V', BASE_VIDIOC_PRIVATE + 6, struct omap3isp_stat_data)
-#define VIDIOC_OMAP3ISP_STAT_EN   _IOWR('V', BASE_VIDIOC_PRIVATE + 7, unsigned long)
+#define VIDIOC_OMAP3ISP_AF_CFG _IOWR('V', BASE_VIDIOC_PRIVATE + 5, struct omap3isp_h3a_af_config)
+#define VIDIOC_OMAP3ISP_STAT_REQ _IOWR('V', BASE_VIDIOC_PRIVATE + 6, struct omap3isp_stat_data)
+#define VIDIOC_OMAP3ISP_STAT_EN _IOWR('V', BASE_VIDIOC_PRIVATE + 7, unsigned long)
 #define V4L2_EVENT_OMAP3ISP_CLASS (V4L2_EVENT_PRIVATE_START | 0x100)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_EVENT_OMAP3ISP_AEWB (V4L2_EVENT_OMAP3ISP_CLASS | 0x1)
@@ -36,9 +36,9 @@
 #define V4L2_EVENT_OMAP3ISP_HIST (V4L2_EVENT_OMAP3ISP_CLASS | 0x3)
 struct omap3isp_stat_event_status {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 frame_number;
- __u16 config_counter;
- __u8 buf_err;
+  __u32 frame_number;
+  __u16 config_counter;
+  __u8 buf_err;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP3ISP_AEWB_MAX_SATURATION_LIM 1023
@@ -83,33 +83,33 @@ struct omap3isp_stat_event_status {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP3ISP_AF_MAX_BUF_SIZE 221184
 struct omap3isp_h3a_aewb_config {
- __u32 buf_size;
- __u16 config_counter;
+  __u32 buf_size;
+  __u16 config_counter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 saturation_limit;
- __u16 win_height;
- __u16 win_width;
- __u16 ver_win_count;
+  __u16 saturation_limit;
+  __u16 win_height;
+  __u16 win_width;
+  __u16 ver_win_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 hor_win_count;
- __u16 ver_win_start;
- __u16 hor_win_start;
- __u16 blk_ver_win_start;
+  __u16 hor_win_count;
+  __u16 ver_win_start;
+  __u16 hor_win_start;
+  __u16 blk_ver_win_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 blk_win_height;
- __u16 subsample_ver_inc;
- __u16 subsample_hor_inc;
- __u8 alaw_enable;
+  __u16 blk_win_height;
+  __u16 subsample_ver_inc;
+  __u16 subsample_hor_inc;
+  __u8 alaw_enable;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_stat_data {
- struct timeval ts;
- void __user *buf;
+  struct timeval ts;
+  void __user * buf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 buf_size;
- __u16 frame_number;
- __u16 cur_frame;
- __u16 config_counter;
+  __u32 buf_size;
+  __u16 frame_number;
+  __u16 cur_frame;
+  __u16 config_counter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define OMAP3ISP_HIST_BINS_32 0
@@ -117,7 +117,7 @@ struct omap3isp_stat_data {
 #define OMAP3ISP_HIST_BINS_128 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP3ISP_HIST_BINS_256 3
-#define OMAP3ISP_HIST_MEM_SIZE_BINS(n) ((1 << ((n)+5))*4*4)
+#define OMAP3ISP_HIST_MEM_SIZE_BINS(n) ((1 << ((n) + 5)) * 4 * 4)
 #define OMAP3ISP_HIST_MEM_SIZE 1024
 #define OMAP3ISP_HIST_MIN_REGIONS 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -136,74 +136,74 @@ struct omap3isp_stat_data {
 #define OMAP3ISP_HIST_CFA_FOVEONX3 1
 struct omap3isp_hist_region {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 h_start;
- __u16 h_end;
- __u16 v_start;
- __u16 v_end;
+  __u16 h_start;
+  __u16 h_end;
+  __u16 v_start;
+  __u16 v_end;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_hist_config {
- __u32 buf_size;
- __u16 config_counter;
+  __u32 buf_size;
+  __u16 config_counter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 num_acc_frames;
- __u16 hist_bins;
- __u8 cfa;
- __u8 wg[OMAP3ISP_HIST_MAX_WG];
+  __u8 num_acc_frames;
+  __u16 hist_bins;
+  __u8 cfa;
+  __u8 wg[OMAP3ISP_HIST_MAX_WG];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 num_regions;
- struct omap3isp_hist_region region[OMAP3ISP_HIST_MAX_REGIONS];
+  __u8 num_regions;
+  struct omap3isp_hist_region region[OMAP3ISP_HIST_MAX_REGIONS];
 };
 #define OMAP3ISP_AF_NUM_COEF 11
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum omap3isp_h3a_af_fvmode {
- OMAP3ISP_AF_MODE_SUMMED = 0,
- OMAP3ISP_AF_MODE_PEAK = 1
+  OMAP3ISP_AF_MODE_SUMMED = 0,
+  OMAP3ISP_AF_MODE_PEAK = 1
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum omap3isp_h3a_af_rgbpos {
- OMAP3ISP_AF_GR_GB_BAYER = 0,
- OMAP3ISP_AF_RG_GB_BAYER = 1,
- OMAP3ISP_AF_GR_BG_BAYER = 2,
+  OMAP3ISP_AF_GR_GB_BAYER = 0,
+  OMAP3ISP_AF_RG_GB_BAYER = 1,
+  OMAP3ISP_AF_GR_BG_BAYER = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAP3ISP_AF_RG_BG_BAYER = 3,
- OMAP3ISP_AF_GG_RB_CUSTOM = 4,
- OMAP3ISP_AF_RB_GG_CUSTOM = 5
+  OMAP3ISP_AF_RG_BG_BAYER = 3,
+  OMAP3ISP_AF_GG_RB_CUSTOM = 4,
+  OMAP3ISP_AF_RB_GG_CUSTOM = 5
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omap3isp_h3a_af_hmf {
- __u8 enable;
- __u8 threshold;
+  __u8 enable;
+  __u8 threshold;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omap3isp_h3a_af_iir {
- __u16 h_start;
- __u16 coeff_set0[OMAP3ISP_AF_NUM_COEF];
- __u16 coeff_set1[OMAP3ISP_AF_NUM_COEF];
+  __u16 h_start;
+  __u16 coeff_set0[OMAP3ISP_AF_NUM_COEF];
+  __u16 coeff_set1[OMAP3ISP_AF_NUM_COEF];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_h3a_af_paxel {
- __u16 h_start;
- __u16 v_start;
+  __u16 h_start;
+  __u16 v_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 width;
- __u8 height;
- __u8 h_cnt;
- __u8 v_cnt;
+  __u8 width;
+  __u8 height;
+  __u8 h_cnt;
+  __u8 v_cnt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 line_inc;
+  __u8 line_inc;
 };
 struct omap3isp_h3a_af_config {
- __u32 buf_size;
+  __u32 buf_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 config_counter;
- struct omap3isp_h3a_af_hmf hmf;
- struct omap3isp_h3a_af_iir iir;
- struct omap3isp_h3a_af_paxel paxel;
+  __u16 config_counter;
+  struct omap3isp_h3a_af_hmf hmf;
+  struct omap3isp_h3a_af_iir iir;
+  struct omap3isp_h3a_af_paxel paxel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- enum omap3isp_h3a_af_rgbpos rgb_pos;
- enum omap3isp_h3a_af_fvmode fvmode;
- __u8 alaw_enable;
+  enum omap3isp_h3a_af_rgbpos rgb_pos;
+  enum omap3isp_h3a_af_fvmode fvmode;
+  __u8 alaw_enable;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP3ISP_CCDC_ALAW (1 << 0)
@@ -218,68 +218,68 @@ struct omap3isp_h3a_af_config {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP3ISP_RGB_MAX 3
 enum omap3isp_alaw_ipwidth {
- OMAP3ISP_ALAW_BIT12_3 = 0x3,
- OMAP3ISP_ALAW_BIT11_2 = 0x4,
+  OMAP3ISP_ALAW_BIT12_3 = 0x3,
+  OMAP3ISP_ALAW_BIT11_2 = 0x4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAP3ISP_ALAW_BIT10_1 = 0x5,
- OMAP3ISP_ALAW_BIT9_0 = 0x6
+  OMAP3ISP_ALAW_BIT10_1 = 0x5,
+  OMAP3ISP_ALAW_BIT9_0 = 0x6
 };
 struct omap3isp_ccdc_lsc_config {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 offset;
- __u8 gain_mode_n;
- __u8 gain_mode_m;
- __u8 gain_format;
+  __u16 offset;
+  __u8 gain_mode_n;
+  __u8 gain_mode_m;
+  __u8 gain_format;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 fmtsph;
- __u16 fmtlnh;
- __u16 fmtslv;
- __u16 fmtlnv;
+  __u16 fmtsph;
+  __u16 fmtlnh;
+  __u16 fmtslv;
+  __u16 fmtlnv;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 initial_x;
- __u8 initial_y;
- __u32 size;
+  __u8 initial_x;
+  __u8 initial_y;
+  __u32 size;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omap3isp_ccdc_bclamp {
- __u8 obgain;
- __u8 obstpixel;
- __u8 oblines;
+  __u8 obgain;
+  __u8 obstpixel;
+  __u8 oblines;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 oblen;
- __u16 dcsubval;
+  __u8 oblen;
+  __u16 dcsubval;
 };
 struct omap3isp_ccdc_fpc {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 fpnum;
- __u32 fpcaddr;
+  __u16 fpnum;
+  __u32 fpcaddr;
 };
 struct omap3isp_ccdc_blcomp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 b_mg;
- __u8 gb_g;
- __u8 gr_cy;
- __u8 r_ye;
+  __u8 b_mg;
+  __u8 gb_g;
+  __u8 gr_cy;
+  __u8 r_ye;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_ccdc_culling {
- __u8 v_pattern;
- __u16 h_odd;
+  __u8 v_pattern;
+  __u16 h_odd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 h_even;
+  __u16 h_even;
 };
 struct omap3isp_ccdc_update_config {
- __u16 update;
+  __u16 update;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 flag;
- enum omap3isp_alaw_ipwidth alawip;
- struct omap3isp_ccdc_bclamp __user *bclamp;
- struct omap3isp_ccdc_blcomp __user *blcomp;
+  __u16 flag;
+  enum omap3isp_alaw_ipwidth alawip;
+  struct omap3isp_ccdc_bclamp __user * bclamp;
+  struct omap3isp_ccdc_blcomp __user * blcomp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct omap3isp_ccdc_fpc __user *fpc;
- struct omap3isp_ccdc_lsc_config __user *lsc_cfg;
- struct omap3isp_ccdc_culling __user *cull;
- __u8 __user *lsc;
+  struct omap3isp_ccdc_fpc __user * fpc;
+  struct omap3isp_ccdc_lsc_config __user * lsc_cfg;
+  struct omap3isp_ccdc_culling __user * cull;
+  __u8 __user * lsc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define OMAP3ISP_PREV_LUMAENH (1 << 0)
@@ -311,106 +311,106 @@ struct omap3isp_ccdc_update_config {
 #define OMAP3ISP_PREV_DETECT_CORRECT_CHANNELS 4
 struct omap3isp_prev_hmed {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 odddist;
- __u8 evendist;
- __u8 thres;
+  __u8 odddist;
+  __u8 evendist;
+  __u8 thres;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum omap3isp_cfa_fmt {
- OMAP3ISP_CFAFMT_BAYER,
- OMAP3ISP_CFAFMT_SONYVGA,
- OMAP3ISP_CFAFMT_RGBFOVEON,
+  OMAP3ISP_CFAFMT_BAYER,
+  OMAP3ISP_CFAFMT_SONYVGA,
+  OMAP3ISP_CFAFMT_RGBFOVEON,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAP3ISP_CFAFMT_DNSPL,
- OMAP3ISP_CFAFMT_HONEYCOMB,
- OMAP3ISP_CFAFMT_RRGGBBFOVEON
+  OMAP3ISP_CFAFMT_DNSPL,
+  OMAP3ISP_CFAFMT_HONEYCOMB,
+  OMAP3ISP_CFAFMT_RRGGBBFOVEON
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omap3isp_prev_cfa {
- enum omap3isp_cfa_fmt format;
- __u8 gradthrs_vert;
- __u8 gradthrs_horz;
+  enum omap3isp_cfa_fmt format;
+  __u8 gradthrs_vert;
+  __u8 gradthrs_horz;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 table[4][OMAP3ISP_PREV_CFA_BLK_SIZE];
+  __u32 table[4][OMAP3ISP_PREV_CFA_BLK_SIZE];
 };
 struct omap3isp_prev_csup {
- __u8 gain;
+  __u8 gain;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 thres;
- __u8 hypf_en;
+  __u8 thres;
+  __u8 hypf_en;
 };
 struct omap3isp_prev_wbal {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 dgain;
- __u8 coef3;
- __u8 coef2;
- __u8 coef1;
+  __u16 dgain;
+  __u8 coef3;
+  __u8 coef2;
+  __u8 coef1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 coef0;
+  __u8 coef0;
 };
 struct omap3isp_prev_blkadj {
- __u8 red;
+  __u8 red;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 green;
- __u8 blue;
+  __u8 green;
+  __u8 blue;
 };
 struct omap3isp_prev_rgbtorgb {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 matrix[OMAP3ISP_RGB_MAX][OMAP3ISP_RGB_MAX];
- __u16 offset[OMAP3ISP_RGB_MAX];
+  __u16 matrix[OMAP3ISP_RGB_MAX][OMAP3ISP_RGB_MAX];
+  __u16 offset[OMAP3ISP_RGB_MAX];
 };
 struct omap3isp_prev_csc {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 matrix[OMAP3ISP_RGB_MAX][OMAP3ISP_RGB_MAX];
- __s16 offset[OMAP3ISP_RGB_MAX];
+  __u16 matrix[OMAP3ISP_RGB_MAX][OMAP3ISP_RGB_MAX];
+  __s16 offset[OMAP3ISP_RGB_MAX];
 };
 struct omap3isp_prev_yclimit {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 minC;
- __u8 maxC;
- __u8 minY;
- __u8 maxY;
+  __u8 minC;
+  __u8 maxC;
+  __u8 minY;
+  __u8 maxY;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_prev_dcor {
- __u8 couplet_mode_en;
- __u32 detect_correct[OMAP3ISP_PREV_DETECT_CORRECT_CHANNELS];
+  __u8 couplet_mode_en;
+  __u32 detect_correct[OMAP3ISP_PREV_DETECT_CORRECT_CHANNELS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_prev_nf {
- __u8 spread;
- __u32 table[OMAP3ISP_PREV_NF_TBL_SIZE];
+  __u8 spread;
+  __u32 table[OMAP3ISP_PREV_NF_TBL_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_prev_gtables {
- __u32 red[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
- __u32 green[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
+  __u32 red[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
+  __u32 green[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 blue[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
+  __u32 blue[OMAP3ISP_PREV_GAMMA_TBL_SIZE];
 };
 struct omap3isp_prev_luma {
- __u32 table[OMAP3ISP_PREV_YENH_TBL_SIZE];
+  __u32 table[OMAP3ISP_PREV_YENH_TBL_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omap3isp_prev_update_config {
- __u32 update;
- __u32 flag;
+  __u32 update;
+  __u32 flag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 shading_shift;
- struct omap3isp_prev_luma __user *luma;
- struct omap3isp_prev_hmed __user *hmed;
- struct omap3isp_prev_cfa __user *cfa;
+  __u32 shading_shift;
+  struct omap3isp_prev_luma __user * luma;
+  struct omap3isp_prev_hmed __user * hmed;
+  struct omap3isp_prev_cfa __user * cfa;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct omap3isp_prev_csup __user *csup;
- struct omap3isp_prev_wbal __user *wbal;
- struct omap3isp_prev_blkadj __user *blkadj;
- struct omap3isp_prev_rgbtorgb __user *rgb2rgb;
+  struct omap3isp_prev_csup __user * csup;
+  struct omap3isp_prev_wbal __user * wbal;
+  struct omap3isp_prev_blkadj __user * blkadj;
+  struct omap3isp_prev_rgbtorgb __user * rgb2rgb;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct omap3isp_prev_csc __user *csc;
- struct omap3isp_prev_yclimit __user *yclimit;
- struct omap3isp_prev_dcor __user *dcor;
- struct omap3isp_prev_nf __user *nf;
+  struct omap3isp_prev_csc __user * csc;
+  struct omap3isp_prev_yclimit __user * yclimit;
+  struct omap3isp_prev_dcor __user * dcor;
+  struct omap3isp_prev_nf __user * nf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct omap3isp_prev_gtables __user *gamma;
+  struct omap3isp_prev_gtables __user * gamma;
 };
 #endif

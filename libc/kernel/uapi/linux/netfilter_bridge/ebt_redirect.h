@@ -19,7 +19,7 @@
 #ifndef __LINUX_BRIDGE_EBT_REDIRECT_H
 #define __LINUX_BRIDGE_EBT_REDIRECT_H
 struct ebt_redirect_info {
- int target;
+  int target;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define EBT_REDIRECT_TARGET "redirect"

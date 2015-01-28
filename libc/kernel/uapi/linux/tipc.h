@@ -22,19 +22,19 @@
 #include <linux/sockios.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tipc_portid {
- __u32 ref;
- __u32 node;
+  __u32 ref;
+  __u32 node;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tipc_name {
- __u32 type;
- __u32 instance;
+  __u32 type;
+  __u32 instance;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tipc_name_seq {
- __u32 type;
- __u32 lower;
- __u32 upper;
+  __u32 type;
+  __u32 lower;
+  __u32 upper;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TIPC_CFG_SRV 0
@@ -66,10 +66,10 @@ struct tipc_name_seq {
 #define TIPC_WAIT_FOREVER (~0)
 struct tipc_subscr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct tipc_name_seq seq;
- __u32 timeout;
- __u32 filter;
- char usr_handle[8];
+  struct tipc_name_seq seq;
+  __u32 timeout;
+  __u32 filter;
+  char usr_handle[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TIPC_PUBLISHED 1
@@ -77,12 +77,12 @@ struct tipc_subscr {
 #define TIPC_SUBSCR_TIMEOUT 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tipc_event {
- __u32 event;
- __u32 found_lower;
- __u32 found_upper;
+  __u32 event;
+  __u32 found_lower;
+  __u32 found_upper;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct tipc_portid port;
- struct tipc_subscr s;
+  struct tipc_portid port;
+  struct tipc_subscr s;
 };
 #ifndef AF_TIPC
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -102,19 +102,19 @@ struct tipc_event {
 #define TIPC_ADDR_ID 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sockaddr_tipc {
- unsigned short family;
- unsigned char addrtype;
- signed char scope;
+  unsigned short family;
+  unsigned char addrtype;
+  signed char scope;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct tipc_portid id;
- struct tipc_name_seq nameseq;
- struct {
+  union {
+    struct tipc_portid id;
+    struct tipc_name_seq nameseq;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct tipc_name name;
- __u32 domain;
- } name;
- } addr;
+      struct tipc_name name;
+      __u32 domain;
+    } name;
+  } addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define TIPC_ERRINFO 1
@@ -136,9 +136,9 @@ struct sockaddr_tipc {
 #define SIOCGETLINKNAME SIOCPROTOPRIVATE
 struct tipc_sioc_ln_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 peer;
- __u32 bearer_id;
- char linkname[TIPC_MAX_LINK_NAME];
+  __u32 peer;
+  __u32 bearer_id;
+  char linkname[TIPC_MAX_LINK_NAME];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

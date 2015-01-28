@@ -22,23 +22,23 @@
 #include <linux/compiler.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct rtentry {
- unsigned long rt_pad1;
- struct sockaddr rt_dst;
- struct sockaddr rt_gateway;
+  unsigned long rt_pad1;
+  struct sockaddr rt_dst;
+  struct sockaddr rt_gateway;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr rt_genmask;
- unsigned short rt_flags;
- short rt_pad2;
- unsigned long rt_pad3;
+  struct sockaddr rt_genmask;
+  unsigned short rt_flags;
+  short rt_pad2;
+  unsigned long rt_pad3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void *rt_pad4;
- short rt_metric;
- char __user *rt_dev;
- unsigned long rt_mtu;
+  void * rt_pad4;
+  short rt_metric;
+  char __user * rt_dev;
+  unsigned long rt_mtu;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define rt_mss rt_mtu
- unsigned long rt_window;
- unsigned short rt_irtt;
+  unsigned long rt_window;
+  unsigned short rt_irtt;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RTF_UP 0x0001

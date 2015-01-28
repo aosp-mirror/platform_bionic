@@ -21,44 +21,44 @@
 #include <linux/types.h>
 struct erase_info_user {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 start;
- __u32 length;
+  __u32 start;
+  __u32 length;
 };
 struct erase_info_user64 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 start;
- __u64 length;
+  __u64 start;
+  __u64 length;
 };
 struct mtd_oob_buf {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 start;
- __u32 length;
- unsigned char __user *ptr;
+  __u32 start;
+  __u32 length;
+  unsigned char __user * ptr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mtd_oob_buf64 {
- __u64 start;
- __u32 pad;
- __u32 length;
+  __u64 start;
+  __u32 pad;
+  __u32 length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 usr_ptr;
+  __u64 usr_ptr;
 };
 enum {
- MTD_OPS_PLACE_OOB = 0,
+  MTD_OPS_PLACE_OOB = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- MTD_OPS_AUTO_OOB = 1,
- MTD_OPS_RAW = 2,
+  MTD_OPS_AUTO_OOB = 1,
+  MTD_OPS_RAW = 2,
 };
 struct mtd_write_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 start;
- __u64 len;
- __u64 ooblen;
- __u64 usr_data;
+  __u64 start;
+  __u64 len;
+  __u64 ooblen;
+  __u64 usr_data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 usr_oob;
- __u8 mode;
- __u8 padding[7];
+  __u64 usr_oob;
+  __u8 mode;
+  __u8 padding[7];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MTD_ABSENT 0
@@ -93,28 +93,28 @@ struct mtd_write_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MTD_OTP_USER 2
 struct mtd_info_user {
- __u8 type;
- __u32 flags;
+  __u8 type;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 size;
- __u32 erasesize;
- __u32 writesize;
- __u32 oobsize;
+  __u32 size;
+  __u32 erasesize;
+  __u32 writesize;
+  __u32 oobsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 padding;
+  __u64 padding;
 };
 struct region_info_user {
- __u32 offset;
+  __u32 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 erasesize;
- __u32 numblocks;
- __u32 regionindex;
+  __u32 erasesize;
+  __u32 numblocks;
+  __u32 regionindex;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct otp_info {
- __u32 start;
- __u32 length;
- __u32 locked;
+  __u32 start;
+  __u32 length;
+  __u32 locked;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define MEMGETINFO _IOR('M', 1, struct mtd_info_user)
@@ -147,40 +147,40 @@ struct otp_info {
 #define MEMWRITE _IOWR('M', 24, struct mtd_write_req)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nand_oobinfo {
- __u32 useecc;
- __u32 eccbytes;
- __u32 oobfree[8][2];
+  __u32 useecc;
+  __u32 eccbytes;
+  __u32 oobfree[8][2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 eccpos[32];
+  __u32 eccpos[32];
 };
 struct nand_oobfree {
- __u32 offset;
+  __u32 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 length;
+  __u32 length;
 };
 #define MTD_MAX_OOBFREE_ENTRIES 8
 #define MTD_MAX_ECCPOS_ENTRIES 64
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nand_ecclayout_user {
- __u32 eccbytes;
- __u32 eccpos[MTD_MAX_ECCPOS_ENTRIES];
- __u32 oobavail;
+  __u32 eccbytes;
+  __u32 eccpos[MTD_MAX_ECCPOS_ENTRIES];
+  __u32 oobavail;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct nand_oobfree oobfree[MTD_MAX_OOBFREE_ENTRIES];
+  struct nand_oobfree oobfree[MTD_MAX_OOBFREE_ENTRIES];
 };
 struct mtd_ecc_stats {
- __u32 corrected;
+  __u32 corrected;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 failed;
- __u32 badblocks;
- __u32 bbtblocks;
+  __u32 failed;
+  __u32 badblocks;
+  __u32 bbtblocks;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum mtd_file_modes {
- MTD_FILE_MODE_NORMAL = MTD_OTP_OFF,
- MTD_FILE_MODE_OTP_FACTORY = MTD_OTP_FACTORY,
- MTD_FILE_MODE_OTP_USER = MTD_OTP_USER,
+  MTD_FILE_MODE_NORMAL = MTD_OTP_OFF,
+  MTD_FILE_MODE_OTP_FACTORY = MTD_OTP_FACTORY,
+  MTD_FILE_MODE_OTP_USER = MTD_OTP_USER,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- MTD_FILE_MODE_RAW,
+  MTD_FILE_MODE_RAW,
 };
 #endif

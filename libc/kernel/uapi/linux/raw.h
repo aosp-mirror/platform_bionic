@@ -19,16 +19,15 @@
 #ifndef __LINUX_RAW_H
 #define __LINUX_RAW_H
 #include <linux/types.h>
-#define RAW_SETBIND _IO( 0xac, 0 )
+#define RAW_SETBIND _IO(0xac, 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RAW_GETBIND _IO( 0xac, 1 )
-struct raw_config_request
-{
- int raw_minor;
+#define RAW_GETBIND _IO(0xac, 1)
+struct raw_config_request {
+  int raw_minor;
+  __u64 block_major;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 block_major;
- __u64 block_minor;
+  __u64 block_minor;
 };
 #define MAX_RAW_MINORS CONFIG_MAX_RAW_DEVS
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

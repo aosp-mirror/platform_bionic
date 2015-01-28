@@ -23,16 +23,16 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MAX_CODADEVS 5
 struct upc_req {
- struct list_head uc_chain;
- caddr_t uc_data;
+  struct list_head uc_chain;
+  caddr_t uc_data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- u_short uc_flags;
- u_short uc_inSize;
- u_short uc_outSize;
- u_short uc_opcode;
+  u_short uc_flags;
+  u_short uc_inSize;
+  u_short uc_outSize;
+  u_short uc_opcode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int uc_unique;
- wait_queue_head_t uc_sleep;
+  int uc_unique;
+  wait_queue_head_t uc_sleep;
 };
 #define CODA_REQ_ASYNC 0x1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

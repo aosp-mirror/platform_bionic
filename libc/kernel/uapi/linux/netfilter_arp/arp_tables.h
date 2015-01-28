@@ -37,29 +37,29 @@
 #define ARPT_STANDARD_TARGET XT_STANDARD_TARGET
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_ERROR_TARGET XT_ERROR_TARGET
-#define ARPT_ENTRY_ITERATE(entries, size, fn, args...)   XT_ENTRY_ITERATE(struct arpt_entry, entries, size, fn, ## args)
+#define ARPT_ENTRY_ITERATE(entries,size,fn,args...) XT_ENTRY_ITERATE(struct arpt_entry, entries, size, fn, ##args)
 #define ARPT_DEV_ADDR_LEN_MAX 16
 struct arpt_devaddr_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char addr[ARPT_DEV_ADDR_LEN_MAX];
- char mask[ARPT_DEV_ADDR_LEN_MAX];
+  char addr[ARPT_DEV_ADDR_LEN_MAX];
+  char mask[ARPT_DEV_ADDR_LEN_MAX];
 };
 struct arpt_arp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in_addr src, tgt;
- struct in_addr smsk, tmsk;
- __u8 arhln, arhln_mask;
- struct arpt_devaddr_info src_devaddr;
+  struct in_addr src, tgt;
+  struct in_addr smsk, tmsk;
+  __u8 arhln, arhln_mask;
+  struct arpt_devaddr_info src_devaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct arpt_devaddr_info tgt_devaddr;
- __be16 arpop, arpop_mask;
- __be16 arhrd, arhrd_mask;
- __be16 arpro, arpro_mask;
+  struct arpt_devaddr_info tgt_devaddr;
+  __be16 arpop, arpop_mask;
+  __be16 arhrd, arhrd_mask;
+  __be16 arpro, arpro_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
- unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
- __u8 flags;
- __u16 invflags;
+  char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
+  unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
+  __u8 flags;
+  __u16 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ARPT_F_MASK 0x00
@@ -77,55 +77,54 @@ struct arpt_arp {
 #define ARPT_INV_ARPHLN 0x0200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_INV_MASK 0x03FF
-struct arpt_entry
-{
- struct arpt_arp arp;
+struct arpt_entry {
+  struct arpt_arp arp;
+  __u16 target_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 target_offset;
- __u16 next_offset;
- unsigned int comefrom;
- struct xt_counters counters;
+  __u16 next_offset;
+  unsigned int comefrom;
+  struct xt_counters counters;
+  unsigned char elems[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char elems[0];
 };
 #define ARPT_BASE_CTL 96
 #define ARPT_SO_SET_REPLACE (ARPT_BASE_CTL)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_SO_SET_ADD_COUNTERS (ARPT_BASE_CTL + 1)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_SO_SET_MAX ARPT_SO_SET_ADD_COUNTERS
 #define ARPT_SO_GET_INFO (ARPT_BASE_CTL)
 #define ARPT_SO_GET_ENTRIES (ARPT_BASE_CTL + 1)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_SO_GET_REVISION_TARGET (ARPT_BASE_CTL + 3)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ARPT_SO_GET_MAX (ARPT_SO_GET_REVISION_TARGET)
 struct arpt_getinfo {
- char name[XT_TABLE_MAXNAMELEN];
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int valid_hooks;
- unsigned int hook_entry[NF_ARP_NUMHOOKS];
- unsigned int underflow[NF_ARP_NUMHOOKS];
- unsigned int num_entries;
+  unsigned int hook_entry[NF_ARP_NUMHOOKS];
+  unsigned int underflow[NF_ARP_NUMHOOKS];
+  unsigned int num_entries;
+  unsigned int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int size;
 };
 struct arpt_replace {
- char name[XT_TABLE_MAXNAMELEN];
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int valid_hooks;
- unsigned int num_entries;
- unsigned int size;
- unsigned int hook_entry[NF_ARP_NUMHOOKS];
+  unsigned int num_entries;
+  unsigned int size;
+  unsigned int hook_entry[NF_ARP_NUMHOOKS];
+  unsigned int underflow[NF_ARP_NUMHOOKS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int underflow[NF_ARP_NUMHOOKS];
- unsigned int num_counters;
- struct xt_counters __user *counters;
- struct arpt_entry entries[0];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int num_counters;
+  struct xt_counters __user * counters;
+  struct arpt_entry entries[0];
 };
-struct arpt_get_entries {
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct arpt_entry entrytable[0];
+struct arpt_get_entries {
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int size;
+  struct arpt_entry entrytable[0];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

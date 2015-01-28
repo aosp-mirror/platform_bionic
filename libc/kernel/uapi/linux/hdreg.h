@@ -24,7 +24,7 @@
 #define HDIO_DRIVE_HOB_HDR_SIZE (8 * sizeof(__u8))
 #define HDIO_DRIVE_TASK_HDR_SIZE (8 * sizeof(__u8))
 #define IDE_DRIVE_TASK_NO_DATA 0
-#define IDE_DRIVE_TASK_INVALID -1
+#define IDE_DRIVE_TASK_INVALID - 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IDE_DRIVE_TASK_SET_XFER 1
 #define IDE_DRIVE_TASK_IN 2
@@ -39,81 +39,81 @@
 typedef unsigned char task_ioreg_t;
 typedef unsigned long sata_ioreg_t;
 typedef union ide_reg_valid_s {
- unsigned all : 16;
+  unsigned all : 16;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- unsigned data : 1;
- unsigned error_feature : 1;
- unsigned sector : 1;
+  struct {
+    unsigned data : 1;
+    unsigned error_feature : 1;
+    unsigned sector : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned nsector : 1;
- unsigned lcyl : 1;
- unsigned hcyl : 1;
- unsigned select : 1;
+    unsigned nsector : 1;
+    unsigned lcyl : 1;
+    unsigned hcyl : 1;
+    unsigned select : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned status_command : 1;
- unsigned data_hob : 1;
- unsigned error_feature_hob : 1;
- unsigned sector_hob : 1;
+    unsigned status_command : 1;
+    unsigned data_hob : 1;
+    unsigned error_feature_hob : 1;
+    unsigned sector_hob : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned nsector_hob : 1;
- unsigned lcyl_hob : 1;
- unsigned hcyl_hob : 1;
- unsigned select_hob : 1;
+    unsigned nsector_hob : 1;
+    unsigned lcyl_hob : 1;
+    unsigned hcyl_hob : 1;
+    unsigned select_hob : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned control_hob : 1;
- } b;
+    unsigned control_hob : 1;
+  } b;
 } ide_reg_valid_t;
 typedef struct ide_task_request_s {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 io_ports[8];
- __u8 hob_ports[8];
- ide_reg_valid_t out_flags;
- ide_reg_valid_t in_flags;
+  __u8 io_ports[8];
+  __u8 hob_ports[8];
+  ide_reg_valid_t out_flags;
+  ide_reg_valid_t in_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int data_phase;
- int req_cmd;
- unsigned long out_size;
- unsigned long in_size;
+  int data_phase;
+  int req_cmd;
+  unsigned long out_size;
+  unsigned long in_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } ide_task_request_t;
 typedef struct ide_ioctl_request_s {
- ide_task_request_t *task_request;
- unsigned char *out_buffer;
+  ide_task_request_t * task_request;
+  unsigned char * out_buffer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char *in_buffer;
+  unsigned char * in_buffer;
 } ide_ioctl_request_t;
 struct hd_drive_cmd_hdr {
- __u8 command;
+  __u8 command;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sector_number;
- __u8 feature;
- __u8 sector_count;
+  __u8 sector_number;
+  __u8 feature;
+  __u8 sector_count;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct hd_drive_task_hdr {
- __u8 data;
- __u8 feature;
- __u8 sector_count;
+  __u8 data;
+  __u8 feature;
+  __u8 sector_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sector_number;
- __u8 low_cylinder;
- __u8 high_cylinder;
- __u8 device_head;
+  __u8 sector_number;
+  __u8 low_cylinder;
+  __u8 high_cylinder;
+  __u8 device_head;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 command;
+  __u8 command;
 } task_struct_t;
 typedef struct hd_drive_hob_hdr {
- __u8 data;
+  __u8 data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 feature;
- __u8 sector_count;
- __u8 sector_number;
- __u8 low_cylinder;
+  __u8 feature;
+  __u8 sector_count;
+  __u8 sector_number;
+  __u8 low_cylinder;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 high_cylinder;
- __u8 device_head;
- __u8 control;
+  __u8 high_cylinder;
+  __u8 device_head;
+  __u8 control;
 } hob_struct_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TASKFILE_NO_DATA 0x0000
@@ -312,11 +312,11 @@ typedef struct hd_drive_hob_hdr {
 #define SECURITY_DISABLE_PASSWORD 0xBF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hd_geometry {
- unsigned char heads;
- unsigned char sectors;
- unsigned short cylinders;
+  unsigned char heads;
+  unsigned char sectors;
+  unsigned short cylinders;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long start;
+  unsigned long start;
 };
 #define HDIO_GETGEO 0x0301
 #define HDIO_GET_UNMASKINTR 0x0302
@@ -366,112 +366,112 @@ struct hd_geometry {
 #define HDIO_SET_ADDRESS 0x032f
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BUSSTATE_OFF = 0,
- BUSSTATE_ON,
- BUSSTATE_TRISTATE
+  BUSSTATE_OFF = 0,
+  BUSSTATE_ON,
+  BUSSTATE_TRISTATE
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NEW_HD_DRIVE_ID
 struct hd_driveid {
- unsigned short config;
- unsigned short cyls;
+  unsigned short config;
+  unsigned short cyls;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short reserved2;
- unsigned short heads;
- unsigned short track_bytes;
- unsigned short sector_bytes;
+  unsigned short reserved2;
+  unsigned short heads;
+  unsigned short track_bytes;
+  unsigned short sector_bytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short sectors;
- unsigned short vendor0;
- unsigned short vendor1;
- unsigned short vendor2;
+  unsigned short sectors;
+  unsigned short vendor0;
+  unsigned short vendor1;
+  unsigned short vendor2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char serial_no[20];
- unsigned short buf_type;
- unsigned short buf_size;
- unsigned short ecc_bytes;
+  unsigned char serial_no[20];
+  unsigned short buf_type;
+  unsigned short buf_size;
+  unsigned short ecc_bytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char fw_rev[8];
- unsigned char model[40];
- unsigned char max_multsect;
- unsigned char vendor3;
+  unsigned char fw_rev[8];
+  unsigned char model[40];
+  unsigned char max_multsect;
+  unsigned char vendor3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short dword_io;
- unsigned char vendor4;
- unsigned char capability;
- unsigned short reserved50;
+  unsigned short dword_io;
+  unsigned char vendor4;
+  unsigned char capability;
+  unsigned short reserved50;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char vendor5;
- unsigned char tPIO;
- unsigned char vendor6;
- unsigned char tDMA;
+  unsigned char vendor5;
+  unsigned char tPIO;
+  unsigned char vendor6;
+  unsigned char tDMA;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short field_valid;
- unsigned short cur_cyls;
- unsigned short cur_heads;
- unsigned short cur_sectors;
+  unsigned short field_valid;
+  unsigned short cur_cyls;
+  unsigned short cur_heads;
+  unsigned short cur_sectors;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short cur_capacity0;
- unsigned short cur_capacity1;
- unsigned char multsect;
- unsigned char multsect_valid;
+  unsigned short cur_capacity0;
+  unsigned short cur_capacity1;
+  unsigned char multsect;
+  unsigned char multsect_valid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int lba_capacity;
- unsigned short dma_1word;
- unsigned short dma_mword;
- unsigned short eide_pio_modes;
+  unsigned int lba_capacity;
+  unsigned short dma_1word;
+  unsigned short dma_mword;
+  unsigned short eide_pio_modes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short eide_dma_min;
- unsigned short eide_dma_time;
- unsigned short eide_pio;
- unsigned short eide_pio_iordy;
+  unsigned short eide_dma_min;
+  unsigned short eide_dma_time;
+  unsigned short eide_pio;
+  unsigned short eide_pio_iordy;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short words69_70[2];
- unsigned short words71_74[4];
- unsigned short queue_depth;
- unsigned short words76_79[4];
+  unsigned short words69_70[2];
+  unsigned short words71_74[4];
+  unsigned short queue_depth;
+  unsigned short words76_79[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short major_rev_num;
- unsigned short minor_rev_num;
- unsigned short command_set_1;
- unsigned short command_set_2;
+  unsigned short major_rev_num;
+  unsigned short minor_rev_num;
+  unsigned short command_set_1;
+  unsigned short command_set_2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short cfsse;
- unsigned short cfs_enable_1;
- unsigned short cfs_enable_2;
- unsigned short csf_default;
+  unsigned short cfsse;
+  unsigned short cfs_enable_1;
+  unsigned short cfs_enable_2;
+  unsigned short csf_default;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short dma_ultra;
- unsigned short trseuc;
- unsigned short trsEuc;
- unsigned short CurAPMvalues;
+  unsigned short dma_ultra;
+  unsigned short trseuc;
+  unsigned short trsEuc;
+  unsigned short CurAPMvalues;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short mprc;
- unsigned short hw_config;
- unsigned short acoustic;
- unsigned short msrqs;
+  unsigned short mprc;
+  unsigned short hw_config;
+  unsigned short acoustic;
+  unsigned short msrqs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short sxfert;
- unsigned short sal;
- unsigned int spg;
- unsigned long long lba_capacity_2;
+  unsigned short sxfert;
+  unsigned short sal;
+  unsigned int spg;
+  unsigned long long lba_capacity_2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short words104_125[22];
- unsigned short last_lun;
- unsigned short word127;
- unsigned short dlf;
+  unsigned short words104_125[22];
+  unsigned short last_lun;
+  unsigned short word127;
+  unsigned short dlf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short csfo;
- unsigned short words130_155[26];
- unsigned short word156;
- unsigned short words157_159[3];
+  unsigned short csfo;
+  unsigned short words130_155[26];
+  unsigned short word156;
+  unsigned short words157_159[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short cfa_power;
- unsigned short words161_175[15];
- unsigned short words176_205[30];
- unsigned short words206_254[49];
+  unsigned short cfa_power;
+  unsigned short words161_175[15];
+  unsigned short words176_205[30];
+  unsigned short words206_254[49];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short integrity_word;
+  unsigned short integrity_word;
 };
 #define IDE_NICE_DSC_OVERLAP (0)
 #define IDE_NICE_ATAPI_OVERLAP (1)

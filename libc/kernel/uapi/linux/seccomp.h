@@ -38,11 +38,11 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SECCOMP_RET_DATA 0x0000ffffU
 struct seccomp_data {
- int nr;
- __u32 arch;
+  int nr;
+  __u32 arch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 instruction_pointer;
- __u64 args[6];
+  __u64 instruction_pointer;
+  __u64 args[6];
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -22,12 +22,12 @@
 #include <linux/netfilter.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ip6t_npt_tginfo {
- union nf_inet_addr src_pfx;
- union nf_inet_addr dst_pfx;
- __u8 src_pfx_len;
+  union nf_inet_addr src_pfx;
+  union nf_inet_addr dst_pfx;
+  __u8 src_pfx_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dst_pfx_len;
- __sum16 adjustment;
+  __u8 dst_pfx_len;
+  __sum16 adjustment;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

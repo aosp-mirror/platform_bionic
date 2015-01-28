@@ -27,27 +27,27 @@
 #define PPS_MAX_NAME_LEN 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct pps_ktime {
- __s64 sec;
- __s32 nsec;
- __u32 flags;
+  __s64 sec;
+  __s32 nsec;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define PPS_TIME_INVALID (1<<0)
+#define PPS_TIME_INVALID (1 << 0)
 struct pps_kinfo {
- __u32 assert_sequence;
+  __u32 assert_sequence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 clear_sequence;
- struct pps_ktime assert_tu;
- struct pps_ktime clear_tu;
- int current_mode;
+  __u32 clear_sequence;
+  struct pps_ktime assert_tu;
+  struct pps_ktime clear_tu;
+  int current_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct pps_kparams {
- int api_version;
- int mode;
+  int api_version;
+  int mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct pps_ktime assert_off_tu;
- struct pps_ktime clear_off_tu;
+  struct pps_ktime assert_off_tu;
+  struct pps_ktime clear_off_tu;
 };
 #define PPS_CAPTUREASSERT 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -68,15 +68,15 @@ struct pps_kparams {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PPS_KC_HARDPPS_FLL 2
 struct pps_fdata {
- struct pps_kinfo info;
- struct pps_ktime timeout;
+  struct pps_kinfo info;
+  struct pps_ktime timeout;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct pps_bind_args {
- int tsformat;
- int edge;
+  int tsformat;
+  int edge;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int consumer;
+  int consumer;
 };
 #include <linux/ioctl.h>
 #define PPS_GETPARAMS _IOR('p', 0xa1, struct pps_kparams *)
