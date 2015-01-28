@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97db8f05_b663b02a",
+        "filename": "libc/kernel/tools/uapi.diff",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-01-28T18:27:13Z",
+      "side": 1,
+      "message": "missing",
+      "range": {
+        "startLine": 1193,
+        "startChar": 1,
+        "endLine": 1193,
+        "endChar": 16
+      },
+      "revId": "28d7ca1cb52072e0911d0f02c4e81f85a331950d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97db8f05_7655483a",
+        "filename": "libc/kernel/tools/uapi.diff",
+        "patchSetId": 1
+      },
+      "lineNbr": 2303,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-01-28T18:27:13Z",
+      "side": 1,
+      "message": "missing",
+      "range": {
+        "startLine": 2303,
+        "startChar": 1,
+        "endLine": 2303,
+        "endChar": 15
+      },
+      "revId": "28d7ca1cb52072e0911d0f02c4e81f85a331950d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
