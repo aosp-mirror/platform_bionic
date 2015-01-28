@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3794a3fe_83e3e2a8",
+        "filename": "libc/kernel/tools/uapi.diff",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-01-28T18:38:21Z",
+      "side": 1,
+      "message": "enh: do we have any preference here for kernel headers formats?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "28d7ca1cb52072e0911d0f02c4e81f85a331950d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97db8f05_b663b02a",
         "filename": "libc/kernel/tools/uapi.diff",
         "patchSetId": 1
