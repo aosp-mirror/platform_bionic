@@ -771,7 +771,12 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
     if (gtest_filter_str == "") {
       gtest_filter_str = "--gtest_filter=-bionic_selftest*";
     } else {
-      gtest_filter_str += ":-bionic_selftest*";
+      // Find if '-' for NEGATIVE_PATTERNS exists.
+      if (gtest_filter_str.find(":-") != std::string::npos) {
+        gtest_filter_str += ":bionic_selftest*";
+      } else {
+        gtest_filter_str += ":-bionic_selftest*";
+      }
     }
     args.push_back(strdup(gtest_filter_str.c_str()));
   }
