@@ -5,19 +5,19 @@
 #include "leb128.h"
 
 #include <vector>
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 namespace relocation_packer {
 
-TEST(Leb128, Encoder) {
-  std::vector<ELF::Xword> values;
+TEST(Leb128, Encoder64) {
+  std::vector<uint64_t> values;
   values.push_back(624485);
   values.push_back(0);
   values.push_back(1);
   values.push_back(127);
   values.push_back(128);
 
-  Leb128Encoder encoder;
+  Leb128Encoder<uint64_t> encoder;
   encoder.EnqueueAll(values);
 
   encoder.Enqueue(4294967295);
@@ -26,7 +26,7 @@ TEST(Leb128, Encoder) {
   std::vector<uint8_t> encoding;
   encoder.GetEncoding(&encoding);
 
-  EXPECT_EQ(23, encoding.size());
+  EXPECT_EQ(23U, encoding.size());
   // 624485
   EXPECT_EQ(0xe5, encoding[0]);
   EXPECT_EQ(0x8e, encoding[1]);
@@ -59,7 +59,7 @@ TEST(Leb128, Encoder) {
   EXPECT_EQ(0x01, encoding[22]);
 }
 
-TEST(Leb128, Decoder) {
+TEST(Leb128, Decoder64) {
   std::vector<uint8_t> encoding;
   // 624485
   encoding.push_back(0xe5);
@@ -92,20 +92,20 @@ TEST(Leb128, Decoder) {
   encoding.push_back(0xff);
   encoding.push_back(0x01);
 
-  Leb128Decoder decoder(encoding);
+  Leb128Decoder<uint64_t> decoder(encoding, 0);
 
-  EXPECT_EQ(624485, decoder.Dequeue());
+  EXPECT_EQ(624485U, decoder.Dequeue());
 
-  std::vector<ELF::Xword> dequeued;
+  std::vector<uint64_t> dequeued;
   decoder.DequeueAll(&dequeued);
 
-  EXPECT_EQ(6, dequeued.size());
-  EXPECT_EQ(0, dequeued[0]);
-  EXPECT_EQ(1, dequeued[1]);
-  EXPECT_EQ(127, dequeued[2]);
-  EXPECT_EQ(128, dequeued[3]);
-  EXPECT_EQ(4294967295, dequeued[4]);
-  EXPECT_EQ(18446744073709551615ul, dequeued[5]);
+  EXPECT_EQ(6U, dequeued.size());
+  EXPECT_EQ(0U, dequeued[0]);
+  EXPECT_EQ(1U, dequeued[1]);
+  EXPECT_EQ(127U, dequeued[2]);
+  EXPECT_EQ(128U, dequeued[3]);
+  EXPECT_EQ(4294967295U, dequeued[4]);
+  EXPECT_EQ(18446744073709551615UL, dequeued[5]);
 }
 
 }  // namespace relocation_packer

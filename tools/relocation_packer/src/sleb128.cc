@@ -10,11 +10,33 @@
 
 #include "elf_traits.h"
 
+namespace {
+
+template <typename T>
+class uint_traits {};
+
+template <>
+class uint_traits<uint64_t> {
+ public:
+  typedef int64_t int_t;
+};
+
+template <>
+class uint_traits<uint32_t> {
+ public:
+  typedef int32_t int_t;
+};
+
+}
+
 namespace relocation_packer {
 
 // Empty constructor and destructor to silence chromium-style.
-Sleb128Encoder::Sleb128Encoder() { }
-Sleb128Encoder::~Sleb128Encoder() { }
+template <typename uint_t>
+Sleb128Encoder<uint_t>::Sleb128Encoder() { }
+
+template <typename uint_t>
+Sleb128Encoder<uint_t>::~Sleb128Encoder() { }
 
 // Add a single value to the encoding.  Values are encoded with variable
 // length.  The least significant 7 bits of each byte hold 7 bits of data,
@@ -22,11 +44,13 @@ Sleb128Encoder::~Sleb128Encoder() { }
 // value is sign extended up to a multiple of 7 bits (ensuring that the
 // most significant bit is zero for a positive number and one for a
 // negative number).
-void Sleb128Encoder::Enqueue(ELF::Sxword value) {
+template <typename uint_t>
+void Sleb128Encoder<uint_t>::Enqueue(uint_t value) {
+  typedef typename uint_traits<uint_t>::int_t int_t;
   static const size_t size = CHAR_BIT * sizeof(value);
 
   bool more = true;
-  const bool negative = value < 0;
+  const bool negative = static_cast<int_t>(value) < 0;
 
   while (more) {
     uint8_t byte = value & 127;
@@ -34,11 +58,11 @@ void Sleb128Encoder::Enqueue(ELF::Sxword value) {
 
     // Sign extend if encoding a -ve value.
     if (negative)
-      value |= -(static_cast<ELF::Sxword>(1) << (size - 7));
+      value |= -(static_cast<uint_t>(1) << (size - 7));
 
     // The sign bit of byte is second high order bit.
     const bool sign_bit = byte & 64;
-    if ((value == 0 && !sign_bit) || (value == -1 && sign_bit))
+    if ((value == 0 && !sign_bit) || (value == static_cast<uint_t>(-1) && sign_bit))
       more = false;
     else
       byte |= 128;
@@ -47,25 +71,30 @@ void Sleb128Encoder::Enqueue(ELF::Sxword value) {
 }
 
 // Add a vector of values to the encoding.
-void Sleb128Encoder::EnqueueAll(const std::vector<ELF::Sxword>& values) {
-  for (size_t i = 0; i < values.size(); ++i)
+template <typename uint_t>
+void Sleb128Encoder<uint_t>::EnqueueAll(const std::vector<uint_t>& values) {
+  for (size_t i = 0; i < values.size(); ++i) {
     Enqueue(values[i]);
+  }
 }
 
 // Create a new decoder for the given encoded stream.
-Sleb128Decoder::Sleb128Decoder(const std::vector<uint8_t>& encoding) {
+template <typename uint_t>
+Sleb128Decoder<uint_t>::Sleb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with) {
   encoding_ = encoding;
-  cursor_ = 0;
+  cursor_ = start_with;
 }
 
 // Empty destructor to silence chromium-style.
-Sleb128Decoder::~Sleb128Decoder() { }
+template <typename uint_t>
+Sleb128Decoder<uint_t>::~Sleb128Decoder() { }
 
 // Decode and retrieve a single value from the encoding.  Consume bytes
 // until one without its most significant bit is found, and re-form the
 // value from the 7 bit fields of the bytes consumed.
-ELF::Sxword Sleb128Decoder::Dequeue() {
-  ELF::Sxword value = 0;
+template <typename uint_t>
+uint_t Sleb128Decoder<uint_t>::Dequeue() {
+  uint_t value = 0;
   static const size_t size = CHAR_BIT * sizeof(value);
 
   size_t shift = 0;
@@ -74,22 +103,29 @@ ELF::Sxword Sleb128Decoder::Dequeue() {
   // Loop until we reach a byte with its high order bit clear.
   do {
     byte = encoding_[cursor_++];
-    value |= (static_cast<ELF::Sxword>(byte & 127) << shift);
+    value |= (static_cast<uint_t>(byte & 127) << shift);
     shift += 7;
   } while (byte & 128);
 
   // The sign bit is second high order bit of the final byte decoded.
   // Sign extend if value is -ve and we did not shift all of it.
   if (shift < size && (byte & 64))
-    value |= -(static_cast<ELF::Sxword>(1) << shift);
+    value |= -(static_cast<uint_t>(1) << shift);
 
-  return value;
+  return static_cast<uint_t>(value);
 }
 
 // Decode and retrieve all remaining values from the encoding.
-void Sleb128Decoder::DequeueAll(std::vector<ELF::Sxword>* values) {
-  while (cursor_ < encoding_.size())
+template <typename uint_t>
+void Sleb128Decoder<uint_t>::DequeueAll(std::vector<uint_t>* values) {
+  while (cursor_ < encoding_.size()) {
     values->push_back(Dequeue());
+  }
 }
+
+template class Sleb128Encoder<uint32_t>;
+template class Sleb128Encoder<uint64_t>;
+template class Sleb128Decoder<uint32_t>;
+template class Sleb128Decoder<uint64_t>;
 
 }  // namespace relocation_packer

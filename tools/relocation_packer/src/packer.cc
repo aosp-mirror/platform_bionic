@@ -10,115 +10,79 @@
 #include "delta_encoder.h"
 #include "elf_traits.h"
 #include "leb128.h"
-#include "run_length_encoder.h"
 #include "sleb128.h"
 
 namespace relocation_packer {
 
-// Pack relative relocations into a run-length encoded packed
-// representation.
-void RelocationPacker::PackRelativeRelocations(
-    const std::vector<ELF::Rel>& relocations,
-    std::vector<uint8_t>* packed) {
+// Pack relocations into a group encoded packed representation.
+template <typename ELF>
+void RelocationPacker<ELF>::PackRelocations(const std::vector<typename ELF::Rela>& relocations,
+                                            std::vector<uint8_t>* packed) {
   // Run-length encode.
-  std::vector<ELF::Xword> packed_words;
-  RelocationRunLengthCodec codec;
+  std::vector<typename ELF::Addr> packed_words;
+  RelocationDeltaCodec<ELF> codec;
   codec.Encode(relocations, &packed_words);
 
-  // If insufficient data to run-length encode, do nothing.
+  // If insufficient data do nothing.
   if (packed_words.empty())
     return;
 
-  // LEB128 encode, with "APR1" prefix.
-  Leb128Encoder encoder;
-  encoder.Enqueue('A');
-  encoder.Enqueue('P');
-  encoder.Enqueue('R');
-  encoder.Enqueue('1');
-  encoder.EnqueueAll(packed_words);
+  Sleb128Encoder<typename ELF::Addr> sleb128_encoder;
+  Leb128Encoder<typename ELF::Addr> leb128_encoder;
 
-  encoder.GetEncoding(packed);
+  std::vector<uint8_t> leb128_packed;
+  std::vector<uint8_t> sleb128_packed;
 
-  // Pad packed to a whole number of words.  This padding will decode as
-  // LEB128 zeroes.  Run-length decoding ignores it because encoding
-  // embeds the pairs count in the stream itself.
-  while (packed->size() % sizeof(ELF::Word))
-    packed->push_back(0);
+  leb128_encoder.EnqueueAll(packed_words);
+  leb128_encoder.GetEncoding(&leb128_packed);
+
+  sleb128_encoder.EnqueueAll(packed_words);
+  sleb128_encoder.GetEncoding(&sleb128_packed);
+
+  // TODO (simonb): Estimate savings on current android system image and consider using
+  // one encoder for all packed relocations to reduce complexity.
+  if (leb128_packed.size() <= sleb128_packed.size()) {
+    packed->push_back('A');
+    packed->push_back('P');
+    packed->push_back('U');
+    packed->push_back('2');
+    packed->insert(packed->end(), leb128_packed.begin(), leb128_packed.end());
+  } else {
+    packed->push_back('A');
+    packed->push_back('P');
+    packed->push_back('S');
+    packed->push_back('2');
+    packed->insert(packed->end(), sleb128_packed.begin(), sleb128_packed.end());
+  }
 }
 
 // Unpack relative relocations from a run-length encoded packed
 // representation.
-void RelocationPacker::UnpackRelativeRelocations(
+template <typename ELF>
+void RelocationPacker<ELF>::UnpackRelocations(
     const std::vector<uint8_t>& packed,
-    std::vector<ELF::Rel>* relocations) {
-  // LEB128 decode, after checking and stripping "APR1" prefix.
-  std::vector<ELF::Xword> packed_words;
-  Leb128Decoder decoder(packed);
-  CHECK(decoder.Dequeue() == 'A' &&
-        decoder.Dequeue() == 'P' &&
-        decoder.Dequeue() == 'R' &&
-        decoder.Dequeue() == '1');
-  decoder.DequeueAll(&packed_words);
+    std::vector<typename ELF::Rela>* relocations) {
 
-  // Run-length decode.
-  RelocationRunLengthCodec codec;
+  std::vector<typename ELF::Addr> packed_words;
+  CHECK(packed.size() > 4 &&
+        packed[0] == 'A' &&
+        packed[1] == 'P' &&
+        (packed[2] == 'U' || packed[2] == 'S') &&
+        packed[3] == '2');
+
+  if (packed[2] == 'U') {
+    Leb128Decoder<typename ELF::Addr> decoder(packed, 4);
+    decoder.DequeueAll(&packed_words);
+  } else {
+    Sleb128Decoder<typename ELF::Addr> decoder(packed, 4);
+    decoder.DequeueAll(&packed_words);
+  }
+
+  RelocationDeltaCodec<ELF> codec;
   codec.Decode(packed_words, relocations);
 }
 
-// Pack relative relocations with addends into a delta encoded packed
-// representation.
-void RelocationPacker::PackRelativeRelocations(
-    const std::vector<ELF::Rela>& relocations,
-    std::vector<uint8_t>* packed) {
-  // Delta encode.
-  std::vector<ELF::Sxword> packed_words;
-  RelocationDeltaCodec codec;
-  codec.Encode(relocations, &packed_words);
-
-  // If insufficient data to delta encode, do nothing.
-  if (packed_words.empty())
-    return;
-
-  // Signed LEB128 encode, with "APA1" prefix.  ASCII does not encode as
-  // itself under signed LEB128, so we have to treat it specially.
-  Sleb128Encoder encoder;
-  encoder.EnqueueAll(packed_words);
-  std::vector<uint8_t> encoded;
-  encoder.GetEncoding(&encoded);
-
-  packed->push_back('A');
-  packed->push_back('P');
-  packed->push_back('A');
-  packed->push_back('1');
-  packed->insert(packed->end(), encoded.begin(), encoded.end());
-
-  // Pad packed to a whole number of words.  This padding will decode as
-  // signed LEB128 zeroes.  Delta decoding ignores it because encoding
-  // embeds the pairs count in the stream itself.
-  while (packed->size() % sizeof(ELF::Word))
-    packed->push_back(0);
-}
-
-// Unpack relative relocations with addends from a delta encoded
-// packed representation.
-void RelocationPacker::UnpackRelativeRelocations(
-    const std::vector<uint8_t>& packed,
-    std::vector<ELF::Rela>* relocations) {
-  // Check "APA1" prefix.
-  CHECK(packed.at(0) == 'A' &&
-        packed.at(1) == 'P' &&
-        packed.at(2) == 'A' &&
-        packed.at(3) == '1');
-
-  // Signed LEB128 decode, after stripping "APA1" prefix.
-  std::vector<ELF::Sxword> packed_words;
-  std::vector<uint8_t> stripped(packed.begin() + 4, packed.end());
-  Sleb128Decoder decoder(stripped);
-  decoder.DequeueAll(&packed_words);
-
-  // Delta decode.
-  RelocationDeltaCodec codec;
-  codec.Decode(packed_words, relocations);
-}
+template class RelocationPacker<ELF32_traits>;
+template class RelocationPacker<ELF64_traits>;
 
 }  // namespace relocation_packer

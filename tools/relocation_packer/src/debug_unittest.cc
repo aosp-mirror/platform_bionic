@@ -5,7 +5,7 @@
 #include "debug.h"
 
 #include <sstream>
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 namespace relocation_packer {
 

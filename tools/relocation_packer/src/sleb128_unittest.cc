@@ -6,27 +6,27 @@
 
 #include <vector>
 #include "elf_traits.h"
-#include "testing/gtest/include/gtest/gtest.h"
+#include "gtest/gtest.h"
 
 namespace relocation_packer {
 
-TEST(Sleb128, Encoder) {
-  std::vector<ELF::Sxword> values;
-  values.push_back(624485);
-  values.push_back(0);
-  values.push_back(1);
-  values.push_back(63);
-  values.push_back(64);
-  values.push_back(-1);
-  values.push_back(-624485);
+TEST(Sleb128, Encoder64) {
+  std::vector<uint64_t> values;
+  values.push_back(624485U);
+  values.push_back(0U);
+  values.push_back(1U);
+  values.push_back(63U);
+  values.push_back(64U);
+  values.push_back(static_cast<uint64_t>(-1));
+  values.push_back(static_cast<uint64_t>(-624485));
 
-  Sleb128Encoder encoder;
+  Sleb128Encoder<uint64_t> encoder;
   encoder.EnqueueAll(values);
 
-  encoder.Enqueue(2147483647);
-  encoder.Enqueue(-2147483648);
-  encoder.Enqueue(9223372036854775807ll);
-  encoder.Enqueue(-9223372036854775807ll - 1);
+  encoder.Enqueue(2147483647U);
+  encoder.Enqueue(static_cast<uint64_t>(-2147483648));
+  encoder.Enqueue(9223372036854775807ULL);
+  encoder.Enqueue(static_cast<uint64_t>(-9223372036854775807LL - 1));
 
   std::vector<uint8_t> encoding;
   encoder.GetEncoding(&encoding);
@@ -143,24 +143,24 @@ TEST(Sleb128, Decoder) {
   encoding.push_back(0x80);
   encoding.push_back(0x7f);
 
-  Sleb128Decoder decoder(encoding);
+  Sleb128Decoder<uint64_t> decoder(encoding, 0);
 
-  EXPECT_EQ(624485, decoder.Dequeue());
+  EXPECT_EQ(624485U, decoder.Dequeue());
 
-  std::vector<ELF::Sxword> dequeued;
+  std::vector<uint64_t> dequeued;
   decoder.DequeueAll(&dequeued);
 
-  EXPECT_EQ(10u, dequeued.size());
-  EXPECT_EQ(0, dequeued[0]);
-  EXPECT_EQ(1, dequeued[1]);
-  EXPECT_EQ(63, dequeued[2]);
-  EXPECT_EQ(64, dequeued[3]);
-  EXPECT_EQ(-1, dequeued[4]);
-  EXPECT_EQ(-624485, dequeued[5]);
-  EXPECT_EQ(2147483647, dequeued[6]);
-  EXPECT_EQ(-2147483648, dequeued[7]);
-  EXPECT_EQ(9223372036854775807ll, dequeued[8]);
-  EXPECT_EQ(-9223372036854775807ll - 1, dequeued[9]);
+  EXPECT_EQ(10U, dequeued.size());
+  EXPECT_EQ(0U, dequeued[0]);
+  EXPECT_EQ(1U, dequeued[1]);
+  EXPECT_EQ(63U, dequeued[2]);
+  EXPECT_EQ(64U, dequeued[3]);
+  EXPECT_EQ(static_cast<uint64_t>(-1), dequeued[4]);
+  EXPECT_EQ(static_cast<uint64_t>(-624485), dequeued[5]);
+  EXPECT_EQ(2147483647U, dequeued[6]);
+  EXPECT_EQ(static_cast<uint64_t>(-2147483648), dequeued[7]);
+  EXPECT_EQ(9223372036854775807ULL, dequeued[8]);
+  EXPECT_EQ(static_cast<uint64_t>(-9223372036854775807LL - 1), dequeued[9]);
 }
 
 }  // namespace relocation_packer

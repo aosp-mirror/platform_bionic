@@ -11,12 +11,7 @@
 #include <vector>
 #include "debug.h"
 #include "elf_traits.h"
-#include "testing/gtest/include/gtest/gtest.h"
-
-// Macro stringification.
-// https://gcc.gnu.org/onlinedocs/cpp/Stringification.html
-#define XSTR(S) STR(S)
-#define STR(S) #S
+#include "gtest/gtest.h"
 
 namespace {
 
@@ -27,8 +22,6 @@ void GetDataFilePath(const char* name, std::string* path) {
   if (bindir) {
     data_dir = std::string(bindir);
   } else {
-    // Test data is in the gyp INTERMEDIATE_DIR subdirectory of the directory
-    // that contains the current binary.
     char path[PATH_MAX];
     memset(path, 0, sizeof(path));
     ASSERT_NE(-1, readlink("/proc/self/exe", path, sizeof(path) - 1));
@@ -37,8 +30,7 @@ void GetDataFilePath(const char* name, std::string* path) {
     size_t pos = data_dir.rfind('/');
     ASSERT_NE(std::string::npos, pos);
 
-    data_dir.erase(pos + 1);
-    data_dir += std::string(XSTR(INTERMEDIATE_DIR));
+    data_dir.erase(pos);
   }
 
   *path = data_dir + "/" + name;
@@ -49,7 +41,7 @@ void OpenRelocsTestFile(const char* name, FILE** stream) {
   GetDataFilePath(name, &path);
 
   FILE* testfile = fopen(path.c_str(), "rb");
-  ASSERT_FALSE(testfile == NULL);
+  ASSERT_FALSE(testfile == NULL) << "Error opening '" << path << "'";
 
   FILE* temporary = tmpfile();
   ASSERT_FALSE(temporary == NULL);
@@ -70,15 +62,7 @@ void OpenRelocsTestFile(const char* name, FILE** stream) {
   *stream = temporary;
 }
 
-void OpenRelocsTestFiles(FILE** relocs_so, FILE** packed_relocs_so) {
-  const char* arch = NULL;
-  if (ELF::kMachine == EM_ARM) {
-    arch = "arm32";
-  } else if (ELF::kMachine == EM_AARCH64) {
-    arch = "arm64";
-  }
-  ASSERT_FALSE(arch == NULL);
-
+void OpenRelocsTestFiles(const std::string& arch, FILE** relocs_so, FILE** packed_relocs_so) {
   const std::string base = std::string("elf_file_unittest_relocs_") + arch;
   const std::string relocs = base + ".so";
   const std::string packed_relocs = base + "_packed.so";
@@ -115,20 +99,45 @@ void CheckFileContentsEqual(FILE* first, FILE* second) {
   EXPECT_TRUE(feof(first) && feof(second));
 }
 
-}  // namespace
+template <typename ELF>
+static void ProcessUnpack(FILE* relocs_so, FILE* packed_relocs_so) {
+  relocation_packer::ElfFile<ELF> elf_file(fileno(packed_relocs_so));
 
-namespace relocation_packer {
+  // Ensure packing fails (already packed).
+  EXPECT_FALSE(elf_file.PackRelocations());
 
-TEST(ElfFile, PackRelocations) {
-  ASSERT_NE(EV_NONE, elf_version(EV_CURRENT));
+  // Unpack golden relocations, and check files are now identical.
+  EXPECT_TRUE(elf_file.UnpackRelocations());
+  CheckFileContentsEqual(packed_relocs_so, relocs_so);
+
+  CloseRelocsTestFiles(relocs_so, packed_relocs_so);
+}
+
+static void RunUnpackRelocationsTestFor(const std::string& arch) {
+  ASSERT_NE(static_cast<uint32_t>(EV_NONE), elf_version(EV_CURRENT));
 
   FILE* relocs_so = NULL;
   FILE* packed_relocs_so = NULL;
-  OpenRelocsTestFiles(&relocs_so, &packed_relocs_so);
-  if (HasFatalFailure())
-    return;
+  OpenRelocsTestFiles(arch, &relocs_so, &packed_relocs_so);
 
-  ElfFile elf_file(fileno(relocs_so));
+  if (relocs_so != NULL && packed_relocs_so != NULL) {
+    // lets detect elf class
+    ASSERT_EQ(0, fseek(relocs_so, EI_CLASS, SEEK_SET))
+        << "Invalid file length: " << strerror(errno);
+    uint8_t elf_class = 0;
+    ASSERT_EQ(1U, fread(&elf_class, 1, 1, relocs_so));
+    ASSERT_EQ(0, fseek(relocs_so, 0, SEEK_SET));
+    if (elf_class == ELFCLASS32) {
+      ProcessUnpack<ELF32_traits>(relocs_so, packed_relocs_so);
+    } else {
+      ProcessUnpack<ELF64_traits>(relocs_so, packed_relocs_so);
+    }
+  }
+}
+
+template <typename ELF>
+static void ProcessPack(FILE* relocs_so, FILE* packed_relocs_so) {
+  relocation_packer::ElfFile<ELF> elf_file(fileno(relocs_so));
 
   // Ensure unpacking fails (not packed).
   EXPECT_FALSE(elf_file.UnpackRelocations());
@@ -140,25 +149,40 @@ TEST(ElfFile, PackRelocations) {
   CloseRelocsTestFiles(relocs_so, packed_relocs_so);
 }
 
-TEST(ElfFile, UnpackRelocations) {
-  ASSERT_NE(EV_NONE, elf_version(EV_CURRENT));
+static void RunPackRelocationsTestFor(const std::string& arch) {
+  ASSERT_NE(static_cast<uint32_t>(EV_NONE), elf_version(EV_CURRENT));
 
   FILE* relocs_so = NULL;
   FILE* packed_relocs_so = NULL;
-  OpenRelocsTestFiles(&relocs_so, &packed_relocs_so);
-  if (HasFatalFailure())
-    return;
+  OpenRelocsTestFiles(arch, &relocs_so, &packed_relocs_so);
 
-  ElfFile elf_file(fileno(packed_relocs_so));
+  if (relocs_so != NULL && packed_relocs_so != NULL) {
+    // lets detect elf class
+    ASSERT_EQ(0, fseek(packed_relocs_so, EI_CLASS, SEEK_SET))
+        << "Invalid file length: " << strerror(errno);
+    uint8_t elf_class = 0;
+    ASSERT_EQ(1U, fread(&elf_class, 1, 1, packed_relocs_so));
+    fseek(packed_relocs_so, 0, SEEK_SET);
+    if (elf_class == ELFCLASS32) {
+      ProcessPack<ELF32_traits>(relocs_so, packed_relocs_so);
+    } else {
+      ProcessPack<ELF64_traits>(relocs_so, packed_relocs_so);
+    }
+  }
+}
 
-  // Ensure packing fails (already packed).
-  EXPECT_FALSE(elf_file.PackRelocations());
+}  // namespace
 
-  // Unpack golden relocations, and check files are now identical.
-  EXPECT_TRUE(elf_file.UnpackRelocations());
-  CheckFileContentsEqual(packed_relocs_so, relocs_so);
+namespace relocation_packer {
 
-  CloseRelocsTestFiles(relocs_so, packed_relocs_so);
+TEST(ElfFile, PackRelocations) {
+  RunPackRelocationsTestFor("arm32");
+  RunPackRelocationsTestFor("arm64");
+}
+
+TEST(ElfFile, UnpackRelocations) {
+  RunUnpackRelocationsTestFor("arm32");
+  RunUnpackRelocationsTestFor("arm64");
 }
 
 }  // namespace relocation_packer

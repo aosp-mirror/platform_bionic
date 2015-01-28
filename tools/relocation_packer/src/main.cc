@@ -25,11 +25,12 @@
 
 #include "debug.h"
 #include "elf_file.h"
+#include "elf_traits.h"
 #include "libelf.h"
 
-namespace {
+#include "nativehelper/ScopedFd.h"
 
-void PrintUsage(const char* argv0) {
+static void PrintUsage(const char* argv0) {
   std::string temporary = argv0;
   const size_t last_slash = temporary.find_last_of("/");
   if (last_slash != temporary.npos) {
@@ -45,58 +46,10 @@ void PrintUsage(const char* argv0) {
       "  -p, --pad      do not shrink relocations, but pad (for debugging)\n\n",
       basename);
 
-  if (ELF::kMachine == EM_ARM) {
-    printf(
-        "Extracts relative relocations from the .rel.dyn section, packs them\n"
-        "into a more compact format, and stores the packed relocations in\n"
-        ".android.rel.dyn.  Expands .android.rel.dyn to hold the packed\n"
-        "data, and shrinks .rel.dyn by the amount of unpacked data removed\n"
-        "from it.\n\n"
-        "Before being packed, a shared library needs to be prepared by adding\n"
-        "a null .android.rel.dyn section.\n\n"
-        "To pack relocations in a shared library:\n\n"
-        "    echo -n 'NULL' >/tmp/small\n"
-        "    arm-linux-androideabi-objcopy \\\n"
-        "        --add-section .android.rel.dyn=/tmp/small \\\n"
-        "        libchrome.<version>.so\n"
-        "    rm /tmp/small\n"
-        "    %s libchrome.<version>.so\n\n"
-        "To unpack and restore the shared library to its original state:\n\n"
-        "    %s -u libchrome.<version>.so\n"
-        "    arm-linux-androideabi-objcopy \\\n"
-        "        --remove-section=.android.rel.dyn libchrome.<version>.so\n\n",
-        basename, basename);
-  } else if (ELF::kMachine == EM_AARCH64) {
-    printf(
-        "Extracts relative relocations from the .rela.dyn section, packs them\n"
-        "into a more compact format, and stores the packed relocations in\n"
-        ".android.rela.dyn.  Expands .android.rela.dyn to hold the packed\n"
-        "data, and shrinks .rela.dyn by the amount of unpacked data removed\n"
-        "from it.\n\n"
-        "Before being packed, a shared library needs to be prepared by adding\n"
-        "a null .android.rela.dyn section.\n\n"
-        "To pack relocations in a shared library:\n\n"
-        "    echo -n 'NULL' >/tmp/small\n"
-        "    aarch64-linux-android-objcopy \\\n"
-        "        --add-section .android.rela.dyn=/tmp/small \\\n"
-        "        libchrome.<version>.so\n"
-        "    rm /tmp/small\n"
-        "    %s libchrome.<version>.so\n\n"
-        "To unpack and restore the shared library to its original state:\n\n"
-        "    %s -u libchrome.<version>.so\n"
-        "    aarch64-linux-android-objcopy \\\n"
-        "        --remove-section=.android.rela.dyn libchrome.<version>.so\n\n",
-        basename, basename);
-  } else {
-    NOTREACHED();
-  }
-
   printf(
       "Debug sections are not handled, so packing should not be used on\n"
       "shared libraries compiled for debugging or otherwise unstripped.\n");
 }
-
-}  // namespace
 
 int main(int argc, char* argv[]) {
   bool is_unpacking = false;
@@ -143,11 +96,9 @@ int main(int argc, char* argv[]) {
     LOG(WARNING) << "Elf Library is out of date!";
   }
 
-  LOG(INFO) << "Configured for " << ELF::Machine();
-
   const char* file = argv[argc - 1];
-  const int fd = open(file, O_RDWR);
-  if (fd == -1) {
+  ScopedFd fd(open(file, O_RDWR));
+  if (fd.get() == -1) {
     LOG(ERROR) << file << ": " << strerror(errno);
     return 1;
   }
@@ -155,16 +106,43 @@ int main(int argc, char* argv[]) {
   if (is_verbose)
     relocation_packer::Logger::SetVerbose(1);
 
-  relocation_packer::ElfFile elf_file(fd);
-  elf_file.SetPadding(is_padding);
+  // We need to detect elf class in order to create
+  // correct implementation
+  uint8_t e_ident[EI_NIDENT];
+  if (TEMP_FAILURE_RETRY(read(fd.get(), e_ident, EI_NIDENT) != EI_NIDENT)) {
+    LOG(ERROR) << file << ": failed to read elf header:" << strerror(errno);
+    return 1;
+  }
 
-  bool status;
-  if (is_unpacking)
-    status = elf_file.UnpackRelocations();
-  else
-    status = elf_file.PackRelocations();
+  if (TEMP_FAILURE_RETRY(lseek(fd.get(), 0, SEEK_SET)) != 0) {
+    LOG(ERROR) << file << ": lseek to 0 failed:" << strerror(errno);
+    return 1;
+  }
 
-  close(fd);
+  bool status = false;
+
+  if (e_ident[EI_CLASS] == ELFCLASS32) {
+    relocation_packer::ElfFile<ELF32_traits> elf_file(fd.get());
+    elf_file.SetPadding(is_padding);
+
+    if (is_unpacking) {
+      status = elf_file.UnpackRelocations();
+    } else {
+      status = elf_file.PackRelocations();
+    }
+  } else if (e_ident[EI_CLASS] == ELFCLASS64) {
+    relocation_packer::ElfFile<ELF64_traits> elf_file(fd.get());
+    elf_file.SetPadding(is_padding);
+
+    if (is_unpacking) {
+      status = elf_file.UnpackRelocations();
+    } else {
+      status = elf_file.PackRelocations();
+    }
+  } else {
+    LOG(ERROR) << file << ": unknown ELFCLASS: " << e_ident[EI_CLASS];
+    return 1;
+  }
 
   if (!status) {
     LOG(ERROR) << file << ": failed to pack/unpack file";

@@ -48,29 +48,25 @@
 #include <vector>
 
 #include "elf.h"
-#include "elf_traits.h"
 
 namespace relocation_packer {
 
-// A RelocationPacker packs vectors of relative relocations into more
+// A RelocationPacker packs vectors of relocations into more
 // compact forms, and unpacks them to reproduce the pre-packed data.
+template <typename ELF>
 class RelocationPacker {
  public:
-  // Pack relative relocations into a more compact form.
-  // |relocations| is a vector of relative relocation structs.
+  // Pack relocations into a more compact form.
+  // |relocations| is a vector of relocation structs.
   // |packed| is the vector of packed bytes into which relocations are packed.
-  static void PackRelativeRelocations(const std::vector<ELF::Rel>& relocations,
-                                      std::vector<uint8_t>* packed);
-  static void PackRelativeRelocations(const std::vector<ELF::Rela>& relocations,
-                                      std::vector<uint8_t>* packed);
+  static void PackRelocations(const std::vector<typename ELF::Rela>& relocations,
+                              std::vector<uint8_t>* packed);
 
-  // Unpack relative relocations from their more compact form.
+  // Unpack relocations from their more compact form.
   // |packed| is the vector of packed relocations.
-  // |relocations| is a vector of unpacked relative relocation structs.
-  static void UnpackRelativeRelocations(const std::vector<uint8_t>& packed,
-                                        std::vector<ELF::Rel>* relocations);
-  static void UnpackRelativeRelocations(const std::vector<uint8_t>& packed,
-                                        std::vector<ELF::Rela>* relocations);
+  // |relocations| is a vector of unpacked relocation structs.
+  static void UnpackRelocations(const std::vector<uint8_t>& packed,
+                                std::vector<typename ELF::Rela>* relocations);
 };
 
 }  // namespace relocation_packer

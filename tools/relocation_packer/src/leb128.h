@@ -21,6 +21,7 @@
 namespace relocation_packer {
 
 // Encode packed words as a LEB128 byte stream.
+template <typename uint_t>
 class Leb128Encoder {
  public:
   // Explicit (but empty) constructor and destructor, for chromium-style.
@@ -29,11 +30,11 @@ class Leb128Encoder {
 
   // Add a value to the encoding stream.
   // |value| is the unsigned int to add.
-  void Enqueue(ELF::Xword value);
+  void Enqueue(uint_t value);
 
   // Add a vector of values to the encoding stream.
   // |values| is the vector of unsigned ints to add.
-  void EnqueueAll(const std::vector<ELF::Xword>& values);
+  void EnqueueAll(const std::vector<uint_t>& values);
 
   // Retrieve the encoded representation of the values.
   // |encoding| is the returned vector of encoded data.
@@ -45,21 +46,22 @@ class Leb128Encoder {
 };
 
 // Decode a LEB128 byte stream to produce packed words.
+template <typename uint_t>
 class Leb128Decoder {
  public:
   // Create a new decoder for the given encoded stream.
   // |encoding| is the vector of encoded data.
-  explicit Leb128Decoder(const std::vector<uint8_t>& encoding);
+  explicit Leb128Decoder(const std::vector<uint8_t>& encoding, size_t start_with);
 
   // Explicit (but empty) destructor, for chromium-style.
   ~Leb128Decoder();
 
   // Retrieve the next value from the encoded stream.
-  ELF::Xword Dequeue();
+  uint_t Dequeue();
 
   // Retrieve all remaining values from the encoded stream.
   // |values| is the vector of decoded data.
-  void DequeueAll(std::vector<ELF::Xword>* values);
+  void DequeueAll(std::vector<uint_t>* values);
 
  private:
   // Encoded LEB128 stream.

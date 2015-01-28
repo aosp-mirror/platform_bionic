@@ -67,12 +67,13 @@ namespace relocation_packer {
 // An ElfFile reads shared objects, and shuttles relative relocations
 // between .rel.dyn or .rela.dyn and .android.rel.dyn or .android.rela.dyn
 // sections.
+template <typename ELF>
 class ElfFile {
  public:
   explicit ElfFile(int fd)
       : fd_(fd), is_padding_relocations_(false), elf_(NULL),
         relocations_section_(NULL), dynamic_section_(NULL),
-        android_relocations_section_(NULL), relocations_type_(NONE) {}
+        relocations_type_(NONE) {}
   ~ElfFile() {}
 
   // Set padding mode.  When padding, PackRelocations() will not shrink
@@ -92,6 +93,10 @@ class ElfFile {
   bool UnpackRelocations();
 
  private:
+  enum relocations_type_t {
+    NONE = 0, REL, RELA
+  };
+
   // Load a new ElfFile from a filedescriptor.  If flushing, the file must
   // be open for read/write.  Returns true on successful ELF file load.
   // |fd| is an open file descriptor for the shared object.
@@ -99,16 +104,33 @@ class ElfFile {
 
   // Templated packer, helper for PackRelocations().  Rel type is one of
   // ELF::Rel or ELF::Rela.
-  template <typename Rel>
-  bool PackTypedRelocations(const std::vector<Rel>& relocations);
+  bool PackTypedRelocations(std::vector<typename ELF::Rela>* relocations);
 
   // Templated unpacker, helper for UnpackRelocations().  Rel type is one of
   // ELF::Rel or ELF::Rela.
-  template <typename Rel>
   bool UnpackTypedRelocations(const std::vector<uint8_t>& packed);
 
   // Write ELF file changes.
   void Flush();
+
+  void AdjustRelativeRelocationTargets(typename ELF::Off hole_start,
+                                       ssize_t hole_size,
+                                       std::vector<typename ELF::Rela>* relocations);
+
+  static void ResizeSection(Elf* elf, Elf_Scn* section, size_t new_size,
+                            typename ELF::Word new_sh_type, relocations_type_t relocations_type);
+
+  static void AdjustDynamicSectionForHole(Elf_Scn* dynamic_section,
+                                          typename ELF::Off hole_start,
+                                          ssize_t hole_size,
+                                          relocations_type_t relocations_type);
+
+  static void ConvertRelArrayToRelaVector(const typename ELF::Rel* rel_array, size_t rel_array_size,
+                                          std::vector<typename ELF::Rela>* rela_vector);
+
+  static void ConvertRelaVectorToRelVector(const std::vector<typename ELF::Rela>& rela_vector,
+                                           std::vector<typename ELF::Rel>* rel_vector);
+
 
   // File descriptor opened on the shared object.
   int fd_;
@@ -123,10 +145,9 @@ class ElfFile {
   // Sections that we manipulate, assigned by Load().
   Elf_Scn* relocations_section_;
   Elf_Scn* dynamic_section_;
-  Elf_Scn* android_relocations_section_;
 
   // Relocation type found, assigned by Load().
-  enum { NONE = 0, REL, RELA } relocations_type_;
+  relocations_type_t relocations_type_;
 };
 
 }  // namespace relocation_packer
