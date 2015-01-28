@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57ae7766_a99cb94a",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-28T22:05:56Z",
+      "side": 1,
+      "message": "This appears to be exactly the same as the aarch64 definition (other than off64_t versus off_t but I believe those should be the same size). Is there a reason not to share the definition rather than create this section?",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 27
+      },
+      "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
