@@ -22,6 +22,30 @@
       "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c2e31e_6da0150d",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1064548
+      },
+      "writtenOn": "2015-01-28T22:30:24Z",
+      "side": 1,
+      "message": "Changing to off_t causes a warning in linker.cpp for MIPS64 build. \nSee the earlier patch to fix the warning below. It is now abandoned.\nhttps://android-review.googlesource.com/#/c/120272/",
+      "parentUuid": "57ae7766_a99cb94a",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 27
+      },
+      "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
