@@ -70,8 +70,8 @@ bool soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& globa
         if (ELF64_R_TYPE2(rel->r_info) != R_MIPS_64 ||
             ELF64_R_TYPE3(rel->r_info) != R_MIPS_NONE) {
           DL_ERR("Unexpected compound relocation type:%d type2:%d type3:%d @ %p (%zu)",
-                 type, (unsigned)ELF64_R_TYPE2(rel->r_info),
-                 (unsigned)ELF64_R_TYPE3(rel->r_info), rel, idx);
+                 type, static_cast<unsigned>(ELF64_R_TYPE2(rel->r_info)),
+                 static_cast<unsigned>(ELF64_R_TYPE3(rel->r_info)), rel, idx);
           return false;
         }
 #endif
