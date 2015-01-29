@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97a38fb2_308dc8ca",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T23:22:29Z",
+      "side": 1,
+      "message": "i think we need to change this back to the old code, where these values differ on arm and x86.",
+      "revId": "6a3ff01cd4f063556cf25706ddc9dff82c351aba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
