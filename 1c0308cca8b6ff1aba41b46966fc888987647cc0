@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7757fb41_d7d1fcd1",
+        "filename": "libc/include/android/legacy_errno_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "didn\u0027t we kill this way back in gingerbread?",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d72fc7b3_77b0f28c",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "are these actually right? didn\u0027t we fix bugs in these before we took them out of line? (even if we didn\u0027t, we might still want to check for bug fixes in the latest.)",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57ae7766_40aab2ed",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "do we want to clang-format these?",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7757fb41_17e374aa",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "shouldn\u0027t need this given the attribute.",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7757fb41_3705d8ba",
+        "filename": "libc/include/android/legacy_sys_atomics_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "(i think you\u0027re right to include this, but... yuck!)",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d72fc7b3_3704aa8c",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T04:30:04Z",
+      "side": 1,
+      "message": "given that you so carefully separated the different files, we could just include the relevant cruft in the relevant clean header. *everyone* gets cdefs.h, so i worry that we\u0027re just making it harder for them to move forward to cleaner \u003e\u003d 21 headers when the time comes.\n\n(given that the only code changes i\u0027ve made today have been adding missing includes... :-) )",
+      "revId": "1c0308cca8b6ff1aba41b46966fc888987647cc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
