@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "linker_allocator.h"
 #include <inttypes.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
 

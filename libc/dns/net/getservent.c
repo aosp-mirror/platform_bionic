@@ -28,6 +28,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <endian.h>
+#include <malloc.h>
 #include <netdb.h>
 #include "servent.h"
 #include "services.h"
