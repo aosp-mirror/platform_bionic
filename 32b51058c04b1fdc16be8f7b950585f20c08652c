@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d726e7f7_8abbcbbf",
+        "filename": "CPPLINT.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T18:57:05Z",
+      "side": 1,
+      "message": "from art:\n\nART_CPPLINT_FILTER :\u003d --filter\u003d-whitespace/line_length,-build/include,-readability/function,-readability/streams,-readability/todo,-runtime/references,-runtime/sizeof,-runtime/threadsafe_fn,-runtime/printf",
+      "revId": "32b51058c04b1fdc16be8f7b950585f20c08652c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
