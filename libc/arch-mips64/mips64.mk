@@ -52,6 +52,7 @@ libc_bionic_src_files_mips64 += \
     arch-mips64/bionic/setjmp.S \
     arch-mips64/bionic/syscall.S \
     arch-mips64/bionic/vfork.S \
+    arch-mips64/bionic/stat.cpp \
 
 libc_crt_target_cflags_mips64 := \
     $($(my_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS) \
