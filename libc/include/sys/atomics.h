@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,34 +25,21 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _TERMIOS_H_
-#define _TERMIOS_H_
 
-#include <sys/cdefs.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <linux/termios.h>
+#ifndef _SYS_ATOMICS_H_
+#define _SYS_ATOMICS_H_
 
-__BEGIN_DECLS
-
-#if __ANDROID_API__ >= 21
-speed_t cfgetispeed(const struct termios*);
-speed_t cfgetospeed(const struct termios*);
-void cfmakeraw(struct termios*);
-int cfsetispeed(struct termios*, speed_t);
-int cfsetospeed(struct termios*, speed_t);
-int cfsetspeed(struct termios*, speed_t);
-int tcdrain(int);
-int tcflow(int, int);
-int tcflush(int, int);
-int tcgetattr(int, struct termios*);
-pid_t tcgetsid(int);
-int tcsendbreak(int, int);
-int tcsetattr(int, int, const struct termios*);
-#else
-#include <android/legacy_termios_inlines.h>
+/*
+ * These got proper out of line definitions in L. Putting the inline definitions
+ * back for old targets brings us closer to being able to use one set of headers
+ * for all API levels.
+ *
+ * The other inlines we put back went in to their appropriate headers, but the
+ * sys/atomics.h header was removed, so we'll just add these somewhere we can be
+ * sure they will be included.
+ */
+#if __ANDROID_API__ < 21
+#include <android/legacy_sys_atomics_inlines.h>
 #endif
 
-__END_DECLS
-
-#endif /* _TERMIOS_H_ */
+#endif /* _SYS_ATOMICS_H_ */
