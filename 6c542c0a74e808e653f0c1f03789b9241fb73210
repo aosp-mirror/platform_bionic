@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7f76b97_ce1963f3",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:14:49Z",
+      "side": 1,
+      "message": "(have we been using __inline__ elsewhere? shouldn\u0027t we use __inline and let cdefs.h choose the appropriate __inline__ or inline for us?)",
+      "revId": "6c542c0a74e808e653f0c1f03789b9241fb73210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9720efdf_88ee378d",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:14:49Z",
+      "side": 1,
+      "message": "C++ comments in C source.\n\n(moving the comment to the line above will fix the weird indentation too.)",
+      "revId": "6c542c0a74e808e653f0c1f03789b9241fb73210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9720efdf_c8d14fd2",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:14:49Z",
+      "side": 1,
+      "message": "sighandler_t",
+      "range": {
+        "startLine": 92,
+        "startChar": 47,
+        "endLine": 92,
+        "endChar": 61
+      },
+      "revId": "6c542c0a74e808e653f0c1f03789b9241fb73210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7025340_97592c7e",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:14:49Z",
+      "side": 1,
+      "message": "since this is only legally included from stdlib, you could lose this. (otherwise, add the missing \u003csignal.h\u003e to the previous file :-) )",
+      "revId": "6c542c0a74e808e653f0c1f03789b9241fb73210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9720efdf_ebe40d36",
+        "filename": "libc/include/ctype.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:14:49Z",
+      "side": 1,
+      "message": "why not\n\n  #if __ANDROID_API_LEVEL__ \u003e\u003d 21\n\nit\u0027s more in keeping with the C/POSIX tests, and these are already conveniently grouped into a block.\n\n(though presumably these should all be in a POSIX \u003e\u003d 2008 block?)",
+      "revId": "6c542c0a74e808e653f0c1f03789b9241fb73210",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
