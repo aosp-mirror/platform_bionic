@@ -69,6 +69,24 @@
       "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9720efdf_6bbbfdf3",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T20:17:57Z",
+      "side": 1,
+      "message": "more importantly, __cxa_guard is part of the language. you might have your own pthread_once function that means something completely different.",
+      "parentUuid": "b72b33c2_49ec41d0",
+      "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
