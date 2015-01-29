@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9752af4f_784aa19a",
+        "filename": "libc/kernel/kernel-3.18.diff",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-01-29T06:38:00Z",
+      "side": 1,
+      "message": "this file shows all the differences from previous version after removing all the WARNING lines. i have manually examined this file and all the diffs should be due  to format change.\n\nthis file will be removed when committing the CL.",
+      "revId": "9a90e76bb27ad04355da0b3ae3651e16f319da8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9752af4f_584fdda8",
+        "filename": "libc/kernel/kernel-3.18.diff",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-01-29T06:38:00Z",
+      "side": 1,
+      "message": "both formats exist in kernel header files. so i\u0027m using the one that puts \u0027{\u0027 in the same line.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "9a90e76bb27ad04355da0b3ae3651e16f319da8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
