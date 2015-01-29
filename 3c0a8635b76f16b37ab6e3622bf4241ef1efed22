@@ -70,6 +70,30 @@
       "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c2e31e_9029daae",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1064548
+      },
+      "writtenOn": "2015-01-29T00:09:49Z",
+      "side": 1,
+      "message": "My bad. While testing with other patches in my local directory, I wrongly assumed the off64_t requirement for this structure. I will use the aarch64 structure instead.",
+      "parentUuid": "9739cf03_e0f8c2d3",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 27
+      },
+      "revId": "3c0a8635b76f16b37ab6e3622bf4241ef1efed22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
