@@ -36,7 +36,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || (defined(__mips__) && defined(__LP64__))
 #define __STAT64_BODY \
   dev_t st_dev; \
   ino_t st_ino; \
@@ -56,7 +56,7 @@ __BEGIN_DECLS
   unsigned int __unused4; \
   unsigned int __unused5; \
 
-#elif defined(__mips__) /* and mips64 */
+#elif defined(__mips__) && !defined(__LP64__)
 #define __STAT64_BODY \
   unsigned int st_dev; \
   unsigned int __pad0[3]; \
