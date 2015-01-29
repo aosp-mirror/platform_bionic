@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37ee63c7_ed4705db",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-01-29T17:32:24Z",
+      "side": 0,
+      "message": "Isn\u0027t this necessary because of the memset in FD_ZERO?",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "7f17aea2fc21aaf657824a023a4b7582fb74a2d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
