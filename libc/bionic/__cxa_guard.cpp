@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-#include <stddef.h>
 #include <endian.h>
+#include <limits.h>
+#undef _USING_LIBCXX  // Prevent using of <atomic>.
+#include <stdatomic.h>
 
-#include "private/bionic_atomic_inline.h"
+#include <stddef.h>
+
 #include "private/bionic_futex.h"
 
 // This file contains C++ ABI support functions for one time
@@ -49,66 +52,82 @@
 // values. The LSB is tested by the compiler-generated code before calling
 // __cxa_guard_acquire.
 union _guard_t {
-    int volatile state;
-    int32_t aligner;
+  atomic_int state;
+  int32_t aligner;
 };
-
-const static int ready = 0x1;
-const static int pending = 0x2;
-const static int waiting = 0x6;
 
 #else
 // The Itanium/x86 C++ ABI (used by all other architectures) mandates that
 // guard variables are 64-bit aligned, 64-bit values. The LSB is tested by
 // the compiler-generated code before calling __cxa_guard_acquire.
 union _guard_t {
-    int volatile state;
-    int64_t aligner;
+  atomic_int state;
+  int64_t aligner;
 };
 
-const static int ready     = letoh32(0x1);
-const static int pending   = letoh32(0x100);
-const static int waiting   = letoh32(0x10000);
 #endif
 
+// Set construction state values according to reference documentation.
+// 0 is the initialization value.
+// Arm requires ((*gv & 1) == 1) after __cxa_guard_release, ((*gv & 3) == 0) after __cxa_guard_abort.
+// X86 requires first byte not modified by __cxa_guard_acquire, first byte is non-zero after
+// __cxa_guard_release.
+
+#define CONSTRUCTION_NOT_YET_STARTED                0
+#define CONSTRUCTION_COMPLETE                       1
+#define CONSTRUCTION_UNDERWAY_WITHOUT_WAITER    0x100
+#define CONSTRUCTION_UNDERWAY_WITH_WAITER       0x200
+
 extern "C" int __cxa_guard_acquire(_guard_t* gv) {
-    // 0 -> pending, return 1
-    // pending -> waiting, wait and return 0
-    // waiting: untouched, wait and return 0
-    // ready: untouched, return 0
+  int old_value = atomic_load_explicit(&gv->state, memory_order_relaxed);
 
-retry:
-    if (__bionic_cmpxchg(0, pending, &gv->state) == 0) {
-        ANDROID_MEMBAR_FULL();
-        return 1;
+  while (true) {
+    if (old_value == CONSTRUCTION_COMPLETE) {
+      // A load_acquire operation is need before exiting with COMPLETE state, as we have to ensure
+      // that all the stores performed by the construction function are observable on this CPU
+      // after we exit.
+      atomic_thread_fence(memory_order_acquire);
+      return 0;
+    } else if (old_value == CONSTRUCTION_NOT_YET_STARTED) {
+      if (!atomic_compare_exchange_weak_explicit(&gv->state, &old_value,
+                                                  CONSTRUCTION_UNDERWAY_WITHOUT_WAITER,
+                                                  memory_order_relaxed,
+                                                  memory_order_relaxed)) {
+        continue;
+      }
+      // The acquire fence may not be needed. But as described in section 3.3.2 of
+      // the Itanium C++ ABI specification, it probably has to behave like the
+      // acquisition of a mutex, which needs an acquire fence.
+      atomic_thread_fence(memory_order_acquire);
+      return 1;
+    } else if (old_value == CONSTRUCTION_UNDERWAY_WITHOUT_WAITER) {
+      if (!atomic_compare_exchange_weak_explicit(&gv->state, &old_value,
+                                                 CONSTRUCTION_UNDERWAY_WITH_WAITER,
+                                                 memory_order_relaxed,
+                                                 memory_order_relaxed)) {
+        continue;
+      }
     }
-    __bionic_cmpxchg(pending, waiting, &gv->state); // Indicate there is a waiter
-    __futex_wait(&gv->state, waiting, NULL);
 
-    if (gv->state != ready) {
-        // __cxa_guard_abort was called, let every thread try since there is no return code for this condition
-        goto retry;
-    }
-
-    ANDROID_MEMBAR_FULL();
-    return 0;
+    __futex_wait_ex(&gv->state, false, CONSTRUCTION_UNDERWAY_WITH_WAITER, NULL);
+    old_value = atomic_load_explicit(&gv->state, memory_order_relaxed);
+  }
 }
 
 extern "C" void __cxa_guard_release(_guard_t* gv) {
-    // pending -> ready
-    // waiting -> ready, and wake
-
-    ANDROID_MEMBAR_FULL();
-    if (__bionic_cmpxchg(pending, ready, &gv->state) == 0) {
-        return;
-    }
-
-    gv->state = ready;
-    __futex_wake(&gv->state, 0x7fffffff);
+  // Release fence is used to make all stores performed by the construction function
+  // visible in other threads.
+  int old_value = atomic_exchange_explicit(&gv->state, CONSTRUCTION_COMPLETE, memory_order_release);
+  if (old_value == CONSTRUCTION_UNDERWAY_WITH_WAITER) {
+    __futex_wake_ex(&gv->state, false, INT_MAX);
+  }
 }
 
 extern "C" void __cxa_guard_abort(_guard_t* gv) {
-    ANDROID_MEMBAR_FULL();
-    gv->state= 0;
-    __futex_wake(&gv->state, 0x7fffffff);
+  // Release fence is used to make all stores performed by the construction function
+  // visible in other threads.
+  int old_value = atomic_exchange_explicit(&gv->state, CONSTRUCTION_NOT_YET_STARTED, memory_order_release);
+  if (old_value == CONSTRUCTION_UNDERWAY_WITH_WAITER) {
+    __futex_wake_ex(&gv->state, false, INT_MAX);
+  }
 }
