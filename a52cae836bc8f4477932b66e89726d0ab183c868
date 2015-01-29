@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "b7025340_57498472",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-29T19:12:19Z",
+      "side": 1,
+      "message": "s/?/./",
+      "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7025340_3715e06c",
         "filename": "libc/bionic/__cxa_guard.cpp",
         "patchSetId": 1
