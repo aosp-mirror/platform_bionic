@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "private/bionic_systrace.h"
 #include "private/libc_logging.h"

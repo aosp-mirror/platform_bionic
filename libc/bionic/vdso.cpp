@@ -15,6 +15,7 @@
  */
 
 #include <link.h>
+#include <string.h>
 #include <sys/auxv.h>
 #include <unistd.h>
 

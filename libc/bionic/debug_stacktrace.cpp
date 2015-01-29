@@ -30,6 +30,7 @@
 
 #include <dlfcn.h>
 #include <inttypes.h>
+#include <malloc.h>
 #include <unistd.h>
 #include <unwind.h>
 #include <sys/types.h>
