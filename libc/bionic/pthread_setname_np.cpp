@@ -30,6 +30,7 @@
 
 #include <fcntl.h>
 #include <stdio.h> // For snprintf.
+#include <string.h>
 #include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

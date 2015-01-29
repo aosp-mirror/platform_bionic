@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <android/dlext.h>
 
 #include <bionic/pthread_internal.h>

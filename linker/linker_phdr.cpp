@@ -29,6 +29,7 @@
 #include "linker_phdr.h"
 
 #include <errno.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
