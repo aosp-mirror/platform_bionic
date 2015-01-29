@@ -31,6 +31,7 @@
 #include "private/kernel_sigset_t.h"
 
 #include <errno.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
