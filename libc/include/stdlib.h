@@ -95,7 +95,7 @@ extern long labs(long) __pure2;
 extern long long llabs(long long) __pure2;
 
 extern char * realpath(const char *path, char *resolved);
-extern int system(const char * string);
+extern int system(const char *string);
 
 extern void * bsearch(const void *key, const void *base0,
 	size_t nmemb, size_t size,
