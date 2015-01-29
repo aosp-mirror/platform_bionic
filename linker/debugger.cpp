@@ -30,9 +30,11 @@
 
 #include <errno.h>
 #include <inttypes.h>
+#include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <sys/socket.h>
@@ -212,6 +214,23 @@ static void send_debuggerd_packet(siginfo_t* info) {
     return;
   }
 
+  // Mutex to prevent multiple crashing threads from trying to talk
+  // to debuggerd at the same time.
+  static pthread_mutex_t crash_mutex = PTHREAD_MUTEX_INITIALIZER;
+  int ret = pthread_mutex_trylock(&crash_mutex);
+  if (ret != 0) {
+    if (ret == EBUSY) {
+      __libc_format_log(ANDROID_LOG_INFO, "libc",
+                        "Another thread has contacted debuggerd first, stop and wait for process to die.");
+      // This will never complete since the lock is never released.
+      pthread_mutex_lock(&crash_mutex);
+    } else {
+      __libc_format_log(ANDROID_LOG_INFO, "libc",
+                        "pthread_mutex_trylock failed: %s", strerror(ret));
+    }
+    return;
+  }
+
   int s = socket_abstract_client(DEBUGGER_SOCKET_NAME, SOCK_STREAM | SOCK_CLOEXEC);
   if (s == -1) {
     __libc_format_log(ANDROID_LOG_FATAL, "libc", "Unable to open connection to debuggerd: %s",
@@ -228,7 +247,7 @@ static void send_debuggerd_packet(siginfo_t* info) {
   msg.tid = gettid();
   msg.abort_msg_address = reinterpret_cast<uintptr_t>(g_abort_message);
   msg.original_si_code = (info != nullptr) ? info->si_code : 0;
-  int ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
+  ret = TEMP_FAILURE_RETRY(write(s, &msg, sizeof(msg)));
   if (ret == sizeof(msg)) {
     char debuggerd_ack;
     ret = TEMP_FAILURE_RETRY(read(s, &debuggerd_ack, 1));
