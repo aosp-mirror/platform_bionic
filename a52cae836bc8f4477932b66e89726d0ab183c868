@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b72b33c2_493561d4",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-29T19:20:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7025340_57498472",
+      "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7025340_3715e06c",
         "filename": "libc/bionic/__cxa_guard.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-01-29T19:11:52Z",
       "side": 1,
       "message": "ah, they avoid the futex in the case where no-one was waiting. probably not worth bothering with this for pthread_once. (i\u0027m not convinced it\u0027s worth keeping the complexity here.)\n\nlooks like g++ inlines the trivial test into the caller, too.\n\n\tcmpb\t$0, guard variable for f()::v(%rip)\n\tje\t.L14\n\tmovl\tf()::v(%rip), %eax\n\tret\n\npity we can\u0027t get that for pthread_once.",
+      "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b72b33c2_49ec41d0",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-29T19:20:57Z",
+      "side": 1,
+      "message": "I guess pthread_once is not used as much as __cxa_guard.",
+      "parentUuid": "b7025340_3715e06c",
       "revId": "a52cae836bc8f4477932b66e89726d0ab183c868",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
