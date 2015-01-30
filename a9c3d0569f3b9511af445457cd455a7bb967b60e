@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3773c325_a5733ece",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 0,
+      "message": "Don\u0027t need these anymore?",
+      "revId": "a9c3d0569f3b9511af445457cd455a7bb967b60e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

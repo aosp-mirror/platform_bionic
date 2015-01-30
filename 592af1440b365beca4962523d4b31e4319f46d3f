@@ -1,0 +1,488 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7826718_ea298784",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Separate lines.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7826718_ca2cc397",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Could you clean up the wildcard imports?",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_50732c02",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "We already have both of these in the Android tree:\n\n    import site\n    top \u003d os.getenv(\u0027ANDROID_BUILD_TOP\u0027)\n    site.addsitedir(os.path.join(\n        top, \u0027external/clang/bindings/python\u0027))\n    os.setenv(\u0027LD_LIBRARY_PATH\u0027, os.path.join(\n        top, \u0027prebuilts/sdk/tools/linux\u0027))",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f793eb67_0b041df5",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Python docstrings should be in the format:\n\n    \"\"\"Brief description.\n    \u003cblank line\u003e\n    Longer description.\n    \"\"\"\n\nor\n\n    \"\"\"Single line description.\"\"\"\n\nTools that show documentation (bpython, editors) rely on this.\n\nhttps://www.python.org/dev/peps/pep-0257/\n\nAlso, to get a little nit-picky, as with our C/C++ code, comments and docstrings should begin with a capital and end with a period.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_f326eada",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Why?",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7826718_aabb0fbf",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Is `_cursor` something that exists in `clang.cindex.Token`? If not, this might be uninitialized.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_1369ae12",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "class CppTokenizer(object):",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_f39b4a08",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Better names for these two.",
+      "range": {
+        "startLine": 175,
+        "startChar": 13,
+        "endLine": 175,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_93391e53",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Keep left aligned with the first quote.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a38fb2_1350ce4a",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Huh?",
+      "range": {
+        "startLine": 201,
+        "startChar": 19,
+        "endLine": 201,
+        "endChar": 33
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57767713_89957da2",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Again, wat? Multiplying a class by an int? What am I not understanding here?",
+      "range": {
+        "startLine": 206,
+        "startChar": 65,
+        "endLine": 206,
+        "endChar": 91
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_a1ec3e18",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Accessing \"private\" data? Just make a constructor.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57767713_a9407975",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Never initialized in the constructor. Make sure everything has a default in the initialized state (even if it\u0027s None or []).\n\npylint will catch this for you.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d797c75c_45869c29",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Ah. If that\u0027s all this is being used for, just make it a @property with a name like num_tokens.",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57767713_0c151b6c",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "basestring?\n\nI\u0027d just enforce that this method is always called with either a string or a list of strings, not both. Let the caller deal with it.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d797c75c_a5eb28b8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Should align with the first argument of the call.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_41a0d27f",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Just scrap the method and use .tokens directly.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_01b76ab9",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Only difference between this and the above is the argument type. I\u0027d probably dedup them into CppStringTokenizer and just let the caller join the list (especially since it\u0027s only used once).",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a1cfbc_e067e20b",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Should really be moved to using unittest... This crap was already here, so no need for this CL, but it would be nice to cleanup eventually.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_41b9f245",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Long line.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a1cfbc_c0597ef8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "identifier_re (at least that\u0027s what it looks like).\n\nAlso, this isn\u0027t correct. Identifiers can\u0027t start with digits.",
+      "range": {
+        "startLine": 365,
+        "startChar": 4,
+        "endLine": 365,
+        "endChar": 19
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_61acf605",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "tokens. This isn\u0027t singular.",
+      "range": {
+        "startLine": 369,
+        "startChar": 13,
+        "endLine": 369,
+        "endChar": 16
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a1cfbc_209dca45",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": ":(",
+      "range": {
+        "startLine": 370,
+        "startChar": 13,
+        "endLine": 370,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a1cfbc_00de46e1",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Incorrectly identifies octal as decimal...\n\nA better implementation:\n\n    token \u003d self.tok[self.i].id\n    if token[0] \u003d\u003d \u00270\u0027:\n        return None\n    try:\n        val \u003d int(token, 10)\n        i +\u003d 1\n        return (\u0027int\u0027, val)\n    except ValueError:\n        return None",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_84db8875",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "This whole function should be:\n\n    try:\n        val \u003d int(self.tok[self.i].id, 16)\n        self.i +\u003d 1\n        return (\u0027hex\u0027, val)\n    except ValueError:\n        return None\n\nShould factor out the pieces that are similar with my other comment.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79c1385_c41e308f",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T02:20:01Z",
+      "side": 1,
+      "message": "Missing octal.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
