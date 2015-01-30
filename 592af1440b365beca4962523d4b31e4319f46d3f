@@ -483,6 +483,120 @@
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70ee7b4_2de5d92f",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "Just `self.directive \u003d\u003d \u0027endif\u0027` for a single case.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9708efac_48f6bf60",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "Trailing whitespace.\n\nAlso, this should just be a dict rather than a list of tuples.",
+      "range": {
+        "startLine": 1307,
+        "startChar": 72,
+        "endLine": 1307,
+        "endChar": 73
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37d66340_eded8517",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "Is there anywhere in `getBlocks` that you want to keep comments? I\u0027d prune them out at the top level rather than duplicating this (tokens \u003d [t for t in tokens if t.kind !\u003d TokenKind.COMMENT])",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37d10340_d8e171da",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "Trailing whitespace.\n\nI don\u0027t really understand what this is doing either... Detect change in what?",
+      "range": {
+        "startLine": 1351,
+        "startChar": 75,
+        "endLine": 1351,
+        "endChar": 76
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d9176e_ee0e9f2e",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1399,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "`j + 1` (use spaces)",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57d9176e_0e832b19",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1402,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-01-30T19:29:34Z",
+      "side": 1,
+      "message": "This is the old (2.5?) syntax for raising exceptions. The modern syntax is:\n\n    raise BadExpectedToken(\u0027### BAD TOKEN at %s\u0027 % t.location)",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
