@@ -16,6 +16,24 @@
       "revId": "6a3ff01cd4f063556cf25706ddc9dff82c351aba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3773c325_8522c2a0",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-01-30T05:52:01Z",
+      "side": 1,
+      "message": "I still can\u0027t see the reason why we need to change back. There is no requirement in documentation saying arm should use bit 1 as pending flag, x86 should use bit 8 as pending flag.\nThere is also no binary-compatibility issue. The guard_value is only modified inside this file. Even it is read outside, the read should be conformed to the requirement in documentation.\nEven if g++ may use its own inline version of cxa_guard, I can\u0027t think up of any place it will cause problem.\n\nSo I wonder if there is a clear reason I misunderstand that we need to change back.",
+      "parentUuid": "97a38fb2_308dc8ca",
+      "revId": "6a3ff01cd4f063556cf25706ddc9dff82c351aba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
