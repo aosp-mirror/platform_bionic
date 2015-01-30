@@ -34,6 +34,24 @@
       "revId": "6a3ff01cd4f063556cf25706ddc9dff82c351aba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97a1cfbc_03265032",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-30T06:02:23Z",
+      "side": 1,
+      "message": "yeah, here\u0027s all i could find in the itanium doc: \"The size of the guard variable is 64 bits. The first byte (i.e. the byte at the address of the full variable) shall contain the value 0 prior to initialization of the associated variable, and 1 after initialization is complete. Usage of the other bytes of the guard variable is implementation-defined.\"\n\nand the arm one just talks about the bottom bit.\n\nlibcxxabi doesn\u0027t seem to care either.\n\n\nit was an intel change that added the different values for intel, but that gerrit instance was lost by the kernel.org hack so we can\u0027t see the review comments from back then. i\u0027ve cc:ed them in case they know any better. but this is starting to look like historical accident unless GCC makes extra assumptions?",
+      "parentUuid": "3773c325_8522c2a0",
+      "revId": "6a3ff01cd4f063556cf25706ddc9dff82c351aba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
