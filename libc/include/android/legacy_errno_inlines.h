@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,34 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _TERMIOS_H_
-#define _TERMIOS_H_
+
+#ifndef _ANDROID_LEGACY_ERRNO_INLINES_H
+#define _ANDROID_LEGACY_ERRNO_INLINES_H
 
 #include <sys/cdefs.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <linux/termios.h>
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 21
-speed_t cfgetispeed(const struct termios*);
-speed_t cfgetospeed(const struct termios*);
-void cfmakeraw(struct termios*);
-int cfsetispeed(struct termios*, speed_t);
-int cfsetospeed(struct termios*, speed_t);
-int cfsetspeed(struct termios*, speed_t);
-int tcdrain(int);
-int tcflow(int, int);
-int tcflush(int, int);
-int tcgetattr(int, struct termios*);
-pid_t tcgetsid(int);
-int tcsendbreak(int, int);
-int tcsetattr(int, int, const struct termios*);
-#else
-#include <android/legacy_termios_inlines.h>
-#endif
+static __inline int __attribute__((deprecated)) __set_errno(int n) {
+  errno = n;
+  return -1;
+}
 
 __END_DECLS
 
-#endif /* _TERMIOS_H_ */
+#endif /* _ANDROID_LEGACY_ERRNO_INLINES_H */
