@@ -104,10 +104,6 @@
  */
 #define  CONFIG_ENV  "BIONIC_DNSCACHE"
 
-/* entries older than CONFIG_SECONDS seconds are always discarded.
- */
-#define  CONFIG_SECONDS    (60*10)    /* 10 minutes */
-
 /* default number of entries kept in the cache. This value has been
  * determined by browsing through various sites and counting the number
  * of corresponding requests. Keep in mind that our framework is currently
