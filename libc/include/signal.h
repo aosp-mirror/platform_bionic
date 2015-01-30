@@ -105,15 +105,15 @@ struct sigaction {
 
 extern int sigaction(int, const struct sigaction*, struct sigaction*);
 
-extern sighandler_t signal(int, sighandler_t);
+_BIONIC_NOT_BEFORE_21(extern sighandler_t signal(int, sighandler_t);)
 
 extern int siginterrupt(int, int);
 
-extern int sigaddset(sigset_t*, int);
-extern int sigdelset(sigset_t*, int);
-extern int sigemptyset(sigset_t*);
-extern int sigfillset(sigset_t*);
-extern int sigismember(const sigset_t*, int);
+_BIONIC_NOT_BEFORE_21(extern int sigaddset(sigset_t*, int);)
+_BIONIC_NOT_BEFORE_21(extern int sigdelset(sigset_t*, int);)
+_BIONIC_NOT_BEFORE_21(extern int sigemptyset(sigset_t*);)
+_BIONIC_NOT_BEFORE_21(extern int sigfillset(sigset_t*);)
+_BIONIC_NOT_BEFORE_21(extern int sigismember(const sigset_t*, int);)
 
 extern int sigpending(sigset_t*) __nonnull((1));
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
@@ -135,6 +135,10 @@ extern int pthread_sigmask(int, const sigset_t*, sigset_t*);
 extern int sigqueue(pid_t, int, const union sigval);
 extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*);
 extern int sigwaitinfo(const sigset_t*, siginfo_t*);
+
+#if __ANDROID_API__ < 21
+#include <android/legacy_signal_inlines.h>
+#endif
 
 __END_DECLS
 

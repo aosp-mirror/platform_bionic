@@ -43,36 +43,37 @@
 #include <sys/cdefs.h>
 #include <xlocale.h>
 
-#define	_CTYPE_U	0x01
-#define	_CTYPE_L	0x02
-#define	_CTYPE_D	0x04
-#define	_CTYPE_S	0x08
-#define	_CTYPE_P	0x10
-#define	_CTYPE_C	0x20
-#define	_CTYPE_X	0x40
-#define	_CTYPE_B	0x80
-#define	_CTYPE_R	(_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_D|_CTYPE_B)
-#define	_CTYPE_A	(_CTYPE_L|_CTYPE_U)
+#define _CTYPE_U 0x01
+#define _CTYPE_L 0x02
+#define _CTYPE_D 0x04
+#define _CTYPE_S 0x08
+#define _CTYPE_P 0x10
+#define _CTYPE_C 0x20
+#define _CTYPE_X 0x40
+#define _CTYPE_B 0x80
+#define _CTYPE_R (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_D|_CTYPE_B)
+#define _CTYPE_A (_CTYPE_L|_CTYPE_U)
 
 __BEGIN_DECLS
 
 extern const char	*_ctype_;
 
 #if defined(__GNUC__) || defined(_ANSI_LIBRARY) || defined(lint)
-int	isalnum(int);
-int	isalpha(int);
-int	iscntrl(int);
-int	isdigit(int);
-int	isgraph(int);
-int	islower(int);
-int	isprint(int);
-int	ispunct(int);
-int	isspace(int);
-int	isupper(int);
-int	isxdigit(int);
-int	tolower(int);
-int	toupper(int);
+int isalnum(int);
+int isalpha(int);
+int iscntrl(int);
+int isdigit(int);
+int isgraph(int);
+int islower(int);
+int isprint(int);
+int ispunct(int);
+int isspace(int);
+int isupper(int);
+int isxdigit(int);
+int tolower(int);
+int toupper(int);
 
+#if __ANDROID_API__ >= 21
 int isalnum_l(int, locale_t);
 int isalpha_l(int, locale_t);
 int isblank_l(int, locale_t);
@@ -87,17 +88,18 @@ int isupper_l(int, locale_t);
 int isxdigit_l(int, locale_t);
 int tolower_l(int, locale_t);
 int toupper_l(int, locale_t);
+#endif /* __ANDROID_API__ >= 21 */
 
 #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __POSIX_VISIBLE > 200112 \
     || __XPG_VISIBLE > 600
-int	isblank(int);
+int isblank(int);
 #endif
 
 #if __BSD_VISIBLE || __XPG_VISIBLE
-int	isascii(int);
-int	toascii(int);
-int	_tolower(int);
-int	_toupper(int);
+int isascii(int);
+int toascii(int);
+int _tolower(int);
+int _toupper(int);
 #endif /* __BSD_VISIBLE || __XPG_VISIBLE */
 
 #endif /* __GNUC__ || _ANSI_LIBRARY || lint */

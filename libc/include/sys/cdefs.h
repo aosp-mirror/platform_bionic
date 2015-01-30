@@ -556,4 +556,10 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
+#if __ANDROID_API__ >= 21
+#define _BIONIC_NOT_BEFORE_21(x) x
+#else
+#define _BIONIC_NOT_BEFORE_21(x)
+#endif /* __ANDROID_API__ >= 21 */
+
 #endif /* !_SYS_CDEFS_H_ */
