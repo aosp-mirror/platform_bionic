@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "574757ec_674ae049",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "To what extent do we still believe this?\n\nThe comment here confuses pids and tids, but they may have the same limit.  I believe I have managed to create more than 32768 threads on a large (non-Android) machine.\n\nThe real maximum seems adjustable via /proc/sys/kernel/pid_max.\n\nI guess if this fails, we just truncate tids, which will rarely break, but would be really hard to debug.\n\nThis seems to be on thin ice, and we should really stop relying on this in the 64 bit case, I think.  But that\u0027s probably a future CL.",
+      "range": {
+        "startLine": 175,
+        "startChar": 1,
+        "endLine": 176,
+        "endChar": 75
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70ee7b4_f078b862",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "atomic_init seems much more appropriate, though it generates the same code on our platforms.",
+      "range": {
+        "startLine": 270,
+        "startChar": 8,
+        "endLine": 270,
+        "endChar": 29
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70ee7b4_90873cef",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 293,
+        "startChar": 4,
+        "endLine": 293,
+        "endChar": 25
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "973d4f4f_b896bfaa",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "Should be \"memory accesses\" instead of \"stores\".  We also have to make sure that prior loads by other threads complete before our updates,",
+      "range": {
+        "startLine": 318,
+        "startChar": 7,
+        "endLine": 318,
+        "endChar": 17
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17cebfa3_5d79cf16",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "I would use acquire here and lose the fence.  It doesn\u0027t matter for performance and the code looks simpler.  On ARM we execute the fence inside the wait loop instead of outside.  But we\u0027re waiting, so it\u0027s not clear which is better.\n\nThis one is debatable.",
+      "range": {
+        "startLine": 337,
+        "startChar": 36,
+        "endLine": 337,
+        "endChar": 56
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "574757ec_677740bd",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "Given that we predict true below, we should probably do it here, too.",
+      "range": {
+        "startLine": 456,
+        "startChar": 12,
+        "endLine": 456,
+        "endChar": 36
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b738935d_2a2a63a2",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "mutex",
+      "range": {
+        "startLine": 613,
+        "startChar": 19,
+        "endLine": 613,
+        "endChar": 23
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "574757ec_c73414db",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T00:17:19Z",
+      "side": 1,
+      "message": "Why?  Isn\u0027t mvalue already correct in all cases?",
+      "range": {
+        "startLine": 718,
+        "startChar": 8,
+        "endLine": 718,
+        "endChar": 77
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
