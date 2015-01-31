@@ -31,7 +31,6 @@
 
 #include <linux/time.h>
 #include <signal.h>
-#include <string.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
@@ -49,7 +48,14 @@ typedef struct {
 #define __FDMASK(fd) (1UL << ((fd) % NFDBITS))
 #define __FDS_BITS(set) (((fd_set*)(set))->fds_bits)
 
-#define FD_ZERO(set) (memset(set, 0, sizeof(*(fd_set*)(set))))
+/* Inline loop so we don't have to declare memset. */
+#define FD_ZERO(set) \
+  do { \
+    size_t __i; \
+    for (__i = 0; __i < __FDSET_LONGS; ++__i) { \
+      (set)->fds_bits[__i] = 0; \
+    } \
+  } while (0)
 
 extern void __FD_CLR_chk(int, fd_set*, size_t);
 extern void __FD_SET_chk(int, fd_set*, size_t);
