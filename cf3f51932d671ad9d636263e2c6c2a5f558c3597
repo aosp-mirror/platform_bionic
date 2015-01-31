@@ -183,6 +183,23 @@
       "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d76a6765_2a311f65",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-31T01:29:16Z",
+      "side": 1,
+      "message": "mutex\n\n(personally, instead of trying to write english in all of these, i\u0027d just copy \u0026 paste the C++. i look forward to them fixing this in C++17!)",
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
