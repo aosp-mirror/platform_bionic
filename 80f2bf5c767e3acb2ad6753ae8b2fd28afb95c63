@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d76a6765_0a1d3bde",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T02:05:23Z",
+      "side": 1,
+      "message": "Again atomic_init seems more appropriate.",
+      "range": {
+        "startLine": 109,
+        "startChar": 2,
+        "endLine": 109,
+        "endChar": 24
+      },
+      "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f77beb34_4e6d9399",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-01-31T02:05:23Z",
+      "side": 1,
+      "message": "This needs to be at least memory_order_acquire, even if we try to stay true to the spirit of the original implementation.  In single use cases, this can clearly be used as a sem_trywait equivalent, and should thus have at least the same ordering guarantees.",
+      "range": {
+        "startLine": 296,
+        "startChar": 66,
+        "endLine": 296,
+        "endChar": 86
+      },
+      "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
