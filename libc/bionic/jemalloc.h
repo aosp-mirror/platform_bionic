@@ -18,6 +18,7 @@
 #define LIBC_BIONIC_JEMALLOC_H_
 
 #include <jemalloc/jemalloc.h>
+#include <malloc.h>  // For struct mallinfo.
 
 // Need to wrap memalign since je_memalign fails on non-power of 2 alignments.
 #define je_memalign je_memalign_round_up_boundary
