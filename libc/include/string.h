@@ -31,7 +31,6 @@
 
 #include <sys/cdefs.h>
 #include <stddef.h>
-#include <malloc.h>
 #include <xlocale.h>
 
 __BEGIN_DECLS
