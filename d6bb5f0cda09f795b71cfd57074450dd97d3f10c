@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d76a6765_8aedab46",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-01-31T01:38:11Z",
+      "side": 1,
+      "message": "i think we should rename the function, not the comment. \"normal\" isn\u0027t very meaningful.",
+      "revId": "d6bb5f0cda09f795b71cfd57074450dd97d3f10c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
