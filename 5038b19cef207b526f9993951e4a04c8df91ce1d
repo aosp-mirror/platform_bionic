@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "575e77d0_465492bb",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-01T01:42:55Z",
+      "side": 1,
+      "message": "This breaks the FD_ZERO FORTIFY_SOURCE unittest in bionic/tests/fortify_tests.cpp.\n\nSpecifically, now that memset isn\u0027t used, the buffer overflow protection provided by memset is no longer used. If \"set\" is smaller than the size of fd_set, then this function will overwrite memory.",
+      "revId": "5038b19cef207b526f9993951e4a04c8df91ce1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
