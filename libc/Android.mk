@@ -115,6 +115,8 @@ libc_bionic_src_files := \
     bionic/error.cpp \
     bionic/eventfd_read.cpp \
     bionic/eventfd_write.cpp \
+    bionic/fchmod.cpp \
+    bionic/fchmodat.cpp \
     bionic/ffs.cpp \
     bionic/flockfile.cpp \
     bionic/fork.cpp \
