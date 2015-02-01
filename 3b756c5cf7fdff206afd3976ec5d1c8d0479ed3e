@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "978b8f6f_7f5b5b3d",
+        "filename": "libc/bionic/fchmodat.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-01T04:28:31Z",
+      "side": 1,
+      "message": "FYI: This function is currently public. The script which generates the assembly files doesn\u0027t mark double-underscore functions as being hidden (__LIBC_HIDDEN__). My intention was that __fchmodat() be entirely hidden.\n\nNot sure how to fix this without fixing up bionic/libc/tools/gensyscalls.py",
+      "revId": "3b756c5cf7fdff206afd3976ec5d1c8d0479ed3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
