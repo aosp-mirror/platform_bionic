@@ -329,6 +329,7 @@ bionic-unit-tests-glibc_shared_libraries += libdl_test_df_1_global
 bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
     libBionicGtestMain \
+    $(fortify_libs) \
 
 bionic-unit-tests-glibc_ldlibs := \
     -lrt -ldl -lutil \
