@@ -117,13 +117,20 @@ def BuildIcuToolsAndData(data_filename):
   # Build the ICU tools.
   print 'Configuring ICU tools...'
   subprocess.check_call(['%s/runConfigureICU' % icu_dir, 'Linux'])
-  print 'Making ICU tools...'
-  subprocess.check_call(['make', '-j32'])
 
   # Run the ICU tools.
   os.chdir('tools/tzcode')
+
+  # The tz2icu tool only picks up icuregions and icuzones in they are in the CWD
+  for icu_data_file in [ 'icuregions', 'icuzones']:
+    icu_data_file_source = '%s/tools/tzcode/%s' % (icu_dir, icu_data_file)
+    icu_data_file_symlink = './%s' % icu_data_file
+    os.symlink(icu_data_file_source, icu_data_file_symlink)
+
   shutil.copyfile('%s/%s' % (original_working_dir, data_filename), data_filename)
   print 'Making ICU data...'
+  # The Makefile assumes the existence of the bin directory.
+  os.mkdir('%s/bin' % icu_working_dir)
   subprocess.check_call(['make'])
 
   # Copy the source file to its ultimate destination.
