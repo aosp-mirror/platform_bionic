@@ -207,16 +207,9 @@ extern FILE* stderr;
 #define	L_tmpnam	1024	/* XXX must be == PATH_MAX */
 #define	TMP_MAX		308915776
 
-/* Always ensure that these are consistent with <fcntl.h> and <unistd.h>! */
-#ifndef SEEK_SET
-#define	SEEK_SET	0	/* set file offset to offset */
-#endif
-#ifndef SEEK_CUR
-#define	SEEK_CUR	1	/* set file offset to current plus offset */
-#endif
-#ifndef SEEK_END
-#define	SEEK_END	2	/* set file offset to EOF plus offset */
-#endif
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
 
 /*
  * Functions defined in ANSI C standard.
