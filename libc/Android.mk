@@ -69,6 +69,7 @@ libc_common_src_files += \
     bionic/__FD_chk.cpp \
     bionic/__fgets_chk.cpp \
     bionic/__memmove_chk.cpp \
+    bionic/__poll_chk.cpp \
     bionic/__read_chk.cpp \
     bionic/__recvfrom_chk.cpp \
     bionic/__stpcpy_chk.cpp \
