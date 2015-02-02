@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fchmod)
+ENTRY(__fchmod)
     mov     ip, r7
     ldr     r7, =__NR_fchmod
     swi     #0
@@ -11,4 +11,4 @@ ENTRY(fchmod)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(fchmod)
+END(__fchmod)
