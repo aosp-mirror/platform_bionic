@@ -69,6 +69,30 @@
       "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97d0ef89_888cf7ce",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-02T22:18:52Z",
+      "side": 1,
+      "message": "For sem_getvalue, actually I don\u0027t know when it is safe to use it, maybe just wait until it becomes some \nvalue. The posix standard says: The updated value represents an actual semaphore value that occurred at some \nunspecified time during the call, but it need not be the actual value of the semaphore when it is returned to \nthe calling process. glibc implements it just like a normal atomic_load. Even we just acquire fence, the value\nmay not still be safe to be used for anything. Maybe just use it in critical section?\nIt will be very helpful for my understanding if you can show me how it is used.",
+      "parentUuid": "f77beb34_4e6d9399",
+      "range": {
+        "startLine": 296,
+        "startChar": 66,
+        "endLine": 296,
+        "endChar": 86
+      },
+      "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
