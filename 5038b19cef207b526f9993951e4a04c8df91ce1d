@@ -16,6 +16,24 @@
       "revId": "5038b19cef207b526f9993951e4a04c8df91ce1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7769bb73_87fda678",
+        "filename": "libc/include/sys/select.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T17:13:54Z",
+      "side": 1,
+      "message": "we could add an __FD_ZERO_chk, but i think we were barking up the wrong tree with this; the problem with fd_set is the opposite --- that it\u0027s a fixed size. in hindsight, we should have just added and __FDELT_chk that FD_CLR, FS_ISSET, and FD_SET could have all shared. FD_ZERO isn\u0027t a realistic source of errors because it doesn\u0027t take an fd.\n\n(i don\u0027t think it\u0027s worth replacing the existing three *_chk functions with __FDELT_chk because we\u0027ll need to keep them for binary compatibility anyway.)\n\nwhat we should do is fortify poll and ppoll --- they\u0027re what people should be using instead of select, and we could check that the nfds_t argument matches the size of the pollfd array... i\u0027ll send out a change for that.",
+      "parentUuid": "575e77d0_465492bb",
+      "revId": "5038b19cef207b526f9993951e4a04c8df91ce1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
