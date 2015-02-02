@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "379e63d1_cd71e9ca",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "for LP64 these will be hidden. for LP32 we were cowards and left them all public for compatibility (though i don\u0027t think we ever dremeled to see whether it was needed). we don\u0027t have an easy way to recognize additions, though, so we can\u0027t prevent adding new turds.\n\ni\u0027ve raised http://b/19233951 to see if we can do something about this.",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77bc5b32_92f25af6",
+        "filename": "libc/bionic/fchmod.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "we usually use saved_errno",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "379e63d1_ed430553",
+        "filename": "libc/bionic/fchmod.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "s/old/specific version.",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7b2535a_74c9a648",
+        "filename": "libc/bionic/fchmodat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "is this right for your ELOOP/EOPNOTSUPP case?",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "379e63d1_edfdc577",
+        "filename": "libc/bionic/fchmodat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "maybe comment that you\u0027re relying on this for the ELOOP/EOPNOTSUPP implementation?",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "379e63d1_ed914567",
+        "filename": "libc/bionic/fchmodat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "note that the kernel doesn\u0027t actually *have* a flags argument. so we shouldn\u0027t be passing it here, and we should have something like\n\n  if ((flags \u0026 ~AT_SYMLINK_NOFOLLOW) !\u003d 0) {\n    errno \u003d EINVAL;\n    return -1;\n  }\n\nat the top.",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "379e63d1_4dc69938",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T19:45:31Z",
+      "side": 1,
+      "message": "explicitly say that glibc \u003cversion\u003e doesn\u0027t support AT_SYMLINK_NOFOLLOW yet, and always returns ENOTSUP. (because presumably one day we\u0027ll be back here.)",
+      "revId": "88854ef07059cd291521b9f55b5918725ec442c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
