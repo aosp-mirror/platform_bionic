@@ -438,7 +438,7 @@ static int __libc_write_stderr(const char* tag, const char* msg) {
   vec[1].iov_base = const_cast<char*>(": ");
   vec[1].iov_len = 2;
   vec[2].iov_base = const_cast<char*>(msg);
-  vec[2].iov_len = strlen(msg) + 1;
+  vec[2].iov_len = strlen(msg);
   vec[3].iov_base = const_cast<char*>("\n");
   vec[3].iov_len = 1;
 
@@ -448,8 +448,7 @@ static int __libc_write_stderr(const char* tag, const char* msg) {
 }
 
 #ifdef TARGET_USES_LOGD
-static int __libc_open_log_socket()
-{
+static int __libc_open_log_socket() {
   // ToDo: Ideally we want this to fail if the gid of the current
   // process is AID_LOGD, but will have to wait until we have
   // registered this in private/android_filesystem_config.h. We have
@@ -491,7 +490,6 @@ struct log_time { // Wire format
 static int __libc_write_log(int priority, const char* tag, const char* msg) {
 #ifdef TARGET_USES_LOGD
   int main_log_fd = __libc_open_log_socket();
-
   if (main_log_fd == -1) {
     // Try stderr instead.
     return __libc_write_stderr(tag, msg);
@@ -515,9 +513,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[3].iov_base = &priority;
   vec[3].iov_len = 1;
   vec[4].iov_base = const_cast<char*>(tag);
-  vec[4].iov_len = strlen(tag) + 1;
+  vec[4].iov_len = strlen(tag);
   vec[5].iov_base = const_cast<char*>(msg);
-  vec[5].iov_len = strlen(msg) + 1;
+  vec[5].iov_len = strlen(msg);
 #else
   int main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
   if (main_log_fd == -1) {
@@ -532,9 +530,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[0].iov_base = &priority;
   vec[0].iov_len = 1;
   vec[1].iov_base = const_cast<char*>(tag);
-  vec[1].iov_len = strlen(tag) + 1;
+  vec[1].iov_len = strlen(tag);
   vec[2].iov_base = const_cast<char*>(msg);
-  vec[2].iov_len = strlen(msg) + 1;
+  vec[2].iov_len = strlen(msg);
 #endif
 
   int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, sizeof(vec) / sizeof(vec[0])));
@@ -614,7 +612,7 @@ void __fortify_chk_fail(const char* msg, uint32_t tag) {
   if (tag != 0) {
     __libc_android_log_event_uid(tag);
   }
-  __libc_fatal("FORTIFY_SOURCE: %s. Calling abort().", msg);
+  __libc_fatal("FORTIFY: %s", msg);
 }
 
 static void __libc_fatal(const char* format, va_list args) {
@@ -622,12 +620,12 @@ static void __libc_fatal(const char* format, va_list args) {
   BufferOutputStream os(msg, sizeof(msg));
   out_vformat(os, format, args);
 
-  // log to stderr for the benefit of "adb shell" users.
+  // Log to stderr for the benefit of "adb shell" users.
   struct iovec iov[2] = {
-    {msg, strlen(msg)},
-    {const_cast<void*>(static_cast<const void*>("\n")), 1},
+    { msg, os.total },
+    { const_cast<char*>("\n"), 1 },
   };
-  writev(2, iov, 2);
+  TEMP_FAILURE_RETRY(writev(2, iov, 2));
 
   // Log to the log for the benefit of regular app developers (whose stdout and stderr are closed).
   __libc_write_log(ANDROID_LOG_FATAL, "libc", msg);
