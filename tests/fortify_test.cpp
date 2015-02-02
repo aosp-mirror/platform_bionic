@@ -19,6 +19,7 @@
 
 #include <fcntl.h>
 #include <malloc.h>
+#include <poll.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <string.h>
@@ -629,15 +630,6 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
 }
 
-// gtest's ASSERT_EXIT needs a valid expression, but glibc has a do-while macro.
-static void FD_ZERO_function(fd_set* s) { FD_ZERO(s); }
-
-TEST_F(DEATHTEST, FD_ZERO_fortified) {
-  char buf[1];
-  fd_set* set = (fd_set*) buf;
-  ASSERT_EXIT(FD_ZERO_function(set), testing::KilledBySignal(SIGABRT), "");
-}
-
 TEST_F(DEATHTEST, read_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
@@ -949,4 +941,16 @@ TEST(TEST_NAME, s_n_printf_macro_expansion) {
 
   sprintf(BUF_AND_CONTENTS(buf));
   EXPECT_STREQ(CONTENTS, buf);
+}
+
+TEST_F(DEATHTEST, poll_fortified) {
+  nfds_t fd_count = atoi("2"); // suppress compiler optimizations
+  pollfd buf[1] = {{0, POLLIN, 0}};
+  ASSERT_EXIT(poll(buf, fd_count, -1), testing::KilledBySignal(SIGABRT), "");
+}
+
+TEST_F(DEATHTEST, ppoll_fortified) {
+  nfds_t fd_count = atoi("2"); // suppress compiler optimizations
+  pollfd buf[1] = {{0, POLLIN, 0}};
+  ASSERT_EXIT(ppoll(buf, fd_count, NULL, NULL), testing::KilledBySignal(SIGABRT), "");
 }
