@@ -27,6 +27,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#if __BIONIC__
+#define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "FORTIFY")
+#else
+#define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "")
+#endif
+
 // Fortify test code needs to run multiple times, so TEST_NAME macro is used to
 // distinguish different tests. TEST_NAME is defined in compilation command.
 #define DEATHTEST_PASTER(name) name##_DeathTest
@@ -49,8 +55,7 @@ struct foo {
 TEST_F(DEATHTEST, stpncpy_fortified2) {
   foo myfoo;
   int copy_amt = atoi("11");
-  ASSERT_EXIT(stpncpy(myfoo.a, "01234567890", copy_amt),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(stpncpy(myfoo.a, "01234567890", copy_amt));
 }
 #endif
 
@@ -61,8 +66,7 @@ TEST_F(DEATHTEST, stpncpy2_fortified2) {
   foo myfoo;
   memset(&myfoo, 0, sizeof(myfoo));
   myfoo.one[0] = 'A'; // not null terminated string
-  ASSERT_EXIT(stpncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(stpncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
 #endif
 
@@ -72,8 +76,7 @@ TEST_F(DEATHTEST, stpncpy2_fortified2) {
 TEST_F(DEATHTEST, strncpy_fortified2) {
   foo myfoo;
   int copy_amt = atoi("11");
-  ASSERT_EXIT(strncpy(myfoo.a, "01234567890", copy_amt),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncpy(myfoo.a, "01234567890", copy_amt));
 }
 #endif
 
@@ -84,8 +87,7 @@ TEST_F(DEATHTEST, strncpy2_fortified2) {
   foo myfoo;
   memset(&myfoo, 0, sizeof(myfoo));
   myfoo.one[0] = 'A'; // not null terminated string
-  ASSERT_EXIT(strncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
 #endif
 
@@ -96,8 +98,7 @@ TEST_F(DEATHTEST, sprintf_fortified2) {
   foo myfoo;
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
-  ASSERT_EXIT(sprintf(myfoo.a, "%s", source_buf),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(sprintf(myfoo.a, "%s", source_buf));
 }
 #endif
 
@@ -106,8 +107,7 @@ TEST_F(DEATHTEST, sprintf_fortified2) {
 // this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf2_fortified2) {
   foo myfoo;
-  ASSERT_EXIT(sprintf(myfoo.a, "0123456789"),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(sprintf(myfoo.a, "0123456789"));
 }
 #endif
 
@@ -126,11 +126,11 @@ static int vsprintf_helper2(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsprintf_fortified2) {
-  ASSERT_EXIT(vsprintf_helper2("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsprintf_helper2("%s", "0123456789"));
 }
 
 TEST_F(DEATHTEST, vsprintf2_fortified2) {
-  ASSERT_EXIT(vsprintf_helper2("0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsprintf_helper2("0123456789"));
 }
 #endif
 
@@ -150,11 +150,11 @@ static int vsnprintf_helper2(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsnprintf_fortified2) {
-  ASSERT_EXIT(vsnprintf_helper2("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsnprintf_helper2("%s", "0123456789"));
 }
 
 TEST_F(DEATHTEST, vsnprintf2_fortified2) {
-  ASSERT_EXIT(vsnprintf_helper2("0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsnprintf_helper2("0123456789"));
 }
 #endif
 
@@ -166,8 +166,7 @@ TEST_F(DEATHTEST, stpcpy_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   char* src = strdup("");
-  ASSERT_EXIT(stpcpy(myfoo.empty, src),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(stpcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -183,8 +182,7 @@ TEST_F(DEATHTEST, strcpy_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   char* src = strdup("");
-  ASSERT_EXIT(strcpy(myfoo.empty, src),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -200,8 +198,7 @@ TEST_F(DEATHTEST, strcpy2_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   char* src = strdup("1");
-  ASSERT_EXIT(strcpy(myfoo.empty, src),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -217,8 +214,7 @@ TEST_F(DEATHTEST, strcpy3_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   char* src = strdup("12");
-  ASSERT_EXIT(strcpy(myfoo.one, src),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(myfoo.one, src));
   free(src);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -234,8 +230,7 @@ TEST_F(DEATHTEST, strchr_fortified2) {
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
   myfoo.b[0] = '\0';
-  ASSERT_EXIT(printf("%s", strchr(myfoo.a, 'a')),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(printf("%s", strchr(myfoo.a, 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -250,8 +245,7 @@ TEST_F(DEATHTEST, strrchr_fortified2) {
   foo myfoo;
   memcpy(myfoo.a, "0123456789", 10);
   memcpy(myfoo.b, "01234", 6);
-  ASSERT_EXIT(printf("%s", strrchr(myfoo.a, 'a')),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(printf("%s", strrchr(myfoo.a, 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -266,8 +260,7 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
   foo myfoo;
   strcpy(myfoo.a, "01");
   size_t n = strlen(myfoo.a);
-  ASSERT_EXIT(strlcpy(myfoo.one, myfoo.a, n),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strlcpy(myfoo.one, myfoo.a, n));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -283,8 +276,7 @@ TEST_F(DEATHTEST, strlcat_fortified2) {
   strcpy(myfoo.a, "01");
   myfoo.one[0] = '\0';
   size_t n = strlen(myfoo.a);
-  ASSERT_EXIT(strlcat(myfoo.one, myfoo.a, n),
-              testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strlcat(myfoo.one, myfoo.a, n));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -298,7 +290,7 @@ TEST_F(DEATHTEST, strncat_fortified2) {
   foo myfoo;
   size_t n = atoi("10"); // avoid compiler optimizations
   strncpy(myfoo.a, "012345678", n);
-  ASSERT_EXIT(strncat(myfoo.a, "9", n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncat(myfoo.a, "9", n));
 }
 #endif
 
@@ -309,7 +301,7 @@ TEST_F(DEATHTEST, strncat2_fortified2) {
   foo myfoo;
   myfoo.a[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
-  ASSERT_EXIT(strncat(myfoo.a, "0123456789", n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncat(myfoo.a, "0123456789", n));
 }
 #endif
 
@@ -318,7 +310,7 @@ TEST_F(DEATHTEST, strncat3_fortified2) {
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
   myfoo.b[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
-  ASSERT_EXIT(strncat(myfoo.b, myfoo.a, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncat(myfoo.b, myfoo.a, n));
 }
 
 #ifndef __clang__
@@ -329,7 +321,7 @@ TEST_F(DEATHTEST, strcat_fortified2) {
   strcpy(src, "0123456789");
   foo myfoo;
   myfoo.a[0] = '\0';
-  ASSERT_EXIT(strcat(myfoo.a, src), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcat(myfoo.a, src));
 }
 #endif
 
@@ -337,21 +329,21 @@ TEST_F(DEATHTEST, strcat2_fortified2) {
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a)); // unterminated string
   myfoo.b[0] = '\0';
-  ASSERT_EXIT(strcat(myfoo.b, myfoo.a), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcat(myfoo.b, myfoo.a));
 }
 
 TEST_F(DEATHTEST, snprintf_fortified2) {
   foo myfoo;
   strcpy(myfoo.a, "012345678");
   size_t n = strlen(myfoo.a) + 2;
-  ASSERT_EXIT(snprintf(myfoo.b, n, "a%s", myfoo.a), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(snprintf(myfoo.b, n, "a%s", myfoo.a));
 }
 
 TEST_F(DEATHTEST, bzero_fortified2) {
   foo myfoo;
   memcpy(myfoo.b, "0123456789", sizeof(myfoo.b));
   size_t n = atoi("11");
-  ASSERT_EXIT(bzero(myfoo.b, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(bzero(myfoo.b, n));
 }
 
 #endif /* defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE=2 */
@@ -361,7 +353,7 @@ TEST_F(DEATHTEST, strcpy_fortified) {
 #if defined(__BIONIC__)
   char buf[10];
   char *orig = strdup("0123456789");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -373,7 +365,7 @@ TEST_F(DEATHTEST, strcpy2_fortified) {
 #if defined(__BIONIC__)
   char buf[0];
   char *orig = strdup("");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -385,7 +377,7 @@ TEST_F(DEATHTEST, strcpy3_fortified) {
 #if defined(__BIONIC__)
   char buf[0];
   char *orig = strdup("1");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -397,7 +389,7 @@ TEST_F(DEATHTEST, strcpy4_fortified) {
 #if defined(__BIONIC__)
   char buf[1];
   char *orig = strdup("12");
-  ASSERT_EXIT(strcpy(buf, orig), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -408,7 +400,7 @@ TEST_F(DEATHTEST, strlen_fortified) {
 #if defined(__BIONIC__)
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%zd", strlen(buf)), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(printf("%zd", strlen(buf)));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -418,7 +410,7 @@ TEST_F(DEATHTEST, strchr_fortified) {
 #if defined(__BIONIC__)
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%s", strchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(printf("%s", strchr(buf, 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -428,7 +420,7 @@ TEST_F(DEATHTEST, strrchr_fortified) {
 #if defined(__BIONIC__)
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
-  ASSERT_EXIT(printf("%s", strrchr(buf, 'a')), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(printf("%s", strrchr(buf, 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -440,7 +432,7 @@ TEST_F(DEATHTEST, strlcpy_fortified) {
   char bufb[10];
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
-  ASSERT_EXIT(strlcpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strlcpy(bufb, bufa, n));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -453,7 +445,7 @@ TEST_F(DEATHTEST, strlcat_fortified) {
   bufb[0] = '\0';
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
-  ASSERT_EXIT(strlcat(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strlcat(bufb, bufa, n));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -463,7 +455,7 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   char buf[10];
   char source_buf[15];
   memcpy(source_buf, "12345678901234", 15);
-  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
 #ifndef __clang__
@@ -473,14 +465,14 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   char* buf = (char *) malloc(10);
   char source_buf[11];
   memcpy(source_buf, "1234567890", 11);
-  ASSERT_EXIT(sprintf(buf, "%s", source_buf), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
   free(buf);
 }
 #endif
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
   char buf[5];
-  ASSERT_EXIT(sprintf(buf, "aaaaa"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(sprintf(buf, "aaaaa"));
 }
 
 static int vsprintf_helper(const char *fmt, ...) {
@@ -495,11 +487,11 @@ static int vsprintf_helper(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsprintf_fortified) {
-  ASSERT_EXIT(vsprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsprintf_helper("%s", "0123456789"));
 }
 
 TEST_F(DEATHTEST, vsprintf2_fortified) {
-  ASSERT_EXIT(vsprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsprintf_helper("0123456789"));
 }
 
 static int vsnprintf_helper(const char *fmt, ...) {
@@ -515,25 +507,25 @@ static int vsnprintf_helper(const char *fmt, ...) {
 }
 
 TEST_F(DEATHTEST, vsnprintf_fortified) {
-  ASSERT_EXIT(vsnprintf_helper("%s", "0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsnprintf_helper("%s", "0123456789"));
 }
 
 TEST_F(DEATHTEST, vsnprintf2_fortified) {
-  ASSERT_EXIT(vsnprintf_helper("0123456789"), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(vsnprintf_helper("0123456789"));
 }
 
 TEST_F(DEATHTEST, strncat_fortified) {
   char buf[10];
   size_t n = atoi("10"); // avoid compiler optimizations
   strncpy(buf, "012345678", n);
-  ASSERT_EXIT(strncat(buf, "9", n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncat(buf, "9", n));
 }
 
 TEST_F(DEATHTEST, strncat2_fortified) {
   char buf[10];
   buf[0] = '\0';
   size_t n = atoi("10"); // avoid compiler optimizations
-  ASSERT_EXIT(strncat(buf, "0123456789", n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncat(buf, "0123456789", n));
 }
 
 TEST_F(DEATHTEST, strcat_fortified) {
@@ -541,14 +533,14 @@ TEST_F(DEATHTEST, strcat_fortified) {
   strcpy(src, "0123456789");
   char buf[10];
   buf[0] = '\0';
-  ASSERT_EXIT(strcat(buf, src), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strcat(buf, src));
 }
 
 TEST_F(DEATHTEST, memmove_fortified) {
   char buf[20];
   strcpy(buf, "0123456789");
   size_t n = atoi("10");
-  ASSERT_EXIT(memmove(buf + 11, buf, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(memmove(buf + 11, buf, n));
 }
 
 TEST_F(DEATHTEST, memcpy_fortified) {
@@ -556,7 +548,7 @@ TEST_F(DEATHTEST, memcpy_fortified) {
   char bufb[10];
   strcpy(bufa, "012345678");
   size_t n = atoi("11");
-  ASSERT_EXIT(memcpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(memcpy(bufb, bufa, n));
 }
 
 TEST_F(DEATHTEST, stpncpy_fortified) {
@@ -564,14 +556,14 @@ TEST_F(DEATHTEST, stpncpy_fortified) {
   char bufb[10];
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
-  ASSERT_EXIT(stpncpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(stpncpy(bufb, bufa, n));
 }
 
 TEST_F(DEATHTEST, stpncpy2_fortified) {
   char dest[11];
   char src[10];
   memcpy(src, "0123456789", sizeof(src)); // src is not null terminated
-  ASSERT_EXIT(stpncpy(dest, src, sizeof(dest)), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(stpncpy(dest, src, sizeof(dest)));
 }
 
 TEST_F(DEATHTEST, strncpy_fortified) {
@@ -579,7 +571,7 @@ TEST_F(DEATHTEST, strncpy_fortified) {
   char bufb[10];
   strcpy(bufa, "01234567890123");
   size_t n = strlen(bufa);
-  ASSERT_EXIT(strncpy(bufb, bufa, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncpy(bufb, bufa, n));
 }
 
 
@@ -587,7 +579,7 @@ TEST_F(DEATHTEST, strncpy2_fortified) {
   char dest[11];
   char src[10];
   memcpy(src, "0123456789", sizeof(src)); // src is not null terminated
-  ASSERT_EXIT(strncpy(dest, src, sizeof(dest)), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(strncpy(dest, src, sizeof(dest)));
 }
 
 TEST_F(DEATHTEST, snprintf_fortified) {
@@ -595,46 +587,46 @@ TEST_F(DEATHTEST, snprintf_fortified) {
   char bufb[10];
   strcpy(bufa, "0123456789");
   size_t n = strlen(bufa) + 1;
-  ASSERT_EXIT(snprintf(bufb, n, "%s", bufa), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(snprintf(bufb, n, "%s", bufa));
 }
 
 TEST_F(DEATHTEST, bzero_fortified) {
   char buf[10];
   memcpy(buf, "0123456789", sizeof(buf));
   size_t n = atoi("11");
-  ASSERT_EXIT(bzero(buf, n), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(bzero(buf, n));
 }
 
 TEST_F(DEATHTEST, umask_fortified) {
   mode_t mask = atoi("1023");  // 01777 in octal
-  ASSERT_EXIT(umask(mask), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(umask(mask));
 }
 
 TEST_F(DEATHTEST, recv_fortified) {
   size_t data_len = atoi("11"); // suppress compiler optimizations
   char buf[10];
-  ASSERT_EXIT(recv(0, buf, data_len, 0), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(recv(0, buf, data_len, 0));
 }
 
 TEST_F(DEATHTEST, FD_ISSET_fortified) {
 #if defined(__BIONIC__) // glibc catches this at compile-time.
   fd_set set;
   memset(&set, 0, sizeof(set));
-  ASSERT_EXIT(FD_ISSET(-1, &set), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(FD_ISSET(-1, &set));
 #endif
 }
 
 TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   char buf[1];
   fd_set* set = (fd_set*) buf;
-  ASSERT_EXIT(FD_ISSET(0, set), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(FD_ISSET(0, set));
 }
 
 TEST_F(DEATHTEST, read_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
   int fd = open("/dev/null", O_RDONLY);
-  ASSERT_EXIT(read(fd, buf, ct), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(read(fd, buf, ct));
   close(fd);
 }
 
@@ -946,11 +938,11 @@ TEST(TEST_NAME, s_n_printf_macro_expansion) {
 TEST_F(DEATHTEST, poll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
   pollfd buf[1] = {{0, POLLIN, 0}};
-  ASSERT_EXIT(poll(buf, fd_count, -1), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(poll(buf, fd_count, -1));
 }
 
 TEST_F(DEATHTEST, ppoll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
   pollfd buf[1] = {{0, POLLIN, 0}};
-  ASSERT_EXIT(ppoll(buf, fd_count, NULL, NULL), testing::KilledBySignal(SIGABRT), "");
+  ASSERT_FORTIFY(ppoll(buf, fd_count, NULL, NULL));
 }
