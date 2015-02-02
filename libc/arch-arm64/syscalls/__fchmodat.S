@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fchmodat)
+ENTRY(__fchmodat)
     mov     x8, __NR_fchmodat
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(fchmodat)
     b.hi    __set_errno_internal
 
     ret
-END(fchmodat)
+END(__fchmodat)
+.hidden __fchmodat
