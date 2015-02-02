@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77ee1b36_0230cce4",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-02T17:51:43Z",
+      "side": 1,
+      "message": "this is yet another case where clang doesn\u0027t cut it for fortify. it worries me that we\u0027re adding _new_ clang hacks rather than removing old ones.\n\ni\u0027ve raised http://b/19231163.",
+      "revId": "4674e3899afcc6b3ac8a48cdb716695d5489d26b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
