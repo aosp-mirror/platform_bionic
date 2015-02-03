@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cf1f452_0097e6aa",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1105,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-03T20:09:25Z",
+      "side": 1,
+      "message": "Might want to change this to something like:\n\n\u003c\u003c \"pthread_mutex only has 16 bits for a tid, but the maximum tid is \" \u003c\u003c pid_max \u003c\u003c \" . The implemenation must be modified to support the current max.\"",
+      "range": {
+        "startLine": 1105,
+        "startChar": 80,
+        "endLine": 1105,
+        "endChar": 90
+      },
+      "revId": "dd60897a8014f045625114881135433308c0956d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
