@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f7c04bc1_83033e85",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Thank you for your reminding. I raised a bug for it and will fix it later. https://b2.corp.google.com/u/0/issues/19216648.",
+      "parentUuid": "574757ec_674ae049",
+      "range": {
+        "startLine": 175,
+        "startChar": 1,
+        "endLine": 176,
+        "endChar": 75
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d70ee7b4_f078b862",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-01-31T00:17:19Z",
       "side": 1,
       "message": "atomic_init seems much more appropriate, though it generates the same code on our platforms.",
+      "range": {
+        "startLine": 270,
+        "startChar": 8,
+        "endLine": 270,
+        "endChar": 29
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d77b475e_4247523d",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d70ee7b4_f078b862",
       "range": {
         "startLine": 270,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d77b475e_62445638",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d70ee7b4_90873cef",
+      "range": {
+        "startLine": 293,
+        "startChar": 4,
+        "endLine": 293,
+        "endChar": 25
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "973d4f4f_b896bfaa",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2015-01-31T00:17:19Z",
       "side": 1,
       "message": "Should be \"memory accesses\" instead of \"stores\".  We also have to make sure that prior loads by other threads complete before our updates,",
+      "range": {
+        "startLine": 318,
+        "startChar": 7,
+        "endLine": 318,
+        "endChar": 17
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37190331_bb35cfd9",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done. But I am afraid that the completion of prior loads is not guaranteed by the release-acquire fence directly, unless the loaded value is written to somewhere else. As in http://en.cppreference.com/w/c/atomic/memory_order, memory_order_release ensures that all writes in the current thread are visible in other threads that acquire the same atomic variable. memory_order_acquire ensures that all writes in other threads that release the same atomic variable are visible in the current thread.",
+      "parentUuid": "973d4f4f_b896bfaa",
       "range": {
         "startLine": 318,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "97e9cf2d_9481b42a",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17cebfa3_5d79cf16",
+      "range": {
+        "startLine": 337,
+        "startChar": 36,
+        "endLine": 337,
+        "endChar": 56
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "574757ec_677740bd",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2015-01-31T00:17:19Z",
       "side": 1,
       "message": "Given that we predict true below, we should probably do it here, too.",
+      "range": {
+        "startLine": 456,
+        "startChar": 12,
+        "endLine": 456,
+        "endChar": 36
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97e9cf2d_747eb097",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "574757ec_677740bd",
       "range": {
         "startLine": 456,
         "startChar": 12,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "37190331_9b3a93c7",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b738935d_2a2a63a2",
+      "range": {
+        "startLine": 613,
+        "startChar": 19,
+        "endLine": 613,
+        "endChar": 23
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "574757ec_c73414db",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "f7c04bc1_065bdc3d",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "We need reread mvalue after __futex_wait_ex. And timespec_from_absolute_timespec() is time costly, so we can reread mvalue after it. Comment added in code. The code path may be a little confusing, but I think it is better than the original one.",
+      "parentUuid": "574757ec_c73414db",
+      "range": {
+        "startLine": 718,
+        "startChar": 8,
+        "endLine": 718,
+        "endChar": 77
+      },
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d76a6765_2a311f65",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -197,6 +389,24 @@
       "writtenOn": "2015-01-31T01:29:16Z",
       "side": 1,
       "message": "mutex\n\n(personally, instead of trying to write english in all of these, i\u0027d just copy \u0026 paste the C++. i look forward to them fixing this in C++17!)",
+      "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b780937a_a149fe78",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:11:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d76a6765_2a311f65",
       "revId": "cf3f51932d671ad9d636263e2c6c2a5f558c3597",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
