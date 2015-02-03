@@ -286,8 +286,9 @@ def add_footer(pointer_length, stub, syscall):
     for alias in aliases:
         stub += function_alias % { "func" : syscall["func"], "alias" : alias }
 
-    # Use hidden visibility for any functions beginning with underscores.
-    if pointer_length == 64 and syscall["func"].startswith("__"):
+    # Use hidden visibility on LP64 for any functions beginning with underscores.
+    # Force hidden visibility for any functions which begin with 3 underscores
+    if (pointer_length == 64 and syscall["func"].startswith("__")) or syscall["func"].startswith("___"):
         stub += '.hidden ' + syscall["func"] + '\n'
 
     return stub

@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__fchmod)
+ENTRY(___fchmod)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -23,4 +23,5 @@ ENTRY(__fchmod)
     popl    %ecx
     popl    %ebx
     ret
-END(__fchmod)
+END(___fchmod)
+.hidden ___fchmod
