@@ -113,7 +113,7 @@ int         writev(int, const struct iovec*, int)  all
 int         __fcntl64:fcntl64(int, int, void*)  arm,mips,x86
 int         fcntl(int, int, void*)  arm64,mips64,x86_64
 int         flock(int, int)   all
-int         __fchmod:fchmod(int, mode_t)  all
+int         ___fchmod:fchmod(int, mode_t)  all
 int         dup(int)  all
 int         pipe2(int*, int) all
 int         dup3(int, int, int)   all
@@ -131,7 +131,7 @@ int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   arm,ar
 
 int __openat:openat(int, const char*, int, mode_t) all
 int faccessat(int, const char*, int, int)  all
-int __fchmodat:fchmodat(int, const char*, mode_t)  all
+int ___fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86
 int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64

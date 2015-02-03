@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__fchmod)
+ENTRY(___fchmod)
     movl    $__NR_fchmod, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,5 +12,5 @@ ENTRY(__fchmod)
     call    __set_errno_internal
 1:
     ret
-END(__fchmod)
-.hidden __fchmod
+END(___fchmod)
+.hidden ___fchmod
