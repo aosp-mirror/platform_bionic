@@ -150,30 +150,9 @@
 /* Mutex owner field:
  *
  * This is only used for recursive and errorcheck mutexes. It holds the
- * tid of the owning thread. Note that this works because the Linux
- * kernel _only_ uses 16-bit values for tids.
- *
- * More specifically, it will wrap to 10000 when it reaches over 32768 for
- * application processes. You can check this by running the following inside
- * an adb shell session:
- *
-    OLDPID=$$;
-    while true; do
-    NEWPID=$(sh -c 'echo $$')
-    if [ "$NEWPID" -gt 32768 ]; then
-        echo "AARGH: new PID $NEWPID is too high!"
-        exit 1
-    fi
-    if [ "$NEWPID" -lt "$OLDPID" ]; then
-        echo "****** Wrapping from PID $OLDPID to $NEWPID. *******"
-    else
-        echo -n "$NEWPID!"
-    fi
-    OLDPID=$NEWPID
-    done
-
- * Note that you can run the same example on a desktop Linux system,
- * the wrapping will also happen at 32768, but will go back to 300 instead.
+ * tid of the owning thread. We use 16 bits to represent tid here,
+ * so the highest tid is 65535. There is a test to check /proc/sys/kernel/pid_max
+ * to make sure it will not exceed our limit.
  */
 #define  MUTEX_OWNER_SHIFT     16
 #define  MUTEX_OWNER_LEN       16
