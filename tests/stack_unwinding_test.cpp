@@ -73,37 +73,47 @@ TEST(stack_unwinding, easy) {
   ASSERT_EQ(count + 1, deeper_count);
 }
 
-static volatile bool signal_handler_run = false;
-static int killer_count = 0;
-static int handler_count = 0;
-static int handler_one_deeper_count = 0;
+struct UnwindData {
+  volatile bool signal_handler_complete = false;
+  int expected_frame_count = 0;
+  int handler_frame_count = 0;
+  int handler_one_deeper_frame_count = 0;
+};
+
+static UnwindData g_unwind_data;
 
 static void noinline UnwindSignalHandler(int) {
-  _Unwind_Backtrace(FrameCounter, &handler_count);
-  ASSERT_GT(handler_count, killer_count);
+  _Unwind_Backtrace(FrameCounter, &g_unwind_data.handler_frame_count);
 
-  handler_one_deeper_count = unwind_one_frame_deeper();
-  ASSERT_EQ(handler_count + 1, handler_one_deeper_count);
-  signal_handler_run = true;
+  g_unwind_data.handler_one_deeper_frame_count = unwind_one_frame_deeper();
+  g_unwind_data.signal_handler_complete = true;
+}
+
+static void verify_unwind_data(const UnwindData& unwind_data) {
+  EXPECT_GT(unwind_data.handler_frame_count, unwind_data.expected_frame_count);
+  EXPECT_EQ(unwind_data.handler_frame_count + 1, unwind_data.handler_one_deeper_frame_count);
 }
 
 TEST(stack_unwinding, unwind_through_signal_frame) {
-  killer_count = handler_count = handler_one_deeper_count = 0;
+  g_unwind_data = {};
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
-  _Unwind_Backtrace(FrameCounter, &killer_count);
-  signal_handler_run = false;
+  _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
+
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
-  while (!signal_handler_run) {}
+  while (!g_unwind_data.signal_handler_complete) {}
+
+  verify_unwind_data(g_unwind_data);
 }
 
 // On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
 TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
-  killer_count = handler_count = handler_one_deeper_count = 0;
+  g_unwind_data = {};
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
-  _Unwind_Backtrace(FrameCounter, &killer_count);
-  signal_handler_run = false;
+  _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
-  while (!signal_handler_run) {}
+  while (!g_unwind_data.signal_handler_complete) {}
+
+  verify_unwind_data(g_unwind_data);
 }
