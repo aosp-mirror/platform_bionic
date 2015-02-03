@@ -93,6 +93,30 @@
       "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7c04bc1_a9145970",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-03T00:49:21Z",
+      "side": 1,
+      "message": "Change sem_getvalue to use acquire fence, and add comment for it.",
+      "parentUuid": "97d0ef89_888cf7ce",
+      "range": {
+        "startLine": 296,
+        "startChar": 66,
+        "endLine": 296,
+        "endChar": 86
+      },
+      "revId": "80f2bf5c767e3acb2ad6753ae8b2fd28afb95c63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
