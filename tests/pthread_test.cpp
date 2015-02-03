@@ -27,6 +27,7 @@
 #include <malloc.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdio.h>
 #include <sys/mman.h>
 #include <sys/syscall.h>
 #include <time.h>
@@ -1091,4 +1092,15 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
   ASSERT_EQ(0, pthread_mutex_unlock(&lock));
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+}
+
+TEST(pthread, pthread_mutex_owner_tid_limit) {
+  FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
+  ASSERT_TRUE(fp != NULL);
+  long pid_max;
+  ASSERT_EQ(1, fscanf(fp, "%ld", &pid_max));
+  fclose(fp);
+  // Current pthread_mutex uses 16 bits to represent owner tid.
+  // Change the implementation if we need to support higher value than 65535.
+  ASSERT_LE(pid_max, 65536);
 }
