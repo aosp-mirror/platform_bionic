@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c24dca3_d990d7e9",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "(flags)",
+      "range": {
+        "startLine": 16,
+        "startChar": 44,
+        "endLine": 16,
+        "endChar": 49
+      },
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c24dca3_592cc710",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Style guide says format is // TODO(owner): comment\n\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#TODO_Comments",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_833b046c",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Long line",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c24dca3_b934fb57",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Long line",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_ee47473d",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "!\u003d nullptr to match the others.",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_4ed993f4",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Null checks?",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c293c84_aeadb7b1",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Why switch to static instead of keeping the anonymous namespace?",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c444057_0fc5e50f",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Long lines.",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c293c84_8e6c3b6c",
+        "filename": "tools/relocation_packer/src/main.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-03T23:55:12Z",
+      "side": 1,
+      "message": "Can be deleted now, right?",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
