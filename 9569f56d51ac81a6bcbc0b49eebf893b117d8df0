@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cfbfc33_5e3cb5c2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:39:38Z",
+      "side": 1,
+      "message": "HandleSignals",
+      "revId": "9569f56d51ac81a6bcbc0b49eebf893b117d8df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cf1f452_03f3707a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:39:38Z",
+      "side": 1,
+      "message": "isn\u0027t this going to spin? why not just pass NULL and then use SIGQUIT plus a shared variable to say \"time to quit, signal catcher\".",
+      "revId": "9569f56d51ac81a6bcbc0b49eebf893b117d8df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b737b3c2_4fece194",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:39:38Z",
+      "side": 1,
+      "message": "SIGINT or SIGKILL?",
+      "revId": "9569f56d51ac81a6bcbc0b49eebf893b117d8df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b737b3c2_2fefad8b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:39:38Z",
+      "side": 1,
+      "message": "why do we pass WNOHANG to waitpid?",
+      "revId": "9569f56d51ac81a6bcbc0b49eebf893b117d8df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cfbfc33_9e28fd7f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:39:38Z",
+      "side": 1,
+      "message": "don\u0027t tell us what you\u0027re doing --- we can see that from the code. tell us *why* you\u0027re doing it.",
+      "revId": "9569f56d51ac81a6bcbc0b49eebf893b117d8df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
