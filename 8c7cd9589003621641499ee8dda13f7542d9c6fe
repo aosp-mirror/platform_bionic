@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cf1f452_40d60e81",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-03T20:08:13Z",
+      "side": 1,
+      "message": "Use hidden visibility on LP64 for any...",
+      "revId": "8c7cd9589003621641499ee8dda13f7542d9c6fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
