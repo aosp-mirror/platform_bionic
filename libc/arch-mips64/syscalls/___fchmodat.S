@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__fchmodat)
+ENTRY(___fchmodat)
     .set push
     .set noreorder
     li v0, __NR_fchmodat
@@ -22,5 +22,5 @@ ENTRY(__fchmodat)
     j t9
     move ra, t0
     .set pop
-END(__fchmodat)
-.hidden __fchmodat
+END(___fchmodat)
+.hidden ___fchmodat
