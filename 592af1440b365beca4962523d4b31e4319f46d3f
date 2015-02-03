@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f7268b4e_19b90b47",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done. Removed unused ones like sys and string.",
+      "parentUuid": "d7826718_ea298784",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7826718_ca2cc397",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Could you clean up the wildcard imports?",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "978b8f6f_f0030084",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7826718_ca2cc397",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "7c0fe024_f744c08c",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97a38fb2_50732c02",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f793eb67_0b041df5",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Python docstrings should be in the format:\n\n    \"\"\"Brief description.\n    \u003cblank line\u003e\n    Longer description.\n    \"\"\"\n\nor\n\n    \"\"\"Single line description.\"\"\"\n\nTools that show documentation (bpython, editors) rely on this.\n\nhttps://www.python.org/dev/peps/pep-0257/\n\nAlso, to get a little nit-picky, as with our C/C++ code, comments and docstrings should begin with a capital and end with a period.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7790db99_afebd9b7",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "I was hesitant when choosing among google style, python style (PEP-8 and 257) and \"local\" style... I\u0027m making it consistent in this file now.",
+      "parentUuid": "f793eb67_0b041df5",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "7790db99_2f2a8979",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Documented in class description now.",
+      "parentUuid": "97a38fb2_f326eada",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7826718_aabb0fbf",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "f7268b4e_7c47cd3d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Not defined in libclang. Fixed.",
+      "parentUuid": "d7826718_aabb0fbf",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a38fb2_1369ae12",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -115,6 +223,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "class CppTokenizer(object):",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c0fe024_1ad51942",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97a38fb2_1369ae12",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -144,6 +270,30 @@
     },
     {
       "key": {
+        "uuid": "7c0fe024_fad9457c",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97a38fb2_f39b4a08",
+      "range": {
+        "startLine": 175,
+        "startChar": 13,
+        "endLine": 175,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a38fb2_93391e53",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -161,6 +311,24 @@
     },
     {
       "key": {
+        "uuid": "f7268b4e_bcafa52b",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97a38fb2_93391e53",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a38fb2_1350ce4a",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -172,6 +340,30 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Huh?",
+      "range": {
+        "startLine": 201,
+        "startChar": 19,
+        "endLine": 201,
+        "endChar": 33
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c24dca3_997c9f9e",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "I don\u0027t actually understand this part either. Since they are copied from libclang code and appear to be working, I\u0027ll just leave them there...",
+      "parentUuid": "97a38fb2_1350ce4a",
       "range": {
         "startLine": 201,
         "startChar": 19,
@@ -207,6 +399,30 @@
     },
     {
       "key": {
+        "uuid": "7c0fe024_1aee3910",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Same as the last reply. Copied from libclang code.",
+      "parentUuid": "57767713_89957da2",
+      "range": {
+        "startLine": 206,
+        "startChar": 65,
+        "endLine": 206,
+        "endChar": 91
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b79c1385_a1ec3e18",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -224,6 +440,24 @@
     },
     {
       "key": {
+        "uuid": "5c24dca3_f95ef32b",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_a1ec3e18",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57767713_a9407975",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -235,6 +469,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Never initialized in the constructor. Make sure everything has a default in the initialized state (even if it\u0027s None or []).\n\npylint will catch this for you.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_20c54e10",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57767713_a9407975",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -264,6 +516,30 @@
     },
     {
       "key": {
+        "uuid": "7c0fe024_5a1951a5",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d797c75c_45869c29",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57767713_0c151b6c",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -275,6 +551,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "basestring?\n\nI\u0027d just enforce that this method is always called with either a string or a list of strings, not both. Let the caller deal with it.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc10cc40_a0d03ece",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57767713_0c151b6c",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -298,6 +592,24 @@
     },
     {
       "key": {
+        "uuid": "7c0fe024_fa07053e",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d797c75c_a5eb28b8",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b79c1385_41a0d27f",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -309,6 +621,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Just scrap the method and use .tokens directly.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77d53b78_67b9f246",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_41a0d27f",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -332,6 +662,24 @@
     },
     {
       "key": {
+        "uuid": "77d53b78_4a7e7397",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_01b76ab9",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a1cfbc_e067e20b",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -343,6 +691,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "Should really be moved to using unittest... This crap was already here, so no need for this CL, but it would be nice to cleanup eventually.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7db33ac_8c96c72d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "i\u0027ll clean them up with a follow-up CL.",
+      "parentUuid": "97a1cfbc_e067e20b",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -366,6 +732,24 @@
     },
     {
       "key": {
+        "uuid": "77d53b78_6aaff7a9",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_41b9f245",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a1cfbc_c0597ef8",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -377,6 +761,30 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "identifier_re (at least that\u0027s what it looks like).\n\nAlso, this isn\u0027t correct. Identifiers can\u0027t start with digits.",
+      "range": {
+        "startLine": 365,
+        "startChar": 4,
+        "endLine": 365,
+        "endChar": 19
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7db33ac_6ca0b380",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "i don\u0027t see any use of this var. just get it killed.",
+      "parentUuid": "97a1cfbc_c0597ef8",
       "range": {
         "startLine": 365,
         "startChar": 4,
@@ -412,6 +820,30 @@
     },
     {
       "key": {
+        "uuid": "97d0ef89_cb48a972",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_61acf605",
+      "range": {
+        "startLine": 369,
+        "startChar": 13,
+        "endLine": 369,
+        "endChar": 16
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97a1cfbc_209dca45",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -423,6 +855,30 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": ":(",
+      "range": {
+        "startLine": 370,
+        "startChar": 13,
+        "endLine": 370,
+        "endChar": 14
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97d0ef89_abb615ba",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97a1cfbc_209dca45",
       "range": {
         "startLine": 370,
         "startChar": 13,
@@ -452,6 +908,24 @@
     },
     {
       "key": {
+        "uuid": "b780937a_c18c42d0",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done. With some minor change by stripping out the last char if it\u0027s in \"ULul\".",
+      "parentUuid": "97a1cfbc_00de46e1",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b79c1385_84db8875",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -463,6 +937,24 @@
       "writtenOn": "2015-01-30T02:20:01Z",
       "side": 1,
       "message": "This whole function should be:\n\n    try:\n        val \u003d int(self.tok[self.i].id, 16)\n        self.i +\u003d 1\n        return (\u0027hex\u0027, val)\n    except ValueError:\n        return None\n\nShould factor out the pieces that are similar with my other comment.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97854f8c_c030be99",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79c1385_84db8875",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -486,6 +978,47 @@
     },
     {
       "key": {
+        "uuid": "f7c04bc1_e9d01154",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done. Also have added some trivial tests for int/oct/hex values. Although they don\u0027t exist in header codes.",
+      "parentUuid": "b79c1385_c41e308f",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97854f8c_c057de99",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 756,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "doesn\u0027t seem right to me. why does it repeat the comparison between e1[0] and e2[0]. since there\u0027s no use of this function and is_equal(), killed them both.",
+      "range": {
+        "startLine": 751,
+        "startChar": 0,
+        "endLine": 756,
+        "endChar": 33
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d70ee7b4_2de5d92f",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -497,6 +1030,24 @@
       "writtenOn": "2015-01-30T19:29:34Z",
       "side": 1,
       "message": "Just `self.directive \u003d\u003d \u0027endif\u0027` for a single case.",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b780937a_84f968d8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d70ee7b4_2de5d92f",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -526,6 +1077,30 @@
     },
     {
       "key": {
+        "uuid": "f7c04bc1_69af01aa",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9708efac_48f6bf60",
+      "range": {
+        "startLine": 1307,
+        "startChar": 72,
+        "endLine": 1307,
+        "endChar": 73
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37d66340_eded8517",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -537,6 +1112,24 @@
       "writtenOn": "2015-01-30T19:29:34Z",
       "side": 1,
       "message": "Is there anywhere in `getBlocks` that you want to keep comments? I\u0027d prune them out at the top level rather than duplicating this (tokens \u003d [t for t in tokens if t.kind !\u003d TokenKind.COMMENT])",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97854f8c_e0edc245",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done. Pruned out all comments when getting the tokens in CppTokenizer._getTokensWithCursors().",
+      "parentUuid": "37d66340_eded8517",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -566,6 +1159,30 @@
     },
     {
       "key": {
+        "uuid": "b780937a_44bcc0b7",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "To detect directive tokens inside a function, such as \u0027#if 1\u0027, for which case we need to create a new block. Otherwise all the lines within a function should be kept in one block.",
+      "parentUuid": "37d10340_d8e171da",
+      "range": {
+        "startLine": 1351,
+        "startChar": 75,
+        "endLine": 1351,
+        "endChar": 76
+      },
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57d9176e_ee0e9f2e",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -583,6 +1200,24 @@
     },
     {
       "key": {
+        "uuid": "578f57ad_5e865529",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1399,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done. Actually deleted this loop because we don\u0027t have COMMENT tokens any more.",
+      "parentUuid": "57d9176e_ee0e9f2e",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57d9176e_0e832b19",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 3
@@ -594,6 +1229,24 @@
       "writtenOn": "2015-01-30T19:29:34Z",
       "side": 1,
       "message": "This is the old (2.5?) syntax for raising exceptions. The modern syntax is:\n\n    raise BadExpectedToken(\u0027### BAD TOKEN at %s\u0027 % t.location)",
+      "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b780937a_446a0084",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1402,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-03T22:33:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57d9176e_0e832b19",
       "revId": "592af1440b365beca4962523d4b31e4319f46d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
