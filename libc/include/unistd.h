@@ -35,14 +35,19 @@
 #include <sys/select.h>
 #include <sys/sysconf.h>
 
+#include <machine/posix_limits.h>
+
 __BEGIN_DECLS
 
-/* Standard file descriptor numbers. */
 #define STDIN_FILENO	0
 #define STDOUT_FILENO	1
 #define STDERR_FILENO	2
 
-/* Values for whence in fseek and lseek */
+#define F_OK 0
+#define X_OK 1
+#define W_OK 2
+#define R_OK 4
+
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
@@ -67,8 +72,6 @@ __BEGIN_DECLS
 #define _PC_ASYNC_IO 17
 #define _PC_PRIO_IO 18
 #define _PC_SYNC_IO 19
-
-#include <machine/posix_limits.h>
 
 extern char** environ;
 
@@ -120,13 +123,6 @@ extern void endusershell(void);
 
 extern long fpathconf(int, int);
 extern long pathconf(const char*, int);
-
-
-/* Macros for access() */
-#define R_OK  4  /* Read */
-#define W_OK  2  /* Write */
-#define X_OK  1  /* Execute */
-#define F_OK  0  /* Existence */
 
 extern int access(const char*, int);
 extern int faccessat(int, const char*, int, int);
