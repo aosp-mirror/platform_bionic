@@ -16,6 +16,24 @@
       "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c521c24_29bae9ee",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T02:45:09Z",
+      "side": 1,
+      "message": "If you see man page of poll, you will find -1 is a valid number. It fooled my already.",
+      "parentUuid": "9c581443_68834370",
+      "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
