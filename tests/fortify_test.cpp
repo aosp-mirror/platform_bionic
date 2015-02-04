@@ -26,6 +26,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 
 #if __BIONIC__
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "FORTIFY")
@@ -938,11 +939,15 @@ TEST(TEST_NAME, s_n_printf_macro_expansion) {
 TEST_F(DEATHTEST, poll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
   pollfd buf[1] = {{0, POLLIN, 0}};
-  ASSERT_FORTIFY(poll(buf, fd_count, -1));
+  // Set timeout to zero to prevent waiting in poll when fortify test fails.
+  ASSERT_FORTIFY(poll(buf, fd_count, 0));
 }
 
 TEST_F(DEATHTEST, ppoll_fortified) {
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
   pollfd buf[1] = {{0, POLLIN, 0}};
-  ASSERT_FORTIFY(ppoll(buf, fd_count, NULL, NULL));
+  // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
+  timespec timeout;
+  timeout.tv_sec = timeout.tv_nsec = 0;
+  ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, NULL));
 }
