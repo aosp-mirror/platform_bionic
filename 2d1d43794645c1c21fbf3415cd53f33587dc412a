@@ -52,6 +52,24 @@
       "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_10316aea",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T20:28:17Z",
+      "side": 1,
+      "message": "Done. Set timeout to zero.",
+      "parentUuid": "9c3f34b5_70cc50ee",
+      "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
