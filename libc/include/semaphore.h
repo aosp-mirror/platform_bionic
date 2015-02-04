@@ -36,7 +36,7 @@ __BEGIN_DECLS
 struct timespec;
 
 typedef struct {
-  volatile unsigned int count;
+  unsigned int count;
 #ifdef __LP64__
   int __reserved[3];
 #endif
