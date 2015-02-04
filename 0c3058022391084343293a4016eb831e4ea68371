@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c3f34b5_3008089f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T04:18:49Z",
+      "side": 1,
+      "message": "this might be less unclear if you make it a size_t finished_child_count and ++ it. the break is confusing too. you should try to avoid break or continue in nested loops. try splitting the for loop out into a new function. (the other for loop before could usefully be a new function too. any time you have a function this long, blocks marked with comments are good candidates for splitting out --- you were able to describe it for a comment, so you can probably give it a name as a function.)",
+      "revId": "0c3058022391084343293a4016eb831e4ea68371",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c581443_ee8cdb4b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T04:18:49Z",
+      "side": 1,
+      "message": "why the ECHILD special case?",
+      "revId": "0c3058022391084343293a4016eb831e4ea68371",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
