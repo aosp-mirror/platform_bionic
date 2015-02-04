@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1c4d04af_7cd9f9f4",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "Name is changed to deadline_end_time_ns. I hope this will help to explain it.",
+      "parentUuid": "7ce0c0af_b8739d35",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ce0c0af_7803f586",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-04T22:41:01Z",
       "side": 1,
       "message": "s/done_flag/done/ (or \u0027finished\u0027 or \u0027exited\u0027 or something).\ns/timeout_flag/timed_out/",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c43fc80_be4ed9f8",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ce0c0af_7803f586",
       "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "3c400875_9d5163ce",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c39f403_60ee7211",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ce0c0af_f837e55a",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-04T22:41:01Z",
       "side": 1,
       "message": "finished",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c400875_fd4ea727",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ce0c0af_f837e55a",
       "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "3c400875_7dc0d700",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "It is for WaitForOneChild(). Maybe this is a comment for what not why. Comment changed.",
+      "parentUuid": "dc2fecb3_82b45ad4",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ce0c0af_78d1b586",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "5c43fc80_1e88ad87",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ce0c0af_78d1b586",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc2fecb3_c2a6629f",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 6
@@ -115,6 +223,24 @@
       "writtenOn": "2015-02-04T22:41:01Z",
       "side": 1,
       "message": "why do we want to break? shouldn\u0027t this be continue?",
+      "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c400875_1da5534e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T23:34:48Z",
+      "side": 1,
+      "message": "In this situation, the child process is finished, and the test is finished. It must be an error caused by test if the read may be blocked. Just like when poll fortify test fails before we fix it.",
+      "parentUuid": "dc2fecb3_c2a6629f",
       "revId": "b6c6dc6d49502e2aa06f053976d75888cee2ff62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
