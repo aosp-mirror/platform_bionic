@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5c293c84_31824ae2",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T00:40:20Z",
+      "side": 1,
+      "message": "Done. I think at least it will not be slower than before the change, in most cases.",
+      "parentUuid": "7c444057_cf37dd5b",
+      "range": {
+        "startLine": 27,
+        "startChar": 1,
+        "endLine": 27,
+        "endChar": 3
+      },
+      "revId": "683087b167c3bad104bd7a5401a42c0e9ff67364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_0e0debae",
         "filename": "libc/bionic/semaphore.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7c5d2031_27e9fa07",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T00:40:20Z",
+      "side": 1,
+      "message": "Done, you are right.",
+      "parentUuid": "5c293c84_0e0debae",
+      "range": {
+        "startLine": 142,
+        "startChar": 27,
+        "endLine": 142,
+        "endChar": 54
+      },
+      "revId": "683087b167c3bad104bd7a5401a42c0e9ff67364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_8edf9b85",
         "filename": "libc/bionic/semaphore.cpp",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2015-02-04T00:04:52Z",
       "side": 1,
       "message": "I think this can also remain relaxed.  If we exit without the compare_exchange, the world is broken anyway.  We\u0027ll inherently miss the release operation, which seems far more critical.\n\n(An error return for that case would make a lot more sense to me, but indeed seems to be disallowed.)",
+      "range": {
+        "startLine": 186,
+        "startChar": 27,
+        "endLine": 186,
+        "endChar": 54
+      },
+      "revId": "683087b167c3bad104bd7a5401a42c0e9ff67364",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c5d2031_07eef60f",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T00:40:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c293c84_8edf9b85",
       "range": {
         "startLine": 186,
         "startChar": 27,
