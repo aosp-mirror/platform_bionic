@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fc1af065_9617cae6",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T05:07:55Z",
+      "side": 1,
+      "message": "the next one is going to be \u0027packed\u0027",
+      "parentUuid": "7c5d2031_d0a3f28c",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c4c248a_e402ba36",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "9c581443_ae9dc3ff",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T05:07:55Z",
+      "side": 1,
+      "message": "nope; runtime linker does not need to deal with more than one type per binary...",
+      "parentUuid": "1c4c248a_e402ba36",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c5d2031_f0a6f69e",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2015-02-04T05:01:05Z",
       "side": 1,
       "message": "ws",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc1af065_d662e279",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T05:07:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c5d2031_f0a6f69e",
       "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
