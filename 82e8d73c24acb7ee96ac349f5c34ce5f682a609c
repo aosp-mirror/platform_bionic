@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5c293c84_eec97f2a",
+        "filename": "tools/relocation_packer/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "added missing packer_uinttest.cc...",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c24dca3_d990d7e9",
         "filename": "tools/relocation_packer/src/delta_encoder.cc",
         "patchSetId": 4
@@ -13,6 +30,30 @@
       "writtenOn": "2015-02-03T23:55:12Z",
       "side": 1,
       "message": "(flags)",
+      "range": {
+        "startLine": 16,
+        "startChar": 44,
+        "endLine": 16,
+        "endChar": 49
+      },
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cc2c81e_0dd63180",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c24dca3_d990d7e9",
       "range": {
         "startLine": 16,
         "startChar": 44,
@@ -42,6 +83,24 @@
     },
     {
       "key": {
+        "uuid": "1ccfc448_6c325ba2",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c24dca3_592cc710",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc10cc40_833b046c",
         "filename": "tools/relocation_packer/src/delta_encoder.cc",
         "patchSetId": 4
@@ -53,6 +112,24 @@
       "writtenOn": "2015-02-03T23:55:12Z",
       "side": 1,
       "message": "Long line",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ccfc448_0c27175f",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc10cc40_833b046c",
       "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -76,6 +153,24 @@
     },
     {
       "key": {
+        "uuid": "7ce0c0af_b2289e7f",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c24dca3_b934fb57",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc10cc40_ee47473d",
         "filename": "tools/relocation_packer/src/delta_encoder.cc",
         "patchSetId": 4
@@ -87,6 +182,24 @@
       "writtenOn": "2015-02-03T23:55:12Z",
       "side": 1,
       "message": "!\u003d nullptr to match the others.",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ce0c0af_12316aea",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc10cc40_ee47473d",
       "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -110,6 +223,24 @@
     },
     {
       "key": {
+        "uuid": "1c3344f6_2ce673f2",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "for group_flags - no; It\u0027d better not to be null. In case it is we want a bang here.",
+      "parentUuid": "dc10cc40_4ed993f4",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_aeadb7b1",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 4
@@ -121,6 +252,24 @@
       "writtenOn": "2015-02-03T23:55:12Z",
       "side": 1,
       "message": "Why switch to static instead of keeping the anonymous namespace?",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc6318f1_2c31dbea",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "\u0027static\u0027 is visible in the middle of large list of function.\n\nThe only case when we want to use anonymous namespace is to hide types.",
+      "parentUuid": "5c293c84_aeadb7b1",
       "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -144,6 +293,24 @@
     },
     {
       "key": {
+        "uuid": "3cc2c81e_8d654133",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c444057_0fc5e50f",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_8e6c3b6c",
         "filename": "tools/relocation_packer/src/main.cc",
         "patchSetId": 4
@@ -155,6 +322,24 @@
       "writtenOn": "2015-02-03T23:55:12Z",
       "side": 1,
       "message": "Can be deleted now, right?",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ccfc448_cc934ff4",
+        "filename": "tools/relocation_packer/src/main.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:11:04Z",
+      "side": 1,
+      "message": "right. done",
+      "parentUuid": "5c293c84_8e6c3b6c",
       "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
