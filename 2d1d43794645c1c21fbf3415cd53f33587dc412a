@@ -34,6 +34,24 @@
       "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3f34b5_70cc50ee",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T04:26:16Z",
+      "side": 1,
+      "message": "ah, i didn\u0027t realize that \"If this field is negative, then the corresponding events field is ignored and the revents field returns zero\" didn\u0027t mean \"immediately\", but \"This provides an easy way of ignoring a file descriptor for a single poll() call\" makes that intent clear.\n\nif all you\u0027re trying to do is avoid waiting forever, i still don\u0027t like inventing a new magic number. just use a small timeout (or 0).",
+      "parentUuid": "5c521c24_29bae9ee",
+      "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
