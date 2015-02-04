@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c5d2031_edad0103",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T03:12:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc1af065_b3765826",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3f34b5_30ffe870",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-04T02:00:37Z",
       "side": 1,
       "message": "maybe WaitForOneChild to make it clearer that although we\u0027ll look through the lists, we\u0027ll return as soon as one has changed state?",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c521c24_a9449939",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T03:12:29Z",
+      "side": 1,
+      "message": "I originally wanted to make it be able to collect more than one child processes\u0027 information, but I didn\u0027t implemented it as well. So I updated the implementation. What\u0027s more, WaitChildProc is below, I think the name WaitForOneChild is better for it.",
+      "parentUuid": "9c3f34b5_30ffe870",
       "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5c521c24_8941dd29",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T03:12:29Z",
+      "side": 1,
+      "message": "Done. Changed to return.",
+      "parentUuid": "9c581443_080de7ae",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c3f34b5_1004e4f2",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-04T02:00:37Z",
       "side": 1,
       "message": "TEMP_FAILURE_RETRY",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c4f2880_880e7756",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T03:12:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c3f34b5_1004e4f2",
       "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
