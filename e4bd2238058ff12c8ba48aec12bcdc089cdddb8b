@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc1af065_b3765826",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T02:00:37Z",
+      "side": 1,
+      "message": "ah, i missed this before. maybe \"return\" would make it stand out more?",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3f34b5_30ffe870",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T02:00:37Z",
+      "side": 1,
+      "message": "maybe WaitForOneChild to make it clearer that although we\u0027ll look through the lists, we\u0027ll return as soon as one has changed state?",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c581443_080de7ae",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T02:00:37Z",
+      "side": 1,
+      "message": "aren\u0027t all mentions of loop_flag just a long-winded way of saying \"return\"?",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3f34b5_1004e4f2",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T02:00:37Z",
+      "side": 1,
+      "message": "TEMP_FAILURE_RETRY",
+      "revId": "e4bd2238058ff12c8ba48aec12bcdc089cdddb8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
