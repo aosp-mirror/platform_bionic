@@ -140,7 +140,7 @@ def BuildIcuToolsAndData(data_filename):
 
   # Regenerate the .dat file.
   os.chdir(icu_working_dir)
-  subprocess.check_call(['make', '-j32'])
+  subprocess.check_call(['make', 'INCLUDE_UNI_CORE_DATA=1', '-j32'])
 
   # Copy the .dat file to its ultimate destination.
   icu_dat_data_dir = '%s/stubdata' % icu_dir
