@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dc2fecb3_62ee7611",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T22:28:21Z",
+      "side": 1,
+      "message": "Done. I also move some code in RuntestInSeparateProc to separate functions. I found to move the full loop may be\ndifficult as I need to include more arguments in new function, but just move some code in the loop is easier.",
+      "parentUuid": "9c3f34b5_3008089f",
+      "revId": "0c3058022391084343293a4016eb831e4ea68371",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c581443_ee8cdb4b",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-04T04:18:49Z",
       "side": 1,
       "message": "why the ECHILD special case?",
+      "revId": "0c3058022391084343293a4016eb831e4ea68371",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ce0c0af_b89ddd46",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T22:28:21Z",
+      "side": 1,
+      "message": "It happens there is no further child processes running. Explained in comment.",
+      "parentUuid": "9c581443_ee8cdb4b",
       "revId": "0c3058022391084343293a4016eb831e4ea68371",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
