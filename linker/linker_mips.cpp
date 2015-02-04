@@ -29,10 +29,15 @@
 #include "linker.h"
 #include "linker_debug.h"
 #include "linker_relocs.h"
+#include "linker_reloc_iterators.h"
 
-template<>
-bool soinfo::relocate(ElfW(Rel)* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+
+template <typename ElfRelIteratorT>
+bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
+    const auto rel = rel_iterator.next();
+
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
 

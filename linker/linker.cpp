@@ -50,11 +50,12 @@
 #include "private/UniquePtr.h"
 
 #include "linker.h"
+#include "linker_allocator.h"
 #include "linker_debug.h"
 #include "linker_environ.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
-#include "linker_allocator.h"
+#include "linker_reloc_iterators.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -1297,9 +1298,10 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
 }
 #endif
 
-template<typename ElfRelT>
-bool soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+template<typename ElfRelIteratorT>
+bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
+    const auto rel = rel_iterator.next();
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
 
@@ -2273,26 +2275,26 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #if defined(USE_RELA)
   if (rela_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (!relocate(rela_, rela_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (!relocate(plt_rela_, plt_rela_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
       return false;
     }
   }
 #else
   if (rel_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (!relocate(rel_, rel_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (!relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
       return false;
     }
   }
