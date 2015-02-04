@@ -259,6 +259,24 @@
     },
     {
       "key": {
+        "uuid": "7ce0c0af_92347a58",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-04T20:46:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fccbd03a_ebd6314c",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_aeadb7b1",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 4
