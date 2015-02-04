@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c581443_68834370",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T02:02:46Z",
+      "side": 1,
+      "message": "why not -1?",
+      "revId": "2d1d43794645c1c21fbf3415cd53f33587dc412a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
