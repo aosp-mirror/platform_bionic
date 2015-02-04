@@ -241,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "fccbd03a_ebd6314c",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-04T20:44:50Z",
+      "side": 1,
+      "message": "Should probably add a CHECK then.",
+      "parentUuid": "1c3344f6_2ce673f2",
+      "revId": "82e8d73c24acb7ee96ac349f5c34ce5f682a609c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c293c84_aeadb7b1",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 4
