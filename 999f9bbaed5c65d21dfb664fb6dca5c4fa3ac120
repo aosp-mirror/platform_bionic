@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c5d2031_d0a3f28c",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T05:01:05Z",
+      "side": 1,
+      "message": "why \u0027plain\u0027?",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c4c248a_e402ba36",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T05:01:05Z",
+      "side": 1,
+      "message": "not a type parameter?",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c5d2031_f0a6f69e",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-04T05:01:05Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "999f9bbaed5c65d21dfb664fb6dca5c4fa3ac120",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
