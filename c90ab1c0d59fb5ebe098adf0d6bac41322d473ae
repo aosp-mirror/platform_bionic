@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c4f2880_4842bf63",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-04T03:15:55Z",
+      "side": 1,
+      "message": "Looks like a bug at first glance.",
+      "range": {
+        "startLine": 568,
+        "startChar": 3,
+        "endLine": 568,
+        "endChar": 34
+      },
+      "revId": "c90ab1c0d59fb5ebe098adf0d6bac41322d473ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
