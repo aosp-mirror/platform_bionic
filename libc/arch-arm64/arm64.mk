@@ -59,6 +59,6 @@ ifeq ($(wildcard $(cpu_variant_mk)),)
 $(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are generic, denver64. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
 endif
 include $(cpu_variant_mk)
-libc_common_additional_dependencies += $(cpu_variank_mk)
+libc_common_additional_dependencies += $(cpu_variant_mk)
 
 cpu_variant_mk :=
