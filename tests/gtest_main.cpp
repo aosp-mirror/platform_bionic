@@ -16,9 +16,11 @@
 
 #include <gtest/gtest.h>
 
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -821,6 +823,24 @@ static size_t GetProcessorCount() {
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
 }
 
+static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
+  // To run DeathTest in threadsafe mode, gtest requires that the user must invoke the
+  // test program via a valid path that contains at least one path separator.
+  // The reason is that gtest uses clone() + execve() to run DeathTest in threadsafe mode,
+  // and execve() doesn't read environment variable PATH, so execve() will not success
+  // until we specify the absolute path or relative path of the test program directly.
+  if (strchr(args[0], '/') == NULL) {
+    char path[PATH_MAX];
+    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+    if (path_len <= 0 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+      perror("readlink");
+      exit(1);
+    }
+    path[path_len] = '\0';
+    args[0] = strdup(path);
+  }
+}
+
 static void AddGtestFilterSynonym(std::vector<char*>& args) {
   // Support --gtest-filter as a synonym for --gtest_filter.
   for (size_t i = 1; i < args.size(); ++i) {
@@ -858,6 +878,7 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
     }
   }
 
+  AddPathSeparatorInTestProgramPath(args);
   AddGtestFilterSynonym(args);
 
   // if --bionic-selftest argument is used, only enable self tests, otherwise remove self tests.
