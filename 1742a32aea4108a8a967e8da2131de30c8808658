@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c3f34b5_b9c74335",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-05T01:51:35Z",
+      "side": 1,
+      "message": "ah, i feel a bit less bad now. i thought you meant it was totally automated. not that we\u0027d have to write one whole line ourselves :-)",
+      "revId": "1742a32aea4108a8a967e8da2131de30c8808658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
