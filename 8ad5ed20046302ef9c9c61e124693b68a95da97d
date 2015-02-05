@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc103097_83ba9eb9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-05T16:16:24Z",
+      "side": 1,
+      "message": "no, readlink(2) /proc/self/exe. (there are several copies of this code lying around, possibly even one you can reuse.)\n\ncan you explain in the comment _why_ gtest requires this?",
+      "revId": "8ad5ed20046302ef9c9c61e124693b68a95da97d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
