@@ -16,6 +16,24 @@
       "revId": "0d3e32b0d095b6e8a26f290ca65a52b64c5a3ac6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc5dd861_3c3bfd6d",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-05T01:13:33Z",
+      "side": 1,
+      "message": "Changed to insert/erase version.",
+      "parentUuid": "7c57e041_d77c5c9f",
+      "revId": "0d3e32b0d095b6e8a26f290ca65a52b64c5a3ac6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
