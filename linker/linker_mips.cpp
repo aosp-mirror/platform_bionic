@@ -30,13 +30,30 @@
 #include "linker_debug.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
+#include "linker_leb128.h"
 
-template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator,
+                                                     const soinfo_list_t& global_group,
+                                                     const soinfo_list_t& local_group);
+
+template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
+    packed_reloc_iterator<sleb128_decoder>&& rel_iterator,
+    const soinfo_list_t& global_group,
+    const soinfo_list_t& local_group);
+
+template bool soinfo::relocate<packed_reloc_iterator<leb128_decoder>>(
+    packed_reloc_iterator<leb128_decoder>&& rel_iterator,
+    const soinfo_list_t& global_group,
+    const soinfo_list_t& local_group);
 
 template <typename ElfRelIteratorT>
 bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
+
+    if (rel == nullptr) {
+      return false;
+    }
 
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);

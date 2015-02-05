@@ -315,6 +315,9 @@ struct soinfo {
 
   soinfo* local_group_root_;
 
+  uint8_t* android_relocs_;
+  size_t android_relocs_size_;
+
   friend soinfo* get_libdl_info();
 };
 
