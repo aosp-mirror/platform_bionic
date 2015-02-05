@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "fc93d067_4bef053d",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-05T23:47:50Z",
+      "side": 1,
+      "message": "I agree with using add instead.  Good idea.\n\nI would not use the mask explicitly, since it greatly complicates the code.  Just please add a comment that this leaves the flags alone.\n\nThe code example you give is broken.  We don\u0027t need to try to half-way support it.  The assignment of 1 to avail races with the read of avail in the first thread.  That sort of data race is clearly disallowed by both Posix and C.  To fix the example, the assignment to avail should be done while holding mtx.  That fixes the memory ordering issue.\n\nEven if the accesses to avail were relaxed atomics, this wouldn\u0027t work.  Pthread_cond_wait could spuriously wake up just before pthread_cond_signal is executed by the other thread.  It would then see avail\u003d1, but wouldn\u0027t see the effect of the fence.\n\nIf we were to leave the fence there, it should be with a comment that it\u0027s there to defend against broken client code.  But that seems completely unhelpful to me since __futex_wake_ex has to include release semantics; it doesn\u0027t make sense unless at least the updates to the futex are visible to the woken thread.\n\nThere are ongoing debates about what Posix \"memory synchronization\" means.  They tend to be conducted on this mailing list:\n\nhttp://dir.gmane.org/gmane.comp.standards.posix.austin.c11-alignment\n\nIn my opinion, there is no reasonable and entirely consistent interpretation of the current standard.  (See my PLDI 05 paper for some justification for that statement.)\n\nI think the correct interpretation is that synchronization primitives that \"synchronize memory\" (and maybe some others) have essentially \"memory_order_seq_consistent\" semantics.  That doesn\u0027t mean much for pthread_cond_signal and friends,  since there is no way to tell whether they actually did anything.  The user can\u0027t tell whether a waiting thread was woken by pthread_cond_signal, or whether it was suspended just before the wait() and spuriously awoken just after the signal call completed.",
+      "parentUuid": "1cc26457_7dc54b0f",
+      "range": {
+        "startLine": 128,
+        "startChar": 1,
+        "endLine": 145,
+        "endChar": 95
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc4910a5_a4bc0848",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 1
@@ -155,6 +179,30 @@
       "side": 1,
       "message": "Comment changed.\n|That fact is not observable because wait can spuriously wake up early.\nDo you mean pthread_cond_wait/timedwait don\u0027t need to provide memory synchronization on spurious wake up? I checked posix standard and couldn\u0027t find any word that it may not provide memory synchronization for spurious wake up.",
       "parentUuid": "fc4910a5_a4bc0848",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 61
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc93d067_aeff97ba",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-05T23:47:50Z",
+      "side": 1,
+      "message": "I don\u0027t think it actually makes sense to provide \"memory synchronization\" unless it\u0027s with another thread.  Certainly that\u0027s true in the C11 model.  There is a reading of Posix in which it does kind of make sense, but in that version everything includes a full fence, often on both sides, and all our code slows down tremendously.  Nobody implements that, for good reason.\n\nIn C11/C++11 a sequentially consistent operation on memory nobody else can see is a no-op.\n\nC++11 specifies condition variable synchronization correctly.  Wait is specified to acquire and release the mutex. Neither has an explicit synchronization clause.",
+      "parentUuid": "1cc26457_dd1adf0d",
       "range": {
         "startLine": 157,
         "startChar": 2,
