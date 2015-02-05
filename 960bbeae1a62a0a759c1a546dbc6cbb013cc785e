@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fc4910a5_b0d6fe4a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-05T00:07:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc4910a5_1bb55b00",
+      "revId": "960bbeae1a62a0a759c1a546dbc6cbb013cc785e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c43fc80_61bf90de",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 8
@@ -47,6 +65,24 @@
       "writtenOn": "2015-02-04T23:41:19Z",
       "side": 1,
       "message": "why?",
+      "revId": "960bbeae1a62a0a759c1a546dbc6cbb013cc785e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4910a5_b5aa70e7",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-05T00:07:14Z",
+      "side": 1,
+      "message": "We should reset child_proc for reuse. Comment is added.",
+      "parentUuid": "5c43fc80_8193bc6e",
       "revId": "960bbeae1a62a0a759c1a546dbc6cbb013cc785e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
