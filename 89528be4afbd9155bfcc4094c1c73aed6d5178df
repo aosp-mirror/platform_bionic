@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcbf988b_cf301117",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-05T02:05:16Z",
+      "side": 1,
+      "message": "doesn\u0027t vector::erase return a suitable iterator?",
+      "revId": "89528be4afbd9155bfcc4094c1c73aed6d5178df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
