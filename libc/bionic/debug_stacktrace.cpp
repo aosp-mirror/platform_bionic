@@ -47,34 +47,20 @@
 
 typedef struct _Unwind_Context __unwind_context;
 
+extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
+
 static mapinfo_t* g_map_info = NULL;
-static void* g_demangler;
-typedef char* (*DemanglerFn)(const char*, char*, size_t*, int*);
-static DemanglerFn g_demangler_fn = NULL;
 
 __LIBC_HIDDEN__ void backtrace_startup() {
   ScopedDisableDebugCalls disable;
 
   g_map_info = mapinfo_create(getpid());
-  g_demangler = dlopen("libgccdemangle.so", RTLD_NOW);
-  if (g_demangler != NULL) {
-    void* sym = dlsym(g_demangler, "__cxa_demangle");
-    g_demangler_fn = reinterpret_cast<DemanglerFn>(sym);
-  }
 }
 
 __LIBC_HIDDEN__ void backtrace_shutdown() {
   ScopedDisableDebugCalls disable;
 
   mapinfo_destroy(g_map_info);
-  dlclose(g_demangler);
-}
-
-static char* demangle(const char* symbol) {
-  if (g_demangler_fn == NULL) {
-    return NULL;
-  }
-  return (*g_demangler_fn)(symbol, NULL, NULL, NULL);
 }
 
 struct stack_crawl_state_t {
@@ -158,8 +144,7 @@ __LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
       soname = "<unknown>";
     }
     if (symbol != NULL) {
-      // TODO: we might need a flag to say whether it's safe to allocate (demangling allocates).
-      char* demangled_symbol = demangle(symbol);
+      char* demangled_symbol = __cxa_demangle(symbol, NULL, NULL, NULL);
       const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
 
       __libc_format_log(ANDROID_LOG_ERROR, "libc",

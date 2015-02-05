@@ -1221,7 +1221,8 @@ LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Only need this for arm since libc++ uses its own unwind code that
 # doesn't mix with the other default unwind code.
-LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm libc++abi
+LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm
+LOCAL_STATIC_LIBRARIES += libc++abi
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
 # Don't install on release build
