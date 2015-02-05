@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -93,7 +94,10 @@ static void PrintHelpInfo() {
          "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
          "  --gtest-filter=POSITIVE_PATTERNS[-NEGATIVE_PATTERNS]\n"
          "      Used as a synonym for --gtest_filter option in gtest.\n"
-         "\nDefault bionic unit test option is -j.\n"
+         "Default bionic unit test option is -j.\n"
+         "In isolation mode, you can send SIGQUIT to the parent process to show current\n"
+         "running tests, or send SIGINT to the parent process to stop testing and\n"
+         "clean up current running tests.\n"
          "\n");
 }
 
@@ -223,13 +227,13 @@ void TestResultPrinter::OnTestPartResult(const testing::TestPartResult& result) 
   int towrite = strlen(buf);
   char* p = buf;
   while (towrite > 0) {
-    ssize_t write_count = TEMP_FAILURE_RETRY(write(child_output_fd, p, towrite));
-    if (write_count == -1) {
+    ssize_t bytes_written = TEMP_FAILURE_RETRY(write(child_output_fd, p, towrite));
+    if (bytes_written == -1) {
       fprintf(stderr, "failed to write child_output_fd: %s\n", strerror(errno));
       exit(1);
     } else {
-      towrite -= write_count;
-      p += write_count;
+      towrite -= bytes_written;
+      p += bytes_written;
     }
   }
 }
@@ -488,6 +492,18 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
   fclose(fp);
 }
 
+struct ChildProcInfo {
+  pid_t pid;
+  int64_t start_time_ns;
+  int64_t end_time_ns;
+  int64_t deadline_end_time_ns; // The time when the test is thought of as timeout.
+  size_t testcase_id, test_id;
+  bool finished;
+  bool timed_out;
+  int exit_status;
+  int child_read_fd; // File descriptor to read child test failure info.
+};
+
 // Forked Child process, run the single test.
 static void ChildProcessFn(int argc, char** argv, const std::string& test_name) {
   char** new_argv = new char*[argc + 2];
@@ -505,57 +521,142 @@ static void ChildProcessFn(int argc, char** argv, const std::string& test_name) 
   exit(result);
 }
 
-struct ChildProcInfo {
-  pid_t pid;
-  int64_t start_time_ns;
-  int64_t deadline_time_ns;
-  size_t testcase_id, test_id;
-  bool done_flag;
-  bool timeout_flag;
-  int exit_status;
-  int child_read_fd;
-  ChildProcInfo() : pid(0) {}
-};
+static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_id, int test_id,
+                                     sigset_t sigmask, int argc, char** argv) {
+  int pipefd[2];
+  int ret = pipe2(pipefd, O_NONBLOCK);
+  if (ret == -1) {
+    perror("pipe2 in RunTestInSeparateProc");
+    exit(1);
+  }
+  pid_t pid = fork();
+  if (pid == -1) {
+    perror("fork in RunTestInSeparateProc");
+    exit(1);
+  } else if (pid == 0) {
+    // In child process, run a single test.
+    close(pipefd[0]);
+    child_output_fd = pipefd[1];
 
-static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
-  pid_t result;
-  int status;
-  bool loop_flag = true;
+    if (sigprocmask(SIG_SETMASK, &sigmask, NULL) == -1) {
+      perror("sigprocmask SIG_SETMASK");
+      exit(1);
+    }
+    ChildProcessFn(argc, argv, test_name);
+    // Unreachable.
+  }
+  // In parent process, initialize child process info.
+  close(pipefd[1]);
+  ChildProcInfo child_proc;
+  child_proc.child_read_fd = pipefd[0];
+  child_proc.pid = pid;
+  child_proc.start_time_ns = NanoTime();
+  child_proc.deadline_end_time_ns = child_proc.start_time_ns + GetDeadlineInfo(test_name) * 1000000LL;
+  child_proc.testcase_id = testcase_id;
+  child_proc.test_id = test_id;
+  child_proc.finished = false;
+  return child_proc;
+}
 
+static void HandleSignals(std::vector<TestCase>& testcase_list,
+                            std::vector<ChildProcInfo>& child_proc_list) {
+  sigset_t waiting_mask;
+  sigemptyset(&waiting_mask);
+  sigaddset(&waiting_mask, SIGINT);
+  sigaddset(&waiting_mask, SIGQUIT);
+  timespec timeout;
+  timeout.tv_sec = timeout.tv_nsec = 0;
   while (true) {
-    while ((result = waitpid(-1, &status, WNOHANG)) == -1) {
-      if (errno != EINTR) {
-        break;
+    int signo = TEMP_FAILURE_RETRY(sigtimedwait(&waiting_mask, NULL, &timeout));
+    if (signo == -1) {
+      if (errno == EAGAIN) {
+        return; // Timeout, no pending signals.
+      }
+      perror("sigtimedwait");
+      exit(1);
+    } else if (signo == SIGQUIT) {
+      // Print current running tests.
+      printf("List of current running tests:\n");
+      for (auto& child_proc : child_proc_list) {
+        if (child_proc.pid != 0) {
+          std::string test_name = testcase_list[child_proc.testcase_id].GetTestName(child_proc.test_id);
+          int64_t current_time_ns = NanoTime();
+          int64_t run_time_ms = (current_time_ns - child_proc.start_time_ns) / 1000000;
+          printf("  %s (%" PRId64 " ms)\n", test_name.c_str(), run_time_ms);
+        }
+      }
+    } else if (signo == SIGINT) {
+      // Kill current running tests.
+      for (auto& child_proc : child_proc_list) {
+        if (child_proc.pid != 0) {
+          // Send SIGKILL to ensure the child process can be killed unconditionally.
+          kill(child_proc.pid, SIGKILL);
+        }
+      }
+      // SIGINT kills the parent process as well.
+      exit(1);
+    }
+  }
+}
+
+static bool CheckChildProcExit(pid_t exit_pid, int exit_status,
+                               std::vector<ChildProcInfo>& child_proc_list) {
+  for (size_t i = 0; i < child_proc_list.size(); ++i) {
+    if (child_proc_list[i].pid == exit_pid) {
+      child_proc_list[i].finished = true;
+      child_proc_list[i].timed_out = false;
+      child_proc_list[i].exit_status = exit_status;
+      child_proc_list[i].end_time_ns = NanoTime();
+      return true;
+    }
+  }
+  return false;
+}
+
+static size_t CheckChildProcTimeout(std::vector<ChildProcInfo>& child_proc_list) {
+  int64_t current_time_ns = NanoTime();
+  size_t timeout_child_count = 0;
+  for (size_t i = 0; i < child_proc_list.size(); ++i) {
+    if (child_proc_list[i].deadline_end_time_ns <= current_time_ns) {
+      child_proc_list[i].finished = true;
+      child_proc_list[i].timed_out = true;
+      child_proc_list[i].end_time_ns = current_time_ns;
+      ++timeout_child_count;
+    }
+  }
+  return timeout_child_count;
+}
+
+static void WaitChildProcs(std::vector<TestCase>& testcase_list,
+                           std::vector<ChildProcInfo>& child_proc_list) {
+  size_t finished_child_count = 0;
+  while (true) {
+    int status;
+    pid_t result;
+    while ((result = TEMP_FAILURE_RETRY(waitpid(-1, &status, WNOHANG))) > 0) {
+      if (CheckChildProcExit(result, status, child_proc_list)) {
+        ++finished_child_count;
       }
     }
 
     if (result == -1) {
-      perror("waitpid");
-      exit(1);
+      if (errno == ECHILD) {
+        // This happens when we have no running child processes.
+        return;
+      } else {
+        perror("waitpid");
+        exit(1);
+      }
     } else if (result == 0) {
-      // Check child timeout.
-      int64_t current_time_ns = NanoTime();
-      for (size_t i = 0; i < child_proc_list.size(); ++i) {
-        if (child_proc_list[i].deadline_time_ns <= current_time_ns) {
-          child_proc_list[i].done_flag = true;
-          child_proc_list[i].timeout_flag = true;
-          loop_flag = false;
-        }
-      }
-    } else {
-      // Check child finish.
-      for (size_t i = 0; i < child_proc_list.size(); ++i) {
-        if (child_proc_list[i].pid == result) {
-          child_proc_list[i].done_flag = true;
-          child_proc_list[i].timeout_flag = false;
-          child_proc_list[i].exit_status = status;
-          loop_flag = false;
-          break;
-        }
-      }
+      finished_child_count += CheckChildProcTimeout(child_proc_list);
     }
 
-    if (!loop_flag) break;
+    if (finished_child_count > 0) {
+      return;
+    }
+
+    HandleSignals(testcase_list, child_proc_list);
+
     // sleep 1 ms to avoid busy looping.
     timespec sleep_time;
     sleep_time.tv_sec = 0;
@@ -564,21 +665,66 @@ static void WaitChildProcs(std::vector<ChildProcInfo>& child_proc_list) {
   }
 }
 
-static TestResult WaitChildProc(pid_t pid) {
-  pid_t result;
+static TestResult WaitForOneChild(pid_t pid) {
   int exit_status;
-
-  while ((result = waitpid(pid, &exit_status, 0)) == -1) {
-    if (errno != EINTR) {
-      break;
-    }
-  }
+  pid_t result = TEMP_FAILURE_RETRY(waitpid(pid, &exit_status, 0));
 
   TestResult test_result = TEST_SUCCESS;
   if (result != pid || WEXITSTATUS(exit_status) != 0) {
     test_result = TEST_FAILED;
   }
   return test_result;
+}
+
+static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& testcase) {
+  int test_id = child_proc.test_id;
+  testcase.SetTestTime(test_id, child_proc.end_time_ns - child_proc.start_time_ns);
+  if (child_proc.timed_out) {
+    // The child process marked as timed_out has not exited, and we should kill it manually.
+    kill(child_proc.pid, SIGKILL);
+    WaitForOneChild(child_proc.pid);
+  }
+
+  while (true) {
+    char buf[1024];
+    ssize_t bytes_read = TEMP_FAILURE_RETRY(read(child_proc.child_read_fd, buf, sizeof(buf) - 1));
+    if (bytes_read > 0) {
+      buf[bytes_read] = '\0';
+      testcase.GetTest(test_id).AppendFailureMessage(buf);
+    } else if (bytes_read == 0) {
+      break; // Read end.
+    } else {
+      if (errno == EAGAIN) {
+        // No data is available. This rarely happens, only when the child process created other
+        // processes which have not exited so far. But the child process has already exited or
+        // been killed, so the test has finished, and we shouldn't wait further.
+        break;
+      }
+      perror("read child_read_fd in RunTestInSeparateProc");
+      exit(1);
+    }
+  }
+  close(child_proc.child_read_fd);
+
+  if (child_proc.timed_out) {
+    testcase.SetTestResult(test_id, TEST_TIMEOUT);
+    char buf[1024];
+    snprintf(buf, sizeof(buf), "%s killed because of timeout at %" PRId64 " ms.\n",
+             testcase.GetTestName(test_id).c_str(), testcase.GetTestTime(test_id) / 1000000);
+    testcase.GetTest(test_id).AppendFailureMessage(buf);
+
+  } else if (WIFSIGNALED(child_proc.exit_status)) {
+    // Record signal terminated test as failed.
+    testcase.SetTestResult(test_id, TEST_FAILED);
+    char buf[1024];
+    snprintf(buf, sizeof(buf), "%s terminated by signal: %s.\n",
+             testcase.GetTestName(test_id).c_str(), strsignal(WTERMSIG(child_proc.exit_status)));
+    testcase.GetTest(test_id).AppendFailureMessage(buf);
+
+  } else {
+    testcase.SetTestResult(test_id, WEXITSTATUS(child_proc.exit_status) == 0 ?
+                           TEST_SUCCESS : TEST_FAILED);
+  }
 }
 
 // We choose to use multi-fork and multi-wait here instead of multi-thread, because it always
@@ -591,13 +737,23 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
                         testing::UnitTest::GetInstance()->listeners().default_result_printer());
   testing::UnitTest::GetInstance()->listeners().Append(new TestResultPrinter);
 
+  // Signals are blocked here as we want to handle them in HandleSignals() later.
+  sigset_t block_mask, orig_mask;
+  sigemptyset(&block_mask);
+  sigaddset(&block_mask, SIGINT);
+  sigaddset(&block_mask, SIGQUIT);
+  if (sigprocmask(SIG_BLOCK, &block_mask, &orig_mask) == -1) {
+    perror("sigprocmask SIG_BLOCK");
+    exit(1);
+  }
+
   for (size_t iteration = 1; iteration <= iteration_count; ++iteration) {
     OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
     int64_t iteration_start_time_ns = NanoTime();
     time_t epoch_iteration_start_time = time(NULL);
 
     // Run up to job_count tests in parallel, each test in a child process.
-    std::vector<ChildProcInfo> child_proc_list(job_count);
+    std::vector<ChildProcInfo> child_proc_list;
 
     // Next test to run is [next_testcase_id:next_test_id].
     size_t next_testcase_id = 0;
@@ -608,103 +764,40 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
     size_t finished_testcase_count = 0;
 
     while (finished_testcase_count < testcase_list.size()) {
-      // Fork up to job_count child processes.
-      for (auto& child_proc : child_proc_list) {
-        if (child_proc.pid == 0 && next_testcase_id < testcase_list.size()) {
-          std::string test_name = testcase_list[next_testcase_id].GetTestName(next_test_id);
-          int pipefd[2];
-          int ret = pipe(pipefd);
-          if (ret == -1) {
-            perror("pipe2 in RunTestInSeparateProc");
-            exit(1);
-          }
-          pid_t pid = fork();
-          if (pid == -1) {
-            perror("fork in RunTestInSeparateProc");
-            exit(1);
-          } else if (pid == 0) {
-            close(pipefd[0]);
-            child_output_fd = pipefd[1];
-            // Run child process test, never return.
-            ChildProcessFn(argc, argv, test_name);
-          }
-          // Parent process
-          close(pipefd[1]);
-          child_proc.child_read_fd = pipefd[0];
-          child_proc.pid = pid;
-          child_proc.start_time_ns = NanoTime();
-          child_proc.deadline_time_ns = child_proc.start_time_ns +
-                                        GetDeadlineInfo(test_name) * 1000000LL;
-          child_proc.testcase_id = next_testcase_id;
-          child_proc.test_id = next_test_id;
-          child_proc.done_flag = false;
-          if (++next_test_id == testcase_list[next_testcase_id].TestCount()) {
-            next_test_id = 0;
-            ++next_testcase_id;
-          }
+      // run up to job_count child processes.
+      while (child_proc_list.size() < job_count && next_testcase_id < testcase_list.size()) {
+        std::string test_name = testcase_list[next_testcase_id].GetTestName(next_test_id);
+        ChildProcInfo child_proc = RunChildProcess(test_name, next_testcase_id, next_test_id,
+                                                   orig_mask, argc, argv);
+        child_proc_list.push_back(child_proc);
+        if (++next_test_id == testcase_list[next_testcase_id].TestCount()) {
+          next_test_id = 0;
+          ++next_testcase_id;
         }
       }
 
       // Wait for any child proc finish or timeout.
-      WaitChildProcs(child_proc_list);
+      WaitChildProcs(testcase_list, child_proc_list);
 
       // Collect result.
-      for (auto& child_proc : child_proc_list) {
-        if (child_proc.pid != 0 && child_proc.done_flag == true) {
+      auto it = child_proc_list.begin();
+      while (it != child_proc_list.end()) {
+        auto& child_proc = *it;
+        if (child_proc.finished == true) {
           size_t testcase_id = child_proc.testcase_id;
           size_t test_id = child_proc.test_id;
           TestCase& testcase = testcase_list[testcase_id];
-          testcase.SetTestTime(test_id, NanoTime() - child_proc.start_time_ns);
 
-          // Kill and wait the timeout child process before we read failure message.
-          if (child_proc.timeout_flag) {
-            kill(child_proc.pid, SIGKILL);
-            WaitChildProc(child_proc.pid);
-          }
-
-          while (true) {
-            char buf[1024];
-            int ret = TEMP_FAILURE_RETRY(read(child_proc.child_read_fd, buf, sizeof(buf) - 1));
-            if (ret > 0) {
-              buf[ret] = '\0';
-              testcase.GetTest(test_id).AppendFailureMessage(buf);
-            } else if (ret == 0) {
-              break; // Read end.
-            } else {
-              perror("read child_read_fd in RunTestInSeparateProc");
-              exit(1);
-            }
-          }
-          close(child_proc.child_read_fd);
-
-          if (child_proc.timeout_flag) {
-            testcase.SetTestResult(test_id, TEST_TIMEOUT);
-            char buf[1024];
-            snprintf(buf, sizeof(buf), "%s killed because of timeout at %" PRId64 " ms.\n",
-                     testcase.GetTestName(test_id).c_str(),
-                     testcase.GetTestTime(test_id) / 1000000);
-            testcase.GetTest(test_id).AppendFailureMessage(buf);
-
-          } else if (WIFSIGNALED(child_proc.exit_status)) {
-            // Record signal terminated test as failed.
-            testcase.SetTestResult(test_id, TEST_FAILED);
-            char buf[1024];
-            snprintf(buf, sizeof(buf), "%s terminated by signal: %s.\n",
-                     testcase.GetTestName(test_id).c_str(),
-                     strsignal(WTERMSIG(child_proc.exit_status)));
-            testcase.GetTest(test_id).AppendFailureMessage(buf);
-
-          } else {
-            testcase.SetTestResult(test_id, WEXITSTATUS(child_proc.exit_status) == 0 ?
-                                   TEST_SUCCESS : TEST_FAILED);
-          }
+          CollectChildTestResult(child_proc, testcase);
           OnTestEndPrint(testcase, test_id);
 
           if (++finished_test_count_list[testcase_id] == testcase.TestCount()) {
             ++finished_testcase_count;
           }
-          child_proc.pid = 0;
-          child_proc.done_flag = false;
+
+          it = child_proc_list.erase(it);
+        } else {
+          ++it;
         }
       }
     }
@@ -715,6 +808,12 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
       OnTestIterationEndXmlPrint(xml_output_filename, testcase_list, epoch_iteration_start_time,
                                  elapsed_time_ns);
     }
+  }
+
+  // Restore signal mask.
+  if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) == -1) {
+    perror("sigprocmask SIG_SETMASK");
+    exit(1);
   }
 }
 
