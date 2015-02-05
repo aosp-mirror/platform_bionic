@@ -1164,9 +1164,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
-LOCAL_LDFLAGS_arm64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_mips64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_x86_64 := -Wl,--exclude-libs,libgcc.a
+LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
