@@ -1,24 +1,6 @@
 # 32-bit x86.
 
 #
-# Various kinds of LP32 cruft.
-#
-
-libc_bionic_src_files_x86 += \
-    bionic/mmap.cpp \
-
-libc_common_src_files_x86 += \
-    bionic/legacy_32_bit_support.cpp \
-    bionic/ndk_cruft.cpp \
-    bionic/time64.c \
-
-libc_netbsd_src_files_x86 += \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
-
-libc_openbsd_src_files_x86 += \
-    upstream-openbsd/lib/libc/stdio/putw.c \
-
-#
 # Default implementations of functions that are commonly optimized.
 #
 

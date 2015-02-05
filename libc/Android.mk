@@ -516,6 +516,23 @@ libc_upstream_openbsd_src_files := \
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
 
+# Various kinds of LP32 cruft.
+# ========================================================
+libc_bionic_src_files_32 += \
+    bionic/mmap.cpp \
+
+libc_common_src_files_32 += \
+    bionic/legacy_32_bit_support.cpp \
+    bionic/ndk_cruft.cpp \
+    bionic/time64.c \
+
+libc_netbsd_src_files_32 += \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
+libc_openbsd_src_files_32 += \
+    upstream-openbsd/lib/libc/stdio/putw.c \
+
+
 # Define some common cflags
 # ========================================================
 libc_common_cflags := \
@@ -572,12 +589,13 @@ libc_common_c_includes += \
     $(LOCAL_PATH)/stdio   \
 
 # ========================================================
-# Add in the arch-specific flags.
+# Add in the arch or 32-bit specific flags
 # Must be called with $(eval).
 # $(1): the LOCAL_ variable name
 # $(2): the bionic variable name to pull in
 define patch-up-arch-specific-flags
 $(1)_$(TARGET_ARCH) += $($(2)_$(TARGET_ARCH))
+$(1)_32 += $($(2)_32)
 ifdef TARGET_2ND_ARCH
 $(1)_$(TARGET_2ND_ARCH) += $($(2)_$(TARGET_2ND_ARCH))
 endif
@@ -1035,7 +1053,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
-    $(libc_static_common_src_files) \
     bionic/libc_init_static.cpp
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
@@ -1087,7 +1104,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
-    $(libc_static_common_src_files) \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_static.cpp \
 
@@ -1122,7 +1138,6 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
     $(libc_arch_dynamic_src_files) \
-    $(libc_static_common_src_files) \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_dynamic.cpp \
     bionic/NetdClient.cpp \
@@ -1152,13 +1167,10 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
-LOCAL_LDFLAGS_arm64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_mips64 := -Wl,--exclude-libs,libgcc.a
-LOCAL_LDFLAGS_x86_64 := -Wl,--exclude-libs,libgcc.a
+LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
-$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_static_common_src_files))
 # special for arm
 LOCAL_NO_CRT_arm := true
 LOCAL_CFLAGS_arm += -DCRT_LEGACY_WORKAROUND
