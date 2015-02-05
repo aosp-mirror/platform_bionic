@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c400875_403d30ef",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-05T00:04:45Z",
+      "side": 1,
+      "message": "Could we do a drive-by fix and rename this, e.g. to nthreads?\n\nThis is not a counter.  And there are counters nearby, so this is really confusing.",
+      "range": {
+        "startLine": 126,
+        "startChar": 17,
+        "endLine": 126,
+        "endChar": 24
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c3e00ec_9f04b33b",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-05T00:04:45Z",
+      "side": 1,
+      "message": "Isn\u0027t this whole thing equivalent to\n\natomic_fetch_and_sub(cond_value_ptr, COND_COUNTER_STEP, memory_order_release)  ?\n\nAm I missing something?\n\nWe should really be operating on unsigned ints here, since\nwe are counting on 2s complement behavior for overflows.\n\nUnless we are trying to provide stronger than Posix guarantees (which I think we shouldn\u0027t), memory_order_relaxed is fine here, no matter which atomic operation you choose.  The woken thread cannot rely on seeing memory accesses performed before the signal call anyway; it might have spuriously woken up just before the signal was executed.  I would add something like that as a comment.\n\nI don\u0027t even think there is much danger of exposing client bugs, since the futex_wake_ex probably already has the fence anyway, and we can\u0027t eliminate that.",
+      "range": {
+        "startLine": 128,
+        "startChar": 1,
+        "endLine": 145,
+        "endChar": 95
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc4910a5_a4bc0848",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-05T00:04:45Z",
+      "side": 1,
+      "message": "I would delete the comment.\nConditional variables provide no memory ordering guarantees beyond the underlying mutex.  That fact is not observable because wait can spuriously wake up early.",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 61
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
