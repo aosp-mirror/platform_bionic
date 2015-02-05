@@ -513,9 +513,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[3].iov_base = &priority;
   vec[3].iov_len = 1;
   vec[4].iov_base = const_cast<char*>(tag);
-  vec[4].iov_len = strlen(tag);
+  vec[4].iov_len = strlen(tag) + 1;
   vec[5].iov_base = const_cast<char*>(msg);
-  vec[5].iov_len = strlen(msg);
+  vec[5].iov_len = strlen(msg) + 1;
 #else
   int main_log_fd = TEMP_FAILURE_RETRY(open("/dev/log/main", O_CLOEXEC | O_WRONLY));
   if (main_log_fd == -1) {
@@ -530,9 +530,9 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[0].iov_base = &priority;
   vec[0].iov_len = 1;
   vec[1].iov_base = const_cast<char*>(tag);
-  vec[1].iov_len = strlen(tag);
+  vec[1].iov_len = strlen(tag) + 1;
   vec[2].iov_base = const_cast<char*>(msg);
-  vec[2].iov_len = strlen(msg);
+  vec[2].iov_len = strlen(msg) + 1;
 #endif
 
   int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, sizeof(vec) / sizeof(vec[0])));
