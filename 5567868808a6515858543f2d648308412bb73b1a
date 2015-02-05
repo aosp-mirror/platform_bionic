@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cb494b1_28dbeba6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-05T00:59:02Z",
+      "side": 1,
+      "message": "same mistake for gnu_hash function...",
+      "range": {
+        "startLine": 801,
+        "startChar": 59,
+        "endLine": 801,
+        "endChar": 63
+      },
+      "revId": "5567868808a6515858543f2d648308412bb73b1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
