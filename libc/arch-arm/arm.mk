@@ -1,24 +1,6 @@
 # 32-bit arm.
 
 #
-# Various kinds of LP32 cruft.
-#
-
-libc_bionic_src_files_arm += \
-    bionic/mmap.cpp \
-
-libc_common_src_files_arm += \
-    bionic/legacy_32_bit_support.cpp \
-    bionic/ndk_cruft.cpp \
-    bionic/time64.c \
-
-libc_netbsd_src_files_arm += \
-    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
-
-libc_openbsd_src_files_arm += \
-    upstream-openbsd/lib/libc/stdio/putw.c \
-
-#
 # Default implementations of functions that are commonly optimized.
 #
 

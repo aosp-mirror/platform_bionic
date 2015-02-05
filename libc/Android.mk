@@ -513,6 +513,23 @@ libc_upstream_openbsd_src_files := \
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
 
+# Various kinds of LP32 cruft.
+# ========================================================
+libc_bionic_src_files_32 += \
+    bionic/mmap.cpp \
+
+libc_common_src_files_32 += \
+    bionic/legacy_32_bit_support.cpp \
+    bionic/ndk_cruft.cpp \
+    bionic/time64.c \
+
+libc_netbsd_src_files_32 += \
+    upstream-netbsd/common/lib/libc/hash/sha1/sha1.c \
+
+libc_openbsd_src_files_32 += \
+    upstream-openbsd/lib/libc/stdio/putw.c \
+
+
 # Define some common cflags
 # ========================================================
 libc_common_cflags := \
@@ -569,12 +586,13 @@ libc_common_c_includes += \
     $(LOCAL_PATH)/stdio   \
 
 # ========================================================
-# Add in the arch-specific flags.
+# Add in the arch or 32-bit specific flags
 # Must be called with $(eval).
 # $(1): the LOCAL_ variable name
 # $(2): the bionic variable name to pull in
 define patch-up-arch-specific-flags
 $(1)_$(TARGET_ARCH) += $($(2)_$(TARGET_ARCH))
+$(1)_32 += $($(2)_32)
 ifdef TARGET_2ND_ARCH
 $(1)_$(TARGET_2ND_ARCH) += $($(2)_$(TARGET_2ND_ARCH))
 endif
