@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fcc030c1_632ba2a5",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-06T22:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcad2cfe_b204c0f7",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c9e48d1_6d80b525",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2015-02-06T20:54:41Z",
       "side": 1,
       "message": "queries",
+      "range": {
+        "startLine": 96,
+        "startChar": 23,
+        "endLine": 96,
+        "endChar": 29
+      },
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcc030c1_432826a7",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-06T22:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c9e48d1_6d80b525",
       "range": {
         "startLine": 96,
         "startChar": 23,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "1c726491_940d2434",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-06T22:44:52Z",
+      "side": 1,
+      "message": "Yes. They are responding much faster with a patch. :) I\u0027ll finish the tests later.",
+      "parentUuid": "dcad2cfe_92ba5c9e",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cab44f1_8c9d277d",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 4
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "7c6360c4_17d03400",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-06T22:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cab44f1_8c9d277d",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcdb18ac_49ea0179",
         "filename": "libc/kernel/tools/cpp.py",
         "patchSetId": 4
@@ -87,6 +165,30 @@
       "writtenOn": "2015-02-06T20:54:41Z",
       "side": 1,
       "message": "Don\u0027t need the extra parens.",
+      "range": {
+        "startLine": 1596,
+        "startChar": 14,
+        "endLine": 1596,
+        "endChar": 15
+      },
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c726491_1403d43c",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1596,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-02-06T22:44:52Z",
+      "side": 1,
+      "message": "Done. Also fixed the one below (L 1600).",
+      "parentUuid": "bcdb18ac_49ea0179",
       "range": {
         "startLine": 1596,
         "startChar": 14,
