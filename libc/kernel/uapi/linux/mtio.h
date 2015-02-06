@@ -22,8 +22,8 @@
 #include <linux/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mtop {
- short mt_op;
- int mt_count;
+  short mt_op;
+  int mt_count;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MTRESET 0
@@ -68,15 +68,15 @@ struct mtop {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MTWEOFI 35
 struct mtget {
- long mt_type;
- long mt_resid;
+  long mt_type;
+  long mt_resid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- long mt_dsreg;
- long mt_gstat;
- long mt_erreg;
- __kernel_daddr_t mt_fileno;
+  long mt_dsreg;
+  long mt_gstat;
+  long mt_erreg;
+  __kernel_daddr_t mt_fileno;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_daddr_t mt_blkno;
+  __kernel_daddr_t mt_blkno;
 };
 #define MT_ISUNKNOWN 0x01
 #define MT_ISQIC02 0x02
@@ -106,7 +106,7 @@ struct mtget {
 #define MT_ISFTAPE_FLAG 0x800000
 struct mtpos {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- long mt_blkno;
+  long mt_blkno;
 };
 #define MTIOCTOP _IOW('m', 1, struct mtop)
 #define MTIOCGET _IOR('m', 2, struct mtget)

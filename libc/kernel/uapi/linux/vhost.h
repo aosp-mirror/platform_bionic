@@ -26,39 +26,39 @@
 #include <linux/virtio_ring.h>
 struct vhost_vring_state {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int index;
- unsigned int num;
+  unsigned int index;
+  unsigned int num;
 };
 struct vhost_vring_file {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int index;
- int fd;
+  unsigned int index;
+  int fd;
 };
 struct vhost_vring_addr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int index;
- unsigned int flags;
+  unsigned int index;
+  unsigned int flags;
 #define VHOST_VRING_F_LOG 0
- __u64 desc_user_addr;
+  __u64 desc_user_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 used_user_addr;
- __u64 avail_user_addr;
- __u64 log_guest_addr;
+  __u64 used_user_addr;
+  __u64 avail_user_addr;
+  __u64 log_guest_addr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct vhost_memory_region {
- __u64 guest_phys_addr;
- __u64 memory_size;
- __u64 userspace_addr;
+  __u64 guest_phys_addr;
+  __u64 memory_size;
+  __u64 userspace_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 flags_padding;
+  __u64 flags_padding;
 };
 #define VHOST_PAGE_SIZE 0x1000
 struct vhost_memory {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 nregions;
- __u32 padding;
- struct vhost_memory_region regions[0];
+  __u32 nregions;
+  __u32 padding;
+  struct vhost_memory_region regions[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VHOST_VIRTIO 0xAF
@@ -86,10 +86,10 @@ struct vhost_memory {
 #define VHOST_SCSI_ABI_VERSION 1
 struct vhost_scsi_target {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int abi_version;
- char vhost_wwpn[224];
- unsigned short vhost_tpgt;
- unsigned short reserved;
+  int abi_version;
+  char vhost_wwpn[224];
+  unsigned short vhost_tpgt;
+  unsigned short reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define VHOST_SCSI_SET_ENDPOINT _IOW(VHOST_VIRTIO, 0x40, struct vhost_scsi_target)

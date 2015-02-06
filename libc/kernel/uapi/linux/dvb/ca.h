@@ -19,54 +19,54 @@
 #ifndef _DVBCA_H_
 #define _DVBCA_H_
 typedef struct ca_slot_info {
- int num;
+  int num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int type;
+  int type;
 #define CA_CI 1
 #define CA_CI_LINK 2
 #define CA_CI_PHYS 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CA_DESCR 8
 #define CA_SC 128
- unsigned int flags;
+  unsigned int flags;
 #define CA_CI_MODULE_PRESENT 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CA_CI_MODULE_READY 2
 } ca_slot_info_t;
 typedef struct ca_descr_info {
- unsigned int num;
+  unsigned int num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int type;
+  unsigned int type;
 #define CA_ECD 1
 #define CA_NDS 2
 #define CA_DSS 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } ca_descr_info_t;
 typedef struct ca_caps {
- unsigned int slot_num;
- unsigned int slot_type;
+  unsigned int slot_num;
+  unsigned int slot_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int descr_num;
- unsigned int descr_type;
+  unsigned int descr_num;
+  unsigned int descr_type;
 } ca_caps_t;
 typedef struct ca_msg {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int index;
- unsigned int type;
- unsigned int length;
- unsigned char msg[256];
+  unsigned int index;
+  unsigned int type;
+  unsigned int length;
+  unsigned char msg[256];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } ca_msg_t;
 typedef struct ca_descr {
- unsigned int index;
- unsigned int parity;
+  unsigned int index;
+  unsigned int parity;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char cw[8];
+  unsigned char cw[8];
 } ca_descr_t;
 typedef struct ca_pid {
- unsigned int pid;
+  unsigned int pid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int index;
+  int index;
 } ca_pid_t;
 #define CA_RESET _IO('o', 128)
 #define CA_GET_CAP _IOR('o', 129, ca_caps_t)

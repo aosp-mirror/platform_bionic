@@ -29,16 +29,16 @@ struct task_struct;
 #define _LINUX_CAPABILITY_VERSION_3 0x20080522
 #define _LINUX_CAPABILITY_U32S_3 2
 typedef struct __user_cap_header_struct {
- __u32 version;
+  __u32 version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pid;
-} __user *cap_user_header_t;
+  int pid;
+} __user * cap_user_header_t;
 typedef struct __user_cap_data_struct {
- __u32 effective;
+  __u32 effective;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 permitted;
- __u32 inheritable;
-} __user *cap_user_data_t;
+  __u32 permitted;
+  __u32 inheritable;
+} __user * cap_user_data_t;
 #define VFS_CAP_REVISION_MASK 0xFF000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VFS_CAP_REVISION_SHIFT 24
@@ -47,22 +47,22 @@ typedef struct __user_cap_data_struct {
 #define VFS_CAP_REVISION_1 0x01000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VFS_CAP_U32_1 1
-#define XATTR_CAPS_SZ_1 (sizeof(__le32)*(1 + 2*VFS_CAP_U32_1))
+#define XATTR_CAPS_SZ_1 (sizeof(__le32) * (1 + 2 * VFS_CAP_U32_1))
 #define VFS_CAP_REVISION_2 0x02000000
 #define VFS_CAP_U32_2 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define XATTR_CAPS_SZ_2 (sizeof(__le32)*(1 + 2*VFS_CAP_U32_2))
+#define XATTR_CAPS_SZ_2 (sizeof(__le32) * (1 + 2 * VFS_CAP_U32_2))
 #define XATTR_CAPS_SZ XATTR_CAPS_SZ_2
 #define VFS_CAP_U32 VFS_CAP_U32_2
 #define VFS_CAP_REVISION VFS_CAP_REVISION_2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct vfs_cap_data {
- __le32 magic_etc;
- struct {
- __le32 permitted;
+  __le32 magic_etc;
+  struct {
+    __le32 permitted;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 inheritable;
- } data[VFS_CAP_U32];
+    __le32 inheritable;
+  } data[VFS_CAP_U32];
 };
 #define _LINUX_CAPABILITY_VERSION _LINUX_CAPABILITY_VERSION_1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

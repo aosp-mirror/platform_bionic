@@ -31,22 +31,22 @@
 #define MGA_WARP_TGZF (MGA_F)
 #define MGA_WARP_TGZA (MGA_A)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGA_WARP_TGZAF (MGA_F|MGA_A)
+#define MGA_WARP_TGZAF (MGA_F | MGA_A)
 #define MGA_WARP_TGZS (MGA_S)
-#define MGA_WARP_TGZSF (MGA_S|MGA_F)
-#define MGA_WARP_TGZSA (MGA_S|MGA_A)
+#define MGA_WARP_TGZSF (MGA_S | MGA_F)
+#define MGA_WARP_TGZSA (MGA_S | MGA_A)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGA_WARP_TGZSAF (MGA_S|MGA_F|MGA_A)
+#define MGA_WARP_TGZSAF (MGA_S | MGA_F | MGA_A)
 #define MGA_WARP_T2GZ (MGA_T2)
-#define MGA_WARP_T2GZF (MGA_T2|MGA_F)
-#define MGA_WARP_T2GZA (MGA_T2|MGA_A)
+#define MGA_WARP_T2GZF (MGA_T2 | MGA_F)
+#define MGA_WARP_T2GZA (MGA_T2 | MGA_A)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGA_WARP_T2GZAF (MGA_T2|MGA_A|MGA_F)
-#define MGA_WARP_T2GZS (MGA_T2|MGA_S)
-#define MGA_WARP_T2GZSF (MGA_T2|MGA_S|MGA_F)
-#define MGA_WARP_T2GZSA (MGA_T2|MGA_S|MGA_A)
+#define MGA_WARP_T2GZAF (MGA_T2 | MGA_A | MGA_F)
+#define MGA_WARP_T2GZS (MGA_T2 | MGA_S)
+#define MGA_WARP_T2GZSF (MGA_T2 | MGA_S | MGA_F)
+#define MGA_WARP_T2GZSA (MGA_T2 | MGA_S | MGA_A)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGA_WARP_T2GZSAF (MGA_T2|MGA_S|MGA_F|MGA_A)
+#define MGA_WARP_T2GZSAF (MGA_T2 | MGA_S | MGA_F | MGA_A)
 #define MGA_MAX_G200_PIPES 8
 #define MGA_MAX_G400_PIPES 16
 #define MGA_MAX_WARP_PIPES MGA_MAX_G400_PIPES
@@ -86,83 +86,83 @@
 #endif
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int dstorg;
- unsigned int maccess;
- unsigned int plnwt;
- unsigned int dwgctl;
+  unsigned int dstorg;
+  unsigned int maccess;
+  unsigned int plnwt;
+  unsigned int dwgctl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int alphactrl;
- unsigned int fogcolor;
- unsigned int wflag;
- unsigned int tdualstage0;
+  unsigned int alphactrl;
+  unsigned int fogcolor;
+  unsigned int wflag;
+  unsigned int tdualstage0;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int tdualstage1;
- unsigned int fcol;
- unsigned int stencil;
- unsigned int stencilctl;
+  unsigned int tdualstage1;
+  unsigned int fcol;
+  unsigned int stencil;
+  unsigned int stencilctl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_context_regs_t;
 typedef struct {
- unsigned int pitch;
+  unsigned int pitch;
 } drm_mga_server_regs_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- unsigned int texctl;
- unsigned int texctl2;
- unsigned int texfilter;
+  unsigned int texctl;
+  unsigned int texctl2;
+  unsigned int texfilter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int texbordercol;
- unsigned int texorg;
- unsigned int texwidth;
- unsigned int texheight;
+  unsigned int texbordercol;
+  unsigned int texorg;
+  unsigned int texwidth;
+  unsigned int texheight;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int texorg1;
- unsigned int texorg2;
- unsigned int texorg3;
- unsigned int texorg4;
+  unsigned int texorg1;
+  unsigned int texorg2;
+  unsigned int texorg3;
+  unsigned int texorg4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_texture_regs_t;
 typedef struct {
- unsigned int head;
- unsigned int wrap;
+  unsigned int head;
+  unsigned int wrap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_age_t;
 typedef struct _drm_mga_sarea {
- drm_mga_context_regs_t context_state;
- drm_mga_server_regs_t server_state;
+  drm_mga_context_regs_t context_state;
+  drm_mga_server_regs_t server_state;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- drm_mga_texture_regs_t tex_state[2];
- unsigned int warp_pipe;
- unsigned int dirty;
- unsigned int vertsize;
+  drm_mga_texture_regs_t tex_state[2];
+  unsigned int warp_pipe;
+  unsigned int dirty;
+  unsigned int vertsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct drm_clip_rect boxes[MGA_NR_SAREA_CLIPRECTS];
- unsigned int nbox;
- unsigned int req_drawable;
- unsigned int req_draw_buffer;
+  struct drm_clip_rect boxes[MGA_NR_SAREA_CLIPRECTS];
+  unsigned int nbox;
+  unsigned int req_drawable;
+  unsigned int req_draw_buffer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int exported_drawable;
- unsigned int exported_index;
- unsigned int exported_stamp;
- unsigned int exported_buffers;
+  unsigned int exported_drawable;
+  unsigned int exported_index;
+  unsigned int exported_stamp;
+  unsigned int exported_buffers;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int exported_nfront;
- unsigned int exported_nback;
- int exported_back_x, exported_front_x, exported_w;
- int exported_back_y, exported_front_y, exported_h;
+  unsigned int exported_nfront;
+  unsigned int exported_nback;
+  int exported_back_x, exported_front_x, exported_w;
+  int exported_back_y, exported_front_y, exported_h;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct drm_clip_rect exported_boxes[MGA_NR_SAREA_CLIPRECTS];
- unsigned int status[4];
- unsigned int last_wrap;
- drm_mga_age_t last_frame;
+  struct drm_clip_rect exported_boxes[MGA_NR_SAREA_CLIPRECTS];
+  unsigned int status[4];
+  unsigned int last_wrap;
+  drm_mga_age_t last_frame;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int last_enqueue;
- unsigned int last_dispatch;
- unsigned int last_quiescent;
- struct drm_tex_region texList[MGA_NR_TEX_HEAPS][MGA_NR_TEX_REGIONS + 1];
+  unsigned int last_enqueue;
+  unsigned int last_dispatch;
+  unsigned int last_quiescent;
+  struct drm_tex_region texList[MGA_NR_TEX_HEAPS][MGA_NR_TEX_REGIONS + 1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int texAge[MGA_NR_TEX_HEAPS];
- int ctxOwner;
+  unsigned int texAge[MGA_NR_TEX_HEAPS];
+  int ctxOwner;
 } drm_mga_sarea_t;
 #define DRM_MGA_INIT 0x00
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -181,115 +181,115 @@ typedef struct _drm_mga_sarea {
 #define DRM_MGA_WAIT_FENCE 0x0b
 #define DRM_MGA_DMA_BOOTSTRAP 0x0c
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_MGA_INIT DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_INIT, drm_mga_init_t)
-#define DRM_IOCTL_MGA_FLUSH DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_FLUSH, struct drm_lock)
-#define DRM_IOCTL_MGA_RESET DRM_IO( DRM_COMMAND_BASE + DRM_MGA_RESET)
-#define DRM_IOCTL_MGA_SWAP DRM_IO( DRM_COMMAND_BASE + DRM_MGA_SWAP)
+#define DRM_IOCTL_MGA_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_INIT, drm_mga_init_t)
+#define DRM_IOCTL_MGA_FLUSH DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_FLUSH, struct drm_lock)
+#define DRM_IOCTL_MGA_RESET DRM_IO(DRM_COMMAND_BASE + DRM_MGA_RESET)
+#define DRM_IOCTL_MGA_SWAP DRM_IO(DRM_COMMAND_BASE + DRM_MGA_SWAP)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_MGA_CLEAR DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_CLEAR, drm_mga_clear_t)
-#define DRM_IOCTL_MGA_VERTEX DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_VERTEX, drm_mga_vertex_t)
-#define DRM_IOCTL_MGA_INDICES DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_INDICES, drm_mga_indices_t)
-#define DRM_IOCTL_MGA_ILOAD DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_ILOAD, drm_mga_iload_t)
+#define DRM_IOCTL_MGA_CLEAR DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_CLEAR, drm_mga_clear_t)
+#define DRM_IOCTL_MGA_VERTEX DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_VERTEX, drm_mga_vertex_t)
+#define DRM_IOCTL_MGA_INDICES DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_INDICES, drm_mga_indices_t)
+#define DRM_IOCTL_MGA_ILOAD DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_ILOAD, drm_mga_iload_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_MGA_BLIT DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_BLIT, drm_mga_blit_t)
+#define DRM_IOCTL_MGA_BLIT DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_BLIT, drm_mga_blit_t)
 #define DRM_IOCTL_MGA_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_GETPARAM, drm_mga_getparam_t)
-#define DRM_IOCTL_MGA_SET_FENCE DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_SET_FENCE, __u32)
+#define DRM_IOCTL_MGA_SET_FENCE DRM_IOW(DRM_COMMAND_BASE + DRM_MGA_SET_FENCE, __u32)
 #define DRM_IOCTL_MGA_WAIT_FENCE DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_WAIT_FENCE, __u32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_MGA_DMA_BOOTSTRAP DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_DMA_BOOTSTRAP, drm_mga_dma_bootstrap_t)
 typedef struct _drm_mga_warp_index {
- int installed;
- unsigned long phys_addr;
+  int installed;
+  unsigned long phys_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int size;
+  int size;
 } drm_mga_warp_index_t;
 typedef struct drm_mga_init {
- enum {
+  enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- MGA_INIT_DMA = 0x01,
- MGA_CLEANUP_DMA = 0x02
- } func;
- unsigned long sarea_priv_offset;
+    MGA_INIT_DMA = 0x01,
+    MGA_CLEANUP_DMA = 0x02
+  } func;
+  unsigned long sarea_priv_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int chipset;
- int sgram;
- unsigned int maccess;
- unsigned int fb_cpp;
+  int chipset;
+  int sgram;
+  unsigned int maccess;
+  unsigned int fb_cpp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int front_offset, front_pitch;
- unsigned int back_offset, back_pitch;
- unsigned int depth_cpp;
- unsigned int depth_offset, depth_pitch;
+  unsigned int front_offset, front_pitch;
+  unsigned int back_offset, back_pitch;
+  unsigned int depth_cpp;
+  unsigned int depth_offset, depth_pitch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int texture_offset[MGA_NR_TEX_HEAPS];
- unsigned int texture_size[MGA_NR_TEX_HEAPS];
- unsigned long fb_offset;
- unsigned long mmio_offset;
+  unsigned int texture_offset[MGA_NR_TEX_HEAPS];
+  unsigned int texture_size[MGA_NR_TEX_HEAPS];
+  unsigned long fb_offset;
+  unsigned long mmio_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long status_offset;
- unsigned long warp_offset;
- unsigned long primary_offset;
- unsigned long buffers_offset;
+  unsigned long status_offset;
+  unsigned long warp_offset;
+  unsigned long primary_offset;
+  unsigned long buffers_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_init_t;
 typedef struct drm_mga_dma_bootstrap {
- unsigned long texture_handle;
- __u32 texture_size;
+  unsigned long texture_handle;
+  __u32 texture_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 primary_size;
- __u32 secondary_bin_count;
- __u32 secondary_bin_size;
- __u32 agp_mode;
+  __u32 primary_size;
+  __u32 secondary_bin_count;
+  __u32 secondary_bin_size;
+  __u32 agp_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 agp_size;
+  __u8 agp_size;
 } drm_mga_dma_bootstrap_t;
 typedef struct drm_mga_clear {
- unsigned int flags;
+  unsigned int flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int clear_color;
- unsigned int clear_depth;
- unsigned int color_mask;
- unsigned int depth_mask;
+  unsigned int clear_color;
+  unsigned int clear_depth;
+  unsigned int color_mask;
+  unsigned int depth_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_clear_t;
 typedef struct drm_mga_vertex {
- int idx;
- int used;
+  int idx;
+  int used;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int discard;
+  int discard;
 } drm_mga_vertex_t;
 typedef struct drm_mga_indices {
- int idx;
+  int idx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int start;
- unsigned int end;
- int discard;
+  unsigned int start;
+  unsigned int end;
+  int discard;
 } drm_mga_indices_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_mga_iload {
- int idx;
- unsigned int dstorg;
- unsigned int length;
+  int idx;
+  unsigned int dstorg;
+  unsigned int length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_iload_t;
 typedef struct _drm_mga_blit {
- unsigned int planemask;
- unsigned int srcorg;
+  unsigned int planemask;
+  unsigned int srcorg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int dstorg;
- int src_pitch, dst_pitch;
- int delta_sx, delta_sy;
- int delta_dx, delta_dy;
+  unsigned int dstorg;
+  int src_pitch, dst_pitch;
+  int delta_sx, delta_sy;
+  int delta_dx, delta_dy;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int height, ydir;
- int source_pitch, dest_pitch;
+  int height, ydir;
+  int source_pitch, dest_pitch;
 } drm_mga_blit_t;
 #define MGA_PARAM_IRQ_NR 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGA_PARAM_CARD_TYPE 2
 typedef struct drm_mga_getparam {
- int param;
- void __user *value;
+  int param;
+  void __user * value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_mga_getparam_t;
 #endif

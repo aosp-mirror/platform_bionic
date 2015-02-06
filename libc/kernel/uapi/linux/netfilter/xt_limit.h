@@ -23,13 +23,13 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_limit_priv;
 struct xt_rateinfo {
- __u32 avg;
- __u32 burst;
+  __u32 avg;
+  __u32 burst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long prev;
- __u32 credit;
- __u32 credit_cap, cost;
- struct xt_limit_priv *master;
+  unsigned long prev;
+  __u32 credit;
+  __u32 credit_cap, cost;
+  struct xt_limit_priv * master;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

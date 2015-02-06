@@ -27,11 +27,11 @@
 #define JS_EVENT_INIT 0x80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct js_event {
- __u32 time;
- __s16 value;
- __u8 type;
+  __u32 time;
+  __s16 value;
+  __u8 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 number;
+  __u8 number;
 };
 #define JSIOCGVERSION _IOR('j', 0x01, __u32)
 #define JSIOCGAXES _IOR('j', 0x11, __u8)
@@ -49,10 +49,10 @@ struct js_event {
 #define JS_CORR_NONE 0x00
 #define JS_CORR_BROKEN 0x01
 struct js_corr {
- __s32 coef[8];
+  __s32 coef[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s16 prec;
- __u16 type;
+  __s16 prec;
+  __u16 type;
 };
 #define JS_RETURN sizeof(struct JS_DATA_TYPE)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -79,30 +79,30 @@ struct js_corr {
 #define JS_GET_ALL 7
 #define JS_SET_ALL 8
 struct JS_DATA_TYPE {
- __s32 buttons;
+  __s32 buttons;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 x;
- __s32 y;
+  __s32 x;
+  __s32 y;
 };
 struct JS_DATA_SAVE_TYPE_32 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 JS_TIMEOUT;
- __s32 BUSY;
- __s32 JS_EXPIRETIME;
- __s32 JS_TIMELIMIT;
+  __s32 JS_TIMEOUT;
+  __s32 BUSY;
+  __s32 JS_EXPIRETIME;
+  __s32 JS_TIMELIMIT;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct JS_DATA_TYPE JS_SAVE;
- struct JS_DATA_TYPE JS_CORR;
+  struct JS_DATA_TYPE JS_SAVE;
+  struct JS_DATA_TYPE JS_CORR;
 };
 struct JS_DATA_SAVE_TYPE_64 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 JS_TIMEOUT;
- __s32 BUSY;
- __s64 JS_EXPIRETIME;
- __s64 JS_TIMELIMIT;
+  __s32 JS_TIMEOUT;
+  __s32 BUSY;
+  __s64 JS_EXPIRETIME;
+  __s64 JS_TIMELIMIT;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct JS_DATA_TYPE JS_SAVE;
- struct JS_DATA_TYPE JS_CORR;
+  struct JS_DATA_TYPE JS_SAVE;
+  struct JS_DATA_TYPE JS_CORR;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

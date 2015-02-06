@@ -22,12 +22,12 @@
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sockaddr_pppopns {
- sa_family_t sa_family;
- unsigned int sa_protocol;
- int tcp_socket;
+  sa_family_t sa_family;
+  unsigned int sa_protocol;
+  int tcp_socket;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 local;
- __u16 remote;
+  __u16 local;
+  __u16 remote;
 } __attribute__((packed));
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

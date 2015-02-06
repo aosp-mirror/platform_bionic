@@ -19,35 +19,35 @@
 #ifndef _UAPI_LINUX_RTC_H_
 #define _UAPI_LINUX_RTC_H_
 struct rtc_time {
- int tm_sec;
+  int tm_sec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int tm_min;
- int tm_hour;
- int tm_mday;
- int tm_mon;
+  int tm_min;
+  int tm_hour;
+  int tm_mday;
+  int tm_mon;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int tm_year;
- int tm_wday;
- int tm_yday;
- int tm_isdst;
+  int tm_year;
+  int tm_wday;
+  int tm_yday;
+  int tm_isdst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct rtc_wkalrm {
- unsigned char enabled;
- unsigned char pending;
+  unsigned char enabled;
+  unsigned char pending;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct rtc_time time;
+  struct rtc_time time;
 };
 struct rtc_pll_info {
- int pll_ctrl;
+  int pll_ctrl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pll_value;
- int pll_max;
- int pll_min;
- int pll_posmult;
+  int pll_value;
+  int pll_max;
+  int pll_min;
+  int pll_posmult;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pll_negmult;
- long pll_clock;
+  int pll_negmult;
+  long pll_clock;
 };
 #define RTC_AIE_ON _IO('p', 0x01)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

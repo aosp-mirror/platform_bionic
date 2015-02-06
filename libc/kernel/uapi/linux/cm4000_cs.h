@@ -24,32 +24,32 @@
 #define MAX_ATR 33
 #define CM4000_MAX_DEV 4
 typedef struct atreq {
- __s32 atr_len;
+  __s32 atr_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char atr[64];
- __s32 power_act;
- unsigned char bIFSD;
- unsigned char bIFSC;
+  unsigned char atr[64];
+  __s32 power_act;
+  unsigned char bIFSD;
+  unsigned char bIFSC;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } atreq_t;
 typedef struct ptsreq {
- __u32 protocol;
- unsigned char flags;
+  __u32 protocol;
+  unsigned char flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char pts1;
- unsigned char pts2;
- unsigned char pts3;
+  unsigned char pts1;
+  unsigned char pts2;
+  unsigned char pts3;
 } ptsreq_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CM_IOC_MAGIC 'c'
 #define CM_IOC_MAXNR 255
-#define CM_IOCGSTATUS _IOR (CM_IOC_MAGIC, 0, unsigned char *)
+#define CM_IOCGSTATUS _IOR(CM_IOC_MAGIC, 0, unsigned char *)
 #define CM_IOCGATR _IOWR(CM_IOC_MAGIC, 1, atreq_t *)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CM_IOCSPTS _IOW (CM_IOC_MAGIC, 2, ptsreq_t *)
-#define CM_IOCSRDR _IO (CM_IOC_MAGIC, 3)
-#define CM_IOCARDOFF _IO (CM_IOC_MAGIC, 4)
-#define CM_IOSDBGLVL _IOW(CM_IOC_MAGIC, 250, int*)
+#define CM_IOCSPTS _IOW(CM_IOC_MAGIC, 2, ptsreq_t *)
+#define CM_IOCSRDR _IO(CM_IOC_MAGIC, 3)
+#define CM_IOCARDOFF _IO(CM_IOC_MAGIC, 4)
+#define CM_IOSDBGLVL _IOW(CM_IOC_MAGIC, 250, int *)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CM_CARD_INSERTED 0x01
 #define CM_CARD_POWERED 0x02

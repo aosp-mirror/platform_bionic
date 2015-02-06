@@ -169,285 +169,292 @@
 #define UVC_CONTROL_CAP_AUTOUPDATE (1 << 3)
 #define UVC_CONTROL_CAP_ASYNCHRONOUS (1 << 4)
 struct uvc_descriptor_header {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 } __attribute__((packed));
 struct uvc_header_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u16 bcdUVC;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u16 bcdUVC;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wTotalLength;
- __u32 dwClockFrequency;
- __u8 bInCollection;
- __u8 baInterfaceNr[];
+  __u16 wTotalLength;
+  __u32 dwClockFrequency;
+  __u8 bInCollection;
+  __u8 baInterfaceNr[];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((__packed__));
-#define UVC_DT_HEADER_SIZE(n) (12+(n))
-#define UVC_HEADER_DESCRIPTOR(n)   uvc_header_descriptor_##n
-#define DECLARE_UVC_HEADER_DESCRIPTOR(n)  struct UVC_HEADER_DESCRIPTOR(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u16 bcdUVC;   __u16 wTotalLength;   __u32 dwClockFrequency;   __u8 bInCollection;   __u8 baInterfaceNr[n];  } __attribute__ ((packed))
+#define UVC_DT_HEADER_SIZE(n) (12 + (n))
+#define UVC_HEADER_DESCRIPTOR(n) uvc_header_descriptor_ ##n
+#define DECLARE_UVC_HEADER_DESCRIPTOR(n) struct UVC_HEADER_DESCRIPTOR(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u16 bcdUVC; __u16 wTotalLength; __u32 dwClockFrequency; __u8 bInCollection; __u8 baInterfaceNr[n]; \
+} __attribute__((packed))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_input_terminal_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bTerminalID;
- __u16 wTerminalType;
- __u8 bAssocTerminal;
- __u8 iTerminal;
+  __u8 bTerminalID;
+  __u16 wTerminalType;
+  __u8 bAssocTerminal;
+  __u8 iTerminal;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((__packed__));
 #define UVC_DT_INPUT_TERMINAL_SIZE 8
 struct uvc_output_terminal_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u8 bTerminalID;
- __u16 wTerminalType;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u8 bTerminalID;
+  __u16 wTerminalType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bAssocTerminal;
- __u8 bSourceID;
- __u8 iTerminal;
+  __u8 bAssocTerminal;
+  __u8 bSourceID;
+  __u8 iTerminal;
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UVC_DT_OUTPUT_TERMINAL_SIZE 9
 struct uvc_camera_terminal_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubType;
- __u8 bTerminalID;
- __u16 wTerminalType;
- __u8 bAssocTerminal;
+  __u8 bDescriptorSubType;
+  __u8 bTerminalID;
+  __u16 wTerminalType;
+  __u8 bAssocTerminal;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 iTerminal;
- __u16 wObjectiveFocalLengthMin;
- __u16 wObjectiveFocalLengthMax;
- __u16 wOcularFocalLength;
+  __u8 iTerminal;
+  __u16 wObjectiveFocalLengthMin;
+  __u16 wObjectiveFocalLengthMax;
+  __u16 wOcularFocalLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bControlSize;
- __u8 bmControls[3];
+  __u8 bControlSize;
+  __u8 bmControls[3];
 } __attribute__((__packed__));
-#define UVC_DT_CAMERA_TERMINAL_SIZE(n) (15+(n))
+#define UVC_DT_CAMERA_TERMINAL_SIZE(n) (15 + (n))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_selector_unit_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bUnitID;
- __u8 bNrInPins;
- __u8 baSourceID[0];
- __u8 iSelector;
+  __u8 bUnitID;
+  __u8 bNrInPins;
+  __u8 baSourceID[0];
+  __u8 iSelector;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((__packed__));
-#define UVC_DT_SELECTOR_UNIT_SIZE(n) (6+(n))
-#define UVC_SELECTOR_UNIT_DESCRIPTOR(n)   uvc_selector_unit_descriptor_##n
-#define DECLARE_UVC_SELECTOR_UNIT_DESCRIPTOR(n)  struct UVC_SELECTOR_UNIT_DESCRIPTOR(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bUnitID;   __u8 bNrInPins;   __u8 baSourceID[n];   __u8 iSelector;  } __attribute__ ((packed))
+#define UVC_DT_SELECTOR_UNIT_SIZE(n) (6 + (n))
+#define UVC_SELECTOR_UNIT_DESCRIPTOR(n) uvc_selector_unit_descriptor_ ##n
+#define DECLARE_UVC_SELECTOR_UNIT_DESCRIPTOR(n) struct UVC_SELECTOR_UNIT_DESCRIPTOR(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bUnitID; __u8 bNrInPins; __u8 baSourceID[n]; __u8 iSelector; \
+} __attribute__((packed))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_processing_unit_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bUnitID;
- __u8 bSourceID;
- __u16 wMaxMultiplier;
- __u8 bControlSize;
+  __u8 bUnitID;
+  __u8 bSourceID;
+  __u16 wMaxMultiplier;
+  __u8 bControlSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmControls[2];
- __u8 iProcessing;
+  __u8 bmControls[2];
+  __u8 iProcessing;
 } __attribute__((__packed__));
-#define UVC_DT_PROCESSING_UNIT_SIZE(n) (9+(n))
+#define UVC_DT_PROCESSING_UNIT_SIZE(n) (9 + (n))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_extension_unit_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bUnitID;
- __u8 guidExtensionCode[16];
- __u8 bNumControls;
- __u8 bNrInPins;
+  __u8 bUnitID;
+  __u8 guidExtensionCode[16];
+  __u8 bNumControls;
+  __u8 bNrInPins;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 baSourceID[0];
- __u8 bControlSize;
- __u8 bmControls[0];
- __u8 iExtension;
+  __u8 baSourceID[0];
+  __u8 bControlSize;
+  __u8 bmControls[0];
+  __u8 iExtension;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((__packed__));
-#define UVC_DT_EXTENSION_UNIT_SIZE(p, n) (24+(p)+(n))
-#define UVC_EXTENSION_UNIT_DESCRIPTOR(p, n)   uvc_extension_unit_descriptor_##p_##n
-#define DECLARE_UVC_EXTENSION_UNIT_DESCRIPTOR(p, n)  struct UVC_EXTENSION_UNIT_DESCRIPTOR(p, n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bUnitID;   __u8 guidExtensionCode[16];   __u8 bNumControls;   __u8 bNrInPins;   __u8 baSourceID[p];   __u8 bControlSize;   __u8 bmControls[n];   __u8 iExtension;  } __attribute__ ((packed))
+#define UVC_DT_EXTENSION_UNIT_SIZE(p,n) (24 + (p) + (n))
+#define UVC_EXTENSION_UNIT_DESCRIPTOR(p,n) uvc_extension_unit_descriptor_ ##p_ ##n
+#define DECLARE_UVC_EXTENSION_UNIT_DESCRIPTOR(p,n) struct UVC_EXTENSION_UNIT_DESCRIPTOR(p, n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bUnitID; __u8 guidExtensionCode[16]; __u8 bNumControls; __u8 bNrInPins; __u8 baSourceID[p]; __u8 bControlSize; __u8 bmControls[n]; __u8 iExtension; \
+} __attribute__((packed))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_control_endpoint_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wMaxTransferSize;
+  __u16 wMaxTransferSize;
 } __attribute__((__packed__));
 #define UVC_DT_CONTROL_ENDPOINT_SIZE 5
 struct uvc_input_header_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u8 bNumFormats;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u8 bNumFormats;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wTotalLength;
- __u8 bEndpointAddress;
- __u8 bmInfo;
- __u8 bTerminalLink;
+  __u16 wTotalLength;
+  __u8 bEndpointAddress;
+  __u8 bmInfo;
+  __u8 bTerminalLink;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bStillCaptureMethod;
- __u8 bTriggerSupport;
- __u8 bTriggerUsage;
- __u8 bControlSize;
+  __u8 bStillCaptureMethod;
+  __u8 bTriggerSupport;
+  __u8 bTriggerUsage;
+  __u8 bControlSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmaControls[];
+  __u8 bmaControls[];
 } __attribute__((__packed__));
-#define UVC_DT_INPUT_HEADER_SIZE(n, p) (13+(n*p))
-#define UVC_INPUT_HEADER_DESCRIPTOR(n, p)   uvc_input_header_descriptor_##n_##p
+#define UVC_DT_INPUT_HEADER_SIZE(n,p) (13 + (n * p))
+#define UVC_INPUT_HEADER_DESCRIPTOR(n,p) uvc_input_header_descriptor_ ##n_ ##p
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DECLARE_UVC_INPUT_HEADER_DESCRIPTOR(n, p)  struct UVC_INPUT_HEADER_DESCRIPTOR(n, p) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bNumFormats;   __u16 wTotalLength;   __u8 bEndpointAddress;   __u8 bmInfo;   __u8 bTerminalLink;   __u8 bStillCaptureMethod;   __u8 bTriggerSupport;   __u8 bTriggerUsage;   __u8 bControlSize;   __u8 bmaControls[p][n];  } __attribute__ ((packed))
+#define DECLARE_UVC_INPUT_HEADER_DESCRIPTOR(n,p) struct UVC_INPUT_HEADER_DESCRIPTOR(n, p) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bNumFormats; __u16 wTotalLength; __u8 bEndpointAddress; __u8 bmInfo; __u8 bTerminalLink; __u8 bStillCaptureMethod; __u8 bTriggerSupport; __u8 bTriggerUsage; __u8 bControlSize; __u8 bmaControls[p][n]; \
+} __attribute__((packed))
 struct uvc_output_header_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubType;
- __u8 bNumFormats;
- __u16 wTotalLength;
- __u8 bEndpointAddress;
+  __u8 bDescriptorSubType;
+  __u8 bNumFormats;
+  __u16 wTotalLength;
+  __u8 bEndpointAddress;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bTerminalLink;
- __u8 bControlSize;
- __u8 bmaControls[];
+  __u8 bTerminalLink;
+  __u8 bControlSize;
+  __u8 bmaControls[];
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define UVC_DT_OUTPUT_HEADER_SIZE(n, p) (9+(n*p))
-#define UVC_OUTPUT_HEADER_DESCRIPTOR(n, p)   uvc_output_header_descriptor_##n_##p
-#define DECLARE_UVC_OUTPUT_HEADER_DESCRIPTOR(n, p)  struct UVC_OUTPUT_HEADER_DESCRIPTOR(n, p) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bNumFormats;   __u16 wTotalLength;   __u8 bEndpointAddress;   __u8 bTerminalLink;   __u8 bControlSize;   __u8 bmaControls[p][n];  } __attribute__ ((packed))
+#define UVC_DT_OUTPUT_HEADER_SIZE(n,p) (9 + (n * p))
+#define UVC_OUTPUT_HEADER_DESCRIPTOR(n,p) uvc_output_header_descriptor_ ##n_ ##p
+#define DECLARE_UVC_OUTPUT_HEADER_DESCRIPTOR(n,p) struct UVC_OUTPUT_HEADER_DESCRIPTOR(n, p) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bNumFormats; __u16 wTotalLength; __u8 bEndpointAddress; __u8 bTerminalLink; __u8 bControlSize; __u8 bmaControls[p][n]; \
+} __attribute__((packed))
 struct uvc_color_matching_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u8 bColorPrimaries;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u8 bColorPrimaries;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bTransferCharacteristics;
- __u8 bMatrixCoefficients;
+  __u8 bTransferCharacteristics;
+  __u8 bMatrixCoefficients;
 } __attribute__((__packed__));
 #define UVC_DT_COLOR_MATCHING_SIZE 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_streaming_control {
- __u16 bmHint;
- __u8 bFormatIndex;
- __u8 bFrameIndex;
+  __u16 bmHint;
+  __u8 bFormatIndex;
+  __u8 bFrameIndex;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dwFrameInterval;
- __u16 wKeyFrameRate;
- __u16 wPFrameRate;
- __u16 wCompQuality;
+  __u32 dwFrameInterval;
+  __u16 wKeyFrameRate;
+  __u16 wPFrameRate;
+  __u16 wCompQuality;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wCompWindowSize;
- __u16 wDelay;
- __u32 dwMaxVideoFrameSize;
- __u32 dwMaxPayloadTransferSize;
+  __u16 wCompWindowSize;
+  __u16 wDelay;
+  __u32 dwMaxVideoFrameSize;
+  __u32 dwMaxPayloadTransferSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dwClockFrequency;
- __u8 bmFramingInfo;
- __u8 bPreferedVersion;
- __u8 bMinVersion;
+  __u32 dwClockFrequency;
+  __u8 bmFramingInfo;
+  __u8 bPreferedVersion;
+  __u8 bMinVersion;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bMaxVersion;
+  __u8 bMaxVersion;
 } __attribute__((__packed__));
 struct uvc_format_uncompressed {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u8 bFormatIndex;
- __u8 bNumFrameDescriptors;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u8 bFormatIndex;
+  __u8 bNumFrameDescriptors;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 guidFormat[16];
- __u8 bBitsPerPixel;
- __u8 bDefaultFrameIndex;
- __u8 bAspectRatioX;
+  __u8 guidFormat[16];
+  __u8 bBitsPerPixel;
+  __u8 bDefaultFrameIndex;
+  __u8 bAspectRatioX;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bAspectRatioY;
- __u8 bmInterfaceFlags;
- __u8 bCopyProtect;
+  __u8 bAspectRatioY;
+  __u8 bmInterfaceFlags;
+  __u8 bCopyProtect;
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UVC_DT_FORMAT_UNCOMPRESSED_SIZE 27
 struct uvc_frame_uncompressed {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubType;
- __u8 bFrameIndex;
- __u8 bmCapabilities;
- __u16 wWidth;
+  __u8 bDescriptorSubType;
+  __u8 bFrameIndex;
+  __u8 bmCapabilities;
+  __u16 wWidth;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wHeight;
- __u32 dwMinBitRate;
- __u32 dwMaxBitRate;
- __u32 dwMaxVideoFrameBufferSize;
+  __u16 wHeight;
+  __u32 dwMinBitRate;
+  __u32 dwMaxBitRate;
+  __u32 dwMaxVideoFrameBufferSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dwDefaultFrameInterval;
- __u8 bFrameIntervalType;
- __u32 dwFrameInterval[];
+  __u32 dwDefaultFrameInterval;
+  __u8 bFrameIntervalType;
+  __u32 dwFrameInterval[];
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define UVC_DT_FRAME_UNCOMPRESSED_SIZE(n) (26+4*(n))
-#define UVC_FRAME_UNCOMPRESSED(n)   uvc_frame_uncompressed_##n
-#define DECLARE_UVC_FRAME_UNCOMPRESSED(n)  struct UVC_FRAME_UNCOMPRESSED(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bFrameIndex;   __u8 bmCapabilities;   __u16 wWidth;   __u16 wHeight;   __u32 dwMinBitRate;   __u32 dwMaxBitRate;   __u32 dwMaxVideoFrameBufferSize;   __u32 dwDefaultFrameInterval;   __u8 bFrameIntervalType;   __u32 dwFrameInterval[n];  } __attribute__ ((packed))
+#define UVC_DT_FRAME_UNCOMPRESSED_SIZE(n) (26 + 4 * (n))
+#define UVC_FRAME_UNCOMPRESSED(n) uvc_frame_uncompressed_ ##n
+#define DECLARE_UVC_FRAME_UNCOMPRESSED(n) struct UVC_FRAME_UNCOMPRESSED(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bFrameIndex; __u8 bmCapabilities; __u16 wWidth; __u16 wHeight; __u32 dwMinBitRate; __u32 dwMaxBitRate; __u32 dwMaxVideoFrameBufferSize; __u32 dwDefaultFrameInterval; __u8 bFrameIntervalType; __u32 dwFrameInterval[n]; \
+} __attribute__((packed))
 struct uvc_format_mjpeg {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubType;
- __u8 bFormatIndex;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubType;
+  __u8 bFormatIndex;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bNumFrameDescriptors;
- __u8 bmFlags;
- __u8 bDefaultFrameIndex;
- __u8 bAspectRatioX;
+  __u8 bNumFrameDescriptors;
+  __u8 bmFlags;
+  __u8 bDefaultFrameIndex;
+  __u8 bAspectRatioX;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bAspectRatioY;
- __u8 bmInterfaceFlags;
- __u8 bCopyProtect;
+  __u8 bAspectRatioY;
+  __u8 bmInterfaceFlags;
+  __u8 bCopyProtect;
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UVC_DT_FORMAT_MJPEG_SIZE 11
 struct uvc_frame_mjpeg {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubType;
- __u8 bFrameIndex;
- __u8 bmCapabilities;
- __u16 wWidth;
+  __u8 bDescriptorSubType;
+  __u8 bFrameIndex;
+  __u8 bmCapabilities;
+  __u16 wWidth;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wHeight;
- __u32 dwMinBitRate;
- __u32 dwMaxBitRate;
- __u32 dwMaxVideoFrameBufferSize;
+  __u16 wHeight;
+  __u32 dwMinBitRate;
+  __u32 dwMaxBitRate;
+  __u32 dwMaxVideoFrameBufferSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dwDefaultFrameInterval;
- __u8 bFrameIntervalType;
- __u32 dwFrameInterval[];
+  __u32 dwDefaultFrameInterval;
+  __u8 bFrameIntervalType;
+  __u32 dwFrameInterval[];
 } __attribute__((__packed__));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define UVC_DT_FRAME_MJPEG_SIZE(n) (26+4*(n))
-#define UVC_FRAME_MJPEG(n)   uvc_frame_mjpeg_##n
-#define DECLARE_UVC_FRAME_MJPEG(n)  struct UVC_FRAME_MJPEG(n) {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubType;   __u8 bFrameIndex;   __u8 bmCapabilities;   __u16 wWidth;   __u16 wHeight;   __u32 dwMinBitRate;   __u32 dwMaxBitRate;   __u32 dwMaxVideoFrameBufferSize;   __u32 dwDefaultFrameInterval;   __u8 bFrameIntervalType;   __u32 dwFrameInterval[n];  } __attribute__ ((packed))
+#define UVC_DT_FRAME_MJPEG_SIZE(n) (26 + 4 * (n))
+#define UVC_FRAME_MJPEG(n) uvc_frame_mjpeg_ ##n
+#define DECLARE_UVC_FRAME_MJPEG(n) struct UVC_FRAME_MJPEG(n) { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubType; __u8 bFrameIndex; __u8 bmCapabilities; __u16 wWidth; __u16 wHeight; __u32 dwMinBitRate; __u32 dwMaxBitRate; __u32 dwMaxVideoFrameBufferSize; __u32 dwDefaultFrameInterval; __u8 bFrameIntervalType; __u32 dwFrameInterval[n]; \
+} __attribute__((packed))
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

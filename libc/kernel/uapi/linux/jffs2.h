@@ -68,139 +68,132 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define JFFS2_INO_FLAG_USERCOMPR 2
 typedef struct {
- __u32 v32;
+  __u32 v32;
 } __attribute__((packed)) jint32_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- __u32 m;
+  __u32 m;
 } __attribute__((packed)) jmode_t;
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 v16;
+  __u16 v16;
 } __attribute__((packed)) jint16_t;
-struct jffs2_unknown_node
-{
+struct jffs2_unknown_node {
+  jint16_t magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t magic;
- jint16_t nodetype;
- jint32_t totlen;
- jint32_t hdr_crc;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  jint16_t nodetype;
+  jint32_t totlen;
+  jint32_t hdr_crc;
 };
-struct jffs2_raw_dirent
-{
- jint16_t magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t nodetype;
- jint32_t totlen;
- jint32_t hdr_crc;
- jint32_t pino;
+struct jffs2_raw_dirent {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t version;
- jint32_t ino;
- jint32_t mctime;
- __u8 nsize;
+  jint32_t hdr_crc;
+  jint32_t pino;
+  jint32_t version;
+  jint32_t ino;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 type;
- __u8 unused[2];
- jint32_t node_crc;
- jint32_t name_crc;
+  jint32_t mctime;
+  __u8 nsize;
+  __u8 type;
+  __u8 unused[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name[0];
+  jint32_t node_crc;
+  jint32_t name_crc;
+  __u8 name[0];
 };
-struct jffs2_raw_inode
-{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t magic;
- jint16_t nodetype;
- jint32_t totlen;
- jint32_t hdr_crc;
+struct jffs2_raw_inode {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t ino;
- jint32_t version;
- jmode_t mode;
- jint16_t uid;
+  jint32_t hdr_crc;
+  jint32_t ino;
+  jint32_t version;
+  jmode_t mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t gid;
- jint32_t isize;
- jint32_t atime;
- jint32_t mtime;
+  jint16_t uid;
+  jint16_t gid;
+  jint32_t isize;
+  jint32_t atime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t ctime;
- jint32_t offset;
- jint32_t csize;
- jint32_t dsize;
+  jint32_t mtime;
+  jint32_t ctime;
+  jint32_t offset;
+  jint32_t csize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 compr;
- __u8 usercompr;
- jint16_t flags;
- jint32_t data_crc;
+  jint32_t dsize;
+  __u8 compr;
+  __u8 usercompr;
+  jint16_t flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t node_crc;
- __u8 data[0];
+  jint32_t data_crc;
+  jint32_t node_crc;
+  __u8 data[0];
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct jffs2_raw_xattr {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t magic;
- jint16_t nodetype;
- jint32_t totlen;
- jint32_t hdr_crc;
+  jint32_t hdr_crc;
+  jint32_t xid;
+  jint32_t version;
+  __u8 xprefix;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t xid;
- jint32_t version;
- __u8 xprefix;
- __u8 name_len;
+  __u8 name_len;
+  jint16_t value_len;
+  jint32_t data_crc;
+  jint32_t node_crc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t value_len;
- jint32_t data_crc;
- jint32_t node_crc;
- __u8 data[0];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 data[0];
 } __attribute__((packed));
-struct jffs2_raw_xref
-{
- jint16_t magic;
+struct jffs2_raw_xref {
+  jint16_t magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint16_t nodetype;
- jint32_t totlen;
- jint32_t hdr_crc;
- jint32_t ino;
+  jint16_t nodetype;
+  jint32_t totlen;
+  jint32_t hdr_crc;
+  jint32_t ino;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t xid;
- jint32_t xseqno;
- jint32_t node_crc;
+  jint32_t xid;
+  jint32_t xseqno;
+  jint32_t node_crc;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct jffs2_raw_summary
-{
- jint16_t magic;
- jint16_t nodetype;
+struct jffs2_raw_summary {
+  jint16_t magic;
+  jint16_t nodetype;
+  jint32_t totlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t totlen;
- jint32_t hdr_crc;
- jint32_t sum_num;
- jint32_t cln_mkr;
+  jint32_t hdr_crc;
+  jint32_t sum_num;
+  jint32_t cln_mkr;
+  jint32_t padded;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t padded;
- jint32_t sum_crc;
- jint32_t node_crc;
- jint32_t sum[0];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  jint32_t sum_crc;
+  jint32_t node_crc;
+  jint32_t sum[0];
 };
-union jffs2_node_union
-{
- struct jffs2_raw_inode i;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct jffs2_raw_dirent d;
- struct jffs2_raw_xattr x;
- struct jffs2_raw_xref r;
- struct jffs2_raw_summary s;
+union jffs2_node_union {
+  struct jffs2_raw_inode i;
+  struct jffs2_raw_dirent d;
+  struct jffs2_raw_xattr x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct jffs2_unknown_node u;
+  struct jffs2_raw_xref r;
+  struct jffs2_raw_summary s;
+  struct jffs2_unknown_node u;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 union jffs2_device_node {
- jint16_t old_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- jint32_t new_id;
+  jint16_t old_id;
+  jint32_t new_id;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -22,32 +22,32 @@
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sync_merge_data {
- __s32 fd2;
- char name[32];
- __s32 fence;
+  __s32 fd2;
+  char name[32];
+  __s32 fence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct sync_pt_info {
- __u32 len;
- char obj_name[32];
+  __u32 len;
+  char obj_name[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char driver_name[32];
- __s32 status;
- __u64 timestamp_ns;
- __u8 driver_data[0];
+  char driver_name[32];
+  __s32 status;
+  __u64 timestamp_ns;
+  __u8 driver_data[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct sync_fence_info_data {
- __u32 len;
- char name[32];
+  __u32 len;
+  char name[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 status;
- __u8 pt_info[0];
+  __s32 status;
+  __u8 pt_info[0];
 };
 #define SYNC_IOC_MAGIC '>'
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYNC_IOC_WAIT _IOW(SYNC_IOC_MAGIC, 0, __s32)
 #define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 1, struct sync_merge_data)
-#define SYNC_IOC_FENCE_INFO _IOWR(SYNC_IOC_MAGIC, 2,  struct sync_fence_info_data)
+#define SYNC_IOC_FENCE_INFO _IOWR(SYNC_IOC_MAGIC, 2, struct sync_fence_info_data)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

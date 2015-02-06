@@ -21,33 +21,33 @@
 #define NFS4_MOUNT_VERSION 1
 struct nfs_string {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int len;
- const char __user * data;
+  unsigned int len;
+  const char __user * data;
 };
 struct nfs4_mount_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int version;
- int flags;
- int rsize;
- int wsize;
+  int version;
+  int flags;
+  int rsize;
+  int wsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int timeo;
- int retrans;
- int acregmin;
- int acregmax;
+  int timeo;
+  int retrans;
+  int acregmin;
+  int acregmax;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int acdirmin;
- int acdirmax;
- struct nfs_string client_addr;
- struct nfs_string mnt_path;
+  int acdirmin;
+  int acdirmax;
+  struct nfs_string client_addr;
+  struct nfs_string mnt_path;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct nfs_string hostname;
- unsigned int host_addrlen;
- struct sockaddr __user * host_addr;
- int proto;
+  struct nfs_string hostname;
+  unsigned int host_addrlen;
+  struct sockaddr __user * host_addr;
+  int proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int auth_flavourlen;
- int __user *auth_flavours;
+  int auth_flavourlen;
+  int __user * auth_flavours;
 };
 #define NFS4_MOUNT_SOFT 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -26,19 +26,19 @@
 #define VIRTIO_CONSOLE_F_MULTIPORT 1
 #define VIRTIO_CONSOLE_F_EMERG_WRITE 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIRTIO_CONSOLE_BAD_ID (~(__u32)0)
+#define VIRTIO_CONSOLE_BAD_ID (~(__u32) 0)
 struct virtio_console_config {
- __u16 cols;
- __u16 rows;
+  __u16 cols;
+  __u16 rows;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 max_nr_ports;
- __u32 emerg_wr;
+  __u32 max_nr_ports;
+  __u32 emerg_wr;
 } __attribute__((packed));
 struct virtio_console_control {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u16 event;
- __u16 value;
+  __u32 id;
+  __u16 event;
+  __u16 value;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_CONSOLE_DEVICE_READY 0

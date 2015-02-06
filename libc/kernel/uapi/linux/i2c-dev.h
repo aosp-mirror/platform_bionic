@@ -33,16 +33,16 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I2C_SMBUS 0x0720
 struct i2c_smbus_ioctl_data {
- __u8 read_write;
- __u8 command;
+  __u8 read_write;
+  __u8 command;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 size;
- union i2c_smbus_data __user *data;
+  __u32 size;
+  union i2c_smbus_data __user * data;
 };
 struct i2c_rdwr_ioctl_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct i2c_msg __user *msgs;
- __u32 nmsgs;
+  struct i2c_msg __user * msgs;
+  __u32 nmsgs;
 };
 #define I2C_RDRW_IOCTL_MAX_MSGS 42
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

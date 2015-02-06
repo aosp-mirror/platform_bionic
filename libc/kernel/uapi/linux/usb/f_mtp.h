@@ -22,17 +22,17 @@
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mtp_file_range {
- int fd;
- loff_t offset;
- int64_t length;
+  int fd;
+  loff_t offset;
+  int64_t length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint16_t command;
- uint32_t transaction_id;
+  uint16_t command;
+  uint32_t transaction_id;
 };
 struct mtp_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- size_t length;
- void *data;
+  size_t length;
+  void * data;
 };
 #define MTP_SEND_FILE _IOW('M', 0, struct mtp_file_range)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

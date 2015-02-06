@@ -23,216 +23,216 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PFKEYV2_REVISION 199806L
 struct sadb_msg {
- __u8 sadb_msg_version;
- __u8 sadb_msg_type;
+  __u8 sadb_msg_version;
+  __u8 sadb_msg_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_msg_errno;
- __u8 sadb_msg_satype;
- __u16 sadb_msg_len;
- __u16 sadb_msg_reserved;
+  __u8 sadb_msg_errno;
+  __u8 sadb_msg_satype;
+  __u16 sadb_msg_len;
+  __u16 sadb_msg_reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_msg_seq;
- __u32 sadb_msg_pid;
+  __u32 sadb_msg_seq;
+  __u32 sadb_msg_pid;
 } __attribute__((packed));
 struct sadb_ext {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_ext_len;
- __u16 sadb_ext_type;
+  __u16 sadb_ext_len;
+  __u16 sadb_ext_type;
 } __attribute__((packed));
 struct sadb_sa {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_sa_len;
- __u16 sadb_sa_exttype;
- __be32 sadb_sa_spi;
- __u8 sadb_sa_replay;
+  __u16 sadb_sa_len;
+  __u16 sadb_sa_exttype;
+  __be32 sadb_sa_spi;
+  __u8 sadb_sa_replay;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_sa_state;
- __u8 sadb_sa_auth;
- __u8 sadb_sa_encrypt;
- __u32 sadb_sa_flags;
+  __u8 sadb_sa_state;
+  __u8 sadb_sa_auth;
+  __u8 sadb_sa_encrypt;
+  __u32 sadb_sa_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_lifetime {
- __u16 sadb_lifetime_len;
- __u16 sadb_lifetime_exttype;
+  __u16 sadb_lifetime_len;
+  __u16 sadb_lifetime_exttype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_lifetime_allocations;
- __u64 sadb_lifetime_bytes;
- __u64 sadb_lifetime_addtime;
- __u64 sadb_lifetime_usetime;
+  __u32 sadb_lifetime_allocations;
+  __u64 sadb_lifetime_bytes;
+  __u64 sadb_lifetime_addtime;
+  __u64 sadb_lifetime_usetime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_address {
- __u16 sadb_address_len;
- __u16 sadb_address_exttype;
+  __u16 sadb_address_len;
+  __u16 sadb_address_exttype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_address_proto;
- __u8 sadb_address_prefixlen;
- __u16 sadb_address_reserved;
+  __u8 sadb_address_proto;
+  __u8 sadb_address_prefixlen;
+  __u16 sadb_address_reserved;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sadb_key {
- __u16 sadb_key_len;
- __u16 sadb_key_exttype;
- __u16 sadb_key_bits;
+  __u16 sadb_key_len;
+  __u16 sadb_key_exttype;
+  __u16 sadb_key_bits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_key_reserved;
+  __u16 sadb_key_reserved;
 } __attribute__((packed));
 struct sadb_ident {
- __u16 sadb_ident_len;
+  __u16 sadb_ident_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_ident_exttype;
- __u16 sadb_ident_type;
- __u16 sadb_ident_reserved;
- __u64 sadb_ident_id;
+  __u16 sadb_ident_exttype;
+  __u16 sadb_ident_type;
+  __u16 sadb_ident_reserved;
+  __u64 sadb_ident_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_sens {
- __u16 sadb_sens_len;
- __u16 sadb_sens_exttype;
+  __u16 sadb_sens_len;
+  __u16 sadb_sens_exttype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_sens_dpd;
- __u8 sadb_sens_sens_level;
- __u8 sadb_sens_sens_len;
- __u8 sadb_sens_integ_level;
+  __u32 sadb_sens_dpd;
+  __u8 sadb_sens_sens_level;
+  __u8 sadb_sens_sens_len;
+  __u8 sadb_sens_integ_level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_sens_integ_len;
- __u32 sadb_sens_reserved;
+  __u8 sadb_sens_integ_len;
+  __u32 sadb_sens_reserved;
 } __attribute__((packed));
 struct sadb_prop {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_prop_len;
- __u16 sadb_prop_exttype;
- __u8 sadb_prop_replay;
- __u8 sadb_prop_reserved[3];
+  __u16 sadb_prop_len;
+  __u16 sadb_prop_exttype;
+  __u8 sadb_prop_replay;
+  __u8 sadb_prop_reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_comb {
- __u8 sadb_comb_auth;
- __u8 sadb_comb_encrypt;
+  __u8 sadb_comb_auth;
+  __u8 sadb_comb_encrypt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_comb_flags;
- __u16 sadb_comb_auth_minbits;
- __u16 sadb_comb_auth_maxbits;
- __u16 sadb_comb_encrypt_minbits;
+  __u16 sadb_comb_flags;
+  __u16 sadb_comb_auth_minbits;
+  __u16 sadb_comb_auth_maxbits;
+  __u16 sadb_comb_encrypt_minbits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_comb_encrypt_maxbits;
- __u32 sadb_comb_reserved;
- __u32 sadb_comb_soft_allocations;
- __u32 sadb_comb_hard_allocations;
+  __u16 sadb_comb_encrypt_maxbits;
+  __u32 sadb_comb_reserved;
+  __u32 sadb_comb_soft_allocations;
+  __u32 sadb_comb_hard_allocations;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 sadb_comb_soft_bytes;
- __u64 sadb_comb_hard_bytes;
- __u64 sadb_comb_soft_addtime;
- __u64 sadb_comb_hard_addtime;
+  __u64 sadb_comb_soft_bytes;
+  __u64 sadb_comb_hard_bytes;
+  __u64 sadb_comb_soft_addtime;
+  __u64 sadb_comb_hard_addtime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 sadb_comb_soft_usetime;
- __u64 sadb_comb_hard_usetime;
+  __u64 sadb_comb_soft_usetime;
+  __u64 sadb_comb_hard_usetime;
 } __attribute__((packed));
 struct sadb_supported {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_supported_len;
- __u16 sadb_supported_exttype;
- __u32 sadb_supported_reserved;
+  __u16 sadb_supported_len;
+  __u16 sadb_supported_exttype;
+  __u32 sadb_supported_reserved;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sadb_alg {
- __u8 sadb_alg_id;
- __u8 sadb_alg_ivlen;
- __u16 sadb_alg_minbits;
+  __u8 sadb_alg_id;
+  __u8 sadb_alg_ivlen;
+  __u16 sadb_alg_minbits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_alg_maxbits;
- __u16 sadb_alg_reserved;
+  __u16 sadb_alg_maxbits;
+  __u16 sadb_alg_reserved;
 } __attribute__((packed));
 struct sadb_spirange {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_spirange_len;
- __u16 sadb_spirange_exttype;
- __u32 sadb_spirange_min;
- __u32 sadb_spirange_max;
+  __u16 sadb_spirange_len;
+  __u16 sadb_spirange_exttype;
+  __u32 sadb_spirange_min;
+  __u32 sadb_spirange_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_spirange_reserved;
+  __u32 sadb_spirange_reserved;
 } __attribute__((packed));
 struct sadb_x_kmprivate {
- __u16 sadb_x_kmprivate_len;
+  __u16 sadb_x_kmprivate_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_kmprivate_exttype;
- __u32 sadb_x_kmprivate_reserved;
+  __u16 sadb_x_kmprivate_exttype;
+  __u32 sadb_x_kmprivate_reserved;
 } __attribute__((packed));
 struct sadb_x_sa2 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_sa2_len;
- __u16 sadb_x_sa2_exttype;
- __u8 sadb_x_sa2_mode;
- __u8 sadb_x_sa2_reserved1;
+  __u16 sadb_x_sa2_len;
+  __u16 sadb_x_sa2_exttype;
+  __u8 sadb_x_sa2_mode;
+  __u8 sadb_x_sa2_reserved1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_sa2_reserved2;
- __u32 sadb_x_sa2_sequence;
- __u32 sadb_x_sa2_reqid;
+  __u16 sadb_x_sa2_reserved2;
+  __u32 sadb_x_sa2_sequence;
+  __u32 sadb_x_sa2_reqid;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sadb_x_policy {
- __u16 sadb_x_policy_len;
- __u16 sadb_x_policy_exttype;
- __u16 sadb_x_policy_type;
+  __u16 sadb_x_policy_len;
+  __u16 sadb_x_policy_exttype;
+  __u16 sadb_x_policy_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_x_policy_dir;
- __u8 sadb_x_policy_reserved;
- __u32 sadb_x_policy_id;
- __u32 sadb_x_policy_priority;
+  __u8 sadb_x_policy_dir;
+  __u8 sadb_x_policy_reserved;
+  __u32 sadb_x_policy_id;
+  __u32 sadb_x_policy_priority;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_x_ipsecrequest {
- __u16 sadb_x_ipsecrequest_len;
- __u16 sadb_x_ipsecrequest_proto;
+  __u16 sadb_x_ipsecrequest_len;
+  __u16 sadb_x_ipsecrequest_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_x_ipsecrequest_mode;
- __u8 sadb_x_ipsecrequest_level;
- __u16 sadb_x_ipsecrequest_reserved1;
- __u32 sadb_x_ipsecrequest_reqid;
+  __u8 sadb_x_ipsecrequest_mode;
+  __u8 sadb_x_ipsecrequest_level;
+  __u16 sadb_x_ipsecrequest_reserved1;
+  __u32 sadb_x_ipsecrequest_reqid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_x_ipsecrequest_reserved2;
+  __u32 sadb_x_ipsecrequest_reserved2;
 } __attribute__((packed));
 struct sadb_x_nat_t_type {
- __u16 sadb_x_nat_t_type_len;
+  __u16 sadb_x_nat_t_type_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_nat_t_type_exttype;
- __u8 sadb_x_nat_t_type_type;
- __u8 sadb_x_nat_t_type_reserved[3];
+  __u16 sadb_x_nat_t_type_exttype;
+  __u8 sadb_x_nat_t_type_type;
+  __u8 sadb_x_nat_t_type_reserved[3];
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sadb_x_nat_t_port {
- __u16 sadb_x_nat_t_port_len;
- __u16 sadb_x_nat_t_port_exttype;
- __be16 sadb_x_nat_t_port_port;
+  __u16 sadb_x_nat_t_port_len;
+  __u16 sadb_x_nat_t_port_exttype;
+  __be16 sadb_x_nat_t_port_port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_nat_t_port_reserved;
+  __u16 sadb_x_nat_t_port_reserved;
 } __attribute__((packed));
 struct sadb_x_sec_ctx {
- __u16 sadb_x_sec_len;
+  __u16 sadb_x_sec_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_sec_exttype;
- __u8 sadb_x_ctx_alg;
- __u8 sadb_x_ctx_doi;
- __u16 sadb_x_ctx_len;
+  __u16 sadb_x_sec_exttype;
+  __u8 sadb_x_ctx_alg;
+  __u8 sadb_x_ctx_doi;
+  __u16 sadb_x_ctx_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct sadb_x_kmaddress {
- __u16 sadb_x_kmaddress_len;
- __u16 sadb_x_kmaddress_exttype;
+  __u16 sadb_x_kmaddress_len;
+  __u16 sadb_x_kmaddress_exttype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 sadb_x_kmaddress_reserved;
+  __u32 sadb_x_kmaddress_reserved;
 } __attribute__((packed));
 struct sadb_x_filter {
- __u16 sadb_x_filter_len;
+  __u16 sadb_x_filter_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sadb_x_filter_exttype;
- __u32 sadb_x_filter_saddr[4];
- __u32 sadb_x_filter_daddr[4];
- __u16 sadb_x_filter_family;
+  __u16 sadb_x_filter_exttype;
+  __u32 sadb_x_filter_saddr[4];
+  __u32 sadb_x_filter_daddr[4];
+  __u16 sadb_x_filter_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sadb_x_filter_splen;
- __u8 sadb_x_filter_dplen;
+  __u8 sadb_x_filter_splen;
+  __u8 sadb_x_filter_dplen;
 } __attribute__((packed));
 #define SADB_RESERVED 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

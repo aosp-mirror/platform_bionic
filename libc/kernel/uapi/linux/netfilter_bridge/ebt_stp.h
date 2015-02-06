@@ -39,27 +39,27 @@
 #define EBT_STP_CONFIG_MASK 0x0ffe
 #define EBT_STP_MATCH "stp"
 struct ebt_stp_config_info {
- __u8 flags;
+  __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 root_priol, root_priou;
- char root_addr[6], root_addrmsk[6];
- __u32 root_costl, root_costu;
- __u16 sender_priol, sender_priou;
+  __u16 root_priol, root_priou;
+  char root_addr[6], root_addrmsk[6];
+  __u32 root_costl, root_costu;
+  __u16 sender_priol, sender_priou;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char sender_addr[6], sender_addrmsk[6];
- __u16 portl, portu;
- __u16 msg_agel, msg_ageu;
- __u16 max_agel, max_ageu;
+  char sender_addr[6], sender_addrmsk[6];
+  __u16 portl, portu;
+  __u16 msg_agel, msg_ageu;
+  __u16 max_agel, max_ageu;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 hello_timel, hello_timeu;
- __u16 forward_delayl, forward_delayu;
+  __u16 hello_timel, hello_timeu;
+  __u16 forward_delayl, forward_delayu;
 };
 struct ebt_stp_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 type;
- struct ebt_stp_config_info config;
- __u16 bitmask;
- __u16 invflags;
+  __u8 type;
+  struct ebt_stp_config_info config;
+  __u16 bitmask;
+  __u16 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

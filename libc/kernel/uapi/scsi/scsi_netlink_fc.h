@@ -23,16 +23,16 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FC_NL_MSGALIGN(len) (((len) + 7) & ~7)
 struct fc_nl_event {
- struct scsi_nl_hdr snlh;
- uint64_t seconds;
+  struct scsi_nl_hdr snlh;
+  uint64_t seconds;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t vendor_id;
- uint16_t host_no;
- uint16_t event_datalen;
- uint32_t event_num;
+  uint64_t vendor_id;
+  uint16_t host_no;
+  uint16_t event_datalen;
+  uint32_t event_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t event_code;
- uint32_t event_data;
+  uint32_t event_code;
+  uint32_t event_data;
 } __attribute__((aligned(sizeof(uint64_t))));
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

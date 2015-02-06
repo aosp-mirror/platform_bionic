@@ -22,27 +22,27 @@
 #include <linux/if_ether.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_cmd {
- __u32 cmd;
- __u32 supported;
- __u32 advertising;
+  __u32 cmd;
+  __u32 supported;
+  __u32 advertising;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 speed;
- __u8 duplex;
- __u8 port;
- __u8 phy_address;
+  __u16 speed;
+  __u8 duplex;
+  __u8 port;
+  __u8 phy_address;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 transceiver;
- __u8 autoneg;
- __u8 mdio_support;
- __u32 maxtxpkt;
+  __u8 transceiver;
+  __u8 autoneg;
+  __u8 mdio_support;
+  __u32 maxtxpkt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 maxrxpkt;
- __u16 speed_hi;
- __u8 eth_tp_mdix;
- __u8 eth_tp_mdix_ctrl;
+  __u32 maxrxpkt;
+  __u16 speed_hi;
+  __u8 eth_tp_mdix;
+  __u8 eth_tp_mdix_ctrl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 lp_advertising;
- __u32 reserved[2];
+  __u32 lp_advertising;
+  __u32 reserved[2];
 };
 #define ETH_MDIO_SUPPORTS_C22 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -51,412 +51,412 @@ struct ethtool_cmd {
 #define ETHTOOL_BUSINFO_LEN 32
 struct ethtool_drvinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- char driver[32];
- char version[32];
- char fw_version[ETHTOOL_FWVERS_LEN];
+  __u32 cmd;
+  char driver[32];
+  char version[32];
+  char fw_version[ETHTOOL_FWVERS_LEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char bus_info[ETHTOOL_BUSINFO_LEN];
- char reserved1[32];
- char reserved2[12];
- __u32 n_priv_flags;
+  char bus_info[ETHTOOL_BUSINFO_LEN];
+  char reserved1[32];
+  char reserved2[12];
+  __u32 n_priv_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 n_stats;
- __u32 testinfo_len;
- __u32 eedump_len;
- __u32 regdump_len;
+  __u32 n_stats;
+  __u32 testinfo_len;
+  __u32 eedump_len;
+  __u32 regdump_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define SOPASS_MAX 6
 struct ethtool_wolinfo {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 supported;
- __u32 wolopts;
- __u8 sopass[SOPASS_MAX];
+  __u32 supported;
+  __u32 wolopts;
+  __u8 sopass[SOPASS_MAX];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_value {
- __u32 cmd;
- __u32 data;
+  __u32 cmd;
+  __u32 data;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum tunable_id {
- ETHTOOL_ID_UNSPEC,
- ETHTOOL_RX_COPYBREAK,
- ETHTOOL_TX_COPYBREAK,
+  ETHTOOL_ID_UNSPEC,
+  ETHTOOL_RX_COPYBREAK,
+  ETHTOOL_TX_COPYBREAK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum tunable_type_id {
- ETHTOOL_TUNABLE_UNSPEC,
- ETHTOOL_TUNABLE_U8,
+  ETHTOOL_TUNABLE_UNSPEC,
+  ETHTOOL_TUNABLE_U8,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETHTOOL_TUNABLE_U16,
- ETHTOOL_TUNABLE_U32,
- ETHTOOL_TUNABLE_U64,
- ETHTOOL_TUNABLE_STRING,
+  ETHTOOL_TUNABLE_U16,
+  ETHTOOL_TUNABLE_U32,
+  ETHTOOL_TUNABLE_U64,
+  ETHTOOL_TUNABLE_STRING,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETHTOOL_TUNABLE_S8,
- ETHTOOL_TUNABLE_S16,
- ETHTOOL_TUNABLE_S32,
- ETHTOOL_TUNABLE_S64,
+  ETHTOOL_TUNABLE_S8,
+  ETHTOOL_TUNABLE_S16,
+  ETHTOOL_TUNABLE_S32,
+  ETHTOOL_TUNABLE_S64,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_tunable {
- __u32 cmd;
- __u32 id;
+  __u32 cmd;
+  __u32 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 type_id;
- __u32 len;
- void *data[0];
+  __u32 type_id;
+  __u32 len;
+  void * data[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_regs {
- __u32 cmd;
- __u32 version;
- __u32 len;
+  __u32 cmd;
+  __u32 version;
+  __u32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 data[0];
+  __u8 data[0];
 };
 struct ethtool_eeprom {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 magic;
- __u32 offset;
- __u32 len;
- __u8 data[0];
+  __u32 magic;
+  __u32 offset;
+  __u32 len;
+  __u8 data[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_eee {
- __u32 cmd;
- __u32 supported;
+  __u32 cmd;
+  __u32 supported;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 advertised;
- __u32 lp_advertised;
- __u32 eee_active;
- __u32 eee_enabled;
+  __u32 advertised;
+  __u32 lp_advertised;
+  __u32 eee_active;
+  __u32 eee_enabled;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_lpi_enabled;
- __u32 tx_lpi_timer;
- __u32 reserved[2];
+  __u32 tx_lpi_enabled;
+  __u32 tx_lpi_timer;
+  __u32 reserved[2];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_modinfo {
- __u32 cmd;
- __u32 type;
- __u32 eeprom_len;
+  __u32 cmd;
+  __u32 type;
+  __u32 eeprom_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[8];
+  __u32 reserved[8];
 };
 struct ethtool_coalesce {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rx_coalesce_usecs;
- __u32 rx_max_coalesced_frames;
- __u32 rx_coalesce_usecs_irq;
- __u32 rx_max_coalesced_frames_irq;
+  __u32 rx_coalesce_usecs;
+  __u32 rx_max_coalesced_frames;
+  __u32 rx_coalesce_usecs_irq;
+  __u32 rx_max_coalesced_frames_irq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_coalesce_usecs;
- __u32 tx_max_coalesced_frames;
- __u32 tx_coalesce_usecs_irq;
- __u32 tx_max_coalesced_frames_irq;
+  __u32 tx_coalesce_usecs;
+  __u32 tx_max_coalesced_frames;
+  __u32 tx_coalesce_usecs_irq;
+  __u32 tx_max_coalesced_frames_irq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 stats_block_coalesce_usecs;
- __u32 use_adaptive_rx_coalesce;
- __u32 use_adaptive_tx_coalesce;
- __u32 pkt_rate_low;
+  __u32 stats_block_coalesce_usecs;
+  __u32 use_adaptive_rx_coalesce;
+  __u32 use_adaptive_tx_coalesce;
+  __u32 pkt_rate_low;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rx_coalesce_usecs_low;
- __u32 rx_max_coalesced_frames_low;
- __u32 tx_coalesce_usecs_low;
- __u32 tx_max_coalesced_frames_low;
+  __u32 rx_coalesce_usecs_low;
+  __u32 rx_max_coalesced_frames_low;
+  __u32 tx_coalesce_usecs_low;
+  __u32 tx_max_coalesced_frames_low;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pkt_rate_high;
- __u32 rx_coalesce_usecs_high;
- __u32 rx_max_coalesced_frames_high;
- __u32 tx_coalesce_usecs_high;
+  __u32 pkt_rate_high;
+  __u32 rx_coalesce_usecs_high;
+  __u32 rx_max_coalesced_frames_high;
+  __u32 tx_coalesce_usecs_high;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_max_coalesced_frames_high;
- __u32 rate_sample_interval;
+  __u32 tx_max_coalesced_frames_high;
+  __u32 rate_sample_interval;
 };
 struct ethtool_ringparam {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- __u32 rx_max_pending;
- __u32 rx_mini_max_pending;
- __u32 rx_jumbo_max_pending;
+  __u32 cmd;
+  __u32 rx_max_pending;
+  __u32 rx_mini_max_pending;
+  __u32 rx_jumbo_max_pending;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_max_pending;
- __u32 rx_pending;
- __u32 rx_mini_pending;
- __u32 rx_jumbo_pending;
+  __u32 tx_max_pending;
+  __u32 rx_pending;
+  __u32 rx_mini_pending;
+  __u32 rx_jumbo_pending;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_pending;
+  __u32 tx_pending;
 };
 struct ethtool_channels {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 max_rx;
- __u32 max_tx;
- __u32 max_other;
- __u32 max_combined;
+  __u32 max_rx;
+  __u32 max_tx;
+  __u32 max_other;
+  __u32 max_combined;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rx_count;
- __u32 tx_count;
- __u32 other_count;
- __u32 combined_count;
+  __u32 rx_count;
+  __u32 tx_count;
+  __u32 other_count;
+  __u32 combined_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_pauseparam {
- __u32 cmd;
- __u32 autoneg;
+  __u32 cmd;
+  __u32 autoneg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rx_pause;
- __u32 tx_pause;
+  __u32 rx_pause;
+  __u32 tx_pause;
 };
 #define ETH_GSTRING_LEN 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum ethtool_stringset {
- ETH_SS_TEST = 0,
- ETH_SS_STATS,
- ETH_SS_PRIV_FLAGS,
+  ETH_SS_TEST = 0,
+  ETH_SS_STATS,
+  ETH_SS_PRIV_FLAGS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_SS_NTUPLE_FILTERS,
- ETH_SS_FEATURES,
+  ETH_SS_NTUPLE_FILTERS,
+  ETH_SS_FEATURES,
 };
 struct ethtool_gstrings {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- __u32 string_set;
- __u32 len;
- __u8 data[0];
+  __u32 cmd;
+  __u32 string_set;
+  __u32 len;
+  __u8 data[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_sset_info {
- __u32 cmd;
- __u32 reserved;
+  __u32 cmd;
+  __u32 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 sset_mask;
- __u32 data[0];
+  __u64 sset_mask;
+  __u32 data[0];
 };
 enum ethtool_test_flags {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_TEST_FL_OFFLINE = (1 << 0),
- ETH_TEST_FL_FAILED = (1 << 1),
- ETH_TEST_FL_EXTERNAL_LB = (1 << 2),
- ETH_TEST_FL_EXTERNAL_LB_DONE = (1 << 3),
+  ETH_TEST_FL_OFFLINE = (1 << 0),
+  ETH_TEST_FL_FAILED = (1 << 1),
+  ETH_TEST_FL_EXTERNAL_LB = (1 << 2),
+  ETH_TEST_FL_EXTERNAL_LB_DONE = (1 << 3),
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_test {
- __u32 cmd;
- __u32 flags;
+  __u32 cmd;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved;
- __u32 len;
- __u64 data[0];
+  __u32 reserved;
+  __u32 len;
+  __u64 data[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_stats {
- __u32 cmd;
- __u32 n_stats;
- __u64 data[0];
+  __u32 cmd;
+  __u32 n_stats;
+  __u64 data[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_perm_addr {
- __u32 cmd;
- __u32 size;
+  __u32 cmd;
+  __u32 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 data[0];
+  __u8 data[0];
 };
 enum ethtool_flags {
- ETH_FLAG_TXVLAN = (1 << 7),
+  ETH_FLAG_TXVLAN = (1 << 7),
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_FLAG_RXVLAN = (1 << 8),
- ETH_FLAG_LRO = (1 << 15),
- ETH_FLAG_NTUPLE = (1 << 27),
- ETH_FLAG_RXHASH = (1 << 28),
+  ETH_FLAG_RXVLAN = (1 << 8),
+  ETH_FLAG_LRO = (1 << 15),
+  ETH_FLAG_NTUPLE = (1 << 27),
+  ETH_FLAG_RXHASH = (1 << 28),
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_tcpip4_spec {
- __be32 ip4src;
- __be32 ip4dst;
+  __be32 ip4src;
+  __be32 ip4dst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 psrc;
- __be16 pdst;
- __u8 tos;
+  __be16 psrc;
+  __be16 pdst;
+  __u8 tos;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_ah_espip4_spec {
- __be32 ip4src;
- __be32 ip4dst;
- __be32 spi;
+  __be32 ip4src;
+  __be32 ip4dst;
+  __be32 spi;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 tos;
+  __u8 tos;
 };
 #define ETH_RX_NFC_IP4 1
 struct ethtool_usrip4_spec {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 ip4src;
- __be32 ip4dst;
- __be32 l4_4_bytes;
- __u8 tos;
+  __be32 ip4src;
+  __be32 ip4dst;
+  __be32 l4_4_bytes;
+  __u8 tos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ip_ver;
- __u8 proto;
+  __u8 ip_ver;
+  __u8 proto;
 };
 union ethtool_flow_union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ethtool_tcpip4_spec tcp_ip4_spec;
- struct ethtool_tcpip4_spec udp_ip4_spec;
- struct ethtool_tcpip4_spec sctp_ip4_spec;
- struct ethtool_ah_espip4_spec ah_ip4_spec;
+  struct ethtool_tcpip4_spec tcp_ip4_spec;
+  struct ethtool_tcpip4_spec udp_ip4_spec;
+  struct ethtool_tcpip4_spec sctp_ip4_spec;
+  struct ethtool_ah_espip4_spec ah_ip4_spec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ethtool_ah_espip4_spec esp_ip4_spec;
- struct ethtool_usrip4_spec usr_ip4_spec;
- struct ethhdr ether_spec;
- __u8 hdata[52];
+  struct ethtool_ah_espip4_spec esp_ip4_spec;
+  struct ethtool_usrip4_spec usr_ip4_spec;
+  struct ethhdr ether_spec;
+  __u8 hdata[52];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_flow_ext {
- __u8 padding[2];
- unsigned char h_dest[ETH_ALEN];
+  __u8 padding[2];
+  unsigned char h_dest[ETH_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 vlan_etype;
- __be16 vlan_tci;
- __be32 data[2];
+  __be16 vlan_etype;
+  __be16 vlan_tci;
+  __be32 data[2];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_rx_flow_spec {
- __u32 flow_type;
- union ethtool_flow_union h_u;
- struct ethtool_flow_ext h_ext;
+  __u32 flow_type;
+  union ethtool_flow_union h_u;
+  struct ethtool_flow_ext h_ext;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union ethtool_flow_union m_u;
- struct ethtool_flow_ext m_ext;
- __u64 ring_cookie;
- __u32 location;
+  union ethtool_flow_union m_u;
+  struct ethtool_flow_ext m_ext;
+  __u64 ring_cookie;
+  __u32 location;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_rxnfc {
- __u32 cmd;
- __u32 flow_type;
+  __u32 cmd;
+  __u32 flow_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 data;
- struct ethtool_rx_flow_spec fs;
- __u32 rule_cnt;
- __u32 rule_locs[0];
+  __u64 data;
+  struct ethtool_rx_flow_spec fs;
+  __u32 rule_cnt;
+  __u32 rule_locs[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ethtool_rxfh_indir {
- __u32 cmd;
- __u32 size;
+  __u32 cmd;
+  __u32 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ring_index[0];
+  __u32 ring_index[0];
 };
 struct ethtool_rxfh {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rss_context;
- __u32 indir_size;
- __u32 key_size;
- __u32 rsvd[2];
+  __u32 rss_context;
+  __u32 indir_size;
+  __u32 key_size;
+  __u32 rsvd[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rss_config[0];
+  __u32 rss_config[0];
 };
 #define ETH_RXFH_INDIR_NO_CHANGE 0xffffffff
 struct ethtool_rx_ntuple_flow_spec {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flow_type;
- union {
- struct ethtool_tcpip4_spec tcp_ip4_spec;
- struct ethtool_tcpip4_spec udp_ip4_spec;
+  __u32 flow_type;
+  union {
+    struct ethtool_tcpip4_spec tcp_ip4_spec;
+    struct ethtool_tcpip4_spec udp_ip4_spec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ethtool_tcpip4_spec sctp_ip4_spec;
- struct ethtool_ah_espip4_spec ah_ip4_spec;
- struct ethtool_ah_espip4_spec esp_ip4_spec;
- struct ethtool_usrip4_spec usr_ip4_spec;
+    struct ethtool_tcpip4_spec sctp_ip4_spec;
+    struct ethtool_ah_espip4_spec ah_ip4_spec;
+    struct ethtool_ah_espip4_spec esp_ip4_spec;
+    struct ethtool_usrip4_spec usr_ip4_spec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ethhdr ether_spec;
- __u8 hdata[72];
- } h_u, m_u;
- __u16 vlan_tag;
+    struct ethhdr ether_spec;
+    __u8 hdata[72];
+  } h_u, m_u;
+  __u16 vlan_tag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 vlan_tag_mask;
- __u64 data;
- __u64 data_mask;
- __s32 action;
+  __u16 vlan_tag_mask;
+  __u64 data;
+  __u64 data_mask;
+  __s32 action;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ETHTOOL_RXNTUPLE_ACTION_DROP (-1)
-#define ETHTOOL_RXNTUPLE_ACTION_CLEAR (-2)
+#define ETHTOOL_RXNTUPLE_ACTION_DROP (- 1)
+#define ETHTOOL_RXNTUPLE_ACTION_CLEAR (- 2)
 };
 struct ethtool_rx_ntuple {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- struct ethtool_rx_ntuple_flow_spec fs;
+  __u32 cmd;
+  struct ethtool_rx_ntuple_flow_spec fs;
 };
 #define ETHTOOL_FLASH_MAX_FILENAME 128
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum ethtool_flash_op_type {
- ETHTOOL_FLASH_ALL_REGIONS = 0,
+  ETHTOOL_FLASH_ALL_REGIONS = 0,
 };
 struct ethtool_flash {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- __u32 region;
- char data[ETHTOOL_FLASH_MAX_FILENAME];
+  __u32 cmd;
+  __u32 region;
+  char data[ETHTOOL_FLASH_MAX_FILENAME];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_dump {
- __u32 cmd;
- __u32 version;
- __u32 flag;
+  __u32 cmd;
+  __u32 version;
+  __u32 flag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 len;
- __u8 data[0];
+  __u32 len;
+  __u8 data[0];
 };
 #define ETH_FW_DUMP_DISABLE 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_get_features_block {
- __u32 available;
- __u32 requested;
- __u32 active;
+  __u32 available;
+  __u32 requested;
+  __u32 active;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 never_changed;
+  __u32 never_changed;
 };
 struct ethtool_gfeatures {
- __u32 cmd;
+  __u32 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 size;
- struct ethtool_get_features_block features[0];
+  __u32 size;
+  struct ethtool_get_features_block features[0];
 };
 struct ethtool_set_features_block {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 valid;
- __u32 requested;
+  __u32 valid;
+  __u32 requested;
 };
 struct ethtool_sfeatures {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- __u32 size;
- struct ethtool_set_features_block features[0];
+  __u32 cmd;
+  __u32 size;
+  struct ethtool_set_features_block features[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ethtool_ts_info {
- __u32 cmd;
- __u32 so_timestamping;
- __s32 phc_index;
+  __u32 cmd;
+  __u32 so_timestamping;
+  __s32 phc_index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_types;
- __u32 tx_reserved[3];
- __u32 rx_filters;
- __u32 rx_reserved[3];
+  __u32 tx_types;
+  __u32 tx_reserved[3];
+  __u32 rx_filters;
+  __u32 rx_reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum ethtool_sfeatures_retval_bits {
- ETHTOOL_F_UNSUPPORTED__BIT,
- ETHTOOL_F_WISH__BIT,
+  ETHTOOL_F_UNSUPPORTED__BIT,
+  ETHTOOL_F_WISH__BIT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETHTOOL_F_COMPAT__BIT,
+  ETHTOOL_F_COMPAT__BIT,
 };
 #define ETHTOOL_F_UNSUPPORTED (1 << ETHTOOL_F_UNSUPPORTED__BIT)
 #define ETHTOOL_F_WISH (1 << ETHTOOL_F_WISH__BIT)
@@ -628,7 +628,7 @@ enum ethtool_sfeatures_retval_bits {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SPEED_2500 2500
 #define SPEED_10000 10000
-#define SPEED_UNKNOWN -1
+#define SPEED_UNKNOWN - 1
 #define DUPLEX_HALF 0x00
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DUPLEX_FULL 0x01
@@ -711,18 +711,18 @@ enum ethtool_sfeatures_retval_bits {
 #define ETH_MODULE_SFF_8472_LEN 512
 enum ethtool_reset_flags {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_RESET_MGMT = 1 << 0,
- ETH_RESET_IRQ = 1 << 1,
- ETH_RESET_DMA = 1 << 2,
- ETH_RESET_FILTER = 1 << 3,
+  ETH_RESET_MGMT = 1 << 0,
+  ETH_RESET_IRQ = 1 << 1,
+  ETH_RESET_DMA = 1 << 2,
+  ETH_RESET_FILTER = 1 << 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_RESET_OFFLOAD = 1 << 4,
- ETH_RESET_MAC = 1 << 5,
- ETH_RESET_PHY = 1 << 6,
- ETH_RESET_RAM = 1 << 7,
+  ETH_RESET_OFFLOAD = 1 << 4,
+  ETH_RESET_MAC = 1 << 5,
+  ETH_RESET_PHY = 1 << 6,
+  ETH_RESET_RAM = 1 << 7,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ETH_RESET_DEDICATED = 0x0000ffff,
- ETH_RESET_ALL = 0xffffffff,
+  ETH_RESET_DEDICATED = 0x0000ffff,
+  ETH_RESET_ALL = 0xffffffff,
 };
 #define ETH_RESET_SHARED_SHIFT 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

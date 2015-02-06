@@ -21,48 +21,48 @@
 #include <linux/types.h>
 struct screen_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 orig_x;
- __u8 orig_y;
- __u16 ext_mem_k;
- __u16 orig_video_page;
+  __u8 orig_x;
+  __u8 orig_y;
+  __u16 ext_mem_k;
+  __u16 orig_video_page;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 orig_video_mode;
- __u8 orig_video_cols;
- __u8 flags;
- __u8 unused2;
+  __u8 orig_video_mode;
+  __u8 orig_video_cols;
+  __u8 flags;
+  __u8 unused2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 orig_video_ega_bx;
- __u16 unused3;
- __u8 orig_video_lines;
- __u8 orig_video_isVGA;
+  __u16 orig_video_ega_bx;
+  __u16 unused3;
+  __u8 orig_video_lines;
+  __u8 orig_video_isVGA;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 orig_video_points;
- __u16 lfb_width;
- __u16 lfb_height;
- __u16 lfb_depth;
+  __u16 orig_video_points;
+  __u16 lfb_width;
+  __u16 lfb_height;
+  __u16 lfb_depth;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 lfb_base;
- __u32 lfb_size;
- __u16 cl_magic, cl_offset;
- __u16 lfb_linelength;
+  __u32 lfb_base;
+  __u32 lfb_size;
+  __u16 cl_magic, cl_offset;
+  __u16 lfb_linelength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 red_size;
- __u8 red_pos;
- __u8 green_size;
- __u8 green_pos;
+  __u8 red_size;
+  __u8 red_pos;
+  __u8 green_size;
+  __u8 green_pos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 blue_size;
- __u8 blue_pos;
- __u8 rsvd_size;
- __u8 rsvd_pos;
+  __u8 blue_size;
+  __u8 blue_pos;
+  __u8 rsvd_size;
+  __u8 rsvd_pos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 vesapm_seg;
- __u16 vesapm_off;
- __u16 pages;
- __u16 vesa_attributes;
+  __u16 vesapm_seg;
+  __u16 vesapm_off;
+  __u16 pages;
+  __u16 vesa_attributes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 capabilities;
- __u8 _reserved[6];
+  __u32 capabilities;
+  __u8 _reserved[6];
 } __attribute__((packed));
 #define VIDEO_TYPE_MDA 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

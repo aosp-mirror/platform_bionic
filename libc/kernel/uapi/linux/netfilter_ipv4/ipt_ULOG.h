@@ -29,27 +29,27 @@
 #define ULOG_PREFIX_LEN 32
 #define ULOG_MAX_QLEN 50
 struct ipt_ulog_info {
- unsigned int nl_group;
+  unsigned int nl_group;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- size_t copy_range;
- size_t qthreshold;
- char prefix[ULOG_PREFIX_LEN];
+  size_t copy_range;
+  size_t qthreshold;
+  char prefix[ULOG_PREFIX_LEN];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct ulog_packet_msg {
- unsigned long mark;
- long timestamp_sec;
- long timestamp_usec;
+  unsigned long mark;
+  long timestamp_sec;
+  long timestamp_usec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int hook;
- char indev_name[IFNAMSIZ];
- char outdev_name[IFNAMSIZ];
- size_t data_len;
+  unsigned int hook;
+  char indev_name[IFNAMSIZ];
+  char outdev_name[IFNAMSIZ];
+  size_t data_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char prefix[ULOG_PREFIX_LEN];
- unsigned char mac_len;
- unsigned char mac[ULOG_MAC_LEN];
- unsigned char payload[0];
+  char prefix[ULOG_PREFIX_LEN];
+  unsigned char mac_len;
+  unsigned char mac[ULOG_MAC_LEN];
+  unsigned char payload[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } ulog_packet_msg_t;
 #endif

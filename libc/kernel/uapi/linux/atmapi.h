@@ -24,6 +24,8 @@
 #else
 #define __ATM_API_ALIGN
 #endif
-typedef struct { unsigned char _[8]; } __ATM_API_ALIGN atm_kptr_t;
+typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned char _[8];
+} __ATM_API_ALIGN atm_kptr_t;
 #endif

@@ -22,7 +22,7 @@
 #define _I810_DEFINES_
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I810_DMA_BUF_ORDER 12
-#define I810_DMA_BUF_SZ (1<<I810_DMA_BUF_ORDER)
+#define I810_DMA_BUF_SZ (1 << I810_DMA_BUF_ORDER)
 #define I810_DMA_BUF_NR 256
 #define I810_NR_SAREA_CLIPRECTS 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -93,81 +93,81 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I810_DEPTH 0x4
 typedef enum _drm_i810_init_func {
- I810_INIT_DMA = 0x01,
- I810_CLEANUP_DMA = 0x02,
+  I810_INIT_DMA = 0x01,
+  I810_CLEANUP_DMA = 0x02,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- I810_INIT_DMA_1_4 = 0x03
+  I810_INIT_DMA_1_4 = 0x03
 } drm_i810_init_func_t;
 typedef struct _drm_i810_init {
- drm_i810_init_func_t func;
+  drm_i810_init_func_t func;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int mmio_offset;
- unsigned int buffers_offset;
- int sarea_priv_offset;
- unsigned int ring_start;
+  unsigned int mmio_offset;
+  unsigned int buffers_offset;
+  int sarea_priv_offset;
+  unsigned int ring_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int ring_end;
- unsigned int ring_size;
- unsigned int front_offset;
- unsigned int back_offset;
+  unsigned int ring_end;
+  unsigned int ring_size;
+  unsigned int front_offset;
+  unsigned int back_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int depth_offset;
- unsigned int overlay_offset;
- unsigned int overlay_physical;
- unsigned int w;
+  unsigned int depth_offset;
+  unsigned int overlay_offset;
+  unsigned int overlay_physical;
+  unsigned int w;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int h;
- unsigned int pitch;
- unsigned int pitch_bits;
+  unsigned int h;
+  unsigned int pitch;
+  unsigned int pitch_bits;
 } drm_i810_init_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _drm_i810_pre12_init {
- drm_i810_init_func_t func;
- unsigned int mmio_offset;
- unsigned int buffers_offset;
+  drm_i810_init_func_t func;
+  unsigned int mmio_offset;
+  unsigned int buffers_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int sarea_priv_offset;
- unsigned int ring_start;
- unsigned int ring_end;
- unsigned int ring_size;
+  int sarea_priv_offset;
+  unsigned int ring_start;
+  unsigned int ring_end;
+  unsigned int ring_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int front_offset;
- unsigned int back_offset;
- unsigned int depth_offset;
- unsigned int w;
+  unsigned int front_offset;
+  unsigned int back_offset;
+  unsigned int depth_offset;
+  unsigned int w;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int h;
- unsigned int pitch;
- unsigned int pitch_bits;
+  unsigned int h;
+  unsigned int pitch;
+  unsigned int pitch_bits;
 } drm_i810_pre12_init_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _drm_i810_tex_region {
- unsigned char next, prev;
- unsigned char in_use;
- int age;
+  unsigned char next, prev;
+  unsigned char in_use;
+  int age;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i810_tex_region_t;
 typedef struct _drm_i810_sarea {
- unsigned int ContextState[I810_CTX_SETUP_SIZE];
- unsigned int BufferState[I810_DEST_SETUP_SIZE];
+  unsigned int ContextState[I810_CTX_SETUP_SIZE];
+  unsigned int BufferState[I810_DEST_SETUP_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int TexState[2][I810_TEX_SETUP_SIZE];
- unsigned int dirty;
- unsigned int nbox;
- struct drm_clip_rect boxes[I810_NR_SAREA_CLIPRECTS];
+  unsigned int TexState[2][I810_TEX_SETUP_SIZE];
+  unsigned int dirty;
+  unsigned int nbox;
+  struct drm_clip_rect boxes[I810_NR_SAREA_CLIPRECTS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- drm_i810_tex_region_t texList[I810_NR_TEX_REGIONS + 1];
- int texAge;
- int last_enqueue;
- int last_dispatch;
+  drm_i810_tex_region_t texList[I810_NR_TEX_REGIONS + 1];
+  int texAge;
+  int last_enqueue;
+  int last_dispatch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int last_quiescent;
- int ctxOwner;
- int vertex_prim;
- int pf_enabled;
+  int last_quiescent;
+  int ctxOwner;
+  int vertex_prim;
+  int pf_enabled;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pf_active;
- int pf_current_page;
+  int pf_active;
+  int pf_current_page;
 } drm_i810_sarea_t;
 #define DRM_I810_INIT 0x00
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -188,74 +188,74 @@ typedef struct _drm_i810_sarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_I810_RSTATUS 0x0d
 #define DRM_I810_FLIP 0x0e
-#define DRM_IOCTL_I810_INIT DRM_IOW( DRM_COMMAND_BASE + DRM_I810_INIT, drm_i810_init_t)
-#define DRM_IOCTL_I810_VERTEX DRM_IOW( DRM_COMMAND_BASE + DRM_I810_VERTEX, drm_i810_vertex_t)
+#define DRM_IOCTL_I810_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_I810_INIT, drm_i810_init_t)
+#define DRM_IOCTL_I810_VERTEX DRM_IOW(DRM_COMMAND_BASE + DRM_I810_VERTEX, drm_i810_vertex_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I810_CLEAR DRM_IOW( DRM_COMMAND_BASE + DRM_I810_CLEAR, drm_i810_clear_t)
-#define DRM_IOCTL_I810_FLUSH DRM_IO( DRM_COMMAND_BASE + DRM_I810_FLUSH)
-#define DRM_IOCTL_I810_GETAGE DRM_IO( DRM_COMMAND_BASE + DRM_I810_GETAGE)
+#define DRM_IOCTL_I810_CLEAR DRM_IOW(DRM_COMMAND_BASE + DRM_I810_CLEAR, drm_i810_clear_t)
+#define DRM_IOCTL_I810_FLUSH DRM_IO(DRM_COMMAND_BASE + DRM_I810_FLUSH)
+#define DRM_IOCTL_I810_GETAGE DRM_IO(DRM_COMMAND_BASE + DRM_I810_GETAGE)
 #define DRM_IOCTL_I810_GETBUF DRM_IOWR(DRM_COMMAND_BASE + DRM_I810_GETBUF, drm_i810_dma_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I810_SWAP DRM_IO( DRM_COMMAND_BASE + DRM_I810_SWAP)
-#define DRM_IOCTL_I810_COPY DRM_IOW( DRM_COMMAND_BASE + DRM_I810_COPY, drm_i810_copy_t)
-#define DRM_IOCTL_I810_DOCOPY DRM_IO( DRM_COMMAND_BASE + DRM_I810_DOCOPY)
-#define DRM_IOCTL_I810_OV0INFO DRM_IOR( DRM_COMMAND_BASE + DRM_I810_OV0INFO, drm_i810_overlay_t)
+#define DRM_IOCTL_I810_SWAP DRM_IO(DRM_COMMAND_BASE + DRM_I810_SWAP)
+#define DRM_IOCTL_I810_COPY DRM_IOW(DRM_COMMAND_BASE + DRM_I810_COPY, drm_i810_copy_t)
+#define DRM_IOCTL_I810_DOCOPY DRM_IO(DRM_COMMAND_BASE + DRM_I810_DOCOPY)
+#define DRM_IOCTL_I810_OV0INFO DRM_IOR(DRM_COMMAND_BASE + DRM_I810_OV0INFO, drm_i810_overlay_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I810_FSTATUS DRM_IO ( DRM_COMMAND_BASE + DRM_I810_FSTATUS)
-#define DRM_IOCTL_I810_OV0FLIP DRM_IO ( DRM_COMMAND_BASE + DRM_I810_OV0FLIP)
-#define DRM_IOCTL_I810_MC DRM_IOW( DRM_COMMAND_BASE + DRM_I810_MC, drm_i810_mc_t)
-#define DRM_IOCTL_I810_RSTATUS DRM_IO ( DRM_COMMAND_BASE + DRM_I810_RSTATUS)
+#define DRM_IOCTL_I810_FSTATUS DRM_IO(DRM_COMMAND_BASE + DRM_I810_FSTATUS)
+#define DRM_IOCTL_I810_OV0FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I810_OV0FLIP)
+#define DRM_IOCTL_I810_MC DRM_IOW(DRM_COMMAND_BASE + DRM_I810_MC, drm_i810_mc_t)
+#define DRM_IOCTL_I810_RSTATUS DRM_IO(DRM_COMMAND_BASE + DRM_I810_RSTATUS)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I810_FLIP DRM_IO ( DRM_COMMAND_BASE + DRM_I810_FLIP)
+#define DRM_IOCTL_I810_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I810_FLIP)
 typedef struct _drm_i810_clear {
- int clear_color;
- int clear_depth;
+  int clear_color;
+  int clear_depth;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int flags;
+  int flags;
 } drm_i810_clear_t;
 typedef struct _drm_i810_vertex {
- int idx;
+  int idx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int used;
- int discard;
+  int used;
+  int discard;
 } drm_i810_vertex_t;
 typedef struct _drm_i810_copy_t {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int idx;
- int used;
- void *address;
+  int idx;
+  int used;
+  void * address;
 } drm_i810_copy_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PR_TRIANGLES (0x0<<18)
-#define PR_TRISTRIP_0 (0x1<<18)
-#define PR_TRISTRIP_1 (0x2<<18)
-#define PR_TRIFAN (0x3<<18)
+#define PR_TRIANGLES (0x0 << 18)
+#define PR_TRISTRIP_0 (0x1 << 18)
+#define PR_TRISTRIP_1 (0x2 << 18)
+#define PR_TRIFAN (0x3 << 18)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PR_POLYGON (0x4<<18)
-#define PR_LINES (0x5<<18)
-#define PR_LINESTRIP (0x6<<18)
-#define PR_RECTS (0x7<<18)
+#define PR_POLYGON (0x4 << 18)
+#define PR_LINES (0x5 << 18)
+#define PR_LINESTRIP (0x6 << 18)
+#define PR_RECTS (0x7 << 18)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PR_MASK (0x7<<18)
+#define PR_MASK (0x7 << 18)
 typedef struct drm_i810_dma {
- void *virtual;
- int request_idx;
+  void * virtual;
+  int request_idx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int request_size;
- int granted;
+  int request_size;
+  int granted;
 } drm_i810_dma_t;
 typedef struct _drm_i810_overlay_t {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int offset;
- unsigned int physical;
+  unsigned int offset;
+  unsigned int physical;
 } drm_i810_overlay_t;
 typedef struct _drm_i810_mc {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int idx;
- int used;
- int num_blocks;
- int *length;
+  int idx;
+  int used;
+  int num_blocks;
+  int * length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int last_render;
+  unsigned int last_render;
 } drm_i810_mc_t;
 #endif

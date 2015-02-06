@@ -22,14 +22,14 @@
 #define IP6T_RT_HOPS 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ip6t_rt {
- __u32 rt_type;
- __u32 segsleft[2];
- __u32 hdrlen;
+  __u32 rt_type;
+  __u32 segsleft[2];
+  __u32 hdrlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 flags;
- __u8 invflags;
- struct in6_addr addrs[IP6T_RT_HOPS];
- __u8 addrnr;
+  __u8 flags;
+  __u8 invflags;
+  struct in6_addr addrs[IP6T_RT_HOPS];
+  __u8 addrnr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IP6T_RT_TYP 0x01

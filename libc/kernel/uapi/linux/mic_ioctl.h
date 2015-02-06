@@ -21,12 +21,12 @@
 #include <linux/types.h>
 struct mic_copy_desc {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iovec *iov;
- __u32 iovcnt;
- __u8 vr_idx;
- __u8 update_used;
+  struct iovec * iov;
+  __u32 iovcnt;
+  __u8 vr_idx;
+  __u8 update_used;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 out_len;
+  __u32 out_len;
 };
 #define MIC_VIRTIO_ADD_DEVICE _IOWR('s', 1, struct mic_device_desc *)
 #define MIC_VIRTIO_COPY_DESC _IOWR('s', 2, struct mic_copy_desc *)

@@ -22,8 +22,8 @@
 struct nf_acct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_nfacct_match_info {
- char name[NFACCT_NAME_MAX];
- struct nf_acct *nfacct;
+  char name[NFACCT_NAME_MAX];
+  struct nf_acct * nfacct;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

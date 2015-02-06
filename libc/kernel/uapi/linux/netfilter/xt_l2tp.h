@@ -21,24 +21,24 @@
 #include <linux/types.h>
 enum xt_l2tp_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- XT_L2TP_TYPE_CONTROL,
- XT_L2TP_TYPE_DATA,
+  XT_L2TP_TYPE_CONTROL,
+  XT_L2TP_TYPE_DATA,
 };
 struct xt_l2tp_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tid;
- __u32 sid;
- __u8 version;
- __u8 type;
+  __u32 tid;
+  __u32 sid;
+  __u8 version;
+  __u8 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 flags;
+  __u8 flags;
 };
 enum {
- XT_L2TP_TID = (1 << 0),
+  XT_L2TP_TID = (1 << 0),
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- XT_L2TP_SID = (1 << 1),
- XT_L2TP_VERSION = (1 << 2),
- XT_L2TP_TYPE = (1 << 3),
+  XT_L2TP_SID = (1 << 1),
+  XT_L2TP_VERSION = (1 << 2),
+  XT_L2TP_TYPE = (1 << 3),
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -57,18 +57,18 @@
 #define IPT_STANDARD_TARGET XT_STANDARD_TARGET
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_ERROR_TARGET XT_ERROR_TARGET
-#define IPT_MATCH_ITERATE(e, fn, args...)   XT_MATCH_ITERATE(struct ipt_entry, e, fn, ## args)
-#define IPT_ENTRY_ITERATE(entries, size, fn, args...)   XT_ENTRY_ITERATE(struct ipt_entry, entries, size, fn, ## args)
+#define IPT_MATCH_ITERATE(e,fn,args...) XT_MATCH_ITERATE(struct ipt_entry, e, fn, ##args)
+#define IPT_ENTRY_ITERATE(entries,size,fn,args...) XT_ENTRY_ITERATE(struct ipt_entry, entries, size, fn, ##args)
 struct ipt_ip {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in_addr src, dst;
- struct in_addr smsk, dmsk;
- char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
- unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
+  struct in_addr src, dst;
+  struct in_addr smsk, dmsk;
+  char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
+  unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 proto;
- __u8 flags;
- __u8 invflags;
+  __u16 proto;
+  __u8 flags;
+  __u8 invflags;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_F_FRAG 0x01
@@ -86,14 +86,14 @@ struct ipt_ip {
 #define IPT_INV_MASK 0x7F
 struct ipt_entry {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ipt_ip ip;
- unsigned int nfcache;
- __u16 target_offset;
- __u16 next_offset;
+  struct ipt_ip ip;
+  unsigned int nfcache;
+  __u16 target_offset;
+  __u16 next_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int comefrom;
- struct xt_counters counters;
- unsigned char elems[0];
+  unsigned int comefrom;
+  struct xt_counters counters;
+  unsigned char elems[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_BASE_CTL 64
@@ -108,47 +108,44 @@ struct ipt_entry {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_SO_GET_MAX IPT_SO_GET_REVISION_TARGET
 struct ipt_icmp {
- __u8 type;
- __u8 code[2];
+  __u8 type;
+  __u8 code[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 invflags;
+  __u8 invflags;
 };
 #define IPT_ICMP_INV 0x01
 struct ipt_getinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int valid_hooks;
- unsigned int hook_entry[NF_INET_NUMHOOKS];
- unsigned int underflow[NF_INET_NUMHOOKS];
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
+  unsigned int hook_entry[NF_INET_NUMHOOKS];
+  unsigned int underflow[NF_INET_NUMHOOKS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int num_entries;
- unsigned int size;
+  unsigned int num_entries;
+  unsigned int size;
 };
 struct ipt_replace {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int valid_hooks;
- unsigned int num_entries;
- unsigned int size;
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
+  unsigned int num_entries;
+  unsigned int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int hook_entry[NF_INET_NUMHOOKS];
- unsigned int underflow[NF_INET_NUMHOOKS];
- unsigned int num_counters;
- struct xt_counters __user *counters;
+  unsigned int hook_entry[NF_INET_NUMHOOKS];
+  unsigned int underflow[NF_INET_NUMHOOKS];
+  unsigned int num_counters;
+  struct xt_counters __user * counters;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ipt_entry entries[0];
+  struct ipt_entry entries[0];
 };
 struct ipt_get_entries {
- char name[XT_TABLE_MAXNAMELEN];
+  char name[XT_TABLE_MAXNAMELEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int size;
- struct ipt_entry entrytable[0];
+  unsigned int size;
+  struct ipt_entry entrytable[0];
 };
-static __inline__ struct xt_entry_target *
+static __inline__ struct xt_entry_target * ipt_get_target(struct ipt_entry * e) {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-ipt_get_target(struct ipt_entry *e)
-{
- return (void *)e + e->target_offset;
+  return(void *) e + e->target_offset;
 }
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

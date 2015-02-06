@@ -27,76 +27,76 @@
 #define DM_UUID_LEN 129
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dm_ioctl {
- __u32 version[3];
- __u32 data_size;
- __u32 data_start;
+  __u32 version[3];
+  __u32 data_size;
+  __u32 data_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 target_count;
- __s32 open_count;
- __u32 flags;
- __u32 event_nr;
+  __u32 target_count;
+  __s32 open_count;
+  __u32 flags;
+  __u32 event_nr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 padding;
- __u64 dev;
- char name[DM_NAME_LEN];
- char uuid[DM_UUID_LEN];
+  __u32 padding;
+  __u64 dev;
+  char name[DM_NAME_LEN];
+  char uuid[DM_UUID_LEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char data[7];
+  char data[7];
 };
 struct dm_target_spec {
- __u64 sector_start;
+  __u64 sector_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 length;
- __s32 status;
- __u32 next;
- char target_type[DM_MAX_TYPE_NAME];
+  __u64 length;
+  __s32 status;
+  __u32 next;
+  char target_type[DM_MAX_TYPE_NAME];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dm_target_deps {
- __u32 count;
- __u32 padding;
+  __u32 count;
+  __u32 padding;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 dev[0];
+  __u64 dev[0];
 };
 struct dm_name_list {
- __u64 dev;
+  __u64 dev;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 next;
- char name[0];
+  __u32 next;
+  char name[0];
 };
 struct dm_target_versions {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 next;
- __u32 version[3];
- char name[0];
+  __u32 next;
+  __u32 version[3];
+  char name[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dm_target_msg {
- __u64 sector;
- char message[0];
+  __u64 sector;
+  char message[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
- DM_VERSION_CMD = 0,
- DM_REMOVE_ALL_CMD,
- DM_LIST_DEVICES_CMD,
+  DM_VERSION_CMD = 0,
+  DM_REMOVE_ALL_CMD,
+  DM_LIST_DEVICES_CMD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- DM_DEV_CREATE_CMD,
- DM_DEV_REMOVE_CMD,
- DM_DEV_RENAME_CMD,
- DM_DEV_SUSPEND_CMD,
+  DM_DEV_CREATE_CMD,
+  DM_DEV_REMOVE_CMD,
+  DM_DEV_RENAME_CMD,
+  DM_DEV_SUSPEND_CMD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- DM_DEV_STATUS_CMD,
- DM_DEV_WAIT_CMD,
- DM_TABLE_LOAD_CMD,
- DM_TABLE_CLEAR_CMD,
+  DM_DEV_STATUS_CMD,
+  DM_DEV_WAIT_CMD,
+  DM_TABLE_LOAD_CMD,
+  DM_TABLE_CLEAR_CMD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- DM_TABLE_DEPS_CMD,
- DM_TABLE_STATUS_CMD,
- DM_LIST_VERSIONS_CMD,
- DM_TARGET_MSG_CMD,
+  DM_TABLE_DEPS_CMD,
+  DM_TABLE_STATUS_CMD,
+  DM_LIST_VERSIONS_CMD,
+  DM_TARGET_MSG_CMD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- DM_DEV_SET_GEOMETRY_CMD
+  DM_DEV_SET_GEOMETRY_CMD
 };
 #define DM_IOCTL 0xfd
 #define DM_VERSION _IOWR(DM_IOCTL, DM_VERSION_CMD, struct dm_ioctl)
@@ -123,7 +123,7 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DM_VERSION_MINOR 28
 #define DM_VERSION_PATCHLEVEL 0
-#define DM_VERSION_EXTRA "-ioctl (2014-09-17)"
+#define DM_VERSION_EXTRA "-ioctl(2014-09-17)"
 #define DM_READONLY_FLAG (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DM_SUSPEND_FLAG (1 << 1)

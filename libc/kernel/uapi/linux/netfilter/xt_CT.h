@@ -21,30 +21,30 @@
 #include <linux/types.h>
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- XT_CT_NOTRACK = 1 << 0,
- XT_CT_NOTRACK_ALIAS = 1 << 1,
- XT_CT_MASK = XT_CT_NOTRACK | XT_CT_NOTRACK_ALIAS,
+  XT_CT_NOTRACK = 1 << 0,
+  XT_CT_NOTRACK_ALIAS = 1 << 1,
+  XT_CT_MASK = XT_CT_NOTRACK | XT_CT_NOTRACK_ALIAS,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_ct_target_info {
- __u16 flags;
- __u16 zone;
- __u32 ct_events;
+  __u16 flags;
+  __u16 zone;
+  __u32 ct_events;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 exp_events;
- char helper[16];
- struct nf_conn *ct __attribute__((aligned(8)));
+  __u32 exp_events;
+  char helper[16];
+  struct nf_conn * ct __attribute__((aligned(8)));
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_ct_target_info_v1 {
- __u16 flags;
- __u16 zone;
- __u32 ct_events;
+  __u16 flags;
+  __u16 zone;
+  __u32 ct_events;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 exp_events;
- char helper[16];
- char timeout[32];
- struct nf_conn *ct __attribute__((aligned(8)));
+  __u32 exp_events;
+  char helper[16];
+  char timeout[32];
+  struct nf_conn * ct __attribute__((aligned(8)));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

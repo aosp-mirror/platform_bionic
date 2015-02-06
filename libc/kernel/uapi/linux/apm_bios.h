@@ -23,17 +23,17 @@ typedef unsigned short apm_event_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef unsigned short apm_eventinfo_t;
 struct apm_bios_info {
- __u16 version;
- __u16 cseg;
+  __u16 version;
+  __u16 cseg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 offset;
- __u16 cseg_16;
- __u16 dseg;
- __u16 flags;
+  __u32 offset;
+  __u16 cseg_16;
+  __u16 dseg;
+  __u16 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 cseg_len;
- __u16 cseg_16_len;
- __u16 dseg_len;
+  __u16 cseg_len;
+  __u16 cseg_16_len;
+  __u16 dseg_len;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define APM_STATE_READY 0x0000

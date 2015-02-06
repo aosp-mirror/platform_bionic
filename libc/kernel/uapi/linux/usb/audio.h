@@ -123,33 +123,34 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_TERMINAL_VENDOR_SPEC 0x1FF
 struct uac1_ac_header_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubtype;
- __le16 bcdADC;
- __le16 wTotalLength;
- __u8 bInCollection;
+  __u8 bDescriptorSubtype;
+  __le16 bcdADC;
+  __le16 wTotalLength;
+  __u8 bInCollection;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 baInterfaceNr[];
-} __attribute__ ((packed));
+  __u8 baInterfaceNr[];
+} __attribute__((packed));
 #define UAC_DT_AC_HEADER_SIZE(n) (8 + (n))
-#define DECLARE_UAC_AC_HEADER_DESCRIPTOR(n)  struct uac1_ac_header_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __le16 bcdADC;   __le16 wTotalLength;   __u8 bInCollection;   __u8 baInterfaceNr[n];  } __attribute__ ((packed))
+#define DECLARE_UAC_AC_HEADER_DESCRIPTOR(n) struct uac1_ac_header_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __le16 bcdADC; __le16 wTotalLength; __u8 bInCollection; __u8 baInterfaceNr[n]; \
+} __attribute__((packed))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uac_input_terminal_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bTerminalID;
- __le16 wTerminalType;
- __u8 bAssocTerminal;
- __u8 bNrChannels;
+  __u8 bTerminalID;
+  __le16 wTerminalType;
+  __u8 bAssocTerminal;
+  __u8 bNrChannels;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wChannelConfig;
- __u8 iChannelNames;
- __u8 iTerminal;
-} __attribute__ ((packed));
+  __le16 wChannelConfig;
+  __u8 iChannelNames;
+  __u8 iTerminal;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_DT_INPUT_TERMINAL_SIZE 12
 #define UAC_INPUT_TERMINAL_UNDEFINED 0x200
@@ -163,17 +164,17 @@ struct uac_input_terminal_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_TERMINAL_CS_COPY_PROTECT_CONTROL 0x01
 struct uac1_output_terminal_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubtype;
- __u8 bTerminalID;
- __le16 wTerminalType;
- __u8 bAssocTerminal;
+  __u8 bDescriptorSubtype;
+  __u8 bTerminalID;
+  __le16 wTerminalType;
+  __u8 bAssocTerminal;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bSourceID;
- __u8 iTerminal;
-} __attribute__ ((packed));
+  __u8 bSourceID;
+  __u8 iTerminal;
+} __attribute__((packed));
 #define UAC_DT_OUTPUT_TERMINAL_SIZE 9
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_OUTPUT_TERMINAL_UNDEFINED 0x300
@@ -187,59 +188,60 @@ struct uac1_output_terminal_descriptor {
 #define UAC_OUTPUT_TERMINAL_LOW_FREQ_EFFECTS_SPEAKER 0x307
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_DT_FEATURE_UNIT_SIZE(ch) (7 + ((ch) + 1) * 2)
-#define DECLARE_UAC_FEATURE_UNIT_DESCRIPTOR(ch)  struct uac_feature_unit_descriptor_##ch {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bUnitID;   __u8 bSourceID;   __u8 bControlSize;   __le16 bmaControls[ch + 1];   __u8 iFeature;  } __attribute__ ((packed))
+#define DECLARE_UAC_FEATURE_UNIT_DESCRIPTOR(ch) struct uac_feature_unit_descriptor_ ##ch { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bUnitID; __u8 bSourceID; __u8 bControlSize; __le16 bmaControls[ch + 1]; __u8 iFeature; \
+} __attribute__((packed))
 struct uac_mixer_unit_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bUnitID;
- __u8 bNrInPins;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bUnitID;
+  __u8 bNrInPins;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 baSourceID[];
-} __attribute__ ((packed));
+  __u8 baSourceID[];
+} __attribute__((packed));
 struct uac_selector_unit_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bUintID;
- __u8 bNrInPins;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bUintID;
+  __u8 bNrInPins;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 baSourceID[];
-} __attribute__ ((packed));
+  __u8 baSourceID[];
+} __attribute__((packed));
 struct uac_feature_unit_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bUnitID;
- __u8 bSourceID;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bUnitID;
+  __u8 bSourceID;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bControlSize;
- __u8 bmaControls[0];
+  __u8 bControlSize;
+  __u8 bmaControls[0];
 } __attribute__((packed));
 struct uac_processing_unit_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bUnitID;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bUnitID;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wProcessType;
- __u8 bNrInPins;
- __u8 baSourceID[];
-} __attribute__ ((packed));
+  __u16 wProcessType;
+  __u8 bNrInPins;
+  __u8 baSourceID[];
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uac1_as_header_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bTerminalLink;
- __u8 bDelay;
- __le16 wFormatTag;
-} __attribute__ ((packed));
+  __u8 bTerminalLink;
+  __u8 bDelay;
+  __le16 wFormatTag;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_DT_AS_HEADER_SIZE 7
 #define UAC_FORMAT_TYPE_I_UNDEFINED 0x0
@@ -251,77 +253,78 @@ struct uac1_as_header_descriptor {
 #define UAC_FORMAT_TYPE_I_MULAW 0x5
 struct uac_format_type_i_continuous_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bFormatType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bFormatType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bNrChannels;
- __u8 bSubframeSize;
- __u8 bBitResolution;
- __u8 bSamFreqType;
+  __u8 bNrChannels;
+  __u8 bSubframeSize;
+  __u8 bBitResolution;
+  __u8 bSamFreqType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 tLowerSamFreq[3];
- __u8 tUpperSamFreq[3];
-} __attribute__ ((packed));
+  __u8 tLowerSamFreq[3];
+  __u8 tUpperSamFreq[3];
+} __attribute__((packed));
 #define UAC_FORMAT_TYPE_I_CONTINUOUS_DESC_SIZE 14
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uac_format_type_i_discrete_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bFormatType;
- __u8 bNrChannels;
- __u8 bSubframeSize;
- __u8 bBitResolution;
+  __u8 bFormatType;
+  __u8 bNrChannels;
+  __u8 bSubframeSize;
+  __u8 bBitResolution;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bSamFreqType;
- __u8 tSamFreq[][3];
-} __attribute__ ((packed));
-#define DECLARE_UAC_FORMAT_TYPE_I_DISCRETE_DESC(n)  struct uac_format_type_i_discrete_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bFormatType;   __u8 bNrChannels;   __u8 bSubframeSize;   __u8 bBitResolution;   __u8 bSamFreqType;   __u8 tSamFreq[n][3];  } __attribute__ ((packed))
+  __u8 bSamFreqType;
+  __u8 tSamFreq[][3];
+} __attribute__((packed));
+#define DECLARE_UAC_FORMAT_TYPE_I_DISCRETE_DESC(n) struct uac_format_type_i_discrete_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bFormatType; __u8 bNrChannels; __u8 bSubframeSize; __u8 bBitResolution; __u8 bSamFreqType; __u8 tSamFreq[n][3]; \
+} __attribute__((packed))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_FORMAT_TYPE_I_DISCRETE_DESC_SIZE(n) (8 + (n * 3))
 struct uac_format_type_i_ext_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorSubtype;
- __u8 bFormatType;
- __u8 bSubslotSize;
- __u8 bBitResolution;
+  __u8 bDescriptorSubtype;
+  __u8 bFormatType;
+  __u8 bSubslotSize;
+  __u8 bBitResolution;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bHeaderLength;
- __u8 bControlSize;
- __u8 bSideBandProtocol;
+  __u8 bHeaderLength;
+  __u8 bControlSize;
+  __u8 bSideBandProtocol;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC_FORMAT_TYPE_II_MPEG 0x1001
 #define UAC_FORMAT_TYPE_II_AC3 0x1002
 struct uac_format_type_ii_discrete_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bFormatType;
- __le16 wMaxBitRate;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bFormatType;
+  __le16 wMaxBitRate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wSamplesPerFrame;
- __u8 bSamFreqType;
- __u8 tSamFreq[][3];
+  __le16 wSamplesPerFrame;
+  __u8 bSamFreqType;
+  __u8 tSamFreq[][3];
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uac_format_type_ii_ext_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bFormatType;
- __u16 wMaxBitRate;
- __u16 wSamplesPerFrame;
- __u8 bHeaderLength;
+  __u8 bFormatType;
+  __u16 wMaxBitRate;
+  __u16 wSamplesPerFrame;
+  __u8 bHeaderLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bSideBandProtocol;
+  __u8 bSideBandProtocol;
 } __attribute__((packed));
 #define UAC_FORMAT_TYPE_III_IEC1937_AC3 0x2001
 #define UAC_FORMAT_TYPE_III_IEC1937_MPEG1_LAYER1 0x2002
@@ -341,13 +344,13 @@ struct uac_format_type_ii_ext_descriptor {
 #define UAC_EXT_FORMAT_TYPE_III 0x83
 struct uac_iso_endpoint_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bmAttributes;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bmAttributes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLockDelayUnits;
- __le16 wLockDelay;
+  __u8 bLockDelayUnits;
+  __le16 wLockDelay;
 } __attribute__((packed));
 #define UAC_ISO_ENDPOINT_DESC_SIZE 7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -363,8 +366,8 @@ struct uac_iso_endpoint_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UAC1_STATUS_TYPE_MEM_CHANGED (1 << 6)
 struct uac1_status_word {
- __u8 bStatusType;
- __u8 bOriginator;
+  __u8 bStatusType;
+  __u8 bOriginator;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 #endif

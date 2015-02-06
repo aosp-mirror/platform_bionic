@@ -76,57 +76,57 @@
 #define SDF_UICPROXY 4
 struct dn_naddr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 a_len;
- __u8 a_addr[DN_MAXADDL];
+  __le16 a_len;
+  __u8 a_addr[DN_MAXADDL];
 };
 struct sockaddr_dn {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 sdn_family;
- __u8 sdn_flags;
- __u8 sdn_objnum;
- __le16 sdn_objnamel;
+  __u16 sdn_family;
+  __u8 sdn_flags;
+  __u8 sdn_objnum;
+  __le16 sdn_objnamel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sdn_objname[DN_MAXOBJL];
- struct dn_naddr sdn_add;
+  __u8 sdn_objname[DN_MAXOBJL];
+  struct dn_naddr sdn_add;
 };
 #define sdn_nodeaddrl sdn_add.a_len
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define sdn_nodeaddr sdn_add.a_addr
 struct optdata_dn {
- __le16 opt_status;
+  __le16 opt_status;
 #define opt_sts opt_status
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 opt_optl;
- __u8 opt_data[16];
+  __le16 opt_optl;
+  __u8 opt_data[16];
 };
 struct accessdata_dn {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 acc_accl;
- __u8 acc_acc[DN_MAXACCL];
- __u8 acc_passl;
- __u8 acc_pass[DN_MAXACCL];
+  __u8 acc_accl;
+  __u8 acc_acc[DN_MAXACCL];
+  __u8 acc_passl;
+  __u8 acc_pass[DN_MAXACCL];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 acc_userl;
- __u8 acc_user[DN_MAXACCL];
+  __u8 acc_userl;
+  __u8 acc_user[DN_MAXACCL];
 };
 struct linkinfo_dn {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 idn_segsize;
- __u8 idn_linkstate;
+  __u16 idn_segsize;
+  __u8 idn_linkstate;
 };
 union etheraddress {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dne_addr[ETH_ALEN];
- struct {
- __u8 dne_hiord[4];
- __u8 dne_nodeaddr[2];
+  __u8 dne_addr[ETH_ALEN];
+  struct {
+    __u8 dne_hiord[4];
+    __u8 dne_nodeaddr[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } dne_remote;
+  } dne_remote;
 };
 struct dn_addr {
- __le16 dna_family;
+  __le16 dna_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union etheraddress dna_netaddr;
+  union etheraddress dna_netaddr;
 };
 #define DECNET_IOCTL_BASE 0x89
 #define SIOCSNETADDR _IOW(DECNET_IOCTL_BASE, 0xe0, struct dn_naddr)

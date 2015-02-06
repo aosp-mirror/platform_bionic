@@ -21,8 +21,8 @@
 #include <linux/types.h>
 struct ebt_pkttype_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 pkt_type;
- __u8 invert;
+  __u8 pkt_type;
+  __u8 invert;
 };
 #define EBT_PKTTYPE_MATCH "pkttype"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

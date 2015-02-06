@@ -21,16 +21,16 @@
 #include <linux/types.h>
 enum xt_quota_flags {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- XT_QUOTA_INVERT = 0x1,
+  XT_QUOTA_INVERT = 0x1,
 };
 #define XT_QUOTA_MASK 0x1
 struct xt_quota_priv;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_quota_info {
- __u32 flags;
- __u32 pad;
- __aligned_u64 quota;
+  __u32 flags;
+  __u32 pad;
+  __aligned_u64 quota;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct xt_quota_priv *master;
+  struct xt_quota_priv * master;
 };
 #endif

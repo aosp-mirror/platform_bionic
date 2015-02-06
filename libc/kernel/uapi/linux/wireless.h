@@ -93,8 +93,8 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIOCIWLAST SIOCIWLASTPRIV
 #define IW_IOCTL_IDX(cmd) ((cmd) - SIOCIWFIRST)
-#define IW_HANDLER(id, func)   [IW_IOCTL_IDX(id)] = func
-#define IW_IS_SET(cmd) (!((cmd) & 0x1))
+#define IW_HANDLER(id,func) [IW_IOCTL_IDX(id)] = func
+#define IW_IS_SET(cmd) (! ((cmd) & 0x1))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IW_IS_GET(cmd) ((cmd) & 0x1)
 #define IWEVTXDROP 0x8C00
@@ -307,253 +307,228 @@
 #define IW_ENC_CAPA_CIPHER_CCMP 0x00000008
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IW_ENC_CAPA_4WAY_HANDSHAKE 0x00000010
-#define IW_EVENT_CAPA_BASE(cmd) ((cmd >= SIOCIWFIRSTPRIV) ?   (cmd - SIOCIWFIRSTPRIV + 0x60) :   (cmd - SIOCIWFIRST))
+#define IW_EVENT_CAPA_BASE(cmd) ((cmd >= SIOCIWFIRSTPRIV) ? (cmd - SIOCIWFIRSTPRIV + 0x60) : (cmd - SIOCIWFIRST))
 #define IW_EVENT_CAPA_INDEX(cmd) (IW_EVENT_CAPA_BASE(cmd) >> 5)
 #define IW_EVENT_CAPA_MASK(cmd) (1 << (IW_EVENT_CAPA_BASE(cmd) & 0x1F))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IW_EVENT_CAPA_K_0 (IW_EVENT_CAPA_MASK(0x8B04) |   IW_EVENT_CAPA_MASK(0x8B06) |   IW_EVENT_CAPA_MASK(0x8B1A))
+#define IW_EVENT_CAPA_K_0 (IW_EVENT_CAPA_MASK(0x8B04) | IW_EVENT_CAPA_MASK(0x8B06) | IW_EVENT_CAPA_MASK(0x8B1A))
 #define IW_EVENT_CAPA_K_1 (IW_EVENT_CAPA_MASK(0x8B2A))
-#define IW_EVENT_CAPA_SET(event_capa, cmd) (event_capa[IW_EVENT_CAPA_INDEX(cmd)] |= IW_EVENT_CAPA_MASK(cmd))
-#define IW_EVENT_CAPA_SET_KERNEL(event_capa) {event_capa[0] |= IW_EVENT_CAPA_K_0; event_capa[1] |= IW_EVENT_CAPA_K_1; }
+#define IW_EVENT_CAPA_SET(event_capa,cmd) (event_capa[IW_EVENT_CAPA_INDEX(cmd)] |= IW_EVENT_CAPA_MASK(cmd))
+#define IW_EVENT_CAPA_SET_KERNEL(event_capa) { event_capa[0] |= IW_EVENT_CAPA_K_0; event_capa[1] |= IW_EVENT_CAPA_K_1; }
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct iw_param
-{
- __s32 value;
- __u8 fixed;
+struct iw_param {
+  __s32 value;
+  __u8 fixed;
+  __u8 disabled;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 disabled;
- __u16 flags;
+  __u16 flags;
 };
-struct iw_point
+struct iw_point {
+  void __user * pointer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- void __user *pointer;
- __u16 length;
- __u16 flags;
+  __u16 length;
+  __u16 flags;
+};
+struct iw_freq {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 m;
+  __s16 e;
+  __u8 i;
+  __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-struct iw_freq
-{
- __s32 m;
+struct iw_quality {
+  __u8 qual;
+  __u8 level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s16 e;
- __u8 i;
- __u8 flags;
+  __u8 noise;
+  __u8 updated;
 };
+struct iw_discarded {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct iw_quality
-{
- __u8 qual;
- __u8 level;
+  __u32 nwid;
+  __u32 code;
+  __u32 fragment;
+  __u32 retries;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 noise;
- __u8 updated;
+  __u32 misc;
 };
-struct iw_discarded
+struct iw_missed {
+  __u32 beacon;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- __u32 nwid;
- __u32 code;
- __u32 fragment;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 retries;
- __u32 misc;
 };
-struct iw_missed
+struct iw_thrspy {
+  struct sockaddr addr;
+  struct iw_quality qual;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- __u32 beacon;
+  struct iw_quality low;
+  struct iw_quality high;
 };
-struct iw_thrspy
+struct iw_scan_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- struct sockaddr addr;
- struct iw_quality qual;
- struct iw_quality low;
+  __u8 scan_type;
+  __u8 essid_len;
+  __u8 num_channels;
+  __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_quality high;
+  struct sockaddr bssid;
+  __u8 essid[IW_ESSID_MAX_SIZE];
+  __u32 min_channel_time;
+  __u32 max_channel_time;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct iw_freq channel_list[IW_MAX_FREQUENCIES];
 };
-struct iw_scan_req
-{
+struct iw_encode_ext {
+  __u32 ext_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 scan_type;
- __u8 essid_len;
- __u8 num_channels;
- __u8 flags;
+  __u8 tx_seq[IW_ENCODE_SEQ_MAX_SIZE];
+  __u8 rx_seq[IW_ENCODE_SEQ_MAX_SIZE];
+  struct sockaddr addr;
+  __u16 alg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr bssid;
- __u8 essid[IW_ESSID_MAX_SIZE];
- __u32 min_channel_time;
- __u32 max_channel_time;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_freq channel_list[IW_MAX_FREQUENCIES];
+  __u16 key_len;
+  __u8 key[0];
 };
-struct iw_encode_ext
-{
+struct iw_mlme {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ext_flags;
- __u8 tx_seq[IW_ENCODE_SEQ_MAX_SIZE];
- __u8 rx_seq[IW_ENCODE_SEQ_MAX_SIZE];
- struct sockaddr addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 alg;
- __u16 key_len;
- __u8 key[0];
+  __u16 cmd;
+  __u16 reason_code;
+  struct sockaddr addr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct iw_mlme
-{
- __u16 cmd;
- __u16 reason_code;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr addr;
-};
 #define IW_PMKSA_ADD 1
 #define IW_PMKSA_REMOVE 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IW_PMKSA_FLUSH 3
 #define IW_PMKID_LEN 16
-struct iw_pmksa
-{
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd;
- struct sockaddr bssid;
- __u8 pmkid[IW_PMKID_LEN];
+struct iw_pmksa {
+  __u32 cmd;
+  struct sockaddr bssid;
+  __u8 pmkid[IW_PMKID_LEN];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct iw_michaelmicfailure {
+  __u32 flags;
+  struct sockaddr src_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct iw_michaelmicfailure
-{
- __u32 flags;
- struct sockaddr src_addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 tsc[IW_ENCODE_SEQ_MAX_SIZE];
+  __u8 tsc[IW_ENCODE_SEQ_MAX_SIZE];
 };
 #define IW_PMKID_CAND_PREAUTH 0x00000001
-struct iw_pmkid_cand
+struct iw_pmkid_cand {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- __u32 flags;
- __u32 index;
- struct sockaddr bssid;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-struct iw_statistics
-{
- __u16 status;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_quality qual;
- struct iw_discarded discard;
- struct iw_missed miss;
+  __u32 flags;
+  __u32 index;
+  struct sockaddr bssid;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-union iwreq_data
-{
- char name[IFNAMSIZ];
- struct iw_point essid;
+struct iw_statistics {
+  __u16 status;
+  struct iw_quality qual;
+  struct iw_discarded discard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_param nwid;
- struct iw_freq freq;
- struct iw_param sens;
- struct iw_param bitrate;
+  struct iw_missed miss;
+};
+union iwreq_data {
+  char name[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_param txpower;
- struct iw_param rts;
- struct iw_param frag;
- __u32 mode;
+  struct iw_point essid;
+  struct iw_param nwid;
+  struct iw_freq freq;
+  struct iw_param sens;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_param retry;
- struct iw_point encoding;
- struct iw_param power;
- struct iw_quality qual;
+  struct iw_param bitrate;
+  struct iw_param txpower;
+  struct iw_param rts;
+  struct iw_param frag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr ap_addr;
- struct sockaddr addr;
- struct iw_param param;
- struct iw_point data;
+  __u32 mode;
+  struct iw_param retry;
+  struct iw_point encoding;
+  struct iw_param power;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct iw_quality qual;
+  struct sockaddr ap_addr;
+  struct sockaddr addr;
+  struct iw_param param;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct iw_point data;
+};
+struct iwreq {
+  union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    char ifrn_name[IFNAMSIZ];
+  } ifr_ifrn;
+  union iwreq_data u;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct iw_range {
+  __u32 throughput;
+  __u32 min_nwid;
+  __u32 max_nwid;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 old_num_channels;
+  __u8 old_num_frequency;
+  __u8 scan_capa;
+  __u32 event_capa[6];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 sensitivity;
+  struct iw_quality max_qual;
+  struct iw_quality avg_qual;
+  __u8 num_bitrates;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 bitrate[IW_MAX_BITRATES];
+  __s32 min_rts;
+  __s32 max_rts;
+  __s32 min_frag;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 max_frag;
+  __s32 min_pmp;
+  __s32 max_pmp;
+  __s32 min_pmt;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 max_pmt;
+  __u16 pmp_flags;
+  __u16 pmt_flags;
+  __u16 pm_capa;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 encoding_size[IW_MAX_ENCODING_SIZES];
+  __u8 num_encoding_sizes;
+  __u8 max_encoding_tokens;
+  __u8 encoding_login_index;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 txpower_capa;
+  __u8 num_txpower;
+  __s32 txpower[IW_MAX_TXPOWER];
+  __u8 we_version_compiled;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 we_version_source;
+  __u16 retry_capa;
+  __u16 retry_flags;
+  __u16 r_time_flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 min_retry;
+  __s32 max_retry;
+  __s32 min_r_time;
+  __s32 max_r_time;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 num_channels;
+  __u8 num_frequency;
+  struct iw_freq freq[IW_MAX_FREQUENCIES];
+  __u32 enc_capa;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-struct iwreq
-{
- union
+struct iw_priv_args {
+  __u32 cmd;
+  __u16 set_args;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- {
- char ifrn_name[IFNAMSIZ];
- } ifr_ifrn;
- union iwreq_data u;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 get_args;
+  char name[IFNAMSIZ];
 };
-struct iw_range
-{
- __u32 throughput;
+struct iw_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 min_nwid;
- __u32 max_nwid;
- __u16 old_num_channels;
- __u8 old_num_frequency;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 scan_capa;
- __u32 event_capa[6];
- __s32 sensitivity;
- struct iw_quality max_qual;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_quality avg_qual;
- __u8 num_bitrates;
- __s32 bitrate[IW_MAX_BITRATES];
- __s32 min_rts;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 max_rts;
- __s32 min_frag;
- __s32 max_frag;
- __s32 min_pmp;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 max_pmp;
- __s32 min_pmt;
- __s32 max_pmt;
- __u16 pmp_flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 pmt_flags;
- __u16 pm_capa;
- __u16 encoding_size[IW_MAX_ENCODING_SIZES];
- __u8 num_encoding_sizes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 max_encoding_tokens;
- __u8 encoding_login_index;
- __u16 txpower_capa;
- __u8 num_txpower;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 txpower[IW_MAX_TXPOWER];
- __u8 we_version_compiled;
- __u8 we_version_source;
- __u16 retry_capa;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 retry_flags;
- __u16 r_time_flags;
- __s32 min_retry;
- __s32 max_retry;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 min_r_time;
- __s32 max_r_time;
- __u16 num_channels;
- __u8 num_frequency;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct iw_freq freq[IW_MAX_FREQUENCIES];
- __u32 enc_capa;
-};
-struct iw_priv_args
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-{
- __u32 cmd;
- __u16 set_args;
- __u16 get_args;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[IFNAMSIZ];
-};
-struct iw_event
-{
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 len;
- __u16 cmd;
- union iwreq_data u;
+  __u16 len;
+  __u16 cmd;
+  union iwreq_data u;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IW_EV_LCP_LEN (sizeof(struct iw_event) - sizeof(union iwreq_data))
@@ -564,9 +539,9 @@ struct iw_event
 #define IW_EV_PARAM_LEN (IW_EV_LCP_LEN + sizeof(struct iw_param))
 #define IW_EV_ADDR_LEN (IW_EV_LCP_LEN + sizeof(struct sockaddr))
 #define IW_EV_QUAL_LEN (IW_EV_LCP_LEN + sizeof(struct iw_quality))
-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) -   (char *) NULL)
+#define IW_EV_POINT_OFF (((char *) & (((struct iw_point *) NULL)->length)) - (char *) NULL)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IW_EV_POINT_LEN (IW_EV_LCP_LEN + sizeof(struct iw_point) -   IW_EV_POINT_OFF)
+#define IW_EV_POINT_LEN (IW_EV_LCP_LEN + sizeof(struct iw_point) - IW_EV_POINT_OFF)
 #define IW_EV_LCP_PK_LEN (4)
 #define IW_EV_CHAR_PK_LEN (IW_EV_LCP_PK_LEN + IFNAMSIZ)
 #define IW_EV_UINT_PK_LEN (IW_EV_LCP_PK_LEN + sizeof(__u32))

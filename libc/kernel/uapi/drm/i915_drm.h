@@ -27,96 +27,96 @@
 #define I915_LOG_MIN_TEX_REGION_SIZE 14
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _drm_i915_init {
- enum {
- I915_INIT_DMA = 0x01,
- I915_CLEANUP_DMA = 0x02,
+  enum {
+    I915_INIT_DMA = 0x01,
+    I915_CLEANUP_DMA = 0x02,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- I915_RESUME_DMA = 0x03
- } func;
- unsigned int mmio_offset;
- int sarea_priv_offset;
+    I915_RESUME_DMA = 0x03
+  } func;
+  unsigned int mmio_offset;
+  int sarea_priv_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int ring_start;
- unsigned int ring_end;
- unsigned int ring_size;
- unsigned int front_offset;
+  unsigned int ring_start;
+  unsigned int ring_end;
+  unsigned int ring_size;
+  unsigned int front_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int back_offset;
- unsigned int depth_offset;
- unsigned int w;
- unsigned int h;
+  unsigned int back_offset;
+  unsigned int depth_offset;
+  unsigned int w;
+  unsigned int h;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int pitch;
- unsigned int pitch_bits;
- unsigned int back_pitch;
- unsigned int depth_pitch;
+  unsigned int pitch;
+  unsigned int pitch_bits;
+  unsigned int back_pitch;
+  unsigned int depth_pitch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int cpp;
- unsigned int chipset;
+  unsigned int cpp;
+  unsigned int chipset;
 } drm_i915_init_t;
 typedef struct _drm_i915_sarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct drm_tex_region texList[I915_NR_TEX_REGIONS + 1];
- int last_upload;
- int last_enqueue;
- int last_dispatch;
+  struct drm_tex_region texList[I915_NR_TEX_REGIONS + 1];
+  int last_upload;
+  int last_enqueue;
+  int last_dispatch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int ctxOwner;
- int texAge;
- int pf_enabled;
- int pf_active;
+  int ctxOwner;
+  int texAge;
+  int pf_enabled;
+  int pf_active;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pf_current_page;
- int perf_boxes;
- int width, height;
- drm_handle_t front_handle;
+  int pf_current_page;
+  int perf_boxes;
+  int width, height;
+  drm_handle_t front_handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int front_offset;
- int front_size;
- drm_handle_t back_handle;
- int back_offset;
+  int front_offset;
+  int front_size;
+  drm_handle_t back_handle;
+  int back_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int back_size;
- drm_handle_t depth_handle;
- int depth_offset;
- int depth_size;
+  int back_size;
+  drm_handle_t depth_handle;
+  int depth_offset;
+  int depth_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- drm_handle_t tex_handle;
- int tex_offset;
- int tex_size;
- int log_tex_granularity;
+  drm_handle_t tex_handle;
+  int tex_offset;
+  int tex_size;
+  int log_tex_granularity;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pitch;
- int rotation;
- int rotated_offset;
- int rotated_size;
+  int pitch;
+  int rotation;
+  int rotated_offset;
+  int rotated_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int rotated_pitch;
- int virtualX, virtualY;
- unsigned int front_tiled;
- unsigned int back_tiled;
+  int rotated_pitch;
+  int virtualX, virtualY;
+  unsigned int front_tiled;
+  unsigned int back_tiled;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int depth_tiled;
- unsigned int rotated_tiled;
- unsigned int rotated2_tiled;
- int pipeA_x;
+  unsigned int depth_tiled;
+  unsigned int rotated_tiled;
+  unsigned int rotated2_tiled;
+  int pipeA_x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pipeA_y;
- int pipeA_w;
- int pipeA_h;
- int pipeB_x;
+  int pipeA_y;
+  int pipeA_w;
+  int pipeA_h;
+  int pipeB_x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int pipeB_y;
- int pipeB_w;
- int pipeB_h;
- drm_handle_t unused_handle;
+  int pipeB_y;
+  int pipeB_w;
+  int pipeB_h;
+  drm_handle_t unused_handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 unused1, unused2, unused3;
- __u32 front_bo_handle;
- __u32 back_bo_handle;
- __u32 unused_bo_handle;
+  __u32 unused1, unused2, unused3;
+  __u32 front_bo_handle;
+  __u32 back_bo_handle;
+  __u32 unused_bo_handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 depth_bo_handle;
+  __u32 depth_bo_handle;
 } drm_i915_sarea_t;
 #define planeA_x pipeA_x
 #define planeA_y pipeA_y
@@ -197,24 +197,24 @@ typedef struct _drm_i915_sarea {
 #define DRM_I915_GET_RESET_STATS 0x32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_I915_GEM_USERPTR 0x33
-#define DRM_IOCTL_I915_INIT DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
-#define DRM_IOCTL_I915_FLUSH DRM_IO ( DRM_COMMAND_BASE + DRM_I915_FLUSH)
-#define DRM_IOCTL_I915_FLIP DRM_IO ( DRM_COMMAND_BASE + DRM_I915_FLIP)
+#define DRM_IOCTL_I915_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
+#define DRM_IOCTL_I915_FLUSH DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLUSH)
+#define DRM_IOCTL_I915_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLIP)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I915_BATCHBUFFER DRM_IOW( DRM_COMMAND_BASE + DRM_I915_BATCHBUFFER, drm_i915_batchbuffer_t)
+#define DRM_IOCTL_I915_BATCHBUFFER DRM_IOW(DRM_COMMAND_BASE + DRM_I915_BATCHBUFFER, drm_i915_batchbuffer_t)
 #define DRM_IOCTL_I915_IRQ_EMIT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_IRQ_EMIT, drm_i915_irq_emit_t)
-#define DRM_IOCTL_I915_IRQ_WAIT DRM_IOW( DRM_COMMAND_BASE + DRM_I915_IRQ_WAIT, drm_i915_irq_wait_t)
+#define DRM_IOCTL_I915_IRQ_WAIT DRM_IOW(DRM_COMMAND_BASE + DRM_I915_IRQ_WAIT, drm_i915_irq_wait_t)
 #define DRM_IOCTL_I915_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GETPARAM, drm_i915_getparam_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I915_SETPARAM DRM_IOW( DRM_COMMAND_BASE + DRM_I915_SETPARAM, drm_i915_setparam_t)
+#define DRM_IOCTL_I915_SETPARAM DRM_IOW(DRM_COMMAND_BASE + DRM_I915_SETPARAM, drm_i915_setparam_t)
 #define DRM_IOCTL_I915_ALLOC DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_ALLOC, drm_i915_mem_alloc_t)
-#define DRM_IOCTL_I915_FREE DRM_IOW( DRM_COMMAND_BASE + DRM_I915_FREE, drm_i915_mem_free_t)
-#define DRM_IOCTL_I915_INIT_HEAP DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT_HEAP, drm_i915_mem_init_heap_t)
+#define DRM_IOCTL_I915_FREE DRM_IOW(DRM_COMMAND_BASE + DRM_I915_FREE, drm_i915_mem_free_t)
+#define DRM_IOCTL_I915_INIT_HEAP DRM_IOW(DRM_COMMAND_BASE + DRM_I915_INIT_HEAP, drm_i915_mem_init_heap_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I915_CMDBUFFER DRM_IOW( DRM_COMMAND_BASE + DRM_I915_CMDBUFFER, drm_i915_cmdbuffer_t)
-#define DRM_IOCTL_I915_DESTROY_HEAP DRM_IOW( DRM_COMMAND_BASE + DRM_I915_DESTROY_HEAP, drm_i915_mem_destroy_heap_t)
-#define DRM_IOCTL_I915_SET_VBLANK_PIPE DRM_IOW( DRM_COMMAND_BASE + DRM_I915_SET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
-#define DRM_IOCTL_I915_GET_VBLANK_PIPE DRM_IOR( DRM_COMMAND_BASE + DRM_I915_GET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
+#define DRM_IOCTL_I915_CMDBUFFER DRM_IOW(DRM_COMMAND_BASE + DRM_I915_CMDBUFFER, drm_i915_cmdbuffer_t)
+#define DRM_IOCTL_I915_DESTROY_HEAP DRM_IOW(DRM_COMMAND_BASE + DRM_I915_DESTROY_HEAP, drm_i915_mem_destroy_heap_t)
+#define DRM_IOCTL_I915_SET_VBLANK_PIPE DRM_IOW(DRM_COMMAND_BASE + DRM_I915_SET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
+#define DRM_IOCTL_I915_GET_VBLANK_PIPE DRM_IOR(DRM_COMMAND_BASE + DRM_I915_GET_VBLANK_PIPE, drm_i915_vblank_pipe_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_VBLANK_SWAP DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_VBLANK_SWAP, drm_i915_vblank_swap_t)
 #define DRM_IOCTL_I915_HWS_ADDR DRM_IOW(DRM_COMMAND_BASE + DRM_I915_HWS_ADDR, struct drm_i915_gem_init)
@@ -228,22 +228,22 @@ typedef struct _drm_i915_sarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_GEM_SET_CACHING DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SET_CACHING, struct drm_i915_gem_caching)
 #define DRM_IOCTL_I915_GEM_GET_CACHING DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_GET_CACHING, struct drm_i915_gem_caching)
-#define DRM_IOCTL_I915_GEM_THROTTLE DRM_IO ( DRM_COMMAND_BASE + DRM_I915_GEM_THROTTLE)
+#define DRM_IOCTL_I915_GEM_THROTTLE DRM_IO(DRM_COMMAND_BASE + DRM_I915_GEM_THROTTLE)
 #define DRM_IOCTL_I915_GEM_ENTERVT DRM_IO(DRM_COMMAND_BASE + DRM_I915_GEM_ENTERVT)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_GEM_LEAVEVT DRM_IO(DRM_COMMAND_BASE + DRM_I915_GEM_LEAVEVT)
 #define DRM_IOCTL_I915_GEM_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CREATE, struct drm_i915_gem_create)
-#define DRM_IOCTL_I915_GEM_PREAD DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_PREAD, struct drm_i915_gem_pread)
-#define DRM_IOCTL_I915_GEM_PWRITE DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
+#define DRM_IOCTL_I915_GEM_PREAD DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_PREAD, struct drm_i915_gem_pread)
+#define DRM_IOCTL_I915_GEM_PWRITE DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_GEM_MMAP DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP, struct drm_i915_gem_mmap)
 #define DRM_IOCTL_I915_GEM_MMAP_GTT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_gtt)
-#define DRM_IOCTL_I915_GEM_SET_DOMAIN DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
-#define DRM_IOCTL_I915_GEM_SW_FINISH DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
+#define DRM_IOCTL_I915_GEM_SET_DOMAIN DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
+#define DRM_IOCTL_I915_GEM_SW_FINISH DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I915_GEM_SET_TILING DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
-#define DRM_IOCTL_I915_GEM_GET_TILING DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_GET_TILING, struct drm_i915_gem_get_tiling)
-#define DRM_IOCTL_I915_GEM_GET_APERTURE DRM_IOR (DRM_COMMAND_BASE + DRM_I915_GEM_GET_APERTURE, struct drm_i915_gem_get_aperture)
+#define DRM_IOCTL_I915_GEM_SET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
+#define DRM_IOCTL_I915_GEM_GET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_GET_TILING, struct drm_i915_gem_get_tiling)
+#define DRM_IOCTL_I915_GEM_GET_APERTURE DRM_IOR(DRM_COMMAND_BASE + DRM_I915_GEM_GET_APERTURE, struct drm_i915_gem_get_aperture)
 #define DRM_IOCTL_I915_GET_PIPE_FROM_CRTC_ID DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GET_PIPE_FROM_CRTC_ID, struct drm_i915_get_pipe_from_crtc_id)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_GEM_MADVISE DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MADVISE, struct drm_i915_gem_madvise)
@@ -253,38 +253,38 @@ typedef struct _drm_i915_sarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_I915_GET_SPRITE_COLORKEY DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_SET_SPRITE_COLORKEY, struct drm_intel_sprite_colorkey)
 #define DRM_IOCTL_I915_GEM_WAIT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_WAIT, struct drm_i915_gem_wait)
-#define DRM_IOCTL_I915_GEM_CONTEXT_CREATE DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
-#define DRM_IOCTL_I915_GEM_CONTEXT_DESTROY DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
+#define DRM_IOCTL_I915_GEM_CONTEXT_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
+#define DRM_IOCTL_I915_GEM_CONTEXT_DESTROY DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_I915_REG_READ DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_REG_READ, struct drm_i915_reg_read)
-#define DRM_IOCTL_I915_GET_RESET_STATS DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GET_RESET_STATS, struct drm_i915_reset_stats)
-#define DRM_IOCTL_I915_GEM_USERPTR DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_USERPTR, struct drm_i915_gem_userptr)
+#define DRM_IOCTL_I915_REG_READ DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_REG_READ, struct drm_i915_reg_read)
+#define DRM_IOCTL_I915_GET_RESET_STATS DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GET_RESET_STATS, struct drm_i915_reset_stats)
+#define DRM_IOCTL_I915_GEM_USERPTR DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_USERPTR, struct drm_i915_gem_userptr)
 typedef struct drm_i915_batchbuffer {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int start;
- int used;
- int DR1;
- int DR4;
+  int start;
+  int used;
+  int DR1;
+  int DR4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int num_cliprects;
- struct drm_clip_rect __user *cliprects;
+  int num_cliprects;
+  struct drm_clip_rect __user * cliprects;
 } drm_i915_batchbuffer_t;
 typedef struct _drm_i915_cmdbuffer {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char __user *buf;
- int sz;
- int DR1;
- int DR4;
+  char __user * buf;
+  int sz;
+  int DR1;
+  int DR4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int num_cliprects;
- struct drm_clip_rect __user *cliprects;
+  int num_cliprects;
+  struct drm_clip_rect __user * cliprects;
 } drm_i915_cmdbuffer_t;
 typedef struct drm_i915_irq_emit {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int __user *irq_seq;
+  int __user * irq_seq;
 } drm_i915_irq_emit_t;
 typedef struct drm_i915_irq_wait {
- int irq_seq;
+  int irq_seq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_irq_wait_t;
 #define I915_PARAM_IRQ_ACTIVE 1
@@ -323,8 +323,8 @@ typedef struct drm_i915_irq_wait {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I915_PARAM_CMD_PARSER_VERSION 28
 typedef struct drm_i915_getparam {
- int param;
- int __user *value;
+  int param;
+  int __user * value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_getparam_t;
 #define I915_SETPARAM_USE_MI_BATCHBUFFER_START 1
@@ -333,112 +333,112 @@ typedef struct drm_i915_getparam {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I915_SETPARAM_NUM_USED_FENCES 4
 typedef struct drm_i915_setparam {
- int param;
- int value;
+  int param;
+  int value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_setparam_t;
 #define I915_MEM_REGION_AGP 1
 typedef struct drm_i915_mem_alloc {
- int region;
+  int region;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int alignment;
- int size;
- int __user *region_offset;
+  int alignment;
+  int size;
+  int __user * region_offset;
 } drm_i915_mem_alloc_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_i915_mem_free {
- int region;
- int region_offset;
+  int region;
+  int region_offset;
 } drm_i915_mem_free_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_i915_mem_init_heap {
- int region;
- int size;
- int start;
+  int region;
+  int size;
+  int start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_mem_init_heap_t;
 typedef struct drm_i915_mem_destroy_heap {
- int region;
+  int region;
 } drm_i915_mem_destroy_heap_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_I915_VBLANK_PIPE_A 1
 #define DRM_I915_VBLANK_PIPE_B 2
 typedef struct drm_i915_vblank_pipe {
- int pipe;
+  int pipe;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_vblank_pipe_t;
 typedef struct drm_i915_vblank_swap {
- drm_drawable_t drawable;
- enum drm_vblank_seq_type seqtype;
+  drm_drawable_t drawable;
+  enum drm_vblank_seq_type seqtype;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int sequence;
+  unsigned int sequence;
 } drm_i915_vblank_swap_t;
 typedef struct drm_i915_hws_addr {
- __u64 addr;
+  __u64 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_i915_hws_addr_t;
 struct drm_i915_gem_init {
- __u64 gtt_start;
- __u64 gtt_end;
+  __u64 gtt_start;
+  __u64 gtt_end;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_i915_gem_create {
- __u64 size;
- __u32 handle;
+  __u64 size;
+  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
+  __u32 pad;
 };
 struct drm_i915_gem_pread {
- __u32 handle;
+  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
- __u64 offset;
- __u64 size;
- __u64 data_ptr;
+  __u32 pad;
+  __u64 offset;
+  __u64 size;
+  __u64 data_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_i915_gem_pwrite {
- __u32 handle;
- __u32 pad;
+  __u32 handle;
+  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 offset;
- __u64 size;
- __u64 data_ptr;
+  __u64 offset;
+  __u64 size;
+  __u64 data_ptr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_mmap {
- __u32 handle;
- __u32 pad;
- __u64 offset;
+  __u32 handle;
+  __u32 pad;
+  __u64 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 size;
- __u64 addr_ptr;
+  __u64 size;
+  __u64 addr_ptr;
 };
 struct drm_i915_gem_mmap_gtt {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 handle;
- __u32 pad;
- __u64 offset;
+  __u32 handle;
+  __u32 pad;
+  __u64 offset;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_set_domain {
- __u32 handle;
- __u32 read_domains;
- __u32 write_domain;
+  __u32 handle;
+  __u32 read_domains;
+  __u32 write_domain;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_i915_gem_sw_finish {
- __u32 handle;
+  __u32 handle;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_relocation_entry {
- __u32 target_handle;
- __u32 delta;
- __u64 offset;
+  __u32 target_handle;
+  __u32 delta;
+  __u64 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 presumed_offset;
- __u32 read_domains;
- __u32 write_domain;
+  __u64 presumed_offset;
+  __u32 read_domains;
+  __u32 write_domain;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I915_GEM_DOMAIN_CPU 0x00000001
@@ -451,99 +451,99 @@ struct drm_i915_gem_relocation_entry {
 #define I915_GEM_DOMAIN_GTT 0x00000040
 struct drm_i915_gem_exec_object {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 handle;
- __u32 relocation_count;
- __u64 relocs_ptr;
- __u64 alignment;
+  __u32 handle;
+  __u32 relocation_count;
+  __u64 relocs_ptr;
+  __u64 alignment;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 offset;
+  __u64 offset;
 };
 struct drm_i915_gem_execbuffer {
- __u64 buffers_ptr;
+  __u64 buffers_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 buffer_count;
- __u32 batch_start_offset;
- __u32 batch_len;
- __u32 DR1;
+  __u32 buffer_count;
+  __u32 batch_start_offset;
+  __u32 batch_len;
+  __u32 DR1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 DR4;
- __u32 num_cliprects;
- __u64 cliprects_ptr;
+  __u32 DR4;
+  __u32 num_cliprects;
+  __u64 cliprects_ptr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_exec_object2 {
- __u32 handle;
- __u32 relocation_count;
- __u64 relocs_ptr;
+  __u32 handle;
+  __u32 relocation_count;
+  __u64 relocs_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 alignment;
- __u64 offset;
-#define EXEC_OBJECT_NEEDS_FENCE (1<<0)
-#define EXEC_OBJECT_NEEDS_GTT (1<<1)
+  __u64 alignment;
+  __u64 offset;
+#define EXEC_OBJECT_NEEDS_FENCE (1 << 0)
+#define EXEC_OBJECT_NEEDS_GTT (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define EXEC_OBJECT_WRITE (1<<2)
-#define __EXEC_OBJECT_UNKNOWN_FLAGS -(EXEC_OBJECT_WRITE<<1)
- __u64 flags;
- __u64 rsvd1;
+#define EXEC_OBJECT_WRITE (1 << 2)
+#define __EXEC_OBJECT_UNKNOWN_FLAGS - (EXEC_OBJECT_WRITE << 1)
+  __u64 flags;
+  __u64 rsvd1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 rsvd2;
+  __u64 rsvd2;
 };
 struct drm_i915_gem_execbuffer2 {
- __u64 buffers_ptr;
+  __u64 buffers_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 buffer_count;
- __u32 batch_start_offset;
- __u32 batch_len;
- __u32 DR1;
+  __u32 buffer_count;
+  __u32 batch_start_offset;
+  __u32 batch_len;
+  __u32 DR1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 DR4;
- __u32 num_cliprects;
- __u64 cliprects_ptr;
-#define I915_EXEC_RING_MASK (7<<0)
+  __u32 DR4;
+  __u32 num_cliprects;
+  __u64 cliprects_ptr;
+#define I915_EXEC_RING_MASK (7 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I915_EXEC_DEFAULT (0<<0)
-#define I915_EXEC_RENDER (1<<0)
-#define I915_EXEC_BSD (2<<0)
-#define I915_EXEC_BLT (3<<0)
+#define I915_EXEC_DEFAULT (0 << 0)
+#define I915_EXEC_RENDER (1 << 0)
+#define I915_EXEC_BSD (2 << 0)
+#define I915_EXEC_BLT (3 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I915_EXEC_VEBOX (4<<0)
-#define I915_EXEC_CONSTANTS_MASK (3<<6)
-#define I915_EXEC_CONSTANTS_REL_GENERAL (0<<6)
-#define I915_EXEC_CONSTANTS_ABSOLUTE (1<<6)
+#define I915_EXEC_VEBOX (4 << 0)
+#define I915_EXEC_CONSTANTS_MASK (3 << 6)
+#define I915_EXEC_CONSTANTS_REL_GENERAL (0 << 6)
+#define I915_EXEC_CONSTANTS_ABSOLUTE (1 << 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I915_EXEC_CONSTANTS_REL_SURFACE (2<<6)
- __u64 flags;
- __u64 rsvd1;
- __u64 rsvd2;
+#define I915_EXEC_CONSTANTS_REL_SURFACE (2 << 6)
+  __u64 flags;
+  __u64 rsvd1;
+  __u64 rsvd2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define I915_EXEC_GEN7_SOL_RESET (1<<8)
-#define I915_EXEC_SECURE (1<<9)
-#define I915_EXEC_IS_PINNED (1<<10)
+#define I915_EXEC_GEN7_SOL_RESET (1 << 8)
+#define I915_EXEC_SECURE (1 << 9)
+#define I915_EXEC_IS_PINNED (1 << 10)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I915_EXEC_NO_RELOC (1<<11)
-#define I915_EXEC_HANDLE_LUT (1<<12)
-#define __I915_EXEC_UNKNOWN_FLAGS -(I915_EXEC_HANDLE_LUT<<1)
+#define I915_EXEC_NO_RELOC (1 << 11)
+#define I915_EXEC_HANDLE_LUT (1 << 12)
+#define __I915_EXEC_UNKNOWN_FLAGS - (I915_EXEC_HANDLE_LUT << 1)
 #define I915_EXEC_CONTEXT_ID_MASK (0xffffffff)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define i915_execbuffer2_set_context_id(eb2, context)   (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
-#define i915_execbuffer2_get_context_id(eb2)   ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
+#define i915_execbuffer2_set_context_id(eb2,context) (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
+#define i915_execbuffer2_get_context_id(eb2) ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
 struct drm_i915_gem_pin {
- __u32 handle;
+  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
- __u64 alignment;
- __u64 offset;
+  __u32 pad;
+  __u64 alignment;
+  __u64 offset;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_unpin {
- __u32 handle;
- __u32 pad;
+  __u32 handle;
+  __u32 pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_busy {
- __u32 handle;
- __u32 busy;
+  __u32 handle;
+  __u32 busy;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I915_CACHING_NONE 0
@@ -551,8 +551,8 @@ struct drm_i915_gem_busy {
 #define I915_CACHING_DISPLAY 2
 struct drm_i915_gem_caching {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 handle;
- __u32 caching;
+  __u32 handle;
+  __u32 caching;
 };
 #define I915_TILING_NONE 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -569,27 +569,27 @@ struct drm_i915_gem_caching {
 #define I915_BIT_6_SWIZZLE_9_17 6
 #define I915_BIT_6_SWIZZLE_9_10_17 7
 struct drm_i915_gem_set_tiling {
- __u32 handle;
+  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tiling_mode;
- __u32 stride;
- __u32 swizzle_mode;
+  __u32 tiling_mode;
+  __u32 stride;
+  __u32 swizzle_mode;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_get_tiling {
- __u32 handle;
- __u32 tiling_mode;
- __u32 swizzle_mode;
+  __u32 handle;
+  __u32 tiling_mode;
+  __u32 swizzle_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_i915_gem_get_aperture {
- __u64 aper_size;
- __u64 aper_available_size;
+  __u64 aper_size;
+  __u64 aper_available_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_i915_get_pipe_from_crtc_id {
- __u32 crtc_id;
- __u32 pipe;
+  __u32 crtc_id;
+  __u32 pipe;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define I915_MADV_WILLNEED 0
@@ -597,9 +597,9 @@ struct drm_i915_get_pipe_from_crtc_id {
 #define __I915_MADV_PURGED 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_madvise {
- __u32 handle;
- __u32 madv;
- __u32 retained;
+  __u32 handle;
+  __u32 madv;
+  __u32 retained;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define I915_OVERLAY_TYPE_MASK 0xff
@@ -627,98 +627,98 @@ struct drm_i915_gem_madvise {
 #define I915_OVERLAY_ENABLE 0x01000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_intel_overlay_put_image {
- __u32 flags;
- __u32 bo_handle;
- __u16 stride_Y;
+  __u32 flags;
+  __u32 bo_handle;
+  __u16 stride_Y;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 stride_UV;
- __u32 offset_Y;
- __u32 offset_U;
- __u32 offset_V;
+  __u16 stride_UV;
+  __u32 offset_Y;
+  __u32 offset_U;
+  __u32 offset_V;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 src_width;
- __u16 src_height;
- __u16 src_scan_width;
- __u16 src_scan_height;
+  __u16 src_width;
+  __u16 src_height;
+  __u16 src_scan_width;
+  __u16 src_scan_height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 crtc_id;
- __u16 dst_x;
- __u16 dst_y;
- __u16 dst_width;
+  __u32 crtc_id;
+  __u16 dst_x;
+  __u16 dst_y;
+  __u16 dst_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 dst_height;
+  __u16 dst_height;
 };
-#define I915_OVERLAY_UPDATE_ATTRS (1<<0)
-#define I915_OVERLAY_UPDATE_GAMMA (1<<1)
+#define I915_OVERLAY_UPDATE_ATTRS (1 << 0)
+#define I915_OVERLAY_UPDATE_GAMMA (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_intel_overlay_attrs {
- __u32 flags;
- __u32 color_key;
- __s32 brightness;
+  __u32 flags;
+  __u32 color_key;
+  __s32 brightness;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 contrast;
- __u32 saturation;
- __u32 gamma0;
- __u32 gamma1;
+  __u32 contrast;
+  __u32 saturation;
+  __u32 gamma0;
+  __u32 gamma1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 gamma2;
- __u32 gamma3;
- __u32 gamma4;
- __u32 gamma5;
+  __u32 gamma2;
+  __u32 gamma3;
+  __u32 gamma4;
+  __u32 gamma5;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define I915_SET_COLORKEY_NONE (1<<0)
-#define I915_SET_COLORKEY_DESTINATION (1<<1)
-#define I915_SET_COLORKEY_SOURCE (1<<2)
+#define I915_SET_COLORKEY_NONE (1 << 0)
+#define I915_SET_COLORKEY_DESTINATION (1 << 1)
+#define I915_SET_COLORKEY_SOURCE (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_intel_sprite_colorkey {
- __u32 plane_id;
- __u32 min_value;
- __u32 channel_mask;
+  __u32 plane_id;
+  __u32 min_value;
+  __u32 channel_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 max_value;
- __u32 flags;
+  __u32 max_value;
+  __u32 flags;
 };
 struct drm_i915_gem_wait {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bo_handle;
- __u32 flags;
- __s64 timeout_ns;
+  __u32 bo_handle;
+  __u32 flags;
+  __s64 timeout_ns;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_context_create {
- __u32 ctx_id;
- __u32 pad;
+  __u32 ctx_id;
+  __u32 pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_context_destroy {
- __u32 ctx_id;
- __u32 pad;
+  __u32 ctx_id;
+  __u32 pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_reg_read {
- __u64 offset;
- __u64 val;
+  __u64 offset;
+  __u64 val;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_reset_stats {
- __u32 ctx_id;
- __u32 flags;
- __u32 reset_count;
+  __u32 ctx_id;
+  __u32 flags;
+  __u32 reset_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 batch_active;
- __u32 batch_pending;
- __u32 pad;
+  __u32 batch_active;
+  __u32 batch_pending;
+  __u32 pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_i915_gem_userptr {
- __u64 user_ptr;
- __u64 user_size;
- __u32 flags;
+  __u64 user_ptr;
+  __u64 user_size;
+  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I915_USERPTR_READ_ONLY 0x1
 #define I915_USERPTR_UNSYNCHRONIZED 0x80000000
- __u32 handle;
+  __u32 handle;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

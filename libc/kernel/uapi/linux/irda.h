@@ -53,30 +53,30 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CS_UNICODE 0xff
 typedef enum {
- IRDA_TEKRAM_DONGLE = 0,
- IRDA_ESI_DONGLE = 1,
+  IRDA_TEKRAM_DONGLE = 0,
+  IRDA_ESI_DONGLE = 1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IRDA_ACTISYS_DONGLE = 2,
- IRDA_ACTISYS_PLUS_DONGLE = 3,
- IRDA_GIRBIL_DONGLE = 4,
- IRDA_LITELINK_DONGLE = 5,
+  IRDA_ACTISYS_DONGLE = 2,
+  IRDA_ACTISYS_PLUS_DONGLE = 3,
+  IRDA_GIRBIL_DONGLE = 4,
+  IRDA_LITELINK_DONGLE = 5,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IRDA_AIRPORT_DONGLE = 6,
- IRDA_OLD_BELKIN_DONGLE = 7,
- IRDA_EP7211_IR = 8,
- IRDA_MCP2120_DONGLE = 9,
+  IRDA_AIRPORT_DONGLE = 6,
+  IRDA_OLD_BELKIN_DONGLE = 7,
+  IRDA_EP7211_IR = 8,
+  IRDA_MCP2120_DONGLE = 9,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IRDA_ACT200L_DONGLE = 10,
- IRDA_MA600_DONGLE = 11,
- IRDA_TOIM3232_DONGLE = 12,
- IRDA_EP7211_DONGLE = 13,
+  IRDA_ACT200L_DONGLE = 10,
+  IRDA_MA600_DONGLE = 11,
+  IRDA_TOIM3232_DONGLE = 12,
+  IRDA_EP7211_DONGLE = 13,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } IRDA_DONGLE;
 enum {
- IRDAPROTO_UNITDATA = 0,
- IRDAPROTO_ULTRA = 1,
+  IRDAPROTO_UNITDATA = 0,
+  IRDAPROTO_ULTRA = 1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IRDAPROTO_MAX
+  IRDAPROTO_MAX
 };
 #define SOL_IRLMP 266
 #define SOL_IRTTP 266
@@ -112,47 +112,47 @@ enum {
 #define LSAP_ANY 0xff
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sockaddr_irda {
- __kernel_sa_family_t sir_family;
- __u8 sir_lsap_sel;
- __u32 sir_addr;
+  __kernel_sa_family_t sir_family;
+  __u8 sir_lsap_sel;
+  __u32 sir_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char sir_name[25];
+  char sir_name[25];
 };
 struct irda_device_info {
- __u32 saddr;
+  __u32 saddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 daddr;
- char info[22];
- __u8 charset;
- __u8 hints[2];
+  __u32 daddr;
+  char info[22];
+  __u8 charset;
+  __u8 hints[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct irda_device_list {
- __u32 len;
- struct irda_device_info dev[1];
+  __u32 len;
+  struct irda_device_info dev[1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct irda_ias_set {
- char irda_class_name[IAS_EXPORT_CLASSNAME];
- char irda_attrib_name[IAS_EXPORT_ATTRIBNAME];
+  char irda_class_name[IAS_EXPORT_CLASSNAME];
+  char irda_attrib_name[IAS_EXPORT_ATTRIBNAME];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int irda_attrib_type;
- union {
- unsigned int irda_attrib_int;
- struct {
+  unsigned int irda_attrib_type;
+  union {
+    unsigned int irda_attrib_int;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short len;
- __u8 octet_seq[IAS_MAX_OCTET_STRING];
- } irda_attrib_octet_seq;
- struct {
+      unsigned short len;
+      __u8 octet_seq[IAS_MAX_OCTET_STRING];
+    } irda_attrib_octet_seq;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 len;
- __u8 charset;
- __u8 string[IAS_MAX_STRING];
- } irda_attrib_string;
+      __u8 len;
+      __u8 charset;
+      __u8 string[IAS_MAX_STRING];
+    } irda_attrib_string;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } attribute;
- __u32 daddr;
+  } attribute;
+  __u32 daddr;
 };
 #define SIOCSDONGLE (SIOCDEVPRIVATE + 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -169,36 +169,36 @@ struct irda_ias_set {
 #define SIOCGQOS (SIOCDEVPRIVATE + 9)
 #define IRNAMSIZ 16
 struct if_irda_qos {
- unsigned long baudrate;
+  unsigned long baudrate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short data_size;
- unsigned short window_size;
- unsigned short min_turn_time;
- unsigned short max_turn_time;
+  unsigned short data_size;
+  unsigned short window_size;
+  unsigned short min_turn_time;
+  unsigned short max_turn_time;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char add_bofs;
- unsigned char link_disc;
+  unsigned char add_bofs;
+  unsigned char link_disc;
 };
 struct if_irda_line {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dtr;
- __u8 rts;
+  __u8 dtr;
+  __u8 rts;
 };
 struct if_irda_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- char ifrn_name[IRNAMSIZ];
- } ifr_ifrn;
- union {
+  union {
+    char ifrn_name[IRNAMSIZ];
+  } ifr_ifrn;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct if_irda_line ifru_line;
- struct if_irda_qos ifru_qos;
- unsigned short ifru_flags;
- unsigned int ifru_receiving;
+    struct if_irda_line ifru_line;
+    struct if_irda_qos ifru_qos;
+    unsigned short ifru_flags;
+    unsigned int ifru_receiving;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int ifru_mode;
- unsigned int ifru_dongle;
- } ifr_ifru;
+    unsigned int ifru_mode;
+    unsigned int ifru_dongle;
+  } ifr_ifru;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ifr_baudrate ifr_ifru.ifru_qos.baudrate
@@ -212,19 +212,19 @@ struct if_irda_req {
 #define IRDA_NL_VERSION 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum irda_nl_commands {
- IRDA_NL_CMD_UNSPEC,
- IRDA_NL_CMD_SET_MODE,
- IRDA_NL_CMD_GET_MODE,
+  IRDA_NL_CMD_UNSPEC,
+  IRDA_NL_CMD_SET_MODE,
+  IRDA_NL_CMD_GET_MODE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __IRDA_NL_CMD_AFTER_LAST
+  __IRDA_NL_CMD_AFTER_LAST
 };
 #define IRDA_NL_CMD_MAX (__IRDA_NL_CMD_AFTER_LAST - 1)
 enum nl80211_attrs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IRDA_NL_ATTR_UNSPEC,
- IRDA_NL_ATTR_IFNAME,
- IRDA_NL_ATTR_MODE,
- __IRDA_NL_ATTR_AFTER_LAST
+  IRDA_NL_ATTR_UNSPEC,
+  IRDA_NL_ATTR_IFNAME,
+  IRDA_NL_ATTR_MODE,
+  __IRDA_NL_ATTR_AFTER_LAST
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IRDA_NL_ATTR_MAX (__IRDA_NL_ATTR_AFTER_LAST - 1)
