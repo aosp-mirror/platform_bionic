@@ -694,15 +694,16 @@ LOCAL_CFLAGS += \
     -DINET6 \
     -fvisibility=hidden \
     -Wno-unused-parameter \
-    -I$(LOCAL_PATH)/dns/include \
-    -I$(LOCAL_PATH)/private \
-    -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
-    -I$(LOCAL_PATH)/upstream-netbsd/android/include \
     -include netbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/dns/include \
+    $(LOCAL_PATH)/private \
+    $(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
+    $(LOCAL_PATH)/upstream-netbsd/android/include \
+
 LOCAL_MODULE := libc_dns
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -728,13 +729,14 @@ LOCAL_SRC_FILES := $(libc_upstream_freebsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
-    -I$(LOCAL_PATH)/upstream-freebsd/android/include \
-    -I$(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
     -include freebsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/upstream-freebsd/android/include \
+    $(LOCAL_PATH)/upstream-freebsd/lib/libc/include \
+
 LOCAL_MODULE := libc_freebsd
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -762,13 +764,14 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
     -DPOSIX_MISTAKE \
-    -I$(LOCAL_PATH)/upstream-netbsd/android/include \
-    -I$(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
     -include netbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/upstream-netbsd/android/include \
+    $(LOCAL_PATH)/upstream-netbsd/lib/libc/include \
+
 LOCAL_MODULE := libc_netbsd
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
@@ -804,15 +807,16 @@ LOCAL_CFLAGS := \
     -Wno-sign-compare \
     -Wno-uninitialized \
     -Wno-unused-parameter \
-    -I$(LOCAL_PATH)/private \
-    -I$(LOCAL_PATH)/upstream-openbsd/android/include \
-    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
-    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
     -include openbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/private \
+    $(LOCAL_PATH)/upstream-openbsd/android/include \
+    $(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
+    $(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
+
 LOCAL_MODULE := libc_openbsd
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
@@ -847,14 +851,15 @@ LOCAL_CFLAGS := \
     $(libc_common_cflags) \
     -Wno-sign-compare -Wno-uninitialized \
     -fvisibility=hidden \
-    -I$(LOCAL_PATH)/private \
-    -I$(LOCAL_PATH)/upstream-openbsd/android/include \
-    -I$(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
     -include openbsd-compat.h \
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/private \
+    $(LOCAL_PATH)/upstream-openbsd/android/include \
+    $(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
+
 LOCAL_MODULE := libc_gdtoa
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
