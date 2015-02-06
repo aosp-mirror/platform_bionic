@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcad2cfe_b204c0f7",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-06T20:54:41Z",
+      "side": 1,
+      "message": "nit: add a space here",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c9e48d1_6d80b525",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-06T20:54:41Z",
+      "side": 1,
+      "message": "queries",
+      "range": {
+        "startLine": 96,
+        "startChar": 23,
+        "endLine": 96,
+        "endChar": 29
+      },
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcad2cfe_92ba5c9e",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-06T20:54:41Z",
+      "side": 1,
+      "message": "Looks like the review is just waiting for you to add tests :)",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cab44f1_8c9d277d",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-06T20:54:41Z",
+      "side": 1,
+      "message": "int_data, ptr_data, and cursor should all go in the constructor too.",
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcdb18ac_49ea0179",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1596,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-06T20:54:41Z",
+      "side": 1,
+      "message": "Don\u0027t need the extra parens.",
+      "range": {
+        "startLine": 1596,
+        "startChar": 14,
+        "endLine": 1596,
+        "endChar": 15
+      },
+      "revId": "4b0c78079e6d8aafb3db33543011e95a7b98a2c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
