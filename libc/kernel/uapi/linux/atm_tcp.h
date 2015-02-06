@@ -24,27 +24,27 @@
 #include <linux/atmioc.h>
 #include <linux/types.h>
 struct atmtcp_hdr {
- __u16 vpi;
+  __u16 vpi;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 vci;
- __u32 length;
+  __u16 vci;
+  __u32 length;
 };
 #define ATMTCP_HDR_MAGIC (~0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATMTCP_CTRL_OPEN 1
 #define ATMTCP_CTRL_CLOSE 2
 struct atmtcp_control {
- struct atmtcp_hdr hdr;
+  struct atmtcp_hdr hdr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int type;
- atm_kptr_t vcc;
- struct sockaddr_atmpvc addr;
- struct atm_qos qos;
+  int type;
+  atm_kptr_t vcc;
+  struct sockaddr_atmpvc addr;
+  struct atm_qos qos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int result;
+  int result;
 } __ATM_API_ALIGN;
-#define SIOCSIFATMTCP _IO('a',ATMIOC_ITF)
-#define ATMTCP_CREATE _IO('a',ATMIOC_ITF+14)
+#define SIOCSIFATMTCP _IO('a', ATMIOC_ITF)
+#define ATMTCP_CREATE _IO('a', ATMIOC_ITF + 14)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATMTCP_REMOVE _IO('a',ATMIOC_ITF+15)
+#define ATMTCP_REMOVE _IO('a', ATMIOC_ITF + 15)
 #endif

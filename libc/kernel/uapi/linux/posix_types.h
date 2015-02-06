@@ -23,10 +23,10 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __FD_SETSIZE 1024
 typedef struct {
- unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
+  unsigned long fds_bits[__FD_SETSIZE / (8 * sizeof(long))];
 } __kernel_fd_set;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef void (*__kernel_sighandler_t)(int);
+typedef void(* __kernel_sighandler_t) (int);
 typedef int __kernel_key_t;
 typedef int __kernel_mqd_t;
 #include <asm/posix_types.h>

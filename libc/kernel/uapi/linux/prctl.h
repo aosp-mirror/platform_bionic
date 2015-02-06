@@ -113,27 +113,27 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PR_SET_MM_MAP_SIZE 15
 struct prctl_mm_map {
- __u64 start_code;
- __u64 end_code;
+  __u64 start_code;
+  __u64 end_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 start_data;
- __u64 end_data;
- __u64 start_brk;
- __u64 brk;
+  __u64 start_data;
+  __u64 end_data;
+  __u64 start_brk;
+  __u64 brk;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 start_stack;
- __u64 arg_start;
- __u64 arg_end;
- __u64 env_start;
+  __u64 start_stack;
+  __u64 arg_start;
+  __u64 arg_end;
+  __u64 env_start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 env_end;
- __u64 *auxv;
- __u32 auxv_size;
- __u32 exe_fd;
+  __u64 env_end;
+  __u64 * auxv;
+  __u32 auxv_size;
+  __u32 exe_fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PR_SET_PTRACER 0x59616d61
-#define PR_SET_PTRACER_ANY ((unsigned long)-1)
+#define PR_SET_PTRACER_ANY ((unsigned long) - 1)
 #define PR_SET_CHILD_SUBREAPER 36
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PR_GET_CHILD_SUBREAPER 37

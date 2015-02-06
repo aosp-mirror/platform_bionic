@@ -27,67 +27,67 @@
 #define DLM_DEVICE_VERSION_PATCH 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dlm_lock_params {
- __u8 mode;
- __u8 namelen;
- __u16 unused;
+  __u8 mode;
+  __u8 namelen;
+  __u16 unused;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __u32 lkid;
- __u32 parent;
- __u64 xid;
+  __u32 flags;
+  __u32 lkid;
+  __u32 parent;
+  __u64 xid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 timeout;
- void __user *castparam;
- void __user *castaddr;
- void __user *bastparam;
+  __u64 timeout;
+  void __user * castparam;
+  void __user * castaddr;
+  void __user * bastparam;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *bastaddr;
- struct dlm_lksb __user *lksb;
- char lvb[DLM_USER_LVB_LEN];
- char name[0];
+  void __user * bastaddr;
+  struct dlm_lksb __user * lksb;
+  char lvb[DLM_USER_LVB_LEN];
+  char name[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dlm_lspace_params {
- __u32 flags;
- __u32 minor;
+  __u32 flags;
+  __u32 minor;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[0];
+  char name[0];
 };
 struct dlm_purge_params {
- __u32 nodeid;
+  __u32 nodeid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pid;
+  __u32 pid;
 };
 struct dlm_write_request {
- __u32 version[3];
+  __u32 version[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 cmd;
- __u8 is64bit;
- __u8 unused[2];
- union {
+  __u8 cmd;
+  __u8 is64bit;
+  __u8 unused[2];
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct dlm_lock_params lock;
- struct dlm_lspace_params lspace;
- struct dlm_purge_params purge;
- } i;
+    struct dlm_lock_params lock;
+    struct dlm_lspace_params lspace;
+    struct dlm_purge_params purge;
+  } i;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dlm_device_version {
- __u32 version[3];
+  __u32 version[3];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dlm_lock_result {
- __u32 version[3];
- __u32 length;
- void __user * user_astaddr;
+  __u32 version[3];
+  __u32 length;
+  void __user * user_astaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user * user_astparam;
- struct dlm_lksb __user * user_lksb;
- struct dlm_lksb lksb;
- __u8 bast_mode;
+  void __user * user_astparam;
+  struct dlm_lksb __user * user_lksb;
+  struct dlm_lksb lksb;
+  __u8 bast_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 unused[3];
- __u32 lvb_offset;
+  __u8 unused[3];
+  __u32 lvb_offset;
 };
 #define DLM_USER_LOCK 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

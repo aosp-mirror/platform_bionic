@@ -21,12 +21,12 @@
 #define I8K_PROC "/proc/i8k"
 #define I8K_PROC_FMT "1.0"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I8K_BIOS_VERSION _IOR ('i', 0x80, int)
-#define I8K_MACHINE_ID _IOR ('i', 0x81, int)
-#define I8K_POWER_STATUS _IOR ('i', 0x82, size_t)
-#define I8K_FN_STATUS _IOR ('i', 0x83, size_t)
+#define I8K_BIOS_VERSION _IOR('i', 0x80, int)
+#define I8K_MACHINE_ID _IOR('i', 0x81, int)
+#define I8K_POWER_STATUS _IOR('i', 0x82, size_t)
+#define I8K_FN_STATUS _IOR('i', 0x83, size_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I8K_GET_TEMP _IOR ('i', 0x84, size_t)
+#define I8K_GET_TEMP _IOR('i', 0x84, size_t)
 #define I8K_GET_SPEED _IOWR('i', 0x85, size_t)
 #define I8K_GET_FAN _IOWR('i', 0x86, size_t)
 #define I8K_SET_FAN _IOWR('i', 0x87, size_t)

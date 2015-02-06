@@ -33,38 +33,38 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NCP_MOUNT_NFS_EXTRAS 0x0080
 struct ncp_mount_data {
- int version;
- unsigned int ncp_fd;
+  int version;
+  unsigned int ncp_fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_uid_t mounted_uid;
- __kernel_pid_t wdog_pid;
- unsigned char mounted_vol[NCP_VOLNAME_LEN + 1];
- unsigned int time_out;
+  __kernel_uid_t mounted_uid;
+  __kernel_pid_t wdog_pid;
+  unsigned char mounted_vol[NCP_VOLNAME_LEN + 1];
+  unsigned int time_out;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int retry_count;
- unsigned int flags;
- __kernel_uid_t uid;
- __kernel_gid_t gid;
+  unsigned int retry_count;
+  unsigned int flags;
+  __kernel_uid_t uid;
+  __kernel_gid_t gid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_mode_t file_mode;
- __kernel_mode_t dir_mode;
+  __kernel_mode_t file_mode;
+  __kernel_mode_t dir_mode;
 };
 #define NCP_MOUNT_VERSION_V4 (4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ncp_mount_data_v4 {
- int version;
- unsigned long flags;
- unsigned long mounted_uid;
+  int version;
+  unsigned long flags;
+  unsigned long mounted_uid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- long wdog_pid;
- unsigned int ncp_fd;
- unsigned int time_out;
- unsigned int retry_count;
+  long wdog_pid;
+  unsigned int ncp_fd;
+  unsigned int time_out;
+  unsigned int retry_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long uid;
- unsigned long gid;
- unsigned long file_mode;
- unsigned long dir_mode;
+  unsigned long uid;
+  unsigned long gid;
+  unsigned long file_mode;
+  unsigned long dir_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define NCP_MOUNT_VERSION_V5 (5)

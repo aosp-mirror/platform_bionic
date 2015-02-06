@@ -71,9 +71,9 @@
 #define USB_PORT_FEAT_REMOTE_WAKE_OVER_CURRENT (1 << 10)
 struct usb_port_status {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wPortStatus;
- __le16 wPortChange;
-} __attribute__ ((packed));
+  __le16 wPortStatus;
+  __le16 wPortChange;
+} __attribute__((packed));
 #define USB_PORT_STAT_CONNECTION 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_PORT_STAT_ENABLE 0x0002
@@ -93,7 +93,7 @@ struct usb_port_status {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_SS_PORT_STAT_SPEED 0x1c00
 #define USB_PORT_STAT_SPEED_5GBPS 0x0000
-#define USB_SS_PORT_STAT_MASK (USB_PORT_STAT_CONNECTION |   USB_PORT_STAT_ENABLE |   USB_PORT_STAT_OVERCURRENT |   USB_PORT_STAT_RESET)
+#define USB_SS_PORT_STAT_MASK (USB_PORT_STAT_CONNECTION | USB_PORT_STAT_ENABLE | USB_PORT_STAT_OVERCURRENT | USB_PORT_STAT_RESET)
 #define USB_SS_PORT_LS_U0 0x0000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_SS_PORT_LS_U1 0x0020
@@ -136,9 +136,9 @@ struct usb_port_status {
 #define HUB_CHAR_PORTIND 0x0080
 struct usb_hub_status {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wHubStatus;
- __le16 wHubChange;
-} __attribute__ ((packed));
+  __le16 wHubStatus;
+  __le16 wHubChange;
+} __attribute__((packed));
 #define HUB_STATUS_LOCAL_POWER 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HUB_STATUS_OVERCURRENT 0x0002
@@ -157,28 +157,28 @@ struct usb_hub_status {
 #define USB_HUB_PR_SS 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_hub_descriptor {
- __u8 bDescLength;
- __u8 bDescriptorType;
- __u8 bNbrPorts;
+  __u8 bDescLength;
+  __u8 bDescriptorType;
+  __u8 bNbrPorts;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wHubCharacteristics;
- __u8 bPwrOn2PwrGood;
- __u8 bHubContrCurrent;
- union {
+  __le16 wHubCharacteristics;
+  __u8 bPwrOn2PwrGood;
+  __u8 bHubContrCurrent;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u8 DeviceRemovable[(USB_MAXCHILDREN + 1 + 7) / 8];
- __u8 PortPwrCtrlMask[(USB_MAXCHILDREN + 1 + 7) / 8];
- } __attribute__ ((packed)) hs;
+    struct {
+      __u8 DeviceRemovable[(USB_MAXCHILDREN + 1 + 7) / 8];
+      __u8 PortPwrCtrlMask[(USB_MAXCHILDREN + 1 + 7) / 8];
+    } __attribute__((packed)) hs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u8 bHubHdrDecLat;
- __le16 wHubDelay;
- __le16 DeviceRemovable;
+    struct {
+      __u8 bHubHdrDecLat;
+      __le16 wHubDelay;
+      __le16 DeviceRemovable;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } __attribute__ ((packed)) ss;
- } u;
-} __attribute__ ((packed));
+    } __attribute__((packed)) ss;
+  } u;
+} __attribute__((packed));
 #define HUB_LED_AUTO 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HUB_LED_AMBER 1
@@ -186,16 +186,20 @@ struct usb_hub_descriptor {
 #define HUB_LED_OFF 3
 enum hub_led_mode {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- INDICATOR_AUTO = 0,
- INDICATOR_CYCLE,
- INDICATOR_GREEN_BLINK, INDICATOR_GREEN_BLINK_OFF,
- INDICATOR_AMBER_BLINK, INDICATOR_AMBER_BLINK_OFF,
+  INDICATOR_AUTO = 0,
+  INDICATOR_CYCLE,
+  INDICATOR_GREEN_BLINK,
+  INDICATOR_GREEN_BLINK_OFF,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- INDICATOR_ALT_BLINK, INDICATOR_ALT_BLINK_OFF
-} __attribute__ ((packed));
+  INDICATOR_AMBER_BLINK,
+  INDICATOR_AMBER_BLINK_OFF,
+  INDICATOR_ALT_BLINK,
+  INDICATOR_ALT_BLINK_OFF
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} __attribute__((packed));
 #define HUB_TTTT_8_BITS 0x00
 #define HUB_TTTT_16_BITS 0x20
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HUB_TTTT_24_BITS 0x40
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HUB_TTTT_32_BITS 0x60
 #endif

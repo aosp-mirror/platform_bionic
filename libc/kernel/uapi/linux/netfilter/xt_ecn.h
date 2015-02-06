@@ -28,16 +28,16 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_ECN_OP_MATCH_MASK 0xce
 struct xt_ecn_info {
- __u8 operation;
- __u8 invert;
+  __u8 operation;
+  __u8 invert;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ip_ect;
- union {
- struct {
- __u8 ect;
+  __u8 ip_ect;
+  union {
+    struct {
+      __u8 ect;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } tcp;
- } proto;
+    } tcp;
+  } proto;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

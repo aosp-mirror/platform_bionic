@@ -29,10 +29,10 @@
 #define IPT_LOG_MACDECODE 0x20
 #define IPT_LOG_MASK 0x2f
 struct ipt_log_info {
- unsigned char level;
+  unsigned char level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char logflags;
- char prefix[30];
+  unsigned char logflags;
+  char prefix[30];
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

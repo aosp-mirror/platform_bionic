@@ -24,71 +24,71 @@
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-mediabus.h>
 enum v4l2_subdev_format_whence {
- V4L2_SUBDEV_FORMAT_TRY = 0,
+  V4L2_SUBDEV_FORMAT_TRY = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- V4L2_SUBDEV_FORMAT_ACTIVE = 1,
+  V4L2_SUBDEV_FORMAT_ACTIVE = 1,
 };
 struct v4l2_subdev_format {
- __u32 which;
+  __u32 which;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
- struct v4l2_mbus_framefmt format;
- __u32 reserved[8];
+  __u32 pad;
+  struct v4l2_mbus_framefmt format;
+  __u32 reserved[8];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_subdev_crop {
- __u32 which;
- __u32 pad;
- struct v4l2_rect rect;
+  __u32 which;
+  __u32 pad;
+  struct v4l2_rect rect;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[8];
+  __u32 reserved[8];
 };
 struct v4l2_subdev_mbus_code_enum {
- __u32 pad;
+  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 index;
- __u32 code;
- __u32 reserved[9];
+  __u32 index;
+  __u32 code;
+  __u32 reserved[9];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_subdev_frame_size_enum {
- __u32 index;
- __u32 pad;
- __u32 code;
+  __u32 index;
+  __u32 pad;
+  __u32 code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 min_width;
- __u32 max_width;
- __u32 min_height;
- __u32 max_height;
+  __u32 min_width;
+  __u32 max_width;
+  __u32 min_height;
+  __u32 max_height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[9];
+  __u32 reserved[9];
 };
 struct v4l2_subdev_frame_interval {
- __u32 pad;
+  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct v4l2_fract interval;
- __u32 reserved[9];
+  struct v4l2_fract interval;
+  __u32 reserved[9];
 };
 struct v4l2_subdev_frame_interval_enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 index;
- __u32 pad;
- __u32 code;
- __u32 width;
+  __u32 index;
+  __u32 pad;
+  __u32 code;
+  __u32 width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 height;
- struct v4l2_fract interval;
- __u32 reserved[9];
+  __u32 height;
+  struct v4l2_fract interval;
+  __u32 reserved[9];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct v4l2_subdev_selection {
- __u32 which;
- __u32 pad;
- __u32 target;
+  __u32 which;
+  __u32 pad;
+  __u32 target;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- struct v4l2_rect r;
- __u32 reserved[8];
+  __u32 flags;
+  struct v4l2_rect r;
+  __u32 reserved[8];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define v4l2_subdev_edid v4l2_edid

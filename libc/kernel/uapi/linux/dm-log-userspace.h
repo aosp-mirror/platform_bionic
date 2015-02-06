@@ -42,20 +42,20 @@
 #define DM_ULOG_IS_REMOTE_RECOVERING 17
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DM_ULOG_REQUEST_MASK 0xFF
-#define DM_ULOG_REQUEST_TYPE(request_type)   (DM_ULOG_REQUEST_MASK & (request_type))
+#define DM_ULOG_REQUEST_TYPE(request_type) (DM_ULOG_REQUEST_MASK & (request_type))
 #define DM_ULOG_REQUEST_VERSION 3
 struct dm_ulog_request {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t luid;
- char uuid[DM_UUID_LEN];
- char padding[3];
- uint32_t version;
+  uint64_t luid;
+  char uuid[DM_UUID_LEN];
+  char padding[3];
+  uint32_t version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int32_t error;
- uint32_t seq;
- uint32_t request_type;
- uint32_t data_size;
+  int32_t error;
+  uint32_t seq;
+  uint32_t request_type;
+  uint32_t data_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char data[0];
+  char data[0];
 };
 #endif

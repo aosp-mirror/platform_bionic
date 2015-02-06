@@ -29,20 +29,20 @@
 #define SHMALL (ULONG_MAX - (1UL << 24))
 #define SHMSEG SHMMNI
 struct shmid_ds {
- struct ipc_perm shm_perm;
+  struct ipc_perm shm_perm;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int shm_segsz;
- __kernel_time_t shm_atime;
- __kernel_time_t shm_dtime;
- __kernel_time_t shm_ctime;
+  int shm_segsz;
+  __kernel_time_t shm_atime;
+  __kernel_time_t shm_dtime;
+  __kernel_time_t shm_ctime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_ipc_pid_t shm_cpid;
- __kernel_ipc_pid_t shm_lpid;
- unsigned short shm_nattch;
- unsigned short shm_unused;
+  __kernel_ipc_pid_t shm_cpid;
+  __kernel_ipc_pid_t shm_lpid;
+  unsigned short shm_nattch;
+  unsigned short shm_unused;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void *shm_unused2;
- void *shm_unused3;
+  void * shm_unused2;
+  void * shm_unused3;
 };
 #include <asm/shmbuf.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -59,22 +59,22 @@ struct shmid_ds {
 #define SHM_STAT 13
 #define SHM_INFO 14
 struct shminfo {
- int shmmax;
+  int shmmax;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int shmmin;
- int shmmni;
- int shmseg;
- int shmall;
+  int shmmin;
+  int shmmni;
+  int shmseg;
+  int shmall;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct shm_info {
- int used_ids;
- __kernel_ulong_t shm_tot;
+  int used_ids;
+  __kernel_ulong_t shm_tot;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_ulong_t shm_rss;
- __kernel_ulong_t shm_swp;
- __kernel_ulong_t swap_attempts;
- __kernel_ulong_t swap_successes;
+  __kernel_ulong_t shm_rss;
+  __kernel_ulong_t shm_swp;
+  __kernel_ulong_t swap_attempts;
+  __kernel_ulong_t swap_successes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

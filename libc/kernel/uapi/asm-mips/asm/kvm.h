@@ -21,22 +21,22 @@
 #include <linux/types.h>
 struct kvm_regs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 gpr[32];
- __u64 hi;
- __u64 lo;
- __u64 pc;
+  __u64 gpr[32];
+  __u64 hi;
+  __u64 lo;
+  __u64 pc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct kvm_fpu {
- __u64 fpr[32];
- __u32 fir;
+  __u64 fpr[32];
+  __u32 fir;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fccr;
- __u32 fexr;
- __u32 fenr;
- __u32 fcsr;
+  __u32 fccr;
+  __u32 fexr;
+  __u32 fenr;
+  __u32 fcsr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pad;
+  __u32 pad;
 };
 #define KVM_REG_MIPS_R0 (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 0)
 #define KVM_REG_MIPS_R1 (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 1)
@@ -82,13 +82,13 @@ struct kvm_fpu {
 #define KVM_REG_MIPS_LO (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 33)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_REG_MIPS_PC (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 34)
-#define KVM_REG_MIPS_COUNT_CTL (KVM_REG_MIPS | KVM_REG_SIZE_U64 |   0x20000 | 0)
+#define KVM_REG_MIPS_COUNT_CTL (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 0x20000 | 0)
 #define KVM_REG_MIPS_COUNT_CTL_DC 0x00000001
-#define KVM_REG_MIPS_COUNT_RESUME (KVM_REG_MIPS | KVM_REG_SIZE_U64 |   0x20000 | 1)
+#define KVM_REG_MIPS_COUNT_RESUME (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 0x20000 | 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define KVM_REG_MIPS_COUNT_HZ (KVM_REG_MIPS | KVM_REG_SIZE_U64 |   0x20000 | 2)
+#define KVM_REG_MIPS_COUNT_HZ (KVM_REG_MIPS | KVM_REG_SIZE_U64 | 0x20000 | 2)
 struct kvm_debug_exit_arch {
- __u64 epc;
+  __u64 epc;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kvm_guest_debug_arch {
@@ -99,8 +99,8 @@ struct kvm_sync_regs {
 struct kvm_sregs {
 };
 struct kvm_mips_interrupt {
- __u32 cpu;
+  __u32 cpu;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 irq;
+  __u32 irq;
 };
 #endif

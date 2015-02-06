@@ -38,37 +38,37 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CFID_X25_2X 5200
 struct cycx_fw_info {
- unsigned short codeid;
- unsigned short version;
+  unsigned short codeid;
+  unsigned short version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short adapter[CFM_MAX_CYCX];
- unsigned long memsize;
- unsigned short reserved[2];
- unsigned short startoffs;
+  unsigned short adapter[CFM_MAX_CYCX];
+  unsigned long memsize;
+  unsigned short reserved[2];
+  unsigned short startoffs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short winoffs;
- unsigned short codeoffs;
- unsigned long codesize;
- unsigned short dataoffs;
+  unsigned short winoffs;
+  unsigned short codeoffs;
+  unsigned long codesize;
+  unsigned short dataoffs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long datasize;
+  unsigned long datasize;
 };
 struct cycx_firmware {
- char signature[80];
+  char signature[80];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short version;
- unsigned short checksum;
- unsigned short reserved[6];
- char descr[CFM_DESCR_LEN];
+  unsigned short version;
+  unsigned short checksum;
+  unsigned short reserved[6];
+  char descr[CFM_DESCR_LEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct cycx_fw_info info;
- unsigned char image[0];
+  struct cycx_fw_info info;
+  unsigned char image[0];
 };
 struct cycx_fw_header {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long reset_size;
- unsigned long data_size;
- unsigned long code_size;
+  unsigned long reset_size;
+  unsigned long data_size;
+  unsigned long code_size;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

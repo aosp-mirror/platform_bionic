@@ -28,8 +28,8 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ASHMEM_IS_PINNED 1
 struct ashmem_pin {
- __u32 offset;
- __u32 len;
+  __u32 offset;
+  __u32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define __ASHMEMIOC 0x77

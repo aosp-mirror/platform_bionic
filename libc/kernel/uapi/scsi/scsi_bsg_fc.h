@@ -33,18 +33,18 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FC_BSG_RPT_CT (FC_BSG_RPT_MASK | 0x00000002)
 struct fc_bsg_host_add_rport {
- uint8_t reserved;
- uint8_t port_id[3];
+  uint8_t reserved;
+  uint8_t port_id[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct fc_bsg_host_del_rport {
- uint8_t reserved;
- uint8_t port_id[3];
+  uint8_t reserved;
+  uint8_t port_id[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct fc_bsg_host_els {
- uint8_t command_code;
- uint8_t port_id[3];
+  uint8_t command_code;
+  uint8_t port_id[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define FC_CTELS_STATUS_OK 0x00000000
@@ -56,66 +56,66 @@ struct fc_bsg_host_els {
 #define FC_CTELS_STATUS_F_BSY 0x00000006
 struct fc_bsg_ctels_reply {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t status;
- struct {
- uint8_t action;
- uint8_t reason_code;
+  uint32_t status;
+  struct {
+    uint8_t action;
+    uint8_t reason_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t reason_explanation;
- uint8_t vendor_unique;
- } rjt_data;
+    uint8_t reason_explanation;
+    uint8_t vendor_unique;
+  } rjt_data;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct fc_bsg_host_ct {
- uint8_t reserved;
- uint8_t port_id[3];
- uint32_t preamble_word0;
+  uint8_t reserved;
+  uint8_t port_id[3];
+  uint32_t preamble_word0;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t preamble_word1;
- uint32_t preamble_word2;
+  uint32_t preamble_word1;
+  uint32_t preamble_word2;
 };
 struct fc_bsg_host_vendor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t vendor_id;
- uint32_t vendor_cmd[0];
+  uint64_t vendor_id;
+  uint32_t vendor_cmd[0];
 };
 struct fc_bsg_host_vendor_reply {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t vendor_rsp[0];
+  uint32_t vendor_rsp[0];
 };
 struct fc_bsg_rport_els {
- uint8_t els_code;
+  uint8_t els_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct fc_bsg_rport_ct {
- uint32_t preamble_word0;
- uint32_t preamble_word1;
+  uint32_t preamble_word0;
+  uint32_t preamble_word1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t preamble_word2;
+  uint32_t preamble_word2;
 };
 struct fc_bsg_request {
- uint32_t msgcode;
+  uint32_t msgcode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct fc_bsg_host_add_rport h_addrport;
- struct fc_bsg_host_del_rport h_delrport;
- struct fc_bsg_host_els h_els;
+  union {
+    struct fc_bsg_host_add_rport h_addrport;
+    struct fc_bsg_host_del_rport h_delrport;
+    struct fc_bsg_host_els h_els;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct fc_bsg_host_ct h_ct;
- struct fc_bsg_host_vendor h_vendor;
- struct fc_bsg_rport_els r_els;
- struct fc_bsg_rport_ct r_ct;
+    struct fc_bsg_host_ct h_ct;
+    struct fc_bsg_host_vendor h_vendor;
+    struct fc_bsg_rport_els r_els;
+    struct fc_bsg_rport_ct r_ct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } rqst_data;
+  } rqst_data;
 } __attribute__((packed));
 struct fc_bsg_reply {
- uint32_t result;
+  uint32_t result;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t reply_payload_rcv_len;
- union {
- struct fc_bsg_host_vendor_reply vendor_reply;
- struct fc_bsg_ctels_reply ctels_reply;
+  uint32_t reply_payload_rcv_len;
+  union {
+    struct fc_bsg_host_vendor_reply vendor_reply;
+    struct fc_bsg_ctels_reply ctels_reply;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } reply_data;
+  } reply_data;
 };
 #endif

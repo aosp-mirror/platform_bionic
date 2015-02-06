@@ -59,27 +59,27 @@
 #define BOND_XMIT_POLICY_ENCAP23 3
 #define BOND_XMIT_POLICY_ENCAP34 4
 typedef struct ifbond {
- __s32 bond_mode;
+  __s32 bond_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 num_slaves;
- __s32 miimon;
+  __s32 num_slaves;
+  __s32 miimon;
 } ifbond;
 typedef struct ifslave {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 slave_id;
- char slave_name[IFNAMSIZ];
- __s8 link;
- __s8 state;
+  __s32 slave_id;
+  char slave_name[IFNAMSIZ];
+  __s8 link;
+  __s8 state;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 link_failure_count;
+  __u32 link_failure_count;
 } ifslave;
 struct ad_info {
- __u16 aggregator_id;
+  __u16 aggregator_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 ports;
- __u16 actor_key;
- __u16 partner_key;
- __u8 partner_system[ETH_ALEN];
+  __u16 ports;
+  __u16 actor_key;
+  __u16 partner_key;
+  __u8 partner_system[ETH_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

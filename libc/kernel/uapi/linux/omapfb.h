@@ -22,9 +22,9 @@
 #include <linux/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/types.h>
-#define OMAP_IOW(num, dtype) _IOW('O', num, dtype)
-#define OMAP_IOR(num, dtype) _IOR('O', num, dtype)
-#define OMAP_IOWR(num, dtype) _IOWR('O', num, dtype)
+#define OMAP_IOW(num,dtype) _IOW('O', num, dtype)
+#define OMAP_IOR(num,dtype) _IOR('O', num, dtype)
+#define OMAP_IOWR(num,dtype) _IOWR('O', num, dtype)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP_IO(num) _IO('O', num)
 #define OMAPFB_MIRROR OMAP_IOW(31, int)
@@ -86,144 +86,144 @@
 #define OMAPFB_MEM_IDX_MASK 0x7f
 enum omapfb_color_format {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_COLOR_RGB565 = 0,
- OMAPFB_COLOR_YUV422,
- OMAPFB_COLOR_YUV420,
- OMAPFB_COLOR_CLUT_8BPP,
+  OMAPFB_COLOR_RGB565 = 0,
+  OMAPFB_COLOR_YUV422,
+  OMAPFB_COLOR_YUV420,
+  OMAPFB_COLOR_CLUT_8BPP,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_COLOR_CLUT_4BPP,
- OMAPFB_COLOR_CLUT_2BPP,
- OMAPFB_COLOR_CLUT_1BPP,
- OMAPFB_COLOR_RGB444,
+  OMAPFB_COLOR_CLUT_4BPP,
+  OMAPFB_COLOR_CLUT_2BPP,
+  OMAPFB_COLOR_CLUT_1BPP,
+  OMAPFB_COLOR_RGB444,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_COLOR_YUY422,
- OMAPFB_COLOR_ARGB16,
- OMAPFB_COLOR_RGB24U,
- OMAPFB_COLOR_RGB24P,
+  OMAPFB_COLOR_YUY422,
+  OMAPFB_COLOR_ARGB16,
+  OMAPFB_COLOR_RGB24U,
+  OMAPFB_COLOR_RGB24P,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_COLOR_ARGB32,
- OMAPFB_COLOR_RGBA32,
- OMAPFB_COLOR_RGBX32,
+  OMAPFB_COLOR_ARGB32,
+  OMAPFB_COLOR_RGBA32,
+  OMAPFB_COLOR_RGBX32,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omapfb_update_window {
- __u32 x, y;
- __u32 width, height;
- __u32 format;
+  __u32 x, y;
+  __u32 width, height;
+  __u32 format;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 out_x, out_y;
- __u32 out_width, out_height;
- __u32 reserved[8];
+  __u32 out_x, out_y;
+  __u32 out_width, out_height;
+  __u32 reserved[8];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omapfb_update_window_old {
- __u32 x, y;
- __u32 width, height;
- __u32 format;
+  __u32 x, y;
+  __u32 width, height;
+  __u32 format;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum omapfb_plane {
- OMAPFB_PLANE_GFX = 0,
- OMAPFB_PLANE_VID1,
+  OMAPFB_PLANE_GFX = 0,
+  OMAPFB_PLANE_VID1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_PLANE_VID2,
+  OMAPFB_PLANE_VID2,
 };
 enum omapfb_channel_out {
- OMAPFB_CHANNEL_OUT_LCD = 0,
+  OMAPFB_CHANNEL_OUT_LCD = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_CHANNEL_OUT_DIGIT,
+  OMAPFB_CHANNEL_OUT_DIGIT,
 };
 struct omapfb_plane_info {
- __u32 pos_x;
+  __u32 pos_x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pos_y;
- __u8 enabled;
- __u8 channel_out;
- __u8 mirror;
+  __u32 pos_y;
+  __u8 enabled;
+  __u8 channel_out;
+  __u8 mirror;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 mem_idx;
- __u32 out_width;
- __u32 out_height;
- __u32 reserved2[12];
+  __u8 mem_idx;
+  __u32 out_width;
+  __u32 out_height;
+  __u32 reserved2[12];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omapfb_mem_info {
- __u32 size;
- __u8 type;
+  __u32 size;
+  __u8 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 reserved[3];
+  __u8 reserved[3];
 };
 struct omapfb_caps {
- __u32 ctrl;
+  __u32 ctrl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 plane_color;
- __u32 wnd_color;
+  __u32 plane_color;
+  __u32 wnd_color;
 };
 enum omapfb_color_key_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_COLOR_KEY_DISABLED = 0,
- OMAPFB_COLOR_KEY_GFX_DST,
- OMAPFB_COLOR_KEY_VID_SRC,
+  OMAPFB_COLOR_KEY_DISABLED = 0,
+  OMAPFB_COLOR_KEY_GFX_DST,
+  OMAPFB_COLOR_KEY_VID_SRC,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct omapfb_color_key {
- __u8 channel_out;
- __u32 background;
- __u32 trans_key;
+  __u8 channel_out;
+  __u32 background;
+  __u32 trans_key;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 key_type;
+  __u8 key_type;
 };
 enum omapfb_update_mode {
- OMAPFB_UPDATE_DISABLED = 0,
+  OMAPFB_UPDATE_DISABLED = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAPFB_AUTO_UPDATE,
- OMAPFB_MANUAL_UPDATE
+  OMAPFB_AUTO_UPDATE,
+  OMAPFB_MANUAL_UPDATE
 };
 struct omapfb_memory_read {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 x;
- __u16 y;
- __u16 w;
- __u16 h;
+  __u16 x;
+  __u16 y;
+  __u16 w;
+  __u16 h;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- size_t buffer_size;
- void __user *buffer;
+  size_t buffer_size;
+  void __user * buffer;
 };
 struct omapfb_ovl_colormode {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 overlay_idx;
- __u8 mode_idx;
- __u32 bits_per_pixel;
- __u32 nonstd;
+  __u8 overlay_idx;
+  __u8 mode_idx;
+  __u32 bits_per_pixel;
+  __u32 nonstd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct fb_bitfield red;
- struct fb_bitfield green;
- struct fb_bitfield blue;
- struct fb_bitfield transp;
+  struct fb_bitfield red;
+  struct fb_bitfield green;
+  struct fb_bitfield blue;
+  struct fb_bitfield transp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omapfb_vram_info {
- __u32 total;
- __u32 free;
+  __u32 total;
+  __u32 free;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 largest_free_block;
- __u32 reserved[5];
+  __u32 largest_free_block;
+  __u32 reserved[5];
 };
 struct omapfb_tearsync_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 enabled;
- __u8 reserved1[3];
- __u16 line;
- __u16 reserved2;
+  __u8 enabled;
+  __u8 reserved1[3];
+  __u16 line;
+  __u16 reserved2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct omapfb_display_info {
- __u16 xres;
- __u16 yres;
+  __u16 xres;
+  __u16 yres;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 width;
- __u32 height;
- __u32 reserved[5];
+  __u32 width;
+  __u32 height;
+  __u32 reserved[5];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

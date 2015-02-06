@@ -32,19 +32,19 @@
 #define EQL_SETMASTRCFG (SIOCDEVPRIVATE + 5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct master_config {
- char master_name[16];
- int max_slaves;
- int min_slaves;
+  char master_name[16];
+  int max_slaves;
+  int min_slaves;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } master_config_t;
 typedef struct slave_config {
- char slave_name[16];
- long priority;
+  char slave_name[16];
+  long priority;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } slave_config_t;
 typedef struct slaving_request {
- char slave_name[16];
- long priority;
+  char slave_name[16];
+  long priority;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } slaving_request_t;
 #endif

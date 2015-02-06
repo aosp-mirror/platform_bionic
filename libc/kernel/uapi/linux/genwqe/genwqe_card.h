@@ -39,7 +39,7 @@
 #define IO_EXTENDED_DIAG_SELECTOR 0x00000070
 #define IO_EXTENDED_DIAG_READ_MBX 0x00000078
 #define IO_EXTENDED_DIAG_MAP(ring) (0x00000500 | ((ring) << 3))
-#define GENWQE_EXTENDED_DIAG_SELECTOR(ring, trace) (((ring) << 8) | (trace))
+#define GENWQE_EXTENDED_DIAG_SELECTOR(ring,trace) (((ring) << 8) | (trace))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IO_SLU_UNITCFG 0x00000000
 #define IO_SLU_UNITCFG_TYPE_MASK 0x000000000ff00000
@@ -94,11 +94,11 @@
 #define IO_SLC_VF_FREE_RUNNING_TIMER 0x00050108
 #define IO_PF_SLC_VIRTUAL_REGION 0x00050000
 #define IO_PF_SLC_VIRTUAL_WINDOW 0x00060000
-#define IO_PF_SLC_JOBPEND(n) (0x00061000 + 8*(n))
+#define IO_PF_SLC_JOBPEND(n) (0x00061000 + 8 * (n))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IO_SLC_JOBPEND(n) IO_PF_SLC_JOBPEND(n)
-#define IO_SLU_SLC_PARSE_TRAP(n) (0x00011000 + 8*(n))
-#define IO_SLU_SLC_DISP_TRAP(n) (0x00011200 + 8*(n))
+#define IO_SLU_SLC_PARSE_TRAP(n) (0x00011000 + 8 * (n))
+#define IO_SLU_SLC_DISP_TRAP(n) (0x00011200 + 8 * (n))
 #define IO_SLC_CFGREG_GFIR 0x00020000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define GFIR_ERR_TRIGGER 0x0000ffff
@@ -177,8 +177,8 @@
 #define IO_APP_DEBUG_REG_18 0x02010088
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct genwqe_reg_io {
- __u64 num;
- __u64 val64;
+  __u64 num;
+  __u64 val64;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IO_ILLEGAL_VALUE 0xffffffffffffffffull
@@ -224,29 +224,29 @@ struct genwqe_reg_io {
 #define SLCMD_MOVE_FLASH_FLAG_PARTITION (1 << 4)
 #define SLCMD_MOVE_FLASH_FLAG_ERASE (1 << 5)
 enum genwqe_card_state {
- GENWQE_CARD_UNUSED = 0,
+  GENWQE_CARD_UNUSED = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GENWQE_CARD_USED = 1,
- GENWQE_CARD_FATAL_ERROR = 2,
- GENWQE_CARD_RELOAD_BITSTREAM = 3,
- GENWQE_CARD_STATE_MAX,
+  GENWQE_CARD_USED = 1,
+  GENWQE_CARD_FATAL_ERROR = 2,
+  GENWQE_CARD_RELOAD_BITSTREAM = 3,
+  GENWQE_CARD_STATE_MAX,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct genwqe_bitstream {
- __u64 data_addr;
- __u32 size;
+  __u64 data_addr;
+  __u32 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 crc;
- __u64 target_addr;
- __u32 partition;
- __u32 uid;
+  __u32 crc;
+  __u64 target_addr;
+  __u32 partition;
+  __u32 uid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 slu_id;
- __u64 app_id;
- __u16 retc;
- __u16 attn;
+  __u64 slu_id;
+  __u64 app_id;
+  __u16 retc;
+  __u16 attn;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 progress;
+  __u32 progress;
 };
 #define DDCB_LENGTH 256
 #define DDCB_ASIV_LENGTH 104
@@ -256,13 +256,13 @@ struct genwqe_bitstream {
 #define DDCB_FIXUPS 12
 struct genwqe_debug_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char driver_version[64];
- __u64 slu_unitcfg;
- __u64 app_unitcfg;
- __u8 ddcb_before[DDCB_LENGTH];
+  char driver_version[64];
+  __u64 slu_unitcfg;
+  __u64 app_unitcfg;
+  __u8 ddcb_before[DDCB_LENGTH];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ddcb_prev[DDCB_LENGTH];
- __u8 ddcb_finished[DDCB_LENGTH];
+  __u8 ddcb_prev[DDCB_LENGTH];
+  __u8 ddcb_finished[DDCB_LENGTH];
 };
 #define ATS_TYPE_DATA 0x0ull
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -271,38 +271,38 @@ struct genwqe_debug_data {
 #define ATS_TYPE_SGL_RD 0x6ull
 #define ATS_TYPE_SGL_RDWR 0x7ull
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ATS_SET_FLAGS(_struct, _field, _flags)   (((_flags) & 0xf) << (44 - (4 * (offsetof(_struct, _field) / 8))))
-#define ATS_GET_FLAGS(_ats, _byte_offs)   (((_ats) >> (44 - (4 * ((_byte_offs) / 8)))) & 0xf)
+#define ATS_SET_FLAGS(_struct,_field,_flags) (((_flags) & 0xf) << (44 - (4 * (offsetof(_struct, _field) / 8))))
+#define ATS_GET_FLAGS(_ats,_byte_offs) (((_ats) >> (44 - (4 * ((_byte_offs) / 8)))) & 0xf)
 struct genwqe_ddcb_cmd {
- __u64 next_addr;
+  __u64 next_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 flags;
- __u8 acfunc;
- __u8 cmd;
- __u8 asiv_length;
+  __u64 flags;
+  __u8 acfunc;
+  __u8 cmd;
+  __u8 asiv_length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 asv_length;
- __u16 cmdopts;
- __u16 retc;
- __u16 attn;
+  __u8 asv_length;
+  __u16 cmdopts;
+  __u16 retc;
+  __u16 attn;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 vcrc;
- __u32 progress;
- __u64 deque_ts;
- __u64 cmplt_ts;
+  __u16 vcrc;
+  __u32 progress;
+  __u64 deque_ts;
+  __u64 cmplt_ts;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 disp_ts;
- __u64 ddata_addr;
- __u8 asv[DDCB_ASV_LENGTH];
- union {
+  __u64 disp_ts;
+  __u64 ddata_addr;
+  __u8 asv[DDCB_ASV_LENGTH];
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u64 ats;
- __u8 asiv[DDCB_ASIV_LENGTH_ATS];
- };
+    struct {
+      __u64 ats;
+      __u8 asiv[DDCB_ASIV_LENGTH_ATS];
+    };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 __asiv[DDCB_ASIV_LENGTH];
- };
+    __u8 __asiv[DDCB_ASIV_LENGTH];
+  };
 };
 #define GENWQE_IOC_CODE 0xa5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -316,17 +316,17 @@ struct genwqe_ddcb_cmd {
 #define GENWQE_GET_CARD_STATE _IOR(GENWQE_IOC_CODE, 36, enum genwqe_card_state)
 struct genwqe_mem {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 addr;
- __u64 size;
- __u64 direction;
- __u64 flags;
+  __u64 addr;
+  __u64 size;
+  __u64 direction;
+  __u64 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define GENWQE_PIN_MEM _IOWR(GENWQE_IOC_CODE, 40, struct genwqe_mem)
 #define GENWQE_UNPIN_MEM _IOWR(GENWQE_IOC_CODE, 41, struct genwqe_mem)
-#define GENWQE_EXECUTE_DDCB   _IOWR(GENWQE_IOC_CODE, 50, struct genwqe_ddcb_cmd)
+#define GENWQE_EXECUTE_DDCB _IOWR(GENWQE_IOC_CODE, 50, struct genwqe_ddcb_cmd)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define GENWQE_EXECUTE_RAW_DDCB   _IOWR(GENWQE_IOC_CODE, 51, struct genwqe_ddcb_cmd)
+#define GENWQE_EXECUTE_RAW_DDCB _IOWR(GENWQE_IOC_CODE, 51, struct genwqe_ddcb_cmd)
 #define GENWQE_SLU_UPDATE _IOWR(GENWQE_IOC_CODE, 80, struct genwqe_bitstream)
 #define GENWQE_SLU_READ _IOWR(GENWQE_IOC_CODE, 81, struct genwqe_bitstream)
 #endif

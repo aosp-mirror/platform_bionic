@@ -34,16 +34,16 @@
 #define DSP_CONTROL 77
 #define ACX 78
 struct pt_regs {
- __u64 regs[32];
+  __u64 regs[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 lo;
- __u64 hi;
- __u64 cp0_epc;
- __u64 cp0_badvaddr;
+  __u64 lo;
+  __u64 hi;
+  __u64 cp0_epc;
+  __u64 cp0_badvaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 cp0_status;
- __u64 cp0_cause;
-} __attribute__ ((aligned (8)));
+  __u64 cp0_status;
+  __u64 cp0_cause;
+} __attribute__((aligned(8)));
 #define PTRACE_GETREGS 12
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PTRACE_SETREGS 13
@@ -61,32 +61,32 @@ struct pt_regs {
 #define PTRACE_GET_THREAD_AREA_3264 0xc4
 enum pt_watch_style {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- pt_watch_style_mips32,
- pt_watch_style_mips64
+  pt_watch_style_mips32,
+  pt_watch_style_mips64
 };
 struct mips32_watch_regs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int watchlo[8];
- unsigned short watchhi[8];
- unsigned short watch_masks[8];
- unsigned int num_valid;
+  unsigned int watchlo[8];
+  unsigned short watchhi[8];
+  unsigned short watch_masks[8];
+  unsigned int num_valid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((aligned(8)));
 struct mips64_watch_regs {
- unsigned long long watchlo[8];
- unsigned short watchhi[8];
+  unsigned long long watchlo[8];
+  unsigned short watchhi[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short watch_masks[8];
- unsigned int num_valid;
+  unsigned short watch_masks[8];
+  unsigned int num_valid;
 } __attribute__((aligned(8)));
 struct pt_watch_regs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- enum pt_watch_style style;
- union {
- struct mips32_watch_regs mips32;
- struct mips64_watch_regs mips64;
+  enum pt_watch_style style;
+  union {
+    struct mips32_watch_regs mips32;
+    struct mips64_watch_regs mips64;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- };
+  };
 };
 #define PTRACE_GET_WATCH_REGS 0xd0
 #define PTRACE_SET_WATCH_REGS 0xd1

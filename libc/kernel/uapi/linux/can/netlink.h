@@ -21,54 +21,54 @@
 #include <linux/types.h>
 struct can_bittiming {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bitrate;
- __u32 sample_point;
- __u32 tq;
- __u32 prop_seg;
+  __u32 bitrate;
+  __u32 sample_point;
+  __u32 tq;
+  __u32 prop_seg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 phase_seg1;
- __u32 phase_seg2;
- __u32 sjw;
- __u32 brp;
+  __u32 phase_seg1;
+  __u32 phase_seg2;
+  __u32 sjw;
+  __u32 brp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct can_bittiming_const {
- char name[16];
- __u32 tseg1_min;
+  char name[16];
+  __u32 tseg1_min;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tseg1_max;
- __u32 tseg2_min;
- __u32 tseg2_max;
- __u32 sjw_max;
+  __u32 tseg1_max;
+  __u32 tseg2_min;
+  __u32 tseg2_max;
+  __u32 sjw_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 brp_min;
- __u32 brp_max;
- __u32 brp_inc;
+  __u32 brp_min;
+  __u32 brp_max;
+  __u32 brp_inc;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct can_clock {
- __u32 freq;
+  __u32 freq;
 };
 enum can_state {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- CAN_STATE_ERROR_ACTIVE = 0,
- CAN_STATE_ERROR_WARNING,
- CAN_STATE_ERROR_PASSIVE,
- CAN_STATE_BUS_OFF,
+  CAN_STATE_ERROR_ACTIVE = 0,
+  CAN_STATE_ERROR_WARNING,
+  CAN_STATE_ERROR_PASSIVE,
+  CAN_STATE_BUS_OFF,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- CAN_STATE_STOPPED,
- CAN_STATE_SLEEPING,
- CAN_STATE_MAX
+  CAN_STATE_STOPPED,
+  CAN_STATE_SLEEPING,
+  CAN_STATE_MAX
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct can_berr_counter {
- __u16 txerr;
- __u16 rxerr;
+  __u16 txerr;
+  __u16 rxerr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct can_ctrlmode {
- __u32 mask;
- __u32 flags;
+  __u32 mask;
+  __u32 flags;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAN_CTRLMODE_LOOPBACK 0x01
@@ -81,30 +81,30 @@ struct can_ctrlmode {
 #define CAN_CTRLMODE_PRESUME_ACK 0x40
 struct can_device_stats {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bus_error;
- __u32 error_warning;
- __u32 error_passive;
- __u32 bus_off;
+  __u32 bus_error;
+  __u32 error_warning;
+  __u32 error_passive;
+  __u32 bus_off;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 arbitration_lost;
- __u32 restarts;
+  __u32 arbitration_lost;
+  __u32 restarts;
 };
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IFLA_CAN_UNSPEC,
- IFLA_CAN_BITTIMING,
- IFLA_CAN_BITTIMING_CONST,
- IFLA_CAN_CLOCK,
+  IFLA_CAN_UNSPEC,
+  IFLA_CAN_BITTIMING,
+  IFLA_CAN_BITTIMING_CONST,
+  IFLA_CAN_CLOCK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IFLA_CAN_STATE,
- IFLA_CAN_CTRLMODE,
- IFLA_CAN_RESTART_MS,
- IFLA_CAN_RESTART,
+  IFLA_CAN_STATE,
+  IFLA_CAN_CTRLMODE,
+  IFLA_CAN_RESTART_MS,
+  IFLA_CAN_RESTART,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IFLA_CAN_BERR_COUNTER,
- IFLA_CAN_DATA_BITTIMING,
- IFLA_CAN_DATA_BITTIMING_CONST,
- __IFLA_CAN_MAX
+  IFLA_CAN_BERR_COUNTER,
+  IFLA_CAN_DATA_BITTIMING,
+  IFLA_CAN_DATA_BITTIMING_CONST,
+  __IFLA_CAN_MAX
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IFLA_CAN_MAX (__IFLA_CAN_MAX - 1)

@@ -41,84 +41,84 @@
 #define BPF_EXIT 0x90
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BPF_REG_0 = 0,
- BPF_REG_1,
- BPF_REG_2,
- BPF_REG_3,
+  BPF_REG_0 = 0,
+  BPF_REG_1,
+  BPF_REG_2,
+  BPF_REG_3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BPF_REG_4,
- BPF_REG_5,
- BPF_REG_6,
- BPF_REG_7,
+  BPF_REG_4,
+  BPF_REG_5,
+  BPF_REG_6,
+  BPF_REG_7,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BPF_REG_8,
- BPF_REG_9,
- BPF_REG_10,
- __MAX_BPF_REG,
+  BPF_REG_8,
+  BPF_REG_9,
+  BPF_REG_10,
+  __MAX_BPF_REG,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define MAX_BPF_REG __MAX_BPF_REG
 struct bpf_insn {
- __u8 code;
+  __u8 code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dst_reg:4;
- __u8 src_reg:4;
- __s16 off;
- __s32 imm;
+  __u8 dst_reg : 4;
+  __u8 src_reg : 4;
+  __s16 off;
+  __s32 imm;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum bpf_cmd {
- BPF_MAP_CREATE,
- BPF_MAP_LOOKUP_ELEM,
+  BPF_MAP_CREATE,
+  BPF_MAP_LOOKUP_ELEM,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BPF_MAP_UPDATE_ELEM,
- BPF_MAP_DELETE_ELEM,
- BPF_MAP_GET_NEXT_KEY,
- BPF_PROG_LOAD,
+  BPF_MAP_UPDATE_ELEM,
+  BPF_MAP_DELETE_ELEM,
+  BPF_MAP_GET_NEXT_KEY,
+  BPF_PROG_LOAD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum bpf_map_type {
- BPF_MAP_TYPE_UNSPEC,
+  BPF_MAP_TYPE_UNSPEC,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum bpf_prog_type {
- BPF_PROG_TYPE_UNSPEC,
+  BPF_PROG_TYPE_UNSPEC,
 };
 union bpf_attr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- __u32 map_type;
- __u32 key_size;
- __u32 value_size;
+  struct {
+    __u32 map_type;
+    __u32 key_size;
+    __u32 value_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 max_entries;
- };
- struct {
- __u32 map_fd;
+    __u32 max_entries;
+  };
+  struct {
+    __u32 map_fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __aligned_u64 key;
- union {
- __aligned_u64 value;
- __aligned_u64 next_key;
+    __aligned_u64 key;
+    union {
+      __aligned_u64 value;
+      __aligned_u64 next_key;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- };
- };
- struct {
- __u32 prog_type;
+    };
+  };
+  struct {
+    __u32 prog_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 insn_cnt;
- __aligned_u64 insns;
- __aligned_u64 license;
- __u32 log_level;
+    __u32 insn_cnt;
+    __aligned_u64 insns;
+    __aligned_u64 license;
+    __u32 log_level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 log_size;
- __aligned_u64 log_buf;
- };
+    __u32 log_size;
+    __aligned_u64 log_buf;
+  };
 } __attribute__((aligned(8)));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum bpf_func_id {
- BPF_FUNC_unspec,
- __BPF_FUNC_MAX_ID,
+  BPF_FUNC_unspec,
+  __BPF_FUNC_MAX_ID,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

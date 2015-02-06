@@ -171,75 +171,75 @@
 #define SND_RATECONTROLMODE_VARIABLEBITRATE ((__u32) 0x00000002)
 struct snd_enc_wma {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 super_block_align;
+  __u32 super_block_align;
 };
 struct snd_enc_vorbis {
- __s32 quality;
+  __s32 quality;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 managed;
- __u32 max_bit_rate;
- __u32 min_bit_rate;
- __u32 downmix;
+  __u32 managed;
+  __u32 max_bit_rate;
+  __u32 min_bit_rate;
+  __u32 downmix;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed, aligned(4)));
 struct snd_enc_real {
- __u32 quant_bits;
- __u32 start_region;
+  __u32 quant_bits;
+  __u32 start_region;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 num_regions;
+  __u32 num_regions;
 } __attribute__((packed, aligned(4)));
 struct snd_enc_flac {
- __u32 num;
+  __u32 num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 gain;
+  __u32 gain;
 } __attribute__((packed, aligned(4)));
 struct snd_enc_generic {
- __u32 bw;
+  __u32 bw;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 reserved[15];
+  __s32 reserved[15];
 } __attribute__((packed, aligned(4)));
 union snd_codec_options {
- struct snd_enc_wma wma;
+  struct snd_enc_wma wma;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct snd_enc_vorbis vorbis;
- struct snd_enc_real real;
- struct snd_enc_flac flac;
- struct snd_enc_generic generic;
+  struct snd_enc_vorbis vorbis;
+  struct snd_enc_real real;
+  struct snd_enc_flac flac;
+  struct snd_enc_generic generic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed, aligned(4)));
 struct snd_codec_desc {
- __u32 max_ch;
- __u32 sample_rates[MAX_NUM_SAMPLE_RATES];
+  __u32 max_ch;
+  __u32 sample_rates[MAX_NUM_SAMPLE_RATES];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 num_sample_rates;
- __u32 bit_rate[MAX_NUM_BITRATES];
- __u32 num_bitrates;
- __u32 rate_control;
+  __u32 num_sample_rates;
+  __u32 bit_rate[MAX_NUM_BITRATES];
+  __u32 num_bitrates;
+  __u32 rate_control;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 profiles;
- __u32 modes;
- __u32 formats;
- __u32 min_buffer;
+  __u32 profiles;
+  __u32 modes;
+  __u32 formats;
+  __u32 min_buffer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reserved[15];
+  __u32 reserved[15];
 } __attribute__((packed, aligned(4)));
 struct snd_codec {
- __u32 id;
+  __u32 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ch_in;
- __u32 ch_out;
- __u32 sample_rate;
- __u32 bit_rate;
+  __u32 ch_in;
+  __u32 ch_out;
+  __u32 sample_rate;
+  __u32 bit_rate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rate_control;
- __u32 profile;
- __u32 level;
- __u32 ch_mode;
+  __u32 rate_control;
+  __u32 profile;
+  __u32 level;
+  __u32 ch_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 format;
- __u32 align;
- union snd_codec_options options;
- __u32 reserved[3];
+  __u32 format;
+  __u32 align;
+  union snd_codec_options options;
+  __u32 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed, aligned(4)));
 #endif

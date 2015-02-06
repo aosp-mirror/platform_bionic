@@ -21,253 +21,253 @@
 #include <linux/types.h>
 typedef enum fe_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_QPSK,
- FE_QAM,
- FE_OFDM,
- FE_ATSC
+  FE_QPSK,
+  FE_QAM,
+  FE_OFDM,
+  FE_ATSC
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } fe_type_t;
 typedef enum fe_caps {
- FE_IS_STUPID = 0,
- FE_CAN_INVERSION_AUTO = 0x1,
+  FE_IS_STUPID = 0,
+  FE_CAN_INVERSION_AUTO = 0x1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_FEC_1_2 = 0x2,
- FE_CAN_FEC_2_3 = 0x4,
- FE_CAN_FEC_3_4 = 0x8,
- FE_CAN_FEC_4_5 = 0x10,
+  FE_CAN_FEC_1_2 = 0x2,
+  FE_CAN_FEC_2_3 = 0x4,
+  FE_CAN_FEC_3_4 = 0x8,
+  FE_CAN_FEC_4_5 = 0x10,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_FEC_5_6 = 0x20,
- FE_CAN_FEC_6_7 = 0x40,
- FE_CAN_FEC_7_8 = 0x80,
- FE_CAN_FEC_8_9 = 0x100,
+  FE_CAN_FEC_5_6 = 0x20,
+  FE_CAN_FEC_6_7 = 0x40,
+  FE_CAN_FEC_7_8 = 0x80,
+  FE_CAN_FEC_8_9 = 0x100,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_FEC_AUTO = 0x200,
- FE_CAN_QPSK = 0x400,
- FE_CAN_QAM_16 = 0x800,
- FE_CAN_QAM_32 = 0x1000,
+  FE_CAN_FEC_AUTO = 0x200,
+  FE_CAN_QPSK = 0x400,
+  FE_CAN_QAM_16 = 0x800,
+  FE_CAN_QAM_32 = 0x1000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_QAM_64 = 0x2000,
- FE_CAN_QAM_128 = 0x4000,
- FE_CAN_QAM_256 = 0x8000,
- FE_CAN_QAM_AUTO = 0x10000,
+  FE_CAN_QAM_64 = 0x2000,
+  FE_CAN_QAM_128 = 0x4000,
+  FE_CAN_QAM_256 = 0x8000,
+  FE_CAN_QAM_AUTO = 0x10000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_TRANSMISSION_MODE_AUTO = 0x20000,
- FE_CAN_BANDWIDTH_AUTO = 0x40000,
- FE_CAN_GUARD_INTERVAL_AUTO = 0x80000,
- FE_CAN_HIERARCHY_AUTO = 0x100000,
+  FE_CAN_TRANSMISSION_MODE_AUTO = 0x20000,
+  FE_CAN_BANDWIDTH_AUTO = 0x40000,
+  FE_CAN_GUARD_INTERVAL_AUTO = 0x80000,
+  FE_CAN_HIERARCHY_AUTO = 0x100000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_8VSB = 0x200000,
- FE_CAN_16VSB = 0x400000,
- FE_HAS_EXTENDED_CAPS = 0x800000,
- FE_CAN_MULTISTREAM = 0x4000000,
+  FE_CAN_8VSB = 0x200000,
+  FE_CAN_16VSB = 0x400000,
+  FE_HAS_EXTENDED_CAPS = 0x800000,
+  FE_CAN_MULTISTREAM = 0x4000000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_TURBO_FEC = 0x8000000,
- FE_CAN_2G_MODULATION = 0x10000000,
- FE_NEEDS_BENDING = 0x20000000,
- FE_CAN_RECOVER = 0x40000000,
+  FE_CAN_TURBO_FEC = 0x8000000,
+  FE_CAN_2G_MODULATION = 0x10000000,
+  FE_NEEDS_BENDING = 0x20000000,
+  FE_CAN_RECOVER = 0x40000000,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_CAN_MUTE_TS = 0x80000000
+  FE_CAN_MUTE_TS = 0x80000000
 } fe_caps_t;
 struct dvb_frontend_info {
- char name[128];
+  char name[128];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- fe_type_t type;
- __u32 frequency_min;
- __u32 frequency_max;
- __u32 frequency_stepsize;
+  fe_type_t type;
+  __u32 frequency_min;
+  __u32 frequency_max;
+  __u32 frequency_stepsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 frequency_tolerance;
- __u32 symbol_rate_min;
- __u32 symbol_rate_max;
- __u32 symbol_rate_tolerance;
+  __u32 frequency_tolerance;
+  __u32 symbol_rate_min;
+  __u32 symbol_rate_max;
+  __u32 symbol_rate_tolerance;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 notifier_delay;
- fe_caps_t caps;
+  __u32 notifier_delay;
+  fe_caps_t caps;
 };
 struct dvb_diseqc_master_cmd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 msg [6];
- __u8 msg_len;
+  __u8 msg[6];
+  __u8 msg_len;
 };
 struct dvb_diseqc_slave_reply {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 msg [4];
- __u8 msg_len;
- int timeout;
+  __u8 msg[4];
+  __u8 msg_len;
+  int timeout;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef enum fe_sec_voltage {
- SEC_VOLTAGE_13,
- SEC_VOLTAGE_18,
- SEC_VOLTAGE_OFF
+  SEC_VOLTAGE_13,
+  SEC_VOLTAGE_18,
+  SEC_VOLTAGE_OFF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } fe_sec_voltage_t;
 typedef enum fe_sec_tone_mode {
- SEC_TONE_ON,
- SEC_TONE_OFF
+  SEC_TONE_ON,
+  SEC_TONE_OFF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } fe_sec_tone_mode_t;
 typedef enum fe_sec_mini_cmd {
- SEC_MINI_A,
- SEC_MINI_B
+  SEC_MINI_A,
+  SEC_MINI_B
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } fe_sec_mini_cmd_t;
 typedef enum fe_status {
- FE_HAS_SIGNAL = 0x01,
- FE_HAS_CARRIER = 0x02,
+  FE_HAS_SIGNAL = 0x01,
+  FE_HAS_CARRIER = 0x02,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_HAS_VITERBI = 0x04,
- FE_HAS_SYNC = 0x08,
- FE_HAS_LOCK = 0x10,
- FE_TIMEDOUT = 0x20,
+  FE_HAS_VITERBI = 0x04,
+  FE_HAS_SYNC = 0x08,
+  FE_HAS_LOCK = 0x10,
+  FE_TIMEDOUT = 0x20,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_REINIT = 0x40,
+  FE_REINIT = 0x40,
 } fe_status_t;
 typedef enum fe_spectral_inversion {
- INVERSION_OFF,
+  INVERSION_OFF,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- INVERSION_ON,
- INVERSION_AUTO
+  INVERSION_ON,
+  INVERSION_AUTO
 } fe_spectral_inversion_t;
 typedef enum fe_code_rate {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FEC_NONE = 0,
- FEC_1_2,
- FEC_2_3,
- FEC_3_4,
+  FEC_NONE = 0,
+  FEC_1_2,
+  FEC_2_3,
+  FEC_3_4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FEC_4_5,
- FEC_5_6,
- FEC_6_7,
- FEC_7_8,
+  FEC_4_5,
+  FEC_5_6,
+  FEC_6_7,
+  FEC_7_8,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FEC_8_9,
- FEC_AUTO,
- FEC_3_5,
- FEC_9_10,
+  FEC_8_9,
+  FEC_AUTO,
+  FEC_3_5,
+  FEC_9_10,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FEC_2_5,
+  FEC_2_5,
 } fe_code_rate_t;
 typedef enum fe_modulation {
- QPSK,
+  QPSK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- QAM_16,
- QAM_32,
- QAM_64,
- QAM_128,
+  QAM_16,
+  QAM_32,
+  QAM_64,
+  QAM_128,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- QAM_256,
- QAM_AUTO,
- VSB_8,
- VSB_16,
+  QAM_256,
+  QAM_AUTO,
+  VSB_8,
+  VSB_16,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- PSK_8,
- APSK_16,
- APSK_32,
- DQPSK,
+  PSK_8,
+  APSK_16,
+  APSK_32,
+  DQPSK,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- QAM_4_NR,
+  QAM_4_NR,
 } fe_modulation_t;
 typedef enum fe_transmit_mode {
- TRANSMISSION_MODE_2K,
+  TRANSMISSION_MODE_2K,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- TRANSMISSION_MODE_8K,
- TRANSMISSION_MODE_AUTO,
- TRANSMISSION_MODE_4K,
- TRANSMISSION_MODE_1K,
+  TRANSMISSION_MODE_8K,
+  TRANSMISSION_MODE_AUTO,
+  TRANSMISSION_MODE_4K,
+  TRANSMISSION_MODE_1K,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- TRANSMISSION_MODE_16K,
- TRANSMISSION_MODE_32K,
- TRANSMISSION_MODE_C1,
- TRANSMISSION_MODE_C3780,
+  TRANSMISSION_MODE_16K,
+  TRANSMISSION_MODE_32K,
+  TRANSMISSION_MODE_C1,
+  TRANSMISSION_MODE_C3780,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } fe_transmit_mode_t;
 typedef enum fe_bandwidth {
- BANDWIDTH_8_MHZ,
- BANDWIDTH_7_MHZ,
+  BANDWIDTH_8_MHZ,
+  BANDWIDTH_7_MHZ,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BANDWIDTH_6_MHZ,
- BANDWIDTH_AUTO,
- BANDWIDTH_5_MHZ,
- BANDWIDTH_10_MHZ,
+  BANDWIDTH_6_MHZ,
+  BANDWIDTH_AUTO,
+  BANDWIDTH_5_MHZ,
+  BANDWIDTH_10_MHZ,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BANDWIDTH_1_712_MHZ,
+  BANDWIDTH_1_712_MHZ,
 } fe_bandwidth_t;
 typedef enum fe_guard_interval {
- GUARD_INTERVAL_1_32,
+  GUARD_INTERVAL_1_32,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GUARD_INTERVAL_1_16,
- GUARD_INTERVAL_1_8,
- GUARD_INTERVAL_1_4,
- GUARD_INTERVAL_AUTO,
+  GUARD_INTERVAL_1_16,
+  GUARD_INTERVAL_1_8,
+  GUARD_INTERVAL_1_4,
+  GUARD_INTERVAL_AUTO,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GUARD_INTERVAL_1_128,
- GUARD_INTERVAL_19_128,
- GUARD_INTERVAL_19_256,
- GUARD_INTERVAL_PN420,
+  GUARD_INTERVAL_1_128,
+  GUARD_INTERVAL_19_128,
+  GUARD_INTERVAL_19_256,
+  GUARD_INTERVAL_PN420,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GUARD_INTERVAL_PN595,
- GUARD_INTERVAL_PN945,
+  GUARD_INTERVAL_PN595,
+  GUARD_INTERVAL_PN945,
 } fe_guard_interval_t;
 typedef enum fe_hierarchy {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- HIERARCHY_NONE,
- HIERARCHY_1,
- HIERARCHY_2,
- HIERARCHY_4,
+  HIERARCHY_NONE,
+  HIERARCHY_1,
+  HIERARCHY_2,
+  HIERARCHY_4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- HIERARCHY_AUTO
+  HIERARCHY_AUTO
 } fe_hierarchy_t;
 enum fe_interleaving {
- INTERLEAVING_NONE,
+  INTERLEAVING_NONE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- INTERLEAVING_AUTO,
- INTERLEAVING_240,
- INTERLEAVING_720,
+  INTERLEAVING_AUTO,
+  INTERLEAVING_240,
+  INTERLEAVING_720,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dvb_qpsk_parameters {
- __u32 symbol_rate;
- fe_code_rate_t fec_inner;
+  __u32 symbol_rate;
+  fe_code_rate_t fec_inner;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dvb_qam_parameters {
- __u32 symbol_rate;
- fe_code_rate_t fec_inner;
- fe_modulation_t modulation;
+  __u32 symbol_rate;
+  fe_code_rate_t fec_inner;
+  fe_modulation_t modulation;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dvb_vsb_parameters {
- fe_modulation_t modulation;
+  fe_modulation_t modulation;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dvb_ofdm_parameters {
- fe_bandwidth_t bandwidth;
- fe_code_rate_t code_rate_HP;
- fe_code_rate_t code_rate_LP;
+  fe_bandwidth_t bandwidth;
+  fe_code_rate_t code_rate_HP;
+  fe_code_rate_t code_rate_LP;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- fe_modulation_t constellation;
- fe_transmit_mode_t transmission_mode;
- fe_guard_interval_t guard_interval;
- fe_hierarchy_t hierarchy_information;
+  fe_modulation_t constellation;
+  fe_transmit_mode_t transmission_mode;
+  fe_guard_interval_t guard_interval;
+  fe_hierarchy_t hierarchy_information;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dvb_frontend_parameters {
- __u32 frequency;
- fe_spectral_inversion_t inversion;
+  __u32 frequency;
+  fe_spectral_inversion_t inversion;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct dvb_qpsk_parameters qpsk;
- struct dvb_qam_parameters qam;
- struct dvb_ofdm_parameters ofdm;
+  union {
+    struct dvb_qpsk_parameters qpsk;
+    struct dvb_qam_parameters qam;
+    struct dvb_ofdm_parameters ofdm;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct dvb_vsb_parameters vsb;
- } u;
+    struct dvb_vsb_parameters vsb;
+  } u;
 };
 struct dvb_frontend_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- fe_status_t status;
- struct dvb_frontend_parameters parameters;
+  fe_status_t status;
+  struct dvb_frontend_parameters parameters;
 };
 #define DTV_UNDEFINED 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -361,135 +361,135 @@ struct dvb_frontend_event {
 #define DTV_MAX_COMMAND DTV_STAT_TOTAL_BLOCK_COUNT
 typedef enum fe_pilot {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- PILOT_ON,
- PILOT_OFF,
- PILOT_AUTO,
+  PILOT_ON,
+  PILOT_OFF,
+  PILOT_AUTO,
 } fe_pilot_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef enum fe_rolloff {
- ROLLOFF_35,
- ROLLOFF_20,
- ROLLOFF_25,
+  ROLLOFF_35,
+  ROLLOFF_20,
+  ROLLOFF_25,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ROLLOFF_AUTO,
+  ROLLOFF_AUTO,
 } fe_rolloff_t;
 typedef enum fe_delivery_system {
- SYS_UNDEFINED,
+  SYS_UNDEFINED,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- SYS_DVBC_ANNEX_A,
- SYS_DVBC_ANNEX_B,
- SYS_DVBT,
- SYS_DSS,
+  SYS_DVBC_ANNEX_A,
+  SYS_DVBC_ANNEX_B,
+  SYS_DVBT,
+  SYS_DSS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- SYS_DVBS,
- SYS_DVBS2,
- SYS_DVBH,
- SYS_ISDBT,
+  SYS_DVBS,
+  SYS_DVBS2,
+  SYS_DVBH,
+  SYS_ISDBT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- SYS_ISDBS,
- SYS_ISDBC,
- SYS_ATSC,
- SYS_ATSCMH,
+  SYS_ISDBS,
+  SYS_ISDBC,
+  SYS_ATSC,
+  SYS_ATSCMH,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- SYS_DTMB,
- SYS_CMMB,
- SYS_DAB,
- SYS_DVBT2,
+  SYS_DTMB,
+  SYS_CMMB,
+  SYS_DAB,
+  SYS_DVBT2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- SYS_TURBO,
- SYS_DVBC_ANNEX_C,
+  SYS_TURBO,
+  SYS_DVBC_ANNEX_C,
 } fe_delivery_system_t;
 #define SYS_DVBC_ANNEX_AC SYS_DVBC_ANNEX_A
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYS_DMBTH SYS_DTMB
 enum atscmh_sccc_block_mode {
- ATSCMH_SCCC_BLK_SEP = 0,
- ATSCMH_SCCC_BLK_COMB = 1,
+  ATSCMH_SCCC_BLK_SEP = 0,
+  ATSCMH_SCCC_BLK_COMB = 1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ATSCMH_SCCC_BLK_RES = 2,
+  ATSCMH_SCCC_BLK_RES = 2,
 };
 enum atscmh_sccc_code_mode {
- ATSCMH_SCCC_CODE_HLF = 0,
+  ATSCMH_SCCC_CODE_HLF = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ATSCMH_SCCC_CODE_QTR = 1,
- ATSCMH_SCCC_CODE_RES = 2,
+  ATSCMH_SCCC_CODE_QTR = 1,
+  ATSCMH_SCCC_CODE_RES = 2,
 };
 enum atscmh_rs_frame_ensemble {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ATSCMH_RSFRAME_ENS_PRI = 0,
- ATSCMH_RSFRAME_ENS_SEC = 1,
+  ATSCMH_RSFRAME_ENS_PRI = 0,
+  ATSCMH_RSFRAME_ENS_SEC = 1,
 };
 enum atscmh_rs_frame_mode {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ATSCMH_RSFRAME_PRI_ONLY = 0,
- ATSCMH_RSFRAME_PRI_SEC = 1,
- ATSCMH_RSFRAME_RES = 2,
+  ATSCMH_RSFRAME_PRI_ONLY = 0,
+  ATSCMH_RSFRAME_PRI_SEC = 1,
+  ATSCMH_RSFRAME_RES = 2,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum atscmh_rs_code_mode {
- ATSCMH_RSCODE_211_187 = 0,
- ATSCMH_RSCODE_223_187 = 1,
- ATSCMH_RSCODE_235_187 = 2,
+  ATSCMH_RSCODE_211_187 = 0,
+  ATSCMH_RSCODE_223_187 = 1,
+  ATSCMH_RSCODE_235_187 = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ATSCMH_RSCODE_RES = 3,
+  ATSCMH_RSCODE_RES = 3,
 };
 #define NO_STREAM_ID_FILTER (~0U)
 #define LNA_AUTO (~0U)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dtv_cmds_h {
- char *name;
- __u32 cmd;
- __u32 set:1;
+  char * name;
+  __u32 cmd;
+  __u32 set : 1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 buffer:1;
- __u32 reserved:30;
+  __u32 buffer : 1;
+  __u32 reserved : 30;
 };
 enum fecap_scale_params {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- FE_SCALE_NOT_AVAILABLE = 0,
- FE_SCALE_DECIBEL,
- FE_SCALE_RELATIVE,
- FE_SCALE_COUNTER
+  FE_SCALE_NOT_AVAILABLE = 0,
+  FE_SCALE_DECIBEL,
+  FE_SCALE_RELATIVE,
+  FE_SCALE_COUNTER
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct dtv_stats {
- __u8 scale;
- union {
+  __u8 scale;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 uvalue;
- __s64 svalue;
- };
-} __attribute__ ((packed));
+    __u64 uvalue;
+    __s64 svalue;
+  };
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MAX_DTV_STATS 4
 struct dtv_fe_stats {
- __u8 len;
- struct dtv_stats stat[MAX_DTV_STATS];
+  __u8 len;
+  struct dtv_stats stat[MAX_DTV_STATS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 struct dtv_property {
- __u32 cmd;
- __u32 reserved[3];
+  __u32 cmd;
+  __u32 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- __u32 data;
- struct dtv_fe_stats st;
- struct {
+  union {
+    __u32 data;
+    struct dtv_fe_stats st;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 data[32];
- __u32 len;
- __u32 reserved1[3];
- void *reserved2;
+      __u8 data[32];
+      __u32 len;
+      __u32 reserved1[3];
+      void * reserved2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } buffer;
- } u;
- int result;
-} __attribute__ ((packed));
+    } buffer;
+  } u;
+  int result;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DTV_IOCTL_MAX_MSGS 64
 struct dtv_properties {
- __u32 num;
- struct dtv_property *props;
+  __u32 num;
+  struct dtv_property * props;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define FE_SET_PROPERTY _IOW('o', 82, struct dtv_properties)

@@ -26,9 +26,9 @@
 #ifdef __BYTE_ORDER
 #if __BYTE_ORDER == __BIG_ENDIAN
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define _PATCHKEY(id) (0xfd00|id)
-#elif __BYTE_ORDER == __LITTLE_ENDIAN
-#define _PATCHKEY(id) ((id<<8)|0x00fd)
+#define _PATCHKEY(id) (0xfd00 | id)
+#elif __BYTE_ORDER==__LITTLE_ENDIAN
+#define _PATCHKEY(id) ((id << 8) | 0x00fd)
 #else
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #error "could not determine byte order"

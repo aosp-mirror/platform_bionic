@@ -31,35 +31,35 @@
 #define IP6_TNL_F_USE_ORIG_FWMARK 0x20
 struct ip6_tnl_parm {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[IFNAMSIZ];
- int link;
- __u8 proto;
- __u8 encap_limit;
+  char name[IFNAMSIZ];
+  int link;
+  __u8 proto;
+  __u8 encap_limit;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 hop_limit;
- __be32 flowinfo;
- __u32 flags;
- struct in6_addr laddr;
+  __u8 hop_limit;
+  __be32 flowinfo;
+  __u32 flags;
+  struct in6_addr laddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in6_addr raddr;
+  struct in6_addr raddr;
 };
 struct ip6_tnl_parm2 {
- char name[IFNAMSIZ];
+  char name[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int link;
- __u8 proto;
- __u8 encap_limit;
- __u8 hop_limit;
+  int link;
+  __u8 proto;
+  __u8 encap_limit;
+  __u8 hop_limit;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 flowinfo;
- __u32 flags;
- struct in6_addr laddr;
- struct in6_addr raddr;
+  __be32 flowinfo;
+  __u32 flags;
+  struct in6_addr laddr;
+  struct in6_addr raddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 i_flags;
- __be16 o_flags;
- __be32 i_key;
- __be32 o_key;
+  __be16 i_flags;
+  __be16 o_flags;
+  __be32 i_key;
+  __be32 o_key;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

@@ -106,13 +106,13 @@
 #define USB_DEV_STAT_LTM_ENABLED 4
 struct usb_ctrlrequest {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bRequestType;
- __u8 bRequest;
- __le16 wValue;
- __le16 wIndex;
+  __u8 bRequestType;
+  __u8 bRequest;
+  __le16 wValue;
+  __le16 wIndex;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 wLength;
-} __attribute__ ((packed));
+  __le16 wLength;
+} __attribute__((packed));
 #define USB_DT_DEVICE 0x01
 #define USB_DT_CONFIG 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -148,30 +148,30 @@ struct usb_ctrlrequest {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_DT_CS_ENDPOINT (USB_TYPE_CLASS | USB_DT_ENDPOINT)
 struct usb_descriptor_header {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 struct usb_device_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 bcdUSB;
- __u8 bDeviceClass;
- __u8 bDeviceSubClass;
- __u8 bDeviceProtocol;
+  __le16 bcdUSB;
+  __u8 bDeviceClass;
+  __u8 bDeviceSubClass;
+  __u8 bDeviceProtocol;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bMaxPacketSize0;
- __le16 idVendor;
- __le16 idProduct;
- __le16 bcdDevice;
+  __u8 bMaxPacketSize0;
+  __le16 idVendor;
+  __le16 idProduct;
+  __le16 bcdDevice;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 iManufacturer;
- __u8 iProduct;
- __u8 iSerialNumber;
- __u8 bNumConfigurations;
+  __u8 iManufacturer;
+  __u8 iProduct;
+  __u8 iSerialNumber;
+  __u8 bNumConfigurations;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define USB_DT_DEVICE_SIZE 18
 #define USB_CLASS_PER_INTERFACE 0
 #define USB_CLASS_AUDIO 1
@@ -197,17 +197,17 @@ struct usb_device_descriptor {
 #define USB_SUBCLASS_VENDOR_SPEC 0xff
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_config_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __le16 wTotalLength;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __le16 wTotalLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bNumInterfaces;
- __u8 bConfigurationValue;
- __u8 iConfiguration;
- __u8 bmAttributes;
+  __u8 bNumInterfaces;
+  __u8 bConfigurationValue;
+  __u8 iConfiguration;
+  __u8 bmAttributes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bMaxPower;
-} __attribute__ ((packed));
+  __u8 bMaxPower;
+} __attribute__((packed));
 #define USB_DT_CONFIG_SIZE 9
 #define USB_CONFIG_ATT_ONE (1 << 7)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -216,38 +216,38 @@ struct usb_config_descriptor {
 #define USB_CONFIG_ATT_BATTERY (1 << 4)
 struct usb_string_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __le16 wData[1];
-} __attribute__ ((packed));
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __le16 wData[1];
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_interface_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bInterfaceNumber;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bInterfaceNumber;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bAlternateSetting;
- __u8 bNumEndpoints;
- __u8 bInterfaceClass;
- __u8 bInterfaceSubClass;
+  __u8 bAlternateSetting;
+  __u8 bNumEndpoints;
+  __u8 bInterfaceClass;
+  __u8 bInterfaceSubClass;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bInterfaceProtocol;
- __u8 iInterface;
-} __attribute__ ((packed));
+  __u8 bInterfaceProtocol;
+  __u8 iInterface;
+} __attribute__((packed));
 #define USB_DT_INTERFACE_SIZE 9
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_endpoint_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bEndpointAddress;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bEndpointAddress;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmAttributes;
- __le16 wMaxPacketSize;
- __u8 bInterval;
- __u8 bRefresh;
+  __u8 bmAttributes;
+  __le16 wMaxPacketSize;
+  __u8 bInterval;
+  __u8 bRefresh;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bSynchAddress;
-} __attribute__ ((packed));
+  __u8 bSynchAddress;
+} __attribute__((packed));
 #define USB_DT_ENDPOINT_SIZE 7
 #define USB_DT_ENDPOINT_AUDIO_SIZE 9
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -277,118 +277,118 @@ struct usb_endpoint_descriptor {
 #define USB_ENDPOINT_USAGE_IMPLICIT_FB 0x20
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_ss_ep_comp_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bMaxBurst;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bMaxBurst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmAttributes;
- __le16 wBytesPerInterval;
-} __attribute__ ((packed));
+  __u8 bmAttributes;
+  __le16 wBytesPerInterval;
+} __attribute__((packed));
 #define USB_DT_SS_EP_COMP_SIZE 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_SS_MULT(p) (1 + ((p) & 0x3))
 struct usb_qualifier_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 bcdUSB;
- __u8 bDeviceClass;
- __u8 bDeviceSubClass;
- __u8 bDeviceProtocol;
+  __le16 bcdUSB;
+  __u8 bDeviceClass;
+  __u8 bDeviceSubClass;
+  __u8 bDeviceProtocol;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bMaxPacketSize0;
- __u8 bNumConfigurations;
- __u8 bRESERVED;
-} __attribute__ ((packed));
+  __u8 bMaxPacketSize0;
+  __u8 bNumConfigurations;
+  __u8 bRESERVED;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_otg_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bmAttributes;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bmAttributes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define USB_OTG_SRP (1 << 0)
 #define USB_OTG_HNP (1 << 1)
 struct usb_debug_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDebugInEndpoint;
- __u8 bDebugOutEndpoint;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDebugInEndpoint;
+  __u8 bDebugOutEndpoint;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct usb_interface_assoc_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bFirstInterface;
- __u8 bInterfaceCount;
- __u8 bFunctionClass;
- __u8 bFunctionSubClass;
+  __u8 bFirstInterface;
+  __u8 bInterfaceCount;
+  __u8 bFunctionClass;
+  __u8 bFunctionSubClass;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bFunctionProtocol;
- __u8 iFunction;
-} __attribute__ ((packed));
+  __u8 bFunctionProtocol;
+  __u8 iFunction;
+} __attribute__((packed));
 struct usb_security_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __le16 wTotalLength;
- __u8 bNumEncryptionTypes;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __le16 wTotalLength;
+  __u8 bNumEncryptionTypes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct usb_key_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 tTKID[3];
- __u8 bReserved;
- __u8 bKeyData[0];
+  __u8 tTKID[3];
+  __u8 bReserved;
+  __u8 bKeyData[0];
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_encryption_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bEncryptionType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bEncryptionType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_ENC_TYPE_UNSECURE 0
 #define USB_ENC_TYPE_WIRED 1
 #define USB_ENC_TYPE_CCM_1 2
 #define USB_ENC_TYPE_RSA_1 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bEncryptionValue;
- __u8 bAuthKeyIndex;
+  __u8 bEncryptionValue;
+  __u8 bAuthKeyIndex;
 } __attribute__((packed));
 struct usb_bos_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __le16 wTotalLength;
- __u8 bNumDeviceCaps;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __le16 wTotalLength;
+  __u8 bNumDeviceCaps;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 #define USB_DT_BOS_SIZE 5
 struct usb_dev_cap_header {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDevCapabilityType;
+  __u8 bDescriptorType;
+  __u8 bDevCapabilityType;
 } __attribute__((packed));
 #define USB_CAP_TYPE_WIRELESS_USB 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_wireless_cap_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDevCapabilityType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDevCapabilityType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmAttributes;
+  __u8 bmAttributes;
 #define USB_WIRELESS_P2P_DRD (1 << 1)
 #define USB_WIRELESS_BEACON_MASK (3 << 2)
 #define USB_WIRELESS_BEACON_SELF (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_WIRELESS_BEACON_DIRECTED (2 << 2)
 #define USB_WIRELESS_BEACON_NONE (3 << 2)
- __le16 wPHYRates;
+  __le16 wPHYRates;
 #define USB_WIRELESS_PHY_53 (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_WIRELESS_PHY_80 (1 << 1)
@@ -399,20 +399,20 @@ struct usb_wireless_cap_descriptor {
 #define USB_WIRELESS_PHY_320 (1 << 5)
 #define USB_WIRELESS_PHY_400 (1 << 6)
 #define USB_WIRELESS_PHY_480 (1 << 7)
- __u8 bmTFITXPowerInfo;
+  __u8 bmTFITXPowerInfo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmFFITXPowerInfo;
- __le16 bmBandGroup;
- __u8 bReserved;
+  __u8 bmFFITXPowerInfo;
+  __le16 bmBandGroup;
+  __u8 bReserved;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_CAP_TYPE_EXT 2
 struct usb_ext_cap_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
+  __u8 bLength;
+  __u8 bDescriptorType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDevCapabilityType;
- __le32 bmAttributes;
+  __u8 bDevCapabilityType;
+  __le32 bmAttributes;
 #define USB_LPM_SUPPORT (1 << 1)
 #define USB_BESL_SUPPORT (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -426,47 +426,47 @@ struct usb_ext_cap_descriptor {
 #define USB_SS_CAP_TYPE 3
 struct usb_ss_cap_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDevCapabilityType;
- __u8 bmAttributes;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDevCapabilityType;
+  __u8 bmAttributes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_LTM_SUPPORT (1 << 1)
- __le16 wSpeedSupported;
+  __le16 wSpeedSupported;
 #define USB_LOW_SPEED_OPERATION (1)
 #define USB_FULL_SPEED_OPERATION (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_HIGH_SPEED_OPERATION (1 << 2)
 #define USB_5GBPS_OPERATION (1 << 3)
- __u8 bFunctionalitySupport;
- __u8 bU1devExitLat;
+  __u8 bFunctionalitySupport;
+  __u8 bU1devExitLat;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 bU2DevExitLat;
+  __le16 bU2DevExitLat;
 } __attribute__((packed));
 #define USB_DT_USB_SS_CAP_SIZE 10
 #define CONTAINER_ID_TYPE 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_ss_container_id_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDevCapabilityType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDevCapabilityType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bReserved;
- __u8 ContainerID[16];
+  __u8 bReserved;
+  __u8 ContainerID[16];
 } __attribute__((packed));
 #define USB_DT_USB_SS_CONTN_ID_SIZE 20
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_wireless_ep_comp_descriptor {
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bMaxBurst;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bMaxBurst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bMaxSequence;
- __le16 wMaxStreamDelay;
- __le16 wOverTheAirPacketSize;
- __u8 bOverTheAirInterval;
+  __u8 bMaxSequence;
+  __le16 wMaxStreamDelay;
+  __le16 wOverTheAirPacketSize;
+  __u8 bOverTheAirInterval;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bmCompAttributes;
+  __u8 bmCompAttributes;
 #define USB_ENDPOINT_SWITCH_MASK 0x03
 #define USB_ENDPOINT_SWITCH_NO 0
 #define USB_ENDPOINT_SWITCH_SWITCH 1
@@ -474,67 +474,68 @@ struct usb_wireless_ep_comp_descriptor {
 #define USB_ENDPOINT_SWITCH_SCALE 2
 } __attribute__((packed));
 struct usb_handshake {
- __u8 bMessageNumber;
+  __u8 bMessageNumber;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bStatus;
- __u8 tTKID[3];
- __u8 bReserved;
- __u8 CDID[16];
+  __u8 bStatus;
+  __u8 tTKID[3];
+  __u8 bReserved;
+  __u8 CDID[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 nonce[16];
- __u8 MIC[8];
+  __u8 nonce[16];
+  __u8 MIC[8];
 } __attribute__((packed));
 struct usb_connection_context {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 CHID[16];
- __u8 CDID[16];
- __u8 CK[16];
+  __u8 CHID[16];
+  __u8 CDID[16];
+  __u8 CK[16];
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum usb_device_speed {
- USB_SPEED_UNKNOWN = 0,
- USB_SPEED_LOW, USB_SPEED_FULL,
- USB_SPEED_HIGH,
+  USB_SPEED_UNKNOWN = 0,
+  USB_SPEED_LOW,
+  USB_SPEED_FULL,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- USB_SPEED_WIRELESS,
- USB_SPEED_SUPER,
+  USB_SPEED_HIGH,
+  USB_SPEED_WIRELESS,
+  USB_SPEED_SUPER,
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum usb_device_state {
+  USB_STATE_NOTATTACHED = 0,
+  USB_STATE_ATTACHED,
+  USB_STATE_POWERED,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- USB_STATE_NOTATTACHED = 0,
- USB_STATE_ATTACHED,
- USB_STATE_POWERED,
- USB_STATE_RECONNECTING,
+  USB_STATE_RECONNECTING,
+  USB_STATE_UNAUTHENTICATED,
+  USB_STATE_DEFAULT,
+  USB_STATE_ADDRESS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- USB_STATE_UNAUTHENTICATED,
- USB_STATE_DEFAULT,
- USB_STATE_ADDRESS,
- USB_STATE_CONFIGURED,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- USB_STATE_SUSPENDED
+  USB_STATE_CONFIGURED,
+  USB_STATE_SUSPENDED
 };
 enum usb3_link_state {
- USB3_LPM_U0 = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- USB3_LPM_U1,
- USB3_LPM_U2,
- USB3_LPM_U3
+  USB3_LPM_U0 = 0,
+  USB3_LPM_U1,
+  USB3_LPM_U2,
+  USB3_LPM_U3
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB3_LPM_DISABLED 0x0
 #define USB3_LPM_U1_MAX_TIMEOUT 0x7F
 #define USB3_LPM_U2_MAX_TIMEOUT 0xFE
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB3_LPM_DEVICE_INITIATED 0xFF
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_set_sel_req {
- __u8 u1_sel;
- __u8 u1_pel;
- __le16 u2_sel;
+  __u8 u1_sel;
+  __u8 u1_pel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 u2_pel;
-} __attribute__ ((packed));
+  __le16 u2_sel;
+  __le16 u2_pel;
+} __attribute__((packed));
 #define USB3_LPM_MAX_U1_SEL_PEL 0xFF
-#define USB3_LPM_MAX_U2_SEL_PEL 0xFFFF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define USB3_LPM_MAX_U2_SEL_PEL 0xFFFF
 #define USB_SELF_POWER_VBUS_MAX_DRAW 100
 #endif

@@ -56,8 +56,8 @@
 #define RDS_INFO_LAST 10010
 struct rds_info_counter {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t name[32];
- uint64_t value;
+  uint8_t name[32];
+  uint64_t value;
 } __attribute__((packed));
 #define RDS_INFO_CONNECTION_FLAG_SENDING 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -66,67 +66,67 @@ struct rds_info_counter {
 #define TRANSNAMSIZ 16
 struct rds_info_connection {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t next_tx_seq;
- uint64_t next_rx_seq;
- __be32 laddr;
- __be32 faddr;
+  uint64_t next_tx_seq;
+  uint64_t next_rx_seq;
+  __be32 laddr;
+  __be32 faddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t transport[TRANSNAMSIZ];
- uint8_t flags;
+  uint8_t transport[TRANSNAMSIZ];
+  uint8_t flags;
 } __attribute__((packed));
 #define RDS_INFO_MESSAGE_FLAG_ACK 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RDS_INFO_MESSAGE_FLAG_FAST_ACK 0x02
 struct rds_info_message {
- uint64_t seq;
- uint32_t len;
+  uint64_t seq;
+  uint32_t len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 laddr;
- __be32 faddr;
- __be16 lport;
- __be16 fport;
+  __be32 laddr;
+  __be32 faddr;
+  __be16 lport;
+  __be16 fport;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint8_t flags;
+  uint8_t flags;
 } __attribute__((packed));
 struct rds_info_socket {
- uint32_t sndbuf;
+  uint32_t sndbuf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 bound_addr;
- __be32 connected_addr;
- __be16 bound_port;
- __be16 connected_port;
+  __be32 bound_addr;
+  __be32 connected_addr;
+  __be16 bound_port;
+  __be16 connected_port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t rcvbuf;
- uint64_t inum;
+  uint32_t rcvbuf;
+  uint64_t inum;
 } __attribute__((packed));
 struct rds_info_tcp_socket {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 local_addr;
- __be16 local_port;
- __be32 peer_addr;
- __be16 peer_port;
+  __be32 local_addr;
+  __be16 local_port;
+  __be32 peer_addr;
+  __be16 peer_port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t hdr_rem;
- uint64_t data_rem;
- uint32_t last_sent_nxt;
- uint32_t last_expected_una;
+  uint64_t hdr_rem;
+  uint64_t data_rem;
+  uint32_t last_sent_nxt;
+  uint32_t last_expected_una;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t last_seen_una;
+  uint32_t last_seen_una;
 } __attribute__((packed));
 #define RDS_IB_GID_LEN 16
 struct rds_info_rdma_connection {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 src_addr;
- __be32 dst_addr;
- uint8_t src_gid[RDS_IB_GID_LEN];
- uint8_t dst_gid[RDS_IB_GID_LEN];
+  __be32 src_addr;
+  __be32 dst_addr;
+  uint8_t src_gid[RDS_IB_GID_LEN];
+  uint8_t dst_gid[RDS_IB_GID_LEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t max_send_wr;
- uint32_t max_recv_wr;
- uint32_t max_send_sge;
- uint32_t rdma_mr_max;
+  uint32_t max_send_wr;
+  uint32_t max_recv_wr;
+  uint32_t max_send_sge;
+  uint32_t rdma_mr_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t rdma_mr_size;
+  uint32_t rdma_mr_size;
 };
 #define RDS_CONG_MONITOR_SIZE 64
 #define RDS_CONG_MONITOR_BIT(port) (((unsigned int) port) % RDS_CONG_MONITOR_SIZE)
@@ -134,75 +134,75 @@ struct rds_info_rdma_connection {
 #define RDS_CONG_MONITOR_MASK(port) (1ULL << RDS_CONG_MONITOR_BIT(port))
 typedef uint64_t rds_rdma_cookie_t;
 struct rds_iovec {
- uint64_t addr;
+  uint64_t addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t bytes;
+  uint64_t bytes;
 };
 struct rds_get_mr_args {
- struct rds_iovec vec;
+  struct rds_iovec vec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t cookie_addr;
- uint64_t flags;
+  uint64_t cookie_addr;
+  uint64_t flags;
 };
 struct rds_get_mr_for_dest_args {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct sockaddr_storage dest_addr;
- struct rds_iovec vec;
- uint64_t cookie_addr;
- uint64_t flags;
+  struct sockaddr_storage dest_addr;
+  struct rds_iovec vec;
+  uint64_t cookie_addr;
+  uint64_t flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct rds_free_mr_args {
- rds_rdma_cookie_t cookie;
- uint64_t flags;
+  rds_rdma_cookie_t cookie;
+  uint64_t flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct rds_rdma_args {
- rds_rdma_cookie_t cookie;
- struct rds_iovec remote_vec;
+  rds_rdma_cookie_t cookie;
+  struct rds_iovec remote_vec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t local_vec_addr;
- uint64_t nr_local;
- uint64_t flags;
- uint64_t user_token;
+  uint64_t local_vec_addr;
+  uint64_t nr_local;
+  uint64_t flags;
+  uint64_t user_token;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct rds_atomic_args {
- rds_rdma_cookie_t cookie;
- uint64_t local_addr;
+  rds_rdma_cookie_t cookie;
+  uint64_t local_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t remote_addr;
- union {
- struct {
- uint64_t compare;
+  uint64_t remote_addr;
+  union {
+    struct {
+      uint64_t compare;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t swap;
- } cswp;
- struct {
- uint64_t add;
+      uint64_t swap;
+    } cswp;
+    struct {
+      uint64_t add;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } fadd;
- struct {
- uint64_t compare;
- uint64_t swap;
+    } fadd;
+    struct {
+      uint64_t compare;
+      uint64_t swap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t compare_mask;
- uint64_t swap_mask;
- } m_cswp;
- struct {
+      uint64_t compare_mask;
+      uint64_t swap_mask;
+    } m_cswp;
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t add;
- uint64_t nocarry_mask;
- } m_fadd;
- };
+      uint64_t add;
+      uint64_t nocarry_mask;
+    } m_fadd;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t flags;
- uint64_t user_token;
+  uint64_t flags;
+  uint64_t user_token;
 };
 struct rds_rdma_notify {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t user_token;
- int32_t status;
+  uint64_t user_token;
+  int32_t status;
 };
 #define RDS_RDMA_SUCCESS 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

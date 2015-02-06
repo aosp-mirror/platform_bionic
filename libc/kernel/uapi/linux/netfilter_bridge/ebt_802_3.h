@@ -29,40 +29,40 @@
 #define IS_UI 0x03
 #define EBT_802_3_MASK (EBT_802_3_SAP | EBT_802_3_TYPE | EBT_802_3)
 struct hdr_ui {
- __u8 dsap;
+  __u8 dsap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 ssap;
- __u8 ctrl;
- __u8 orig[3];
- __be16 type;
+  __u8 ssap;
+  __u8 ctrl;
+  __u8 orig[3];
+  __be16 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct hdr_ni {
- __u8 dsap;
- __u8 ssap;
+  __u8 dsap;
+  __u8 ssap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 ctrl;
- __u8 orig[3];
- __be16 type;
+  __be16 ctrl;
+  __u8 orig[3];
+  __be16 type;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ebt_802_3_hdr {
- __u8 daddr[ETH_ALEN];
- __u8 saddr[ETH_ALEN];
- __be16 len;
+  __u8 daddr[ETH_ALEN];
+  __u8 saddr[ETH_ALEN];
+  __be16 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct hdr_ui ui;
- struct hdr_ni ni;
- } llc;
+  union {
+    struct hdr_ui ui;
+    struct hdr_ni ni;
+  } llc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ebt_802_3_info {
- __u8 sap;
- __be16 type;
+  __u8 sap;
+  __be16 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bitmask;
- __u8 invflags;
+  __u8 bitmask;
+  __u8 invflags;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

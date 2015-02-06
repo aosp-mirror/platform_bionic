@@ -24,9 +24,9 @@
 #define MARK_AND_VALUE (0xffffffd0)
 #define MARK_XOR_VALUE (0xffffffc0)
 struct ebt_mark_t_info {
- unsigned long mark;
+  unsigned long mark;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int target;
+  int target;
 };
 #define EBT_MARK_TARGET "mark"
 #endif

@@ -19,8 +19,8 @@
 #ifndef _XT_MAC_H
 #define _XT_MAC_H
 struct xt_mac_info {
- unsigned char srcaddr[ETH_ALEN];
+  unsigned char srcaddr[ETH_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int invert;
+  int invert;
 };
 #endif

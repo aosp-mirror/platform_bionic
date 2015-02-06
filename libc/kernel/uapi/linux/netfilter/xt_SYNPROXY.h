@@ -26,9 +26,9 @@
 #define XT_SYNPROXY_OPT_ECN 0x10
 struct xt_synproxy_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 options;
- __u8 wscale;
- __u16 mss;
+  __u8 options;
+  __u8 wscale;
+  __u16 mss;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

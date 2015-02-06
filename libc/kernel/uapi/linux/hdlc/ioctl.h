@@ -52,47 +52,47 @@
 #ifndef __ASSEMBLY__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- unsigned int clock_rate;
- unsigned int clock_type;
- unsigned short loopback;
+  unsigned int clock_rate;
+  unsigned int clock_type;
+  unsigned short loopback;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } sync_serial_settings;
 typedef struct {
- unsigned int clock_rate;
- unsigned int clock_type;
+  unsigned int clock_rate;
+  unsigned int clock_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short loopback;
- unsigned int slot_map;
+  unsigned short loopback;
+  unsigned int slot_map;
 } te1_settings;
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short encoding;
- unsigned short parity;
+  unsigned short encoding;
+  unsigned short parity;
 } raw_hdlc_proto;
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int t391;
- unsigned int t392;
- unsigned int n391;
- unsigned int n392;
+  unsigned int t391;
+  unsigned int t392;
+  unsigned int n391;
+  unsigned int n392;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int n393;
- unsigned short lmi;
- unsigned short dce;
+  unsigned int n393;
+  unsigned short lmi;
+  unsigned short dce;
 } fr_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- unsigned int dlci;
+  unsigned int dlci;
 } fr_proto_pvc;
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int dlci;
- char master[IFNAMSIZ];
-}fr_proto_pvc_info;
+  unsigned int dlci;
+  char master[IFNAMSIZ];
+} fr_proto_pvc_info;
 typedef struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int interval;
- unsigned int timeout;
+  unsigned int interval;
+  unsigned int timeout;
 } cisco_proto;
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

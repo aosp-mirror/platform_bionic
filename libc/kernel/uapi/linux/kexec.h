@@ -27,9 +27,9 @@
 #define KEXEC_FILE_ON_CRASH 0x00000002
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KEXEC_FILE_NO_INITRAMFS 0x00000004
-#define KEXEC_ARCH_DEFAULT ( 0 << 16)
-#define KEXEC_ARCH_386 ( 3 << 16)
-#define KEXEC_ARCH_68K ( 4 << 16)
+#define KEXEC_ARCH_DEFAULT (0 << 16)
+#define KEXEC_ARCH_386 (3 << 16)
+#define KEXEC_ARCH_68K (4 << 16)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KEXEC_ARCH_X86_64 (62 << 16)
 #define KEXEC_ARCH_PPC (20 << 16)
@@ -41,14 +41,14 @@
 #define KEXEC_ARCH_SH (42 << 16)
 #define KEXEC_ARCH_MIPS_LE (10 << 16)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define KEXEC_ARCH_MIPS ( 8 << 16)
+#define KEXEC_ARCH_MIPS (8 << 16)
 #define KEXEC_SEGMENT_MAX 16
 struct kexec_segment {
- const void *buf;
+  const void * buf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- size_t bufsz;
- const void *mem;
- size_t memsz;
+  size_t bufsz;
+  const void * mem;
+  size_t memsz;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

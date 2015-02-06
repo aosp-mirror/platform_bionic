@@ -22,8 +22,8 @@
 #define OMAP_PARAM_CHIPSET_ID 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_omap_param {
- uint64_t param;
- uint64_t value;
+  uint64_t param;
+  uint64_t value;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define OMAP_BO_SCANOUT 0x00000001
@@ -39,46 +39,46 @@ struct drm_omap_param {
 #define OMAP_BO_TILED_32 0x00000300
 #define OMAP_BO_TILED (OMAP_BO_TILED_8 | OMAP_BO_TILED_16 | OMAP_BO_TILED_32)
 union omap_gem_size {
- uint32_t bytes;
+  uint32_t bytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct {
- uint16_t width;
- uint16_t height;
- } tiled;
+  struct {
+    uint16_t width;
+    uint16_t height;
+  } tiled;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_omap_gem_new {
- union omap_gem_size size;
- uint32_t flags;
+  union omap_gem_size size;
+  uint32_t flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t handle;
- uint32_t __pad;
+  uint32_t handle;
+  uint32_t __pad;
 };
 enum omap_gem_op {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- OMAP_GEM_READ = 0x01,
- OMAP_GEM_WRITE = 0x02,
+  OMAP_GEM_READ = 0x01,
+  OMAP_GEM_WRITE = 0x02,
 };
 struct drm_omap_gem_cpu_prep {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t handle;
- uint32_t op;
+  uint32_t handle;
+  uint32_t op;
 };
 struct drm_omap_gem_cpu_fini {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t handle;
- uint32_t op;
- uint32_t nregions;
- uint32_t __pad;
+  uint32_t handle;
+  uint32_t op;
+  uint32_t nregions;
+  uint32_t __pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_omap_gem_info {
- uint32_t handle;
- uint32_t pad;
+  uint32_t handle;
+  uint32_t pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t offset;
- uint32_t size;
- uint32_t __pad;
+  uint64_t offset;
+  uint32_t size;
+  uint32_t __pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_OMAP_GET_PARAM 0x00
@@ -91,10 +91,10 @@ struct drm_omap_gem_info {
 #define DRM_OMAP_NUM_IOCTLS 0x07
 #define DRM_IOCTL_OMAP_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_OMAP_GET_PARAM, struct drm_omap_param)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_OMAP_SET_PARAM DRM_IOW (DRM_COMMAND_BASE + DRM_OMAP_SET_PARAM, struct drm_omap_param)
+#define DRM_IOCTL_OMAP_SET_PARAM DRM_IOW(DRM_COMMAND_BASE + DRM_OMAP_SET_PARAM, struct drm_omap_param)
 #define DRM_IOCTL_OMAP_GEM_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_OMAP_GEM_NEW, struct drm_omap_gem_new)
-#define DRM_IOCTL_OMAP_GEM_CPU_PREP DRM_IOW (DRM_COMMAND_BASE + DRM_OMAP_GEM_CPU_PREP, struct drm_omap_gem_cpu_prep)
-#define DRM_IOCTL_OMAP_GEM_CPU_FINI DRM_IOW (DRM_COMMAND_BASE + DRM_OMAP_GEM_CPU_FINI, struct drm_omap_gem_cpu_fini)
+#define DRM_IOCTL_OMAP_GEM_CPU_PREP DRM_IOW(DRM_COMMAND_BASE + DRM_OMAP_GEM_CPU_PREP, struct drm_omap_gem_cpu_prep)
+#define DRM_IOCTL_OMAP_GEM_CPU_FINI DRM_IOW(DRM_COMMAND_BASE + DRM_OMAP_GEM_CPU_FINI, struct drm_omap_gem_cpu_fini)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_OMAP_GEM_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_OMAP_GEM_INFO, struct drm_omap_gem_info)
 #endif

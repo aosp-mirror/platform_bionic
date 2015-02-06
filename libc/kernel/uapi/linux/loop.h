@@ -22,48 +22,48 @@
 #define LO_KEY_SIZE 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
- LO_FLAGS_READ_ONLY = 1,
- LO_FLAGS_AUTOCLEAR = 4,
- LO_FLAGS_PARTSCAN = 8,
+  LO_FLAGS_READ_ONLY = 1,
+  LO_FLAGS_AUTOCLEAR = 4,
+  LO_FLAGS_PARTSCAN = 8,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #include <asm/posix_types.h>
 #include <linux/types.h>
 struct loop_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int lo_number;
- __kernel_old_dev_t lo_device;
- unsigned long lo_inode;
- __kernel_old_dev_t lo_rdevice;
+  int lo_number;
+  __kernel_old_dev_t lo_device;
+  unsigned long lo_inode;
+  __kernel_old_dev_t lo_rdevice;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int lo_offset;
- int lo_encrypt_type;
- int lo_encrypt_key_size;
- int lo_flags;
+  int lo_offset;
+  int lo_encrypt_type;
+  int lo_encrypt_key_size;
+  int lo_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char lo_name[LO_NAME_SIZE];
- unsigned char lo_encrypt_key[LO_KEY_SIZE];
- unsigned long lo_init[2];
- char reserved[4];
+  char lo_name[LO_NAME_SIZE];
+  unsigned char lo_encrypt_key[LO_KEY_SIZE];
+  unsigned long lo_init[2];
+  char reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct loop_info64 {
- __u64 lo_device;
- __u64 lo_inode;
+  __u64 lo_device;
+  __u64 lo_inode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 lo_rdevice;
- __u64 lo_offset;
- __u64 lo_sizelimit;
- __u32 lo_number;
+  __u64 lo_rdevice;
+  __u64 lo_offset;
+  __u64 lo_sizelimit;
+  __u32 lo_number;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 lo_encrypt_type;
- __u32 lo_encrypt_key_size;
- __u32 lo_flags;
- __u8 lo_file_name[LO_NAME_SIZE];
+  __u32 lo_encrypt_type;
+  __u32 lo_encrypt_key_size;
+  __u32 lo_flags;
+  __u8 lo_file_name[LO_NAME_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 lo_crypt_name[LO_NAME_SIZE];
- __u8 lo_encrypt_key[LO_KEY_SIZE];
- __u64 lo_init[2];
+  __u8 lo_crypt_name[LO_NAME_SIZE];
+  __u8 lo_encrypt_key[LO_KEY_SIZE];
+  __u64 lo_init[2];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define LO_CRYPT_NONE 0

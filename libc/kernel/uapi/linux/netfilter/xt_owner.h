@@ -21,15 +21,15 @@
 #include <linux/types.h>
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- XT_OWNER_UID = 1 << 0,
- XT_OWNER_GID = 1 << 1,
- XT_OWNER_SOCKET = 1 << 2,
+  XT_OWNER_UID = 1 << 0,
+  XT_OWNER_GID = 1 << 1,
+  XT_OWNER_SOCKET = 1 << 2,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_owner_match_info {
- __u32 uid_min, uid_max;
- __u32 gid_min, gid_max;
- __u8 match, invert;
+  __u32 uid_min, uid_max;
+  __u32 gid_min, gid_max;
+  __u8 match, invert;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

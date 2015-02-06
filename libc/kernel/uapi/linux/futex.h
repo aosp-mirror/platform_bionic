@@ -53,17 +53,17 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FUTEX_WAIT_BITSET_PRIVATE (FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG)
 #define FUTEX_WAKE_BITSET_PRIVATE (FUTEX_WAKE_BITSET | FUTEX_PRIVATE_FLAG)
-#define FUTEX_WAIT_REQUEUE_PI_PRIVATE (FUTEX_WAIT_REQUEUE_PI |   FUTEX_PRIVATE_FLAG)
-#define FUTEX_CMP_REQUEUE_PI_PRIVATE (FUTEX_CMP_REQUEUE_PI |   FUTEX_PRIVATE_FLAG)
+#define FUTEX_WAIT_REQUEUE_PI_PRIVATE (FUTEX_WAIT_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
+#define FUTEX_CMP_REQUEUE_PI_PRIVATE (FUTEX_CMP_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct robust_list {
- struct robust_list __user *next;
+  struct robust_list __user * next;
 };
 struct robust_list_head {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct robust_list list;
- long futex_offset;
- struct robust_list __user *list_op_pending;
+  struct robust_list list;
+  long futex_offset;
+  struct robust_list __user * list_op_pending;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FUTEX_WAITERS 0x80000000
@@ -87,5 +87,5 @@ struct robust_list_head {
 #define FUTEX_OP_CMP_GT 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FUTEX_OP_CMP_GE 5
-#define FUTEX_OP(op, oparg, cmp, cmparg)   (((op & 0xf) << 28) | ((cmp & 0xf) << 24)   | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
+#define FUTEX_OP(op,oparg,cmp,cmparg) (((op & 0xf) << 28) | ((cmp & 0xf) << 24) | ((oparg & 0xfff) << 12) | (cmparg & 0xfff))
 #endif

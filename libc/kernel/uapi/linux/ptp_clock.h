@@ -21,64 +21,64 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define PTP_ENABLE_FEATURE (1<<0)
-#define PTP_RISING_EDGE (1<<1)
-#define PTP_FALLING_EDGE (1<<2)
+#define PTP_ENABLE_FEATURE (1 << 0)
+#define PTP_RISING_EDGE (1 << 1)
+#define PTP_FALLING_EDGE (1 << 2)
 struct ptp_clock_time {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s64 sec;
- __u32 nsec;
- __u32 reserved;
+  __s64 sec;
+  __u32 nsec;
+  __u32 reserved;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ptp_clock_caps {
- int max_adj;
- int n_alarm;
- int n_ext_ts;
+  int max_adj;
+  int n_alarm;
+  int n_ext_ts;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int n_per_out;
- int pps;
- int n_pins;
- int rsv[14];
+  int n_per_out;
+  int pps;
+  int n_pins;
+  int rsv[14];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ptp_extts_request {
- unsigned int index;
- unsigned int flags;
+  unsigned int index;
+  unsigned int flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int rsv[2];
+  unsigned int rsv[2];
 };
 struct ptp_perout_request {
- struct ptp_clock_time start;
+  struct ptp_clock_time start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ptp_clock_time period;
- unsigned int index;
- unsigned int flags;
- unsigned int rsv[4];
+  struct ptp_clock_time period;
+  unsigned int index;
+  unsigned int flags;
+  unsigned int rsv[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PTP_MAX_SAMPLES 25
 struct ptp_sys_offset {
- unsigned int n_samples;
+  unsigned int n_samples;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int rsv[3];
- struct ptp_clock_time ts[2 * PTP_MAX_SAMPLES + 1];
+  unsigned int rsv[3];
+  struct ptp_clock_time ts[2 * PTP_MAX_SAMPLES + 1];
 };
 enum ptp_pin_function {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- PTP_PF_NONE,
- PTP_PF_EXTTS,
- PTP_PF_PEROUT,
- PTP_PF_PHYSYNC,
+  PTP_PF_NONE,
+  PTP_PF_EXTTS,
+  PTP_PF_PEROUT,
+  PTP_PF_PHYSYNC,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ptp_pin_desc {
- char name[64];
- unsigned int index;
+  char name[64];
+  unsigned int index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int func;
- unsigned int chan;
- unsigned int rsv[5];
+  unsigned int func;
+  unsigned int chan;
+  unsigned int rsv[5];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PTP_CLK_MAGIC '='
@@ -92,10 +92,10 @@ struct ptp_pin_desc {
 #define PTP_PIN_SETFUNC _IOW(PTP_CLK_MAGIC, 7, struct ptp_pin_desc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ptp_extts_event {
- struct ptp_clock_time t;
- unsigned int index;
- unsigned int flags;
+  struct ptp_clock_time t;
+  unsigned int index;
+  unsigned int flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int rsv[2];
+  unsigned int rsv[2];
 };
 #endif

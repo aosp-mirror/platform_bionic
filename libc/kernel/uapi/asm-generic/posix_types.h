@@ -82,7 +82,7 @@ typedef __kernel_long_t __kernel_ptrdiff_t;
 #ifndef __kernel_fsid_t
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct {
- int val[2];
+  int val[2];
 } __kernel_fsid_t;
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

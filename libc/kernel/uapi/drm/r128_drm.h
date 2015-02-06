@@ -64,61 +64,61 @@
 #define R128_MAX_TEXTURE_UNITS 2
 #endif
 typedef struct {
- unsigned int dst_pitch_offset_c;
+  unsigned int dst_pitch_offset_c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int dp_gui_master_cntl_c;
- unsigned int sc_top_left_c;
- unsigned int sc_bottom_right_c;
- unsigned int z_offset_c;
+  unsigned int dp_gui_master_cntl_c;
+  unsigned int sc_top_left_c;
+  unsigned int sc_bottom_right_c;
+  unsigned int z_offset_c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int z_pitch_c;
- unsigned int z_sten_cntl_c;
- unsigned int tex_cntl_c;
- unsigned int misc_3d_state_cntl_reg;
+  unsigned int z_pitch_c;
+  unsigned int z_sten_cntl_c;
+  unsigned int tex_cntl_c;
+  unsigned int misc_3d_state_cntl_reg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int texture_clr_cmp_clr_c;
- unsigned int texture_clr_cmp_msk_c;
- unsigned int fog_color_c;
- unsigned int tex_size_pitch_c;
+  unsigned int texture_clr_cmp_clr_c;
+  unsigned int texture_clr_cmp_msk_c;
+  unsigned int fog_color_c;
+  unsigned int tex_size_pitch_c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int constant_color_c;
- unsigned int pm4_vc_fpu_setup;
- unsigned int setup_cntl;
- unsigned int dp_write_mask;
+  unsigned int constant_color_c;
+  unsigned int pm4_vc_fpu_setup;
+  unsigned int setup_cntl;
+  unsigned int dp_write_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int sten_ref_mask_c;
- unsigned int plane_3d_mask_c;
- unsigned int window_xy_offset;
- unsigned int scale_3d_cntl;
+  unsigned int sten_ref_mask_c;
+  unsigned int plane_3d_mask_c;
+  unsigned int window_xy_offset;
+  unsigned int scale_3d_cntl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_r128_context_regs_t;
 typedef struct {
- unsigned int tex_cntl;
- unsigned int tex_combine_cntl;
+  unsigned int tex_cntl;
+  unsigned int tex_combine_cntl;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int tex_size_pitch;
- unsigned int tex_offset[R128_MAX_TEXTURE_LEVELS];
- unsigned int tex_border_color;
+  unsigned int tex_size_pitch;
+  unsigned int tex_offset[R128_MAX_TEXTURE_LEVELS];
+  unsigned int tex_border_color;
 } drm_r128_texture_regs_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_sarea {
- drm_r128_context_regs_t context_state;
- drm_r128_texture_regs_t tex_state[R128_MAX_TEXTURE_UNITS];
- unsigned int dirty;
+  drm_r128_context_regs_t context_state;
+  drm_r128_texture_regs_t tex_state[R128_MAX_TEXTURE_UNITS];
+  unsigned int dirty;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int vertsize;
- unsigned int vc_format;
- struct drm_clip_rect boxes[R128_NR_SAREA_CLIPRECTS];
- unsigned int nbox;
+  unsigned int vertsize;
+  unsigned int vc_format;
+  struct drm_clip_rect boxes[R128_NR_SAREA_CLIPRECTS];
+  unsigned int nbox;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int last_frame;
- unsigned int last_dispatch;
- struct drm_tex_region tex_list[R128_NR_TEX_HEAPS][R128_NR_TEX_REGIONS + 1];
- unsigned int tex_age[R128_NR_TEX_HEAPS];
+  unsigned int last_frame;
+  unsigned int last_dispatch;
+  struct drm_tex_region tex_list[R128_NR_TEX_HEAPS][R128_NR_TEX_REGIONS + 1];
+  unsigned int tex_age[R128_NR_TEX_HEAPS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int ctx_owner;
- int pfAllowPageFlip;
- int pfCurrentPage;
+  int ctx_owner;
+  int pfAllowPageFlip;
+  int pfCurrentPage;
 } drm_r128_sarea_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_R128_INIT 0x00
@@ -143,138 +143,138 @@ typedef struct drm_r128_sarea {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_R128_GETPARAM 0x12
 #define DRM_R128_FLIP 0x13
-#define DRM_IOCTL_R128_INIT DRM_IOW( DRM_COMMAND_BASE + DRM_R128_INIT, drm_r128_init_t)
-#define DRM_IOCTL_R128_CCE_START DRM_IO( DRM_COMMAND_BASE + DRM_R128_CCE_START)
+#define DRM_IOCTL_R128_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_R128_INIT, drm_r128_init_t)
+#define DRM_IOCTL_R128_CCE_START DRM_IO(DRM_COMMAND_BASE + DRM_R128_CCE_START)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_R128_CCE_STOP DRM_IOW( DRM_COMMAND_BASE + DRM_R128_CCE_STOP, drm_r128_cce_stop_t)
-#define DRM_IOCTL_R128_CCE_RESET DRM_IO( DRM_COMMAND_BASE + DRM_R128_CCE_RESET)
-#define DRM_IOCTL_R128_CCE_IDLE DRM_IO( DRM_COMMAND_BASE + DRM_R128_CCE_IDLE)
-#define DRM_IOCTL_R128_RESET DRM_IO( DRM_COMMAND_BASE + DRM_R128_RESET)
+#define DRM_IOCTL_R128_CCE_STOP DRM_IOW(DRM_COMMAND_BASE + DRM_R128_CCE_STOP, drm_r128_cce_stop_t)
+#define DRM_IOCTL_R128_CCE_RESET DRM_IO(DRM_COMMAND_BASE + DRM_R128_CCE_RESET)
+#define DRM_IOCTL_R128_CCE_IDLE DRM_IO(DRM_COMMAND_BASE + DRM_R128_CCE_IDLE)
+#define DRM_IOCTL_R128_RESET DRM_IO(DRM_COMMAND_BASE + DRM_R128_RESET)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_R128_SWAP DRM_IO( DRM_COMMAND_BASE + DRM_R128_SWAP)
-#define DRM_IOCTL_R128_CLEAR DRM_IOW( DRM_COMMAND_BASE + DRM_R128_CLEAR, drm_r128_clear_t)
-#define DRM_IOCTL_R128_VERTEX DRM_IOW( DRM_COMMAND_BASE + DRM_R128_VERTEX, drm_r128_vertex_t)
-#define DRM_IOCTL_R128_INDICES DRM_IOW( DRM_COMMAND_BASE + DRM_R128_INDICES, drm_r128_indices_t)
+#define DRM_IOCTL_R128_SWAP DRM_IO(DRM_COMMAND_BASE + DRM_R128_SWAP)
+#define DRM_IOCTL_R128_CLEAR DRM_IOW(DRM_COMMAND_BASE + DRM_R128_CLEAR, drm_r128_clear_t)
+#define DRM_IOCTL_R128_VERTEX DRM_IOW(DRM_COMMAND_BASE + DRM_R128_VERTEX, drm_r128_vertex_t)
+#define DRM_IOCTL_R128_INDICES DRM_IOW(DRM_COMMAND_BASE + DRM_R128_INDICES, drm_r128_indices_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_R128_BLIT DRM_IOW( DRM_COMMAND_BASE + DRM_R128_BLIT, drm_r128_blit_t)
-#define DRM_IOCTL_R128_DEPTH DRM_IOW( DRM_COMMAND_BASE + DRM_R128_DEPTH, drm_r128_depth_t)
-#define DRM_IOCTL_R128_STIPPLE DRM_IOW( DRM_COMMAND_BASE + DRM_R128_STIPPLE, drm_r128_stipple_t)
+#define DRM_IOCTL_R128_BLIT DRM_IOW(DRM_COMMAND_BASE + DRM_R128_BLIT, drm_r128_blit_t)
+#define DRM_IOCTL_R128_DEPTH DRM_IOW(DRM_COMMAND_BASE + DRM_R128_DEPTH, drm_r128_depth_t)
+#define DRM_IOCTL_R128_STIPPLE DRM_IOW(DRM_COMMAND_BASE + DRM_R128_STIPPLE, drm_r128_stipple_t)
 #define DRM_IOCTL_R128_INDIRECT DRM_IOWR(DRM_COMMAND_BASE + DRM_R128_INDIRECT, drm_r128_indirect_t)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_IOCTL_R128_FULLSCREEN DRM_IOW( DRM_COMMAND_BASE + DRM_R128_FULLSCREEN, drm_r128_fullscreen_t)
-#define DRM_IOCTL_R128_CLEAR2 DRM_IOW( DRM_COMMAND_BASE + DRM_R128_CLEAR2, drm_r128_clear2_t)
-#define DRM_IOCTL_R128_GETPARAM DRM_IOWR( DRM_COMMAND_BASE + DRM_R128_GETPARAM, drm_r128_getparam_t)
-#define DRM_IOCTL_R128_FLIP DRM_IO( DRM_COMMAND_BASE + DRM_R128_FLIP)
+#define DRM_IOCTL_R128_FULLSCREEN DRM_IOW(DRM_COMMAND_BASE + DRM_R128_FULLSCREEN, drm_r128_fullscreen_t)
+#define DRM_IOCTL_R128_CLEAR2 DRM_IOW(DRM_COMMAND_BASE + DRM_R128_CLEAR2, drm_r128_clear2_t)
+#define DRM_IOCTL_R128_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_R128_GETPARAM, drm_r128_getparam_t)
+#define DRM_IOCTL_R128_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_R128_FLIP)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_init {
- enum {
- R128_INIT_CCE = 0x01,
- R128_CLEANUP_CCE = 0x02
+  enum {
+    R128_INIT_CCE = 0x01,
+    R128_CLEANUP_CCE = 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } func;
- unsigned long sarea_priv_offset;
- int is_pci;
- int cce_mode;
+  } func;
+  unsigned long sarea_priv_offset;
+  int is_pci;
+  int cce_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int cce_secure;
- int ring_size;
- int usec_timeout;
- unsigned int fb_bpp;
+  int cce_secure;
+  int ring_size;
+  int usec_timeout;
+  unsigned int fb_bpp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int front_offset, front_pitch;
- unsigned int back_offset, back_pitch;
- unsigned int depth_bpp;
- unsigned int depth_offset, depth_pitch;
+  unsigned int front_offset, front_pitch;
+  unsigned int back_offset, back_pitch;
+  unsigned int depth_bpp;
+  unsigned int depth_offset, depth_pitch;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int span_offset;
- unsigned long fb_offset;
- unsigned long mmio_offset;
- unsigned long ring_offset;
+  unsigned int span_offset;
+  unsigned long fb_offset;
+  unsigned long mmio_offset;
+  unsigned long ring_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long ring_rptr_offset;
- unsigned long buffers_offset;
- unsigned long agp_textures_offset;
+  unsigned long ring_rptr_offset;
+  unsigned long buffers_offset;
+  unsigned long agp_textures_offset;
 } drm_r128_init_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_cce_stop {
- int flush;
- int idle;
+  int flush;
+  int idle;
 } drm_r128_cce_stop_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_clear {
- unsigned int flags;
- unsigned int clear_color;
- unsigned int clear_depth;
+  unsigned int flags;
+  unsigned int clear_color;
+  unsigned int clear_depth;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int color_mask;
- unsigned int depth_mask;
+  unsigned int color_mask;
+  unsigned int depth_mask;
 } drm_r128_clear_t;
 typedef struct drm_r128_vertex {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int prim;
- int idx;
- int count;
- int discard;
+  int prim;
+  int idx;
+  int count;
+  int discard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_r128_vertex_t;
 typedef struct drm_r128_indices {
- int prim;
- int idx;
+  int prim;
+  int idx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int start;
- int end;
- int discard;
+  int start;
+  int end;
+  int discard;
 } drm_r128_indices_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_blit {
- int idx;
- int pitch;
- int offset;
+  int idx;
+  int pitch;
+  int offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int format;
- unsigned short x, y;
- unsigned short width, height;
+  int format;
+  unsigned short x, y;
+  unsigned short width, height;
 } drm_r128_blit_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_depth {
- enum {
- R128_WRITE_SPAN = 0x01,
- R128_WRITE_PIXELS = 0x02,
+  enum {
+    R128_WRITE_SPAN = 0x01,
+    R128_WRITE_PIXELS = 0x02,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- R128_READ_SPAN = 0x03,
- R128_READ_PIXELS = 0x04
- } func;
- int n;
+    R128_READ_SPAN = 0x03,
+    R128_READ_PIXELS = 0x04
+  } func;
+  int n;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int __user *x;
- int __user *y;
- unsigned int __user *buffer;
- unsigned char __user *mask;
+  int __user * x;
+  int __user * y;
+  unsigned int __user * buffer;
+  unsigned char __user * mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_r128_depth_t;
 typedef struct drm_r128_stipple {
- unsigned int __user *mask;
+  unsigned int __user * mask;
 } drm_r128_stipple_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_r128_indirect {
- int idx;
- int start;
- int end;
+  int idx;
+  int start;
+  int end;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int discard;
+  int discard;
 } drm_r128_indirect_t;
 typedef struct drm_r128_fullscreen {
- enum {
+  enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- R128_INIT_FULLSCREEN = 0x01,
- R128_CLEANUP_FULLSCREEN = 0x02
- } func;
+    R128_INIT_FULLSCREEN = 0x01,
+    R128_CLEANUP_FULLSCREEN = 0x02
+  } func;
 } drm_r128_fullscreen_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define R128_PARAM_IRQ_NR 1
 typedef struct drm_r128_getparam {
- int param;
- void __user *value;
+  int param;
+  void __user * value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } drm_r128_getparam_t;
 #endif

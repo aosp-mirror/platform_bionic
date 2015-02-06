@@ -26,42 +26,42 @@
 #define SNDRV_FIREWIRE_EVENT_EFW_RESPONSE 0x4e617475
 struct snd_firewire_event_common {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int type;
+  unsigned int type;
 };
 struct snd_firewire_event_lock_status {
- unsigned int type;
+  unsigned int type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int status;
+  unsigned int status;
 };
 struct snd_firewire_event_dice_notification {
- unsigned int type;
+  unsigned int type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int notification;
+  unsigned int notification;
 };
-#define SND_EFW_TRANSACTION_USER_SEQNUM_MAX ((__u32)((__u16)~0) - 1)
+#define SND_EFW_TRANSACTION_USER_SEQNUM_MAX ((__u32) ((__u16) ~0) - 1)
 struct snd_efw_transaction {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 length;
- __be32 version;
- __be32 seqnum;
- __be32 category;
+  __be32 length;
+  __be32 version;
+  __be32 seqnum;
+  __be32 category;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 command;
- __be32 status;
- __be32 params[0];
+  __be32 command;
+  __be32 status;
+  __be32 params[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_firewire_event_efw_response {
- unsigned int type;
- __be32 response[0];
+  unsigned int type;
+  __be32 response[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 union snd_firewire_event {
- struct snd_firewire_event_common common;
- struct snd_firewire_event_lock_status lock_status;
- struct snd_firewire_event_dice_notification dice_notification;
+  struct snd_firewire_event_common common;
+  struct snd_firewire_event_lock_status lock_status;
+  struct snd_firewire_event_dice_notification dice_notification;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct snd_firewire_event_efw_response efw_response;
+  struct snd_firewire_event_efw_response efw_response;
 };
 #define SNDRV_FIREWIRE_IOCTL_GET_INFO _IOR('H', 0xf8, struct snd_firewire_get_info)
 #define SNDRV_FIREWIRE_IOCTL_LOCK _IO('H', 0xf9)
@@ -72,10 +72,10 @@ union snd_firewire_event {
 #define SNDRV_FIREWIRE_TYPE_BEBOB 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_firewire_get_info {
- unsigned int type;
- unsigned int card;
- unsigned char guid[8];
+  unsigned int type;
+  unsigned int card;
+  unsigned char guid[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char device_name[16];
+  char device_name[16];
 };
 #endif

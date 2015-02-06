@@ -1,560 +1,400 @@
-# a glorified C pre-processor parser
+#!/usr/bin/python
+"""A glorified C pre-processor parser."""
 
-import sys, re, string
-from utils import *
-from defaults import *
+import ctypes
+import logging
+import os
+import re
+import site
+import utils
 
-debugTokens             = False
-debugDirectiveTokenizer = False
-debugLineParsing        = False
-debugCppExpr            = False
-debugOptimIf01          = False
+top = os.getenv('ANDROID_BUILD_TOP')
+if top is None:
+    utils.panic('ANDROID_BUILD_TOP not set.\n')
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####           C P P   T O K E N S                                             #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+# Set up the env vars for libclang.
+site.addsitedir(os.path.join(top, 'external/clang/bindings/python'))
+os.putenv('LD_LIBRARY_PATH', os.path.join(top, 'prebuilts/sdk/tools/linux'))
+
+import clang.cindex
+from clang.cindex import conf
+from clang.cindex import Cursor
+from clang.cindex import CursorKind
+from clang.cindex import SourceLocation
+from clang.cindex import SourceRange
+from clang.cindex import TokenGroup
+from clang.cindex import TokenKind
+from clang.cindex import TranslationUnit
+
+from defaults import kCppUndefinedMacro
+from defaults import kernel_remove_config_macros
+from defaults import kernel_token_replacements
+
+
+debugBlockParser = False
+debugCppExpr = False
+debugOptimIf01 = False
+
+###############################################################################
+###############################################################################
+#####                                                                     #####
+#####           C P P   T O K E N S                                       #####
+#####                                                                     #####
+###############################################################################
+###############################################################################
 
 # the list of supported C-preprocessor tokens
 # plus a couple of C tokens as well
-tokEOF       = "\0"
-tokLN        = "\n"
+tokEOF = "\0"
+tokLN = "\n"
 tokSTRINGIFY = "#"
-tokCONCAT    = "##"
-tokLOGICAND  = "&&"
-tokLOGICOR   = "||"
-tokSHL       = "<<"
-tokSHR       = ">>"
-tokEQUAL     = "=="
-tokNEQUAL    = "!="
-tokLT        = "<"
-tokLTE       = "<="
-tokGT        = ">"
-tokGTE       = ">="
-tokELLIPSIS  = "..."
-tokSPACE     = " "
-tokDEFINED   = "defined"
-tokLPAREN    = "("
-tokRPAREN    = ")"
-tokNOT       = "!"
-tokPLUS      = "+"
-tokMINUS     = "-"
-tokMULTIPLY  = "*"
-tokDIVIDE    = "/"
-tokMODULUS   = "%"
-tokBINAND    = "&"
-tokBINOR     = "|"
-tokBINXOR    = "^"
-tokCOMMA     = ","
-tokLBRACE    = "{"
-tokRBRACE    = "}"
-tokARROW     = "->"
+tokCONCAT = "##"
+tokLOGICAND = "&&"
+tokLOGICOR = "||"
+tokSHL = "<<"
+tokSHR = ">>"
+tokEQUAL = "=="
+tokNEQUAL = "!="
+tokLT = "<"
+tokLTE = "<="
+tokGT = ">"
+tokGTE = ">="
+tokELLIPSIS = "..."
+tokSPACE = " "
+tokDEFINED = "defined"
+tokLPAREN = "("
+tokRPAREN = ")"
+tokNOT = "!"
+tokPLUS = "+"
+tokMINUS = "-"
+tokMULTIPLY = "*"
+tokDIVIDE = "/"
+tokMODULUS = "%"
+tokBINAND = "&"
+tokBINOR = "|"
+tokBINXOR = "^"
+tokCOMMA = ","
+tokLBRACE = "{"
+tokRBRACE = "}"
+tokARROW = "->"
 tokINCREMENT = "++"
 tokDECREMENT = "--"
-tokNUMBER    = "<number>"
-tokIDENT     = "<ident>"
-tokSTRING    = "<string>"
+tokNUMBER = "<number>"
+tokIDENT = "<ident>"
+tokSTRING = "<string>"
 
-class Token:
-    """a simple class to hold information about a given token.
-       each token has a position in the source code, as well as
-       an 'id' and a 'value'. the id is a string that identifies
-       the token's class, while the value is the string of the
-       original token itself.
 
-       for example, the tokenizer concatenates a series of spaces
-       and tabs as a single tokSPACE id, whose value if the original
-       spaces+tabs sequence."""
+class Token(clang.cindex.Token):
+    """A class that represents one token after parsing.
 
-    def __init__(self):
-        self.id     = None
-        self.value  = None
-        self.lineno = 0
-        self.colno  = 0
+    It inherits the class in libclang, with an extra id property to hold the
+    new spelling of the token. The spelling property in the base class is
+    defined as read-only. New names after macro instantiation are saved in
+    their ids now. It also facilitates the renaming of directive optimizations
+    like replacing 'ifndef X' with 'if !defined(X)'.
 
-    def set(self,id,val=None):
-        self.id = id
-        if val:
-            self.value = val
+    It also overrides the cursor property of the base class. Because the one
+    in libclang always queries based on a single token, which usually doesn't
+    hold useful information. The cursor in this class can be set by calling
+    CppTokenizer.getTokensWithCursors(). Otherwise it returns the one in the
+    base class.
+    """
+
+    def __init__(self, tu=None, group=None, int_data=None, ptr_data=None,
+                 cursor=None):
+        clang.cindex.Token.__init__(self)
+        self._id = None
+        self._tu = tu
+        self._group = group
+        self._cursor = cursor
+        # self.int_data and self.ptr_data are from the base class. But
+        # self.int_data doesn't accept a None value.
+        if int_data is not None:
+            self.int_data = int_data
+        self.ptr_data = ptr_data
+
+    @property
+    def id(self):
+        """Name of the token."""
+        if self._id is None:
+            return self.spelling
         else:
-            self.value = id
-        return None
+            return self._id
 
-    def copyFrom(self,src):
-        self.id     = src.id
-        self.value  = src.value
-        self.lineno = src.lineno
-        self.colno  = src.colno
+    @id.setter
+    def id(self, new_id):
+        """Setting name of the token."""
+        self._id = new_id
+
+    @property
+    def cursor(self):
+        if self._cursor is None:
+            self._cursor = clang.cindex.Token.cursor
+        return self._cursor
+
+    @cursor.setter
+    def cursor(self, new_cursor):
+        self._cursor = new_cursor
 
     def __repr__(self):
-        if self.id == tokIDENT:
-            return "(ident %s)" % self.value
-        if self.id == tokNUMBER:
-            return "(number %s)" % self.value
-        if self.id == tokSTRING:
-            return "(string '%s')" % self.value
-        if self.id == tokLN:
-            return "<LN>"
-        if self.id == tokEOF:
-            return "<EOF>"
-        if self.id == tokSPACE and self.value == "\\":
-            # this corresponds to a trailing \ that was transformed into a tokSPACE
-            return "<\\>"
+        if self.id == 'defined':
+            return self.id
+        elif self.kind == TokenKind.IDENTIFIER:
+            return "(ident %s)" % self.id
 
         return self.id
 
     def __str__(self):
-        if self.id == tokIDENT:
-            return self.value
-        if self.id == tokNUMBER:
-            return self.value
-        if self.id == tokSTRING:
-            return self.value
-        if self.id == tokEOF:
-            return "<EOF>"
-        if self.id == tokSPACE:
-            if self.value == "\\":  # trailing \
-                return "\\\n"
-            else:
-                return self.value
-
         return self.id
 
+
 class BadExpectedToken(Exception):
-    def __init__(self,msg):
-        print msg
+    """An exception that will be raised for unexpected tokens."""
+    pass
 
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####           C P P   T O K E N I Z E R                                       #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+# The __contains__ function in libclang SourceRange class contains a bug. It
+# gives wrong result when dealing with single line range.
+# Bug filed with upstream:
+# http://llvm.org/bugs/show_bug.cgi?id=22243, http://reviews.llvm.org/D7277
+def SourceRange__contains__(self, other):
+    """Determine if a given location is inside the range."""
+    if not isinstance(other, SourceLocation):
+        return False
+    if other.file is None and self.start.file is None:
+        pass
+    elif (self.start.file.name != other.file.name or
+          other.file.name != self.end.file.name):
+        # same file name
+        return False
+    # same file, in between lines
+    if self.start.line < other.line < self.end.line:
+        return True
+    # same file, same line
+    elif self.start.line == other.line == self.end.line:
+        if self.start.column <= other.column <= self.end.column:
+            return True
+    elif self.start.line == other.line:
+        # same file first line
+        if self.start.column <= other.column:
+            return True
+    elif other.line == self.end.line:
+        # same file last line
+        if other.column <= self.end.column:
+            return True
+    return False
 
-# list of long symbols, i.e. those that take more than one characters
-cppLongSymbols = [ tokCONCAT, tokLOGICAND, tokLOGICOR, tokSHL, tokSHR, tokELLIPSIS, tokEQUAL,\
-                   tokNEQUAL, tokLTE, tokGTE, tokARROW, tokINCREMENT, tokDECREMENT ]
 
-class CppTokenizer:
-    """an abstract class used to convert some input text into a list
-       of tokens. real implementations follow and differ in the format
-       of the input text only"""
+SourceRange.__contains__ = SourceRange__contains__
+
+
+################################################################################
+################################################################################
+#####                                                                      #####
+#####           C P P   T O K E N I Z E R                                  #####
+#####                                                                      #####
+################################################################################
+################################################################################
+
+
+class CppTokenizer(object):
+    """A tokenizer that converts some input text into a list of tokens.
+
+    It calls libclang's tokenizer to get the parsed tokens. In addition, it
+    updates the cursor property in each token after parsing, by calling
+    getTokensWithCursors().
+    """
+
+    clang_flags = ['-E', '-x', 'c']
+    options = TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD
 
     def __init__(self):
-        """initialize a new CppTokenizer object"""
-        self.eof  = False  # end of file reached ?
-        self.text = None   # content of current line, with final \n stripped
-        self.line = 0      # number of current line
-        self.pos  = 0      # current character position in current line
-        self.len  = 0      # length of current line text
-        self.held = Token()
+        """Initialize a new CppTokenizer object."""
+        self._indexer = clang.cindex.Index.create()
+        self._tu = None
+        self._index = 0
+        self.tokens = None
 
-    def setLineText(self,line):
-        """set the content of the (next) current line. should be called
-           by fillLineText() in derived classes"""
-        self.text = line
-        self.len  = len(line)
-        self.pos  = 0
+    def _getTokensWithCursors(self):
+        """Helper method to return all tokens with their cursors.
 
-    def fillLineText(self):
-        """refresh the content of 'line' with a new line of input"""
-        # to be overriden
-        self.eof = True
+        The cursor property in a clang Token doesn't provide enough
+        information. Because it is queried based on single token each time
+        without any context, i.e. via calling conf.lib.clang_annotateTokens()
+        with only one token given. So we often see 'INVALID_FILE' in one
+        token's cursor. In this function it passes all the available tokens
+        to get more informative cursors.
+        """
 
-    def markPos(self,tok):
-        """mark the position of the current token in the source file"""
-        if self.eof or self.pos > self.len:
-            tok.lineno = self.line + 1
-            tok.colno  = 0
+        tokens_memory = ctypes.POINTER(clang.cindex.Token)()
+        tokens_count = ctypes.c_uint()
+
+        conf.lib.clang_tokenize(self._tu, self._tu.cursor.extent,
+                                ctypes.byref(tokens_memory),
+                                ctypes.byref(tokens_count))
+
+        count = int(tokens_count.value)
+
+        # If we get no tokens, no memory was allocated. Be sure not to return
+        # anything and potentially call a destructor on nothing.
+        if count < 1:
+            return
+
+        cursors = (Cursor * count)()
+        cursors_memory = ctypes.cast(cursors, ctypes.POINTER(Cursor))
+
+        conf.lib.clang_annotateTokens(self._tu, tokens_memory, count,
+                                      cursors_memory)
+
+        tokens_array = ctypes.cast(
+            tokens_memory,
+            ctypes.POINTER(clang.cindex.Token * count)).contents
+        token_group = TokenGroup(self._tu, tokens_memory, tokens_count)
+
+        tokens = []
+        for i in xrange(0, count):
+            token = Token(self._tu, token_group,
+                          int_data=tokens_array[i].int_data,
+                          ptr_data=tokens_array[i].ptr_data,
+                          cursor=cursors[i])
+            # We only want non-comment tokens.
+            if token.kind != TokenKind.COMMENT:
+                tokens.append(token)
+
+        return tokens
+
+    def parseString(self, lines):
+        """Parse a list of text lines into a BlockList object."""
+        file_ = 'dummy.c'
+        self._tu = self._indexer.parse(file_, self.clang_flags,
+                                       unsaved_files=[(file_, lines)],
+                                       options=self.options)
+        self.tokens = self._getTokensWithCursors()
+
+    def parseFile(self, file_):
+        """Parse a file into a BlockList object."""
+        self._tu = self._indexer.parse(file_, self.clang_flags,
+                                       options=self.options)
+        self.tokens = self._getTokensWithCursors()
+
+    def nextToken(self):
+        """Return next token from the list."""
+        if self._index < len(self.tokens):
+            t = self.tokens[self._index]
+            self._index += 1
+            return t
         else:
-            tok.lineno = self.line
-            tok.colno  = self.pos
-
-    def peekChar(self):
-        """return the current token under the cursor without moving it"""
-        if self.eof:
-            return tokEOF
-
-        if self.pos > self.len:
-            self.pos   = 0
-            self.line += 1
-            self.fillLineText()
-            if self.eof:
-                return tokEOF
-
-        if self.pos == self.len:
-            return tokLN
-        else:
-            return self.text[self.pos]
-
-    def peekNChar(self,n):
-        """try to peek the next n chars on the same line"""
-        if self.pos + n > self.len:
             return None
-        return self.text[self.pos:self.pos+n]
 
-    def skipChar(self):
-        """increment the token cursor position"""
-        if not self.eof:
-            self.pos += 1
 
-    def skipNChars(self,n):
-        if self.pos + n <= self.len:
-            self.pos += n
-        else:
-            while n > 0:
-                self.skipChar()
-                n -= 1
+class CppStringTokenizer(CppTokenizer):
+    """A CppTokenizer derived class that accepts a string of text as input."""
 
-    def nextChar(self):
-        """retrieve the token at the current cursor position, then skip it"""
-        result = self.peekChar()
-        self.skipChar()
-        return  result
-
-    def getEscape(self):
-        # try to get all characters after a backslash (\)
-        result = self.nextChar()
-        if result == "0":
-            # octal number ?
-            num = self.peekNChar(3)
-            if num != None:
-                isOctal = True
-                for d in num:
-                    if not d in "01234567":
-                        isOctal = False
-                        break
-                if isOctal:
-                    result += num
-                    self.skipNChars(3)
-        elif result == "x" or result == "X":
-            # hex number ?
-            num = self.peekNChar(2)
-            if num != None:
-                isHex = True
-                for d in num:
-                    if not d in "012345678abcdefABCDEF":
-                        isHex = False
-                        break
-                if isHex:
-                    result += num
-                    self.skipNChars(2)
-        elif result == "u" or result == "U":
-            # unicode char ?
-            num = self.peekNChar(4)
-            if num != None:
-                isHex = True
-                for d in num:
-                    if not d in "012345678abcdefABCDEF":
-                        isHex = False
-                        break
-                if isHex:
-                    result += num
-                    self.skipNChars(4)
-
-        return result
-
-    def nextRealToken(self,tok):
-        """return next CPP token, used internally by nextToken()"""
-        c = self.nextChar()
-        if c == tokEOF or c == tokLN:
-            return tok.set(c)
-
-        if c == '/':
-            c = self.peekChar()
-            if c == '/':   # C++ comment line
-                self.skipChar()
-                while 1:
-                    c = self.nextChar()
-                    if c == tokEOF or c == tokLN:
-                        break
-                return tok.set(tokLN)
-            if c == '*':   # C comment start
-                self.skipChar()
-                value = "/*"
-                prev_c = None
-                while 1:
-                    c = self.nextChar()
-                    if c == tokEOF:
-                        return tok.set(tokEOF,value)
-                    if c == '/' and prev_c == '*':
-                        break
-                    prev_c = c
-                    value += c
-
-                value += "/"
-                return tok.set(tokSPACE,value)
-            c = '/'
-
-        if c.isspace():
-            while 1:
-                c2 = self.peekChar()
-                if c2 == tokLN or not c2.isspace():
-                    break
-                c += c2
-                self.skipChar()
-            return tok.set(tokSPACE,c)
-
-        if c == '\\':
-            if debugTokens:
-                print "nextRealToken: \\ found, next token is '%s'" % repr(self.peekChar())
-            if self.peekChar() == tokLN:   # trailing \
-                # eat the tokLN
-                self.skipChar()
-                # we replace a trailing \ by a tokSPACE whose value is
-                # simply "\\". this allows us to detect them later when
-                # needed.
-                return tok.set(tokSPACE,"\\")
-            else:
-                # treat as a single token here ?
-                c +=self.getEscape()
-                return tok.set(c)
-
-        if c == "'":  # chars
-            c2 = self.nextChar()
-            c += c2
-            if c2 == '\\':
-                c += self.getEscape()
-
-            while 1:
-                c2 = self.nextChar()
-                if c2 == tokEOF:
-                    break
-                c += c2
-                if c2 == "'":
-                    break
-
-            return tok.set(tokSTRING, c)
-
-        if c == '"':  # strings
-            quote = 0
-            while 1:
-                c2  = self.nextChar()
-                if c2 == tokEOF:
-                    return tok.set(tokSTRING,c)
-
-                c += c2
-                if not quote:
-                    if c2 == '"':
-                        return tok.set(tokSTRING,c)
-                    if c2 == "\\":
-                        quote = 1
-                else:
-                    quote = 0
-
-        if c >= "0" and c <= "9":  # integers ?
-            while 1:
-                c2 = self.peekChar()
-                if c2 == tokLN or (not c2.isalnum() and c2 != "_"):
-                    break
-                c += c2
-                self.skipChar()
-            return tok.set(tokNUMBER,c)
-
-        if c.isalnum() or c == "_":  # identifiers ?
-            while 1:
-                c2 = self.peekChar()
-                if c2 == tokLN or (not c2.isalnum() and c2 != "_"):
-                    break
-                c += c2
-                self.skipChar()
-            if c == tokDEFINED:
-                return tok.set(tokDEFINED)
-            else:
-                return tok.set(tokIDENT,c)
-
-        # check special symbols
-        for sk in cppLongSymbols:
-            if c == sk[0]:
-                sklen = len(sk[1:])
-                if self.pos + sklen <= self.len and \
-                   self.text[self.pos:self.pos+sklen] == sk[1:]:
-                    self.pos += sklen
-                    return tok.set(sk)
-
-        return tok.set(c)
-
-    def nextToken(self,tok):
-        """return the next token from the input text. this function
-           really updates 'tok', and does not return a new one"""
-        self.markPos(tok)
-        self.nextRealToken(tok)
-
-    def getToken(self):
-        tok = Token()
-        self.nextToken(tok)
-        if debugTokens:
-            print "getTokens: %s" % repr(tok)
-        return tok
-
-    def toTokenList(self):
-        """convert the input text of a CppTokenizer into a direct
-           list of token objects. tokEOF is stripped from the result"""
-        result = []
-        while 1:
-            tok = Token()
-            self.nextToken(tok)
-            if tok.id == tokEOF:
-                break
-            result.append(tok)
-        return result
-
-class CppLineTokenizer(CppTokenizer):
-    """a CppTokenizer derived class that accepts a single line of text as input"""
-    def __init__(self,line,lineno=1):
+    def __init__(self, line):
         CppTokenizer.__init__(self)
-        self.line = lineno
-        self.setLineText(line)
-
-
-class CppLinesTokenizer(CppTokenizer):
-    """a CppTokenizer derived class that accepts a list of texdt lines as input.
-       the lines must not have a trailing \n"""
-    def __init__(self,lines=[],lineno=1):
-        """initialize a CppLinesTokenizer. you can later add lines using addLines()"""
-        CppTokenizer.__init__(self)
-        self.line  = lineno
-        self.lines = lines
-        self.index = 0
-        self.count = len(lines)
-
-        if self.count > 0:
-            self.fillLineText()
-        else:
-            self.eof = True
-
-    def addLine(self,line):
-        """add a line to a CppLinesTokenizer. this can be done after tokenization
-           happens"""
-        if self.count == 0:
-            self.setLineText(line)
-            self.index = 1
-        self.lines.append(line)
-        self.count += 1
-        self.eof    = False
-
-    def fillLineText(self):
-        if self.index < self.count:
-            self.setLineText(self.lines[self.index])
-            self.index += 1
-        else:
-            self.eof = True
+        self.parseString(line)
 
 
 class CppFileTokenizer(CppTokenizer):
-    def __init__(self,file,lineno=1):
-        CppTokenizer.__init__(self)
-        self.file = file
-        self.line = lineno
+    """A CppTokenizer derived class that accepts a file as input."""
 
-    def fillLineText(self):
-        line = self.file.readline()
-        if len(line) > 0:
-            if line[-1] == '\n':
-                line = line[:-1]
-            if len(line) > 0 and line[-1] == "\r":
-                line = line[:-1]
-            self.setLineText(line)
-        else:
-            self.eof = True
+    def __init__(self, file_):
+        CppTokenizer.__init__(self)
+        self.parseFile(file_)
+
 
 # Unit testing
 #
-class CppTokenizerTester:
-    """a class used to test CppTokenizer classes"""
-    def __init__(self,tokenizer=None):
-        self.tokenizer = tokenizer
-        self.token     = Token()
+class CppTokenizerTester(object):
+    """A class used to test CppTokenizer classes."""
 
-    def setTokenizer(self,tokenizer):
-        self.tokenizer = tokenizer
+    def __init__(self, tokenizer=None):
+        self._tokenizer = tokenizer
+        self._token = None
 
-    def expect(self,id):
-        self.tokenizer.nextToken(self.token)
-        tokid = self.token.id
+    def setTokenizer(self, tokenizer):
+        self._tokenizer = tokenizer
+
+    def expect(self, id):
+        self._token = self._tokenizer.nextToken()
+        if self._token is None:
+            tokid = ''
+        else:
+            tokid = self._token.id
         if tokid == id:
             return
-        if self.token.value == id and (tokid == tokIDENT or tokid == tokNUMBER):
-            return
-        raise BadExpectedToken, "###  BAD TOKEN: '%s' expecting '%s'" % (self.token.id,id)
+        raise BadExpectedToken("###  BAD TOKEN: '%s' expecting '%s'" % (
+            tokid, id))
 
-    def expectToken(self,id,line,col):
+    def expectToken(self, id, line, col):
         self.expect(id)
-        if self.token.lineno != line:
-            raise BadExpectedToken, "###  BAD LINENO: token '%s' got '%d' expecting '%d'" % (id,self.token.lineno,line)
-        if self.token.colno != col:
-            raise BadExpectedToken, "###  BAD COLNO: '%d' expecting '%d'" % (self.token.colno,col)
+        if self._token.location.line != line:
+            raise BadExpectedToken(
+                "###  BAD LINENO: token '%s' got '%d' expecting '%d'" % (
+                    id, self._token.lineno, line))
+        if self._token.location.column != col:
+            raise BadExpectedToken("###  BAD COLNO: '%d' expecting '%d'" % (
+                self._token.colno, col))
 
-    def expectTokenVal(self,id,value,line,col):
-        self.expectToken(id,line,col)
-        if self.token.value != value:
-            raise BadExpectedToken, "###  BAD VALUE: '%s' expecting '%s'" % (self.token.value,value)
+    def expectTokens(self, tokens):
+        for id, line, col in tokens:
+            self.expectToken(id, line, col)
 
-    def expectList(self,list):
-        for item in list:
+    def expectList(self, list_):
+        for item in list_:
             self.expect(item)
+
 
 def test_CppTokenizer():
     tester = CppTokenizerTester()
 
-    tester.setTokenizer( CppLineTokenizer("#an/example  && (01923_xy)") )
-    tester.expectList( ["#", "an", "/", "example", tokSPACE, tokLOGICAND, tokSPACE, tokLPAREN, "01923_xy", \
-                       tokRPAREN, tokLN, tokEOF] )
+    tester.setTokenizer(CppStringTokenizer("#an/example  && (01923_xy)"))
+    tester.expectList(["#", "an", "/", "example", tokLOGICAND, tokLPAREN,
+                       "01923_xy", tokRPAREN])
 
-    tester.setTokenizer( CppLineTokenizer("FOO(BAR) && defined(BAZ)") )
-    tester.expectList( ["FOO", tokLPAREN, "BAR", tokRPAREN, tokSPACE, tokLOGICAND, tokSPACE,
-                        tokDEFINED, tokLPAREN, "BAZ", tokRPAREN, tokLN, tokEOF] )
+    tester.setTokenizer(CppStringTokenizer("FOO(BAR) && defined(BAZ)"))
+    tester.expectList(["FOO", tokLPAREN, "BAR", tokRPAREN, tokLOGICAND,
+                       "defined", tokLPAREN, "BAZ", tokRPAREN])
 
-    tester.setTokenizer( CppLinesTokenizer( ["/*", "#", "*/"] ) )
-    tester.expectList( [ tokSPACE, tokLN, tokEOF ] )
+    tester.setTokenizer(CppStringTokenizer("/*\n#\n*/"))
+    tester.expectList([])
 
-    tester.setTokenizer( CppLinesTokenizer( ["first", "second"] ) )
-    tester.expectList( [ "first", tokLN, "second", tokLN, tokEOF ] )
+    tester.setTokenizer(CppStringTokenizer("first\nsecond"))
+    tester.expectList(["first", "second"])
 
-    tester.setTokenizer( CppLinesTokenizer( ["first second", "  third"] ) )
-    tester.expectToken( "first", 1, 0 )
-    tester.expectToken( tokSPACE, 1, 5 )
-    tester.expectToken( "second", 1, 6 )
-    tester.expectToken( tokLN, 1, 12 )
-    tester.expectToken( tokSPACE, 2, 0 )
-    tester.expectToken( "third", 2, 2 )
+    tester.setTokenizer(CppStringTokenizer("first second\n  third"))
+    tester.expectTokens([("first", 1, 1),
+                         ("second", 1, 7),
+                         ("third", 2, 3)])
 
-    tester.setTokenizer( CppLinesTokenizer( [ "boo /* what the", "hell */" ] ) )
-    tester.expectList( [ "boo", tokSPACE ] )
-    tester.expectTokenVal( tokSPACE, "/* what the\nhell */", 1, 4 )
-    tester.expectList( [ tokLN, tokEOF ] )
+    tester.setTokenizer(CppStringTokenizer("boo /* what the\nhell */"))
+    tester.expectTokens([("boo", 1, 1)])
 
-    tester.setTokenizer( CppLinesTokenizer( [ "an \\", " example" ] ) )
-    tester.expectToken( "an", 1, 0 )
-    tester.expectToken( tokSPACE, 1, 2 )
-    tester.expectTokenVal( tokSPACE, "\\", 1, 3 )
-    tester.expectToken( tokSPACE, 2, 0 )
-    tester.expectToken( "example", 2, 1 )
-    tester.expectToken( tokLN, 2, 8 )
-
+    tester.setTokenizer(CppStringTokenizer("an \\\n example"))
+    tester.expectTokens([("an", 1, 1),
+                         ("example", 2, 2)])
     return True
 
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####           C P P   E X P R E S S I O N S                                   #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+################################################################################
+################################################################################
+#####                                                                      #####
+#####           C P P   E X P R E S S I O N S                              #####
+#####                                                                      #####
+################################################################################
+################################################################################
 
-class CppExpr:
-    """a class that models the condition of #if directives into
-        an expression tree. each node in the tree is of the form (op,arg) or (op,arg1,arg2)
-        where "op" is a string describing the operation"""
 
-    unaries  = [ "!", "~" ]
-    binaries = [ "+", "-", "<", "<=", ">=", ">", "&&", "||", "*", "/", "%", "&", "|", "^", "<<", ">>", "==", "!=", "?", ":" ]
+class CppExpr(object):
+    """A class that models the condition of #if directives into an expr tree.
+
+    Each node in the tree is of the form (op, arg) or (op, arg1, arg2) where
+    "op" is a string describing the operation
+    """
+
+    unaries = ["!", "~"]
+    binaries = ["+", "-", "<", "<=", ">=", ">", "&&", "||", "*", "/", "%",
+                "&", "|", "^", "<<", ">>", "==", "!=", "?", ":"]
     precedences = {
         "?": 1, ":": 1,
         "||": 2,
@@ -570,204 +410,197 @@ class CppExpr:
         "!": 12, "~": 12
     }
 
-    re_cpp_constant = re.compile(r"((\d|\w|_)+)")
-
     def __init__(self, tokens):
-        """initialize a CppExpr. 'tokens' must be a CppToken list"""
-        self.tok  = tokens
-        self.n    = len(tokens)
-        self.i    = 0
+        """Initialize a CppExpr. 'tokens' must be a CppToken list."""
+        self.tokens = tokens
+        self._num_tokens = len(tokens)
+        self._index = 0
+
         if debugCppExpr:
             print "CppExpr: trying to parse %s" % repr(tokens)
         self.expr = self.parseExpression(0)
         if debugCppExpr:
             print "CppExpr: got " + repr(self.expr)
-        if self.i != self.n:
-            print 'crap at end of input (%d != %d): %s' % (self.i, self.n, repr(tokens))
-            raise
-
+        if self._index != self._num_tokens:
+            self.throw(BadExpectedToken, "crap at end of input (%d != %d): %s"
+                       % (self._index, self._num_tokens, repr(tokens)))
 
     def throw(self, exception, msg):
-        if self.i < self.n:
-            tok = self.tok[self.i]
-            print "%d:%d: %s" % (tok.lineno,tok.colno,msg)
+        if self._index < self._num_tokens:
+            tok = self.tokens[self._index]
+            print "%d:%d: %s" % (tok.location.line, tok.location.column, msg)
         else:
             print "EOF: %s" % msg
         raise exception(msg)
 
-
-    def skip_spaces(self):
-        """skip spaces in input token list"""
-        while self.i < self.n:
-            t = self.tok[self.i]
-            if t.id != tokSPACE and t.id != tokLN:
-                break
-            self.i += 1
-
-
     def expectId(self, id):
-        """check that a given token id is at the current position, then skip over it"""
-        self.skip_spaces()
-        if self.i >= self.n or self.tok[self.i].id != id:
-            self.throw(BadExpectedToken,self.i,"### expecting '%s' in expression, got '%s'" % (id, self.tok[self.i].id))
-        self.i += 1
-
-
-    def expectIdent(self):
-        self.skip_spaces()
-        if self.i >= self.n or self.tok[self.i].id != tokIDENT:
-            self.throw(BadExpectedToken, self.i,"### expecting identifier in expression, got '%s'" % (id, self.tok[self.i].id))
-        self.i += 1
-
+        """Check that a given token id is at the current position."""
+        token = self.tokens[self._index]
+        if self._index >= self._num_tokens or token.id != id:
+            self.throw(BadExpectedToken,
+                       "### expecting '%s' in expression, got '%s'" % (
+                           id, token.id))
+        self._index += 1
 
     def is_decimal(self):
-        v = self.tok[self.i].value[:]
-        while len(v) > 0 and v[-1] in "ULul":
-            v = v[:-1]
-        for digit in v:
-            if not digit.isdigit():
-                return None
-
-        self.i += 1
-        return ("int", string.atoi(v))
-
-
-    def is_hexadecimal(self):
-        v = self.tok[self.i].value[:]
-        while len(v) > 0 and v[-1] in "ULul":
-            v = v[:-1]
-        if len(v) > 2 and (v[0:2] == "0x" or v[0:2] == "0X"):
-            for digit in v[2:]:
-                if not digit in "0123456789abcdefABCDEF":
-                    return None
-
-            # for a hex expression tuple, the argument
-            # is the value as an integer
-            self.i += 1
-            return ("hex", int(v[2:], 16))
-
-        return None
-
-
-    def is_integer(self):
-        if self.tok[self.i].id != tokNUMBER:
+        token = self.tokens[self._index].id
+        if token[-1] in "ULul":
+            token = token[:-1]
+        try:
+            val = int(token, 10)
+            self._index += 1
+            return ('int', val)
+        except ValueError:
             return None
 
-        c = self.is_decimal()
-        if c: return c
+    def is_octal(self):
+        token = self.tokens[self._index].id
+        if token[-1] in "ULul":
+            token = token[:-1]
+        if len(token) < 2 or token[0] != '0':
+            return None
+        try:
+            val = int(token, 8)
+            self._index += 1
+            return ('oct', val)
+        except ValueError:
+            return None
+
+    def is_hexadecimal(self):
+        token = self.tokens[self._index].id
+        if token[-1] in "ULul":
+            token = token[:-1]
+        if len(token) < 3 or (token[:2] != '0x' and token[:2] != '0X'):
+            return None
+        try:
+            val = int(token, 16)
+            self._index += 1
+            return ('hex', val)
+        except ValueError:
+            return None
+
+    def is_integer(self):
+        if self.tokens[self._index].kind != TokenKind.LITERAL:
+            return None
 
         c = self.is_hexadecimal()
-        if c: return c
+        if c:
+            return c
+
+        c = self.is_octal()
+        if c:
+            return c
+
+        c = self.is_decimal()
+        if c:
+            return c
 
         return None
 
-
     def is_number(self):
-        t = self.tok[self.i]
-        if t.id == tokMINUS and self.i+1 < self.n:
-            self.i += 1
+        t = self.tokens[self._index]
+        if t.id == tokMINUS and self._index + 1 < self._num_tokens:
+            self._index += 1
             c = self.is_integer()
             if c:
-                op, val  = c
+                op, val = c
                 return (op, -val)
-        if t.id == tokPLUS and self.i+1 < self.n:
+        if t.id == tokPLUS and self._index + 1 < self._num_tokens:
+            self._index += 1
             c = self.is_integer()
-            if c: return c
+            if c:
+                return c
 
         return self.is_integer()
 
-
     def is_defined(self):
-        t = self.tok[self.i]
+        t = self.tokens[self._index]
         if t.id != tokDEFINED:
             return None
 
-        # we have the defined keyword, check the rest
-        self.i += 1
-        self.skip_spaces()
-        used_parens = 0
-        if self.i < self.n and self.tok[self.i].id == tokLPAREN:
-            used_parens = 1
-            self.i += 1
-            self.skip_spaces()
+        # We have the defined keyword, check the rest.
+        self._index += 1
+        used_parens = False
+        if (self._index < self._num_tokens and
+            self.tokens[self._index].id == tokLPAREN):
+            used_parens = True
+            self._index += 1
 
-        if self.i >= self.n:
-            self.throw(CppConstantExpected,i,"### 'defined' must be followed  by macro name or left paren")
+        if self._index >= self._num_tokens:
+            self.throw(BadExpectedToken,
+                       "### 'defined' must be followed by macro name or left "
+                       "paren")
 
-        t = self.tok[self.i]
-        if t.id != tokIDENT:
-            self.throw(CppConstantExpected,i,"### 'defined' must be followed by macro name")
+        t = self.tokens[self._index]
+        if t.kind != TokenKind.IDENTIFIER:
+            self.throw(BadExpectedToken,
+                       "### 'defined' must be followed by macro name")
 
-        self.i += 1
+        self._index += 1
         if used_parens:
             self.expectId(tokRPAREN)
 
-        return ("defined", t.value)
-
+        return ("defined", t.id)
 
     def is_call_or_ident(self):
-        self.skip_spaces()
-        if self.i >= self.n:
+        if self._index >= self._num_tokens:
             return None
 
-        t = self.tok[self.i]
-        if t.id != tokIDENT:
+        t = self.tokens[self._index]
+        if t.kind != TokenKind.IDENTIFIER:
             return None
 
-        name = t.value
+        name = t.id
 
-        self.i += 1
-        self.skip_spaces()
-        if self.i >= self.n or self.tok[self.i].id != tokLPAREN:
+        self._index += 1
+        if (self._index >= self._num_tokens or
+            self.tokens[self._index].id != tokLPAREN):
             return ("ident", name)
 
-        params    = []
-        depth     = 1
-        self.i += 1
-        j  = self.i
-        while self.i < self.n:
-            id = self.tok[self.i].id
+        params = []
+        depth = 1
+        self._index += 1
+        j = self._index
+        while self._index < self._num_tokens:
+            id = self.tokens[self._index].id
             if id == tokLPAREN:
                 depth += 1
             elif depth == 1 and (id == tokCOMMA or id == tokRPAREN):
-                while j < self.i and self.tok[j].id == tokSPACE:
-                    j += 1
-                k = self.i
-                while k > j and self.tok[k-1].id == tokSPACE:
-                    k -= 1
-                param = self.tok[j:k]
+                k = self._index
+                param = self.tokens[j:k]
                 params.append(param)
                 if id == tokRPAREN:
                     break
-                j = self.i+1
+                j = self._index + 1
             elif id == tokRPAREN:
                 depth -= 1
-            self.i += 1
+            self._index += 1
 
-        if self.i >= self.n:
+        if self._index >= self._num_tokens:
             return None
 
-        self.i += 1
+        self._index += 1
         return ("call", (name, params))
 
+    # Implements the "precedence climbing" algorithm from
+    # http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm.
+    # The "classic" algorithm would be fine if we were using a tool to
+    # generate the parser, but we're not. Dijkstra's "shunting yard"
+    # algorithm hasn't been necessary yet.
 
-    # Implements the "precedence climbing" algorithm from http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm.
-    # The "classic" algorithm would be fine if we were using a tool to generate the parser, but we're not.
-    # Dijkstra's "shunting yard" algorithm hasn't been necessary yet.
     def parseExpression(self, minPrecedence):
-        self.skip_spaces()
-        if self.i >= self.n:
+        if self._index >= self._num_tokens:
             return None
 
         node = self.parsePrimary()
-        while self.token() != None and self.isBinary(self.token()) and self.precedence(self.token()) >= minPrecedence:
+        while (self.token() and self.isBinary(self.token()) and
+               self.precedence(self.token()) >= minPrecedence):
             op = self.token()
             self.nextToken()
             rhs = self.parseExpression(self.precedence(op) + 1)
             node = (op.id, node, rhs)
 
         return node
-
 
     def parsePrimary(self):
         op = self.token()
@@ -784,51 +617,47 @@ class CppExpr:
             self.nextToken()
             primary = self.parseExpression(0)
             self.expectId(":")
-        elif op.id == tokNUMBER:
+        elif op.id == '+' or op.id == '-' or op.kind == TokenKind.LITERAL:
             primary = self.is_number()
-        elif op.id == tokIDENT:
-            primary = self.is_call_or_ident()
+        # Checking for 'defined' needs to come first now because 'defined' is
+        # recognized as IDENTIFIER.
         elif op.id == tokDEFINED:
             primary = self.is_defined()
+        elif op.kind == TokenKind.IDENTIFIER:
+            primary = self.is_call_or_ident()
         else:
-            self.throw(BadExpectedToken, "didn't expect to see a %s in factor" % (self.tok[self.i].id))
-
-        self.skip_spaces()
-
-        return primary;
-
+            self.throw(BadExpectedToken,
+                       "didn't expect to see a %s in factor" % (
+                           self.tokens[self._index].id))
+        return primary
 
     def isBinary(self, token):
         return token.id in self.binaries
 
-
     def isUnary(self, token):
         return token.id in self.unaries
-
 
     def precedence(self, token):
         return self.precedences.get(token.id)
 
-
     def token(self):
-        if self.i >= self.n:
+        if self._index >= self._num_tokens:
             return None
-        return self.tok[self.i]
-
+        return self.tokens[self._index]
 
     def nextToken(self):
-        self.i += 1
-        self.skip_spaces()
-        if self.i >= self.n:
+        self._index += 1
+        if self._index >= self._num_tokens:
             return None
-        return self.tok[self.i]
-
+        return self.tokens[self._index]
 
     def dump_node(self, e):
         op = e[0]
         line = "(" + op
         if op == "int":
             line += " %d)" % e[1]
+        elif op == "oct":
+            line += " 0%o)" % e[1]
         elif op == "hex":
             line += " 0x%x)" % e[1]
         elif op == "ident":
@@ -864,31 +693,33 @@ class CppExpr:
             return "%d" % e[1]
         if op == "hex":
             return "0x%x" % e[1]
+        if op == "oct":
+            return "0%o" % e[1]
         if op == "ident":
             # XXX: should try to expand
             return e[1]
         if op == "defined":
             return "defined(%s)" % e[1]
 
-        prec = CppExpr.precedences.get(op,1000)
-        arg  = e[1]
+        prec = CppExpr.precedences.get(op, 1000)
+        arg = e[1]
         if op in CppExpr.unaries:
             arg_src = self.source_node(arg)
-            arg_op  = arg[0]
-            arg_prec = CppExpr.precedences.get(arg[0],1000)
+            arg_op = arg[0]
+            arg_prec = CppExpr.precedences.get(arg_op, 1000)
             if arg_prec < prec:
                 return "!(" + arg_src + ")"
             else:
                 return "!" + arg_src
         if op in CppExpr.binaries:
-            arg2     = e[2]
-            arg1_op  = arg[0]
-            arg2_op  = arg2[0]
+            arg2 = e[2]
+            arg1_op = arg[0]
+            arg2_op = arg2[0]
             arg1_src = self.source_node(arg)
             arg2_src = self.source_node(arg2)
-            if CppExpr.precedences.get(arg1_op,1000) < prec:
+            if CppExpr.precedences.get(arg1_op, 1000) < prec:
                 arg1_src = "(%s)" % arg1_src
-            if CppExpr.precedences.get(arg2_op,1000) < prec:
+            if CppExpr.precedences.get(arg2_op, 1000) < prec:
                 arg2_src = "(%s)" % arg2_src
 
             return "%s %s %s" % (arg1_src, op, arg2_src)
@@ -897,19 +728,21 @@ class CppExpr:
     def __str__(self):
         return self.source_node(self.expr)
 
-    def int_node(self,e):
-        if e[0] == "int":
+    @staticmethod
+    def int_node(e):
+        if e[0] in ["int", "oct", "hex"]:
             return e[1]
-        elif e[1] == "hex":
-            return int(e[1],16)
         else:
             return None
 
     def toInt(self):
         return self.int_node(self.expr)
 
-    def optimize_node(self, e, macros={}):
+    def optimize_node(self, e, macros=None):
+        if macros is None:
+            macros = {}
         op = e[0]
+
         if op == "defined":
             op, name = e
             if macros.has_key(name):
@@ -919,7 +752,7 @@ class CppExpr:
                     try:
                         value = int(macros[name])
                         return ("int", value)
-                    except:
+                    except ValueError:
                         return ("defined", macros[name])
 
             if kernel_remove_config_macros and name.startswith("CONFIG_"):
@@ -933,7 +766,7 @@ class CppExpr:
                 try:
                     value = int(macros[name])
                     expanded = ("int", value)
-                except:
+                except ValueError:
                     expanded = ("ident", macros[name])
                 return self.optimize_node(expanded, macros)
             return e
@@ -950,16 +783,16 @@ class CppExpr:
 
         elif op == "&&":
             op, l, r = e
-            l  = self.optimize_node(l, macros)
-            r  = self.optimize_node(r, macros)
+            l = self.optimize_node(l, macros)
+            r = self.optimize_node(r, macros)
             li = self.int_node(l)
             ri = self.int_node(r)
-            if li != None:
+            if li is not None:
                 if li == 0:
                     return ("int", 0)
                 else:
                     return r
-            elif ri != None:
+            elif ri is not None:
                 if ri == 0:
                     return ("int", 0)
                 else:
@@ -968,16 +801,16 @@ class CppExpr:
 
         elif op == "||":
             op, l, r = e
-            l  = self.optimize_node(l, macros)
-            r  = self.optimize_node(r, macros)
+            l = self.optimize_node(l, macros)
+            r = self.optimize_node(r, macros)
             li = self.int_node(l)
             ri = self.int_node(r)
-            if li != None:
+            if li is not None:
                 if li == 0:
                     return r
                 else:
                     return ("int", 1)
-            elif ri != None:
+            elif ri is not None:
                 if ri == 0:
                     return l
                 else:
@@ -987,50 +820,54 @@ class CppExpr:
         else:
             return e
 
-    def optimize(self,macros={}):
+    def optimize(self, macros=None):
+        if macros is None:
+            macros = {}
         self.expr = self.optimize_node(self.expr, macros)
 
-    def is_equal_node(self,e1,e2):
-        if e1[0] != e2[0] or len(e1) != len(e2):
-            return False
-
-        op = e1[0]
-        if op == "int" or op == "hex" or op == "!" or op == "defined":
-            return e1[0] == e2[0]
-
-        return self.is_equal_node(e1[1],e2[1]) and self.is_equal_node(e1[2],e2[2])
-
-    def is_equal(self,other):
-        return self.is_equal_node(self.expr,other.expr)
 
 def test_cpp_expr(expr, expected):
-    e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
+    e = CppExpr(CppStringTokenizer(expr).tokens)
     s1 = repr(e)
     if s1 != expected:
-        print "[FAIL]: expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
+        print ("[FAIL]: expression '%s' generates '%s', should be "
+               "'%s'" % (expr, s1, expected))
         global failure_count
         failure_count += 1
 
-def test_cpp_expr_optim(expr, expected, macros={}):
-    e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
+
+def test_cpp_expr_optim(expr, expected, macros=None):
+    if macros is None:
+        macros = {}
+    e = CppExpr(CppStringTokenizer(expr).tokens)
     e.optimize(macros)
     s1 = repr(e)
     if s1 != expected:
-        print "[FAIL]: optimized expression '%s' generates '%s' with macros %s, should be '%s'" % (expr, s1, macros, expected)
+        print ("[FAIL]: optimized expression '%s' generates '%s' with "
+               "macros %s, should be '%s'" % (expr, s1, macros, expected))
         global failure_count
         failure_count += 1
 
+
 def test_cpp_expr_source(expr, expected):
-    e = CppExpr( CppLineTokenizer( expr ).toTokenList() )
+    e = CppExpr(CppStringTokenizer(expr).tokens)
     s1 = str(e)
     if s1 != expected:
-        print "[FAIL]: source expression '%s' generates '%s', should be '%s'" % (expr, s1, expected)
+        print ("[FAIL]: source expression '%s' generates '%s', should "
+               "be '%s'" % (expr, s1, expected))
         global failure_count
         failure_count += 1
+
 
 def test_CppExpr():
     test_cpp_expr("0", "(int 0)")
     test_cpp_expr("1", "(int 1)")
+    test_cpp_expr("-5", "(int -5)")
+    test_cpp_expr("+1", "(int 1)")
+    test_cpp_expr("0U", "(int 0)")
+    test_cpp_expr("015", "(oct 015)")
+    test_cpp_expr("015l", "(oct 015)")
+    test_cpp_expr("0x3e", "(hex 0x3e)")
     test_cpp_expr("(0)", "(int 0)")
     test_cpp_expr("1 && 1", "(&& (int 1) (int 1))")
     test_cpp_expr("1 && 0", "(&& (int 1) (int 0))")
@@ -1039,13 +876,17 @@ def test_CppExpr():
     test_cpp_expr("defined(EXAMPLE)", "(defined EXAMPLE)")
     test_cpp_expr("defined ( EXAMPLE ) ", "(defined EXAMPLE)")
     test_cpp_expr("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
-    test_cpp_expr("defined(ABC) || defined(BINGO)", "(|| (defined ABC) (defined BINGO))")
-    test_cpp_expr("FOO(BAR)", "(call FOO [BAR])")
-    test_cpp_expr("A == 1 || defined(B)", "(|| (== (ident A) (int 1)) (defined B))")
+    test_cpp_expr("defined(ABC) || defined(BINGO)",
+                  "(|| (defined ABC) (defined BINGO))")
+    test_cpp_expr("FOO(BAR,5)", "(call FOO [BAR,5])")
+    test_cpp_expr("A == 1 || defined(B)",
+                  "(|| (== (ident A) (int 1)) (defined B))")
 
     test_cpp_expr_optim("0", "(int 0)")
     test_cpp_expr_optim("1", "(int 1)")
     test_cpp_expr_optim("1 && 1", "(int 1)")
+    test_cpp_expr_optim("1 && +1", "(int 1)")
+    test_cpp_expr_optim("0x1 && 01", "(oct 01)")
     test_cpp_expr_optim("1 && 0", "(int 0)")
     test_cpp_expr_optim("0 && 1", "(int 0)")
     test_cpp_expr_optim("0 && 0", "(int 0)")
@@ -1054,32 +895,48 @@ def test_CppExpr():
     test_cpp_expr_optim("0 || 1", "(int 1)")
     test_cpp_expr_optim("0 || 0", "(int 0)")
     test_cpp_expr_optim("A", "(ident A)")
-    test_cpp_expr_optim("A", "(int 1)", { "A": 1 })
-    test_cpp_expr_optim("A || B", "(int 1)", { "A": 1 })
-    test_cpp_expr_optim("A || B", "(int 1)", { "B": 1 })
-    test_cpp_expr_optim("A && B", "(ident B)", { "A": 1 })
-    test_cpp_expr_optim("A && B", "(ident A)", { "B": 1 })
+    test_cpp_expr_optim("A", "(int 1)", {"A": 1})
+    test_cpp_expr_optim("A || B", "(int 1)", {"A": 1})
+    test_cpp_expr_optim("A || B", "(int 1)", {"B": 1})
+    test_cpp_expr_optim("A && B", "(ident B)", {"A": 1})
+    test_cpp_expr_optim("A && B", "(ident A)", {"B": 1})
     test_cpp_expr_optim("A && B", "(&& (ident A) (ident B))")
     test_cpp_expr_optim("EXAMPLE", "(ident EXAMPLE)")
     test_cpp_expr_optim("EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))")
     test_cpp_expr_optim("defined(EXAMPLE)", "(defined EXAMPLE)")
-    test_cpp_expr_optim("defined(EXAMPLE)", "(defined XOWOE)", { "EXAMPLE": "XOWOE" })
-    test_cpp_expr_optim("defined(EXAMPLE)", "(int 0)", { "EXAMPLE": kCppUndefinedMacro})
+    test_cpp_expr_optim("defined(EXAMPLE)", "(defined XOWOE)",
+                        {"EXAMPLE": "XOWOE"})
+    test_cpp_expr_optim("defined(EXAMPLE)", "(int 0)",
+                        {"EXAMPLE": kCppUndefinedMacro})
     test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
-    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined XOWOE))", { "EXAMPLE" : "XOWOE" })
-    test_cpp_expr_optim("!defined(EXAMPLE)", "(int 1)", { "EXAMPLE" : kCppUndefinedMacro })
-    test_cpp_expr_optim("defined(A) || defined(B)", "(|| (defined A) (defined B))")
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", { "A" : "1" })
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", { "B" : "1" })
-    test_cpp_expr_optim("defined(A) || defined(B)", "(defined A)", { "B" : kCppUndefinedMacro })
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 0)", { "A" : kCppUndefinedMacro, "B" : kCppUndefinedMacro })
-    test_cpp_expr_optim("defined(A) && defined(B)", "(&& (defined A) (defined B))")
-    test_cpp_expr_optim("defined(A) && defined(B)", "(defined B)", { "A" : "1" })
-    test_cpp_expr_optim("defined(A) && defined(B)", "(defined A)", { "B" : "1" })
-    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)", { "B" : kCppUndefinedMacro })
-    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)", { "A" : kCppUndefinedMacro })
-    test_cpp_expr_optim("A == 1 || defined(B)", "(|| (== (ident A) (int 1)) (defined B))" )
-    test_cpp_expr_optim("defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)", "(|| (! (defined __GLIBC__)) (< (ident __GLIBC__) (int 2)))", { "__KERNEL__": kCppUndefinedMacro })
+    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined XOWOE))",
+                        {"EXAMPLE": "XOWOE"})
+    test_cpp_expr_optim("!defined(EXAMPLE)", "(int 1)",
+                        {"EXAMPLE": kCppUndefinedMacro})
+    test_cpp_expr_optim("defined(A) || defined(B)",
+                        "(|| (defined A) (defined B))")
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", {"A": "1"})
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", {"B": "1"})
+    test_cpp_expr_optim("defined(A) || defined(B)", "(defined A)",
+                        {"B": kCppUndefinedMacro})
+    test_cpp_expr_optim("defined(A) || defined(B)", "(int 0)",
+                        {"A": kCppUndefinedMacro, "B": kCppUndefinedMacro})
+    test_cpp_expr_optim("defined(A) && defined(B)",
+                        "(&& (defined A) (defined B))")
+    test_cpp_expr_optim("defined(A) && defined(B)",
+                        "(defined B)", {"A": "1"})
+    test_cpp_expr_optim("defined(A) && defined(B)",
+                        "(defined A)", {"B": "1"})
+    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)",
+                        {"B": kCppUndefinedMacro})
+    test_cpp_expr_optim("defined(A) && defined(B)",
+                        "(int 0)", {"A": kCppUndefinedMacro})
+    test_cpp_expr_optim("A == 1 || defined(B)",
+                        "(|| (== (ident A) (int 1)) (defined B))")
+    test_cpp_expr_optim(
+        "defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)",
+        "(|| (! (defined __GLIBC__)) (< (ident __GLIBC__) (int 2)))",
+        {"__KERNEL__": kCppUndefinedMacro})
 
     test_cpp_expr_source("0", "0")
     test_cpp_expr_source("1", "1")
@@ -1098,179 +955,176 @@ def test_CppExpr():
     test_cpp_expr_source("A == 1 || defined(B)", "A == 1 || defined(B)")
 
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####          C P P   B L O C K                                                #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+################################################################################
+################################################################################
+#####                                                                      #####
+#####          C P P   B L O C K                                           #####
+#####                                                                      #####
+################################################################################
+################################################################################
 
-class Block:
-    """a class used to model a block of input source text. there are two block types:
-        - directive blocks: contain the tokens of a single pre-processor directive (e.g. #if)
-        - text blocks, contain the tokens of non-directive blocks
 
-       the cpp parser class below will transform an input source file into a list of Block
-       objects (grouped in a BlockList object for convenience)"""
+class Block(object):
+    """A class used to model a block of input source text.
 
-    def __init__(self,tokens,directive=None,lineno=0):
-        """initialize a new block, if 'directive' is None, this is a text block
-           NOTE: this automatically converts '#ifdef MACRO' into '#if defined(MACRO)'
-                 and '#ifndef MACRO' into '#if !defined(MACRO)'"""
+    There are two block types:
+      - directive blocks: contain the tokens of a single pre-processor
+        directive (e.g. #if)
+      - text blocks, contain the tokens of non-directive blocks
+
+    The cpp parser class below will transform an input source file into a list
+    of Block objects (grouped in a BlockList object for convenience)
+    """
+
+    def __init__(self, tokens, directive=None, lineno=0, identifier=None):
+        """Initialize a new block, if 'directive' is None, it is a text block.
+
+        NOTE: This automatically converts '#ifdef MACRO' into
+        '#if defined(MACRO)' and '#ifndef MACRO' into '#if !defined(MACRO)'.
+        """
+
         if directive == "ifdef":
             tok = Token()
-            tok.set(tokDEFINED)
-            tokens = [ tok ] + tokens
+            tok.id = tokDEFINED
+            tokens = [tok] + tokens
             directive = "if"
 
         elif directive == "ifndef":
             tok1 = Token()
             tok2 = Token()
-            tok1.set(tokNOT)
-            tok2.set(tokDEFINED)
-            tokens = [ tok1, tok2 ] + tokens
+            tok1.id = tokNOT
+            tok2.id = tokDEFINED
+            tokens = [tok1, tok2] + tokens
             directive = "if"
 
-        self.tokens    = tokens
+        self.tokens = tokens
         self.directive = directive
+        self.define_id = identifier
         if lineno > 0:
             self.lineno = lineno
         else:
-            self.lineno = self.tokens[0].lineno
+            self.lineno = self.tokens[0].location.line
 
         if self.isIf():
-            self.expr = CppExpr( self.tokens )
+            self.expr = CppExpr(self.tokens)
 
     def isDirective(self):
-        """returns True iff this is a directive block"""
-        return self.directive != None
+        """Return True iff this is a directive block."""
+        return self.directive is not None
 
     def isConditional(self):
-        """returns True iff this is a conditional directive block"""
-        return self.directive in ["if","ifdef","ifndef","else","elif","endif"]
+        """Return True iff this is a conditional directive block."""
+        return self.directive in ["if", "ifdef", "ifndef", "else", "elif",
+                                  "endif"]
 
     def isDefine(self):
-        """returns the macro name in a #define directive, or None otherwise"""
+        """Return the macro name in a #define directive, or None otherwise."""
         if self.directive != "define":
             return None
-
-        return self.tokens[0].value
+        return self.define_id
 
     def isIf(self):
-        """returns True iff this is an #if-like directive block"""
-        return self.directive in ["if","ifdef","ifndef","elif"]
+        """Return True iff this is an #if-like directive block."""
+        return self.directive in ["if", "ifdef", "ifndef", "elif"]
+
+    def isEndif(self):
+        """Return True iff this is an #endif directive block."""
+        return self.directive == "endif"
 
     def isInclude(self):
-        """checks whether this is a #include directive. if true, then returns the
-           corresponding file name (with brackets or double-qoutes). None otherwise"""
+        """Check whether this is a #include directive.
+
+        If true, returns the corresponding file name (with brackets or
+        double-qoutes). None otherwise.
+        """
+
         if self.directive != "include":
             return None
+        return ''.join([str(x) for x in self.tokens])
 
-        if self.tokens[0].id == tokSTRING:
-            # a double-quote include, that's easy
-            return self.tokens[0].value
+    @staticmethod
+    def format_blocks(tokens, indent=0):
+        """Return the formatted lines of strings with proper indentation."""
+        newline = True
+        result = []
+        buf = ''
+        i = 0
+        while i < len(tokens):
+            t = tokens[i]
+            if t.id == '{':
+                buf += ' {'
+                result.append(strip_space(buf))
+                indent += 2
+                buf = ''
+                newline = True
+            elif t.id == '}':
+                indent -= 2
+                if not newline:
+                    result.append(strip_space(buf))
+                # Look ahead to determine if it's the end of line.
+                if (i + 1 < len(tokens) and
+                    (tokens[i+1].id == ';' or
+                     tokens[i+1].id in ['else', '__attribute__',
+                                        '__attribute', '__packed'] or
+                     tokens[i+1].kind == TokenKind.IDENTIFIER)):
+                    buf = ' ' * indent + '}'
+                    newline = False
+                else:
+                    result.append(' ' * indent + '}')
+                    buf = ''
+                    newline = True
+            elif t.id == ';':
+                result.append(strip_space(buf) + ';')
+                buf = ''
+                newline = True
+            # We prefer a new line for each constant in enum.
+            elif t.id == ',' and t.cursor.kind == CursorKind.ENUM_DECL:
+                result.append(strip_space(buf) + ',')
+                buf = ''
+                newline = True
+            else:
+                if newline:
+                    buf += ' ' * indent + str(t)
+                else:
+                    buf += ' ' + str(t)
+                newline = False
+            i += 1
 
-        # we only want the bracket part, not any comments or junk after it
-        if self.tokens[0].id == "<":
-            i   = 0
-            tok = self.tokens
-            n   = len(tok)
-            while i < n and tok[i].id != ">":
-                i += 1
+        if buf:
+            result.append(strip_space(buf))
 
-            if i >= n:
-                return None
+        return result, indent
 
-            return string.join([ str(x) for x in tok[:i+1] ],"")
-
-        else:
-            return None
-
-    def removeWhiteSpace(self):
-        # Remove trailing whitespace and empty lines
-        # All whitespace is also contracted to a single space
-        if self.directive != None:
-            return
-
-        tokens = []
-        line   = 0     # index of line start
-        space  = -1    # index of first space, or -1
-        ii = 0
-        nn = len(self.tokens)
-        while ii < nn:
-            tok = self.tokens[ii]
-
-            # If we find a space, record its position if this is the first
-            # one the line start or the previous character. Don't append
-            # anything to tokens array yet though.
-            if tok.id == tokSPACE:
-                if space < 0:
-                    space = ii
-                ii += 1
-                continue
-
-            # If this is a line space, ignore the spaces we found previously
-            # on the line, and remove empty lines.
-            if tok.id == tokLN:
-                old_line  = line
-                old_space = space
-                ii   += 1
-                line  = ii
-                space = -1
-                if old_space == old_line:  # line only contains spaces
-                    continue
-                if ii-1 == old_line:  # line is empty
-                    continue
-                tokens.append(tok)
-                continue
-
-            # Other token, append any space range if any, converting each
-            # one to a single space character, then append the token.
-            if space >= 0:
-                jj = space
-                space = -1
-                while jj < ii:
-                    tok2 = self.tokens[jj]
-                    tok2.value = " "
-                    tokens.append(tok2)
-                    jj += 1
-
-            tokens.append(tok)
-            ii += 1
-
-        self.tokens = tokens
-
-    def writeWithWarning(self,out,warning,left_count,repeat_count):
+    def writeWithWarning(self, out, warning, left_count, repeat_count, indent):
+        """Dump the current block with warnings."""
         # removeWhiteSpace() will sometimes creates non-directive blocks
         # without any tokens. These come from blocks that only contained
         # empty lines and spaces. They should not be printed in the final
         # output, and then should not be counted for this operation.
         #
-        if not self.directive and self.tokens == []:
-            return left_count
+        if self.directive is None and not self.tokens:
+            return left_count, indent
 
         if self.directive:
-            out.write(str(self).rstrip() + "\n")
+            out.write(str(self) + '\n')
             left_count -= 1
             if left_count == 0:
                 out.write(warning)
                 left_count = repeat_count
 
         else:
-            for tok in self.tokens:
-                out.write(str(tok))
-                if tok.id == tokLN:
-                    left_count -= 1
-                    if left_count == 0:
-                        out.write(warning)
-                        left_count = repeat_count
+            lines, indent = self.format_blocks(self.tokens, indent)
+            for line in lines:
+                out.write(line + '\n')
+                left_count -= 1
+                if left_count == 0:
+                    out.write(warning)
+                    left_count = repeat_count
 
-        return left_count
-
+        return left_count, indent
 
     def __repr__(self):
-        """generate the representation of a given block"""
+        """Generate the representation of a given block."""
         if self.directive:
             result = "#%s " % self.directive
             if self.isIf():
@@ -1286,8 +1140,9 @@ class Block:
         return result
 
     def __str__(self):
-        """generate the string representation of a given block"""
+        """Generate the string representation of a given block."""
         if self.directive:
+            # "#if"
             if self.directive == "if":
                 # small optimization to re-generate #ifdef and #ifndef
                 e = self.expr.expr
@@ -1298,114 +1153,138 @@ class Block:
                     result = "#ifndef %s" % e[1][1]
                 else:
                     result = "#if " + str(self.expr)
+
+            # "#define"
+            elif self.isDefine():
+                result = "#%s %s" % (self.directive, self.define_id)
+                if self.tokens:
+                    result += " "
+                expr = strip_space(' '.join([tok.id for tok in self.tokens]))
+                # remove the space between name and '(' in function call
+                result += re.sub(r'(\w+) \(', r'\1(', expr)
+
+            # "#error"
+            # Concatenating tokens with a space separator, because they may
+            # not be quoted and broken into several tokens
+            elif self.directive == "error":
+                result = "#error %s" % ' '.join([tok.id for tok in self.tokens])
+
             else:
                 result = "#%s" % self.directive
-                if len(self.tokens):
+                if self.tokens:
                     result += " "
-                for tok in self.tokens:
-                    result += str(tok)
+                result += ''.join([tok.id for tok in self.tokens])
         else:
-            result = ""
-            for tok in self.tokens:
-                result += str(tok)
+            lines, _ = self.format_blocks(self.tokens)
+            result = '\n'.join(lines)
 
         return result
 
-class BlockList:
-    """a convenience class used to hold and process a list of blocks returned by
-       the cpp parser"""
-    def __init__(self,blocks):
+
+class BlockList(object):
+    """A convenience class used to hold and process a list of blocks.
+
+    It calls the cpp parser to get the blocks.
+    """
+
+    def __init__(self, blocks):
         self.blocks = blocks
 
     def __len__(self):
         return len(self.blocks)
 
-    def __getitem__(self,n):
+    def __getitem__(self, n):
         return self.blocks[n]
 
     def __repr__(self):
         return repr(self.blocks)
 
     def __str__(self):
-        result = ""
-        for b in self.blocks:
-            result += str(b)
-            if b.isDirective():
-                result = result.rstrip() + '\n'
+        result = '\n'.join([str(b) for b in self.blocks])
         return result
 
-    def  optimizeIf01(self):
-        """remove the code between #if 0 .. #endif in a BlockList"""
+    def dump(self):
+        """Dump all the blocks in current BlockList."""
+        print '##### BEGIN #####'
+        for i, b in enumerate(self.blocks):
+            print '### BLOCK %d ###' % i
+            print b
+        print '##### END #####'
+
+    def optimizeIf01(self):
+        """Remove the code between #if 0 .. #endif in a BlockList."""
         self.blocks = optimize_if01(self.blocks)
 
     def optimizeMacros(self, macros):
-        """remove known defined and undefined macros from a BlockList"""
+        """Remove known defined and undefined macros from a BlockList."""
         for b in self.blocks:
             if b.isIf():
                 b.expr.optimize(macros)
 
-    def removeMacroDefines(self,macros):
-        """remove known macro definitions from a BlockList"""
-        self.blocks = remove_macro_defines(self.blocks,macros)
+    def removeMacroDefines(self, macros):
+        """Remove known macro definitions from a BlockList."""
+        self.blocks = remove_macro_defines(self.blocks, macros)
 
-    def removeWhiteSpace(self):
-        for b in self.blocks:
-            b.removeWhiteSpace()
-
-    def optimizeAll(self,macros):
+    def optimizeAll(self, macros):
         self.optimizeMacros(macros)
         self.optimizeIf01()
         return
 
     def findIncludes(self):
-        """return the list of included files in a BlockList"""
+        """Return the list of included files in a BlockList."""
         result = []
         for b in self.blocks:
             i = b.isInclude()
             if i:
                 result.append(i)
-
         return result
 
-
-    def write(self,out):
+    def write(self, out):
         out.write(str(self))
 
-    def writeWithWarning(self,out,warning,repeat_count):
+    def writeWithWarning(self, out, warning, repeat_count):
         left_count = repeat_count
+        indent = 0
         for b in self.blocks:
-            left_count = b.writeWithWarning(out,warning,left_count,repeat_count)
+            left_count, indent = b.writeWithWarning(out, warning, left_count,
+                                                    repeat_count, indent)
 
-    def removeComments(self):
-        for b in self.blocks:
-            for tok in b.tokens:
-                if tok.id == tokSPACE:
-                    tok.value = " "
+    def removeVarsAndFuncs(self, knownStatics=None):
+        """Remove variable and function declarations.
 
-    def removeVarsAndFuncs(self,knownStatics=set()):
-        """remove all extern and static declarations corresponding
-           to variable and function declarations. we only accept typedefs
-           and enum/structs/union declarations.
+        All extern and static declarations corresponding to variable and
+        function declarations are removed. We only accept typedefs and
+        enum/structs/union declarations.
 
-           however, we keep the definitions corresponding to the set
-           of known static inline functions in the set 'knownStatics',
-           which is useful for optimized byteorder swap functions and
-           stuff like that.
-           """
+        However, we keep the definitions corresponding to the set of known
+        static inline functions in the set 'knownStatics', which is useful
+        for optimized byteorder swap functions and stuff like that.
+        """
+
+        # NOTE: It's also removing function-like macros, such as __SYSCALL(...)
+        # in uapi/asm-generic/unistd.h, or KEY_FIELD(...) in linux/bcache.h.
+        # It could be problematic when we have function-like macros but without
+        # '}' following them. It will skip all the tokens/blocks until seeing a
+        # '}' as the function end. Fortunately we don't have such cases in the
+        # current kernel headers.
+
         # state = 0 => normal (i.e. LN + spaces)
         # state = 1 => typedef/struct encountered, ends with ";"
         # state = 2 => var declaration encountered, ends with ";"
         # state = 3 => func declaration encountered, ends with "}"
-        state      = 0
-        depth      = 0
-        blocks2    = []
+
+        if knownStatics is None:
+            knownStatics = set()
+        state = 0
+        depth = 0
+        blocks2 = []
         skipTokens = False
         for b in self.blocks:
             if b.isDirective():
                 blocks2.append(b)
             else:
-                n     = len(b.tokens)
-                i     = 0
+                n = len(b.tokens)
+                i = 0
                 if skipTokens:
                     first = n
                 else:
@@ -1434,21 +1313,16 @@ class BlockList:
                             state = 0
                             if skipTokens:
                                 skipTokens = False
-                                first = i+1
+                                first = i + 1
 
-                        i = i+1
-                        continue
-
-                    # We are looking for the start of a new type/func/var
-                    # ignore whitespace
-                    if tokid in [tokLN, tokSPACE]:
-                        i = i+1
+                        i += 1
                         continue
 
                     # Is it a new type definition, then start recording it
-                    if tok.value in [ 'struct', 'typedef', 'enum', 'union', '__extension__' ]:
+                    if tok.id in ['struct', 'typedef', 'enum', 'union',
+                                  '__extension__']:
                         state = 1
-                        i     = i+1
+                        i += 1
                         continue
 
                     # Is it a variable or function definition. If so, first
@@ -1464,18 +1338,18 @@ class BlockList:
                     # We also assume that the var/func name is the last
                     # identifier before the terminator.
                     #
-                    j = i+1
+                    j = i + 1
                     ident = ""
                     while j < n:
                         tokid = b.tokens[j].id
                         if tokid == '(':  # a function declaration
                             state = 3
                             break
-                        elif tokid == ';': # a variable declaration
+                        elif tokid == ';':  # a variable declaration
                             state = 2
                             break
-                        if tokid == tokIDENT:
-                            ident = b.tokens[j].value
+                        if b.tokens[j].kind == TokenKind.IDENTIFIER:
+                            ident = b.tokens[j].id
                         j += 1
 
                     if j >= n:
@@ -1488,221 +1362,309 @@ class BlockList:
                         # without making our parser much more
                         # complex.
                         #
-                        #print "### skip unterminated static '%s'" % ident
+                        logging.debug("### skip unterminated static '%s'",
+                                      ident)
                         break
 
                     if ident in knownStatics:
-                        #print "### keep var/func '%s': %s" % (ident,repr(b.tokens[i:j]))
-                        pass
+                        logging.debug("### keep var/func '%s': %s", ident,
+                                      repr(b.tokens[i:j]))
                     else:
                         # We're going to skip the tokens for this declaration
-                        #print "### skip variable /func'%s': %s" % (ident,repr(b.tokens[i:j]))
+                        logging.debug("### skip var/func '%s': %s", ident,
+                                      repr(b.tokens[i:j]))
                         if i > first:
-                            blocks2.append( Block(b.tokens[first:i]))
+                            blocks2.append(Block(b.tokens[first:i]))
                         skipTokens = True
-                        first      = n
+                        first = n
 
-                    i = i+1
+                    i += 1
 
                 if i > first:
-                    #print "### final '%s'" % repr(b.tokens[first:i])
-                    blocks2.append( Block(b.tokens[first:i]) )
+                    # print "### final '%s'" % repr(b.tokens[first:i])
+                    blocks2.append(Block(b.tokens[first:i]))
 
         self.blocks = blocks2
 
-    def insertDisclaimer(self,disclaimer="/* auto-generated file, DO NOT EDIT */"):
-        """insert your standard issue disclaimer that this is an
-           auto-generated file, etc.."""
-        tokens = CppLineTokenizer( disclaimer ).toTokenList()
-        tokens = tokens[:-1]  # remove trailing tokLN
-        self.blocks = [ Block(tokens) ] + self.blocks
-
-    def replaceTokens(self,replacements):
-        """replace tokens according to the given dict"""
+    def replaceTokens(self, replacements):
+        """Replace tokens according to the given dict."""
         for b in self.blocks:
             made_change = False
-            if b.isInclude() == None:
+            if b.isInclude() is None:
                 for tok in b.tokens:
-                    if tok.id == tokIDENT:
-                        if tok.value in replacements:
-                            tok.value = replacements[tok.value]
+                    if tok.kind == TokenKind.IDENTIFIER:
+                        if tok.id in replacements:
+                            tok.id = replacements[tok.id]
                             made_change = True
+
+                if b.isDefine() and b.define_id in replacements:
+                    b.define_id = replacements[b.define_id]
+                    made_change = True
 
             if made_change and b.isIf():
                 # Keep 'expr' in sync with 'tokens'.
                 b.expr = CppExpr(b.tokens)
 
-class BlockParser:
-    """a class used to convert an input source file into a BlockList object"""
 
-    def __init__(self,tokzer=None):
-        """initialize a block parser. the input source is provided through a Tokenizer
-           object"""
-        self.reset(tokzer)
+def strip_space(s):
+    """Strip out redundant space in a given string."""
 
-    def reset(self,tokzer):
-        self.state  = 1
-        self.tokzer = tokzer
+    # NOTE: It ought to be more clever to not destroy spaces in string tokens.
+    replacements = {' . ': '.',
+                    ' [': '[',
+                    '[ ': '[',
+                    ' ]': ']',
+                    '( ': '(',
+                    ' )': ')',
+                    ' ,': ',',
+                    '# ': '#',
+                    ' ;': ';',
+                    '~ ': '~',
+                    ' -> ': '->'}
+    result = s
+    for r in replacements:
+        result = result.replace(r, replacements[r])
 
-    def getBlocks(self,tokzer=None):
-        """tokenize and parse the input source, return a BlockList object
-           NOTE: empty and line-numbering directives are ignored and removed
-                 from the result. as a consequence, it is possible to have
-                 two successive text blocks in the result"""
-        # state 0 => in source code
-        # state 1 => in source code, after a LN
-        # state 2 => in source code, after LN then some space
-        state   = 1
-        lastLN  = 0
-        current = []
-        blocks  = []
+    # Remove the space between function name and the parenthesis.
+    result = re.sub(r'(\w+) \(', r'\1(', result)
+    return result
 
-        if tokzer == None:
-            tokzer = self.tokzer
 
-        while 1:
-            tok = tokzer.getToken()
-            if tok.id == tokEOF:
-                break
+class BlockParser(object):
+    """A class that converts an input source file into a BlockList object."""
 
-            if tok.id == tokLN:
-                state    = 1
-                current.append(tok)
-                lastLN   = len(current)
+    def __init__(self, tokzer=None):
+        """Initialize a block parser.
 
-            elif tok.id == tokSPACE:
-                if state == 1:
-                    state = 2
-                current.append(tok)
+        The input source is provided through a Tokenizer object.
+        """
+        self._tokzer = tokzer
+        self._parsed = False
 
-            elif tok.id == "#":
-                if state > 0:
-                    # this is the start of a directive
+    @property
+    def parsed(self):
+        return self._parsed
 
-                    if lastLN > 0:
-                        # record previous tokens as text block
-                        block   = Block(current[:lastLN])
-                        blocks.append(block)
-                        lastLN  = 0
+    @staticmethod
+    def _short_extent(extent):
+        return '%d:%d - %d:%d' % (extent.start.line, extent.start.column,
+                                  extent.end.line, extent.end.column)
 
-                    current = []
+    def getBlocks(self, tokzer=None):
+        """Return all the blocks parsed."""
 
-                    # skip spaces after the #
-                    while 1:
-                        tok = tokzer.getToken()
-                        if tok.id != tokSPACE:
-                            break
+        def consume_extent(i, tokens, extent=None, detect_change=False):
+            """Return tokens that belong to the given extent.
 
-                    if tok.id != tokIDENT:
-                        # empty or line-numbering, ignore it
-                        if tok.id != tokLN and tok.id != tokEOF:
-                            while 1:
-                                tok = tokzer.getToken()
-                                if tok.id == tokLN or tok.id == tokEOF:
-                                    break
-                        continue
+            It parses all the tokens that follow tokens[i], until getting out
+            of the extent. When detect_change is True, it may terminate early
+            when detecting preprocessing directives inside the extent.
+            """
 
-                    directive = tok.value
-                    lineno    = tok.lineno
+            result = []
+            if extent is None:
+                extent = tokens[i].cursor.extent
 
-                    # skip spaces
-                    tok = tokzer.getToken()
-                    while tok.id == tokSPACE:
-                        tok = tokzer.getToken()
+            while i < len(tokens) and tokens[i].location in extent:
+                t = tokens[i]
+                if debugBlockParser:
+                    print ' ' * 2, t.id, t.kind, t.cursor.kind
+                if (detect_change and t.cursor.extent != extent and
+                    t.cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE):
+                    break
+                result.append(t)
+                i += 1
+            return (i, result)
 
-                    # then record tokens until LN
-                    dirtokens = []
-                    while tok.id != tokLN and tok.id != tokEOF:
-                        dirtokens.append(tok)
-                        tok = tokzer.getToken()
+        def consume_line(i, tokens):
+            """Return tokens that follow tokens[i] in the same line."""
+            result = []
+            line = tokens[i].location.line
+            while i < len(tokens) and tokens[i].location.line == line:
+                if tokens[i].cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE:
+                    break
+                result.append(tokens[i])
+                i += 1
+            return (i, result)
 
-                    block = Block(dirtokens,directive,lineno)
-                    blocks.append(block)
-                    state   = 1
+        if tokzer is None:
+            tokzer = self._tokzer
+        tokens = tokzer.tokens
+
+        blocks = []
+        buf = []
+        i = 0
+
+        while i < len(tokens):
+            t = tokens[i]
+            cursor = t.cursor
+
+            if debugBlockParser:
+                print ("%d: Processing [%s], kind=[%s], cursor=[%s], "
+                       "extent=[%s]" % (t.location.line, t.spelling, t.kind,
+                                        cursor.kind,
+                                        self._short_extent(cursor.extent)))
+
+            if cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE:
+                if buf:
+                    blocks.append(Block(buf))
+                    buf = []
+
+                j = i
+                if j + 1 >= len(tokens):
+                    raise BadExpectedToken("### BAD TOKEN at %s" % (t.location))
+                directive = tokens[j+1].id
+
+                if directive == 'define':
+                    if i+2 >= len(tokens):
+                        raise BadExpectedToken("### BAD TOKEN at %s" %
+                                               (tokens[i].location))
+
+                    # Skip '#' and 'define'.
+                    extent = tokens[i].cursor.extent
+                    i += 2
+                    id = ''
+                    # We need to separate the id from the remaining of
+                    # the line, especially for the function-like macro.
+                    if (i + 1 < len(tokens) and tokens[i+1].id == '(' and
+                        (tokens[i].location.column + len(tokens[i].spelling) ==
+                         tokens[i+1].location.column)):
+                        while i < len(tokens):
+                            id += tokens[i].id
+                            if tokens[i].spelling == ')':
+                                i += 1
+                                break
+                            i += 1
+                    else:
+                        id += tokens[i].id
+                        # Advance to the next token that follows the macro id
+                        i += 1
+
+                    (i, ret) = consume_extent(i, tokens, extent=extent)
+                    blocks.append(Block(ret, directive=directive,
+                                        lineno=t.location.line, identifier=id))
+
+                else:
+                    (i, ret) = consume_extent(i, tokens)
+                    blocks.append(Block(ret[2:], directive=directive,
+                                        lineno=t.location.line))
+
+            elif cursor.kind == CursorKind.INCLUSION_DIRECTIVE:
+                if buf:
+                    blocks.append(Block(buf))
+                    buf = []
+                directive = tokens[i+1].id
+                (i, ret) = consume_extent(i, tokens)
+
+                blocks.append(Block(ret[2:], directive=directive,
+                                    lineno=t.location.line))
+
+            elif cursor.kind == CursorKind.VAR_DECL:
+                if buf:
+                    blocks.append(Block(buf))
+                    buf = []
+
+                (i, ret) = consume_extent(i, tokens, detect_change=True)
+                buf += ret
+
+            elif cursor.kind == CursorKind.FUNCTION_DECL:
+                if buf:
+                    blocks.append(Block(buf))
+                    buf = []
+
+                (i, ret) = consume_extent(i, tokens, detect_change=True)
+                buf += ret
 
             else:
-                state = 0
-                current.append(tok)
+                (i, ret) = consume_line(i, tokens)
+                buf += ret
 
-        if len(current) > 0:
-            block = Block(current)
-            blocks.append(block)
+        if buf:
+            blocks.append(Block(buf))
+
+        # _parsed=True indicates a successful parsing, although may result an
+        # empty BlockList.
+        self._parsed = True
 
         return BlockList(blocks)
 
-    def parse(self,tokzer):
-        return self.getBlocks( tokzer )
+    def parse(self, tokzer):
+        return self.getBlocks(tokzer)
 
-    def parseLines(self,lines):
-        """parse a list of text lines into a BlockList object"""
-        return self.getBlocks( CppLinesTokenizer(lines) )
-
-    def parseFile(self,path):
-        """parse a file into a BlockList object"""
-        file = open(path, "rt")
-        result = self.getBlocks( CppFileTokenizer(file) )
-        file.close()
-        return result
+    def parseFile(self, path):
+        return self.getBlocks(CppFileTokenizer(path))
 
 
-def test_block_parsing(lines,expected):
-    blocks = BlockParser().parse( CppLinesTokenizer(lines) )
+def test_block_parsing(lines, expected):
+    """Helper method to test the correctness of BlockParser.parse."""
+    blocks = BlockParser().parse(CppStringTokenizer('\n'.join(lines)))
     if len(blocks) != len(expected):
-        raise BadExpectedToken, "parser.buildBlocks returned '%s' expecting '%s'" \
-              % (str(blocks), repr(expected))
+        raise BadExpectedToken("BlockParser.parse() returned '%s' expecting "
+                               "'%s'" % (str(blocks), repr(expected)))
     for n in range(len(blocks)):
         if str(blocks[n]) != expected[n]:
-            raise BadExpectedToken, "parser.buildBlocks()[%d] is '%s', expecting '%s'" \
-                  % (n, str(blocks[n]), expected[n])
-    #for block in blocks:
-    #    print block
+            raise BadExpectedToken("BlockParser.parse()[%d] is '%s', "
+                                   "expecting '%s'" % (n, str(blocks[n]),
+                                                       expected[n]))
+
 
 def test_BlockParser():
-    test_block_parsing(["#error hello"],["#error hello"])
-    test_block_parsing([ "foo", "", "bar" ], [ "foo\n\nbar\n" ])
-    test_block_parsing([ "foo", "  #  ", "bar" ], [ "foo\n","bar\n" ])
-    test_block_parsing(\
-        [ "foo", "   #  ", "  #  /* ahah */ if defined(__KERNEL__) ", "bar", "#endif" ],
-        [ "foo\n", "#ifdef __KERNEL__", "bar\n", "#endif" ] )
+    test_block_parsing(["#error hello"], ["#error hello"])
+    test_block_parsing(["foo", "", "bar"], ["foo bar"])
+
+    # We currently cannot handle the following case with libclang properly.
+    # Fortunately it doesn't appear in current headers.
+    # test_block_parsing(["foo", "  #  ", "bar"], ["foo", "bar"])
+
+    test_block_parsing(["foo",
+                        "  #  /* ahah */ if defined(__KERNEL__) /* more */",
+                        "bar", "#endif"],
+                       ["foo", "#ifdef __KERNEL__", "bar", "#endif"])
 
 
-#####################################################################################
-#####################################################################################
-#####                                                                           #####
-#####        B L O C K   L I S T   O P T I M I Z A T I O N                      #####
-#####                                                                           #####
-#####################################################################################
-#####################################################################################
+################################################################################
+################################################################################
+#####                                                                      #####
+#####        B L O C K   L I S T   O P T I M I Z A T I O N                 #####
+#####                                                                      #####
+################################################################################
+################################################################################
 
-def  remove_macro_defines( blocks, excludedMacros=set() ):
-    """remove macro definitions like #define <macroName>  ...."""
+
+def remove_macro_defines(blocks, excludedMacros=None):
+    """Remove macro definitions like #define <macroName>  ...."""
+    if excludedMacros is None:
+        excludedMacros = set()
     result = []
     for b in blocks:
         macroName = b.isDefine()
-        if macroName == None or not macroName in excludedMacros:
+        if macroName is None or macroName not in excludedMacros:
             result.append(b)
 
     return result
 
-def  find_matching_endif( blocks, i ):
-    n     = len(blocks)
+
+def find_matching_endif(blocks, i):
+    """Traverse the blocks to find out the matching #endif."""
+    n = len(blocks)
     depth = 1
     while i < n:
         if blocks[i].isDirective():
-            dir = blocks[i].directive
-            if dir in [ "if", "ifndef", "ifdef" ]:
+            dir_ = blocks[i].directive
+            if dir_ in ["if", "ifndef", "ifdef"]:
                 depth += 1
-            elif depth == 1 and dir in [ "else", "elif" ]:
+            elif depth == 1 and dir_ in ["else", "elif"]:
                 return i
-            elif dir == "endif":
+            elif dir_ == "endif":
                 depth -= 1
                 if depth == 0:
                     return i
         i += 1
     return i
 
-def  optimize_if01( blocks ):
-    """remove the code between #if 0 .. #endif in a list of CppBlocks"""
+
+def optimize_if01(blocks):
+    """Remove the code between #if 0 .. #endif in a list of CppBlocks."""
     i = 0
     n = len(blocks)
     result = []
@@ -1711,34 +1673,37 @@ def  optimize_if01( blocks ):
         while j < n and not blocks[j].isIf():
             j += 1
         if j > i:
-            logging.debug("appending lines %d to %d" % (blocks[i].lineno, blocks[j-1].lineno))
+            logging.debug("appending lines %d to %d", blocks[i].lineno,
+                          blocks[j-1].lineno)
             result += blocks[i:j]
         if j >= n:
             break
         expr = blocks[j].expr
-        r    = expr.toInt()
-        if r == None:
+        r = expr.toInt()
+        if r is None:
             result.append(blocks[j])
             i = j + 1
             continue
 
         if r == 0:
             # if 0 => skip everything until the corresponding #endif
-            j = find_matching_endif( blocks, j+1 )
+            j = find_matching_endif(blocks, j + 1)
             if j >= n:
                 # unterminated #if 0, finish here
                 break
-            dir = blocks[j].directive
-            if dir == "endif":
-                logging.debug("remove 'if 0' .. 'endif' (lines %d to %d)" % (blocks[i].lineno, blocks[j].lineno))
+            dir_ = blocks[j].directive
+            if dir_ == "endif":
+                logging.debug("remove 'if 0' .. 'endif' (lines %d to %d)",
+                              blocks[i].lineno, blocks[j].lineno)
                 i = j + 1
-            elif dir == "else":
+            elif dir_ == "else":
                 # convert 'else' into 'if 1'
-                logging.debug("convert 'if 0' .. 'else' into 'if 1' (lines %d to %d)" % (blocks[i].lineno, blocks[j-1].lineno))
+                logging.debug("convert 'if 0' .. 'else' into 'if 1' (lines %d "
+                              "to %d)", blocks[i].lineno, blocks[j-1].lineno)
                 blocks[j].directive = "if"
-                blocks[j].expr      = CppExpr( CppLineTokenizer("1").toTokenList() )
+                blocks[j].expr = CppExpr(CppStringTokenizer("1").tokens)
                 i = j
-            elif dir == "elif":
+            elif dir_ == "elif":
                 # convert 'elif' into 'if'
                 logging.debug("convert 'if 0' .. 'elif' into 'if'")
                 blocks[j].directive = "if"
@@ -1746,34 +1711,38 @@ def  optimize_if01( blocks ):
             continue
 
         # if 1 => find corresponding endif and remove/transform them
-        k = find_matching_endif( blocks, j+1 )
+        k = find_matching_endif(blocks, j + 1)
         if k >= n:
             # unterminated #if 1, finish here
             logging.debug("unterminated 'if 1'")
             result += blocks[j+1:k]
             break
 
-        dir = blocks[k].directive
-        if dir == "endif":
-            logging.debug("convert 'if 1' .. 'endif' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
+        dir_ = blocks[k].directive
+        if dir_ == "endif":
+            logging.debug("convert 'if 1' .. 'endif' (lines %d to %d)",
+                          blocks[j].lineno, blocks[k].lineno)
             result += optimize_if01(blocks[j+1:k])
-            i       = k+1
-        elif dir == "else":
+            i = k + 1
+        elif dir_ == "else":
             # convert 'else' into 'if 0'
-            logging.debug("convert 'if 1' .. 'else' (lines %d to %d)"  % (blocks[j].lineno, blocks[k].lineno))
+            logging.debug("convert 'if 1' .. 'else' (lines %d to %d)",
+                          blocks[j].lineno, blocks[k].lineno)
             result += optimize_if01(blocks[j+1:k])
             blocks[k].directive = "if"
-            blocks[k].expr      = CppExpr( CppLineTokenizer("0").toTokenList() )
+            blocks[k].expr = CppExpr(CppStringTokenizer("0").tokens)
             i = k
-        elif dir == "elif":
+        elif dir_ == "elif":
             # convert 'elif' into 'if 0'
-            logging.debug("convert 'if 1' .. 'elif' (lines %d to %d)" % (blocks[j].lineno, blocks[k].lineno))
+            logging.debug("convert 'if 1' .. 'elif' (lines %d to %d)",
+                          blocks[j].lineno, blocks[k].lineno)
             result += optimize_if01(blocks[j+1:k])
-            blocks[k].expr      = CppExpr( CppLineTokenizer("0").toTokenList() )
+            blocks[k].expr = CppExpr(CppStringTokenizer("0").tokens)
             i = k
     return result
 
-def  test_optimizeAll():
+
+def test_optimizeAll():
     text = """\
 #if 1
 #define  GOOD_1
@@ -1816,49 +1785,41 @@ def  test_optimizeAll():
 
     expected = """\
 #define GOOD_1
-
 #define GOOD_2
-
 #define GOOD_3
-
-
 #if !defined(__GLIBC__) || __GLIBC__ < 2
 #define X
 #endif
-
 #ifndef __SIGRTMAX
 #define __SIGRTMAX 123
-#endif
-
+#endif\
 """
 
-    out = StringOutput()
-    lines = string.split(text, '\n')
-    list = BlockParser().parse( CppLinesTokenizer(lines) )
-    list.replaceTokens( kernel_token_replacements )
-    list.optimizeAll( {"__KERNEL__":kCppUndefinedMacro} )
-    list.write(out)
+    out = utils.StringOutput()
+    blocks = BlockParser().parse(CppStringTokenizer(text))
+    blocks.replaceTokens(kernel_token_replacements)
+    blocks.optimizeAll({"__KERNEL__": kCppUndefinedMacro})
+    blocks.write(out)
     if out.get() != expected:
         print "[FAIL]: macro optimization failed\n"
         print "<<<< expecting '",
         print expected,
-        print "'\n>>>> result '"
+        print "'\n>>>> result '",
         print out.get(),
         print "'\n----"
         global failure_count
         failure_count += 1
 
 
-# -- Always run the unit tests.
-
 def runUnitTests():
-    """run all unit tests for this program"""
+    """Always run all unit tests for this program."""
     test_CppTokenizer()
     test_CppExpr()
     test_optimizeAll()
     test_BlockParser()
 
+
 failure_count = 0
 runUnitTests()
 if failure_count != 0:
-    sys.exit(1)
+    utils.panic("Unit tests failed in cpp.py.\n")

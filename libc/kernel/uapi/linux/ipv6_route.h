@@ -38,18 +38,18 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define RTF_LOCAL 0x80000000
 struct in6_rtmsg {
- struct in6_addr rtmsg_dst;
- struct in6_addr rtmsg_src;
+  struct in6_addr rtmsg_dst;
+  struct in6_addr rtmsg_src;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in6_addr rtmsg_gateway;
- __u32 rtmsg_type;
- __u16 rtmsg_dst_len;
- __u16 rtmsg_src_len;
+  struct in6_addr rtmsg_gateway;
+  __u32 rtmsg_type;
+  __u16 rtmsg_dst_len;
+  __u16 rtmsg_src_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rtmsg_metric;
- unsigned long rtmsg_info;
- __u32 rtmsg_flags;
- int rtmsg_ifindex;
+  __u32 rtmsg_metric;
+  unsigned long rtmsg_info;
+  __u32 rtmsg_flags;
+  int rtmsg_ifindex;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define RTMSG_NEWDEVICE 0x11

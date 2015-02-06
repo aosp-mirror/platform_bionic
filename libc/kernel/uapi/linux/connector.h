@@ -47,18 +47,18 @@
 #define CONNECTOR_MAX_MSG_SIZE 16384
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct cb_id {
- __u32 idx;
- __u32 val;
+  __u32 idx;
+  __u32 val;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct cn_msg {
- struct cb_id id;
- __u32 seq;
- __u32 ack;
+  struct cb_id id;
+  __u32 seq;
+  __u32 ack;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 len;
- __u16 flags;
- __u8 data[0];
+  __u16 len;
+  __u16 flags;
+  __u8 data[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

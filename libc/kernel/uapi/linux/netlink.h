@@ -52,19 +52,19 @@
 #define MAX_LINKS 32
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct sockaddr_nl {
- __kernel_sa_family_t nl_family;
- unsigned short nl_pad;
- __u32 nl_pid;
+  __kernel_sa_family_t nl_family;
+  unsigned short nl_pad;
+  __u32 nl_pid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 nl_groups;
+  __u32 nl_groups;
 };
 struct nlmsghdr {
- __u32 nlmsg_len;
+  __u32 nlmsg_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 nlmsg_type;
- __u16 nlmsg_flags;
- __u32 nlmsg_seq;
- __u32 nlmsg_pid;
+  __u16 nlmsg_type;
+  __u16 nlmsg_flags;
+  __u32 nlmsg_seq;
+  __u32 nlmsg_pid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define NLM_F_REQUEST 1
@@ -77,22 +77,22 @@ struct nlmsghdr {
 #define NLM_F_MATCH 0x200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NLM_F_ATOMIC 0x400
-#define NLM_F_DUMP (NLM_F_ROOT|NLM_F_MATCH)
+#define NLM_F_DUMP (NLM_F_ROOT | NLM_F_MATCH)
 #define NLM_F_REPLACE 0x100
 #define NLM_F_EXCL 0x200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NLM_F_CREATE 0x400
 #define NLM_F_APPEND 0x800
 #define NLMSG_ALIGNTO 4U
-#define NLMSG_ALIGN(len) ( ((len)+NLMSG_ALIGNTO-1) & ~(NLMSG_ALIGNTO-1) )
+#define NLMSG_ALIGN(len) (((len) + NLMSG_ALIGNTO - 1) & ~(NLMSG_ALIGNTO - 1))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NLMSG_HDRLEN ((int) NLMSG_ALIGN(sizeof(struct nlmsghdr)))
 #define NLMSG_LENGTH(len) ((len) + NLMSG_HDRLEN)
 #define NLMSG_SPACE(len) NLMSG_ALIGN(NLMSG_LENGTH(len))
-#define NLMSG_DATA(nlh) ((void*)(((char*)nlh) + NLMSG_LENGTH(0)))
+#define NLMSG_DATA(nlh) ((void *) (((char *) nlh) + NLMSG_LENGTH(0)))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define NLMSG_NEXT(nlh,len) ((len) -= NLMSG_ALIGN((nlh)->nlmsg_len),   (struct nlmsghdr*)(((char*)(nlh)) + NLMSG_ALIGN((nlh)->nlmsg_len)))
-#define NLMSG_OK(nlh,len) ((len) >= (int)sizeof(struct nlmsghdr) &&   (nlh)->nlmsg_len >= sizeof(struct nlmsghdr) &&   (nlh)->nlmsg_len <= (len))
+#define NLMSG_NEXT(nlh,len) ((len) -= NLMSG_ALIGN((nlh)->nlmsg_len), (struct nlmsghdr *) (((char *) (nlh)) + NLMSG_ALIGN((nlh)->nlmsg_len)))
+#define NLMSG_OK(nlh,len) ((len) >= (int) sizeof(struct nlmsghdr) && (nlh)->nlmsg_len >= sizeof(struct nlmsghdr) && (nlh)->nlmsg_len <= (len))
 #define NLMSG_PAYLOAD(nlh,len) ((nlh)->nlmsg_len - NLMSG_SPACE((len)))
 #define NLMSG_NOOP 0x1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -102,8 +102,8 @@ struct nlmsghdr {
 #define NLMSG_MIN_TYPE 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nlmsgerr {
- int error;
- struct nlmsghdr msg;
+  int error;
+  struct nlmsghdr msg;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NETLINK_ADD_MEMBERSHIP 1
@@ -116,33 +116,33 @@ struct nlmsgerr {
 #define NETLINK_TX_RING 7
 struct nl_pktinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 group;
+  __u32 group;
 };
 struct nl_mmap_req {
- unsigned int nm_block_size;
+  unsigned int nm_block_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int nm_block_nr;
- unsigned int nm_frame_size;
- unsigned int nm_frame_nr;
+  unsigned int nm_block_nr;
+  unsigned int nm_frame_size;
+  unsigned int nm_frame_nr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nl_mmap_hdr {
- unsigned int nm_status;
- unsigned int nm_len;
- __u32 nm_group;
+  unsigned int nm_status;
+  unsigned int nm_len;
+  __u32 nm_group;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 nm_pid;
- __u32 nm_uid;
- __u32 nm_gid;
+  __u32 nm_pid;
+  __u32 nm_uid;
+  __u32 nm_gid;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum nl_mmap_status {
- NL_MMAP_STATUS_UNUSED,
- NL_MMAP_STATUS_RESERVED,
- NL_MMAP_STATUS_VALID,
+  NL_MMAP_STATUS_UNUSED,
+  NL_MMAP_STATUS_RESERVED,
+  NL_MMAP_STATUS_VALID,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- NL_MMAP_STATUS_COPY,
- NL_MMAP_STATUS_SKIP,
+  NL_MMAP_STATUS_COPY,
+  NL_MMAP_STATUS_SKIP,
 };
 #define NL_MMAP_MSG_ALIGNMENT NLMSG_ALIGNTO
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -151,13 +151,13 @@ enum nl_mmap_status {
 #define NET_MAJOR 36
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- NETLINK_UNCONNECTED = 0,
- NETLINK_CONNECTED,
+  NETLINK_UNCONNECTED = 0,
+  NETLINK_CONNECTED,
 };
 struct nlattr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 nla_len;
- __u16 nla_type;
+  __u16 nla_len;
+  __u16 nla_type;
 };
 #define NLA_F_NESTED (1 << 15)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -89,7 +89,7 @@
 #define PT_TEXT_END_ADDR 0x10008
 #ifndef __ASSEMBLY__
 struct pt_regs {
- long uregs[18];
+  long uregs[18];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ARM_cpsr uregs[16]
@@ -114,7 +114,7 @@ struct pt_regs {
 #define ARM_r1 uregs[1]
 #define ARM_r0 uregs[0]
 #define ARM_ORIG_r0 uregs[17]
-#define ARM_VFPREGS_SIZE ( 32 * 8   + 4   )
+#define ARM_VFPREGS_SIZE (32 * 8 + 4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #endif

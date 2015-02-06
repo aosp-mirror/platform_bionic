@@ -24,10 +24,10 @@
 #define EBT_MARK_OR 0x02
 #define EBT_MARK_MASK (EBT_MARK_AND | EBT_MARK_OR)
 struct ebt_mark_m_info {
- unsigned long mark, mask;
+  unsigned long mark, mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 invert;
- __u8 bitmask;
+  __u8 invert;
+  __u8 bitmask;
 };
 #define EBT_MARK_MATCH "mark_m"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

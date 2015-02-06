@@ -29,55 +29,57 @@
 #define USB_MS_EMBEDDED 0x01
 #define USB_MS_EXTERNAL 0x02
 struct usb_ms_header_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __le16 bcdMSC;
- __le16 wTotalLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __le16 bcdMSC;
+  __le16 wTotalLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define USB_DT_MS_HEADER_SIZE 7
 struct usb_midi_in_jack_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bJackType;
- __u8 bJackID;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bJackType;
+  __u8 bJackID;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 iJack;
-} __attribute__ ((packed));
+  __u8 iJack;
+} __attribute__((packed));
 #define USB_DT_MIDI_IN_SIZE 6
 struct usb_midi_source_pin {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 baSourceID;
- __u8 baSourcePin;
-} __attribute__ ((packed));
+  __u8 baSourceID;
+  __u8 baSourcePin;
+} __attribute__((packed));
 struct usb_midi_out_jack_descriptor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bLength;
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bJackType;
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bJackType;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bJackID;
- __u8 bNrInputPins;
- struct usb_midi_source_pin pins[];
-} __attribute__ ((packed));
+  __u8 bJackID;
+  __u8 bNrInputPins;
+  struct usb_midi_source_pin pins[];
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USB_DT_MIDI_OUT_SIZE(p) (7 + 2 * (p))
-#define DECLARE_USB_MIDI_OUT_JACK_DESCRIPTOR(p)  struct usb_midi_out_jack_descriptor_##p {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bJackType;   __u8 bJackID;   __u8 bNrInputPins;   struct usb_midi_source_pin pins[p];   __u8 iJack;  } __attribute__ ((packed))
+#define DECLARE_USB_MIDI_OUT_JACK_DESCRIPTOR(p) struct usb_midi_out_jack_descriptor_ ##p { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bJackType; __u8 bJackID; __u8 bNrInputPins; struct usb_midi_source_pin pins[p]; __u8 iJack; \
+} __attribute__((packed))
 struct usb_ms_endpoint_descriptor {
- __u8 bLength;
+  __u8 bLength;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bDescriptorType;
- __u8 bDescriptorSubtype;
- __u8 bNumEmbMIDIJack;
- __u8 baAssocJackID[];
+  __u8 bDescriptorType;
+  __u8 bDescriptorSubtype;
+  __u8 bNumEmbMIDIJack;
+  __u8 baAssocJackID[];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} __attribute__ ((packed));
+} __attribute__((packed));
 #define USB_DT_MS_ENDPOINT_SIZE(n) (4 + (n))
-#define DECLARE_USB_MS_ENDPOINT_DESCRIPTOR(n)  struct usb_ms_endpoint_descriptor_##n {   __u8 bLength;   __u8 bDescriptorType;   __u8 bDescriptorSubtype;   __u8 bNumEmbMIDIJack;   __u8 baAssocJackID[n];  } __attribute__ ((packed))
+#define DECLARE_USB_MS_ENDPOINT_DESCRIPTOR(n) struct usb_ms_endpoint_descriptor_ ##n { __u8 bLength; __u8 bDescriptorType; __u8 bDescriptorSubtype; __u8 bNumEmbMIDIJack; __u8 baAssocJackID[n]; \
+} __attribute__((packed))
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -27,41 +27,41 @@
 #define MSG_COPY 040000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct msqid_ds {
- struct ipc_perm msg_perm;
- struct msg *msg_first;
- struct msg *msg_last;
+  struct ipc_perm msg_perm;
+  struct msg * msg_first;
+  struct msg * msg_last;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_time_t msg_stime;
- __kernel_time_t msg_rtime;
- __kernel_time_t msg_ctime;
- unsigned long msg_lcbytes;
+  __kernel_time_t msg_stime;
+  __kernel_time_t msg_rtime;
+  __kernel_time_t msg_ctime;
+  unsigned long msg_lcbytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long msg_lqbytes;
- unsigned short msg_cbytes;
- unsigned short msg_qnum;
- unsigned short msg_qbytes;
+  unsigned long msg_lqbytes;
+  unsigned short msg_cbytes;
+  unsigned short msg_qnum;
+  unsigned short msg_qbytes;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_ipc_pid_t msg_lspid;
- __kernel_ipc_pid_t msg_lrpid;
+  __kernel_ipc_pid_t msg_lspid;
+  __kernel_ipc_pid_t msg_lrpid;
 };
 #include <asm/msgbuf.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct msgbuf {
- __kernel_long_t mtype;
- char mtext[1];
+  __kernel_long_t mtype;
+  char mtext[1];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct msginfo {
- int msgpool;
- int msgmap;
- int msgmax;
+  int msgpool;
+  int msgmap;
+  int msgmax;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int msgmnb;
- int msgmni;
- int msgssz;
- int msgtql;
+  int msgmnb;
+  int msgmni;
+  int msgssz;
+  int msgtql;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short msgseg;
+  unsigned short msgseg;
 };
 #define MSG_MEM_SCALE 32
 #define MSGMNI 16
