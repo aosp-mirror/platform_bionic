@@ -19,9 +19,9 @@
 #ifndef DRM_FOURCC_H
 #define DRM_FOURCC_H
 #include <linux/types.h>
-#define fourcc_code(a, b, c, d) ((__u32)(a) | ((__u32)(b) << 8) |   ((__u32)(c) << 16) | ((__u32)(d) << 24))
+#define fourcc_code(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define DRM_FORMAT_BIG_ENDIAN (1<<31)
+#define DRM_FORMAT_BIG_ENDIAN (1 << 31)
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
 #define DRM_FORMAT_RGB332 fourcc_code('R', 'G', 'B', '8')
 #define DRM_FORMAT_BGR233 fourcc_code('B', 'G', 'R', '8')

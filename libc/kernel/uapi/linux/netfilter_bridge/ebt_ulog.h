@@ -29,28 +29,27 @@
 #define EBT_ULOG_WATCHER "ulog"
 #define EBT_ULOG_VERSION 1
 struct ebt_ulog_info {
- __u32 nlgroup;
+  __u32 nlgroup;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int cprange;
- unsigned int qthreshold;
- char prefix[EBT_ULOG_PREFIX_LEN];
+  unsigned int cprange;
+  unsigned int qthreshold;
+  char prefix[EBT_ULOG_PREFIX_LEN];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct ebt_ulog_packet_msg {
- int version;
- char indev[IFNAMSIZ];
- char outdev[IFNAMSIZ];
+  int version;
+  char indev[IFNAMSIZ];
+  char outdev[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char physindev[IFNAMSIZ];
- char physoutdev[IFNAMSIZ];
- char prefix[EBT_ULOG_PREFIX_LEN];
- struct timeval stamp;
+  char physindev[IFNAMSIZ];
+  char physoutdev[IFNAMSIZ];
+  char prefix[EBT_ULOG_PREFIX_LEN];
+  struct timeval stamp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long mark;
- unsigned int hook;
- size_t data_len;
- unsigned char data[0] __attribute__
+  unsigned long mark;
+  unsigned int hook;
+  size_t data_len;
+  unsigned char data[0] __attribute__((aligned(__alignof__(struct ebt_ulog_info))));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ((aligned (__alignof__(struct ebt_ulog_info))));
 } ebt_ulog_packet_msg_t;
 #endif

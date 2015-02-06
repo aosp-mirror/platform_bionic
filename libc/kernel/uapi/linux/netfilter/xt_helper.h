@@ -19,8 +19,8 @@
 #ifndef _XT_HELPER_H
 #define _XT_HELPER_H
 struct xt_helper_info {
- int invert;
+  int invert;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char name[30];
+  char name[30];
 };
 #endif

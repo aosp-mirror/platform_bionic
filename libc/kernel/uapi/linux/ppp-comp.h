@@ -42,7 +42,7 @@
 #define BSD_VERSION(x) ((x) >> 5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BSD_CURRENT_VERSION 1
-#define BSD_MAKE_OPT(v, n) (((v) << 5) | (n))
+#define BSD_MAKE_OPT(v,n) (((v) << 5) | (n))
 #define BSD_MIN_BITS 9
 #define BSD_MAX_BITS 15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

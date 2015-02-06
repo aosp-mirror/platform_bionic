@@ -21,11 +21,11 @@
 #include <linux/types.h>
 struct xt_mark_tginfo2 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 mark, mask;
+  __u32 mark, mask;
 };
 struct xt_mark_mtinfo1 {
- __u32 mark, mask;
+  __u32 mark, mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 invert;
+  __u8 invert;
 };
 #endif

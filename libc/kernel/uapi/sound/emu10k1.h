@@ -269,14 +269,14 @@
 #define TANKMEMADDRREG_WRITE 0x00200000
 #define TANKMEMADDRREG_READ 0x00100000
 struct snd_emu10k1_fx8010_info {
- unsigned int internal_tram_size;
+  unsigned int internal_tram_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int external_tram_size;
- char fxbus_names[16][32];
- char extin_names[16][32];
- char extout_names[32][32];
+  unsigned int external_tram_size;
+  char fxbus_names[16][32];
+  char extin_names[16][32];
+  char extout_names[32][32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int gpr_controls;
+  unsigned int gpr_controls;
 };
 #define EMU10K1_GPR_TRANSLATION_NONE 0
 #define EMU10K1_GPR_TRANSLATION_TABLE100 1
@@ -286,97 +286,97 @@ struct snd_emu10k1_fx8010_info {
 #define EMU10K1_GPR_TRANSLATION_ONOFF 4
 struct snd_emu10k1_fx8010_control_gpr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct snd_ctl_elem_id id;
- unsigned int vcount;
- unsigned int count;
- unsigned short gpr[32];
+  struct snd_ctl_elem_id id;
+  unsigned int vcount;
+  unsigned int count;
+  unsigned short gpr[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int value[32];
- unsigned int min;
- unsigned int max;
- unsigned int translation;
+  unsigned int value[32];
+  unsigned int min;
+  unsigned int max;
+  unsigned int translation;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- const unsigned int *tlv;
+  const unsigned int * tlv;
 };
 struct snd_emu10k1_fx8010_control_old_gpr {
- struct snd_ctl_elem_id id;
+  struct snd_ctl_elem_id id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int vcount;
- unsigned int count;
- unsigned short gpr[32];
- unsigned int value[32];
+  unsigned int vcount;
+  unsigned int count;
+  unsigned short gpr[32];
+  unsigned int value[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int min;
- unsigned int max;
- unsigned int translation;
+  unsigned int min;
+  unsigned int max;
+  unsigned int translation;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_emu10k1_fx8010_code {
- char name[128];
- DECLARE_BITMAP(gpr_valid, 0x200);
- __u32 __user *gpr_map;
+  char name[128];
+  DECLARE_BITMAP(gpr_valid, 0x200);
+  __u32 __user * gpr_map;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int gpr_add_control_count;
- struct snd_emu10k1_fx8010_control_gpr __user *gpr_add_controls;
- unsigned int gpr_del_control_count;
- struct snd_ctl_elem_id __user *gpr_del_controls;
+  unsigned int gpr_add_control_count;
+  struct snd_emu10k1_fx8010_control_gpr __user * gpr_add_controls;
+  unsigned int gpr_del_control_count;
+  struct snd_ctl_elem_id __user * gpr_del_controls;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int gpr_list_control_count;
- unsigned int gpr_list_control_total;
- struct snd_emu10k1_fx8010_control_gpr __user *gpr_list_controls;
- DECLARE_BITMAP(tram_valid, 0x100);
+  unsigned int gpr_list_control_count;
+  unsigned int gpr_list_control_total;
+  struct snd_emu10k1_fx8010_control_gpr __user * gpr_list_controls;
+  DECLARE_BITMAP(tram_valid, 0x100);
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 __user *tram_data_map;
- __u32 __user *tram_addr_map;
- DECLARE_BITMAP(code_valid, 1024);
- __u32 __user *code;
+  __u32 __user * tram_data_map;
+  __u32 __user * tram_addr_map;
+  DECLARE_BITMAP(code_valid, 1024);
+  __u32 __user * code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct snd_emu10k1_fx8010_tram {
- unsigned int address;
- unsigned int size;
+  unsigned int address;
+  unsigned int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int *samples;
+  unsigned int * samples;
 };
 struct snd_emu10k1_fx8010_pcm_rec {
- unsigned int substream;
+  unsigned int substream;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int res1;
- unsigned int channels;
- unsigned int tram_start;
- unsigned int buffer_size;
+  unsigned int res1;
+  unsigned int channels;
+  unsigned int tram_start;
+  unsigned int buffer_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short gpr_size;
- unsigned short gpr_ptr;
- unsigned short gpr_count;
- unsigned short gpr_tmpcount;
+  unsigned short gpr_size;
+  unsigned short gpr_ptr;
+  unsigned short gpr_count;
+  unsigned short gpr_tmpcount;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short gpr_trigger;
- unsigned short gpr_running;
- unsigned char pad;
- unsigned char etram[32];
+  unsigned short gpr_trigger;
+  unsigned short gpr_running;
+  unsigned char pad;
+  unsigned char etram[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int res2;
+  unsigned int res2;
 };
 #define SNDRV_EMU10K1_VERSION SNDRV_PROTOCOL_VERSION(1, 0, 1)
-#define SNDRV_EMU10K1_IOCTL_INFO _IOR ('H', 0x10, struct snd_emu10k1_fx8010_info)
+#define SNDRV_EMU10K1_IOCTL_INFO _IOR('H', 0x10, struct snd_emu10k1_fx8010_info)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SNDRV_EMU10K1_IOCTL_CODE_POKE _IOW ('H', 0x11, struct snd_emu10k1_fx8010_code)
+#define SNDRV_EMU10K1_IOCTL_CODE_POKE _IOW('H', 0x11, struct snd_emu10k1_fx8010_code)
 #define SNDRV_EMU10K1_IOCTL_CODE_PEEK _IOWR('H', 0x12, struct snd_emu10k1_fx8010_code)
-#define SNDRV_EMU10K1_IOCTL_TRAM_SETUP _IOW ('H', 0x20, int)
-#define SNDRV_EMU10K1_IOCTL_TRAM_POKE _IOW ('H', 0x21, struct snd_emu10k1_fx8010_tram)
+#define SNDRV_EMU10K1_IOCTL_TRAM_SETUP _IOW('H', 0x20, int)
+#define SNDRV_EMU10K1_IOCTL_TRAM_POKE _IOW('H', 0x21, struct snd_emu10k1_fx8010_tram)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SNDRV_EMU10K1_IOCTL_TRAM_PEEK _IOWR('H', 0x22, struct snd_emu10k1_fx8010_tram)
-#define SNDRV_EMU10K1_IOCTL_PCM_POKE _IOW ('H', 0x30, struct snd_emu10k1_fx8010_pcm_rec)
+#define SNDRV_EMU10K1_IOCTL_PCM_POKE _IOW('H', 0x30, struct snd_emu10k1_fx8010_pcm_rec)
 #define SNDRV_EMU10K1_IOCTL_PCM_PEEK _IOWR('H', 0x31, struct snd_emu10k1_fx8010_pcm_rec)
-#define SNDRV_EMU10K1_IOCTL_PVERSION _IOR ('H', 0x40, int)
+#define SNDRV_EMU10K1_IOCTL_PVERSION _IOR('H', 0x40, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SNDRV_EMU10K1_IOCTL_STOP _IO ('H', 0x80)
-#define SNDRV_EMU10K1_IOCTL_CONTINUE _IO ('H', 0x81)
-#define SNDRV_EMU10K1_IOCTL_ZERO_TRAM_COUNTER _IO ('H', 0x82)
-#define SNDRV_EMU10K1_IOCTL_SINGLE_STEP _IOW ('H', 0x83, int)
+#define SNDRV_EMU10K1_IOCTL_STOP _IO('H', 0x80)
+#define SNDRV_EMU10K1_IOCTL_CONTINUE _IO('H', 0x81)
+#define SNDRV_EMU10K1_IOCTL_ZERO_TRAM_COUNTER _IO('H', 0x82)
+#define SNDRV_EMU10K1_IOCTL_SINGLE_STEP _IOW('H', 0x83, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SNDRV_EMU10K1_IOCTL_DBG_READ _IOR ('H', 0x84, int)
+#define SNDRV_EMU10K1_IOCTL_DBG_READ _IOR('H', 0x84, int)
 typedef struct snd_emu10k1_fx8010_info emu10k1_fx8010_info_t;
 typedef struct snd_emu10k1_fx8010_control_gpr emu10k1_fx8010_control_gpr_t;
 typedef struct snd_emu10k1_fx8010_code emu10k1_fx8010_code_t;

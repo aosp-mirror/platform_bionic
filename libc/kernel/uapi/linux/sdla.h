@@ -27,7 +27,7 @@
 #define SDLA_S508 5080
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SDLA_S509 5090
-#define SDLA_UNKNOWN -1
+#define SDLA_UNKNOWN - 1
 #define SDLA_S508_PORT_V35 0x00
 #define SDLA_S508_PORT_RS232 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -48,10 +48,10 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SDLA_READMEM (FRAD_LAST_IOCTL + 6)
 struct sdla_mem {
- int addr;
- int len;
+  int addr;
+  int len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *data;
+  void __user * data;
 };
 #define SDLA_START (FRAD_LAST_IOCTL + 7)
 #define SDLA_STOP (FRAD_LAST_IOCTL + 8)
@@ -68,42 +68,42 @@ struct sdla_mem {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SDLA_MAX_DLCI 24
 struct sdla_conf {
- short station;
- short config;
+  short station;
+  short config;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short kbaud;
- short clocking;
- short max_frm;
- short T391;
+  short kbaud;
+  short clocking;
+  short max_frm;
+  short T391;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short T392;
- short N391;
- short N392;
- short N393;
+  short T392;
+  short N391;
+  short N392;
+  short N393;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short CIR_fwd;
- short Bc_fwd;
- short Be_fwd;
- short CIR_bwd;
+  short CIR_fwd;
+  short Bc_fwd;
+  short Be_fwd;
+  short CIR_bwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Bc_bwd;
- short Be_bwd;
+  short Bc_bwd;
+  short Be_bwd;
 };
 struct sdla_dlci_conf {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short config;
- short CIR_fwd;
- short Bc_fwd;
- short Be_fwd;
+  short config;
+  short CIR_fwd;
+  short Bc_fwd;
+  short Be_fwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short CIR_bwd;
- short Bc_bwd;
- short Be_bwd;
- short Tc_fwd;
+  short CIR_bwd;
+  short Bc_bwd;
+  short Be_bwd;
+  short Tc_fwd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short Tc_bwd;
- short Tf_max;
- short Tb_max;
+  short Tc_bwd;
+  short Tf_max;
+  short Tb_max;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

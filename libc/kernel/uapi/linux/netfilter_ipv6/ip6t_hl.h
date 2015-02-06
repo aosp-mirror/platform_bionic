@@ -21,15 +21,15 @@
 #include <linux/types.h>
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- IP6T_HL_EQ = 0,
- IP6T_HL_NE,
- IP6T_HL_LT,
- IP6T_HL_GT,
+  IP6T_HL_EQ = 0,
+  IP6T_HL_NE,
+  IP6T_HL_LT,
+  IP6T_HL_GT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ip6t_hl_info {
- __u8 mode;
- __u8 hop_limit;
+  __u8 mode;
+  __u8 hop_limit;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

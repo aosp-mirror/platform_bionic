@@ -62,86 +62,86 @@
 #pragma pack(1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef union _SCSI3Addr_struct {
- struct {
- BYTE Dev;
- BYTE Bus:6;
+  struct {
+    BYTE Dev;
+    BYTE Bus : 6;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE Mode:2;
- } PeripDev;
- struct {
- BYTE DevLSB;
+    BYTE Mode : 2;
+  } PeripDev;
+  struct {
+    BYTE DevLSB;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE DevMSB:6;
- BYTE Mode:2;
- } LogDev;
- struct {
+    BYTE DevMSB : 6;
+    BYTE Mode : 2;
+  } LogDev;
+  struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE Dev:5;
- BYTE Bus:3;
- BYTE Targ:6;
- BYTE Mode:2;
+    BYTE Dev : 5;
+    BYTE Bus : 3;
+    BYTE Targ : 6;
+    BYTE Mode : 2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } LogUnit;
+  } LogUnit;
 } SCSI3Addr_struct;
 typedef struct _PhysDevAddr_struct {
- DWORD TargetId:24;
+  DWORD TargetId : 24;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- DWORD Bus:6;
- DWORD Mode:2;
- SCSI3Addr_struct Target[2];
+  DWORD Bus : 6;
+  DWORD Mode : 2;
+  SCSI3Addr_struct Target[2];
 } PhysDevAddr_struct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _LogDevAddr_struct {
- DWORD VolId:30;
- DWORD Mode:2;
- BYTE reserved[4];
+  DWORD VolId : 30;
+  DWORD Mode : 2;
+  BYTE reserved[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } LogDevAddr_struct;
 typedef union _LUNAddr_struct {
- BYTE LunAddrBytes[8];
- SCSI3Addr_struct SCSI3Lun[4];
+  BYTE LunAddrBytes[8];
+  SCSI3Addr_struct SCSI3Lun[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- PhysDevAddr_struct PhysDev;
- LogDevAddr_struct LogDev;
+  PhysDevAddr_struct PhysDev;
+  LogDevAddr_struct LogDev;
 } LUNAddr_struct;
 typedef struct _RequestBlock_struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE CDBLen;
- struct {
- BYTE Type:3;
- BYTE Attribute:3;
+  BYTE CDBLen;
+  struct {
+    BYTE Type : 3;
+    BYTE Attribute : 3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE Direction:2;
- } Type;
- HWORD Timeout;
- BYTE CDB[16];
+    BYTE Direction : 2;
+  } Type;
+  HWORD Timeout;
+  BYTE CDB[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } RequestBlock_struct;
-typedef union _MoreErrInfo_struct{
- struct {
- BYTE Reserved[3];
+typedef union _MoreErrInfo_struct {
+  struct {
+    BYTE Reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE Type;
- DWORD ErrorInfo;
- } Common_Info;
- struct{
+    BYTE Type;
+    DWORD ErrorInfo;
+  } Common_Info;
+  struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE Reserved[2];
- BYTE offense_size;
- BYTE offense_num;
- DWORD offense_value;
+    BYTE Reserved[2];
+    BYTE offense_size;
+    BYTE offense_num;
+    DWORD offense_value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } Invalid_Cmd;
+  } Invalid_Cmd;
 } MoreErrInfo_struct;
 typedef struct _ErrorInfo_struct {
- BYTE ScsiStatus;
+  BYTE ScsiStatus;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE SenseLen;
- HWORD CommandStatus;
- DWORD ResidualCnt;
- MoreErrInfo_struct MoreErrInfo;
+  BYTE SenseLen;
+  HWORD CommandStatus;
+  DWORD ResidualCnt;
+  MoreErrInfo_struct MoreErrInfo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- BYTE SenseInfo[SENSEINFOBYTES];
+  BYTE SenseInfo[SENSEINFOBYTES];
 } ErrorInfo_struct;
 #pragma pack()
 #endif

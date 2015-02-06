@@ -32,12 +32,12 @@
 #define IDMAP_STATUS_SUCCESS 0x08
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct idmap_msg {
- __u8 im_type;
- __u8 im_conv;
- char im_name[IDMAP_NAMESZ];
+  __u8 im_type;
+  __u8 im_conv;
+  char im_name[IDMAP_NAMESZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 im_id;
- __u8 im_status;
+  __u32 im_id;
+  __u8 im_status;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

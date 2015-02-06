@@ -23,15 +23,15 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if __UAPI_DEF_IN6_ADDR
 struct in6_addr {
- union {
- __u8 u6_addr8[16];
+  union {
+    __u8 u6_addr8[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if __UAPI_DEF_IN6_ADDR_ALT
- __be16 u6_addr16[8];
- __be32 u6_addr32[4];
+    __be16 u6_addr16[8];
+    __be32 u6_addr32[4];
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } in6_u;
+  } in6_u;
 #define s6_addr in6_u.u6_addr8
 #if __UAPI_DEF_IN6_ADDR_ALT
 #define s6_addr16 in6_u.u6_addr16
@@ -43,35 +43,35 @@ struct in6_addr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if __UAPI_DEF_SOCKADDR_IN6
 struct sockaddr_in6 {
- unsigned short int sin6_family;
- __be16 sin6_port;
+  unsigned short int sin6_family;
+  __be16 sin6_port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 sin6_flowinfo;
- struct in6_addr sin6_addr;
- __u32 sin6_scope_id;
+  __be32 sin6_flowinfo;
+  struct in6_addr sin6_addr;
+  __u32 sin6_scope_id;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #if __UAPI_DEF_IPV6_MREQ
 struct ipv6_mreq {
- struct in6_addr ipv6mr_multiaddr;
+  struct in6_addr ipv6mr_multiaddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int ipv6mr_ifindex;
+  int ipv6mr_ifindex;
 };
 #endif
 #define ipv6mr_acaddr ipv6mr_multiaddr
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct in6_flowlabel_req {
- struct in6_addr flr_dst;
- __be32 flr_label;
- __u8 flr_action;
+  struct in6_addr flr_dst;
+  __be32 flr_label;
+  __u8 flr_action;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 flr_share;
- __u16 flr_flags;
- __u16 flr_expires;
- __u16 flr_linger;
+  __u8 flr_share;
+  __u16 flr_flags;
+  __u16 flr_expires;
+  __u16 flr_linger;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 __flr_pad;
+  __u32 __flr_pad;
 };
 #define IPV6_FL_A_GET 0
 #define IPV6_FL_A_PUT 1

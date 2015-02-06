@@ -79,7 +79,7 @@
 #endif
 #ifndef O_SYNC
 #define __O_SYNC 04000000
-#define O_SYNC (__O_SYNC|O_DSYNC)
+#define O_SYNC (__O_SYNC | O_DSYNC)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #ifndef O_PATH
@@ -144,9 +144,9 @@
 #define F_OWNER_PID 1
 #define F_OWNER_PGRP 2
 struct f_owner_ex {
- int type;
+  int type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_pid_t pid;
+  __kernel_pid_t pid;
 };
 #define FD_CLOEXEC 1
 #ifndef F_RDLCK
@@ -178,13 +178,13 @@ struct f_owner_ex {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 struct flock {
- short l_type;
- short l_whence;
+  short l_type;
+  short l_whence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_off_t l_start;
- __kernel_off_t l_len;
- __kernel_pid_t l_pid;
- __ARCH_FLOCK_PAD
+  __kernel_off_t l_start;
+  __kernel_off_t l_len;
+  __kernel_pid_t l_pid;
+  __ARCH_FLOCK_PAD
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
@@ -194,14 +194,14 @@ struct flock {
 #define __ARCH_FLOCK64_PAD
 #endif
 struct flock64 {
- short l_type;
+  short l_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- short l_whence;
- __kernel_loff_t l_start;
- __kernel_loff_t l_len;
- __kernel_pid_t l_pid;
+  short l_whence;
+  __kernel_loff_t l_start;
+  __kernel_loff_t l_len;
+  __kernel_pid_t l_pid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __ARCH_FLOCK64_PAD
+  __ARCH_FLOCK64_PAD
 };
 #endif
 #endif

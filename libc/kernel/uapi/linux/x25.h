@@ -51,18 +51,18 @@
 #define X25_PS4096 12
 struct x25_address {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char x25_addr[16];
+  char x25_addr[16];
 };
 struct sockaddr_x25 {
- __kernel_sa_family_t sx25_family;
+  __kernel_sa_family_t sx25_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct x25_address sx25_addr;
+  struct x25_address sx25_addr;
 };
 struct x25_subscrip_struct {
- char device[200-sizeof(unsigned long)];
+  char device[200 - sizeof(unsigned long)];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long global_facil_mask;
- unsigned int extended;
+  unsigned long global_facil_mask;
+  unsigned int extended;
 };
 #define X25_MASK_REVERSE 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -73,44 +73,44 @@ struct x25_subscrip_struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define X25_MASK_CALLED_AE 0x20
 struct x25_route_struct {
- struct x25_address address;
- unsigned int sigdigits;
+  struct x25_address address;
+  unsigned int sigdigits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char device[200];
+  char device[200];
 };
 struct x25_facilities {
- unsigned int winsize_in, winsize_out;
+  unsigned int winsize_in, winsize_out;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int pacsize_in, pacsize_out;
- unsigned int throughput;
- unsigned int reverse;
+  unsigned int pacsize_in, pacsize_out;
+  unsigned int throughput;
+  unsigned int reverse;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct x25_dte_facilities {
- __u16 delay_cumul;
- __u16 delay_target;
- __u16 delay_max;
+  __u16 delay_cumul;
+  __u16 delay_target;
+  __u16 delay_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 min_throughput;
- __u8 expedited;
- __u8 calling_len;
- __u8 called_len;
+  __u8 min_throughput;
+  __u8 expedited;
+  __u8 calling_len;
+  __u8 called_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 calling_ae[20];
- __u8 called_ae[20];
+  __u8 calling_ae[20];
+  __u8 called_ae[20];
 };
 struct x25_calluserdata {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int cudlength;
- unsigned char cuddata[128];
+  unsigned int cudlength;
+  unsigned char cuddata[128];
 };
 struct x25_causediag {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char cause;
- unsigned char diagnostic;
+  unsigned char cause;
+  unsigned char diagnostic;
 };
 struct x25_subaddr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int cudmatchlength;
+  unsigned int cudmatchlength;
 };
 #endif

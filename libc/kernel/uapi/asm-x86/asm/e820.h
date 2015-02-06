@@ -34,15 +34,15 @@
 #ifndef __ASSEMBLY__
 #include <linux/types.h>
 struct e820entry {
- __u64 addr;
+  __u64 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 size;
- __u32 type;
+  __u64 size;
+  __u32 type;
 } __attribute__((packed));
 struct e820map {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 nr_map;
- struct e820entry map[E820_X_MAX];
+  __u32 nr_map;
+  struct e820entry map[E820_X_MAX];
 };
 #define ISA_START_ADDRESS 0xa0000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

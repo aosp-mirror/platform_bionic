@@ -22,30 +22,30 @@
 #define DRM_ARMADA_GEM_MMAP 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_ARMADA_GEM_PWRITE 0x03
-#define ARMADA_IOCTL(dir, name, str)   DRM_##dir(DRM_COMMAND_BASE + DRM_ARMADA_##name, struct drm_armada_##str)
+#define ARMADA_IOCTL(dir,name,str) DRM_ ##dir(DRM_COMMAND_BASE + DRM_ARMADA_ ##name, struct drm_armada_ ##str)
 struct drm_armada_gem_create {
- uint32_t handle;
+  uint32_t handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t size;
+  uint32_t size;
 };
-#define DRM_IOCTL_ARMADA_GEM_CREATE   ARMADA_IOCTL(IOWR, GEM_CREATE, gem_create)
+#define DRM_IOCTL_ARMADA_GEM_CREATE ARMADA_IOCTL(IOWR, GEM_CREATE, gem_create)
 struct drm_armada_gem_mmap {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t handle;
- uint32_t pad;
- uint64_t offset;
- uint64_t size;
+  uint32_t handle;
+  uint32_t pad;
+  uint64_t offset;
+  uint64_t size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t addr;
+  uint64_t addr;
 };
-#define DRM_IOCTL_ARMADA_GEM_MMAP   ARMADA_IOCTL(IOWR, GEM_MMAP, gem_mmap)
+#define DRM_IOCTL_ARMADA_GEM_MMAP ARMADA_IOCTL(IOWR, GEM_MMAP, gem_mmap)
 struct drm_armada_gem_pwrite {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint64_t ptr;
- uint32_t handle;
- uint32_t offset;
- uint32_t size;
+  uint64_t ptr;
+  uint32_t handle;
+  uint32_t offset;
+  uint32_t size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define DRM_IOCTL_ARMADA_GEM_PWRITE   ARMADA_IOCTL(IOW, GEM_PWRITE, gem_pwrite)
+#define DRM_IOCTL_ARMADA_GEM_PWRITE ARMADA_IOCTL(IOW, GEM_PWRITE, gem_pwrite)
 #endif

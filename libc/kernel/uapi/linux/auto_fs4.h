@@ -38,10 +38,10 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define AUTOFS_TYPE_OFFSET 4U
 enum autofs_notify {
- NFY_NONE,
- NFY_MOUNT,
+  NFY_NONE,
+  NFY_MOUNT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- NFY_EXPIRE
+  NFY_EXPIRE
 };
 #define autofs_ptype_expire_multi 2
 #define autofs_ptype_missing_indirect 3
@@ -51,33 +51,33 @@ enum autofs_notify {
 #define autofs_ptype_expire_direct 6
 struct autofs_packet_expire_multi {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct autofs_packet_hdr hdr;
- autofs_wqt_t wait_queue_token;
- int len;
- char name[NAME_MAX+1];
+  struct autofs_packet_hdr hdr;
+  autofs_wqt_t wait_queue_token;
+  int len;
+  char name[NAME_MAX + 1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 union autofs_packet_union {
- struct autofs_packet_hdr hdr;
- struct autofs_packet_missing missing;
+  struct autofs_packet_hdr hdr;
+  struct autofs_packet_missing missing;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct autofs_packet_expire expire;
- struct autofs_packet_expire_multi expire_multi;
+  struct autofs_packet_expire expire;
+  struct autofs_packet_expire_multi expire_multi;
 };
 struct autofs_v5_packet {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct autofs_packet_hdr hdr;
- autofs_wqt_t wait_queue_token;
- __u32 dev;
- __u64 ino;
+  struct autofs_packet_hdr hdr;
+  autofs_wqt_t wait_queue_token;
+  __u32 dev;
+  __u64 ino;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 uid;
- __u32 gid;
- __u32 pid;
- __u32 tgid;
+  __u32 uid;
+  __u32 gid;
+  __u32 pid;
+  __u32 tgid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 len;
- char name[NAME_MAX+1];
+  __u32 len;
+  char name[NAME_MAX + 1];
 };
 typedef struct autofs_v5_packet autofs_packet_missing_indirect_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -86,19 +86,19 @@ typedef struct autofs_v5_packet autofs_packet_missing_direct_t;
 typedef struct autofs_v5_packet autofs_packet_expire_direct_t;
 union autofs_v5_packet_union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct autofs_packet_hdr hdr;
- struct autofs_v5_packet v5_packet;
- autofs_packet_missing_indirect_t missing_indirect;
- autofs_packet_expire_indirect_t expire_indirect;
+  struct autofs_packet_hdr hdr;
+  struct autofs_v5_packet v5_packet;
+  autofs_packet_missing_indirect_t missing_indirect;
+  autofs_packet_expire_indirect_t expire_indirect;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- autofs_packet_missing_direct_t missing_direct;
- autofs_packet_expire_direct_t expire_direct;
+  autofs_packet_missing_direct_t missing_direct;
+  autofs_packet_expire_direct_t expire_direct;
 };
-#define AUTOFS_IOC_EXPIRE_MULTI _IOW(0x93,0x66,int)
+#define AUTOFS_IOC_EXPIRE_MULTI _IOW(0x93, 0x66, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define AUTOFS_IOC_EXPIRE_INDIRECT AUTOFS_IOC_EXPIRE_MULTI
 #define AUTOFS_IOC_EXPIRE_DIRECT AUTOFS_IOC_EXPIRE_MULTI
-#define AUTOFS_IOC_PROTOSUBVER _IOR(0x93,0x67,int)
-#define AUTOFS_IOC_ASKUMOUNT _IOR(0x93,0x70,int)
+#define AUTOFS_IOC_PROTOSUBVER _IOR(0x93, 0x67, int)
+#define AUTOFS_IOC_ASKUMOUNT _IOR(0x93, 0x70, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

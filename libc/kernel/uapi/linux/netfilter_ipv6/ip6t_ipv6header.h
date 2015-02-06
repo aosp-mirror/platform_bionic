@@ -21,9 +21,9 @@
 #include <linux/types.h>
 struct ip6t_ipv6header_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 matchflags;
- __u8 invflags;
- __u8 modeflag;
+  __u8 matchflags;
+  __u8 invflags;
+  __u8 modeflag;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MASK_HOPOPTS 128

@@ -57,21 +57,21 @@
 #define CASE_LOWER_EXT 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DELETED_FLAG 0xe5
-#define IS_FREE(n) (!*(n) || *(n) == DELETED_FLAG)
+#define IS_FREE(n) (! * (n) || * (n) == DELETED_FLAG)
 #define FAT_LFN_LEN 255
 #define MSDOS_NAME 11
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSDOS_SLOTS 21
 #define MSDOS_DOT ".          "
 #define MSDOS_DOTDOT "..         "
-#define FAT_FIRST_ENT(s, x) ((MSDOS_SB(s)->fat_bits == 32 ? 0x0FFFFF00 :   MSDOS_SB(s)->fat_bits == 16 ? 0xFF00 : 0xF00) | (x))
+#define FAT_FIRST_ENT(s,x) ((MSDOS_SB(s)->fat_bits == 32 ? 0x0FFFFF00 : MSDOS_SB(s)->fat_bits == 16 ? 0xFF00 : 0xF00) | (x))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FAT_START_ENT 2
 #define MAX_FAT12 0xFF4
 #define MAX_FAT16 0xFFF4
 #define MAX_FAT32 0x0FFFFFF6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MAX_FAT(s) (MSDOS_SB(s)->fat_bits == 32 ? MAX_FAT32 :   MSDOS_SB(s)->fat_bits == 16 ? MAX_FAT16 : MAX_FAT12)
+#define MAX_FAT(s) (MSDOS_SB(s)->fat_bits == 32 ? MAX_FAT32 : MSDOS_SB(s)->fat_bits == 16 ? MAX_FAT16 : MAX_FAT12)
 #define BAD_FAT12 0xFF7
 #define BAD_FAT16 0xFFF7
 #define BAD_FAT32 0x0FFFFFF7
@@ -86,14 +86,14 @@
 #define FAT_FSINFO_SIG1 0x41615252
 #define FAT_FSINFO_SIG2 0x61417272
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IS_FSINFO(x) (le32_to_cpu((x)->signature1) == FAT_FSINFO_SIG1   && le32_to_cpu((x)->signature2) == FAT_FSINFO_SIG2)
+#define IS_FSINFO(x) (le32_to_cpu((x)->signature1) == FAT_FSINFO_SIG1 && le32_to_cpu((x)->signature2) == FAT_FSINFO_SIG2)
 #define FAT_STATE_DIRTY 0x01
 struct __fat_dirent {
- long d_ino;
+  long d_ino;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_off_t d_off;
- unsigned short d_reclen;
- char d_name[256];
+  __kernel_off_t d_off;
+  unsigned short d_reclen;
+  char d_name[256];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VFAT_IOCTL_READDIR_BOTH _IOR('r', 1, struct __fat_dirent[2])
@@ -103,92 +103,92 @@ struct __fat_dirent {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FAT_IOCTL_GET_VOLUME_ID _IOR('r', 0x13, __u32)
 struct fat_boot_sector {
- __u8 ignored[3];
- __u8 system_id[8];
+  __u8 ignored[3];
+  __u8 system_id[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 sector_size[2];
- __u8 sec_per_clus;
- __le16 reserved;
- __u8 fats;
+  __u8 sector_size[2];
+  __u8 sec_per_clus;
+  __le16 reserved;
+  __u8 fats;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 dir_entries[2];
- __u8 sectors[2];
- __u8 media;
- __le16 fat_length;
+  __u8 dir_entries[2];
+  __u8 sectors[2];
+  __u8 media;
+  __le16 fat_length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 secs_track;
- __le16 heads;
- __le32 hidden;
- __le32 total_sect;
+  __le16 secs_track;
+  __le16 heads;
+  __le32 hidden;
+  __le32 total_sect;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- __u8 drive_number;
- __u8 state;
+  union {
+    struct {
+      __u8 drive_number;
+      __u8 state;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 signature;
- __u8 vol_id[4];
- __u8 vol_label[11];
- __u8 fs_type[8];
+      __u8 signature;
+      __u8 vol_id[4];
+      __u8 vol_label[11];
+      __u8 fs_type[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } fat16;
- struct {
- __le32 length;
- __le16 flags;
+    } fat16;
+    struct {
+      __le32 length;
+      __le16 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 version[2];
- __le32 root_cluster;
- __le16 info_sector;
- __le16 backup_boot;
+      __u8 version[2];
+      __le32 root_cluster;
+      __le16 info_sector;
+      __le16 backup_boot;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 reserved2[6];
- __u8 drive_number;
- __u8 state;
- __u8 signature;
+      __le16 reserved2[6];
+      __u8 drive_number;
+      __u8 state;
+      __u8 signature;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 vol_id[4];
- __u8 vol_label[11];
- __u8 fs_type[8];
- } fat32;
+      __u8 vol_id[4];
+      __u8 vol_label[11];
+      __u8 fs_type[8];
+    } fat32;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- };
+  };
 };
 struct fat_boot_fsinfo {
- __le32 signature1;
+  __le32 signature1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 reserved1[120];
- __le32 signature2;
- __le32 free_clusters;
- __le32 next_cluster;
+  __le32 reserved1[120];
+  __le32 signature2;
+  __le32 free_clusters;
+  __le32 next_cluster;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 reserved2[4];
+  __le32 reserved2[4];
 };
 struct msdos_dir_entry {
- __u8 name[MSDOS_NAME];
+  __u8 name[MSDOS_NAME];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 attr;
- __u8 lcase;
- __u8 ctime_cs;
- __le16 ctime;
+  __u8 attr;
+  __u8 lcase;
+  __u8 ctime_cs;
+  __le16 ctime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le16 cdate;
- __le16 adate;
- __le16 starthi;
- __le16 time,date,start;
+  __le16 cdate;
+  __le16 adate;
+  __le16 starthi;
+  __le16 time, date, start;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __le32 size;
+  __le32 size;
 };
 struct msdos_dir_slot {
- __u8 id;
+  __u8 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name0_4[10];
- __u8 attr;
- __u8 reserved;
- __u8 alias_checksum;
+  __u8 name0_4[10];
+  __u8 attr;
+  __u8 reserved;
+  __u8 alias_checksum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 name5_10[12];
- __le16 start;
- __u8 name11_12[4];
+  __u8 name5_10[12];
+  __le16 start;
+  __u8 name11_12[4];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

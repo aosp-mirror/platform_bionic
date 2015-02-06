@@ -28,13 +28,13 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_PHYSDEV_OP_MASK (0x20 - 1)
 struct xt_physdev_info {
- char physindev[IFNAMSIZ];
- char in_mask[IFNAMSIZ];
+  char physindev[IFNAMSIZ];
+  char in_mask[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char physoutdev[IFNAMSIZ];
- char out_mask[IFNAMSIZ];
- __u8 invert;
- __u8 bitmask;
+  char physoutdev[IFNAMSIZ];
+  char out_mask[IFNAMSIZ];
+  __u8 invert;
+  __u8 bitmask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

@@ -21,8 +21,8 @@
 #include <linux/types.h>
 struct xt_esp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 spis[2];
- __u8 invflags;
+  __u32 spis[2];
+  __u8 invflags;
 };
 #define XT_ESP_INV_SPI 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

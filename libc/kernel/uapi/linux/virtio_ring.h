@@ -29,38 +29,38 @@
 #define VIRTIO_RING_F_INDIRECT_DESC 28
 #define VIRTIO_RING_F_EVENT_IDX 29
 struct vring_desc {
- __u64 addr;
+  __u64 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 len;
- __u16 flags;
- __u16 next;
+  __u32 len;
+  __u16 flags;
+  __u16 next;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct vring_avail {
- __u16 flags;
- __u16 idx;
- __u16 ring[];
+  __u16 flags;
+  __u16 idx;
+  __u16 ring[];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct vring_used_elem {
- __u32 id;
- __u32 len;
+  __u32 id;
+  __u32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct vring_used {
- __u16 flags;
- __u16 idx;
+  __u16 flags;
+  __u16 idx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct vring_used_elem ring[];
+  struct vring_used_elem ring[];
 };
 struct vring {
- unsigned int num;
+  unsigned int num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct vring_desc *desc;
- struct vring_avail *avail;
- struct vring_used *used;
+  struct vring_desc * desc;
+  struct vring_avail * avail;
+  struct vring_used * used;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
-#define vring_avail_event(vr) (*(__u16 *)&(vr)->used->ring[(vr)->num])
+#define vring_avail_event(vr) (* (__u16 *) & (vr)->used->ring[(vr)->num])
 #endif

@@ -19,9 +19,9 @@
 #ifndef __LINUX_BRIDGE_EBT_ARPREPLY_H
 #define __LINUX_BRIDGE_EBT_ARPREPLY_H
 struct ebt_arpreply_info {
- unsigned char mac[ETH_ALEN];
+  unsigned char mac[ETH_ALEN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int target;
+  int target;
 };
 #define EBT_ARPREPLY_TARGET "arpreply"
 #endif

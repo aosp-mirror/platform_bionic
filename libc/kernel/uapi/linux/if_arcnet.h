@@ -42,55 +42,53 @@
 #define ARCNET_ALEN 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct arc_rfc1201 {
- __u8 proto;
- __u8 split_flag;
- __be16 sequence;
+  __u8 proto;
+  __u8 split_flag;
+  __be16 sequence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 payload[0];
+  __u8 payload[0];
 };
 #define RFC1201_HDR_SIZE 4
 struct arc_rfc1051 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 proto;
- __u8 payload[0];
+  __u8 proto;
+  __u8 payload[0];
 };
 #define RFC1051_HDR_SIZE 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct arc_eth_encap {
- __u8 proto;
- struct ethhdr eth;
- __u8 payload[0];
+  __u8 proto;
+  struct ethhdr eth;
+  __u8 payload[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define ETH_ENCAP_HDR_SIZE 14
 struct arc_cap {
- __u8 proto;
+  __u8 proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 cookie[sizeof(int)];
- union {
- __u8 ack;
- __u8 raw[0];
+  __u8 cookie[sizeof(int)];
+  union {
+    __u8 ack;
+    __u8 raw[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } mes;
+  } mes;
 };
 struct arc_hardware {
- __u8 source,
+  __u8 source, dest, offset[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- dest,
- offset[2];
 };
 #define ARC_HDR_SIZE 4
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct archdr {
- struct arc_hardware hard;
- union {
- struct arc_rfc1201 rfc1201;
+  struct arc_hardware hard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct arc_rfc1051 rfc1051;
- struct arc_eth_encap eth_encap;
- struct arc_cap cap;
- __u8 raw[0];
+  union {
+    struct arc_rfc1201 rfc1201;
+    struct arc_rfc1051 rfc1051;
+    struct arc_eth_encap eth_encap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } soft;
+    struct arc_cap cap;
+    __u8 raw[0];
+  } soft;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -138,22 +138,22 @@ typedef __s64 Elf64_Sxword;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ELF64_ST_BIND(x) ELF_ST_BIND(x)
 #define ELF64_ST_TYPE(x) ELF_ST_TYPE(x)
-typedef struct dynamic{
- Elf32_Sword d_tag;
+typedef struct dynamic {
+  Elf32_Sword d_tag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union{
- Elf32_Sword d_val;
- Elf32_Addr d_ptr;
- } d_un;
+  union {
+    Elf32_Sword d_val;
+    Elf32_Addr d_ptr;
+  } d_un;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } Elf32_Dyn;
 typedef struct {
- Elf64_Sxword d_tag;
- union {
+  Elf64_Sxword d_tag;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Xword d_val;
- Elf64_Addr d_ptr;
- } d_un;
+    Elf64_Xword d_val;
+    Elf64_Addr d_ptr;
+  } d_un;
 } Elf64_Dyn;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ELF32_R_SYM(x) ((x) >> 8)
@@ -162,116 +162,116 @@ typedef struct {
 #define ELF64_R_TYPE(i) ((i) & 0xffffffff)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct elf32_rel {
- Elf32_Addr r_offset;
- Elf32_Word r_info;
+  Elf32_Addr r_offset;
+  Elf32_Word r_info;
 } Elf32_Rel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct elf64_rel {
- Elf64_Addr r_offset;
- Elf64_Xword r_info;
+  Elf64_Addr r_offset;
+  Elf64_Xword r_info;
 } Elf64_Rel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-typedef struct elf32_rela{
- Elf32_Addr r_offset;
- Elf32_Word r_info;
- Elf32_Sword r_addend;
+typedef struct elf32_rela {
+  Elf32_Addr r_offset;
+  Elf32_Word r_info;
+  Elf32_Sword r_addend;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } Elf32_Rela;
 typedef struct elf64_rela {
- Elf64_Addr r_offset;
- Elf64_Xword r_info;
+  Elf64_Addr r_offset;
+  Elf64_Xword r_info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Sxword r_addend;
+  Elf64_Sxword r_addend;
 } Elf64_Rela;
-typedef struct elf32_sym{
- Elf32_Word st_name;
+typedef struct elf32_sym {
+  Elf32_Word st_name;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Addr st_value;
- Elf32_Word st_size;
- unsigned char st_info;
- unsigned char st_other;
+  Elf32_Addr st_value;
+  Elf32_Word st_size;
+  unsigned char st_info;
+  unsigned char st_other;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Half st_shndx;
+  Elf32_Half st_shndx;
 } Elf32_Sym;
 typedef struct elf64_sym {
- Elf64_Word st_name;
+  Elf64_Word st_name;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char st_info;
- unsigned char st_other;
- Elf64_Half st_shndx;
- Elf64_Addr st_value;
+  unsigned char st_info;
+  unsigned char st_other;
+  Elf64_Half st_shndx;
+  Elf64_Addr st_value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Xword st_size;
+  Elf64_Xword st_size;
 } Elf64_Sym;
 #define EI_NIDENT 16
-typedef struct elf32_hdr{
+typedef struct elf32_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char e_ident[EI_NIDENT];
- Elf32_Half e_type;
- Elf32_Half e_machine;
- Elf32_Word e_version;
+  unsigned char e_ident[EI_NIDENT];
+  Elf32_Half e_type;
+  Elf32_Half e_machine;
+  Elf32_Word e_version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Addr e_entry;
- Elf32_Off e_phoff;
- Elf32_Off e_shoff;
- Elf32_Word e_flags;
+  Elf32_Addr e_entry;
+  Elf32_Off e_phoff;
+  Elf32_Off e_shoff;
+  Elf32_Word e_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Half e_ehsize;
- Elf32_Half e_phentsize;
- Elf32_Half e_phnum;
- Elf32_Half e_shentsize;
+  Elf32_Half e_ehsize;
+  Elf32_Half e_phentsize;
+  Elf32_Half e_phnum;
+  Elf32_Half e_shentsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Half e_shnum;
- Elf32_Half e_shstrndx;
+  Elf32_Half e_shnum;
+  Elf32_Half e_shstrndx;
 } Elf32_Ehdr;
 typedef struct elf64_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char e_ident[EI_NIDENT];
- Elf64_Half e_type;
- Elf64_Half e_machine;
- Elf64_Word e_version;
+  unsigned char e_ident[EI_NIDENT];
+  Elf64_Half e_type;
+  Elf64_Half e_machine;
+  Elf64_Word e_version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Addr e_entry;
- Elf64_Off e_phoff;
- Elf64_Off e_shoff;
- Elf64_Word e_flags;
+  Elf64_Addr e_entry;
+  Elf64_Off e_phoff;
+  Elf64_Off e_shoff;
+  Elf64_Word e_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Half e_ehsize;
- Elf64_Half e_phentsize;
- Elf64_Half e_phnum;
- Elf64_Half e_shentsize;
+  Elf64_Half e_ehsize;
+  Elf64_Half e_phentsize;
+  Elf64_Half e_phnum;
+  Elf64_Half e_shentsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Half e_shnum;
- Elf64_Half e_shstrndx;
+  Elf64_Half e_shnum;
+  Elf64_Half e_shstrndx;
 } Elf64_Ehdr;
 #define PF_R 0x4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PF_W 0x2
 #define PF_X 0x1
-typedef struct elf32_phdr{
- Elf32_Word p_type;
+typedef struct elf32_phdr {
+  Elf32_Word p_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Off p_offset;
- Elf32_Addr p_vaddr;
- Elf32_Addr p_paddr;
- Elf32_Word p_filesz;
+  Elf32_Off p_offset;
+  Elf32_Addr p_vaddr;
+  Elf32_Addr p_paddr;
+  Elf32_Word p_filesz;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Word p_memsz;
- Elf32_Word p_flags;
- Elf32_Word p_align;
+  Elf32_Word p_memsz;
+  Elf32_Word p_flags;
+  Elf32_Word p_align;
 } Elf32_Phdr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct elf64_phdr {
- Elf64_Word p_type;
- Elf64_Word p_flags;
- Elf64_Off p_offset;
+  Elf64_Word p_type;
+  Elf64_Word p_flags;
+  Elf64_Off p_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Addr p_vaddr;
- Elf64_Addr p_paddr;
- Elf64_Xword p_filesz;
- Elf64_Xword p_memsz;
+  Elf64_Addr p_vaddr;
+  Elf64_Addr p_paddr;
+  Elf64_Xword p_filesz;
+  Elf64_Xword p_memsz;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Xword p_align;
+  Elf64_Xword p_align;
 } Elf64_Phdr;
 #define SHT_NULL 0
 #define SHT_PROGBITS 1
@@ -309,34 +309,34 @@ typedef struct elf64_phdr {
 #define SHN_COMMON 0xfff2
 #define SHN_HIRESERVE 0xffff
 typedef struct elf32_shdr {
- Elf32_Word sh_name;
+  Elf32_Word sh_name;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Word sh_type;
- Elf32_Word sh_flags;
- Elf32_Addr sh_addr;
- Elf32_Off sh_offset;
+  Elf32_Word sh_type;
+  Elf32_Word sh_flags;
+  Elf32_Addr sh_addr;
+  Elf32_Off sh_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Word sh_size;
- Elf32_Word sh_link;
- Elf32_Word sh_info;
- Elf32_Word sh_addralign;
+  Elf32_Word sh_size;
+  Elf32_Word sh_link;
+  Elf32_Word sh_info;
+  Elf32_Word sh_addralign;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf32_Word sh_entsize;
+  Elf32_Word sh_entsize;
 } Elf32_Shdr;
 typedef struct elf64_shdr {
- Elf64_Word sh_name;
+  Elf64_Word sh_name;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Word sh_type;
- Elf64_Xword sh_flags;
- Elf64_Addr sh_addr;
- Elf64_Off sh_offset;
+  Elf64_Word sh_type;
+  Elf64_Xword sh_flags;
+  Elf64_Addr sh_addr;
+  Elf64_Off sh_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Xword sh_size;
- Elf64_Word sh_link;
- Elf64_Word sh_info;
- Elf64_Xword sh_addralign;
+  Elf64_Xword sh_size;
+  Elf64_Word sh_link;
+  Elf64_Word sh_info;
+  Elf64_Xword sh_addralign;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Xword sh_entsize;
+  Elf64_Xword sh_entsize;
 } Elf64_Shdr;
 #define EI_MAG0 0
 #define EI_MAG1 1
@@ -417,15 +417,15 @@ typedef struct elf64_shdr {
 #define NT_METAG_TLS 0x502
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct elf32_note {
- Elf32_Word n_namesz;
- Elf32_Word n_descsz;
- Elf32_Word n_type;
+  Elf32_Word n_namesz;
+  Elf32_Word n_descsz;
+  Elf32_Word n_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } Elf32_Nhdr;
 typedef struct elf64_note {
- Elf64_Word n_namesz;
- Elf64_Word n_descsz;
+  Elf64_Word n_namesz;
+  Elf64_Word n_descsz;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- Elf64_Word n_type;
+  Elf64_Word n_type;
 } Elf64_Nhdr;
 #endif

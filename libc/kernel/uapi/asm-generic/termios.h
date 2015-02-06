@@ -22,22 +22,22 @@
 #include <asm/ioctls.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct winsize {
- unsigned short ws_row;
- unsigned short ws_col;
- unsigned short ws_xpixel;
+  unsigned short ws_row;
+  unsigned short ws_col;
+  unsigned short ws_xpixel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short ws_ypixel;
+  unsigned short ws_ypixel;
 };
 #define NCC 8
 struct termio {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short c_iflag;
- unsigned short c_oflag;
- unsigned short c_cflag;
- unsigned short c_lflag;
+  unsigned short c_iflag;
+  unsigned short c_oflag;
+  unsigned short c_cflag;
+  unsigned short c_lflag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char c_line;
- unsigned char c_cc[NCC];
+  unsigned char c_line;
+  unsigned char c_cc[NCC];
 };
 #define TIOCM_LE 0x001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

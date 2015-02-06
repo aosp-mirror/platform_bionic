@@ -27,13 +27,13 @@
 #define EBT_NFLOG_DEFAULT_THRESHOLD 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ebt_nflog_info {
- __u32 len;
- __u16 group;
- __u16 threshold;
+  __u32 len;
+  __u16 group;
+  __u16 threshold;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 flags;
- __u16 pad;
- char prefix[EBT_NFLOG_PREFIX_SIZE];
+  __u16 flags;
+  __u16 pad;
+  char prefix[EBT_NFLOG_PREFIX_SIZE];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

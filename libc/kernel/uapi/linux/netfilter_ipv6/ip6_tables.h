@@ -57,19 +57,19 @@
 #define IP6T_STANDARD_TARGET XT_STANDARD_TARGET
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IP6T_ERROR_TARGET XT_ERROR_TARGET
-#define IP6T_MATCH_ITERATE(e, fn, args...)   XT_MATCH_ITERATE(struct ip6t_entry, e, fn, ## args)
-#define IP6T_ENTRY_ITERATE(entries, size, fn, args...)   XT_ENTRY_ITERATE(struct ip6t_entry, entries, size, fn, ## args)
+#define IP6T_MATCH_ITERATE(e,fn,args...) XT_MATCH_ITERATE(struct ip6t_entry, e, fn, ##args)
+#define IP6T_ENTRY_ITERATE(entries,size,fn,args...) XT_ENTRY_ITERATE(struct ip6t_entry, entries, size, fn, ##args)
 struct ip6t_ip6 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct in6_addr src, dst;
- struct in6_addr smsk, dmsk;
- char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
- unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
+  struct in6_addr src, dst;
+  struct in6_addr smsk, dmsk;
+  char iniface[IFNAMSIZ], outiface[IFNAMSIZ];
+  unsigned char iniface_mask[IFNAMSIZ], outiface_mask[IFNAMSIZ];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 proto;
- __u8 tos;
- __u8 flags;
- __u8 invflags;
+  __u16 proto;
+  __u8 tos;
+  __u8 flags;
+  __u8 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IP6T_F_PROTO 0x01
@@ -88,30 +88,36 @@ struct ip6t_ip6 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IP6T_INV_MASK 0x7F
 struct ip6t_entry {
- struct ip6t_ip6 ipv6;
- unsigned int nfcache;
+  struct ip6t_ip6 ipv6;
+  unsigned int nfcache;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 target_offset;
- __u16 next_offset;
- unsigned int comefrom;
- struct xt_counters counters;
+  __u16 target_offset;
+  __u16 next_offset;
+  unsigned int comefrom;
+  struct xt_counters counters;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char elems[0];
+  unsigned char elems[0];
 };
 struct ip6t_standard {
- struct ip6t_entry entry;
+  struct ip6t_entry entry;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct xt_standard_target target;
+  struct xt_standard_target target;
 };
 struct ip6t_error {
- struct ip6t_entry entry;
+  struct ip6t_entry entry;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct xt_error_target target;
+  struct xt_error_target target;
 };
-#define IP6T_ENTRY_INIT(__size)  {   .target_offset = sizeof(struct ip6t_entry),   .next_offset = (__size),  }
-#define IP6T_STANDARD_INIT(__verdict)  {   .entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_standard)),   .target = XT_TARGET_INIT(XT_STANDARD_TARGET,   sizeof(struct xt_standard_target)),   .target.verdict = -(__verdict) - 1,  }
+#define IP6T_ENTRY_INIT(__size) \
+{.target_offset = sizeof(struct ip6t_entry),.next_offset = (__size), \
+}
+#define IP6T_STANDARD_INIT(__verdict) \
+{.entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_standard)),.target = XT_TARGET_INIT(XT_STANDARD_TARGET, sizeof(struct xt_standard_target)),.target.verdict = - (__verdict) - 1, \
+}
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IP6T_ERROR_INIT  {   .entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_error)),   .target = XT_TARGET_INIT(XT_ERROR_TARGET,   sizeof(struct xt_error_target)),   .target.errorname = "ERROR",  }
+#define IP6T_ERROR_INIT \
+{.entry = IP6T_ENTRY_INIT(sizeof(struct ip6t_error)),.target = XT_TARGET_INIT(XT_ERROR_TARGET, sizeof(struct xt_error_target)),.target.errorname = "ERROR", \
+}
 #define IP6T_BASE_CTL 64
 #define IP6T_SO_SET_REPLACE (IP6T_BASE_CTL)
 #define IP6T_SO_SET_ADD_COUNTERS (IP6T_BASE_CTL + 1)
@@ -126,46 +132,44 @@ struct ip6t_error {
 #define IP6T_SO_ORIGINAL_DST 80
 struct ip6t_icmp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 type;
- __u8 code[2];
- __u8 invflags;
+  __u8 type;
+  __u8 code[2];
+  __u8 invflags;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IP6T_ICMP_INV 0x01
 struct ip6t_getinfo {
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int valid_hooks;
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int hook_entry[NF_INET_NUMHOOKS];
- unsigned int underflow[NF_INET_NUMHOOKS];
- unsigned int num_entries;
- unsigned int size;
+  unsigned int hook_entry[NF_INET_NUMHOOKS];
+  unsigned int underflow[NF_INET_NUMHOOKS];
+  unsigned int num_entries;
+  unsigned int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ip6t_replace {
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int valid_hooks;
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int valid_hooks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int num_entries;
- unsigned int size;
- unsigned int hook_entry[NF_INET_NUMHOOKS];
- unsigned int underflow[NF_INET_NUMHOOKS];
+  unsigned int num_entries;
+  unsigned int size;
+  unsigned int hook_entry[NF_INET_NUMHOOKS];
+  unsigned int underflow[NF_INET_NUMHOOKS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int num_counters;
- struct xt_counters __user *counters;
- struct ip6t_entry entries[0];
+  unsigned int num_counters;
+  struct xt_counters __user * counters;
+  struct ip6t_entry entries[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ip6t_get_entries {
- char name[XT_TABLE_MAXNAMELEN];
- unsigned int size;
- struct ip6t_entry entrytable[0];
+  char name[XT_TABLE_MAXNAMELEN];
+  unsigned int size;
+  struct ip6t_entry entrytable[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-static __inline__ struct xt_entry_target *
-ip6t_get_target(struct ip6t_entry *e)
-{
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- return (void *)e + e->target_offset;
+static __inline__ struct xt_entry_target * ip6t_get_target(struct ip6t_entry * e) {
+  return(void *) e + e->target_offset;
 }
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

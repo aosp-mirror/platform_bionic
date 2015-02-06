@@ -23,15 +23,15 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef int ion_user_handle_t;
 enum ion_heap_type {
- ION_HEAP_TYPE_SYSTEM,
- ION_HEAP_TYPE_SYSTEM_CONTIG,
+  ION_HEAP_TYPE_SYSTEM,
+  ION_HEAP_TYPE_SYSTEM_CONTIG,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ION_HEAP_TYPE_CARVEOUT,
- ION_HEAP_TYPE_CHUNK,
- ION_HEAP_TYPE_DMA,
- ION_HEAP_TYPE_CUSTOM,
+  ION_HEAP_TYPE_CARVEOUT,
+  ION_HEAP_TYPE_CHUNK,
+  ION_HEAP_TYPE_DMA,
+  ION_HEAP_TYPE_CUSTOM,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- ION_NUM_HEAPS = 16,
+  ION_NUM_HEAPS = 16,
 };
 #define ION_HEAP_SYSTEM_MASK (1 << ION_HEAP_TYPE_SYSTEM)
 #define ION_HEAP_SYSTEM_CONTIG_MASK (1 << ION_HEAP_TYPE_SYSTEM_CONTIG)
@@ -43,30 +43,30 @@ enum ion_heap_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ION_FLAG_CACHED_NEEDS_SYNC 2
 struct ion_allocation_data {
- size_t len;
- size_t align;
+  size_t len;
+  size_t align;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int heap_id_mask;
- unsigned int flags;
- ion_user_handle_t handle;
+  unsigned int heap_id_mask;
+  unsigned int flags;
+  ion_user_handle_t handle;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ion_fd_data {
- ion_user_handle_t handle;
- int fd;
+  ion_user_handle_t handle;
+  int fd;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ion_handle_data {
- ion_user_handle_t handle;
+  ion_user_handle_t handle;
 };
 struct ion_custom_data {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int cmd;
- unsigned long arg;
+  unsigned int cmd;
+  unsigned long arg;
 };
 #define ION_IOC_MAGIC 'I'
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ION_IOC_ALLOC _IOWR(ION_IOC_MAGIC, 0,   struct ion_allocation_data)
+#define ION_IOC_ALLOC _IOWR(ION_IOC_MAGIC, 0, struct ion_allocation_data)
 #define ION_IOC_FREE _IOWR(ION_IOC_MAGIC, 1, struct ion_handle_data)
 #define ION_IOC_MAP _IOWR(ION_IOC_MAGIC, 2, struct ion_fd_data)
 #define ION_IOC_SHARE _IOWR(ION_IOC_MAGIC, 4, struct ion_fd_data)

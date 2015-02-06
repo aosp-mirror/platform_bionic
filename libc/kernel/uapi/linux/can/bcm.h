@@ -22,32 +22,32 @@
 #include <linux/can.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct bcm_msg_head {
- __u32 opcode;
- __u32 flags;
- __u32 count;
+  __u32 opcode;
+  __u32 flags;
+  __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct timeval ival1, ival2;
- canid_t can_id;
- __u32 nframes;
- struct can_frame frames[0];
+  struct timeval ival1, ival2;
+  canid_t can_id;
+  __u32 nframes;
+  struct can_frame frames[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 enum {
- TX_SETUP = 1,
- TX_DELETE,
+  TX_SETUP = 1,
+  TX_DELETE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- TX_READ,
- TX_SEND,
- RX_SETUP,
- RX_DELETE,
+  TX_READ,
+  TX_SEND,
+  RX_SETUP,
+  RX_DELETE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- RX_READ,
- TX_STATUS,
- TX_EXPIRED,
- RX_STATUS,
+  RX_READ,
+  TX_STATUS,
+  TX_EXPIRED,
+  RX_STATUS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- RX_TIMEOUT,
- RX_CHANGED
+  RX_TIMEOUT,
+  RX_CHANGED
 };
 #define SETTIMER 0x0001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

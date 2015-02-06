@@ -23,9 +23,9 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SECMARK_SECCTX_MAX 256
 struct xt_secmark_target_info {
- __u8 mode;
- __u32 secid;
+  __u8 mode;
+  __u32 secid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char secctx[SECMARK_SECCTX_MAX];
+  char secctx[SECMARK_SECCTX_MAX];
 };
 #endif

@@ -38,36 +38,36 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UVC_CTRL_FLAG_RESTORE (1 << 6)
 #define UVC_CTRL_FLAG_AUTO_UPDATE (1 << 7)
-#define UVC_CTRL_FLAG_GET_RANGE   (UVC_CTRL_FLAG_GET_CUR | UVC_CTRL_FLAG_GET_MIN |   UVC_CTRL_FLAG_GET_MAX | UVC_CTRL_FLAG_GET_RES |   UVC_CTRL_FLAG_GET_DEF)
+#define UVC_CTRL_FLAG_GET_RANGE (UVC_CTRL_FLAG_GET_CUR | UVC_CTRL_FLAG_GET_MIN | UVC_CTRL_FLAG_GET_MAX | UVC_CTRL_FLAG_GET_RES | UVC_CTRL_FLAG_GET_DEF)
 struct uvc_menu_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 value;
- __u8 name[32];
+  __u32 value;
+  __u8 name[32];
 };
 struct uvc_xu_control_mapping {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u8 name[32];
- __u8 entity[16];
- __u8 selector;
+  __u32 id;
+  __u8 name[32];
+  __u8 entity[16];
+  __u8 selector;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 size;
- __u8 offset;
- __u32 v4l2_type;
- __u32 data_type;
+  __u8 size;
+  __u8 offset;
+  __u32 v4l2_type;
+  __u32 data_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct uvc_menu_info __user *menu_info;
- __u32 menu_count;
- __u32 reserved[4];
+  struct uvc_menu_info __user * menu_info;
+  __u32 menu_count;
+  __u32 reserved[4];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uvc_xu_control_query {
- __u8 unit;
- __u8 selector;
- __u8 query;
+  __u8 unit;
+  __u8 selector;
+  __u8 query;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 size;
- __u8 __user *data;
+  __u16 size;
+  __u8 __user * data;
 };
 #define UVCIOC_CTRL_MAP _IOWR('u', 0x20, struct uvc_xu_control_mapping)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

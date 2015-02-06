@@ -19,20 +19,20 @@
 #ifndef _LINUX_MEI_H
 #define _LINUX_MEI_H
 #include <linux/uuid.h>
-#define IOCTL_MEI_CONNECT_CLIENT   _IOWR('H' , 0x01, struct mei_connect_client_data)
+#define IOCTL_MEI_CONNECT_CLIENT _IOWR('H', 0x01, struct mei_connect_client_data)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mei_client {
- __u32 max_msg_length;
- __u8 protocol_version;
- __u8 reserved[3];
+  __u32 max_msg_length;
+  __u8 protocol_version;
+  __u8 reserved[3];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct mei_connect_client_data {
- union {
- uuid_le in_client_uuid;
+  union {
+    uuid_le in_client_uuid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct mei_client out_client_properties;
- };
+    struct mei_client out_client_properties;
+  };
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

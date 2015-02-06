@@ -27,12 +27,12 @@
 #define aARCH (__cpu_to_le32(0x20))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define aSHARED (__cpu_to_le32(0x80))
-#define aDONTSUBALLOCATE (__cpu_to_le32(1L<<11))
-#define aTRANSACTIONAL (__cpu_to_le32(1L<<12))
-#define aPURGE (__cpu_to_le32(1L<<16))
+#define aDONTSUBALLOCATE (__cpu_to_le32(1L << 11))
+#define aTRANSACTIONAL (__cpu_to_le32(1L << 12))
+#define aPURGE (__cpu_to_le32(1L << 16))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define aRENAMEINHIBIT (__cpu_to_le32(1L<<17))
-#define aDELETEINHIBIT (__cpu_to_le32(1L<<18))
-#define aDONTCOMPRESS (__cpu_to_le32(1L<<27))
+#define aRENAMEINHIBIT (__cpu_to_le32(1L << 17))
+#define aDELETEINHIBIT (__cpu_to_le32(1L << 18))
+#define aDONTCOMPRESS (__cpu_to_le32(1L << 27))
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

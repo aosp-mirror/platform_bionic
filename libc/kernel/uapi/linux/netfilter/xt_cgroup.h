@@ -21,8 +21,8 @@
 #include <linux/types.h>
 struct xt_cgroup_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 id;
- __u32 invert;
+  __u32 id;
+  __u32 invert;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

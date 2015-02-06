@@ -19,10 +19,10 @@
 #ifndef _XT_TEE_TARGET_H
 #define _XT_TEE_TARGET_H
 struct xt_tee_tginfo {
- union nf_inet_addr gw;
+  union nf_inet_addr gw;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char oif[16];
- struct xt_tee_priv *priv __attribute__((aligned(8)));
+  char oif[16];
+  struct xt_tee_priv * priv __attribute__((aligned(8)));
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

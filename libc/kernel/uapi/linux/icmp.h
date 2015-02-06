@@ -67,28 +67,28 @@
 #define ICMP_EXC_FRAGTIME 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct icmphdr {
- __u8 type;
- __u8 code;
- __sum16 checksum;
+  __u8 type;
+  __u8 code;
+  __sum16 checksum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- __be16 id;
- __be16 sequence;
+  union {
+    struct {
+      __be16 id;
+      __be16 sequence;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } echo;
- __be32 gateway;
- struct {
- __be16 __linux_unused;
+    } echo;
+    __be32 gateway;
+    struct {
+      __be16 __linux_unused;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 mtu;
- } frag;
- } un;
+      __be16 mtu;
+    } frag;
+  } un;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ICMP_FILTER 1
 struct icmp_filter {
- __u32 data;
+  __u32 data;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -84,16 +84,16 @@
 #define TUN_F_UFO 0x10
 #define TUN_PKT_STRIP 0x0001
 struct tun_pi {
- __u16 flags;
+  __u16 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 proto;
+  __be16 proto;
 };
 #define TUN_FLT_ALLMULTI 0x0001
 struct tun_filter {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 flags;
- __u16 count;
- __u8 addr[0][ETH_ALEN];
+  __u16 flags;
+  __u16 count;
+  __u8 addr[0][ETH_ALEN];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

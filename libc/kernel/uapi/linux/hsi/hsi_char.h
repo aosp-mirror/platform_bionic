@@ -19,10 +19,10 @@
 #ifndef __HSI_CHAR_H
 #define __HSI_CHAR_H
 #define HSI_CHAR_MAGIC 'k'
-#define HSC_IOW(num, dtype) _IOW(HSI_CHAR_MAGIC, num, dtype)
+#define HSC_IOW(num,dtype) _IOW(HSI_CHAR_MAGIC, num, dtype)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define HSC_IOR(num, dtype) _IOR(HSI_CHAR_MAGIC, num, dtype)
-#define HSC_IOWR(num, dtype) _IOWR(HSI_CHAR_MAGIC, num, dtype)
+#define HSC_IOR(num,dtype) _IOR(HSI_CHAR_MAGIC, num, dtype)
+#define HSC_IOWR(num,dtype) _IOWR(HSI_CHAR_MAGIC, num, dtype)
 #define HSC_IO(num) _IO(HSI_CHAR_MAGIC, num)
 #define HSC_RESET HSC_IO(16)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -43,17 +43,17 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HSC_ARB_PRIO 1
 struct hsc_rx_config {
- uint32_t mode;
- uint32_t flow;
+  uint32_t mode;
+  uint32_t flow;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t channels;
+  uint32_t channels;
 };
 struct hsc_tx_config {
- uint32_t mode;
+  uint32_t mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- uint32_t channels;
- uint32_t speed;
- uint32_t arb_mode;
+  uint32_t channels;
+  uint32_t speed;
+  uint32_t arb_mode;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -27,29 +27,29 @@
 #define NFS_MAX_CONTEXT_LEN 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nfs_mount_data {
- int version;
- int fd;
- struct nfs2_fh old_root;
+  int version;
+  int fd;
+  struct nfs2_fh old_root;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int flags;
- int rsize;
- int wsize;
- int timeo;
+  int flags;
+  int rsize;
+  int wsize;
+  int timeo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int retrans;
- int acregmin;
- int acregmax;
- int acdirmin;
+  int retrans;
+  int acregmin;
+  int acregmax;
+  int acdirmin;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int acdirmax;
- struct sockaddr_in addr;
- char hostname[NFS_MAXNAMLEN + 1];
- int namlen;
+  int acdirmax;
+  struct sockaddr_in addr;
+  char hostname[NFS_MAXNAMLEN + 1];
+  int namlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int bsize;
- struct nfs3_fh root;
- int pseudoflavor;
- char context[NFS_MAX_CONTEXT_LEN + 1];
+  unsigned int bsize;
+  struct nfs3_fh root;
+  int pseudoflavor;
+  char context[NFS_MAX_CONTEXT_LEN + 1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define NFS_MOUNT_SOFT 0x0001
