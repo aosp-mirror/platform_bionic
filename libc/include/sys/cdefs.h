@@ -378,6 +378,15 @@
 # define __USE_BSD 1
 #endif
 
+/*
+ * _FILE_OFFSET_BITS 64 support.
+ */
+#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
+#if _FILE_OFFSET_BITS == 64
+#define __USE_FILE_OFFSET64 1
+#endif
+#endif
+
 /*-
  * POSIX.1 requires that the macros we test be defined before any standard
  * header file is included.
