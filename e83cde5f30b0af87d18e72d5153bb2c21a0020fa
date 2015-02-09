@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1be9bc5_d36e5467",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-09T19:56:40Z",
+      "side": 1,
+      "message": "we\u0027ve already been using \u003e 21.",
+      "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11c24f57_742d683d",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-09T19:56:40Z",
+      "side": 1,
+      "message": "i did type \"this seems overly conservative\" but then i grepped the NDK *functions.txt files and saw they haven\u0027t exported *any* of the fortify stuff in *any* release :-(\n\nthat\u0027s probably worth commenting, otherwise the choice of 21 here seems wrong.",
+      "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
