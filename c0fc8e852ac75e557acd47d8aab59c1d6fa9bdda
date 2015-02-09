@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "518047c4_f9b933c6",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-02-09T17:04:20Z",
+      "side": 1,
+      "message": "This test reports the overhead of the underlying futex wake syscall on the producer. It does not report the overhead from issuing the wake to the point where the posted consumer thread wakes up.",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 73
+      },
+      "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "518047c4_597b875b",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-02-09T17:04:20Z",
+      "side": 1,
+      "message": "Remove this sentence, the double occurs so rarely (1/50 runs or less) that it is not worth noting; and only occurs when the CPU is not locked as is part of the test requirements.\n\nWe _may_wish to enforce this for this test by turning all CPUs on, and switching to the performance governor _while_ running this test; restoring afterwards.\n\nNot sure if I want to do this as there may be a liability to doing this (burning up the CPU), and because most of the benchmarks have this requirement in any case (some tests skip by this requirement by keeping the CPU(s) \u003e90% busy).",
+      "range": {
+        "startLine": 57,
+        "startChar": 3,
+        "endLine": 57,
+        "endChar": 59
+      },
+      "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "511a07b5_463392ef",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-02-09T17:04:20Z",
+      "side": 1,
+      "message": "change name to BM_semaphore_sem_post, the addition of _wakeup will lead to confusion; especially if a followup benchmark is added that measures the sem_post -\u003e sem_wake overhead.",
+      "range": {
+        "startLine": 71,
+        "startChar": 33,
+        "endLine": 71,
+        "endChar": 40
+      },
+      "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
