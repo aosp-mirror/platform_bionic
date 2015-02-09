@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "917c7ff2_48429f53",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-09T22:33:08Z",
+      "side": 1,
+      "message": "That helps a lot.\n\nI would also appreciate a comment describing the overall effect of the priority setting code.  The code is difficult to follow, and its purpose is not immediately apparent, though I might be able to guess.",
+      "parentUuid": "518047c4_f9b933c6",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 73
+      },
+      "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "518047c4_597b875b",
         "filename": "benchmarks/semaphore_benchmark.cpp",
         "patchSetId": 2
@@ -41,6 +65,29 @@
         "startChar": 3,
         "endLine": 57,
         "endChar": 59
+      },
+      "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "917c7ff2_a8f6bb93",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-09T22:33:08Z",
+      "side": 1,
+      "message": "Should be atomic_int or atomic\u003cint\u003e.  Particularly since otherwise the compiler is allowed to treat __sem_wait_run as loop invariant in the loop below.\n\nIs there a reason to use system-namespace (double underscore) names here?",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 10
       },
       "revId": "c0fc8e852ac75e557acd47d8aab59c1d6fa9bdda",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
