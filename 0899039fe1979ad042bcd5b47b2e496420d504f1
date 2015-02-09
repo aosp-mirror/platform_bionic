@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "318af32f_6dc4d515",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-09T21:36:08Z",
+      "side": 1,
+      "message": "Thanks for your explanation. I think I understand your reason for using memory_order_relaxed here more than before. I add some comment in the code, and you can review if it is correct and clear.",
+      "parentUuid": "fc93d067_4bef053d",
+      "range": {
+        "startLine": 128,
+        "startChar": 1,
+        "endLine": 145,
+        "endChar": 95
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc4910a5_a4bc0848",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 1
@@ -203,6 +227,30 @@
       "side": 1,
       "message": "I don\u0027t think it actually makes sense to provide \"memory synchronization\" unless it\u0027s with another thread.  Certainly that\u0027s true in the C11 model.  There is a reading of Posix in which it does kind of make sense, but in that version everything includes a full fence, often on both sides, and all our code slows down tremendously.  Nobody implements that, for good reason.\n\nIn C11/C++11 a sequentially consistent operation on memory nobody else can see is a no-op.\n\nC++11 specifies condition variable synchronization correctly.  Wait is specified to acquire and release the mutex. Neither has an explicit synchronization clause.",
       "parentUuid": "1cc26457_dd1adf0d",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 61
+      },
+      "revId": "0899039fe1979ad042bcd5b47b2e496420d504f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "318af32f_adc5dd10",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-09T21:36:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc93d067_aeff97ba",
       "range": {
         "startLine": 157,
         "startChar": 2,
