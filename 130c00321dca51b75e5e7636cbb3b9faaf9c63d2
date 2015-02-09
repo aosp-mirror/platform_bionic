@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1197af55_4cf0ff1b",
+        "filename": "libm/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-09T22:12:01Z",
+      "side": 1,
+      "message": "Oops, typo. Should be i387.",
+      "range": {
+        "startLine": 279,
+        "startChar": 38,
+        "endLine": 279,
+        "endChar": 41
+      },
+      "revId": "130c00321dca51b75e5e7636cbb3b9faaf9c63d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
