@@ -22,12 +22,12 @@
 #define IP6T_OPTS_OPTSNR 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ip6t_opts {
- __u32 hdrlen;
- __u8 flags;
- __u8 invflags;
+  __u32 hdrlen;
+  __u8 flags;
+  __u8 invflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 opts[IP6T_OPTS_OPTSNR];
- __u8 optsnr;
+  __u16 opts[IP6T_OPTS_OPTSNR];
+  __u8 optsnr;
 };
 #define IP6T_OPTS_LEN 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

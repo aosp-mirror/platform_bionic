@@ -23,97 +23,97 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/types.h>
 #define I2O_MAGIC_NUMBER 'i'
-#define I2OGETIOPS _IOR(I2O_MAGIC_NUMBER,0,__u8[MAX_I2O_CONTROLLERS])
-#define I2OHRTGET _IOWR(I2O_MAGIC_NUMBER,1,struct i2o_cmd_hrtlct)
+#define I2OGETIOPS _IOR(I2O_MAGIC_NUMBER, 0, __u8[MAX_I2O_CONTROLLERS])
+#define I2OHRTGET _IOWR(I2O_MAGIC_NUMBER, 1, struct i2o_cmd_hrtlct)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I2OLCTGET _IOWR(I2O_MAGIC_NUMBER,2,struct i2o_cmd_hrtlct)
-#define I2OPARMSET _IOWR(I2O_MAGIC_NUMBER,3,struct i2o_cmd_psetget)
-#define I2OPARMGET _IOWR(I2O_MAGIC_NUMBER,4,struct i2o_cmd_psetget)
-#define I2OSWDL _IOWR(I2O_MAGIC_NUMBER,5,struct i2o_sw_xfer)
+#define I2OLCTGET _IOWR(I2O_MAGIC_NUMBER, 2, struct i2o_cmd_hrtlct)
+#define I2OPARMSET _IOWR(I2O_MAGIC_NUMBER, 3, struct i2o_cmd_psetget)
+#define I2OPARMGET _IOWR(I2O_MAGIC_NUMBER, 4, struct i2o_cmd_psetget)
+#define I2OSWDL _IOWR(I2O_MAGIC_NUMBER, 5, struct i2o_sw_xfer)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I2OSWUL _IOWR(I2O_MAGIC_NUMBER,6,struct i2o_sw_xfer)
-#define I2OSWDEL _IOWR(I2O_MAGIC_NUMBER,7,struct i2o_sw_xfer)
-#define I2OVALIDATE _IOR(I2O_MAGIC_NUMBER,8,__u32)
-#define I2OHTML _IOWR(I2O_MAGIC_NUMBER,9,struct i2o_html)
+#define I2OSWUL _IOWR(I2O_MAGIC_NUMBER, 6, struct i2o_sw_xfer)
+#define I2OSWDEL _IOWR(I2O_MAGIC_NUMBER, 7, struct i2o_sw_xfer)
+#define I2OVALIDATE _IOR(I2O_MAGIC_NUMBER, 8, __u32)
+#define I2OHTML _IOWR(I2O_MAGIC_NUMBER, 9, struct i2o_html)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define I2OEVTREG _IOW(I2O_MAGIC_NUMBER,10,struct i2o_evt_id)
-#define I2OEVTGET _IOR(I2O_MAGIC_NUMBER,11,struct i2o_evt_info)
-#define I2OPASSTHRU _IOR(I2O_MAGIC_NUMBER,12,struct i2o_cmd_passthru)
-#define I2OPASSTHRU32 _IOR(I2O_MAGIC_NUMBER,12,struct i2o_cmd_passthru32)
+#define I2OEVTREG _IOW(I2O_MAGIC_NUMBER, 10, struct i2o_evt_id)
+#define I2OEVTGET _IOR(I2O_MAGIC_NUMBER, 11, struct i2o_evt_info)
+#define I2OPASSTHRU _IOR(I2O_MAGIC_NUMBER, 12, struct i2o_cmd_passthru)
+#define I2OPASSTHRU32 _IOR(I2O_MAGIC_NUMBER, 12, struct i2o_cmd_passthru32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct i2o_cmd_passthru32 {
- unsigned int iop;
- __u32 msg;
+  unsigned int iop;
+  __u32 msg;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct i2o_cmd_passthru {
- unsigned int iop;
- void __user *msg;
+  unsigned int iop;
+  void __user * msg;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct i2o_cmd_hrtlct {
- unsigned int iop;
- void __user *resbuf;
- unsigned int __user *reslen;
+  unsigned int iop;
+  void __user * resbuf;
+  unsigned int __user * reslen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct i2o_cmd_psetget {
- unsigned int iop;
- unsigned int tid;
+  unsigned int iop;
+  unsigned int tid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *opbuf;
- unsigned int oplen;
- void __user *resbuf;
- unsigned int __user *reslen;
+  void __user * opbuf;
+  unsigned int oplen;
+  void __user * resbuf;
+  unsigned int __user * reslen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct i2o_sw_xfer {
- unsigned int iop;
- unsigned char flags;
+  unsigned int iop;
+  unsigned char flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char sw_type;
- unsigned int sw_id;
- void __user *buf;
- unsigned int __user *swlen;
+  unsigned char sw_type;
+  unsigned int sw_id;
+  void __user * buf;
+  unsigned int __user * swlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int __user *maxfrag;
- unsigned int __user *curfrag;
+  unsigned int __user * maxfrag;
+  unsigned int __user * curfrag;
 };
 struct i2o_html {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int iop;
- unsigned int tid;
- unsigned int page;
- void __user *resbuf;
+  unsigned int iop;
+  unsigned int tid;
+  unsigned int page;
+  void __user * resbuf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int __user *reslen;
- void __user *qbuf;
- unsigned int qlen;
+  unsigned int __user * reslen;
+  void __user * qbuf;
+  unsigned int qlen;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I2O_EVT_Q_LEN 32
 struct i2o_evt_id {
- unsigned int iop;
- unsigned int tid;
+  unsigned int iop;
+  unsigned int tid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int evt_mask;
+  unsigned int evt_mask;
 };
 #define I2O_EVT_DATA_SIZE 88
 struct i2o_evt_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct i2o_evt_id id;
- unsigned char evt_data[I2O_EVT_DATA_SIZE];
- unsigned int data_size;
+  struct i2o_evt_id id;
+  unsigned char evt_data[I2O_EVT_DATA_SIZE];
+  unsigned int data_size;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct i2o_evt_get {
- struct i2o_evt_info info;
- int pending;
- int lost;
+  struct i2o_evt_info info;
+  int pending;
+  int lost;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 typedef struct i2o_sg_io_hdr {
- unsigned int flags;
+  unsigned int flags;
 } i2o_sg_io_hdr_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define I2O_BUS_LOCAL 0
@@ -127,141 +127,141 @@ typedef struct i2o_sg_io_hdr {
 #define I2O_BUS_UNKNOWN 0x80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _i2o_pci_bus {
- __u8 PciFunctionNumber;
- __u8 PciDeviceNumber;
- __u8 PciBusNumber;
+  __u8 PciFunctionNumber;
+  __u8 PciDeviceNumber;
+  __u8 PciBusNumber;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 reserved;
- __u16 PciVendorID;
- __u16 PciDeviceID;
+  __u8 reserved;
+  __u16 PciVendorID;
+  __u16 PciDeviceID;
 } i2o_pci_bus;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _i2o_local_bus {
- __u16 LbBaseIOPort;
- __u16 reserved;
- __u32 LbBaseMemoryAddress;
+  __u16 LbBaseIOPort;
+  __u16 reserved;
+  __u32 LbBaseMemoryAddress;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } i2o_local_bus;
 typedef struct _i2o_isa_bus {
- __u16 IsaBaseIOPort;
- __u8 CSN;
+  __u16 IsaBaseIOPort;
+  __u8 CSN;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 reserved;
- __u32 IsaBaseMemoryAddress;
+  __u8 reserved;
+  __u32 IsaBaseMemoryAddress;
 } i2o_isa_bus;
 typedef struct _i2o_eisa_bus_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 EisaBaseIOPort;
- __u8 reserved;
- __u8 EisaSlotNumber;
- __u32 EisaBaseMemoryAddress;
+  __u16 EisaBaseIOPort;
+  __u8 reserved;
+  __u8 EisaSlotNumber;
+  __u32 EisaBaseMemoryAddress;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } i2o_eisa_bus;
 typedef struct _i2o_mca_bus {
- __u16 McaBaseIOPort;
- __u8 reserved;
+  __u16 McaBaseIOPort;
+  __u8 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 McaSlotNumber;
- __u32 McaBaseMemoryAddress;
+  __u8 McaSlotNumber;
+  __u32 McaBaseMemoryAddress;
 } i2o_mca_bus;
 typedef struct _i2o_other_bus {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 BaseIOPort;
- __u16 reserved;
- __u32 BaseMemoryAddress;
+  __u16 BaseIOPort;
+  __u16 reserved;
+  __u32 BaseMemoryAddress;
 } i2o_other_bus;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct _i2o_hrt_entry {
- __u32 adapter_id;
- __u32 parent_tid:12;
- __u32 state:4;
+  __u32 adapter_id;
+  __u32 parent_tid : 12;
+  __u32 state : 4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bus_num:8;
- __u32 bus_type:8;
- union {
- i2o_pci_bus pci_bus;
+  __u32 bus_num : 8;
+  __u32 bus_type : 8;
+  union {
+    i2o_pci_bus pci_bus;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- i2o_local_bus local_bus;
- i2o_isa_bus isa_bus;
- i2o_eisa_bus eisa_bus;
- i2o_mca_bus mca_bus;
+    i2o_local_bus local_bus;
+    i2o_isa_bus isa_bus;
+    i2o_eisa_bus eisa_bus;
+    i2o_mca_bus mca_bus;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- i2o_other_bus other_bus;
- } bus;
+    i2o_other_bus other_bus;
+  } bus;
 } i2o_hrt_entry;
 typedef struct _i2o_hrt {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 num_entries;
- __u8 entry_len;
- __u8 hrt_version;
- __u32 change_ind;
+  __u16 num_entries;
+  __u8 entry_len;
+  __u8 hrt_version;
+  __u32 change_ind;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- i2o_hrt_entry hrt_entry[1];
+  i2o_hrt_entry hrt_entry[1];
 } i2o_hrt;
 typedef struct _i2o_lct_entry {
- __u32 entry_size:16;
+  __u32 entry_size : 16;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tid:12;
- __u32 reserved:4;
- __u32 change_ind;
- __u32 device_flags;
+  __u32 tid : 12;
+  __u32 reserved : 4;
+  __u32 change_ind;
+  __u32 device_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 class_id:12;
- __u32 version:4;
- __u32 vendor_id:16;
- __u32 sub_class;
+  __u32 class_id : 12;
+  __u32 version : 4;
+  __u32 vendor_id : 16;
+  __u32 sub_class;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 user_tid:12;
- __u32 parent_tid:12;
- __u32 bios_info:8;
- __u8 identity_tag[8];
+  __u32 user_tid : 12;
+  __u32 parent_tid : 12;
+  __u32 bios_info : 8;
+  __u8 identity_tag[8];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 event_capabilities;
+  __u32 event_capabilities;
 } i2o_lct_entry;
 typedef struct _i2o_lct {
- __u32 table_size:16;
+  __u32 table_size : 16;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 boot_tid:12;
- __u32 lct_ver:4;
- __u32 iop_flags;
- __u32 change_ind;
+  __u32 boot_tid : 12;
+  __u32 lct_ver : 4;
+  __u32 iop_flags;
+  __u32 change_ind;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- i2o_lct_entry lct_entry[1];
+  i2o_lct_entry lct_entry[1];
 } i2o_lct;
 typedef struct _i2o_status_block {
- __u16 org_id;
+  __u16 org_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 reserved;
- __u16 iop_id:12;
- __u16 reserved1:4;
- __u16 host_unit_id;
+  __u16 reserved;
+  __u16 iop_id : 12;
+  __u16 reserved1 : 4;
+  __u16 host_unit_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 segment_number:12;
- __u16 i2o_version:4;
- __u8 iop_state;
- __u8 msg_type;
+  __u16 segment_number : 12;
+  __u16 i2o_version : 4;
+  __u8 iop_state;
+  __u8 msg_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 inbound_frame_size;
- __u8 init_code;
- __u8 reserved2;
- __u32 max_inbound_frames;
+  __u16 inbound_frame_size;
+  __u8 init_code;
+  __u8 reserved2;
+  __u32 max_inbound_frames;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cur_inbound_frames;
- __u32 max_outbound_frames;
- char product_id[24];
- __u32 expected_lct_size;
+  __u32 cur_inbound_frames;
+  __u32 max_outbound_frames;
+  char product_id[24];
+  __u32 expected_lct_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 iop_capabilities;
- __u32 desired_mem_size;
- __u32 current_mem_size;
- __u32 current_mem_base;
+  __u32 iop_capabilities;
+  __u32 desired_mem_size;
+  __u32 current_mem_size;
+  __u32 current_mem_base;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 desired_io_size;
- __u32 current_io_size;
- __u32 current_io_base;
- __u32 reserved3:24;
+  __u32 desired_io_size;
+  __u32 current_io_size;
+  __u32 current_io_base;
+  __u32 reserved3 : 24;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cmd_status:8;
+  __u32 cmd_status : 8;
 } i2o_status_block;
 #define I2O_EVT_IND_STATE_CHANGE 0x80000000
 #define I2O_EVT_IND_GENERAL_WARNING 0x40000000

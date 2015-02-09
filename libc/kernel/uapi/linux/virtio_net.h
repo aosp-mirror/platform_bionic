@@ -53,38 +53,38 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_NET_S_ANNOUNCE 2
 struct virtio_net_config {
- __u8 mac[ETH_ALEN];
- __u16 status;
+  __u8 mac[ETH_ALEN];
+  __u16 status;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 max_virtqueue_pairs;
+  __u16 max_virtqueue_pairs;
 } __attribute__((packed));
 struct virtio_net_hdr {
 #define VIRTIO_NET_HDR_F_NEEDS_CSUM 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_NET_HDR_F_DATA_VALID 2
- __u8 flags;
+  __u8 flags;
 #define VIRTIO_NET_HDR_GSO_NONE 0
 #define VIRTIO_NET_HDR_GSO_TCPV4 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_NET_HDR_GSO_UDP 3
 #define VIRTIO_NET_HDR_GSO_TCPV6 4
 #define VIRTIO_NET_HDR_GSO_ECN 0x80
- __u8 gso_type;
+  __u8 gso_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 hdr_len;
- __u16 gso_size;
- __u16 csum_start;
- __u16 csum_offset;
+  __u16 hdr_len;
+  __u16 gso_size;
+  __u16 csum_start;
+  __u16 csum_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct virtio_net_hdr_mrg_rxbuf {
- struct virtio_net_hdr hdr;
- __u16 num_buffers;
+  struct virtio_net_hdr hdr;
+  __u16 num_buffers;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct virtio_net_ctrl_hdr {
- __u8 class;
- __u8 cmd;
+  __u8 class;
+  __u8 cmd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 typedef __u8 virtio_net_ctrl_ack;
@@ -101,8 +101,8 @@ typedef __u8 virtio_net_ctrl_ack;
 #define VIRTIO_NET_CTRL_RX_NOBCAST 5
 struct virtio_net_ctrl_mac {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 entries;
- __u8 macs[][ETH_ALEN];
+  __u32 entries;
+  __u8 macs[][ETH_ALEN];
 } __attribute__((packed));
 #define VIRTIO_NET_CTRL_MAC 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -116,7 +116,7 @@ struct virtio_net_ctrl_mac {
 #define VIRTIO_NET_CTRL_ANNOUNCE_ACK 0
 struct virtio_net_ctrl_mq {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 virtqueue_pairs;
+  __u16 virtqueue_pairs;
 };
 #define VIRTIO_NET_CTRL_MQ 4
 #define VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET 0

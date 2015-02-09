@@ -28,14 +28,14 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_ECN_OP_MASK 0xce
 struct ipt_ECN_info {
- __u8 operation;
- __u8 ip_ect;
+  __u8 operation;
+  __u8 ip_ect;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- struct {
- __u8 ece:1, cwr:1;
- } tcp;
+  union {
+    struct {
+      __u8 ece : 1, cwr : 1;
+    } tcp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } proto;
+  } proto;
 };
 #endif

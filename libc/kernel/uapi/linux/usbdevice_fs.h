@@ -22,43 +22,43 @@
 #include <linux/magic.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usbdevfs_ctrltransfer {
- __u8 bRequestType;
- __u8 bRequest;
- __u16 wValue;
+  __u8 bRequestType;
+  __u8 bRequest;
+  __u16 wValue;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 wIndex;
- __u16 wLength;
- __u32 timeout;
- void __user *data;
+  __u16 wIndex;
+  __u16 wLength;
+  __u32 timeout;
+  void __user * data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct usbdevfs_bulktransfer {
- unsigned int ep;
- unsigned int len;
+  unsigned int ep;
+  unsigned int len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int timeout;
- void __user *data;
+  unsigned int timeout;
+  void __user * data;
 };
 struct usbdevfs_setinterface {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int interface;
- unsigned int altsetting;
+  unsigned int interface;
+  unsigned int altsetting;
 };
 struct usbdevfs_disconnectsignal {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int signr;
- void __user *context;
+  unsigned int signr;
+  void __user * context;
 };
 #define USBDEVFS_MAXDRIVERNAME 255
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usbdevfs_getdriver {
- unsigned int interface;
- char driver[USBDEVFS_MAXDRIVERNAME + 1];
+  unsigned int interface;
+  char driver[USBDEVFS_MAXDRIVERNAME + 1];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usbdevfs_connectinfo {
- unsigned int devnum;
- unsigned char slow;
+  unsigned int devnum;
+  unsigned char slow;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define USBDEVFS_URB_SHORT_NOT_OK 0x01
@@ -74,44 +74,44 @@ struct usbdevfs_connectinfo {
 #define USBDEVFS_URB_TYPE_CONTROL 2
 #define USBDEVFS_URB_TYPE_BULK 3
 struct usbdevfs_iso_packet_desc {
- unsigned int length;
+  unsigned int length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int actual_length;
- unsigned int status;
+  unsigned int actual_length;
+  unsigned int status;
 };
 struct usbdevfs_urb {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char type;
- unsigned char endpoint;
- int status;
- unsigned int flags;
+  unsigned char type;
+  unsigned char endpoint;
+  int status;
+  unsigned int flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *buffer;
- int buffer_length;
- int actual_length;
- int start_frame;
+  void __user * buffer;
+  int buffer_length;
+  int actual_length;
+  int start_frame;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- union {
- int number_of_packets;
- unsigned int stream_id;
- };
+  union {
+    int number_of_packets;
+    unsigned int stream_id;
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int error_count;
- unsigned int signr;
- void __user *usercontext;
- struct usbdevfs_iso_packet_desc iso_frame_desc[0];
+  int error_count;
+  unsigned int signr;
+  void __user * usercontext;
+  struct usbdevfs_iso_packet_desc iso_frame_desc[0];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct usbdevfs_ioctl {
- int ifno;
- int ioctl_code;
+  int ifno;
+  int ioctl_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- void __user *data;
+  void __user * data;
 };
 struct usbdevfs_hub_portinfo {
- char nports;
+  char nports;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char port [127];
+  char port[127];
 };
 #define USBDEVFS_CAP_ZERO_PACKET 0x01
 #define USBDEVFS_CAP_BULK_CONTINUATION 0x02
@@ -122,16 +122,16 @@ struct usbdevfs_hub_portinfo {
 #define USBDEVFS_DISCONNECT_CLAIM_EXCEPT_DRIVER 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usbdevfs_disconnect_claim {
- unsigned int interface;
- unsigned int flags;
- char driver[USBDEVFS_MAXDRIVERNAME + 1];
+  unsigned int interface;
+  unsigned int flags;
+  char driver[USBDEVFS_MAXDRIVERNAME + 1];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct usbdevfs_streams {
- unsigned int num_streams;
- unsigned int num_eps;
+  unsigned int num_streams;
+  unsigned int num_eps;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char eps[0];
+  unsigned char eps[0];
 };
 #define USBDEVFS_CONTROL _IOWR('U', 0, struct usbdevfs_ctrltransfer)
 #define USBDEVFS_CONTROL32 _IOWR('U', 0, struct usbdevfs_ctrltransfer32)

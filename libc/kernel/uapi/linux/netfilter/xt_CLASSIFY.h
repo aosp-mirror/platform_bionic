@@ -21,6 +21,6 @@
 #include <linux/types.h>
 struct xt_classify_target_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 priority;
+  __u32 priority;
 };
 #endif

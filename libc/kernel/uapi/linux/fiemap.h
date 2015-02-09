@@ -21,24 +21,24 @@
 #include <linux/types.h>
 struct fiemap_extent {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 fe_logical;
- __u64 fe_physical;
- __u64 fe_length;
- __u64 fe_reserved64[2];
+  __u64 fe_logical;
+  __u64 fe_physical;
+  __u64 fe_length;
+  __u64 fe_reserved64[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fe_flags;
- __u32 fe_reserved[3];
+  __u32 fe_flags;
+  __u32 fe_reserved[3];
 };
 struct fiemap {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u64 fm_start;
- __u64 fm_length;
- __u32 fm_flags;
- __u32 fm_mapped_extents;
+  __u64 fm_start;
+  __u64 fm_length;
+  __u32 fm_flags;
+  __u32 fm_mapped_extents;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fm_extent_count;
- __u32 fm_reserved;
- struct fiemap_extent fm_extents[0];
+  __u32 fm_extent_count;
+  __u32 fm_reserved;
+  struct fiemap_extent fm_extents[0];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FIEMAP_MAX_OFFSET (~0ULL)

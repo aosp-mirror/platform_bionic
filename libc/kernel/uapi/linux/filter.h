@@ -26,15 +26,15 @@
 #define BPF_MINOR_VERSION 1
 struct sock_filter {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 code;
- __u8 jt;
- __u8 jf;
- __u32 k;
+  __u16 code;
+  __u8 jt;
+  __u8 jf;
+  __u32 k;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct sock_fprog {
- unsigned short len;
- struct sock_filter __user *filter;
+  unsigned short len;
+  struct sock_filter __user * filter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define BPF_RVAL(code) ((code) & 0x18)
@@ -44,15 +44,15 @@ struct sock_fprog {
 #define BPF_TAX 0x00
 #define BPF_TXA 0x80
 #ifndef BPF_STMT
-#define BPF_STMT(code, k) { (unsigned short)(code), 0, 0, k }
+#define BPF_STMT(code,k) { (unsigned short) (code), 0, 0, k }
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #ifndef BPF_JUMP
-#define BPF_JUMP(code, k, jt, jf) { (unsigned short)(code), jt, jf, k }
+#define BPF_JUMP(code,k,jt,jf) { (unsigned short) (code), jt, jf, k }
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BPF_MEMWORDS 16
-#define SKF_AD_OFF (-0x1000)
+#define SKF_AD_OFF (- 0x1000)
 #define SKF_AD_PROTOCOL 0
 #define SKF_AD_PKTTYPE 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -73,7 +73,7 @@ struct sock_fprog {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SKF_AD_RANDOM 56
 #define SKF_AD_MAX 60
-#define SKF_NET_OFF (-0x100000)
-#define SKF_LL_OFF (-0x200000)
+#define SKF_NET_OFF (- 0x100000)
+#define SKF_LL_OFF (- 0x200000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

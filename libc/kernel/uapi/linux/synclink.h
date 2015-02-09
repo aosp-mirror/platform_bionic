@@ -162,140 +162,139 @@
 #define MGSL_INTERFACE_RL 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGSL_INTERFACE_MSB_FIRST 0x80
-typedef struct _MGSL_PARAMS
-{
- unsigned long mode;
+typedef struct _MGSL_PARAMS {
+  unsigned long mode;
+  unsigned char loopback;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char loopback;
- unsigned short flags;
- unsigned char encoding;
- unsigned long clock_speed;
+  unsigned short flags;
+  unsigned char encoding;
+  unsigned long clock_speed;
+  unsigned char addr_filter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char addr_filter;
- unsigned short crc_type;
- unsigned char preamble_length;
- unsigned char preamble;
+  unsigned short crc_type;
+  unsigned char preamble_length;
+  unsigned char preamble;
+  unsigned long data_rate;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long data_rate;
- unsigned char data_bits;
- unsigned char stop_bits;
- unsigned char parity;
+  unsigned char data_bits;
+  unsigned char stop_bits;
+  unsigned char parity;
+} MGSL_PARAMS, * PMGSL_PARAMS;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-} MGSL_PARAMS, *PMGSL_PARAMS;
 #define MICROGATE_VENDOR_ID 0x13c0
 #define SYNCLINK_DEVICE_ID 0x0010
 #define MGSCC_DEVICE_ID 0x0020
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYNCLINK_SCA_DEVICE_ID 0x0030
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYNCLINK_GT_DEVICE_ID 0x0070
 #define SYNCLINK_GT4_DEVICE_ID 0x0080
 #define SYNCLINK_AC_DEVICE_ID 0x0090
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SYNCLINK_GT2_DEVICE_ID 0x00A0
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGSL_MAX_SERIAL_NUMBER 30
 #define DiagStatus_OK 0
 #define DiagStatus_AddressFailure 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_AddressConflict 2
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_IrqFailure 3
 #define DiagStatus_IrqConflict 4
 #define DiagStatus_DmaFailure 5
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_DmaConflict 6
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_PciAdapterNotFound 7
 #define DiagStatus_CantAssignPciResources 8
 #define DiagStatus_CantAssignPciMemAddr 9
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_CantAssignPciIoAddr 10
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DiagStatus_CantAssignPciIrq 11
 #define DiagStatus_MemoryError 12
 #define SerialSignal_DCD 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SerialSignal_TXD 0x02
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SerialSignal_RI 0x04
 #define SerialSignal_RXD 0x08
 #define SerialSignal_CTS 0x10
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SerialSignal_RTS 0x20
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SerialSignal_DSR 0x40
 #define SerialSignal_DTR 0x80
 struct mgsl_icount {
+  __u32 cts, dsr, rng, dcd, tx, rx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 cts, dsr, rng, dcd, tx, rx;
- __u32 frame, parity, overrun, brk;
- __u32 buf_overrun;
- __u32 txok;
+  __u32 frame, parity, overrun, brk;
+  __u32 buf_overrun;
+  __u32 txok;
+  __u32 txunder;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 txunder;
- __u32 txabort;
- __u32 txtimeout;
- __u32 rxshort;
+  __u32 txabort;
+  __u32 txtimeout;
+  __u32 rxshort;
+  __u32 rxlong;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rxlong;
- __u32 rxabort;
- __u32 rxover;
- __u32 rxcrc;
+  __u32 rxabort;
+  __u32 rxover;
+  __u32 rxcrc;
+  __u32 rxok;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rxok;
- __u32 exithunt;
- __u32 rxidle;
+  __u32 exithunt;
+  __u32 rxidle;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct gpio_desc {
- __u32 state;
- __u32 smask;
- __u32 dir;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dmask;
+  __u32 state;
+  __u32 smask;
+  __u32 dir;
+  __u32 dmask;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define DEBUG_LEVEL_DATA 1
 #define DEBUG_LEVEL_ERROR 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DEBUG_LEVEL_INFO 3
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DEBUG_LEVEL_BH 4
 #define DEBUG_LEVEL_ISR 5
 #define MgslEvent_DsrActive 0x0001
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_DsrInactive 0x0002
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_Dsr 0x0003
 #define MgslEvent_CtsActive 0x0004
 #define MgslEvent_CtsInactive 0x0008
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_Cts 0x000c
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_DcdActive 0x0010
 #define MgslEvent_DcdInactive 0x0020
 #define MgslEvent_Dcd 0x0030
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_RiActive 0x0040
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_RiInactive 0x0080
 #define MgslEvent_Ri 0x00c0
 #define MgslEvent_ExitHuntMode 0x0100
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MgslEvent_IdleReceived 0x0200
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGSL_MAGIC_IOC 'm'
-#define MGSL_IOCSPARAMS _IOW(MGSL_MAGIC_IOC,0,struct _MGSL_PARAMS)
-#define MGSL_IOCGPARAMS _IOR(MGSL_MAGIC_IOC,1,struct _MGSL_PARAMS)
+#define MGSL_IOCSPARAMS _IOW(MGSL_MAGIC_IOC, 0, struct _MGSL_PARAMS)
+#define MGSL_IOCGPARAMS _IOR(MGSL_MAGIC_IOC, 1, struct _MGSL_PARAMS)
+#define MGSL_IOCSTXIDLE _IO(MGSL_MAGIC_IOC, 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGSL_IOCSTXIDLE _IO(MGSL_MAGIC_IOC,2)
-#define MGSL_IOCGTXIDLE _IO(MGSL_MAGIC_IOC,3)
-#define MGSL_IOCTXENABLE _IO(MGSL_MAGIC_IOC,4)
-#define MGSL_IOCRXENABLE _IO(MGSL_MAGIC_IOC,5)
+#define MGSL_IOCGTXIDLE _IO(MGSL_MAGIC_IOC, 3)
+#define MGSL_IOCTXENABLE _IO(MGSL_MAGIC_IOC, 4)
+#define MGSL_IOCRXENABLE _IO(MGSL_MAGIC_IOC, 5)
+#define MGSL_IOCTXABORT _IO(MGSL_MAGIC_IOC, 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGSL_IOCTXABORT _IO(MGSL_MAGIC_IOC,6)
-#define MGSL_IOCGSTATS _IO(MGSL_MAGIC_IOC,7)
-#define MGSL_IOCWAITEVENT _IOWR(MGSL_MAGIC_IOC,8,int)
-#define MGSL_IOCCLRMODCOUNT _IO(MGSL_MAGIC_IOC,15)
+#define MGSL_IOCGSTATS _IO(MGSL_MAGIC_IOC, 7)
+#define MGSL_IOCWAITEVENT _IOWR(MGSL_MAGIC_IOC, 8, int)
+#define MGSL_IOCCLRMODCOUNT _IO(MGSL_MAGIC_IOC, 15)
+#define MGSL_IOCLOOPTXDONE _IO(MGSL_MAGIC_IOC, 9)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGSL_IOCLOOPTXDONE _IO(MGSL_MAGIC_IOC,9)
-#define MGSL_IOCSIF _IO(MGSL_MAGIC_IOC,10)
-#define MGSL_IOCGIF _IO(MGSL_MAGIC_IOC,11)
-#define MGSL_IOCSGPIO _IOW(MGSL_MAGIC_IOC,16,struct gpio_desc)
+#define MGSL_IOCSIF _IO(MGSL_MAGIC_IOC, 10)
+#define MGSL_IOCGIF _IO(MGSL_MAGIC_IOC, 11)
+#define MGSL_IOCSGPIO _IOW(MGSL_MAGIC_IOC, 16, struct gpio_desc)
+#define MGSL_IOCGGPIO _IOR(MGSL_MAGIC_IOC, 17, struct gpio_desc)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MGSL_IOCGGPIO _IOR(MGSL_MAGIC_IOC,17,struct gpio_desc)
-#define MGSL_IOCWAITGPIO _IOWR(MGSL_MAGIC_IOC,18,struct gpio_desc)
+#define MGSL_IOCWAITGPIO _IOWR(MGSL_MAGIC_IOC, 18, struct gpio_desc)
 #define MGSL_IOCSXSYNC _IO(MGSL_MAGIC_IOC, 19)
 #define MGSL_IOCGXSYNC _IO(MGSL_MAGIC_IOC, 20)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGSL_IOCSXCTRL _IO(MGSL_MAGIC_IOC, 21)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MGSL_IOCGXCTRL _IO(MGSL_MAGIC_IOC, 22)
 #endif

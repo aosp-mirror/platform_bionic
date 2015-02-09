@@ -34,26 +34,26 @@
 #define SAREA_MAX_DRAWABLES 256
 #define SAREA_DRAWABLE_CLAIMED_ENTRY 0x80000000
 struct drm_sarea_drawable {
- unsigned int stamp;
+  unsigned int stamp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int flags;
+  unsigned int flags;
 };
 struct drm_sarea_frame {
- unsigned int x;
+  unsigned int x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int y;
- unsigned int width;
- unsigned int height;
- unsigned int fullscreen;
+  unsigned int y;
+  unsigned int width;
+  unsigned int height;
+  unsigned int fullscreen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_sarea {
- struct drm_hw_lock lock;
- struct drm_hw_lock drawable_lock;
+  struct drm_hw_lock lock;
+  struct drm_hw_lock drawable_lock;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct drm_sarea_drawable drawableTable[SAREA_MAX_DRAWABLES];
- struct drm_sarea_frame frame;
- drm_context_t dummy_context;
+  struct drm_sarea_drawable drawableTable[SAREA_MAX_DRAWABLES];
+  struct drm_sarea_frame frame;
+  drm_context_t dummy_context;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_sarea_drawable drm_sarea_drawable_t;

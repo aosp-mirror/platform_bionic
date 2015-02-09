@@ -28,9 +28,9 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_LOG_MASK 0x2f
 struct xt_log_info {
- unsigned char level;
- unsigned char logflags;
+  unsigned char level;
+  unsigned char logflags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char prefix[30];
+  char prefix[30];
 };
 #endif

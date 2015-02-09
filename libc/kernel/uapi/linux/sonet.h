@@ -18,23 +18,23 @@
  ****************************************************************************/
 #ifndef _UAPILINUX_SONET_H
 #define _UAPILINUX_SONET_H
-#define __SONET_ITEMS   __HANDLE_ITEM(section_bip);     __HANDLE_ITEM(line_bip);     __HANDLE_ITEM(path_bip);     __HANDLE_ITEM(line_febe);     __HANDLE_ITEM(path_febe);     __HANDLE_ITEM(corr_hcs);     __HANDLE_ITEM(uncorr_hcs);     __HANDLE_ITEM(tx_cells);     __HANDLE_ITEM(rx_cells);
+#define __SONET_ITEMS __HANDLE_ITEM(section_bip); __HANDLE_ITEM(line_bip); __HANDLE_ITEM(path_bip); __HANDLE_ITEM(line_febe); __HANDLE_ITEM(path_febe); __HANDLE_ITEM(corr_hcs); __HANDLE_ITEM(uncorr_hcs); __HANDLE_ITEM(tx_cells); __HANDLE_ITEM(rx_cells);
 struct sonet_stats {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __HANDLE_ITEM(i) int i
- __SONET_ITEMS
+  __SONET_ITEMS
 #undef __HANDLE_ITEM
-} __attribute__ ((packed));
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SONET_GETSTAT _IOR('a',ATMIOC_PHYTYP,struct sonet_stats)
-#define SONET_GETSTATZ _IOR('a',ATMIOC_PHYTYP+1,struct sonet_stats)
-#define SONET_SETDIAG _IOWR('a',ATMIOC_PHYTYP+2,int)
-#define SONET_CLRDIAG _IOWR('a',ATMIOC_PHYTYP+3,int)
+#define SONET_GETSTAT _IOR('a', ATMIOC_PHYTYP, struct sonet_stats)
+#define SONET_GETSTATZ _IOR('a', ATMIOC_PHYTYP + 1, struct sonet_stats)
+#define SONET_SETDIAG _IOWR('a', ATMIOC_PHYTYP + 2, int)
+#define SONET_CLRDIAG _IOWR('a', ATMIOC_PHYTYP + 3, int)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SONET_GETDIAG _IOR('a',ATMIOC_PHYTYP+4,int)
-#define SONET_SETFRAMING _IOW('a',ATMIOC_PHYTYP+5,int)
-#define SONET_GETFRAMING _IOR('a',ATMIOC_PHYTYP+6,int)
-#define SONET_GETFRSENSE _IOR('a',ATMIOC_PHYTYP+7,   unsigned char[SONET_FRSENSE_SIZE])
+#define SONET_GETDIAG _IOR('a', ATMIOC_PHYTYP + 4, int)
+#define SONET_SETFRAMING _IOW('a', ATMIOC_PHYTYP + 5, int)
+#define SONET_GETFRAMING _IOR('a', ATMIOC_PHYTYP + 6, int)
+#define SONET_GETFRSENSE _IOR('a', ATMIOC_PHYTYP + 7, unsigned char[SONET_FRSENSE_SIZE])
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SONET_INS_SBIP 1
 #define SONET_INS_LBIP 2

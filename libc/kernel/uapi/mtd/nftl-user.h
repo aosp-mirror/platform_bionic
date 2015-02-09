@@ -21,49 +21,49 @@
 #include <linux/types.h>
 struct nftl_bci {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char ECCSig[6];
- __u8 Status;
- __u8 Status1;
-}__attribute__((packed));
+  unsigned char ECCSig[6];
+  __u8 Status;
+  __u8 Status1;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct nftl_uci0 {
- __u16 VirtUnitNum;
- __u16 ReplUnitNum;
- __u16 SpareVirtUnitNum;
+  __u16 VirtUnitNum;
+  __u16 ReplUnitNum;
+  __u16 SpareVirtUnitNum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 SpareReplUnitNum;
+  __u16 SpareReplUnitNum;
 } __attribute__((packed));
 struct nftl_uci1 {
- __u32 WearInfo;
+  __u32 WearInfo;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 EraseMark;
- __u16 EraseMark1;
+  __u16 EraseMark;
+  __u16 EraseMark1;
 } __attribute__((packed));
 struct nftl_uci2 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 FoldMark;
- __u16 FoldMark1;
- __u32 unused;
+  __u16 FoldMark;
+  __u16 FoldMark1;
+  __u32 unused;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 union nftl_uci {
- struct nftl_uci0 a;
- struct nftl_uci1 b;
- struct nftl_uci2 c;
+  struct nftl_uci0 a;
+  struct nftl_uci1 b;
+  struct nftl_uci2 c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct nftl_oob {
- struct nftl_bci b;
- union nftl_uci u;
+  struct nftl_bci b;
+  union nftl_uci u;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct NFTLMediaHeader {
- char DataOrgID[6];
- __u16 NumEraseUnits;
+  char DataOrgID[6];
+  __u16 NumEraseUnits;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 FirstPhysicalEUN;
- __u32 FormattedSize;
- unsigned char UnitSizeFactor;
+  __u16 FirstPhysicalEUN;
+  __u32 FormattedSize;
+  unsigned char UnitSizeFactor;
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MAX_ERASE_ZONES (8192 - 512)

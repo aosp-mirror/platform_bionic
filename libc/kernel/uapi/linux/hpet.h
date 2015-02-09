@@ -21,10 +21,10 @@
 #include <linux/compiler.h>
 struct hpet_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long hi_ireqfreq;
- unsigned long hi_flags;
- unsigned short hi_hpet;
- unsigned short hi_timer;
+  unsigned long hi_ireqfreq;
+  unsigned long hi_flags;
+  unsigned short hi_hpet;
+  unsigned short hi_timer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define HPET_INFO_PERIODIC 0x0010

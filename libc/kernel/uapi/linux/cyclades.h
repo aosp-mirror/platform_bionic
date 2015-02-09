@@ -21,23 +21,23 @@
 #include <linux/types.h>
 struct cyclades_monitor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long int_count;
- unsigned long char_count;
- unsigned long char_max;
- unsigned long char_last;
+  unsigned long int_count;
+  unsigned long char_count;
+  unsigned long char_max;
+  unsigned long char_last;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct cyclades_idle_stats {
- __kernel_time_t in_use;
- __kernel_time_t recv_idle;
+  __kernel_time_t in_use;
+  __kernel_time_t recv_idle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_time_t xmit_idle;
- unsigned long recv_bytes;
- unsigned long xmit_bytes;
- unsigned long overruns;
+  __kernel_time_t xmit_idle;
+  unsigned long recv_bytes;
+  unsigned long xmit_bytes;
+  unsigned long overruns;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long frame_errs;
- unsigned long parity_errs;
+  unsigned long frame_errs;
+  unsigned long parity_errs;
 };
 #define CYCLADES_MAGIC 0x4359
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -64,14 +64,14 @@ struct cyclades_idle_stats {
 #define CYSETWAIT 0x435912
 #define CYGETWAIT 0x435913
 #define CZIOC ('M' << 8)
-#define CZ_NBOARDS (CZIOC|0xfa)
+#define CZ_NBOARDS (CZIOC | 0xfa)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CZ_BOOT_START (CZIOC|0xfb)
-#define CZ_BOOT_DATA (CZIOC|0xfc)
-#define CZ_BOOT_END (CZIOC|0xfd)
-#define CZ_TEST (CZIOC|0xfe)
+#define CZ_BOOT_START (CZIOC | 0xfb)
+#define CZ_BOOT_DATA (CZIOC | 0xfc)
+#define CZ_BOOT_END (CZIOC | 0xfd)
+#define CZ_TEST (CZIOC | 0xfe)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define CZ_DEF_POLL (HZ/25)
+#define CZ_DEF_POLL (HZ / 25)
 #define MAX_BOARD 4
 #define MAX_DEV 256
 #define CYZ_MAX_SPEED 921600
@@ -79,14 +79,14 @@ struct cyclades_idle_stats {
 #define CYZ_FIFO_SIZE 16
 #define CYZ_BOOT_NWORDS 0x100
 struct CYZ_BOOT_CTRL {
- unsigned short nboard;
+  unsigned short nboard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int status[MAX_BOARD];
- int nchannel[MAX_BOARD];
- int fw_rev[MAX_BOARD];
- unsigned long offset;
+  int status[MAX_BOARD];
+  int nchannel[MAX_BOARD];
+  int fw_rev[MAX_BOARD];
+  unsigned long offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long data[CYZ_BOOT_NWORDS];
+  unsigned long data[CYZ_BOOT_NWORDS];
 };
 #ifndef DP_WINDOW_SIZE
 #define DP_WINDOW_SIZE (0x00080000)
@@ -94,66 +94,66 @@ struct CYZ_BOOT_CTRL {
 #define ZE_DP_WINDOW_SIZE (0x00100000)
 #define CTRL_WINDOW_SIZE (0x00000080)
 struct CUSTOM_REG {
- __u32 fpga_id;
+  __u32 fpga_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fpga_version;
- __u32 cpu_start;
- __u32 cpu_stop;
- __u32 misc_reg;
+  __u32 fpga_version;
+  __u32 cpu_start;
+  __u32 cpu_stop;
+  __u32 misc_reg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 idt_mode;
- __u32 uart_irq_status;
- __u32 clear_timer0_irq;
- __u32 clear_timer1_irq;
+  __u32 idt_mode;
+  __u32 uart_irq_status;
+  __u32 clear_timer0_irq;
+  __u32 clear_timer1_irq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 clear_timer2_irq;
- __u32 test_register;
- __u32 test_count;
- __u32 timer_select;
+  __u32 clear_timer2_irq;
+  __u32 test_register;
+  __u32 test_count;
+  __u32 timer_select;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 pr_uart_irq_status;
- __u32 ram_wait_state;
- __u32 uart_wait_state;
- __u32 timer_wait_state;
+  __u32 pr_uart_irq_status;
+  __u32 ram_wait_state;
+  __u32 uart_wait_state;
+  __u32 timer_wait_state;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 ack_wait_state;
+  __u32 ack_wait_state;
 };
 struct RUNTIME_9060 {
- __u32 loc_addr_range;
+  __u32 loc_addr_range;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 loc_addr_base;
- __u32 loc_arbitr;
- __u32 endian_descr;
- __u32 loc_rom_range;
+  __u32 loc_addr_base;
+  __u32 loc_arbitr;
+  __u32 endian_descr;
+  __u32 loc_rom_range;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 loc_rom_base;
- __u32 loc_bus_descr;
- __u32 loc_range_mst;
- __u32 loc_base_mst;
+  __u32 loc_rom_base;
+  __u32 loc_bus_descr;
+  __u32 loc_range_mst;
+  __u32 loc_base_mst;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 loc_range_io;
- __u32 pci_base_mst;
- __u32 pci_conf_io;
- __u32 filler1;
+  __u32 loc_range_io;
+  __u32 pci_base_mst;
+  __u32 pci_conf_io;
+  __u32 filler1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 filler2;
- __u32 filler3;
- __u32 filler4;
- __u32 mail_box_0;
+  __u32 filler2;
+  __u32 filler3;
+  __u32 filler4;
+  __u32 mail_box_0;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 mail_box_1;
- __u32 mail_box_2;
- __u32 mail_box_3;
- __u32 filler5;
+  __u32 mail_box_1;
+  __u32 mail_box_2;
+  __u32 mail_box_3;
+  __u32 filler5;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 filler6;
- __u32 filler7;
- __u32 filler8;
- __u32 pci_doorbell;
+  __u32 filler6;
+  __u32 filler7;
+  __u32 filler8;
+  __u32 pci_doorbell;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 loc_doorbell;
- __u32 intr_ctrl_stat;
- __u32 init_ctrl;
+  __u32 loc_doorbell;
+  __u32 intr_ctrl_stat;
+  __u32 init_ctrl;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define WIN_RAM 0x00000001L
@@ -176,8 +176,8 @@ struct RUNTIME_9060 {
 #define ZF_TINACT ZF_TINACT_DEF
 struct FIRM_ID {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 signature;
- __u32 zfwctrl_addr;
+  __u32 signature;
+  __u32 zfwctrl_addr;
 };
 #define C_OS_LINUX 0x00000030
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -299,79 +299,79 @@ struct FIRM_ID {
 #define C_CM_FATAL 0x91
 #define C_CM_HW_RESET 0x92
 struct CH_CTRL {
- __u32 op_mode;
+  __u32 op_mode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 intr_enable;
- __u32 sw_flow;
- __u32 flow_status;
- __u32 comm_baud;
+  __u32 intr_enable;
+  __u32 sw_flow;
+  __u32 flow_status;
+  __u32 comm_baud;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 comm_parity;
- __u32 comm_data_l;
- __u32 comm_flags;
- __u32 hw_flow;
+  __u32 comm_parity;
+  __u32 comm_data_l;
+  __u32 comm_flags;
+  __u32 hw_flow;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rs_control;
- __u32 rs_status;
- __u32 flow_xon;
- __u32 flow_xoff;
+  __u32 rs_control;
+  __u32 rs_status;
+  __u32 flow_xon;
+  __u32 flow_xoff;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 hw_overflow;
- __u32 sw_overflow;
- __u32 comm_error;
- __u32 ichar;
+  __u32 hw_overflow;
+  __u32 sw_overflow;
+  __u32 comm_error;
+  __u32 ichar;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 filler[7];
+  __u32 filler[7];
 };
 struct BUF_CTRL {
- __u32 flag_dma;
+  __u32 flag_dma;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_bufaddr;
- __u32 tx_bufsize;
- __u32 tx_threshold;
- __u32 tx_get;
+  __u32 tx_bufaddr;
+  __u32 tx_bufsize;
+  __u32 tx_threshold;
+  __u32 tx_get;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 tx_put;
- __u32 rx_bufaddr;
- __u32 rx_bufsize;
- __u32 rx_threshold;
+  __u32 tx_put;
+  __u32 rx_bufaddr;
+  __u32 rx_bufsize;
+  __u32 rx_threshold;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 rx_get;
- __u32 rx_put;
- __u32 filler[5];
+  __u32 rx_get;
+  __u32 rx_put;
+  __u32 filler[5];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct BOARD_CTRL {
- __u32 n_channel;
- __u32 fw_version;
- __u32 op_system;
+  __u32 n_channel;
+  __u32 fw_version;
+  __u32 op_system;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 dr_version;
- __u32 inactivity;
- __u32 hcmd_channel;
- __u32 hcmd_param;
+  __u32 dr_version;
+  __u32 inactivity;
+  __u32 hcmd_channel;
+  __u32 hcmd_param;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fwcmd_channel;
- __u32 fwcmd_param;
- __u32 zf_int_queue_addr;
- __u32 filler[6];
+  __u32 fwcmd_channel;
+  __u32 fwcmd_param;
+  __u32 zf_int_queue_addr;
+  __u32 filler[6];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define QUEUE_SIZE (10*MAX_CHAN)
+#define QUEUE_SIZE (10 * MAX_CHAN)
 struct INT_QUEUE {
- unsigned char intr_code[QUEUE_SIZE];
+  unsigned char intr_code[QUEUE_SIZE];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned long channel[QUEUE_SIZE];
- unsigned long param[QUEUE_SIZE];
- unsigned long put;
- unsigned long get;
+  unsigned long channel[QUEUE_SIZE];
+  unsigned long param[QUEUE_SIZE];
+  unsigned long put;
+  unsigned long get;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct ZFW_CTRL {
- struct BOARD_CTRL board_ctrl;
- struct CH_CTRL ch_ctrl[MAX_CHAN];
+  struct BOARD_CTRL board_ctrl;
+  struct CH_CTRL ch_ctrl[MAX_CHAN];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct BUF_CTRL buf_ctrl[MAX_CHAN];
+  struct BUF_CTRL buf_ctrl[MAX_CHAN];
 };
 #endif
 #endif

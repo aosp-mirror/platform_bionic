@@ -37,8 +37,8 @@
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct epoll_event {
- __u32 events;
- __u64 data;
+  __u32 events;
+  __u64 data;
 } EPOLL_PACKED;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

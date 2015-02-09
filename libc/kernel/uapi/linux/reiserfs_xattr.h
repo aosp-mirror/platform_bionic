@@ -22,14 +22,14 @@
 #define REISERFS_XATTR_MAGIC 0x52465841
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct reiserfs_xattr_header {
- __le32 h_magic;
- __le32 h_hash;
+  __le32 h_magic;
+  __le32 h_hash;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct reiserfs_security_handle {
- const char *name;
- void *value;
- size_t length;
+  const char * name;
+  void * value;
+  size_t length;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

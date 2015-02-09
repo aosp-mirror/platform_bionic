@@ -27,8 +27,8 @@
 #define HE_REGTYPE_MBOX 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct he_ioctl_reg {
- unsigned addr, val;
- char type;
+  unsigned addr, val;
+  char type;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

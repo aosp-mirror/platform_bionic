@@ -23,7 +23,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ZORRO_PROD(id) (((id) >> 8) & 0xff)
 #define ZORRO_EPC(id) ((id) & 0xff)
-#define ZORRO_ID(manuf, prod, epc)   ((ZORRO_MANUF_##manuf << 16) | ((prod) << 8) | (epc))
+#define ZORRO_ID(manuf,prod,epc) ((ZORRO_MANUF_ ##manuf << 16) | ((prod) << 8) | (epc))
 typedef __u32 zorro_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/zorro_ids.h>
@@ -31,39 +31,39 @@ typedef __u32 zorro_id;
 #define GVP_SCSICLKMASK (0x01)
 enum GVP_flags {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GVP_IO = 0x01,
- GVP_ACCEL = 0x02,
- GVP_SCSI = 0x04,
- GVP_24BITDMA = 0x08,
+  GVP_IO = 0x01,
+  GVP_ACCEL = 0x02,
+  GVP_SCSI = 0x04,
+  GVP_24BITDMA = 0x08,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- GVP_25BITDMA = 0x10,
- GVP_NOBANK = 0x20,
- GVP_14MHZ = 0x40,
+  GVP_25BITDMA = 0x10,
+  GVP_NOBANK = 0x20,
+  GVP_14MHZ = 0x40,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct Node {
- __be32 ln_Succ;
- __be32 ln_Pred;
- __u8 ln_Type;
+  __be32 ln_Succ;
+  __be32 ln_Pred;
+  __u8 ln_Type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s8 ln_Pri;
- __be32 ln_Name;
+  __s8 ln_Pri;
+  __be32 ln_Name;
 } __packed;
 struct ExpansionRom {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 er_Type;
- __u8 er_Product;
- __u8 er_Flags;
- __u8 er_Reserved03;
+  __u8 er_Type;
+  __u8 er_Product;
+  __u8 er_Flags;
+  __u8 er_Reserved03;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 er_Manufacturer;
- __be32 er_SerialNumber;
- __be16 er_InitDiagVec;
- __u8 er_Reserved0c;
+  __be16 er_Manufacturer;
+  __be32 er_SerialNumber;
+  __be16 er_InitDiagVec;
+  __u8 er_Reserved0c;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 er_Reserved0d;
- __u8 er_Reserved0e;
- __u8 er_Reserved0f;
+  __u8 er_Reserved0d;
+  __u8 er_Reserved0e;
+  __u8 er_Reserved0f;
 } __packed;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ERT_TYPEMASK 0xc0
@@ -71,22 +71,22 @@ struct ExpansionRom {
 #define ERT_ZORROIII 0x80
 #define ERTB_MEMLIST 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define ERTF_MEMLIST (1<<5)
+#define ERTF_MEMLIST (1 << 5)
 struct ConfigDev {
- struct Node cd_Node;
- __u8 cd_Flags;
+  struct Node cd_Node;
+  __u8 cd_Flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 cd_Pad;
- struct ExpansionRom cd_Rom;
- __be32 cd_BoardAddr;
- __be32 cd_BoardSize;
+  __u8 cd_Pad;
+  struct ExpansionRom cd_Rom;
+  __be32 cd_BoardAddr;
+  __be32 cd_BoardSize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 cd_SlotAddr;
- __be16 cd_SlotSize;
- __be32 cd_Driver;
- __be32 cd_NextCD;
+  __be16 cd_SlotAddr;
+  __be16 cd_SlotSize;
+  __be32 cd_Driver;
+  __be32 cd_NextCD;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 cd_Unused[4];
+  __be32 cd_Unused[4];
 } __packed;
 #define ZORRO_NUM_AUTO 16
 #endif

@@ -23,14 +23,14 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TC_EM_TEXT_ALGOSIZ 16
 struct tcf_em_text {
- char algo[TC_EM_TEXT_ALGOSIZ];
- __u16 from_offset;
+  char algo[TC_EM_TEXT_ALGOSIZ];
+  __u16 from_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 to_offset;
- __u16 pattern_len;
- __u8 from_layer:4;
- __u8 to_layer:4;
+  __u16 to_offset;
+  __u16 pattern_len;
+  __u8 from_layer : 4;
+  __u8 to_layer : 4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 pad;
+  __u8 pad;
 };
 #endif

@@ -27,13 +27,13 @@
 #define XT_DCCP_VALID_FLAGS 0x0f
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_dccp_info {
- __u16 dpts[2];
- __u16 spts[2];
- __u16 flags;
+  __u16 dpts[2];
+  __u16 spts[2];
+  __u16 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 invflags;
- __u16 typemask;
- __u8 option;
+  __u16 invflags;
+  __u16 typemask;
+  __u8 option;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

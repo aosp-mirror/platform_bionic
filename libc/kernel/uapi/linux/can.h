@@ -39,22 +39,22 @@ typedef __u32 can_err_mask_t;
 #define CANFD_MAX_DLC 15
 #define CANFD_MAX_DLEN 64
 struct can_frame {
- canid_t can_id;
+  canid_t can_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 can_dlc;
- __u8 data[CAN_MAX_DLEN] __attribute__((aligned(8)));
+  __u8 can_dlc;
+  __u8 data[CAN_MAX_DLEN] __attribute__((aligned(8)));
 };
 #define CANFD_BRS 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CANFD_ESI 0x02
 struct canfd_frame {
- canid_t can_id;
- __u8 len;
+  canid_t can_id;
+  __u8 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 flags;
- __u8 __res0;
- __u8 __res1;
- __u8 data[CANFD_MAX_DLEN] __attribute__((aligned(8)));
+  __u8 flags;
+  __u8 __res0;
+  __u8 __res1;
+  __u8 data[CANFD_MAX_DLEN] __attribute__((aligned(8)));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define CAN_MTU (sizeof(struct can_frame))
@@ -71,18 +71,20 @@ struct canfd_frame {
 #define SOL_CAN_BASE 100
 struct sockaddr_can {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_sa_family_t can_family;
- int can_ifindex;
- union {
- struct { canid_t rx_id, tx_id; } tp;
+  __kernel_sa_family_t can_family;
+  int can_ifindex;
+  union {
+    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } can_addr;
+      canid_t rx_id, tx_id;
+    } tp;
+  } can_addr;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct can_filter {
- canid_t can_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- canid_t can_mask;
+  canid_t can_id;
+  canid_t can_mask;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAN_INV_FILTER 0x20000000U
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -27,12 +27,12 @@
 #define EBT_VLAN_MATCH "vlan"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ebt_vlan_info {
- __u16 id;
- __u8 prio;
- __be16 encap;
+  __u16 id;
+  __u8 prio;
+  __be16 encap;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u8 bitmask;
- __u8 invflags;
+  __u8 bitmask;
+  __u8 invflags;
 };
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

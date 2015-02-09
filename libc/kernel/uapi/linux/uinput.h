@@ -23,17 +23,17 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UINPUT_VERSION 4
 struct uinput_ff_upload {
- __u32 request_id;
- __s32 retval;
+  __u32 request_id;
+  __s32 retval;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct ff_effect effect;
- struct ff_effect old;
+  struct ff_effect effect;
+  struct ff_effect old;
 };
 struct uinput_ff_erase {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 request_id;
- __s32 retval;
- __u32 effect_id;
+  __u32 request_id;
+  __s32 retval;
+  __u32 effect_id;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UINPUT_IOCTL_BASE 'U'
@@ -49,7 +49,7 @@ struct uinput_ff_erase {
 #define UI_SET_LEDBIT _IOW(UINPUT_IOCTL_BASE, 105, int)
 #define UI_SET_SNDBIT _IOW(UINPUT_IOCTL_BASE, 106, int)
 #define UI_SET_FFBIT _IOW(UINPUT_IOCTL_BASE, 107, int)
-#define UI_SET_PHYS _IOW(UINPUT_IOCTL_BASE, 108, char*)
+#define UI_SET_PHYS _IOW(UINPUT_IOCTL_BASE, 108, char *)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UI_SET_SWBIT _IOW(UINPUT_IOCTL_BASE, 109, int)
 #define UI_SET_PROPBIT _IOW(UINPUT_IOCTL_BASE, 110, int)
@@ -67,14 +67,14 @@ struct uinput_ff_erase {
 #define UINPUT_MAX_NAME_SIZE 80
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct uinput_user_dev {
- char name[UINPUT_MAX_NAME_SIZE];
- struct input_id id;
- __u32 ff_effects_max;
+  char name[UINPUT_MAX_NAME_SIZE];
+  struct input_id id;
+  __u32 ff_effects_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 absmax[ABS_CNT];
- __s32 absmin[ABS_CNT];
- __s32 absfuzz[ABS_CNT];
- __s32 absflat[ABS_CNT];
+  __s32 absmax[ABS_CNT];
+  __s32 absmin[ABS_CNT];
+  __s32 absfuzz[ABS_CNT];
+  __s32 absflat[ABS_CNT];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

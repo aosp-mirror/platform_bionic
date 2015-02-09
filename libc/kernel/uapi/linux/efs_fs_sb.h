@@ -28,44 +28,44 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EFS_ROOTINODE 2
 struct efs_super {
- __be32 fs_size;
- __be32 fs_firstcg;
+  __be32 fs_size;
+  __be32 fs_firstcg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 fs_cgfsize;
- __be16 fs_cgisize;
- __be16 fs_sectors;
- __be16 fs_heads;
+  __be32 fs_cgfsize;
+  __be16 fs_cgisize;
+  __be16 fs_sectors;
+  __be16 fs_heads;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be16 fs_ncg;
- __be16 fs_dirty;
- __be32 fs_time;
- __be32 fs_magic;
+  __be16 fs_ncg;
+  __be16 fs_dirty;
+  __be32 fs_time;
+  __be32 fs_magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char fs_fname[6];
- char fs_fpack[6];
- __be32 fs_bmsize;
- __be32 fs_tfree;
+  char fs_fname[6];
+  char fs_fpack[6];
+  __be32 fs_bmsize;
+  __be32 fs_tfree;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 fs_tinode;
- __be32 fs_bmblock;
- __be32 fs_replsb;
- __be32 fs_lastialloc;
+  __be32 fs_tinode;
+  __be32 fs_bmblock;
+  __be32 fs_replsb;
+  __be32 fs_lastialloc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char fs_spare[20];
- __be32 fs_checksum;
+  char fs_spare[20];
+  __be32 fs_checksum;
 };
 struct efs_sb_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 fs_magic;
- __u32 fs_start;
- __u32 first_block;
- __u32 total_blocks;
+  __u32 fs_magic;
+  __u32 fs_start;
+  __u32 first_block;
+  __u32 total_blocks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 group_size;
- __u32 data_free;
- __u32 inode_free;
- __u16 inode_blocks;
+  __u32 group_size;
+  __u32 data_free;
+  __u32 inode_free;
+  __u16 inode_blocks;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u16 total_groups;
+  __u16 total_groups;
 };
 #endif

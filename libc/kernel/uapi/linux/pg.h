@@ -22,19 +22,19 @@
 #define PG_MAX_DATA 32768
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct pg_write_hdr {
- char magic;
- char func;
- int dlen;
+  char magic;
+  char func;
+  int dlen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int timeout;
- char packet[12];
+  int timeout;
+  char packet[12];
 };
 struct pg_read_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char magic;
- char scsi;
- int dlen;
- int duration;
+  char magic;
+  char scsi;
+  int dlen;
+  int duration;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char pad[12];
+  char pad[12];
 };

@@ -18,22 +18,22 @@
  ****************************************************************************/
 #include <asm/bitsperlong.h>
 #ifndef __SYSCALL
-#define __SYSCALL(x, y)
+#define __SYSCALL(x,y)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if __BITS_PER_LONG == 32 || defined(__SYSCALL_COMPAT)
-#define __SC_3264(_nr, _32, _64) __SYSCALL(_nr, _32)
+#define __SC_3264(_nr,_32,_64) __SYSCALL(_nr, _32)
 #else
-#define __SC_3264(_nr, _32, _64) __SYSCALL(_nr, _64)
+#define __SC_3264(_nr,_32,_64) __SYSCALL(_nr, _64)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #ifdef __SYSCALL_COMPAT
-#define __SC_COMP(_nr, _sys, _comp) __SYSCALL(_nr, _comp)
-#define __SC_COMP_3264(_nr, _32, _64, _comp) __SYSCALL(_nr, _comp)
+#define __SC_COMP(_nr,_sys,_comp) __SYSCALL(_nr, _comp)
+#define __SC_COMP_3264(_nr,_32,_64,_comp) __SYSCALL(_nr, _comp)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #else
-#define __SC_COMP(_nr, _sys, _comp) __SYSCALL(_nr, _sys)
-#define __SC_COMP_3264(_nr, _32, _64, _comp) __SC_3264(_nr, _32, _64)
+#define __SC_COMP(_nr,_sys,_comp) __SYSCALL(_nr, _sys)
+#define __SC_COMP_3264(_nr,_32,_64,_comp) __SC_3264(_nr, _32, _64)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_io_setup 0
@@ -402,7 +402,7 @@
 #define __NR3264_lstat 1039
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #undef __NR_syscalls
-#define __NR_syscalls (__NR3264_lstat+1)
+#define __NR_syscalls (__NR3264_lstat + 1)
 #endif
 #ifdef __ARCH_WANT_SYSCALL_NO_FLAGS
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -414,7 +414,7 @@
 #define __NR_eventfd 1044
 #define __NR_signalfd 1045
 #undef __NR_syscalls
-#define __NR_syscalls (__NR_signalfd+1)
+#define __NR_syscalls (__NR_signalfd + 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #if (__BITS_PER_LONG == 32 || defined(__SYSCALL_COMPAT)) && defined(__ARCH_WANT_SYSCALL_OFF_T)
@@ -438,7 +438,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_mmap 1058
 #undef __NR_syscalls
-#define __NR_syscalls (__NR_mmap+1)
+#define __NR_syscalls (__NR_mmap + 1)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __ARCH_WANT_SYSCALL_DEPRECATED
@@ -481,7 +481,7 @@
 #define __NR_fork 1079
 #undef __NR_syscalls
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define __NR_syscalls (__NR_fork+1)
+#define __NR_syscalls (__NR_fork + 1)
 #endif
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl

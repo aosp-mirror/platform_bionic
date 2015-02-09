@@ -23,17 +23,17 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CAPI_MAXDATAWINDOW 8
 typedef struct kcapi_flagdef {
- int contr;
- int flag;
+  int contr;
+  int flag;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } kcapi_flagdef;
 typedef struct kcapi_carddef {
- char driver[32];
- unsigned int port;
+  char driver[32];
+  unsigned int port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned irq;
- unsigned int membase;
- int cardnr;
+  unsigned irq;
+  unsigned int membase;
+  int cardnr;
 } kcapi_carddef;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KCAPI_CMD_TRACE 10

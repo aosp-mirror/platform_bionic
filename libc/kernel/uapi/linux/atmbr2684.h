@@ -28,7 +28,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BR2684_MEDIA_FDDI (3)
 #define BR2684_MEDIA_802_6 (4)
-#define BR2684_FLAG_ROUTED (1<<16)
+#define BR2684_FLAG_ROUTED (1 << 16)
 #define BR2684_FCSIN_NO (0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BR2684_FCSIN_IGNORE (1)
@@ -44,11 +44,11 @@
 #define BR2684_PAYLOAD_ROUTED (0)
 #define BR2684_PAYLOAD_BRIDGED (1)
 struct atm_newif_br2684 {
- atm_backend_t backend_num;
+  atm_backend_t backend_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int media;
- char ifname[IFNAMSIZ];
- int mtu;
+  int media;
+  char ifname[IFNAMSIZ];
+  int mtu;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BR2684_FIND_BYNOTHING (0)
@@ -56,43 +56,43 @@ struct atm_newif_br2684 {
 #define BR2684_FIND_BYIFNAME (2)
 struct br2684_if_spec {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int method;
- union {
- char ifname[IFNAMSIZ];
- int devnum;
+  int method;
+  union {
+    char ifname[IFNAMSIZ];
+    int devnum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- } spec;
+  } spec;
 };
 struct atm_backend_br2684 {
- atm_backend_t backend_num;
+  atm_backend_t backend_num;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct br2684_if_spec ifspec;
- int fcs_in;
- int fcs_out;
- int fcs_auto;
+  struct br2684_if_spec ifspec;
+  int fcs_in;
+  int fcs_out;
+  int fcs_auto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int encaps;
- int has_vpiid;
- __u8 vpn_id[7];
- int send_padding;
+  int encaps;
+  int has_vpiid;
+  __u8 vpn_id[7];
+  int send_padding;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int min_size;
+  int min_size;
 };
 struct br2684_filter {
- __be32 prefix;
+  __be32 prefix;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __be32 netmask;
+  __be32 netmask;
 };
 struct br2684_filter_set {
- struct br2684_if_spec ifspec;
+  struct br2684_if_spec ifspec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct br2684_filter filter;
+  struct br2684_filter filter;
 };
 enum br2684_payload {
- p_routed = BR2684_PAYLOAD_ROUTED,
+  p_routed = BR2684_PAYLOAD_ROUTED,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- p_bridged = BR2684_PAYLOAD_BRIDGED,
+  p_bridged = BR2684_PAYLOAD_BRIDGED,
 };
-#define BR2684_SETFILT _IOW( 'a', ATMIOC_BACKEND + 0,   struct br2684_filter_set)
+#define BR2684_SETFILT _IOW('a', ATMIOC_BACKEND + 0, struct br2684_filter_set)
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

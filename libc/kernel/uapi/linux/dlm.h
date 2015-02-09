@@ -27,11 +27,11 @@ typedef void dlm_lockspace_t;
 #define DLM_SBF_ALTMODE 0x04
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct dlm_lksb {
- int sb_status;
- __u32 sb_lkid;
- char sb_flags;
+  int sb_status;
+  __u32 sb_lkid;
+  char sb_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- char * sb_lvbptr;
+  char * sb_lvbptr;
 };
 #define DLM_LSFL_TIMEWARN 0x00000002
 #define DLM_LSFL_FS 0x00000004

@@ -22,7 +22,7 @@
 #include <asm/byteorder.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mpls_label {
- __be32 entry;
+  __be32 entry;
 };
 #define MPLS_LS_LABEL_MASK 0xFFFFF000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

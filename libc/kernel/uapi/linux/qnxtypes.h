@@ -23,8 +23,8 @@ typedef __le16 qnx4_nxtnt_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __u8 qnx4_ftype_t;
 typedef struct {
- __le32 xtnt_blk;
- __le32 xtnt_size;
+  __le32 xtnt_blk;
+  __le32 xtnt_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } qnx4_xtnt_t;
 typedef __le16 qnx4_mode_t;

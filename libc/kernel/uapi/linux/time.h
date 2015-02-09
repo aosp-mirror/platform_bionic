@@ -23,33 +23,33 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define _STRUCT_TIMESPEC
 struct timespec {
- __kernel_time_t tv_sec;
- long tv_nsec;
+  __kernel_time_t tv_sec;
+  long tv_nsec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
 struct timeval {
- __kernel_time_t tv_sec;
+  __kernel_time_t tv_sec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __kernel_suseconds_t tv_usec;
+  __kernel_suseconds_t tv_usec;
 };
 struct timezone {
- int tz_minuteswest;
+  int tz_minuteswest;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- int tz_dsttime;
+  int tz_dsttime;
 };
 #define ITIMER_REAL 0
 #define ITIMER_VIRTUAL 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ITIMER_PROF 2
 struct itimerspec {
- struct timespec it_interval;
- struct timespec it_value;
+  struct timespec it_interval;
+  struct timespec it_value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct itimerval {
- struct timeval it_interval;
- struct timeval it_value;
+  struct timeval it_interval;
+  struct timeval it_value;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define CLOCK_REALTIME 0

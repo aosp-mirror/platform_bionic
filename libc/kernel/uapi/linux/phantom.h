@@ -21,14 +21,14 @@
 #include <linux/types.h>
 struct phm_reg {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 reg;
- __u32 value;
+  __u32 reg;
+  __u32 value;
 };
 struct phm_regs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 count;
- __u32 mask;
- __u32 values[8];
+  __u32 count;
+  __u32 mask;
+  __u32 values[8];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PH_IOC_MAGIC 'p'

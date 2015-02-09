@@ -21,40 +21,40 @@
 #include <linux/types.h>
 struct hiddev_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned hid;
- signed int value;
+  unsigned hid;
+  signed int value;
 };
 struct hiddev_devinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 bustype;
- __u32 busnum;
- __u32 devnum;
- __u32 ifnum;
+  __u32 bustype;
+  __u32 busnum;
+  __u32 devnum;
+  __u32 ifnum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s16 vendor;
- __s16 product;
- __s16 version;
- __u32 num_applications;
+  __s16 vendor;
+  __s16 product;
+  __s16 version;
+  __u32 num_applications;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct hiddev_collection_info {
- __u32 index;
- __u32 type;
+  __u32 index;
+  __u32 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 usage;
- __u32 level;
+  __u32 usage;
+  __u32 level;
 };
 #define HID_STRING_SIZE 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hiddev_string_descriptor {
- __s32 index;
- char value[HID_STRING_SIZE];
+  __s32 index;
+  char value[HID_STRING_SIZE];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hiddev_report_info {
- __u32 report_type;
- __u32 report_id;
- __u32 num_fields;
+  __u32 report_type;
+  __u32 report_id;
+  __u32 num_fields;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define HID_REPORT_ID_UNKNOWN 0xffffffff
@@ -71,23 +71,23 @@ struct hiddev_report_info {
 #define HID_REPORT_TYPE_MAX 3
 struct hiddev_field_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 report_type;
- __u32 report_id;
- __u32 field_index;
- __u32 maxusage;
+  __u32 report_type;
+  __u32 report_id;
+  __u32 field_index;
+  __u32 maxusage;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 flags;
- __u32 physical;
- __u32 logical;
- __u32 application;
+  __u32 flags;
+  __u32 physical;
+  __u32 logical;
+  __u32 application;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 logical_minimum;
- __s32 logical_maximum;
- __s32 physical_minimum;
- __s32 physical_maximum;
+  __s32 logical_minimum;
+  __s32 logical_maximum;
+  __s32 physical_minimum;
+  __s32 physical_maximum;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 unit_exponent;
- __u32 unit;
+  __u32 unit_exponent;
+  __u32 unit;
 };
 #define HID_FIELD_CONSTANT 0x001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -102,21 +102,21 @@ struct hiddev_field_info {
 #define HID_FIELD_BUFFERED_BYTE 0x100
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hiddev_usage_ref {
- __u32 report_type;
- __u32 report_id;
- __u32 field_index;
+  __u32 report_type;
+  __u32 report_id;
+  __u32 field_index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __u32 usage_index;
- __u32 usage_code;
- __s32 value;
+  __u32 usage_index;
+  __u32 usage_code;
+  __s32 value;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HID_MAX_MULTI_USAGES 1024
 struct hiddev_usage_ref_multi {
- struct hiddev_usage_ref uref;
- __u32 num_values;
+  struct hiddev_usage_ref uref;
+  __u32 num_values;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- __s32 values[HID_MAX_MULTI_USAGES];
+  __s32 values[HID_MAX_MULTI_USAGES];
 };
 #define HID_FIELD_INDEX_NONE 0xffffffff
 #define HID_VERSION 0x010004

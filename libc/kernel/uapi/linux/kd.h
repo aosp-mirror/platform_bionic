@@ -27,9 +27,9 @@
 #define PIO_FONTX 0x4B6C
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct consolefontdesc {
- unsigned short charcount;
- unsigned short charheight;
- char __user *chardata;
+  unsigned short charcount;
+  unsigned short charheight;
+  char __user * chardata;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PIO_FONTRESET 0x4B6D
@@ -74,22 +74,22 @@ typedef char scrnmap_t;
 #define PIO_UNISCRNMAP 0x4B6A
 #define GIO_UNIMAP 0x4B66
 struct unipair {
- unsigned short unicode;
+  unsigned short unicode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned short fontpos;
+  unsigned short fontpos;
 };
 struct unimapdesc {
- unsigned short entry_ct;
+  unsigned short entry_ct;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- struct unipair __user *entries;
+  struct unipair __user * entries;
 };
 #define PIO_UNIMAP 0x4B67
 #define PIO_UNIMAPCLR 0x4B68
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct unimapinit {
- unsigned short advised_hashsize;
- unsigned short advised_hashstep;
- unsigned short advised_hashlevel;
+  unsigned short advised_hashsize;
+  unsigned short advised_hashstep;
+  unsigned short advised_hashlevel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define UNI_DIRECT_BASE 0xF000
@@ -116,9 +116,9 @@ struct unimapinit {
 #define KDSKBLED 0x4B65
 struct kbentry {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char kb_table;
- unsigned char kb_index;
- unsigned short kb_value;
+  unsigned char kb_table;
+  unsigned char kb_index;
+  unsigned short kb_value;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define K_NORMTAB 0x00
@@ -129,37 +129,37 @@ struct kbentry {
 #define KDGKBENT 0x4B46
 #define KDSKBENT 0x4B47
 struct kbsentry {
- unsigned char kb_func;
+  unsigned char kb_func;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char kb_string[512];
+  unsigned char kb_string[512];
 };
 #define KDGKBSENT 0x4B48
 #define KDSKBSENT 0x4B49
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kbdiacr {
- unsigned char diacr, base, result;
+  unsigned char diacr, base, result;
 };
 struct kbdiacrs {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int kb_cnt;
- struct kbdiacr kbdiacr[256];
+  unsigned int kb_cnt;
+  struct kbdiacr kbdiacr[256];
 };
 #define KDGKBDIACR 0x4B4A
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KDSKBDIACR 0x4B4B
 struct kbdiacruc {
- unsigned int diacr, base, result;
+  unsigned int diacr, base, result;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kbdiacrsuc {
- unsigned int kb_cnt;
- struct kbdiacruc kbdiacruc[256];
+  unsigned int kb_cnt;
+  struct kbdiacruc kbdiacruc[256];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KDGKBDIACRUC 0x4BFA
 #define KDSKBDIACRUC 0x4BFB
 struct kbkeycode {
- unsigned int scancode, keycode;
+  unsigned int scancode, keycode;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define KDGETKEYCODE 0x4B4C
@@ -167,26 +167,26 @@ struct kbkeycode {
 #define KDSIGACCEPT 0x4B4E
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kbd_repeat {
- int delay;
- int period;
+  int delay;
+  int period;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KDKBDREP 0x4B52
 #define KDFONTOP 0x4B72
 struct console_font_op {
- unsigned int op;
+  unsigned int op;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned int flags;
- unsigned int width, height;
- unsigned int charcount;
- unsigned char __user *data;
+  unsigned int flags;
+  unsigned int width, height;
+  unsigned int charcount;
+  unsigned char __user * data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct console_font {
- unsigned int width, height;
- unsigned int charcount;
+  unsigned int width, height;
+  unsigned int charcount;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
- unsigned char *data;
+  unsigned char * data;
 };
 #define KD_FONT_OP_SET 0
 #define KD_FONT_OP_GET 1
