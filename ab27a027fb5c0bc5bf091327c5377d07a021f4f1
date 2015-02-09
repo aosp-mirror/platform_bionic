@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1be9bc5_73dbc0ec",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-09T19:49:15Z",
+      "side": 1,
+      "message": "i think we should probably changed ScopedTlsMapAccess to take the thread list lock. aren\u0027t all the other uses unsafe too?",
+      "revId": "ab27a027fb5c0bc5bf091327c5377d07a021f4f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
