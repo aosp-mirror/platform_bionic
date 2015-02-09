@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "71254bee_070b5609",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-02-09T16:54:02Z",
+      "side": 1,
+      "message": "This is not enough documentation ... at a loss for additional words to make this clearer for the moment. MUST ALTER once I get a clearer understanding of audience requirements.",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 73
+      },
+      "revId": "13f8ba20452c53754b57bb97eddccf43c2ebb3f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31c2f31e_edd5e53d",
         "filename": "benchmarks/semaphore_benchmark.cpp",
         "patchSetId": 1
