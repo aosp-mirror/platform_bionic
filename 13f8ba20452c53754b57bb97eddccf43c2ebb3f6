@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31c2f31e_edd5e53d",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-09T04:17:41Z",
+      "side": 1,
+      "message": "I couldn\u0027t find a declaration or explanation of what this is.",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 16
+      },
+      "revId": "13f8ba20452c53754b57bb97eddccf43c2ebb3f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
