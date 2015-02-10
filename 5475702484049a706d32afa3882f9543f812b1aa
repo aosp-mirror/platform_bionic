@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b138a35d_414312d2",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-10T19:16:19Z",
+      "side": 1,
+      "message": "How does this differ from the default?",
+      "range": {
+        "startLine": 179,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 50
+      },
+      "revId": "5475702484049a706d32afa3882f9543f812b1aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
