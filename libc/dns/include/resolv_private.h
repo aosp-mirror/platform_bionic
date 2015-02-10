@@ -63,6 +63,13 @@
 /* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
 #pragma GCC visibility push(default)
 
+// Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
+// RFC 1034 and RFC 1035 is 255 octets.
+#ifdef MAXHOSTNAMELEN
+#undef MAXHOSTNAMELEN
+#endif
+#define MAXHOSTNAMELEN 256
+
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
  * It can change every day so the right thing to do with it is use it
