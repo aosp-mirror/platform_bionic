@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1f85bd4_863cacf0",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-10T06:27:13Z",
+      "side": 1,
+      "message": "we should probably come back and remove this. i think we\u0027re better off using the kernel_token_replacements stuff instead in future.",
+      "revId": "2d8f9b5aea90b57cd01c0a07cfff032092b4672e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
