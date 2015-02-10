@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d108b7db_5d3f4fb0",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-10T18:44:04Z",
+      "side": 1,
+      "message": "use ScopedPthreadMutexLocker?",
+      "range": {
+        "startLine": 210,
+        "startChar": 2,
+        "endLine": 210,
+        "endChar": 42
+      },
+      "revId": "ab27a027fb5c0bc5bf091327c5377d07a021f4f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1be9bc5_73dbc0ec",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 1
