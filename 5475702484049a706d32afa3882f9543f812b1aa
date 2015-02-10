@@ -22,6 +22,30 @@
       "revId": "5475702484049a706d32afa3882f9543f812b1aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "518f67ad_de6a65d7",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-02-10T20:38:51Z",
+      "side": 1,
+      "message": "There is no mention of the default for param, POSIX allows inheriting from the caller.\n\nBut what I notice is that I have not set PTHREAD_EXPLICIT_SCHED so these are meaningless.\n\nThe good news is the typical caller\u0027s priority is SCHED_OTHER from shell. I need SCHED_OTHER to guarantee that tasks will run to completion to their resource limits so that these operations are performed accordingly in lock-step.",
+      "parentUuid": "b138a35d_414312d2",
+      "range": {
+        "startLine": 179,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 50
+      },
+      "revId": "5475702484049a706d32afa3882f9543f812b1aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
