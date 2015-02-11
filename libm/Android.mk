@@ -270,6 +270,9 @@ LOCAL_SRC_FILES_arm64 += \
 LOCAL_SRC_FILES_mips += \
     mips/fenv.c \
 
+LOCAL_SRC_FILES_mips64 += \
+    mips/fenv.c \
+
 LOCAL_SRC_FILES_x86 += \
     i387/fenv.c \
 
