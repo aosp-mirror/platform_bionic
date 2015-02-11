@@ -29,5 +29,6 @@
 #ifndef NOGROUP
 #define NOGROUP (- 1)
 #endif
-#endif
+#define MAXHOSTNAMELEN 64
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
