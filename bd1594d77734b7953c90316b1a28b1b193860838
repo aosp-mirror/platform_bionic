@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6b979da_9956bbc2",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-11T23:49:34Z",
+      "side": 1,
+      "message": "This is unfortunately too far on the bleeding edge to work well.  See below.",
+      "range": {
+        "startLine": 87,
+        "startChar": 45,
+        "endLine": 87,
+        "endChar": 52
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76a621d5_ff489f75",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-11T23:49:34Z",
+      "side": 1,
+      "message": "Any reason for adding the \"!\u003d NULL\"?  I\u0027d leave it as just \"if (p)\".  I do appreciate the variable renaming.",
+      "range": {
+        "startLine": 310,
+        "startChar": 10,
+        "endLine": 310,
+        "endChar": 17
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96a1d5bc_20402a25",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-11T23:49:34Z",
+      "side": 1,
+      "message": "Why are we passing in the address rather than its contents here?  I think all callers have already done the load to do the null check.\n\nAFAIK, memory_order_consume is not seriously supported by any compiler.  It\u0027s not ready for prime time.  It is generally translated to memory_order_acquire, though I\u0027m told that some gcc versions tried to do something else that was incorrect.  Using memory_order_consume meaningfully with the current spec is hard, and essentially requires use of kill_dependency as well.  And kill_dependency has some specification issues.  The C++ committee is considering ways to fix this (see WG21/N4321).\n\nI\u0027m not sure how performance critical this is.  I don\u0027t see why it would be.  If not, I would just use memory_order_acquire.  That would unfortunately slow down this code appreciably (as with memory_order_consume, since reading each tree level involves a fence).\n\nIf it is critical, I would probably use a macro (RESTRICTED_CONSUME?) to make the intent clear, and define it to memory_order_relaxed for now.  That\u0027s more correct than the current code, though not 100% correct.  (It would be wrong on DEC Alpha, but who cares?)  I would be highly surprised if it broke on any hardware we actually use.  But there should be a comment labeling this as a stop-gap hack until memory_order_consume works.\n\nThe reason this is actually reasonably safe here is that the dependent load is loading a field from the pointer we loaded last.  For those two loads to complete out of order, on hardware like ARM that doesn\u0027t reorder dependent loads, the compiler would have to correctly guess the value of the value of the first load, and we\u0027re not really giving it an opportunity to do so.",
+      "range": {
+        "startLine": 344,
+        "startChar": 49,
+        "endLine": 344,
+        "endChar": 69
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
