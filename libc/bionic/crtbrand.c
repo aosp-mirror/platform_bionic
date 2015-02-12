@@ -32,21 +32,6 @@
 
 /*
  * Special ".note" entry to tag an Android binary and specify the ABI version.
- *
- * For all arches except sparc, gcc emits the section directive for the
- * following struct with a PROGBITS type.  However, the section should be
- * of NOTE type, according to the Generic SysV ABI spec.
- *
- * Unfortunately, there is no clean way to tell gcc to use another section type,
- * so this C file (or the C file that includes it) must be compiled in multiple
- * steps:
- *
- * - Compile the .c file to a .s file.
- * - Edit the .s file to change the 'progbits' type to 'note', for the section
- *   directive that defines the .note.ABI-tag section.
- * - Compile the .s file to an object file.
- *
- * These steps are done in the invididual Makefiles for each applicable arch.
  */
 static const struct {
     int32_t	namesz;
