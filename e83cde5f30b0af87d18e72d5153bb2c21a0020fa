@@ -69,6 +69,24 @@
       "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f64db110_1b1d7b03",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1010186
+      },
+      "writtenOn": "2015-02-12T03:35:12Z",
+      "side": 1,
+      "message": "NDK android-21 headers/libs do support some *_chk functions, but not *_poll_chk added post-21 (2/2 2015)",
+      "parentUuid": "96071552_90edb495",
+      "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
