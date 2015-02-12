@@ -236,6 +236,30 @@
       "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b21a095_35fa307c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-12T23:50:43Z",
+      "side": 1,
+      "message": "Sorry, new test results about N5 and N7 are added in bug reporter. According to the test, release-consume code is about 14%~40% slower than original code on N7, and about 20%~65% slower than orignal code on N5. Which release-relaxed code is almost the same as original code. So Stronger support to use memory_order_relaxed for performance reason.",
+      "parentUuid": "b686d963_d19a8482",
+      "range": {
+        "startLine": 344,
+        "startChar": 49,
+        "endLine": 344,
+        "endChar": 69
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
