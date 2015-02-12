@@ -91,10 +91,10 @@ typedef struct {
   pthread_mutex_t __unused_lock;
   pthread_cond_t __unused_cond;
 #endif
-  volatile int32_t state; // 0=unlock, -1=writer lock, +n=reader lock
-  volatile int32_t writer_thread_id;
-  volatile int32_t pending_readers;
-  volatile int32_t pending_writers;
+  int32_t state; // 0=unlock, -1=writer lock, +n=reader lock
+  int32_t writer_thread_id;
+  uint32_t pending_readers;
+  uint32_t pending_writers;
   int32_t attr;
 #ifdef __LP64__
   char __reserved[36];
