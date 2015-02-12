@@ -16,6 +16,24 @@
       "revId": "b6d301f42dc191681a17eb85536f9cde4eb78c44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d66a6d65_0ae21b2c",
+        "filename": "libc/arch-mips/include/machine/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003296
+      },
+      "writtenOn": "2015-02-12T05:19:30Z",
+      "side": 1,
+      "message": "Jump buffer got changed accidentally for MIPS32 in the below patch. NDK still has the value of 157. \n\nhttps://android-review.googlesource.com/#/c/116077/",
+      "parentUuid": "7690e199_2fc3692c",
+      "revId": "b6d301f42dc191681a17eb85536f9cde4eb78c44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
