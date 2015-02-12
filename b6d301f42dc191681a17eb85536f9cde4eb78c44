@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7690e199_2fc3692c",
+        "filename": "libc/arch-mips/include/machine/setjmp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T05:00:21Z",
+      "side": 1,
+      "message": "this change will cause major stack/heap corruption for existing code built with the old jmp_buf/sigjmp_buf. are you sure that\u0027s what you want?",
+      "revId": "b6d301f42dc191681a17eb85536f9cde4eb78c44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
