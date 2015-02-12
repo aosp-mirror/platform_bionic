@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "d6818d4d_72cf1860",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-12T04:51:23Z",
+      "side": 1,
+      "message": "Sorry.  I\u0027ll try to remember that.",
+      "parentUuid": "36d66940_ed38e56f",
+      "range": {
+        "startLine": 310,
+        "startChar": 10,
+        "endLine": 310,
+        "endChar": 17
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96a1d5bc_20402a25",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "no one reads properties in loops, and writing properties requires an RPC.",
       "parentUuid": "16fc05c4_e7059cbd",
+      "range": {
+        "startLine": 344,
+        "startChar": 49,
+        "endLine": 344,
+        "endChar": 69
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b686d963_d19a8482",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-12T04:51:23Z",
+      "side": 1,
+      "message": "If it is not performance critical, I would go with acquire.  The benchmark was run on something other than a Nexus 9, right?  Nexus 9s have near-zero cost dmb\u0027s.  Nothing else does.  I\u0027m a little surprised the difference is that little, since a single dmb often costs more than that.  But based on Elliott\u0027s comments, it probably still doesn\u0027t matter.",
+      "parentUuid": "16b5e5f7_dfe15fa5",
       "range": {
         "startLine": 344,
         "startChar": 49,
