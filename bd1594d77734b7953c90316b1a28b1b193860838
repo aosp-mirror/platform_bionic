@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f6cbf13a_6b9d61d0",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T03:21:39Z",
+      "side": 1,
+      "message": "no, please put it back. we prefer the explicit Java style in all our code.",
+      "parentUuid": "d61c2dfd_9acd0dbc",
+      "range": {
+        "startLine": 310,
+        "startChar": 10,
+        "endLine": 310,
+        "endChar": 17
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96a1d5bc_20402a25",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -107,6 +131,30 @@
       "side": 1,
       "message": "The benchmark results showing the difference of using memory_order_consume and memory_order_relaxed is less than 10 ns. It\u0027s pretty small. The difference in real system may be more or less, but I guess it is not critical.\n\nHowever, After checking arm instruction code, I found memory_order_consume uses \"dmb\" instruction as what memory_order_acquire does.\n\nSo I think both options are ok. For performance reason, RESTRICTED_CONSUME version is a little better to me.",
       "parentUuid": "96a1d5bc_20402a25",
+      "range": {
+        "startLine": 344,
+        "startChar": 49,
+        "endLine": 344,
+        "endChar": 69
+      },
+      "revId": "bd1594d77734b7953c90316b1a28b1b193860838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16b5e5f7_dfe15fa5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T03:21:39Z",
+      "side": 1,
+      "message": "no one reads properties in loops, and writing properties requires an RPC.",
+      "parentUuid": "16fc05c4_e7059cbd",
       "range": {
         "startLine": 344,
         "startChar": 49,
