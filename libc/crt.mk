@@ -32,26 +32,14 @@ my_libc_crt_target_so_cflags := \
 my_libc_crt_target_ldflags := $(libc_crt_target_ldflags_$(my_arch))
 
 
-# See the comment in crtbrand.c for the reason why we need to generate
-# crtbrand.s before generating crtbrand.o.
-GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
-$(GEN): PRIVATE_CC := $($(my_2nd_arch_prefix)TARGET_CC)
-$(GEN): PRIVATE_CFLAGS := $(my_libc_crt_target_so_cflags)
-$(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
-	@mkdir -p $(dir $@)
-	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) -S \
-		-MD -MF $(@:%.s=%.d) -o $@ $<
-	$(hide) sed -i -e '/\.note\.ABI-tag/s/progbits/note/' $@
-	$(call transform-d-to-p-args,$(@:%.s=%.d),$(@:%.s=%.P))
--include $(GEN:%.s=%.P)
-
-
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.o
 $(GEN): PRIVATE_CC := $($(my_2nd_arch_prefix)TARGET_CC)
 $(GEN): PRIVATE_CFLAGS := $(my_libc_crt_target_so_cflags)
-$(GEN): $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbrand.s
-	@mkdir -p $(dir $@)
-	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) -o $@ -c $<
+$(GEN): $(LOCAL_PATH)/bionic/crtbrand.c
+	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
+		-MD -MF $(@:%.o=%.d) -o $@ -c $<
+	$(transform-d-to-p)
+-include $(GEN:%.o=%.P)
 
 
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
