@@ -87,6 +87,42 @@
       "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6cbf13a_eb5ab16c",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T03:45:19Z",
+      "side": 1,
+      "message": "no, i think \u003e\u003d 21 is right, but you need to add a comment explaining why --- that it\u0027s because the NDK didn\u0027t expose any of the _chk functions until 21. we should retcon that on the NDK side and then remove this (and replace it with per-function #ifs like you have already for poll/ppoll).",
+      "parentUuid": "96071552_90edb495",
+      "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6cbf13a_cb5d7567",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T03:45:19Z",
+      "side": 1,
+      "message": "no, i think \u003e\u003d 21 is right, but you need to add a comment explaining why --- that it\u0027s because the NDK didn\u0027t expose any of the _chk functions until 21. we should retcon that on the NDK side and then remove this (and replace it with per-function #ifs like you have already for poll/ppoll).",
+      "parentUuid": "96071552_90edb495",
+      "revId": "e83cde5f30b0af87d18e72d5153bb2c21a0020fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
