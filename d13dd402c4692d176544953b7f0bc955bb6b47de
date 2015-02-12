@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36a829a2_fdb307ca",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T04:23:23Z",
+      "side": 1,
+      "message": "\u0026\u0026 at end of unfinished line here and elsewhere.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36a829a2_ddb84ba7",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T04:23:23Z",
+      "side": 1,
+      "message": "no need for the \"NOTE:\" bit.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6cbf13a_8b40cd77",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T04:23:23Z",
+      "side": 1,
+      "message": "this fits in 100 columns without wrapping.\n\nbut is this really useful? should we just say\n\n  if (flags !\u003d 0) {\n    errno \u003d\u003d EINVAL;\n    return -1;\n  }\n\nabove instead? i worry that we\u0027ve just made life more confusing because people will test the normal case and think AT_EACCESS is working, when it really isn\u0027t. it\u0027s also odd that the same flag could cause EINVAL or not depending on implicit state.\n\ni like the rest of the change but i\u0027m not sure whether we\u0027re making things better or worse here.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7690e199_0fe2252c",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T04:23:23Z",
+      "side": 1,
+      "message": "AT_REMOVEDIR already has this value. i guess it doesn\u0027t matter as long as the kernel doesn\u0027t believe in AT_EACCESS anyway, and if they ever do define AT_EACCESS this will prevent us from compiling so we\u0027ll notice.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7690e199_2fdfe95c",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-12T04:23:23Z",
+      "side": 1,
+      "message": "looks like they clear any invalid bits. i don\u0027t think it\u0027s that flags is 0, i think it\u0027s that you tested with AT_SYMLINK_NOFOLLOW which -- as you know -- is a weird special case.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
