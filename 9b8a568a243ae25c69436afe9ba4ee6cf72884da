@@ -690,6 +690,24 @@
     },
     {
       "key": {
+        "uuid": "ab3af0c2_14b4da7b",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T01:39:03Z",
+      "side": 1,
+      "message": "actually no - this leads to operator\u003c\u003c(nullptr) call when compiled with -O0 in the absence of errors from libelf... rolled back to if(...).",
+      "parentUuid": "2b2600b6_903c5abb",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c073452_b311e2ce",
         "filename": "tools/relocation_packer/src/leb128.h",
         "patchSetId": 7
