@@ -1179,8 +1179,10 @@ $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src
 # special for arm
 LOCAL_NO_CRT_arm := true
 LOCAL_CFLAGS_arm += -DCRT_LEGACY_WORKAROUND
+LOCAL_ASFLAGS_arm += $(libc_crt_target_cflags)
 LOCAL_SRC_FILES_arm += \
     arch-common/bionic/crtbegin_so.c \
+    arch-common/bionic/crtbrand.S \
     arch-arm/bionic/atexit_legacy.c \
     arch-common/bionic/crtend_so.S
 LOCAL_ADDRESS_SANITIZER := false
