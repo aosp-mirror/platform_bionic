@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "0b4cdc89_e4a99a6b",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-13T05:43:40Z",
+      "side": 1,
+      "message": "well, i think this file does that. the bit i hadn\u0027t seen was L1182.",
+      "parentUuid": "cb5e442b_b3288a7d",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4cdc89_84d3060d",
         "filename": "libc/arch-common/bionic/crtbrand.S",
         "patchSetId": 1
