@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cb5e442b_b3288a7d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-02-13T05:30:03Z",
+      "side": 1,
+      "message": "crt.mk sets libc_crt_target_cflags to -DPLATFORM_SDK_VERSION\u003d",
+      "parentUuid": "0b4cdc89_44050ef4",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b4cdc89_84d3060d",
         "filename": "libc/arch-common/bionic/crtbrand.S",
         "patchSetId": 1
@@ -64,6 +82,24 @@
       "writtenOn": "2015-02-13T05:12:29Z",
       "side": 1,
       "message": "i don\u0027t understand the extra stage. comment?",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4cdc89_44b4eece",
+        "filename": "libc/crt.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-02-13T05:30:03Z",
+      "side": 1,
+      "message": "This rule uses ld -r to combine crtbegin_so1.o (the old crtbegin_so.o) and crtbrand.o into a single .o file, the same as the two rules below for crtbegin_dynamic.o and crtbegin_static.o.  I\u0027ll add comments to all the strange rules",
+      "parentUuid": "cb5e442b_d3a53ec6",
       "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
