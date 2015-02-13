@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b4cdc89_44050ef4",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-13T05:12:29Z",
+      "side": 1,
+      "message": "how do the crt cflags that set PLATFORM_SDK_VERSION get here?",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4cdc89_84d3060d",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-13T05:12:29Z",
+      "side": 1,
+      "message": "unused.",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb83a4c3_22d44ec1",
+        "filename": "libc/arch-common/bionic/crtbrand.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-13T05:12:29Z",
+      "side": 1,
+      "message": "you could just inline the three that are actually used below.",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5e442b_d3a53ec6",
+        "filename": "libc/crt.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-13T05:12:29Z",
+      "side": 1,
+      "message": "i don\u0027t understand the extra stage. comment?",
+      "revId": "659425938c5275432e0ab7b883fe26ba2de364c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
