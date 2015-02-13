@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cbe72493_62c8f6ad",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c2520ee_47826e69",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c2520ee_8793c6bb",
         "filename": "tools/relocation_packer/src/delta_encoder.cc",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "These assume all relocation fields have sizes \u003c\u003d sizeof(ElfAddr).  In practice they do, but I wonder if ELF_Xword might be safer.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbe72493_e25e4630",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "I spent some time playing with types, decided to go with uniform unsigned long (for target platform); I think it should be safe.",
+      "parentUuid": "7c2520ee_8793c6bb",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "2b2600b6_4d9bf95c",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c073452_934bfee8",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c073452_b3656285",
         "filename": "tools/relocation_packer/src/delta_encoder.h",
         "patchSetId": 7
@@ -81,6 +135,30 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "grouped",
+      "range": {
+        "startLine": 26,
+        "startChar": 59,
+        "endLine": 26,
+        "endChar": 67
+      },
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f66e91af_7340a026",
+        "filename": "tools/relocation_packer/src/delta_encoder.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c073452_b3656285",
       "range": {
         "startLine": 26,
         "startChar": 59,
@@ -110,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "363ae9a9_6d40d526",
+        "filename": "tools/relocation_packer/src/delta_encoder.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "done. also we have an example in unit tests...",
+      "parentUuid": "9c073452_f36fea5e",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c1a1cb5_e6755e64",
         "filename": "tools/relocation_packer/src/delta_encoder_unittest.cc",
         "patchSetId": 7
@@ -127,6 +223,24 @@
     },
     {
       "key": {
+        "uuid": "ab3af0c2_91fb3c42",
+        "filename": "tools/relocation_packer/src/delta_encoder_unittest.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c1a1cb5_e6755e64",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c2520ee_0a199ba6",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -138,6 +252,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "static const int (or similar) throughout.\nhttp://google-styleguide.googlecode.com/svn/trunk/cppguide.html#Preprocessor_Macros",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b2600b6_4d43f9d9",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c2520ee_0a199ba6",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -167,6 +299,30 @@
     },
     {
       "key": {
+        "uuid": "6b447857_4f82cde6",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "this was removed: we support all machines now;",
+      "parentUuid": "9c073452_93377e5c",
+      "range": {
+        "startLine": 144,
+        "startChar": 48,
+        "endLine": 144,
+        "endChar": 57
+      },
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c1a1cb5_c61782e5",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -178,6 +334,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "Move down to just before point of first use.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab3af0c2_11662c8c",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c1a1cb5_c61782e5",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -201,6 +375,24 @@
     },
     {
       "key": {
+        "uuid": "ab3af0c2_f1bcc846",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "this code no longer exists.",
+      "parentUuid": "7c2520ee_ca55c307",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c1a1cb5_c66ca26d",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -212,6 +404,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "Comment drift; no longer using run-length encoding.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b2600b6_d0a542c6",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "comment removed.",
+      "parentUuid": "5c1a1cb5_c66ca26d",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -252,6 +462,24 @@
     },
     {
       "key": {
+        "uuid": "6b447857_0f66058c",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c1a1cb5_463a7266",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c073452_136d4e1d",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -263,6 +491,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "It seems cleaner to build these up explicitly through their d_un union rather than with constructors.  I changed to using that in\nhttps://codereview.chromium.org/535943002/diff/40001/tools/relocation_packer/src/elf_file.cc\n\n(That you don\u0027t have this code suggests you might be basing your work off a somewhat old snapshot of the current chromium relocation packer -- presumably to step back over the change that split the exec segment in two?)",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab3af0c2_11850c73",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c073452_136d4e1d",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -286,6 +532,24 @@
     },
     {
       "key": {
+        "uuid": "ab3af0c2_716d781a",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "7c2520ee_aaa32fc6",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c2520ee_aa4a0f44",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -297,6 +561,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "reloactions -\u003e relocations.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b447857_2f38a969",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1050,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c2520ee_aa4a0f44",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -320,6 +602,24 @@
     },
     {
       "key": {
+        "uuid": "ab3af0c2_71545844",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c073452_1356ee48",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c2520ee_ea44073b",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 7
@@ -331,6 +631,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "As for 948 above.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b2600b6_10318ae4",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1068,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c2520ee_ea44073b",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -354,6 +672,24 @@
     },
     {
       "key": {
+        "uuid": "2b2600b6_903c5abb",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c1a1cb5_c6730235",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c073452_b311e2ce",
         "filename": "tools/relocation_packer/src/leb128.h",
         "patchSetId": 7
@@ -365,6 +701,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "Can\u0027t we avoid this templating complexity by simply settling on uint64_t everywhere?  A feature of leb (variable length) encoding is that it will encode a given value to identical representations no matter if the encoder works on a 32 or a 64 bit variable.\n\nIf we used uint64_t then 32-bit values would widen automatically on the interface, then encode exactly as if they had not done so.  I\u0027d feel more comfortable with uint64_t here and throughout, and no templating and icky int_traits later on.  Ditto sleb128.h.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b2600b6_30fa467c",
+        "filename": "tools/relocation_packer/src/leb128.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "I did it initially but after that in order to align sizeof(long) with target architecture decided to go with target dependent sizes.",
+      "parentUuid": "9c073452_b311e2ce",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -388,6 +742,24 @@
     },
     {
       "key": {
+        "uuid": "2b2600b6_90a0da7b",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c2520ee_6ad01753",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c1a1cb5_86c62a19",
         "filename": "tools/relocation_packer/src/packer.cc",
         "patchSetId": 7
@@ -399,6 +771,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "Have you compared the savings here?\n\nI experimented with moving the current code from unsigned to signed leb128 and found that for arm32 I lost only ~300 bytes of saving (out of several Mb total saving).  Where numbers are small, signed leb is only a tiny bit less efficient than unsigned.\n\nMuch depends, of course, on the values being encoded -- my experiment focused on the run-length-encoded stream, but I see we\u0027re no longer using that strategy.  It\u0027d be worth knowing the tradeoff, though.  If we can remove the unsigned leb code that would be a useful simplification.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab3af0c2_94dd6a6c",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "I was actually thinking about using unsigned leb128 everywhere. Negative values apply only to addend_deltas; other values are always positive (in practice). I did not compare sizes yet.. Added todo on your behalf.",
+      "parentUuid": "5c1a1cb5_86c62a19",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -439,6 +829,24 @@
     },
     {
       "key": {
+        "uuid": "2b2600b6_d06d4297",
+        "filename": "tools/relocation_packer/src/relocation_helper.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "this file was removed. there is no need to check relocation types.",
+      "parentUuid": "5c1a1cb5_665b2eef",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c2520ee_8758e677",
         "filename": "tools/relocation_packer/src/relocation_helper.h",
         "patchSetId": 7
@@ -450,6 +858,24 @@
       "writtenOn": "2015-02-05T15:53:48Z",
       "side": 1,
       "message": "Single whitespace separation, I think.",
+      "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b447857_afddb994",
+        "filename": "tools/relocation_packer/src/relocation_helper.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-13T00:54:08Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "7c2520ee_8758e677",
       "revId": "9b8a568a243ae25c69436afe9ba4ee6cf72884da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
