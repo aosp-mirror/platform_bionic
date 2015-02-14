@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b4dbcae_1c59d57b",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-14T00:32:10Z",
+      "side": 1,
+      "message": "we didn\u0027t document STB_LOOS or STB_HIOS. unless we\u0027re different from the appropriate standard, or what we have is a hack in some way, we\u0027re not trying to be a source of documentation.",
+      "revId": "ce618250e853575a630d0fd23ac2d68783d60986",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
