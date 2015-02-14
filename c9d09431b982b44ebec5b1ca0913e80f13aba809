@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "2b69a006_f5ed18be",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-14T04:11:23Z",
+      "side": 1,
+      "message": "Sorry, I am not clear of your meaning. Typical use of __warnattr() is like:\nchar* tmpnam(char*) __warnattr(\"tmpnam possibly used unsafely; consider using mkstemp\");\n\nAny difference in style with code below?\nstruct group\t*getgrent(void) __errorattr(\"This function is meaningless on Android.\");\n\nOr you mean msgs in __warnattrs are start with lower case and don\u0027t end in a period?",
+      "parentUuid": "8b528c4f_be5701c4",
+      "revId": "c9d09431b982b44ebec5b1ca0913e80f13aba809",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "abbf508b_529fead1",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
