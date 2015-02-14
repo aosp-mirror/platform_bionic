@@ -2040,8 +2040,8 @@ bool soinfo::prelink_image() {
         if ((dynamic_flags & PF_W) != 0) {
           d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
         }
-        break;
 #endif
+        break;
 #if defined(USE_RELA)
       case DT_RELA:
         rela_ = reinterpret_cast<ElfW(Rela)*>(load_bias + d->d_un.d_ptr);
