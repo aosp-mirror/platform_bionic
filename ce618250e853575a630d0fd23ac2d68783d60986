@@ -16,6 +16,24 @@
       "revId": "ce618250e853575a630d0fd23ac2d68783d60986",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb4948a5_3e4e4584",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-14T00:35:52Z",
+      "side": 1,
+      "message": "we are not different - removed comments.",
+      "parentUuid": "0b4dbcae_1c59d57b",
+      "revId": "ce618250e853575a630d0fd23ac2d68783d60986",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
