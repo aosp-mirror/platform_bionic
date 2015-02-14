@@ -335,12 +335,14 @@
 #endif
 
 #if __GNUC_PREREQ(4, 3)
-#define __errordecl(name, msg) extern void name(void) __attribute__((__error__(msg)))
+#define __errorattr(msg) __attribute__((__error__(msg)))
 #define __warnattr(msg) __attribute__((__warning__(msg)))
 #else
-#define __errordecl(name, msg) extern void name(void)
+#define __errorattr(msg)
 #define __warnattr(msg)
 #endif
+
+#define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 
 /*
  * Some BSD source needs these macros.
