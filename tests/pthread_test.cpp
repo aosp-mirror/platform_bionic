@@ -1327,14 +1327,17 @@ TEST(pthread, pthread_mutex_RECURSIVE_wakeup) {
 }
 
 TEST(pthread, pthread_mutex_owner_tid_limit) {
+#if defined(__BIONIC__) && !defined(__LP64__)
   FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
   ASSERT_TRUE(fp != NULL);
   long pid_max;
   ASSERT_EQ(1, fscanf(fp, "%ld", &pid_max));
   fclose(fp);
-  // Current pthread_mutex uses 16 bits to represent owner tid.
-  // Change the implementation if we need to support higher value than 65535.
+  // Bionic's pthread_mutex implementation on 32-bit devices uses 16 bits to represent owner tid.
   ASSERT_LE(pid_max, 65536);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing as 32-bit tid is supported by pthread_mutex.\n";
+#endif
 }
 
 class StrictAlignmentAllocator {
