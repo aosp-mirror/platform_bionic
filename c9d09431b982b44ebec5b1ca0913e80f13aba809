@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8b528c4f_9b95efdd",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-14T02:37:13Z",
+      "side": 1,
+      "message": "|all of the other uses of __attribute__((error)) start with lower case and don\u0027t end in a period.\nSome __warnattr() are like this. I will change that as far as I can. \nAll use of __errordecl() are for compile time error detection, not missing functions.",
+      "parentUuid": "7658e11a_b2005e7d",
+      "revId": "c9d09431b982b44ebec5b1ca0913e80f13aba809",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "abbf508b_529fead1",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-13T22:36:42Z",
       "side": 1,
       "message": "lgtm. we\u0027ll can worry later about how we make all these work with clang.",
+      "revId": "c9d09431b982b44ebec5b1ca0913e80f13aba809",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4dbcae_22b8eaa2",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-14T02:37:13Z",
+      "side": 1,
+      "message": "Bug reported in https://b2.corp.google.com/u/0/issues/19374062.",
+      "parentUuid": "abbf508b_529fead1",
       "revId": "c9d09431b982b44ebec5b1ca0913e80f13aba809",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
