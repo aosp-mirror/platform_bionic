@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "2b69a006_55be8caf",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-14T04:20:41Z",
+      "side": 1,
+      "message": "yes, i meant you should rewrite yours in the usual style: like part of a sentence rather than a whole sentence (because the compiler will insert it into an error message) and always explicitly referring to the function that you\u0027re talking about (because that won\u0027t necessarily be visible otherwise).\n\nlike the example i gave: \"getgrent is meaningless on Android\".",
+      "parentUuid": "2b69a006_f5ed18be",
+      "revId": "c9d09431b982b44ebec5b1ca0913e80f13aba809",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "abbf508b_529fead1",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
