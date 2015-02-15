@@ -234,6 +234,11 @@ TEST(wchar, wcsstr) {
   ASSERT_EQ(NULL, wcsstr(haystack, bad_needle));
 }
 
+TEST(wchar, wcsstr_80199) {
+  // https://code.google.com/p/android/issues/detail?id=80199
+  ASSERT_TRUE(wcsstr(L"romrom", L"rom") != NULL);
+}
+
 TEST(wchar, mbtowc) {
   wchar_t out[8];
 
