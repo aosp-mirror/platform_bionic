@@ -34,6 +34,24 @@
       "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6be0f8af_38100dfc",
+        "filename": "tests/math_data_test.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-15T23:44:29Z",
+      "side": 1,
+      "message": "does this cover all the different function signatures in \u003cmath.h\u003e now? (i\u0027m just wondering how much effort it\u0027s worth putting in to simplifying things any more.)",
+      "parentUuid": "8bdb6c05_7053102c",
+      "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
