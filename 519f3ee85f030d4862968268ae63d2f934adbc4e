@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b08ccac_c8a06fb3",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T21:44:12Z",
+      "side": 1,
+      "message": "just __deprecated? i don\u0027t think the _attr really adds anything here. (in the other cases we\u0027ve used the same names as BSD or glibc, but afaik neither of them has an equivalent of this so we get to choose our own name.)",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab38305d_61fe56bf",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T21:44:12Z",
+      "side": 1,
+      "message": "i don\u0027t think we care about GCC \u003c 3.2 :-)\n\n(the other #if __GNUC_PREREQs we mostly have because we inherited them from BSD, but we can probably remove 99% of them now. certainly anything less than \u003c 4 is ancient history.)",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
