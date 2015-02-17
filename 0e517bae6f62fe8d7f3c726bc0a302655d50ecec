@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b736025_85f3a2a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T16:50:15Z",
+      "side": 1,
+      "message": "i always cut here because it\u0027s kind of misleading to have this mentioned in the git history given that we *haven\u0027t* taken these tzcode changes.",
+      "revId": "0e517bae6f62fe8d7f3c726bc0a302655d50ecec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b736025_a5f09e97",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T16:50:15Z",
+      "side": 1,
+      "message": "(this is less important because it\u0027s irrelevant, but it\u0027s, well, irrelevant :-) )",
+      "revId": "0e517bae6f62fe8d7f3c726bc0a302655d50ecec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
