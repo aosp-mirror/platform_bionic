@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b02548e_a9b899c3",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T22:57:37Z",
+      "side": 1,
+      "message": "i wonder if we should call this _non_ndk_?",
+      "revId": "2e92e87a624cf69911cc32e1bbcd3ccd9b96404b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b160cdb_58621df0",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T22:57:37Z",
+      "side": 1,
+      "message": "why can\u0027t sysconf be in the compatibility library?\n\n(i wonder if we should have each non-ndk file on its own line with a # comment explaining why?)",
+      "revId": "2e92e87a624cf69911cc32e1bbcd3ccd9b96404b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
