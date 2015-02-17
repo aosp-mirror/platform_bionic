@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b736025_e8d34b0b",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-17T19:10:57Z",
+      "side": 1,
+      "message": "Shouldn\u0027t you check if this fails? If failing is not really likely then this is fine.",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "be6a44566a7085470b96bc41d371e37b5b12ff87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
