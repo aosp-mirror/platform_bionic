@@ -58,7 +58,7 @@ extern int unsetenv(const char*);
 extern int clearenv(void);
 
 extern char* mkdtemp(char*);
-extern char* mktemp(char*) __deprecated("mktemp possibly used unsafely; consider using mkstemp");
+extern char* mktemp(char*) __warnattr("mktemp possibly used unsafely; consider using mkstemp");
 
 extern int mkostemp64(char*, int);
 extern int mkostemp(char*, int);
