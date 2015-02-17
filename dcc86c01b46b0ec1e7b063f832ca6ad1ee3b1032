@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb81e44d_35789a55",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T23:58:43Z",
+      "side": 1,
+      "message": "we\u0027ll have to clean these up after yabinc\u0027s change is in.",
+      "revId": "dcc86c01b46b0ec1e7b063f832ca6ad1ee3b1032",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
