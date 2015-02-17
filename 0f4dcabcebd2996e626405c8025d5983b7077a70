@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b160cdb_98143543",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T23:00:27Z",
+      "side": 1,
+      "message": "explain how this is different from libc_bionic.a?",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb1c84fd_7a435936",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T23:00:27Z",
+      "side": 1,
+      "message": "do they all actually need this?",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b160cdb_188a6532",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T23:00:27Z",
+      "side": 1,
+      "message": "i think you can be a bit more specific.",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b160cdb_58469d47",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T23:00:27Z",
+      "side": 1,
+      "message": "?",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
