@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8b08ccac_08720746",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-17T22:01:06Z",
+      "side": 1,
+      "message": "Done. glibc has a similar macro, __attribute_deprecated__, but without msg.",
+      "parentUuid": "8b08ccac_c8a06fb3",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab38305d_61fe56bf",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-17T21:44:12Z",
       "side": 1,
       "message": "i don\u0027t think we care about GCC \u003c 3.2 :-)\n\n(the other #if __GNUC_PREREQs we mostly have because we inherited them from BSD, but we can probably remove 99% of them now. certainly anything less than \u003c 4 is ancient history.)",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b02548e_c6de22e4",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-17T22:01:06Z",
+      "side": 1,
+      "message": "I prefer to remove #if __GNUC_PREREQ together with others. You can assign me a bug if you think it is better.",
+      "parentUuid": "ab38305d_61fe56bf",
       "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
