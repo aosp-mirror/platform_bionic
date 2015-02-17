@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cb81e44d_b21fc08d",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-17T23:16:32Z",
+      "side": 1,
+      "message": "Oops. Looks like I missed a few of these.",
+      "parentUuid": "8b160cdb_98143543",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb1c84fd_7a435936",
         "filename": "libc/Android.mk",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-17T23:00:27Z",
       "side": 1,
       "message": "do they all actually need this?",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b8b6c6f_f0522027",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-17T23:16:32Z",
+      "side": 1,
+      "message": "Just wanted to keep all the build configurations as similar to how things were before. I\u0027m not sure if this was added to guard something specific or just in general, so I left it.",
+      "parentUuid": "cb1c84fd_7a435936",
       "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -64,6 +100,24 @@
       "writtenOn": "2015-02-17T23:00:27Z",
       "side": 1,
       "message": "?",
+      "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb81e44d_d24da487",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-17T23:16:32Z",
+      "side": 1,
+      "message": "Oops.",
+      "parentUuid": "8b160cdb_58469d47",
       "revId": "0f4dcabcebd2996e626405c8025d5983b7077a70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
