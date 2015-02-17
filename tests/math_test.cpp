@@ -1379,72 +1379,492 @@ TEST(math, nextafterl_OpenBSD_bug) {
   ASSERT_TRUE(nextafterl(1.0L, 0.0L) - 1.0L < 0.0L);
 }
 
-#include "math_cos_intel_data.h"
+#include "math_data/acos_intel_data.h"
+TEST(math, acos_intel) {
+  DoMathDataTest<1>(g_acos_intel_data, acos);
+}
+
+#include "math_data/acosf_intel_data.h"
+TEST(math, acosf_intel) {
+  DoMathDataTest<1>(g_acosf_intel_data, acosf);
+}
+
+#include "math_data/acosh_intel_data.h"
+TEST(math, acosh_intel) {
+  DoMathDataTest<2>(g_acosh_intel_data, acosh);
+}
+
+#include "math_data/acoshf_intel_data.h"
+TEST(math, acoshf_intel) {
+  DoMathDataTest<2>(g_acoshf_intel_data, acoshf);
+}
+
+#include "math_data/asin_intel_data.h"
+TEST(math, asin_intel) {
+  DoMathDataTest<1>(g_asin_intel_data, asin);
+}
+
+#include "math_data/asinf_intel_data.h"
+TEST(math, asinf_intel) {
+  DoMathDataTest<1>(g_asinf_intel_data, asinf);
+}
+
+#include "math_data/asinh_intel_data.h"
+TEST(math, asinh_intel) {
+  DoMathDataTest<2>(g_asinh_intel_data, asinh);
+}
+
+#include "math_data/asinhf_intel_data.h"
+TEST(math, asinhf_intel) {
+  DoMathDataTest<2>(g_asinhf_intel_data, asinhf);
+}
+
+#include "math_data/atan2_intel_data.h"
+TEST(math, atan2_intel) {
+  DoMathDataTest<2>(g_atan2_intel_data, atan2);
+}
+
+#include "math_data/atan2f_intel_data.h"
+TEST(math, atan2f_intel) {
+  DoMathDataTest<2>(g_atan2f_intel_data, atan2f);
+}
+
+#include "math_data/atan_intel_data.h"
+TEST(math, atan_intel) {
+  DoMathDataTest<1>(g_atan_intel_data, atan);
+}
+
+#include "math_data/atanf_intel_data.h"
+TEST(math, atanf_intel) {
+  DoMathDataTest<1>(g_atanf_intel_data, atanf);
+}
+
+#include "math_data/atanh_intel_data.h"
+TEST(math, atanh_intel) {
+  DoMathDataTest<2>(g_atanh_intel_data, atanh);
+}
+
+#include "math_data/atanhf_intel_data.h"
+TEST(math, atanhf_intel) {
+  DoMathDataTest<2>(g_atanhf_intel_data, atanhf);
+}
+
+#include "math_data/cbrt_intel_data.h"
+TEST(math, cbrt_intel) {
+  DoMathDataTest<1>(g_cbrt_intel_data, cbrt);
+}
+
+#include "math_data/cbrtf_intel_data.h"
+TEST(math, cbrtf_intel) {
+  DoMathDataTest<1>(g_cbrtf_intel_data, cbrtf);
+}
+
+#include "math_data/ceil_intel_data.h"
+TEST(math, ceil_intel) {
+  DoMathDataTest<1>(g_ceil_intel_data, ceil);
+}
+
+#include "math_data/ceilf_intel_data.h"
+TEST(math, ceilf_intel) {
+  DoMathDataTest<1>(g_ceilf_intel_data, ceilf);
+}
+
+#include "math_data/copysign_intel_data.h"
+TEST(math, copysign_intel) {
+  DoMathDataTest<1>(g_copysign_intel_data, copysign);
+}
+
+#include "math_data/copysignf_intel_data.h"
+TEST(math, copysignf_intel) {
+  DoMathDataTest<1>(g_copysignf_intel_data, copysignf);
+}
+
+#include "math_data/cos_intel_data.h"
 TEST(math, cos_intel) {
   DoMathDataTest<1>(g_cos_intel_data, cos);
 }
 
-#include "math_cosf_intel_data.h"
+#include "math_data/cosf_intel_data.h"
 TEST(math, cosf_intel) {
   DoMathDataTest<1>(g_cosf_intel_data, cosf);
 }
 
-#include "math_exp_intel_data.h"
+#include "math_data/cosh_intel_data.h"
+TEST(math, cosh_intel) {
+  DoMathDataTest<2>(g_cosh_intel_data, cosh);
+}
+
+#include "math_data/coshf_intel_data.h"
+TEST(math, coshf_intel) {
+  DoMathDataTest<2>(g_coshf_intel_data, coshf);
+}
+
+#include "math_data/exp_intel_data.h"
 TEST(math, exp_intel) {
   DoMathDataTest<1>(g_exp_intel_data, exp);
 }
 
-#include "math_expf_intel_data.h"
+#include "math_data/expf_intel_data.h"
 TEST(math, expf_intel) {
   DoMathDataTest<1>(g_expf_intel_data, expf);
 }
 
-#include "math_log_intel_data.h"
+#include "math_data/exp2_intel_data.h"
+TEST(math, exp2_intel) {
+  DoMathDataTest<1>(g_exp2_intel_data, exp2);
+}
+
+#include "math_data/exp2f_intel_data.h"
+TEST(math, exp2f_intel) {
+  DoMathDataTest<1>(g_exp2f_intel_data, exp2f);
+}
+
+#include "math_data/expm1_intel_data.h"
+TEST(math, expm1_intel) {
+  DoMathDataTest<1>(g_expm1_intel_data, expm1);
+}
+
+#include "math_data/expm1f_intel_data.h"
+TEST(math, expm1f_intel) {
+  DoMathDataTest<1>(g_expm1f_intel_data, expm1f);
+}
+
+#include "math_data/fabs_intel_data.h"
+TEST(math, fabs_intel) {
+  DoMathDataTest<1>(g_fabs_intel_data, fabs);
+}
+
+#include "math_data/fabsf_intel_data.h"
+TEST(math, fabsf_intel) {
+  DoMathDataTest<1>(g_fabsf_intel_data, fabsf);
+}
+
+#include "math_data/fdim_intel_data.h"
+TEST(math, fdim_intel) {
+  DoMathDataTest<1>(g_fdim_intel_data, fdim);
+}
+
+#include "math_data/fdimf_intel_data.h"
+TEST(math, fdimf_intel) {
+  DoMathDataTest<1>(g_fdimf_intel_data, fdimf);
+}
+
+#include "math_data/floor_intel_data.h"
+TEST(math, floor_intel) {
+  DoMathDataTest<1>(g_floor_intel_data, floor);
+}
+
+#include "math_data/floorf_intel_data.h"
+TEST(math, floorf_intel) {
+  DoMathDataTest<1>(g_floorf_intel_data, floorf);
+}
+
+#include "math_data/fma_intel_data.h"
+TEST(math, fma_intel) {
+  DoMathDataTest<1>(g_fma_intel_data, fma);
+}
+
+#include "math_data/fmaf_intel_data.h"
+TEST(math, fmaf_intel) {
+  DoMathDataTest<1>(g_fmaf_intel_data, fmaf);
+}
+
+#include "math_data/fmax_intel_data.h"
+TEST(math, fmax_intel) {
+  DoMathDataTest<1>(g_fmax_intel_data, fmax);
+}
+
+#include "math_data/fmaxf_intel_data.h"
+TEST(math, fmaxf_intel) {
+  DoMathDataTest<1>(g_fmaxf_intel_data, fmaxf);
+}
+
+#include "math_data/fmin_intel_data.h"
+TEST(math, fmin_intel) {
+  DoMathDataTest<1>(g_fmin_intel_data, fmin);
+}
+
+#include "math_data/fminf_intel_data.h"
+TEST(math, fminf_intel) {
+  DoMathDataTest<1>(g_fminf_intel_data, fminf);
+}
+
+#include "math_data/fmod_intel_data.h"
+TEST(math, fmod_intel) {
+  DoMathDataTest<1>(g_fmod_intel_data, fmod);
+}
+
+#include "math_data/fmodf_intel_data.h"
+TEST(math, fmodf_intel) {
+  DoMathDataTest<1>(g_fmodf_intel_data, fmodf);
+}
+
+#include "math_data/frexp_intel_data.h"
+TEST(math, frexp_intel) {
+  DoMathDataTest<1>(g_frexp_intel_data, frexp);
+}
+
+#include "math_data/frexpf_intel_data.h"
+TEST(math, frexpf_intel) {
+  DoMathDataTest<1>(g_frexpf_intel_data, frexpf);
+}
+
+#include "math_data/hypot_intel_data.h"
+TEST(math, hypot_intel) {
+  DoMathDataTest<1>(g_hypot_intel_data, hypot);
+}
+
+#include "math_data/hypotf_intel_data.h"
+TEST(math, hypotf_intel) {
+  DoMathDataTest<1>(g_hypotf_intel_data, hypotf);
+}
+
+#include "math_data/ilogb_intel_data.h"
+TEST(math, ilogb_intel) {
+  DoMathDataTest<1>(g_ilogb_intel_data, ilogb);
+}
+
+#include "math_data/ilogbf_intel_data.h"
+TEST(math, ilogbf_intel) {
+  DoMathDataTest<1>(g_ilogbf_intel_data, ilogbf);
+}
+
+#include "math_data/ldexp_intel_data.h"
+TEST(math, ldexp_intel) {
+  DoMathDataTest<1>(g_ldexp_intel_data, ldexp);
+}
+
+#include "math_data/ldexpf_intel_data.h"
+TEST(math, ldexpf_intel) {
+  DoMathDataTest<1>(g_ldexpf_intel_data, ldexpf);
+}
+
+#include "math_data/log_intel_data.h"
 TEST(math, log_intel) {
   DoMathDataTest<1>(g_log_intel_data, log);
 }
 
-#include "math_logf_intel_data.h"
+#include "math_data/logf_intel_data.h"
 TEST(math, logf_intel) {
   DoMathDataTest<1>(g_logf_intel_data, logf);
 }
 
-#include "math_pow_intel_data.h"
+#include "math_data/log10_intel_data.h"
+TEST(math, log10_intel) {
+  DoMathDataTest<1>(g_log10_intel_data, log10);
+}
+
+#include "math_data/log10f_intel_data.h"
+TEST(math, log10f_intel) {
+  DoMathDataTest<1>(g_log10f_intel_data, log10f);
+}
+
+#include "math_data/log1p_intel_data.h"
+TEST(math, log1p_intel) {
+  DoMathDataTest<1>(g_log1p_intel_data, log1p);
+}
+
+#include "math_data/log1pf_intel_data.h"
+TEST(math, log1pf_intel) {
+  DoMathDataTest<1>(g_log1pf_intel_data, log1pf);
+}
+
+#include "math_data/log2_intel_data.h"
+TEST(math, log2_intel) {
+  DoMathDataTest<1>(g_log2_intel_data, log2);
+}
+
+#include "math_data/log2f_intel_data.h"
+TEST(math, log2f_intel) {
+  DoMathDataTest<1>(g_log2f_intel_data, log2f);
+}
+
+#include "math_data/logb_intel_data.h"
+TEST(math, logb_intel) {
+  DoMathDataTest<1>(g_logb_intel_data, logb);
+}
+
+#include "math_data/logbf_intel_data.h"
+TEST(math, logbf_intel) {
+  DoMathDataTest<1>(g_logbf_intel_data, logbf);
+}
+
+#include "math_data/modf_intel_data.h"
+TEST(math, modf_intel) {
+  DoMathDataTest<1>(g_modf_intel_data, modf);
+}
+
+#include "math_data/modff_intel_data.h"
+TEST(math, modff_intel) {
+  DoMathDataTest<1>(g_modff_intel_data, modff);
+}
+
+#include "math_data/nearbyint_intel_data.h"
+TEST(math, nearbyint_intel) {
+  DoMathDataTest<1>(g_nearbyint_intel_data, nearbyint);
+}
+
+#include "math_data/nearbyintf_intel_data.h"
+TEST(math, nearbyintf_intel) {
+  DoMathDataTest<1>(g_nearbyintf_intel_data, nearbyintf);
+}
+
+#include "math_data/nextafter_intel_data.h"
+TEST(math, nextafter_intel) {
+  DoMathDataTest<1>(g_nextafter_intel_data, nextafter);
+}
+
+#include "math_data/nextafterf_intel_data.h"
+TEST(math, nextafterf_intel) {
+  DoMathDataTest<1>(g_nextafterf_intel_data, nextafterf);
+}
+
+#include "math_data/pow_intel_data.h"
 TEST(math, pow_intel) {
   DoMathDataTest<1>(g_pow_intel_data, pow);
 }
 
-#include "math_powf_intel_data.h"
+#include "math_data/powf_intel_data.h"
 TEST(math, powf_intel) {
   DoMathDataTest<1>(g_powf_intel_data, powf);
 }
 
-#include "math_sin_intel_data.h"
+#include "math_data/remainder_intel_data.h"
+TEST(math, remainder_intel) {
+  DoMathDataTest<1>(g_remainder_intel_data, remainder);
+}
+
+#include "math_data/remainderf_intel_data.h"
+TEST(math, remainderf_intel) {
+  DoMathDataTest<1>(g_remainderf_intel_data, remainderf);
+}
+
+#include "math_data/remquo_intel_data.h"
+TEST(math, remquo_intel) {
+  DoMathDataTest<1>(g_remquo_intel_data, remquo);
+}
+
+#include "math_data/remquof_intel_data.h"
+TEST(math, remquof_intel) {
+  DoMathDataTest<1>(g_remquof_intel_data, remquof);
+}
+
+#include "math_data/rint_intel_data.h"
+TEST(math, rint_intel) {
+  DoMathDataTest<1>(g_rint_intel_data, rint);
+}
+
+#include "math_data/rintf_intel_data.h"
+TEST(math, rintf_intel) {
+  DoMathDataTest<1>(g_rintf_intel_data, rintf);
+}
+
+#include "math_data/round_intel_data.h"
+TEST(math, round_intel) {
+  DoMathDataTest<1>(g_round_intel_data, round);
+}
+
+#include "math_data/roundf_intel_data.h"
+TEST(math, roundf_intel) {
+  DoMathDataTest<1>(g_roundf_intel_data, roundf);
+}
+
+#include "math_data/scalb_intel_data.h"
+TEST(math, scalb_intel) {
+  DoMathDataTest<1>(g_scalb_intel_data, scalb);
+}
+
+#include "math_data/scalbf_intel_data.h"
+TEST(math, scalbf_intel) {
+  DoMathDataTest<1>(g_scalbf_intel_data, scalbf);
+}
+
+#include "math_data/scalbn_intel_data.h"
+TEST(math, scalbn_intel) {
+  DoMathDataTest<1>(g_scalbn_intel_data, scalbn);
+}
+
+#include "math_data/scalbnf_intel_data.h"
+TEST(math, scalbnf_intel) {
+  DoMathDataTest<1>(g_scalbnf_intel_data, scalbnf);
+}
+
+#include "math_data/significand_intel_data.h"
+TEST(math, significand_intel) {
+  DoMathDataTest<1>(g_significand_intel_data, significand);
+}
+
+#include "math_data/significandf_intel_data.h"
+TEST(math, significandf_intel) {
+  DoMathDataTest<1>(g_significandf_intel_data, significandf);
+}
+
+#include "math_data/sin_intel_data.h"
 TEST(math, sin_intel) {
   DoMathDataTest<1>(g_sin_intel_data, sin);
 }
 
-#include "math_sincos_intel_data.h"
-TEST(math, sincos_intel) {
-  DoMathDataTest<1>(g_sincos_intel_data, sincos);
-}
-
-#include "math_sincosf_intel_data.h"
-TEST(math, sincosf_intel) {
-  DoMathDataTest<1>(g_sincosf_intel_data, sincosf);
-}
-
-#include "math_sinf_intel_data.h"
+#include "math_data/sinf_intel_data.h"
 TEST(math, sinf_intel) {
   DoMathDataTest<1>(g_sinf_intel_data, sinf);
 }
 
-#include "math_tan_intel_data.h"
+#include "math_data/sinh_intel_data.h"
+TEST(math, sinh_intel) {
+  DoMathDataTest<2>(g_sinh_intel_data, sinh);
+}
+
+#include "math_data/sinhf_intel_data.h"
+TEST(math, sinhf_intel) {
+  DoMathDataTest<2>(g_sinhf_intel_data, sinhf);
+}
+
+#include "math_data/sincos_intel_data.h"
+TEST(math, sincos_intel) {
+  DoMathDataTest<1>(g_sincos_intel_data, sincos);
+}
+
+#include "math_data/sincosf_intel_data.h"
+TEST(math, sincosf_intel) {
+  DoMathDataTest<1>(g_sincosf_intel_data, sincosf);
+}
+
+#include "math_data/sqrt_intel_data.h"
+TEST(math, sqrt_intel) {
+  DoMathDataTest<1>(g_sqrt_intel_data, sqrt);
+}
+
+#include "math_data/sqrtf_intel_data.h"
+TEST(math, sqrtf_intel) {
+  DoMathDataTest<1>(g_sqrtf_intel_data, sqrtf);
+}
+
+#include "math_data/tan_intel_data.h"
 TEST(math, tan_intel) {
   DoMathDataTest<1>(g_tan_intel_data, tan);
 }
 
-#include "math_tanf_intel_data.h"
+#include "math_data/tanf_intel_data.h"
 TEST(math, tanf_intel) {
   DoMathDataTest<1>(g_tanf_intel_data, tanf);
+}
+
+#include "math_data/tanh_intel_data.h"
+TEST(math, tanh_intel) {
+  DoMathDataTest<2>(g_tanh_intel_data, tanh);
+}
+
+#include "math_data/tanhf_intel_data.h"
+TEST(math, tanhf_intel) {
+  DoMathDataTest<2>(g_tanhf_intel_data, tanhf);
+}
+
+#include "math_data/trunc_intel_data.h"
+TEST(math, trunc_intel) {
+  DoMathDataTest<1>(g_trunc_intel_data, trunc);
+}
+
+#include "math_data/truncf_intel_data.h"
+TEST(math, truncf_intel) {
+  DoMathDataTest<1>(g_truncf_intel_data, truncf);
 }
