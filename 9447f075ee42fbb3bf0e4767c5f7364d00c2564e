@@ -52,6 +52,24 @@
       "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb99e484_f52252c2",
+        "filename": "tests/math_data_test.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-17T15:48:28Z",
+      "side": 1,
+      "message": "I believe these are the only unsupported signatures:\n\njn, yn: (int, double) -\u003e double\nscalbn: (double, int) -\u003e double\nnann: (const char*) -\u003e double\n\nThere are other functions with a similar signature but float, or long double instead of double so should be covered if those above are covered.\n\nHowever, I don\u0027t think it\u0027s necessary to add anything else until we need to.",
+      "parentUuid": "6be0f8af_38100dfc",
+      "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
