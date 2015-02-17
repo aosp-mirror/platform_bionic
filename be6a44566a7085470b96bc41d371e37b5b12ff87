@@ -22,6 +22,30 @@
       "revId": "be6a44566a7085470b96bc41d371e37b5b12ff87",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bba8cec_bb2b5375",
+        "filename": "libc/bionic/sysconf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T19:23:09Z",
+      "side": 1,
+      "message": "yeah, given that we control the input, i don\u0027t think this can fail. more importantly, even if we did screw up and pass an invalid value to ourselves, there\u0027s no good way to report the error anyway because sysconf doesn\u0027t believe that\u0027s possible.",
+      "parentUuid": "2b736025_e8d34b0b",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "be6a44566a7085470b96bc41d371e37b5b12ff87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
