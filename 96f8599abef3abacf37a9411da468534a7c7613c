@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab38305d_e17ca652",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T22:00:37Z",
+      "side": 1,
+      "message": "can we remove __warnattr now, since it doesn\u0027t work for clang?",
+      "revId": "96f8599abef3abacf37a9411da468534a7c7613c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
