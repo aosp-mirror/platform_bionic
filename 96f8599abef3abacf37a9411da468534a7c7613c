@@ -16,6 +16,24 @@
       "revId": "96f8599abef3abacf37a9411da468534a7c7613c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b02548e_66808e92",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-17T22:15:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab38305d_e17ca652",
+      "revId": "96f8599abef3abacf37a9411da468534a7c7613c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
