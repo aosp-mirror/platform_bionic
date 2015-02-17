@@ -70,6 +70,24 @@
       "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bb5bcf7_fc37890a",
+        "filename": "tests/math_data_test.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T17:10:43Z",
+      "side": 1,
+      "message": "yeah, fine by me.",
+      "parentUuid": "cb99e484_f52252c2",
+      "revId": "9447f075ee42fbb3bf0e4767c5f7364d00c2564e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
