@@ -9,8 +9,6 @@ libc_bionic_src_files_mips64 += \
     bionic/__memset_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/__strcat_chk.cpp \
-    bionic/memchr.c \
-    bionic/memrchr.c \
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
@@ -30,7 +28,9 @@ libc_freebsd_src_files_mips64 += \
     upstream-freebsd/lib/libc/string/wmemmove.c \
 
 libc_openbsd_src_files_mips64 += \
+    upstream-openbsd/lib/libc/string/memchr.c \
     upstream-openbsd/lib/libc/string/memmove.c \
+    upstream-openbsd/lib/libc/string/memrchr.c \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
     upstream-openbsd/lib/libc/string/strcat.c \

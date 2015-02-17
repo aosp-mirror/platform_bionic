@@ -1385,3 +1385,13 @@ TEST(string, __gnu_basename) {
   TestBasename("///", "");
   TestBasename("//usr//lib//", "");
 }
+
+TEST(string, strnlen_147048) {
+  // https://code.google.com/p/android/issues/detail?id=147048
+  char stack_src[64] = {0};
+  EXPECT_EQ(0U, strnlen(stack_src, 1024*1024*1024));
+  char* heap_src = new char[1];
+  *heap_src = '\0';
+  EXPECT_EQ(0U, strnlen(heap_src, 1024*1024*1024));
+  delete[] heap_src;
+}
