@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4b02548e_6962a1f0",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T22:40:45Z",
+      "side": 1,
+      "message": "yeah, that seems silly. the macro name is almost as long as the inline text, and it encourages you to use the bad form that doesn\u0027t include a message. not sure what they were thinking there!",
+      "parentUuid": "8b08ccac_08720746",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab38305d_61fe56bf",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "I prefer to remove #if __GNUC_PREREQ together with others. You can assign me a bug if you think it is better.",
       "parentUuid": "ab38305d_61fe56bf",
+      "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b513ca8_fcb9a9f8",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-17T22:40:45Z",
+      "side": 1,
+      "message": "sgtm.",
+      "parentUuid": "4b02548e_c6de22e4",
       "revId": "519f3ee85f030d4862968268ae63d2f934adbc4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
