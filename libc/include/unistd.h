@@ -168,7 +168,6 @@ extern int dup2(int, int);
 extern int dup3(int, int, int);
 extern int fcntl(int, int, ...);
 extern int ioctl(int, int, ...);
-extern int flock(int, int);
 extern int fsync(int);
 extern int fdatasync(int);
 extern int ftruncate(int, off_t);
