@@ -57,8 +57,6 @@
 
 __BEGIN_DECLS
 
-#define	_FSTDIO			/* Define for new stdio with functions. */
-
 typedef off_t fpos_t;		/* stdio file position type */
 
 /*
@@ -282,11 +280,22 @@ char* tempnam(const char*, const char*)
 extern int rename(const char*, const char*);
 extern int renameat(int, const char*, int, const char*);
 
+#if defined(__USE_FILE_OFFSET64)
+/* Not possible. */
+int	 fgetpos(FILE * __restrict, fpos_t * __restrict)
+	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
+int	 fsetpos(FILE *, const fpos_t *)
+	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
+int	 fseeko(FILE *, off_t, int)
+	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
+off_t	 ftello(FILE *)
+	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
+#else
 int	 fgetpos(FILE * __restrict, fpos_t * __restrict);
 int	 fsetpos(FILE *, const fpos_t *);
-
 int	 fseeko(FILE *, off_t, int);
 off_t	 ftello(FILE *);
+#endif
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
