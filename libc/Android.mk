@@ -123,7 +123,6 @@ libc_bionic_ndk_src_files := \
     bionic/fpclassify.cpp \
     bionic/futimens.cpp \
     bionic/getcwd.cpp \
-    bionic/getentropy_linux.c \
     bionic/gethostname.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
@@ -200,7 +199,6 @@ libc_bionic_ndk_src_files := \
     bionic/strtold.cpp \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
-    bionic/sysconf.cpp \
     bionic/sysinfo.cpp \
     bionic/syslog.cpp \
     bionic/sys_siglist.c \
@@ -213,7 +211,6 @@ libc_bionic_ndk_src_files := \
     bionic/umount.cpp \
     bionic/unlink.cpp \
     bionic/utimes.cpp \
-    bionic/vdso.cpp \
     bionic/wait.cpp \
     bionic/wchar.cpp \
     bionic/wctype.cpp \
@@ -229,6 +226,11 @@ libc_bionic_src_files += bionic/fork.cpp
 # the copies of the global data will be initialized, resulting in nullptr
 # dereferences.
 libc_bionic_src_files += bionic/getauxval.cpp
+
+# These three require getauxval, which isn't available on older platforms.
+libc_bionic_src_files += bionic/getentropy_linux.c
+libc_bionic_src_files += bionic/sysconf.cpp
+libc_bionic_src_files += bionic/vdso.cpp
 
 libc_cxa_src_files := \
     bionic/__cxa_guard.cpp \
@@ -326,10 +328,13 @@ libc_upstream_openbsd_gdtoa_src_files_64 := \
     $(libc_upstream_openbsd_gdtoa_src_files) \
     upstream-openbsd/lib/libc/gdtoa/strtorQ.c \
 
+# These two depend on getentropy_linux.cpp, which isn't in libc_ndk.a.
 libc_upstream_openbsd_src_files := \
-    upstream-openbsd/lib/libc/compat-43/killpg.c \
     upstream-openbsd/lib/libc/crypt/arc4random.c \
     upstream-openbsd/lib/libc/crypt/arc4random_uniform.c \
+
+libc_upstream_openbsd_ndk_src_files := \
+    upstream-openbsd/lib/libc/compat-43/killpg.c \
     upstream-openbsd/lib/libc/gen/alarm.c \
     upstream-openbsd/lib/libc/gen/ctype_.c \
     upstream-openbsd/lib/libc/gen/daemon.c \
@@ -798,6 +803,51 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
+# libc_openbsd_ndk.a - upstream OpenBSD C library code
+# that can be safely included in the libc_ndk.a (doesn't
+# contain any troublesome global data or constructors).
+# ========================================================
+#
+# These files are built with the openbsd-compat.h header file
+# automatically included.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_upstream_openbsd_ndk_src_files)
+ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
+  # Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
+  LOCAL_CLANG := false
+else
+  LOCAL_CLANG := $(use_clang)
+endif
+
+LOCAL_CFLAGS := \
+    $(libc_common_cflags) \
+    -Wno-sign-compare \
+    -Wno-uninitialized \
+    -Wno-unused-parameter \
+    -include openbsd-compat.h \
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes) \
+    $(LOCAL_PATH)/private \
+    $(LOCAL_PATH)/upstream-openbsd/android/include \
+    $(LOCAL_PATH)/upstream-openbsd/lib/libc/include \
+    $(LOCAL_PATH)/upstream-openbsd/lib/libc/gdtoa/ \
+
+LOCAL_MODULE := libc_openbsd_ndk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL := none
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ADDRESS_SANITIZER := false
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
 # libc_openbsd.a - upstream OpenBSD C library code
 # ========================================================
 #
@@ -1100,12 +1150,11 @@ LOCAL_CFLAGS := $(libc_common_cflags) \
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_bionic_ndk \
     libc_cxa \
-    libc_dns \
     libc_freebsd \
     libc_gdtoa \
     libc_malloc \
     libc_netbsd \
-    libc_openbsd \
+    libc_openbsd_ndk \
     libc_stack_protector \
     libc_syscalls \
     libc_tzcode \
@@ -1150,6 +1199,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_malloc \
     libc_netbsd \
     libc_openbsd \
+    libc_openbsd_ndk \
     libc_pthread \
     libc_stack_protector \
     libc_syscalls \
