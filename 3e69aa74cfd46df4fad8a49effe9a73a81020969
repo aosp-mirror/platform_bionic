@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "8b2c4c7c_68828331",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-18T22:35:45Z",
+      "side": 1,
+      "message": "Do you mean if I use a seq_cst store followed by a relaxed load, the load may happen before the store on other cpus? That conflicts the standard.\nWhy the code doesn\u0027t work in ARMv8? Where can I find the reason?\nI thought the code follows the c11 standard of atomic, but in fact maybe I am still misunderstanding, can you please see my comment in __pthread_rwlock_timedwrlock/timedrdlock to find any misunderstanding in it?",
+      "parentUuid": "4b30947e_5cf4558b",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b30947e_dcae257f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
