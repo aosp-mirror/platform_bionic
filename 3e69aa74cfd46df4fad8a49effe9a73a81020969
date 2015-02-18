@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b2600b6_cd1b696f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T19:35:21Z",
+      "side": 1,
+      "message": "I don\u0027t think we need this repeated with every function.\n\nDan Albert is looking at why we get the error anyway.  I\u0027m not sure that\u0027s working as intended, but it probably also shouldn\u0027t slow down this work.",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 38
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bd55878_aa956f29",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T19:35:21Z",
+      "side": 1,
+      "message": "That seems like a very workload-dependent prediction, and this is unlikely to be performance critical.  I wouldn\u0027t bother.",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 20
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bd55878_8acd0bf0",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T19:35:21Z",
+      "side": 1,
+      "message": "Good catch!\n\nThis should always have been a loop.",
+      "range": {
+        "startLine": 276,
+        "startChar": 2,
+        "endLine": 276,
+        "endChar": 8
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b30947e_5cf4558b",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T19:35:21Z",
+      "side": 1,
+      "message": "This probably works on our current hardware, but is not technically correct.  It is likely to eventually fail on ARMv8.  A seq_cst store followed by a memory_order_relaxed load does not enforce ordering.\n\nA memory_order_release store followed by atomic_thread_fence(memory_order_seq_cst) should do, and is likely to be faster than making the loads below sequentially consistent as well.",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b30947e_dcae257f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T19:35:21Z",
+      "side": 1,
+      "message": "Same issue here.  Use release followed by a seq_cst fence.  It should generate the same code, so there shouldn\u0027t be a performance impact, except possibly on some future ARMv8, where the current code is incorrect.",
+      "range": {
+        "startLine": 336,
+        "startChar": 50,
+        "endLine": 336,
+        "endChar": 70
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
