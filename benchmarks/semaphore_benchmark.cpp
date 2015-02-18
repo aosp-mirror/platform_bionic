@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-#include "benchmark.h"
-
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdatomic.h>
 #include <stdio.h>
 
-static void BM_semaphore_sem_getvalue(int iters) {
+#include <benchmark/Benchmark.h>
+
+BENCHMARK_NO_ARG(BM_semaphore_sem_getvalue);
+void BM_semaphore_sem_getvalue::Run(int iters) {
   StopBenchmarkTiming();
   sem_t semaphore;
   sem_init(&semaphore, 1, 1);
@@ -34,9 +35,9 @@ static void BM_semaphore_sem_getvalue(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_semaphore_sem_getvalue);
 
-static void BM_semaphore_sem_wait_sem_post(int iters) {
+BENCHMARK_NO_ARG(BM_semaphore_sem_wait_sem_post);
+void BM_semaphore_sem_wait_sem_post::Run(int iters) {
   StopBenchmarkTiming();
   sem_t semaphore;
   sem_init(&semaphore, 1, 1);
@@ -49,7 +50,6 @@ static void BM_semaphore_sem_wait_sem_post(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_semaphore_sem_wait_sem_post);
 
 /*
  *    This test reports the overhead of the underlying futex wake syscall on
@@ -87,7 +87,8 @@ static void *BM_semaphore_sem_post_start_thread(void *obj) {
     return NULL;
 }
 
-static void BM_semaphore_sem_post(int iters) {
+BENCHMARK_NO_ARG(BM_semaphore_sem_post);
+void BM_semaphore_sem_post::Run(int iters) {
   StopBenchmarkTiming();
 
   sem_t semaphore;
@@ -100,9 +101,6 @@ static void BM_semaphore_sem_post(int iters) {
   pthread_attr_setschedparam(&attr, &param);
   pthread_attr_setschedpolicy(&attr, SCHED_OTHER);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-#ifdef PTHREAD_SET_INHERIT_SCHED
-  pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
-#endif
   pthread_t pthread;
   pthread_create(&pthread, &attr, BM_semaphore_sem_post_start_thread, &semaphore);
   pthread_attr_destroy(&attr);
@@ -143,99 +141,3 @@ static void BM_semaphore_sem_post(int iters) {
     sched_yield();
   } while (!BM_semaphore_sem_post_running);
 }
-BENCHMARK(BM_semaphore_sem_post);
-
-/*
- *    This test reports the overhead of sem_post to sem_wake. A circle of
- * num_semaphore - 1 threads are run on a set of semaphores to measure the
- * activity. One can calculate the sem_wake overhead alone by:
- *
- * BM_semaphore_sem_post_sem_wait - BM_semaphore_sem_post - BM_time_clock_gettime
- *
- * Differences will result if there are more threads than active processors,
- * there will be delay induced when scheduling the processes. This cost is
- * measured by trying different values of num_semaphore. The governor selected
- * will have a major impact on the results for a large number of threads.
- *
- *     To reduce the chances for threads racing ahead and not triggering the
- * futex, for example the background threads finish their job before the
- * sem_wait is hit in the main thread, the background threads will run at
- * batch priority and the main thread at fifo priority. This should generally
- * guarantee the main thread completes its task of priming itself with the
- * sem_wait before the other threads can start. In practice without the
- * sched mechanics here, this works on Android configured kernels, this is
- * insurance for wacky(tm) sched configurations.
- */
-static void *BM_semaphore_sem_post_sem_wait_start_thread(void *obj) {
-  sem_t *semaphore = reinterpret_cast<sem_t *>(obj);
-
-  while ((BM_semaphore_sem_post_running > 0) && !sem_wait(semaphore)) {
-    sem_post(semaphore + 1);
-  }
-  --BM_semaphore_sem_post_running;
-  return NULL;
-}
-
-static void BM_semaphore_sem_post_sem_wait_num(int iters, int num_semaphore) {
-  StopBenchmarkTiming();
-
-  sem_t semaphore[num_semaphore];
-
-  for (int i = 0; i < num_semaphore; ++i) {
-    sem_init(semaphore + i, 0, 0);
-  }
-
-  pthread_attr_t attr;
-  pthread_attr_init(&attr);
-  BM_semaphore_sem_post_running = 1;
-  struct sched_param param = { 0, };
-  pthread_attr_setschedparam(&attr, &param);
-  pthread_attr_setschedpolicy(&attr, SCHED_BATCH);
-  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-#ifdef PTHREAD_SET_INHERIT_SCHED
-  pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
-#endif
-  for (int i = 0; i < (num_semaphore - 1); ++i) {
-    pthread_t pthread;
-    pthread_create(&pthread, &attr, BM_semaphore_sem_post_sem_wait_start_thread, semaphore + i);
-  }
-  pthread_attr_destroy(&attr);
-  sched_yield();
-
-  param.sched_priority = 1;
-  sched_setscheduler((pid_t)0, SCHED_FIFO, &param);
-
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; i += num_semaphore) {
-    sem_post(semaphore);
-    sem_wait(semaphore + num_semaphore - 1);
-  }
-
-  StopBenchmarkTiming();
-
-  param.sched_priority = 0;
-  sched_setscheduler((pid_t)0, SCHED_OTHER, &param);
-
-  if (BM_semaphore_sem_post_running > 0) {
-    BM_semaphore_sem_post_running = 0;
-  }
-  for (int i = 0;
-       (i < (10 * num_semaphore)) && (BM_semaphore_sem_post_running > (1 - num_semaphore));
-       ++i) {
-    for (int j = 0; j < (num_semaphore - 1); ++j) {
-      sem_post(semaphore + j);
-    }
-    sched_yield();
-  }
-}
-
-static void BM_semaphore_sem_post_sem_wait_low(int iters) {
-    BM_semaphore_sem_post_sem_wait_num(iters, 2);
-}
-BENCHMARK(BM_semaphore_sem_post_sem_wait_low);
-
-static void BM_semaphore_sem_post_sem_wait_high(int iters) {
-    BM_semaphore_sem_post_sem_wait_num(iters, 100);
-}
-BENCHMARK(BM_semaphore_sem_post_sem_wait_high);
