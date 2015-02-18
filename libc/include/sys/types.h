@@ -90,16 +90,14 @@ typedef uint64_t dev_t;
 typedef __kernel_time_t __time_t;
 typedef __time_t time_t;
 
-/* This historical accident means that we had a 32-bit off_t on 32-bit architectures. */
-#if !defined(__LP64__)
-typedef __kernel_off_t off_t;
-typedef __kernel_loff_t loff_t;
+#if defined(__USE_FILE_OFFSET64) || defined(__LP64__)
+typedef int64_t off_t;
+typedef off_t loff_t;
 typedef loff_t off64_t;
 #else
-/* We could re-use the LP32 definitions, but that would mean that although off_t and loff_t/off64_t
- * would be the same size, they wouldn't actually be the same type, which can lead to warnings. */
+/* This historical accident means that we had a 32-bit off_t on 32-bit architectures. */
 typedef __kernel_off_t off_t;
-typedef off_t loff_t;
+typedef __kernel_loff_t loff_t;
 typedef loff_t off64_t;
 #endif
 
