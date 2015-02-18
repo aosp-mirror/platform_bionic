@@ -49,8 +49,13 @@ __BEGIN_DECLS
 #define POSIX_MADV_WILLNEED   MADV_WILLNEED
 #define POSIX_MADV_DONTNEED   MADV_DONTNEED
 
+#if defined(__USE_FILE_OFFSET64)
+extern void* mmap(void*, size_t, int, int, int, off_t) __RENAME(mmap64);
+#else
 extern void* mmap(void*, size_t, int, int, int, off_t);
+#endif
 extern void* mmap64(void*, size_t, int, int, int, off64_t);
+
 extern int munmap(void*, size_t);
 extern int msync(const void*, size_t, int);
 extern int mprotect(const void*, size_t, int);
