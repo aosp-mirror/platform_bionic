@@ -85,7 +85,7 @@ libc_common_src_files += \
     bionic/__vsnprintf_chk.cpp \
     bionic/__vsprintf_chk.cpp \
 
-libc_bionic_src_files := \
+libc_bionic_ndk_src_files := \
     bionic/abort.cpp \
     bionic/accept.cpp \
     bionic/accept4.cpp \
@@ -120,10 +120,8 @@ libc_bionic_src_files := \
     bionic/fchmodat.cpp \
     bionic/ffs.cpp \
     bionic/flockfile.cpp \
-    bionic/fork.cpp \
     bionic/fpclassify.cpp \
     bionic/futimens.cpp \
-    bionic/getauxval.cpp \
     bionic/getcwd.cpp \
     bionic/getentropy_linux.c \
     bionic/gethostname.cpp \
@@ -160,27 +158,6 @@ libc_bionic_src_files := \
     bionic/posix_fallocate.cpp \
     bionic/posix_madvise.cpp \
     bionic/posix_timers.cpp \
-    bionic/pthread_atfork.cpp \
-    bionic/pthread_attr.cpp \
-    bionic/pthread_cond.cpp \
-    bionic/pthread_create.cpp \
-    bionic/pthread_detach.cpp \
-    bionic/pthread_equal.cpp \
-    bionic/pthread_exit.cpp \
-    bionic/pthread_getcpuclockid.cpp \
-    bionic/pthread_getschedparam.cpp \
-    bionic/pthread_gettid_np.cpp \
-    bionic/pthread_internals.cpp \
-    bionic/pthread_join.cpp \
-    bionic/pthread_key.cpp \
-    bionic/pthread_kill.cpp \
-    bionic/pthread_mutex.cpp \
-    bionic/pthread_once.cpp \
-    bionic/pthread_rwlock.cpp \
-    bionic/pthread_self.cpp \
-    bionic/pthread_setname_np.cpp \
-    bionic/pthread_setschedparam.cpp \
-    bionic/pthread_sigmask.cpp \
     bionic/ptrace.cpp \
     bionic/pty.cpp \
     bionic/raise.cpp \
@@ -240,6 +217,18 @@ libc_bionic_src_files := \
     bionic/wait.cpp \
     bionic/wchar.cpp \
     bionic/wctype.cpp \
+
+libc_bionic_src_files :=
+
+# The fork implementation depends on pthread data, so we can't include it in
+# libc_ndk.a.
+libc_bionic_src_files += bionic/fork.cpp
+
+# The data that backs getauxval is initialized in the libc init functions which
+# are invoked by the linker. If this file is included in libc_ndk.a, only one of
+# the copies of the global data will be initialized, resulting in nullptr
+# dereferences.
+libc_bionic_src_files += bionic/getauxval.cpp
 
 libc_cxa_src_files := \
     bionic/__cxa_guard.cpp \
@@ -512,6 +501,29 @@ libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/string/wcslcpy.c \
     upstream-openbsd/lib/libc/string/wcsstr.c \
     upstream-openbsd/lib/libc/string/wcswidth.c \
+
+libc_pthread_src_files := \
+    bionic/pthread_atfork.cpp \
+    bionic/pthread_attr.cpp \
+    bionic/pthread_cond.cpp \
+    bionic/pthread_create.cpp \
+    bionic/pthread_detach.cpp \
+    bionic/pthread_equal.cpp \
+    bionic/pthread_exit.cpp \
+    bionic/pthread_getcpuclockid.cpp \
+    bionic/pthread_getschedparam.cpp \
+    bionic/pthread_gettid_np.cpp \
+    bionic/pthread_internals.cpp \
+    bionic/pthread_join.cpp \
+    bionic/pthread_key.cpp \
+    bionic/pthread_kill.cpp \
+    bionic/pthread_mutex.cpp \
+    bionic/pthread_once.cpp \
+    bionic/pthread_rwlock.cpp \
+    bionic/pthread_self.cpp \
+    bionic/pthread_setname_np.cpp \
+    bionic/pthread_setschedparam.cpp \
+    bionic/pthread_sigmask.cpp \
 
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
@@ -900,7 +912,76 @@ LOCAL_ADDRESS_SANITIZER := false
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
+# libc_bionic_ndk.a - The portions of libc_bionic that can
+# be safely used in libc_ndk.a (no troublesome global data
+# or constructors).
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_bionic_ndk_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -Wframe-larger-than=2048 \
+
+# ssse3-strcmp-slm.S does not compile with Clang.
+LOCAL_CLANG_ASFLAGS_x86_64 += -no-integrated-as
+
+# memcpy.S, memchr.S, etc. do not compile with Clang.
+LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
+LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
+LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
+LOCAL_MODULE := libc_bionic_ndk
+LOCAL_CLANG := $(use_clang)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL := none
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ADDRESS_SANITIZER := false
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
+include $(BUILD_STATIC_LIBRARY)
+
+
+# ========================================================
+# libc_pthread.a - pthreads parts that previously lived in
+# libc_bionic.a. Relocated to their own library because
+# they can't be included in libc_ndk.a (as they layout of
+# pthread_t has changed over the years and has ABI
+# compatibility issues).
+# ========================================================
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(libc_pthread_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -Wframe-larger-than=2048 \
+
+# ssse3-strcmp-slm.S does not compile with Clang.
+LOCAL_CLANG_ASFLAGS_x86_64 += -no-integrated-as
+
+# memcpy.S, memchr.S, etc. do not compile with Clang.
+LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
+LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_pthread
+LOCAL_CLANG := $(use_clang)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL := none
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ADDRESS_SANITIZER := false
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -992,9 +1073,57 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libc_ndk
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_syscalls libm
-LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CLANG := true
+LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CFLAGS := $(libc_common_cflags) -fvisibility=hidden -O0
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_ADDRESS_SANITIZER := false
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+LOCAL_SRC_FILES := \
+    $(libc_common_src_files) \
+    $(libc_arch_dynamic_src_files) \
+    $(libc_ndk_stub_src_files) \
+    bionic/malloc_debug_common.cpp \
+
+LOCAL_SRC_FILES_arm += \
+    arch-common/bionic/crtbegin_so.c \
+    arch-arm/bionic/atexit_legacy.c \
+    arch-common/bionic/crtend_so.S \
+
+LOCAL_CFLAGS := $(libc_common_cflags) \
+    -DLIBC_STATIC \
+
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+    libc_bionic_ndk \
+    libc_cxa \
+    libc_dns \
+    libc_freebsd \
+    libc_gdtoa \
+    libc_malloc \
+    libc_netbsd \
+    libc_openbsd \
+    libc_stack_protector \
+    libc_syscalls \
+    libc_tzcode \
+    libm \
+
+LOCAL_WHOLE_STATIC_LIBRARIES_arm := libc_aeabi
+LOCAL_CXX_STL := none
+
+ifneq ($(MALLOC_IMPL),dlmalloc)
+LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
+endif
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_common_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_ASFLAGS,LOCAL_CFLAGS))
+
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
@@ -1013,6 +1142,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_bionic \
+    libc_bionic_ndk \
     libc_cxa \
     libc_dns \
     libc_freebsd \
@@ -1020,6 +1150,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_malloc \
     libc_netbsd \
     libc_openbsd \
+    libc_pthread \
     libc_stack_protector \
     libc_syscalls \
     libc_tzcode \
