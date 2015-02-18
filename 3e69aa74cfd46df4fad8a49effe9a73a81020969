@@ -118,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "6b31d8d0_c7bc3e99",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-18T23:10:36Z",
+      "side": 1,
+      "message": "The reordering is allowed by the standard.  Consider (everything initially zero):\n\nThread 1:\na: x \u003d 1 seq_cst\nb: r1 \u003d y relaxed\n\nThread 2:\nc: y \u003d 1 seq_cst\nd: r2 \u003d x seq_cst\n\nI claim r1 \u003d r2 \u003d 0 is allowed.  In the SC order S\n\nc \u003c d \u003c a\n\nb sees the initializing write, not c, as does d.  There are no synchronizes-with relationships.  Hence happens-before orders only actions within a thread and initializations. The SC order S does not contribute to happens-before.  No problems.\n\nSee 29.3 in the standard.\n\nOn ARMv8, the seq_cst store can be implement as a release store, which is ordered with respect to later acquire loads, but not with respect to later ordinary loads.  The relaxed load would be an ordinary load.\n\nI think the rest of your understanding is correct.  You should just not assume that seq_cst acts as a fence with respect to other weakly ordered operations.  It\u0027s not guaranteed to.  (It does on architectures on which seq_cst is implemented with full fences.  But that\u0027s not all of them.)\n\nseq_cst was designed to provide sequential consistency for programs that only used seq_cst operations.  Its ordering properties are near minimal for achieving that goal.  Mixing it with weakly ordered operations is tricky.",
+      "parentUuid": "8b2c4c7c_68828331",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b30947e_dcae257f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
