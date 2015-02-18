@@ -334,12 +334,16 @@
 #define __wur
 #endif
 
+#if __GNUC_PREREQ(3, 2)
+#define __deprecated(msg) __attribute__ ((deprecated(msg)))
+#else
+#define __deprecated(msg)
+#endif
+
 #if __GNUC_PREREQ(4, 3)
 #define __errorattr(msg) __attribute__((__error__(msg)))
-#define __warnattr(msg) __attribute__((__warning__(msg)))
 #else
 #define __errorattr(msg)
-#define __warnattr(msg)
 #endif
 
 #define __errordecl(name, msg) extern void name(void) __errorattr(msg)
