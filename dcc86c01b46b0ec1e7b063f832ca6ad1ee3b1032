@@ -16,6 +16,23 @@
       "revId": "dcc86c01b46b0ec1e7b063f832ca6ad1ee3b1032",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8be9ac2d_c0b25ec4",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-18T02:21:59Z",
+      "side": 1,
+      "message": "Else define it to 0 or things using -Wundef will explode (or change all your #ifs to #ifdefs)",
+      "revId": "dcc86c01b46b0ec1e7b063f832ca6ad1ee3b1032",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
