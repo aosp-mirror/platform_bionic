@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "084dc2ae_5ce7dde8",
+        "filename": "benchmarks/main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T23:03:45Z",
+      "side": 1,
+      "message": "I leaked it intentionally since we\u0027re going to exit right after this. It didn\u0027t seem worth the effort to clean up. Since this is an error path that will quit, I went this way.\n\nThere are a few other places I\u0027m leaking things since the program is going to finish, so let me know if you\u0027d prefer me to clean up everything.",
+      "parentUuid": "e8a4ee88_03be0edf",
+      "revId": "aad73367b6baabfa56e3a2800ec6a82c38f73c91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "084dc2ae_bcd54147",
         "filename": "benchmarks/main.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2840c674_dd876b27",
+        "filename": "benchmarks/main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T23:03:45Z",
+      "side": 1,
+      "message": "I\u0027m not sure that this is really possible, but I\u0027m anal and wanted to add it just in case.",
+      "parentUuid": "084dc2ae_bcd54147",
+      "revId": "aad73367b6baabfa56e3a2800ec6a82c38f73c91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "084dc2ae_9cd2055b",
         "filename": "benchmarks/utils.h",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2015-02-19T22:48:59Z",
       "side": 1,
       "message": "oops.",
+      "revId": "aad73367b6baabfa56e3a2800ec6a82c38f73c91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "683e3eec_5f8b4bff",
+        "filename": "benchmarks/utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T23:03:45Z",
+      "side": 1,
+      "message": "Dammit, clearly I need more sleep.\n\nFixed now.",
+      "parentUuid": "084dc2ae_9cd2055b",
       "revId": "aad73367b6baabfa56e3a2800ec6a82c38f73c91",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
