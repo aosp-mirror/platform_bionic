@@ -402,6 +402,10 @@ res_nsend(res_state statp,
 	}
 
 	if (statp->nscount == 0) {
+		// We have no nameservers configured, so there's no point trying.
+		// Tell the cache the query failed, or any retries and anyone else asking the same
+		// question will block for PENDING_REQUEST_TIMEOUT seconds instead of failing fast.
+		_resolv_cache_query_failed(statp->netid, buf, buflen);
 		errno = ESRCH;
 		return (-1);
 	}
