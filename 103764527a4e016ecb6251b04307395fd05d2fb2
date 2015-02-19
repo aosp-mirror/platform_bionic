@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "88b452b1_68ffa304",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Yep, unnecessary, so removed.",
+      "parentUuid": "e8486e7a_e39752e4",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "685d5e31_a7a16a3a",
         "filename": "benchmarks/Android.mk",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-19T18:08:33Z",
       "side": 1,
       "message": "i suspect you\u0027re going to make the host look unfairly good on this benchmark :-)\n\n(i like this though. good idea.)",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88b452b1_e866338a",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Right now I just define away the whole file. I chose this method rather than having two separate lists because that just seems to get messy quick.",
+      "parentUuid": "685d5e31_a7a16a3a",
       "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a8bf568b_e99715ab",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Deleted all of these.",
+      "parentUuid": "e8486e7a_83777e1e",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48525a24_09196d78",
         "filename": "benchmarks/Benchmark.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-19T18:08:33Z",
       "side": 1,
       "message": "passing by value?",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88b452b1_08814768",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Fixed.\n\nI thought about fixing this for arg values, but since most are ints, it seems overkill. Also, if there is a complicated arg needed, I would think it would use pointers. Does this seem reasonable?",
+      "parentUuid": "48525a24_09196d78",
       "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "a8bf568b_6cf013ec",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "That\u0027s a good idea but requires extra knowledge. How about I save that for a follow-on cl? It gets a little tricky because I need to integrate it with the args part.\n\nI\u0027d forgotten how much I hated working with templates, so I\u0027d like to get a working vesion in then expand it. I hate getting weird obcure errors at link time because I forgot to add a \u003d0 to a pure virtual function. Oh the pain.",
+      "parentUuid": "685d5e31_077b96d6",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8486e7a_e336325d",
         "filename": "benchmarks/Benchmark.cpp",
         "patchSetId": 3
@@ -98,6 +188,24 @@
       "writtenOn": "2015-02-19T18:08:33Z",
       "side": 1,
       "message": "this could just be a while loop.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88b452b1_a8db5b9c",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Yeah, technically the first check isn\u0027t strictly necessary, but I think it makes the code a bit more readable than this version.\n\nPoof, now it\u0027s a while loop.",
+      "parentUuid": "e8486e7a_e336325d",
       "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "68b9dea9_47396efe",
+        "filename": "benchmarks/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "e8486e7a_e3bbd24a",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8486e7a_83dbfe9c",
         "filename": "benchmarks/property_benchmark.cpp",
         "patchSetId": 3
@@ -132,6 +258,24 @@
       "writtenOn": "2015-02-19T18:08:33Z",
       "side": 1,
       "message": "oh, i thought you were going to link against the fake system properties implementation. what you\u0027ve done probably makes more sense.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8baca9b_cd625def",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Yeah, doing anything than making this a nop seemed like work for no real benefit.",
+      "parentUuid": "e8486e7a_83dbfe9c",
       "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "c8baca9b_cda7bdce",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Yeah, I did think of other ways of handling this, but they seemed like too much code for very little benefit.",
+      "parentUuid": "48525a24_2949c977",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48525a24_49b9a5f5",
         "filename": "benchmarks/utils.h",
         "patchSetId": 3
@@ -172,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "8839b203_609cb281",
+        "filename": "benchmarks/utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Oops, I bet you can\u0027t guess the previous name of this file?",
+      "parentUuid": "48525a24_49b9a5f5",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8486e7a_e3b1925d",
         "filename": "benchmarks/utils.h",
         "patchSetId": 3
@@ -183,6 +363,24 @@
       "writtenOn": "2015-02-19T18:08:33Z",
       "side": 1,
       "message": "\u003cstddef.h\u003e for size_t?",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48aeda66_e65f3e2a",
+        "filename": "benchmarks/utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T22:41:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8486e7a_e3b1925d",
       "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
