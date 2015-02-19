@@ -667,3 +667,8 @@ TEST(wchar, wcstoull_l_EINVAL) {
   wcstoull_l(L"123", NULL, 37, LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
 }
+
+TEST(wchar, wmempcpy) {
+  wchar_t dst[6];
+  ASSERT_EQ(&dst[4], wmempcpy(dst, L"hello", 4));
+}
