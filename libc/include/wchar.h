@@ -151,6 +151,9 @@ extern int               wcwidth(wchar_t);
 extern wchar_t          *wmemchr(const wchar_t *, wchar_t, size_t);
 extern int               wmemcmp(const wchar_t *, const wchar_t *, size_t);
 extern wchar_t          *wmemcpy(wchar_t *, const wchar_t *, size_t);
+#if defined(__USE_GNU)
+extern wchar_t          *wmempcpy(wchar_t *, const wchar_t *, size_t);
+#endif
 extern wchar_t          *wmemmove(wchar_t *, const wchar_t *, size_t);
 extern wchar_t          *wmemset(wchar_t *, wchar_t, size_t);
 extern int               wprintf(const wchar_t *, ...);

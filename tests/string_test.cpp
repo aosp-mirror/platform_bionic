@@ -1395,3 +1395,8 @@ TEST(string, strnlen_147048) {
   EXPECT_EQ(0U, strnlen(heap_src, 1024*1024*1024));
   delete[] heap_src;
 }
+
+TEST(string, mempcpy) {
+  char dst[6];
+  ASSERT_EQ(&dst[4], reinterpret_cast<char*>(mempcpy(dst, "hello", 4)));
+}
