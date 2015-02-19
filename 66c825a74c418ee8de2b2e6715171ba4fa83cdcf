@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a83af6c2_f41dd664",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T05:44:08Z",
+      "side": 1,
+      "message": "This seems a little overkill. Any reason you didn\u0027t just do:\n\nASSERT_EQ(\u0026dst[4], p);",
+      "range": {
+        "startLine": 1402,
+        "startChar": 2,
+        "endLine": 1404,
+        "endChar": 29
+      },
+      "revId": "66c825a74c418ee8de2b2e6715171ba4fa83cdcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "883ff2b4_f30deab2",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-19T05:44:08Z",
+      "side": 1,
+      "message": "Same as the other, why not:\n\nASSERT_EQ(\u0026dst[4], p);",
+      "range": {
+        "startLine": 673,
+        "startChar": 2,
+        "endLine": 673,
+        "endChar": 41
+      },
+      "revId": "66c825a74c418ee8de2b2e6715171ba4fa83cdcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
