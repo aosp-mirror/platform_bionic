@@ -142,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "e81a2e66_96234ac8",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-19T01:48:54Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that the implementation of memory order is affected by what operation the function will execute. My current understanding is: For seq_cst, store operation will have to flush its cache all the way to memory (before the store?), load operation will have to wait for any flushing finished and visible (after the load?).\nIf that is right, I can understand your example, \"a\" only flushes its cache, but doesn\u0027t wait others flush, so \"b\" can read y from its cache.\n\nSo I guess atomic_thread_fence(seq_cst) implies both flush to memory and wait flushing actions. And all load-store operations with seq_cst operations imply both flush to memory and wait flushing actions. If that is right, the original code should be right as it uses compare_and_swap operations with seq_cst.\n\nBut I still wonder why you suggest to use memory order release in atomic_store and atomic_compare_exchange_weak_explicit below, as using a atomic_thread_fence(seq_cst) may already be enough. If it is for matching with memory_order_acquire in locking functions, I think it will be reasonable.",
+      "parentUuid": "6b31d8d0_c7bc3e99",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b30947e_dcae257f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
