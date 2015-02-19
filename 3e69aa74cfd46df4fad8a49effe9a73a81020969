@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "087a22aa_577cae4f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-19T20:33:29Z",
+      "side": 1,
+      "message": "After checking disassemble code and arm specification, I found it may because use of dmb instruction in seq_cst has been replaced by ldar/stlr instructions in aarch64. So I am confused with one problem:\n\natomic_store(\u0026a, 5);\nc \u003d atomic_load(\u0026b);\n\nIn aarch64 implementation, atomic_store is implemented by stlr instruction, atomic_load is implemented by ldar instruction. So they can exchange their position, and load before store. Is it what c11/c++11 standard allows?",
+      "parentUuid": "e81a2e66_96234ac8",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b30947e_dcae257f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
