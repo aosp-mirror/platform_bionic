@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8486e7a_e39752e4",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "really? for what?\n\noh, libutils.\n\n1. i\u0027m pretty sure this is on the hard-coded include path you can\u0027t avoid.\n\n2. even if/when we get around to fixing that, we\u0027ll make libutils export its headers (and probably want to move them into libutils itself at the same time).\n\nso unless there\u0027s some _other_ reason for this, i don\u0027t think we should add it.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "685d5e31_a7a16a3a",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "i suspect you\u0027re going to make the host look unfairly good on this benchmark :-)\n\n(i like this though. good idea.)",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8486e7a_83777e1e",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "danalbert made this unnecessary. we\u0027ve even started to remove them in places...",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48525a24_09196d78",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "passing by value?",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "685d5e31_077b96d6",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "not GetNameStr? then you could run just the NaN benchmarks or just the ones on 4KiB buffers or whatever.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8486e7a_e336325d",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "this could just be a while loop.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8486e7a_e3bbd24a",
+        "filename": "benchmarks/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "call regerror()?\n\n(and \"Couldn\u0027t\", since the other errors here start with a capital?)",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8486e7a_83dbfe9c",
+        "filename": "benchmarks/property_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "oh, i thought you were going to link against the fake system properties implementation. what you\u0027ve done probably makes more sense.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48525a24_2949c977",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "these look weird, but then they\u0027re weird benchmarks, so i\u0027m fine with that.",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48525a24_49b9a5f5",
+        "filename": "benchmarks/utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "UTILS?",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8486e7a_e3b1925d",
+        "filename": "benchmarks/utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-19T18:08:33Z",
+      "side": 1,
+      "message": "\u003cstddef.h\u003e for size_t?",
+      "revId": "103764527a4e016ecb6251b04307395fd05d2fb2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
