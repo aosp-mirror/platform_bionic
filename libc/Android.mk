@@ -143,6 +143,7 @@ libc_bionic_ndk_src_files := \
     bionic/mbrtoc16.cpp \
     bionic/mbrtoc32.cpp \
     bionic/mbstate.cpp \
+    bionic/mempcpy.cpp \
     bionic/mkdir.cpp \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
@@ -214,6 +215,7 @@ libc_bionic_ndk_src_files := \
     bionic/wait.cpp \
     bionic/wchar.cpp \
     bionic/wctype.cpp \
+    bionic/wmempcpy.cpp \
 
 libc_bionic_src_files :=
 
