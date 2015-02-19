@@ -386,11 +386,11 @@ TEST(time, timer_delete_from_timer_thread) {
   ASSERT_EQ(0, timer_create(CLOCK_REALTIME, &se, &tdd.timer_id));
 
   itimerspec ts;
-  ts.it_value.tv_sec = 0;
-  ts.it_value.tv_nsec = 100;
+  ts.it_value.tv_sec = 1;
+  ts.it_value.tv_nsec = 0;
   ts.it_interval.tv_sec = 0;
   ts.it_interval.tv_nsec = 0;
-  ASSERT_EQ(0, timer_settime(tdd.timer_id, TIMER_ABSTIME, &ts, NULL));
+  ASSERT_EQ(0, timer_settime(tdd.timer_id, 0, &ts, NULL));
 
   time_t cur_time = time(NULL);
   while (!tdd.complete && (time(NULL) - cur_time) < 5);
