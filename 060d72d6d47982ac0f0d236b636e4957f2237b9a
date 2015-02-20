@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68a8fe90_6f3211ec",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-20T02:42:25Z",
+      "side": 1,
+      "message": "plus an owner field.  The mutex contains both.",
+      "range": {
+        "startLine": 46,
+        "startChar": 31,
+        "endLine": 46,
+        "endChar": 74
+      },
+      "revId": "060d72d6d47982ac0f0d236b636e4957f2237b9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88a372b2_302ea836",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-20T02:42:25Z",
+      "side": 1,
+      "message": "This should be unsigned short to match the implementation code.  Unsigned short and uint16_t are not necessarily even the same length, though they clearly are for all our platforms.  Either that or we could use atomic_uint_least16_t in the implementation.",
+      "range": {
+        "startLine": 40,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 10
+      },
+      "revId": "060d72d6d47982ac0f0d236b636e4957f2237b9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
