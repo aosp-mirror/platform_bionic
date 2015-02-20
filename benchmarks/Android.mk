@@ -20,12 +20,29 @@ LOCAL_PATH := $(call my-dir)
 # Benchmarks library, usable by projects outside this directory.
 # -----------------------------------------------------------------------------
 
+benchmark_cflags := \
+    -O2 \
+    -fno-builtin \
+    -Wall \
+    -Wextra \
+    -Werror \
+    -Wunused \
+
+benchmark_cppflags := \
+    -std=gnu++11 \
+
+benchmarklib_src_files := \
+    Benchmark.cpp \
+    utils.cpp \
+    main.cpp \
+
 include $(CLEAR_VARS)
 LOCAL_MODULE := libbenchmark
-LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror
-LOCAL_SRC_FILES := benchmark_main.cpp
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
-LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
+LOCAL_CFLAGS := $(benchmark_cflags)
+LOCAL_CPPFLAGS := $(benchmark_cppflags)
+LOCAL_SRC_FILES := $(benchmarklib_src_files)
+LOCAL_C_INCLUDES := $(benchmark_c_includes)
+LOCAL_STATIC_LIBRARIES := libutils
 include $(BUILD_STATIC_LIBRARY)
 
 # Only supported on linux systems.
@@ -33,11 +50,12 @@ ifeq ($(HOST_OS),linux)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libbenchmark
-LOCAL_CFLAGS += -O2 -Wall -Wextra -Werror
-LOCAL_SRC_FILES := benchmark_main.cpp
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
-LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
+LOCAL_CFLAGS := $(benchmark_cflags)
+LOCAL_CPPFLAGS := $(benchmark_cppflags)
+LOCAL_SRC_FILES := $(benchmarklib_src_files)
+LOCAL_C_INCLUDES := $(benchmark_c_includes)
 LOCAL_MULTILIB := both
+LOCAL_STATIC_LIBRARIES := libutils
 include $(BUILD_HOST_STATIC_LIBRARY)
 
 endif
@@ -45,16 +63,9 @@ endif
 # -----------------------------------------------------------------------------
 # Benchmarks.
 # -----------------------------------------------------------------------------
-
-benchmark_c_flags = \
-    -O2 \
-    -Wall -Wextra -Wunused \
-    -Werror \
-    -fno-builtin \
-    -std=gnu++11 \
-
-benchmark_src_files = \
+benchmark_src_files := \
     math_benchmark.cpp \
+    property_benchmark.cpp \
     pthread_benchmark.cpp \
     semaphore_benchmark.cpp \
     stdio_benchmark.cpp \
@@ -70,9 +81,10 @@ LOCAL_MODULE := bionic-benchmarks
 LOCAL_MODULE_STEM_32 := bionic-benchmarks32
 LOCAL_MODULE_STEM_64 := bionic-benchmarks64
 LOCAL_MULTILIB := both
-LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_SRC_FILES := $(benchmark_src_files) property_benchmark.cpp
-LOCAL_STATIC_LIBRARIES += libbenchmark
+LOCAL_CFLAGS := $(benchmark_cflags)
+LOCAL_CPPFLAGS := $(benchmark_cppflags)
+LOCAL_SRC_FILES := $(benchmark_src_files)
+LOCAL_STATIC_LIBRARIES := libbenchmark libutils
 include $(BUILD_EXECUTABLE)
 
 # We don't build a static benchmark executable because it's not usually
@@ -90,10 +102,11 @@ LOCAL_MODULE := bionic-benchmarks-glibc
 LOCAL_MODULE_STEM_32 := bionic-benchmarks-glibc32
 LOCAL_MODULE_STEM_64 := bionic-benchmarks-glibc64
 LOCAL_MULTILIB := both
-LOCAL_CFLAGS += $(benchmark_c_flags)
-LOCAL_LDFLAGS += -lrt
+LOCAL_CFLAGS := $(benchmark_cflags)
+LOCAL_CPPFLAGS := $(benchmark_cppflags)
+LOCAL_LDFLAGS := -lrt
 LOCAL_SRC_FILES := $(benchmark_src_files)
-LOCAL_STATIC_LIBRARIES += libbenchmark
+LOCAL_STATIC_LIBRARIES := libbenchmark libutils
 include $(BUILD_HOST_EXECUTABLE)
 
 endif
