@@ -47,10 +47,10 @@ public:
 
   static std::vector<Benchmark*>& List();
 
-  static size_t MaxNameColumnWidth();
+  static int MaxNameColumnWidth();
 
 protected:
-  virtual size_t NameColumnWidth() = 0;
+  virtual int NameColumnWidth() = 0;
 
   uint64_t bytes_processed_;
   uint64_t total_time_ns_;
@@ -85,8 +85,8 @@ protected:
 
   virtual void Run(int) = 0;
 
-  virtual size_t NameColumnWidth() override {
-    return Name().size();
+  virtual int NameColumnWidth() override {
+    return (int)Name().size();
   }
 
   virtual std::string GetNameStr(void *) override;
@@ -104,10 +104,10 @@ public:
   }
 
 protected:
-  virtual size_t NameColumnWidth() override {
-    size_t max = 0;
+  virtual int NameColumnWidth() override {
+    int max = 0;
     for (const auto arg : args_) {
-      max = std::max(max, GetNameStr(arg).size());
+      max = std::max(max, (int)GetNameStr(arg).size());
     }
     return max;
   }
