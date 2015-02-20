@@ -208,6 +208,8 @@ int getpagesize(void);
 
 long sysconf(int);
 
+long syscall(long number, ...);
+
 extern int daemon(int, int);
 
 #if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
