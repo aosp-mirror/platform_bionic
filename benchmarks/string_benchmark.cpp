@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-#include "benchmark.h"
-
+#include <stdint.h>
 #include <string.h>
+
+#include <benchmark/Benchmark.h>
 
 #define KB 1024
 #define MB 1024*KB
@@ -26,7 +27,8 @@
 
 // TODO: test unaligned operation too? (currently everything will be 8-byte aligned by malloc.)
 
-static void BM_string_memcmp(int iters, int nbytes) {
+BENCHMARK_WITH_ARG(BM_string_memcmp, int)->AT_COMMON_SIZES;
+void BM_string_memcmp::Run(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* src = new char[nbytes]; char* dst = new char[nbytes];
   memset(src, 'x', nbytes);
@@ -39,13 +41,13 @@ static void BM_string_memcmp(int iters, int nbytes) {
   }
 
   StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  SetBenchmarkBytesProcessed(uint64_t(iters) * uint64_t(nbytes));
   delete[] src;
   delete[] dst;
 }
-BENCHMARK(BM_string_memcmp)->AT_COMMON_SIZES;
 
-static void BM_string_memcpy(int iters, int nbytes) {
+BENCHMARK_WITH_ARG(BM_string_memcpy, int)->AT_COMMON_SIZES;
+void BM_string_memcpy::Run(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* src = new char[nbytes]; char* dst = new char[nbytes];
   memset(src, 'x', nbytes);
@@ -56,13 +58,13 @@ static void BM_string_memcpy(int iters, int nbytes) {
   }
 
   StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  SetBenchmarkBytesProcessed(uint64_t(iters) * uint64_t(nbytes));
   delete[] src;
   delete[] dst;
 }
-BENCHMARK(BM_string_memcpy)->AT_COMMON_SIZES;
 
-static void BM_string_memmove(int iters, int nbytes) {
+BENCHMARK_WITH_ARG(BM_string_memmove, int)->AT_COMMON_SIZES;
+void BM_string_memmove::Run(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* buf = new char[nbytes + 64];
   memset(buf, 'x', nbytes + 64);
@@ -73,12 +75,12 @@ static void BM_string_memmove(int iters, int nbytes) {
   }
 
   StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  SetBenchmarkBytesProcessed(uint64_t(iters) * uint64_t(nbytes));
   delete[] buf;
 }
-BENCHMARK(BM_string_memmove)->AT_COMMON_SIZES;
 
-static void BM_string_memset(int iters, int nbytes) {
+BENCHMARK_WITH_ARG(BM_string_memset, int)->AT_COMMON_SIZES;
+void BM_string_memset::Run(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* dst = new char[nbytes];
   StartBenchmarkTiming();
@@ -88,12 +90,12 @@ static void BM_string_memset(int iters, int nbytes) {
   }
 
   StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  SetBenchmarkBytesProcessed(uint64_t(iters) * uint64_t(nbytes));
   delete[] dst;
 }
-BENCHMARK(BM_string_memset)->AT_COMMON_SIZES;
 
-static void BM_string_strlen(int iters, int nbytes) {
+BENCHMARK_WITH_ARG(BM_string_strlen, int)->AT_COMMON_SIZES;
+void BM_string_strlen::Run(int iters, int nbytes) {
   StopBenchmarkTiming();
   char* s = new char[nbytes];
   memset(s, 'x', nbytes);
@@ -106,7 +108,6 @@ static void BM_string_strlen(int iters, int nbytes) {
   }
 
   StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(nbytes));
+  SetBenchmarkBytesProcessed(uint64_t(iters) * uint64_t(nbytes));
   delete[] s;
 }
-BENCHMARK(BM_string_strlen)->AT_COMMON_SIZES;
