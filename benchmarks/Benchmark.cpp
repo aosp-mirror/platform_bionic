@@ -44,8 +44,8 @@ std::vector<Benchmark*>& Benchmark::List() {
   return list;
 }
 
-size_t Benchmark::MaxNameColumnWidth() {
-  size_t max = 20;
+int Benchmark::MaxNameColumnWidth() {
+  int max = 20;
   for (auto& benchmark : List()) {
     max = std::max(max, benchmark->NameColumnWidth());
   }
