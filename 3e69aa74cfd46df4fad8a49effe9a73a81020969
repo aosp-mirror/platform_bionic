@@ -286,6 +286,30 @@
     },
     {
       "key": {
+        "uuid": "c881ea4d_320bd04d",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-20T23:04:27Z",
+      "side": 1,
+      "message": "In my copy of the ARMv8 manual, section B2.7.3, there is a section load-acquire and store-release.  The first bullet in the first bulleted list states:\n\n\"A Store-Release followed by a Load-Acquire is observed in program order by each observer within the\nshareability domain of the memory address being accessed by the Store-Release and the memory address\nbeing accessed by the Load-Acquire.\"",
+      "parentUuid": "88eff2fe_70a8509e",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b30947e_dcae257f",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
