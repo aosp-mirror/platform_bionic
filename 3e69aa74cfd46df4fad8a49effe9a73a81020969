@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8c5967a_62a86c65",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-20T19:47:34Z",
+      "side": 1,
+      "message": "Retain only one of this comment. I found some code in system/core assumes sizeof(atomic_int) equals sizeof(int), but I didn\u0027t find any place in standard guarantees this. So I think it is safer to retain the static_assert.",
+      "parentUuid": "2b2600b6_cd1b696f",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 38
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bd55878_aa956f29",
         "filename": "libc/bionic/pthread_rwlock.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-18T19:35:21Z",
       "side": 1,
       "message": "That seems like a very workload-dependent prediction, and this is unlikely to be performance critical.  I wouldn\u0027t bother.",
+      "range": {
+        "startLine": 144,
+        "startChar": 6,
+        "endLine": 144,
+        "endChar": 20
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e56a1d_7563a2f4",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-20T19:47:34Z",
+      "side": 1,
+      "message": "Just to keep it the same as pthread_mutex_init.",
+      "parentUuid": "6bd55878_aa956f29",
       "range": {
         "startLine": 144,
         "startChar": 6,
@@ -202,6 +250,30 @@
       "side": 1,
       "message": "ARMv8 (unlike Itanium) does not allow reordering of a release store followed by an acquire load.  This was done precisely to avoid this problem.  It does allow reordering of a release store followed by an ordinary load.",
       "parentUuid": "087a22aa_577cae4f",
+      "range": {
+        "startLine": 327,
+        "startChar": 4,
+        "endLine": 327,
+        "endChar": 30
+      },
+      "revId": "3e69aa74cfd46df4fad8a49effe9a73a81020969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88eff2fe_70a8509e",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-20T19:47:34Z",
+      "side": 1,
+      "message": "I found the same sentence in a blog, but not in a formal ARM documentation. Any suggestion about in which document can I find the proof?",
+      "parentUuid": "488dfa43_aeaeb7f7",
       "range": {
         "startLine": 327,
         "startChar": 4,
