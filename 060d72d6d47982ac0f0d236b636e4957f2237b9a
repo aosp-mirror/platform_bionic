@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "88eff2fe_f0b1e0c1",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-20T20:08:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68a8fe90_6f3211ec",
+      "range": {
+        "startLine": 46,
+        "startChar": 31,
+        "endLine": 46,
+        "endChar": 74
+      },
+      "revId": "060d72d6d47982ac0f0d236b636e4957f2237b9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88a372b2_302ea836",
         "filename": "libc/include/pthread.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-20T02:42:25Z",
       "side": 1,
       "message": "This should be unsigned short to match the implementation code.  Unsigned short and uint16_t are not necessarily even the same length, though they clearly are for all our platforms.  Either that or we could use atomic_uint_least16_t in the implementation.",
+      "range": {
+        "startLine": 40,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 10
+      },
+      "revId": "060d72d6d47982ac0f0d236b636e4957f2237b9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d97a6e_4e1a5315",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-20T20:08:52Z",
+      "side": 1,
+      "message": "The problem I am worried about here is: on 32-bit devices, we need to make sure sizeof(value) + sizeof(owner_tid) \u003d sizeof(int). So define value as uint16_t is more stable to me, and I changed the implementation from \"unsigned short\" to \"uint16_t\" as well.",
+      "parentUuid": "88a372b2_302ea836",
       "range": {
         "startLine": 40,
         "startChar": 2,
