@@ -34,6 +34,7 @@
 #include <stddef.h>
 #include <sys/cdefs.h>
 #include <sys/syscall.h>
+#include <unistd.h>
 
 __BEGIN_DECLS
 
