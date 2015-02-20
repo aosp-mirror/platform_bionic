@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "benchmark.h"
-
 #include <stdio.h>
 #include <stdio_ext.h>
+
+#include <benchmark/Benchmark.h>
 
 #define KB 1024
 #define MB 1024*KB
@@ -27,12 +27,12 @@
     Arg(1*KB)->Arg(4*KB)->Arg(8*KB)->Arg(16*KB)->Arg(64*KB)
 
 template <typename Fn>
-static void ReadWriteTest(int iters, int chunk_size, Fn f, bool buffered) {
-  StopBenchmarkTiming();
+void ReadWriteTest(::testing::Benchmark* benchmark, int iters, int chunk_size, Fn f, bool buffered) {
+  benchmark->StopBenchmarkTiming();
   FILE* fp = fopen("/dev/zero", "rw");
   __fsetlocking(fp, FSETLOCKING_BYCALLER);
   char* buf = new char[chunk_size];
-  StartBenchmarkTiming();
+  benchmark->StartBenchmarkTiming();
 
   if (!buffered) {
     setvbuf(fp, 0, _IONBF, 0);
@@ -42,31 +42,31 @@ static void ReadWriteTest(int iters, int chunk_size, Fn f, bool buffered) {
     f(buf, chunk_size, 1, fp);
   }
 
-  StopBenchmarkTiming();
-  SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(chunk_size));
+  benchmark->StopBenchmarkTiming();
+  benchmark->SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(chunk_size));
   delete[] buf;
   fclose(fp);
 }
 
-static void BM_stdio_fread(int iters, int chunk_size) {
-  ReadWriteTest(iters, chunk_size, fread, true);
+BENCHMARK_WITH_ARG(BM_stdio_fread, int)->AT_COMMON_SIZES;
+void BM_stdio_fread::Run(int iters, int chunk_size) {
+  ReadWriteTest(this, iters, chunk_size, fread, true);
 }
-BENCHMARK(BM_stdio_fread)->AT_COMMON_SIZES;
 
-static void BM_stdio_fwrite(int iters, int chunk_size) {
-  ReadWriteTest(iters, chunk_size, fwrite, true);
+BENCHMARK_WITH_ARG(BM_stdio_fwrite, int)->AT_COMMON_SIZES;
+void BM_stdio_fwrite::Run(int iters, int chunk_size) {
+  ReadWriteTest(this, iters, chunk_size, fwrite, true);
 }
-BENCHMARK(BM_stdio_fwrite)->AT_COMMON_SIZES;
 
-static void BM_stdio_fread_unbuffered(int iters, int chunk_size) {
-  ReadWriteTest(iters, chunk_size, fread, false);
+BENCHMARK_WITH_ARG(BM_stdio_fread_unbuffered, int)->AT_COMMON_SIZES;
+void BM_stdio_fread_unbuffered::Run(int iters, int chunk_size) {
+  ReadWriteTest(this, iters, chunk_size, fread, false);
 }
-BENCHMARK(BM_stdio_fread_unbuffered)->AT_COMMON_SIZES;
 
-static void BM_stdio_fwrite_unbuffered(int iters, int chunk_size) {
-  ReadWriteTest(iters, chunk_size, fwrite, false);
+BENCHMARK_WITH_ARG(BM_stdio_fwrite_unbuffered, int)->AT_COMMON_SIZES;
+void BM_stdio_fwrite_unbuffered::Run(int iters, int chunk_size) {
+  ReadWriteTest(this, iters, chunk_size, fwrite, false);
 }
-BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
 
 static void FopenFgetsFclose(int iters, bool no_locking) {
   char buf[1024];
@@ -78,12 +78,16 @@ static void FopenFgetsFclose(int iters, bool no_locking) {
   }
 }
 
-static void BM_stdio_fopen_fgets_fclose_locking(int iters) {
+BENCHMARK_NO_ARG(BM_stdio_fopen_fgets_fclose_locking);
+void BM_stdio_fopen_fgets_fclose_locking::Run(int iters) {
+  StartBenchmarkTiming();
   FopenFgetsFclose(iters, false);
+  StopBenchmarkTiming();
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
 
-static void BM_stdio_fopen_fgets_fclose_no_locking(int iters) {
+BENCHMARK_NO_ARG(BM_stdio_fopen_fgets_fclose_no_locking);
+void BM_stdio_fopen_fgets_fclose_no_locking::Run(int iters) {
+  StartBenchmarkTiming();
   FopenFgetsFclose(iters, true);
+  StopBenchmarkTiming();
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
