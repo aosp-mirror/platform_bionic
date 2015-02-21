@@ -1,0 +1,259 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28f0c60e_9d59e37d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "do we need to use uintptr_t for alignment reasons? i was a bit concerned about using an extra 32 bits per key per thread, but i wasn\u0027t expecting an extra 64 :-)",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ee3e36_828b3c34",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "i\u0027m not as concerned about the size here, since there\u0027s no \"per thread\" multiplier, but this doesn\u0027t need to be pointer-sized, so should probably just be an explicit size, 32 or 64.",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_fd80e766",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "either \u0027destructor\u0027 or, if you really want something shorter, \u0027dtor\u0027 is the traditional abbreviation (with \u0027ctor\u0027 for constructor).\n\npersonally i\u0027d be tempted to go overboard and have something like \u0027key_destructor\u0027 since these aren\u0027t either of the two common kinds of destructor.",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_dd852b75",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "inline functions, not #defines.",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_1e678d87",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "move this up with the struct.",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_be55b99a",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "size_t",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ee3e36_e29b2888",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "size_t",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_9e5a7dc6",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "s/for some odd reason/ (if you don\u0027t have a real-world example to give, don\u0027t waffle.)",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_3d9b6fda",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "hey, yeah, \u0027key_destructor\u0027 is a great name :-)",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ee3e36_42913468",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "s/might be/is/",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_7d95f7a1",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "destructor",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_5d92bbbb",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "invalidate",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_5d675b34",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "i think this would be a mangled name change for C++, no?",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_de640586",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "s/that can be/\n\ns/count/number/",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_3e6a494f",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T04:44:29Z",
+      "side": 1,
+      "message": "s/used by users/allocated by pthread_key_create/",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
