@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48f33a1b_deac0505",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "s/fcn/fn/",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_3eb24962",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "call to...?\n\ni think wording using \"reset after\" might be clearer than \"scoped to\" anyway, since there are no actual scopes here.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_c009c02b",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "s/callback/the lookup function/",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8122e0d_b3ea18f9",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "the linker",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8122e0d_93ef1c09",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "the library",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_1eaf8df6",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "*close_flag\n\nthis should probably be a bool, not an int.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8122e0d_f3e4902e",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "when is that, exactly?",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_00144841",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "android_(dlopen_?)\n\nthis is all going in the global namespace, remember, and we can\u0027t change it after we\u0027ve shipped.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_a00e342f",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "android_update_dlopen_lookup_fn?\n\nupdate feels like the wrong word. (i can\u0027t remember now why we called the function above update rather than set.) but i\u0027m not sure what the right verb is for \"use this for the next call only\".\n\nwhy does this exist? why can\u0027t the caller use android_dlopen_ext? if we\u0027re having to provide new private API to the only user of our new public API, that makes me worry about the suitability of our new public API :-)",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28f0c60e_e0183c77",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "this looks like it should be returning bool.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48f33a1b_7ebcd131",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-21T18:14:34Z",
+      "side": 1,
+      "message": "i knew you knew :-)",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
