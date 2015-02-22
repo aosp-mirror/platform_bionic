@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0816a200_f4e4782e",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f33a1b_deac0505",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_3eb24962",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 22
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "call to...?\n\ni think wording using \"reset after\" might be clearer than \"scoped to\" anyway, since there are no actual scopes here.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8df2a7e_a26abecf",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "well, it is not reset... it is used inside function and becomes inactive after the call. I removed the second sentence, it is confusing. In this case it is obvious that the arguments cannot be used by the linker after the call.",
+      "parentUuid": "48f33a1b_3eb24962",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "6869de73_47a80e9e",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28f0c60e_c009c02b",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8122e0d_b3ea18f9",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 22
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "the linker",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0816a200_940ee42f",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8122e0d_b3ea18f9",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,41 @@
     },
     {
       "key": {
+        "uuid": "c8df2a7e_62771667",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8122e0d_93ef1c09",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_077a164f",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "speaking of bool, should we change return type as well?",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_1eaf8df6",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 22
@@ -98,6 +205,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "*close_flag\n\nthis should probably be a bool, not an int.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_27771a68",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f33a1b_1eaf8df6",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "0816a200_f413d859",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "once it is loaded.",
+      "parentUuid": "e8122e0d_f3e4902e",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f0c60e_00144841",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 22
@@ -132,6 +275,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "android_(dlopen_?)\n\nthis is all going in the global namespace, remember, and we can\u0027t change it after we\u0027ve shipped.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_c764feb0",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28f0c60e_00144841",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "0816a200_d4185c77",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "I am thinking now of opening this function (adding it to dlext.h) and changing semantics of to something like sigaction... where you can get old lookup_fn and an argument when setting up new one.\n\nI answered the question why in https://android-review.googlesource.com/101981",
+      "parentUuid": "28f0c60e_a00e342f",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f0c60e_e0183c77",
         "filename": "linker/linker.cpp",
         "patchSetId": 22
@@ -166,6 +345,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "this looks like it should be returning bool.",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6869de73_e7690286",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-22T21:59:38Z",
+      "side": 1,
+      "message": "right...",
+      "parentUuid": "28f0c60e_e0183c77",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
