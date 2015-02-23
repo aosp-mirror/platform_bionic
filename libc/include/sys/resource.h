@@ -36,6 +36,10 @@
 
 __BEGIN_DECLS
 
+/* The kernel header doesn't have these, but POSIX does. */
+#define RLIM_SAVED_CUR RLIM_INFINITY
+#define RLIM_SAVED_MAX RLIM_INFINITY
+
 typedef unsigned long rlim_t;
 
 extern int getrlimit(int, struct rlimit*);
