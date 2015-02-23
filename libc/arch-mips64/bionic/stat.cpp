@@ -29,7 +29,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/syscall.h>
-#include <asm/unistd.h>
+#include <unistd.h>
 
 struct kernel_stat {
  unsigned int st_dev;
