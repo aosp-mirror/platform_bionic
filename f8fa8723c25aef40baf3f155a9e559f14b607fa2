@@ -16,6 +16,24 @@
       "revId": "f8fa8723c25aef40baf3f155a9e559f14b607fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a534e107_a1199e77",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T04:49:09Z",
+      "side": 1,
+      "message": "Before the change, I want to ask why uint_least32_t is preferred than unsigned int. Is it because \"unsigned int\" don\u0027t have an explicit size? In my assumption, \"unsigned int\" is actually uint_least32_t. Do we need to worry about \"unsigned int\" may become smaller, or bigger?\nIs there the reason to prefer \"uint_least16_t\" than \"unsigned short\"?",
+      "parentUuid": "c52f15b4_62c67673",
+      "revId": "f8fa8723c25aef40baf3f155a9e559f14b607fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
