@@ -194,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "652589ee_67cb32ac",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-24T16:09:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6869de73_077a164f",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_1eaf8df6",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 22
@@ -334,6 +352,24 @@
     },
     {
       "key": {
+        "uuid": "e5f7b997_8bd10d57",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-24T16:09:02Z",
+      "side": 1,
+      "message": "replaced this with android_set_dlopen_lookup_action.. made it public.",
+      "parentUuid": "0816a200_d4185c77",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f0c60e_e0183c77",
         "filename": "linker/linker.cpp",
         "patchSetId": 22
@@ -369,6 +405,24 @@
     },
     {
       "key": {
+        "uuid": "e5f7b997_ebded164",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-24T16:09:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6869de73_e7690286",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_7ebcd131",
         "filename": "linker/linker.cpp",
         "patchSetId": 22
@@ -380,6 +434,24 @@
       "writtenOn": "2015-02-21T18:14:34Z",
       "side": 1,
       "message": "i knew you knew :-)",
+      "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5f7b997_cbdb1573",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-02-24T16:09:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f33a1b_7ebcd131",
       "revId": "53c1697299d83f0a5153ab0102acf0a56b5b2ea6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
