@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85a19dbc_e0c5a297",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T20:55:07Z",
+      "side": 1,
+      "message": "It would be really nice to see a comment with an overview of the data structure here.",
+      "range": {
+        "startLine": 38,
+        "startChar": 7,
+        "endLine": 38,
+        "endChar": 24
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45d4052e_36187818",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T20:55:07Z",
+      "side": 1,
+      "message": "This seems expensive, especially since the current PTHREAD_KEYS_MAX seems fairly low.  Keep a per-thread count of the highest index that ever had a non-NULL slot?",
+      "range": {
+        "startLine": 62,
+        "startChar": 27,
+        "endLine": 62,
+        "endChar": 51
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45ab259e_7e0db1b3",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T20:55:07Z",
+      "side": 1,
+      "message": "acquire.  See below.",
+      "range": {
+        "startLine": 63,
+        "startChar": 59,
+        "endLine": 63,
+        "endChar": 80
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45ab259e_9e4abd6d",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T20:55:07Z",
+      "side": 1,
+      "message": "Pthread_key_create is also used to allocate the reserved slots?",
+      "range": {
+        "startLine": 87,
+        "startChar": 18,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65a669d5_ff653fac",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T20:55:07Z",
+      "side": 1,
+      "message": "I don\u0027t see the correctness argument for relaxed ordering here.  If one thread allocates and immediately deletes a key, the destructor assignment can become visible after the destructor assignment for the next reuse of the slot.  The ordering here requires care, though it may be OK to keep the relaxed ordering in setspecific and getspecific, where it matters.\n\nAt a minimum create needs to use acquire ordering and delete release ordering, since they acquire and release ownership of the destructor slot.",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 50
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
