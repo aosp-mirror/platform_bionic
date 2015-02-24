@@ -801,3 +801,22 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_UUCP);
 #endif // defined(__BIONIC__)
 }
+
+TEST(unistd, dup2_same) {
+  // POSIX says of dup2:
+  // If fildes2 is already a valid open file descriptor ...
+  // [and] fildes is equal to fildes2 ... dup2() shall return
+  // fildes2 without closing it.
+  // This isn't true of dup3(2), so we need to manually implement that.
+
+  // Equal and valid.
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+  ASSERT_EQ(fd, dup2(fd, fd));
+  ASSERT_EQ(0, close(fd)); // Check that dup2 didn't close fd.
+
+  // Equal, but invalid.
+  errno = 0;
+  ASSERT_EQ(-1, dup2(fd, fd));
+  ASSERT_EQ(EBADF, errno);
+}
