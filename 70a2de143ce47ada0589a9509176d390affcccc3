@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "e52fb98a_8e131bd3",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:07:50Z",
+      "side": 1,
+      "message": "Will reduce the number of pthread keys statically allocated, and use mmaped space for extra pthread keys needed.",
+      "parentUuid": "e86eaeaf_f33d9059",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f0c60e_fd80e766",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 2
