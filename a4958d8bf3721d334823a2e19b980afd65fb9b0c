@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "85efddfe_f0644009",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T22:13:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85a19dbc_e0c5a297",
+      "range": {
+        "startLine": 38,
+        "startChar": 7,
+        "endLine": 38,
+        "endChar": 24
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45d4052e_36187818",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
@@ -95,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "857c3df2_6b83dd71",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T22:13:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45ab259e_7e0db1b3",
+      "range": {
+        "startLine": 63,
+        "startChar": 59,
+        "endLine": 63,
+        "endChar": 80
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45ab259e_9e4abd6d",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
@@ -153,6 +201,30 @@
       "writtenOn": "2015-02-24T20:55:07Z",
       "side": 1,
       "message": "I don\u0027t see the correctness argument for relaxed ordering here.  If one thread allocates and immediately deletes a key, the destructor assignment can become visible after the destructor assignment for the next reuse of the slot.  The ordering here requires care, though it may be OK to keep the relaxed ordering in setspecific and getspecific, where it matters.\n\nAt a minimum create needs to use acquire ordering and delete release ordering, since they acquire and release ownership of the destructor slot.",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 50
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85efddfe_1080e427",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T22:13:20Z",
+      "side": 1,
+      "message": "Done. Good concern!",
+      "parentUuid": "65a669d5_ff653fac",
       "range": {
         "startLine": 92,
         "startChar": 8,
