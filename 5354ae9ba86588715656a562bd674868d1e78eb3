@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e576d9c4_56e83204",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T01:42:07Z",
+      "side": 1,
+      "message": "This is misleading because there aren\u0027t really two kinds of key.\n\nreplace the first sentence with \"bionic uses some pthread keys internally.\"?",
+      "revId": "5354ae9ba86588715656a562bd674868d1e78eb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c56c75f3_7a075900",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T01:42:07Z",
+      "side": 1,
+      "message": "maybe #define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 5 above, rather than have the comment and the magic number?",
+      "revId": "5354ae9ba86588715656a562bd674868d1e78eb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05a12d5e_5cdb7d2b",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T01:42:07Z",
+      "side": 1,
+      "message": "much better.",
+      "revId": "5354ae9ba86588715656a562bd674868d1e78eb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
