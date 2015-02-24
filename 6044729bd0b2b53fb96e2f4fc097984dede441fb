@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25ab9158_e5197676",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-24T03:05:44Z",
+      "side": 1,
+      "message": "Given the way you wrote this, there could still be an error if dup2 blindly returns the same value if the two arguments are equal.\n\nYou could shift the tests around, and do the equal, but invalid using the fd obtained from the open call below. That would guarantee that the wrong value is not being returned.\n\nThis isn\u0027t that big a deal since you are checking the errno anyway, but it might be a bit more thorough.",
+      "range": {
+        "startLine": 813,
+        "startChar": 2,
+        "endLine": 815,
+        "endChar": 26
+      },
+      "revId": "6044729bd0b2b53fb96e2f4fc097984dede441fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
