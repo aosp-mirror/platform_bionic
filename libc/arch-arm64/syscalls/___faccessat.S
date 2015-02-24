@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(faccessat)
+ENTRY(___faccessat)
     mov     x8, __NR_faccessat
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(faccessat)
     b.hi    __set_errno_internal
 
     ret
-END(faccessat)
+END(___faccessat)
+.hidden ___faccessat

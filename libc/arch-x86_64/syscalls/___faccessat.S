@@ -2,8 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(faccessat)
-    movq    %rcx, %r10
+ENTRY(___faccessat)
     movl    $__NR_faccessat, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -13,4 +12,5 @@ ENTRY(faccessat)
     call    __set_errno_internal
 1:
     ret
-END(faccessat)
+END(___faccessat)
+.hidden ___faccessat
