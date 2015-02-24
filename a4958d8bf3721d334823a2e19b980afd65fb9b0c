@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "4547a5ec_7e311160",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T23:20:26Z",
+      "side": 1,
+      "message": "depends what you mean. the c library itself uses the public API, so, yes, you need to start at 0 for the C library uses. but, yes, by the time user code is allocating keys, the low-numbered slots are already taken.",
+      "parentUuid": "4547a5ec_9e8dfd20",
+      "range": {
+        "startLine": 87,
+        "startChar": 18,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65a669d5_ff653fac",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
