@@ -34,6 +34,24 @@
       "revId": "fe7b11b1e7e78bb80f3e3b5d4cbb03ca8b569607",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45432581_5e0195e7",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T05:24:48Z",
+      "side": 1,
+      "message": "yeah, that makes sense.",
+      "parentUuid": "45432581_5ec6b572",
+      "revId": "fe7b11b1e7e78bb80f3e3b5d4cbb03ca8b569607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
