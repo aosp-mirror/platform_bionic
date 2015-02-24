@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a880367a_c70452c4",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:05:14Z",
+      "side": 1,
+      "message": "Yes. For alignment, The size of whole structure will stay the same even we use int here. I think it is fine as the whole pthread_internal_t still takes one page and will not use the space of stack.",
+      "parentUuid": "28f0c60e_9d59e37d",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68ee3e36_828b3c34",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-21T04:44:29Z",
       "side": 1,
       "message": "i\u0027m not as concerned about the size here, since there\u0027s no \"per thread\" multiplier, but this doesn\u0027t need to be pointer-sized, so should probably just be an explicit size, 32 or 64.",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e86eaeaf_f33d9059",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:05:14Z",
+      "side": 1,
+      "message": "Do you mean the type of uintptr_t is misunderstanding? And we\u0027d better use type \"int\" even there are 8 bytes for alignment in 64-bit device?",
+      "parentUuid": "68ee3e36_828b3c34",
       "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +259,24 @@
     },
     {
       "key": {
+        "uuid": "885372fc_b0277829",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:05:14Z",
+      "side": 1,
+      "message": "Good concern. It matters.",
+      "parentUuid": "28f0c60e_5d675b34",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_de640586",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 2
@@ -240,6 +294,24 @@
     },
     {
       "key": {
+        "uuid": "e52fb98a_2e36677d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:05:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f33a1b_de640586",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f33a1b_3e6a494f",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 2
@@ -251,6 +323,24 @@
       "writtenOn": "2015-02-21T04:44:29Z",
       "side": 1,
       "message": "s/used by users/allocated by pthread_key_create/",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "054ccd89_674c8c8d",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T00:05:14Z",
+      "side": 1,
+      "message": "All of them are allocated by pthread_key_create.",
+      "parentUuid": "48f33a1b_3e6a494f",
       "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
