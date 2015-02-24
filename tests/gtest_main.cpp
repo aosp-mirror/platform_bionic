@@ -124,15 +124,15 @@ class Test {
 
   int64_t GetTestTime() const { return elapsed_time_ns_; }
 
-  void AppendFailureMessage(const std::string& s) { failure_message_ += s; }
+  void AppendTestOutput(const std::string& s) { output_ += s; }
 
-  const std::string& GetFailureMessage() const { return failure_message_; }
+  const std::string& GetTestOutput() const { return output_; }
 
  private:
   const std::string name_;
   TestResult result_;
   int64_t elapsed_time_ns_;
-  std::string failure_message_;
+  std::string output_;
 };
 
 class TestCase {
@@ -196,10 +196,6 @@ class TestCase {
   std::vector<Test> test_list_;
 };
 
-// This is the file descriptor used by the child process to write failure message.
-// The parent process will collect the information and dump to stdout / xml file.
-static int child_output_fd;
-
 class TestResultPrinter : public testing::EmptyTestEventListener {
  public:
   TestResultPrinter() : pinfo_(NULL) {}
@@ -219,25 +215,9 @@ void TestResultPrinter::OnTestPartResult(const testing::TestPartResult& result) 
     return;
 
   // Print failure message from the assertion (e.g. expected this and got that).
-  char buf[1024];
-  snprintf(buf, sizeof(buf), "%s:(%d) Failure in test %s.%s\n%s\n", result.file_name(),
-                                                                    result.line_number(),
-                                                                    pinfo_->test_case_name(),
-                                                                    pinfo_->name(),
-                                                                    result.message());
-
-  int towrite = strlen(buf);
-  char* p = buf;
-  while (towrite > 0) {
-    ssize_t bytes_written = TEMP_FAILURE_RETRY(write(child_output_fd, p, towrite));
-    if (bytes_written == -1) {
-      fprintf(stderr, "failed to write child_output_fd: %s\n", strerror(errno));
-      exit(1);
-    } else {
-      towrite -= bytes_written;
-      p += bytes_written;
-    }
-  }
+  printf("%s:(%d) Failure in test %s.%s\n%s\n", result.file_name(), result.line_number(),
+         pinfo_->test_case_name(), pinfo_->name(), result.message());
+  fflush(stdout);
 }
 
 static int64_t NanoTime() {
@@ -332,8 +312,8 @@ static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
     printf("\n");
   }
 
-  const std::string& failure_message = testcase.GetTest(test_id).GetFailureMessage();
-  printf("%s", failure_message.c_str());
+  const std::string& test_output = testcase.GetTest(test_id).GetTestOutput();
+  printf("%s", test_output.c_str());
   fflush(stdout);
 }
 
@@ -481,8 +461,8 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
         fputs(" />\n", fp);
       } else {
         fputs(">\n", fp);
-        const std::string& failure_message = testcase.GetTest(j).GetFailureMessage();
-        fprintf(fp, "      <failure message=\"%s\" type=\"\">\n", failure_message.c_str());
+        const std::string& test_output = testcase.GetTest(j).GetTestOutput();
+        fprintf(fp, "      <failure message=\"%s\" type=\"\">\n", test_output.c_str());
         fputs("      </failure>\n", fp);
         fputs("    </testcase>\n", fp);
       }
@@ -538,7 +518,10 @@ static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_
   } else if (pid == 0) {
     // In child process, run a single test.
     close(pipefd[0]);
-    child_output_fd = pipefd[1];
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+    dup2(pipefd[1], STDOUT_FILENO);
+    dup2(pipefd[1], STDERR_FILENO);
 
     if (sigprocmask(SIG_SETMASK, &sigmask, NULL) == -1) {
       perror("sigprocmask SIG_SETMASK");
@@ -692,7 +675,7 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     ssize_t bytes_read = TEMP_FAILURE_RETRY(read(child_proc.child_read_fd, buf, sizeof(buf) - 1));
     if (bytes_read > 0) {
       buf[bytes_read] = '\0';
-      testcase.GetTest(test_id).AppendFailureMessage(buf);
+      testcase.GetTest(test_id).AppendTestOutput(buf);
     } else if (bytes_read == 0) {
       break; // Read end.
     } else {
@@ -713,7 +696,7 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     char buf[1024];
     snprintf(buf, sizeof(buf), "%s killed because of timeout at %" PRId64 " ms.\n",
              testcase.GetTestName(test_id).c_str(), testcase.GetTestTime(test_id) / 1000000);
-    testcase.GetTest(test_id).AppendFailureMessage(buf);
+    testcase.GetTest(test_id).AppendTestOutput(buf);
 
   } else if (WIFSIGNALED(child_proc.exit_status)) {
     // Record signal terminated test as failed.
@@ -721,7 +704,7 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     char buf[1024];
     snprintf(buf, sizeof(buf), "%s terminated by signal: %s.\n",
              testcase.GetTestName(test_id).c_str(), strsignal(WTERMSIG(child_proc.exit_status)));
-    testcase.GetTest(test_id).AppendFailureMessage(buf);
+    testcase.GetTest(test_id).AppendTestOutput(buf);
 
   } else {
     testcase.SetTestResult(test_id, WEXITSTATUS(child_proc.exit_status) == 0 ?
