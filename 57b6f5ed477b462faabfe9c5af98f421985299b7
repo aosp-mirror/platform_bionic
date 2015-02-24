@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05fccdc3_246df216",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T23:05:05Z",
+      "side": 1,
+      "message": "I\u0027m a bit concerned about anything that increases thread creation/destruction overhead, given the lengths people tend to go to to avoid creating threads.  But Elliott is clearly right that this currently unlikely to be low hanging fruit, especially given the low limit.  I agree it\u0027s fine for now.",
+      "range": {
+        "startLine": 68,
+        "startChar": 27,
+        "endLine": 68,
+        "endChar": 51
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6542e9dd_bf4a376d",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T23:05:05Z",
+      "side": 1,
+      "message": "I don\u0027t think this is quite correct yet, though failures are extremely unlikely.  The read of key_destructor potentially races with key_create.  This seems to be unavoidably true, independent of memory order sepcifications.  I think it\u0027s (mostly) fixable by doing the non-null destructor test last.  At that point, we know that we have valid non-null data, which could only have gotten there if someone passed us the key, and that (almost) implies a happens-before ordering.\n\n(almost: I think this assumes the absence of a non-trivial memory_order_consume implementation, which is currently a safe assumption.)\n\nIf I\u0027m correct, this also requires a comment.",
+      "range": {
+        "startLine": 69,
+        "startChar": 60,
+        "endLine": 69,
+        "endChar": 80
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
