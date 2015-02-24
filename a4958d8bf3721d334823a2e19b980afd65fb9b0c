@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "45d4052e_96d98cb2",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T20:58:29Z",
+      "side": 1,
+      "message": "not worth it: this gets called once per thread, on exit.\n\nand this will change when we get round to removing the fixed-fixed buffer in a later change anyway.",
+      "parentUuid": "45d4052e_36187818",
+      "range": {
+        "startLine": 62,
+        "startChar": 27,
+        "endLine": 62,
+        "endChar": 51
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45ab259e_7e0db1b3",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
@@ -82,6 +106,30 @@
       "writtenOn": "2015-02-24T20:55:07Z",
       "side": 1,
       "message": "Pthread_key_create is also used to allocate the reserved slots?",
+      "range": {
+        "startLine": 87,
+        "startChar": 18,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25d1d13f_35e630b3",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T20:58:29Z",
+      "side": 1,
+      "message": "see the comment in the next file :-)\n\n(it\u0027s a huge historical pain the \u0027c\u0027 \u003c \u0027h\u0027 so the interface always sorts before the implementation. we should fix that in our review tools.)",
+      "parentUuid": "45ab259e_9e4abd6d",
       "range": {
         "startLine": 87,
         "startChar": 18,
