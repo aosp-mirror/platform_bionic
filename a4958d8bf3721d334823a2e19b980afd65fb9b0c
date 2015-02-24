@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "4547a5ec_9e8dfd20",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-24T23:08:14Z",
+      "side": 1,
+      "message": "So should we be starting at zero here?  I read the comment as saying \"no\"?",
+      "parentUuid": "25d1d13f_35e630b3",
+      "range": {
+        "startLine": 87,
+        "startChar": 18,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65a669d5_ff653fac",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
