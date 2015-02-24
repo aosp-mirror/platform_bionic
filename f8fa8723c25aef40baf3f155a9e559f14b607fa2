@@ -34,6 +34,24 @@
       "revId": "f8fa8723c25aef40baf3f155a9e559f14b607fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a534e107_c1c02226",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T05:03:32Z",
+      "side": 1,
+      "message": "in the modern world, only long really ever differs, but we prefer to always be explicit. (in general, not just integer types :-).)",
+      "parentUuid": "a534e107_a1199e77",
+      "revId": "f8fa8723c25aef40baf3f155a9e559f14b607fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
