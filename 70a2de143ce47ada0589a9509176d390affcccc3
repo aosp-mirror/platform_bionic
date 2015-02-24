@@ -90,6 +90,42 @@
     },
     {
       "key": {
+        "uuid": "4597a502_1e464d6b",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T00:25:47Z",
+      "side": 1,
+      "message": "i may just have to get used to seeing uintptr_t in place like this. it\u0027s probably worth a comment that you\u0027re using it for alignment though, not that you actually think you need a 64-bit sequence number.\n\nwould there be any performance advantage on a 64-bit device to only using a 32-bit value? i assume not.",
+      "parentUuid": "e86eaeaf_f33d9059",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4597a502_5eb7f502",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T00:25:47Z",
+      "side": 1,
+      "message": "sgtm, but you don\u0027t have to do that in the same change.",
+      "parentUuid": "e52fb98a_8e131bd3",
+      "revId": "70a2de143ce47ada0589a9509176d390affcccc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f0c60e_fd80e766",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 2
