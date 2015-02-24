@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45432581_fe27c1d4",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T04:46:10Z",
+      "side": 1,
+      "message": "well, i\u0027d have moved this up next to the LIBC constant and removed the comment (since this is better commented above), or split the big block comment above and inserted the libc constant after the list of libc keys and the jemalloc constant after the jemalloc keys, but this is fine too.",
+      "revId": "fe7b11b1e7e78bb80f3e3b5d4cbb03ca8b569607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
