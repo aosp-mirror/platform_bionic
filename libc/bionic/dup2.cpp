@@ -26,8 +26,19 @@
  * SUCH DAMAGE.
  */
 
+#include <fcntl.h>
 #include <unistd.h>
 
 int dup2(int old_fd, int new_fd) {
+  // If old_fd is equal to new_fd and a valid file descriptor, dup2 returns
+  // old_fd without closing it. This is not true of dup3, so we have to
+  // handle this case ourselves.
+  if (old_fd == new_fd) {
+    if (fcntl(old_fd, F_GETFD) == -1) {
+      return -1;
+    }
+    return old_fd;
+  }
+
   return dup3(old_fd, new_fd, 0);
 }
