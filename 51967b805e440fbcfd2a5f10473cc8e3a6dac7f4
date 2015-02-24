@@ -46,6 +46,30 @@
       "revId": "51967b805e440fbcfd2a5f10473cc8e3a6dac7f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4502458e_06dc3a6a",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T22:16:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5ea21ed_d16a647c",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 356,
+        "endChar": 61
+      },
+      "revId": "51967b805e440fbcfd2a5f10473cc8e3a6dac7f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
