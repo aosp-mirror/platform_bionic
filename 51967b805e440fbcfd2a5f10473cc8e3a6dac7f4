@@ -22,6 +22,30 @@
       "revId": "51967b805e440fbcfd2a5f10473cc8e3a6dac7f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5ea21ed_d16a647c",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T21:46:08Z",
+      "side": 1,
+      "message": "we can just remove this. it clearly didn\u0027t help.",
+      "parentUuid": "25d1d13f_980099e6",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 356,
+        "endChar": 61
+      },
+      "revId": "51967b805e440fbcfd2a5f10473cc8e3a6dac7f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
