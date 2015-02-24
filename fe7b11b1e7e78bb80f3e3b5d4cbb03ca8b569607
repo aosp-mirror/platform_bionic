@@ -16,6 +16,24 @@
       "revId": "fe7b11b1e7e78bb80f3e3b5d4cbb03ca8b569607",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45432581_5ec6b572",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-24T04:58:27Z",
+      "side": 1,
+      "message": "To be more precise, I prefer to move the enumeration of jemalloc use down here, to be protected by USE_JEMALLOC macro. Maybe malloc is part of libc, but it doesn\u0027t seem\nto be so here.",
+      "parentUuid": "45432581_fe27c1d4",
+      "revId": "fe7b11b1e7e78bb80f3e3b5d4cbb03ca8b569607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
