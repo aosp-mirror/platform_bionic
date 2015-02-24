@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4502458e_86e6ea33",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T22:17:25Z",
+      "side": 1,
+      "message": "no blank lines in empty functions.",
+      "revId": "0c2e1424c3953b0e45d315f926754cab29717507",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
