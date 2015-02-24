@@ -130,7 +130,7 @@ int         fremovexattr(int, const char*) all
 int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   arm,arm64,mips,mips64,x86,x86_64
 
 int __openat:openat(int, const char*, int, mode_t) all
-int faccessat(int, const char*, int, int)  all
+int ___faccessat:faccessat(int, const char*, int)  all
 int ___fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86

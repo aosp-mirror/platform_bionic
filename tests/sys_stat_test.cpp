@@ -219,3 +219,43 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_dangling_symlink) {
   ASSERT_EQ(ENOTSUP, errno);
   unlink(linkname);
 }
+
+TEST(sys_stat, faccessat_EINVAL) {
+  ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", F_OK, ~AT_SYMLINK_NOFOLLOW));
+  ASSERT_EQ(EINVAL, errno);
+#if defined(__BIONIC__)
+  ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), 0));
+  ASSERT_EQ(EINVAL, errno);
+#else
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), AT_SYMLINK_NOFOLLOW));
+  ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), 0));
+  ASSERT_EQ(EINVAL, errno);
+#endif
+}
+
+TEST(sys_stat, faccessat_AT_SYMLINK_NOFOLLOW_EINVAL) {
+#if defined(__BIONIC__)
+  // Android doesn't support AT_SYMLINK_NOFOLLOW
+  ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", F_OK, AT_SYMLINK_NOFOLLOW));
+  ASSERT_EQ(EINVAL, errno);
+#else
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", F_OK, AT_SYMLINK_NOFOLLOW));
+#endif
+}
+
+TEST(sys_stat, faccessat_dev_null) {
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", F_OK, 0));
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", R_OK, 0));
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", W_OK, 0));
+  ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", R_OK|W_OK, 0));
+}
+
+TEST(sys_stat, faccessat_nonexistant) {
+  ASSERT_EQ(-1, faccessat(AT_FDCWD, "/blah", F_OK, AT_SYMLINK_NOFOLLOW));
+#if defined(__BIONIC__)
+  // Android doesn't support AT_SYMLINK_NOFOLLOW
+  ASSERT_EQ(EINVAL, errno);
+#else
+  ASSERT_EQ(ENOENT, errno);
+#endif
+}

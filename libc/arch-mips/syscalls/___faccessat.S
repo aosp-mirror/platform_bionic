@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(faccessat)
+ENTRY(___faccessat)
     .set noreorder
     .cpload t9
     li v0, __NR_faccessat
@@ -16,4 +16,5 @@ ENTRY(faccessat)
     j t9
     nop
     .set reorder
-END(faccessat)
+END(___faccessat)
+.hidden ___faccessat
