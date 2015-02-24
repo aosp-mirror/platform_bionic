@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "254471e8_fd9207ed",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T23:18:30Z",
+      "side": 1,
+      "message": "we used to take two global locks *and* have this loop :-)",
+      "parentUuid": "05fccdc3_246df216",
+      "range": {
+        "startLine": 68,
+        "startChar": 27,
+        "endLine": 68,
+        "endChar": 51
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6542e9dd_bf4a376d",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 7
