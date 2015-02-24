@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a5ea21ed_117a2c4d",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-24T21:47:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36a829a2_fdb307ca",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36a829a2_ddb84ba7",
         "filename": "libc/bionic/faccessat.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-12T04:23:23Z",
       "side": 1,
       "message": "no need for the \"NOTE:\" bit.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5e5551d_52f314a2",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-24T21:47:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36a829a2_ddb84ba7",
       "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c5e5551d_12ed8cbd",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-24T21:47:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6cbf13a_8b40cd77",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7690e199_0fe2252c",
         "filename": "libc/include/fcntl.h",
         "patchSetId": 5
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "c5e5551d_72c17827",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-24T21:47:05Z",
+      "side": 1,
+      "message": "Deleted.",
+      "parentUuid": "7690e199_0fe2252c",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7690e199_2fdfe95c",
         "filename": "tests/sys_stat_test.cpp",
         "patchSetId": 5
@@ -81,6 +153,24 @@
       "writtenOn": "2015-02-12T04:23:23Z",
       "side": 1,
       "message": "looks like they clear any invalid bits. i don\u0027t think it\u0027s that flags is 0, i think it\u0027s that you tested with AT_SYMLINK_NOFOLLOW which -- as you know -- is a weird special case.",
+      "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5ca5990_137a2c4d",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-24T21:47:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7690e199_2fdfe95c",
       "revId": "d13dd402c4692d176544953b7f0bc955bb6b47de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
