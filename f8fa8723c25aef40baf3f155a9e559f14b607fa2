@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c52f15b4_62c67673",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-24T04:19:47Z",
+      "side": 1,
+      "message": "i\u0027d prefer we used the stupid atomic_uint_least32_t here so we can use explicitly-sized types in the rest of the code. allowing 1970s nonsense like \"unsigned int\" to leak back into the code seems like a mistake, even if the ill-considered standard tries to move us in that direction.",
+      "revId": "f8fa8723c25aef40baf3f155a9e559f14b607fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
