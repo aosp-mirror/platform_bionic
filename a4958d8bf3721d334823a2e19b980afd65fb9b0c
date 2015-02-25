@@ -262,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "a5214133_59c1c326",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-25T00:03:20Z",
+      "side": 1,
+      "message": "no. everything\u0027s fine. hboehm is just confused because he didn\u0027t realize that we use pthread_key_create internally.\n\n(perhaps because of the TLS slots which really are magic, but which are now a separate data structure.)",
+      "parentUuid": "a5214133_9912fb53",
+      "range": {
+        "startLine": 87,
+        "startChar": 18,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65a669d5_ff653fac",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 6
