@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-// This file perpetuates the mistakes of the past, but only for 32-bit targets.
-#if !defined(__LP64__)
+// This file perpetuates the mistakes of the past.
 
 #include <ctype.h>
 #include <dirent.h>
@@ -45,6 +44,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <wchar.h>
+
+#include "private/libc_logging.h"
+
+// The part is only for 32-bit targets.
+#if !defined(__LP64__)
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
@@ -342,4 +346,15 @@ extern "C" void* dlmalloc(size_t size) {
   return malloc(size);
 }
 
-#endif
+#endif // !defined(__LP64__)
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" char* getusershell() {
+  return NULL;
+}
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" void setusershell() { }
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" void endusershell() { }
