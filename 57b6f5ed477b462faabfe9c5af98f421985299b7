@@ -93,6 +93,30 @@
       "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e526d94e_73a860a0",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-25T00:27:51Z",
+      "side": 1,
+      "message": "1. Correct.  But I think we can take advantage of them to resolve 2.\n\n2. The problem is just that key_destructor can be concurrently read while it\u0027s being set.  Since it\u0027s not atomic, C++ does not allow that; it results in undefined behavior.  By the language rules, it can, for example, see half the bits of the destructor updated and the other half null.  That\u0027s unlikely to happen on our hardware.  Somewhat more likely failure scenarios:\n\na) Since there is no ordering, the destructor can read as on old, previously replaced value.  After thinking about this more, that may be a real concern.\n\nb) The compiler performs some weird optimization, knowing that key_destructor can\u0027t change asynchronously, and reading it multiple times is OK.  The program crashes because the assumption doesn\u0027t hold.  Currently very unlikely, though we can construct semiplausible scenarios along these lines.\n\nc) In the distant future bionic and tsan are solid enough to run tsan over this code.  It fails because there is a data race.\n\nThus we don\u0027t want to access the destructor unless this thread has used this key, in which case the destructor access should not race.",
+      "parentUuid": "650d89bb_ca34e3d6",
+      "range": {
+        "startLine": 69,
+        "startChar": 60,
+        "endLine": 69,
+        "endChar": 80
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
