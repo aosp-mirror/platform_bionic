@@ -425,6 +425,30 @@
       "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82b433b1_0812a755",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T23:40:37Z",
+      "side": 1,
+      "message": "I think the constructors of libc.so is called before user\u0027s code can call pthread_key_create, so no way to steal reserved slots.",
+      "parentUuid": "e276cfc4_330268ef",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 31
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
