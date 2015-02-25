@@ -93,6 +93,30 @@
       "revId": "b8ce47421727f7621f3e00043d535e35cd904852",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "229467fe_3de8efff",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-25T22:10:59Z",
+      "side": 1,
+      "message": "The current spec for kill_dependency is a bit of a mess.  I\u0027ve been pushing back against fixing it until we know what semantics we really want for memory_order_consume.  Nobody likes the current version, and it is very likely to change, though possibly in ways that will actually make this use (without kill_dependency) correct and useful.",
+      "parentUuid": "e22faf8a_aec9374f",
+      "range": {
+        "startLine": 344,
+        "startChar": 51,
+        "endLine": 344,
+        "endChar": 71
+      },
+      "revId": "b8ce47421727f7621f3e00043d535e35cd904852",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
