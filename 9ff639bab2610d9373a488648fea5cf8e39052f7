@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26c6bf3_fae92983",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-25T22:42:01Z",
+      "side": 1,
+      "message": "i think we can use stronger wording. the linux man page is pretty explicit: http://man7.org/linux/man-pages/man3/tempnam.3.html\n\nhow about \"tempnam is very unsafe; use mkstemp instead\"? (and similar for mktemp.)\n\nwe could change gets\u0027 \"consider using fgets\" to \"use fgets instead\" too.\n\nwe could drop the word \u0027very\u0027 in these messages if people prefer. i don\u0027t feel strongly either way. i was just copying what we have for gets.",
+      "revId": "9ff639bab2610d9373a488648fea5cf8e39052f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
