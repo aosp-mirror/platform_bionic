@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a263f7f0_e92e15b4",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:28:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0233e3f5_6cac7b88",
+      "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e22faf8a_2b37797b",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-25T20:53:24Z",
       "side": 1,
       "message": "s/, is/is that/",
+      "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8258b342_c8022f34",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:28:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e22faf8a_2b37797b",
       "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "8258b342_880c3766",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:28:18Z",
+      "side": 1,
+      "message": "Done. Previous comment was not up-to-date.",
+      "parentUuid": "222627b6_2d2b0d78",
+      "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e22faf8a_2ba65928",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 8
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-25T20:53:24Z",
       "side": 1,
       "message": "should we add something like GLOBAL_INIT_THREAD_LOCAL_BUFFER that we can for the uselocale and _res_key keys too, and then just say \"should be created by GLOBAL_INIT_THREAD_LOCAL_BUFFER or WHATEVER_THE_NEW_THING_IS_CALLED\"?\n\nthis is fine for now though. that can be a separate change if we want to do it.",
+      "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8258b342_084cc787",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:28:18Z",
+      "side": 1,
+      "message": "Those two uses of pthread key is more flexible than GLOBAL_INIT_THREAD_LOCAL_BUFFER. But I think we can still\nprovide constructor for that, so it is easier to search\nall use of pthread keys in bionic.",
+      "parentUuid": "e22faf8a_2ba65928",
       "revId": "10d8770348a5ce72a3e7820420d4a22f4d9e5bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
