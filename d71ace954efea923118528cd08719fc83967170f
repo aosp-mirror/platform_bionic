@@ -34,6 +34,24 @@
       "revId": "d71ace954efea923118528cd08719fc83967170f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e526d94e_531e8408",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-25T00:45:43Z",
+      "side": 1,
+      "message": "Ah, didn\u0027t know that.\n\nchh: is it specifically the fortify code that\u0027s causing the problem? Would -O1 allow the device to boot? That way we\u0027d keep the fortify code. (If nnk is okay with disabling it I\u0027m less worried, but it seems that would be a better option.)",
+      "parentUuid": "e526d94e_93badc98",
+      "revId": "d71ace954efea923118528cd08719fc83967170f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
