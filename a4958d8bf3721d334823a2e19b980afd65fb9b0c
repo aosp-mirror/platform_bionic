@@ -330,6 +330,29 @@
       "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4547a5ec_04843af1",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-25T00:29:22Z",
+      "side": 1,
+      "message": "I guess I\u0027m confused by the word \"statically\" here.  It sounded to me like \"not with pthread_key_create\".  That was wrong?",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 31
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
