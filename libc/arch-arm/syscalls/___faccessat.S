@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(faccessat)
+ENTRY(___faccessat)
     mov     ip, r7
     ldr     r7, =__NR_faccessat
     swi     #0
@@ -11,4 +11,5 @@ ENTRY(faccessat)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(faccessat)
+END(___faccessat)
+.hidden ___faccessat
