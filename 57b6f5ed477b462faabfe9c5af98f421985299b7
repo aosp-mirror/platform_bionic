@@ -69,6 +69,30 @@
       "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "650d89bb_ca34e3d6",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T00:00:26Z",
+      "side": 1,
+      "message": "I am a little confused. I can explain my consideration here and you can see any place needs discussion.\n1. We don\u0027t need to worry about key_data[i].data and key_data[i].seq here, as they are only set and used in current thread.\n2. If some other threads create a new key while current thread is exiting, it may see the key as created but key_destructor is null. But it doesn\u0027t matter, it just works as if current thread exit before the key is created. After all, we don\u0027t have responsibility to make synchronization between creating/deleting keys and using keys.",
+      "parentUuid": "6542e9dd_bf4a376d",
+      "range": {
+        "startLine": 69,
+        "startChar": 60,
+        "endLine": 69,
+        "endChar": 80
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
