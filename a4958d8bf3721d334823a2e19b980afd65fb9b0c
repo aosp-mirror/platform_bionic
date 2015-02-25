@@ -401,6 +401,30 @@
       "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e276cfc4_330268ef",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-25T23:08:06Z",
+      "side": 1,
+      "message": "Thanks.  Presumably it\u0027s actually \"special constructors run before user code\", so that ordinary user constructors creating keys don\u0027t get in the way and steal reserved slots?",
+      "parentUuid": "222627b6_2dfd4d70",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 31
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
