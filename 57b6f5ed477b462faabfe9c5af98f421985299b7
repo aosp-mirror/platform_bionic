@@ -117,6 +117,30 @@
       "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0233e3f5_4c83ffec",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T20:52:06Z",
+      "side": 1,
+      "message": "I try to find the key_destructor matching the seq number, while not using too much fences (which harms performance). It is a little complex, but in my calculation it can handle the situation that one thread is running pthread_key_create/pthread_key_deleting infinitely, while another thread is exiting.",
+      "parentUuid": "e526d94e_73a860a0",
+      "range": {
+        "startLine": 69,
+        "startChar": 60,
+        "endLine": 69,
+        "endChar": 80
+      },
+      "revId": "57b6f5ed477b462faabfe9c5af98f421985299b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
