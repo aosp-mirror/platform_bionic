@@ -16,6 +16,24 @@
       "revId": "d71ace954efea923118528cd08719fc83967170f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e526d94e_93badc98",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-25T00:43:01Z",
+      "side": 1,
+      "message": "Specifying -O0 is essentially the same thing as specifying -U_FORTIFY_SOURCE . See bionic/libc/include/sys/cdefs.h , where we check the optimization level and suppress FORTIFY_SOURCE if -O0 is present.\n\n  #if defined(_FORTIFY_SOURCE) \u0026\u0026 _FORTIFY_SOURCE \u003e 0 \u0026\u0026 defined(__OPTIMIZE__) \u0026\u0026 __OPTIMIZE__ \u003e 0\n  #define __BIONIC_FORTIFY 1\n\nBecause of that, it\u0027s better to leave this as-is.",
+      "parentUuid": "858b5d6f_90bab498",
+      "revId": "d71ace954efea923118528cd08719fc83967170f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
