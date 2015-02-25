@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "858b5d6f_90bab498",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-02-25T00:36:21Z",
+      "side": 1,
+      "message": "Fortify is a security thing. It\u0027s better to deoptimize.",
+      "revId": "d71ace954efea923118528cd08719fc83967170f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
