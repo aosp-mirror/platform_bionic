@@ -119,10 +119,6 @@ struct passwd* getpwuid(uid_t);
 int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**);
 int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**);
 
-void endpwent(void);
-struct passwd* getpwent(void);
-int setpwent(void);
-
 __END_DECLS
 
 #endif
