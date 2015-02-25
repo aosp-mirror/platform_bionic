@@ -353,6 +353,30 @@
       "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "057f6d22_ec5a4b6e",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-25T03:11:12Z",
+      "side": 1,
+      "message": "yes, they\u0027re still created with pthread_key_create, but using constructor functions so they\u0027re all allocated before user code starts (so we can\u0027t be starved, given that we still have a fixed limit on the number of keys).",
+      "parentUuid": "4547a5ec_04843af1",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 75,
+        "endChar": 31
+      },
+      "revId": "a4958d8bf3721d334823a2e19b980afd65fb9b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
