@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(faccessat)
+ENTRY(___faccessat)
     .set push
     .set noreorder
     li v0, __NR_faccessat
@@ -22,4 +22,5 @@ ENTRY(faccessat)
     j t9
     move ra, t0
     .set pop
-END(faccessat)
+END(___faccessat)
+.hidden ___faccessat
