@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0233e3f5_6cca3bda",
+        "filename": "benchmarks/benchmark/Benchmark.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-25T22:57:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a534e107_2118eea4",
+      "revId": "b8f47e334008ca04aa8d669876c7018cf79528b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85399d03_20ed8a14",
         "filename": "benchmarks/benchmark/Benchmark.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-24T04:38:39Z",
       "side": 1,
       "message": "wouldn\u0027t it be better to use size_t for max and then static_cast on L121? we could even have a comment there explaining that since this is only used with printf\u0027s * int is the right return type.",
+      "revId": "b8f47e334008ca04aa8d669876c7018cf79528b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "222627b6_cd96c9e6",
+        "filename": "benchmarks/benchmark/Benchmark.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-25T22:57:49Z",
+      "side": 1,
+      "message": "Yes, in fact it I changed it so that only MaxNameColumnWidth() returns an int. Making NameColumnWidth() return size_t and having a single cast in MaxNameColumnWidth() seems better.",
+      "parentUuid": "85399d03_20ed8a14",
       "revId": "b8f47e334008ca04aa8d669876c7018cf79528b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
