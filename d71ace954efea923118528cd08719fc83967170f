@@ -52,6 +52,24 @@
       "revId": "d71ace954efea923118528cd08719fc83967170f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e526d94e_f32eb037",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-02-25T00:48:55Z",
+      "side": 1,
+      "message": "Or, we can use gcc to build this module.",
+      "parentUuid": "858b5d6f_90bab498",
+      "revId": "d71ace954efea923118528cd08719fc83967170f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
