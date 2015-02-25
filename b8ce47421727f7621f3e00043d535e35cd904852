@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0233e3f5_4c309f91",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:04:52Z",
+      "side": 1,
+      "message": "The size of uint_least32_t doesn\u0027t matter here as it is only used internally. It does matter in pthread_mutex.cpp in https://android-review.googlesource.com/#/c/132412/, but I already has a static_assert for it. Life will be easier if we have atomic_uint32_t.",
+      "parentUuid": "e5ca5990_5341c42d",
+      "range": {
+        "startLine": 96,
+        "startChar": 4,
+        "endLine": 96,
+        "endChar": 23
+      },
+      "revId": "b8ce47421727f7621f3e00043d535e35cd904852",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25d63140_cdec091a",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-02-24T21:55:41Z",
       "side": 1,
       "message": "I would still make these memory_order_acquire.  Even if there were a compiler that handled memory_order_consume correctly and better than memory_order_acquire (and if we really knew what that meant), I think it still wouldn\u0027t help without the appropriate kill_dependency calls to limit dependency propagation to the client code.  As it stands, we\u0027re just misleading readers into believing that we know what we\u0027re doing, and possibly exposing ourselves to more compiler bugs.\n\nBut I can live with it either way.",
+      "range": {
+        "startLine": 344,
+        "startChar": 51,
+        "endLine": 344,
+        "endChar": 71
+      },
+      "revId": "b8ce47421727f7621f3e00043d535e35cd904852",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e22faf8a_aec9374f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-25T21:04:52Z",
+      "side": 1,
+      "message": "I didn\u0027t realize memory_order_consume is so complex to use: from empty to memory_order_acquire, to the use of kill_dependency. Actually, I don\u0027t know how to use kill_dependency currently. I can come back here when I am able to use kill_dependency and if it deserves the complexity.",
+      "parentUuid": "25d63140_cdec091a",
       "range": {
         "startLine": 344,
         "startChar": 51,
