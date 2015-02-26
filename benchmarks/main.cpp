@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     regs.push_back(re);
   }
 
-  if (!::testing::Benchmark::RunAll(regs)) {
+  if (::testing::Benchmark::RunAll(regs) == 0) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
     for (const auto& benchmark : ::testing::Benchmark::List()) {
