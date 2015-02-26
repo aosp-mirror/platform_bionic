@@ -39,40 +39,45 @@ static uint64_t NanoTime() {
   return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
 }
 
+bool Benchmark::header_printed_;
+
 std::vector<Benchmark*>& Benchmark::List() {
   static std::vector<Benchmark*> list;
   return list;
 }
 
 int Benchmark::MaxNameColumnWidth() {
-  int max = 20;
+  size_t max = 20;
   for (auto& benchmark : List()) {
     max = std::max(max, benchmark->NameColumnWidth());
   }
-  return max;
+  return static_cast<int>(max);
 }
 
-bool Benchmark::RunAll(std::vector<regex_t*>& regs) {
-  bool ran_benchmark = false;
+size_t Benchmark::RunAll(std::vector<regex_t*>& regs) {
+  size_t benchmarks_run = 0;
+  header_printed_ = false;
   for (auto& benchmark : List()) {
-    if (benchmark->ShouldRun(regs)) {
-      if (!ran_benchmark) {
-        printf("%-*s %10s %10s\n", MaxNameColumnWidth(), "", "iterations", "ns/op");
-        ran_benchmark = true;
-      }
-      benchmark->RunAll();
-    }
+    benchmarks_run += benchmark->RunAllArgs(regs);
   }
-  return ran_benchmark;
+  return benchmarks_run;
 }
 
-bool Benchmark::ShouldRun(std::vector<regex_t*>& regs) {
+void Benchmark::PrintHeader() {
+  if (!header_printed_) {
+    printf("%-*s %10s %10s\n", MaxNameColumnWidth(), "", "iterations", "ns/op");
+    header_printed_ = true;
+  }
+}
+
+template <typename T>
+bool BenchmarkT<T>::ShouldRun(std::vector<regex_t*>& regs, T arg) {
   if (regs.empty()) {
     return true;
   }
 
   for (const auto& re : regs) {
-    if (regexec(re, Name().c_str(), 0, NULL, 0) != REG_NOMATCH) {
+    if (regexec(re, GetNameStr(arg).c_str(), 0, NULL, 0) != REG_NOMATCH) {
       return true;
     }
   }
