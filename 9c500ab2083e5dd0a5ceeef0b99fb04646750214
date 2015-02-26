@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02a8435a_c4f6be93",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-26T00:19:55Z",
+      "side": 1,
+      "message": "Is this necessary?\n\nThe logic I had in mind was:\n\n0. Keep the data structure as it originally was around revision 6.\n\n1. Check that this threads copy of the data is non-null and associated with the correct sequence number.  If not, we\u0027re done.\n\n2) Check that the data is not null (without reading the destructor).  If it\u0027s null we\u0027re done.\n\n3) [Slight revision of my prior reasoning, sorry.]  At this\npoint we know thread local data was updated by this thread.\nEither that update raced with the key_create() call, which\nI think we should declare illegal (and I presume Posix would if they had their act together), or the key_create call \"happened before\" this code is being called.  Thus it is now safe to read the destructor field.  Read it using a non-atomic access, and invoke the destructor if appropriate.\n\nThe only dubious case is if the theoretical case in which the above race was somehow prevented using memory_order_consume without introducing a happens-before ordering for us.  This would only be an issue if we had a compiler that didn\u0027t implement consume as acquire.  We don\u0027t, and we\u0027re not likely to anytime soon.  I wouldn\u0027t worry about it beyond documenting the assumption.",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
