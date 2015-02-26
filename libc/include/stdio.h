@@ -264,16 +264,16 @@ int vdprintf(int, const char * __restrict, __va_list) __printflike(2, 0);
 
 #ifndef __AUDIT__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112L
-char* gets(char*) __attribute__((deprecated("gets is very unsafe; consider using fgets")));
+char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
 int sprintf(char* __restrict, const char* __restrict, ...)
     __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
-char* tmpnam(char*) __warnattr("tmpnam possibly used unsafely; consider using mkstemp");
 int vsprintf(char* __restrict, const char* __restrict, __va_list)
     __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
+char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
 #if __XPG_VISIBLE
 char* tempnam(const char*, const char*)
-    __warnattr("tempnam possibly used unsafely; consider using mkstemp");
+    __attribute__((deprecated("tempnam is unsafe, use mkstemp or tmpfile instead")));
 #endif
 #endif
 
