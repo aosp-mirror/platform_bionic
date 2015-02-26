@@ -34,6 +34,24 @@
       "revId": "448a85968da1e4622e829bb48fd888a38f9f6c49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8207d351_f00fe058",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-02-26T02:41:15Z",
+      "side": 0,
+      "message": "the idea is that it documents that it\u0027s a deliberate absence, not just something we haven\u0027t got round to yet, and it gives you a more directly useful error message.",
+      "parentUuid": "626bbfdd_d7c3dc0f",
+      "revId": "448a85968da1e4622e829bb48fd888a38f9f6c49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
