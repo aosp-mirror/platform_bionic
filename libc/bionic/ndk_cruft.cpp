@@ -358,3 +358,6 @@ extern "C" void setusershell() { }
 
 // This is never implemented in bionic, only needed for ABI compatibility with the NDK.
 extern "C" void endusershell() { }
+
+// This is never implemented in bionic, only needed for ABI compatibility with the NDK.
+extern "C" void endpwent() { }
