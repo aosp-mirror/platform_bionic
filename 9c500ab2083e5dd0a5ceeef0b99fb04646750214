@@ -46,6 +46,53 @@
       "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26aab65_2ae4bfa8",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-26T23:41:50Z",
+      "side": 1,
+      "message": "Yes, good catch.  You do need to reread the sequence number in order, and the destructor field needs to be atomic.\n\nI don\u0027t immediately see why you need the HAS_DESTRUCTOR bit, or why you need the first re-load of seq.  By my argument, since we saw non-null data with the right sequence number, the appropriate key_create must already have happened before us.  Thus the destructor store for this seq must have happened before us.  Thus we can\u0027t see an earlier destructor.  The fact that we saw seq unchanged after reading the destructor, which is only rewritten after updating seq, seems to imply that we can\u0027t see a later one, modulo comments below.",
+      "parentUuid": "42431b81_9e083da4",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26aab65_6a32b768",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-26T23:41:50Z",
+      "side": 1,
+      "message": "The ordering here is too weak.  If a slot is reused by two different otherwise unrelated threads, and both use a destructor, there is nothing to enforce ordering between the two destructor stores.  Thus any subsequent observer can see either.",
+      "range": {
+        "startLine": 151,
+        "startChar": 60,
+        "endLine": 151,
+        "endChar": 81
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
