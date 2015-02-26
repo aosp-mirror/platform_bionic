@@ -54,9 +54,9 @@ __BEGIN_DECLS
 struct group	*getgrgid(gid_t);
 struct group	*getgrnam(const char *);
 #if __POSIX_VISIBLE >= 200112 || __XPG_VISIBLE
-struct group	*getgrent(void) __errorattr("getgrent is meaningless on Android");
-__errordecl(setgrent, "setgrent is meaningless on Android");
-__errordecl(endgrent, "endgrent is meaningless on Android");
+struct group	*getgrent(void)  __attribute__((deprecated("getgrent is meaningless on Android")));
+void setgrent(void) __attribute__((deprecated("setgrent is meaningless on Android")));
+void endgrent(void) __attribute__((deprecated("endgrent is meaningless on Android")));
 int		 getgrgid_r(gid_t, struct group *, char *,
 		    size_t, struct group **);
 int		 getgrnam_r(const char *, struct group *, char *,
