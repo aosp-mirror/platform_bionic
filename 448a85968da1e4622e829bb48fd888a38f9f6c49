@@ -16,6 +16,24 @@
       "revId": "448a85968da1e4622e829bb48fd888a38f9f6c49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "626bbfdd_d7c3dc0f",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-26T02:23:04Z",
+      "side": 0,
+      "message": "Yes, I prefer to just lose that function declarations. I wonder if we don\u0027t have a implementation of a function, does it necessary to retain the declaration that prevents others from implementing it?",
+      "parentUuid": "e2624f23_f3189019",
+      "revId": "448a85968da1e4622e829bb48fd888a38f9f6c49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
