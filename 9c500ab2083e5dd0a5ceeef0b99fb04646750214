@@ -22,6 +22,30 @@
       "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42431b81_9e083da4",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-26T01:02:50Z",
+      "side": 1,
+      "message": "This is the scenario that forces me to use two release-acquire fences:\nThread1\nthread_key_create(\u0026key1, destructor1);\nthread_key_delete(key1);\nthread_key_create(\u0026key2, NULL);\ncreate thread2, and let it uses and finishes using key2, which can be done by reference counter or others,\nbut thread2 is not joined.\nthread_key_delete(key2);\nthread_key_create(\u0026key3, destructor3);\nthread_key_delete(key3);\n\nThread2\nIt uses and finishes using key2, having a non-null data.\nThen it comes to pthread_key_clean_all()\nAs we use memory_order_relaxed to read seq, it is possible that we read the old seq number of key2,\nbut read destructor3, so we take the risk of calling destructor3(non-null data for key2).\n\nI can\u0027t see any place in this scenario is ileagal in standard.",
+      "parentUuid": "02a8435a_c4f6be93",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
