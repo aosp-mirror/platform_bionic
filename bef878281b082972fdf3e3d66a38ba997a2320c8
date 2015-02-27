@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92f6464a_a0d6f4e7",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-02-27T22:51:46Z",
+      "side": 1,
+      "message": "Is there any reason we shouldn\u0027t always use the memcpy() on line 215? I\u0027d prefer always using memcpy() for all builds, rather than making this a compile time choice.",
+      "revId": "bef878281b082972fdf3e3d66a38ba997a2320c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
