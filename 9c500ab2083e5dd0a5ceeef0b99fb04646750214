@@ -165,6 +165,30 @@
       "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820273b9_fe345906",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-27T04:29:35Z",
+      "side": 1,
+      "message": "In the above example:\n1. thread2 can\u0027t create key2 in the same slot unless it can see the delete of key1 in thread1.\n2. thread3 can\u0027t use key2 safely unless user uses some synchornization methods between create and use key2.\n   And it should be user\u0027s responsibility (Consider the situation that thread3 has much higher scheduling\n   priority than thread2, then whatever we do in pthread key implementation is useless, only the user\u0027s\n   synchornization method can make it safe.). So it\u0027s reasonable to expect that user will synchronize the\n   create of key2 in thread2 and use of key2 in thread3. Then we are sure that thread3 will use key2\u0027s destructor.\n\nSo the execution order for the example is:\nthread1           thread2                 thread3\ncreate key1\ndelete key1 _\n             |_  create key2\n                 sync method by user -\u003e sync method by user\n                                          use key2\n                                        clean up using key2\u0027s destructor\n\nFor performance area, I agree with your priority order of functions. And I think that in \npthread_key_clean_all, we need to avoid memory barrier instruction when looping each pthread key.\n\nAnother implementation choice would be using a global mutex for pthread_key_create, pthread_key_delete,\nand pthread_key_clean_all, like before.",
+      "parentUuid": "62073fcc_37c0b824",
+      "range": {
+        "startLine": 151,
+        "startChar": 60,
+        "endLine": 151,
+        "endChar": 81
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
