@@ -211,7 +211,7 @@ build_type := host
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
-# Library of bionic customized gtest main function.
+# Library of bionic customized gtest main function, with simplified output format.
 # -----------------------------------------------------------------------------
 libBionicGtestMain_src_files := gtest_main.cpp
 
@@ -220,6 +220,24 @@ libBionicGtestMain_cflags := $(test_cflags)
 libBionicGtestMain_cppflags := $(test_cppflags)
 
 module := libBionicGtestMain
+module_tag := optional
+build_type := target
+build_target := STATIC_TEST_LIBRARY
+include $(LOCAL_PATH)/Android.build.mk
+build_type := host
+include $(LOCAL_PATH)/Android.build.mk
+
+# -----------------------------------------------------------------------------
+# Library of bionic customized gtest main function, with normal gtest output format,
+# which is needed by bionic cts test.
+# -----------------------------------------------------------------------------
+libBionicCtsGtestMain_src_files := gtest_main.cpp
+
+libBionicCtsGtestMain_cflags := $(test_cflags)
+
+libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT
+
+module := libBionicCtsGtestMain
 module_tag := optional
 build_type := target
 build_target := STATIC_TEST_LIBRARY
