@@ -141,6 +141,30 @@
       "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62073fcc_37c0b824",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-02-27T02:44:17Z",
+      "side": 1,
+      "message": "Consider (all create calls have destructor, use same slot)\n\nThread1: create; destroy;\n\nThread2: create; (next sequence number) pass key to thread 3\n\nThread3: uses key to store data; exits trying to invoke destructor.\n\nWhat prevents Thread 3 from seeing the obsolete destructor stored by thread 1?  Thread 1 and thread 2 executions are not ordered by happens-before, hence I believe thread 3 can see either.\n\nAs a meta-point, I think this is getting too hairy to analyze, and we\u0027re optimizing stuff that doesn\u0027t matter.  I claim we don\u0027t care about create and delete performance; just leave them SC.  I would set the destructor to something invalid when not in use, just for debugging.  Or possibly get rid of DESTRUCTOR_FLAG again.  Getspecific is THE call that matters, with setspecific a (distant?) second priority.  When I\u0027ve tried to use these, I\u0027ve issued a total of one create call, no delete calls, one set call per thread (with a pointer to a data structure that subsequently gets directly updated) and a zillion get calls.",
+      "parentUuid": "c5ad55fe_521474ba",
+      "range": {
+        "startLine": 151,
+        "startChar": 60,
+        "endLine": 151,
+        "endChar": 81
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
