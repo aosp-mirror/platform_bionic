@@ -213,6 +213,30 @@
       "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6231ffd0_07fd76bd",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-27T19:56:09Z",
+      "side": 1,
+      "message": "The problem of previous code may be because I am trying to avoid unnecessary fences too hard and result in missing considerations. To gain a consistent result, I use acquire-release fences in normal case, and use relaxed memory order when performance is critical (seems only in pthread_getspecific). And the code becomes simpler.\n\nThe reason I don\u0027t use seq_cst here, is because we have to use relaxed at some place in the code. It seems\neasier to understand \"acq_rel + relaxed\" than \"seq_cst + relaxed\".\n\nAnd I didn\u0027t set key_destructor to invalid value in pthread_key_delete. Because there are chances that the atomic_compare_exchange of seq can fail.",
+      "parentUuid": "62073fcc_fa8e2519",
+      "range": {
+        "startLine": 151,
+        "startChar": 60,
+        "endLine": 151,
+        "endChar": 81
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
