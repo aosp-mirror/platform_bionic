@@ -295,6 +295,32 @@ static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list
   fflush(stdout);
 }
 
+// bionic cts test needs gtest output format.
+#if defined(USING_GTEST_OUTPUT_FORMAT)
+
+static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
+  ColoredPrintf(COLOR_GREEN, "[ RUN      ] ");
+  printf("%s\n", testcase.GetTestName(test_id).c_str());
+
+  const std::string& test_output = testcase.GetTest(test_id).GetTestOutput();
+  printf("%s", test_output.c_str());
+
+  TestResult result = testcase.GetTestResult(test_id);
+  if (result == TEST_SUCCESS) {
+    ColoredPrintf(COLOR_GREEN, "[       OK ] ");
+  } else {
+    ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
+  }
+  printf("%s", testcase.GetTestName(test_id).c_str());
+  if (testing::GTEST_FLAG(print_time)) {
+    printf(" (%" PRId64 " ms)", testcase.GetTestTime(test_id) / 1000000);
+  }
+  printf("\n");
+  fflush(stdout);
+}
+
+#else  // !defined(USING_GTEST_OUTPUT_FORMAT)
+
 static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
   TestResult result = testcase.GetTestResult(test_id);
   if (result == TEST_SUCCESS) {
@@ -307,15 +333,16 @@ static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
 
   printf("%s", testcase.GetTestName(test_id).c_str());
   if (testing::GTEST_FLAG(print_time)) {
-    printf(" (%" PRId64 " ms)\n", testcase.GetTestTime(test_id) / 1000000);
-  } else {
-    printf("\n");
+    printf(" (%" PRId64 " ms)", testcase.GetTestTime(test_id) / 1000000);
   }
+  printf("\n");
 
   const std::string& test_output = testcase.GetTest(test_id).GetTestOutput();
   printf("%s", test_output.c_str());
   fflush(stdout);
 }
+
+#endif  // !defined(USING_GTEST_OUTPUT_FORMAT)
 
 static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, size_t /*iteration*/,
                                     int64_t elapsed_time_ns) {
