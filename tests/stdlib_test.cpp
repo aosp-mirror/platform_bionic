@@ -138,6 +138,47 @@ TEST(stdlib, mrand48) {
   EXPECT_EQ(795539493, mrand48());
 }
 
+TEST(stdlib, jrand48_distribution) {
+  const int iterations = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  unsigned short xsubi[3];
+  int bits[32] = {};
+
+  for (int iter = 0; iter < iterations; ++iter) {
+    long rand_val = jrand48(xsubi);
+    for (int bit = 0; bit < 32; ++bit) {
+      bits[bit] += (static_cast<unsigned long>(rand_val) >> bit) & 0x01;
+    }
+  }
+
+  // Check that bit probability is uniform
+  for (int bit = 0; bit < 32; ++bit) {
+    EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
+TEST(stdlib, mrand48_distribution) {
+  const int iterations = 4096;
+  const int pivot_low  = 1536;
+  const int pivot_high = 2560;
+
+  int bits[32] = {};
+
+  for (int iter = 0; iter < iterations; ++iter) {
+    long rand_val = mrand48();
+    for (int bit = 0; bit < 32; ++bit) {
+      bits[bit] += (static_cast<unsigned long>(rand_val) >> bit) & 0x01;
+    }
+  }
+
+  // Check that bit probability is uniform
+  for (int bit = 0; bit < 32; ++bit) {
+    EXPECT_TRUE((pivot_low <= bits[bit]) && (bits[bit] <= pivot_high));
+  }
+}
+
 TEST(stdlib, posix_memalign_sweep) {
   void* ptr;
 
