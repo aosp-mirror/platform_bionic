@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "22f0e70e_1dbdd3ac",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-27T00:28:14Z",
+      "side": 1,
+      "message": "We always don\u0027t need to worry about using an earlier destructor. It is user\u0027s responsibility to forbidden that.\nYeah, in current implementation, we don\u0027t set key_destructor to NULL in pthread_key_create for performance reason, but we use SEQ_HAS_DESTRUCTOR_BIT to take care of it.",
+      "parentUuid": "c26aab65_2ae4bfa8",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c26aab65_6a32b768",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 9
@@ -84,6 +108,30 @@
       "writtenOn": "2015-02-26T23:41:50Z",
       "side": 1,
       "message": "The ordering here is too weak.  If a slot is reused by two different otherwise unrelated threads, and both use a destructor, there is nothing to enforce ordering between the two destructor stores.  Thus any subsequent observer can see either.",
+      "range": {
+        "startLine": 151,
+        "startChar": 60,
+        "endLine": 151,
+        "endChar": 81
+      },
+      "revId": "9c500ab2083e5dd0a5ceeef0b99fb04646750214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5ad55fe_521474ba",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-27T00:28:14Z",
+      "side": 1,
+      "message": "We only have destructor store in pthread_key_create, which is protected by key_map[key].seq. Only thread taking owner of key slot can store destructor. Am I missing your point?",
+      "parentUuid": "c26aab65_6a32b768",
       "range": {
         "startLine": 151,
         "startChar": 60,
