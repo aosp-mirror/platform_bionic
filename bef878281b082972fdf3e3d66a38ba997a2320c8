@@ -16,6 +16,24 @@
       "revId": "bef878281b082972fdf3e3d66a38ba997a2320c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f20a2213_58da7d9d",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-02-27T23:17:42Z",
+      "side": 1,
+      "message": "Assignment operator should be faster most of the time when compiler does the right optimization. memcpy is incorrect in general for non-POD structures or structures with redefined assignment operators.\n\nI limit this workaround only for the clang x86 compiler for now just to continue debugging other clang x86 problems.\nThis bug could affect other places too.\nWe should fix the compiler bug before switching over to clang x86.",
+      "parentUuid": "92f6464a_a0d6f4e7",
+      "revId": "bef878281b082972fdf3e3d66a38ba997a2320c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
