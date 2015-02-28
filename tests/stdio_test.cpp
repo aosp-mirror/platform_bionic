@@ -965,3 +965,41 @@ TEST(stdio, fwrite_after_fread_slow_path) {
 TEST(stdio, fwrite_after_fread_fast_path) {
   test_fwrite_after_fread(64*1024);
 }
+
+// http://b/19172514
+TEST(stdio, fread_after_fseek) {
+  TemporaryFile tf;
+
+  FILE* fp = fopen(tf.filename, "w+");
+  ASSERT_TRUE(fp != nullptr);
+
+  char file_data[12288];
+  for (size_t i = 0; i < 12288; i++) {
+    file_data[i] = i;
+  }
+  ASSERT_EQ(12288U, fwrite(file_data, 1, 12288, fp));
+  fclose(fp);
+
+  fp = fopen(tf.filename, "r");
+  ASSERT_TRUE(fp != nullptr);
+
+  char buffer[8192];
+  size_t cur_location = 0;
+  // Small read to populate internal buffer.
+  ASSERT_EQ(100U, fread(buffer, 1, 100, fp));
+  ASSERT_EQ(memcmp(file_data, buffer, 100), 0);
+
+  cur_location = static_cast<size_t>(ftell(fp));
+  // Large read to force reading into the user supplied buffer and bypassing
+  // the internal buffer.
+  ASSERT_EQ(8192U, fread(buffer, 1, 8192, fp));
+  ASSERT_EQ(memcmp(file_data+cur_location, buffer, 8192), 0);
+
+  // Small backwards seek to verify fseek does not reuse the internal buffer.
+  ASSERT_EQ(0, fseek(fp, -22, SEEK_CUR));
+  cur_location = static_cast<size_t>(ftell(fp));
+  ASSERT_EQ(22U, fread(buffer, 1, 22, fp));
+  ASSERT_EQ(memcmp(file_data+cur_location, buffer, 22), 0);
+
+  fclose(fp);
+}

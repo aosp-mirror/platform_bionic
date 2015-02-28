@@ -102,6 +102,12 @@ fread(void *buf, size_t size, size_t count, FILE *fp)
 		 * avoid copying it through the buffer?
 		 */
 		if (total > (size_t) fp->_bf._size) {
+			/*
+			 * Make sure that fseek doesn't think it can
+			 * reuse the buffer since we are going to read
+			 * directly from the file descriptor.
+			 */
+			fp->_flags |= __SMOD;
 			break;
 		}
 
