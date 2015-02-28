@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "922486ae_2d9aedeb",
+        "filename": "libc/stdio/fread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-02-28T04:33:06Z",
+      "side": 1,
+      "message": "Will it be more clear if we can move this line above L126 ?  (need to take care of the situation of total\u003d0)\nAnd will it be more clear if we set \"fp-\u003e_p \u003d fp-\u003e_bf._base; fp-\u003e_r \u003d 0;\" directly , instead of setting the flag?",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 110,
+        "endChar": 24
+      },
+      "revId": "cc9ca1051dbf5bd2af1b801de13d43a399521cf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
