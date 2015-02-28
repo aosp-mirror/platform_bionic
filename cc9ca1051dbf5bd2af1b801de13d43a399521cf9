@@ -22,6 +22,30 @@
       "revId": "cc9ca1051dbf5bd2af1b801de13d43a399521cf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "922486ae_5095d239",
+        "filename": "libc/stdio/fread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-02-28T18:30:58Z",
+      "side": 1,
+      "message": "Moving to above 126 won\u0027t work because that sets it even in the case where all of the data is read out of the internal buffer. Technically, if you wanted to be absolutely specific, setting it in the body of the second loop would be the best, but then you are doing something extra in each loop and potentially slowing things down.\n\nMessing with the buffer won\u0027t fix things since fseek will still think the buffer is valid and might return bad data.",
+      "parentUuid": "922486ae_2d9aedeb",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 110,
+        "endChar": 24
+      },
+      "revId": "cc9ca1051dbf5bd2af1b801de13d43a399521cf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
