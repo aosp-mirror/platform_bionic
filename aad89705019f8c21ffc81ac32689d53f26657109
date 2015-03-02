@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92c00617_cd658993",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Thanks for the added note.  Can you say more here.  Why are weights increased in chunks of 10 and 30 rather than (say) 1 and 3 or 100 and 300?  Is the 3:1 ratio relevant, and if so how.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92c00617_ad5cbdca",
+        "filename": "tools/relocation_packer/src/delta_encoder.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Line \u003e80 chars (and elsewhere).",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72cf1248_ec2e4b8e",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "All the above may now be comment drift.  SplitProgramHeadersForHole() no longer exists.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72cf1248_2c06931c",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Line longer than 80 chars.  Also several others below.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92c00617_cd37c993",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Never called.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72cf1248_2c8f732a",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "+\u003d would be simpler.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92c00617_2dde8ddf",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Relevant comment?",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2c50a26_ee7b9f3e",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "Line \u003e80 chars (and elsewhere).",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2c50a26_8e88dbb5",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-02T15:57:50Z",
+      "side": 1,
+      "message": "ine?",
+      "range": {
+        "startLine": 41,
+        "startChar": 82,
+        "endLine": 41,
+        "endChar": 85
+      },
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
