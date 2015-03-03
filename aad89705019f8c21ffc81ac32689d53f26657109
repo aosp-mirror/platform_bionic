@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "92d48638_4d081926",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "there is no particular reason.... the chunk of 10 because this was first that came to mind. Added note on the ratio.",
+      "parentUuid": "92c00617_cd658993",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92c00617_ad5cbdca",
         "filename": "tools/relocation_packer/src/delta_encoder.h",
         "patchSetId": 11
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-02T15:57:50Z",
       "side": 1,
       "message": "Line \u003e80 chars (and elsewhere).",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72e3921f_2c7ef397",
+        "filename": "tools/relocation_packer/src/delta_encoder.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92c00617_ad5cbdca",
       "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "320f5ab3_ca46237d",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72cf1248_ec2e4b8e",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72cf1248_2c06931c",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 11
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-02T15:57:50Z",
       "side": 1,
       "message": "Line longer than 80 chars.  Also several others below.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92d48638_2d5f0df9",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "80 seems restrictive I fixed the lines with \u003e 100 chars.",
+      "parentUuid": "72cf1248_2c06931c",
       "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "320f5ab3_0a12fb55",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "Done; apparently -Wunused does not work well with templated functions.",
+      "parentUuid": "92c00617_cd37c993",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72cf1248_2c8f732a",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 11
@@ -98,6 +188,24 @@
       "writtenOn": "2015-03-02T15:57:50Z",
       "side": 1,
       "message": "+\u003d would be simpler.",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72e3921f_cc652fce",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72cf1248_2c8f732a",
       "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "320f5ab3_6a3297f6",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "92c00617_2dde8ddf",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2c50a26_ee7b9f3e",
         "filename": "tools/relocation_packer/src/packer.cc",
         "patchSetId": 11
@@ -138,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "320f5ab3_ea1c4722",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2c50a26_ee7b9f3e",
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2c50a26_8e88dbb5",
         "filename": "tools/relocation_packer/src/packer.cc",
         "patchSetId": 11
@@ -149,6 +293,30 @@
       "writtenOn": "2015-03-02T15:57:50Z",
       "side": 1,
       "message": "ine?",
+      "range": {
+        "startLine": 41,
+        "startChar": 82,
+        "endLine": 41,
+        "endChar": 85
+      },
+      "revId": "aad89705019f8c21ffc81ac32689d53f26657109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "320f5ab3_0a01dbb6",
+        "filename": "tools/relocation_packer/src/packer.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-03T18:31:26Z",
+      "side": 1,
+      "message": "one",
+      "parentUuid": "b2c50a26_8e88dbb5",
       "range": {
         "startLine": 41,
         "startChar": 82,
