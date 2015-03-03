@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "321d9af7_a3830854",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T23:30:27Z",
+      "side": 1,
+      "message": "I\u0027m not sure I should be suggesting this, but:\n\nCast key to unsigned type of the right length and drop the first test?  Maybe the compiler already does that?",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "8bd0719c3ab92a2372007f1cd07a872d99f67519",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "321d9af7_c3e39c56",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T23:30:27Z",
+      "side": 1,
+      "message": "I don\u0027t see the comment I suggested that we\u0027re relying on a user-established happens-before relationship to ensure that we\u0027re getting the right destructor, and not an earlier one.  I still think something along those lines would be useful.  This only works because we\u0027ve seen the data, and thus the corresponding destructor write must be visible, too.",
+      "range": {
+        "startLine": 83,
+        "startChar": 18,
+        "endLine": 84,
+        "endChar": 25
+      },
+      "revId": "8bd0719c3ab92a2372007f1cd07a872d99f67519",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
