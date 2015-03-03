@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "727f1222_8cc867a2",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-03T22:57:17Z",
+      "side": 1,
+      "message": "Yes, it is unnecessary here.",
+      "parentUuid": "9242c6dc_7ded9738",
+      "range": {
+        "startLine": 80,
+        "startChar": 28,
+        "endLine": 80,
+        "endChar": 48
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3234ba65_65d3c055",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-03T21:37:42Z",
       "side": 1,
       "message": "Add:\n// Since we have data for the latest key, the pthread_key_create call\n// happened-before us, and we must either see a current destructor,\n// or the sequence number must have changed when we reread it below.",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 76
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "727f1222_accd23b1",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-03T22:57:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3234ba65_65d3c055",
       "range": {
         "startLine": 82,
         "startChar": 55,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "727f1222_6cd09b47",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-03T22:57:17Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "3234ba65_a5df8852",
+      "range": {
+        "startLine": 86,
+        "startChar": 28,
+        "endLine": 86,
+        "endChar": 48
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3282fa51_f2ea28f6",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 12
@@ -82,6 +154,30 @@
       "writtenOn": "2015-03-03T21:37:42Z",
       "side": 1,
       "message": "I\u0027m not sure whether it affects the generated code, but the fact that you\u0027re redoing the sequence number load twice here is a little troubling.  This is the one place where, in my experience, every cycle counts.",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 21
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "727f1222_4cfa7fc7",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-03T22:57:17Z",
+      "side": 1,
+      "message": "Done. After changing here, the speed of pthread_getspecific/pthread_setspecific can be seen faster.",
+      "parentUuid": "3282fa51_f2ea28f6",
       "range": {
         "startLine": 143,
         "startChar": 7,
