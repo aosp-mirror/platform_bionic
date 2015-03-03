@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9242c6dc_7ded9738",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T21:37:42Z",
+      "side": 1,
+      "message": "I don\u0027t see the need for this fence at all.  The comment really seems to apply to the next one.  So long as I see the last sequence number whose assignment happened before me, or a later one, I think we\u0027re fine here.  Or did you have a specific concern in mind?",
+      "range": {
+        "startLine": 80,
+        "startChar": 28,
+        "endLine": 80,
+        "endChar": 48
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3234ba65_65d3c055",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T21:37:42Z",
+      "side": 1,
+      "message": "Add:\n// Since we have data for the latest key, the pthread_key_create call\n// happened-before us, and we must either see a current destructor,\n// or the sequence number must have changed when we reread it below.",
+      "range": {
+        "startLine": 82,
+        "startChar": 55,
+        "endLine": 82,
+        "endChar": 76
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3234ba65_a5df8852",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T21:37:42Z",
+      "side": 1,
+      "message": "Since you\u0027re ordering earlier relaxed loads with respect to a later load, I think memory_order_acquire here is fine, and cheaper on x86 and maybe eventually ARMv8.",
+      "range": {
+        "startLine": 86,
+        "startChar": 28,
+        "endLine": 86,
+        "endChar": 48
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3282fa51_f2ea28f6",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-03T21:37:42Z",
+      "side": 1,
+      "message": "I\u0027m not sure whether it affects the generated code, but the fact that you\u0027re redoing the sequence number load twice here is a little troubling.  This is the one place where, in my experience, every cycle counts.",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 21
+      },
+      "revId": "f6a681976b030689722dfd1871cc20650c41681f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
