@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f285c28a_20324af5",
+        "filename": "libm/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1042898
+      },
+      "writtenOn": "2015-03-04T19:46:19Z",
+      "side": 1,
+      "message": "double space",
+      "range": {
+        "startLine": 174,
+        "startChar": 18,
+        "endLine": 174,
+        "endChar": 20
+      },
+      "revId": "40c3e2445db7758ade742a879e9e4ee5d53ddf81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

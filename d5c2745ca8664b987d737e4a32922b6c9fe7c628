@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f285c28a_402f4e8a",
+        "filename": "libm/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1042898
+      },
+      "writtenOn": "2015-03-04T19:46:19Z",
+      "side": 0,
+      "message": "Why remove the dependency? New policy?\nSame for 343",
+      "revId": "d5c2745ca8664b987d737e4a32922b6c9fe7c628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
