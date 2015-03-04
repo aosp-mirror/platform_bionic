@@ -56,7 +56,8 @@ void __init_tls(pthread_internal_t* thread) {
   if (thread->mmap_size == 0) {
     // If the TLS area was not allocated by mmap(), it may not have been cleared to zero.
     // So assume the worst and zero the TLS area.
-    memset(&thread->tls[0], 0, BIONIC_TLS_SLOTS * sizeof(void*));
+    memset(thread->tls, 0, sizeof(thread->tls));
+    memset(thread->key_data, 0, sizeof(thread->key_data));
   }
 
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
@@ -155,7 +156,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   }
 
   // Mapped space(or user allocated stack) is used for:
-  //   thread_internal_t (including tls array)
+  //   thread_internal_t
   //   thread stack (including guard page)
   stack_top -= sizeof(pthread_internal_t);
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
