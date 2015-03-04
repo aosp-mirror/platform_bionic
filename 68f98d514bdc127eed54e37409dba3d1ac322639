@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52a68e28_0ed00b46",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-04T16:18:29Z",
+      "side": 1,
+      "message": "Thanks for the note on the 3:1 ratio.  Please can you now just move to using 1 and 3 instead of 10 and 30.  The 10 multiplier on every weight used in here is an unnecessary distraction.",
+      "revId": "68f98d514bdc127eed54e37409dba3d1ac322639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
