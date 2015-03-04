@@ -16,6 +16,24 @@
       "revId": "68f98d514bdc127eed54e37409dba3d1ac322639",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f25ea2fc_9b1d4f67",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-04T22:15:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52a68e28_0ed00b46",
+      "revId": "68f98d514bdc127eed54e37409dba3d1ac322639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
