@@ -67,15 +67,15 @@ enum {
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
-  TLS_SLOT_FIRST_USER_SLOT // Must come last!
+  BIONIC_TLS_SLOTS // Must come last!
 };
 
 /*
- * There are two kinds of slot used internally by bionic --- there are the well-known slots
- * enumerated above, and then there are those that are allocated during startup by calls to
- * pthread_key_create; grep for GLOBAL_INIT_THREAD_LOCAL_BUFFER to find those. We need to manually
- * maintain that second number, but pthread_test will fail if we forget.
- * Following are current pthread keys used internally:
+ * Bionic uses some pthread keys internally. All pthread keys used internally
+ * should be created in constructors.
+ * We need to manually maintain the count of pthread keys used internally, but
+ * pthread_test should fail if we forget.
+ * Following are current pthread keys used internally by libc:
  *  basename               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  dirname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  uselocale              libc
@@ -88,28 +88,29 @@ enum {
  *  passwd                 libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  group                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  _res_key               libc
+ */
+
+#define LIBC_PTHREAD_KEY_RESERVED_COUNT 12
+
+#if defined(USE_JEMALLOC)
+/* Following are current pthread keys used internally by jemalloc:
  * je_thread_allocated_tsd jemalloc
  * je_arenas_tsd           jemalloc
  * je_tcache_tsd           jemalloc
  * je_tcache_enabled_tsd   jemalloc
  * je_quarantine_tsd       jemalloc
- *
  */
-
-#define LIBC_TLS_RESERVED_SLOTS 12
-
-#if defined(USE_JEMALLOC)
-/* jemalloc uses 5 keys for itself. */
-#define BIONIC_TLS_RESERVED_SLOTS (LIBC_TLS_RESERVED_SLOTS + 5)
+#define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 5
+#define BIONIC_PTHREAD_KEY_RESERVED_COUNT (LIBC_PTHREAD_KEY_RESERVED_COUNT + JEMALLOC_PTHREAD_KEY_RESERVED_COUNT)
 #else
-#define BIONIC_TLS_RESERVED_SLOTS LIBC_TLS_RESERVED_SLOTS
+#define BIONIC_PTHREAD_KEY_RESERVED_COUNT LIBC_PTHREAD_KEY_RESERVED_COUNT
 #endif
 
 /*
- * Maximum number of elements in the TLS array.
- * This includes space for pthread keys and our own internal slots.
+ * Maximum number of pthread keys allocated.
+ * This includes pthread keys used internally and externally.
  */
-#define BIONIC_TLS_SLOTS (PTHREAD_KEYS_MAX + TLS_SLOT_FIRST_USER_SLOT + BIONIC_TLS_RESERVED_SLOTS)
+#define BIONIC_PTHREAD_KEY_COUNT (BIONIC_PTHREAD_KEY_RESERVED_COUNT + PTHREAD_KEYS_MAX)
 
 __END_DECLS
 
