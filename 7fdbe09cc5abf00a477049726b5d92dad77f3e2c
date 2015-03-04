@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f25ea2fc_78d7a1e5",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-04T21:14:07Z",
+      "side": 1,
+      "message": "Thanks for reminding. I forgot that.",
+      "parentUuid": "321d9af7_2fb119c6",
+      "range": {
+        "startLine": 34,
+        "startChar": 67,
+        "endLine": 34,
+        "endChar": 79
+      },
+      "revId": "7fdbe09cc5abf00a477049726b5d92dad77f3e2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "321d9af7_046bd774",
         "filename": "tests/fortify_sprintf_warnings.cpp",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "writtenOn": "2015-03-04T18:53:16Z",
       "side": 1,
       "message": "It doesn\u0027t make sense to have this file called fortify_sprintf_warnings and fill it with non-sprintf related functions.\n\nIt would be better to split this up a bit or to rename the file something like fortify_warnings.cpp.\n\nI\u0027d lean towards splitting it up so that if there is a problem you\u0027ll have a better idea of what\u0027s not working.",
+      "range": {
+        "startLine": 63,
+        "startChar": 5,
+        "endLine": 63,
+        "endChar": 16
+      },
+      "revId": "7fdbe09cc5abf00a477049726b5d92dad77f3e2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1268969d_399b6fbe",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-04T21:14:07Z",
+      "side": 1,
+      "message": "Yes, I keep the file name here so it is easier to review. I will change the file name to fortify_compilation_test.cpp. The test is simple, compared to fortify_test.cpp. So maybe not worth to split another file.",
+      "parentUuid": "321d9af7_046bd774",
       "range": {
         "startLine": 63,
         "startChar": 5,
