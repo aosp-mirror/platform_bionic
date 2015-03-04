@@ -141,6 +141,30 @@
       "revId": "7fdbe09cc5abf00a477049726b5d92dad77f3e2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b23d0aa1_ce4b8304",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-04T22:39:14Z",
+      "side": 1,
+      "message": "You should be able to do a git mv so that you can keep the history of this file.",
+      "parentUuid": "1268969d_399b6fbe",
+      "range": {
+        "startLine": 63,
+        "startChar": 5,
+        "endLine": 63,
+        "endChar": 16
+      },
+      "revId": "7fdbe09cc5abf00a477049726b5d92dad77f3e2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
