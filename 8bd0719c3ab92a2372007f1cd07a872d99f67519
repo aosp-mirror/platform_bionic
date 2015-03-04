@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "321d9af7_e96001c0",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-04T00:52:09Z",
+      "side": 1,
+      "message": "I was just suggesting a cast to make sure we generate a single unsigned comparison rather than two signed ones.  I was suggesting an ugly performance hack, since it\u0027s on a very critical path.  But if the compilers already translate this to a single test, that would be even better.\n\nIn any case, this doesn\u0027t have much to do with your change.",
+      "parentUuid": "727f1222_6c35fb89",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 17
+      },
+      "revId": "8bd0719c3ab92a2372007f1cd07a872d99f67519",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "321d9af7_c3e39c56",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 13
