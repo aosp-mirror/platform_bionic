@@ -16,6 +16,24 @@
       "revId": "d5c2745ca8664b987d737e4a32922b6c9fe7c628",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "321d9af7_f72d3717",
+        "filename": "libm/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-04T20:21:24Z",
+      "side": 0,
+      "message": "The internal build rules changed such that everything automatically depends on the makefiles. You only need this if you are including a separate makefile.",
+      "parentUuid": "f285c28a_402f4e8a",
+      "revId": "d5c2745ca8664b987d737e4a32922b6c9fe7c628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
