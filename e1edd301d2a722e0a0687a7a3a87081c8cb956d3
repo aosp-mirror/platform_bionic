@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2f34a1a_1eedcd39",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-04T06:17:00Z",
+      "side": 0,
+      "message": "Why was this case removed?",
+      "revId": "e1edd301d2a722e0a0687a7a3a87081c8cb956d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
