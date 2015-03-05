@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d70d102d_9a1fe985",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-05T07:06:59Z",
+      "side": 1,
+      "message": "Looks like this is just unused legacy cruft.",
+      "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "570040ef_fb194ffc",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-05T07:06:59Z",
+      "side": 1,
+      "message": "All the comments above refer to the line after.",
+      "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
