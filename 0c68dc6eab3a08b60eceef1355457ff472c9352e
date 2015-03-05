@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "929c86d9_566c6a33",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "Please create local variables for android_relocs_ + 4 and android_relocs_size_ - 4, and use those both here and at 2335 below.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773384f5_ef8e1dfa",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "Can you comment this change?  I think I understand it -- up to now addr has always been 0 because of the way shared libraries are built, and packed relocations has changed that; right?",
+      "range": {
+        "startLine": 335,
+        "startChar": 17,
+        "endLine": 335,
+        "endChar": 24
+      },
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "929c86d9_d6b17a4a",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "If this fails we lose synchronization with the packed data stream, and an obscure crash later on is inevitable.\n\nCan we \u0027invalidate\u0027 the iterator here, and add to it an error() or similar method that relocate() can check at the end of its processing loop?  That would allow us to gracefully fail the load without horrible consequences.\n\n(I agree that this error case \u0027should not happen\u0027, at least not if the packer is correctly coded, and I think there\u0027s a case for not trying to handle it at all, either here or in read_group_fields().  But if we are going to try then propagating the error up to the caller would probably be preferable.)",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "929c86d9_766fe629",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "relocate() does not error-out if next() returns null.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "375f4c29_8a842ba1",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "DL_ERR also?  Seems like a significant issue.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773384f5_2f43051f",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "relocate() does not error-out if next() returns null.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "375f4c29_6a5337c2",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T18:16:43Z",
+      "side": 1,
+      "message": "DL_ERR?",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
