@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7220f282_b9f04398",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T16:36:45Z",
+      "side": 1,
+      "message": "yes it is... if this group does not have an addend next group starts with 0. moved.",
+      "parentUuid": "929c86d9_f6ce365c",
+      "revId": "24b678f7beed4da514195800a1c6ad11e77b24cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "929c86d9_76c36631",
         "filename": "tools/relocation_packer/src/delta_encoder.cc",
         "patchSetId": 14
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-05T15:51:29Z",
       "side": 1,
       "message": "Same comment as above -- more appropriate right at the bottom of the loop body?  In particular, the value of addend is ignored (line 173) for the current group.",
+      "revId": "24b678f7beed4da514195800a1c6ad11e77b24cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7220f282_d9e5ffd4",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T16:36:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "929c86d9_76c36631",
       "revId": "24b678f7beed4da514195800a1c6ad11e77b24cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
