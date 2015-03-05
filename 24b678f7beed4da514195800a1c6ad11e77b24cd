@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "929c86d9_f6ce365c",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T15:51:29Z",
+      "side": 1,
+      "message": "Is this being reset for the benefit of the next group, rather than this one?  previous_addend is not changed by the remainder of this loop body if this group has no addends.\n\nIf yes, it would be clearer to move this down to the bottom of the foreach-group loop, and comment a bit more clearly.",
+      "revId": "24b678f7beed4da514195800a1c6ad11e77b24cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "929c86d9_76c36631",
+        "filename": "tools/relocation_packer/src/delta_encoder.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-05T15:51:29Z",
+      "side": 1,
+      "message": "Same comment as above -- more appropriate right at the bottom of the loop body?  In particular, the value of addend is ignored (line 173) for the current group.",
+      "revId": "24b678f7beed4da514195800a1c6ad11e77b24cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
