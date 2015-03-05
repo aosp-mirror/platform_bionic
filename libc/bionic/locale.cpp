@@ -36,6 +36,7 @@
 #include <wchar.h>
 
 #include "private/bionic_macros.h"
+#include "private/ThreadLocalBuffer.h"
 
 // We currently support a single locale, the "C" locale (also known as "POSIX").
 
@@ -62,10 +63,7 @@ static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
 
 // We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
-static pthread_key_t g_uselocale_key;
-__attribute__((constructor)) static void __bionic_tls_uselocale_key_init() {
-  pthread_key_create(&g_uselocale_key, NULL);
-}
+BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR(g_uselocale_key, NULL);
 
 static void __locale_init() {
   g_locale.decimal_point = const_cast<char*>(".");
