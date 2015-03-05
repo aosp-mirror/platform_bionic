@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7220f282_b8c92158",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-05T01:31:46Z",
+      "side": 1,
+      "message": "While you\u0027re at it, I would make this atomic.  That will prevent a race detector from complaining. And there are perfectly reasonable but currently unimplemented compiler optimizations that will break this code without that.",
+      "range": {
+        "startLine": 708,
+        "startChar": 4,
+        "endLine": 708,
+        "endChar": 12
+      },
+      "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37110c43_fad1494d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-05T01:31:46Z",
+      "side": 1,
+      "message": "Did you intentionally drop the preceding assert?  I would keep it.",
+      "range": {
+        "startLine": 712,
+        "startChar": 18,
+        "endLine": 712,
+        "endChar": 73
+      },
+      "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7220f282_78aec965",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-05T01:31:46Z",
+      "side": 1,
+      "message": "Again, I would have kept the progress assert.  It\u0027s unlikely to fail if join() works correctly.  But these are bionic tests, so it seems reasonable to assume that anything may break.\n\nI\u0027m clearly far less familiar with these tests than Elliott.",
+      "range": {
+        "startLine": 733,
+        "startChar": 2,
+        "endLine": 733,
+        "endChar": 43
+      },
+      "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
