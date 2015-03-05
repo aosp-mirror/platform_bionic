@@ -78,7 +78,7 @@ enum {
  * Following are current pthread keys used internally by libc:
  *  basename               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  dirname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  uselocale              libc
+ *  uselocale              libc (BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR)
  *  getmntent_mntent       libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  getmntent_strings      libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  ptsname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
@@ -87,7 +87,7 @@ enum {
  *  strsignal              libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  passwd                 libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  group                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  _res_key               libc
+ *  _res_key               libc (BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR)
  */
 
 #define LIBC_PTHREAD_KEY_RESERVED_COUNT 12

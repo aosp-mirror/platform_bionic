@@ -39,6 +39,8 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
+#include "private/ThreadLocalBuffer.h"
+
 /* Set to 1 to enable debug traces */
 #define DEBUG 0
 
@@ -49,8 +51,6 @@
 #else
 #  define D(...)  do{}while(0)
 #endif
-
-static pthread_key_t   _res_key;
 
 typedef struct {
     int                  _h_errno;
@@ -105,12 +105,7 @@ _res_thread_free( void*  _rt )
     free(rt);
 }
 
-__attribute__((constructor))
-static void
-_res_init_key( void )
-{
-    pthread_key_create( &_res_key, _res_thread_free );
-}
+BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR(_res_key, _res_thread_free);
 
 static _res_thread*
 _res_thread_get(void)
