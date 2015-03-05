@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7220f282_3362b242",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-05T04:10:38Z",
+      "side": 1,
+      "message": "I think in at least a couple of cases below, we\u0027re using sleep() to wait for the other thread to complete an action.  That\u0027s technically still a race.  And I would object to it if it were not in a test.  Whether the compiler can move a volatile around sleep is unclear.  I think technically yes, in practice that would be evil.  In any case, a race detector should not consider sleep() as synchronization of any kind.\n\nThe general rule is not to use volatile for thread synchronization at all.  It has no impact on the presence of a data race.  In practice everybody used it with old compilers, because it sometimes kind of works like memory_order_relaxed atomics, but these days there is no reason not use atomics.\n\nAround line 712, the lock acquisitions should prevent the progress read from moving up.  But officially there is nothing preventing a progress write from moving down or, as you say from reusing the value for the read that was just written.  I think technically the former is true even for volatile.",
+      "parentUuid": "7220f282_33a47284",
+      "range": {
+        "startLine": 708,
+        "startChar": 4,
+        "endLine": 708,
+        "endChar": 12
+      },
+      "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37110c43_fad1494d",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 6
@@ -89,6 +113,29 @@
         "startChar": 18,
         "endLine": 712,
         "endChar": 73
+      },
+      "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d70d102d_376a389d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-05T04:10:38Z",
+      "side": 1,
+      "message": "I had missed this before, but ideally, we probably don\u0027t want to wait a whole second to avoid slowing down the tests.",
+      "range": {
+        "startLine": 728,
+        "startChar": 2,
+        "endLine": 728,
+        "endChar": 11
       },
       "revId": "c8d6d74b7917a30a4ac9061e42c6797e8f54ae72",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
