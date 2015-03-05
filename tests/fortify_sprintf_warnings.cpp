@@ -144,7 +144,7 @@ void test_vsprintf(const char* fmt, ...) {
   va_start(va, fmt);
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___vsprintf_chk(char*, int, {{(long )?}}unsigned int, const char*, {{(__va_list)|(void\*)|(char\*)}}) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___vsprintf_chk(char*, int, {{(long )?}}unsigned int, const char*, {{(__va_list)|(void\*)|(char\*)|(__va_list_tag\*)}}) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   vsprintf(buf, "foobar", va);
   va_end(va);
@@ -156,7 +156,7 @@ void test_vsnprintf(const char* fmt, ...) {
   va_start(va, fmt);
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: warning: call to int __builtin___vsnprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, {{(__va_list)|(void\*)|(char\*)}}) will always overflow destination buffer
+  // GCC: warning: call to int __builtin___vsnprintf_chk(char*, {{(long )?}}unsigned int, int, {{(long )?}}unsigned int, const char*, {{(__va_list)|(void\*)|(char\*)|(__va_list_tag\*)}}) will always overflow destination buffer
   // clang should emit a warning, but doesn't
   vsnprintf(buf, 5, "foobar", va);  // NOLINT(runtime/printf)
 
