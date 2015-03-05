@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37110c43_5d026f73",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-05T06:39:14Z",
+      "side": 1,
+      "message": "Why isn\u0027t this always __va_list? Build fix, so submit anyway, but that\u0027s strange.",
+      "range": {
+        "startLine": 147,
+        "startChar": 109,
+        "endLine": 147,
+        "endChar": 138
+      },
+      "revId": "94545eba371be428c11d587a3b7d9883f37c7b19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
