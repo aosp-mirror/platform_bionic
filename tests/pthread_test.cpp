@@ -33,6 +33,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <atomic>
+
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
@@ -697,6 +699,79 @@ TEST(pthread, pthread_rwlock_smoke) {
 #endif
 
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
+}
+
+struct RwlockWakeupHelperArg {
+  pthread_rwlock_t lock;
+  enum Progress {
+    LOCK_INITIALIZED,
+    LOCK_WAITING,
+    LOCK_RELEASED,
+    LOCK_ACCESSED
+  };
+  std::atomic<Progress> progress;
+};
+
+static void pthread_rwlock_reader_wakeup_writer_helper(RwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
+
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&arg->lock));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+
+  arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
+}
+
+TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+static void pthread_rwlock_writer_wakeup_reader_helper(RwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
+
+  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&arg->lock));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+
+  arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
 }
 
 static int g_once_fn_call_count = 0;
