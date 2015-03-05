@@ -252,8 +252,6 @@ LOCAL_SRC_FILES += \
 # -----------------------------------------------------------------------------
 LOCAL_SRC_FILES_arm += \
     arm/fenv.c \
-    upstream-freebsd/lib/msun/src/e_sqrt.c \
-    upstream-freebsd/lib/msun/src/e_sqrtf.c \
     upstream-freebsd/lib/msun/src/s_ceil.c \
     upstream-freebsd/lib/msun/src/s_ceilf.c \
     upstream-freebsd/lib/msun/src/s_fma.c \
@@ -277,9 +275,17 @@ endif
 
 # Use the C version on armv7-a since it doesn't support neon instructions.
 ifeq ($(arch_variant),armv7-a)
-LOCAL_SRC_FILES_arm += upstream-freebsd/lib/msun/src/s_floor.c
+LOCAL_SRC_FILES_arm += \
+    upstream-freebsd/lib/msun/src/e_sqrt.c \
+    upstream-freebsd/lib/msun/src/e_sqrtf.c \
+    upstream-freebsd/lib/msun/src/s_floor.c \
+
 else
-LOCAL_SRC_FILES_arm += arm/s_floor.S
+LOCAL_SRC_FILES_arm += \
+    arm/e_sqrt.S \
+    arm/e_sqrtf.S \
+    arm/s_floor.S \
+
 endif
 
 # -----------------------------------------------------------------------------
