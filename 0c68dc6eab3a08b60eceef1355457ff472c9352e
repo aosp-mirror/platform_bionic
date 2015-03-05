@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7220f282_41aaf503",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "929c86d9_566c6a33",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773384f5_ef8e1dfa",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2015-03-05T18:16:43Z",
       "side": 1,
       "message": "Can you comment this change?  I think I understand it -- up to now addr has always been 0 because of the way shared libraries are built, and packed relocations has changed that; right?",
+      "range": {
+        "startLine": 335,
+        "startChar": 17,
+        "endLine": 335,
+        "endChar": 24
+      },
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1787a8d2_c1bc821f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "right. linker never really worked with p_vaddr of the first segment !\u003d nullptr before.. (see also linker.cpp:1411 \u0026\u0026 L1420)\n\nin the case we provide the value of addr !\u003d 0 kernel is going to create mmap on the page boundary of the \"hint\" address (when it is available) which is not necessary here. we want a random address.",
+      "parentUuid": "773384f5_ef8e1dfa",
       "range": {
         "startLine": 335,
         "startChar": 17,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "f78db4f3_60a1f221",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "good catch; Done - yes we should not crash. DL_ERR should cover the cause; the only cause atm is unexpected r_addend.",
+      "parentUuid": "929c86d9_d6b17a4a",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "929c86d9_766fe629",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 4
@@ -70,6 +130,24 @@
       "writtenOn": "2015-03-05T18:16:43Z",
       "side": 1,
       "message": "relocate() does not error-out if next() returns null.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f78db4f3_60ced230",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "Done; added nullptr check to relocate",
+      "parentUuid": "929c86d9_766fe629",
       "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "f78db4f3_a0b5ba64",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "375f4c29_8a842ba1",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773384f5_2f43051f",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 4
@@ -104,6 +200,24 @@
       "writtenOn": "2015-03-05T18:16:43Z",
       "side": 1,
       "message": "relocate() does not error-out if next() returns null.",
+      "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7220f282_a157295b",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-05T19:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773384f5_2f43051f",
       "revId": "0c68dc6eab3a08b60eceef1355457ff472c9352e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
