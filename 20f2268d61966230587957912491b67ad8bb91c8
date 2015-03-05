@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7220f282_fe50e1b2",
+        "filename": "tests/fortify_sprintf_warnings.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003723
+      },
+      "writtenOn": "2015-03-05T06:20:50Z",
+      "side": 1,
+      "message": "Seen on sdk_x86-eng and other build server builds:\n\ntarget  C++: bionic-compile-time-tests-g++ \u003c\u003d bionic/tests/fortify_sprintf_warnings.cpp\nbionic/tests/fortify_sprintf_warnings.cpp:99:10: error: expected string not found in input\n // GCC: warning: call to {{(char\\* __builtin___strcpy_chk\\(char\\*, const char\\*, unsigned int\\))|(void\\* __builtin___memcpy_chk\\(void\\*, const void\\*, long unsigned int, long unsigned int\\))}} will always overflow destination buffer\n         ^\n\u003cstdin\u003e:45:164: note: scanning from here\nbionic/libc/include/string.h:207:53: warning: call to void* __builtin___memset_chk(void*, int, unsigned int, unsigned int) Copy: out/target/product/generic_x86/obj/STATIC_LIBRARIES/libclangAST_intermediates/include/clang/AST/AttrDump.inc\nwill always overflow destination buffer [enabled by default]\n                                                                                                                                                                 ^\nmake: *** [out/target/product/generic_x86/obj/STATIC_LIBRARIES/bionic-compile-time-tests-g++_intermediates/fortify_sprintf_warnings.o] Error 1",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 45
+      },
+      "revId": "20f2268d61966230587957912491b67ad8bb91c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
