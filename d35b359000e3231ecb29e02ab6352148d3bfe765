@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7a6f0c2_9556642c",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T23:08:48Z",
+      "side": 1,
+      "message": "The main thread\u0027s...",
+      "revId": "d35b359000e3231ecb29e02ab6352148d3bfe765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
