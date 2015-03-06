@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7f17ca4_2e1c671f",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-06T16:44:15Z",
+      "side": 1,
+      "message": "I\u0027d make this message textually different to that in line 133 below, so that if an error like this occurs it is clear which case triggered.  We should probably also set relocation_index_ \u003d relocation_count_ \u003d 0; so that the iterator can no longer be used, like in 87 above.\n\n(Note: for well-behaved client code that always calls has_next() before calling next(), I don\u0027t think we can ever reach here now -- this case is checked in read_group_fields(), and error detected there will force has_next() to always-false, line 87.)",
+      "revId": "0f26ee51f320a44c0cfe34dd10eb6273264d5c29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
