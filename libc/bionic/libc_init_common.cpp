@@ -88,7 +88,6 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
   main_thread.mmap_size = 0;
   pthread_attr_init(&main_thread.attr);
-  main_thread.attr.flags = PTHREAD_ATTR_FLAG_MAIN_THREAD;
   main_thread.attr.guard_size = 0; // The main thread has no guard page.
   main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
   // TODO: the main thread's sched_policy and sched_priority need to be queried.
