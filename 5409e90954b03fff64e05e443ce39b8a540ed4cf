@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7d8b03c_5fc24bd2",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T23:59:55Z",
+      "side": 1,
+      "message": "why .weak rather than .globl?\n\n(we might want to add a macro to bionic_asm.h for this. we use it in the generated system call stubs, and a macro might help us be consistent.)",
+      "revId": "5409e90954b03fff64e05e443ce39b8a540ed4cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
