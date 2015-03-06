@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "175c0863_f95d17ff",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-06T04:40:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37302c12_687f77de",
+      "range": {
+        "startLine": 159,
+        "startChar": 16,
+        "endLine": 159,
+        "endChar": 27
+      },
+      "revId": "379dcbfcb5f07b40b3f5b77e80fe22a2efd2ea2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37302c12_887abbec",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-03-06T04:33:21Z",
       "side": 1,
       "message": "that may",
+      "range": {
+        "startLine": 75,
+        "startChar": 54,
+        "endLine": 75,
+        "endChar": 57
+      },
+      "revId": "379dcbfcb5f07b40b3f5b77e80fe22a2efd2ea2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37302c12_8bc8f5a0",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-06T04:40:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37302c12_887abbec",
       "range": {
         "startLine": 75,
         "startChar": 54,
