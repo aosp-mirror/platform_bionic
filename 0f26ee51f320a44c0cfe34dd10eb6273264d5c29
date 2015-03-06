@@ -34,6 +34,24 @@
       "revId": "0f26ee51f320a44c0cfe34dd10eb6273264d5c29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f72054e0_a80fbbdd",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-06T17:59:51Z",
+      "side": 1,
+      "message": "removed this code since it is unreachable anyways.",
+      "parentUuid": "f72054e0_28c46b3e",
+      "revId": "0f26ee51f320a44c0cfe34dd10eb6273264d5c29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
