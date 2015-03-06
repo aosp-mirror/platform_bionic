@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37ccac7c_62193675",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-06T18:45:25Z",
+      "side": 1,
+      "message": "I\u0027m a little leery of aborting here. I think it\u0027s highly probable that a bunch of apps have bugs that might hit this. While they are real bugs, these apps are not likely to be changed.\n\nCan you do a sweep and see how many apps use pthread_key_create? It might be worth trying a few with this change to see if anything bad happens.",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 3
+      },
+      "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
