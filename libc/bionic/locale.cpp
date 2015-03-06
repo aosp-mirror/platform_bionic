@@ -36,7 +36,6 @@
 #include <wchar.h>
 
 #include "private/bionic_macros.h"
-#include "private/ThreadLocalBuffer.h"
 
 // We currently support a single locale, the "C" locale (also known as "POSIX").
 
@@ -59,11 +58,17 @@ struct __locale_t {
   DISALLOW_COPY_AND_ASSIGN(__locale_t);
 };
 
+size_t __ctype_get_mb_cur_max() {
+  locale_t l = uselocale(NULL);
+  if (l == LC_GLOBAL_LOCALE) {
+    return __bionic_current_locale_is_utf8 ? 4 : 1;
+  } else {
+    return l->mb_cur_max;
+  }
+}
+
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
-
-// We don't use pthread_once for this so that we know when the resource (a TLS slot) will be taken.
-BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR(g_uselocale_key, NULL);
 
 static void __locale_init() {
   g_locale.decimal_point = const_cast<char*>(".");
@@ -93,15 +98,6 @@ static void __locale_init() {
   g_locale.int_n_sep_by_space = CHAR_MAX;
   g_locale.int_p_sign_posn = CHAR_MAX;
   g_locale.int_n_sign_posn = CHAR_MAX;
-}
-
-size_t __ctype_get_mb_cur_max() {
-  locale_t l = reinterpret_cast<locale_t>(pthread_getspecific(g_uselocale_key));
-  if (l == nullptr || l == LC_GLOBAL_LOCALE) {
-    return __bionic_current_locale_is_utf8 ? 4 : 1;
-  } else {
-    return l->mb_cur_max;
-  }
 }
 
 static bool __is_supported_locale(const char* locale) {
@@ -160,7 +156,16 @@ char* setlocale(int category, const char* locale_name) {
   return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
 }
 
+// We can't use a constructor to create g_uselocal_key, because it may be used in constructors.
+static pthread_once_t g_uselocale_once = PTHREAD_ONCE_INIT;
+static pthread_key_t g_uselocale_key;
+
+static void g_uselocale_key_init() {
+  pthread_key_create(&g_uselocale_key, NULL);
+}
+
 locale_t uselocale(locale_t new_locale) {
+  pthread_once(&g_uselocale_once, g_uselocale_key_init);
   locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
