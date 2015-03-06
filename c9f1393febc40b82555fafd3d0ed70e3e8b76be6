@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37274cf6_4a6f13ac",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T17:25:34Z",
+      "side": 1,
+      "message": "only macros should be all-caps.",
+      "revId": "c9f1393febc40b82555fafd3d0ed70e3e8b76be6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37274cf6_6a6ad79d",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T17:25:34Z",
+      "side": 1,
+      "message": "typedef, not #define.",
+      "revId": "c9f1393febc40b82555fafd3d0ed70e3e8b76be6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37274cf6_aae16fa0",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T17:25:34Z",
+      "side": 1,
+      "message": "an",
+      "revId": "c9f1393febc40b82555fafd3d0ed70e3e8b76be6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d72350ea_67169281",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-06T17:25:34Z",
+      "side": 1,
+      "message": "s/in/to the/",
+      "revId": "c9f1393febc40b82555fafd3d0ed70e3e8b76be6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
