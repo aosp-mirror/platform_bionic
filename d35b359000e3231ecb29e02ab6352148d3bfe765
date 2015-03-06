@@ -16,6 +16,24 @@
       "revId": "d35b359000e3231ecb29e02ab6352148d3bfe765",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7a6f0c2_15b8b45e",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-06T23:17:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7a6f0c2_9556642c",
+      "revId": "d35b359000e3231ecb29e02ab6352148d3bfe765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
