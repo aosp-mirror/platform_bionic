@@ -16,6 +16,24 @@
       "revId": "0f26ee51f320a44c0cfe34dd10eb6273264d5c29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f72054e0_28c46b3e",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-06T17:44:29Z",
+      "side": 1,
+      "message": "I am thinking about aborting here... In the case when flags point to existence of the r_addend field is handled by read_group_fields() and this part of code should be unreachable.",
+      "parentUuid": "b7f17ca4_2e1c671f",
+      "revId": "0f26ee51f320a44c0cfe34dd10eb6273264d5c29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
