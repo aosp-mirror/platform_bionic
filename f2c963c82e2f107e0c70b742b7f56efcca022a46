@@ -22,6 +22,30 @@
       "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d5b400_c0391ea8",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-06T19:14:33Z",
+      "side": 1,
+      "message": "There are not many use of pthread_key_create in aosp. I can\u0027t see any problem in them, while I can\u0027t tell whether they are safe until runtime. In apk scanning, I see 3766401 uses of pthread_key_create. I am afraid I can\u0027t test them.\nAfter all, I think we don\u0027t need to worry about apps. We have dogfood. And if the apps are popular, I think they will be taken care of by developers.",
+      "parentUuid": "37ccac7c_62193675",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 3
+      },
+      "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
