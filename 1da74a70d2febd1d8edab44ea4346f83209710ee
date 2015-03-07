@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7a430cd_dfc83b53",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T01:29:16Z",
+      "side": 1,
+      "message": "Bug:\n\n(we might even be able to add the bug submitter as a reviewer.)",
+      "revId": "1da74a70d2febd1d8edab44ea4346f83209710ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7a430cd_9fd2b301",
+        "filename": "libc/include/sys/procfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T01:29:16Z",
+      "side": 1,
+      "message": "weird, but if that\u0027s what gdb needs...",
+      "revId": "1da74a70d2febd1d8edab44ea4346f83209710ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7770e418_e4953a87",
+        "filename": "libc/include/sys/procfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T01:29:16Z",
+      "side": 1,
+      "message": "is this right? should this just be \u003csys/user.h\u003e instead?",
+      "revId": "1da74a70d2febd1d8edab44ea4346f83209710ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179b288e_a1143ec6",
+        "filename": "libc/include/sys/procfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T01:29:16Z",
+      "side": 1,
+      "message": "is this actually right? for example, i think on arm greg_t is signed but elf_greg_t is never (afaik) signed?\n\nwe\u0027d have NGREG from \u003csys/user.h\u003e, so can we just have:\n\n  typedef uintptr_t elf_greg_t;\n  typedef uintptr_t elf_gregset_t[NGREG];\n\n?",
+      "revId": "1da74a70d2febd1d8edab44ea4346f83209710ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7ab3c9d_7ed25153",
+        "filename": "libc/include/sys/procfs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T01:29:16Z",
+      "side": 1,
+      "message": "but not prgregset_t?",
+      "revId": "1da74a70d2febd1d8edab44ea4346f83209710ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
