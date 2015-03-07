@@ -70,6 +70,47 @@
       "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_392d0f90",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T02:17:09Z",
+      "side": 1,
+      "message": "yeah, testing a handful of the popular apps will give us an idea whether this is a common mistake or not.\n\nbut... won\u0027t incorrect apps have crashed anyway? their pthread_setspecific calls will have done nothing but (because they probably ignored the EINVAL return) their pthread_getspecific calls will return NULL.",
+      "parentUuid": "d7b190f2_f7d7c0e4",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 3
+      },
+      "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_793387fa",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T02:17:09Z",
+      "side": 1,
+      "message": "synchronize",
+      "revId": "f2c963c82e2f107e0c70b742b7f56efcca022a46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
