@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9771d81d_a5509ee8",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T00:28:18Z",
+      "side": 1,
+      "message": "can\u0027t all the others potentially be used in constructors? do we need to move to statically allocating these in the enum above? we could still use pthread_getspecific and pthread_setspecific --- we\u0027d just need an internal way to initialize a pthread_key_t from an enum value.",
+      "revId": "f7e3b3e48ab3ffbf7bbce5102ce1739c200093cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
