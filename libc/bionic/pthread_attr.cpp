@@ -170,6 +170,11 @@ int pthread_attr_getguardsize(const pthread_attr_t* attr, size_t* guard_size) {
 int pthread_getattr_np(pthread_t t, pthread_attr_t* attr) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
   *attr = thread->attr;
+  // We prefer reading join_state here to setting thread->attr.flags in pthread_detach.
+  // Because data race exists in the latter case.
+  if (atomic_load(&thread->join_state) == THREAD_DETACHED) {
+    attr->flags |= PTHREAD_ATTR_FLAG_DETACHED;
+  }
   // The main thread's stack information is not stored in thread->attr, and we need to
   // collect that at runtime.
   if (thread->tid == getpid()) {
