@@ -94,6 +94,13 @@ typedef struct {
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
 
+/* Android compressed rel/rela sections */
+#define DT_ANDROID_REL (DT_LOOS + 2)
+#define DT_ANDROID_RELSZ (DT_LOOS + 3)
+
+#define DT_ANDROID_RELA (DT_LOOS + 4)
+#define DT_ANDROID_RELASZ (DT_LOOS + 5)
+
 /* gnu hash entry */
 #define DT_GNU_HASH 0x6ffffef5
 
