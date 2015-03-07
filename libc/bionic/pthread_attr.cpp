@@ -152,9 +152,6 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
 }
 
 int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
-  if ((attr->flags & PTHREAD_ATTR_FLAG_MAIN_THREAD) != 0) {
-    return __pthread_attr_getstack_main_thread(stack_base, stack_size);
-  }
   *stack_base = attr->stack_base;
   *stack_size = attr->stack_size;
   return 0;
@@ -171,7 +168,13 @@ int pthread_attr_getguardsize(const pthread_attr_t* attr, size_t* guard_size) {
 }
 
 int pthread_getattr_np(pthread_t t, pthread_attr_t* attr) {
-  *attr = reinterpret_cast<pthread_internal_t*>(t)->attr;
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  *attr = thread->attr;
+  // The main thread's stack information is not stored in thread->attr, and we need to
+  // collect that at runtime.
+  if (thread->tid == getpid()) {
+    return __pthread_attr_getstack_main_thread(&attr->stack_base, &attr->stack_size);
+  }
   return 0;
 }
 
