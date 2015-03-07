@@ -93,6 +93,75 @@
       "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_7954a7dc",
+        "filename": "libm/x86/libm_reduce_pi04l.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-07T02:33:28Z",
+      "side": 1,
+      "message": "I don\u0027t think we can take this code with this license. Is it possible to use the same license used in the majority of the other code?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_195b6b0b",
+        "filename": "libm/x86/libm_sincos_huge.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-07T02:33:28Z",
+      "side": 1,
+      "message": "Same as previous comment, can this be uploaded with the other license?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_d94df349",
+        "filename": "libm/x86/libm_tancot_huge.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-07T02:33:28Z",
+      "side": 1,
+      "message": "Same as previous comment, can this be uploaded with the other license?",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "7b1d11c80dbf1298cde48efdde4850df15c9c807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
