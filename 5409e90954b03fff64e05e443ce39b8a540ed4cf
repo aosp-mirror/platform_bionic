@@ -16,6 +16,24 @@
       "revId": "5409e90954b03fff64e05e443ce39b8a540ed4cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7770e418_e45a9a04",
+        "filename": "libm/x86/ceil.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-07T00:47:47Z",
+      "side": 1,
+      "message": "No reason, this pattern is used in a lot of the code. I\u0027ll fix these ones, and then I\u0027ll do a separate CL to clean them all up and add a macro.",
+      "parentUuid": "d7d8b03c_5fc24bd2",
+      "revId": "5409e90954b03fff64e05e443ce39b8a540ed4cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
