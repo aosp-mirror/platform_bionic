@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7770e418_246f527f",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-07T01:13:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "576be030_a3a25a78",
+      "revId": "44f58df1c5f58e0fdc079b50bdbbd4c6ffbe04f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9771d81d_e520d621",
         "filename": "linker/linker_leb128.h",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "179b288e_a18f9e26",
+        "filename": "linker/linker_leb128.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-07T01:13:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9771d81d_e520d621",
+      "revId": "44f58df1c5f58e0fdc079b50bdbbd4c6ffbe04f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "576be030_c33676b7",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 8
@@ -47,6 +83,24 @@
       "writtenOn": "2015-03-07T00:45:10Z",
       "side": 1,
       "message": "let\u0027s ... .",
+      "revId": "44f58df1c5f58e0fdc079b50bdbbd4c6ffbe04f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179b288e_4137b2b3",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-07T01:13:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "576be030_c33676b7",
       "revId": "44f58df1c5f58e0fdc079b50bdbbd4c6ffbe04f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
