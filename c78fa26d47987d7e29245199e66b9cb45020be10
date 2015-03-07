@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7d8b03c_dfb57b64",
+        "filename": "libm/arm/e_sqrt.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T00:01:25Z",
+      "side": 1,
+      "message": "when is this not true for arm?",
+      "revId": "c78fa26d47987d7e29245199e66b9cb45020be10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7d8b03c_ffb23f79",
+        "filename": "libm/arm/e_sqrt.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-07T00:01:25Z",
+      "side": 1,
+      "message": ".globl?",
+      "revId": "c78fa26d47987d7e29245199e66b9cb45020be10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
