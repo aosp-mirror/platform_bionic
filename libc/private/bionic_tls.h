@@ -72,13 +72,13 @@ enum {
 
 /*
  * Bionic uses some pthread keys internally. All pthread keys used internally
- * should be created in constructors.
+ * should be created in constructors, except for keys that may be used in or before constructors.
  * We need to manually maintain the count of pthread keys used internally, but
  * pthread_test should fail if we forget.
  * Following are current pthread keys used internally by libc:
  *  basename               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  dirname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  uselocale              libc (BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR)
+ *  uselocale              libc (can be used in constructors)
  *  getmntent_mntent       libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  getmntent_strings      libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
  *  ptsname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
