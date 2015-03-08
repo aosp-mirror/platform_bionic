@@ -50,11 +50,13 @@
 #include "private/UniquePtr.h"
 
 #include "linker.h"
+#include "linker_allocator.h"
 #include "linker_debug.h"
 #include "linker_environ.h"
+#include "linker_leb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
-#include "linker_allocator.h"
+#include "linker_reloc_iterators.h"
 
 /* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
  *
@@ -1297,9 +1299,14 @@ static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
 }
 #endif
 
-template<typename ElfRelT>
-bool soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  for (size_t idx = 0; idx < count; ++idx, ++rel) {
+template<typename ElfRelIteratorT>
+bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+  for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
+    const auto rel = rel_iterator.next();
+    if (rel == nullptr) {
+      return false;
+    }
+
     ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
     ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
 
@@ -1405,16 +1412,16 @@ bool soinfo::relocate(ElfRelT* rel, unsigned count, const soinfo_list_t& global_
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
                    reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(base + addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (base + addend);
+                   reinterpret_cast<void*>(load_bias + addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
         break;
       case R_GENERIC_IRELATIVE:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
                     reinterpret_cast<void*>(reloc),
-                    reinterpret_cast<void*>(base + addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(base + addend);
+                    reinterpret_cast<void*>(load_bias + addend));
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = call_ifunc_resolver(load_bias + addend);
         break;
 
 #if defined(__aarch64__)
@@ -2051,6 +2058,22 @@ bool soinfo::prelink_image() {
         rela_count_ = d->d_un.d_val / sizeof(ElfW(Rela));
         break;
 
+      case DT_ANDROID_RELA:
+        android_relocs_ = reinterpret_cast<uint8_t*>(load_bias + d->d_un.d_ptr);
+        break;
+
+      case DT_ANDROID_RELASZ:
+        android_relocs_size_ = d->d_un.d_val;
+        break;
+
+      case DT_ANDROID_REL:
+        DL_ERR("unsupported DT_ANDROID_REL in \"%s\"", name);
+        return false;
+
+      case DT_ANDROID_RELSZ:
+        DL_ERR("unsupported DT_ANDROID_RELSZ in \"%s\"", name);
+        return false;
+
       case DT_RELAENT:
         if (d->d_un.d_val != sizeof(ElfW(Rela))) {
           DL_ERR("invalid DT_RELAENT: %zd", static_cast<size_t>(d->d_un.d_val));
@@ -2069,6 +2092,7 @@ bool soinfo::prelink_image() {
       case DT_RELSZ:
         DL_ERR("unsupported DT_RELSZ in \"%s\"", name);
         return false;
+
 #else
       case DT_REL:
         rel_ = reinterpret_cast<ElfW(Rel)*>(load_bias + d->d_un.d_ptr);
@@ -2085,6 +2109,22 @@ bool soinfo::prelink_image() {
         }
         break;
 
+      case DT_ANDROID_REL:
+        android_relocs_ = reinterpret_cast<uint8_t*>(load_bias + d->d_un.d_ptr);
+        break;
+
+      case DT_ANDROID_RELSZ:
+        android_relocs_size_ = d->d_un.d_val;
+        break;
+
+      case DT_ANDROID_RELA:
+        DL_ERR("unsupported DT_ANDROID_RELA in \"%s\"", name);
+        return false;
+
+      case DT_ANDROID_RELASZ:
+        DL_ERR("unsupported DT_ANDROID_RELASZ in \"%s\"", name);
+        return false;
+
       // "Indicates that all RELATIVE relocations have been concatenated together,
       // and specifies the RELATIVE relocation count."
       //
@@ -2092,9 +2132,15 @@ bool soinfo::prelink_image() {
       // Not currently used by bionic linker - ignored.
       case DT_RELCOUNT:
         break;
+
       case DT_RELA:
         DL_ERR("unsupported DT_RELA in \"%s\"", name);
         return false;
+
+      case DT_RELASZ:
+        DL_ERR("unsupported DT_RELASZ in \"%s\"", name);
+        return false;
+
 #endif
       case DT_INIT:
         init_func_ = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
@@ -2249,7 +2295,8 @@ bool soinfo::prelink_image() {
   return true;
 }
 
-bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo) {
+bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                        const android_dlextinfo* extinfo) {
 
   local_group_root_ = local_group.front();
   if (local_group_root_ == nullptr) {
@@ -2270,29 +2317,63 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #endif
 
+  if (android_relocs_ != nullptr) {
+    // check signature
+    if (android_relocs_size_ > 3 &&
+        android_relocs_[0] == 'A' &&
+        android_relocs_[1] == 'P' &&
+        (android_relocs_[2] == 'U' || android_relocs_[2] == 'S') &&
+        android_relocs_[3] == '2') {
+      DEBUG("[ android relocating %s ]", name);
+
+      bool relocated = false;
+      const uint8_t* packed_relocs = android_relocs_ + 4;
+      const size_t packed_relocs_size = android_relocs_size_ - 4;
+
+      if (android_relocs_[2] == 'U') {
+        relocated = relocate(
+            packed_reloc_iterator<leb128_decoder>(
+              leb128_decoder(packed_relocs, packed_relocs_size)),
+            global_group, local_group);
+      } else { // android_relocs_[2] == 'S'
+        relocated = relocate(
+            packed_reloc_iterator<sleb128_decoder>(
+              sleb128_decoder(packed_relocs, packed_relocs_size)),
+            global_group, local_group);
+      }
+
+      if (!relocated) {
+        return false;
+      }
+    } else {
+      DL_ERR("bad android relocation header.");
+      return false;
+    }
+  }
+
 #if defined(USE_RELA)
   if (rela_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (!relocate(rela_, rela_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (!relocate(plt_rela_, plt_rela_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
       return false;
     }
   }
 #else
   if (rel_ != nullptr) {
     DEBUG("[ relocating %s ]", name);
-    if (!relocate(rel_, rel_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
     DEBUG("[ relocating %s plt ]", name);
-    if (!relocate(plt_rel_, plt_rel_count_, global_group, local_group)) {
+    if (!relocate(plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
       return false;
     }
   }
