@@ -1241,9 +1241,7 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
-  if (!get_AT_SECURE()) {
-    parse_LD_LIBRARY_PATH(ld_library_path);
-  }
+  parse_LD_LIBRARY_PATH(ld_library_path);
 }
 
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
