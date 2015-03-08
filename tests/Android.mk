@@ -388,7 +388,7 @@ LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx \
 LOCAL_CLANG := false
 LOCAL_MODULE := bionic-compile-time-tests-g++
 LOCAL_CPPFLAGS := -Wall
-LOCAL_SRC_FILES := fortify_sprintf_warnings.cpp
+LOCAL_SRC_FILES := fortify_compilation_test.cpp
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
