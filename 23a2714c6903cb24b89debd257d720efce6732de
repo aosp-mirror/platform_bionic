@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c4c498b_0435d60a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-09T23:40:29Z",
+      "side": 1,
+      "message": "also need:\n\n  Bug: 19381040",
+      "revId": "23a2714c6903cb24b89debd257d720efce6732de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c4c498b_c49b3e71",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-09T23:40:29Z",
+      "side": 1,
+      "message": "I\u0027d separate this into 2 ASSERT_TRUE statements, just like the original version.",
+      "revId": "23a2714c6903cb24b89debd257d720efce6732de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c4c498b_248c5236",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-09T23:40:29Z",
+      "side": 1,
+      "message": "separate into 2 ASSERT_TRUE statements.",
+      "revId": "23a2714c6903cb24b89debd257d720efce6732de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
