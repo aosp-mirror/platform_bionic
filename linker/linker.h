@@ -309,6 +309,10 @@ struct soinfo {
   size_t strtab_size_;
 
   // version >= 2
+
+  size_t gnu_nbucket_;
+  uint32_t* gnu_bucket_;
+  uint32_t* gnu_chain_;
   uint32_t gnu_maskwords_;
   uint32_t gnu_shift2_;
   ElfW(Addr)* gnu_bloom_filter_;
