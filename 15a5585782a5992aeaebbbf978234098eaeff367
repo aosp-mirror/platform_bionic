@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b726dc9a_460a124e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-09T21:16:05Z",
+      "side": 1,
+      "message": "bug #s are the same.",
+      "range": {
+        "startLine": 9,
+        "startChar": 24,
+        "endLine": 9,
+        "endChar": 51
+      },
+      "revId": "15a5585782a5992aeaebbbf978234098eaeff367",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
