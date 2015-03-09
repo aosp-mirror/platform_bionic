@@ -421,26 +421,41 @@ ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name) {
   uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
   ElfW(Addr) bloom_word = gnu_bloom_filter_[word_num];
 
+  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p (gnu)",
+      symbol_name.get_name(), name, reinterpret_cast<void*>(base));
+
   // test against bloom filter
   if ((1 & (bloom_word >> (hash % bloom_mask_bits)) & (bloom_word >> (h2 % bloom_mask_bits))) == 0) {
+    TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
+        symbol_name.get_name(), name, reinterpret_cast<void*>(base));
+
     return nullptr;
   }
 
   // bloom test says "probably yes"...
-  uint32_t n = bucket_[hash % nbucket_];
+  uint32_t n = gnu_bucket_[hash % gnu_nbucket_];
 
   if (n == 0) {
+    TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
+        symbol_name.get_name(), name, reinterpret_cast<void*>(base));
+
     return nullptr;
   }
 
   do {
     ElfW(Sym)* s = symtab_ + n;
-    if (((chain_[n] ^ hash) >> 1) == 0 &&
+    if (((gnu_chain_[n] ^ hash) >> 1) == 0 &&
         strcmp(get_string(s->st_name), symbol_name.get_name()) == 0 &&
         is_symbol_global_and_defined(this, s)) {
+      TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
+          symbol_name.get_name(), name, reinterpret_cast<void*>(s->st_value),
+          static_cast<size_t>(s->st_size));
       return s;
     }
-  } while ((chain_[n++] & 1) == 0);
+  } while ((gnu_chain_[n++] & 1) == 0);
+
+  TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
+             symbol_name.get_name(), name, reinterpret_cast<void*>(base));
 
   return nullptr;
 }
@@ -802,8 +817,8 @@ static bool symbol_matches_soaddr(const ElfW(Sym)* sym, ElfW(Addr) soaddr) {
 ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
   ElfW(Addr) soaddr = reinterpret_cast<ElfW(Addr)>(addr) - load_bias;
 
-  for (size_t i = 0; i < nbucket_; ++i) {
-    uint32_t n = bucket_[i];
+  for (size_t i = 0; i < gnu_nbucket_; ++i) {
+    uint32_t n = gnu_bucket_[i];
 
     if (n == 0) {
       continue;
@@ -814,7 +829,7 @@ ElfW(Sym)* soinfo::gnu_addr_lookup(const void* addr) {
       if (symbol_matches_soaddr(sym, soaddr)) {
         return sym;
       }
-    } while ((chain_[n++] & 1) == 0);
+    } while ((gnu_chain_[n++] & 1) == 0);
   }
 
   return nullptr;
@@ -1941,11 +1956,6 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_HASH:
-        if (nbucket_ != 0) {
-          // in case of --hash-style=both, we prefer gnu
-          break;
-        }
-
         nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         nchain_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
         bucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr + 8);
@@ -1953,20 +1963,15 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_GNU_HASH:
-        if (nbucket_ != 0) {
-          // in case of --hash-style=both, we prefer gnu
-          nchain_ = 0;
-        }
-
-        nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
+        gnu_nbucket_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[0];
         // skip symndx
         gnu_maskwords_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[2];
         gnu_shift2_ = reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[3];
 
         gnu_bloom_filter_ = reinterpret_cast<ElfW(Addr)*>(load_bias + d->d_un.d_ptr + 16);
-        bucket_ = reinterpret_cast<uint32_t*>(gnu_bloom_filter_ + gnu_maskwords_);
+        gnu_bucket_ = reinterpret_cast<uint32_t*>(gnu_bloom_filter_ + gnu_maskwords_);
         // amend chain for symndx = header[1]
-        chain_ = bucket_ + nbucket_ - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
+        gnu_chain_ = gnu_bucket_ + gnu_nbucket_ - reinterpret_cast<uint32_t*>(load_bias + d->d_un.d_ptr)[1];
 
         if (!powerof2(gnu_maskwords_)) {
           DL_ERR("invalid maskwords for gnu_hash = 0x%x, in \"%s\" expecting power to two", gnu_maskwords_, name);
@@ -2278,7 +2283,7 @@ bool soinfo::prelink_image() {
     DL_ERR("linker cannot have DT_NEEDED dependencies on other libraries");
     return false;
   }
-  if (nbucket_ == 0) {
+  if (nbucket_ == 0 && gnu_nbucket_ == 0) {
     DL_ERR("empty/missing DT_HASH/DT_GNU_HASH in \"%s\" (new hash type from the future?)", name);
     return false;
   }
