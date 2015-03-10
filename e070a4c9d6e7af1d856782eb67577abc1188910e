@@ -128,6 +128,29 @@
       "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ca9fd60_c5023a38",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-03-10T01:53:07Z",
+      "side": 1,
+      "message": "This test case has dangling symlink. \"tf\" is not the target file.\nLine 250 might still work but is misleading.\nI would rather have some comment and not testing tf.fd, or check the non-existance of the file named tf.filename + \".doesnotexist\".",
+      "range": {
+        "startLine": 250,
+        "startChar": 19,
+        "endLine": 250,
+        "endChar": 21
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
