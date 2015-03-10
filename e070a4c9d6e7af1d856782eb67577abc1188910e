@@ -151,6 +151,30 @@
       "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcb4b9b1_a80fdb2d",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-10T01:55:20Z",
+      "side": 1,
+      "message": "good catch.",
+      "parentUuid": "9ca9fd60_c5023a38",
+      "range": {
+        "startLine": 250,
+        "startChar": 19,
+        "endLine": 250,
+        "endChar": 21
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
