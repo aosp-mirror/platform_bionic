@@ -1326,7 +1326,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
-LOCAL_LDFLAGS := -Wl,--hash-style=both
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
@@ -1480,7 +1480,7 @@ LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
-LOCAL_LDFLAGS := -Wl,--hash-style=both
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 
 LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
 LOCAL_MODULE:= libstdc++
