@@ -138,13 +138,18 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_nonexistant_file) {
 #endif
 }
 
+static void AssertFileModeEquals(mode_t expected_mode, const char* filename) {
+  struct stat sb;
+  ASSERT_EQ(0, stat(filename, &sb));
+  mode_t mask = S_IRWXU | S_IRWXG | S_IRWXO;
+  ASSERT_EQ(expected_mode & mask, static_cast<mode_t>(sb.st_mode) & mask);
+}
+
 TEST(sys_stat, fchmodat_file) {
   TemporaryFile tf;
-  struct stat sb;
 
   ASSERT_EQ(0, fchmodat(AT_FDCWD, tf.filename, 0751, 0));
-  ASSERT_EQ(0, fstat(tf.fd, &sb));
-  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+  AssertFileModeEquals(0751, tf.filename);
 }
 
 TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_file) {
@@ -153,11 +158,9 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_file) {
   int result = fchmodat(AT_FDCWD, tf.filename, 0751, AT_SYMLINK_NOFOLLOW);
 
 #if defined(__BIONIC__)
-  struct stat sb;
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
-  ASSERT_EQ(0, fstat(tf.fd, &sb));
-  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+  AssertFileModeEquals(0751, tf.filename);
 #else
   // glibc 2.19 does not implement AT_SYMLINK_NOFOLLOW and always
   // returns ENOTSUP
@@ -169,14 +172,12 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_file) {
 TEST(sys_stat, fchmodat_symlink) {
   TemporaryFile tf;
   char linkname[255];
-  struct stat sb;
 
   snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
 
   ASSERT_EQ(0, symlink(tf.filename, linkname));
   ASSERT_EQ(0, fchmodat(AT_FDCWD, linkname, 0751, 0));
-  ASSERT_EQ(0, fstat(tf.fd, &sb));
-  ASSERT_TRUE(0751 == (sb.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO)));
+  AssertFileModeEquals(0751, tf.filename);
   unlink(linkname);
 }
 
@@ -194,29 +195,54 @@ TEST(sys_stat, fchmodat_dangling_symlink) {
   unlink(linkname);
 }
 
+static void AssertSymlinkModeEquals(mode_t expected_mode, const char* linkname) {
+  struct stat sb;
+  ASSERT_EQ(0, fstatat(AT_FDCWD, linkname, &sb, AT_SYMLINK_NOFOLLOW));
+  mode_t mask = S_IRWXU | S_IRWXG | S_IRWXO;
+  ASSERT_EQ(expected_mode & mask, static_cast<mode_t>(sb.st_mode) & mask);
+}
+
 TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_symlink) {
   TemporaryFile tf;
-  char linkname[255];
+  struct stat tf_sb;
+  ASSERT_EQ(0, stat(tf.filename, &tf_sb));
 
+  char linkname[255];
   snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
 
   ASSERT_EQ(0, symlink(tf.filename, linkname));
-  ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(ENOTSUP, errno);
+  int result = fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW);
+  // It depends on the kernel whether chmod operation on symlink is allowed.
+  if (result == 0) {
+    AssertSymlinkModeEquals(0751, linkname);
+  } else {
+    ASSERT_EQ(-1, result);
+    ASSERT_EQ(ENOTSUP, errno);
+  }
+
+  // Target file mode shouldn't be modified.
+  AssertFileModeEquals(tf_sb.st_mode, tf.filename);
   unlink(linkname);
 }
 
 TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_dangling_symlink) {
   TemporaryFile tf;
+
   char linkname[255];
   char target[255];
-
   snprintf(linkname, sizeof(linkname), "%s.link", tf.filename);
   snprintf(target, sizeof(target), "%s.doesnotexist", tf.filename);
 
   ASSERT_EQ(0, symlink(target, linkname));
-  ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(ENOTSUP, errno);
+  int result = fchmodat(AT_FDCWD, linkname, 0751, AT_SYMLINK_NOFOLLOW);
+  // It depends on the kernel whether chmod operation on symlink is allowed.
+  if (result == 0) {
+    AssertSymlinkModeEquals(0751, linkname);
+  } else {
+    ASSERT_EQ(-1, result);
+    ASSERT_EQ(ENOTSUP, errno);
+  }
+
   unlink(linkname);
 }
 
