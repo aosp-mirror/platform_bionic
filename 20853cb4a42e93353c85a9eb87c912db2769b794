@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9c701d51_0d0d5166",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-10T21:22:34Z",
+      "side": 1,
+      "message": "I believe TARGET_USES_LOGD is still false on some devices",
+      "parentUuid": "d70d102d_9a1fe985",
+      "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "570040ef_fb194ffc",
         "filename": "libc/Blueprints",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-05T07:06:59Z",
       "side": 1,
       "message": "All the comments above refer to the line after.",
+      "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c6bb16b_4a03333d",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-10T21:22:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "570040ef_fb194ffc",
       "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
