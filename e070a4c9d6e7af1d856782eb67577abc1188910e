@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "fcb4b9b1_281beb6d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-10T01:56:04Z",
+      "side": 1,
+      "message": "jpa: is this something that\u0027s changed in the kernel? or is it a configuration option?",
+      "parentUuid": "5cca253a_8b768dd3",
+      "range": {
+        "startLine": 10,
+        "startChar": 54,
+        "endLine": 12,
+        "endChar": 12
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c7a89ab_f4793846",
         "filename": "tests/sys_stat_test.cpp",
         "patchSetId": 5
