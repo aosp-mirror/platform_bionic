@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "1c87cdd2_81dc3a97",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1005480
+      },
+      "writtenOn": "2015-03-10T02:29:17Z",
+      "side": 1,
+      "message": "The kernel code between fugu and flounder do look very close in terms of fchmodat() handling.\nNo config option for something like that within the kernel.\n\nI would take a fugu kernel, add extra log messages that look for failing cases that don\u0027t get reported.",
+      "parentUuid": "fcb4b9b1_281beb6d",
+      "range": {
+        "startLine": 10,
+        "startChar": 54,
+        "endLine": 12,
+        "endChar": 12
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c7a89ab_f4793846",
         "filename": "tests/sys_stat_test.cpp",
         "patchSetId": 5
