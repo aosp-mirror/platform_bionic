@@ -22,9 +22,9 @@
 
 #include "private/bionic_prctl.h"
 
-struct LinkerAllocatorPage {
-  LinkerAllocatorPage* next;
-  uint8_t bytes[PAGE_SIZE-sizeof(LinkerAllocatorPage*)];
+struct LinkerBlockAllocatorPage {
+  LinkerBlockAllocatorPage* next;
+  uint8_t bytes[PAGE_SIZE-sizeof(LinkerBlockAllocatorPage*)];
 };
 
 struct FreeBlockInfo {
@@ -64,7 +64,7 @@ void LinkerBlockAllocator::free(void* block) {
     return;
   }
 
-  LinkerAllocatorPage* page = find_page(block);
+  LinkerBlockAllocatorPage* page = find_page(block);
 
   if (page == nullptr) {
     abort();
@@ -87,7 +87,7 @@ void LinkerBlockAllocator::free(void* block) {
 }
 
 void LinkerBlockAllocator::protect_all(int prot) {
-  for (LinkerAllocatorPage* page = page_list_; page != nullptr; page = page->next) {
+  for (LinkerBlockAllocatorPage* page = page_list_; page != nullptr; page = page->next) {
     if (mprotect(page, PAGE_SIZE, prot) == -1) {
       abort();
     }
@@ -95,8 +95,9 @@ void LinkerBlockAllocator::protect_all(int prot) {
 }
 
 void LinkerBlockAllocator::create_new_page() {
-  LinkerAllocatorPage* page = reinterpret_cast<LinkerAllocatorPage*>(mmap(nullptr, PAGE_SIZE,
-      PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+  LinkerBlockAllocatorPage* page = reinterpret_cast<LinkerBlockAllocatorPage*>(
+      mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+
   if (page == MAP_FAILED) {
     abort(); // oom
   }
@@ -107,7 +108,7 @@ void LinkerBlockAllocator::create_new_page() {
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
-  first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerAllocatorPage*))/block_size_;
+  first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerBlockAllocatorPage*))/block_size_;
 
   free_block_list_ = first_block;
 
@@ -115,12 +116,12 @@ void LinkerBlockAllocator::create_new_page() {
   page_list_ = page;
 }
 
-LinkerAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
+LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
   if (block == nullptr) {
     abort();
   }
 
-  LinkerAllocatorPage* page = page_list_;
+  LinkerBlockAllocatorPage* page = page_list_;
   while (page != nullptr) {
     const uint8_t* page_ptr = reinterpret_cast<const uint8_t*>(page);
     if (block >= (page_ptr + sizeof(page->next)) && block < (page_ptr + PAGE_SIZE)) {

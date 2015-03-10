@@ -92,8 +92,8 @@ static const char* get_base_name(const char* name) {
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
-static LinkerAllocator<soinfo> g_soinfo_allocator;
-static LinkerAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
+static LinkerTypeAllocator<soinfo> g_soinfo_allocator;
+static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 
 static soinfo* solist;
 static soinfo* sonext;

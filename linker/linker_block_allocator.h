@@ -21,7 +21,7 @@
 #include <limits.h>
 #include "private/bionic_macros.h"
 
-struct LinkerAllocatorPage;
+struct LinkerBlockAllocatorPage;
 
 /*
  * This class is a non-template version of the LinkerAllocator
@@ -40,10 +40,10 @@ class LinkerBlockAllocator {
 
  private:
   void create_new_page();
-  LinkerAllocatorPage* find_page(void* block);
+  LinkerBlockAllocatorPage* find_page(void* block);
 
   size_t block_size_;
-  LinkerAllocatorPage* page_list_;
+  LinkerBlockAllocatorPage* page_list_;
   void* free_block_list_;
 
   DISALLOW_COPY_AND_ASSIGN(LinkerBlockAllocator);
@@ -57,14 +57,15 @@ class LinkerBlockAllocator {
  * anonymous mmaps.
  */
 template<typename T>
-class LinkerAllocator {
+class LinkerTypeAllocator {
  public:
-  LinkerAllocator() : block_allocator_(sizeof(T)) {}
+  LinkerTypeAllocator() : block_allocator_(sizeof(T)) {}
   T* alloc() { return reinterpret_cast<T*>(block_allocator_.alloc()); }
   void free(T* t) { block_allocator_.free(t); }
   void protect_all(int prot) { block_allocator_.protect_all(prot); }
  private:
   LinkerBlockAllocator block_allocator_;
-  DISALLOW_COPY_AND_ASSIGN(LinkerAllocator);
+  DISALLOW_COPY_AND_ASSIGN(LinkerTypeAllocator);
 };
+
 #endif // __LINKER_ALLOCATOR_H
