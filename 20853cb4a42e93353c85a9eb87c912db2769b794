@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dc67f59d_270aba4f",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-10T21:26:26Z",
+      "side": 1,
+      "message": "Code search shows a few BoardConfigs where it\u0027s manually set true, and several checks, but I don\u0027t see anywhere it\u0027s set false.",
+      "parentUuid": "9c701d51_0d0d5166",
+      "revId": "20853cb4a42e93353c85a9eb87c912db2769b794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "570040ef_fb194ffc",
         "filename": "libc/Blueprints",
         "patchSetId": 1
