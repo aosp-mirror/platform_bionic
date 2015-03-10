@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc69b5e5_b74428a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-10T00:58:03Z",
+      "side": 1,
+      "message": "\"Loose\" -\u003e \"Loosen\" or \"Relax\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c7a89ab_34dc90e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-10T00:58:03Z",
+      "side": 1,
+      "message": "I suspect it has more to do with the kernel version, rather than a kernel/user tunable knob.\n\nI\u0027d prefer to pull this sentence.\n\nI\u0027m still not sure if this is a kernel bug or not...",
+      "range": {
+        "startLine": 10,
+        "startChar": 54,
+        "endLine": 12,
+        "endChar": 12
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c7a89ab_f4793846",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-03-10T00:58:03Z",
+      "side": 1,
+      "message": "I\u0027d call this:\n\n  assertFileModeEquals(mode_t expected, int fd);\n\nAlso, by convention, the expected value in a test always goes first, and then the object tested. See ASSERT_EQ() for example. That\u0027s why I reversed the order of the arguments.",
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
