@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bcc5e125_8e377bb0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-10T01:26:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc69b5e5_b74428a2",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c7a89ab_34dc90e3",
         "filename": "/COMMIT_MSG",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5cca253a_8b768dd3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-10T01:26:46Z",
+      "side": 1,
+      "message": "Chmod on symlinks succeed on fugu(linux 3.10.20), fails on flounder(linux 3.10.40) and host(linux 3.13). After looking a bit at kernel, I can see no difference in fs/open.c, whether the chmod operation is allowed is decided by security_ops-\u003epath_chmod(). So I suspect it has more to do with the kernel/user configuration. Whatever, I think kernel team is hard to change their mind, and we need to live with this in bionic.\nAllowing two results seems hard to use and maintain. But I see the only place using fchmodat(AT_SYMLINK_NOFOLLOW) is in do_mkdir in system/core/init/builtins.cpp. So I think it is safe to loosen the test.",
+      "parentUuid": "7c7a89ab_34dc90e3",
+      "range": {
+        "startLine": 10,
+        "startChar": 54,
+        "endLine": 12,
+        "endChar": 12
+      },
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c7a89ab_f4793846",
         "filename": "tests/sys_stat_test.cpp",
         "patchSetId": 5
@@ -59,6 +107,24 @@
       "writtenOn": "2015-03-10T00:58:03Z",
       "side": 1,
       "message": "I\u0027d call this:\n\n  assertFileModeEquals(mode_t expected, int fd);\n\nAlso, by convention, the expected value in a test always goes first, and then the object tested. See ASSERT_EQ() for example. That\u0027s why I reversed the order of the arguments.",
+      "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ccfe947_2c91b34a",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-10T01:26:46Z",
+      "side": 1,
+      "message": "Done. Use AssertFileModeEquals. assertFileModeEquals is more like Java method name convension.",
+      "parentUuid": "7c7a89ab_f4793846",
       "revId": "e070a4c9d6e7af1d856782eb67577abc1188910e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
