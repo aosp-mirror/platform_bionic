@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "linker_allocator.h"
+#include "linker_block_allocator.h"
 #include <inttypes.h>
 #include <string.h>
 #include <sys/mman.h>
