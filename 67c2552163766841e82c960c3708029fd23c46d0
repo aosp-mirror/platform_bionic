@@ -91,6 +91,30 @@
       "revId": "67c2552163766841e82c960c3708029fd23c46d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0167660f_f89a916c",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-11T17:18:35Z",
+      "side": 1,
+      "message": "i think part of the reason there\u0027s a comment here is because something was relying on it. annoyingly, we didn\u0027t include the bug number in the comment. git blame/log might be able to enlighten you though.",
+      "parentUuid": "c1970e01_de6b05ef",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
