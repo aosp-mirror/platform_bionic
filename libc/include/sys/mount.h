@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_MOUNT_H
 #define _SYS_MOUNT_H
 
@@ -35,9 +36,10 @@
 __BEGIN_DECLS
 
 /* umount2 flags. */
-#define MNT_FORCE	1	/* Forcibly unmount */
-#define MNT_DETACH	2	/* Detach from tree only */
-#define MNT_EXPIRE	4	/* Mark for expiry */
+#define MNT_FORCE 1
+#define MNT_DETACH 2
+#define MNT_EXPIRE 4
+#define UMOUNT_NOFOLLOW 8
 
 extern int mount(const char*, const char*, const char*, unsigned long, const void*);
 extern int umount(const char*);
