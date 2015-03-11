@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e190920b_1f8de331",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T17:12:35Z",
+      "side": 1,
+      "message": "Did you mean \"Move\"?",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 7
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "018e86ef_60aa528a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T17:12:35Z",
+      "side": 1,
+      "message": "s/Using/Use/",
+      "range": {
+        "startLine": 11,
+        "startChar": 3,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e190920b_5fc60b4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T17:12:35Z",
+      "side": 1,
+      "message": "I don\u0027t see any lock acquisitions getting removed?  Perhaps clarify?",
+      "range": {
+        "startLine": 12,
+        "startChar": 17,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1970e01_de6b05ef",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T17:12:35Z",
+      "side": 1,
+      "message": "That seems like a very odd thing to do, even if glibc really does this.  This is a dangerous client bug: If the detach had been timed a bit differently, all sorts of weird things could have happened, especially if the tid is recycled. At a minimum, I think we should return EINVAL, which would be consistent with our behavior if these happened in the opposite order.  There is also an argument for abort(), or whatever our usual equivalent of \"panic\" is.\n\nPosix says \"undefined behavior\", so I think either is fine.",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
