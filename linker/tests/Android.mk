@@ -28,7 +28,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
   linked_list_test.cpp \
-  linker_allocator_test.cpp \
-  ../linker_allocator.cpp
+  linker_block_allocator_test.cpp \
+  ../linker_block_allocator.cpp
 
 include $(BUILD_NATIVE_TEST)

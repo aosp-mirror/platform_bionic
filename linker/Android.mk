@@ -6,7 +6,7 @@ LOCAL_SRC_FILES:= \
     debugger.cpp \
     dlfcn.cpp \
     linker.cpp \
-    linker_allocator.cpp \
+    linker_block_allocator.cpp \
     linker_environ.cpp \
     linker_libc_support.c \
     linker_phdr.cpp \
