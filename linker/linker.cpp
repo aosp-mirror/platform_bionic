@@ -50,7 +50,7 @@
 #include "private/UniquePtr.h"
 
 #include "linker.h"
-#include "linker_allocator.h"
+#include "linker_block_allocator.h"
 #include "linker_debug.h"
 #include "linker_environ.h"
 #include "linker_leb128.h"
