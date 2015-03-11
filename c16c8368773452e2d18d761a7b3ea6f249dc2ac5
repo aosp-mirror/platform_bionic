@@ -22,6 +22,30 @@
       "revId": "c16c8368773452e2d18d761a7b3ea6f249dc2ac5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2170eac2_d986b315",
+        "filename": "libc/include/sys/mount.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-11T17:20:45Z",
+      "side": 0,
+      "message": "the usual reason: bionic header files are not a canonical source of documentation. the only comments that should be in our headers are things that explain how we differ from POSIX or whatever. (and obviously, we\u0027d like to minimize those.)\n\nsee also the lack of names for the parameters in the declarations below.",
+      "parentUuid": "0167660f_d8546d25",
+      "range": {
+        "startLine": 38,
+        "startChar": 20,
+        "endLine": 38,
+        "endChar": 42
+      },
+      "revId": "c16c8368773452e2d18d761a7b3ea6f249dc2ac5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
