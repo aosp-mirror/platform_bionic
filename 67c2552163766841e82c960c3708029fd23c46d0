@@ -115,6 +115,30 @@
       "revId": "67c2552163766841e82c960c3708029fd23c46d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01dcc6fb_b072d8de",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T17:50:41Z",
+      "side": 1,
+      "message": "My problem at the moment is that, assuming we are not relying on it internally, I don\u0027t see how anyone can rely on this without exposing themselves to catastrophic breakage under a different thread schedule.  If I detach a thread that\u0027s intended to be joined, the thread id can be reused, and the actual join can join the wrong thread, returning the wrong value, right?  There are probably few people who could successfully debug that ...\n\nI was unfortunately not enlightened by the git log.  The code, in some form, was already there before June 2013.",
+      "parentUuid": "0167660f_f89a916c",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
