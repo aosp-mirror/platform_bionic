@@ -29,6 +29,11 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 LOCAL_SRC_FILES := \
   linked_list_test.cpp \
   linker_block_allocator_test.cpp \
-  ../linker_block_allocator.cpp
+  ../linker_block_allocator.cpp \
+  linker_memory_allocator_test.cpp \
+  ../linker_allocator.cpp
+
+# for __libc_fatal
+LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
 
 include $(BUILD_NATIVE_TEST)
