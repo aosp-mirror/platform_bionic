@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c68ad9d_5924a3dd",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T01:15:33Z",
+      "side": 1,
+      "message": "Nit: I think I would have written this as\nif (abs_timeout_or_null \u003d\u003d NULL) { ... } else { ... }\nto avoid repeating the test.  It also probably makes the code slightly clearer.",
+      "range": {
+        "startLine": 471,
+        "startChar": 32,
+        "endLine": 471,
+        "endChar": 61
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c728992_34f530d1",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T01:15:33Z",
+      "side": 1,
+      "message": "Are we sure that this has no significant performance impact?  I think the case that really matters here is the uncontended, normal, not timed case.  I don\u0027t really care about the timed case, and I hate to see us slowing down the normal case for it.  The fast path now has three calls in it, and my guess is the compiler can\u0027t get rid of any of them.  My inclination would have been to handle the uncontended normal case directly here in line, and then share the rest of the code path between the timed and untimed case.\n\nThe \"worst\" case here is probably Nexus 9, where the atomic operations are potentially cheap.",
+      "range": {
+        "startLine": 483,
+        "startChar": 0,
+        "endLine": 484,
+        "endChar": 59
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c728992_f4dbb8ea",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1201,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-03-11T01:15:33Z",
+      "side": 1,
+      "message": "If we keep adding these, should we make them shorter?  One second waits in each test add up ...",
+      "range": {
+        "startLine": 1201,
+        "startChar": 4,
+        "endLine": 1201,
+        "endChar": 13
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
