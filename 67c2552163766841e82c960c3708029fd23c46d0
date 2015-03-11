@@ -139,6 +139,30 @@
       "revId": "67c2552163766841e82c960c3708029fd23c46d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1c05a16_4de51928",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-11T18:01:02Z",
+      "side": 1,
+      "message": "we can certainly try it and see what breaks, but we should make behavioral changes in a separate CL for ease of reverting.\n\n(in practice, because a pthread_t is an mmap address they probably don\u0027t get reused very often, so you probably could get away with this.)\n\nwhy do we need the loop?",
+      "parentUuid": "01dcc6fb_b072d8de",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
