@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "01868696_6049b2b9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Actually, I do not have any good reason for not implementing realloc()...",
+      "parentUuid": "e1ec123e_822b3c7e",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1ec123e_e2d4c8ed",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2015-03-12T18:29:02Z",
       "side": 1,
       "message": "Nugatory space before }.",
+      "range": {
+        "startLine": 29,
+        "startChar": 51,
+        "endLine": 29,
+        "endChar": 52
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01868696_63253cda",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1ec123e_e2d4c8ed",
       "range": {
         "startLine": 29,
         "startChar": 51,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "01868696_436918f6",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1ec123e_02d0ccf7",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61110209_13066cd4",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 2
@@ -70,6 +130,30 @@
       "writtenOn": "2015-03-12T18:29:02Z",
       "side": 1,
       "message": "Spaces around arith operator.",
+      "range": {
+        "startLine": 211,
+        "startChar": 21,
+        "endLine": 211,
+        "endChar": 22
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01868696_a3402466",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61110209_13066cd4",
       "range": {
         "startLine": 211,
         "startChar": 21,
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "01868696_239ed462",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "alloc(1) it is.",
+      "parentUuid": "01ea0620_23dd14dd",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61110209_13382c80",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 2
@@ -116,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "e18892a6_c2c0c47e",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61110209_13382c80",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61110209_73ea407c",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 2
@@ -127,6 +247,30 @@
       "writtenOn": "2015-03-12T18:29:02Z",
       "side": 1,
       "message": "has",
+      "range": {
+        "startLine": 35,
+        "startChar": 7,
+        "endLine": 35,
+        "endChar": 10
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e18892a6_dfdfbb86",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61110209_73ea407c",
       "range": {
         "startLine": 35,
         "startChar": 7,
@@ -162,6 +306,30 @@
     },
     {
       "key": {
+        "uuid": "01868696_83f080e1",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "was thinking about binray_search at the time... done",
+      "parentUuid": "01ea0620_235354f4",
+      "range": {
+        "startLine": 52,
+        "startChar": 25,
+        "endLine": 52,
+        "endChar": 27
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1ec123e_c2c5443e",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 2
@@ -173,6 +341,30 @@
       "writtenOn": "2015-03-12T18:29:02Z",
       "side": 1,
       "message": "Spaces around arith operator.",
+      "range": {
+        "startLine": 91,
+        "startChar": 17,
+        "endLine": 91,
+        "endChar": 18
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01868696_03363018",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1ec123e_c2c5443e",
       "range": {
         "startLine": 91,
         "startChar": 17,
@@ -249,6 +441,24 @@
       "side": 1,
       "message": "we cannot really test malloc/free implementations here because the test already compiled against libc malloc/free.\n\nI will add tests for LinkerMemoryAllocator::alloc(0)/free(0)",
       "parentUuid": "01ea0620_c346e810",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_7b8ed3aa",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T22:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01868696_a02c9a1c",
       "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
