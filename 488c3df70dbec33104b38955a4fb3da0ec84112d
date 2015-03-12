@@ -1,0 +1,221 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1ec123e_822b3c7e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Comment drifted.  Perhaps \u0027...call some memory-allocating...\u0027?",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1ec123e_e2d4c8ed",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Nugatory space before }.",
+      "range": {
+        "startLine": 29,
+        "startChar": 51,
+        "endLine": 29,
+        "endChar": 52
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1ec123e_02d0ccf7",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Maybe dimension explicitly as \u0027allocator_names[kSmallObjectAllocatorsCount]\u0027?",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61110209_13066cd4",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Spaces around arith operator.",
+      "range": {
+        "startLine": 211,
+        "startChar": 21,
+        "endLine": 211,
+        "endChar": 22
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01ea0620_23dd14dd",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Should probably handle size\u003d\u003d0 explicitly, especially since log2(0) returns 32 or 64.\n\nmalloc(0) is \u0027implementation-defined\u0027 in C99, but of the choices available, abort() is not a good one -- I think this is what will occur when the 32 or 64 reaches get_small_object_allocator().\n\nSimplest may be to treat malloc(0) as malloc(1).  Returning null is also an option, but this is readily confused with oom or other allocation failure, so may not be preferred.",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61110209_13382c80",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Should correctly handle free(0) -- a no-op.",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61110209_73ea407c",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "has",
+      "range": {
+        "startLine": 35,
+        "startChar": 7,
+        "endLine": 35,
+        "endChar": 10
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01ea0620_235354f4",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "and co?",
+      "range": {
+        "startLine": 52,
+        "startChar": 25,
+        "endLine": 52,
+        "endChar": 27
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1ec123e_c2c5443e",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Spaces around arith operator.",
+      "range": {
+        "startLine": 91,
+        "startChar": 17,
+        "endLine": 91,
+        "endChar": 18
+      },
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01ea0620_c3f4285d",
+        "filename": "linker/linker_memory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "libc calloc() zeroes memory before returning it.  This implementation should do the same (perhaps either here or in alloc() via an additional parameter).",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01ea0620_c346e810",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-12T18:29:02Z",
+      "side": 1,
+      "message": "Please add tests for malloc(0) and free(0), and a check that calloc() returns zeroed allocations..",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
