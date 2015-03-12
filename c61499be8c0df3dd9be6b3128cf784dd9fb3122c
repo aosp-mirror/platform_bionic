@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "414a3e43_db825f53",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "?\n\n(maybe we\u0027re missing a top-level description of all the pieces and how they fit together?)",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_9fcb7f20",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_5bd4af68",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "where did this come from?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_9f78df7f",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "the information\n\ns/resolve/find the/?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_3fe0abc3",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "is this supposed to be a member?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_bf667bda",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "__libc_fatal or linker equivalent?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_b36798a8",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "maybe a file-level comment explaining the tradeoffs between this and the new malloc stuff?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_731c2018",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "this is a bit misleading now.",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_530f1cdf",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "here too",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_9fa29f28",
+        "filename": "linker/linker_memory.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "2015 here and elsewhere.",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_5fb80758",
+        "filename": "linker/linker_memory.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "missing empty line before and after #includes.",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_1f976fc0",
+        "filename": "linker/linker_memory.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "is this a good idea? why not just use the regular prototypes?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_06672a27",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "let\u0027s\n\nthe next",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_1f412fc5",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-12T22:50:58Z",
+      "side": 1,
+      "message": "clang-format since you\u0027re google3-style in all this new code?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
