@@ -202,6 +202,24 @@
     },
     {
       "key": {
+        "uuid": "01868696_00a2a626",
+        "filename": "linker/linker_memory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T18:37:53Z",
+      "side": 1,
+      "message": "LinkerMemoryAllocator zeros out everything by default...",
+      "parentUuid": "01ea0620_c3f4285d",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01ea0620_c346e810",
         "filename": "linker/tests/linker_memory_allocator_test.cpp",
         "patchSetId": 2
@@ -213,6 +231,24 @@
       "writtenOn": "2015-03-12T18:29:02Z",
       "side": 1,
       "message": "Please add tests for malloc(0) and free(0), and a check that calloc() returns zeroed allocations..",
+      "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01868696_a02c9a1c",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-12T18:37:53Z",
+      "side": 1,
+      "message": "we cannot really test malloc/free implementations here because the test already compiled against libc malloc/free.\n\nI will add tests for LinkerMemoryAllocator::alloc(0)/free(0)",
+      "parentUuid": "01ea0620_c346e810",
       "revId": "488c3df70dbec33104b38955a4fb3da0ec84112d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
