@@ -47,6 +47,7 @@ __BEGIN_DECLS
 
 #define LOG_PRIMASK 7
 #define LOG_PRI(x) ((x) & LOG_PRIMASK)
+#define LOG_MAKEPRI(fac, pri) ((fac) | (pri))
 
 /* Facilities are currently ignored on Android. */
 #define LOG_KERN     0000
