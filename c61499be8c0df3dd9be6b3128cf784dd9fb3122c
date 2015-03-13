@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "06f21c55_20daeaee",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-03-13T16:15:41Z",
+      "side": 1,
+      "message": "This will never shrink any allocation realloc\u0027ed to a smaller size.\nThere are good performance reasons for not always doing so, say p\u003dmalloc(1\u003c\u003c20);realloc(p,(1\u003c\u003c20)-4).  But p\u003dmalloc(1\u003c\u003c20);realloc(p,1\u003c\u003c10) probably deserves to go through alloc/memcpy/free.\nMaybe set a limit here on how much \u0027wasted\u0027 allocation to tolerate?  Going down one or more block sizes, perhaps?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "414a3e43_5bd4af68",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 3
