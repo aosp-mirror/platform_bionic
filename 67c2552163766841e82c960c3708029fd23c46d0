@@ -259,6 +259,30 @@
       "revId": "67c2552163766841e82c960c3708029fd23c46d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_dd45fc74",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T05:47:21Z",
+      "side": 1,
+      "message": "ah, yes, the new version makes much more sense to me.",
+      "parentUuid": "414a3e43_9900dcb7",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
