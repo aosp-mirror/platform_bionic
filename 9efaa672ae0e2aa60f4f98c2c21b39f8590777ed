@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2168ea9d_76ab2908",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T03:44:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c68ad9d_5924a3dd",
+      "range": {
+        "startLine": 471,
+        "startChar": 32,
+        "endLine": 471,
+        "endChar": 61
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c728992_34f530d1",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c178ee71_ab46390f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T03:44:44Z",
+      "side": 1,
+      "message": "Now I know you \"hate\" slowing down things :)\nIf it is just for normal, not timed case, I add __normal_mutex_trylock here. The benchmark results in N5, N7, N9 show that it is slightly faster in normal, not timed case than before, while it slows down other mutex types.",
+      "parentUuid": "7c728992_34f530d1",
+      "range": {
+        "startLine": 483,
+        "startChar": 0,
+        "endLine": 484,
+        "endChar": 59
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c728992_f4dbb8ea",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2015-03-11T01:15:33Z",
       "side": 1,
       "message": "If we keep adding these, should we make them shorter?  One second waits in each test add up ...",
+      "range": {
+        "startLine": 1201,
+        "startChar": 4,
+        "endLine": 1201,
+        "endChar": 13
+      },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_36c9b1f5",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1201,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T03:44:44Z",
+      "side": 1,
+      "message": "Done. Changed to another implementation here. As the test runner has 1 minute test running deadline, we don\u0027t need to worry about hanging here.",
+      "parentUuid": "7c728992_f4dbb8ea",
       "range": {
         "startLine": 1201,
         "startChar": 4,
