@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "17c4087c_bc2eadbe",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T04:09:12Z",
+      "side": 1,
+      "message": "\u0026\u0026 on previous line.",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c4087c_7c2935b5",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T04:09:12Z",
+      "side": 1,
+      "message": "wakes",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c68ad9d_5924a3dd",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 4
@@ -90,6 +124,23 @@
         "endLine": 484,
         "endChar": 59
       },
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37c10c6d_fdcd4332",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T04:09:12Z",
+      "side": 1,
+      "message": "pthread_mutex_unlock_normal?",
       "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
