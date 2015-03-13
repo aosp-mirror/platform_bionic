@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2168ea9d_5131cfed",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T05:04:34Z",
+      "side": 1,
+      "message": "Thanks for reminding. It is a mistake by being careless.",
+      "parentUuid": "17c4087c_bc2eadbe",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17c4087c_7c2935b5",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-13T04:09:12Z",
       "side": 1,
       "message": "wakes",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_912b677e",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T05:04:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17c4087c_7c2935b5",
       "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -141,6 +177,24 @@
       "writtenOn": "2015-03-13T04:09:12Z",
       "side": 1,
       "message": "pthread_mutex_unlock_normal?",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_d908a4ad",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T05:04:34Z",
+      "side": 1,
+      "message": "Done. I saw on the review of an early change that we tend to use __function_name for non API functions, so we can notice it easily when it is shown in the export symbol table. Is my understanding true? And is it for the situation that we miss the \"static\" key word in static functions?",
+      "parentUuid": "37c10c6d_fdcd4332",
       "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
