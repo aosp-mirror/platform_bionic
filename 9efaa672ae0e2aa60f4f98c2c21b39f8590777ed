@@ -219,6 +219,24 @@
     },
     {
       "key": {
+        "uuid": "c178ee71_5d280cb3",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T05:39:20Z",
+      "side": 1,
+      "message": "the long-term solution is to build all our code with -fvisibility\u003dhidden and explicitly expose the public API in the header files. (but we\u0027ll probably still want to run the script even then, because we could still screw up in the header files, especially if we get lazy and use #pragma.)",
+      "parentUuid": "414a3e43_b9fe80e8",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c728992_f4dbb8ea",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
