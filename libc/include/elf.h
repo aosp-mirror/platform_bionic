@@ -125,4 +125,8 @@ typedef struct {
 /* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
 #define NT_FPREGSET NT_PRFPREG
 
+#define ELF_NOTE_GNU "GNU"
+
+#define NT_GNU_BUILD_ID 3
+
 #endif /* _ELF_H */
