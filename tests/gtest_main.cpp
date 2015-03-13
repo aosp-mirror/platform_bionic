@@ -741,7 +741,8 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
 
 // We choose to use multi-fork and multi-wait here instead of multi-thread, because it always
 // makes deadlock to use fork in multi-thread.
-static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
+// Returns true if all tests run successfully, otherwise return false.
+static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
                                   size_t iteration_count, size_t job_count,
                                   const std::string& xml_output_filename) {
   // Stop default result printer to avoid environment setup/teardown information for each test.
@@ -758,6 +759,8 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
     perror("sigprocmask SIG_BLOCK");
     exit(1);
   }
+
+  bool all_tests_passed = true;
 
   for (size_t iteration = 1; iteration <= iteration_count; ++iteration) {
     OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
@@ -806,6 +809,9 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
           if (++finished_test_count_list[testcase_id] == testcase.TestCount()) {
             ++finished_testcase_count;
           }
+          if (testcase.GetTestResult(test_id) != TEST_SUCCESS) {
+            all_tests_passed = false;
+          }
 
           it = child_proc_list.erase(it);
         } else {
@@ -827,6 +833,8 @@ static void RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
     perror("sigprocmask SIG_SETMASK");
     exit(1);
   }
+
+  return all_tests_passed;
 }
 
 static size_t GetProcessorCount() {
@@ -1061,15 +1069,15 @@ int main(int argc, char** argv) {
     if (EnumerateTests(argc, arg_list.data(), testcase_list) == false) {
       return 1;
     }
-    RunTestInSeparateProc(argc, arg_list.data(), testcase_list, options.gtest_repeat,
-                          options.job_count, options.gtest_output);
+    bool all_test_passed =  RunTestInSeparateProc(argc, arg_list.data(), testcase_list,
+                              options.gtest_repeat, options.job_count, options.gtest_output);
+    return all_test_passed ? 0 : 1;
   } else {
     argc = static_cast<int>(arg_list.size());
     arg_list.push_back(NULL);
     testing::InitGoogleTest(&argc, arg_list.data());
     return RUN_ALL_TESTS();
   }
-  return 0;
 }
 
 //################################################################################
