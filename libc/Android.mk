@@ -1326,7 +1326,7 @@ LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
-LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \

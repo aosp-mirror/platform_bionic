@@ -439,7 +439,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
-LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
 
 LOCAL_MODULE := libm
 LOCAL_CLANG := $(libm_clang)
