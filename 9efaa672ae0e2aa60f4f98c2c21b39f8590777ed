@@ -201,6 +201,24 @@
     },
     {
       "key": {
+        "uuid": "414a3e43_b9fe80e8",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T05:37:57Z",
+      "side": 1,
+      "message": "yes, __pthread_mutex_unlock_normal is probably a better idea, for exactly those reasons.\n\nin theory we shouldn\u0027t need to worry as much about accidents because we have a script to check for mistakes ... but we still need to remember to actually run the script :-(",
+      "parentUuid": "414a3e43_d908a4ad",
+      "revId": "9efaa672ae0e2aa60f4f98c2c21b39f8590777ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c728992_f4dbb8ea",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
