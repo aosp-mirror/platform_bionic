@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "012da676_4825bfd9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T06:53:46Z",
+      "side": 1,
+      "message": "A bool seems better, as we are in c++. I think a count of failures may reveal unnecessary info.",
+      "parentUuid": "c178ee71_3d02703a",
+      "revId": "ad7e9c26576e79748732ba3e20528c79aa39f206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "414a3e43_39ca90c9",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-13T05:35:52Z",
       "side": 1,
       "message": "and then \"? EXIT_SUCCESS : EXIT_FAILURE;\" here?",
+      "revId": "ad7e9c26576e79748732ba3e20528c79aa39f206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "012da676_c861af14",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T06:53:46Z",
+      "side": 1,
+      "message": "Done. use 0 : 1 directly, as I think EXIT_SUCCESS may not be necessary. It is a convention in unix to return 0 as success. What\u0027s more, we already return RUN_ALL_TESTS() directly, which returns 0 on success and 1 on failure.",
+      "parentUuid": "414a3e43_39ca90c9",
       "revId": "ad7e9c26576e79748732ba3e20528c79aa39f206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
