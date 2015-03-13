@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c178ee71_3d02703a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T05:35:52Z",
+      "side": 1,
+      "message": "Returns ... returns ...\n\nbut wouldn\u0027t a bool be more appropriate? or a count of failures?",
+      "revId": "ad7e9c26576e79748732ba3e20528c79aa39f206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_39ca90c9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-13T05:35:52Z",
+      "side": 1,
+      "message": "and then \"? EXIT_SUCCESS : EXIT_FAILURE;\" here?",
+      "revId": "ad7e9c26576e79748732ba3e20528c79aa39f206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
