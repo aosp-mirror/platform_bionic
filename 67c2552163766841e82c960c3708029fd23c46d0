@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2168ea9d_f1974340",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T04:48:04Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "e190920b_1f8de331",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 7
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "018e86ef_60aa528a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c178ee71_6bed0139",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T04:48:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "018e86ef_60aa528a",
+      "range": {
+        "startLine": 11,
+        "startChar": 3,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e190920b_5fc60b4b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2015-03-11T17:12:35Z",
       "side": 1,
       "message": "I don\u0027t see any lock acquisitions getting removed?  Perhaps clarify?",
+      "range": {
+        "startLine": 12,
+        "startChar": 17,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_b95040b4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T04:48:04Z",
+      "side": 1,
+      "message": "Because I has not decided whether to keep or remove pthread_accessor.h yet. I want to remove the lock step by\nstep.",
+      "parentUuid": "e190920b_5fc60b4b",
       "range": {
         "startLine": 12,
         "startChar": 17,
@@ -154,6 +226,30 @@
       "side": 1,
       "message": "we can certainly try it and see what breaks, but we should make behavioral changes in a separate CL for ease of reverting.\n\n(in practice, because a pthread_t is an mmap address they probably don\u0027t get reused very often, so you probably could get away with this.)\n\nwhy do we need the loop?",
       "parentUuid": "01dcc6fb_b072d8de",
+      "range": {
+        "startLine": 52,
+        "startChar": 21,
+        "endLine": 52,
+        "endChar": 75
+      },
+      "revId": "67c2552163766841e82c960c3708029fd23c46d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_9900dcb7",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-13T04:48:04Z",
+      "side": 1,
+      "message": "Ok. I will try to return EINVAL in the next CL. There seems to have two main use of pthread_detach in aosp, one is just after pthread_create, the other is just before pthread_exit.\n\nThe loop is necessary because the atomic_compare_exchange_weak may fail, like when pthread_detach is called while pthread_exit is changing join_state from THREAD_NOT_JOINED to THREAD_EXITED_NOT_JOINED. code refactored to make it more clear.",
+      "parentUuid": "a1c05a16_4de51928",
       "range": {
         "startLine": 52,
         "startChar": 21,
