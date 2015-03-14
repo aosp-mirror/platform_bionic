@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "66191872_8d19f536",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:10:03Z",
+      "side": 1,
+      "message": "POSIX constant is too big... and soinfos len can be much shorter for lp32 linker",
+      "parentUuid": "2639e0d0_5a616933",
+      "revId": "d80a0d1b93b2e2d1fe6d74f5d54d823888d96feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66191872_ed5509dc",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2015-03-14T01:03:59Z",
       "side": 1,
       "message": "or wait a day or two and then strdup?",
+      "revId": "d80a0d1b93b2e2d1fe6d74f5d54d823888d96feb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_4d3abd7c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:10:03Z",
+      "side": 1,
+      "message": "good point.",
+      "parentUuid": "66191872_ed5509dc",
       "revId": "d80a0d1b93b2e2d1fe6d74f5d54d823888d96feb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
