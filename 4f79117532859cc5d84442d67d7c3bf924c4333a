@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2639e0d0_bace15dc",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:55:01Z",
+      "side": 1,
+      "message": "not weak?",
+      "revId": "4f79117532859cc5d84442d67d7c3bf924c4333a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
