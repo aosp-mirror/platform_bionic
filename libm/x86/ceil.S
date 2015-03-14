@@ -40,5 +40,4 @@ ENTRY(ceil)
 	ret
 END(ceil)
 
-.globl ceill;
-.equ ceill, ceil;
+ALIAS_SYMBOL(ceill, ceil);

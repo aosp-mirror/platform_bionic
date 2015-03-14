@@ -324,8 +324,7 @@ END(sinh)
 # -- End  sinh
 
 # Start file scope ASM
-.weak sinhl
-.equ sinhl, sinh
+ALIAS_SYMBOL(sinhl, sinh);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16
