@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c178ee71_0d32d776",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "s/basic functionality of/the same functionality as the/",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_1a7d216a",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "s/the/a/",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_8d3ee73b",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "s/the/a/",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_cd38df51",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "the number\n\n2,",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_5a6a899b",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "s/another/the other/",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_82a4242f",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "ah, i see. maybe still use an enum? you could lose kSmallObjectAllocatorsCount then, and make \"large\" less of a special case.",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_fa3ffd87",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "what is type? why is it a uint32_t? (type sounds like it should be an enum.)",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_ed2cbb1d",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "ALLOCATOR",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_2daa33d7",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "you should probably add something stronger like \"Use this in preference to malloc/free whenever possible.\"",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_a28960bd",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T00:25:09Z",
+      "side": 1,
+      "message": "Memory",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
