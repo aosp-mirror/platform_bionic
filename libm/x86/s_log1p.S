@@ -266,8 +266,7 @@ END(log1p)
 # -- End  log1p
 
 # Start file scope ASM
-.weak log1pl
-.equ log1pl, log1p
+ALIAS_SYMBOL(log1pl, log1p);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

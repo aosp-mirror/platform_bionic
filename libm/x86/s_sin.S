@@ -321,8 +321,7 @@ END(sin)
 # -- End  sin
 
 # Start file scope ASM
-.weak sinl
-.equ sinl, sin
+ALIAS_SYMBOL(sinl, sin);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

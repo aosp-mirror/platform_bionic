@@ -57,4 +57,8 @@
     ENTRY(f); \
     .hidden f \
 
+#define ALIAS_SYMBOL(alias, original) \
+    .globl alias; \
+    .equ alias, original
+
 #endif /* _PRIVATE_BIONIC_ASM_H_ */

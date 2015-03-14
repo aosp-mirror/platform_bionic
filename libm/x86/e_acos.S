@@ -388,8 +388,7 @@ END(acos)
 # -- End  acos
 
 # Start file scope ASM
-.weak acosl
-.equ acosl, acos
+ALIAS_SYMBOL(acosl, acos);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

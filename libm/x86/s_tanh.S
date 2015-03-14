@@ -278,8 +278,7 @@ END(tanh)
 # -- End  tanh
 
 # Start file scope ASM
-.weak tanhl
-.equ tanhl, tanh
+ALIAS_SYMBOL(tanhl, tanh);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

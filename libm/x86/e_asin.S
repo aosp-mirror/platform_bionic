@@ -466,8 +466,7 @@ END(asin)
 # -- End  asin
 
 # Start file scope ASM
-.weak asinl
-.equ asinl, asin
+ALIAS_SYMBOL(asinl, asin);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

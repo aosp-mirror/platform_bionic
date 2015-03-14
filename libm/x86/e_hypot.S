@@ -199,8 +199,7 @@ END(hypot)
 # -- End  hypot
 
 # Start file scope ASM
-.weak hypotl
-.equ hypotl, hypot
+ALIAS_SYMBOL(hypotl, hypot);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16
