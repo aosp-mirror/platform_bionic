@@ -247,6 +247,24 @@
     },
     {
       "key": {
+        "uuid": "a624f0ad_8d89e1bd",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-14T02:04:24Z",
+      "side": 1,
+      "message": "c++11 enum class?",
+      "parentUuid": "2639e0d0_fa4ffdc1",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_ed2cbb1d",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 4
