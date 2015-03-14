@@ -16,6 +16,24 @@
       "revId": "81c31bdd43e50538fa45f5e7783782a5ae5666e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "861e0c58_b406404b",
+        "filename": "libm/arm/e_sqrt.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-14T01:03:24Z",
+      "side": 0,
+      "message": "Yes, this wasn\u0027t needed since this code will always be compiled with sizeof(long double) \u003d\u003d sizeof(double).",
+      "parentUuid": "66191872_cdbecda3",
+      "revId": "81c31bdd43e50538fa45f5e7783782a5ae5666e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

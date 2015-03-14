@@ -16,6 +16,24 @@
       "revId": "4f79117532859cc5d84442d67d7c3bf924c4333a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a624f0ad_2dc54d8c",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-14T01:03:24Z",
+      "side": 1,
+      "message": "I think weak actually can lead to potential errors. For example, while doing the libm changes, if I had accidentally included the C source for the duplicate symbol and the assembler, you won\u0027t get a linker error. This makes sure that someone doesn\u0027t do something incorrect.\n\nI don\u0027t think there is a need for another macro that does the same but using weak. If someone knows of reason to do that, I can add a DUP_SYMBOL_AS_WEAK or something.",
+      "parentUuid": "2639e0d0_bace15dc",
+      "revId": "4f79117532859cc5d84442d67d7c3bf924c4333a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
