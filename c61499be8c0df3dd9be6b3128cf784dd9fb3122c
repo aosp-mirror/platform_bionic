@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2639e0d0_d72094c6",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "414a3e43_db825f53",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_9fcb7f20",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-12T22:50:58Z",
       "side": 1,
       "message": "?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_b77cf0b3",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done?",
+      "parentUuid": "c178ee71_9fcb7f20",
       "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "66191872_c7d8ee74",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "This allocator is not expected to be used for long-lived objects... This is one of the reasons I was hesitant about implementing realloc. I think I will keep it the way it is for now.",
+      "parentUuid": "06f21c55_20daeaee",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "414a3e43_5bd4af68",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-12T22:50:58Z",
       "side": 1,
       "message": "where did this come from?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2168ea9d_d8a4240e",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "kSmallObjectAllocatorsMaxSizeLog2 - kSmallObjectAllocatorsMinSizeLog2 + 1;",
+      "parentUuid": "414a3e43_5bd4af68",
       "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "414a3e43_677630d7",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c178ee71_9f78df7f",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_3fe0abc3",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 3
@@ -98,6 +188,24 @@
       "writtenOn": "2015-03-12T22:50:58Z",
       "side": 1,
       "message": "is this supposed to be a member?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_07b9e4de",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done; moved outside of the struct.",
+      "parentUuid": "c178ee71_3fe0abc3",
       "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -138,6 +246,24 @@
     },
     {
       "key": {
+        "uuid": "414a3e43_c1f98c52",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2168ea9d_b36798a8",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2168ea9d_731c2018",
         "filename": "linker/linker_block_allocator.h",
         "patchSetId": 3
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "2168ea9d_c2035390",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2168ea9d_731c2018",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2168ea9d_530f1cdf",
         "filename": "linker/linker_block_allocator.h",
         "patchSetId": 3
@@ -166,6 +310,24 @@
       "writtenOn": "2015-03-12T22:50:58Z",
       "side": 1,
       "message": "here too",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_4ab12345",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2168ea9d_530f1cdf",
       "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +385,24 @@
     },
     {
       "key": {
+        "uuid": "2168ea9d_4e53eff2",
+        "filename": "linker/linker_memory.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "this file was removed.",
+      "parentUuid": "c178ee71_1f976fc0",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "414a3e43_06672a27",
         "filename": "linker/tests/linker_memory_allocator_test.cpp",
         "patchSetId": 3
@@ -240,6 +420,24 @@
     },
     {
       "key": {
+        "uuid": "c178ee71_eacf4f58",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "414a3e43_06672a27",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_1f412fc5",
         "filename": "linker/tests/linker_memory_allocator_test.cpp",
         "patchSetId": 3
@@ -251,6 +449,24 @@
       "writtenOn": "2015-03-12T22:50:58Z",
       "side": 1,
       "message": "clang-format since you\u0027re google3-style in all this new code?",
+      "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "414a3e43_e60dc6ba",
+        "filename": "linker/tests/linker_memory_allocator_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T00:16:35Z",
+      "side": 1,
+      "message": "agree.. will do.",
+      "parentUuid": "c178ee71_1f412fc5",
       "revId": "c61499be8c0df3dd9be6b3128cf784dd9fb3122c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
