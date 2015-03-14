@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "66191872_48786b7a",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-14T02:38:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2639e0d0_45d50abd",
+      "revId": "93c3f6b2642964e2ab6ca34f3e439b3db6acd9a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a624f0ad_6d035593",
         "filename": "libc/include/pthread.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-14T02:13:06Z",
       "side": 1,
       "message": "s/reserved/private/?",
+      "revId": "93c3f6b2642964e2ab6ca34f3e439b3db6acd9a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_2528c636",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-14T02:38:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a624f0ad_6d035593",
       "revId": "93c3f6b2642964e2ab6ca34f3e439b3db6acd9a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
