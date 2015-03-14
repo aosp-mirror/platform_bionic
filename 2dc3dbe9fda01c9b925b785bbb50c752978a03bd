@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2639e0d0_7a030d93",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c178ee71_0d32d776",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2639e0d0_1a7d216a",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-14T00:25:09Z",
       "side": 1,
       "message": "s/the/a/",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c178ee71_98a8e78b",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2639e0d0_1a7d216a",
       "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c178ee71_58872f11",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c178ee71_8d3ee73b",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_cd38df51",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-14T00:25:09Z",
       "side": 1,
       "message": "the number\n\n2,",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_6d0e996c",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c178ee71_cd38df51",
       "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "2639e0d0_ba20551c",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2639e0d0_5a6a899b",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66191872_82a4242f",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 4
@@ -98,6 +188,24 @@
       "writtenOn": "2015-03-14T00:25:09Z",
       "side": 1,
       "message": "ah, i see. maybe still use an enum? you could lose kSmallObjectAllocatorsCount then, and make \"large\" less of a special case.",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_5ad6097d",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "I would rather keep \"large\" one out of small object allocator related code. I was considering virtual class at one point but interfaces do not match.",
+      "parentUuid": "66191872_82a4242f",
       "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "2639e0d0_fa4ffdc1",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "to keep first two fields of this structure aligned to 8..",
+      "parentUuid": "2639e0d0_fa3ffd87",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c178ee71_ed2cbb1d",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 4
@@ -132,6 +258,24 @@
       "writtenOn": "2015-03-14T00:25:09Z",
       "side": 1,
       "message": "ALLOCATOR",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66191872_8d4c5554",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c178ee71_ed2cbb1d",
       "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "2639e0d0_1a840156",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "line 31?",
+      "parentUuid": "c178ee71_2daa33d7",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66191872_a28960bd",
         "filename": "linker/linker_block_allocator.h",
         "patchSetId": 4
@@ -166,6 +328,24 @@
       "writtenOn": "2015-03-14T00:25:09Z",
       "side": 1,
       "message": "Memory",
+      "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2639e0d0_da655946",
+        "filename": "linker/linker_block_allocator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-14T01:27:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66191872_a28960bd",
       "revId": "2dc3dbe9fda01c9b925b785bbb50c752978a03bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
