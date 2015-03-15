@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include <utils/stringprintf.h>
+#include <base/stringprintf.h>
 
 #include <benchmark/Benchmark.h>
 
@@ -108,7 +108,7 @@ std::string BenchmarkWithArg<int>::GetNameStr(int arg) {
 
 template <>
 std::string BenchmarkWithArg<double>::GetNameStr(double arg) {
-  return Name() + "/" + android::StringPrintf("%0.6f", arg);
+  return Name() + "/" + android::base::StringPrintf("%0.6f", arg);
 }
 
 template<typename T>
