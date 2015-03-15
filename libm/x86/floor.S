@@ -40,5 +40,4 @@ ENTRY(floor)
 	ret
 END(floor)
 
-.globl floorl;
-.equ floorl, floor;
+ALIAS_SYMBOL(floorl, floor);

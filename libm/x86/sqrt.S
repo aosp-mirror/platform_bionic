@@ -40,5 +40,4 @@ ENTRY(sqrt)
 	ret
 END(sqrt)
 
-.globl sqrtl;
-.equ sqrtl, sqrt;
+ALIAS_SYMBOL(sqrtl, sqrt);

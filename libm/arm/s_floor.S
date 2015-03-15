@@ -136,7 +136,4 @@ ENTRY(floor)    /* x in r0, r1 */
 
 END(floor)
 
-#if LDBL_MANT_DIG == 53
-        .weak           floorl
-        .equ            floorl,floor
-#endif
+ALIAS_SYMBOL(floorl, floor);
