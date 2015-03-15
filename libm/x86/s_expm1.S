@@ -365,7 +365,7 @@ END(expm1)
 # -- End  expm1
 
 # Start file scope ASM
-ALIAS_SYMBOL(exmp1l, exmp1);
+ALIAS_SYMBOL(expm1l, expm1);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16
