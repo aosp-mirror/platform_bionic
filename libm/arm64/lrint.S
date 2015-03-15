@@ -29,8 +29,6 @@ ENTRY(lrintf)
 END(lrintf)
 
 // sizeof(long) and sizeof(long long) are the same for aarch64
-.weak llrint
-.equ llrint,lrint
+ALIAS_SYMBOL(llrint, lrint);
 
-.weak llrintf
-.equ llrintf,lrintf
+ALIAS_SYMBOL(llrintf, lrintf);

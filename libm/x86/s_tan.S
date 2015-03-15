@@ -284,8 +284,7 @@ END(tan)
 # -- End  tan
 
 # Start file scope ASM
-.weak tanl
-.equ tanl, tan
+ALIAS_SYMBOL(tanl, tan);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

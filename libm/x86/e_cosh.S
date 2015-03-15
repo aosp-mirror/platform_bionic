@@ -272,8 +272,7 @@ END(cosh)
 # -- End  cosh
 
 # Start file scope ASM
-.weak coshl
-.equ coshl, cosh
+ALIAS_SYMBOL(coshl, cosh);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16

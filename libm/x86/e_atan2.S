@@ -452,8 +452,7 @@ END(atan2)
 # -- End  atan2
 
 # Start file scope ASM
-.weak atan2l
-.equ atan2l, atan2
+ALIAS_SYMBOL(atan2l, atan2);
 # End file scope ASM
 	.section .rodata, "a"
 	.align 16
