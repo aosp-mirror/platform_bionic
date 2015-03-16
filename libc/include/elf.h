@@ -94,6 +94,13 @@ typedef struct {
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
 
+/* Android compressed rel/rela sections */
+#define DT_ANDROID_REL (DT_LOOS + 2)
+#define DT_ANDROID_RELSZ (DT_LOOS + 3)
+
+#define DT_ANDROID_RELA (DT_LOOS + 4)
+#define DT_ANDROID_RELASZ (DT_LOOS + 5)
+
 /* gnu hash entry */
 #define DT_GNU_HASH 0x6ffffef5
 
@@ -106,6 +113,9 @@ typedef struct {
 #define STB_LOPROC    13
 #define STB_HIPROC    15
 
+#define SHT_LOOS    0x60000000
+#define SHT_HIOS    0x6fffffff
+
 #define STT_GNU_IFUNC 10
 #define STT_LOOS      10
 #define STT_HIOS      12
@@ -114,5 +124,9 @@ typedef struct {
 
 /* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
 #define NT_FPREGSET NT_PRFPREG
+
+#define ELF_NOTE_GNU "GNU"
+
+#define NT_GNU_BUILD_ID 3
 
 #endif /* _ELF_H */

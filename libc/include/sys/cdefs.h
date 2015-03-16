@@ -335,12 +335,14 @@
 #endif
 
 #if __GNUC_PREREQ(4, 3)
-#define __errordecl(name, msg) extern void name(void) __attribute__((__error__(msg)))
+#define __errorattr(msg) __attribute__((__error__(msg)))
 #define __warnattr(msg) __attribute__((__warning__(msg)))
 #else
-#define __errordecl(name, msg) extern void name(void)
+#define __errorattr(msg)
 #define __warnattr(msg)
 #endif
+
+#define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 
 /*
  * Some BSD source needs these macros.
@@ -376,6 +378,15 @@
 
 #if defined(_BSD_SOURCE)
 # define __USE_BSD 1
+#endif
+
+/*
+ * _FILE_OFFSET_BITS 64 support.
+ */
+#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
+#if _FILE_OFFSET_BITS == 64
+#define __USE_FILE_OFFSET64 1
+#endif
 #endif
 
 /*-

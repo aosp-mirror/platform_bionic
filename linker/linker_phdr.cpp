@@ -332,7 +332,7 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
       return false;
     }
     int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-    start = mmap(addr, load_size_, PROT_NONE, mmap_flags, -1, 0);
+    start = mmap(nullptr, load_size_, PROT_NONE, mmap_flags, -1, 0);
     if (start == MAP_FAILED) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_);
       return false;

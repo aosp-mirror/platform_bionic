@@ -39,7 +39,6 @@
 #define	_PATH_CONSOLE	"/dev/console"
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_KLOG	"/proc/kmsg"
-#define	_PATH_MEM	"/dev/mem"
 
 #define	_PATH_MOUNTED	"/proc/mounts"
 #define	_PATH_TTY	"/dev/tty"

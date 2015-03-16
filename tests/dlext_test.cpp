@@ -144,7 +144,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(android_data != nullptr);
 
   char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
+  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;

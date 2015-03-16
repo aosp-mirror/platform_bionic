@@ -446,31 +446,6 @@ protoent* getprotobynumber(int /*proto*/) {
   return NULL;
 }
 
-static void unimplemented_stub(const char* function) {
-  const char* fmt = "%s(3) is not implemented on Android\n";
-  __libc_format_log(ANDROID_LOG_WARN, "libc", fmt, function);
-  fprintf(stderr, fmt, function);
-}
-
-#define UNIMPLEMENTED unimplemented_stub(__PRETTY_FUNCTION__)
-
-void endpwent() {
-  UNIMPLEMENTED;
-}
-
-char* getusershell() {
-  UNIMPLEMENTED;
-  return NULL;
-}
-
-void setusershell() {
-  UNIMPLEMENTED;
-}
-
-void endusershell() {
-  UNIMPLEMENTED;
-}
-
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
   // We dont use sysconf(3) here because that drags in stdio, which makes static binaries fat.

@@ -116,10 +116,6 @@ extern int setresgid(gid_t, gid_t, gid_t);
 extern int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);
 extern int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);
 extern char* getlogin(void);
-extern char* getusershell(void);
-extern void setusershell(void);
-extern void endusershell(void);
-
 
 extern long fpathconf(int, int);
 extern long pathconf(const char*, int);
@@ -146,32 +142,40 @@ extern int chown(const char *, uid_t, gid_t);
 extern int fchown(int, uid_t, gid_t);
 extern int fchownat(int, const char*, uid_t, gid_t, int);
 extern int lchown(const char *, uid_t, gid_t);
-extern int truncate(const char *, off_t);
-extern int truncate64(const char *, off64_t);
 extern char *getcwd(char *, size_t);
 
 extern int sync(void);
 
 extern int close(int);
-extern off_t lseek(int, off_t, int);
-extern off64_t lseek64(int, off64_t, int);
 
 extern ssize_t read(int, void *, size_t);
 extern ssize_t write(int, const void *, size_t);
-extern ssize_t pread(int, void *, size_t, off_t);
-extern ssize_t pread64(int, void *, size_t, off64_t);
-extern ssize_t pwrite(int, const void *, size_t, off_t);
-extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 
 extern int dup(int);
 extern int dup2(int, int);
 extern int dup3(int, int, int);
 extern int fcntl(int, int, ...);
 extern int ioctl(int, int, ...);
-extern int flock(int, int);
 extern int fsync(int);
 extern int fdatasync(int);
+
+#if defined(__USE_FILE_OFFSET64)
+extern int truncate(const char *, off_t) __RENAME(truncate64);
+extern off_t lseek(int, off_t, int) __RENAME(lseek64);
+extern ssize_t pread(int, void *, size_t, off_t) __RENAME(pread64);
+extern ssize_t pwrite(int, const void *, size_t, off_t) __RENAME(pwrite64);
+extern int ftruncate(int, off_t) __RENAME(ftruncate64);
+#else
+extern int truncate(const char *, off_t);
+extern off_t lseek(int, off_t, int);
+extern ssize_t pread(int, void *, size_t, off_t);
+extern ssize_t pwrite(int, const void *, size_t, off_t);
 extern int ftruncate(int, off_t);
+#endif
+extern int truncate64(const char *, off64_t);
+extern off64_t lseek64(int, off64_t, int);
+extern ssize_t pread64(int, void *, size_t, off64_t);
+extern ssize_t pwrite64(int, const void *, size_t, off64_t);
 extern int ftruncate64(int, off64_t);
 
 extern int pause(void);
@@ -199,6 +203,8 @@ extern int  acct(const char*  filepath);
 int getpagesize(void);
 
 long sysconf(int);
+
+long syscall(long number, ...);
 
 extern int daemon(int, int);
 

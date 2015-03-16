@@ -234,6 +234,11 @@ TEST(wchar, wcsstr) {
   ASSERT_EQ(NULL, wcsstr(haystack, bad_needle));
 }
 
+TEST(wchar, wcsstr_80199) {
+  // https://code.google.com/p/android/issues/detail?id=80199
+  ASSERT_TRUE(wcsstr(L"romrom", L"rom") != NULL);
+}
+
 TEST(wchar, mbtowc) {
   wchar_t out[8];
 
@@ -661,4 +666,9 @@ TEST(wchar, wcstoull_l_EINVAL) {
   errno = 0;
   wcstoull_l(L"123", NULL, 37, LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(wchar, wmempcpy) {
+  wchar_t dst[6];
+  ASSERT_EQ(&dst[4], wmempcpy(dst, L"hello", 4));
 }

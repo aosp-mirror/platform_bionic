@@ -73,13 +73,14 @@ enum {
 };
 
 typedef struct {
-  unsigned int value;
-#ifdef __LP64__
-  char __reserved[44];
+#if defined(__LP64__)
+  char __private[48];
+#else
+  char __private[4];
 #endif
-} pthread_cond_t;
+} pthread_cond_t __attribute__((aligned(8)));
 
-#define PTHREAD_COND_INITIALIZER  {0 __RESERVED_INITIALIZER}
+#define PTHREAD_COND_INITIALIZER  { { 0 } }
 
 typedef long pthread_mutexattr_t;
 typedef long pthread_condattr_t;
@@ -87,28 +88,14 @@ typedef long pthread_condattr_t;
 typedef long pthread_rwlockattr_t;
 
 typedef struct {
-#if !defined(__LP64__)
-  pthread_mutex_t __unused_lock;
-  pthread_cond_t __unused_cond;
-#endif
-  volatile int32_t state; // 0=unlock, -1=writer lock, +n=reader lock
-  volatile int32_t writer_thread_id;
-  volatile int32_t pending_readers;
-  volatile int32_t pending_writers;
-  int32_t attr;
-#ifdef __LP64__
-  char __reserved[36];
+#if defined(__LP64__)
+  char __private[56];
 #else
-  char __reserved[12];
+  char __private[40];
 #endif
+} pthread_rwlock_t __attribute__((aligned(8)));
 
-} pthread_rwlock_t;
-
-#ifdef __LP64__
-  #define PTHREAD_RWLOCK_INITIALIZER  { 0, 0, 0, 0, 0, { 0 } }
-#else
-  #define PTHREAD_RWLOCK_INITIALIZER  { PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER, 0, 0, 0, 0, 0, { 0 } }
-#endif
+#define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 
 typedef int pthread_key_t;
 

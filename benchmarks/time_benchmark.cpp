@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "benchmark.h"
-
-#include <unistd.h>
 #include <sys/syscall.h>
 #include <sys/time.h>
 #include <time.h>
 
-static void BM_time_clock_gettime(int iters) {
+#include <benchmark/Benchmark.h>
+
+BENCHMARK_NO_ARG(BM_time_clock_gettime);
+void BM_time_clock_gettime::Run(int iters) {
   StartBenchmarkTiming();
 
   timespec t;
@@ -31,9 +31,9 @@ static void BM_time_clock_gettime(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_time_clock_gettime);
 
-static void BM_time_clock_gettime_syscall(int iters) {
+BENCHMARK_NO_ARG(BM_time_clock_gettime_syscall);
+void BM_time_clock_gettime_syscall::Run(int iters) {
   StartBenchmarkTiming();
 
   timespec t;
@@ -43,9 +43,9 @@ static void BM_time_clock_gettime_syscall(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_time_clock_gettime_syscall);
 
-static void BM_time_gettimeofday(int iters) {
+BENCHMARK_NO_ARG(BM_time_gettimeofday);
+void BM_time_gettimeofday::Run(int iters) {
   StartBenchmarkTiming();
 
   timeval tv;
@@ -55,9 +55,9 @@ static void BM_time_gettimeofday(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_time_gettimeofday);
 
-static void BM_time_gettimeofday_syscall(int iters) {
+BENCHMARK_NO_ARG(BM_time_gettimeofday_syscall);
+void BM_time_gettimeofday_syscall::Run(int iters) {
   StartBenchmarkTiming();
 
   timeval tv;
@@ -67,9 +67,9 @@ static void BM_time_gettimeofday_syscall(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_time_gettimeofday_syscall);
 
-static void BM_time_time(int iters) {
+BENCHMARK_NO_ARG(BM_time_time);
+void BM_time_time::Run(int iters) {
   StartBenchmarkTiming();
 
   for (int i = 0; i < iters; ++i) {
@@ -78,4 +78,3 @@ static void BM_time_time(int iters) {
 
   StopBenchmarkTiming();
 }
-BENCHMARK(BM_time_time);

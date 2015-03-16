@@ -41,8 +41,10 @@
 /* Did the thread exit without freeing pthread_internal_t? */
 #define PTHREAD_ATTR_FLAG_ZOMBIE 0x00000004
 
-/* Is this the main thread? */
-#define PTHREAD_ATTR_FLAG_MAIN_THREAD 0x80000000
+struct pthread_key_data_t {
+  uintptr_t seq; // Use uintptr_t just for alignment, as we use pointer below.
+  void* data;
+};
 
 struct pthread_internal_t {
   struct pthread_internal_t* next;
@@ -85,6 +87,8 @@ struct pthread_internal_t {
   size_t mmap_size;
 
   void* tls[BIONIC_TLS_SLOTS];
+
+  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
 
   /*
    * The dynamic linker implements dlerror(3), which makes it hard for us to implement this

@@ -19,7 +19,6 @@
 #include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
-#include "gtest_ex.h"
 
 #include <errno.h>
 #include <inttypes.h>
@@ -32,6 +31,8 @@
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
+
+#include <atomic>
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -699,6 +700,79 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
+struct RwlockWakeupHelperArg {
+  pthread_rwlock_t lock;
+  enum Progress {
+    LOCK_INITIALIZED,
+    LOCK_WAITING,
+    LOCK_RELEASED,
+    LOCK_ACCESSED
+  };
+  std::atomic<Progress> progress;
+};
+
+static void pthread_rwlock_reader_wakeup_writer_helper(RwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
+
+  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&arg->lock));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+
+  arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
+}
+
+TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+static void pthread_rwlock_writer_wakeup_reader_helper(RwlockWakeupHelperArg* arg) {
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
+
+  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&arg->lock));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&arg->lock));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
+
+  arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL,
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
+  sleep(1);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+
+  ASSERT_EQ(0, pthread_join(thread, NULL));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
 static int g_once_fn_call_count = 0;
 static void OnceFn() {
   ++g_once_fn_call_count;
@@ -742,23 +816,21 @@ static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) 
 static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
 
 TEST(pthread, pthread_atfork_smoke) {
-  test_isolated([] {
-    ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
-    ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
 
-    int pid = fork();
-    ASSERT_NE(-1, pid) << strerror(errno);
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
 
-    // Child and parent calls are made in the order they were registered.
-    if (pid == 0) {
-      ASSERT_EQ(0x12, g_atfork_child_calls);
-      _exit(0);
-    }
-    ASSERT_EQ(0x12, g_atfork_parent_calls);
+  // Child and parent calls are made in the order they were registered.
+  if (pid == 0) {
+    ASSERT_EQ(0x12, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0x12, g_atfork_parent_calls);
 
-    // Prepare calls are made in the reverse order.
-    ASSERT_EQ(0x21, g_atfork_prepare_calls);
-  });
+  // Prepare calls are made in the reverse order.
+  ASSERT_EQ(0x21, g_atfork_prepare_calls);
 }
 
 TEST(pthread, pthread_attr_getscope) {
@@ -800,7 +872,7 @@ TEST(pthread, pthread_condattr_setclock) {
 }
 
 TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
-#if defined(__BIONIC__) // This tests a bionic implementation detail.
+#if defined(__BIONIC__)
   pthread_condattr_t attr;
   pthread_condattr_init(&attr);
 
@@ -813,16 +885,78 @@ TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
   ASSERT_EQ(0, pthread_cond_signal(&cond_var));
   ASSERT_EQ(0, pthread_cond_broadcast(&cond_var));
 
-  attr = static_cast<pthread_condattr_t>(cond_var.value);
+  attr = static_cast<pthread_condattr_t>(*reinterpret_cast<uint32_t*>(cond_var.__private));
   clockid_t clock;
   ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
   ASSERT_EQ(CLOCK_MONOTONIC, clock);
   int pshared;
   ASSERT_EQ(0, pthread_condattr_getpshared(&attr, &pshared));
   ASSERT_EQ(PTHREAD_PROCESS_SHARED, pshared);
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#else  // !defined(__BIONIC__)
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif  // !defined(__BIONIC__)
+}
+
+class pthread_CondWakeupTest : public ::testing::Test {
+ protected:
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+
+  enum Progress {
+    INITIALIZED,
+    WAITING,
+    SIGNALED,
+    FINISHED,
+  };
+  std::atomic<Progress> progress;
+  pthread_t thread;
+
+ protected:
+  virtual void SetUp() {
+    ASSERT_EQ(0, pthread_mutex_init(&mutex, NULL));
+    ASSERT_EQ(0, pthread_cond_init(&cond, NULL));
+    progress = INITIALIZED;
+    ASSERT_EQ(0,
+      pthread_create(&thread, NULL, reinterpret_cast<void* (*)(void*)>(WaitThreadFn), this));
+  }
+
+  virtual void TearDown() {
+    ASSERT_EQ(0, pthread_join(thread, NULL));
+    ASSERT_EQ(FINISHED, progress);
+    ASSERT_EQ(0, pthread_cond_destroy(&cond));
+    ASSERT_EQ(0, pthread_mutex_destroy(&mutex));
+  }
+
+  void SleepUntilProgress(Progress expected_progress) {
+    while (progress != expected_progress) {
+      usleep(5000);
+    }
+    usleep(5000);
+  }
+
+ private:
+  static void WaitThreadFn(pthread_CondWakeupTest* test) {
+    ASSERT_EQ(0, pthread_mutex_lock(&test->mutex));
+    test->progress = WAITING;
+    while (test->progress == WAITING) {
+      ASSERT_EQ(0, pthread_cond_wait(&test->cond, &test->mutex));
+    }
+    ASSERT_EQ(SIGNALED, test->progress);
+    test->progress = FINISHED;
+    ASSERT_EQ(0, pthread_mutex_unlock(&test->mutex));
+  }
+};
+
+TEST_F(pthread_CondWakeupTest, signal) {
+  SleepUntilProgress(WAITING);
+  progress = SIGNALED;
+  pthread_cond_signal(&cond);
+}
+
+TEST_F(pthread_CondWakeupTest, broadcast) {
+  SleepUntilProgress(WAITING);
+  progress = SIGNALED;
+  pthread_cond_broadcast(&cond);
 }
 
 TEST(pthread, pthread_mutex_timedlock) {
