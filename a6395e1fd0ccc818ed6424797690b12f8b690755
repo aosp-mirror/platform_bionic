@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c61ac4b3_acb06770",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-16T20:06:25Z",
+      "side": 1,
+      "message": "This is going to create libc_openbsd_ndk.a without definitions for any of the functions that vary by architecture (memchr, etc.), because those are defined in libc_openbsd_src_files_arch.",
+      "revId": "a6395e1fd0ccc818ed6424797690b12f8b690755",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
