@@ -42,7 +42,7 @@ LOCAL_CFLAGS := $(benchmark_cflags)
 LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_SRC_FILES := $(benchmarklib_src_files)
 LOCAL_C_INCLUDES := $(benchmark_c_includes)
-LOCAL_STATIC_LIBRARIES := libutils
+LOCAL_STATIC_LIBRARIES := libbase
 include $(BUILD_STATIC_LIBRARY)
 
 # Only supported on linux systems.
@@ -55,7 +55,7 @@ LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_SRC_FILES := $(benchmarklib_src_files)
 LOCAL_C_INCLUDES := $(benchmark_c_includes)
 LOCAL_MULTILIB := both
-LOCAL_STATIC_LIBRARIES := libutils
+LOCAL_STATIC_LIBRARIES := libbase
 include $(BUILD_HOST_STATIC_LIBRARY)
 
 endif
@@ -84,7 +84,7 @@ LOCAL_MULTILIB := both
 LOCAL_CFLAGS := $(benchmark_cflags)
 LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_SRC_FILES := $(benchmark_src_files)
-LOCAL_STATIC_LIBRARIES := libbenchmark libutils
+LOCAL_STATIC_LIBRARIES := libbenchmark libbase
 include $(BUILD_EXECUTABLE)
 
 # We don't build a static benchmark executable because it's not usually
@@ -106,7 +106,7 @@ LOCAL_CFLAGS := $(benchmark_cflags)
 LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_LDFLAGS := -lrt
 LOCAL_SRC_FILES := $(benchmark_src_files)
-LOCAL_STATIC_LIBRARIES := libbenchmark libutils
+LOCAL_STATIC_LIBRARIES := libbenchmark libbase
 include $(BUILD_HOST_EXECUTABLE)
 
 endif
