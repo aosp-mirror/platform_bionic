@@ -73,13 +73,14 @@ enum {
 };
 
 typedef struct {
-  unsigned int value;
-#ifdef __LP64__
-  char __reserved[44];
+#if defined(__LP64__)
+  char __private[48];
+#else
+  char __private[4];
 #endif
 } pthread_cond_t;
 
-#define PTHREAD_COND_INITIALIZER  {0 __RESERVED_INITIALIZER}
+#define PTHREAD_COND_INITIALIZER  { { 0 } }
 
 typedef long pthread_mutexattr_t;
 typedef long pthread_condattr_t;
