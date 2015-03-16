@@ -46,6 +46,30 @@
       "revId": "b1ada3dd3fbf188ced9ab1edf1ee154d119bbc02",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_6a6f73aa",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-16T20:40:39Z",
+      "side": 1,
+      "message": "or StringPrintf... (when danalbert\u0027s changes are back in.)",
+      "parentUuid": "660f5879_29a4692d",
+      "range": {
+        "startLine": 151,
+        "startChar": 47,
+        "endLine": 151,
+        "endChar": 55
+      },
+      "revId": "b1ada3dd3fbf188ced9ab1edf1ee154d119bbc02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
