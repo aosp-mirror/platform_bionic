@@ -19,7 +19,6 @@
 #include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
-#include "gtest_ex.h"
 
 #include <errno.h>
 #include <inttypes.h>
@@ -817,23 +816,21 @@ static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) 
 static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
 
 TEST(pthread, pthread_atfork_smoke) {
-  test_isolated([] {
-    ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
-    ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
 
-    int pid = fork();
-    ASSERT_NE(-1, pid) << strerror(errno);
+  int pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
 
-    // Child and parent calls are made in the order they were registered.
-    if (pid == 0) {
-      ASSERT_EQ(0x12, g_atfork_child_calls);
-      _exit(0);
-    }
-    ASSERT_EQ(0x12, g_atfork_parent_calls);
+  // Child and parent calls are made in the order they were registered.
+  if (pid == 0) {
+    ASSERT_EQ(0x12, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0x12, g_atfork_parent_calls);
 
-    // Prepare calls are made in the reverse order.
-    ASSERT_EQ(0x21, g_atfork_prepare_calls);
-  });
+  // Prepare calls are made in the reverse order.
+  ASSERT_EQ(0x21, g_atfork_prepare_calls);
 }
 
 TEST(pthread, pthread_attr_getscope) {
