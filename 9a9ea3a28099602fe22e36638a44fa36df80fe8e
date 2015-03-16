@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c61ac4b3_0cf89b92",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-16T19:45:49Z",
+      "side": 1,
+      "message": "this is never defined, only libc_arch_dynamic_src_files_arm",
+      "revId": "9a9ea3a28099602fe22e36638a44fa36df80fe8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_4602740c",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 1089,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-16T19:45:49Z",
+      "side": 1,
+      "message": "this is never defined",
+      "revId": "9a9ea3a28099602fe22e36638a44fa36df80fe8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f5879_862aac74",
+        "filename": "libc/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-03-16T19:45:49Z",
+      "side": 1,
+      "message": "This overwrites -fvisibility\u003dhidden -O0 from above",
+      "revId": "9a9ea3a28099602fe22e36638a44fa36df80fe8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
