@@ -147,18 +147,6 @@ void count_relocation(RelocationKind) {
 uint32_t bitmask[4096];
 #endif
 
-// You shouldn't try to call memory-allocating functions in the dynamic linker.
-// Guard against the most obvious ones.
-#define DISALLOW_ALLOCATION(return_type, name, ...) \
-    return_type name __VA_ARGS__ \
-    { \
-      __libc_fatal("ERROR: " #name " called from the dynamic linker!\n"); \
-    }
-DISALLOW_ALLOCATION(void*, malloc, (size_t u __unused));
-DISALLOW_ALLOCATION(void, free, (void* u __unused));
-DISALLOW_ALLOCATION(void*, realloc, (void* u1 __unused, size_t u2 __unused));
-DISALLOW_ALLOCATION(void*, calloc, (size_t u1 __unused, size_t u2 __unused));
-
 static char __linker_dl_err_buf[768];
 
 char* linker_get_error_buffer() {
