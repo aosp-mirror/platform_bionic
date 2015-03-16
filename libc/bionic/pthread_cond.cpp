@@ -41,6 +41,13 @@
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
 
+// XXX *technically* there is a race condition that could allow
+// XXX a signal to be missed.  If thread A is preempted in _wait()
+// XXX after unlocking the mutex and before waiting, and if other
+// XXX threads call signal or broadcast UINT_MAX/2 times (exactly),
+// XXX before thread A is scheduled again and calls futex_wait(),
+// XXX then the signal will be lost.
+
 // We use one bit in pthread_condattr_t (long) values as the 'shared' flag
 // and one bit for the clock type (CLOCK_REALTIME is ((clockid_t) 1), and
 // CLOCK_MONOTONIC is ((clockid_t) 0).). The rest of the bits are a counter.
@@ -56,7 +63,6 @@
 #define COND_IS_SHARED(c) (((c) & COND_SHARED_MASK) != 0)
 #define COND_GET_CLOCK(c) (((c) & COND_CLOCK_MASK) >> 1)
 #define COND_SET_CLOCK(attr, c) ((attr) | (c << 1))
-
 
 int pthread_condattr_init(pthread_condattr_t* attr) {
   *attr = 0;
@@ -98,47 +104,50 @@ int pthread_condattr_destroy(pthread_condattr_t* attr) {
   return 0;
 }
 
-static inline atomic_uint* COND_TO_ATOMIC_POINTER(pthread_cond_t* cond) {
-  static_assert(sizeof(atomic_uint) == sizeof(cond->value),
-                "cond->value should actually be atomic_uint in implementation.");
+struct pthread_cond_internal_t {
+  atomic_uint state;
 
-  // We prefer casting to atomic_uint instead of declaring cond->value to be atomic_uint directly.
-  // Because using the second method pollutes pthread.h, and causes an error when compiling libcxx.
-  return reinterpret_cast<atomic_uint*>(&cond->value);
+  bool process_shared() const {
+    return COND_IS_SHARED(atomic_load_explicit(&state, memory_order_relaxed));
+  }
+
+  int get_clock() const {
+    return COND_GET_CLOCK(atomic_load_explicit(&state, memory_order_relaxed));
+  }
+
+#if defined(__LP64__)
+  char __reserved[44];
+#endif
+};
+
+static pthread_cond_internal_t* __get_internal_cond(pthread_cond_t* cond_interface) {
+  static_assert(sizeof(pthread_cond_t) == sizeof(pthread_cond_internal_t),
+                "pthread_cond_t should actually be pthread_cond_internal_t in implementation.");
+  return reinterpret_cast<pthread_cond_internal_t*>(cond_interface);
 }
 
-// XXX *technically* there is a race condition that could allow
-// XXX a signal to be missed.  If thread A is preempted in _wait()
-// XXX after unlocking the mutex and before waiting, and if other
-// XXX threads call signal or broadcast UINT_MAX/2 times (exactly),
-// XXX before thread A is scheduled again and calls futex_wait(),
-// XXX then the signal will be lost.
+int pthread_cond_init(pthread_cond_t* cond_interface, const pthread_condattr_t* attr) {
+  pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
 
-int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* attr) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  unsigned int init_value = 0;
-
+  unsigned int init_state = 0;
   if (attr != NULL) {
-    init_value = (*attr & COND_FLAGS_MASK);
+    init_state = (*attr & COND_FLAGS_MASK);
   }
-  atomic_init(cond_value_ptr, init_value);
+  atomic_init(&cond->state, init_state);
 
   return 0;
 }
 
-int pthread_cond_destroy(pthread_cond_t* cond) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  atomic_store_explicit(cond_value_ptr, 0xdeadc04d, memory_order_relaxed);
+int pthread_cond_destroy(pthread_cond_t* cond_interface) {
+  pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
+  atomic_store_explicit(&cond->state, 0xdeadc04d, memory_order_relaxed);
   return 0;
 }
 
 // This function is used by pthread_cond_broadcast and
 // pthread_cond_signal to atomically decrement the counter
 // then wake up thread_count threads.
-static int __pthread_cond_pulse(atomic_uint* cond_value_ptr, int thread_count) {
-  unsigned int old_value = atomic_load_explicit(cond_value_ptr, memory_order_relaxed);
-  bool shared = COND_IS_SHARED(old_value);
-
+static int __pthread_cond_pulse(pthread_cond_internal_t* cond, int thread_count) {
   // We don't use a release/seq_cst fence here. Because pthread_cond_wait/signal can't be
   // used as a method for memory synchronization by itself. It should always be used with
   // pthread mutexes. Note that Spurious wakeups from pthread_cond_wait/timedwait may occur,
@@ -149,20 +158,18 @@ static int __pthread_cond_pulse(atomic_uint* cond_value_ptr, int thread_count) {
   // synchronization. And it doesn't help even if we use any fence here.
 
   // The increase of value should leave flags alone, even if the value can overflows.
-  atomic_fetch_add_explicit(cond_value_ptr, COND_COUNTER_STEP, memory_order_relaxed);
+  atomic_fetch_add_explicit(&cond->state, COND_COUNTER_STEP, memory_order_relaxed);
 
-  __futex_wake_ex(cond_value_ptr, shared, thread_count);
+  __futex_wake_ex(&cond->state, cond->process_shared(), thread_count);
   return 0;
 }
 
-__LIBC_HIDDEN__
-int __pthread_cond_timedwait_relative(atomic_uint* cond_value_ptr, pthread_mutex_t* mutex,
-                                      const timespec* reltime) {
-  unsigned int old_value = atomic_load_explicit(cond_value_ptr, memory_order_relaxed);
-  bool shared = COND_IS_SHARED(old_value);
+static int __pthread_cond_timedwait_relative(pthread_cond_internal_t* cond, pthread_mutex_t* mutex,
+                                             const timespec* rel_timeout_or_null) {
+  unsigned int old_state = atomic_load_explicit(&cond->state, memory_order_relaxed);
 
   pthread_mutex_unlock(mutex);
-  int status = __futex_wait_ex(cond_value_ptr, shared, old_value, reltime);
+  int status = __futex_wait_ex(&cond->state, cond->process_shared(), old_state, rel_timeout_or_null);
   pthread_mutex_lock(mutex);
 
   if (status == -ETIMEDOUT) {
@@ -171,67 +178,68 @@ int __pthread_cond_timedwait_relative(atomic_uint* cond_value_ptr, pthread_mutex
   return 0;
 }
 
-__LIBC_HIDDEN__
-int __pthread_cond_timedwait(atomic_uint* cond_value_ptr, pthread_mutex_t* mutex,
-                             const timespec* abs_ts, clockid_t clock) {
+static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex_t* mutex,
+                                    const timespec* abs_timeout_or_null, clockid_t clock) {
   timespec ts;
-  timespec* tsp;
+  timespec* rel_timeout = NULL;
 
-  if (abs_ts != NULL) {
-    if (!timespec_from_absolute_timespec(ts, *abs_ts, clock)) {
+  if (abs_timeout_or_null != NULL) {
+    rel_timeout = &ts;
+    if (!timespec_from_absolute_timespec(*rel_timeout, *abs_timeout_or_null, clock)) {
       return ETIMEDOUT;
     }
-    tsp = &ts;
-  } else {
-    tsp = NULL;
   }
 
-  return __pthread_cond_timedwait_relative(cond_value_ptr, mutex, tsp);
+  return __pthread_cond_timedwait_relative(cond, mutex, rel_timeout);
 }
 
-int pthread_cond_broadcast(pthread_cond_t* cond) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_pulse(cond_value_ptr, INT_MAX);
+int pthread_cond_broadcast(pthread_cond_t* cond_interface) {
+  return __pthread_cond_pulse(__get_internal_cond(cond_interface), INT_MAX);
 }
 
-int pthread_cond_signal(pthread_cond_t* cond) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_pulse(cond_value_ptr, 1);
+int pthread_cond_signal(pthread_cond_t* cond_interface) {
+  return __pthread_cond_pulse(__get_internal_cond(cond_interface), 1);
 }
 
-int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait(cond_value_ptr, mutex, NULL,
-           COND_GET_CLOCK(atomic_load_explicit(cond_value_ptr, memory_order_relaxed)));
+int pthread_cond_wait(pthread_cond_t* cond_interface, pthread_mutex_t* mutex) {
+  pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
+  return __pthread_cond_timedwait(cond, mutex, NULL, cond->get_clock());
 }
 
-int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t * mutex, const timespec *abstime) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait(cond_value_ptr, mutex, abstime,
-           COND_GET_CLOCK(atomic_load_explicit(cond_value_ptr, memory_order_relaxed)));
+int pthread_cond_timedwait(pthread_cond_t *cond_interface, pthread_mutex_t * mutex,
+                           const timespec *abstime) {
+
+  pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
+  return __pthread_cond_timedwait(cond, mutex, abstime, cond->get_clock());
 }
 
 #if !defined(__LP64__)
 // TODO: this exists only for backward binary compatibility on 32 bit platforms.
-extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait(cond_value_ptr, mutex, abstime, CLOCK_MONOTONIC);
+extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond_interface,
+                                                pthread_mutex_t* mutex,
+                                                const timespec* abs_timeout) {
+
+  return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, abs_timeout,
+                                  CLOCK_MONOTONIC);
 }
 
-extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* abstime) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait(cond_value_ptr, mutex, abstime, CLOCK_MONOTONIC);
+extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond_interface,
+                                                   pthread_mutex_t* mutex,
+                                                   const timespec* abs_timeout) {
+  return pthread_cond_timedwait_monotonic(cond_interface, mutex, abs_timeout);
 }
 
-extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* reltime) {
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait_relative(cond_value_ptr, mutex, reltime);
+extern "C" int pthread_cond_timedwait_relative_np(pthread_cond_t* cond_interface,
+                                                  pthread_mutex_t* mutex,
+                                                  const timespec* rel_timeout) {
+
+  return __pthread_cond_timedwait_relative(__get_internal_cond(cond_interface), mutex, rel_timeout);
 }
 
-extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsigned ms) {
+extern "C" int pthread_cond_timeout_np(pthread_cond_t* cond_interface,
+                                       pthread_mutex_t* mutex, unsigned ms) {
   timespec ts;
   timespec_from_ms(ts, ms);
-  atomic_uint* cond_value_ptr = COND_TO_ATOMIC_POINTER(cond);
-  return __pthread_cond_timedwait_relative(cond_value_ptr, mutex, &ts);
+  return pthread_cond_timedwait_relative_np(cond_interface, mutex, &ts);
 }
 #endif // !defined(__LP64__)

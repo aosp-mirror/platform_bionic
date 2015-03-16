@@ -875,7 +875,7 @@ TEST(pthread, pthread_condattr_setclock) {
 }
 
 TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
-#if defined(__BIONIC__) // This tests a bionic implementation detail.
+#if defined(__BIONIC__)
   pthread_condattr_t attr;
   pthread_condattr_init(&attr);
 
@@ -888,16 +888,78 @@ TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
   ASSERT_EQ(0, pthread_cond_signal(&cond_var));
   ASSERT_EQ(0, pthread_cond_broadcast(&cond_var));
 
-  attr = static_cast<pthread_condattr_t>(cond_var.value);
+  attr = static_cast<pthread_condattr_t>(*reinterpret_cast<uint32_t*>(cond_var.__private));
   clockid_t clock;
   ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
   ASSERT_EQ(CLOCK_MONOTONIC, clock);
   int pshared;
   ASSERT_EQ(0, pthread_condattr_getpshared(&attr, &pshared));
   ASSERT_EQ(PTHREAD_PROCESS_SHARED, pshared);
-#else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __BIONIC__
+#else  // !defined(__BIONIC__)
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif  // !defined(__BIONIC__)
+}
+
+class pthread_CondWakeupTest : public ::testing::Test {
+ protected:
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+
+  enum Progress {
+    INITIALIZED,
+    WAITING,
+    SIGNALED,
+    FINISHED,
+  };
+  std::atomic<Progress> progress;
+  pthread_t thread;
+
+ protected:
+  virtual void SetUp() {
+    ASSERT_EQ(0, pthread_mutex_init(&mutex, NULL));
+    ASSERT_EQ(0, pthread_cond_init(&cond, NULL));
+    progress = INITIALIZED;
+    ASSERT_EQ(0,
+      pthread_create(&thread, NULL, reinterpret_cast<void* (*)(void*)>(WaitThreadFn), this));
+  }
+
+  virtual void TearDown() {
+    ASSERT_EQ(0, pthread_join(thread, NULL));
+    ASSERT_EQ(FINISHED, progress);
+    ASSERT_EQ(0, pthread_cond_destroy(&cond));
+    ASSERT_EQ(0, pthread_mutex_destroy(&mutex));
+  }
+
+  void SleepUntilProgress(Progress expected_progress) {
+    while (progress != expected_progress) {
+      usleep(5000);
+    }
+    usleep(5000);
+  }
+
+ private:
+  static void WaitThreadFn(pthread_CondWakeupTest* test) {
+    ASSERT_EQ(0, pthread_mutex_lock(&test->mutex));
+    test->progress = WAITING;
+    while (test->progress == WAITING) {
+      ASSERT_EQ(0, pthread_cond_wait(&test->cond, &test->mutex));
+    }
+    ASSERT_EQ(SIGNALED, test->progress);
+    test->progress = FINISHED;
+    ASSERT_EQ(0, pthread_mutex_unlock(&test->mutex));
+  }
+};
+
+TEST_F(pthread_CondWakeupTest, signal) {
+  SleepUntilProgress(WAITING);
+  progress = SIGNALED;
+  pthread_cond_signal(&cond);
+}
+
+TEST_F(pthread_CondWakeupTest, broadcast) {
+  SleepUntilProgress(WAITING);
+  progress = SIGNALED;
+  pthread_cond_broadcast(&cond);
 }
 
 TEST(pthread, pthread_mutex_timedlock) {
