@@ -107,11 +107,11 @@ int pthread_condattr_destroy(pthread_condattr_t* attr) {
 struct pthread_cond_internal_t {
   atomic_uint state;
 
-  bool process_shared() const {
+  bool process_shared() {
     return COND_IS_SHARED(atomic_load_explicit(&state, memory_order_relaxed));
   }
 
-  int get_clock() const {
+  int get_clock() {
     return COND_GET_CLOCK(atomic_load_explicit(&state, memory_order_relaxed));
   }
 
