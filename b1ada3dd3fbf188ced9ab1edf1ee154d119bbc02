@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "660f5879_a93339a3",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-16T20:27:49Z",
+      "side": 1,
+      "message": "If you don\u0027t want to deal with snprintf, you could change this to:\n\n(std::string(LIBZIPPATH) + android_data).c_str()\n\nBut maybe for another time.",
+      "range": {
+        "startLine": 151,
+        "startChar": 47,
+        "endLine": 151,
+        "endChar": 55
+      },
+      "revId": "b1ada3dd3fbf188ced9ab1edf1ee154d119bbc02",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
