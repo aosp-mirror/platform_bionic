@@ -16,6 +16,24 @@
       "revId": "ca863e4e8a5106fc596f31e20ad66afd8f77bc35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41331ed7_b9120b89",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-16T18:20:39Z",
+      "side": 1,
+      "message": "done - added comment to the header file.",
+      "parentUuid": "861e0c58_3724722b",
+      "revId": "ca863e4e8a5106fc596f31e20ad66afd8f77bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
