@@ -86,6 +86,12 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
 int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   int error = 0;
 
+  if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
+    atomic_init(&thread->join_state, THREAD_NOT_JOINED);
+  } else {
+    atomic_init(&thread->join_state, THREAD_DETACHED);
+  }
+
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
     sched_param param;
@@ -263,7 +269,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   if (init_errno != 0) {
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+    atomic_store(&thread->join_state, THREAD_DETACHED);
     thread->start_routine = __do_nothing;
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     return init_errno;
