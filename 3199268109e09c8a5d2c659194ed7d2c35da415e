@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4683341d_ea0d0739",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-17T23:37:05Z",
+      "side": 1,
+      "message": "You should set errno \u003d 0 before this. Otherwise, if errno happened to be ENOENT before this call, and the value returned was zero, you might think this failed.",
+      "range": {
+        "startLine": 41,
+        "startChar": 6,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "3199268109e09c8a5d2c659194ed7d2c35da415e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
