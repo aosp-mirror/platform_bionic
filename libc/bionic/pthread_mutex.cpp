@@ -305,7 +305,7 @@ static inline int __pthread_normal_mutex_trylock(atomic_int* mutex_value_ptr, in
  */
 static inline int __pthread_normal_mutex_lock(atomic_int* mutex_value_ptr, int shared,
                                               const timespec* abs_timeout_or_null, clockid_t clock) {
-    if (__predict_true(__normal_mutex_trylock(mutex_value_ptr, shared) == 0)) {
+    if (__predict_true(__pthread_normal_mutex_trylock(mutex_value_ptr, shared) == 0)) {
         return 0;
     }
 
