@@ -70,6 +70,30 @@
       "revId": "3199268109e09c8a5d2c659194ed7d2c35da415e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e67fc8e4_27ed9aba",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-03-17T23:49:23Z",
+      "side": 1,
+      "message": "It\u0027s the caller\u0027s responsibility to set errno to 0 before calling functions like this. The strtol family is a common example.",
+      "parentUuid": "4683341d_ea0d0739",
+      "range": {
+        "startLine": 41,
+        "startChar": 6,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "3199268109e09c8a5d2c659194ed7d2c35da415e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
