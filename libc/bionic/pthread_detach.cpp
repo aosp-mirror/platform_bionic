@@ -38,21 +38,18 @@ int pthread_detach(pthread_t t) {
       return ESRCH;
     }
 
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-      return EINVAL; // Already detached.
+    ThreadJoinState old_state = THREAD_NOT_JOINED;
+    while (old_state == THREAD_NOT_JOINED &&
+           !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_DETACHED)) {
     }
-
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-      return 0; // Already being joined; silently do nothing, like glibc.
-    }
-
-    // If the thread has not exited, we can detach it safely.
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) == 0) {
-      thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
-      return 0;
+    switch (old_state) {
+      case THREAD_NOT_JOINED: return 0;
+      case THREAD_JOINED:     return 0; // Already being joined; silently do nothing, like glibc.
+      case THREAD_DETACHED:   return THREAD_DETACHED;
+      case THREAD_EXITED_NOT_JOINED:  // Call pthread_join out of scope of pthread_accessor.
     }
   }
 
-  // The thread is in zombie state, use pthread_join to clean it up.
+  // The thread is in THREAD_EXITED_NOT_JOINED, use pthread_join to clean it up.
   return pthread_join(t, NULL);
 }
