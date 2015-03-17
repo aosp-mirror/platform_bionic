@@ -78,7 +78,7 @@ typedef struct {
 #else
   char __private[4];
 #endif
-} pthread_cond_t __attribute__((aligned(8)));
+} pthread_cond_t __attribute__((aligned(sizeof(long))));
 
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
 
