@@ -46,6 +46,30 @@
       "revId": "3199268109e09c8a5d2c659194ed7d2c35da415e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "067dbcec_48a1bf72",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-17T23:48:57Z",
+      "side": 1,
+      "message": "There are a couple places we set errno to zero, but then we restore the value afterwards.\n\nFeel free to disregard, it\u0027s up to the caller to set errno to zero before this call.",
+      "parentUuid": "067dbcec_c81daf94",
+      "range": {
+        "startLine": 41,
+        "startChar": 6,
+        "endLine": 41,
+        "endChar": 27
+      },
+      "revId": "3199268109e09c8a5d2c659194ed7d2c35da415e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
