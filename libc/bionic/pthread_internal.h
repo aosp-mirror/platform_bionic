@@ -29,6 +29,7 @@
 #define _PTHREAD_INTERNAL_H_
 
 #include <pthread.h>
+#include <stdatomic.h>
 
 #include "private/bionic_tls.h"
 
@@ -44,6 +45,13 @@
 struct pthread_key_data_t {
   uintptr_t seq; // Use uintptr_t just for alignment, as we use pointer below.
   void* data;
+};
+
+enum ThreadJoinState {
+  THREAD_NOT_JOINED,
+  THREAD_EXITED_NOT_JOINED,
+  THREAD_JOINED,
+  THREAD_DETACHED
 };
 
 struct pthread_internal_t {
@@ -73,6 +81,8 @@ struct pthread_internal_t {
   }
 
   pthread_attr_t attr;
+
+  _Atomic(ThreadJoinState) join_state;
 
   __pthread_cleanup_t* cleanup_stack;
 

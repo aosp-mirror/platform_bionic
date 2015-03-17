@@ -44,16 +44,15 @@ int pthread_join(pthread_t t, void** return_value) {
       return ESRCH;
     }
 
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0) {
+    ThreadJoinState old_state = THREAD_NOT_JOINED;
+    while ((old_state == THREAD_NOT_JOINED || old_state == THREAD_EXITED_NOT_JOINED) &&
+           !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_JOINED)) {
+    }
+
+    if (old_state == THREAD_DETACHED || old_state == THREAD_JOINED) {
       return EINVAL;
     }
 
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) != 0) {
-      return EINVAL;
-    }
-
-    // Okay, looks like we can signal our intention to join.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_JOINED;
     tid = thread->tid;
     tid_ptr = &thread->tid;
   }
