@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "660f5879_805567a7",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-03-17T00:25:47Z",
+      "side": 1,
+      "message": "8 bytes on LP64",
+      "range": {
+        "startLine": 108,
+        "startChar": 2,
+        "endLine": 108,
+        "endChar": 19
+      },
+      "revId": "32651b8e8e453391c7aaca47cd885e94d54d0bf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86144c89_cb582617",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-03-17T00:25:47Z",
+      "side": 1,
+      "message": "44+8\u003d52",
+      "range": {
+        "startLine": 77,
+        "startChar": 17,
+        "endLine": 77,
+        "endChar": 19
+      },
+      "revId": "32651b8e8e453391c7aaca47cd885e94d54d0bf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "660f5879_29a7490c",
         "filename": "libc/include/pthread.h",
         "patchSetId": 1
