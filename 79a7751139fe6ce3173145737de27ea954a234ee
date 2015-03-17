@@ -22,6 +22,30 @@
       "revId": "79a7751139fe6ce3173145737de27ea954a234ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "469a5479_f5cceb09",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-17T17:18:27Z",
+      "side": 1,
+      "message": "I am not sure if we can use aligned(8) here. Before we hide the internal of the structure, it only contains int/unsigned int members, which only imply 4 bytes alignment. So I am worried if it may break sth if we use aligned(8) here, like make the size of the structure which embodies pthread_cond_t or pthread_rwlock_t bigger.",
+      "parentUuid": "469a5479_355673e8",
+      "range": {
+        "startLine": 81,
+        "startChar": 32,
+        "endLine": 81,
+        "endChar": 41
+      },
+      "revId": "79a7751139fe6ce3173145737de27ea954a234ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
