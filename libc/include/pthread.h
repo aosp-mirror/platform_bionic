@@ -85,6 +85,11 @@ typedef long pthread_rwlockattr_t;
 
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 
+enum {
+  PTHREAD_RWLOCK_PREFER_READER_NP = 0,
+  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 1,
+};
+
 typedef int pthread_key_t;
 
 typedef int pthread_once_t;
@@ -178,10 +183,12 @@ int pthread_mutex_unlock(pthread_mutex_t*) __nonnull((1));
 
 int pthread_once(pthread_once_t*, void (*)(void)) __nonnull((1, 2));
 
+int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
-int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t*, int) __nonnull((1));
+int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
+int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t*, int) __nonnull((1));
 
 int pthread_rwlock_destroy(pthread_rwlock_t*) __nonnull((1));
 int pthread_rwlock_init(pthread_rwlock_t*, const pthread_rwlockattr_t*) __nonnull((1));

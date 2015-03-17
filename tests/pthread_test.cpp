@@ -660,6 +660,37 @@ TEST(pthread, pthread_attr_setstacksize) {
 #endif // __BIONIC__
 }
 
+TEST(pthread, pthread_rwlockattr_smoke) {
+  pthread_rwlockattr_t attr;
+  ASSERT_EQ(0, pthread_rwlockattr_init(&attr));
+
+  int pshared_value_array[] = {PTHREAD_PROCESS_PRIVATE, PTHREAD_PROCESS_SHARED};
+  for (size_t i = 0; i < sizeof(pshared_value_array) / sizeof(pshared_value_array[0]); ++i) {
+    ASSERT_EQ(0, pthread_rwlockattr_setpshared(&attr, pshared_value_array[i]));
+    int pshared;
+    ASSERT_EQ(0, pthread_rwlockattr_getpshared(&attr, &pshared));
+    ASSERT_EQ(pshared_value_array[i], pshared);
+  }
+
+  int kind_array[] = {PTHREAD_RWLOCK_PREFER_READER_NP,
+                      PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP};
+  for (size_t i = 0; i < sizeof(kind_array) / sizeof(kind_array[0]); ++i) {
+    ASSERT_EQ(0, pthread_rwlockattr_setkind_np(&attr, kind_array[i]));
+    int kind;
+    ASSERT_EQ(0, pthread_rwlockattr_getkind_np(&attr, &kind));
+    ASSERT_EQ(kind_array[i], kind);
+  }
+
+  ASSERT_EQ(0, pthread_rwlockattr_destroy(&attr));
+}
+
+TEST(pthread, pthread_rwlock_init_same_as_PTHREAD_RWLOCK_INITIALIZER) {
+  pthread_rwlock_t lock1 = PTHREAD_RWLOCK_INITIALIZER;
+  pthread_rwlock_t lock2;
+  ASSERT_EQ(0, pthread_rwlock_init(&lock2, NULL));
+  ASSERT_EQ(0, memcmp(&lock1, &lock2, sizeof(lock1)));
+}
+
 TEST(pthread, pthread_rwlock_smoke) {
   pthread_rwlock_t l;
   ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
@@ -695,7 +726,6 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
-#ifdef __BIONIC__
   // EDEADLK in "read after write"
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(EDEADLK, pthread_rwlock_rdlock(&l));
@@ -705,7 +735,6 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(EDEADLK, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
-#endif
 
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
@@ -805,6 +834,111 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
   ASSERT_EQ(0, pthread_join(thread, NULL));
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
   ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+class RwlockKindTestHelper {
+ private:
+  struct ThreadArg {
+    RwlockKindTestHelper* helper;
+    std::atomic<pid_t>& tid;
+
+    ThreadArg(RwlockKindTestHelper* helper, std::atomic<pid_t>& tid)
+      : helper(helper), tid(tid) { }
+  };
+
+ public:
+  pthread_rwlock_t lock;
+
+ public:
+  RwlockKindTestHelper(int kind_type) {
+    InitRwlock(kind_type);
+  }
+
+  ~RwlockKindTestHelper() {
+    DestroyRwlock();
+  }
+
+  void CreateWriterThread(pthread_t& thread, std::atomic<pid_t>& tid) {
+    tid = 0;
+    ThreadArg* arg = new ThreadArg(this, tid);
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+                                reinterpret_cast<void* (*)(void*)>(WriterThreadFn), arg));
+  }
+
+  void CreateReaderThread(pthread_t& thread, std::atomic<pid_t>& tid) {
+    tid = 0;
+    ThreadArg* arg = new ThreadArg(this, tid);
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+                                reinterpret_cast<void* (*)(void*)>(ReaderThreadFn), arg));
+  }
+
+ private:
+  void InitRwlock(int kind_type) {
+    pthread_rwlockattr_t attr;
+    ASSERT_EQ(0, pthread_rwlockattr_init(&attr));
+    ASSERT_EQ(0, pthread_rwlockattr_setkind_np(&attr, kind_type));
+    ASSERT_EQ(0, pthread_rwlock_init(&lock, &attr));
+    ASSERT_EQ(0, pthread_rwlockattr_destroy(&attr));
+  }
+
+  void DestroyRwlock() {
+    ASSERT_EQ(0, pthread_rwlock_destroy(&lock));
+  }
+
+  static void WriterThreadFn(ThreadArg* arg) {
+    arg->tid = gettid();
+
+    RwlockKindTestHelper* helper = arg->helper;
+    ASSERT_EQ(0, pthread_rwlock_wrlock(&helper->lock));
+    ASSERT_EQ(0, pthread_rwlock_unlock(&helper->lock));
+    delete arg;
+  }
+
+  static void ReaderThreadFn(ThreadArg* arg) {
+    arg->tid = gettid();
+
+    RwlockKindTestHelper* helper = arg->helper;
+    ASSERT_EQ(0, pthread_rwlock_rdlock(&helper->lock));
+    ASSERT_EQ(0, pthread_rwlock_unlock(&helper->lock));
+    delete arg;
+  }
+};
+
+TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_READER_NP) {
+  RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_READER_NP);
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
+
+  pthread_t writer_thread;
+  std::atomic<pid_t> writer_tid;
+  helper.CreateWriterThread(writer_thread, writer_tid);
+  WaitUntilThreadSleep(writer_tid);
+
+  pthread_t reader_thread;
+  std::atomic<pid_t> reader_tid;
+  helper.CreateReaderThread(reader_thread, reader_tid);
+  ASSERT_EQ(0, pthread_join(reader_thread, NULL));
+
+  ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
+  ASSERT_EQ(0, pthread_join(writer_thread, NULL));
+}
+
+TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) {
+  RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
+
+  pthread_t writer_thread;
+  std::atomic<pid_t> writer_tid;
+  helper.CreateWriterThread(writer_thread, writer_tid);
+  WaitUntilThreadSleep(writer_tid);
+
+  pthread_t reader_thread;
+  std::atomic<pid_t> reader_tid;
+  helper.CreateReaderThread(reader_thread, reader_tid);
+  WaitUntilThreadSleep(reader_tid);
+
+  ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
+  ASSERT_EQ(0, pthread_join(writer_thread, NULL));
+  ASSERT_EQ(0, pthread_join(reader_thread, NULL));
 }
 
 static int g_once_fn_call_count = 0;
