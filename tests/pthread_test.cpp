@@ -732,8 +732,10 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
-  sleep(1);
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  while (wakeup_arg.progress != RwlockWakeupHelperArg::LOCK_WAITING) {
+    usleep(5000);
+  }
+  usleep(5000);
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
@@ -763,8 +765,10 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
-  sleep(1);
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+  while (wakeup_arg.progress != RwlockWakeupHelperArg::LOCK_WAITING) {
+    usleep(5000);
+  }
+  usleep(5000);
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
@@ -1177,15 +1181,21 @@ TEST(pthread, pthread_mutexattr_gettype) {
   ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
   ASSERT_EQ(0, pthread_mutexattr_gettype(&attr, &attr_type));
   ASSERT_EQ(PTHREAD_MUTEX_RECURSIVE, attr_type);
+
+  ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
+}
+
+static void CreateMutex(pthread_mutex_t& mutex, int mutex_type) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, mutex_type));
+  ASSERT_EQ(0, pthread_mutex_init(&mutex, &attr));
+  ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
 }
 
 TEST(pthread, pthread_mutex_lock_NORMAL) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL));
-
   pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+  CreateMutex(lock, PTHREAD_MUTEX_NORMAL);
 
   ASSERT_EQ(0, pthread_mutex_lock(&lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&lock));
@@ -1193,12 +1203,8 @@ TEST(pthread, pthread_mutex_lock_NORMAL) {
 }
 
 TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
-
   pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+  CreateMutex(lock, PTHREAD_MUTEX_ERRORCHECK);
 
   ASSERT_EQ(0, pthread_mutex_lock(&lock));
   ASSERT_EQ(EDEADLK, pthread_mutex_lock(&lock));
@@ -1211,12 +1217,8 @@ TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
 }
 
 TEST(pthread, pthread_mutex_lock_RECURSIVE) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
-
   pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+  CreateMutex(lock, PTHREAD_MUTEX_RECURSIVE);
 
   ASSERT_EQ(0, pthread_mutex_lock(&lock));
   ASSERT_EQ(0, pthread_mutex_lock(&lock));
@@ -1226,6 +1228,66 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
   ASSERT_EQ(0, pthread_mutex_unlock(&lock));
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+}
+
+class MutexWakeupHelper {
+ private:
+  pthread_mutex_t mutex;
+  enum Progress {
+    LOCK_INITIALIZED,
+    LOCK_WAITING,
+    LOCK_RELEASED,
+    LOCK_ACCESSED
+  };
+  std::atomic<Progress> progress;
+
+  static void thread_fn(MutexWakeupHelper* helper) {
+    ASSERT_EQ(LOCK_INITIALIZED, helper->progress);
+    helper->progress = LOCK_WAITING;
+
+    ASSERT_EQ(0, pthread_mutex_lock(&helper->mutex));
+    ASSERT_EQ(LOCK_RELEASED, helper->progress);
+    ASSERT_EQ(0, pthread_mutex_unlock(&helper->mutex));
+
+    helper->progress = LOCK_ACCESSED;
+  }
+
+ public:
+  void test(int mutex_type) {
+    CreateMutex(mutex, mutex_type);
+    ASSERT_EQ(0, pthread_mutex_lock(&mutex));
+    progress = LOCK_INITIALIZED;
+
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+      reinterpret_cast<void* (*)(void*)>(MutexWakeupHelper::thread_fn), this));
+
+    while (progress != LOCK_WAITING) {
+      usleep(5000);
+    }
+    usleep(5000);
+    progress = LOCK_RELEASED;
+    ASSERT_EQ(0, pthread_mutex_unlock(&mutex));
+
+    ASSERT_EQ(0, pthread_join(thread, NULL));
+    ASSERT_EQ(LOCK_ACCESSED, progress);
+    ASSERT_EQ(0, pthread_mutex_destroy(&mutex));
+  }
+};
+
+TEST(pthread, pthread_mutex_NORMAL_wakeup) {
+  MutexWakeupHelper helper;
+  helper.test(PTHREAD_MUTEX_NORMAL);
+}
+
+TEST(pthread, pthread_mutex_ERRORCHECK_wakeup) {
+  MutexWakeupHelper helper;
+  helper.test(PTHREAD_MUTEX_ERRORCHECK);
+}
+
+TEST(pthread, pthread_mutex_RECURSIVE_wakeup) {
+  MutexWakeupHelper helper;
+  helper.test(PTHREAD_MUTEX_RECURSIVE);
 }
 
 TEST(pthread, pthread_mutex_owner_tid_limit) {
