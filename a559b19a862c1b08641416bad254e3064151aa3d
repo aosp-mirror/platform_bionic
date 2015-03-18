@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6d4f037_8d44c177",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-18T21:51:26Z",
+      "side": 1,
+      "message": "() rather than (void) here and elsewhere.",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6d4f037_cdb1a9f8",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-18T21:51:26Z",
+      "side": 1,
+      "message": "why the #define?",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46e6d429_35e63a59",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-18T21:51:26Z",
+      "side": 1,
+      "message": "link to the bug here so we don\u0027t take this back out of line without checking benchmarks.",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
