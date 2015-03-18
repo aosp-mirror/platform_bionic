@@ -174,9 +174,9 @@ int __fadvise64:fadvise64_64(int, off64_t, off64_t, int) x86
 int __fadvise64:fadvise64(int, off64_t, off64_t, int) arm64,mips,mips64,x86_64
 
 int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
-int fstatfs64|fstatfs:fstatfs(int, struct statfs*)  arm64,mips64,x86_64
+int __fstatfs:fstatfs(int, struct statfs*)  arm64,mips64,x86_64
 int __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
-int statfs64|statfs:statfs(const char*, struct statfs*)  arm64,mips64,x86_64
+int __statfs:statfs(const char*, struct statfs*)  arm64,mips64,x86_64
 
 int     fstat64|fstat:fstat64(int, struct stat*)    arm,mips,x86
 int     fstat64|fstat:fstat(int, struct stat*)    arm64,x86_64
