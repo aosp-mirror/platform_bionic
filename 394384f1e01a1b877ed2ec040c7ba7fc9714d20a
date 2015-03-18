@@ -22,6 +22,30 @@
       "revId": "394384f1e01a1b877ed2ec040c7ba7fc9714d20a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6d9e470_0e89ebf3",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-18T21:51:33Z",
+      "side": 1,
+      "message": "For pthread_cond_t on 32 bit systems, it only has 4 bytes, so it only needs 4 bytes alignment. For other cases, I agree using 8 bytes alignment would be better for further maintenance. But previous pthread_cond_t, pthread_mutex_t, pthread_rwlock_t structures only imply 4 bytes alignment (as they don\u0027t have 64 bit members), I am worried if it will cause some problem to use more strict alignment now. For example, some structure containing pthread_cond_t may change their size.",
+      "parentUuid": "06a4dcb8_658eac33",
+      "range": {
+        "startLine": 81,
+        "startChar": 32,
+        "endLine": 81,
+        "endChar": 42
+      },
+      "revId": "394384f1e01a1b877ed2ec040c7ba7fc9714d20a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
