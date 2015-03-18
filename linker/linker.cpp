@@ -942,12 +942,8 @@ static int open_library(const char* name, off64_t* file_offset) {
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       *file_offset = 0;
-      return fd;
     }
-    // ...but nvidia binary blobs (at least) rely on this behavior, so fall through for now.
-#if defined(__LP64__)
-    return -1;
-#endif
+    return fd;
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
