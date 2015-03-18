@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(statfs64)
+ENTRY(__fstatfs)
     .set push
     .set noreorder
-    li v0, __NR_statfs
+    li v0, __NR_fstatfs
     syscall
     bnez a3, 1f
     move a0, v0
@@ -22,7 +22,5 @@ ENTRY(statfs64)
     j t9
     move ra, t0
     .set pop
-END(statfs64)
-
-    .globl statfs
-    .equ statfs, statfs64
+END(__fstatfs)
+.hidden __fstatfs

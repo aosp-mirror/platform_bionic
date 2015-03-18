@@ -31,6 +31,11 @@ template <typename StatFsT> void Check(StatFsT& sb) {
   EXPECT_EQ(0, sb.f_fsid.__val[0]);
   EXPECT_EQ(0, sb.f_fsid.__val[1]);
   EXPECT_EQ(255, static_cast<int>(sb.f_namelen));
+
+  // The kernel sets a private bit to indicate that f_flags is valid.
+  // This flag is not supposed to be exposed to libc clients.
+  static const uint32_t ST_VALID = 0x0020;
+  EXPECT_TRUE((sb.f_flags & ST_VALID) == 0) << sb.f_flags;
 }
 
 TEST(sys_vfs, statfs) {
@@ -52,6 +57,7 @@ TEST(sys_vfs, fstatfs) {
   close(fd);
   Check(sb);
 }
+
 TEST(sys_vfs, fstatfs64) {
   struct statfs64 sb;
   int fd = open("/proc", O_RDONLY);
