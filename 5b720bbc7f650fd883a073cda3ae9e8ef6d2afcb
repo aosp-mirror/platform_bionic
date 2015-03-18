@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e67fc8e4_d0e8f27e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-18T01:04:59Z",
+      "side": 1,
+      "message": "or just return TEMP_...",
+      "revId": "5b720bbc7f650fd883a073cda3ae9e8ef6d2afcb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
