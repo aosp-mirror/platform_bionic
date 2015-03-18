@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(statfs64)
+ENTRY(__statfs)
     mov     x8, __NR_statfs
     svc     #0
 
@@ -11,7 +11,5 @@ ENTRY(statfs64)
     b.hi    __set_errno_internal
 
     ret
-END(statfs64)
-
-    .globl statfs
-    .equ statfs, statfs64
+END(__statfs)
+.hidden __statfs

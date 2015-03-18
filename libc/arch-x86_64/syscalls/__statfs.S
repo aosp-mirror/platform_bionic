@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(statfs64)
+ENTRY(__statfs)
     movl    $__NR_statfs, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,7 +12,5 @@ ENTRY(statfs64)
     call    __set_errno_internal
 1:
     ret
-END(statfs64)
-
-    .globl statfs
-    .equ statfs, statfs64
+END(__statfs)
+.hidden __statfs
