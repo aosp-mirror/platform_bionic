@@ -31,6 +31,7 @@
 #include <sys/auxv.h>
 #include <private/bionic_auxv.h>
 #include <elf.h>
+#include <errno.h>
 
 __LIBC_HIDDEN__ ElfW(auxv_t)* __libc_auxv = NULL;
 
@@ -40,5 +41,6 @@ extern "C" unsigned long int getauxval(unsigned long int type) {
       return v->a_un.a_val;
     }
   }
+  errno = ENOENT;
   return 0;
 }
