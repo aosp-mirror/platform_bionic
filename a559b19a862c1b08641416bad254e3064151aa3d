@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a6d4f037_ad4f7d14",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-18T22:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6d4f037_8d44c177",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6d4f037_cdb1a9f8",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "46e6d429_b83fc1da",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-18T22:04:28Z",
+      "side": 1,
+      "message": "Because I think the name of __get_thread() is better than __get_internal_thread(). And I want to only keep one instance of implementation. So I can\u0027t think up of a better way.",
+      "parentUuid": "a6d4f037_cdb1a9f8",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46e6d429_35e63a59",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2015-03-18T21:51:26Z",
       "side": 1,
       "message": "link to the bug here so we don\u0027t take this back out of line without checking benchmarks.",
+      "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6d4f037_8d1161db",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-18T22:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46e6d429_35e63a59",
       "revId": "a559b19a862c1b08641416bad254e3064151aa3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
