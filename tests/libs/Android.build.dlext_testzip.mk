@@ -35,7 +35,7 @@ my_shared_libs := \
 $(LOCAL_BUILT_MODULE): PRIVATE_ALIGNMENT := 4096 # PAGE_SIZE
 $(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
 	@echo "Zipalign $(PRIVATE_ALIGNMENT): $@"
-	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)
-	$(hide) cp $^ $(dir $@)
-	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -rD0 $(notdir $@).unaligned empty_file.txt *.so)
+	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir
+	$(hide) cp $^ $(dir $@)/libdir
+	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -rD0 $(notdir $@).unaligned empty_file.txt libdir/*.so)
 	$(hide) $(ZIPALIGN) $(PRIVATE_ALIGNMENT) $@.unaligned $@
