@@ -46,6 +46,30 @@
       "revId": "394384f1e01a1b877ed2ec040c7ba7fc9714d20a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46e6d429_18d6cd45",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-18T21:57:15Z",
+      "side": 1,
+      "message": "plus existing code will be compiled without this alignment restriction, so if we\u0027re broken in that case, we need to change our implementation to be able to keep running existing code...",
+      "parentUuid": "c6d9e470_0e89ebf3",
+      "range": {
+        "startLine": 81,
+        "startChar": 32,
+        "endLine": 81,
+        "endChar": 42
+      },
+      "revId": "394384f1e01a1b877ed2ec040c7ba7fc9714d20a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
