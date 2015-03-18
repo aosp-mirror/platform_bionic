@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e67fc8e4_d0e5524d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-18T01:17:01Z",
+      "side": 0,
+      "message": "I\u0027m guessing this isn\u0027t true any more?",
+      "range": {
+        "startLine": 866,
+        "startChar": 4,
+        "endLine": 866,
+        "endChar": 92
+      },
+      "revId": "5f8ddf69e59b13653d016e236599b95daf6501a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
