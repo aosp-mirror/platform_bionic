@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "460fb4b1_9ea2ad1e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-19T01:14:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "460fb4b1_1e37ddae",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2612c0d8_3de62759",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-19T01:09:51Z",
       "side": 1,
       "message": "also known as \u0027if\u0027? or are we going to add more than one case to this switch? (in which case, TODO?)",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66de785c_d4c132d2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2350,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-19T01:14:45Z",
+      "side": 1,
+      "message": "Done - replaced with if.",
+      "parentUuid": "2612c0d8_3de62759",
       "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2612c0d8_f8e1bd16",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-19T01:14:45Z",
+      "side": 1,
+      "message": "see below.",
+      "parentUuid": "460fb4b1_3e64e18e",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2612c0d8_bd7e97dd",
         "filename": "tests/libs/Android.mk",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-19T01:09:51Z",
       "side": 1,
       "message": "no_soname? but you use -soname on L140...",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2612c0d8_58cc49b5",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-19T01:14:45Z",
+      "side": 1,
+      "message": "copy-paste leftover... bad news is ld.gold does not let me use empty -soname. I had to remove this library and merge the tests.",
+      "parentUuid": "2612c0d8_bd7e97dd",
       "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
