@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "460fb4b1_d9603f33",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T02:12:54Z",
+      "side": 1,
+      "message": "this is how we\u0027ve dealt with this problem in the past, keeping the macro nonsense in ndk_cruft.cpp rather than in header files that get included everywhere.",
+      "revId": "80d0cf718b0e0763023fea20ea880476f352cb5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
