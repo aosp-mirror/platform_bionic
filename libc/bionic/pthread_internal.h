@@ -39,9 +39,6 @@
 /* Has the thread been joined by another thread? */
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000002
 
-/* Did the thread exit without freeing pthread_internal_t? */
-#define PTHREAD_ATTR_FLAG_ZOMBIE 0x00000004
-
 struct pthread_key_data_t {
   uintptr_t seq; // Use uintptr_t just for alignment, as we use pointer below.
   void* data;
