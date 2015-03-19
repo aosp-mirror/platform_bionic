@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "460fb4b1_c49df2e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T03:31:43Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/#/c/142836/ removes that memset.",
+      "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66de785c_bfdaff9d",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T03:31:43Z",
+      "side": 1,
+      "message": "i think the dust needs to settle before we add anything like this to the c library. memset_s would probably be a less bad idea. (all those annex k functions are ugly and unnecessarily awkward, but they made it into a real standard so there\u0027s not much we can do to argue against them.)",
+      "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
