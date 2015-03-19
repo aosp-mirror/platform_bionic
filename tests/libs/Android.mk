@@ -117,6 +117,17 @@ build_type := target
 build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
+# ----------------------------------------------------------------------------
+# Library with soname which does not match filename
+# ----------------------------------------------------------------------------
+libdlext_test_different_soname_src_files := \
+    dlext_test_library.cpp \
+
+module := libdlext_test_different_soname
+module_tag := optional
+libdlext_test_different_soname_ldflags := -Wl,-soname=libdlext_test_soname.so
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
