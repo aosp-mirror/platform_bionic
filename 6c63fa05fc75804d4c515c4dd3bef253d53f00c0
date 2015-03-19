@@ -51,6 +51,24 @@
       "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86fc4cc6_273a9498",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T05:42:15Z",
+      "side": 1,
+      "message": "yeah, that sounds reasonable.\n\n(and, yes, the lack of any other implementation is one reason why annex k isn\u0027t very high up my to-do list.)",
+      "parentUuid": "86fc4cc6_a7456425",
+      "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
