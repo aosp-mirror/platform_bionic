@@ -78,19 +78,6 @@
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
 
-#if defined(__LP64__)
-#define SEARCH_NAME(x) x
-#else
-// Nvidia drivers are relying on the bug:
-// http://code.google.com/p/android/issues/detail?id=6670
-// so we continue to use base-name lookup for lp32
-static const char* get_base_name(const char* name) {
-  const char* bname = strrchr(name, '/');
-  return bname ? bname + 1 : name;
-}
-#define SEARCH_NAME(x) get_base_name(x)
-#endif
-
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 static LinkerTypeAllocator<soinfo> g_soinfo_allocator;
@@ -1029,7 +1016,7 @@ static soinfo* load_library(LoadTaskList& load_tasks,
     return nullptr;
   }
 
-  soinfo* si = soinfo_alloc(SEARCH_NAME(name), &file_stat, file_offset, rtld_flags);
+  soinfo* si = soinfo_alloc(name, &file_stat, file_offset, rtld_flags);
   if (si == nullptr) {
     return nullptr;
   }
@@ -1051,10 +1038,15 @@ static soinfo* load_library(LoadTaskList& load_tasks,
   return si;
 }
 
-static soinfo *find_loaded_library_by_name(const char* name) {
-  const char* search_name = SEARCH_NAME(name);
+static soinfo *find_loaded_library_by_soname(const char* name) {
+  // Ignore filename with path.
+  if (strchr(name, '/') != nullptr) {
+    return nullptr;
+  }
+
   for (soinfo* si = solist; si != nullptr; si = si->next) {
-    if (!strcmp(search_name, si->name)) {
+    const char* soname = si->get_soname();
+    if (soname != nullptr && (strcmp(name, soname) == 0)) {
       return si;
     }
   }
@@ -1062,13 +1054,12 @@ static soinfo *find_loaded_library_by_name(const char* name) {
 }
 
 static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
-
-  soinfo* si = find_loaded_library_by_name(name);
+  soinfo* si = find_loaded_library_by_soname(name);
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
   if (si == nullptr) {
-    TRACE("[ '%s' has not been found by name.  Trying harder...]", name);
+    TRACE("[ '%s' has not been found by soname.  Trying harder...]", name);
     si = load_library(load_tasks, name, rtld_flags, extinfo);
   }
 
@@ -1832,6 +1823,7 @@ uint32_t soinfo::get_dt_flags_1() const {
 
   return 0;
 }
+
 void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
   if (has_min_version(1)) {
     if ((dt_flags_1 & DF_1_GLOBAL) != 0) {
@@ -1843,6 +1835,14 @@ void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
     }
 
     dt_flags_1_ = dt_flags_1;
+  }
+}
+
+const char* soinfo::get_soname() {
+  if (has_min_version(2)) {
+    return soname_;
+  } else {
+    return name;
   }
 }
 
@@ -2012,14 +2012,17 @@ bool soinfo::prelink_image() {
 #endif
 
   // Extract useful information from dynamic section.
+  // Note that: "Except for the DT_NULL element at the end of the array,
+  // and the relative order of DT_NEEDED elements, entries may appear in any order."
+  //
+  // source: http://www.sco.com/developers/gabi/1998-04-29/ch5.dynamic.html
   uint32_t needed_count = 0;
   for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
     DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p",
           d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
     switch (d->d_tag) {
       case DT_SONAME:
-        // TODO: glibc dynamic linker uses this name for
-        // initial library lookup; consider doing the same here.
+        // this is parsed after we have strtab initialized (see below).
         break;
 
       case DT_HASH:
@@ -2339,6 +2342,14 @@ bool soinfo::prelink_image() {
               reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
+    }
+  }
+
+  // second pass - parse entries relying on strtab
+  for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_SONAME) {
+      soname_ = get_string(d->d_un.d_val);
+      break;
     }
   }
 

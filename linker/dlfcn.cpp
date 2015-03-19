@@ -248,6 +248,7 @@ soinfo* get_libdl_info() {
     __libdl_info.ref_count_ = 1;
     __libdl_info.strtab_size_ = sizeof(ANDROID_LIBDL_STRTAB);
     __libdl_info.local_group_root_ = &__libdl_info;
+    __libdl_info.soname_ = "libdl.so";
   }
 
   return &__libdl_info;
