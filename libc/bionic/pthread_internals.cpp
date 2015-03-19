@@ -68,7 +68,3 @@ void _pthread_internal_add(pthread_internal_t* thread) {
   }
   g_thread_list = thread;
 }
-
-pthread_internal_t* __get_thread(void) {
-  return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
-}
