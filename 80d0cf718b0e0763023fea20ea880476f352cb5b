@@ -16,6 +16,24 @@
       "revId": "80d0cf718b0e0763023fea20ea880476f352cb5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2612c0d8_a37c366e",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-19T02:39:45Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t realize we can use macro like this. Very powerful.",
+      "parentUuid": "460fb4b1_d9603f33",
+      "revId": "80d0cf718b0e0763023fea20ea880476f352cb5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
