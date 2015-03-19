@@ -52,9 +52,9 @@ typedef int (*fn)(void);
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define LIBPATH_PREFIX "%s/nativetest64/libdlext_test_fd/"
+#define LIBPATH_PREFIX "/nativetest64/libdlext_test_fd/"
 #else
-#define LIBPATH_PREFIX "%s/nativetest/libdlext_test_fd/"
+#define LIBPATH_PREFIX "/nativetest/libdlext_test_fd/"
 #endif
 
 #define LIBPATH LIBPATH_PREFIX "libdlext_test_fd.so"
@@ -103,16 +103,13 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFd) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
-  char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBPATH, android_data);
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBPATH;
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD;
-  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path.c_str(), O_RDONLY | O_CLOEXEC));
   ASSERT_TRUE(extinfo.library_fd != -1);
-  handle_ = android_dlopen_ext(lib_path, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(lib_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
@@ -120,18 +117,14 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
-
-  char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
-  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path.c_str(), O_RDONLY | O_CLOEXEC));
   extinfo.library_fd_offset = LIBZIP_OFFSET;
 
-  handle_ = android_dlopen_ext(lib_path, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(lib_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
 
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
@@ -140,15 +133,11 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
-  const char* android_data = getenv("ANDROID_DATA");
-  ASSERT_TRUE(android_data != nullptr);
-
-  char lib_path[PATH_MAX];
-  snprintf(lib_path, sizeof(lib_path), LIBZIPPATH, android_data);
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
-  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path, O_RDONLY | O_CLOEXEC));
+  extinfo.library_fd = TEMP_FAILURE_RETRY(open(lib_path.c_str(), O_RDONLY | O_CLOEXEC));
   extinfo.library_fd_offset = 17;
 
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
@@ -183,6 +172,46 @@ TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
 }
+
+TEST(dlfcn, dlopen_from_zip_absolute_path) {
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
+
+  void* handle = dlopen((lib_path + "!libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  int (*fn)(void);
+  fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
+  ASSERT_TRUE(fn != nullptr);
+  EXPECT_EQ(4, fn());
+
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_from_zip_ld_library_path) {
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!libdir";
+
+  typedef void (*fn_t)(const char*);
+  fn_t android_update_LD_LIBRARY_PATH =
+      reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "android_update_LD_LIBRARY_PATH"));
+
+  ASSERT_TRUE(android_update_LD_LIBRARY_PATH != nullptr) << dlerror();
+
+  void* handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+
+  android_update_LD_LIBRARY_PATH(lib_path.c_str());
+
+  handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  int (*fn)(void);
+  fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
+  ASSERT_TRUE(fn != nullptr);
+  EXPECT_EQ(4, fn());
+
+  dlclose(handle);
+}
+
 
 TEST_F(DlExtTest, Reserved) {
   void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
