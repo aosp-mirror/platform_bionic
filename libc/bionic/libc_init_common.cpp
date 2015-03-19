@@ -92,7 +92,7 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
   // TODO: the main thread's sched_policy and sched_priority need to be queried.
 
-  __init_thread(&main_thread, false);
+  __init_thread(&main_thread);
   __init_tls(&main_thread);
   __set_tls(main_thread.tls);
   main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
@@ -113,7 +113,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
-  _pthread_internal_add(main_thread);
+  __pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
 
