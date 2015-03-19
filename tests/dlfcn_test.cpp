@@ -29,14 +29,6 @@
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
-#if defined(__LP64__)
-#define LIBPATH_PREFIX "/nativetest64/libdlext_test_fd/"
-#else
-#define LIBPATH_PREFIX "/nativetest/libdlext_test_fd/"
-#endif
-
-#define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_fd_zipaligned.zip"
-
 static bool g_called = false;
 extern "C" void DlSymTestFunction() {
   g_called = true;
@@ -877,46 +869,6 @@ TEST(dlfcn, dlopen_symlink) {
   dlclose(handle1);
   dlclose(handle2);
 }
-
-TEST(dlfcn, dlopen_from_zip_absolute_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
-
-  void* handle = dlopen((lib_path + "!libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-
-  int (*fn)(void);
-  fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
-  ASSERT_TRUE(fn != nullptr);
-  EXPECT_EQ(4, fn());
-
-  dlclose(handle);
-}
-
-TEST(dlfcn, dlopen_from_zip_ld_library_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!libdir";
-
-  typedef void (*fn_t)(const char*);
-  fn_t android_update_LD_LIBRARY_PATH =
-      reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "android_update_LD_LIBRARY_PATH"));
-
-  ASSERT_TRUE(android_update_LD_LIBRARY_PATH != nullptr) << dlerror();
-
-  void* handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
-  ASSERT_TRUE(handle == nullptr);
-
-  android_update_LD_LIBRARY_PATH(lib_path.c_str());
-
-  handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-
-  int (*fn)(void);
-  fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
-  ASSERT_TRUE(fn != nullptr);
-  EXPECT_EQ(4, fn());
-
-  dlclose(handle);
-}
-
 
 // libtest_dlopen_from_ctor_main.so depends on
 // libtest_dlopen_from_ctor.so which has a constructor
