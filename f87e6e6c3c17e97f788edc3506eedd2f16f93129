@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "460fb4b1_1e37ddae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T01:09:51Z",
+      "side": 1,
+      "message": "once",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2612c0d8_3de62759",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2350,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T01:09:51Z",
+      "side": 1,
+      "message": "also known as \u0027if\u0027? or are we going to add more than one case to this switch? (in which case, TODO?)",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "460fb4b1_3e64e18e",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T01:09:51Z",
+      "side": 1,
+      "message": "that\u0027s what you said on L121.",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2612c0d8_bd7e97dd",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-19T01:09:51Z",
+      "side": 1,
+      "message": "no_soname? but you use -soname on L140...",
+      "revId": "f87e6e6c3c17e97f788edc3506eedd2f16f93129",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
