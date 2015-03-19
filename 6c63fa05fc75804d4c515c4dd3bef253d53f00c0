@@ -33,6 +33,24 @@
       "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86fc4cc6_a7456425",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-03-19T05:39:07Z",
+      "side": 1,
+      "message": "I could just fix the explicit_bzero(...) definition in the OpenBSD compatibility header, which would be enough for the minor hardening in their arc4random(...) to work as intended.\n\nAnnex K isn\u0027t really much of a standard because no one actually implements it. Microsoft also didn\u0027t update their implementation to conform to it despite sponsoring it.",
+      "parentUuid": "66de785c_bfdaff9d",
+      "revId": "6c63fa05fc75804d4c515c4dd3bef253d53f00c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
