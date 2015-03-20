@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46825452_0783e4da",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-20T03:49:58Z",
+      "side": 1,
+      "message": "These shouldn\u0027t be a part of this module since they aren\u0027t using filecheck.\n\nI\u0027d probably move yours into libc itself. The goal of static_check is to prevent problematic code from compiling in the first place.\n\nAs I noted in the test itself, the static_asserts on the pthread types should be next to the struct definitions. The tests on alignment of the user types can go in a source file. As long as they don\u0027t get used, no harm done (can you __attribute__((unavailable)) a struct?).",
+      "revId": "ecdb8271bcfb35feab35a965863237c7c5b19b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_f7020f8e",
+        "filename": "tests/pthread_compilation_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-20T03:49:58Z",
+      "side": 1,
+      "message": "The asserts for the types themselves should just go right after the struct definition rather than in a separate file. They don\u0027t have to be in a function, they can exist at the top level.",
+      "revId": "ecdb8271bcfb35feab35a965863237c7c5b19b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
