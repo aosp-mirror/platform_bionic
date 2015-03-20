@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46825452_47600cb3",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T04:11:20Z",
+      "side": 1,
+      "message": "naming these the other way round means they get grouped together when sorted alphabetically by tools. that\u0027s why it\u0027s \"pthread_mutex_lock\" and \"pthread_mutex_unlock\" even though natural English word order would be \"lock_pthread_mutex\" and \"unlock_pthread_mutex\".",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_2738624e",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T04:11:20Z",
+      "side": 1,
+      "message": "__pthread_is_valid",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66259842_07d6867b",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T04:11:20Z",
+      "side": 1,
+      "message": "or this might be more natural:\n\n  if (old_state \u003d\u003d THREAD_NOT_JOINED) {\n    return 0;\n  }\n  if (old_state \u003d\u003d THREAD_EXITED_NOT_JOINED) {\n    // Use pthread_join to clean it up.\n    return pthread_join(t, NULL);\n  }\n  return EINVAL;",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "068cdc85_f7744f01",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T04:11:20Z",
+      "side": 1,
+      "message": "isn\u0027t there only one caller of this now, in pthread_exit?",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
