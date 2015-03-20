@@ -139,6 +139,24 @@
       "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_2ebb4727",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T23:50:22Z",
+      "side": 1,
+      "message": "i think part of what\u0027s confusing is that you didn\u0027t actually _split_ the functions. \"free\" calls \"remove\", which is a bit weird. if you\u0027re going to do that, i think the boolean is definitely a better idea because it\u0027s more explicit. i can\u0027t guess from the name what \"free\" actually does --- it\u0027s both list management *and* memory management.",
+      "parentUuid": "c6a1e40d_2e34e78a",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
