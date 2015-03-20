@@ -149,13 +149,13 @@ struct soinfo {
   ElfW(Addr) base;
   size_t size;
 
-#ifndef __LP64__
+#if defined(__arm__)
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
   ElfW(Dyn)* dynamic;
 
-#ifndef __LP64__
+#if defined(__arm__)
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
 #endif
