@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "66259842_3c54f024",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T18:22:35Z",
+      "side": 1,
+      "message": "Done. Not only for thread stack, but also for thread_internal_t, as we allocate it manually.",
+      "parentUuid": "06ea1c20_2367d496",
+      "revId": "b340f895535a92ac07bc5c19836a651716b49638",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6f3a419_41abf453",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-20T18:14:18Z",
       "side": 1,
       "message": "byte\n\n(you can just remove \"for ...\". you\u0027ve already said that.)",
+      "revId": "b340f895535a92ac07bc5c19836a651716b49638",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46825452_2dc6064a",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T18:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6f3a419_41abf453",
       "revId": "b340f895535a92ac07bc5c19836a651716b49638",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
