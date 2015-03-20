@@ -44,7 +44,7 @@ int pthread_detach(pthread_t t) {
     }
     switch (old_state) {
       case THREAD_NOT_JOINED: return 0;
-      case THREAD_JOINED:     return 0;  // Already being joined; silently do nothing, like glibc.
+      case THREAD_JOINED:     return EINVAL;
       case THREAD_DETACHED:   return EINVAL;
       case THREAD_EXITED_NOT_JOINED: break;  // Call pthread_join out of scope of pthread_accessor.
     }

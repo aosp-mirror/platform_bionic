@@ -271,8 +271,11 @@ TEST(pthread, pthread_no_op_detach_after_join) {
 
   sleep(1); // (Give t2 a chance to call pthread_join.)
 
-  // ...a call to pthread_detach on thread 1 will "succeed" (silently fail)...
+#if defined(__BIONIC__)
+  ASSERT_EQ(EINVAL, pthread_detach(t1));
+#else
   ASSERT_EQ(0, pthread_detach(t1));
+#endif
   AssertDetached(t1, false);
 
   spinhelper.UnSpin();
