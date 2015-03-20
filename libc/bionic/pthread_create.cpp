@@ -162,14 +162,15 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   }
 
   // Mapped space(or user allocated stack) is used for:
-  //   thread_internal_t
+  //   pthread_internal_t
   //   thread stack (including guard page)
-  stack_top -= sizeof(pthread_internal_t);
+
+  // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
+  stack_top = reinterpret_cast<uint8_t*>(
+                (reinterpret_cast<uintptr_t>(stack_top) - sizeof(pthread_internal_t)) & ~0xf);
+
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
   attr->stack_size = stack_top - reinterpret_cast<uint8_t*>(attr->stack_base);
-
-  // No need to check stack_top alignment. The size of pthread_internal_t is 16-bytes aligned,
-  // and user allocated stack is guaranteed by pthread_attr_setstack.
 
   thread->mmap_size = mmap_size;
   thread->attr = *attr;
