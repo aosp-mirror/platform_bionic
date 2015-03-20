@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46825452_7e7356e5",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-20T20:36:51Z",
+      "side": 1,
+      "message": "the \"the\" is needed grammatically, but, yes, now it should come before \"thread_internal_t\" (which should be pthread_internal_t).\n\nyou can say \"the pthread_internal_t and the thread stack\", but since they\u0027re actually the same allocation, it\u0027s clearer to just say \"the pthread_internal_t and thread stack\". it\u0027s the grammar equivalent of saying \"the (pthread_internal_t and thread stack)\" instead of \"the (pthread_internal_t) and the (thread stack)\".",
+      "revId": "ec1c495f8f4ccf1e2f8d2cdc85f658898bd2694a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
