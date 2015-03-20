@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_0edc8be6",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T23:38:20Z",
+      "side": 1,
+      "message": "Yes. I didn\u0027t realize it. It should be a more important consideration we need to take care of when naming a group of c functions.",
+      "parentUuid": "46825452_47600cb3",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66259842_2738624e",
         "filename": "libc/bionic/pthread_detach.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-20T04:11:20Z",
       "side": 1,
       "message": "__pthread_is_valid",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86160cff_945a64d7",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T23:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66259842_2738624e",
       "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c6a1e40d_4efdf334",
+        "filename": "libc/bionic/pthread_detach.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T23:38:20Z",
+      "side": 1,
+      "message": "Done. Seem better.",
+      "parentUuid": "66259842_07d6867b",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "068cdc85_f7744f01",
         "filename": "libc/bionic/pthread_internals.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2015-03-20T04:11:20Z",
       "side": 1,
       "message": "isn\u0027t there only one caller of this now, in pthread_exit?",
+      "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_2e34e78a",
+        "filename": "libc/bionic/pthread_internals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-20T23:38:20Z",
+      "side": 1,
+      "message": "The only place to call __pthread_internal_remove is in pthread_exit, and the only place to call __pthread_internal_free is in pthread_join. I split _pthread_internal_remove_locked into these two functions, because I think the argument free_thread is a little annoying. An alternative is to call munmap directly in pthread_join. But I think the current choice is better, because pthread_join may not want to know how to free pthread_internal_t, it just want to free pthread_internal_t.",
+      "parentUuid": "068cdc85_f7744f01",
       "revId": "ac27fab196734aeea9d901168cab19fe78192be4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
