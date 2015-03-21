@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a69cf0d8_93ec24bf",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-21T00:30:24Z",
+      "side": 1,
+      "message": "requirement",
+      "range": {
+        "startLine": 134,
+        "startChar": 59,
+        "endLine": 134,
+        "endChar": 66
+      },
+      "revId": "48c3730ebd8213672b2505b0229a6975f41f2358",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6a1e40d_31b1ea74",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-03-21T00:30:24Z",
+      "side": 1,
+      "message": "requirement",
+      "range": {
+        "startLine": 121,
+        "startChar": 60,
+        "endLine": 121,
+        "endChar": 67
+      },
+      "revId": "48c3730ebd8213672b2505b0229a6975f41f2358",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
