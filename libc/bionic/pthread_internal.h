@@ -103,7 +103,7 @@ struct pthread_internal_t {
    */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
-} __attribute__((aligned(16))); // Align it as thread stack top below it should be aligned.
+};
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
