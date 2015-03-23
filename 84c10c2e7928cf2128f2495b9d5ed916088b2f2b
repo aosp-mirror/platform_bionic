@@ -16,6 +16,24 @@
       "revId": "84c10c2e7928cf2128f2495b9d5ed916088b2f2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_5a549525",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-23T23:56:03Z",
+      "side": 1,
+      "message": "and probably will never be supported.",
+      "parentUuid": "a6731093_18406911",
+      "revId": "84c10c2e7928cf2128f2495b9d5ed916088b2f2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
