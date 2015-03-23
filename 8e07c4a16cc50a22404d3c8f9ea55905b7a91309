@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "666d98b3_f6273e65",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:40:01Z",
+      "side": 1,
+      "message": "aren\u0027t these PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_RECURSIVE, and PTHREAD_MUTEX_ERRORCHECK?",
+      "revId": "8e07c4a16cc50a22404d3c8f9ea55905b7a91309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_98f2b9b3",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:40:01Z",
+      "side": 1,
+      "message": "the implicit \"fill the rest with zeroes\" doesn\u0027t upset clang?",
+      "revId": "8e07c4a16cc50a22404d3c8f9ea55905b7a91309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_f77d7a32",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:40:01Z",
+      "side": 1,
+      "message": "i think these are the values in use. can we rewrite the _INITIALIZERS to use these for clarity?",
+      "revId": "8e07c4a16cc50a22404d3c8f9ea55905b7a91309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86728c8f_77b88a56",
+        "filename": "libc/stdio/fileext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:40:01Z",
+      "side": 1,
+      "message": "not just\n\n  _FLOCK(fp) \u003d PTHREAD_RECURSIVE_MUTEX_INITIALIZER;\n\n?",
+      "revId": "8e07c4a16cc50a22404d3c8f9ea55905b7a91309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
