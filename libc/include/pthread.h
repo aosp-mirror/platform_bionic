@@ -78,7 +78,7 @@ typedef struct {
 #else
   char __private[4];
 #endif
-} pthread_cond_t __attribute__((aligned(sizeof(long))));
+} pthread_cond_t __attribute__((aligned(4)));
 
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
 
@@ -93,7 +93,7 @@ typedef struct {
 #else
   char __private[40];
 #endif
-} pthread_rwlock_t __attribute__((aligned(8)));
+} pthread_rwlock_t __attribute__((aligned(4)));
 
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 

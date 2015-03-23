@@ -33,6 +33,7 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <vector>
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -1302,4 +1303,61 @@ TEST(pthread, pthread_mutex_owner_tid_limit) {
   // Current pthread_mutex uses 16 bits to represent owner tid.
   // Change the implementation if we need to support higher value than 65535.
   ASSERT_LE(pid_max, 65536);
+}
+
+class StrictAlignmentAllocator {
+ public:
+  void* allocate(size_t size, size_t alignment) {
+    char* p = new char[size + alignment * 2];
+    allocated_array.push_back(p);
+    while (!is_strict_aligned(p, alignment)) {
+      ++p;
+    }
+    return p;
+  }
+
+  ~StrictAlignmentAllocator() {
+    for (auto& p : allocated_array) {
+      delete [] p;
+    }
+  }
+
+ private:
+  bool is_strict_aligned(char* p, size_t alignment) {
+    return (reinterpret_cast<uintptr_t>(p) % (alignment * 2)) == alignment;
+  }
+
+  std::vector<char*> allocated_array;
+};
+
+TEST(pthread, pthread_types_allow_four_bytes_alignment) {
+#if defined(__BIONIC__)
+  // For binary compatibility with old version, we need to allow 4-byte aligned data for pthread types.
+  StrictAlignmentAllocator allocator;
+  pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(
+                             allocator.allocate(sizeof(pthread_mutex_t), 4));
+  ASSERT_EQ(0, pthread_mutex_init(mutex, NULL));
+  ASSERT_EQ(0, pthread_mutex_lock(mutex));
+  ASSERT_EQ(0, pthread_mutex_unlock(mutex));
+  ASSERT_EQ(0, pthread_mutex_destroy(mutex));
+
+  pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(
+                           allocator.allocate(sizeof(pthread_cond_t), 4));
+  ASSERT_EQ(0, pthread_cond_init(cond, NULL));
+  ASSERT_EQ(0, pthread_cond_signal(cond));
+  ASSERT_EQ(0, pthread_cond_broadcast(cond));
+  ASSERT_EQ(0, pthread_cond_destroy(cond));
+
+  pthread_rwlock_t* rwlock = reinterpret_cast<pthread_rwlock_t*>(
+                               allocator.allocate(sizeof(pthread_rwlock_t), 4));
+  ASSERT_EQ(0, pthread_rwlock_init(rwlock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_unlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_unlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_destroy(rwlock));
+
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details.";
+#endif
 }
