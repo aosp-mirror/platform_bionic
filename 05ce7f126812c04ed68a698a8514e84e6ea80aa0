@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6731093_f8cbadee",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:58:58Z",
+      "side": 1,
+      "message": "maybe s/get/find/?\n\n(if you\u0027re trying to think of the right verb, it\u0027s often helpful to ask \"what verb does the STL use for a similar operation?\". \"get\" implies you already know where something is. \"find\" implies you have to search for it.)",
+      "revId": "05ce7f126812c04ed68a698a8514e84e6ea80aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_f811edd9",
+        "filename": "libc/bionic/pthread_kill.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-23T23:58:58Z",
+      "side": 1,
+      "message": "or feel free to write L45-L50 on one line. we often do that.",
+      "revId": "05ce7f126812c04ed68a698a8514e84e6ea80aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
