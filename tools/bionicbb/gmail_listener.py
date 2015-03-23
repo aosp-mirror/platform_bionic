@@ -190,8 +190,10 @@ def build_project(gerrit_info, dry_run, lunch_target=None):
         if lunch_target is not None:
             params['LUNCH_TARGET'] = lunch_target
         if not dry_run:
-            job = jenkins[build].invoke(build_params=params)
-            url = job.get_build().baseurl
+            _ = jenkins[build].invoke(build_params=params)
+            # https://issues.jenkins-ci.org/browse/JENKINS-27256
+            # url = job.get_build().baseurl
+            url = 'URL UNAVAILABLE'
         else:
             url = 'DRY_RUN_URL'
         print '{}({}): {} => {} {} {}'.format(
