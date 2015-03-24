@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23eb9264_55fc8c85",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-24T21:12:59Z",
+      "side": 1,
+      "message": "the k is kind of weird here. can\u0027t we make this static const and use \u003d { ... }; ?",
+      "revId": "796a881253923e45e206b0c8480358c46c3efe5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
