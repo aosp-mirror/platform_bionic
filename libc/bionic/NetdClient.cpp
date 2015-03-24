@@ -34,7 +34,7 @@ static void netdClientInitFunction(void* handle, const char* symbol, FunctionTyp
 }
 
 static void netdClientInitImpl() {
-    void* netdClientHandle = dlopen("libnetd_client.so", RTLD_LAZY);
+    void* netdClientHandle = dlopen("libnetd_client.so", RTLD_NOW);
     if (netdClientHandle == NULL) {
         // If the library is not available, it's not an error. We'll just use
         // default implementations of functions that it would've overridden.
