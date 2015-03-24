@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "23eb9264_44250028",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3f6a249_60d58c6f",
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3f6a249_e0acfc1a",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -66,6 +84,54 @@
     },
     {
       "key": {
+        "uuid": "a3f6a249_a3027e36",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "I think in this case typedefs will make the code less readable.",
+      "parentUuid": "a3f6a249_e0acfc1a",
+      "range": {
+        "startLine": 92,
+        "startChar": 7,
+        "endLine": 92,
+        "endChar": 31
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_c4d6b0ef",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "yes it doesn\u0027t dynamic linker never exits...",
+      "parentUuid": "23eb9264_a4a60cb7",
+      "range": {
+        "startLine": 92,
+        "startChar": 7,
+        "endLine": 92,
+        "endChar": 31
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3fb9632_6136b01a",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -77,6 +143,30 @@
       "writtenOn": "2015-03-24T17:56:34Z",
       "side": 1,
       "message": "auto?",
+      "range": {
+        "startLine": 883,
+        "startChar": 13,
+        "endLine": 883,
+        "endChar": 24
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_8408aa5e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3fb9632_6136b01a",
       "range": {
         "startLine": 883,
         "startChar": 13,
@@ -106,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "c3fb9632_e4f88ec0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3f6a249_c0e6a059",
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3f6a249_400cd0bf",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -129,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "c3fb9632_8431ca22",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2674,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3f6a249_400cd0bf",
+      "range": {
+        "startLine": 2674,
+        "startChar": 13,
+        "endLine": 2674,
+        "endChar": 24
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3fb9632_c1546429",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -140,6 +272,24 @@
       "writtenOn": "2015-03-24T17:59:25Z",
       "side": 1,
       "message": "explain why?",
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_0435ba88",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2848,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T19:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3fb9632_c1546429",
       "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
