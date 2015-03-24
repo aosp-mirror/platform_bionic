@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a6731093_de8df935",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-24T02:06:41Z",
+      "side": 1,
+      "message": "Done. Good to know this.",
+      "parentUuid": "a6731093_f8cbadee",
+      "revId": "05ce7f126812c04ed68a698a8514e84e6ea80aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6731093_f811edd9",
         "filename": "libc/bionic/pthread_kill.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-23T23:58:58Z",
       "side": 1,
       "message": "or feel free to write L45-L50 on one line. we often do that.",
+      "revId": "05ce7f126812c04ed68a698a8514e84e6ea80aa0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_9e93815c",
+        "filename": "libc/bionic/pthread_kill.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-24T02:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6731093_f811edd9",
       "revId": "05ce7f126812c04ed68a698a8514e84e6ea80aa0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
