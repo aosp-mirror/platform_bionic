@@ -521,7 +521,7 @@ libc_pthread_src_files := \
     bionic/pthread_getcpuclockid.cpp \
     bionic/pthread_getschedparam.cpp \
     bionic/pthread_gettid_np.cpp \
-    bionic/pthread_internals.cpp \
+    bionic/pthread_internal.cpp \
     bionic/pthread_join.cpp \
     bionic/pthread_key.cpp \
     bionic/pthread_kill.cpp \

@@ -100,9 +100,7 @@ void pthread_exit(void* return_value) {
     __set_tid_address(NULL);
 
     // pthread_internal_t is freed below with stack, not here.
-    pthread_mutex_lock(&g_thread_list_lock);
-    _pthread_internal_remove_locked(thread, false);
-    pthread_mutex_unlock(&g_thread_list_lock);
+    __pthread_internal_remove(thread);
 
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
