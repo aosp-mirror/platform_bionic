@@ -105,10 +105,14 @@ struct pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
-__LIBC_HIDDEN__ void _pthread_internal_add(pthread_internal_t* thread);
+
+__LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
+__LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
+__LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
 
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {
@@ -116,7 +120,6 @@ static inline __always_inline pthread_internal_t* __get_thread() {
 }
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
-__LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread, bool free_thread);
 
 /*
  * Traditionally we gave threads a 1MiB stack. When we started
@@ -126,9 +129,6 @@ __LIBC_HIDDEN__ void _pthread_internal_remove_locked(pthread_internal_t* thread,
  * roughly constant.
  */
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
-
-__LIBC_HIDDEN__ extern pthread_internal_t* g_thread_list;
-__LIBC_HIDDEN__ extern pthread_mutex_t g_thread_list_lock;
 
 /* Needed by fork. */
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();

@@ -83,7 +83,7 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
   }
 }
 
-int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
+int __init_thread(pthread_internal_t* thread) {
   int error = 0;
 
   if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
@@ -107,10 +107,6 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   }
 
   thread->cleanup_stack = NULL;
-
-  if (add_to_thread_list) {
-    _pthread_internal_add(thread);
-  }
 
   return error;
 }
@@ -266,7 +262,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  int init_errno = __init_thread(thread, true);
+  int init_errno = __init_thread(thread);
   if (init_errno != 0) {
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
@@ -277,7 +273,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   }
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.
-  *thread_out = reinterpret_cast<pthread_t>(thread);
+  *thread_out = __pthread_internal_add(thread);
   pthread_mutex_unlock(&thread->startup_handshake_mutex);
 
   return 0;
