@@ -62,8 +62,8 @@ def get_labels(change_id, patch_set):
         }
     }
     """
-    details = call('/changes/{}/revisions/{}/review'.format(
-        change_id, patch_set))
+    details = json.loads(call('/changes/{}/revisions/{}/review'.format(
+        change_id, patch_set)))
     labels = {'Code-Review': {}, 'Verified': {}}
     for review in details['labels']['Code-Review']['all']:
         if 'value' in review and 'email' in review:
