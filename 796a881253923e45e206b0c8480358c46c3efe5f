@@ -16,6 +16,24 @@
       "revId": "796a881253923e45e206b0c8480358c46c3efe5f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_32835852",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-24T21:18:59Z",
+      "side": 1,
+      "message": "using \u003d { } leads to calls to memory allocator which is not yet ready to be called.",
+      "parentUuid": "23eb9264_55fc8c85",
+      "revId": "796a881253923e45e206b0c8480358c46c3efe5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
