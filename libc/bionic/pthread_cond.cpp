@@ -120,9 +120,15 @@ struct pthread_cond_internal_t {
 #endif
 };
 
+static_assert(sizeof(pthread_cond_t) == sizeof(pthread_cond_internal_t),
+              "pthread_cond_t should actually be pthread_cond_internal_t in implementation.");
+
+// For binary compatibility with old version of pthread_cond_t, we can't use more strict alignment
+// than 4-byte alignment.
+static_assert(alignof(pthread_cond_t) == 4,
+              "pthread_cond_t should fulfill the alignment requirement of pthread_cond_internal_t.");
+
 static pthread_cond_internal_t* __get_internal_cond(pthread_cond_t* cond_interface) {
-  static_assert(sizeof(pthread_cond_t) == sizeof(pthread_cond_internal_t),
-                "pthread_cond_t should actually be pthread_cond_internal_t in implementation.");
   return reinterpret_cast<pthread_cond_internal_t*>(cond_interface);
 }
 
