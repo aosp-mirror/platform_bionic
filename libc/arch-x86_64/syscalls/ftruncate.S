@@ -14,5 +14,4 @@ ENTRY(ftruncate)
     ret
 END(ftruncate)
 
-    .globl ftruncate64
-    .equ ftruncate64, ftruncate
+ALIAS_SYMBOL(ftruncate64, ftruncate)
