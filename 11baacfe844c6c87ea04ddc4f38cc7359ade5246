@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3f6a249_e0acfc1a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-24T17:56:34Z",
+      "side": 1,
+      "message": "Do you want a short typedef for this? You use it everywhere, but I\u0027m not sure doing that would make the code more readable or less readable.",
+      "range": {
+        "startLine": 92,
+        "startChar": 7,
+        "endLine": 92,
+        "endChar": 31
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3fb9632_6136b01a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-24T17:56:34Z",
+      "side": 1,
+      "message": "auto?",
+      "range": {
+        "startLine": 883,
+        "startChar": 13,
+        "endLine": 883,
+        "endChar": 24
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6a249_400cd0bf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2674,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-24T17:56:34Z",
+      "side": 1,
+      "message": "auto instead?",
+      "range": {
+        "startLine": 2674,
+        "startChar": 13,
+        "endLine": 2674,
+        "endChar": 24
+      },
+      "revId": "11baacfe844c6c87ea04ddc4f38cc7359ade5246",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
