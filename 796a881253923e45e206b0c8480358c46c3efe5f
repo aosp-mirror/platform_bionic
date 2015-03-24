@@ -34,6 +34,24 @@
       "revId": "796a881253923e45e206b0c8480358c46c3efe5f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23eb9264_b58998f4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-24T21:23:24Z",
+      "side": 1,
+      "message": "we should probably just take this back to static const char* const then.\n\nthe rest all seems like an improvement though.",
+      "parentUuid": "c3fb9632_32835852",
+      "revId": "796a881253923e45e206b0c8480358c46c3efe5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
