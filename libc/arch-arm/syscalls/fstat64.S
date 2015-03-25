@@ -13,5 +13,4 @@ ENTRY(fstat64)
     b       __set_errno_internal
 END(fstat64)
 
-    .globl fstat
-    .equ fstat, fstat64
+ALIAS_SYMBOL(fstat, fstat64)
