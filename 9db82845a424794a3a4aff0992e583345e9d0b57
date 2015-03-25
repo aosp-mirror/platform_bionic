@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "267f204e_a74bce3a",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T23:33:45Z",
+      "side": 1,
+      "message": "i think this comment is out of date now. (a) it belongs to the stuff on L143-145 and (b) those are now defined in terms of the values in \u003cpthread.h\u003e. so i don\u0027t think there\u0027s anything useful to say here. remove L128-135?",
+      "revId": "9db82845a424794a3a4aff0992e583345e9d0b57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c352b622_50edc186",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T23:33:45Z",
+      "side": 1,
+      "message": "ah, this is where i got distracted reviewing your change... i removed all but one of the users of this from the tree: https://cs.corp.google.com/#android/ndk/sources/cxx-stl/gabi%2B%2B/src/one_time_construction.cc\u0026q\u003dPTHREAD_RECURSIVE_MUTEX_INITIALIZER%5Cb%20-file:external/bison%20-file:bits/gthr-%20-file:pthread.h\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs\u0026l\u003d55\n\ni\u0027ll leave the last one (plus removal of this cruft in pthread.h) to you...",
+      "revId": "9db82845a424794a3a4aff0992e583345e9d0b57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_82bc04ab",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T23:33:45Z",
+      "side": 1,
+      "message": "can\u0027t you inline CreateMutex here?",
+      "revId": "9db82845a424794a3a4aff0992e583345e9d0b57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6731093_9ec0e12f",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T23:33:45Z",
+      "side": 1,
+      "message": "why isn\u0027t this the body of the destructor?",
+      "revId": "9db82845a424794a3a4aff0992e583345e9d0b57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "666d98b3_a2e740d9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T23:33:45Z",
+      "side": 1,
+      "message": "this probably shouldn\u0027t be copyable.\n\n\ni\u0027m not sure this class actually makes any of the tests more readable.",
+      "revId": "9db82845a424794a3a4aff0992e583345e9d0b57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
