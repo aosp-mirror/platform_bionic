@@ -352,12 +352,5 @@ longjmp_botch:
 	jal	abort
 END(siglongjmp)
 
-
-	.globl	longjmp
-	.type	longjmp, @function
-	.equ	longjmp, siglongjmp	# alias for siglongjmp
-
-
-	.globl	_longjmp
-	.type	_longjmp, @function
-	.equ	_longjmp, siglongjmp	# alias for siglongjmp
+ALIAS_SYMBOL(longjmp, siglongjmp)
+ALIAS_SYMBOL(_longjmp, siglongjmp)
