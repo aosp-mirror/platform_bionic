@@ -13,5 +13,4 @@ ENTRY(fstatat64)
     b       __set_errno_internal
 END(fstatat64)
 
-    .globl fstatat
-    .equ fstatat, fstatat64
+ALIAS_SYMBOL(fstatat, fstatat64)
