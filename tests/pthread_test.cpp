@@ -399,12 +399,17 @@ TEST(pthread, pthread_setname_np__other) {
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
 }
 
-TEST(pthread, pthread_setname_np__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_setname_np__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   // Call pthread_setname_np after thread has already exited.
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_setname_np(dead_thread, "short 3"), testing::KilledBySignal(SIGABRT),
+              "No such thread");
+#else
   ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
+#endif
 }
 
 TEST(pthread, pthread_kill__0) {
@@ -430,11 +435,15 @@ TEST(pthread, pthread_kill__in_signal_handler) {
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
 }
 
-TEST(pthread, pthread_detach__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_detach__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_detach(dead_thread), testing::KilledBySignal(SIGABRT), "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
+#endif
 }
 
 TEST(pthread, pthread_detach_no_leak) {
@@ -485,44 +494,67 @@ TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   ASSERT_EQ(0, clock_gettime(c, &ts));
 }
 
-TEST(pthread, pthread_getcpuclockid__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_getcpuclockid__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   clockid_t c;
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_getcpuclockid(dead_thread, &c), testing::KilledBySignal(SIGABRT),
+              "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_getcpuclockid(dead_thread, &c));
+#endif
 }
 
-TEST(pthread, pthread_getschedparam__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_getschedparam__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   int policy;
   sched_param param;
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_getschedparam(dead_thread, &policy, &param), testing::KilledBySignal(SIGABRT),
+              "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_getschedparam(dead_thread, &policy, &param));
+#endif
 }
 
-TEST(pthread, pthread_setschedparam__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_setschedparam__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   int policy = 0;
   sched_param param;
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_setschedparam(dead_thread, policy, &param), testing::KilledBySignal(SIGABRT),
+              "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_setschedparam(dead_thread, policy, &param));
+#endif
 }
 
-TEST(pthread, pthread_join__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_join__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_join(dead_thread, NULL), testing::KilledBySignal(SIGABRT), "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_join(dead_thread, NULL));
+#endif
 }
 
-TEST(pthread, pthread_kill__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_kill__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
+#if defined(__BIONIC__)
+  ASSERT_EXIT(pthread_kill(dead_thread, 0), testing::KilledBySignal(SIGABRT), "No such thread");
+#else
   ASSERT_EQ(ESRCH, pthread_kill(dead_thread, 0));
+#endif
 }
 
 TEST(pthread, pthread_join__multijoin) {
