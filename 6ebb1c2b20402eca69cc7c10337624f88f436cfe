@@ -16,6 +16,24 @@
       "revId": "6ebb1c2b20402eca69cc7c10337624f88f436cfe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "834c3e8c_ad4a65ae",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-25T22:32:19Z",
+      "side": 1,
+      "message": "Done. %p is a better choice.",
+      "parentUuid": "c352b622_2d178e80",
+      "revId": "6ebb1c2b20402eca69cc7c10337624f88f436cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
