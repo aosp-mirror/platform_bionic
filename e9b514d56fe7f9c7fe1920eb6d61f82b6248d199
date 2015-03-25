@@ -16,6 +16,24 @@
       "revId": "e9b514d56fe7f9c7fe1920eb6d61f82b6248d199",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_cf2b5178",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-03-25T04:05:29Z",
+      "side": 1,
+      "message": "Inlined.",
+      "parentUuid": "c3fb9632_885c38d4",
+      "revId": "e9b514d56fe7f9c7fe1920eb6d61f82b6248d199",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
