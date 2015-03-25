@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3fb9632_885c38d4",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T00:43:20Z",
+      "side": 1,
+      "message": "or just inline this below now it\u0027s one line?",
+      "revId": "e9b514d56fe7f9c7fe1920eb6d61f82b6248d199",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
