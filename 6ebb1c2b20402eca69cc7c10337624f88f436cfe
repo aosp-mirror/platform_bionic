@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c352b622_2d178e80",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-25T22:21:26Z",
+      "side": 1,
+      "message": "given that POSIX doesn\u0027t use the word \"id\", i\u0027d probably just say \"No such thread: \". also, don\u0027t you want %p?",
+      "revId": "6ebb1c2b20402eca69cc7c10337624f88f436cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
