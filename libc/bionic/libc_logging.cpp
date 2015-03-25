@@ -427,7 +427,7 @@ int __libc_format_fd(int fd, const char* format, ...) {
 }
 
 static int __libc_write_stderr(const char* tag, const char* msg) {
-  int fd = TEMP_FAILURE_RETRY(open("/dev/stderr", O_CLOEXEC | O_WRONLY));
+  int fd = TEMP_FAILURE_RETRY(open("/dev/stderr", O_CLOEXEC | O_WRONLY | O_APPEND));
   if (fd == -1) {
     return -1;
   }
