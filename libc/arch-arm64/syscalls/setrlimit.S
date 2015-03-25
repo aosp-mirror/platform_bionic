@@ -13,5 +13,4 @@ ENTRY(setrlimit)
     ret
 END(setrlimit)
 
-    .globl setrlimit64
-    .equ setrlimit64, setrlimit
+ALIAS_SYMBOL(setrlimit64, setrlimit)

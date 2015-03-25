@@ -24,5 +24,4 @@ ENTRY(pread64)
     .set pop
 END(pread64)
 
-    .globl pread
-    .equ pread, pread64
+ALIAS_SYMBOL(pread, pread64)

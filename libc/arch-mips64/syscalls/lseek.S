@@ -24,5 +24,4 @@ ENTRY(lseek)
     .set pop
 END(lseek)
 
-    .globl lseek64
-    .equ lseek64, lseek
+ALIAS_SYMBOL(lseek64, lseek)

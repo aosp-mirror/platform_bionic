@@ -14,5 +14,4 @@ ENTRY(truncate)
     ret
 END(truncate)
 
-    .globl truncate64
-    .equ truncate64, truncate
+ALIAS_SYMBOL(truncate64, truncate)

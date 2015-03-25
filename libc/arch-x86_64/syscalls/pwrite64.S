@@ -15,5 +15,4 @@ ENTRY(pwrite64)
     ret
 END(pwrite64)
 
-    .globl pwrite
-    .equ pwrite, pwrite64
+ALIAS_SYMBOL(pwrite, pwrite64)

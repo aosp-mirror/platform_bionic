@@ -24,5 +24,4 @@ ENTRY(_exit)
     .set pop
 END(_exit)
 
-    .globl _Exit
-    .equ _Exit, _exit
+ALIAS_SYMBOL(_Exit, _exit)
