@@ -81,12 +81,16 @@ void __pthread_internal_remove_and_free(pthread_internal_t* thread) {
 
 pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(thread_id);
-  ScopedPthreadMutexLocker locker(&g_thread_list_lock);
+  {
+    ScopedPthreadMutexLocker locker(&g_thread_list_lock);
 
-  for (pthread_internal_t* t = g_thread_list; t != NULL; t = t->next) {
-    if (t == thread) {
-      return thread;
+    for (pthread_internal_t* t = g_thread_list; t != NULL; t = t->next) {
+      if (t == thread) {
+        return thread;
+      }
     }
   }
+  // TODO: Remove g_thread_list/g_thread_list_lock when the fatal error below doesn't happen.
+  __libc_fatal("No such thread: %p", thread);
   return NULL;
 }
