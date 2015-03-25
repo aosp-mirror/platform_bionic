@@ -129,7 +129,5 @@ ENTRY(siglongjmp)
   ret
 END(siglongjmp)
 
-  .globl longjmp
-  .equ longjmp, siglongjmp
-  .globl _longjmp
-  .equ _longjmp, siglongjmp
+ALIAS_SYMBOL(longjmp, siglongjmp)
+ALIAS_SYMBOL(_longjmp, siglongjmp)
