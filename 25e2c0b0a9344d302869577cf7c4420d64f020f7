@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c352b622_83741102",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-26T01:11:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a31f8253_7b4d374d",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e30dfa2c_d73bfc49",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2362b2ee_f12eea37",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-26T01:11:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e30dfa2c_d73bfc49",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "831efe57_b40080b9",
         "filename": "tests/__cxa_thread_atexit_test.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2015-03-26T00:58:36Z",
       "side": 1,
       "message": "oops?",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2362b2ee_91732e68",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-26T01:11:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "831efe57_b40080b9",
       "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
