@@ -4,9 +4,8 @@
 
 // SLEB128 encoder and decoder for packed relative relocations.
 //
-// Delta encoded relative relocations consist of a large number
-// of pairs signed integer values, many with small values.  Encoding these
-// as signed LEB128 saves space.
+// Packed relocations consist of a large number of relatively small
+// integer values.  Encoding these as LEB128 saves space.
 //
 // For more on LEB128 see http://en.wikipedia.org/wiki/LEB128.
 
