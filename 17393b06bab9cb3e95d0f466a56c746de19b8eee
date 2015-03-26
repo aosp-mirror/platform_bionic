@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e30dfa2c_f767204e",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T01:54:44Z",
+      "side": 1,
+      "message": "personally i\u0027d probably have just renamed CreateMutex InitMutex and left the pthread_mutex_destroys explicit, but this version is better than the last.",
+      "revId": "17393b06bab9cb3e95d0f466a56c746de19b8eee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "831efe57_f46a785d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T01:54:44Z",
+      "side": 1,
+      "message": "personally i\u0027d probably have just renamed CreateMutex InitMutex and left the pthread_mutex_destroys explicit, but this version is better than the last.",
+      "revId": "17393b06bab9cb3e95d0f466a56c746de19b8eee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a31f8253_bbc3cfa4",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1286,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T01:54:44Z",
+      "side": 1,
+      "message": "does this pass on glibc? all mutexes of the same type are indistinguishable until used?",
+      "revId": "17393b06bab9cb3e95d0f466a56c746de19b8eee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
