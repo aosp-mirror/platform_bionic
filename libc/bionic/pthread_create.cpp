@@ -267,6 +267,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
     atomic_store(&thread->join_state, THREAD_DETACHED);
+    __pthread_internal_add(thread);
     thread->start_routine = __do_nothing;
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     return init_errno;
