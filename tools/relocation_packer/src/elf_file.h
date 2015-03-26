@@ -4,53 +4,16 @@
 
 // ELF shared object file updates handler.
 //
-// Provides functions to remove relative relocations from the .rel.dyn
-// or .rela.dyn sections and pack into .android.rel.dyn or .android.rela.dyn,
-// and unpack to return the file to its pre-packed state.
-//
-// Files to be packed or unpacked must include an existing .android.rel.dyn
-// or android.rela.dyn section.  A standard libchrome.<version>.so will not
-// contain this section, so the following can be used to add one:
-//
-//   echo -n 'NULL' >/tmp/small
-//   if file libchrome.<version>.so | grep -q 'ELF 32'; then
-//     arm-linux-androideabi-objcopy
-//         --add-section .android.rel.dyn=/tmp/small
-//         libchrome.<version>.so libchrome.<version>.so.packed
-//   else
-//     aarch64-linux-android-objcopy
-//         --add-section .android.rela.dyn=/tmp/small
-//         libchrome.<version>.so libchrome.<version>.so.packed
-//   fi
-//   rm /tmp/small
-//
-// To use, open the file and pass the file descriptor to the constructor,
-// then pack or unpack as desired.  Packing or unpacking will flush the file
-// descriptor on success.  Example:
-//
-//   int fd = open(..., O_RDWR);
-//   ElfFile elf_file(fd);
-//   bool status;
-//   if (is_packing)
-//     status = elf_file.PackRelocations();
-//   else
-//     status = elf_file.UnpackRelocations();
-//   close(fd);
+// Provides functions to pack relocations in the .rel.dyn or .rela.dyn
+// sections, and unpack to return the file to its pre-packed state.
 //
 // SetPadding() causes PackRelocations() to pad .rel.dyn or .rela.dyn with
 // NONE-type entries rather than cutting a hole out of the shared object
 // file.  This keeps all load addresses and offsets constant, and enables
 // easier debugging and testing.
 //
-// A packed shared object file has all of its relative relocations
-// removed from .rel.dyn or .rela.dyn, and replaced as packed data in
-// .android.rel.dyn or .android.rela.dyn respectively.  The resulting file
-// is shorter than its non-packed original.
-//
-// Unpacking a packed file restores the file to its non-packed state, by
-// expanding the packed data in .android.rel.dyn or .android.rela.dyn,
-// combining the relative relocations with the data already in .rel.dyn
-// or .rela.dyn, and then writing back the now expanded section.
+// A packed shared object file is shorter than its non-packed original.
+// Unpacking a packed file restores the file to its non-packed state.
 
 #ifndef TOOLS_RELOCATION_PACKER_SRC_ELF_FILE_H_
 #define TOOLS_RELOCATION_PACKER_SRC_ELF_FILE_H_

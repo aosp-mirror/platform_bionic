@@ -4,9 +4,6 @@
 
 // Tool to pack and unpack relative relocations in a shared library.
 //
-// Packing removes relative relocations from .rel.dyn and writes them
-// in a more compact form to .android.rel.dyn.  Unpacking does the reverse.
-//
 // Invoke with -v to trace actions taken when packing or unpacking.
 // Invoke with -p to pad removed relocations with R_*_NONE.  Suppresses
 // shrinking of .rel.dyn.
