@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c352b622_03514168",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 1018,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-26T01:12:16Z",
+      "side": 1,
+      "message": "had to add this because clang does not support emutls_get_addr().",
+      "revId": "df79c330d895af31f39ee301dee62731fa586168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
