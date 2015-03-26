@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a31f8253_7b4d374d",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T00:58:36Z",
+      "side": 1,
+      "message": ".",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e30dfa2c_d73bfc49",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T00:58:36Z",
+      "side": 1,
+      "message": "s/first/next/ or just s/ first//",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "831efe57_b40080b9",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T00:58:36Z",
+      "side": 1,
+      "message": "oops?",
+      "revId": "25e2c0b0a9344d302869577cf7c4420d64f020f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
