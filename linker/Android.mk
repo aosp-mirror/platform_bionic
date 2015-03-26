@@ -70,7 +70,9 @@ LOCAL_MULTILIB := both
 # meaningful name resolution.
 LOCAL_STRIP_MODULE := keep_symbols
 
-# Insert an extra objcopy step to add prefix to symbols.
+# Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
+# looking up symbols in the linker by mistake.
+#
 # Note we are using "=" instead of ":=" to defer the evaluation,
 # because LOCAL_2ND_ARCH_VAR_PREFIX or linked_module isn't set properly yet at this point.
 LOCAL_POST_LINK_CMD = $(hide) $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_OBJCOPY) \
