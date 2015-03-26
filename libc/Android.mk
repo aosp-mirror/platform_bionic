@@ -533,6 +533,9 @@ libc_pthread_src_files := \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
 
+libc_thread_atexit_impl_src_files := \
+    bionic/__cxa_thread_atexit_impl.cpp \
+
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
 
@@ -1002,6 +1005,24 @@ $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := $(libc_thread_atexit_impl_src_files)
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-data-sections -Wframe-larger-than=2048
+
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_thread_atexit_impl
+# TODO: Clang tries to use __tls_get_addr which is not supported yet
+# remove after it is implemented.
+LOCAL_CLANG := false
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL := none
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_ADDRESS_SANITIZER := false
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
 # libc_pthread.a - pthreads parts that previously lived in
@@ -1206,6 +1227,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
     libc_pthread \
     libc_stack_protector \
     libc_syscalls \
+    libc_thread_atexit_impl \
     libc_tzcode \
 
 LOCAL_WHOLE_STATIC_LIBRARIES_arm := libc_aeabi
