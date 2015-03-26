@@ -16,6 +16,24 @@
       "revId": "df79c330d895af31f39ee301dee62731fa586168",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a31f8253_7bd09780",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 1018,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-26T01:48:07Z",
+      "side": 1,
+      "message": "is there already a clang patch for that, or is this something chh should look into?",
+      "parentUuid": "c352b622_03514168",
+      "revId": "df79c330d895af31f39ee301dee62731fa586168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
