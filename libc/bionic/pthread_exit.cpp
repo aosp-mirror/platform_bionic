@@ -37,6 +37,7 @@
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
 extern "C" __noreturn void __exit(int);
 extern "C" int __set_tid_address(int*);
+extern "C" void __cxa_thread_finalize();
 
 /* CAVEAT: our implementation of pthread_cleanup_push/pop doesn't support C++ exceptions
  *         and thread cancelation
@@ -59,10 +60,13 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
 }
 
 void pthread_exit(void* return_value) {
+  // Call dtors for thread_local objects first.
+  __cxa_thread_finalize();
+
   pthread_internal_t* thread = __get_thread();
   thread->return_value = return_value;
 
-  // Call the cleanup handlers first.
+  // Call the cleanup handlers.
   while (thread->cleanup_stack) {
     __pthread_cleanup_t* c = thread->cleanup_stack;
     thread->cleanup_stack = c->__cleanup_prev;
