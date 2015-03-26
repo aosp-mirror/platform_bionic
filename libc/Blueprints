@@ -740,7 +740,8 @@ cc_library_static {
         "upstream-openbsd/lib/libc/net/res_random.c",
     ],
 
-    cflags: ["-Dres_randomid=__res_randomid"] + libc_common_cflags + [
+    cflags: ["-Dres_randomid=__res_randomid"] +
+    libc_common_cflags + [
         "-DANDROID_CHANGES",
         "-DINET6",
         "-fvisibility=hidden",
