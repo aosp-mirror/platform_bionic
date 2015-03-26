@@ -4,9 +4,8 @@
 
 // LEB128 encoder and decoder for packed relative relocations.
 //
-// Run-length encoded relative relocations consist of a large number
-// of pairs of relatively small positive integer values.  Encoding these as
-// LEB128 saves space.
+// Packed relocations consist of a large number of relatively small
+// integer values.  Encoding these as LEB128 saves space.
 //
 // For more on LEB128 see http://en.wikipedia.org/wiki/LEB128.
 
