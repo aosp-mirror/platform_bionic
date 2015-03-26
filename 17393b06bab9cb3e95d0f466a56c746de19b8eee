@@ -50,6 +50,24 @@
       "revId": "17393b06bab9cb3e95d0f466a56c746de19b8eee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c352b622_864d3f50",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1286,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-26T02:09:36Z",
+      "side": 1,
+      "message": "No. It fails because of possible glibc bug of using PTHREAD_MUTEX_NO_ELISION_NP for PTHREAD_MUTEX_NORMAL. I plan to fix test failure on glibc in http://b/19805726.",
+      "parentUuid": "a31f8253_bbc3cfa4",
+      "revId": "17393b06bab9cb3e95d0f466a56c746de19b8eee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
