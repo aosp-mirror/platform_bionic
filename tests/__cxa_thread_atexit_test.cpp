@@ -20,6 +20,36 @@
 
 #include <string>
 
+static std::string class_with_dtor_output;
+
+class ClassWithDtor {
+ public:
+  void set_message(const std::string& msg) {
+    message = msg;
+  }
+
+  ~ClassWithDtor() {
+    class_with_dtor_output += message;
+  }
+ private:
+  std::string message;
+};
+
+thread_local ClassWithDtor class_with_dtor;
+
+static void* thread_nop(void* arg) {
+  class_with_dtor.set_message(*static_cast<std::string*>(arg));
+  return nullptr;
+}
+
+TEST(thread_local, smoke) {
+  std::string msg("dtor called.");
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, thread_nop, &msg));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+  ASSERT_EQ("dtor called.", class_with_dtor_output);
+}
+
 extern "C" int __cxa_thread_atexit_impl(void (*fn)(void*), void* arg, void* dso_handle);
 
 static void thread_atexit_fn1(void* arg) {
