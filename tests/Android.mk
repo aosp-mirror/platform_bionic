@@ -287,6 +287,10 @@ bionic-unit-tests_shared_libraries_target := \
     libdl_preempt_test_1 \
     libdl_preempt_test_2
 
+# TODO: clang support for thread_local on arm is done via __aeabi_read_tp()
+# which bionic does not support. Reenable this once this question is resolved.
+bionic-unit-tests_clang_target := false
+
 ifneq ($(filter $(TARGET_ARCH),arm arm64),$(TARGET_ARCH))
 bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
 endif
