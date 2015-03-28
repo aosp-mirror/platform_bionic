@@ -1,0 +1,122 @@
+//
+// Copyright (C) 2013 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+// -----------------------------------------------------------------------------
+// Benchmarks library, usable by projects outside this directory.
+// -----------------------------------------------------------------------------
+
+benchmark_cflags = [
+    "-O2",
+    "-fno-builtin",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wunused",
+]
+
+benchmark_cppflags = ["-std=gnu++11"]
+
+benchmarklib_src_files = [
+    "Benchmark.cpp",
+    "utils.cpp",
+    "main.cpp",
+]
+
+cc_library_static {
+    name: "libbenchmark",
+    host_supported: true,
+    cflags: benchmark_cflags,
+    cppflags: benchmark_cppflags,
+    srcs: benchmarklib_src_files,
+    static_libs: ["libbase"],
+    target: {
+        darwin: {
+            // Only supported on linux systems.
+            disabled: true,
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Benchmarks.
+// -----------------------------------------------------------------------------
+benchmark_src_files = [
+    "math_benchmark.cpp",
+    "property_benchmark.cpp",
+    "pthread_benchmark.cpp",
+    "semaphore_benchmark.cpp",
+    "stdio_benchmark.cpp",
+    "string_benchmark.cpp",
+    "time_benchmark.cpp",
+    "unistd_benchmark.cpp",
+]
+
+// Build benchmarks for the device (with bionic's .so). Run with:
+//   adb shell bionic-benchmarks32
+//   adb shell bionic-benchmarks64
+cc_binary {
+    name: "bionic-benchmarks",
+    multilib: {
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
+    },
+    compile_multilib: "both",
+    cflags: benchmark_cflags,
+    cppflags: benchmark_cppflags,
+    srcs: benchmark_src_files,
+    static_libs: [
+        "libbenchmark",
+        "libbase",
+    ],
+}
+
+// We don't build a static benchmark executable because it's not usually
+// useful. If you're trying to run the current benchmarks on an older
+// release, it's (so far at least) always because you want to measure the
+// performance of the old release's libc, and a static benchmark isn't
+// going to let you do that.
+
+// Build benchmarks for the host (against glibc!). Run with:
+cc_binary_host {
+    name: "bionic-benchmarks-glibc",
+    multilib: {
+        lib32: {
+            stem: "bionic-benchmarks-glibc32",
+        },
+        lib64: {
+            stem: "bionic-benchmarks-glibc64",
+        },
+    },
+    compile_multilib: "both",
+    cflags: benchmark_cflags,
+    cppflags: benchmark_cppflags,
+    ldflags: ["-lrt"],
+    srcs: benchmark_src_files,
+    static_libs: [
+        "libbenchmark",
+        "libbase",
+    ],
+    target: {
+        darwin: {
+            // Only supported on linux systems.
+            disabled: true,
+        },
+    },
+}
