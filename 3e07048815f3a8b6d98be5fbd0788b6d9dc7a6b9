@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "837a7ea8_498e5181",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-30T17:38:29Z",
+      "side": 1,
+      "message": "I prefer to use (SIGNAL_STACK_SIZE - PAGE_SIZE) here, or use (SIGSTKSZ + PAGE_SIZE) for SIGNAL_STACK_SIZE above.",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 26
+      },
+      "revId": "3e07048815f3a8b6d98be5fbd0788b6d9dc7a6b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "837a7ea8_c96ee127",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-03-30T17:38:29Z",
+      "side": 1,
+      "message": "Name for (p, SIGNAL_STACK_SIZE) to include all mapped pages?",
+      "range": {
+        "startLine": 88,
+        "startChar": 44,
+        "endLine": 88,
+        "endChar": 64
+      },
+      "revId": "3e07048815f3a8b6d98be5fbd0788b6d9dc7a6b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
