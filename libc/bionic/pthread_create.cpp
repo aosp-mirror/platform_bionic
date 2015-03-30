@@ -77,7 +77,7 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
       return;
     }
     stack_t ss;
-    ss.ss_sp = stack_base + PAGE_SIZE;
+    ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PAGE_SIZE;
     ss.ss_size = SIGNAL_STACK_SIZE - PAGE_SIZE;
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
