@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43308612_f306cfd6",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-30T20:55:53Z",
+      "side": 1,
+      "message": "void*\n\ns/p/stack_base/ or something.",
+      "revId": "04355d5078d14443adcca8c32645ef760944a5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43308612_93278368",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-30T20:55:53Z",
+      "side": 1,
+      "message": "\u003d\u003d -1",
+      "revId": "04355d5078d14443adcca8c32645ef760944a5fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
