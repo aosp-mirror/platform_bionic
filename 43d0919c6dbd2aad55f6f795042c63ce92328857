@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "83143e89_41a6d510",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-31T17:31:12Z",
+      "side": 1,
+      "message": "Done. as far as I understand stop and wait in this case means stop and wait for debuggerd to do its job... effectively until process is stopped.",
+      "parentUuid": "e3d89a3c_bfd99720",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03d68e0c_a09fba63",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "a315c284_04398b51",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-31T17:31:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03d68e0c_a09fba63",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03d68e0c_c09cbe71",
         "filename": "linker/linker_reloc_iterators.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2015-03-31T02:02:39Z",
       "side": 1,
       "message": "or make these member functions that work directly on group_flags_?",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "630f4a79_af9cd46f",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-03-31T17:31:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03d68e0c_c09cbe71",
       "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
