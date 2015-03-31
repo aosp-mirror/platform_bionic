@@ -32,7 +32,7 @@
 extern "C" const char* __strsignal_lookup(int);
 extern "C" const char* __strsignal(int, char*, size_t);
 
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(strsignal);
+static ThreadLocalBuffer<char, NL_TEXTMAX> g_strsignal_tls_buffer;
 
 char* strsignal(int signal_number) {
   // Just return the original constant in the easy cases.
@@ -41,6 +41,6 @@ char* strsignal(int signal_number) {
     return result;
   }
 
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strsignal, NL_TEXTMAX);
-  return const_cast<char*>(__strsignal(signal_number, strsignal_tls_buffer, strsignal_tls_buffer_size));
+  return const_cast<char*>(__strsignal(signal_number, g_strsignal_tls_buffer.get(),
+                                       g_strsignal_tls_buffer.size()));
 }

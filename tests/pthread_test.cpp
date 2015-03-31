@@ -68,8 +68,7 @@ TEST(pthread, pthread_key_many_distinct) {
 
   for (int i = 0; i < nkeys; ++i) {
     pthread_key_t key;
-    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is
-    // wrong.
+    // If this fails, it's likely that LIBC_PTHREAD_KEY_RESERVED_COUNT is wrong.
     ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << nkeys;
     keys.push_back(key);
     ASSERT_EQ(0, pthread_setspecific(key, reinterpret_cast<void*>(i)));
