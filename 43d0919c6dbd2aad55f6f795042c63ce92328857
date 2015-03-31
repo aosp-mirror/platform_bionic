@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "a315c284_e75ef1fc",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-31T17:51:28Z",
+      "side": 1,
+      "message": "but given the comment below, that won\u0027t help?\n\ni think that they really mean is \"intentionally deadlocking to allow you to debug that thread\".",
+      "parentUuid": "83143e89_41a6d510",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03d68e0c_a09fba63",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
