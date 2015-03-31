@@ -240,7 +240,8 @@ bool ElfReader::ReadProgramHeader() {
 
   phdr_size_ = page_max - page_min;
 
-  void* mmap_result = mmap64(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, file_offset_ + page_min);
+  void* mmap_result =
+      mmap64(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, file_offset_ + page_min);
   if (mmap_result == MAP_FAILED) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_, strerror(errno));
     return false;
@@ -449,7 +450,8 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias) {
+int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
+                                size_t phdr_count, ElfW(Addr) load_bias) {
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, 0);
 }
 
@@ -469,7 +471,8 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias) {
+int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
+                                  size_t phdr_count, ElfW(Addr) load_bias) {
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
 }
 
@@ -531,7 +534,8 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias) {
+int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
+                                 size_t phdr_count, ElfW(Addr) load_bias) {
   return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
 }
 
@@ -547,7 +551,9 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias,
+int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
+                                   size_t phdr_count,
+                                   ElfW(Addr) load_bias,
                                    int fd) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
@@ -592,7 +598,9 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_cou
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count, ElfW(Addr) load_bias,
+int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
+                             size_t phdr_count,
+                             ElfW(Addr) load_bias,
                              int fd) {
   // Map the file at a temporary location so we can compare its contents.
   struct stat file_stat;
@@ -725,11 +733,12 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
                                     ElfW(Addr) load_bias, ElfW(Dyn)** dynamic,
                                     ElfW(Word)* dynamic_flags) {
   *dynamic = nullptr;
-  for (const ElfW(Phdr)* phdr = phdr_table, *phdr_limit = phdr + phdr_count; phdr < phdr_limit; phdr++) {
-    if (phdr->p_type == PT_DYNAMIC) {
-      *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr->p_vaddr);
+  for (size_t i = 0; i<phdr_count; ++i) {
+    const ElfW(Phdr)& phdr = phdr_table[i];
+    if (phdr.p_type == PT_DYNAMIC) {
+      *dynamic = reinterpret_cast<ElfW(Dyn)*>(load_bias + phdr.p_vaddr);
       if (dynamic_flags) {
-        *dynamic_flags = phdr->p_flags;
+        *dynamic_flags = phdr.p_flags;
       }
       return;
     }
