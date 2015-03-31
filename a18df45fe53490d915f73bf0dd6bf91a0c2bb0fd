@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a315c284_d8dd94e5",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-31T19:54:42Z",
+      "side": 1,
+      "message": "glibc has non-const char*.",
+      "revId": "a18df45fe53490d915f73bf0dd6bf91a0c2bb0fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
