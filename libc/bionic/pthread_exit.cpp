@@ -87,7 +87,7 @@ void pthread_exit(void* return_value) {
     sigaltstack(&ss, NULL);
 
     // Free it.
-    munmap(thread->alternate_signal_stack, SIGNAL_STACK_SIZE);
+    munmap(thread->alternate_signal_stack, SIGSTKSZ);
     thread->alternate_signal_stack = NULL;
   }
 
