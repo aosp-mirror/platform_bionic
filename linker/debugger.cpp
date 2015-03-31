@@ -221,7 +221,7 @@ static void send_debuggerd_packet(siginfo_t* info) {
   if (ret != 0) {
     if (ret == EBUSY) {
       __libc_format_log(ANDROID_LOG_INFO, "libc",
-                        "Another thread has contacted debuggerd first, stop and wait for process to die.");
+          "Another thread contacted debuggerd first; not contacting debuggerd.");
       // This will never complete since the lock is never released.
       pthread_mutex_lock(&crash_mutex);
     } else {
