@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3d89a3c_bfd99720",
+        "filename": "linker/debugger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-31T02:02:39Z",
+      "side": 1,
+      "message": "s/has//\n\nand what does \"stop and wait\" mean? especially given the comment on the next line.",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03d68e0c_a09fba63",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-31T02:02:39Z",
+      "side": 1,
+      "message": "or use a size_t and just phdr \u003d phdr_table[i] on the next line?\n\nsame number of lines but more readable.",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03d68e0c_c09cbe71",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-03-31T02:02:39Z",
+      "side": 1,
+      "message": "or make these member functions that work directly on group_flags_?",
+      "revId": "43d0919c6dbd2aad55f6f795042c63ce92328857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
