@@ -39,6 +39,8 @@
 #include "private/libc_logging.h"
 #include "linked_list.h"
 
+#include <string>
+
 #define DL_ERR(fmt, x...) \
     do { \
       __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
@@ -94,7 +96,9 @@
 
 #define SOINFO_VERSION 2
 
+#if defined(__arm__)
 #define SOINFO_NAME_LEN 128
+#endif
 
 typedef void (*linker_function_t)();
 
@@ -141,8 +145,11 @@ class SymbolName {
 struct soinfo {
  public:
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
+#if defined(__arm__)
+ private:
+  char old_name_[SOINFO_NAME_LEN];
+#endif
  public:
-  char name[SOINFO_NAME_LEN];
   const ElfW(Phdr)* phdr;
   size_t phnum;
   ElfW(Addr) entry;
@@ -263,8 +270,12 @@ struct soinfo {
   bool can_unload() const;
   bool is_gnu_hash() const;
 
-  bool inline has_min_version(uint32_t min_version) const {
+  bool inline has_min_version(uint32_t min_version __unused) const {
+#if defined(__arm__)
     return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
+#else
+    return true;
+#endif
   }
 
   bool is_linked() const;
@@ -279,7 +290,8 @@ struct soinfo {
 
   soinfo* get_local_group_root() const;
 
-  const char* get_soname();
+  const char* get_soname() const;
+  const char* get_realpath() const;
 
  private:
   ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
@@ -327,6 +339,7 @@ struct soinfo {
   size_t android_relocs_size_;
 
   const char* soname_;
+  std::string realpath_;
 
   friend soinfo* get_libdl_info();
 };

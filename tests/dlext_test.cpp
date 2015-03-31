@@ -156,9 +156,9 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" is negative", dlerror());
 
   extinfo.library_fd_offset = PAGE_SIZE;
-  handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_STREQ("dlopen failed: \"libname_placeholder\" has bad ELF magic", dlerror());
+  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic", dlerror());
 
   close(extinfo.library_fd);
 }
