@@ -47,7 +47,9 @@ template bool soinfo::relocate<packed_reloc_iterator<leb128_decoder>>(
     const soinfo_list_t& local_group);
 
 template <typename ElfRelIteratorT>
-bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
+                      const soinfo_list_t& global_group,
+                      const soinfo_list_t& local_group) {
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
@@ -115,7 +117,8 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
   return true;
 }
 
-bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::mips_relocate_got(const soinfo_list_t& global_group,
+                               const soinfo_list_t& local_group) {
   ElfW(Addr)** got = plt_got_;
   if (got == nullptr) {
     return true;
