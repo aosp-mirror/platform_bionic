@@ -130,6 +130,9 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
  */
 #define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
 
+/* Leave room for a guard page in the internally created signal stacks. */
+#define SIGNAL_STACK_SIZE (SIGSTKSZ + PAGE_SIZE)
+
 /* Needed by fork. */
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
