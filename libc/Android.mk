@@ -1347,9 +1347,6 @@ LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
-# TODO: This is to work around b/19059885. Remove after root cause is fixed
-LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
-
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
     $(libc_arch_dynamic_src_files) \
@@ -1359,8 +1356,10 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE := libc
 LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_REQUIRED_MODULES := tzdata
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(libc_common_additional_dependencies) \
+    $(LOCAL_PATH)/version_script.txt \
 
 # Leave the symbols in the shared library so that stack unwinders can produce
 # meaningful name resolution.
@@ -1379,10 +1378,16 @@ LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+# Don't re-export new/delete and friends, even if the compiler really wants to.
+LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
 LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
+
+# TODO: This is to work around b/19059885. Remove after root cause is fixed
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
@@ -1431,7 +1436,9 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE := libc_malloc_debug_leak
 LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(libc_common_additional_dependencies) \
+    $(LOCAL_PATH)/version_script.txt \
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_CXX_STL := none
@@ -1441,6 +1448,9 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm
 LOCAL_STATIC_LIBRARIES += libc++abi
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
+
+# Don't re-export new/delete and friends, even if the compiler really wants to.
+LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
 
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
@@ -1471,11 +1481,16 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE := libc_malloc_debug_qemu
 LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(libc_common_additional_dependencies) \
+    $(LOCAL_PATH)/version_script.txt \
 
 LOCAL_SHARED_LIBRARIES := libc libdl
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
+
+# Don't re-export new/delete and friends, even if the compiler really wants to.
+LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
 
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
