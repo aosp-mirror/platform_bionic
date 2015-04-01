@@ -412,6 +412,70 @@ bool ElfReader::LoadSegments() {
   return true;
 }
 
+/* Used internally. Used to set the protection bits of all loaded segments
+ * with optional extra flags (i.e. really PROT_WRITE). Used by
+ * phdr_table_protect_segments and phdr_table_unprotect_segments.
+ */
+static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                     ElfW(Addr) load_bias, int extra_prot_flags) {
+  const ElfW(Phdr)* phdr = phdr_table;
+  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+
+  for (; phdr < phdr_limit; phdr++) {
+    if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
+      continue;
+    }
+
+    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+
+    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
+                       seg_page_end - seg_page_start,
+                       PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags);
+    if (ret < 0) {
+      return -1;
+    }
+  }
+  return 0;
+}
+
+/* Restore the original protection modes for all loadable segments.
+ * You should only call this after phdr_table_unprotect_segments and
+ * applying all relocations.
+ *
+ * Input:
+ *   phdr_table  -> program header table
+ *   phdr_count  -> number of entries in tables
+ *   load_bias   -> load bias
+ * Return:
+ *   0 on error, -1 on failure (error code in errno).
+ */
+int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
+                                size_t phdr_count, ElfW(Addr) load_bias) {
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, 0);
+}
+
+/* Change the protection of all loaded segments in memory to writable.
+ * This is useful before performing relocations. Once completed, you
+ * will have to call phdr_table_protect_segments to restore the original
+ * protection flags on all segments.
+ *
+ * Note that some writable segments can also have their content turned
+ * to read-only by calling phdr_table_protect_gnu_relro. This is no
+ * performed here.
+ *
+ * Input:
+ *   phdr_table  -> program header table
+ *   phdr_count  -> number of entries in tables
+ *   load_bias   -> load bias
+ * Return:
+ *   0 on error, -1 on failure (error code in errno).
+ */
+int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
+                                  size_t phdr_count, ElfW(Addr) load_bias) {
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
+}
+
 /* Used internally by phdr_table_protect_gnu_relro and
  * phdr_table_unprotect_gnu_relro.
  */
