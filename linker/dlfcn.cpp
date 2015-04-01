@@ -101,16 +101,11 @@ void* dlsym(void* handle, const char* symbol) {
 
   soinfo* found = nullptr;
   ElfW(Sym)* sym = nullptr;
-  if (handle == RTLD_DEFAULT) {
-    sym = dlsym_linear_lookup(symbol, &found, nullptr);
-  } else if (handle == RTLD_NEXT) {
-    void* caller_addr = __builtin_return_address(0);
-    soinfo* si = find_containing_library(caller_addr);
+  void* caller_addr = __builtin_return_address(0);
+  soinfo* caller = find_containing_library(caller_addr);
 
-    sym = nullptr;
-    if (si && si->next) {
-      sym = dlsym_linear_lookup(symbol, &found, si->next);
-    }
+  if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
+    sym = dlsym_linear_lookup(symbol, &found, caller, handle);
   } else {
     sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, symbol);
   }
