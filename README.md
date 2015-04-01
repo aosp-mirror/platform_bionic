@@ -208,19 +208,17 @@ The tests are all built from the tests/ directory.
 The host tests require that you have `lunch`ed either an x86 or x86_64 target.
 
     $ mma
-    # 64-bit tests for 64-bit targets, 32-bit otherwise.
-    $ mm bionic-unit-tests-run-on-host
-    # Only exists for 64-bit targets.
     $ mm bionic-unit-tests-run-on-host32
+    $ mm bionic-unit-tests-run-on-host64  # For 64-bit *targets* only.
 
 ### Against glibc
 
 As a way to check that our tests do in fact test the correct behavior (and not
 just the behavior we think is correct), it is possible to run the tests against
-the host's glibc.
+the host's glibc. The executables are already in your path.
 
     $ mma
-    $ bionic-unit-tests-glibc32 # already in your path
+    $ bionic-unit-tests-glibc32
     $ bionic-unit-tests-glibc64
 
 
