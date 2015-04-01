@@ -32,32 +32,30 @@
 #include <malloc.h>
 #include <pthread.h>
 
-// libstdc++ currently contains __cxa_guard_acquire and __cxa_guard_release,
-// so we make do with macros instead of a C++ class.
-// TODO: move __cxa_guard_acquire and __cxa_guard_release into libc.
+// TODO: use __thread instead?
 
-// We used to use pthread_once to initialize the keys, but life is more predictable
-// if we allocate them all up front when the C library starts up, via __constructor__.
-#define BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR(key_name, key_destructor) \
-  static pthread_key_t key_name; \
-  __attribute__((constructor)) static void __bionic_tls_ ## key_name ## _key_init() { \
-    pthread_key_create(&key_name, key_destructor); \
+template <typename T, size_t Size = sizeof(T)>
+class ThreadLocalBuffer {
+ public:
+  ThreadLocalBuffer() {
+    // We used to use pthread_once to initialize the keys, but life is more predictable
+    // if we allocate them all up front when the C library starts up, via __constructor__.
+    pthread_key_create(&key_, free);
   }
 
-#define GLOBAL_INIT_THREAD_LOCAL_BUFFER(name) \
-  static void __bionic_tls_ ## name ## _key_destroy(void* buffer) { \
-    free(buffer); \
-  } \
-  BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR(__bionic_tls_ ## name ## _key, __bionic_tls_ ## name ## _key_destroy)
+  T* get() {
+    T* result = reinterpret_cast<T*>(pthread_getspecific(key_));
+    if (result == nullptr) {
+      result = reinterpret_cast<T*>(calloc(1, Size));
+      pthread_setspecific(key_, result);
+    }
+    return result;
+  }
 
-// Leaves "name_tls_buffer" and "name_tls_buffer_size" defined and initialized.
-#define LOCAL_INIT_THREAD_LOCAL_BUFFER(type, name, byte_count) \
-  type name ## _tls_buffer = \
-      reinterpret_cast<type>(pthread_getspecific(__bionic_tls_ ## name ## _key)); \
-  if (name ## _tls_buffer == NULL) { \
-    name ## _tls_buffer = reinterpret_cast<type>(calloc(1, byte_count)); \
-    pthread_setspecific(__bionic_tls_ ## name ## _key, name ## _tls_buffer); \
-  } \
-  const size_t name ## _tls_buffer_size __attribute__((unused)) = byte_count
+  size_t size() { return Size; }
+
+ private:
+  pthread_key_t key_;
+};
 
 #endif // _BIONIC_THREAD_LOCAL_BUFFER_H_included
