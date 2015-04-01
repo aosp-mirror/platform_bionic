@@ -30,11 +30,11 @@ static void MakeTree(const char* root) {
   char path[PATH_MAX];
 
   snprintf(path, sizeof(path), "%s/dir", root);
-  ASSERT_EQ(0, mkdir(path, 0555));
+  ASSERT_EQ(0, mkdir(path, 0755)) << path;
   snprintf(path, sizeof(path), "%s/dir/sub", root);
-  ASSERT_EQ(0, mkdir(path, 0555));
+  ASSERT_EQ(0, mkdir(path, 0555)) << path;
   snprintf(path, sizeof(path), "%s/unreadable-dir", root);
-  ASSERT_EQ(0, mkdir(path, 0000));
+  ASSERT_EQ(0, mkdir(path, 0000)) << path;
 
   snprintf(path, sizeof(path), "%s/dangler", root);
   ASSERT_EQ(0, symlink("/does-not-exist", path));
