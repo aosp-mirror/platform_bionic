@@ -2297,13 +2297,8 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_TEXTREL:
-#if defined(__LP64__)
-        DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", name);
+        DL_ERR("text relocations (DT_TEXTREL) found in the ELF file \"%s\"", name);
         return false;
-#else
-        has_text_relocations = true;
-        break;
-#endif
 
       case DT_SYMBOLIC:
         has_DT_SYMBOLIC = true;
@@ -2315,12 +2310,8 @@ bool soinfo::prelink_image() {
 
       case DT_FLAGS:
         if (d->d_un.d_val & DF_TEXTREL) {
-#if defined(__LP64__)
-          DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", name);
+          DL_ERR("text relocations (DF_TEXTREL) found in the ELF file \"%s\"", name);
           return false;
-#else
-          has_text_relocations = true;
-#endif
         }
         if (d->d_un.d_val & DF_SYMBOLIC) {
           has_DT_SYMBOLIC = true;
@@ -2429,20 +2420,6 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     local_group_root_ = this;
   }
 
-#if !defined(__LP64__)
-  if (has_text_relocations) {
-    // Make segments writable to allow text relocations to work properly. We will later call
-    // phdr_table_protect_segments() after all of them are applied and all constructors are run.
-    DL_WARN("%s has text relocations. This is wasting memory and prevents "
-            "security hardening. Please fix.", name);
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-             name, strerror(errno));
-      return false;
-    }
-  }
-#endif
-
   if (android_relocs_ != nullptr) {
     // check signature
     if (android_relocs_size_ > 3 &&
@@ -2512,17 +2489,6 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #endif
 
   DEBUG("[ finished linking %s ]", name);
-
-#if !defined(__LP64__)
-  if (has_text_relocations) {
-    // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't protect segments for \"%s\": %s",
-             name, strerror(errno));
-      return false;
-    }
-  }
-#endif
 
   /* We can also turn on GNU RELRO protection */
   if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
