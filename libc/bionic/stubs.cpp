@@ -49,24 +49,11 @@
 // functions to share state, but <grp.h> functions can't clobber <passwd.h>
 // functions' state and vice versa.
 
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(group);
-
 struct group_state_t {
   group group_;
   char* group_members_[2];
   char group_name_buffer_[32];
 };
-
-static group_state_t* __group_state() {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(group_state_t*, group, sizeof(group_state_t));
-  if (group_tls_buffer != NULL) {
-    memset(group_tls_buffer, 0, sizeof(group_state_t));
-    group_tls_buffer->group_.gr_mem = group_tls_buffer->group_members_;
-  }
-  return group_tls_buffer;
-}
-
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(passwd);
 
 struct passwd_state_t {
   passwd passwd_;
@@ -75,9 +62,16 @@ struct passwd_state_t {
   char sh_buffer_[32];
 };
 
-static passwd_state_t* __passwd_state() {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(passwd_state_t*, passwd, sizeof(passwd_state_t));
-  return passwd_tls_buffer;
+static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
+static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
+
+static group_state_t* __group_state() {
+  group_state_t* result = g_group_tls_buffer.get();
+  if (result != nullptr) {
+    memset(result, 0, sizeof(group_state_t));
+    result->group_.gr_mem = result->group_members_;
+  }
+  return result;
 }
 
 static int do_getpw_r(int by_name, const char* name, uid_t uid,
@@ -361,7 +355,7 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
 }
 
 passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
-  passwd_state_t* state = __passwd_state();
+  passwd_state_t* state = g_passwd_tls_buffer.get();
   if (state == NULL) {
     return NULL;
   }
@@ -374,7 +368,7 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
 }
 
 passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
-  passwd_state_t* state = __passwd_state();
+  passwd_state_t* state = g_passwd_tls_buffer.get();
   if (state == NULL) {
     return NULL;
   }

@@ -72,22 +72,26 @@ enum {
 
 /*
  * Bionic uses some pthread keys internally. All pthread keys used internally
- * should be created in constructors, except for keys that may be used in or before constructors.
+ * should be created in constructors, except for keys that may be used in or
+ * before constructors.
+ *
  * We need to manually maintain the count of pthread keys used internally, but
  * pthread_test should fail if we forget.
- * Following are current pthread keys used internally by libc:
- *  basename               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  dirname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
+ *
+ * These are the pthread keys currently used internally by libc:
+ *
+ *  basename               libc (ThreadLocalBuffer)
+ *  dirname                libc (ThreadLocalBuffer)
  *  uselocale              libc (can be used in constructors)
- *  getmntent_mntent       libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  getmntent_strings      libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  ptsname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  ttyname                libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  strerror               libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  strsignal              libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  passwd                 libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  group                  libc (GLOBAL_INIT_THREAD_LOCAL_BUFFER)
- *  _res_key               libc (BIONIC_PTHREAD_KEY_WITH_CONSTRUCTOR)
+ *  getmntent_mntent       libc (ThreadLocalBuffer)
+ *  getmntent_strings      libc (ThreadLocalBuffer)
+ *  ptsname                libc (ThreadLocalBuffer)
+ *  ttyname                libc (ThreadLocalBuffer)
+ *  strerror               libc (ThreadLocalBuffer)
+ *  strsignal              libc (ThreadLocalBuffer)
+ *  passwd                 libc (ThreadLocalBuffer)
+ *  group                  libc (ThreadLocalBuffer)
+ *  _res_key               libc (constructor in BSD code)
  */
 
 #define LIBC_PTHREAD_KEY_RESERVED_COUNT 12
