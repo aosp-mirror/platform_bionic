@@ -1,0 +1,12 @@
+LIBC {
+  local:
+    _ZSt7nothrow;
+    _ZdaPv;
+    _ZdaPvRKSt9nothrow_t;
+    _ZdlPv;
+    _ZdlPvRKSt9nothrow_t;
+    _Znaj;
+    _ZnajRKSt9nothrow_t;
+    _Znwj;
+    _ZnwjRKSt9nothrow_t;
+};
