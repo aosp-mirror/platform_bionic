@@ -226,8 +226,8 @@ struct soinfo {
   // value to get the corresponding address in the process' address space.
   ElfW(Addr) load_bias;
 
-#if !defined(__LP64__)
-  bool has_text_relocations;
+#if defined(__arm__)
+  bool unused4; // DO NOT USE, maintained for compatibility
 #endif
   bool has_DT_SYMBOLIC;
 
