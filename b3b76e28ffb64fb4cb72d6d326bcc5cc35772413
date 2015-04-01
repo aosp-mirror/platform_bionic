@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a371421d_0e950f41",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Nit: Correct spelling is \"preferred\".",
+      "range": {
+        "startLine": 167,
+        "startChar": 27,
+        "endLine": 167,
+        "endChar": 35
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_6d8e8d81",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "This really needs a careful description of the meaning of the flags.  In particular, the fact that HAVE_PENDING flags can be set when the lock is entirely available seemed surprising to me, and requires care.",
+      "range": {
+        "startLine": 172,
+        "startChar": 2,
+        "endLine": 175,
+        "endChar": 36
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a371421d_ee5ef3fc",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Tricky enough to warrant a comment?",
+      "range": {
+        "startLine": 189,
+        "startChar": 9,
+        "endLine": 189,
+        "endChar": 48
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_cd1f7de1",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "I would have called it something like \"add_writer_flag\", since \"set\" sounds like an imperative update to me.",
+      "range": {
+        "startLine": 196,
+        "startChar": 34,
+        "endLine": 196,
+        "endChar": 57
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a371421d_ee2513a5",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "\"remove_writer_flag\"?",
+      "range": {
+        "startLine": 200,
+        "startChar": 36,
+        "endLine": 200,
+        "endChar": 59
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_cd54e129",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Is that necessary?  Can we have pending writers without the state being owned by readers?\n\nOn closer examination, I don\u0027t think it is redundant.  But the correctness argument is not at all clear to me.  It seems surprising that this can succeed when we have a pending writer which hasn\u0027t woken up yet, and the last reader just unlocked the rwlock.  Perhaps this actually needs to be deleted for correctness?",
+      "range": {
+        "startLine": 273,
+        "startChar": 48,
+        "endLine": 273,
+        "endChar": 83
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_d061d2b9",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "This seems wrong in the writer preference case.  If we are in reader mode, but there is a waiting writer, we we\u0027ll end up spinning, which is technically correct, but bad.",
+      "range": {
+        "startLine": 300,
+        "startChar": 4,
+        "endLine": 302,
+        "endChar": 5
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a371421d_d9bd83a7",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Again, I think this also needs to handle the writer-waiting case.",
+      "range": {
+        "startLine": 330,
+        "startChar": 8,
+        "endLine": 330,
+        "endChar": 42
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_369a2670",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "That\u0027s not the same terminology as in the standard.  They don\u0027t \"synchronize with\" each other.  You\u0027re relying on the fact that they both operate on the same object, and accesses to the same object always appear to occur in a single total order.\n\nThis does look correct to me.",
+      "range": {
+        "startLine": 394,
+        "startChar": 58,
+        "endLine": 394,
+        "endChar": 74
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_38cf712f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Nit: \"woken\"",
+      "range": {
+        "startLine": 502,
+        "startChar": 35,
+        "endLine": 502,
+        "endChar": 40
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8370be19_73402af4",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Enh\u0027s call, but I would drop this, leaving just the other two.  There is no way to implement it correctly.  I don\u0027t think we\u0027re helping anyone by providing this as a very counter-intuitive alias for PREFER_READER_NP.  I think we\u0027re doing people a favor by having code that uses this fail to compile.",
+      "range": {
+        "startLine": 90,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 38
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6392ea67_4bd465c3",
+        "filename": "libc/private/bionic_lock.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "This does exactly what a \"normal\" pthread mutex does, right?  Can we arrange to share the code?\n\nIt\u0027s also exactly what a C++ mutex should do, and probably what clients really want in 98% of cases ...",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 22
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_d692aad2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-01T19:59:16Z",
+      "side": 1,
+      "message": "Spelling ...",
+      "range": {
+        "startLine": 868,
+        "startChar": 18,
+        "endLine": 868,
+        "endChar": 26
+      },
+      "revId": "b3b76e28ffb64fb4cb72d6d326bcc5cc35772413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
