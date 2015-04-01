@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a371421d_e267df94",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-01T22:41:34Z",
+      "side": 1,
+      "message": "shamu? flounder?\n\ni assume fugu\u0027s unaffected anyway?",
+      "revId": "b34a876ff9f25da6e56c681a0aee38283a0b9215",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e37fbae4_86739f95",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-01T22:41:34Z",
+      "side": 1,
+      "message": "just #error here, so the mistake gets fixed rather than just leaving the build spammy.",
+      "revId": "b34a876ff9f25da6e56c681a0aee38283a0b9215",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
