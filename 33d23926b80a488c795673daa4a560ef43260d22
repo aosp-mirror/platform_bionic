@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "30574343_cc516b48",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-02T03:16:30Z",
+      "side": 1,
+      "message": "alloc/find_page relies on the read access to all pages: L50, L145",
+      "parentUuid": "10f15fa2_d488d412",
+      "revId": "33d23926b80a488c795673daa4a560ef43260d22",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30574343_eca6ef31",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 1
