@@ -22,6 +22,30 @@
       "revId": "f69672b254aa5ed61fc39bc35cd40b958799468e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_91a4dc84",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-02T04:16:09Z",
+      "side": 1,
+      "message": "I removed it because we don\u0027t use an atomic exchange loop now. Yeah, I removed too much, and useful information are added back now.",
+      "parentUuid": "e3bdfae6_1d8913bb",
+      "range": {
+        "startLine": 388,
+        "startChar": 4,
+        "endLine": 388,
+        "endChar": 67
+      },
+      "revId": "f69672b254aa5ed61fc39bc35cd40b958799468e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
