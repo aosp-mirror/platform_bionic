@@ -277,8 +277,8 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
 // PrettyUnitTestResultPrinter. The reason for copy is that PrettyUnitTestResultPrinter
 // is defined and used in gtest.cc, which is hard to reuse.
 static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, size_t iteration,
-                                      size_t iteration_count) {
-  if (iteration_count > 1) {
+                                      int iteration_count) {
+  if (iteration_count != 1) {
     printf("\nRepeating all tests (iteration %zu) . . .\n\n", iteration);
   }
   ColoredPrintf(COLOR_GREEN,  "[==========] ");
@@ -743,7 +743,7 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
 // makes deadlock to use fork in multi-thread.
 // Returns true if all tests run successfully, otherwise return false.
 static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& testcase_list,
-                                  size_t iteration_count, size_t job_count,
+                                  int iteration_count, size_t job_count,
                                   const std::string& xml_output_filename) {
   // Stop default result printer to avoid environment setup/teardown information for each test.
   testing::UnitTest::GetInstance()->listeners().Release(
@@ -762,7 +762,9 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
 
   bool all_tests_passed = true;
 
-  for (size_t iteration = 1; iteration <= iteration_count; ++iteration) {
+  for (size_t iteration = 1;
+       iteration_count < 0 || iteration <= static_cast<size_t>(iteration_count);
+       ++iteration) {
     OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
     int64_t iteration_start_time_ns = NanoTime();
     time_t epoch_iteration_start_time = time(NULL);
@@ -875,7 +877,7 @@ struct IsolationTestOptions {
   int test_warnline_ms;
   std::string gtest_color;
   bool gtest_print_time;
-  size_t gtest_repeat;
+  int gtest_repeat;
   std::string gtest_output;
 };
 
@@ -993,12 +995,9 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
     } else if (strcmp(args[i], "--gtest_print_time=0") == 0) {
       options.gtest_print_time = false;
     } else if (strncmp(args[i], "--gtest_repeat=", strlen("--gtest_repeat=")) == 0) {
-      int repeat = atoi(args[i] + strlen("--gtest_repeat="));
-      if (repeat < 0) {
-        fprintf(stderr, "invalid gtest_repeat count: %d\n", repeat);
-        return false;
-      }
-      options.gtest_repeat = repeat;
+      // If the value of gtest_repeat is < 0, then it indicates the tests
+      // should be repeated forever.
+      options.gtest_repeat = atoi(args[i] + strlen("--gtest_repeat="));
       // Remove --gtest_repeat=xx from arguments, so child process only run one iteration for a single test.
       args.erase(args.begin() + i);
       --i;
