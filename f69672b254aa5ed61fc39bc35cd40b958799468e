@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_1d8913bb",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-02T00:53:53Z",
+      "side": 1,
+      "message": "Why was the preceding comment deleted?  It still seems to apply, and seems helpful.",
+      "range": {
+        "startLine": 388,
+        "startChar": 4,
+        "endLine": 388,
+        "endChar": 67
+      },
+      "revId": "f69672b254aa5ed61fc39bc35cd40b958799468e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
