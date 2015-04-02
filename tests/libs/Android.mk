@@ -371,6 +371,15 @@ module := libtest_dlsym_weak_func
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
+# Library to check RTLD_LOCAL with dlsym in 'this'
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_src_files := dlsym_from_this.cpp
+
+module := libtest_dlsym_from_this
+
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
 # Library with weak undefined function
 # -----------------------------------------------------------------------------
 libtest_dlopen_weak_undefined_func_src_files := \
