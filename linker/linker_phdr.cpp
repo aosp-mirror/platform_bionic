@@ -429,9 +429,15 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    if ((extra_prot_flags & PROT_WRITE) != 0) {
+      // make sure we're never simultaneously writable / executable
+      prot &= ~PROT_EXEC;
+    }
+
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
-                       PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags);
+                       prot | extra_prot_flags);
     if (ret < 0) {
       return -1;
     }
