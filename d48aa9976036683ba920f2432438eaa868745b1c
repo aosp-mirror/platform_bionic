@@ -55,6 +55,42 @@
     },
     {
       "key": {
+        "uuid": "e3bdfae6_af3e5f89",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-02T20:52:20Z",
+      "side": 1,
+      "message": "Done - it was compiler optimization what causes this to work incorrectly for x86_64",
+      "parentUuid": "c3d47630_d6d4a475",
+      "revId": "d48aa9976036683ba920f2432438eaa868745b1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_af553fdd",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-02T20:52:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_2d2ca53d",
+      "revId": "d48aa9976036683ba920f2432438eaa868745b1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3bdfae6_0608a45c",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
