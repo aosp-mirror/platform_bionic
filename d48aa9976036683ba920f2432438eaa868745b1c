@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_916cdc03",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-02T03:17:09Z",
+      "side": 1,
+      "message": "if you run this test against glibc - it is going to be nullptr.",
+      "parentUuid": "23c4727c_2d2ca53d",
+      "revId": "d48aa9976036683ba920f2432438eaa868745b1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3bdfae6_0608a45c",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-02T02:29:05Z",
       "side": 1,
       "message": "dlclose()?",
+      "revId": "d48aa9976036683ba920f2432438eaa868745b1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_66dbe0f0",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-02T03:17:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_0608a45c",
       "revId": "d48aa9976036683ba920f2432438eaa868745b1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
