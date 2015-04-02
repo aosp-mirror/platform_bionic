@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63de6a5c_f9789af4",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-02T23:39:45Z",
+      "side": 1,
+      "message": "maybe stat(2)s? (or explicitly say \"by comparing filename, major and minor device.\"?)",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_5652bc3b",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-02T23:39:45Z",
+      "side": 1,
+      "message": "the caller\u0027s",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_92529b39",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-02T23:39:45Z",
+      "side": 1,
+      "message": "a unique\n\n... because ...?",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
