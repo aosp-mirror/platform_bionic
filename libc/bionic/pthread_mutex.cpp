@@ -44,14 +44,85 @@
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
 
-/* a mutex is implemented as a 32-bit integer holding the following fields
+/* a mutex attribute holds the following fields
+ *
+ * bits:     name       description
+ * 0-3       type       type of mutex
+ * 4         shared     process-shared flag
+ */
+#define  MUTEXATTR_TYPE_MASK   0x000f
+#define  MUTEXATTR_SHARED_MASK 0x0010
+
+int pthread_mutexattr_init(pthread_mutexattr_t *attr)
+{
+    *attr = PTHREAD_MUTEX_DEFAULT;
+    return 0;
+}
+
+int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
+{
+    *attr = -1;
+    return 0;
+}
+
+int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type_p)
+{
+    int type = (*attr & MUTEXATTR_TYPE_MASK);
+
+    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK) {
+        return EINVAL;
+    }
+
+    *type_p = type;
+    return 0;
+}
+
+int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
+{
+    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK ) {
+        return EINVAL;
+    }
+
+    *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
+    return 0;
+}
+
+/* process-shared mutexes are not supported at the moment */
+
+int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
+{
+    switch (pshared) {
+    case PTHREAD_PROCESS_PRIVATE:
+        *attr &= ~MUTEXATTR_SHARED_MASK;
+        return 0;
+
+    case PTHREAD_PROCESS_SHARED:
+        /* our current implementation of pthread actually supports shared
+         * mutexes but won't cleanup if a process dies with the mutex held.
+         * Nevertheless, it's better than nothing. Shared mutexes are used
+         * by surfaceflinger and audioflinger.
+         */
+        *attr |= MUTEXATTR_SHARED_MASK;
+        return 0;
+    }
+    return EINVAL;
+}
+
+int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared) {
+    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
+    return 0;
+}
+
+/* a mutex contains a state value and a owner_tid.
+ * The value is implemented as a 16-bit integer holding the following fields:
  *
  * bits:     name     description
- * 31-16     tid      owner thread's tid (recursive and errorcheck only)
  * 15-14     type     mutex type
  * 13        shared   process-shared flag
  * 12-2      counter  counter of recursive mutexes
  * 1-0       state    lock state (0, 1 or 2)
+ *
+ * The owner_tid is used only in recursive and errorcheck mutex to hold the mutex owner thread tid.
  */
 
 /* Convenience macro, creates a mask of 'bits' bits that starts from
@@ -67,6 +138,12 @@
 
 /* And this one does the opposite, i.e. extract a field's value from a bit pattern */
 #define  FIELD_FROM_BITS(val,shift,bits)  (((val) >> (shift)) & ((1 << (bits))-1))
+
+
+/* Convenience macros.
+ *
+ * These are used to form or modify the bit pattern of a given mutex value
+ */
 
 /* Mutex state:
  *
@@ -135,102 +212,16 @@
 #define  MUTEX_TYPE_BITS_RECURSIVE   MUTEX_TYPE_TO_BITS(PTHREAD_MUTEX_RECURSIVE)
 #define  MUTEX_TYPE_BITS_ERRORCHECK  MUTEX_TYPE_TO_BITS(PTHREAD_MUTEX_ERRORCHECK)
 
-/* Mutex owner field:
- *
- * This is only used for recursive and errorcheck mutexes. It holds the
- * tid of the owning thread. We use 16 bits to represent tid here,
- * so the highest tid is 65535. There is a test to check /proc/sys/kernel/pid_max
- * to make sure it will not exceed our limit.
- */
-#define  MUTEX_OWNER_SHIFT     16
-#define  MUTEX_OWNER_LEN       16
-
-#define  MUTEX_OWNER_FROM_BITS(v)    FIELD_FROM_BITS(v,MUTEX_OWNER_SHIFT,MUTEX_OWNER_LEN)
-#define  MUTEX_OWNER_TO_BITS(v)      FIELD_TO_BITS(v,MUTEX_OWNER_SHIFT,MUTEX_OWNER_LEN)
-
-/* Convenience macros.
- *
- * These are used to form or modify the bit pattern of a given mutex value
- */
-
-
-
-/* a mutex attribute holds the following fields
- *
- * bits:     name       description
- * 0-3       type       type of mutex
- * 4         shared     process-shared flag
- */
-#define  MUTEXATTR_TYPE_MASK   0x000f
-#define  MUTEXATTR_SHARED_MASK 0x0010
-
-
-int pthread_mutexattr_init(pthread_mutexattr_t *attr)
-{
-    *attr = PTHREAD_MUTEX_DEFAULT;
-    return 0;
-}
-
-int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
-{
-    *attr = -1;
-    return 0;
-}
-
-int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type_p)
-{
-    int type = (*attr & MUTEXATTR_TYPE_MASK);
-
-    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK) {
-        return EINVAL;
-    }
-
-    *type_p = type;
-    return 0;
-}
-
-int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
-{
-    if (type < PTHREAD_MUTEX_NORMAL || type > PTHREAD_MUTEX_ERRORCHECK ) {
-        return EINVAL;
-    }
-
-    *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
-    return 0;
-}
-
-/* process-shared mutexes are not supported at the moment */
-
-int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int  pshared)
-{
-    switch (pshared) {
-    case PTHREAD_PROCESS_PRIVATE:
-        *attr &= ~MUTEXATTR_SHARED_MASK;
-        return 0;
-
-    case PTHREAD_PROCESS_SHARED:
-        /* our current implementation of pthread actually supports shared
-         * mutexes but won't cleanup if a process dies with the mutex held.
-         * Nevertheless, it's better than nothing. Shared mutexes are used
-         * by surfaceflinger and audioflinger.
-         */
-        *attr |= MUTEXATTR_SHARED_MASK;
-        return 0;
-    }
-    return EINVAL;
-}
-
-int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared) {
-    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
-    return 0;
-}
-
 struct pthread_mutex_internal_t {
-  atomic_int state;
+  _Atomic(uint16_t) state;
 #if defined(__LP64__)
-  char __reserved[36];
+  uint16_t __pad;
+  atomic_int owner_tid;
+  char __reserved[32];
+#else
+  _Atomic(uint16_t) owner_tid;
 #endif
-};
+} __attribute__((aligned(4)));
 
 static_assert(sizeof(pthread_mutex_t) == sizeof(pthread_mutex_internal_t),
               "pthread_mutex_t should actually be pthread_mutex_internal_t in implementation.");
@@ -254,35 +245,36 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
         return 0;
     }
 
-    int state = 0;
+    uint16_t state = 0;
     if ((*attr & MUTEXATTR_SHARED_MASK) != 0) {
         state |= MUTEX_SHARED_MASK;
     }
 
     switch (*attr & MUTEXATTR_TYPE_MASK) {
     case PTHREAD_MUTEX_NORMAL:
-        state |= MUTEX_TYPE_BITS_NORMAL;
-        break;
+      state |= MUTEX_TYPE_BITS_NORMAL;
+      break;
     case PTHREAD_MUTEX_RECURSIVE:
-        state |= MUTEX_TYPE_BITS_RECURSIVE;
-        break;
+      state |= MUTEX_TYPE_BITS_RECURSIVE;
+      break;
     case PTHREAD_MUTEX_ERRORCHECK:
-        state |= MUTEX_TYPE_BITS_ERRORCHECK;
-        break;
+      state |= MUTEX_TYPE_BITS_ERRORCHECK;
+      break;
     default:
         return EINVAL;
     }
 
     atomic_init(&mutex->state, state);
+    atomic_init(&mutex->owner_tid, 0);
     return 0;
 }
 
 static inline __always_inline int __pthread_normal_mutex_trylock(pthread_mutex_internal_t* mutex,
-                                                                 int shared) {
-    const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
-    const int locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+                                                                 uint16_t shared) {
+    const uint16_t unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
+    const uint16_t locked_uncontended = shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
 
-    int old_state = unlocked;
+    uint16_t old_state = unlocked;
     if (__predict_true(atomic_compare_exchange_strong_explicit(&mutex->state, &old_state,
                          locked_uncontended, memory_order_acquire, memory_order_relaxed))) {
         return 0;
@@ -303,7 +295,7 @@ static inline __always_inline int __pthread_normal_mutex_trylock(pthread_mutex_i
  * the lock state field.
  */
 static inline __always_inline int __pthread_normal_mutex_lock(pthread_mutex_internal_t* mutex,
-                                                              int shared,
+                                                              uint16_t shared,
                                                               const timespec* abs_timeout_or_null,
                                                               clockid_t clock) {
     if (__predict_true(__pthread_normal_mutex_trylock(mutex, shared) == 0)) {
@@ -312,8 +304,8 @@ static inline __always_inline int __pthread_normal_mutex_lock(pthread_mutex_inte
 
     ScopedTrace trace("Contending for pthread mutex");
 
-    const int unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
-    const int locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+    const uint16_t unlocked           = shared | MUTEX_STATE_BITS_UNLOCKED;
+    const uint16_t locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
 
     // We want to go to sleep until the mutex is available, which requires
     // promoting it to locked_contended. We need to swap in the new state
@@ -341,13 +333,13 @@ static inline __always_inline int __pthread_normal_mutex_lock(pthread_mutex_inte
 }
 
 /*
- * Release a mutex of type NORMAL.  The caller is responsible for determining
+ * Release a normal mutex.  The caller is responsible for determining
  * that we are in fact the owner of this lock.
  */
 static inline __always_inline void __pthread_normal_mutex_unlock(pthread_mutex_internal_t* mutex,
-                                                                 int shared) {
-    const int unlocked         = shared | MUTEX_STATE_BITS_UNLOCKED;
-    const int locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+                                                                 uint16_t shared) {
+    const uint16_t unlocked         = shared | MUTEX_STATE_BITS_UNLOCKED;
+    const uint16_t locked_contended = shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
 
     // We use an atomic_exchange to release the lock. If locked_contended state
     // is returned, some threads is waiting for the lock and we need to wake up
@@ -385,7 +377,7 @@ static inline __always_inline void __pthread_normal_mutex_unlock(pthread_mutex_i
  *
  */
 static inline __always_inline int __recursive_increment(pthread_mutex_internal_t* mutex,
-                                                        int old_state) {
+                                                        uint16_t old_state) {
     // Detect recursive lock overflow and return EAGAIN.
     // This is safe because only the owner thread can modify the
     // counter bits in the mutex value.
@@ -393,22 +385,18 @@ static inline __always_inline int __recursive_increment(pthread_mutex_internal_t
         return EAGAIN;
     }
 
-    // We own the mutex, but other threads are able to change the lower bits
-    // (e.g. promoting it to "contended"), so we need to use an atomic exchange
-    // loop to update the counter. The counter will not overflow in the loop,
-    // as only the owner thread can change it.
-    // The mutex is still locked, so we don't need a release fence.
+    // Other threads are able to change the lower bits (e.g. promoting it to "contended"),
+    // but the mutex counter will not overflow. So we use atomic_fetch_add operation here.
+    // The mutex is still locked by current thread, so we don't need a release fence.
     atomic_fetch_add_explicit(&mutex->state, MUTEX_COUNTER_BITS_ONE, memory_order_relaxed);
     return 0;
 }
 
 static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
                                            const timespec* abs_timeout_or_null, clockid_t clock) {
-    int old_state, mtype, tid, shared;
-
-    old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    mtype = (old_state & MUTEX_TYPE_MASK);
-    shared = (old_state & MUTEX_SHARED_MASK);
+    uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
+    uint16_t shared = (old_state & MUTEX_SHARED_MASK);
 
     // Handle common case first.
     if ( __predict_true(mtype == MUTEX_TYPE_BITS_NORMAL) ) {
@@ -416,26 +404,26 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
     }
 
     // Do we already own this recursive or error-check mutex?
-    tid = __get_thread()->tid;
-    if (tid == MUTEX_OWNER_FROM_BITS(old_state)) {
+    pid_t tid = __get_thread()->tid;
+    if (tid == atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed)) {
         if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
             return EDEADLK;
         }
         return __recursive_increment(mutex, old_state);
     }
 
-    const int unlocked           = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
-    const int locked_uncontended = mtype | shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
-    const int locked_contended   = mtype | shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
+    const uint16_t unlocked           = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
+    const uint16_t locked_uncontended = mtype | shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+    const uint16_t locked_contended   = mtype | shared | MUTEX_STATE_BITS_LOCKED_CONTENDED;
 
     // First, if the mutex is unlocked, try to quickly acquire it.
     // In the optimistic case where this works, set the state to locked_uncontended.
     if (old_state == unlocked) {
-        int new_state = MUTEX_OWNER_TO_BITS(tid) | locked_uncontended;
         // If exchanged successfully, an acquire fence is required to make
         // all memory accesses made by other threads visible to the current CPU.
         if (__predict_true(atomic_compare_exchange_strong_explicit(&mutex->state, &old_state,
-                             new_state, memory_order_acquire, memory_order_relaxed))) {
+                             locked_uncontended, memory_order_acquire, memory_order_relaxed))) {
+            atomic_store_explicit(&mutex->owner_tid, tid, memory_order_relaxed);
             return 0;
         }
     }
@@ -448,13 +436,13 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
             // is contention when we are in this loop. This ensures all waiters
             // will be unlocked.
 
-            int new_state = MUTEX_OWNER_TO_BITS(tid) | locked_contended;
             // If exchanged successfully, an acquire fence is required to make
             // all memory accesses made by other threads visible to the current CPU.
             if (__predict_true(atomic_compare_exchange_weak_explicit(&mutex->state,
-                                                                     &old_state, new_state,
+                                                                     &old_state, locked_contended,
                                                                      memory_order_acquire,
                                                                      memory_order_relaxed))) {
+                atomic_store_explicit(&mutex->owner_tid, tid, memory_order_relaxed);
                 return 0;
             }
             continue;
@@ -491,9 +479,9 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
 
-    int old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    int mtype = (old_state & MUTEX_TYPE_MASK);
-    int shared = (old_state & MUTEX_SHARED_MASK);
+    uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
+    uint16_t shared = (old_state & MUTEX_SHARED_MASK);
     // Avoid slowing down fast path of normal mutex lock operation.
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
       if (__predict_true(__pthread_normal_mutex_trylock(mutex, shared) == 0)) {
@@ -506,11 +494,9 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
 
-    int old_state, mtype, tid, shared;
-
-    old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    mtype  = (old_state & MUTEX_TYPE_MASK);
-    shared = (old_state & MUTEX_SHARED_MASK);
+    uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
+    uint16_t shared = (old_state & MUTEX_SHARED_MASK);
 
     // Handle common case first.
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
@@ -519,9 +505,10 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
     }
 
     // Do we already own this recursive or error-check mutex?
-    tid = __get_thread()->tid;
-    if ( tid != MUTEX_OWNER_FROM_BITS(old_state) )
+    pid_t tid = __get_thread()->tid;
+    if ( tid != atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed) ) {
         return EPERM;
+    }
 
     // If the counter is > 0, we can simply decrement it atomically.
     // Since other threads can mutate the lower state bits (and only the
@@ -538,7 +525,8 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
     // to awake.
     // A release fence is required to make previous stores visible to next
     // lock owner threads.
-    const int unlocked = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
+    atomic_store_explicit(&mutex->owner_tid, 0, memory_order_relaxed);
+    const uint16_t unlocked = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
     old_state = atomic_exchange_explicit(&mutex->state, unlocked, memory_order_release);
     if (MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(old_state)) {
         __futex_wake_ex(&mutex->state, shared, 1);
@@ -550,12 +538,12 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
 int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
 
-    int old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    int mtype  = (old_state & MUTEX_TYPE_MASK);
-    int shared = (old_state & MUTEX_SHARED_MASK);
+    uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
+    uint16_t shared = (old_state & MUTEX_SHARED_MASK);
 
-    const int unlocked           = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
-    const int locked_uncontended = mtype | shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
+    const uint16_t unlocked           = mtype | shared | MUTEX_STATE_BITS_UNLOCKED;
+    const uint16_t locked_uncontended = mtype | shared | MUTEX_STATE_BITS_LOCKED_UNCONTENDED;
 
     // Handle common case first.
     if (__predict_true(mtype == MUTEX_TYPE_BITS_NORMAL)) {
@@ -564,7 +552,7 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
 
     // Do we already own this recursive or error-check mutex?
     pid_t tid = __get_thread()->tid;
-    if (tid == MUTEX_OWNER_FROM_BITS(old_state)) {
+    if (tid == atomic_load_explicit(&mutex->owner_tid, memory_order_relaxed)) {
         if (mtype == MUTEX_TYPE_BITS_ERRORCHECK) {
             return EBUSY;
         }
@@ -577,10 +565,11 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
     // If exchanged successfully, an acquire fence is required to make
     // all memory accesses made by other threads visible to the current CPU.
     old_state = unlocked;
-    int new_state = MUTEX_OWNER_TO_BITS(tid) | locked_uncontended;
-    if (__predict_true(atomic_compare_exchange_strong_explicit(&mutex->state, &old_state, new_state,
+    if (__predict_true(atomic_compare_exchange_strong_explicit(&mutex->state, &old_state,
+                                                               locked_uncontended,
                                                                memory_order_acquire,
                                                                memory_order_relaxed))) {
+        atomic_store_explicit(&mutex->owner_tid, tid, memory_order_relaxed);
         return 0;
     }
     return EBUSY;
@@ -617,8 +606,5 @@ int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     if (error != 0) {
         return error;
     }
-
-    pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-    atomic_store_explicit(&mutex->state, 0xdead10cc, memory_order_relaxed);
     return 0;
 }
