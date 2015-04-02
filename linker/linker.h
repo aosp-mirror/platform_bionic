@@ -351,7 +351,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo);
 void do_dlclose(soinfo* si);
 
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller, void* handle);
 soinfo* find_containing_library(const void* addr);
 
 ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);

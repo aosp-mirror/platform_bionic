@@ -738,15 +738,21 @@ ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
    beginning of the global solist. Otherwise the search starts at the
    specified soinfo (for RTLD_NEXT).
  */
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) {
+ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller, void* handle) {
   SymbolName symbol_name(name);
 
-  if (start == nullptr) {
-    start = solist;
+  soinfo* start = solist;
+
+  if (handle == RTLD_NEXT) {
+    if (caller == nullptr || caller->next == nullptr) {
+      return nullptr;
+    } else {
+      start = caller->next;
+    }
   }
 
   ElfW(Sym)* s = nullptr;
-  for (soinfo* si = start; (s == nullptr) && (si != nullptr); si = si->next) {
+  for (soinfo* si = start; si != nullptr; si = si->next) {
     if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0) {
       continue;
     }
@@ -755,6 +761,30 @@ ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start) 
     if (s != nullptr) {
       *found = si;
       break;
+    }
+  }
+
+  // If not found - look into local_group unless
+  // caller is part of the global group in which
+  // case we already did it.
+  if (s == nullptr && caller != nullptr &&
+      (caller->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+    soinfo* local_group_root = caller->get_local_group_root();
+
+    if (handle == RTLD_DEFAULT) {
+      start = local_group_root;
+    }
+
+    for (soinfo* si = start; si != nullptr; si = si->next) {
+      if (si->get_local_group_root() != local_group_root) {
+        break;
+      }
+
+      s = si->find_symbol_by_name(symbol_name);
+      if (s != nullptr) {
+        *found = si;
+        break;
+      }
     }
   }
 

@@ -46,7 +46,7 @@ TEST(dlfcn, ctor_function_call) {
   ASSERT_EQ(17, g_ctor_function_called);
 }
 
-TEST(dlfcn, dlsym_in_self) {
+TEST(dlfcn, dlsym_in_executable) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -62,6 +62,27 @@ TEST(dlfcn, dlsym_in_self) {
   ASSERT_TRUE(g_called);
 
   ASSERT_EQ(0, dlclose(self));
+}
+
+TEST(dlfcn, dlsym_from_sofile) {
+  void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_LAZY | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  // check that we cant find '_test_dlsym_symbol' via dlsym(RTLD_DEFAULT)
+  void* symbol = dlsym(RTLD_DEFAULT, "test_dlsym_symbol");
+  ASSERT_TRUE(symbol == nullptr);
+  ASSERT_SUBSTR("undefined symbol: test_dlsym_symbol", dlerror());
+
+  typedef int* (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_DEFAULT"));
+
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  int* ptr = fn();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(42, *ptr);
+
+  dlclose(handle);
 }
 
 TEST(dlfcn, dlsym_with_dependencies) {
