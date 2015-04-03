@@ -262,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "e3bdfae6_30f855f8",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T22:51:59Z",
+      "side": 1,
+      "message": "Done. I test that the static_assert(offset...) works if the offset doesn\u0027t match the expectation here. The code would be simpler if we can use \"state | (owner_tid \u003c\u003c 16)\" here. But because I can\u0027t rely on the assumption that we always use little-endian, so I have no choice but to use the union here.",
+      "parentUuid": "23c4727c_89bf05f3",
+      "range": {
+        "startLine": 408,
+        "startChar": 1,
+        "endLine": 414,
+        "endChar": 15
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cefea1_5e1f828a",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
