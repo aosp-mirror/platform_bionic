@@ -1384,7 +1384,8 @@ LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
-LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
+# TODO: disabled for http://b/20065774.
+#LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
