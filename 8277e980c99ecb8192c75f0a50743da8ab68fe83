@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_38a5e97f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-04-03T19:26:44Z",
+      "side": 1,
+      "message": "It\u0027s actually that they\u0027re assuming the symbols are in _some_ library they link, but not libc.so since that was built with --exclude-libs.\n\nlibc.so is just a convenient place to put this since we already do this for arm32.",
+      "range": {
+        "startLine": 10,
+        "startChar": 29,
+        "endLine": 10,
+        "endChar": 36
+      },
+      "revId": "8277e980c99ecb8192c75f0a50743da8ab68fe83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
