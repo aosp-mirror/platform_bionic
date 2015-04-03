@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_a02c1691",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-03T00:49:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_f9789af4",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_5652bc3b",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "63de6a5c_e019fe79",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-03T00:49:35Z",
+      "side": 1,
+      "message": "actually if there are no dependencies on the library - soname may be not-unique. removed this sentence.",
+      "parentUuid": "e3bdfae6_92529b39",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63de6a5c_59720e11",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2015-04-02T23:40:40Z",
       "side": 1,
       "message": "actually, the checkin comment should probably go in here too. we describe what the flag does, but give no motivation to use it. (This is a problem with all of the documentation in this file.)",
+      "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_504cff9f",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-03T00:49:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63de6a5c_59720e11",
       "revId": "9357be5d6eee42d73b5bb0f97eac0b3271745e04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
