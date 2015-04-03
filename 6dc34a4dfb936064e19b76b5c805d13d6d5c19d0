@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03092eaf_cbf7495b",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T03:31:47Z",
+      "side": 1,
+      "message": "danalbert added gettid to libcutils for glibc, and i think we\u0027re already linked against that.",
+      "revId": "6dc34a4dfb936064e19b76b5c805d13d6d5c19d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03092eaf_abec158c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T03:31:47Z",
+      "side": 1,
+      "message": "StringPrintf",
+      "revId": "6dc34a4dfb936064e19b76b5c805d13d6d5c19d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83cefea1_49f111e2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T03:31:47Z",
+      "side": 1,
+      "message": "ReadFileToString",
+      "revId": "6dc34a4dfb936064e19b76b5c805d13d6d5c19d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
