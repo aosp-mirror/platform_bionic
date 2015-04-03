@@ -33,6 +33,24 @@
       "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_f632e29f",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T17:17:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3d47630_3c729910",
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
