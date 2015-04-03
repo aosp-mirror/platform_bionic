@@ -173,6 +173,40 @@ TEST_F(DlExtTest, ExtInfoUseOffsetWihtoutFd) {
   ASSERT_STREQ("dlopen failed: invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without ANDROID_DLEXT_USE_LIBRARY_FD): 0x20", dlerror());
 }
 
+TEST(dlext, android_dlopen_ext_force_load_smoke) {
+  // 1. Open actual file
+  void* handle = dlopen("libdlext_test.so", RTLD_NOW);
+  ASSERT_DL_NOTNULL(handle);
+  // 2. Open link with force_load flag set
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_FORCE_LOAD;
+  void* handle2 = android_dlopen_ext("libdlext_test_v2.so", RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle2);
+  ASSERT_TRUE(handle != handle2);
+
+  dlclose(handle2);
+  dlclose(handle);
+}
+
+TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
+  // Check if soname lookup still returns already loaded library
+  // when ANDROID_DLEXT_FORCE_LOAD flag is specified.
+  void* handle = dlopen("libdlext_test_v2.so", RTLD_NOW);
+  ASSERT_DL_NOTNULL(handle);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_FORCE_LOAD;
+
+  // Note that 'libdlext_test.so' is dt_soname for libdlext_test_v2.so
+  void* handle2 = android_dlopen_ext("libdlext_test.so", RTLD_NOW, &extinfo);
+
+  ASSERT_DL_NOTNULL(handle2);
+  ASSERT_TRUE(handle == handle2);
+
+  dlclose(handle2);
+  dlclose(handle);
+}
+
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 

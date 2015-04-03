@@ -1044,16 +1044,18 @@ static soinfo* load_library(LoadTaskList& load_tasks,
   }
 
   // Check for symlink and other situations where
-  // file can have different names.
-  for (soinfo* si = solist; si != nullptr; si = si->next) {
-    if (si->get_st_dev() != 0 &&
-        si->get_st_ino() != 0 &&
-        si->get_st_dev() == file_stat.st_dev &&
-        si->get_st_ino() == file_stat.st_ino &&
-        si->get_file_offset() == file_offset) {
-      TRACE("library \"%s\" is already loaded under different name/path \"%s\" - "
-          "will return existing soinfo", name, si->name);
-      return si;
+  // file can have different names, unless ANDROID_DLEXT_FORCE_LOAD is set
+  if (extinfo == nullptr || (extinfo->flags & ANDROID_DLEXT_FORCE_LOAD) == 0) {
+    for (soinfo* si = solist; si != nullptr; si = si->next) {
+      if (si->get_st_dev() != 0 &&
+          si->get_st_ino() != 0 &&
+          si->get_st_dev() == file_stat.st_dev &&
+          si->get_st_ino() == file_stat.st_ino &&
+          si->get_file_offset() == file_offset) {
+        TRACE("library \"%s\" is already loaded under different name/path \"%s\" - "
+            "will return existing soinfo", name, si->name);
+        return si;
+      }
     }
   }
 
