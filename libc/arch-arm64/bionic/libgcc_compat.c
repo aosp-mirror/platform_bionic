@@ -1,6 +1,6 @@
 /* STOPSHIP: remove this once the flounder blobs have been rebuilt (http://b/20065774). */
 
-#if defined(__clang__)
+#if !defined(__clang__)
 
 extern void __clear_cache(char*, char*);
 extern char _Unwind_Backtrace;
