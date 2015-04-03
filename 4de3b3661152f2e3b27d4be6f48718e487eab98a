@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "63f74ae2_38550d23",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T20:26:18Z",
+      "side": 1,
+      "message": "I don\u0027t know how to check it with static_asserts, or I am not sure what do you want to check. Give an example?",
+      "parentUuid": "23c4727c_baad7216",
+      "range": {
+        "startLine": 408,
+        "startChar": 1,
+        "endLine": 414,
+        "endChar": 15
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cefea1_5e1f828a",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
