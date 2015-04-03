@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "23c4727c_9a83ce05",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-03T17:45:06Z",
+      "side": 1,
+      "message": "\"waits\"",
+      "range": {
+        "startLine": 400,
+        "startChar": 23,
+        "endLine": 400,
+        "endChar": 27
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_56574e5f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-03T17:45:06Z",
+      "side": 1,
+      "message": "\"For a\"",
+      "range": {
+        "startLine": 400,
+        "startChar": 68,
+        "endLine": 400,
+        "endChar": 70
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_f9f413d5",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-03T17:45:06Z",
+      "side": 1,
+      "message": "\"the owner_tid\"",
+      "range": {
+        "startLine": 400,
+        "startChar": 85,
+        "endLine": 400,
+        "endChar": 94
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_baad7216",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-03T17:45:06Z",
+      "side": 1,
+      "message": "This assumes that the layout is identical to pthread_mutex_internal_t, and neither has any padding.  That no doubt holds for current architectures, but I would try to check it with static_asserts.\n\nI wonder whether this is the best approach, or whether owner_tid and state should always be accessed atomically as a unit, like before, in spite of the fact that that\u0027s not logically necessary.  Probably either way is OK.",
+      "range": {
+        "startLine": 408,
+        "startChar": 1,
+        "endLine": 414,
+        "endChar": 15
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cefea1_5e1f828a",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
