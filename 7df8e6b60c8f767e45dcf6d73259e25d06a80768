@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_b92c5b3f",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T17:49:41Z",
+      "side": 1,
+      "message": "the library",
+      "revId": "7df8e6b60c8f767e45dcf6d73259e25d06a80768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_c9aab5d1",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T17:49:41Z",
+      "side": 1,
+      "message": ".",
+      "revId": "7df8e6b60c8f767e45dcf6d73259e25d06a80768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
