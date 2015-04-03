@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3bdfae6_48832751",
+        "filename": "libc/arch-arm64/bionic/libgcc_compat.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-04-03T20:32:29Z",
+      "side": 1,
+      "message": "!defined ?",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 11
+      },
+      "revId": "0975a5d9d29019e764dc0ab2ddc75759bebffb9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
