@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83cefea1_5e1f828a",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T17:02:34Z",
+      "side": 1,
+      "message": "it\u0027s not a macro. it\u0027s new syntax.",
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c3d47630_3c729910",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T17:02:34Z",
+      "side": 1,
+      "message": "forward declarations should be at the top of the file.",
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
