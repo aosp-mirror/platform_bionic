@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63de6a5c_c60cdaef",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T05:32:06Z",
+      "side": 1,
+      "message": "if you didn\u0027t need to put extern \"C\" before this, i suspect that means you don\u0027t need this at all...",
+      "revId": "4fbeb51252a26a991ef56d3c4b7e9f9f08443ea7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63de6a5c_a609cede",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-03T05:32:06Z",
+      "side": 1,
+      "message": "if you\u0027re going to get all fancy and use std::regex (which is fine) you might want to use a raw string literal?",
+      "revId": "4fbeb51252a26a991ef56d3c4b7e9f9f08443ea7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
