@@ -71,6 +71,78 @@
     },
     {
       "key": {
+        "uuid": "23c4727c_fbb1abd4",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T20:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c4727c_9a83ce05",
+      "range": {
+        "startLine": 400,
+        "startChar": 23,
+        "endLine": 400,
+        "endChar": 27
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_7d513768",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T20:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_56574e5f",
+      "range": {
+        "startLine": 400,
+        "startChar": 68,
+        "endLine": 400,
+        "endChar": 70
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_5d4e7bc6",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T20:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_f9f413d5",
+      "range": {
+        "startLine": 400,
+        "startChar": 85,
+        "endLine": 400,
+        "endChar": 94
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_baad7216",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 4
@@ -106,6 +178,30 @@
       "side": 1,
       "message": "yeah, it is starting to feel like we\u0027re just getting more pain out of this. is it worth continuing down this path or should we merge them again?",
       "parentUuid": "23c4727c_baad7216",
+      "range": {
+        "startLine": 408,
+        "startChar": 1,
+        "endLine": 414,
+        "endChar": 15
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_a85763b0",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-03T20:23:34Z",
+      "side": 1,
+      "message": "It is pain because we only have 32-bits for 32-bit devices. So 32-bit device want to use unit access for state and owner_tid, but 64-bit device has enough space to access and owner_tid separately. What\u0027s more, we can\u0027t use atomic_long for \"state and owner_tid\" because we only support 4 bytes alignment for pthread_mutex_t.\n\nThis may be the best approach I can think up of to support 32-bit owner_tid. In other choices, we need to split more code into 32-bit version and 64-bit version, which is more painful to maintain.",
+      "parentUuid": "23c4727c_1a0c5ebe",
       "range": {
         "startLine": 408,
         "startChar": 1,
