@@ -1,4 +1,9 @@
 LIBC {
+  global:
+    /* Work-around for http://b/20065774. */
+    __clear_cache;
+    _Unwind_Backtrace;
+    _Unwind_GetIP;
   local:
     _ZSt7nothrow;
     _ZdaPv;
