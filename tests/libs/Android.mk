@@ -376,6 +376,7 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 libtest_dlsym_from_this_src_files := dlsym_from_this.cpp
 
 module := libtest_dlsym_from_this
+libtest_dlsym_from_this_shared_libraries_target := libdl
 
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
@@ -396,13 +397,9 @@ libtest_dlopen_from_ctor_src_files := \
 
 module := libtest_dlopen_from_ctor
 
-build_target := SHARED_LIBRARY
-build_type := host
-include $(TEST_PATH)/Android.build.mk
+libtest_dlopen_from_ctor_shared_libraries_target := libdl
 
-libtest_dlopen_from_ctor_shared_libraries := libdl
-build_type := target
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
 # Library that depends on the library with constructor that calls dlopen() b/7941716
