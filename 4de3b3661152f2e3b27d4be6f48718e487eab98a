@@ -238,6 +238,30 @@
     },
     {
       "key": {
+        "uuid": "23c4727c_89bf05f3",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-03T21:13:11Z",
+      "side": 1,
+      "message": "I hadn\u0027t thought about the 64-bit alignment issues.  Good point.  We unfortunately got that wrong for L, I think.\n\nI would just check that the state and owner_tid fields have the expected offsets.  I hope that you can check with static_assert(offsetof...), but I\u0027m actually not sure that works.",
+      "parentUuid": "63f74ae2_38550d23",
+      "range": {
+        "startLine": 408,
+        "startChar": 1,
+        "endLine": 414,
+        "endChar": 15
+      },
+      "revId": "4de3b3661152f2e3b27d4be6f48718e487eab98a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cefea1_5e1f828a",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 4
