@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "23c4727c_1aed7e87",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-03T17:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03092eaf_abd3f5da",
+      "revId": "fab710f81f5923f4df6a0daa0d1d0ce5b0daf03b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3d47630_bc9fc935",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-03T03:28:24Z",
       "side": 1,
       "message": "...reason multiple ELF files share the same filename (because the already-loaded library has been removed and overwritten, for example).\n\n?\n\ni still think it\u0027s worth mentioning the soname. because now it\u0027s quite subtle, isn\u0027t it? or is this only useful for ELF files with no DT_NEEDEDs? (in which case, should we mention that?)",
+      "revId": "fab710f81f5923f4df6a0daa0d1d0ce5b0daf03b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_f903f30c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-03T17:42:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3d47630_bc9fc935",
       "revId": "fab710f81f5923f4df6a0daa0d1d0ce5b0daf03b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
