@@ -124,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "e3bdfae6_3956f9e8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T18:53:05Z",
+      "side": 1,
+      "message": "but \u0027name\u0027 here is the path, right? so you don\u0027t need to use \u0027fd\u0027?\n\noh, i missed the ANDROID_DLEXT_USE_LIBRARY_FD case.\n\nokay, maybe rename this frealpath or (less \u0027standard\u0027 but more readable) realpath_fd to make it clear what the difference is?",
+      "parentUuid": "63f74ae2_028ab6af",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f74ae2_82f22669",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -204,6 +222,24 @@
       "side": 1,
       "message": "in order to locate libc.so on linux I need to parse/access ldconfig.. can\u0027t just hardcode the realpath.",
       "parentUuid": "63f74ae2_62084ae2",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_196335c3",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T18:53:05Z",
+      "side": 1,
+      "message": "/proc/self/maps?",
+      "parentUuid": "63f74ae2_e2579aaf",
       "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
