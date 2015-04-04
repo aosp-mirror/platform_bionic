@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c4727c_01698921",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-04T01:05:24Z",
+      "side": 1,
+      "message": "Maybe add \"and we\u0027re little-endian\"",
+      "range": {
+        "startLine": 409,
+        "startChar": 5,
+        "endLine": 409,
+        "endChar": 105
+      },
+      "revId": "1de1e1e4954279c53110ef84fb47f36e735cab06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
