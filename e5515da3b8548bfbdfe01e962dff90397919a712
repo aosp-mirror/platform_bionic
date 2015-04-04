@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63f74ae2_c2f81e4d",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "do you need any alignment constraint on this?",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c34716eb_1e8c8dca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "though\n\nthe debugger",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_a2ed2289",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "if you\u0027re serious about this, file a bug against glibc and link to it here.\n\n(or at least tone it down to \"long term we should investigate whether we can fix...\". we don\u0027t actually _need_ anything. it just offends us that those C programmers didn\u0027t use const where they should have :-) )",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c34716eb_de5625b5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "i\u0027m surprised this isn\u0027t a call to bionic\u0027s realpath.\n\nif (",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_82f22669",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2675,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "(don\u0027t you usually write ctor?)",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c34716eb_9e509db8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2676,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "the memory",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_19ab3582",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_62084ae2",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-04T16:00:58Z",
+      "side": 1,
+      "message": "explain why it doesn\u0027t?",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
