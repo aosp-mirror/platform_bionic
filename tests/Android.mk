@@ -128,6 +128,9 @@ libBionicStandardTests_c_includes := \
     bionic/libc \
     external/tinyxml2 \
 
+libBionicStandardTests_static_libraries := \
+    libbase \
+
 libBionicStandardTests_ldlibs_host := \
     -lrt \
 
@@ -257,6 +260,7 @@ bionic-unit-tests_whole_static_libraries := \
 bionic-unit-tests_static_libraries := \
     libtinyxml2 \
     liblog \
+    libbase \
 
 # TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
 bionic-unit-tests_src_files := \
@@ -317,6 +321,7 @@ bionic-unit-tests-static_static_libraries := \
     libdl \
     libtinyxml2 \
     liblog \
+    libbase \
 
 bionic-unit-tests-static_force_static_executable := true
 
@@ -354,6 +359,11 @@ bionic-unit-tests-glibc_whole_static_libraries := \
     libBionicStandardTests \
     libBionicGtestMain \
     $(fortify_libs) \
+
+bionic-unit-tests-glibc_static_libraries := \
+    libbase \
+    liblog \
+    libcutils \
 
 bionic-unit-tests-glibc_ldlibs := \
     -lrt -ldl -lutil \

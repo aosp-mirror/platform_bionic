@@ -24,14 +24,10 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/syscall.h>
 #include <unistd.h>
 #include <set>
 
-#if defined(__GLIBC__)
-// glibc doesn't expose gettid(2).
-pid_t gettid() { return syscall(__NR_gettid); }
-#endif // __GLIBC__
+extern "C" pid_t gettid();
 
 // For x86, bionic and glibc have per-thread stack guard values (all identical).
 #if defined(__i386__)
