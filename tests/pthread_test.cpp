@@ -29,12 +29,18 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <regex>
 #include <vector>
+
+#include <base/file.h>
+#include <base/stringprintf.h>
 
 #include "private/bionic_macros.h"
 #include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
+
+extern "C" pid_t gettid();
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -704,6 +710,23 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
 }
 
+static void WaitUntilThreadSleep(std::atomic<pid_t>& pid) {
+  while (pid == 0) {
+    usleep(1000);
+  }
+  std::string filename = android::base::StringPrintf("/proc/%d/stat", pid.load());
+  std::regex regex {R"(\s+S\s+)"};
+
+  while (true) {
+    std::string content;
+    ASSERT_TRUE(android::base::ReadFileToString(filename, &content));
+    if (std::regex_search(content, regex)) {
+      break;
+    }
+    usleep(1000);
+  }
+}
+
 struct RwlockWakeupHelperArg {
   pthread_rwlock_t lock;
   enum Progress {
@@ -713,9 +736,11 @@ struct RwlockWakeupHelperArg {
     LOCK_ACCESSED
   };
   std::atomic<Progress> progress;
+  std::atomic<pid_t> tid;
 };
 
 static void pthread_rwlock_reader_wakeup_writer_helper(RwlockWakeupHelperArg* arg) {
+  arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
 
@@ -732,14 +757,14 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
-  while (wakeup_arg.progress != RwlockWakeupHelperArg::LOCK_WAITING) {
-    usleep(5000);
-  }
-  usleep(5000);
+  WaitUntilThreadSleep(wakeup_arg.tid);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
@@ -749,6 +774,7 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
 }
 
 static void pthread_rwlock_writer_wakeup_reader_helper(RwlockWakeupHelperArg* arg) {
+  arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
 
@@ -765,14 +791,14 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
-  while (wakeup_arg.progress != RwlockWakeupHelperArg::LOCK_WAITING) {
-    usleep(5000);
-  }
-  usleep(5000);
+  WaitUntilThreadSleep(wakeup_arg.tid);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
@@ -1263,7 +1289,6 @@ TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
   ASSERT_EQ(0, memcmp(&lock_recursive, &m3.lock, sizeof(pthread_mutex_t)));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock_recursive));
 }
-
 class MutexWakeupHelper {
  private:
   PthreadMutex m;
@@ -1274,8 +1299,10 @@ class MutexWakeupHelper {
     LOCK_ACCESSED
   };
   std::atomic<Progress> progress;
+  std::atomic<pid_t> tid;
 
   static void thread_fn(MutexWakeupHelper* helper) {
+    helper->tid = gettid();
     ASSERT_EQ(LOCK_INITIALIZED, helper->progress);
     helper->progress = LOCK_WAITING;
 
@@ -1293,15 +1320,15 @@ class MutexWakeupHelper {
   void test() {
     ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
     progress = LOCK_INITIALIZED;
+    tid = 0;
 
     pthread_t thread;
     ASSERT_EQ(0, pthread_create(&thread, NULL,
       reinterpret_cast<void* (*)(void*)>(MutexWakeupHelper::thread_fn), this));
 
-    while (progress != LOCK_WAITING) {
-      usleep(5000);
-    }
-    usleep(5000);
+    WaitUntilThreadSleep(tid);
+    ASSERT_EQ(LOCK_WAITING, progress);
+
     progress = LOCK_RELEASED;
     ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 
