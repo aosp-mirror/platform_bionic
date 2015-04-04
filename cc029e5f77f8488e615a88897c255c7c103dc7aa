@@ -33,6 +33,24 @@
       "revId": "cc029e5f77f8488e615a88897c255c7c103dc7aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3bdfae6_8b736f96",
+        "filename": "libc/arch-arm/bionic/libgcc_protect_unwind.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T02:52:07Z",
+      "side": 1,
+      "message": "This was readelf --dym-sym | grep Unwind, I do not think we need a script danalbert working on permanent solution for this which will eventually remove these symbols from libc.",
+      "parentUuid": "63f74ae2_f19aeb46",
+      "revId": "cc029e5f77f8488e615a88897c255c7c103dc7aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
