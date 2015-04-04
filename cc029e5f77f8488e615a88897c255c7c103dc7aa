@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "23c4727c_b729ff81",
+        "filename": "libc/arch-arm/bionic/libgcc_protect_unwind.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T03:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63f74ae2_31d403e5",
+      "revId": "cc029e5f77f8488e615a88897c255c7c103dc7aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f74ae2_f19aeb46",
         "filename": "libc/arch-arm/bionic/libgcc_protect_unwind.c",
         "patchSetId": 1
