@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c34716eb_3e1dc9e8",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T18:31:14Z",
+      "side": 1,
+      "message": "yes, done.",
+      "parentUuid": "63f74ae2_c2f81e4d",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c34716eb_1e8c8dca",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "c34716eb_de2aa5fa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T18:31:14Z",
+      "side": 1,
+      "message": "removed todo part",
+      "parentUuid": "63f74ae2_a2ed2289",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c34716eb_de5625b5",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -64,6 +100,24 @@
       "writtenOn": "2015-04-04T16:00:58Z",
       "side": 1,
       "message": "i\u0027m surprised this isn\u0027t a call to bionic\u0027s realpath.\n\nif (",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_028ab6af",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T18:31:14Z",
+      "side": 1,
+      "message": "bionic\u0027s realpath does not work with fd.",
+      "parentUuid": "c34716eb_de5625b5",
       "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -132,6 +186,24 @@
       "writtenOn": "2015-04-04T16:00:58Z",
       "side": 1,
       "message": "explain why it doesn\u0027t?",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63f74ae2_e2579aaf",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-04T18:31:14Z",
+      "side": 1,
+      "message": "in order to locate libc.so on linux I need to parse/access ldconfig.. can\u0027t just hardcode the realpath.",
+      "parentUuid": "63f74ae2_62084ae2",
       "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
