@@ -16,6 +16,24 @@
       "revId": "dadac10fccb1558fb00bbafc3fc4f6b3a20f9591",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a34222dc_7fa342f4",
+        "filename": "tools/bionicbb/gmail_listener.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-04-06T21:48:09Z",
+      "side": 1,
+      "message": "Correct. I\u0027ll update the comment to be more clear.",
+      "parentUuid": "83519eaa_cd142e45",
+      "revId": "dadac10fccb1558fb00bbafc3fc4f6b3a20f9591",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
