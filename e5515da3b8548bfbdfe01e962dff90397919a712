@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "a34222dc_3c72a810",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-06T21:15:28Z",
+      "side": 1,
+      "message": "duh. i forgot the ANDROID_DLEXT_USE_LIBRARY_FD case again :-)",
+      "parentUuid": "c34716eb_d4dcb963",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f74ae2_82f22669",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
