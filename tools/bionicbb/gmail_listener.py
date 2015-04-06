@@ -19,6 +19,7 @@ import httplib
 import httplib2
 import jenkinsapi
 import json
+import os
 import re
 import requests
 import termcolor
@@ -51,14 +52,34 @@ def get_headers(msg):
     return headers
 
 
-def should_skip_message(info):
-    if info['MessageType'] in ('newchange', 'newpatchset', 'comment'):
-        commit = gerrit.get_commit(info['Change-Id'], info['PatchSet'])
-        committer = commit['committer']['email']
-        return not committer.endswith('@google.com')
-    else:
-        raise ValueError('should_skip_message() is only valid for new '
+def is_untrusted_committer(change_id, patch_set):
+    # TODO(danalbert): Needs to be based on the account that made the comment.
+    commit = gerrit.get_commit(change_id, patch_set)
+    committer = commit['committer']['email']
+    return not committer.endswith('@google.com')
+
+
+def contains_cleanspec(change_id, patch_set):
+    files = gerrit.get_files_for_revision(change_id, patch_set)
+    return 'CleanSpec.mk' in [os.path.basename(f) for f in files]
+
+
+def should_skip_build(info):
+    if info['MessageType'] not in ('newchange', 'newpatchset', 'comment'):
+        raise ValueError('should_skip_build() is only valid for new '
                          'changes, patch sets, and commits.')
+
+    change_id = info['Change-Id']
+    patch_set = info['PatchSet']
+
+    checks = [
+        is_untrusted_committer,
+        contains_cleanspec,
+    ]
+    for check in checks:
+        if check(change_id, patch_set):
+            return True
+    return False
 
 
 def build_service():
@@ -214,7 +235,7 @@ def build_project(gerrit_info, dry_run, lunch_target=None):
 
 
 def handle_change(gerrit_info, _, dry_run):
-    if should_skip_message(gerrit_info):
+    if should_skip_build(gerrit_info):
         return True
     return build_project(gerrit_info, dry_run)
 handle_newchange = handle_change
@@ -246,8 +267,7 @@ def handle_comment(gerrit_info, body, dry_run):
     if 'Verified+1' in body:
         drop_rejection(gerrit_info, dry_run)
 
-    # TODO(danalbert): Needs to be based on the account that made the comment.
-    if should_skip_message(gerrit_info):
+    if should_skip_build(gerrit_info):
         return True
 
     command_map = {
