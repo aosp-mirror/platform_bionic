@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83519eaa_cd142e45",
+        "filename": "tools/bionicbb/gmail_listener.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-06T21:31:09Z",
+      "side": 1,
+      "message": "why? oh, you mean _also_. because googlers should be able to request a build of a non-googler\u0027s change, but a non-googler shouldn\u0027t?",
+      "revId": "dadac10fccb1558fb00bbafc3fc4f6b3a20f9591",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
