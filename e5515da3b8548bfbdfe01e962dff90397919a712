@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "a34222dc_1c9a4c70",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-06T20:52:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3bdfae6_3956f9e8",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63f74ae2_82f22669",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -240,6 +258,24 @@
       "side": 1,
       "message": "/proc/self/maps?",
       "parentUuid": "63f74ae2_e2579aaf",
+      "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a34222dc_9c03bc0e",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-06T20:52:52Z",
+      "side": 1,
+      "message": "the name is in maps libc-2.19.so which is different from ldconfig name - I updated the message.",
+      "parentUuid": "e3bdfae6_196335c3",
       "revId": "e5515da3b8548bfbdfe01e962dff90397919a712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
