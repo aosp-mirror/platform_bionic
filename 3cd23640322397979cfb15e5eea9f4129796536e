@@ -16,6 +16,24 @@
       "revId": "3cd23640322397979cfb15e5eea9f4129796536e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2320f22c_7f03470f",
+        "filename": "tests/utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-06T23:07:29Z",
+      "side": 1,
+      "message": "backtrace_map_info_t, but it ignores some fields.... like inode/dev/pathname",
+      "parentUuid": "a34222dc_3f061a4e",
+      "revId": "3cd23640322397979cfb15e5eea9f4129796536e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
