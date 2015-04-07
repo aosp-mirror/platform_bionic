@@ -136,7 +136,7 @@ int dladdr(const void* addr, Dl_info* info) {
 
   memset(info, 0, sizeof(Dl_info));
 
-  info->dli_fname = si->name;
+  info->dli_fname = si->get_realpath();
   // Address at which the shared object is loaded.
   info->dli_fbase = reinterpret_cast<void*>(si->base);
 
@@ -228,23 +228,28 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
 static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 #endif
 
-static soinfo __libdl_info("libdl.so", nullptr, 0, RTLD_GLOBAL);
+static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
+static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
-  if ((__libdl_info.flags_ & FLAG_LINKED) == 0) {
-    __libdl_info.flags_ |= FLAG_LINKED;
-    __libdl_info.strtab_ = ANDROID_LIBDL_STRTAB;
-    __libdl_info.symtab_ = g_libdl_symtab;
-    __libdl_info.nbucket_ = sizeof(g_libdl_buckets)/sizeof(unsigned);
-    __libdl_info.nchain_ = sizeof(g_libdl_chains)/sizeof(unsigned);
-    __libdl_info.bucket_ = g_libdl_buckets;
-    __libdl_info.chain_ = g_libdl_chains;
-    __libdl_info.ref_count_ = 1;
-    __libdl_info.strtab_size_ = sizeof(ANDROID_LIBDL_STRTAB);
-    __libdl_info.local_group_root_ = &__libdl_info;
-    __libdl_info.soname_ = "libdl.so";
+  if (__libdl_info == nullptr) {
+    __libdl_info = new (__libdl_info_buf) soinfo("libdl.so", nullptr, 0, RTLD_GLOBAL);
+    __libdl_info->flags_ |= FLAG_LINKED;
+    __libdl_info->strtab_ = ANDROID_LIBDL_STRTAB;
+    __libdl_info->symtab_ = g_libdl_symtab;
+    __libdl_info->nbucket_ = sizeof(g_libdl_buckets)/sizeof(unsigned);
+    __libdl_info->nchain_ = sizeof(g_libdl_chains)/sizeof(unsigned);
+    __libdl_info->bucket_ = g_libdl_buckets;
+    __libdl_info->chain_ = g_libdl_chains;
+    __libdl_info->ref_count_ = 1;
+    __libdl_info->strtab_size_ = sizeof(ANDROID_LIBDL_STRTAB);
+    __libdl_info->local_group_root_ = __libdl_info;
+    __libdl_info->soname_ = "libdl.so";
+#if defined(__arm__)
+    strlcpy(__libdl_info->old_name_, __libdl_info->soname_, sizeof(__libdl_info->old_name_));
+#endif
   }
 
-  return &__libdl_info;
+  return __libdl_info;
 }
