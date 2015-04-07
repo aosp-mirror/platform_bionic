@@ -26,8 +26,11 @@
 
 #include <string>
 
+#include "utils.h"
+
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
+
 
 static bool g_called = false;
 extern "C" void DlSymTestFunction() {
@@ -699,7 +702,7 @@ TEST(dlfcn, dlsym_failures) {
   ASSERT_EQ(0, dlclose(self));
 }
 
-TEST(dlfcn, dladdr) {
+TEST(dlfcn, dladdr_executable) {
   dlerror(); // Clear any pending errors.
   void* self = dlopen(NULL, RTLD_NOW);
   ASSERT_TRUE(self != NULL);
@@ -720,13 +723,11 @@ TEST(dlfcn, dladdr) {
   rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
   ASSERT_NE(rc, -1);
   executable_path[rc] = '\0';
-  std::string executable_name(basename(executable_path));
 
   // The filename should be that of this executable.
-  // Note that we don't know whether or not we have the full path, so we want an "ends_with" test.
-  std::string dli_fname(info.dli_fname);
-  dli_fname = basename(&dli_fname[0]);
-  ASSERT_EQ(dli_fname, executable_name);
+  char dli_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(info.dli_fname, dli_realpath) != nullptr);
+  ASSERT_STREQ(executable_path, dli_realpath);
 
   // The symbol name should be the symbol we looked up.
   ASSERT_STREQ(info.dli_sname, "DlSymTestFunction");
@@ -734,27 +735,43 @@ TEST(dlfcn, dladdr) {
   // The address should be the exact address of the symbol.
   ASSERT_EQ(info.dli_saddr, sym);
 
-  // Look in /proc/pid/maps to find out what address we were loaded at.
-  // TODO: factor /proc/pid/maps parsing out into a class and reuse all over bionic.
-  void* base_address = NULL;
-  char line[BUFSIZ];
-  FILE* fp = fopen("/proc/self/maps", "r");
-  ASSERT_TRUE(fp != NULL);
-  while (fgets(line, sizeof(line), fp) != NULL) {
-    uintptr_t start = strtoul(line, 0, 16);
-    line[strlen(line) - 1] = '\0'; // Chomp the '\n'.
-    char* path = strchr(line, '/');
-    if (path != NULL && strcmp(executable_path, path) == 0) {
-      base_address = reinterpret_cast<void*>(start);
+  std::vector<map_record> maps;
+  ASSERT_TRUE(Maps::parse_maps(&maps));
+
+  void* base_address = nullptr;
+  for (const map_record& rec : maps) {
+    if (executable_path == rec.pathname) {
+      base_address = reinterpret_cast<void*>(rec.addr_start);
       break;
     }
   }
-  fclose(fp);
 
   // The base address should be the address we were loaded at.
   ASSERT_EQ(info.dli_fbase, base_address);
 
   ASSERT_EQ(0, dlclose(self));
+}
+
+#if defined(__LP64__)
+#define BIONIC_PATH_TO_LIBC "/system/lib64/libc.so"
+#else
+#define BIONIC_PATH_TO_LIBC "/system/lib/libc.so"
+#endif
+
+TEST(dlfcn, dladdr_libc) {
+#if defined(__BIONIC__)
+  Dl_info info;
+  void* addr = reinterpret_cast<void*>(puts); // well-known libc function
+  ASSERT_TRUE(dladdr(addr, &info) != 0);
+
+  ASSERT_STREQ(BIONIC_PATH_TO_LIBC, info.dli_fname);
+  // TODO: add check for dfi_fbase
+  ASSERT_STREQ("puts", info.dli_sname);
+  ASSERT_EQ(addr, info.dli_saddr);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing for glibc. Glibc returns path from ldconfig "
+      "for libc.so, which is symlink itself (not a realpath).\n";
+#endif
 }
 
 TEST(dlfcn, dladdr_invalid) {

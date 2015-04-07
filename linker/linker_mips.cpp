@@ -64,7 +64,7 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
 
-    DEBUG("Processing '%s' relocation at index %zd", this->name, idx);
+    DEBUG("Processing '%s' relocation at index %zd", get_soname(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }
@@ -77,7 +77,7 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
       s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
       if (s == nullptr) {
         // mips does not support relocation with weak-undefined symbols
-        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
+        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, get_soname());
         return false;
       } else {
         // We got a definition.
