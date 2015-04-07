@@ -52,7 +52,7 @@ class Maps {
     char line[BUFSIZ];
     while (fgets(line, sizeof(line), fp) != nullptr) {
       map_record record;
-      dev_t dev_major, dev_minor;
+      uint32_t dev_major, dev_minor;
       char pathstr[BUFSIZ];
       char prot[5]; // sizeof("rwxp")
       if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR " %4s %" SCNxPTR " %x:%x %lu %s",
