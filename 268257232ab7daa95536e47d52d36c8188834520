@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63f82afb_3b06d71f",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T03:37:58Z",
+      "side": 1,
+      "message": "suspend",
+      "range": {
+        "startLine": 165,
+        "startChar": 33,
+        "endLine": 165,
+        "endChar": 37
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3eea234_7d9df7b0",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T03:37:58Z",
+      "side": 1,
+      "message": "\"can_acquire_read_lock\"?",
+      "range": {
+        "startLine": 303,
+        "startChar": 10,
+        "endLine": 303,
+        "endChar": 33
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3ec1a3e_7f8ccfcb",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T03:37:58Z",
+      "side": 1,
+      "message": "Not necessarily.  X86 has dedicated instructions.  ARM uses load/store exclusive.  Logically none of this really matters, but I don\u0027t understand the purpose of the parenthetical comment.",
+      "range": {
+        "startLine": 320,
+        "startChar": 65,
+        "endLine": 321,
+        "endChar": 36
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3eea234_5d6f5b23",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T03:37:58Z",
+      "side": 1,
+      "message": "Maybe once is enough for the comment?",
+      "range": {
+        "startLine": 399,
+        "startChar": 4,
+        "endLine": 403,
+        "endChar": 20
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3eea234_00c4488f",
+        "filename": "libc/private/bionic_lock.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T03:37:58Z",
+      "side": 1,
+      "message": "All of these locks should almost certainly spin a few times before they sleep.  That seems especially clear here, since this lock should be held very briefly, so __futex_wait really only makes sense if the holder was suspended in the critical section, which should be very rare.  Maybe add an explicit TODO comment?",
+      "range": {
+        "startLine": 61,
+        "startChar": 7,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
