@@ -258,6 +258,30 @@
       "revId": "268257232ab7daa95536e47d52d36c8188834520",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03868e96_c006fea1",
+        "filename": "libc/private/bionic_lock.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-08T20:13:26Z",
+      "side": 1,
+      "message": "TODO comment added.",
+      "parentUuid": "a3eea234_896fdc22",
+      "range": {
+        "startLine": 61,
+        "startChar": 7,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
