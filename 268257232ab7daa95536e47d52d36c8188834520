@@ -234,6 +234,30 @@
       "revId": "268257232ab7daa95536e47d52d36c8188834520",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3eea234_896fdc22",
+        "filename": "libc/private/bionic_lock.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-08T19:04:47Z",
+      "side": 1,
+      "message": "I think there\u0027s actually a fair amount of research literature on this, though I don\u0027t have a reference handy.  The underlying observation is simple:  Invoking the scheduler typically costs a couple of orders of magnitude more time than the hold time for these locks (maybe  several usecs vs \u003c100nsecs; I haven\u0027t measured it under realistic Android conditions).  Thus if you, say wait 10 times for 20 nsecs each before entering the kernel, you save several usecs when it succeeds, and it costs you 200 nsecs when it fails.  The success rate is very likely to be significantly \u003e 50%, so that\u0027s a large win.  This makes sense everywhere except on a uniprocessor, and we\u0027re mostly ignoring those.  I think most other implementations do something like that these days.  Windows has an explicit InitializeCriticalSectionAndSpinCount API function.\n\nFor higher-level locks, it may make sense to make the spin count adaptive:  If spinning worked in the past, spin a little longer before using a futex.\n\nI think this also applies to power-sensitive contexts like ours. Entering the kernel no doubt also costs a lot of power.",
+      "parentUuid": "63f82afb_b59310ac",
+      "range": {
+        "startLine": 61,
+        "startChar": 7,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "268257232ab7daa95536e47d52d36c8188834520",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
