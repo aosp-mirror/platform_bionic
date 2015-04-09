@@ -29,6 +29,12 @@ def get_commit(change_id, revision):
         call('/changes/{}/revisions/{}/commit'.format(change_id, revision)))
 
 
+def get_files_for_revision(change_id, revision):
+    return json.loads(
+        call('/changes/{}/revisions/{}/files'.format(
+            change_id, revision))).keys()
+
+
 def call(endpoint, method='GET'):
     if method != 'GET':
         raise NotImplementedError('Currently only HTTP GET is supported.')

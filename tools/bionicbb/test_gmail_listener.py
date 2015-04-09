@@ -3,61 +3,71 @@ import mock
 import unittest
 
 
-class TestShouldSkipMessage(unittest.TestCase):
-    def test_accepts_googlers(self):
+class TestShouldSkipBuild(unittest.TestCase):
+    @mock.patch('gmail_listener.contains_cleanspec')
+    @mock.patch('gerrit.get_commit')
+    def test_accepts_googlers(self, mock_commit, *other_checks):
+        mock_commit.return_value = {
+            'committer': {'email': 'googler@google.com'}
+        }
+
+        for other_check in other_checks:
+            other_check.return_value = False
+
         for message_type in ('newchange', 'newpatchset', 'comment'):
-            with mock.patch('gerrit.get_commit') as mock_commit:
-                mock_commit.return_value = {
-                    'committer': {'email': 'googler@google.com'}
-                }
+            self.assertFalse(gmail_listener.should_skip_build({
+                'MessageType': message_type,
+                'Change-Id': '',
+                'PatchSet': '',
+            }))
 
-                self.assertFalse(gmail_listener.should_skip_message({
-                    'MessageType': message_type,
-                    'Change-Id': '',
-                    'PatchSet': '',
-                }))
+    @mock.patch('gmail_listener.contains_cleanspec')
+    @mock.patch('gerrit.get_commit')
+    def test_rejects_googlish_domains(self, mock_commit, *other_checks):
+        mock_commit.return_value = {
+            'committer': {'email': 'fakegoogler@google.com.fake.com'}
+        }
 
-    def test_rejects_non_googlers(self):
+        for other_check in other_checks:
+            other_check.return_value = False
+
         for message_type in ('newchange', 'newpatchset', 'comment'):
-            with mock.patch('gerrit.get_commit') as mock_commit:
-                mock_commit.return_value = {
-                    'committer': {'email': 'fakegoogler@google.com.fake.com'}
-                }
+            self.assertTrue(gmail_listener.should_skip_build({
+                'MessageType': message_type,
+                'Change-Id': '',
+                'PatchSet': '',
+            }))
 
-                self.assertTrue(gmail_listener.should_skip_message({
-                    'MessageType': message_type,
-                    'Change-Id': '',
-                    'PatchSet': '',
-                }))
+    @mock.patch('gmail_listener.contains_cleanspec')
+    @mock.patch('gerrit.get_commit')
+    def test_rejects_non_googlers(self, mock_commit, *other_checks):
+        mock_commit.return_value = {
+            'committer': {'email': 'johndoe@example.com'}
+        }
 
-            with mock.patch('gerrit.get_commit') as mock_commit:
-                mock_commit.return_value = {
-                    'committer': {'email': 'johndoe@example.com'}
-                }
+        for other_check in other_checks:
+            other_check.return_value = False
 
-                self.assertTrue(gmail_listener.should_skip_message({
-                    'MessageType': message_type,
-                    'Change-Id': '',
-                    'PatchSet': '',
-                }))
-
-    def test_calls_gerrit_get_commit(self):  # pylint: disable=no-self-use
         for message_type in ('newchange', 'newpatchset', 'comment'):
-            with mock.patch('gerrit.get_commit') as mock_commit:
-                gmail_listener.should_skip_message({
-                    'MessageType': message_type,
-                    'Change-Id': 'foo',
-                    'PatchSet': 'bar',
-                })
-            mock_commit.assert_called_once_with('foo', 'bar')
+            self.assertTrue(gmail_listener.should_skip_build({
+                'MessageType': message_type,
+                'Change-Id': '',
+                'PatchSet': '',
+            }))
 
-            with mock.patch('gerrit.get_commit') as mock_commit:
-                gmail_listener.should_skip_message({
-                    'MessageType': message_type,
-                    'Change-Id': 'baz',
-                    'PatchSet': 'qux',
-                })
-            mock_commit.assert_called_once_with('baz', 'qux')
+    @mock.patch('gmail_listener.is_untrusted_committer')
+    @mock.patch('gerrit.get_files_for_revision')
+    def test_skips_cleanspecs(self, mock_files, *other_checks):
+        mock_files.return_value = ['foo/CleanSpec.mk']
+        for other_check in other_checks:
+            other_check.return_value = False
+
+        for message_type in ('newchange', 'newpatchset', 'comment'):
+            self.assertTrue(gmail_listener.should_skip_build({
+                'MessageType': message_type,
+                'Change-Id': '',
+                'PatchSet': '',
+            }))
 
 
 if __name__ == '__main__':
