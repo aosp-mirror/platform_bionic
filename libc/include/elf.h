@@ -48,6 +48,71 @@ typedef struct {
   } a_un;
 } Elf64_auxv_t;
 
+typedef Elf32_Half Elf32_Versym;
+typedef Elf64_Half Elf64_Versym;
+
+typedef struct {
+  Elf32_Half vd_version;
+  Elf32_Half vd_flags;
+  Elf32_Half vd_ndx;
+  Elf32_Half vd_cnt;
+  Elf32_Word vd_hash;
+  Elf32_Word vd_aux;
+  Elf32_Word vd_next;
+} Elf32_Verdef;
+
+typedef struct {
+  Elf32_Word vda_name;
+  Elf32_Word vda_next;
+} Elf32_Verdaux;
+
+typedef struct {
+  Elf64_Half vd_version;
+  Elf64_Half vd_flags;
+  Elf64_Half vd_ndx;
+  Elf64_Half vd_cnt;
+  Elf64_Word vd_hash;
+  Elf64_Word vd_aux;
+  Elf64_Word vd_next;
+} Elf64_Verdef;
+
+typedef struct {
+  Elf64_Word vda_name;
+  Elf64_Word vda_next;
+} Elf64_Verdaux;
+
+typedef struct {
+  Elf32_Half vn_version;
+  Elf32_Half vn_cnt;
+  Elf32_Word vn_file;
+  Elf32_Word vn_aux;
+  Elf32_Word vn_next;
+} Elf32_Verneed;
+
+typedef struct {
+  Elf32_Word vna_hash;
+  Elf32_Half vna_flags;
+  Elf32_Half vna_other;
+  Elf32_Word vna_name;
+  Elf32_Word vna_next;
+} Elf32_Vernaux;
+
+typedef struct {
+  Elf64_Half vn_version;
+  Elf64_Half vn_cnt;
+  Elf64_Word vn_file;
+  Elf64_Word vn_aux;
+  Elf64_Word vn_next;
+} Elf64_Verneed;
+
+typedef struct {
+  Elf64_Word vna_hash;
+  Elf64_Half vna_flags;
+  Elf64_Half vna_other;
+  Elf64_Word vna_name;
+  Elf64_Word vna_next;
+} Elf64_Vernaux;
+
 #define DF_ORIGIN     0x00000001
 #define DF_SYMBOLIC   0x00000002
 #define DF_TEXTREL    0x00000004
