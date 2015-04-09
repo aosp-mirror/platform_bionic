@@ -1,5 +1,4 @@
 libc_bionic_src_files_arm += \
-    arch-arm/generic/bionic/memcmp.S \
     arch-arm/krait/bionic/memcpy.S \
     arch-arm/krait/bionic/memset.S \
     arch-arm/krait/bionic/strcmp.S \
@@ -13,5 +12,8 @@ libc_bionic_src_files_arm += \
     arch-arm/cortex-a15/bionic/strcpy.S \
     arch-arm/cortex-a15/bionic/strlen.S \
 
-libc_openbsd_src_files_arm += \
-    upstream-openbsd/lib/libc/string/memmove.c \
+libc_bionic_src_files_arm += \
+    arch-arm/generic/bionic/memcmp.S \
+
+libc_bionic_src_files_arm += \
+    arch-arm/denver/bionic/memmove.S \
