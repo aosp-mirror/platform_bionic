@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e356daec_f5e730d6",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-09T21:05:44Z",
+      "side": 1,
+      "message": "are we keeping things in LP32/LP64 pairs...",
+      "revId": "c0e7dbb1dbe92c9e72bdbd299fa50786fd751807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_55d71ceb",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-09T21:05:44Z",
+      "side": 1,
+      "message": "...or not?",
+      "revId": "c0e7dbb1dbe92c9e72bdbd299fa50786fd751807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
