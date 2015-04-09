@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03d12e8c_a8f8dbfc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2015-04-09T09:27:55Z",
+      "side": 1,
+      "message": "\".. and the jars are currently required for host tests.\"",
+      "revId": "d1a76bf3b54621f24e8f4dc858cb1a8613f0b46b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
