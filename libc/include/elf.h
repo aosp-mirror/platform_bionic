@@ -194,4 +194,10 @@ typedef struct {
 
 #define NT_GNU_BUILD_ID 3
 
+#define VER_FLG_BASE 0x1
+#define VER_FLG_WEAK 0x2
+
+#define VER_NDX_LOCAL  0
+#define VER_NDX_GLOBAL 1
+
 #endif /* _ELF_H */

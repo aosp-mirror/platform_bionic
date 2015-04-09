@@ -925,3 +925,63 @@ TEST(dlfcn, dlopen_dlopen_from_ctor) {
   GTEST_LOG_(INFO) << "This test is disabled for glibc (glibc segfaults if you try to call dlopen from a constructor).\n";
 #endif
 }
+
+TEST(dlfcn, symbol_versioning_use_v1) {
+  void* handle = dlopen("libtest_versioned_uselibv1.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "get_function_version"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(1, fn());
+  dlclose(handle);
+}
+
+TEST(dlfcn, symbol_versioning_use_v2) {
+  void* handle = dlopen("libtest_versioned_uselibv2.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "get_function_version"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(2, fn());
+  dlclose(handle);
+}
+
+TEST(dlfcn, symbol_versioning_use_other_v2) {
+  void* handle = dlopen("libtest_versioned_uselibv2_other.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "get_function_version"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(20, fn());
+  dlclose(handle);
+}
+
+TEST(dlfcn, symbol_versioning_use_other_v3) {
+  void* handle = dlopen("libtest_versioned_uselibv3_other.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "get_function_version"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(3, fn());
+  dlclose(handle);
+}
+
+TEST(dlfcn, symbol_versioning_default_via_dlsym) {
+  void* handle = dlopen("libtest_versioned_lib.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "versioned_function"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  ASSERT_EQ(3, fn()); // the default version is 3
+  dlclose(handle);
+}
+
+// This preempts the implementation from libtest_versioned_lib.so
+extern "C" int version_zero_function() {
+  return 0;
+}
+
+// This preempts the implementation from libtest_versioned_uselibv*.so
+extern "C" int version_zero_function2() {
+  return 0;
+}
