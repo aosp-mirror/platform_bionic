@@ -16,6 +16,24 @@
       "revId": "458f18601cc1cfddb4f5183db14d0d63d88925c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e356daec_78d415e6",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-09T21:50:45Z",
+      "side": 1,
+      "message": "leak... done.",
+      "parentUuid": "e356daec_d8fb418d",
+      "revId": "458f18601cc1cfddb4f5183db14d0d63d88925c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
