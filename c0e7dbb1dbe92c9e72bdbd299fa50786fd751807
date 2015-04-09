@@ -33,6 +33,24 @@
       "revId": "c0e7dbb1dbe92c9e72bdbd299fa50786fd751807",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "636d8ab3_79623f86",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-09T21:07:52Z",
+      "side": 1,
+      "message": "well, *aux is in some sense continuation of previous structure...",
+      "parentUuid": "e356daec_55d71ceb",
+      "revId": "c0e7dbb1dbe92c9e72bdbd299fa50786fd751807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
