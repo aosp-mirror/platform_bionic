@@ -64,6 +64,11 @@ def contains_cleanspec(change_id, patch_set):
     return 'CleanSpec.mk' in [os.path.basename(f) for f in files]
 
 
+def contains_bionicbb(change_id, patch_set):
+    files = gerrit.get_files_for_revision(change_id, patch_set)
+    return any('tools/bionicbb' in f for f in files)
+
+
 def should_skip_build(info):
     if info['MessageType'] not in ('newchange', 'newpatchset', 'comment'):
         raise ValueError('should_skip_build() is only valid for new '
@@ -75,6 +80,7 @@ def should_skip_build(info):
     checks = [
         is_untrusted_committer,
         contains_cleanspec,
+        contains_bionicbb,
     ]
     for check in checks:
         if check(change_id, patch_set):
