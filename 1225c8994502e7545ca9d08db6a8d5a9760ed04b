@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c326369c_06cf2f5c",
+        "filename": "linker/linker_debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-11T01:15:54Z",
+      "side": 1,
+      "message": "this is reverted in ps2.",
+      "revId": "1225c8994502e7545ca9d08db6a8d5a9760ed04b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
