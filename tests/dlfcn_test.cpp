@@ -764,7 +764,11 @@ TEST(dlfcn, dladdr_libc) {
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
   ASSERT_TRUE(dladdr(addr, &info) != 0);
 
-  ASSERT_STREQ(BIONIC_PATH_TO_LIBC, info.dli_fname);
+  // /system/lib is symlink when this test is executed on host.
+  char libc_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(BIONIC_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+
+  ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
   ASSERT_STREQ("puts", info.dli_sname);
   ASSERT_EQ(addr, info.dli_saddr);
