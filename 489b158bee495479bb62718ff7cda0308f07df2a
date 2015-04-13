@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0299e86_08683b67",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1655,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-13T19:35:56Z",
+      "side": 1,
+      "message": "apparently we cannot. additional testing shows that filename is not used to narrow the search during symbol lookup. It is only used to check \"if a corruption in the required symbols list obscures an outdated object file and causes a match on the object filename in the Elfxx_Verneed entry\".",
+      "revId": "489b158bee495479bb62718ff7cda0308f07df2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
