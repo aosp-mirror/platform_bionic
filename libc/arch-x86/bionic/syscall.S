@@ -15,9 +15,17 @@
 ENTRY(syscall)
     # Push the callee save registers.
     push    %ebx
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ebx, 0
     push    %esi
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset esi, 0
     push    %edi
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset edi, 0
     push    %ebp
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset ebp, 0
 
     # Load all the arguments from the calling frame.
     # (Not all will be valid, depending on the syscall.)
@@ -43,8 +51,16 @@ ENTRY(syscall)
 1:
     # Restore the callee save registers.
     pop    %ebp
+    .cfi_adjust_cfa_offset -4
+    .cfi_restore ebp, 0
     pop    %edi
+    .cfi_adjust_cfa_offset -4
+    .cfi_restore edi, 0
     pop    %esi
+    .cfi_adjust_cfa_offset -4
+    .cfi_restore esi, 0
     pop    %ebx
+    .cfi_adjust_cfa_offset -4
+    .cfi_restore ebx, 0
     ret
 END(syscall)
