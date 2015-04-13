@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0242aae_2f7bf875",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "the callback",
+      "range": {
+        "startLine": 92,
+        "startChar": 33,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_b5229f9b",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "a very small",
+      "range": {
+        "startLine": 213,
+        "startChar": 75,
+        "endLine": 213,
+        "endChar": 85
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_a186e4e3",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "the callback",
+      "range": {
+        "startLine": 214,
+        "startChar": 70,
+        "endLine": 214,
+        "endChar": 78
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_c1fd7036",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "Might want to just delete this, I don\u0027t think it adds much.",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 23
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_e10bccd6",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "It might be better to just replace this with something like:\n\nAll events to the callback will be ignore after this call.",
+      "range": {
+        "startLine": 215,
+        "startChar": 25,
+        "endLine": 217,
+        "endChar": 23
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_6fab4001",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "For glibc, each callback for a SIGEVE_THREAD timer creates a new thread.",
+      "range": {
+        "startLine": 262,
+        "startChar": 7,
+        "endLine": 262,
+        "endChar": 84
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_c62295ce",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "a very",
+      "range": {
+        "startLine": 263,
+        "startChar": 48,
+        "endLine": 263,
+        "endChar": 52
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_af9008c7",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "callbacks",
+      "range": {
+        "startLine": 264,
+        "startChar": 47,
+        "endLine": 264,
+        "endChar": 55
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_413ce074",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "be",
+      "range": {
+        "startLine": 264,
+        "startChar": 17,
+        "endLine": 264,
+        "endChar": 21
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_06308d18",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "extra",
+      "range": {
+        "startLine": 527,
+        "startChar": 40,
+        "endLine": 527,
+        "endChar": 53
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23c4727c_46368519",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-13T20:48:14Z",
+      "side": 1,
+      "message": "Did you mean to leave this sleep here?",
+      "range": {
+        "startLine": 553,
+        "startChar": 2,
+        "endLine": 553,
+        "endChar": 17
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
