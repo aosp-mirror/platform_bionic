@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b0242aae_55becec5",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T04:08:50Z",
+      "side": 1,
+      "message": "Done. As user can use pthread_key_t* as function argument, change the type of pthread_key_t takes the risk of breaking binary compatibility, so it is unlikely to change.",
+      "parentUuid": "b0242aae_6a71e58a",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 105
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9033a6f4_9d96a449",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2015-04-14T02:00:20Z",
       "side": 1,
       "message": "As long as you are using __predict_false for these calls, it\u0027s probably worth adding one here too.",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 27
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_7caf7be4",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T04:08:50Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t add __predict_false here as here is not performance critical.",
+      "parentUuid": "9033a6f4_9d96a449",
       "range": {
         "startLine": 134,
         "startChar": 6,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9033a6f4_58904a4b",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T04:08:50Z",
+      "side": 1,
+      "message": "I thought using index may be a little less misleading. disassemble code in x86 stays the same. Maybe both are fine.",
+      "parentUuid": "b0242aae_ca61f9b9",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 18
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9033a6f4_fd86c816",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "d0299e86_3c52136b",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T04:08:50Z",
+      "side": 1,
+      "message": "I thought it had a different. But now I can\u0027t find any difference in disassemble code. So maybe I made a mistake.",
+      "parentUuid": "9033a6f4_fd86c816",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 43
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0299e86_bc7cc36f",
         "filename": "libc/bionic/pthread_key.cpp",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2015-04-14T02:00:20Z",
       "side": 1,
       "message": "This seems odd, why init the data to NULL if someone got here incorrectly?",
+      "range": {
+        "startLine": 162,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 20
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_b5ea92a3",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T04:08:50Z",
+      "side": 1,
+      "message": "Because when we delete an old key, we don\u0027t clear its values in all threads. Instead when we find the data-\u003eseq !\u003d key_map[].seq, we know that current thread is still holding value of old pthread_key. So it is normal to arrive here, and we should clear data and return null.",
+      "parentUuid": "d0299e86_bc7cc36f",
       "range": {
         "startLine": 162,
         "startChar": 2,
