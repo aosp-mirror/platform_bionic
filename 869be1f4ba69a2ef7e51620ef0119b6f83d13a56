@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0299e86_7f91b09f",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0242aae_2f7bf875",
+      "range": {
+        "startLine": 92,
+        "startChar": 33,
+        "endLine": 92,
+        "endChar": 41
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0299e86_b5229f9b",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 6
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "9033a6f4_2242ef1c",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "9033a6f4_c1fd7036",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 23
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9033a6f4_e10bccd6",
         "filename": "libc/bionic/posix_timers.cpp",
         "patchSetId": 6
@@ -117,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "b0242aae_8f49c395",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "You might want to check the commit message again. We don\u0027t ignore events manually after disarm. We ignore events after timer_delete. I think it is fine as the behavior matches glibc\u0027s implementation.",
+      "parentUuid": "9033a6f4_e10bccd6",
+      "range": {
+        "startLine": 215,
+        "startChar": 25,
+        "endLine": 217,
+        "endChar": 23
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0242aae_6fab4001",
         "filename": "tests/time_test.cpp",
         "patchSetId": 6
@@ -128,6 +200,30 @@
       "writtenOn": "2015-04-13T20:48:14Z",
       "side": 1,
       "message": "For glibc, each callback for a SIGEVE_THREAD timer creates a new thread.",
+      "range": {
+        "startLine": 262,
+        "startChar": 7,
+        "endLine": 262,
+        "endChar": 84
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_1523a6d4",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "I found only one place needs this, which is test timer_settime_repeats. So I moved the sleep over there.",
+      "parentUuid": "b0242aae_6fab4001",
       "range": {
         "startLine": 262,
         "startChar": 7,
@@ -232,6 +328,30 @@
     },
     {
       "key": {
+        "uuid": "9033a6f4_78378612",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "I think the reason of sending extra events is that the kernel already has pending events when we disarm the timer. So I try to explain the deeper reason. Not sure if it is better.",
+      "parentUuid": "23c4727c_06308d18",
+      "range": {
+        "startLine": 527,
+        "startChar": 40,
+        "endLine": 527,
+        "endChar": 53
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23c4727c_46368519",
         "filename": "tests/time_test.cpp",
         "patchSetId": 6
@@ -243,6 +363,30 @@
       "writtenOn": "2015-04-13T20:48:14Z",
       "side": 1,
       "message": "Did you mean to leave this sleep here?",
+      "range": {
+        "startLine": 553,
+        "startChar": 2,
+        "endLine": 553,
+        "endChar": 17
+      },
+      "revId": "869be1f4ba69a2ef7e51620ef0119b6f83d13a56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_3558e259",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-04-14T03:26:29Z",
+      "side": 1,
+      "message": "Yes. Although I am not sure the test \"timer_disarm_terminates\" and \"timer_delete_terminates\" are still useful. Because as I add the sleep, the tests lose their original intention to test whether disarm/delete the timer can prevent callback immediately.",
+      "parentUuid": "23c4727c_46368519",
       "range": {
         "startLine": 553,
         "startChar": 2,
