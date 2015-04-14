@@ -57,8 +57,15 @@ static inline bool SeqOfKeyInUse(uintptr_t seq) {
   return seq & (1 << SEQ_KEY_IN_USE_BIT);
 }
 
+#define KEY_VALID_FLAG (1 << 31)
+
+static_assert(sizeof(pthread_key_t) == sizeof(int) && static_cast<pthread_key_t>(-1) < 0,
+              "pthread_key_t should be typedef to int");
+
 static inline bool KeyInValidRange(pthread_key_t key) {
-  return key >= 0 && key < BIONIC_PTHREAD_KEY_COUNT;
+  // key < 0 means bit 31 is set.
+  // Then key < (2^31 | BIONIC_PTHREAD_KEY_COUNT) means the index part of key < BIONIC_PTHREAD_KEY_COUNT.
+  return (key < (KEY_VALID_FLAG | BIONIC_PTHREAD_KEY_COUNT));
 }
 
 // Called from pthread_exit() to remove all pthread keys. This must call the destructor of
@@ -114,7 +121,7 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
     while (!SeqOfKeyInUse(seq)) {
       if (atomic_compare_exchange_weak(&key_map[i].seq, &seq, seq + SEQ_INCREMENT_STEP)) {
         atomic_store(&key_map[i].key_destructor, reinterpret_cast<uintptr_t>(key_destructor));
-        *key = i;
+        *key = i | KEY_VALID_FLAG;
         return 0;
       }
     }
@@ -127,9 +134,10 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
 // responsibility of the caller to properly dispose of the corresponding data
 // and resources, using any means it finds suitable.
 int pthread_key_delete(pthread_key_t key) {
-  if (!KeyInValidRange(key)) {
+  if (__predict_false(!KeyInValidRange(key))) {
     return EINVAL;
   }
+  key &= ~KEY_VALID_FLAG;
   // Increase seq to invalidate values in all threads.
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   if (SeqOfKeyInUse(seq)) {
@@ -141,9 +149,10 @@ int pthread_key_delete(pthread_key_t key) {
 }
 
 void* pthread_getspecific(pthread_key_t key) {
-  if (!KeyInValidRange(key)) {
+  if (__predict_false(!KeyInValidRange(key))) {
     return NULL;
   }
+  key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   pthread_key_data_t* data = &(__get_thread()->key_data[key]);
   // It is user's responsibility to synchornize between the creation and use of pthread keys,
@@ -151,16 +160,19 @@ void* pthread_getspecific(pthread_key_t key) {
   if (__predict_true(SeqOfKeyInUse(seq) && data->seq == seq)) {
     return data->data;
   }
+  // We arrive here when current thread holds the seq of an deleted pthread key. So the
+  // data is for the deleted pthread key, and should be cleared.
   data->data = NULL;
   return NULL;
 }
 
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
-  if (!KeyInValidRange(key)) {
+  if (__predict_false(!KeyInValidRange(key))) {
     return EINVAL;
   }
+  key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
-  if (SeqOfKeyInUse(seq)) {
+  if (__predict_true(SeqOfKeyInUse(seq))) {
     pthread_key_data_t* data = &(__get_thread()->key_data[key]);
     data->seq = seq;
     data->data = const_cast<void*>(ptr);
