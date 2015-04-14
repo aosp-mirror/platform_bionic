@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0242aae_6a71e58a",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "There are two implicit assumptions about pthread_key_t that aren\u0027t explicitly stated. First, it has to be a signed type and it has to be 32 bits. I\u0027m not sure where these assumptions should be mentioned, but maybe here is as good a place as any.",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 105
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_9d96a449",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "As long as you are using __predict_false for these calls, it\u0027s probably worth adding one here too.",
+      "range": {
+        "startLine": 134,
+        "startChar": 6,
+        "endLine": 134,
+        "endChar": 27
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_ca61f9b9",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "Is there a reason not to just do a key \u0026\u003d ~KEY_VALID_FLAG instead? Then the index values below don\u0027t need to be changed, and the compiler might be helped a bit (not that it matters too much).",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 18
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_fd86c816",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "Is there a reason you broke this like you did? Would it be better to add __predict_true(SeqOfKeyInUse(seq) \u0026\u0026 data-\u003eseq \u003d\u003d seq)?",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 43
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_bc7cc36f",
+        "filename": "libc/bionic/pthread_key.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "This seems odd, why init the data to NULL if someone got here incorrectly?",
+      "range": {
+        "startLine": 162,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 20
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_8a59b1e3",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "I\u0027m not sure what this test is trying to do. Is it trying to verify that if you have a valid key, but it was never used, that error values are returned? If so, you probably want to do:\n\npthread_key_create(\u0026key);\npthread_key_delete(key);\n\nNow you have a key # guaranteed to be valid and guaranteed not to be in use.\n\nThen you can do the next three calls and guarantee you are checking the valid, but not in use condition.\n\nYou could even just define the bionic portion to be on the getspecific call since I suspect that glibc should properly return the invalid cases for the other two calls. Heck, it might do the right thing for getspecific too, and you dump the define completely.",
+      "range": {
+        "startLine": 184,
+        "startChar": 14,
+        "endLine": 184,
+        "endChar": 46
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0242aae_2a42bd1c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "Why is this static, this function is only invoked once isn\u0027t it?",
+      "range": {
+        "startLine": 187,
+        "startChar": 2,
+        "endLine": 187,
+        "endChar": 8
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0299e86_bcc3a33b",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "You aren\u0027t initializing this, so you can\u0027t assume anything about it\u0027s value. You could get supremely unlucky and it winds up as a value for a valid key.",
+      "range": {
+        "startLine": 187,
+        "startChar": 23,
+        "endLine": 187,
+        "endChar": 27
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9033a6f4_1d42b41c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-14T02:00:20Z",
+      "side": 1,
+      "message": "I think you need another test that verifies the boundaries of all of the functions. If this already exists, ignore this, but I didn\u0027t see one that checks pthread_key_delete, pthread_setspecific, pthread_getspecific for all potential invalid values (keys of -1, and BIONIC_PTHREAD_KEY_COUNT).",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 0
+      },
+      "revId": "9342f4f003387140d1ba113bb2299ac1aee1e812",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
