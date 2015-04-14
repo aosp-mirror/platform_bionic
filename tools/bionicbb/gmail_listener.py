@@ -316,6 +316,7 @@ def skip_handler(gerrit_info, _, __):
         gerrit_info['Change-Id'])
     return True
 handle_abandon = skip_handler
+handle_merge_failed = skip_handler
 handle_merged = skip_handler
 handle_restore = skip_handler
 handle_revert = skip_handler
@@ -329,7 +330,8 @@ def process_message(msg, dry_run):
             print termcolor.colored('No info found: {}'.format(msg['id']),
                                     'red')
         msg_type = gerrit_info['MessageType']
-        handler = 'handle_{}'.format(gerrit_info['MessageType'])
+        handler = 'handle_{}'.format(
+            gerrit_info['MessageType'].replace('-', '_'))
         if handler in globals():
             return globals()[handler](gerrit_info, body, dry_run)
         else:
