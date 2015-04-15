@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d080bec6_c04b0fb6",
+        "filename": "libc/stdlib/exit.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-15T22:53:19Z",
+      "side": 1,
+      "message": "finalize",
+      "revId": "775a52b3e278e83babd9036df397bbd2c639906b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
