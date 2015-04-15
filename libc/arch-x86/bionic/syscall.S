@@ -52,15 +52,15 @@ ENTRY(syscall)
     # Restore the callee save registers.
     pop    %ebp
     .cfi_adjust_cfa_offset -4
-    .cfi_restore ebp, 0
+    .cfi_restore ebp
     pop    %edi
     .cfi_adjust_cfa_offset -4
-    .cfi_restore edi, 0
+    .cfi_restore edi
     pop    %esi
     .cfi_adjust_cfa_offset -4
-    .cfi_restore esi, 0
+    .cfi_restore esi
     pop    %ebx
     .cfi_adjust_cfa_offset -4
-    .cfi_restore ebx, 0
+    .cfi_restore ebx
     ret
 END(syscall)
