@@ -22,7 +22,7 @@ struct thread_local_dtor {
   thread_local_dtor* next;
 };
 
-__thread thread_local_dtor* thread_local_dtors = nullptr;
+static __thread thread_local_dtor* thread_local_dtors = nullptr;
 
 extern "C" int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle) {
   thread_local_dtor* dtor = new thread_local_dtor();
