@@ -35,7 +35,7 @@ class ClassWithDtor {
   std::string message;
 };
 
-thread_local ClassWithDtor class_with_dtor;
+static thread_local ClassWithDtor class_with_dtor;
 
 static void* thread_nop(void* arg) {
   class_with_dtor.set_message(*static_cast<std::string*>(arg));
