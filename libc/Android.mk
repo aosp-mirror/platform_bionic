@@ -1007,7 +1007,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_thread_atexit_impl_src_files)
-LOCAL_CFLAGS := $(libc_common_cflags) -fno-data-sections -Wframe-larger-than=2048
+LOCAL_CFLAGS := $(libc_common_cflags) -Wframe-larger-than=2048
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
