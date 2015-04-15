@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d080bec6_33e49fd5",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-15T23:09:26Z",
+      "side": 1,
+      "message": "Extra line.",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 0
+      },
+      "revId": "01faccccf1a5168448d34336b384b643de580d8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b07b4aac_03882cb8",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-15T23:09:26Z",
+      "side": 1,
+      "message": "This behavior is fine because in the POSIX standard:",
+      "range": {
+        "startLine": 215,
+        "startChar": 22,
+        "endLine": 215,
+        "endChar": 38
+      },
+      "revId": "01faccccf1a5168448d34336b384b643de580d8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_53a4bb84",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-15T23:09:26Z",
+      "side": 1,
+      "message": "a few extra times.",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 20
+      },
+      "revId": "01faccccf1a5168448d34336b384b643de580d8d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
