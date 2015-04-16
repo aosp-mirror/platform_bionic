@@ -97,14 +97,8 @@ enum {
 #define LIBC_PTHREAD_KEY_RESERVED_COUNT 12
 
 #if defined(USE_JEMALLOC)
-/* Following are current pthread keys used internally by jemalloc:
- * je_thread_allocated_tsd jemalloc
- * je_arenas_tsd           jemalloc
- * je_tcache_tsd           jemalloc
- * je_tcache_enabled_tsd   jemalloc
- * je_quarantine_tsd       jemalloc
- */
-#define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 5
+/* Internally, jemalloc uses a single key for per thread data. */
+#define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 1
 #define BIONIC_PTHREAD_KEY_RESERVED_COUNT (LIBC_PTHREAD_KEY_RESERVED_COUNT + JEMALLOC_PTHREAD_KEY_RESERVED_COUNT)
 #else
 #define BIONIC_PTHREAD_KEY_RESERVED_COUNT LIBC_PTHREAD_KEY_RESERVED_COUNT
