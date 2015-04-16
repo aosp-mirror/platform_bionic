@@ -19,10 +19,10 @@ import httplib
 import httplib2
 import jenkinsapi
 import json
+import logging
 import os
 import re
 import requests
-import termcolor
 import socket
 import sys
 import time
@@ -141,7 +141,7 @@ def get_gerrit_info(body):
     return info
 
 
-def clean_project(gerrit_info, dry_run):
+def clean_project(dry_run):
     username = config.jenkins_credentials['username']
     password = config.jenkins_credentials['password']
     jenkins_url = config.jenkins_url
@@ -154,16 +154,9 @@ def clean_project(gerrit_info, dry_run):
             url = job.get_build().baseurl
         else:
             url = 'DRY_RUN_URL'
-        print '{}({}): {} {}'.format(
-            termcolor.colored('CLEAN', 'green'),
-            gerrit_info['MessageType'],
-            build,
-            url)
+        logging.info('Cleaning: %s %s', build, url)
     else:
-        print '{}({}): {}'.format(
-            termcolor.colored('CLEAN', 'red'),
-            gerrit_info['MessageType'],
-            termcolor.colored(build, 'red'))
+        logging.error('Failed to clean: could not find project %s', build)
     return True
 
 
@@ -194,21 +187,9 @@ def build_project(gerrit_info, dry_run, lunch_target=None):
         if not project_path:
             raise RuntimeError('bogus project: {}'.format(project))
         if project_path.startswith('platform/'):
-            print '{}({}): {} => {}'.format(
-                termcolor.colored('ERROR', 'red'),
-                'project',
-                project,
-                project_path)
-            return False
-        try:
-            ref = gerrit.ref_for_change(change_id)
-        except gerrit.GerritError as ex:
-            print '{}({}): {} {}'.format(
-                termcolor.colored('GERRIT-ERROR', 'red'),
-                ex.code,
-                change_id,
-                ex.url)
-            return False
+            raise RuntimeError('Bad project mapping: {} => {}'.format(
+                project, project_path))
+        ref = gerrit.ref_for_change(change_id)
         params = {
             'REF': ref,
             'CHANGE_ID': change_id,
@@ -223,20 +204,10 @@ def build_project(gerrit_info, dry_run, lunch_target=None):
             url = 'URL UNAVAILABLE'
         else:
             url = 'DRY_RUN_URL'
-        print '{}({}): {} => {} {} {}'.format(
-            termcolor.colored('BUILD', 'green'),
-            gerrit_info['MessageType'],
-            project,
-            build,
-            url,
-            change_id)
+        logging.info('Building: %s => %s %s %s', project, build, url,
+                     change_id)
     else:
-        print '{}({}): {} => {} {}'.format(
-            termcolor.colored('BUILD', 'red'),
-            gerrit_info['MessageType'],
-            project,
-            termcolor.colored(build, 'red'),
-            change_id)
+        logging.error('Unknown build: %s => %s %s', project, build, change_id)
     return True
 
 
@@ -259,13 +230,9 @@ def drop_rejection(gerrit_info, dry_run):
         try:
             requests.post(url, headers=headers, data=json.dumps(request_data))
         except requests.exceptions.ConnectionError as ex:
-            print '{}(drop-rejection): {}'.format(
-                termcolor.colored('ERROR', 'red'), ex)
+            logging.error('Failed to drop rejection: %s', ex)
             return False
-    print '{}({}): {}'.format(
-        termcolor.colored('CHECK', 'green'),
-        gerrit_info['MessageType'],
-        gerrit_info['Change-Id'])
+    logging.info('Dropped rejection: %s', gerrit_info['Change-Id'])
     return True
 
 
@@ -277,7 +244,7 @@ def handle_comment(gerrit_info, body, dry_run):
         return True
 
     command_map = {
-        'clean': lambda: clean_project(gerrit_info, dry_run),
+        'clean': lambda: clean_project(dry_run),
         'retry': lambda: build_project(gerrit_info, dry_run),
 
         'arm': lambda: build_project(gerrit_info, dry_run,
@@ -310,11 +277,11 @@ def handle_comment(gerrit_info, body, dry_run):
 
 
 def skip_handler(gerrit_info, _, __):
-    print '{}({}): {}'.format(
-        termcolor.colored('SKIP', 'yellow'),
-        gerrit_info['MessageType'],
-        gerrit_info['Change-Id'])
+    logging.info('Skipping %s: %s', gerrit_info['MessageType'],
+                 gerrit_info['Change-Id'])
     return True
+
+
 handle_abandon = skip_handler
 handle_merge_failed = skip_handler
 handle_merged = skip_handler
@@ -327,28 +294,22 @@ def process_message(msg, dry_run):
         body = get_body(msg)
         gerrit_info = get_gerrit_info(body)
         if not gerrit_info:
-            print termcolor.colored('No info found: {}'.format(msg['id']),
-                                    'red')
+            logging.fatal('No Gerrit info found: %s', msg.subject)
         msg_type = gerrit_info['MessageType']
         handler = 'handle_{}'.format(
             gerrit_info['MessageType'].replace('-', '_'))
         if handler in globals():
             return globals()[handler](gerrit_info, body, dry_run)
         else:
-            print termcolor.colored(
-                'MessageType {} unhandled.'.format(msg_type), 'red')
-        print
+            logging.warning('MessageType %s unhandled.', msg_type)
         return False
     except NotImplementedError as ex:
-        print ex
+        logging.error("%s", ex)
         return False
     except gerrit.GerritError as ex:
-        if ex.code == 404:
-            print '{}(404): {}!'.format(
-                termcolor.colored('ERROR', 'red'), ex)
-            return True
-        else:
-            return False
+        change_id = gerrit_info['Change-Id']
+        logging.error('Gerrit error (%d): %s %s', ex.code, change_id, ex.url)
+        return ex.code == 404
 
 
 def main(argc, argv):
@@ -376,10 +337,10 @@ def main(argc, argv):
                     msg_service.trash(userId='me', id=msg['id']).execute()
             time.sleep(60 * 5)
         except GmailError as ex:
-            print '{}: {}!'.format(termcolor.colored('ERROR', 'red'), ex)
+            logging.error('Gmail error: %s', ex)
             time.sleep(60 * 5)
         except apiclient.errors.HttpError as ex:
-            print '{}: {}!'.format(termcolor.colored('ERROR', 'red'), ex)
+            logging.error('API Client HTTP error: %s', ex)
             time.sleep(60 * 5)
         except httplib.BadStatusLine:
             pass
