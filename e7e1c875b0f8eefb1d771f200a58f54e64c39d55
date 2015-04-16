@@ -16,6 +16,23 @@
       "revId": "e7e1c875b0f8eefb1d771f200a58f54e64c39d55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_e483b804",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-16T17:13:56Z",
+      "side": 1,
+      "message": "this seems misleading. the source will say \"pread\", but we\u0027re going to extra effort to say \"pread64\".",
+      "revId": "e7e1c875b0f8eefb1d771f200a58f54e64c39d55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
