@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_54dfc154",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "this is the only known VER_ flag",
+      "parentUuid": "d080bec6_f0cce0ba",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_c1d795e7",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-15T21:54:49Z",
       "side": 1,
       "message": "yeah, i\u0027d rather see the constants here.",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_935488ab",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_c1d795e7",
       "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_ea7708ca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_a19a9944",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_90d80ca7",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2015-04-15T21:54:49Z",
       "side": 1,
       "message": "what\u0027s the \u0026 0x8000?",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_14fce9b0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "\"spec: if bit 15 is set the symbol is hidden\" (dimitry: or not-default)\n\nmoved to inline function.",
+      "parentUuid": "d080bec6_90d80ca7",
       "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_aac83058",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_3b155874",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_8118bd77",
         "filename": "linker/linker.h",
         "patchSetId": 5
@@ -98,6 +188,24 @@
       "writtenOn": "2015-04-15T21:54:49Z",
       "side": 1,
       "message": "DISALLOW?",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_33dd7f95",
+        "filename": "linker/linker.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_8118bd77",
       "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_032023c4",
+        "filename": "tests/libs/Android.build.versioned_lib.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_31d337da",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "907ac6a8_b13bc798",
         "filename": "tests/libs/Android.build.versioned_lib.mk",
         "patchSetId": 5
@@ -132,6 +258,24 @@
       "writtenOn": "2015-04-15T21:54:49Z",
       "side": 1,
       "message": "exports",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_1eff1fa9",
+        "filename": "tests/libs/Android.build.versioned_lib.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "907ac6a8_b13bc798",
       "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "10dc16fc_8aaaffd2",
+        "filename": "tests/libs/Android.build.versioned_lib.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_a8e59624",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_48dac266",
         "filename": "tests/libs/Android.build.versioned_lib.mk",
         "patchSetId": 5
@@ -172,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_a36ccf06",
+        "filename": "tests/libs/Android.build.versioned_lib.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_48dac266",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_c808125d",
         "filename": "tests/libs/versioned_lib_other.cpp",
         "patchSetId": 5
@@ -183,6 +363,24 @@
       "writtenOn": "2015-04-15T21:54:49Z",
       "side": 1,
       "message": "(you can just write extern \"C\" here.)",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10dc16fc_2a819349",
+        "filename": "tests/libs/versioned_lib_other.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T21:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b07b4aac_c808125d",
       "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
