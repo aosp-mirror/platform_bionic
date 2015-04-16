@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30d59acf_f432969c",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T00:02:45Z",
+      "side": 1,
+      "message": "does it use __get_tls()[12]?",
+      "revId": "1938f56c7926192b94630edd1d71a8a222e9421e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
