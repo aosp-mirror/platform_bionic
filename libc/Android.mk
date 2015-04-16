@@ -63,6 +63,7 @@ libc_common_src_files := \
     stdio/sprintf.c \
     stdio/stdio.c \
     stdio/stdio_ext.cpp \
+    stdlib/exit.c \
 
 # Fortify implementations of libc functions.
 libc_common_src_files += \
@@ -480,7 +481,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
-    upstream-openbsd/lib/libc/stdlib/exit.c \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
     upstream-openbsd/lib/libc/stdlib/insque.c \
     upstream-openbsd/lib/libc/stdlib/lsearch.c \
