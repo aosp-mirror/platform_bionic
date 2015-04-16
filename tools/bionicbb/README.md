@@ -12,7 +12,6 @@ Dependencies
  * [Google API Client Library](https://developers.google.com/api-client-library/python/start/installation)
  * [jenkinsapi](https://pypi.python.org/pypi/jenkinsapi)
  * [Requests](http://docs.python-requests.org/en/latest/)
- * [termcolor](https://pypi.python.org/pypi/termcolor)
 
 Setup
 -----
