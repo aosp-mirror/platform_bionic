@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <atomic>
 
 #include "ScopedSignalHandler.h"
 
@@ -197,7 +198,7 @@ TEST(time, timer_create) {
   ASSERT_EQ(0, timer_delete(timer_id));
 }
 
-static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
+static int timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
 static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
   ++timer_create_SIGEV_SIGNAL_signal_handler_invocation_count;
   ASSERT_EQ(SIGUSR1, signal_number);
@@ -212,6 +213,7 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
 
+  timer_create_SIGEV_SIGNAL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGUSR1, timer_create_SIGEV_SIGNAL_signal_handler);
 
   ASSERT_EQ(0, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
@@ -228,18 +230,11 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
 }
 
 struct Counter {
-  volatile int value;
+ private:
+  std::atomic<int> value;
   timer_t timer_id;
   sigevent_t se;
   bool timer_valid;
-
-  Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
-    memset(&se, 0, sizeof(se));
-    se.sigev_notify = SIGEV_THREAD;
-    se.sigev_notify_function = fn;
-    se.sigev_value.sival_ptr = this;
-    Create();
-  }
 
   void Create() {
     ASSERT_FALSE(timer_valid);
@@ -247,6 +242,14 @@ struct Counter {
     timer_valid = true;
   }
 
+ public:
+  Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
+    memset(&se, 0, sizeof(se));
+    se.sigev_notify = SIGEV_THREAD;
+    se.sigev_notify_function = fn;
+    se.sigev_value.sival_ptr = this;
+    Create();
+  }
   void DeleteTimer() {
     ASSERT_TRUE(timer_valid);
     ASSERT_EQ(0, timer_delete(timer_id));
@@ -259,12 +262,16 @@ struct Counter {
     }
   }
 
+  int Value() const {
+    return value;
+  }
+
   void SetTime(time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
     ::SetTime(timer_id, value_s, value_ns, interval_s, interval_ns);
   }
 
   bool ValueUpdated() {
-    volatile int current_value = value;
+    int current_value = value;
     time_t start = time(NULL);
     while (current_value == value && (time(NULL) - start) < 5) {
     }
@@ -287,30 +294,29 @@ struct Counter {
 
 TEST(time, timer_settime_0) {
   Counter counter(Counter::CountAndDisarmNotifyFunction);
-  ASSERT_TRUE(counter.timer_valid);
-
-  ASSERT_EQ(0, counter.value);
+  ASSERT_EQ(0, counter.Value());
 
   counter.SetTime(0, 1, 1, 0);
   usleep(500000);
 
   // The count should just be 1 because we disarmed the timer the first time it fired.
-  ASSERT_EQ(1, counter.value);
+  ASSERT_EQ(1, counter.Value());
 }
 
 TEST(time, timer_settime_repeats) {
   Counter counter(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter.timer_valid);
-
-  ASSERT_EQ(0, counter.value);
+  ASSERT_EQ(0, counter.Value());
 
   counter.SetTime(0, 1, 0, 10);
   ASSERT_TRUE(counter.ValueUpdated());
   ASSERT_TRUE(counter.ValueUpdated());
   ASSERT_TRUE(counter.ValueUpdated());
+  counter.DeleteTimer();
+  // Add a sleep as other threads may be calling the callback function when the timer is deleted.
+  usleep(500000);
 }
 
-static int timer_create_NULL_signal_handler_invocation_count = 0;
+static int timer_create_NULL_signal_handler_invocation_count;
 static void timer_create_NULL_signal_handler(int signal_number) {
   ++timer_create_NULL_signal_handler_invocation_count;
   ASSERT_EQ(SIGALRM, signal_number);
@@ -321,6 +327,7 @@ TEST(time, timer_create_NULL) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
 
+  timer_create_NULL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGALRM, timer_create_NULL_signal_handler);
 
   ASSERT_EQ(0, timer_create_NULL_signal_handler_invocation_count);
@@ -367,22 +374,59 @@ TEST(time, timer_delete_multiple) {
 
 TEST(time, timer_create_multiple) {
   Counter counter1(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter1.timer_valid);
   Counter counter2(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter2.timer_valid);
   Counter counter3(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter3.timer_valid);
 
-  ASSERT_EQ(0, counter1.value);
-  ASSERT_EQ(0, counter2.value);
-  ASSERT_EQ(0, counter3.value);
+  ASSERT_EQ(0, counter1.Value());
+  ASSERT_EQ(0, counter2.Value());
+  ASSERT_EQ(0, counter3.Value());
 
   counter2.SetTime(0, 1, 0, 0);
   usleep(500000);
 
-  EXPECT_EQ(0, counter1.value);
-  EXPECT_EQ(1, counter2.value);
-  EXPECT_EQ(0, counter3.value);
+  EXPECT_EQ(0, counter1.Value());
+  EXPECT_EQ(1, counter2.Value());
+  EXPECT_EQ(0, counter3.Value());
+}
+
+// Test to verify that disarming a repeatable timer disables the callbacks.
+TEST(time, timer_disarm_terminates) {
+  Counter counter(Counter::CountNotifyFunction);
+  ASSERT_EQ(0, counter.Value());
+
+  counter.SetTime(0, 1, 0, 1);
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+
+  counter.SetTime(0, 0, 0, 0);
+  // Add a sleep as the kernel may have pending events when the timer is disarmed.
+  usleep(500000);
+  int value = counter.Value();
+  usleep(500000);
+
+  // Verify the counter has not been incremented.
+  ASSERT_EQ(value, counter.Value());
+}
+
+// Test to verify that deleting a repeatable timer disables the callbacks.
+TEST(time, timer_delete_terminates) {
+  Counter counter(Counter::CountNotifyFunction);
+  ASSERT_EQ(0, counter.Value());
+
+  counter.SetTime(0, 1, 0, 1);
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+  ASSERT_TRUE(counter.ValueUpdated());
+
+  counter.DeleteTimer();
+  // Add a sleep as other threads may be calling the callback function when the timer is deleted.
+  usleep(500000);
+  int value = counter.Value();
+  usleep(500000);
+
+  // Verify the counter has not been incremented.
+  ASSERT_EQ(value, counter.Value());
 }
 
 struct TimerDeleteData {
@@ -498,46 +542,4 @@ TEST(time, clock_nanosleep) {
   timespec in;
   timespec out;
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
-}
-
-// Test to verify that disarming a repeatable timer disables the
-// callbacks.
-TEST(time, timer_disarm_terminates) {
-  Counter counter(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter.timer_valid);
-
-  ASSERT_EQ(0, counter.value);
-
-  counter.SetTime(0, 1, 0, 1);
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-
-  counter.SetTime(0, 0, 1, 0);
-  volatile int value = counter.value;
-  usleep(500000);
-
-  // Verify the counter has not been incremented.
-  ASSERT_EQ(value, counter.value);
-}
-
-// Test to verify that deleting a repeatable timer disables the
-// callbacks.
-TEST(time, timer_delete_terminates) {
-  Counter counter(Counter::CountNotifyFunction);
-  ASSERT_TRUE(counter.timer_valid);
-
-  ASSERT_EQ(0, counter.value);
-
-  counter.SetTime(0, 1, 0, 1);
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-  ASSERT_TRUE(counter.ValueUpdated());
-
-  counter.DeleteTimer();
-  volatile int value = counter.value;
-  usleep(500000);
-
-  // Verify the counter has not been incremented.
-  ASSERT_EQ(value, counter.value);
 }
