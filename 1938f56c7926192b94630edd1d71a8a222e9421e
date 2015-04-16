@@ -34,6 +34,42 @@
       "revId": "1938f56c7926192b94630edd1d71a8a222e9421e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_36dd6d95",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-16T00:20:19Z",
+      "side": 1,
+      "message": "No, it uses pthread_getspecific/setspecific.",
+      "parentUuid": "30d59acf_f432969c",
+      "revId": "1938f56c7926192b94630edd1d71a8a222e9421e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "907ac6a8_e5bdf9a4",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-04-16T00:20:19Z",
+      "side": 1,
+      "message": "Yikes, fixed now.",
+      "parentUuid": "30d59acf_7491c69f",
+      "revId": "1938f56c7926192b94630edd1d71a8a222e9421e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
