@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 import json
+import logging
 import requests
-import termcolor
 
 import gerrit
 
@@ -43,7 +43,7 @@ def handle_build_message():
     ref = params['REF']
     patch_set = ref.split('/')[-1]
 
-    print '{} #{} {}: {}'.format(name, number, status, full_url)
+    logging.debug('%s #%s %s: %s', name, number, status, full_url)
 
     # bionic-lint is always broken, so we don't want to reject changes for
     # those failures until we clean things up.
@@ -69,19 +69,19 @@ def handle_build_message():
                                                                     patch_set))
 
         headers = {'Content-Type': 'application/json;charset=UTF-8'}
-        print 'POST {}: {}'.format(url, request_data)
-        print requests.post(url, headers=headers, json=request_data)
+        logging.debug('POST %s: %s', url, request_data)
+        requests.post(url, headers=headers, json=request_data)
     elif name == 'clean-bionic-presubmit':
         request_data = {'message': 'out/ directory removed'}
         url = gerrit_url('/a/changes/{}/revisions/{}/review'.format(change_id,
                                                                     patch_set))
         headers = {'Content-Type': 'application/json;charset=UTF-8'}
-        print 'POST {}: {}'.format(url, request_data)
-        print requests.post(url, headers=headers, json=request_data)
+        logging.debug('POST %s: %s', url, request_data)
+        requests.post(url, headers=headers, json=request_data)
     elif name == 'bionic-lint':
-        print 'IGNORED'
+        logging.warning('Result for bionic-lint ignored')
     else:
-        print '{}: {}'.format(termcolor.colored('red', 'UNKNOWN'), name)
+        logging.error('Unknown project: %s', name)
     return ''
 
 
@@ -100,17 +100,17 @@ def drop_rejection():
         bb_review = 0
 
     if bb_review >= 0:
-        print 'No rejection to drop: {} {}'.format(change_id, patch_set)
+        logging.info('No rejection to drop: %s %s', change_id, patch_set)
         return ''
 
-    print 'Dropping rejection: {} {}'.format(change_id, patch_set)
+    logging.info('Dropping rejection: %s %s', change_id, patch_set)
 
     request_data = {'labels': {'Verified': 0}}
     url = gerrit_url('/a/changes/{}/revisions/{}/review'.format(change_id,
                                                                 patch_set))
     headers = {'Content-Type': 'application/json;charset=UTF-8'}
-    print 'POST {}: {}'.format(url, request_data)
-    print requests.post(url, headers=headers, json=request_data)
+    logging.debug('POST %s: %s', url, request_data)
+    requests.post(url, headers=headers, json=request_data)
     return ''
 
 
