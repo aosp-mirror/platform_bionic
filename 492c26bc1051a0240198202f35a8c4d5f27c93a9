@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_86252164",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-16T22:20:36Z",
+      "side": 1,
+      "message": "This CL is missing weak references to versioned symbols implementation. \n\nI think this is a task for the separate CL. This one is already 800+ lines.",
+      "parentUuid": "907ac6a8_54dfc154",
+      "revId": "492c26bc1051a0240198202f35a8c4d5f27c93a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b07b4aac_c1d795e7",
         "filename": "linker/linker.cpp",
         "patchSetId": 5
