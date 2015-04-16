@@ -33,6 +33,24 @@
       "revId": "e7e1c875b0f8eefb1d771f200a58f54e64c39d55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_44394c50",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-04-16T17:37:57Z",
+      "side": 1,
+      "message": "It needs this define to reuse the code due to pread_chk and pread_real. The __pread64_chk function will cause this to report \"pread64\" unless a third non-inline function is provided. I don\u0027t mind doing that but it seems like it\u0027s more trouble than it\u0027s worth.\n\nThe compile-time error bits could do it either way. FWIW, I just checked glibc and it reports \"pread64\" for pread when using 64-bit off_t.",
+      "parentUuid": "d080bec6_e483b804",
+      "revId": "e7e1c875b0f8eefb1d771f200a58f54e64c39d55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
