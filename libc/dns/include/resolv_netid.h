@@ -75,6 +75,9 @@ int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t
 /* delete the cache associated with a certain network */
 extern void _resolv_delete_cache_for_net(unsigned netid);
 
+/* set a port range for exclusion in the random_bind */
+int _resolv_set_port_exclusion_range(in_port_t min, in_port_t max) __used_in_netd;
+
 __END_DECLS
 
 #endif /* _RESOLV_NETID_H */

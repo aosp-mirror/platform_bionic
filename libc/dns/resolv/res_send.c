@@ -137,6 +137,10 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #define EXT(res) ((res)->_u._ext)
 #define DBG 0
 
+#define MAX_PORT (1 << (sizeof(in_port_t)*8))-1
+#define DNS_MIN_PORT (IPPORT_RESERVED+1)
+#define DNS_MAX_EXCLUDED_PORTS 5000
+
 static const int highestFD = FD_SETSIZE - 1;
 
 /* Forward. */
@@ -164,6 +168,27 @@ static int retrying_select(const int sock, fd_set *readset, fd_set *writeset,
 			const struct timespec *finish);
 
 /* BIONIC-BEGIN: implement source port randomization */
+static volatile in_port_t exclusion_min = 0;
+static volatile in_port_t exclusion_max = 0;
+
+int _resolv_set_port_exclusion_range(in_port_t min, in_port_t max)
+{
+    if (min == 0 && max == 0) {
+        exclusion_min = exclusion_max = 0;
+        return 0;
+    }
+
+    if (min < DNS_MIN_PORT || min > max
+            || (max - min > DNS_MAX_EXCLUDED_PORTS)) {
+        errno = ERANGE;
+        return -1;
+    }
+
+    exclusion_min = min;
+    exclusion_max = max;
+    return 0;
+}
+
 typedef union {
     struct sockaddr      sa;
     struct sockaddr_in   sin;
@@ -197,7 +222,13 @@ random_bind( int  s, int  family )
     /* first try to bind to a random source port a few times */
     for (j = 0; j < 10; j++) {
         /* find a random port between 1025 .. 65534 */
-        int  port = 1025 + (res_randomid() % (65535-1025));
+        in_port_t port;
+        do {
+            port = DNS_MIN_PORT + (res_randomid() % (MAX_PORT - DNS_MIN_PORT));
+        } while (exclusion_min
+                && exclusion_max
+                && port >= exclusion_min && port <= exclusion_max);
+
         if (family == AF_INET)
             u.sin.sin_port = htons(port);
         else
