@@ -32,8 +32,6 @@
 #include <sys/mman.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "atexit.h"
-#include "thread_private.h"
 
 /*
  * This variable is zero until a process has created a thread.
@@ -44,12 +42,21 @@
  */
 int     __isthreaded    = 0;
 
+/* BEGIN android-added: using __cxa_finalize and __cxa_thread_finalize */
+extern void __cxa_finalize(void* dso_handle);
+extern void __cxa_thread_finalize();
+/* END android-added */
+
 /*
  * Exit, flushing stdio buffers if necessary.
  */
 void
 exit(int status)
 {
+  /* BEGIN android-added: call thread_local d-tors */
+  __cxa_thread_finalize();
+  /* END android-added */
+
 	/*
 	 * Call functions registered by atexit() or _cxa_atexit()
 	 * (including the stdio cleanup routine) and then _exit().
