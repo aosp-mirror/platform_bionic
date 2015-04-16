@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30d59acf_1da6568c",
+        "filename": "libc/bionic/__pread64_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-16T16:19:41Z",
+      "side": 1,
+      "message": "sweet!",
+      "revId": "e7e1c875b0f8eefb1d771f200a58f54e64c39d55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
