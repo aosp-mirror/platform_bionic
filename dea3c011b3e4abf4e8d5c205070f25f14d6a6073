@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "d080bec6_d062eb12",
+        "filename": "libc/bionic/__readlink_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-04-17T18:29:55Z",
+      "side": 1,
+      "message": "It could also just be defined in terms of readlinkat in the header, but then even the __attribute__((error(...)) messages would report readlinkat.",
+      "parentUuid": "d080bec6_55232dd3",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_3ab9c02a",
         "filename": "libc/include/unistd.h",
         "patchSetId": 2
