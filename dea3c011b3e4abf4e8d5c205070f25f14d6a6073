@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "907ac6a8_07c024ce",
+        "filename": "libc/bionic/__readlink_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-04-17T17:36:21Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s cleaner.",
+      "parentUuid": "907ac6a8_27f760a3",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_3ab9c02a",
         "filename": "libc/include/unistd.h",
         "patchSetId": 2
