@@ -1,0 +1,9 @@
+TESTLIB_V0 {
+  local:
+    versioned_function_v*;
+};
+
+TESTLIB_V2 {
+  global:
+    versioned_function;
+} TESTLIB_V0;
