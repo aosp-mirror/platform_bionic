@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "907ac6a8_27f760a3",
+        "filename": "libc/bionic/__readlink_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-17T17:27:57Z",
+      "side": 1,
+      "message": "maybe it\u0027s better to just have this be one line:\n\n  return __readlinkat_chk(AT_FDCWD, path, buf, size, buf_size);",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d080bec6_3ab9c02a",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-17T17:27:57Z",
+      "side": 1,
+      "message": "why aren\u0027t you using __bos() here?",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c51e25_62449e7c",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-17T17:27:57Z",
+      "side": 1,
+      "message": "why aren\u0027t you using __bos() here?",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
