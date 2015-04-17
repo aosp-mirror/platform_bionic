@@ -100,7 +100,7 @@ void* dlsym(void* handle, const char* symbol) {
   }
 
   soinfo* found = nullptr;
-  ElfW(Sym)* sym = nullptr;
+  const ElfW(Sym)* sym = nullptr;
   void* caller_addr = __builtin_return_address(0);
   soinfo* caller = find_containing_library(caller_addr);
 
