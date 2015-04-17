@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
