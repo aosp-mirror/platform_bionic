@@ -623,6 +623,22 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   ASSERT_FORTIFY(FD_ISSET(0, set));
 }
 
+TEST_F(DEATHTEST, pread_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_RDONLY);
+  ASSERT_FORTIFY(pread(fd, buf, ct, 0));
+  close(fd);
+}
+
+TEST_F(DEATHTEST, pread64_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_RDONLY);
+  ASSERT_FORTIFY(pread64(fd, buf, ct, 0));
+  close(fd);
+}
+
 TEST_F(DEATHTEST, read_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
