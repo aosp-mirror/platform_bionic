@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "d080bec6_55232dd3",
+        "filename": "libc/bionic/__readlink_chk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-17T17:37:56Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s a problem. Elliott, what do you think?",
+      "parentUuid": "d0c51e25_42d882f3",
+      "revId": "dea3c011b3e4abf4e8d5c205070f25f14d6a6073",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d080bec6_3ab9c02a",
         "filename": "libc/include/unistd.h",
         "patchSetId": 2
