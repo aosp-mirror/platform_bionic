@@ -239,6 +239,16 @@ __errordecl(__read_dest_size_error, "read called with size bigger than destinati
 __errordecl(__read_count_toobig_error, "read called with count > SSIZE_MAX");
 extern ssize_t __read_real(int, void*, size_t) __RENAME(read);
 
+extern ssize_t __readlink_chk(const char*, char*, size_t, size_t);
+__errordecl(__readlink_dest_size_error, "readlink called with size bigger than destination");
+__errordecl(__readlink_size_toobig_error, "readlink called with size > SSIZE_MAX");
+extern ssize_t __readlink_real(const char*, char*, size_t) __RENAME(readlink);
+
+extern ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t);
+__errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger than destination");
+__errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
+extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat);
+
 #if defined(__BIONIC_FORTIFY)
 
 #if defined(__USE_FILE_OFFSET64)
@@ -320,6 +330,56 @@ ssize_t read(int fd, void* buf, size_t count) {
 #endif
 
     return __read_chk(fd, buf, count, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+ssize_t readlink(const char* path, char* buf, size_t size) {
+    size_t bos = __bos(buf);
+
+#if !defined(__clang__)
+    if (__builtin_constant_p(size) && (size > SSIZE_MAX)) {
+        __readlink_size_toobig_error();
+    }
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __readlink_real(path, buf, size);
+    }
+
+    if (__builtin_constant_p(size) && (size > bos)) {
+        __readlink_dest_size_error();
+    }
+
+    if (__builtin_constant_p(size) && (size <= bos)) {
+        return __readlink_real(path, buf, size);
+    }
+#endif
+
+    return __readlink_chk(path, buf, size, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size) {
+    size_t bos = __bos(buf);
+
+#if !defined(__clang__)
+    if (__builtin_constant_p(size) && (size > SSIZE_MAX)) {
+        __readlinkat_size_toobig_error();
+    }
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __readlinkat_real(dirfd, path, buf, size);
+    }
+
+    if (__builtin_constant_p(size) && (size > bos)) {
+        __readlinkat_dest_size_error();
+    }
+
+    if (__builtin_constant_p(size) && (size <= bos)) {
+        return __readlinkat_real(dirfd, path, buf, size);
+    }
+#endif
+
+    return __readlinkat_chk(dirfd, path, buf, size, bos);
 }
 
 #endif /* defined(__BIONIC_FORTIFY) */
