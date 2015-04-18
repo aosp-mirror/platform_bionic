@@ -120,6 +120,10 @@ def drop_rejection():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger()
+    fh = logging.FileHandler('bionicbb.log')
+    fh.setLevel(logging.INFO)
+    logger.addHandler(fh)
 
     # Prevent the job from being rescheduled by the reloader.
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
