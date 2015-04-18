@@ -245,6 +245,7 @@ static id_t app_id_from_name(const char* name, bool is_group) {
         appid = android_ids[n].aid;
         // Move the end pointer to the null terminator.
         end += strlen(android_ids[n].name) + 1;
+        break;
       }
     }
   }
