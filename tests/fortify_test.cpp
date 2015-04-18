@@ -647,6 +647,18 @@ TEST_F(DEATHTEST, read_fortified) {
   close(fd);
 }
 
+TEST_F(DEATHTEST, readlink_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  ASSERT_FORTIFY(readlink("/dev/null", buf, ct));
+}
+
+TEST_F(DEATHTEST, readlinkat_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  ASSERT_FORTIFY(readlinkat(AT_FDCWD, "/dev/null", buf, ct));
+}
+
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
