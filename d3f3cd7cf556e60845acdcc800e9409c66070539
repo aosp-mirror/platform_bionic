@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06c3e17_b6b8c827",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-18T01:12:38Z",
+      "side": 1,
+      "message": "Please use __builtin_memchr() instead of __memchr_real().\n\nhttps://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html",
+      "revId": "d3f3cd7cf556e60845acdcc800e9409c66070539",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f055c239_f7c240a1",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-18T01:12:38Z",
+      "side": 1,
+      "message": "Please use __builtin_memchr() instead of __memchr_real().\n\nhttps://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html",
+      "revId": "d3f3cd7cf556e60845acdcc800e9409c66070539",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
