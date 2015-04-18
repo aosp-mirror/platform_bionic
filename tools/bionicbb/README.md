@@ -8,6 +8,7 @@ Dependencies
 ------------
 
  * Python 2.7
+ * [Advanced Python Scheduler](https://apscheduler.readthedocs.org/en/latest/)
  * [Flask](http://flask.pocoo.org/)
  * [Google API Client Library](https://developers.google.com/api-client-library/python/start/installation)
  * [jenkinsapi](https://pypi.python.org/pypi/jenkinsapi)

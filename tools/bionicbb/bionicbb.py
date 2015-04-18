@@ -16,11 +16,15 @@
 #
 import json
 import logging
+import os
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask, request
 import requests
 
 import gerrit
+import tasks
 
-from flask import Flask, request
 app = Flask(__name__)
 
 
@@ -115,4 +119,12 @@ def drop_rejection():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
+    # Prevent the job from being rescheduled by the reloader.
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+        scheduler = BackgroundScheduler()
+        scheduler.start()
+        scheduler.add_job(tasks.get_and_process_jobs, 'interval', minutes=5)
+
     app.run(host='0.0.0.0', debug=True)

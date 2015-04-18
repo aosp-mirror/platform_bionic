@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 #
 # Copyright (C) 2015 The Android Open Source Project
 #
@@ -14,42 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import base64
-import httplib
-import httplib2
-import jenkinsapi
+from __future__ import absolute_import
+
 import json
 import logging
-import os
+import os.path
 import re
 import requests
-import socket
-import sys
-import time
 
-import apiclient.errors
+import jenkinsapi
 
-import config
 import gerrit
 
-
-class GmailError(RuntimeError):
-    def __init__(self, message):
-        super(GmailError, self).__init__(message)
-
-
-def get_gerrit_label(labels):
-    for label in labels:
-        if label['name'] == 'gerrit':
-            return label['id']
-    return None
-
-
-def get_headers(msg):
-    headers = {}
-    for hdr in msg['payload']['headers']:
-        headers[hdr['name']] = hdr['value']
-    return headers
+import config
 
 
 def is_untrusted_committer(change_id, patch_set):
@@ -86,59 +62,6 @@ def should_skip_build(info):
         if check(change_id, patch_set):
             return True
     return False
-
-
-def build_service():
-    from apiclient.discovery import build
-    from oauth2client.client import flow_from_clientsecrets
-    from oauth2client.file import Storage
-    from oauth2client.tools import run
-
-    OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.modify'
-    STORAGE = Storage('oauth.storage')
-
-    # Start the OAuth flow to retrieve credentials
-    flow = flow_from_clientsecrets(config.client_secret_file,
-                                   scope=OAUTH_SCOPE)
-    http = httplib2.Http()
-
-    # Try to retrieve credentials from storage or run the flow to generate them
-    credentials = STORAGE.get()
-    if credentials is None or credentials.invalid:
-        credentials = run(flow, STORAGE, http=http)
-
-    http = credentials.authorize(http)
-    return build('gmail', 'v1', http=http)
-
-
-def get_all_messages(service, label):
-    msgs = []
-    response = service.users().messages().list(
-        userId='me', labelIds=label).execute()
-    if 'messages' in response:
-        msgs.extend(response['messages'])
-    while 'nextPageToken' in response:
-        page_token = response['nextPageToken']
-        response = service.users().messages().list(
-            userId='me', pageToken=page_token).execute()
-        msgs.extend(response['messages'])
-    return msgs
-
-
-def get_body(msg):
-    if 'attachmentId' in msg['payload']['body']:
-        raise NotImplementedError('Handling of messages contained in '
-                                  'attachments not yet implemented.')
-    b64_body = msg['payload']['body']['data']
-    return base64.urlsafe_b64decode(b64_body.encode('ASCII'))
-
-
-def get_gerrit_info(body):
-    info = {}
-    gerrit_pattern = r'^Gerrit-(\S+): (.+)$'
-    for match in re.finditer(gerrit_pattern, body, flags=re.MULTILINE):
-        info[match.group(1)] = match.group(2).strip()
-    return info
 
 
 def clean_project(dry_run):
@@ -215,8 +138,6 @@ def handle_change(gerrit_info, _, dry_run):
     if should_skip_build(gerrit_info):
         return True
     return build_project(gerrit_info, dry_run)
-handle_newchange = handle_change
-handle_newpatchset = handle_change
 
 
 def drop_rejection(gerrit_info, dry_run):
@@ -280,75 +201,3 @@ def skip_handler(gerrit_info, _, __):
     logging.info('Skipping %s: %s', gerrit_info['MessageType'],
                  gerrit_info['Change-Id'])
     return True
-
-
-handle_abandon = skip_handler
-handle_merge_failed = skip_handler
-handle_merged = skip_handler
-handle_restore = skip_handler
-handle_revert = skip_handler
-
-
-def process_message(msg, dry_run):
-    try:
-        body = get_body(msg)
-        gerrit_info = get_gerrit_info(body)
-        if not gerrit_info:
-            logging.fatal('No Gerrit info found: %s', msg.subject)
-        msg_type = gerrit_info['MessageType']
-        handler = 'handle_{}'.format(
-            gerrit_info['MessageType'].replace('-', '_'))
-        if handler in globals():
-            return globals()[handler](gerrit_info, body, dry_run)
-        else:
-            logging.warning('MessageType %s unhandled.', msg_type)
-        return False
-    except NotImplementedError as ex:
-        logging.error("%s", ex)
-        return False
-    except gerrit.GerritError as ex:
-        change_id = gerrit_info['Change-Id']
-        logging.error('Gerrit error (%d): %s %s', ex.code, change_id, ex.url)
-        return ex.code == 404
-
-
-def main(argc, argv):
-    dry_run = False
-    if argc == 2 and argv[1] == '--dry-run':
-        dry_run = True
-    elif argc > 2:
-        sys.exit('usage: python {} [--dry-run]'.format(argv[0]))
-
-    gmail_service = build_service()
-    msg_service = gmail_service.users().messages()
-
-    while True:
-        try:
-            labels = gmail_service.users().labels().list(userId='me').execute()
-            if not labels['labels']:
-                raise GmailError('Could not retrieve Gmail labels')
-            label_id = get_gerrit_label(labels['labels'])
-            if not label_id:
-                raise GmailError('Could not find gerrit label')
-
-            for msg in get_all_messages(gmail_service, label_id):
-                msg = msg_service.get(userId='me', id=msg['id']).execute()
-                if process_message(msg, dry_run) and not dry_run:
-                    msg_service.trash(userId='me', id=msg['id']).execute()
-            time.sleep(60 * 5)
-        except GmailError as ex:
-            logging.error('Gmail error: %s', ex)
-            time.sleep(60 * 5)
-        except apiclient.errors.HttpError as ex:
-            logging.error('API Client HTTP error: %s', ex)
-            time.sleep(60 * 5)
-        except httplib.BadStatusLine:
-            pass
-        except httplib2.ServerNotFoundError:
-            pass
-        except socket.error:
-            pass
-
-
-if __name__ == '__main__':
-    main(len(sys.argv), sys.argv)
