@@ -34,6 +34,23 @@
       "revId": "4ae773633aac9ceba5ec62bb8e1aa22c3c56ebde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06c3e17_0a622b86",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-19T00:58:22Z",
+      "side": 1,
+      "message": "After line 155, can you add:\n\n    void* result \u003d __builtin_memchr(s, c, n);\n    if (__builtin_constant_p(result)) {\n        return result;\n    }\n\nIf the results of __builtin_memchr() can be determined at compile time, there\u0027s no need to call __memchr_chk at runtime.",
+      "revId": "4ae773633aac9ceba5ec62bb8e1aa22c3c56ebde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
