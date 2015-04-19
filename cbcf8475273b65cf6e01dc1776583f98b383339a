@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06c3e17_0a1fcbe2",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-19T02:18:34Z",
+      "side": 1,
+      "message": "This is always going to result in an I/O call, so optimizing this to save a function call doesn\u0027t seem worth it.\n\nHow about we unconditionally call the fortified version, and get rid of all of this code?\n\n__BIONIC_FORTIFY_INLINE\nchar* realpath(const char* path, char* resolved) {\n  return __realpath_chk(path, resolved, __bos(resolved));\n}\n\nand the __realpath_chk() ignores the third argument if resolved\u003d\u003dNULL.\n\nOr better yet, pass in 4 arguments, and also check for read overflow.\n\n__BIONIC_FORTIFY_INLINE\nchar* realpath(const char* path, char* resolved) {\n  return __realpath_chk(path, resolved, __bos(path), __bos(resolved));\n}",
+      "revId": "cbcf8475273b65cf6e01dc1776583f98b383339a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
