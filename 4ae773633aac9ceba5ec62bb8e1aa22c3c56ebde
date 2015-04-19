@@ -69,6 +69,24 @@
       "revId": "4ae773633aac9ceba5ec62bb8e1aa22c3c56ebde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d06c3e17_0a94ebba",
+        "filename": "libc/include/string.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-04-19T01:45:21Z",
+      "side": 1,
+      "message": "I don\u0027t think a pointer to a usable object can ever be considered constant due to position independence. It can only happen with NULL or some integer constant encoded as a pointer.\n\nThis experiment seems to confirm it:\n\n#include \u003cstdio.h\u003e\n\nint main(void) {\n  const char buf[10];\n  printf(\"%d\\n\", __builtin_constant_p(buf));\n  return 0;\n}\n\nThe compiler could probably make the assumption for non-PIC code, but it\u0027s not that clever.",
+      "parentUuid": "d06c3e17_ca9953f8",
+      "revId": "4ae773633aac9ceba5ec62bb8e1aa22c3c56ebde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
