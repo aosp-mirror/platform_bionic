@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10a416b9_73959a3a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-21T23:39:50Z",
+      "side": 1,
+      "message": "snprintf is not working at this point but std::string, std::vector, and readlink all are?",
+      "revId": "85c06dea466753fd8cefe298dbd0588c1730d448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
