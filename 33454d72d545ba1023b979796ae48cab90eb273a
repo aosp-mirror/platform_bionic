@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70f6329f_ae8fb7fc",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-04-21T18:01:28Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 12
+      },
+      "revId": "33454d72d545ba1023b979796ae48cab90eb273a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
