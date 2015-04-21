@@ -442,7 +442,8 @@ static bool for_each_verdef(const soinfo* si, F functor) {
     offset += verdef->vd_next;
 
     if (verdef->vd_version != 1) {
-      DL_ERR("unsupported verdef[%zd] vd_version: %d (expected 1)", i, verdef->vd_version);
+      DL_ERR("unsupported verdef[%zd] vd_version: %d (expected 1) library: %s",
+          i, verdef->vd_version, si->get_soname());
       return false;
     }
 
