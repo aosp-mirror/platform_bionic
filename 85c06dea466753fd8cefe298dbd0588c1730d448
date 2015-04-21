@@ -16,6 +16,24 @@
       "revId": "85c06dea466753fd8cefe298dbd0588c1730d448",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_53cdf665",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-21T23:50:12Z",
+      "side": 1,
+      "message": "yes.. snprintf does nothing (sometimes)... It might be related to the problem with pthread_getspecific described at L1598.",
+      "parentUuid": "10a416b9_73959a3a",
+      "revId": "85c06dea466753fd8cefe298dbd0588c1730d448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
