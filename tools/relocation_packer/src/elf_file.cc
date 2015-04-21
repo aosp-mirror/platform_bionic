@@ -439,6 +439,9 @@ void ElfFile<ELF>::AdjustDynamicSectionForHole(Elf_Scn* dynamic_section,
                                 tag == DT_JMPREL ||
                                 tag == DT_INIT_ARRAY ||
                                 tag == DT_FINI_ARRAY ||
+                                tag == DT_VERSYM ||
+                                tag == DT_VERNEED ||
+                                tag == DT_VERDEF ||
                                 tag == DT_ANDROID_REL||
                                 tag == DT_ANDROID_RELA);
 
@@ -586,7 +589,7 @@ bool ElfFile<ELF>::PackRelocations() {
     const typename ELF::Rel* relocations_base = reinterpret_cast<typename ELF::Rel*>(data->d_buf);
     ConvertRelArrayToRelaVector(relocations_base,
         data->d_size / sizeof(typename ELF::Rel), &relocations);
-    LOG(INFO) << "Relocations   : REL";
+    VLOG(1) << "Relocations   : REL";
   } else if (relocations_type_ == RELA) {
     // Convert data to a vector of relocations with addends.
     const typename ELF::Rela* relocations_base = reinterpret_cast<typename ELF::Rela*>(data->d_buf);
@@ -594,7 +597,7 @@ bool ElfFile<ELF>::PackRelocations() {
         relocations_base,
         relocations_base + data->d_size / sizeof(relocations[0]));
 
-    LOG(INFO) << "Relocations   : RELA";
+    VLOG(1) << "Relocations   : RELA";
   } else {
     NOTREACHED();
   }
@@ -618,18 +621,18 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
       relocations_type_ == RELA ? sizeof(typename ELF::Rela) : sizeof(typename ELF::Rel);
   const size_t initial_bytes = relocations->size() * rel_size;
 
-  LOG(INFO) << "Unpacked                   : " << initial_bytes << " bytes";
+  VLOG(1) << "Unpacked                   : " << initial_bytes << " bytes";
   std::vector<uint8_t> packed;
   RelocationPacker<ELF> packer;
 
   // Pack relocations: dry run to estimate memory savings.
   packer.PackRelocations(*relocations, &packed);
   const size_t packed_bytes_estimate = packed.size() * sizeof(packed[0]);
-  LOG(INFO) << "Packed         (no padding): " << packed_bytes_estimate << " bytes";
+  VLOG(1) << "Packed         (no padding): " << packed_bytes_estimate << " bytes";
 
   if (packed.empty()) {
     LOG(INFO) << "Too few relocations to pack";
-    return false;
+    return true;
   }
 
   // Pre-calculate the size of the hole we will close up when we rewrite
@@ -646,7 +649,7 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   // Adjusting for alignment may have removed any packing benefit.
   if (hole_size == 0) {
     LOG(INFO) << "Too few relocations to pack after alignment";
-    return false;
+    return true;
   }
 
   if (hole_size <= 0) {
