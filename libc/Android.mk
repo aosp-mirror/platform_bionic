@@ -824,12 +824,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_upstream_openbsd_ndk_src_files)
-ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-  # Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-  LOCAL_CLANG := false
-else
-  LOCAL_CLANG := $(use_clang)
-endif
+LOCAL_CLANG := $(use_clang)
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
@@ -867,12 +862,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(libc_upstream_openbsd_src_files)
-ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-  # Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-  LOCAL_CLANG := false
-else
-  LOCAL_CLANG := $(use_clang)
-endif
+LOCAL_CLANG := $(use_clang)
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
@@ -912,12 +902,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES_32 := $(libc_upstream_openbsd_gdtoa_src_files_32)
 LOCAL_SRC_FILES_64 := $(libc_upstream_openbsd_gdtoa_src_files_64)
-ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-  # Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-  LOCAL_CLANG := false
-else
-  LOCAL_CLANG := $(use_clang)
-endif
+LOCAL_CLANG := $(use_clang)
 
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
