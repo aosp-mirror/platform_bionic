@@ -36,7 +36,7 @@ class ElfFile {
   explicit ElfFile(int fd)
       : fd_(fd), is_padding_relocations_(false), elf_(NULL),
         relocations_section_(NULL), dynamic_section_(NULL),
-        relocations_type_(NONE) {}
+        relocations_type_(NONE), has_android_relocations_(false) {}
   ~ElfFile() {}
 
   // Set padding mode.  When padding, PackRelocations() will not shrink
@@ -111,6 +111,9 @@ class ElfFile {
 
   // Relocation type found, assigned by Load().
   relocations_type_t relocations_type_;
+
+  // Elf-file has android relocations section
+  bool has_android_relocations_;
 };
 
 }  // namespace relocation_packer
