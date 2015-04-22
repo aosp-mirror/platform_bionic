@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "309d9a70_a6997cf8",
+        "filename": "tools/relocation_packer/src/elf_file.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-22T19:54:17Z",
+      "side": 1,
+      "message": "the name and the comment don\u0027t seem to match. (it\u0027s awkward grammatically too.) maybe has_android_relocations_ or is_already_packed_?",
+      "revId": "560c2e9c3665edbc5dd6c036f5d8e3163f9a93f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
