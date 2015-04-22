@@ -14,7 +14,6 @@ if top is None:
 
 # Set up the env vars for libclang.
 site.addsitedir(os.path.join(top, 'external/clang/bindings/python'))
-os.putenv('LD_LIBRARY_PATH', os.path.join(top, 'prebuilts/sdk/tools/linux'))
 
 import clang.cindex
 from clang.cindex import conf
@@ -25,6 +24,10 @@ from clang.cindex import SourceRange
 from clang.cindex import TokenGroup
 from clang.cindex import TokenKind
 from clang.cindex import TranslationUnit
+
+# Set up LD_LIBRARY_PATH to include libclang.so, libLLVM.so, and etc.
+# Note that setting LD_LIBRARY_PATH with os.putenv() sometimes doesn't help.
+clang.cindex.Config.set_library_path(os.path.join(top, 'prebuilts/sdk/tools/linux/lib64'))
 
 from defaults import kCppUndefinedMacro
 from defaults import kernel_remove_config_macros
