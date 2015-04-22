@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d08d1e46_71df5255",
+        "filename": "tools/relocation_packer/src/elf_file_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-22T18:53:34Z",
+      "side": 1,
+      "message": "right... forgot about this. fixed.",
+      "parentUuid": "d08d1e46_ae64f793",
+      "revId": "bdc99294cb5d1aadcfa6b634380f58213134794f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50984e8f_458b3cb8",
         "filename": "tools/relocation_packer/src/packer_unittest.cc",
         "patchSetId": 1
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "309d9a70_663eb4df",
+        "filename": "tools/relocation_packer/src/packer_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-22T18:53:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50984e8f_458b3cb8",
+      "range": {
+        "startLine": 67,
+        "startChar": 53,
+        "endLine": 67,
+        "endChar": 55
+      },
+      "revId": "bdc99294cb5d1aadcfa6b634380f58213134794f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90972654_6f768d85",
         "filename": "tools/relocation_packer/src/packer_unittest.cc",
         "patchSetId": 1
@@ -71,6 +113,30 @@
       "writtenOn": "2015-04-22T17:16:11Z",
       "side": 1,
       "message": "7d or 0d.",
+      "range": {
+        "startLine": 106,
+        "startChar": 53,
+        "endLine": 106,
+        "endChar": 55
+      },
+      "revId": "bdc99294cb5d1aadcfa6b634380f58213134794f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_86439870",
+        "filename": "tools/relocation_packer/src/packer_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-22T18:53:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90972654_6f768d85",
       "range": {
         "startLine": 106,
         "startChar": 53,
