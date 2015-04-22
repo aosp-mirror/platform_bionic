@@ -16,6 +16,24 @@
       "revId": "560c2e9c3665edbc5dd6c036f5d8e3163f9a93f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_8dce5601",
+        "filename": "tools/relocation_packer/src/elf_file.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-22T19:59:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "309d9a70_a6997cf8",
+      "revId": "560c2e9c3665edbc5dd6c036f5d8e3163f9a93f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
