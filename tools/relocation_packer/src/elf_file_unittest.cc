@@ -175,13 +175,19 @@ static void RunPackRelocationsTestFor(const std::string& arch) {
 
 namespace relocation_packer {
 
-TEST(ElfFile, PackRelocations) {
+TEST(ElfFile, PackRelocationsArm32) {
   RunPackRelocationsTestFor("arm32");
+}
+
+TEST(ElfFile, PackRelocationsArm64) {
   RunPackRelocationsTestFor("arm64");
 }
 
-TEST(ElfFile, UnpackRelocations) {
+TEST(ElfFile, UnpackRelocationsArm32) {
   RunUnpackRelocationsTestFor("arm32");
+}
+
+TEST(ElfFile, UnpackRelocationsArm64) {
   RunUnpackRelocationsTestFor("arm64");
 }
 
