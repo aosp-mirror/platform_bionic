@@ -46,6 +46,9 @@ LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := src/main.cc
 LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf
+
+# Statically linking libc++ to make it work from prebuilts
+LOCAL_CXX_STL := libc++_static
 LOCAL_C_INCLUDES := external/elfutils/src/libelf libnativehelper/include
 
 LOCAL_MODULE := relocation_packer
