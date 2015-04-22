@@ -16,6 +16,24 @@
       "revId": "7592008030a67ebe0dbda20aa041d5c347170611",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_2bc9d52c",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-04-22T18:07:22Z",
+      "side": 1,
+      "message": "you meant 32-bit case? since we only provide the 64-bit so\u0027s under prebuilts, we can hard-code the path here. one has to build and set up his own environment if he has to use 32-bit versions.",
+      "parentUuid": "309d9a70_4b9a9947",
+      "revId": "7592008030a67ebe0dbda20aa041d5c347170611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
