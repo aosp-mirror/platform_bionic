@@ -26,7 +26,6 @@ LOCAL_SRC_FILES := \
   src/debug.cc \
   src/delta_encoder.cc \
   src/elf_file.cc \
-  src/leb128.cc \
   src/packer.cc \
   src/sleb128.cc \
 
@@ -67,7 +66,6 @@ LOCAL_SRC_FILES := \
   src/debug_unittest.cc \
   src/delta_encoder_unittest.cc \
   src/elf_file_unittest.cc \
-  src/leb128_unittest.cc \
   src/sleb128_unittest.cc \
   src/packer_unittest.cc \
 

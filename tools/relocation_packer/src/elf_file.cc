@@ -190,6 +190,7 @@ bool ElfFile<ELF>::Load() {
   // these; both is unsupported.
   bool has_rel_relocations = false;
   bool has_rela_relocations = false;
+  bool has_android_relocations = false;
 
   Elf_Scn* section = NULL;
   while ((section = elf_nextscn(elf, section)) != nullptr) {
@@ -209,6 +210,11 @@ bool ElfFile<ELF>::Load() {
     if ((name == ".rel.dyn" || name == ".rela.dyn") &&
         section_header->sh_size > 0) {
       found_relocations_section = section;
+
+      // Note if relocation section is already packed
+      has_android_relocations =
+          section_header->sh_type == SHT_ANDROID_REL ||
+          section_header->sh_type == SHT_ANDROID_RELA;
     }
 
     if (section_header->sh_offset == dynamic_program_header->p_offset) {
@@ -250,6 +256,7 @@ bool ElfFile<ELF>::Load() {
   relocations_section_ = found_relocations_section;
   dynamic_section_ = found_dynamic_section;
   relocations_type_ = has_rel_relocations ? REL : RELA;
+  has_android_relocations_ = has_android_relocations;
   return true;
 }
 
@@ -610,10 +617,15 @@ template <typename ELF>
 bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocations) {
   typedef typename ELF::Rela Rela;
 
+  if (has_android_relocations_) {
+    LOG(ERROR) << "Relocation table is already packed";
+    return false;
+  }
+
   // If no relocations then we have nothing packable.  Perhaps
   // the shared object has already been packed?
   if (relocations->empty()) {
-    LOG(ERROR) << "No relocations found (already packed?)";
+    LOG(ERROR) << "No relocations found";
     return false;
   }
 
@@ -737,7 +749,7 @@ bool ElfFile<ELF>::UnpackRelocations() {
       packed.size() > 3 &&
       packed[0] == 'A' &&
       packed[1] == 'P' &&
-      (packed[2] == 'U' || packed[2] == 'S') &&
+      packed[2] == 'S' &&
       packed[3] == '2') {
     LOG(INFO) << "Relocations   : " << (relocations_type_ == REL ? "REL" : "RELA");
   } else {
