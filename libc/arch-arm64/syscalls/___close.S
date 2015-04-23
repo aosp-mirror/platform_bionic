@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(close)
+ENTRY(___close)
     mov     x8, __NR_close
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(close)
     b.hi    __set_errno_internal
 
     ret
-END(close)
+END(___close)
+.hidden ___close
