@@ -1222,10 +1222,6 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
 
 LOCAL_WHOLE_STATIC_LIBRARIES_arm := libc_aeabi
 
-ifneq ($(MALLOC_IMPL),dlmalloc)
-LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
-endif
-
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
@@ -1318,6 +1314,11 @@ LOCAL_MODULE := libc
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+
+ifneq ($(MALLOC_IMPL),dlmalloc)
+LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
+endif
+
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_ADDRESS_SANITIZER := false
@@ -1365,6 +1366,11 @@ LOCAL_STRIP_MODULE := keep_symbols
 
 LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+
+ifneq ($(MALLOC_IMPL),dlmalloc)
+LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
+endif
+
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
