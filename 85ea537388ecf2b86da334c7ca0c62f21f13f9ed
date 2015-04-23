@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10a416b9_a54eca19",
+        "filename": "libc/arch-common/bionic/pthread_atfork.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T00:43:22Z",
+      "side": 1,
+      "message": "2015",
+      "revId": "85ea537388ecf2b86da334c7ca0c62f21f13f9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_85ab86ff",
+        "filename": "libc/arch-common/bionic/pthread_atfork.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T00:43:22Z",
+      "side": 1,
+      "message": "explain why?\n\nshould this be in ndk_cruft?",
+      "revId": "85ea537388ecf2b86da334c7ca0c62f21f13f9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_6e2da613",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T00:43:22Z",
+      "side": 1,
+      "message": "may as well change all the NULLs if you\u0027re going to change one.",
+      "revId": "85ea537388ecf2b86da334c7ca0c62f21f13f9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90b566fa_97ca939b",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T00:43:22Z",
+      "side": 1,
+      "message": "this name is known to the compiler? comment that?",
+      "revId": "85ea537388ecf2b86da334c7ca0c62f21f13f9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_a5ddea96",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T00:43:22Z",
+      "side": 1,
+      "message": "good use of decimal :-)",
+      "revId": "85ea537388ecf2b86da334c7ca0c62f21f13f9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
