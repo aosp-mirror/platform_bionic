@@ -938,9 +938,6 @@ LOCAL_SRC_FILES := $(libc_bionic_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
 
-# ssse3-strcmp-slm.S does not compile with Clang.
-LOCAL_CLANG_ASFLAGS_x86_64 += -no-integrated-as
-
 # memcpy.S, memchr.S, etc. do not compile with Clang.
 LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
 LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
@@ -971,9 +968,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_bionic_ndk_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
-
-# ssse3-strcmp-slm.S does not compile with Clang.
-LOCAL_CLANG_ASFLAGS_x86_64 += -no-integrated-as
 
 # memcpy.S, memchr.S, etc. do not compile with Clang.
 LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
@@ -1026,9 +1020,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_pthread_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
-
-# ssse3-strcmp-slm.S does not compile with Clang.
-LOCAL_CLANG_ASFLAGS_x86_64 += -no-integrated-as
 
 # memcpy.S, memchr.S, etc. do not compile with Clang.
 LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
