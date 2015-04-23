@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(close)
+ENTRY(___close)
     movl    $__NR_close, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(close)
     call    __set_errno_internal
 1:
     ret
-END(close)
+END(___close)
+.hidden ___close
