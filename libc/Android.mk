@@ -109,6 +109,7 @@ libc_bionic_ndk_src_files := \
     bionic/clock_getcpuclockid.cpp \
     bionic/clock_nanosleep.cpp \
     bionic/clone.cpp \
+    bionic/close.cpp \
     bionic/__cmsg_nxthdr.cpp \
     bionic/connect.cpp \
     bionic/ctype.cpp \
