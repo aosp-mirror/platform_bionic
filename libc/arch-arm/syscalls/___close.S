@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(close)
+ENTRY(___close)
     mov     ip, r7
     ldr     r7, =__NR_close
     swi     #0
@@ -11,4 +11,5 @@ ENTRY(close)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(close)
+END(___close)
+.hidden ___close

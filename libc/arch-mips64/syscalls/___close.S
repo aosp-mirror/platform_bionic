@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(close)
+ENTRY(___close)
     .set push
     .set noreorder
     li v0, __NR_close
@@ -22,4 +22,5 @@ ENTRY(close)
     j t9
     move ra, t0
     .set pop
-END(close)
+END(___close)
+.hidden ___close
