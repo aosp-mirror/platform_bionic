@@ -666,7 +666,7 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
 
   if (hole_size <= 0) {
     LOG(INFO) << "Packing relocations saves no space";
-    return false;
+    return true;
   }
 
   size_t data_padding_bytes = is_padding_relocations_ ?
