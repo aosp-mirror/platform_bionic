@@ -63,6 +63,7 @@ libc_common_src_files := \
     stdio/sprintf.c \
     stdio/stdio.c \
     stdio/stdio_ext.cpp \
+    stdlib/atexit.c \
     stdlib/exit.c \
 
 # Fortify implementations of libc functions.
@@ -481,7 +482,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/wprintf.c \
     upstream-openbsd/lib/libc/stdio/wscanf.c \
     upstream-openbsd/lib/libc/stdio/wsetup.c \
-    upstream-openbsd/lib/libc/stdlib/atexit.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \

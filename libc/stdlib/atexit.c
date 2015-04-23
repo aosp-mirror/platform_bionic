@@ -35,10 +35,14 @@
 #include <string.h>
 #include <unistd.h>
 #include "atexit.h"
-#include "thread_private.h"
+#include "private/thread_private.h"
 
 struct atexit *__atexit;
 static int restartloop;
+
+/* BEGIN android-changed: __unregister_atfork is used by __cxa_finalize */
+extern void __unregister_atfork(void* dso);
+/* END android-changed */
 
 /*
  * Function pointers are stored in a linked list of pages. The list
@@ -62,7 +66,7 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
 	struct atexit *p = __atexit;
 	struct atexit_fn *fnp;
-	int pgsize = getpagesize();
+	size_t pgsize = getpagesize();
 	int ret = -1;
 
 	if (pgsize < sizeof(*p))
@@ -161,6 +165,12 @@ restart:
 		__atexit = NULL;
 	}
 	_ATEXIT_UNLOCK();
+
+  /* BEGIN android-changed: call __unregister_atfork if dso is not null */
+  if (dso != NULL) {
+    __unregister_atfork(dso);
+  }
+  /* END android-changed */
 }
 
 /*
@@ -170,7 +180,7 @@ void
 __atexit_register_cleanup(void (*func)(void))
 {
 	struct atexit *p;
-	int pgsize = getpagesize();
+	size_t pgsize = getpagesize();
 
 	if (pgsize < sizeof(*p))
 		return;
