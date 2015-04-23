@@ -55,7 +55,7 @@
 #include "linker_block_allocator.h"
 #include "linker_debug.h"
 #include "linker_environ.h"
-#include "linker_leb128.h"
+#include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
@@ -2875,7 +2875,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     if (android_relocs_size_ > 3 &&
         android_relocs_[0] == 'A' &&
         android_relocs_[1] == 'P' &&
-        (android_relocs_[2] == 'U' || android_relocs_[2] == 'S') &&
+        android_relocs_[2] == 'S' &&
         android_relocs_[3] == '2') {
       DEBUG("[ android relocating %s ]", get_soname());
 
@@ -2883,17 +2883,10 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
       const uint8_t* packed_relocs = android_relocs_ + 4;
       const size_t packed_relocs_size = android_relocs_size_ - 4;
 
-      if (android_relocs_[2] == 'U') {
-        relocated = relocate(
-            packed_reloc_iterator<leb128_decoder>(
-              leb128_decoder(packed_relocs, packed_relocs_size)),
-            global_group, local_group);
-      } else { // android_relocs_[2] == 'S'
-        relocated = relocate(
-            packed_reloc_iterator<sleb128_decoder>(
-              sleb128_decoder(packed_relocs, packed_relocs_size)),
-            global_group, local_group);
-      }
+      relocated = relocate(
+          packed_reloc_iterator<sleb128_decoder>(
+            sleb128_decoder(packed_relocs, packed_relocs_size)),
+          global_group, local_group);
 
       if (!relocated) {
         return false;

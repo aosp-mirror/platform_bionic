@@ -30,7 +30,7 @@
 #include "linker_debug.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
-#include "linker_leb128.h"
+#include "linker_sleb128.h"
 
 template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator,
                                                      const soinfo_list_t& global_group,
@@ -38,11 +38,6 @@ template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_
 
 template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
     packed_reloc_iterator<sleb128_decoder>&& rel_iterator,
-    const soinfo_list_t& global_group,
-    const soinfo_list_t& local_group);
-
-template bool soinfo::relocate<packed_reloc_iterator<leb128_decoder>>(
-    packed_reloc_iterator<leb128_decoder>&& rel_iterator,
     const soinfo_list_t& global_group,
     const soinfo_list_t& local_group);
 
