@@ -30,6 +30,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#include "private/bionic_macros.h"
+
 struct atfork_t {
   atfork_t* next;
   atfork_t* prev;
@@ -37,79 +39,143 @@ struct atfork_t {
   void (*prepare)(void);
   void (*child)(void);
   void (*parent)(void);
+
+  void* dso_handle;
 };
 
-struct atfork_list_t {
-  atfork_t* first;
-  atfork_t* last;
+class atfork_list_t {
+ public:
+  atfork_list_t() : first_(nullptr), last_(nullptr) {}
+
+  template<typename F>
+  void walk_forward(F f) {
+    for (atfork_t* it = first_; it != nullptr; it = it->next) {
+      f(it);
+    }
+  }
+
+  template<typename F>
+  void walk_backwards(F f) {
+    for (atfork_t* it = last_; it != nullptr; it = it->prev) {
+      f(it);
+    }
+  }
+
+  void push_back(atfork_t* entry) {
+    entry->next = nullptr;
+    entry->prev = last_;
+    if (entry->prev != nullptr) {
+      entry->prev->next = entry;
+    }
+    if (first_ == nullptr) {
+      first_ = entry;
+    }
+    last_ = entry;
+  }
+
+  template<typename F>
+  void remove_if(F predicate) {
+    atfork_t* it = first_;
+    while (it != nullptr) {
+      if (predicate(it)) {
+        atfork_t* entry = it;
+        it = it->next;
+        remove(entry);
+      } else {
+        it = it->next;
+      }
+    }
+  }
+
+ private:
+  void remove(atfork_t* entry) {
+    if (entry->prev != nullptr) {
+      entry->prev->next = entry->next;
+    } else {
+      first_ = entry->next;
+    }
+
+    if (entry->next != nullptr) {
+      entry->next->prev = entry->prev;
+    } else {
+      last_ = entry->prev;
+    }
+
+    free(entry);
+  }
+
+  atfork_t* first_;
+  atfork_t* last_;
+
+  DISALLOW_COPY_AND_ASSIGN(atfork_list_t);
 };
 
 static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
-static atfork_list_t g_atfork_list = { NULL, NULL };
+static atfork_list_t g_atfork_list;
 
 void __bionic_atfork_run_prepare() {
   // We lock the atfork list here, unlock it in the parent, and reset it in the child.
   // This ensures that nobody can modify the handler array between the calls
   // to the prepare and parent/child handlers.
-  //
-  // TODO: If a handler tries to mutate the list, they'll block. We should probably copy
-  // the list before forking, and have prepare, parent, and child all work on the consistent copy.
   pthread_mutex_lock(&g_atfork_list_mutex);
 
   // Call pthread_atfork() prepare handlers. POSIX states that the prepare
   // handlers should be called in the reverse order of the parent/child
   // handlers, so we iterate backwards.
-  for (atfork_t* it = g_atfork_list.last; it != NULL; it = it->prev) {
-    if (it->prepare != NULL) {
+  g_atfork_list.walk_backwards([](atfork_t* it) {
+    if (it->prepare != nullptr) {
       it->prepare();
     }
-  }
+  });
 }
 
 void __bionic_atfork_run_child() {
-  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
-    if (it->child != NULL) {
+  g_atfork_list.walk_forward([](atfork_t* it) {
+    if (it->child != nullptr) {
       it->child();
     }
-  }
+  });
 
   g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 }
 
 void __bionic_atfork_run_parent() {
-  for (atfork_t* it = g_atfork_list.first; it != NULL; it = it->next) {
-    if (it->parent != NULL) {
+  g_atfork_list.walk_forward([](atfork_t* it) {
+    if (it->parent != nullptr) {
       it->parent();
     }
-  }
+  });
 
   pthread_mutex_unlock(&g_atfork_list_mutex);
 }
 
-int pthread_atfork(void (*prepare)(void), void (*parent)(void), void(*child)(void)) {
+// __register_atfork is the name used by glibc
+extern "C" int __register_atfork(void (*prepare)(void), void (*parent)(void),
+                                 void(*child)(void), void* dso) {
   atfork_t* entry = reinterpret_cast<atfork_t*>(malloc(sizeof(atfork_t)));
-  if (entry == NULL) {
+  if (entry == nullptr) {
     return ENOMEM;
   }
 
   entry->prepare = prepare;
   entry->parent = parent;
   entry->child = child;
+  entry->dso_handle = dso;
 
   pthread_mutex_lock(&g_atfork_list_mutex);
 
-  // Append 'entry' to the list.
-  entry->next = NULL;
-  entry->prev = g_atfork_list.last;
-  if (entry->prev != NULL) {
-    entry->prev->next = entry;
-  }
-  if (g_atfork_list.first == NULL) {
-    g_atfork_list.first = entry;
-  }
-  g_atfork_list.last = entry;
+  g_atfork_list.push_back(entry);
 
   pthread_mutex_unlock(&g_atfork_list_mutex);
 
   return 0;
 }
+
+extern "C" __LIBC_HIDDEN__ void __unregister_atfork(void* dso) {
+  pthread_mutex_lock(&g_atfork_list_mutex);
+  g_atfork_list.remove_if([&](const atfork_t* entry) {
+    return entry->dso_handle == dso;
+  });
+  pthread_mutex_unlock(&g_atfork_list_mutex);
+}
+
