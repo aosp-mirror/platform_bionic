@@ -47,7 +47,6 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
-#include "private/ScopedFd.h"
 #include "private/ScopeGuard.h"
 #include "private/UniquePtr.h"
 
@@ -1225,29 +1224,10 @@ static void for_each_dt_needed(const soinfo* si, F action) {
   }
 }
 
-static soinfo* load_library(LoadTaskList& load_tasks,
+static soinfo* load_library(int fd, off64_t file_offset,
+                            LoadTaskList& load_tasks,
                             const char* name, int rtld_flags,
                             const android_dlextinfo* extinfo) {
-  int fd = -1;
-  off64_t file_offset = 0;
-  ScopedFd file_guard(-1);
-
-  if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
-    fd = extinfo->library_fd;
-    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
-      file_offset = extinfo->library_fd_offset;
-    }
-  } else {
-    // Open the file.
-    fd = open_library(name, &file_offset);
-    if (fd == -1) {
-      DL_ERR("library \"%s\" not found", name);
-      return nullptr;
-    }
-
-    file_guard.reset(fd);
-  }
-
   if ((file_offset % PAGE_SIZE) != 0) {
     DL_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return nullptr;
@@ -1321,6 +1301,29 @@ static soinfo* load_library(LoadTaskList& load_tasks,
   });
 
   return si;
+}
+
+static soinfo* load_library(LoadTaskList& load_tasks,
+                            const char* name, int rtld_flags,
+                            const android_dlextinfo* extinfo) {
+  if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
+    off64_t file_offset = 0;
+    if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
+      file_offset = extinfo->library_fd_offset;
+    }
+    return load_library(extinfo->library_fd, file_offset, load_tasks, name, rtld_flags, extinfo);
+  }
+
+  // Open the file.
+  off64_t file_offset;
+  int fd = open_library(name, &file_offset);
+  if (fd == -1) {
+    DL_ERR("library \"%s\" not found", name);
+    return nullptr;
+  }
+  soinfo* result = load_library(fd, file_offset, load_tasks, name, rtld_flags, extinfo);
+  close(fd);
+  return result;
 }
 
 static soinfo *find_loaded_library_by_soname(const char* name) {
