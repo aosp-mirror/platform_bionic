@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d076fe11_9a0e9de8",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T02:07:43Z",
+      "side": 1,
+      "message": "void*",
+      "revId": "8aa034621be2f66fa4ab27561a1aa10aca41d53a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d076fe11_fa15d1ef",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-23T02:07:43Z",
+      "side": 1,
+      "message": "we\u0027ll have to remember we have this next time we need a list\u003cT\u003e in bionic.",
+      "revId": "8aa034621be2f66fa4ab27561a1aa10aca41d53a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
