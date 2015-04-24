@@ -69,6 +69,30 @@
       "revId": "c76e4397bf78f2895d6ca7ce0eb089764cfa6001",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a416b9_802602b1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-04-24T19:47:06Z",
+      "side": 1,
+      "message": "SERIAL_DIRTY is only for per-property serial numbers",
+      "parentUuid": "10a416b9_c0448a7e",
+      "range": {
+        "startLine": 607,
+        "startChar": 47,
+        "endLine": 607,
+        "endChar": 67
+      },
+      "revId": "c76e4397bf78f2895d6ca7ce0eb089764cfa6001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
