@@ -16,6 +16,24 @@
       "revId": "3244d9f07fda946d62afdfa61ed5a876d380d0ff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d43e30_d375c077",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-04-24T19:40:35Z",
+      "side": 1,
+      "message": "\u003e I think the runtime check is significantly more important than the compile time check.\n\nIt can\u0027t catch anything at runtime that\u0027s not already caught here. The runtime path has to exist in glibc because they don\u0027t have a compile-time check if the calling code didn\u0027t pull in a header defining PATH_MAX earlier.\n\nI don\u0027t think there\u0027s any problem with doing it all at runtime via __realpath_chk to handle Clang today, but once the issues involving __builtin_object_size(null) and _RENAME are fixed it would just be legacy cruft to preserve the ABI. If that\u0027s seen as the lesser evil I\u0027ll do it that way.",
+      "parentUuid": "10a416b9_b228bc05",
+      "revId": "3244d9f07fda946d62afdfa61ed5a876d380d0ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
