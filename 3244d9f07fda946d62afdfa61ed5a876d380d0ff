@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10a416b9_b228bc05",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-04-24T18:17:07Z",
+      "side": 1,
+      "message": "We can support clang. We just need to write the function as:\n\nchar* realpath(const char* path, char* resolved) {\n  return __realpath_chk(path, resolved, __bos(resolved));\n}\n\nand do a runtime check instead of a compile time check. glibc has __realpath_chk(), and this would make bionic consistent with glibc. I think the runtime check is significantly more important than the compile time check.",
+      "revId": "3244d9f07fda946d62afdfa61ed5a876d380d0ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
