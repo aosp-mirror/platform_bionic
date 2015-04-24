@@ -22,6 +22,29 @@
       "revId": "c76e4397bf78f2895d6ca7ce0eb089764cfa6001",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "309d9a70_de8b9670",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-04-24T18:26:44Z",
+      "side": 1,
+      "message": "I think you want memory_order_acquire, to guarantee that any future property reads are order after this?",
+      "range": {
+        "startLine": 607,
+        "startChar": 47,
+        "endLine": 607,
+        "endChar": 67
+      },
+      "revId": "c76e4397bf78f2895d6ca7ce0eb089764cfa6001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
