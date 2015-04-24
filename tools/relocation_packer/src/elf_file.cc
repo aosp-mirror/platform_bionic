@@ -618,8 +618,8 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   typedef typename ELF::Rela Rela;
 
   if (has_android_relocations_) {
-    LOG(ERROR) << "Relocation table is already packed";
-    return false;
+    LOG(INFO) << "Relocation table is already packed";
+    return true;
   }
 
   // If no relocations then we have nothing packable.  Perhaps
