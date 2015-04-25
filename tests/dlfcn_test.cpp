@@ -626,7 +626,6 @@ TEST(dlfcn, dlopen_nodelete_dt_flags_1) {
 }
 
 TEST(dlfcn, dlsym_df_1_global) {
-#if !defined(__arm__) && !defined(__aarch64__)
   void* handle = dlopen("libtest_dlsym_df_1_global.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   int (*get_answer)();
@@ -634,9 +633,6 @@ TEST(dlfcn, dlsym_df_1_global) {
   ASSERT_TRUE(get_answer != nullptr) << dlerror();
   ASSERT_EQ(42, get_answer());
   ASSERT_EQ(0, dlclose(handle));
-#else
-  GTEST_LOG_(INFO) << "This test does nothing on arm/arm64 (to be reenabled once b/18137520 or b/18130452 are fixed).\n";
-#endif
 }
 
 TEST(dlfcn, dlopen_failure) {
