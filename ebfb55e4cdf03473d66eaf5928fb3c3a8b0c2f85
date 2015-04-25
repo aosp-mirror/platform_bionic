@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0f222e5_55a09c9e",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-25T01:18:08Z",
+      "side": 0,
+      "message": "this is the reason it was exported only for arm libc.so in previous version.",
+      "revId": "ebfb55e4cdf03473d66eaf5928fb3c3a8b0c2f85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
