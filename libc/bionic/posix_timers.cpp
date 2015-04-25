@@ -174,10 +174,10 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
     return -1;
   }
 
-  // Give the thread a meaningful name.
+  // Give the thread a specific meaningful name.
   // It can't do this itself because the kernel timer isn't created until after it's running.
-  char name[32];
-  snprintf(name, sizeof(name), "POSIX interval timer %d", to_kernel_timer_id(timer));
+  char name[16]; // 16 is the kernel-imposed limit.
+  snprintf(name, sizeof(name), "POSIX timer %d", to_kernel_timer_id(timer));
   pthread_setname_np(timer->callback_thread, name);
 
   *timer_id = timer;

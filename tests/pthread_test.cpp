@@ -404,7 +404,9 @@ TEST(pthread, pthread_sigmask) {
 }
 
 TEST(pthread, pthread_setname_np__too_long) {
-  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
+  // The limit is 15 characters --- the kernel's buffer is 16, but includes a NUL.
+  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "123456789012345"));
+  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "1234567890123456"));
 }
 
 TEST(pthread, pthread_setname_np__self) {
