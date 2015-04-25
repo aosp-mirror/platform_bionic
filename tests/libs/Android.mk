@@ -349,6 +349,10 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 libdl_test_df_1_global_src_files := dl_df_1_global.cpp
 libdl_test_df_1_global_ldflags := -Wl,-z,global
+# TODO (dimitry): x86* toolchain does not support -z global - switch to bfd
+ifeq ($(filter $(TARGET_ARCH),x86 x86_64),$(TARGET_ARCH))
+libdl_test_df_1_global_ldflags_target := -fuse-ld=bfd
+endif
 # TODO (dimitry): host ld.gold does not yet support -z global
 # remove this line once it is updated.
 libdl_test_df_1_global_ldflags_host := -fuse-ld=bfd
