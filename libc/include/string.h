@@ -121,6 +121,13 @@ extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
 #define __bionic_using_gnu_basename
 #endif
 
+extern void* __memchr_chk(const void*, int, size_t, size_t);
+__errordecl(__memchr_buf_size_error, "memchr called with size bigger than buffer");
+
+extern void* __memrchr_chk(const void*, int, size_t, size_t);
+__errordecl(__memrchr_buf_size_error, "memrchr called with size bigger than buffer");
+extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
+
 extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
 extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
@@ -129,6 +136,48 @@ extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) _
 extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
 
 #if defined(__BIONIC_FORTIFY)
+
+__BIONIC_FORTIFY_INLINE
+void* memchr(const void *s, int c, size_t n) {
+    size_t bos = __bos(s);
+
+#if !defined(__clang__)
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __builtin_memchr(s, c, n);
+    }
+
+    if (__builtin_constant_p(n) && (n > bos)) {
+        __memchr_buf_size_error();
+    }
+
+    if (__builtin_constant_p(n) && (n <= bos)) {
+        return __builtin_memchr(s, c, n);
+    }
+#endif
+
+    return __memchr_chk(s, c, n, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+void* memrchr(const void *s, int c, size_t n) {
+    size_t bos = __bos(s);
+
+#if !defined(__clang__)
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __memrchr_real(s, c, n);
+    }
+
+    if (__builtin_constant_p(n) && (n > bos)) {
+        __memrchr_buf_size_error();
+    }
+
+    if (__builtin_constant_p(n) && (n <= bos)) {
+        return __memrchr_real(s, c, n);
+    }
+#endif
+
+    return __memrchr_chk(s, c, n, bos);
+}
 
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
