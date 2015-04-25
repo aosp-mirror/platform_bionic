@@ -63,6 +63,7 @@ libc_common_src_files := \
     stdio/sprintf.c \
     stdio/stdio.c \
     stdio/stdio_ext.cpp \
+    stdlib/atexit.c \
     stdlib/exit.c \
 
 # Fortify implementations of libc functions.
@@ -482,7 +483,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/wprintf.c \
     upstream-openbsd/lib/libc/stdio/wscanf.c \
     upstream-openbsd/lib/libc/stdio/wsetup.c \
-    upstream-openbsd/lib/libc/stdlib/atexit.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
@@ -1340,10 +1340,13 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_SRC_FILES := \
+    arch-common/bionic/crtbegin_so.c \
+    arch-common/bionic/crtbrand.S \
     $(libc_arch_dynamic_src_files) \
     bionic/malloc_debug_common.cpp \
     bionic/libc_init_dynamic.cpp \
     bionic/NetdClient.cpp \
+    arch-common/bionic/crtend_so.S \
 
 LOCAL_MODULE := libc
 LOCAL_CLANG := $(use_clang)
@@ -1388,15 +1391,15 @@ LOCAL_LDFLAGS_arm := -Wl,--hash-style=sysv
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
+
+LOCAL_NO_CRT := true
+LOCAL_ASFLAGS += $(libc_crt_target_cflags)
+
 # special for arm
-LOCAL_NO_CRT_arm := true
 LOCAL_CFLAGS_arm += -DCRT_LEGACY_WORKAROUND
-LOCAL_ASFLAGS_arm += $(libc_crt_target_cflags)
 LOCAL_SRC_FILES_arm += \
-    arch-common/bionic/crtbegin_so.c \
-    arch-common/bionic/crtbrand.S \
-    arch-arm/bionic/atexit_legacy.c \
-    arch-common/bionic/crtend_so.S
+    arch-arm/bionic/atexit_legacy.c
+
 LOCAL_ADDRESS_SANITIZER := false
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
