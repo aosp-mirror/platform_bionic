@@ -28,7 +28,6 @@ cc_library_host_static {
         "src/debug.cc",
         "src/delta_encoder.cc",
         "src/elf_file.cc",
-        "src/leb128.cc",
         "src/packer.cc",
         "src/sleb128.cc",
     ],
@@ -48,6 +47,7 @@ cc_binary_host {
         "lib_relocation_packer",
         "libelf",
     ],
+    stl: "libc++_static",
     include_dirs: [
         "external/elfutils/src/libelf",
         "libnativehelper/include",
@@ -65,7 +65,6 @@ cc_test_host {
         "src/debug_unittest.cc",
         "src/delta_encoder_unittest.cc",
         "src/elf_file_unittest.cc",
-        "src/leb128_unittest.cc",
         "src/sleb128_unittest.cc",
         "src/packer_unittest.cc",
     ],

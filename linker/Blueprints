@@ -84,7 +84,13 @@ cc_binary {
     // just for this module
     nocrt: true,
 
-    static_libs: ["libc_nomalloc"],
+    static_libs: [
+        "libc_nomalloc",
+        "libziparchive",
+        "libutils",
+        "libz",
+        "liblog",
+    ],
 
     static_executable: true,
 

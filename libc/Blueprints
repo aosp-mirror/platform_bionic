@@ -31,15 +31,23 @@ libc_common_src_files = [
     "stdio/sprintf.c",
     "stdio/stdio.c",
     "stdio/stdio_ext.cpp",
+    "stdlib/atexit.c",
+    "stdlib/exit.c",
 ]
 
 // Fortify implementations of libc functions.
 libc_common_src_files += [
     "bionic/__FD_chk.cpp",
     "bionic/__fgets_chk.cpp",
+    "bionic/__memchr_chk.cpp",
     "bionic/__memmove_chk.cpp",
+    "bionic/__memrchr_chk.cpp",
     "bionic/__poll_chk.cpp",
+    "bionic/__pread64_chk.cpp",
+    "bionic/__pread_chk.cpp",
     "bionic/__read_chk.cpp",
+    "bionic/__readlink_chk.cpp",
+    "bionic/__readlinkat_chk.cpp",
     "bionic/__recvfrom_chk.cpp",
     "bionic/__stpcpy_chk.cpp",
     "bionic/__stpncpy_chk.cpp",
@@ -74,6 +82,7 @@ libc_bionic_ndk_src_files = [
     "bionic/clock_getcpuclockid.cpp",
     "bionic/clock_nanosleep.cpp",
     "bionic/clone.cpp",
+    "bionic/close.cpp",
     "bionic/__cmsg_nxthdr.cpp",
     "bionic/connect.cpp",
     "bionic/ctype.cpp",
@@ -468,11 +477,9 @@ libc_upstream_openbsd_ndk_src_files = [
     "upstream-openbsd/lib/libc/stdio/wprintf.c",
     "upstream-openbsd/lib/libc/stdio/wscanf.c",
     "upstream-openbsd/lib/libc/stdio/wsetup.c",
-    "upstream-openbsd/lib/libc/stdlib/atexit.c",
     "upstream-openbsd/lib/libc/stdlib/atoi.c",
     "upstream-openbsd/lib/libc/stdlib/atol.c",
     "upstream-openbsd/lib/libc/stdlib/atoll.c",
-    "upstream-openbsd/lib/libc/stdlib/exit.c",
     "upstream-openbsd/lib/libc/stdlib/getenv.c",
     "upstream-openbsd/lib/libc/stdlib/insque.c",
     "upstream-openbsd/lib/libc/stdlib/lsearch.c",
@@ -529,7 +536,7 @@ libc_pthread_src_files = [
     "bionic/pthread_getcpuclockid.cpp",
     "bionic/pthread_getschedparam.cpp",
     "bionic/pthread_gettid_np.cpp",
-    "bionic/pthread_internals.cpp",
+    "bionic/pthread_internal.cpp",
     "bionic/pthread_join.cpp",
     "bionic/pthread_key.cpp",
     "bionic/pthread_kill.cpp",
@@ -868,12 +875,7 @@ cc_library_static {
     name: "libc_openbsd_ndk",
     srcs: libc_upstream_openbsd_ndk_src_files,
 
-    // ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-    // Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-    // LOCAL_CLANG := false
-    // else
-    // LOCAL_CLANG := $(use_clang)
-    // endif
+    clang: use_clang,
 
     cflags: libc_common_cflags + [
         "-Wno-sign-compare",
@@ -935,15 +937,7 @@ cc_library_static {
         },
     },
 
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-    // Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-    clang: false,
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // else
-    //clang = use_clang,
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // endif
+    clang: use_clang,
     cflags: libc_common_cflags + [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
@@ -987,15 +981,8 @@ cc_library_static {
             srcs: libc_upstream_openbsd_gdtoa_src_files_64,
         },
     },
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // ifneq (,$(filter $(TARGET_ARCH),x86 x86_64))
-    // Clang has wrong long double size or LDBL_MANT_DIG, http://b/17163651.
-    //clang = false,
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // else
     clang: use_clang,
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // endif
+
     cflags: libc_common_cflags + [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
@@ -1030,16 +1017,12 @@ cc_library_static {
     cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
 
     arch: {
-        x86_64: {
-            // ssse3-strcmp-slm.S does not compile with Clang.
-            asflags: ["-no-integrated-as"],
-        },
         arm: {
             // memcpy.S, memchr.S, etc. do not compile with Clang.
-            asflags: ["-no-integrated-as"],
+            clang_asflags: ["-no-integrated-as"],
         },
         arm64: {
-            asflags: ["-no-integrated-as"],
+            clang_asflags: ["-no-integrated-as"],
         },
     },
 
@@ -1066,9 +1049,10 @@ cc_library_static {
     srcs: libc_bionic_ndk_src_files,
     cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
 
-    // ssse3-strcmp-slm.S does not compile with Clang.
     arch: {
         arm64: {
+            // memcpy.S, memchr.S, etc. do not compile with Clang.
+            clang_asflags: ["-no-integrated-as"],
             srcs: [
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -1096,6 +1080,8 @@ cc_library_static {
             ],
         },
         arm: {
+            // memcpy.S, memchr.S, etc. do not compile with Clang.
+            clang_asflags: ["-no-integrated-as"],
             srcs: [
                 "-bionic/__memcpy_chk.cpp",
                 "-bionic/__memset_chk.cpp",
@@ -1121,17 +1107,6 @@ cc_library_static {
                 "arch-arm/cortex-a15/bionic/strlen.S",
             ],
         },
-
-        /*x86_64: {
-        asflags: ["-no-integrated-as"],
-        },
-        // memcpy.S, memchr.S, etc. do not compile with Clang.
-        arm: {
-        asflags: ["-no-integrated-as"],
-        },
-        arm64: {
-        asflags: ["-no-integrated-as"],
-        },*/
     },
     multilib: {
         lib32: {
@@ -1152,6 +1127,22 @@ cc_library_static {
 
 }
 
+cc_library_static {
+    name: "libc_thread_atexit_impl",
+    srcs: ["bionic/__cxa_thread_atexit_impl.cpp"],
+    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
+    include_dirs: libc_common_c_includes + ["bionic/libstdc++/include"],
+    // TODO: Clang tries to use __tls_get_addr which is not supported yet
+    // remove after it is implemented.
+    clang: false,
+    stl: "none",
+    system_shared_libs: [],
+    asan: false,
+    native_coverage: bionic_coverage,
+}
+
 // ========================================================
 // libc_pthread.a - pthreads parts that previously lived in
 // libc_bionic.a. Relocated to their own library because
@@ -1165,16 +1156,12 @@ cc_library_static {
     cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
 
     arch: {
-        x86_64: {
-            // ssse3-strcmp-slm.S does not compile with Clang.
-            asflags: ["-no-integrated-as"],
-        },
         arm: {
             // memcpy.S, memchr.S, etc. do not compile with Clang.
-            asflags: ["-no-integrated-as"],
+            clang_asflags: ["-no-integrated-as"],
         },
         arm64: {
-            asflags: ["-no-integrated-as"],
+            clang_asflags: ["-no-integrated-as"],
         },
     },
 
@@ -1366,12 +1353,9 @@ cc_library_static {
         "libc_pthread",
         "libc_stack_protector",
         "libc_syscalls",
+        "libc_thread_atexit_impl",
         "libc_tzcode",
-    ] + // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // ifneq ($(MALLOC_IMPL),dlmalloc)
-    ["libjemalloc"],
-    // ANDROIDMK TRANSLATION ERROR: unsupported directive
-    // endif
+    ],
 
     arch: {
         arm: {
@@ -1465,9 +1449,12 @@ cc_library {
     },
     shared: {
         srcs: [
+            "arch-common/bionic/crtbegin_so.c",
+            "arch-common/bionic/crtbrand.S",
             "bionic/malloc_debug_common.cpp",
             "bionic/libc_init_dynamic.cpp",
             "bionic/NetdClient.cpp",
+            "arch-common/bionic/crtend_so.S",
         ],
     },
 
@@ -1488,9 +1475,18 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common"],
+    whole_static_libs: ["libc_common"] +
+        // ANDROIDMK TRANSLATION ERROR: unsupported directive
+        // ifneq ($(MALLOC_IMPL),dlmalloc)
+        ["libjemalloc"],
+        // ANDROIDMK TRANSLATION ERROR: unsupported directive
+        // endif
     stl: "none",
     system_shared_libs: [],
+
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    // TODO:
+    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
 
     // We'd really like to do this for all architectures, but since this wasn't done
     // before, these symbols must continue to be exported on LP32 for binary
@@ -1501,21 +1497,24 @@ cc_library {
         },
     },
 
+    nocrt: true,
+    asflags: ["-DPLATFORM_SDK_VERSION=" + PLATFORM_SDK_VERSION],
+
     // special for arm
     arch: {
         arm: {
+            //TODO: This is to work around b/19059885. Remove after root cause is fixed
+            ldflags: ["-Wl,--hash-style=sysv"],
+
             shared: {
                 srcs: ["arch-arm/bionic/exidx_dynamic.c"],
             },
             static: {
                 srcs: ["arch-arm/bionic/exidx_static.c"],
             },
-            nocrt: true,
             cflags: ["-DCRT_LEGACY_WORKAROUND"],
             srcs: [
-                "arch-common/bionic/crtbegin_so.c",
                 "arch-arm/bionic/atexit_legacy.c",
-                "arch-common/bionic/crtend_so.S",
             ],
         },
     },
@@ -1571,6 +1570,10 @@ cc_library_shared {
     },
     allow_undefined_symbols: true,
 
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    // TODO:
+    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+
     // Don't install on release build
     tags: [
         "eng",
@@ -1606,6 +1609,10 @@ cc_library_shared {
     stl: "none",
     system_shared_libs: [],
 
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    // TODO:
+    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+
     // Don't install on release build
     tags: [
         "eng",
@@ -1635,13 +1642,6 @@ cc_library {
     cppflags: libc_common_cppflags,
     srcs: libstdcxx_common_src_files,
     name: "libstdc++",
-
-    arch: {
-        arm: {
-            // TODO: This is to work around b/19059885. Remove after root cause is fixed
-            ldflags: ["-Wl,--hash-style=sysv"],
-        },
-    },
 
     stl: "none",
     system_shared_libs: ["libc"],
