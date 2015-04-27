@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_f86bfe9e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-27T18:21:49Z",
+      "side": 1,
+      "message": "fixing this is an open bug, and i think we realize this isn\u0027t a practical solution.",
+      "revId": "dd76cf189f87c6b1ddc5abd770a709392a1a5935",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d42a38_ac8ad66c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-27T18:21:49Z",
+      "side": 1,
+      "message": "these are all done, right?",
+      "revId": "dd76cf189f87c6b1ddc5abd770a709392a1a5935",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
