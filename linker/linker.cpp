@@ -61,21 +61,6 @@
 #include "linker_reloc_iterators.h"
 #include "ziparchive/zip_archive.h"
 
-/* >>> IMPORTANT NOTE - READ ME BEFORE MODIFYING <<<
- *
- * Do NOT use malloc() and friends or pthread_*() code here.
- * Don't use printf() either; it's caused mysterious memory
- * corruption in the past.
- * The linker runs before we bring up libc and it's easiest
- * to make sure it does not depend on any complex libc features
- *
- * open issues / todo:
- *
- * - cleaner error reporting
- * - after linking, set as much stuff as possible to READONLY
- *   and NOEXEC
- */
-
 // Override macros to use C++ style casts
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
