@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0f222e5_9e52a1ba",
+        "filename": "libm/arm/fabs.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-04-27T16:48:17Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the current implementation compile to effectively:\n\nand r1, 0x7FFFFFFF\nbx lr\n\nthis looks less efficient. Any performance analysis to support this change?",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 10
+      },
+      "revId": "3002d35fb5c39ae03bb89100ea37e820120f9472",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
