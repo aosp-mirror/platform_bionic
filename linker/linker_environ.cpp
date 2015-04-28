@@ -36,7 +36,6 @@
 
 #include "private/KernelArgumentBlock.h"
 
-static char** _envp;
 static bool _AT_SECURE_value = true;
 
 bool get_AT_SECURE() {
@@ -150,8 +149,8 @@ static bool __is_unsafe_environment_variable(const char* name) {
 }
 
 static void __sanitize_environment_variables() {
-  char** src  = _envp;
-  char** dst = _envp;
+  char** src  = environ;
+  char** dst = environ;
   for (; src[0] != nullptr; ++src) {
     if (!__is_valid_environment_variable(src[0])) {
       continue;
@@ -168,7 +167,7 @@ static void __sanitize_environment_variables() {
 
 void linker_env_init(KernelArgumentBlock& args) {
   // Store environment pointer - can't be null.
-  _envp = args.envp;
+  environ = args.envp;
 
   __init_AT_SECURE(args);
   __sanitize_environment_variables();
@@ -179,7 +178,7 @@ const char* linker_env_get(const char* name) {
     return nullptr;
   }
 
-  for (char** p = _envp; p[0] != nullptr; ++p) {
+  for (char** p = environ; p[0] != nullptr; ++p) {
     const char* val = env_match(p[0], name);
     if (val != nullptr) {
       if (val[0] == '\0') {
