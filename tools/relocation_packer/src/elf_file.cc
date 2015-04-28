@@ -37,11 +37,13 @@ static constexpr int32_t DT_ANDROID_RELASZ = DT_LOOS + 5;
 static constexpr uint32_t SHT_ANDROID_REL = SHT_LOOS + 1;
 static constexpr uint32_t SHT_ANDROID_RELA = SHT_LOOS + 2;
 
+static const size_t kPageSize = 4096;
+
 // Alignment to preserve, in bytes.  This must be at least as large as the
 // largest d_align and sh_addralign values found in the loaded file.
 // Out of caution for RELRO page alignment, we preserve to a complete target
 // page.  See http://www.airs.com/blog/archives/189.
-static constexpr size_t kPreserveAlignment = 4096;
+static const size_t kPreserveAlignment = kPageSize;
 
 // Get section data.  Checks that the section has exactly one data entry,
 // so that the section size and the data size are the same.  True in
@@ -318,9 +320,13 @@ static void AdjustProgramHeaderOffsets(typename ELF::Phdr* program_headers,
     } else {
       program_header->p_vaddr -= hole_size;
       program_header->p_paddr -= hole_size;
+      if (program_header->p_align > kPageSize) {
+        program_header->p_align = kPageSize;
+      }
       VLOG(1) << "phdr[" << i
               << "] p_vaddr adjusted to "<< program_header->p_vaddr
-              << "; p_paddr adjusted to "<< program_header->p_paddr;
+              << "; p_paddr adjusted to "<< program_header->p_paddr
+              << "; p_align adjusted to "<< program_header->p_align;
     }
   }
 }
