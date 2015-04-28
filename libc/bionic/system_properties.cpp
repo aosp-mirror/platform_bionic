@@ -598,6 +598,16 @@ int __system_property_area_init()
     return map_prop_area_rw();
 }
 
+unsigned int __system_property_area_serial()
+{
+    prop_area *pa = __system_property_area__;
+    if (!pa) {
+        return -1;
+    }
+    // Make sure this read fulfilled before __system_property_serial
+    return atomic_load_explicit(&(pa->serial), memory_order_acquire);
+}
+
 const prop_info *__system_property_find(const char *name)
 {
     if (__predict_false(compat_mode)) {
