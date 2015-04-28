@@ -56,6 +56,7 @@ enum AndroidEventLogType {
   EVENT_TYPE_LONG     = 1,
   EVENT_TYPE_STRING   = 2,
   EVENT_TYPE_LIST     = 3,
+  EVENT_TYPE_FLOAT    = 4,
 };
 
 struct BufferOutputStream {
