@@ -1361,6 +1361,9 @@ LOCAL_ADDITIONAL_DEPENDENCIES := \
 # meaningful name resolution.
 LOCAL_STRIP_MODULE := keep_symbols
 
+# Do not pack libc.so relocations; see http://b/20645321 for details.
+LOCAL_PACK_MODULE_RELOCATIONS := false
+
 # WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
 # make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
 # ensures that symbols that are pulled into those new libraries from libgcc.a are not declared
