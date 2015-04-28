@@ -39,6 +39,24 @@
       "revId": "107d360c7b66e6322aa3a679f89fec00ed92492f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d42a38_c4c4cdc0",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-04-28T02:57:42Z",
+      "side": 1,
+      "message": "Done - from \u003csys/user.h\u003e for host.",
+      "parentUuid": "d0027e8c_1bc00f98",
+      "revId": "107d360c7b66e6322aa3a679f89fec00ed92492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
