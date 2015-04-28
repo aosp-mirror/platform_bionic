@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d42a38_e4b7c9c4",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-04-28T02:02:49Z",
+      "side": 1,
+      "message": "Where is the 16K page support?",
+      "range": {
+        "startLine": 40,
+        "startChar": 32,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "107d360c7b66e6322aa3a679f89fec00ed92492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
