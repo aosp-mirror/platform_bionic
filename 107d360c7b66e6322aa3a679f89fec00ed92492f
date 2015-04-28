@@ -22,6 +22,23 @@
       "revId": "107d360c7b66e6322aa3a679f89fec00ed92492f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0027e8c_1bc00f98",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-28T02:03:35Z",
+      "side": 1,
+      "message": "or just PAGE_SIZE from \u003climits.h\u003e?",
+      "revId": "107d360c7b66e6322aa3a679f89fec00ed92492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
