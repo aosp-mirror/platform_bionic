@@ -98,6 +98,24 @@ int __system_property_set_filename(const char *filename);
 */
 int __system_property_area_init();
 
+/* Read the global serial number of the system properties
+**
+** Called to predict if a series of cached __system_property_find
+** objects will have seen __system_property_serial values change.
+** But also aids the converse, as changes in the global serial can
+** also be used to predict if a failed __system_property_find
+** could in-turn now find an new object; thus preventing the
+** cycles of effort to poll __system_property_find.
+**
+** Called at the beginning of a cache cycle to signal _any_ possible
+** changes have occurred since last. If there is, check each individual
+** __system_property_serial to confirm dirty, or __system_property_find
+** to check if the property now exists.
+**
+** Returns the serial number on success, -1 on error.
+*/
+unsigned int __system_property_area_serial();
+
 /* Add a new system property.  Can only be done by a single
 ** process that has write access to the property area, and
 ** that process must handle sequencing to ensure the property
