@@ -2429,7 +2429,7 @@ bool soinfo::prelink_image() {
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
-    INFO("[ linking %s ]", get_soname());
+    INFO("[ linking %s ]", get_realpath());
     DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
@@ -3135,6 +3135,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   for (const auto& ld_preload_name : g_ld_preload_names) {
     needed_library_name_list.push_back(ld_preload_name.c_str());
     ++needed_libraries_count;
+    ++ld_preloads_count;
   }
 
   for_each_dt_needed(si, [&](const char* name) {
