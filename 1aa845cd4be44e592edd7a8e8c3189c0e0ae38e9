@@ -39,6 +39,30 @@
       "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f8f2fa_fbe3cfcc",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-04-29T20:14:30Z",
+      "side": 1,
+      "message": "I am worried we are getting too wordy ... I figure we should strike the sentence \"A change may...\" than to delve into the subtleties of the inherent race conditions associated with the updated.\n\nThe basic expectation is that the serial global serial number is not updated _until_ all the corresponding adjustments have completed, we will not have returned from __system_propert_update until the global serial number in-effect terminates the request. Lets not worry about requests that are currently in progress, even if they are near enough to completion, that a check for the content would succeed to see a new value despite the fact the global sequence has yet to increment.\n\nThe fact is, if the call to __system_property_update has *completed*, the sequence number collected an instant afterwards would show that there has been an update to the content of the property data. Simple.\n\nCorollary:\n\nThe cache writer can achieve a snappiness(tm) to their algorithm if they decide instead to check all known (found) individual property serial number content first, then use the global serial number if any are currently not yet found, to gate whether to re-run __system_property_find() to see if they have shown up.\n\nAs such, maybe I should refactor the sentence surrounding \"If there is, check each individual __system_property_serial to confirm dirty\" as it is disingenuously pointing us to the less-snappy algorithm. But as far as I am concerned, this simpler to maintain algorithm is an acceptable expactation. Looking at the individual property serial numbers before the global serial number is more complicated and fraught with multiplying loops.\n\nBetter to miss the change this cache cycle and catch it on the next one for KISS.",
+      "parentUuid": "d0d99e70_278b8423",
+      "range": {
+        "startLine": 116,
+        "startChar": 3,
+        "endLine": 117,
+        "endChar": 15
+      },
+      "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
