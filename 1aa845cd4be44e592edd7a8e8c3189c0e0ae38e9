@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0d99e70_6cfbb38e",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-04-29T16:18:02Z",
+      "side": 1,
+      "message": "a",
+      "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
