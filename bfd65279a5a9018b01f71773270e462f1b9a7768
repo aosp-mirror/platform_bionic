@@ -45,6 +45,30 @@
       "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d42a38_d3c483c0",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-04-29T00:35:14Z",
+      "side": 1,
+      "message": "The expected guarantee is that if a call to __system_property_add or __system_property_update has completed between two calls to __system_property_area_serial then the second call will return a value larger than the first call.  The expected use case is to invalidate cached results of __system_property_find or __system_property_read.",
+      "parentUuid": "f0f222e5_cddaaeea",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 114,
+        "endChar": 2
+      },
+      "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
