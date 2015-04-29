@@ -63,6 +63,30 @@
       "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70f8f2fa_dba4132f",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-29T20:30:06Z",
+      "side": 1,
+      "message": "My only real concern is that a user may expect the serial number update and property update to appear atomic.  I think I would expect that property from such an API if I hadn\u0027t looked at the implementation, but it doesn\u0027t hold.  We\u0027re introducing an API call that\u0027s not serializable with respect to the others, I think.  Anything we say to warn the reader about that is fine with me.",
+      "parentUuid": "70f8f2fa_fbe3cfcc",
+      "range": {
+        "startLine": 116,
+        "startChar": 3,
+        "endLine": 117,
+        "endChar": 15
+      },
+      "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
