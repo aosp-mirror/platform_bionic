@@ -69,6 +69,30 @@
       "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_ac5e3b79",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-29T16:51:21Z",
+      "side": 1,
+      "message": "That sounds right, where \"complete\" means \"perform the atomic increment\".  But if I read the code correctly, it does not mean, for example, that system properties remain constant between calls that return the same serial number.  Which seems worth mentioning as well.\n\nIt sounds like we do want to guarantee that if you see the serial number update then you see the corresponding property update or a later one.  Thus acquire semantics for the read and release semantics for the update make sense.",
+      "parentUuid": "b0d42a38_d3c483c0",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 114,
+        "endChar": 2
+      },
+      "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
