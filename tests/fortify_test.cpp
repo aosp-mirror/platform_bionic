@@ -623,12 +623,40 @@ TEST_F(DEATHTEST, FD_ISSET_2_fortified) {
   ASSERT_FORTIFY(FD_ISSET(0, set));
 }
 
+TEST_F(DEATHTEST, pread_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_RDONLY);
+  ASSERT_FORTIFY(pread(fd, buf, ct, 0));
+  close(fd);
+}
+
+TEST_F(DEATHTEST, pread64_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_RDONLY);
+  ASSERT_FORTIFY(pread64(fd, buf, ct, 0));
+  close(fd);
+}
+
 TEST_F(DEATHTEST, read_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_FORTIFY(read(fd, buf, ct));
   close(fd);
+}
+
+TEST_F(DEATHTEST, readlink_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  ASSERT_FORTIFY(readlink("/dev/null", buf, ct));
+}
+
+TEST_F(DEATHTEST, readlinkat_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  ASSERT_FORTIFY(readlinkat(AT_FDCWD, "/dev/null", buf, ct));
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <sys/cdefs.h>
 #include <gtest/gtest.h>
 
@@ -53,7 +54,9 @@ TEST(getauxval, expected_values) {
 
 TEST(getauxval, unexpected_values) {
 #if defined(GETAUXVAL_CAN_COMPILE)
+  errno = 0;
   ASSERT_EQ((unsigned long int) 0, getauxval(0xdeadbeef));
+  ASSERT_EQ(ENOENT, errno);
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif

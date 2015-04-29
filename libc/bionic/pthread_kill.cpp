@@ -30,26 +30,17 @@
 #include <unistd.h>
 
 #include "private/ErrnoRestorer.h"
-#include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 extern "C" int tgkill(int tgid, int tid, int sig);
 
 int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
-  pthread_accessor thread(t);
-  if (thread.get() == NULL) {
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
     return ESRCH;
   }
 
-  // There's a race here, but it's one we share with all other C libraries.
-  pid_t tid = thread->tid;
-  thread.Unlock();
-
-  int rc = tgkill(getpid(), tid, sig);
-  if (rc == -1) {
-    return errno;
-  }
-
-  return 0;
+  return (tgkill(getpid(), thread->tid, sig) == -1) ? errno : 0;
 }

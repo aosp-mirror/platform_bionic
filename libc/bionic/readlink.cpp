@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#undef _FORTIFY_SOURCE
+
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

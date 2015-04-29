@@ -103,8 +103,8 @@ template <typename ELF>
 static void ProcessUnpack(FILE* relocs_so, FILE* packed_relocs_so) {
   relocation_packer::ElfFile<ELF> elf_file(fileno(packed_relocs_so));
 
-  // Ensure packing fails (already packed).
-  EXPECT_FALSE(elf_file.PackRelocations());
+  // Ensure packing already packed elf-file does not fail the build.
+  EXPECT_TRUE(elf_file.PackRelocations());
 
   // Unpack golden relocations, and check files are now identical.
   EXPECT_TRUE(elf_file.UnpackRelocations());
@@ -175,13 +175,19 @@ static void RunPackRelocationsTestFor(const std::string& arch) {
 
 namespace relocation_packer {
 
-TEST(ElfFile, PackRelocations) {
+TEST(ElfFile, PackRelocationsArm32) {
   RunPackRelocationsTestFor("arm32");
+}
+
+TEST(ElfFile, PackRelocationsArm64) {
   RunPackRelocationsTestFor("arm64");
 }
 
-TEST(ElfFile, UnpackRelocations) {
+TEST(ElfFile, UnpackRelocationsArm32) {
   RunUnpackRelocationsTestFor("arm32");
+}
+
+TEST(ElfFile, UnpackRelocationsArm64) {
   RunUnpackRelocationsTestFor("arm64");
 }
 

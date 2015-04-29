@@ -14,5 +14,4 @@ ENTRY(fstat64)
     ret
 END(fstat64)
 
-    .globl fstat
-    .equ fstat, fstat64
+ALIAS_SYMBOL(fstat, fstat64)

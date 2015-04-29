@@ -121,8 +121,8 @@ void BM_pthread_mutex_lock_RECURSIVE::Run(int iters) {
   StopBenchmarkTiming();
 }
 
-BENCHMARK_NO_ARG(BM_pthread_rw_lock_read);
-void BM_pthread_rw_lock_read::Run(int iters) {
+BENCHMARK_NO_ARG(BM_pthread_rwlock_read);
+void BM_pthread_rwlock_read::Run(int iters) {
   StopBenchmarkTiming();
   pthread_rwlock_t lock;
   pthread_rwlock_init(&lock, NULL);
@@ -137,8 +137,8 @@ void BM_pthread_rw_lock_read::Run(int iters) {
   pthread_rwlock_destroy(&lock);
 }
 
-BENCHMARK_NO_ARG(BM_pthread_rw_lock_write);
-void BM_pthread_rw_lock_write::Run(int iters) {
+BENCHMARK_NO_ARG(BM_pthread_rwlock_write);
+void BM_pthread_rwlock_write::Run(int iters) {
   StopBenchmarkTiming();
   pthread_rwlock_t lock;
   pthread_rwlock_init(&lock, NULL);

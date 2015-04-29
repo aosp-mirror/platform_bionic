@@ -1,0 +1,9 @@
+TESTLIB_NONE {
+  global:
+    get_function_version;
+};
+
+TESTLIB_ZERO {
+  global:
+    version_zero_function2;
+} TESTLIB_NONE;

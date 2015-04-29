@@ -402,7 +402,7 @@ static void malloc_init_impl() {
   }
 
   // Load .so that implements the required malloc debugging functionality.
-  void* malloc_impl_handle = dlopen(so_name, RTLD_LAZY);
+  void* malloc_impl_handle = dlopen(so_name, RTLD_NOW);
   if (malloc_impl_handle == NULL) {
     error_log("%s: Missing module %s required for malloc debug level %d: %s",
               getprogname(), so_name, g_malloc_debug_level, dlerror());

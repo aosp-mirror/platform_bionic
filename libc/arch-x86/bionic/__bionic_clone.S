@@ -3,8 +3,14 @@
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 ENTRY(__bionic_clone)
         pushl   %ebx
+        .cfi_adjust_cfa_offset 4
+        .cfi_rel_offset ebx, 0
         pushl   %esi
+        .cfi_adjust_cfa_offset 4
+        .cfi_rel_offset esi, 0
         pushl   %edi
+        .cfi_adjust_cfa_offset 4
+        .cfi_rel_offset edi, 0
 
         # Load system call arguments into registers.
         movl    16(%esp), %ebx   # flags
@@ -46,8 +52,14 @@ ENTRY(__bionic_clone)
         # We're the parent; nothing to do.
 .L_bc_return:
         popl    %edi
+        .cfi_adjust_cfa_offset -4
+        .cfi_restore edi
         popl    %esi
+        .cfi_adjust_cfa_offset -4
+        .cfi_restore esi
         popl    %ebx
+        .cfi_adjust_cfa_offset -4
+        .cfi_restore ebx
         ret
 END(__bionic_clone)
 .hidden __bionic_clone

@@ -29,30 +29,24 @@
 #include <errno.h>
 #include <pthread.h>
 
-#include "pthread_accessor.h"
+#include "pthread_internal.h"
 
 int pthread_detach(pthread_t t) {
-  {
-    pthread_accessor thread(t);
-    if (thread.get() == NULL) {
-      return ESRCH;
-    }
-
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) {
-      return EINVAL; // Already detached.
-    }
-
-    if (thread->attr.flags & PTHREAD_ATTR_FLAG_JOINED) {
-      return 0; // Already being joined; silently do nothing, like glibc.
-    }
-
-    // If the thread has not exited, we can detach it safely.
-    if ((thread->attr.flags & PTHREAD_ATTR_FLAG_ZOMBIE) == 0) {
-      thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
-      return 0;
-    }
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
+    return ESRCH;
   }
 
-  // The thread is in zombie state, use pthread_join to clean it up.
-  return pthread_join(t, NULL);
+  ThreadJoinState old_state = THREAD_NOT_JOINED;
+  while (old_state == THREAD_NOT_JOINED &&
+         !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_DETACHED)) {
+  }
+
+  if (old_state == THREAD_NOT_JOINED) {
+    return 0;
+  } else if (old_state == THREAD_EXITED_NOT_JOINED) {
+    // Use pthread_join to clean it up.
+    return pthread_join(t, NULL);
+  }
+  return EINVAL;
 }

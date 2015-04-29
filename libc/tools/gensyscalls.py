@@ -56,12 +56,6 @@ ENTRY(%(func)s)
 """
 
 
-function_alias = """
-    .globl %(alias)s
-    .equ %(alias)s, %(func)s
-"""
-
-
 #
 # ARM assembler templates for each syscall stub
 #
@@ -284,7 +278,7 @@ def add_footer(pointer_length, stub, syscall):
     # Add any aliases for this syscall.
     aliases = syscall["aliases"]
     for alias in aliases:
-        stub += function_alias % { "func" : syscall["func"], "alias" : alias }
+        stub += "\nALIAS_SYMBOL(%s, %s)\n" % (alias, syscall["func"])
 
     # Use hidden visibility on LP64 for any functions beginning with underscores.
     # Force hidden visibility for any functions which begin with 3 underscores

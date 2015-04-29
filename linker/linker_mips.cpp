@@ -30,7 +30,7 @@
 #include "linker_debug.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
-#include "linker_leb128.h"
+#include "linker_sleb128.h"
 
 template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator,
                                                      const soinfo_list_t& global_group,
@@ -41,13 +41,16 @@ template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
     const soinfo_list_t& global_group,
     const soinfo_list_t& local_group);
 
-template bool soinfo::relocate<packed_reloc_iterator<leb128_decoder>>(
-    packed_reloc_iterator<leb128_decoder>&& rel_iterator,
-    const soinfo_list_t& global_group,
-    const soinfo_list_t& local_group);
-
 template <typename ElfRelIteratorT>
-bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
+                      const soinfo_list_t& global_group,
+                      const soinfo_list_t& local_group) {
+  VersionTracker version_tracker;
+
+  if (!version_tracker.init(this)) {
+    return false;
+  }
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
@@ -62,20 +65,41 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
 
-    DEBUG("Processing '%s' relocation at index %zd", this->name, idx);
+    DEBUG("Processing '%s' relocation at index %zd", get_soname(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }
 
-    ElfW(Sym)* s = nullptr;
+    const ElfW(Sym)* s = nullptr;
     soinfo* lsi = nullptr;
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      s = soinfo_do_lookup(this, sym_name, &lsi, global_group,local_group);
+      const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
+      ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+
+      if (sym_ver == VER_NDX_LOCAL || sym_ver == VER_NDX_GLOBAL) {
+        // there is no version info for this one
+        if (!soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group, &s)) {
+          return false;
+        }
+      } else {
+        const version_info* vi = version_tracker.get_version_info(sym_ver);
+
+        if (vi == nullptr) {
+          DL_ERR("cannot find verneed/verdef for version index=%d "
+              "referenced by symbol \"%s\" at \"%s\"", sym_ver, sym_name, get_soname());
+          return false;
+        }
+
+        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+          return false;
+        }
+      }
+
       if (s == nullptr) {
         // mips does not support relocation with weak-undefined symbols
-        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, name);
+        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, get_soname());
         return false;
       } else {
         // We got a definition.
@@ -115,7 +139,8 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
   return true;
 }
 
-bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
+bool soinfo::mips_relocate_got(const soinfo_list_t& global_group,
+                               const soinfo_list_t& local_group) {
   ElfW(Addr)** got = plt_got_;
   if (got == nullptr) {
     return true;
@@ -144,7 +169,11 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group, const soinfo_l
     // This is an undefined reference... try to locate it.
     const char* sym_name = get_string(sym->st_name);
     soinfo* lsi = nullptr;
-    ElfW(Sym)* s = soinfo_do_lookup(this, sym_name, &lsi, global_group, local_group);
+    const ElfW(Sym)* s = nullptr;
+    if (!soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group, &s)) {
+      return false;
+    }
+
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       s = &symtab_[g];

@@ -29,6 +29,12 @@ def get_commit(change_id, revision):
         call('/changes/{}/revisions/{}/commit'.format(change_id, revision)))
 
 
+def get_files_for_revision(change_id, revision):
+    return json.loads(
+        call('/changes/{}/revisions/{}/files'.format(
+            change_id, revision))).keys()
+
+
 def call(endpoint, method='GET'):
     if method != 'GET':
         raise NotImplementedError('Currently only HTTP GET is supported.')
@@ -62,8 +68,8 @@ def get_labels(change_id, patch_set):
         }
     }
     """
-    details = call('/changes/{}/revisions/{}/review'.format(
-        change_id, patch_set))
+    details = json.loads(call('/changes/{}/revisions/{}/review'.format(
+        change_id, patch_set)))
     labels = {'Code-Review': {}, 'Verified': {}}
     for review in details['labels']['Code-Review']['all']:
         if 'value' in review and 'email' in review:

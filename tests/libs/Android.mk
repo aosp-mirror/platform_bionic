@@ -25,7 +25,9 @@ common_additional_dependencies := \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
+    $(LOCAL_PATH)/Android.build.pthread_atfork.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
+    $(LOCAL_PATH)/Android.build.versioned_lib.mk \
     $(TEST_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
@@ -117,6 +119,17 @@ build_type := target
 build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
+# ----------------------------------------------------------------------------
+# Library with soname which does not match filename
+# ----------------------------------------------------------------------------
+libdlext_test_different_soname_src_files := \
+    dlext_test_library.cpp \
+
+module := libdlext_test_different_soname
+module_tag := optional
+libdlext_test_different_soname_ldflags := -Wl,-soname=libdlext_test_soname.so
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
@@ -185,6 +198,16 @@ include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
 # Build libtest_check_order_root.so with its dependencies.
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
+
+# -----------------------------------------------------------------------------
+# Build libtest_versioned_lib.so with its dependencies.
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.versioned_lib.mk
+
+# -----------------------------------------------------------------------------
+# Build libraries needed by pthread_atfork tests
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
 
 # -----------------------------------------------------------------------------
 # Library with dependency loop used by dlfcn tests
@@ -331,17 +354,17 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # Library with DF_1_GLOBAL
 # -----------------------------------------------------------------------------
 libdl_test_df_1_global_src_files := dl_df_1_global.cpp
-libdl_test_df_1_global_ldflags := -fuse-ld=bfd -Wl,-z,global
-module := libdl_test_df_1_global
-# TODO: re-enable arm once b/18137520 or b/18130452 are fixed
-ifeq ($(filter $(TARGET_ARCH),arm arm64),)
-include $(LOCAL_PATH)/Android.build.testlib.mk
-else
-# build it for host only
-build_target := SHARED_LIBRARY
-build_type := host
-include $(TEST_PATH)/Android.build.mk
+libdl_test_df_1_global_ldflags := -Wl,-z,global
+# TODO (dimitry): x86* toolchain does not support -z global - switch to bfd
+ifeq ($(filter $(TARGET_ARCH),x86 x86_64),$(TARGET_ARCH))
+libdl_test_df_1_global_ldflags_target := -fuse-ld=bfd
 endif
+# TODO (dimitry): host ld.gold does not yet support -z global
+# remove this line once it is updated.
+libdl_test_df_1_global_ldflags_host := -fuse-ld=bfd
+
+module := libdl_test_df_1_global
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
 # Library using symbol from libdl_test_df_1_global
@@ -357,6 +380,16 @@ libtest_dlsym_weak_func_src_files := \
     dlsym_weak_function.cpp
 
 module := libtest_dlsym_weak_func
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Library to check RTLD_LOCAL with dlsym in 'this'
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_src_files := dlsym_from_this.cpp
+
+module := libtest_dlsym_from_this
+libtest_dlsym_from_this_shared_libraries_target := libdl
+
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
@@ -376,13 +409,9 @@ libtest_dlopen_from_ctor_src_files := \
 
 module := libtest_dlopen_from_ctor
 
-build_target := SHARED_LIBRARY
-build_type := host
-include $(TEST_PATH)/Android.build.mk
+libtest_dlopen_from_ctor_shared_libraries_target := libdl
 
-libtest_dlopen_from_ctor_shared_libraries := libdl
-build_type := target
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
 # Library that depends on the library with constructor that calls dlopen() b/7941716

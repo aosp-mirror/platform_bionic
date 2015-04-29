@@ -151,6 +151,15 @@ TEST(stdio, getdelim_invalid) {
   fclose(fp);
 }
 
+TEST(stdio, getdelim_directory) {
+  FILE* fp = fopen("/proc", "r");
+  ASSERT_TRUE(fp != NULL);
+  char* word_read;
+  size_t allocated_length;
+  ASSERT_EQ(-1, getdelim(&word_read, &allocated_length, ' ', fp));
+  fclose(fp);
+}
+
 TEST(stdio, getline) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != NULL);

@@ -39,6 +39,9 @@
 #include "private/libc_logging.h"
 #include "linked_list.h"
 
+#include <string>
+#include <vector>
+
 #define DL_ERR(fmt, x...) \
     do { \
       __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
@@ -92,9 +95,11 @@
 
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
 
-#define SOINFO_VERSION 1
+#define SOINFO_VERSION 2
 
+#if defined(__arm__)
 #define SOINFO_NAME_LEN 128
+#endif
 
 typedef void (*linker_function_t)();
 
@@ -138,24 +143,53 @@ class SymbolName {
   DISALLOW_IMPLICIT_CONSTRUCTORS(SymbolName);
 };
 
+struct version_info {
+  version_info() : elf_hash(0), name(nullptr), target_si(nullptr) {}
+
+  uint32_t elf_hash;
+  const char* name;
+  const soinfo* target_si;
+};
+
+// Class used construct version dependency graph.
+class VersionTracker {
+ public:
+  VersionTracker() = default;
+  bool init(const soinfo* si_from);
+
+  const version_info* get_version_info(ElfW(Versym) source_symver) const;
+ private:
+  bool init_verneed(const soinfo* si_from);
+  bool init_verdef(const soinfo* si_from);
+  void add_version_info(size_t source_index, ElfW(Word) elf_hash,
+      const char* ver_name, const soinfo* target_si);
+
+  std::vector<version_info> version_infos;
+
+  DISALLOW_COPY_AND_ASSIGN(VersionTracker);
+};
+
 struct soinfo {
  public:
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
+#if defined(__arm__)
+ private:
+  char old_name_[SOINFO_NAME_LEN];
+#endif
  public:
-  char name[SOINFO_NAME_LEN];
   const ElfW(Phdr)* phdr;
   size_t phnum;
   ElfW(Addr) entry;
   ElfW(Addr) base;
   size_t size;
 
-#ifndef __LP64__
+#if defined(__arm__)
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
   ElfW(Dyn)* dynamic;
 
-#ifndef __LP64__
+#if defined(__arm__)
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
 #endif
@@ -238,7 +272,8 @@ struct soinfo {
   void call_destructors();
   void call_pre_init_constructors();
   bool prelink_image();
-  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group, const android_dlextinfo* extinfo);
+  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+                  const android_dlextinfo* extinfo);
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -252,18 +287,27 @@ struct soinfo {
   void set_dt_flags_1(uint32_t dt_flags_1);
 
   soinfo_list_t& get_children();
+  const soinfo_list_t& get_children() const;
+
   soinfo_list_t& get_parents();
 
-  ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name);
+  bool find_symbol_by_name(SymbolName& symbol_name,
+                           const version_info* vi,
+                           const ElfW(Sym)** symbol) const;
+
   ElfW(Sym)* find_symbol_by_address(const void* addr);
-  ElfW(Addr) resolve_symbol_address(ElfW(Sym)* s);
+  ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const;
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
   bool is_gnu_hash() const;
 
-  bool inline has_min_version(uint32_t min_version) const {
+  bool inline has_min_version(uint32_t min_version __unused) const {
+#if defined(__arm__)
     return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
+#else
+    return true;
+#endif
   }
 
   bool is_linked() const;
@@ -278,16 +322,27 @@ struct soinfo {
 
   soinfo* get_local_group_root() const;
 
+  const char* get_soname() const;
+  const char* get_realpath() const;
+  const ElfW(Versym)* get_versym(size_t n) const;
+  ElfW(Addr) get_verneed_ptr() const;
+  size_t get_verneed_cnt() const;
+  ElfW(Addr) get_verdef_ptr() const;
+  size_t get_verdef_cnt() const;
+
+  bool find_verdef_version_index(const version_info* vi, ElfW(Versym)* versym) const;
+
  private:
-  ElfW(Sym)* elf_lookup(SymbolName& symbol_name);
+  bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
-  ElfW(Sym)* gnu_lookup(SymbolName& symbol_name);
+  bool gnu_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
 
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void call_function(const char* function_name, linker_function_t function);
   template<typename ElfRelIteratorT>
-  bool relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& global_group,
+                const soinfo_list_t& local_group);
 
  private:
   // This part of the structure is only available
@@ -322,11 +377,23 @@ struct soinfo {
   uint8_t* android_relocs_;
   size_t android_relocs_size_;
 
+  const char* soname_;
+  std::string realpath_;
+
+  const ElfW(Versym)* versym_;
+
+  ElfW(Addr) verdef_ptr_;
+  size_t verdef_cnt_;
+
+  ElfW(Addr) verneed_ptr_;
+  size_t verneed_cnt_;
+
   friend soinfo* get_libdl_info();
 };
 
-ElfW(Sym)* soinfo_do_lookup(soinfo* si_from, const char* name, soinfo** si_found_in,
-    const soinfo::soinfo_list_t& global_group, const soinfo::soinfo_list_t& local_group);
+bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
+                      soinfo** si_found_in, const soinfo::soinfo_list_t& global_group,
+                      const soinfo::soinfo_list_t& local_group, const ElfW(Sym)** symbol);
 
 enum RelocationKind {
   kRelocAbsolute = 0,
@@ -345,10 +412,10 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo);
 void do_dlclose(soinfo* si);
 
-ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* start);
+const ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller, void* handle);
 soinfo* find_containing_library(const void* addr);
 
-ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
+const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;

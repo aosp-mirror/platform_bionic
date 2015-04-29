@@ -31,16 +31,16 @@
 
 extern "C" const char* __strerror_lookup(int);
 
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(strerror);
+static ThreadLocalBuffer<char, NL_TEXTMAX> g_strerror_tls_buffer;
 
 char* strerror(int error_number) {
   // Just return the original constant in the easy cases.
   char* result = const_cast<char*>(__strerror_lookup(error_number));
-  if (result != NULL) {
+  if (result != nullptr) {
     return result;
   }
 
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, strerror, NL_TEXTMAX);
-  strerror_r(error_number, strerror_tls_buffer, strerror_tls_buffer_size);
-  return strerror_tls_buffer;
+  result = g_strerror_tls_buffer.get();
+  strerror_r(error_number, result, g_strerror_tls_buffer.size());
+  return result;
 }

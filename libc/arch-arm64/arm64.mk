@@ -40,6 +40,8 @@ libc_bionic_src_files_arm64 += \
     arch-arm64/bionic/syscall.S \
     arch-arm64/bionic/vfork.S \
 
+# Work around for http://b/20065774.
+libc_bionic_src_files_arm64 += arch-arm64/bionic/libgcc_compat.c
 
 libc_crt_target_cflags_arm64 := \
     -I$(LOCAL_PATH)/arch-arm64/include

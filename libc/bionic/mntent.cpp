@@ -31,14 +31,13 @@
 
 #include "private/ThreadLocalBuffer.h"
 
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(getmntent_mntent);
-GLOBAL_INIT_THREAD_LOCAL_BUFFER(getmntent_strings);
+static ThreadLocalBuffer<mntent> g_getmntent_mntent_tls_buffer;
+static ThreadLocalBuffer<char, BUFSIZ> g_getmntent_strings_tls_buffer;
 
 mntent* getmntent(FILE* fp) {
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(mntent*, getmntent_mntent, sizeof(mntent));
-  LOCAL_INIT_THREAD_LOCAL_BUFFER(char*, getmntent_strings, BUFSIZ);
-  return getmntent_r(fp, getmntent_mntent_tls_buffer,
-                     getmntent_strings_tls_buffer, getmntent_strings_tls_buffer_size);
+  return getmntent_r(fp, g_getmntent_mntent_tls_buffer.get(),
+                     g_getmntent_strings_tls_buffer.get(),
+                     g_getmntent_strings_tls_buffer.size());
 }
 
 mntent* getmntent_r(FILE* fp, struct mntent* e, char* buf, int buf_len) {

@@ -16,10 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include "private/ScopeGuard.h"
-#include "BionicDeathTest.h"
-#include "ScopedSignalHandler.h"
-
+#include <dlfcn.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -33,6 +30,18 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <regex>
+#include <vector>
+
+#include <base/file.h>
+#include <base/stringprintf.h>
+
+#include "private/bionic_macros.h"
+#include "private/ScopeGuard.h"
+#include "BionicDeathTest.h"
+#include "ScopedSignalHandler.h"
+
+extern "C" pid_t gettid();
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -66,8 +75,7 @@ TEST(pthread, pthread_key_many_distinct) {
 
   for (int i = 0; i < nkeys; ++i) {
     pthread_key_t key;
-    // If this fails, it's likely that GLOBAL_INIT_THREAD_LOCAL_BUFFER_COUNT is
-    // wrong.
+    // If this fails, it's likely that LIBC_PTHREAD_KEY_RESERVED_COUNT is wrong.
     ASSERT_EQ(0, pthread_key_create(&key, NULL)) << i << " of " << nkeys;
     keys.push_back(key);
     ASSERT_EQ(0, pthread_setspecific(key, reinterpret_cast<void*>(i)));
@@ -174,6 +182,19 @@ TEST(pthread, pthread_key_dirty) {
   ASSERT_EQ(0, pthread_key_delete(key));
 }
 
+TEST(pthread, static_pthread_key_used_before_creation) {
+#if defined(__BIONIC__)
+  // See http://b/19625804. The bug is about a static/global pthread key being used before creation.
+  // So here tests if the static/global default value 0 can be detected as invalid key.
+  static pthread_key_t key;
+  ASSERT_EQ(nullptr, pthread_getspecific(key));
+  ASSERT_EQ(EINVAL, pthread_setspecific(key, nullptr));
+  ASSERT_EQ(EINVAL, pthread_key_delete(key));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic pthread key implementation detail.\n";
+#endif
+}
+
 static void* IdFn(void* arg) {
   return arg;
 }
@@ -271,8 +292,11 @@ TEST(pthread, pthread_no_op_detach_after_join) {
 
   sleep(1); // (Give t2 a chance to call pthread_join.)
 
-  // ...a call to pthread_detach on thread 1 will "succeed" (silently fail)...
+#if defined(__BIONIC__)
+  ASSERT_EQ(EINVAL, pthread_detach(t1));
+#else
   ASSERT_EQ(0, pthread_detach(t1));
+#endif
   AssertDetached(t1, false);
 
   spinhelper.UnSpin();
@@ -380,7 +404,9 @@ TEST(pthread, pthread_sigmask) {
 }
 
 TEST(pthread, pthread_setname_np__too_long) {
-  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
+  // The limit is 15 characters --- the kernel's buffer is 16, but includes a NUL.
+  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "123456789012345"));
+  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "1234567890123456"));
 }
 
 TEST(pthread, pthread_setname_np__self) {
@@ -650,6 +676,37 @@ TEST(pthread, pthread_attr_setstacksize) {
 #endif // __BIONIC__
 }
 
+TEST(pthread, pthread_rwlockattr_smoke) {
+  pthread_rwlockattr_t attr;
+  ASSERT_EQ(0, pthread_rwlockattr_init(&attr));
+
+  int pshared_value_array[] = {PTHREAD_PROCESS_PRIVATE, PTHREAD_PROCESS_SHARED};
+  for (size_t i = 0; i < sizeof(pshared_value_array) / sizeof(pshared_value_array[0]); ++i) {
+    ASSERT_EQ(0, pthread_rwlockattr_setpshared(&attr, pshared_value_array[i]));
+    int pshared;
+    ASSERT_EQ(0, pthread_rwlockattr_getpshared(&attr, &pshared));
+    ASSERT_EQ(pshared_value_array[i], pshared);
+  }
+
+  int kind_array[] = {PTHREAD_RWLOCK_PREFER_READER_NP,
+                      PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP};
+  for (size_t i = 0; i < sizeof(kind_array) / sizeof(kind_array[0]); ++i) {
+    ASSERT_EQ(0, pthread_rwlockattr_setkind_np(&attr, kind_array[i]));
+    int kind;
+    ASSERT_EQ(0, pthread_rwlockattr_getkind_np(&attr, &kind));
+    ASSERT_EQ(kind_array[i], kind);
+  }
+
+  ASSERT_EQ(0, pthread_rwlockattr_destroy(&attr));
+}
+
+TEST(pthread, pthread_rwlock_init_same_as_PTHREAD_RWLOCK_INITIALIZER) {
+  pthread_rwlock_t lock1 = PTHREAD_RWLOCK_INITIALIZER;
+  pthread_rwlock_t lock2;
+  ASSERT_EQ(0, pthread_rwlock_init(&lock2, NULL));
+  ASSERT_EQ(0, memcmp(&lock1, &lock2, sizeof(lock1)));
+}
+
 TEST(pthread, pthread_rwlock_smoke) {
   pthread_rwlock_t l;
   ASSERT_EQ(0, pthread_rwlock_init(&l, NULL));
@@ -685,7 +742,6 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
-#ifdef __BIONIC__
   // EDEADLK in "read after write"
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(EDEADLK, pthread_rwlock_rdlock(&l));
@@ -695,9 +751,25 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(EDEADLK, pthread_rwlock_wrlock(&l));
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
-#endif
 
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
+}
+
+static void WaitUntilThreadSleep(std::atomic<pid_t>& pid) {
+  while (pid == 0) {
+    usleep(1000);
+  }
+  std::string filename = android::base::StringPrintf("/proc/%d/stat", pid.load());
+  std::regex regex {R"(\s+S\s+)"};
+
+  while (true) {
+    std::string content;
+    ASSERT_TRUE(android::base::ReadFileToString(filename, &content));
+    if (std::regex_search(content, regex)) {
+      break;
+    }
+    usleep(1000);
+  }
 }
 
 struct RwlockWakeupHelperArg {
@@ -709,9 +781,11 @@ struct RwlockWakeupHelperArg {
     LOCK_ACCESSED
   };
   std::atomic<Progress> progress;
+  std::atomic<pid_t> tid;
 };
 
 static void pthread_rwlock_reader_wakeup_writer_helper(RwlockWakeupHelperArg* arg) {
+  arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
 
@@ -728,12 +802,14 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
-  sleep(1);
+  WaitUntilThreadSleep(wakeup_arg.tid);
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
@@ -743,6 +819,7 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
 }
 
 static void pthread_rwlock_writer_wakeup_reader_helper(RwlockWakeupHelperArg* arg) {
+  arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
 
@@ -759,18 +836,125 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
     reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
-  sleep(1);
+  WaitUntilThreadSleep(wakeup_arg.tid);
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_RELEASED;
   ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
 
   ASSERT_EQ(0, pthread_join(thread, NULL));
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
   ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+class RwlockKindTestHelper {
+ private:
+  struct ThreadArg {
+    RwlockKindTestHelper* helper;
+    std::atomic<pid_t>& tid;
+
+    ThreadArg(RwlockKindTestHelper* helper, std::atomic<pid_t>& tid)
+      : helper(helper), tid(tid) { }
+  };
+
+ public:
+  pthread_rwlock_t lock;
+
+ public:
+  RwlockKindTestHelper(int kind_type) {
+    InitRwlock(kind_type);
+  }
+
+  ~RwlockKindTestHelper() {
+    DestroyRwlock();
+  }
+
+  void CreateWriterThread(pthread_t& thread, std::atomic<pid_t>& tid) {
+    tid = 0;
+    ThreadArg* arg = new ThreadArg(this, tid);
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+                                reinterpret_cast<void* (*)(void*)>(WriterThreadFn), arg));
+  }
+
+  void CreateReaderThread(pthread_t& thread, std::atomic<pid_t>& tid) {
+    tid = 0;
+    ThreadArg* arg = new ThreadArg(this, tid);
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+                                reinterpret_cast<void* (*)(void*)>(ReaderThreadFn), arg));
+  }
+
+ private:
+  void InitRwlock(int kind_type) {
+    pthread_rwlockattr_t attr;
+    ASSERT_EQ(0, pthread_rwlockattr_init(&attr));
+    ASSERT_EQ(0, pthread_rwlockattr_setkind_np(&attr, kind_type));
+    ASSERT_EQ(0, pthread_rwlock_init(&lock, &attr));
+    ASSERT_EQ(0, pthread_rwlockattr_destroy(&attr));
+  }
+
+  void DestroyRwlock() {
+    ASSERT_EQ(0, pthread_rwlock_destroy(&lock));
+  }
+
+  static void WriterThreadFn(ThreadArg* arg) {
+    arg->tid = gettid();
+
+    RwlockKindTestHelper* helper = arg->helper;
+    ASSERT_EQ(0, pthread_rwlock_wrlock(&helper->lock));
+    ASSERT_EQ(0, pthread_rwlock_unlock(&helper->lock));
+    delete arg;
+  }
+
+  static void ReaderThreadFn(ThreadArg* arg) {
+    arg->tid = gettid();
+
+    RwlockKindTestHelper* helper = arg->helper;
+    ASSERT_EQ(0, pthread_rwlock_rdlock(&helper->lock));
+    ASSERT_EQ(0, pthread_rwlock_unlock(&helper->lock));
+    delete arg;
+  }
+};
+
+TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_READER_NP) {
+  RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_READER_NP);
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
+
+  pthread_t writer_thread;
+  std::atomic<pid_t> writer_tid;
+  helper.CreateWriterThread(writer_thread, writer_tid);
+  WaitUntilThreadSleep(writer_tid);
+
+  pthread_t reader_thread;
+  std::atomic<pid_t> reader_tid;
+  helper.CreateReaderThread(reader_thread, reader_tid);
+  ASSERT_EQ(0, pthread_join(reader_thread, NULL));
+
+  ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
+  ASSERT_EQ(0, pthread_join(writer_thread, NULL));
+}
+
+TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) {
+  RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
+
+  pthread_t writer_thread;
+  std::atomic<pid_t> writer_tid;
+  helper.CreateWriterThread(writer_thread, writer_tid);
+  WaitUntilThreadSleep(writer_tid);
+
+  pthread_t reader_thread;
+  std::atomic<pid_t> reader_tid;
+  helper.CreateReaderThread(reader_thread, reader_tid);
+  WaitUntilThreadSleep(reader_tid);
+
+  ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
+  ASSERT_EQ(0, pthread_join(writer_thread, NULL));
+  ASSERT_EQ(0, pthread_join(reader_thread, NULL));
 }
 
 static int g_once_fn_call_count = 0;
@@ -806,14 +990,14 @@ TEST(pthread, pthread_once_1934122) {
 }
 
 static int g_atfork_prepare_calls = 0;
-static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1; }
-static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2; }
+static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 1; }
+static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 2; }
 static int g_atfork_parent_calls = 0;
-static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 1; }
-static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 2; }
+static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 1; }
+static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 2; }
 static int g_atfork_child_calls = 0;
-static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 1; }
-static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
+static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 1; }
+static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 2; }
 
 TEST(pthread, pthread_atfork_smoke) {
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
@@ -824,13 +1008,71 @@ TEST(pthread, pthread_atfork_smoke) {
 
   // Child and parent calls are made in the order they were registered.
   if (pid == 0) {
-    ASSERT_EQ(0x12, g_atfork_child_calls);
+    ASSERT_EQ(12, g_atfork_child_calls);
     _exit(0);
   }
-  ASSERT_EQ(0x12, g_atfork_parent_calls);
+  ASSERT_EQ(12, g_atfork_parent_calls);
 
   // Prepare calls are made in the reverse order.
-  ASSERT_EQ(0x21, g_atfork_prepare_calls);
+  ASSERT_EQ(21, g_atfork_prepare_calls);
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+}
+
+static void AtForkPrepare3() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 3; }
+static void AtForkPrepare4() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 4; }
+
+static void AtForkParent3() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 3; }
+static void AtForkParent4() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 4; }
+
+static void AtForkChild3() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 3; }
+static void AtForkChild4() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 4; }
+
+TEST(pthread, pthread_atfork_with_dlclose) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+
+  void* handle = dlopen("libtest_pthread_atfork.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)(void (*)(void), void (*)(void), void (*)(void));
+  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "proxy_pthread_atfork"));
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+  // the library registers 2 additional atfork handlers in a constructor
+  ASSERT_EQ(0, fn(AtForkPrepare2, AtForkParent2, AtForkChild2));
+  ASSERT_EQ(0, fn(AtForkPrepare3, AtForkParent3, AtForkChild3));
+
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare4, AtForkParent4, AtForkChild4));
+
+  int pid = fork();
+
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    ASSERT_EQ(1234, g_atfork_child_calls);
+    _exit(0);
+  }
+
+  ASSERT_EQ(1234, g_atfork_parent_calls);
+  ASSERT_EQ(4321, g_atfork_prepare_calls);
+
+  EXPECT_EQ(0, dlclose(handle));
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+
+  pid = fork();
+
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    ASSERT_EQ(14, g_atfork_child_calls);
+    _exit(0);
+  }
+
+  ASSERT_EQ(14, g_atfork_parent_calls);
+  ASSERT_EQ(41, g_atfork_prepare_calls);
+
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
 }
 
 TEST(pthread, pthread_attr_getscope) {
@@ -1177,64 +1419,214 @@ TEST(pthread, pthread_mutexattr_gettype) {
   ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
   ASSERT_EQ(0, pthread_mutexattr_gettype(&attr, &attr_type));
   ASSERT_EQ(PTHREAD_MUTEX_RECURSIVE, attr_type);
+
+  ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
 }
 
-TEST(pthread, pthread_mutex_lock_NORMAL) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_NORMAL));
-
+struct PthreadMutex {
   pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
 
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  PthreadMutex(int mutex_type) {
+    init(mutex_type);
+  }
+
+  ~PthreadMutex() {
+    destroy();
+  }
+
+ private:
+  void init(int mutex_type) {
+    pthread_mutexattr_t attr;
+    ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+    ASSERT_EQ(0, pthread_mutexattr_settype(&attr, mutex_type));
+    ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+    ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
+  }
+
+  void destroy() {
+    ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  }
+
+  DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
+};
+
+TEST(pthread, pthread_mutex_lock_NORMAL) {
+  PthreadMutex m(PTHREAD_MUTEX_NORMAL);
+
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
 TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
+  PthreadMutex m(PTHREAD_MUTEX_ERRORCHECK);
 
-  pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
-
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(EDEADLK, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(EDEADLK, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
 }
 
 TEST(pthread, pthread_mutex_lock_RECURSIVE) {
-  pthread_mutexattr_t attr;
-  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
-  ASSERT_EQ(0, pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+  PthreadMutex m(PTHREAD_MUTEX_RECURSIVE);
 
-  pthread_mutex_t lock;
-  ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+  ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
+}
 
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_lock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_trylock(&lock));
-  ASSERT_EQ(0, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(EPERM, pthread_mutex_unlock(&lock));
-  ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
+  pthread_mutex_t lock_normal = PTHREAD_MUTEX_INITIALIZER;
+  PthreadMutex m1(PTHREAD_MUTEX_NORMAL);
+  ASSERT_EQ(0, memcmp(&lock_normal, &m1.lock, sizeof(pthread_mutex_t)));
+  pthread_mutex_destroy(&lock_normal);
+
+  pthread_mutex_t lock_errorcheck = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
+  PthreadMutex m2(PTHREAD_MUTEX_ERRORCHECK);
+  ASSERT_EQ(0, memcmp(&lock_errorcheck, &m2.lock, sizeof(pthread_mutex_t)));
+  pthread_mutex_destroy(&lock_errorcheck);
+
+  pthread_mutex_t lock_recursive = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+  PthreadMutex m3(PTHREAD_MUTEX_RECURSIVE);
+  ASSERT_EQ(0, memcmp(&lock_recursive, &m3.lock, sizeof(pthread_mutex_t)));
+  ASSERT_EQ(0, pthread_mutex_destroy(&lock_recursive));
+}
+class MutexWakeupHelper {
+ private:
+  PthreadMutex m;
+  enum Progress {
+    LOCK_INITIALIZED,
+    LOCK_WAITING,
+    LOCK_RELEASED,
+    LOCK_ACCESSED
+  };
+  std::atomic<Progress> progress;
+  std::atomic<pid_t> tid;
+
+  static void thread_fn(MutexWakeupHelper* helper) {
+    helper->tid = gettid();
+    ASSERT_EQ(LOCK_INITIALIZED, helper->progress);
+    helper->progress = LOCK_WAITING;
+
+    ASSERT_EQ(0, pthread_mutex_lock(&helper->m.lock));
+    ASSERT_EQ(LOCK_RELEASED, helper->progress);
+    ASSERT_EQ(0, pthread_mutex_unlock(&helper->m.lock));
+
+    helper->progress = LOCK_ACCESSED;
+  }
+
+ public:
+  MutexWakeupHelper(int mutex_type) : m(mutex_type) {
+  }
+
+  void test() {
+    ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+    progress = LOCK_INITIALIZED;
+    tid = 0;
+
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+      reinterpret_cast<void* (*)(void*)>(MutexWakeupHelper::thread_fn), this));
+
+    WaitUntilThreadSleep(tid);
+    ASSERT_EQ(LOCK_WAITING, progress);
+
+    progress = LOCK_RELEASED;
+    ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+
+    ASSERT_EQ(0, pthread_join(thread, NULL));
+    ASSERT_EQ(LOCK_ACCESSED, progress);
+  }
+};
+
+TEST(pthread, pthread_mutex_NORMAL_wakeup) {
+  MutexWakeupHelper helper(PTHREAD_MUTEX_NORMAL);
+  helper.test();
+}
+
+TEST(pthread, pthread_mutex_ERRORCHECK_wakeup) {
+  MutexWakeupHelper helper(PTHREAD_MUTEX_ERRORCHECK);
+  helper.test();
+}
+
+TEST(pthread, pthread_mutex_RECURSIVE_wakeup) {
+  MutexWakeupHelper helper(PTHREAD_MUTEX_RECURSIVE);
+  helper.test();
 }
 
 TEST(pthread, pthread_mutex_owner_tid_limit) {
+#if defined(__BIONIC__) && !defined(__LP64__)
   FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
   ASSERT_TRUE(fp != NULL);
   long pid_max;
   ASSERT_EQ(1, fscanf(fp, "%ld", &pid_max));
   fclose(fp);
-  // Current pthread_mutex uses 16 bits to represent owner tid.
-  // Change the implementation if we need to support higher value than 65535.
+  // Bionic's pthread_mutex implementation on 32-bit devices uses 16 bits to represent owner tid.
   ASSERT_LE(pid_max, 65536);
+#else
+  GTEST_LOG_(INFO) << "This test does nothing as 32-bit tid is supported by pthread_mutex.\n";
+#endif
+}
+
+class StrictAlignmentAllocator {
+ public:
+  void* allocate(size_t size, size_t alignment) {
+    char* p = new char[size + alignment * 2];
+    allocated_array.push_back(p);
+    while (!is_strict_aligned(p, alignment)) {
+      ++p;
+    }
+    return p;
+  }
+
+  ~StrictAlignmentAllocator() {
+    for (auto& p : allocated_array) {
+      delete [] p;
+    }
+  }
+
+ private:
+  bool is_strict_aligned(char* p, size_t alignment) {
+    return (reinterpret_cast<uintptr_t>(p) % (alignment * 2)) == alignment;
+  }
+
+  std::vector<char*> allocated_array;
+};
+
+TEST(pthread, pthread_types_allow_four_bytes_alignment) {
+#if defined(__BIONIC__)
+  // For binary compatibility with old version, we need to allow 4-byte aligned data for pthread types.
+  StrictAlignmentAllocator allocator;
+  pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(
+                             allocator.allocate(sizeof(pthread_mutex_t), 4));
+  ASSERT_EQ(0, pthread_mutex_init(mutex, NULL));
+  ASSERT_EQ(0, pthread_mutex_lock(mutex));
+  ASSERT_EQ(0, pthread_mutex_unlock(mutex));
+  ASSERT_EQ(0, pthread_mutex_destroy(mutex));
+
+  pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(
+                           allocator.allocate(sizeof(pthread_cond_t), 4));
+  ASSERT_EQ(0, pthread_cond_init(cond, NULL));
+  ASSERT_EQ(0, pthread_cond_signal(cond));
+  ASSERT_EQ(0, pthread_cond_broadcast(cond));
+  ASSERT_EQ(0, pthread_cond_destroy(cond));
+
+  pthread_rwlock_t* rwlock = reinterpret_cast<pthread_rwlock_t*>(
+                               allocator.allocate(sizeof(pthread_rwlock_t), 4));
+  ASSERT_EQ(0, pthread_rwlock_init(rwlock, NULL));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_unlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_unlock(rwlock));
+  ASSERT_EQ(0, pthread_rwlock_destroy(rwlock));
+
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details.";
+#endif
 }

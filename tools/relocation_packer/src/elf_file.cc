@@ -37,11 +37,13 @@ static constexpr int32_t DT_ANDROID_RELASZ = DT_LOOS + 5;
 static constexpr uint32_t SHT_ANDROID_REL = SHT_LOOS + 1;
 static constexpr uint32_t SHT_ANDROID_RELA = SHT_LOOS + 2;
 
+static const size_t kPageSize = 4096;
+
 // Alignment to preserve, in bytes.  This must be at least as large as the
 // largest d_align and sh_addralign values found in the loaded file.
 // Out of caution for RELRO page alignment, we preserve to a complete target
 // page.  See http://www.airs.com/blog/archives/189.
-static constexpr size_t kPreserveAlignment = 4096;
+static const size_t kPreserveAlignment = kPageSize;
 
 // Get section data.  Checks that the section has exactly one data entry,
 // so that the section size and the data size are the same.  True in
@@ -190,6 +192,7 @@ bool ElfFile<ELF>::Load() {
   // these; both is unsupported.
   bool has_rel_relocations = false;
   bool has_rela_relocations = false;
+  bool has_android_relocations = false;
 
   Elf_Scn* section = NULL;
   while ((section = elf_nextscn(elf, section)) != nullptr) {
@@ -209,6 +212,11 @@ bool ElfFile<ELF>::Load() {
     if ((name == ".rel.dyn" || name == ".rela.dyn") &&
         section_header->sh_size > 0) {
       found_relocations_section = section;
+
+      // Note if relocation section is already packed
+      has_android_relocations =
+          section_header->sh_type == SHT_ANDROID_REL ||
+          section_header->sh_type == SHT_ANDROID_RELA;
     }
 
     if (section_header->sh_offset == dynamic_program_header->p_offset) {
@@ -250,6 +258,7 @@ bool ElfFile<ELF>::Load() {
   relocations_section_ = found_relocations_section;
   dynamic_section_ = found_dynamic_section;
   relocations_type_ = has_rel_relocations ? REL : RELA;
+  has_android_relocations_ = has_android_relocations;
   return true;
 }
 
@@ -311,9 +320,13 @@ static void AdjustProgramHeaderOffsets(typename ELF::Phdr* program_headers,
     } else {
       program_header->p_vaddr -= hole_size;
       program_header->p_paddr -= hole_size;
+      if (program_header->p_align > kPageSize) {
+        program_header->p_align = kPageSize;
+      }
       VLOG(1) << "phdr[" << i
               << "] p_vaddr adjusted to "<< program_header->p_vaddr
-              << "; p_paddr adjusted to "<< program_header->p_paddr;
+              << "; p_paddr adjusted to "<< program_header->p_paddr
+              << "; p_align adjusted to "<< program_header->p_align;
     }
   }
 }
@@ -439,6 +452,9 @@ void ElfFile<ELF>::AdjustDynamicSectionForHole(Elf_Scn* dynamic_section,
                                 tag == DT_JMPREL ||
                                 tag == DT_INIT_ARRAY ||
                                 tag == DT_FINI_ARRAY ||
+                                tag == DT_VERSYM ||
+                                tag == DT_VERNEED ||
+                                tag == DT_VERDEF ||
                                 tag == DT_ANDROID_REL||
                                 tag == DT_ANDROID_RELA);
 
@@ -586,7 +602,7 @@ bool ElfFile<ELF>::PackRelocations() {
     const typename ELF::Rel* relocations_base = reinterpret_cast<typename ELF::Rel*>(data->d_buf);
     ConvertRelArrayToRelaVector(relocations_base,
         data->d_size / sizeof(typename ELF::Rel), &relocations);
-    LOG(INFO) << "Relocations   : REL";
+    VLOG(1) << "Relocations   : REL";
   } else if (relocations_type_ == RELA) {
     // Convert data to a vector of relocations with addends.
     const typename ELF::Rela* relocations_base = reinterpret_cast<typename ELF::Rela*>(data->d_buf);
@@ -594,7 +610,7 @@ bool ElfFile<ELF>::PackRelocations() {
         relocations_base,
         relocations_base + data->d_size / sizeof(relocations[0]));
 
-    LOG(INFO) << "Relocations   : RELA";
+    VLOG(1) << "Relocations   : RELA";
   } else {
     NOTREACHED();
   }
@@ -607,10 +623,15 @@ template <typename ELF>
 bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocations) {
   typedef typename ELF::Rela Rela;
 
+  if (has_android_relocations_) {
+    LOG(INFO) << "Relocation table is already packed";
+    return true;
+  }
+
   // If no relocations then we have nothing packable.  Perhaps
   // the shared object has already been packed?
   if (relocations->empty()) {
-    LOG(ERROR) << "No relocations found (already packed?)";
+    LOG(ERROR) << "No relocations found";
     return false;
   }
 
@@ -618,18 +639,18 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
       relocations_type_ == RELA ? sizeof(typename ELF::Rela) : sizeof(typename ELF::Rel);
   const size_t initial_bytes = relocations->size() * rel_size;
 
-  LOG(INFO) << "Unpacked                   : " << initial_bytes << " bytes";
+  VLOG(1) << "Unpacked                   : " << initial_bytes << " bytes";
   std::vector<uint8_t> packed;
   RelocationPacker<ELF> packer;
 
   // Pack relocations: dry run to estimate memory savings.
   packer.PackRelocations(*relocations, &packed);
   const size_t packed_bytes_estimate = packed.size() * sizeof(packed[0]);
-  LOG(INFO) << "Packed         (no padding): " << packed_bytes_estimate << " bytes";
+  VLOG(1) << "Packed         (no padding): " << packed_bytes_estimate << " bytes";
 
   if (packed.empty()) {
     LOG(INFO) << "Too few relocations to pack";
-    return false;
+    return true;
   }
 
   // Pre-calculate the size of the hole we will close up when we rewrite
@@ -646,12 +667,12 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   // Adjusting for alignment may have removed any packing benefit.
   if (hole_size == 0) {
     LOG(INFO) << "Too few relocations to pack after alignment";
-    return false;
+    return true;
   }
 
   if (hole_size <= 0) {
     LOG(INFO) << "Packing relocations saves no space";
-    return false;
+    return true;
   }
 
   size_t data_padding_bytes = is_padding_relocations_ ?
@@ -734,7 +755,7 @@ bool ElfFile<ELF>::UnpackRelocations() {
       packed.size() > 3 &&
       packed[0] == 'A' &&
       packed[1] == 'P' &&
-      (packed[2] == 'U' || packed[2] == 'S') &&
+      packed[2] == 'S' &&
       packed[3] == '2') {
     LOG(INFO) << "Relocations   : " << (relocations_type_ == REL ? "REL" : "RELA");
   } else {

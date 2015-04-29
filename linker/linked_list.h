@@ -136,6 +136,17 @@ class LinkedList {
     }
   }
 
+  template<typename F>
+  T* find_if(F predicate) const {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (predicate(e->element)) {
+        return e->element;
+      }
+    }
+
+    return nullptr;
+  }
+
   size_t copy_to_array(T* array[], size_t array_length) const {
     size_t sz = 0;
     for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next) {

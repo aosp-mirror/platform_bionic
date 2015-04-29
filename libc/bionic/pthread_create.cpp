@@ -69,13 +69,20 @@ void __init_tls(pthread_internal_t* thread) {
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
-  stack_t ss;
-  ss.ss_sp = mmap(NULL, SIGSTKSZ, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (ss.ss_sp != MAP_FAILED) {
-    ss.ss_size = SIGSTKSZ;
+  void* stack_base = mmap(NULL, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  if (stack_base != MAP_FAILED) {
+
+    // Create a guard page to catch stack overflows in signal handlers.
+    if (mprotect(stack_base, PAGE_SIZE, PROT_NONE) == -1) {
+      munmap(stack_base, SIGNAL_STACK_SIZE);
+      return;
+    }
+    stack_t ss;
+    ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PAGE_SIZE;
+    ss.ss_size = SIGNAL_STACK_SIZE - PAGE_SIZE;
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
-    thread->alternate_signal_stack = ss.ss_sp;
+    thread->alternate_signal_stack = stack_base;
 
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.
@@ -83,8 +90,14 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
   }
 }
 
-int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
+int __init_thread(pthread_internal_t* thread) {
   int error = 0;
+
+  if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
+    atomic_init(&thread->join_state, THREAD_NOT_JOINED);
+  } else {
+    atomic_init(&thread->join_state, THREAD_DETACHED);
+  }
 
   // Set the scheduling policy/priority of the thread.
   if (thread->attr.sched_policy != SCHED_NORMAL) {
@@ -101,10 +114,6 @@ int __init_thread(pthread_internal_t* thread, bool add_to_thread_list) {
   }
 
   thread->cleanup_stack = NULL;
-
-  if (add_to_thread_list) {
-    _pthread_internal_add(thread);
-  }
 
   return error;
 }
@@ -156,14 +165,15 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   }
 
   // Mapped space(or user allocated stack) is used for:
-  //   thread_internal_t
+  //   pthread_internal_t
   //   thread stack (including guard page)
-  stack_top -= sizeof(pthread_internal_t);
+
+  // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
+  stack_top = reinterpret_cast<uint8_t*>(
+                (reinterpret_cast<uintptr_t>(stack_top) - sizeof(pthread_internal_t)) & ~0xf);
+
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
   attr->stack_size = stack_top - reinterpret_cast<uint8_t*>(attr->stack_base);
-
-  // No need to check stack_top alignment. The size of pthread_internal_t is 16-bytes aligned,
-  // and user allocated stack is guaranteed by pthread_attr_setstack.
 
   thread->mmap_size = mmap_size;
   thread->attr = *attr;
@@ -259,18 +269,19 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     return clone_errno;
   }
 
-  int init_errno = __init_thread(thread, true);
+  int init_errno = __init_thread(thread);
   if (init_errno != 0) {
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
-    thread->attr.flags |= PTHREAD_ATTR_FLAG_DETACHED;
+    atomic_store(&thread->join_state, THREAD_DETACHED);
+    __pthread_internal_add(thread);
     thread->start_routine = __do_nothing;
     pthread_mutex_unlock(&thread->startup_handshake_mutex);
     return init_errno;
   }
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.
-  *thread_out = reinterpret_cast<pthread_t>(thread);
+  *thread_out = __pthread_internal_add(thread);
   pthread_mutex_unlock(&thread->startup_handshake_mutex);
 
   return 0;

@@ -36,9 +36,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "pthread_accessor.h"
-#include "pthread_internal.h"
 #include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
 
 // This value is not exported by kernel headers.
 #define MAX_TASK_COMM_LEN 16
@@ -58,14 +57,12 @@ int pthread_setname_np(pthread_t t, const char* thread_name) {
   }
 
   // We have to change another thread's name.
-  pid_t tid = 0;
-  {
-    pthread_accessor thread(t);
-    if (thread.get() == NULL) {
-      return ENOENT;
-    }
-    tid = thread->tid;
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
+    return ENOENT;
   }
+  pid_t tid = thread->tid;
+
   char comm_name[sizeof(TASK_COMM_FMT) + 8];
   snprintf(comm_name, sizeof(comm_name), TASK_COMM_FMT, tid);
   int fd = open(comm_name, O_CLOEXEC | O_WRONLY);

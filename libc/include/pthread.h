@@ -36,30 +36,15 @@
 #include <sys/types.h>
 #include <time.h>
 
-#if defined(__LP64__)
-  #define __RESERVED_INITIALIZER , {0}
-#else
-  #define __RESERVED_INITIALIZER
-#endif
-
 typedef struct {
-  int value;
-#ifdef __LP64__
-  char __reserved[36];
+#if defined(__LP64__)
+  int32_t __private[10];
+#else
+  int32_t __private[1];
 #endif
 } pthread_mutex_t;
 
-#define  __PTHREAD_MUTEX_INIT_VALUE            0
-#define  __PTHREAD_RECURSIVE_MUTEX_INIT_VALUE  0x4000
-#define  __PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE 0x8000
-
-#define PTHREAD_MUTEX_INITIALIZER {__PTHREAD_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP {__PTHREAD_ERRORCHECK_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP {__PTHREAD_RECURSIVE_MUTEX_INIT_VALUE __RESERVED_INITIALIZER}
-
-/* TODO: remove this namespace pollution. */
-#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP
+typedef long pthread_mutexattr_t;
 
 enum {
     PTHREAD_MUTEX_NORMAL = 0,
@@ -72,30 +57,38 @@ enum {
     PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
 };
 
+#define PTHREAD_MUTEX_INITIALIZER { { ((PTHREAD_MUTEX_NORMAL & 3) << 14) } }
+#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_RECURSIVE & 3) << 14) } }
+#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_ERRORCHECK & 3) << 14) } }
+
 typedef struct {
 #if defined(__LP64__)
-  char __private[48];
+  int32_t __private[12];
 #else
-  char __private[4];
+  int32_t __private[1];
 #endif
-} pthread_cond_t __attribute__((aligned(sizeof(long))));
+} pthread_cond_t;
+
+typedef long pthread_condattr_t;
 
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
 
-typedef long pthread_mutexattr_t;
-typedef long pthread_condattr_t;
+typedef struct {
+#if defined(__LP64__)
+  int32_t __private[14];
+#else
+  int32_t __private[10];
+#endif
+} pthread_rwlock_t;
 
 typedef long pthread_rwlockattr_t;
 
-typedef struct {
-#if defined(__LP64__)
-  char __private[56];
-#else
-  char __private[40];
-#endif
-} pthread_rwlock_t __attribute__((aligned(8)));
-
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
+
+enum {
+  PTHREAD_RWLOCK_PREFER_READER_NP = 0,
+  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 1,
+};
 
 typedef int pthread_key_t;
 
@@ -190,10 +183,12 @@ int pthread_mutex_unlock(pthread_mutex_t*) __nonnull((1));
 
 int pthread_once(pthread_once_t*, void (*)(void)) __nonnull((1, 2));
 
+int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
-int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t*, int) __nonnull((1));
+int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
+int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t*, int) __nonnull((1));
 
 int pthread_rwlock_destroy(pthread_rwlock_t*) __nonnull((1));
 int pthread_rwlock_init(pthread_rwlock_t*, const pthread_rwlockattr_t*) __nonnull((1));

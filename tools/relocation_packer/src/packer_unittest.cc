@@ -39,6 +39,7 @@ template <typename ELF>
 static void DoPackNoAddend() {
   std::vector<typename ELF::Rela> relocations;
   std::vector<uint8_t> packed;
+  bool is_32 = sizeof(typename ELF::Addr) == 4;
   // Initial relocation.
   AddRelocation<ELF>(0xd1ce0000, 0x11, 0, &relocations);
   // Two more relocations, 4 byte deltas.
@@ -59,16 +60,16 @@ static void DoPackNoAddend() {
   size_t ndx = 0;
   EXPECT_EQ('A', packed[ndx++]);
   EXPECT_EQ('P', packed[ndx++]);
-  EXPECT_EQ('U', packed[ndx++]);
+  EXPECT_EQ('S', packed[ndx++]);
   EXPECT_EQ('2', packed[ndx++]);
   // relocation count
   EXPECT_EQ(6, packed[ndx++]);
-  // base relocation = 0xd1cdfffc -> fc, ff, b7, 8e, 0d
+  // base relocation = 0xd1cdfffc -> fc, ff, b7, 8e, 7d/0d (32/64bit)
   EXPECT_EQ(0xfc, packed[ndx++]);
   EXPECT_EQ(0xff, packed[ndx++]);
   EXPECT_EQ(0xb7, packed[ndx++]);
   EXPECT_EQ(0x8e, packed[ndx++]);
-  EXPECT_EQ(0x0d, packed[ndx++]);
+  EXPECT_EQ(is_32 ? 0x7d : 0x0d, packed[ndx++]);
   // first group
   EXPECT_EQ(3, packed[ndx++]);  // size
   EXPECT_EQ(3, packed[ndx++]); // flags
@@ -83,8 +84,11 @@ static void DoPackNoAddend() {
   EXPECT_EQ(ndx, packed.size());
 }
 
-TEST(Packer, PackNoAddend) {
+TEST(Packer, PackNoAddend32) {
   DoPackNoAddend<ELF32_traits>();
+}
+
+TEST(Packer, PackNoAddend64) {
   DoPackNoAddend<ELF64_traits>();
 }
 
@@ -92,18 +96,19 @@ template <typename ELF>
 static void DoUnpackNoAddend() {
   std::vector<typename ELF::Rela> relocations;
   std::vector<uint8_t> packed;
+  bool is_32 = sizeof(typename ELF::Addr) == 4;
   packed.push_back('A');
   packed.push_back('P');
-  packed.push_back('U');
+  packed.push_back('S');
   packed.push_back('2');
   // relocation count
   packed.push_back(6);
-  // base relocation = 0xd1cdfffc -> fc, ff, b7, 8e, 0d
+  // base relocation = 0xd1cdfffc -> fc, ff, b7, 8e, 7d/0d (32/64bit)
   packed.push_back(0xfc);
   packed.push_back(0xff);
   packed.push_back(0xb7);
   packed.push_back(0x8e);
-  packed.push_back(0x0d);
+  packed.push_back(is_32 ? 0x7d : 0x0d);
   // first group
   packed.push_back(3);  // size
   packed.push_back(3); // flags
@@ -131,8 +136,11 @@ static void DoUnpackNoAddend() {
   EXPECT_EQ(ndx, relocations.size());
 }
 
-TEST(Packer, UnpackNoAddend) {
+TEST(Packer, UnpackNoAddend32) {
   DoUnpackNoAddend<ELF32_traits>();
+}
+
+TEST(Packer, UnpackNoAddend64) {
   DoUnpackNoAddend<ELF64_traits>();
 }
 
