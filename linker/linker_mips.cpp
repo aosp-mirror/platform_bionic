@@ -128,7 +128,7 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
         if (s != nullptr) {
           *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
         } else {
-          *reinterpret_cast<ElfW(Addr)*>(reloc) += base;
+          *reinterpret_cast<ElfW(Addr)*>(reloc) += load_bias;
         }
         break;
       default:
