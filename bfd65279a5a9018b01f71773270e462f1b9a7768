@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0d42a38_aac74dc3",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-29T00:26:23Z",
+      "side": 1,
+      "message": "a",
+      "range": {
+        "startLine": 107,
+        "startChar": 26,
+        "endLine": 107,
+        "endChar": 28
+      },
+      "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f222e5_cddaaeea",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-29T00:26:23Z",
+      "side": 1,
+      "message": "I was hoping for a statement about guarantees that are or are not provided.  What can you conclude if you get the same or a different number back?  My impression is very little.  If you see an updated serial number then you will see the corresponding update or perhaps a later one?\n\nI think the prediction you\u0027re talking about here is in a sense heuristic; the updating thread could have done everything but update the serial number, and be suspended in that state.  Thus this is really only a hint?  If so, it would be nice to say that.\n\nI\u0027m pursuing this because it impacts the required memory ordering, I think.",
+      "range": {
+        "startLine": 110,
+        "startChar": 3,
+        "endLine": 114,
+        "endChar": 2
+      },
+      "revId": "bfd65279a5a9018b01f71773270e462f1b9a7768",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
