@@ -16,6 +16,29 @@
       "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0d99e70_278b8423",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-04-29T17:04:07Z",
+      "side": 1,
+      "message": "If correct, add(?):\n\nIf two consecutive calls return the same value, a system property may still appear to have changed in-between, since an update may have been started and become visible, but not completed.  It is guaranteed that if an updated serial number is returned, then the corresponding update is visible.",
+      "range": {
+        "startLine": 116,
+        "startChar": 3,
+        "endLine": 117,
+        "endChar": 15
+      },
+      "revId": "1aa845cd4be44e592edd7a8e8c3189c0e0ae38e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
