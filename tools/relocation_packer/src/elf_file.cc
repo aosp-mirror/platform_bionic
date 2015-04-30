@@ -472,6 +472,16 @@ void ElfFile<ELF>::AdjustDynamicSectionForHole(Elf_Scn* dynamic_section,
               << " d_val adjusted to " << dynamic->d_un.d_val;
     }
 
+    // Special case: DT_MIPS_RLD_MAP2 stores the difference between dynamic
+    // entry address and the address of the _r_debug (used by GDB)
+    // since the dynamic section and target address are on the
+    // different sides of the hole it needs to be adjusted accordingly
+    if (tag == DT_MIPS_RLD_MAP2) {
+      dynamic->d_un.d_val += hole_size;
+      VLOG(1) << "dynamic[" << i << "] " << dynamic->d_tag
+              << " d_val adjusted to " << dynamic->d_un.d_val;
+    }
+
     // Ignore DT_RELCOUNT and DT_RELACOUNT: (1) nobody uses them and
     // technically (2) the relative relocation count is not changed.
 

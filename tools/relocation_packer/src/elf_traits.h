@@ -10,6 +10,10 @@
 #include "elf.h"
 #include "libelf.h"
 
+#if !defined(DT_MIPS_RLD_MAP2)
+#define DT_MIPS_RLD_MAP2 0x70000035
+#endif
+
 // ELF is a traits structure used to provide convenient aliases for
 // 32/64 bit Elf types and functions, depending on the target file.
 
