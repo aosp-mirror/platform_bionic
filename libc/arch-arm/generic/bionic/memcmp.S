@@ -62,7 +62,7 @@ ENTRY(memcmp)
  * Neon optimization
  * Comparing 32 bytes at a time
  */
-#if defined(__ARM_NEON__) && defined(NEON_UNALIGNED_ACCESS)
+#if defined(__ARM_NEON__)
         subs        r2, r2, #32
         blo         3f
 
