@@ -3022,6 +3022,8 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   insert_soinfo_into_debug_map(linker_soinfo_for_gdb);
 }
 
+extern "C" int __system_properties_init(void);
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -3035,6 +3037,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   // Initialize environment functions, and get to the ELF aux vectors table.
   linker_env_init(args);
+
+  // Initialize system properties
+  __system_properties_init(); // may use 'environ'
 
   // If this is a setuid/setgid program, close the security hole described in
   // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
