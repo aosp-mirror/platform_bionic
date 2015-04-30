@@ -38,6 +38,12 @@ cc_library_host_static {
 
     cppflags: common_cppflags,
 
+    target: {
+        darwin: {
+            disabled: true
+        },
+    },
+
 }
 
 cc_binary_host {
@@ -57,6 +63,11 @@ cc_binary_host {
 
     cppflags: common_cppflags,
 
+    target: {
+        darwin: {
+            disabled: true
+        },
+    },
 }
 
 cc_test_host {
@@ -79,6 +90,11 @@ cc_test_host {
 
     name: "relocation_packer_unit_tests",
 
+    target: {
+        darwin: {
+            disabled: true
+        },
+    },
 }
 
 // $(1) library name
