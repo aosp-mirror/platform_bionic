@@ -104,13 +104,19 @@ int __system_property_area_init();
 ** objects will have seen __system_property_serial values change.
 ** But also aids the converse, as changes in the global serial can
 ** also be used to predict if a failed __system_property_find
-** could in-turn now find an new object; thus preventing the
+** could in-turn now find a new object; thus preventing the
 ** cycles of effort to poll __system_property_find.
 **
-** Called at the beginning of a cache cycle to signal _any_ possible
-** changes have occurred since last. If there is, check each individual
+** Typically called at beginning of a cache cycle to signal if _any_ possible
+** changes have occurred since last. If there is, one may check each individual
 ** __system_property_serial to confirm dirty, or __system_property_find
-** to check if the property now exists.
+** to check if the property now exists. If a call to __system_property_add
+** or __system_property_update has completed between two calls to
+** __system_property_area_serial then the second call will return a larger
+** value than the first call. Beware of race conditions as changes to the
+** properties are not atomic, the main value of this call is to determine
+** whether the expensive __system_property_find is worth retrying to see if
+** a property now exists.
 **
 ** Returns the serial number on success, -1 on error.
 */
