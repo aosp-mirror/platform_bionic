@@ -75,26 +75,14 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
-      ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+      const version_info* vi = nullptr;
 
-      if (sym_ver == VER_NDX_LOCAL || sym_ver == VER_NDX_GLOBAL) {
-        // there is no version info for this one
-        if (!soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
-      } else {
-        const version_info* vi = version_tracker.get_version_info(sym_ver);
+      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+        return false;
+      }
 
-        if (vi == nullptr) {
-          DL_ERR("cannot find verneed/verdef for version index=%d "
-              "referenced by symbol \"%s\" at \"%s\"", sym_ver, sym_name, get_soname());
-          return false;
-        }
-
-        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
+      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+        return false;
       }
 
       if (s == nullptr) {

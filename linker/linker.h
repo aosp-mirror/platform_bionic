@@ -338,6 +338,9 @@ struct soinfo {
   bool gnu_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
 
+  bool lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
+                           const char* sym_name, const version_info** vi);
+
   void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
   void call_function(const char* function_name, linker_function_t function);
   template<typename ElfRelIteratorT>
