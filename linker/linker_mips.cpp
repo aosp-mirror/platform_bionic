@@ -32,25 +32,22 @@
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
 
-template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator,
+template bool soinfo::relocate<plain_reloc_iterator>(const VersionTracker& version_tracker,
+                                                     plain_reloc_iterator&& rel_iterator,
                                                      const soinfo_list_t& global_group,
                                                      const soinfo_list_t& local_group);
 
 template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
+    const VersionTracker& version_tracker,
     packed_reloc_iterator<sleb128_decoder>&& rel_iterator,
     const soinfo_list_t& global_group,
     const soinfo_list_t& local_group);
 
 template <typename ElfRelIteratorT>
-bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
+bool soinfo::relocate(const VersionTracker& version_tracker,
+                      ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group,
                       const soinfo_list_t& local_group) {
-  VersionTracker version_tracker;
-
-  if (!version_tracker.init(this)) {
-    return false;
-  }
-
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
@@ -127,7 +124,8 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
   return true;
 }
 
-bool soinfo::mips_relocate_got(const soinfo_list_t& global_group,
+bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
+                               const soinfo_list_t& global_group,
                                const soinfo_list_t& local_group) {
   ElfW(Addr)** got = plt_got_;
   if (got == nullptr) {
@@ -151,21 +149,27 @@ bool soinfo::mips_relocate_got(const soinfo_list_t& global_group,
   }
 
   // Now for the global GOT entries...
-  ElfW(Sym)* sym = symtab_ + mips_gotsym_;
   got = plt_got_ + mips_local_gotno_;
-  for (size_t g = mips_gotsym_; g < mips_symtabno_; g++, sym++, got++) {
+  for (ElfW(Word) sym = mips_gotsym_; sym < mips_symtabno_; sym++, got++) {
     // This is an undefined reference... try to locate it.
-    const char* sym_name = get_string(sym->st_name);
+    const ElfW(Sym)* local_sym = symtab_ + sym;
+    const char* sym_name = get_string(local_sym->st_name);
     soinfo* lsi = nullptr;
     const ElfW(Sym)* s = nullptr;
-    if (!soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group, &s)) {
+
+    const version_info* vi = nullptr;
+
+    if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+      return false;
+    }
+
+    if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
       return false;
     }
 
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
-      s = &symtab_[g];
-      if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
+      if (ELF_ST_BIND(local_sym->st_info) != STB_WEAK) {
         DL_ERR("cannot locate \"%s\"...", sym_name);
         return false;
       }
