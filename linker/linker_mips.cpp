@@ -32,25 +32,22 @@
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
 
-template bool soinfo::relocate<plain_reloc_iterator>(plain_reloc_iterator&& rel_iterator,
+template bool soinfo::relocate<plain_reloc_iterator>(const VersionTracker& version_tracker,
+                                                     plain_reloc_iterator&& rel_iterator,
                                                      const soinfo_list_t& global_group,
                                                      const soinfo_list_t& local_group);
 
 template bool soinfo::relocate<packed_reloc_iterator<sleb128_decoder>>(
+    const VersionTracker& version_tracker,
     packed_reloc_iterator<sleb128_decoder>&& rel_iterator,
     const soinfo_list_t& global_group,
     const soinfo_list_t& local_group);
 
 template <typename ElfRelIteratorT>
-bool soinfo::relocate(ElfRelIteratorT&& rel_iterator,
+bool soinfo::relocate(const VersionTracker& version_tracker,
+                      ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group,
                       const soinfo_list_t& local_group) {
-  VersionTracker version_tracker;
-
-  if (!version_tracker.init(this)) {
-    return false;
-  }
-
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
 
