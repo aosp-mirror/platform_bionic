@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90fd66eb_3431b61b",
+        "filename": "libc/arch-arm/bionic/memchr.v7a.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1072203
+      },
+      "writtenOn": "2015-05-01T06:05:11Z",
+      "side": 1,
+      "message": "When David submitted this to newlib, this was replaced with \"ldrd    r5,r6,[r0],#8\", as it was suggested to be faster on A15 and showed no regression on A8/A9. May be worth testing",
+      "revId": "39d6219fe11276ad8d389ae2d5bbed63e2644db2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
