@@ -247,7 +247,9 @@ struct soinfo {
   uint32_t mips_symtabno_;
   uint32_t mips_local_gotno_;
   uint32_t mips_gotsym_;
-  bool mips_relocate_got(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool mips_relocate_got(const VersionTracker& version_tracker,
+                         const soinfo_list_t& global_group,
+                         const soinfo_list_t& local_group);
 
 #endif
   size_t ref_count_;

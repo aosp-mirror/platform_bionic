@@ -2941,7 +2941,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #endif
 
 #if defined(__mips__)
-  if (!mips_relocate_got(global_group, local_group)) {
+  if (!mips_relocate_got(version_tracker, global_group, local_group)) {
     return false;
   }
 #endif
