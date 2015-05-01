@@ -1728,6 +1728,27 @@ bool VersionTracker::init(const soinfo* si_from) {
   return init_verneed(si_from) && init_verdef(si_from);
 }
 
+bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
+                                 const char* sym_name, const version_info** vi) {
+  const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
+  ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+
+  if (sym_ver != VER_NDX_LOCAL && sym_ver != VER_NDX_GLOBAL) {
+    *vi = version_tracker.get_version_info(sym_ver);
+
+    if (*vi == nullptr) {
+      DL_ERR("cannot find verneed/verdef for version index=%d "
+          "referenced by symbol \"%s\" at \"%s\"", sym_ver, sym_name, get_soname());
+      return false;
+    }
+  } else {
+    // there is no version info
+    *vi = nullptr;
+  }
+
+  return true;
+}
+
 #if !defined(__mips__)
 #if defined(USE_RELA)
 static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
@@ -1776,27 +1797,16 @@ bool soinfo::relocate(ElfRelIteratorT&& rel_iterator, const soinfo_list_t& globa
 
     if (sym != 0) {
       sym_name = get_string(symtab_[sym].st_name);
-      const ElfW(Versym)* sym_ver_ptr = get_versym(sym);
-      ElfW(Versym) sym_ver = sym_ver_ptr == nullptr ? 0 : *sym_ver_ptr;
+      const version_info* vi = nullptr;
 
-      if (sym_ver == VER_NDX_LOCAL || sym_ver == VER_NDX_GLOBAL) {
-        // there is no version info for this one
-        if (!soinfo_do_lookup(this, sym_name, nullptr, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
-      } else {
-        const version_info* vi = version_tracker.get_version_info(sym_ver);
-
-        if (vi == nullptr) {
-          DL_ERR("cannot find verneed/verdef for version index=%d "
-              "referenced by symbol \"%s\" at \"%s\"", sym_ver, sym_name, get_soname());
-          return false;
-        }
-
-        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
+      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+        return false;
       }
+
+      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+        return false;
+      }
+
       if (s == nullptr) {
         // We only allow an undefined symbol if this is a weak reference...
         s = &symtab_[sym];
