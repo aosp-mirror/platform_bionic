@@ -312,6 +312,13 @@ static void AdjustProgramHeaderOffsets(typename ELF::Phdr* program_headers,
   for (size_t i = 0; i < count; ++i) {
     typename ELF::Phdr* program_header = &program_headers[i];
 
+    // Do not adjust PT_GNU_STACK - it confuses gdb and results
+    // in incorrect unwinding if the executable is stripped after
+    // packing.
+    if (program_header->p_type == PT_GNU_STACK) {
+      continue;
+    }
+
     if (program_header->p_offset > hole_start) {
       // The hole start is past this segment, so adjust offset.
       program_header->p_offset += hole_size;
