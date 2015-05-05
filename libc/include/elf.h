@@ -187,6 +187,11 @@ typedef struct {
 #define STT_LOPROC    13
 #define STT_HIPROC    15
 
+#define STV_DEFAULT   0
+#define STV_INTERNAL  1
+#define STV_HIDDEN    2
+#define STV_PROTECTED 3
+
 /* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
 #define NT_FPREGSET NT_PRFPREG
 
