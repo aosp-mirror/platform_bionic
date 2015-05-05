@@ -157,20 +157,34 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
     soinfo* lsi = nullptr;
     const ElfW(Sym)* s = nullptr;
 
-    const version_info* vi = nullptr;
+    ElfW(Word) st_visibility = (local_sym->st_other & 0x3);
 
-    if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
-      return false;
-    }
+    if (st_visibility == STV_DEFAULT) {
+      const version_info* vi = nullptr;
 
-    if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+        return false;
+      }
+
+      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+        return false;
+      }
+    } else if (st_visibility == STV_PROTECTED) {
+      if (local_sym->st_value == 0) {
+        DL_ERR("%s: invalid symbol \"%s\" (PROTECTED/UNDEFINED) ", get_soname(), sym_name);
+        return false;
+      }
+      s = local_sym;
+      lsi = this;
+    } else {
+      DL_ERR("%s: invalid symbol \"%s\" visibility: 0x%x", get_soname(), sym_name, st_visibility);
       return false;
     }
 
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       if (ELF_ST_BIND(local_sym->st_info) != STB_WEAK) {
-        DL_ERR("cannot locate \"%s\"...", sym_name);
+        DL_ERR("%s: cannot locate \"%s\"...", get_soname(), sym_name);
         return false;
       }
       *got = 0;
