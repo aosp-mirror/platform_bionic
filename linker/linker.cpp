@@ -1701,7 +1701,7 @@ bool VersionTracker::init_verneed(const soinfo* si_from) {
     const char* target_soname = si_from->get_string(verneed->vn_file);
     // find it in dependencies
     soinfo* target_si = si_from->get_children().find_if([&](const soinfo* si) {
-      return strcmp(si->get_soname(), target_soname) == 0;
+      return si->get_soname() != nullptr && strcmp(si->get_soname(), target_soname) == 0;
     });
 
     if (target_si == nullptr) {
