@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd24a5a6_7ffbe3f6",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-05-06T00:08:13Z",
+      "side": 1,
+      "message": "This should probably be dlfcn, but I\u0027m not sure.\n\nIt might be better to split this into another file, and call it something like pthread_dlfcn_test.cpp to indicate this is really a test that is also testing dl related functionality.",
+      "range": {
+        "startLine": 1003,
+        "startChar": 5,
+        "endLine": 1003,
+        "endChar": 12
+      },
+      "revId": "c876fa12e945c99df0c9075d5dbd7e46b2b86509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
