@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4d8435cc_89c1e182",
+        "filename": "libc/arch-common/bionic/asm_multiarch.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-07T17:36:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d39c1d0_57382400",
+      "revId": "8e3b1155e4134d41a52c15032f17e4be4b213eca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_8049ac43",
         "filename": "libc/arch-common/bionic/crtend.S",
         "patchSetId": 1
