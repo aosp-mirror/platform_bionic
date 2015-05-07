@@ -29,12 +29,15 @@
 #include "asm_multiarch.h"
 
 	.section .preinit_array, "aw"
+	ASM_ALIGN_TO_PTR_SIZE
 	ASM_PTR_SIZE(0)
 
 	.section .init_array, "aw"
+	ASM_ALIGN_TO_PTR_SIZE
 	ASM_PTR_SIZE(0)
 
 	.section .fini_array, "aw"
+	ASM_ALIGN_TO_PTR_SIZE
 	ASM_PTR_SIZE(0)
 
 #if defined(__linux__) && defined(__ELF__)
@@ -42,7 +45,9 @@
 #endif
 #if defined(__i386__) || defined(__x86_64__)
 	.section	.eh_frame,"a",@progbits
-	ASM_ALIGN(4)
+#if defined(__i386__)
+	.balign 4
+#endif
 	.type	__FRAME_END__, @object
 	.size	__FRAME_END__, 4
 __FRAME_END__:
