@@ -42,6 +42,7 @@ cc_library_static {
     cppflags: benchmark_cppflags,
     srcs: benchmarklib_src_files,
     static_libs: ["libbase"],
+    export_include_dirs: ["."],
     target: {
         darwin: {
             // Only supported on linux systems.
