@@ -269,6 +269,7 @@ bionic-unit-tests_src_files := \
     dlext_test.cpp \
     __cxa_thread_atexit_test.cpp \
     dlfcn_test.cpp \
+    pthread_dlfcn_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
 
@@ -346,6 +347,7 @@ bionic-unit-tests-glibc_src_files := \
     atexit_test.cpp \
     dlfcn_test.cpp \
     dl_test.cpp \
+    pthread_dlfcn_test.cpp \
 
 bionic-unit-tests-glibc_shared_libraries := \
     libdl_preempt_test_1 \
