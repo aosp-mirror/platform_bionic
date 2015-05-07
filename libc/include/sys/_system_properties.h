@@ -81,7 +81,6 @@ struct prop_msg
 #define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"
 #define PROP_PATH_SYSTEM_BUILD     "/system/build.prop"
 #define PROP_PATH_VENDOR_BUILD     "/vendor/build.prop"
-#define PROP_PATH_BOOTIMAGE_BUILD  "/build.prop"
 #define PROP_PATH_LOCAL_OVERRIDE   "/data/local.prop"
 #define PROP_PATH_FACTORY          "/factory/factory.prop"
 
