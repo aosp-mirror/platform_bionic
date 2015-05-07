@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "cd290587_548264d9",
+        "filename": "libc/arch-common/bionic/crtend.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1072549
+      },
+      "writtenOn": "2015-05-07T17:45:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d1e2d58_8049ac43",
+      "revId": "8e3b1155e4134d41a52c15032f17e4be4b213eca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d8435cc_b871665f",
         "filename": "libc/arch-common/bionic/crtend_so.S",
         "patchSetId": 1
