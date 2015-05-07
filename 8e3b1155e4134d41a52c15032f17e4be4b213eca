@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "2d39c1d0_57382400",
+        "filename": "libc/arch-common/bionic/asm_multiarch.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-07T02:50:39Z",
+      "side": 1,
+      "message": "(it\u0027s PTR_SIZE on the line above.)",
+      "revId": "8e3b1155e4134d41a52c15032f17e4be4b213eca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d1e2d58_8049ac43",
         "filename": "libc/arch-common/bionic/crtend.S",
         "patchSetId": 1
