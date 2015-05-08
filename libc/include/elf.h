@@ -34,6 +34,11 @@
 
 #include <machine/elf_machdep.h>
 
+#define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
+#define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
+
+typedef __s64 Elf32_Sxword;
+
 typedef struct {
   __u32 a_type;
   union {
