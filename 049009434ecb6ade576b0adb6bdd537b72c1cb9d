@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d1e2d58_52557120",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-08T06:02:35Z",
+      "side": 1,
+      "message": "why don\u0027t we need a cast on the 32-bit one?",
+      "revId": "049009434ecb6ade576b0adb6bdd537b72c1cb9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
