@@ -37,6 +37,7 @@
  */
 
     .fpu    neon
+    .syntax unified
 
 ENTRY(__memset_chk)
         cmp         r2, r3
@@ -98,9 +99,9 @@ ENTRY(memset)
 1:      bge         2f
         vst1.32     {d0[0]}, [r0]!
 2:      movs        ip, r2, lsl #31
-        strmib      r1, [r0], #1
-        strcsb      r1, [r0], #1
-        strcsb      r1, [r0], #1
+        strbmi      r1, [r0], #1
+        strbcs      r1, [r0], #1
+        strbcs      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
 END(memset)
