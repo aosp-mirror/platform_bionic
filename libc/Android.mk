@@ -941,10 +941,6 @@ LOCAL_SRC_FILES := $(libc_bionic_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
 
-# memcpy.S, memchr.S, etc. do not compile with Clang.
-LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
-LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
-
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
 LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
@@ -971,10 +967,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_bionic_ndk_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
-
-# memcpy.S, memchr.S, etc. do not compile with Clang.
-LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
-LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
@@ -1023,10 +1015,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_pthread_src_files)
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -Wframe-larger-than=2048 \
-
-# memcpy.S, memchr.S, etc. do not compile with Clang.
-LOCAL_CLANG_ASFLAGS_arm += -no-integrated-as
-LOCAL_CLANG_ASFLAGS_arm64 += -no-integrated-as
 
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags) -Wold-style-cast
