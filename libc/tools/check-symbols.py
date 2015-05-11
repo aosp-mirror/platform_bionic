@@ -13,9 +13,21 @@ arch = re.sub(r'.*/linux-x86/([^/]+)/.*', r'\1', toolchain)
 sys.stderr.write('Checking symbols for arch "%s"...\n' % arch)
 
 def GetSymbols(library, functions_or_variables):
+  global api
+  global arch
+
   api = '9'
   if library == 'libm' and arch == 'arm':
     api = '3'
+
+  # There were no 64-bit ABIs before API level 21.
+  if '64' in arch:
+    api = '21'
+
+  # What GCC calls aarch64, Android calls arm64.
+  if arch == 'aarch64':
+    arch = 'arm64'
+
   path = '%s/development/ndk/platforms/android-%s/arch-%s/symbols/%s.so.%s.txt' % (os.environ['ANDROID_BUILD_TOP'], api, arch, library, functions_or_variables)
   symbols = set()
   for line in open(path, 'r'):
@@ -26,7 +38,11 @@ def GetSymbols(library, functions_or_variables):
 def CheckSymbols(library, functions_or_variables):
   expected_symbols = GetSymbols(library, functions_or_variables)
 
-  so_file = '%s/system/lib/%s.so' % (os.environ['ANDROID_PRODUCT_OUT'], library)
+  lib_dir = 'lib'
+  if '64' in arch:
+    lib_dir = 'lib64'
+
+  so_file = '%s/system/%s/%s.so' % (os.environ['ANDROID_PRODUCT_OUT'], lib_dir, library)
 
   # Example readelf output:
   #   264: 0001623c     4 FUNC    GLOBAL DEFAULT    8 cabsf
@@ -38,7 +54,7 @@ def CheckSymbols(library, functions_or_variables):
   r = re.compile(r' +\d+: [0-9a-f]+ +\d+ (FUNC|OBJECT) +\S+ +\S+ +\d+ (\S+)')
 
   actual_symbols = set()
-  for line in subprocess.check_output(['readelf', '--dyn-syms', so_file]).split('\n'):
+  for line in subprocess.check_output(['readelf', '-W', '--dyn-syms', so_file]).split('\n'):
     m = r.match(line)
     if m:
       if m.group(1) == 'FUNC' and functions_or_variables == 'functions':
@@ -53,6 +69,12 @@ def CheckSymbols(library, functions_or_variables):
     sys.stderr.write('%d missing %s in %s for %s:\n' % (len(missing), functions_or_variables, library, arch))
     for miss in sorted(missing):
       sys.stderr.write('  %s\n' % miss)
+
+  extra = actual_symbols - expected_symbols
+  if len(extra) > 0:
+    sys.stderr.write('%d extra %s in %s for %s:\n' % (len(extra), functions_or_variables, library, arch))
+    for s in sorted(extra):
+      sys.stderr.write('  %s\n' % s)
 
   return len(missing) == 0
 
