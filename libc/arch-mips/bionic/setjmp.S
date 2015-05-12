@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
