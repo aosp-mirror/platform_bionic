@@ -918,13 +918,17 @@ static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_s
 }
 
 
-// This is used by dlsym(3).  It performs symbol lookup only within the
-// specified soinfo object and its dependencies in breadth first order.
-const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
+                                            soinfo** found, SymbolName& symbol_name) {
   const ElfW(Sym)* result = nullptr;
-  SymbolName symbol_name(name);
+  bool skip_lookup = skip_until != nullptr;
 
-  walk_dependencies_tree(&si, 1, [&](soinfo* current_soinfo) {
+  walk_dependencies_tree(&root, 1, [&](soinfo* current_soinfo) {
+    if (skip_lookup) {
+      skip_lookup = current_soinfo != skip_until;
+      return true;
+    }
+
     if (!current_soinfo->find_symbol_by_name(symbol_name, nullptr, &result)) {
       result = nullptr;
       return false;
@@ -939,6 +943,13 @@ const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* nam
   });
 
   return result;
+}
+
+// This is used by dlsym(3).  It performs symbol lookup only within the
+// specified soinfo object and its dependencies in breadth first order.
+const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+  SymbolName symbol_name(name);
+  return dlsym_handle_lookup(si, nullptr, found, symbol_name);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -978,31 +989,13 @@ const ElfW(Sym)* dlsym_linear_lookup(const char* name,
     }
   }
 
-  // If not found - look into local_group unless
-  // caller is part of the global group in which
+  // If not found - use dlsym_handle_lookup for caller's
+  // local_group unless it is part of the global group in which
   // case we already did it.
   if (s == nullptr && caller != nullptr &&
       (caller->get_rtld_flags() & RTLD_GLOBAL) == 0) {
-    soinfo* local_group_root = caller->get_local_group_root();
-
-    if (handle == RTLD_DEFAULT) {
-      start = local_group_root;
-    }
-
-    for (soinfo* si = start; si != nullptr; si = si->next) {
-      if (si->get_local_group_root() != local_group_root) {
-        break;
-      }
-
-      if (!si->find_symbol_by_name(symbol_name, nullptr, &s)) {
-        return nullptr;
-      }
-
-      if (s != nullptr) {
-        *found = si;
-        break;
-      }
-    }
+    return dlsym_handle_lookup(caller->get_local_group_root(),
+        (handle == RTLD_NEXT) ? caller : nullptr, found, symbol_name);
   }
 
   if (s != nullptr) {
