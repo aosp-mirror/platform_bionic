@@ -71,21 +71,78 @@ TEST(dlfcn, dlsym_from_sofile) {
   void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_LAZY | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  // check that we cant find '_test_dlsym_symbol' via dlsym(RTLD_DEFAULT)
+  // check that we can't find '_test_dlsym_symbol' via dlsym(RTLD_DEFAULT)
   void* symbol = dlsym(RTLD_DEFAULT, "test_dlsym_symbol");
   ASSERT_TRUE(symbol == nullptr);
   ASSERT_SUBSTR("undefined symbol: test_dlsym_symbol", dlerror());
 
   typedef int* (*fn_t)();
-  fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_DEFAULT"));
+  fn_t lookup_dlsym_symbol_using_RTLD_DEFAULT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_DEFAULT"));
+  ASSERT_TRUE(lookup_dlsym_symbol_using_RTLD_DEFAULT != nullptr) << dlerror();
 
-  ASSERT_TRUE(fn != nullptr) << dlerror();
-
-  int* ptr = fn();
+  int* ptr = lookup_dlsym_symbol_using_RTLD_DEFAULT();
   ASSERT_TRUE(ptr != nullptr) << dlerror();
   ASSERT_EQ(42, *ptr);
 
+  fn_t lookup_dlsym_symbol2_using_RTLD_DEFAULT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol2_using_RTLD_DEFAULT"));
+  ASSERT_TRUE(lookup_dlsym_symbol2_using_RTLD_DEFAULT != nullptr) << dlerror();
+
+  ptr = lookup_dlsym_symbol2_using_RTLD_DEFAULT();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(44, *ptr);
+
+  fn_t lookup_dlsym_symbol_using_RTLD_NEXT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_NEXT"));
+  ASSERT_TRUE(lookup_dlsym_symbol_using_RTLD_NEXT != nullptr) << dlerror();
+
+  ptr = lookup_dlsym_symbol_using_RTLD_NEXT();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(43, *ptr);
+
   dlclose(handle);
+}
+
+TEST(dlfcn, dlsym_from_sofile_with_preload) {
+  void* preload = dlopen("libtest_dlsym_from_this_grandchild.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(preload != nullptr) << dlerror();
+
+  void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  // check that we can't find '_test_dlsym_symbol' via dlsym(RTLD_DEFAULT)
+  void* symbol = dlsym(RTLD_DEFAULT, "test_dlsym_symbol");
+  ASSERT_TRUE(symbol == nullptr);
+  ASSERT_SUBSTR("undefined symbol: test_dlsym_symbol", dlerror());
+
+  typedef int* (*fn_t)();
+  fn_t lookup_dlsym_symbol_using_RTLD_DEFAULT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_DEFAULT"));
+  ASSERT_TRUE(lookup_dlsym_symbol_using_RTLD_DEFAULT != nullptr) << dlerror();
+
+  int* ptr = lookup_dlsym_symbol_using_RTLD_DEFAULT();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(42, *ptr);
+
+  fn_t lookup_dlsym_symbol2_using_RTLD_DEFAULT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol2_using_RTLD_DEFAULT"));
+  ASSERT_TRUE(lookup_dlsym_symbol2_using_RTLD_DEFAULT != nullptr) << dlerror();
+
+  ptr = lookup_dlsym_symbol2_using_RTLD_DEFAULT();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(44, *ptr);
+
+  fn_t lookup_dlsym_symbol_using_RTLD_NEXT =
+      reinterpret_cast<fn_t>(dlsym(handle, "lookup_dlsym_symbol_using_RTLD_NEXT"));
+  ASSERT_TRUE(lookup_dlsym_symbol_using_RTLD_NEXT != nullptr) << dlerror();
+
+  ptr = lookup_dlsym_symbol_using_RTLD_NEXT();
+  ASSERT_TRUE(ptr != nullptr) << dlerror();
+  ASSERT_EQ(43, *ptr);
+
+  dlclose(handle);
+  dlclose(preload);
 }
 
 TEST(dlfcn, dlsym_with_dependencies) {
