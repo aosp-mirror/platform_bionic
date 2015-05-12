@@ -32,6 +32,8 @@
 #include <machine/cpu-features.h>
 #include <private/bionic_asm.h>
 
+.syntax unified
+
 ENTRY(strcpy)
 	pld	[r1, #0]
 	eor	r2, r0, r1
@@ -108,15 +110,15 @@ ENTRY(strcpy)
 #ifdef __ARMEB__
 	tst	r2, #0xff00
 	iteet	ne
-	strneh	r2, [ip], #2
+	strhne	r2, [ip], #2
 	lsreq	r2, r2, #8
-	streqb	r2, [ip]
+	strbeq	r2, [ip]
 	tstne	r2, #0xff
 #else
 	tst	r2, #0xff
 	itet	ne
-	strneh	r2, [ip], #2
-	streqb	r2, [ip]
+	strhne	r2, [ip], #2
+	strbeq	r2, [ip]
 	tstne	r2, #0xff00
 #endif
 	bne	5b

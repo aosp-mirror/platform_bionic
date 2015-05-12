@@ -35,6 +35,7 @@
  */
 
     .fpu    neon
+    .syntax unified
 
 ENTRY(__memset_chk)
         cmp         r2, r3
@@ -100,9 +101,9 @@ ENTRY(memset)
 1:      bge         2f
         vst1.32     {d0[0]}, [r0]!
 2:      movs        ip, r2, lsl #31
-        strmib      r1, [r0], #1
-        strcsb      r1, [r0], #1
-        strcsb      r1, [r0], #1
+        strbmi      r1, [r0], #1
+        strbcs      r1, [r0], #1
+        strbcs      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
 END(memset)
@@ -131,11 +132,11 @@ ENTRY_PRIVATE(__memset_large_copy)
         orr         r1, r1, r1, lsr #16
 
         movs        r12, r3, lsl #31
-        strcsb      r1, [r0], #1    /* can't use strh (alignment unknown) */
-        strcsb      r1, [r0], #1
-        strmib      r1, [r0], #1
+        strbcs      r1, [r0], #1    /* can't use strh (alignment unknown) */
+        strbcs      r1, [r0], #1
+        strbmi      r1, [r0], #1
         subs        r2, r2, r3
-        ldmlsfd     sp!, {r0, r4-r7, lr}   /* return */
+        popls       {r0, r4-r7, lr}   /* return */
         bxls        lr
 
         /* align the destination to a cache-line */
@@ -155,9 +156,9 @@ ENTRY_PRIVATE(__memset_large_copy)
 
         /* conditionally writes 0 to 7 words (length in r3) */
         movs        r3, r3, lsl #28
-        stmcsia     r0!, {r1, lr}
-        stmcsia     r0!, {r1, lr}
-        stmmiia     r0!, {r1, lr}
+        stmcs       r0!, {r1, lr}
+        stmcs       r0!, {r1, lr}
+        stmmi       r0!, {r1, lr}
         movs        r3, r3, lsl #2
         strcs       r1, [r0], #4
 
@@ -172,13 +173,13 @@ ENTRY_PRIVATE(__memset_large_copy)
 
         /* conditionally stores 0 to 31 bytes */
         movs        r2, r2, lsl #28
-        stmcsia     r0!, {r1,r3,r12,lr}
-        stmmiia     r0!, {r1, lr}
+        stmcs       r0!, {r1,r3,r12,lr}
+        stmmi       r0!, {r1, lr}
         movs        r2, r2, lsl #2
         strcs       r1, [r0], #4
-        strmih      r1, [r0], #2
+        strhmi      r1, [r0], #2
         movs        r2, r2, lsl #2
-        strcsb      r1, [r0]
+        strbcs      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, lr}
         bx          lr
 END(__memset_large_copy)
