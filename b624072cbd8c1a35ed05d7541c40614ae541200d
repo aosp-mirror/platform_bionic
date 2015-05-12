@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad3e91ea_ebc88fa4",
+        "filename": "libc/Blueprints",
+        "patchSetId": 1
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-12T18:49:41Z",
+      "side": 0,
+      "message": "looks like this was just a copy \u0026 paste from netbsd and openbsd (which do have this directory).",
+      "revId": "b624072cbd8c1a35ed05d7541c40614ae541200d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
