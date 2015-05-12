@@ -385,11 +385,26 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 # Library to check RTLD_LOCAL with dlsym in 'this'
 # -----------------------------------------------------------------------------
-libtest_dlsym_from_this_src_files := dlsym_from_this.cpp
+libtest_dlsym_from_this_src_files := dlsym_from_this_symbol.cpp
+
+libtest_dlsym_from_this_shared_libraries_target := libdl
+libtest_dlsym_from_this_shared_libraries := libtest_dlsym_from_this_child
 
 module := libtest_dlsym_from_this
-libtest_dlsym_from_this_shared_libraries_target := libdl
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_child_src_files := dlsym_from_this_functions.cpp
+
+libtest_dlsym_from_this_child_shared_libraries := libtest_dlsym_from_this_grandchild
+
+module := libtest_dlsym_from_this_child
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_grandchild_src_files := dlsym_from_this_symbol2.cpp
+
+module := libtest_dlsym_from_this_grandchild
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
