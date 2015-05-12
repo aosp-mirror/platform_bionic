@@ -809,7 +809,6 @@ cc_library_static {
     include_dirs: libc_common_c_includes,
     local_include_dirs: [
         "upstream-freebsd/android/include",
-        "upstream-freebsd/lib/libc/include",
     ],
 
     name: "libc_freebsd",
