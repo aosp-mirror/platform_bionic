@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "utils.h"
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -21,7 +23,7 @@
 
 #include <string>
 
-#include "utils.h"
+#include <base/stringprintf.h>
 
 int Round(int n) {
   int base = 1;
@@ -72,10 +74,7 @@ std::string PrettyInt(long value, size_t base) {
       break;
     }
   }
-  char* s = NULL;
-  asprintf(&s, "%s%" PRId64 "%s", (negative_number ? "-" : ""),
-           count / kAmountPerUnit[i], kUnitStrings[i]);
-  std::string result(s);
-  free(s);
-  return result;
+  return android::base::StringPrintf("%s%" PRId64 "%s",
+                                     negative_number ? "-" : "",
+                                     count / kAmountPerUnit[i], kUnitStrings[i]);
 }
