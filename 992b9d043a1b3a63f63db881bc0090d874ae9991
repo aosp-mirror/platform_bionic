@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed2329ea_e1142af6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-13T20:01:22Z",
+      "side": 1,
+      "message": "we should not close this one... scope guard in it\u0027s current form will.",
+      "revId": "992b9d043a1b3a63f63db881bc0090d874ae9991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
