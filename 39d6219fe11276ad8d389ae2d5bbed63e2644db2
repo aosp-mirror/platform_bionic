@@ -34,6 +34,24 @@
       "revId": "39d6219fe11276ad8d389ae2d5bbed63e2644db2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d9a7579_dbabbf80",
+        "filename": "libc/arch-arm/bionic/memchr.v7a.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1070513
+      },
+      "writtenOn": "2015-05-14T10:59:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90fd66eb_3431b61b",
+      "revId": "39d6219fe11276ad8d389ae2d5bbed63e2644db2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
