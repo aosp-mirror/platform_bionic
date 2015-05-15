@@ -205,15 +205,6 @@ static bool have_siginfo(int signum) {
 }
 
 static void send_debuggerd_packet(siginfo_t* info) {
-  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
-    // process has disabled core dumps and PTRACE_ATTACH, and does not want to be dumped.
-    // Honor that intention by not connecting to debuggerd and asking it
-    // to dump our internal state.
-    __libc_format_log(ANDROID_LOG_INFO, "libc",
-                      "Suppressing debuggerd output because prctl(PR_GET_DUMPABLE)==0");
-    return;
-  }
-
   // Mutex to prevent multiple crashing threads from trying to talk
   // to debuggerd at the same time.
   static pthread_mutex_t crash_mutex = PTHREAD_MUTEX_INITIALIZER;
