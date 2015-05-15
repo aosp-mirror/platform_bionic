@@ -2429,8 +2429,7 @@ static int nullify_closed_stdio() {
   /* If /dev/null is not one of the stdio file descriptors, close it. */
   if (dev_null > 2) {
     TRACE("[ Closing /dev/null file-descriptor=%d]", dev_null);
-    status = TEMP_FAILURE_RETRY(close(dev_null));
-    if (status == -1) {
+    if (close(dev_null) == -1) {
       DL_ERR("close failed: %s", strerror(errno));
       return_value = -1;
     }
