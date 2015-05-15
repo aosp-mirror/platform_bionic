@@ -86,5 +86,5 @@ __sseek(void *cookie, fpos_t offset, int whence)
 int
 __sclose(void *cookie)
 {
-	return TEMP_FAILURE_RETRY(close(((FILE *)cookie)->_file));
+	return close(((FILE *)cookie)->_file);
 }
