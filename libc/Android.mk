@@ -1371,6 +1371,7 @@ LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
+LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
@@ -1501,6 +1502,7 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
+LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
 LOCAL_SRC_FILES := $(libstdcxx_common_src_files)
 LOCAL_MODULE:= libstdc++
