@@ -97,7 +97,7 @@
 
 #define SOINFO_VERSION 2
 
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
 #define SOINFO_NAME_LEN 128
 #endif
 
@@ -172,7 +172,7 @@ class VersionTracker {
 struct soinfo {
  public:
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
  private:
   char old_name_[SOINFO_NAME_LEN];
 #endif
@@ -183,13 +183,13 @@ struct soinfo {
   ElfW(Addr) base;
   size_t size;
 
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
   ElfW(Dyn)* dynamic;
 
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
 #endif
@@ -305,7 +305,7 @@ struct soinfo {
   bool is_gnu_hash() const;
 
   bool inline has_min_version(uint32_t min_version __unused) const {
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
     return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
 #else
     return true;
