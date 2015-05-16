@@ -1544,7 +1544,7 @@ static void soinfo_unload(soinfo* root) {
           }
         }
       } else {
-#if !defined(__arm__)
+#if !defined(__work_around_b_19059885__)
         __libc_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
 #else
         PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
@@ -2270,7 +2270,7 @@ void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
 }
 
 const char* soinfo::get_realpath() const {
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
   if (has_min_version(2)) {
     return realpath_.c_str();
   } else {
@@ -2282,7 +2282,7 @@ const char* soinfo::get_realpath() const {
 }
 
 const char* soinfo::get_soname() const {
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
   if (has_min_version(2)) {
     return soname_;
   } else {
@@ -2820,7 +2820,7 @@ bool soinfo::prelink_image() {
   for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_SONAME) {
       soname_ = get_string(d->d_un.d_val);
-#if defined(__arm__)
+#if defined(__work_around_b_19059885__)
       strlcpy(old_name_, soname_, sizeof(old_name_));
 #endif
       break;
