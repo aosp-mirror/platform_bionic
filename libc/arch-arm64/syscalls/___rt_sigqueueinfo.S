@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__rt_sigqueueinfo)
+ENTRY(___rt_sigqueueinfo)
     mov     x8, __NR_rt_sigqueueinfo
     svc     #0
 
@@ -11,5 +11,5 @@ ENTRY(__rt_sigqueueinfo)
     b.hi    __set_errno_internal
 
     ret
-END(__rt_sigqueueinfo)
-.hidden __rt_sigqueueinfo
+END(___rt_sigqueueinfo)
+.hidden ___rt_sigqueueinfo

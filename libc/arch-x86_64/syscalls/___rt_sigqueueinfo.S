@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__rt_sigqueueinfo)
+ENTRY(___rt_sigqueueinfo)
     movl    $__NR_rt_sigqueueinfo, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,5 +12,5 @@ ENTRY(__rt_sigqueueinfo)
     call    __set_errno_internal
 1:
     ret
-END(__rt_sigqueueinfo)
-.hidden __rt_sigqueueinfo
+END(___rt_sigqueueinfo)
+.hidden ___rt_sigqueueinfo

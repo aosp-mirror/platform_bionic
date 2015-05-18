@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__rt_sigqueueinfo)
+ENTRY(___rt_sigqueueinfo)
     mov     ip, r7
     ldr     r7, =__NR_rt_sigqueueinfo
     swi     #0
@@ -11,4 +11,5 @@ ENTRY(__rt_sigqueueinfo)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(__rt_sigqueueinfo)
+END(___rt_sigqueueinfo)
+.hidden ___rt_sigqueueinfo

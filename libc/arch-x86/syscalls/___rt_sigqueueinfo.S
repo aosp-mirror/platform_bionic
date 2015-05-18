@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__rt_sigqueueinfo)
+ENTRY(___rt_sigqueueinfo)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -28,4 +28,5 @@ ENTRY(__rt_sigqueueinfo)
     popl    %ecx
     popl    %ebx
     ret
-END(__rt_sigqueueinfo)
+END(___rt_sigqueueinfo)
+.hidden ___rt_sigqueueinfo
