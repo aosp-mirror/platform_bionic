@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__rt_sigqueueinfo)
+ENTRY(___rt_sigqueueinfo)
     .set push
     .set noreorder
     li v0, __NR_rt_sigqueueinfo
@@ -22,5 +22,5 @@ ENTRY(__rt_sigqueueinfo)
     j t9
     move ra, t0
     .set pop
-END(__rt_sigqueueinfo)
-.hidden __rt_sigqueueinfo
+END(___rt_sigqueueinfo)
+.hidden ___rt_sigqueueinfo
