@@ -31,7 +31,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-extern "C" int __rt_sigqueueinfo(pid_t, int, siginfo_t*);
+extern "C" int ___rt_sigqueueinfo(pid_t, int, siginfo_t*);
 
 int sigqueue(pid_t pid, int signo, const sigval value) {
   siginfo_t info;
@@ -42,5 +42,5 @@ int sigqueue(pid_t pid, int signo, const sigval value) {
   info.si_uid = getuid();
   info.si_value = value;
 
-  return __rt_sigqueueinfo(pid, signo, &info);
+  return ___rt_sigqueueinfo(pid, signo, &info);
 }
