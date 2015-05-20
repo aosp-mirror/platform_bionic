@@ -46,6 +46,29 @@
       "revId": "85ced1c4610d4007c72e6e204d8036ac802e54bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_f4a68938",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-05-20T20:53:18Z",
+      "side": 1,
+      "message": "I think this weakens the test for bionic. You can move the EXPECT_EQ into the #if since the test is really do you get an 8MiB reported stack on bionic.\n\nIn fact, you could move all of the stack stuff into the bionic ifdef it it really doesn\u0027t apply to glibc.",
+      "range": {
+        "startLine": 1185,
+        "startChar": 2,
+        "endLine": 1185,
+        "endChar": 11
+      },
+      "revId": "85ced1c4610d4007c72e6e204d8036ac802e54bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

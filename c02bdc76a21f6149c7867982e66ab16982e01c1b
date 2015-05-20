@@ -46,6 +46,30 @@
       "revId": "c02bdc76a21f6149c7867982e66ab16982e01c1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6e217b_bd28f739",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-05-20T20:53:18Z",
+      "side": 0,
+      "message": "Looking at the code, I don\u0027t think both cases are necessary, but I think keeping one case where RLIMIT_STACK is not RLIM_INFINITY is useful since it exercises a slightly different path for the bionic code. You can put it in a bionic ifdef, but if glibc isn\u0027t quite the same as bionic here.",
+      "parentUuid": "6d7ad934_401b1cf4",
+      "range": {
+        "startLine": 1183,
+        "startChar": 0,
+        "endLine": 1220,
+        "endChar": 31
+      },
+      "revId": "c02bdc76a21f6149c7867982e66ab16982e01c1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
