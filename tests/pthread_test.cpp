@@ -1154,6 +1154,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   // The two methods of asking for the stack size should agree.
   EXPECT_EQ(stack_size, stack_size2);
 
+#if defined(__BIONIC__)
   // What does /proc/self/maps' [stack] line say?
   void* maps_stack_hi = NULL;
   FILE* fp = fopen("/proc/self/maps", "r");
@@ -1170,26 +1171,24 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   }
   fclose(fp);
 
+  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
+  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
+  // region isn't very interesting.
+  EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
+
   // The stack size should correspond to RLIMIT_STACK.
   rlimit rl;
   ASSERT_EQ(0, getrlimit(RLIMIT_STACK, &rl));
   uint64_t original_rlim_cur = rl.rlim_cur;
-#if defined(__BIONIC__)
   if (rl.rlim_cur == RLIM_INFINITY) {
     rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
   }
-#endif
   EXPECT_EQ(rl.rlim_cur, stack_size);
 
   auto guard = make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
-
-  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
-  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
-  // region isn't very interesting.
-  EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
 
   //
   // What if RLIMIT_STACK is smaller than the stack's current extent?
@@ -1218,6 +1217,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 
   EXPECT_EQ(stack_size, stack_size2);
   ASSERT_EQ(6666U, stack_size);
+#endif
 }
 
 static void pthread_attr_getstack_18908062_helper(void*) {
