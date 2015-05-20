@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d6e217b_cf65f1cd",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-05-20T19:31:46Z",
+      "side": 0,
+      "message": "I\u0027m not sure I agree with the removal of these tests. It\u0027s not clear, do you think it\u0027s impossible to hit these cases, and that\u0027s why they are not appropriate?",
+      "range": {
+        "startLine": 1183,
+        "startChar": 0,
+        "endLine": 1220,
+        "endChar": 31
+      },
+      "revId": "c02bdc76a21f6149c7867982e66ab16982e01c1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
