@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2d6e217b_d295953c",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-05-20T22:08:42Z",
+      "side": 1,
+      "message": "Shouldn\u0027t getcwd be defined for clang to call __getcwd_chk,\nlike other fortified functions in string.h?",
+      "range": {
+        "startLine": 258,
+        "startChar": 22,
+        "endLine": 258,
+        "endChar": 27
+      },
+      "revId": "86742b20fb938a658e54341185162ad7045cb764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d7ad934_8ab59e2f",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
