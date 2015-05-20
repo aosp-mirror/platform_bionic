@@ -69,6 +69,30 @@
       "revId": "85ced1c4610d4007c72e6e204d8036ac802e54bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_4a2496a9",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1185,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-05-20T21:46:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7ad934_f4a68938",
+      "range": {
+        "startLine": 1185,
+        "startChar": 2,
+        "endLine": 1185,
+        "endChar": 11
+      },
+      "revId": "85ced1c4610d4007c72e6e204d8036ac802e54bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
