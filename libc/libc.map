@@ -1336,6 +1336,7 @@ LIBC_N {
   global:
     __fread_chk;
     __fwrite_chk;
+    __getcwd_chk;
     getgrgid_r;
     getgrnam_r;
 } LIBC;

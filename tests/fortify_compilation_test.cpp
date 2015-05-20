@@ -262,3 +262,11 @@ void test_fwrite_too_big() {
   // clang should emit a warning, but doesn't
   fwrite(buf, 1, 5, stdout);
 }
+
+void test_getcwd() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__getcwd_dest_size_error' declared with attribute error: getcwd called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  getcwd(buf, 5);
+}
