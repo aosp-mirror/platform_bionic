@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d7ad934_8ab59e2f",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-05-20T22:05:42Z",
+      "side": 1,
+      "message": "Please put this after the test definition. Due to restrictions in cts, you need to make sure that there are always the same set of tests in all ways that this can be compiled, even if some tests don\u0027t do anything.",
+      "range": {
+        "startLine": 626,
+        "startChar": 0,
+        "endLine": 626,
+        "endChar": 17
+      },
+      "revId": "86742b20fb938a658e54341185162ad7045cb764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
