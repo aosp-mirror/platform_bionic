@@ -151,7 +151,6 @@ int utimensat(int, const char*, const struct timespec times[2], int)  all
 off_t lseek(int, off_t, int) arm,mips,x86
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
 off_t lseek|lseek64(int, off_t, int) arm64,mips64,x86_64
-int ftruncate(int, off_t) arm,mips,x86
 int ftruncate64(int, off64_t) arm,mips,x86
 int ftruncate|ftruncate64(int, off_t) arm64,mips64,x86_64
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) arm,mips,x86
