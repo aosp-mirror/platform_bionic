@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfdb1c1_b9dfb901",
+        "filename": "libc/bionic/ftruncate.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1018087
+      },
+      "writtenOn": "2015-05-20T21:16:06Z",
+      "side": 1,
+      "message": "Actually, you shouldn\u0027t need this: ftruncate64 does the check.",
+      "revId": "31fab53b652cd35b77d44ff8079d5f039d38eb08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
