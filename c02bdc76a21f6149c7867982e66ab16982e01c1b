@@ -22,6 +22,30 @@
       "revId": "c02bdc76a21f6149c7867982e66ab16982e01c1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d7ad934_401b1cf4",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-05-20T20:28:58Z",
+      "side": 0,
+      "message": "I think this part can be removed, because it doesn\u0027t make sense to limit the stack size to be smaller\nthan what it is currently using. Firstly, the kernel only checks the limit when the stack needs\nto grow, so making stack size limit smaller than what it is using doesn\u0027t make sense to the kernel.\nSecondly, glibc doesn\u0027t consider the stack size should be exactly the same as the stack size limit.\nSo this part only tests bionic specific implementation of considering stack size limit as stack size.\nIf you really prefer to keep it, I think at least we should include it in __BIONIC__ macro guard.",
+      "parentUuid": "2d6e217b_cf65f1cd",
+      "range": {
+        "startLine": 1183,
+        "startChar": 0,
+        "endLine": 1220,
+        "endChar": 31
+      },
+      "revId": "c02bdc76a21f6149c7867982e66ab16982e01c1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
