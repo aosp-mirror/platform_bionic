@@ -176,6 +176,15 @@ TEST(unistd, ftruncate64) {
   ASSERT_EQ(123, sb.st_size);
 }
 
+TEST(unistd, ftruncate_negative) {
+  TemporaryFile tf;
+  errno = 0;
+  int rc = ftruncate(tf.fd, -123);
+  int err = errno;
+  ASSERT_EQ(-1, rc);
+  ASSERT_EQ(EINVAL, err);
+}
+
 static bool g_pause_test_flag = false;
 static void PauseTestSignalHandler(int) {
   g_pause_test_flag = true;
