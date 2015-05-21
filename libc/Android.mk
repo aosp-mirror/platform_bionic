@@ -131,6 +131,7 @@ libc_bionic_ndk_src_files := \
     bionic/ffs.cpp \
     bionic/flockfile.cpp \
     bionic/fpclassify.cpp \
+    bionic/ftruncate.cpp \
     bionic/futimens.cpp \
     bionic/getcwd.cpp \
     bionic/gethostname.cpp \
