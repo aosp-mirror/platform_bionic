@@ -49,6 +49,9 @@ endif
 test_cppflags = \
     -std=gnu++11 \
 
+libBionicStandardTests_src_files_target := \
+    libdl_test.cpp \
+
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
