@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d031dc0_2d421bff",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-22T17:44:38Z",
+      "side": 1,
+      "message": "why? If p_align is \u003e page_size for some other architecture shouldn\u0027t we still adjust it?",
+      "revId": "818c14107d07de5ba064798c52d9030904591f2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
