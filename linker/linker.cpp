@@ -965,7 +965,7 @@ const ElfW(Sym)* dlsym_linear_lookup(const char* name,
   soinfo* start = solist;
 
   if (handle == RTLD_NEXT) {
-    if (caller == nullptr || caller->next == nullptr) {
+    if (caller == nullptr) {
       return nullptr;
     } else {
       start = caller->next;
