@@ -17,6 +17,7 @@
 #include <dlfcn.h>
 #include <link.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <android/dlext.h>
 
 // These are stubs for functions that are actually defined
@@ -38,3 +39,6 @@ void android_get_LD_LIBRARY_PATH(char* buffer __unused, size_t buffer_size __unu
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path __unused) { }
 
 void* android_dlopen_ext(const char* filename __unused, int flag __unused, const android_dlextinfo* extinfo __unused) { return 0; }
+
+void android_set_application_target_sdk_version(uint32_t target __unused) { }
+uint32_t android_get_application_target_sdk_version() { return 0; }
