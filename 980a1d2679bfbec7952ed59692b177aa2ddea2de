@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd8f45ac_619b70bd",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T16:04:42Z",
+      "side": 1,
+      "message": "warning? We are unlikely to hit it but it is better not to trap user in the state where binary cannot be unpacked because of unusual elf-file.",
+      "revId": "980a1d2679bfbec7952ed59692b177aa2ddea2de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
