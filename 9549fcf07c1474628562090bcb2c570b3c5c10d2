@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4d0995dc_6f2d20c1",
+        "filename": "libc/bionic/android_app_sdk_version.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T21:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d0995dc_973a5092",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d99cdfb_22432a23",
         "filename": "libc/include/android/appsdk.h",
         "patchSetId": 2
@@ -48,6 +66,24 @@
       "side": 1,
       "message": "api-level.h is included by sys/cdefs.h I would like to avoid this being included everywhere.",
       "parentUuid": "8d99cdfb_22432a23",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_0f48e41d",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T21:37:31Z",
+      "side": 1,
+      "message": "any suggestions for the file name? maybe just sdk.h? or application_sdk_version.h?",
+      "parentUuid": "4d0995dc_177be03c",
       "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -88,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "0d5f9dfa_d30b1c24",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T21:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d9499c1_be04b59c",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0995dc_57d9d8f3",
         "filename": "libc/include/android/appsdk.h",
         "patchSetId": 2
@@ -99,6 +153,24 @@
       "writtenOn": "2015-05-26T18:25:27Z",
       "side": 1,
       "message": "replace all this with just \"false if min \u003e target || target \u003e max\"?",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_af0e18e6",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T21:37:31Z",
+      "side": 1,
+      "message": "removed this part.",
+      "parentUuid": "4d0995dc_57d9d8f3",
       "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
