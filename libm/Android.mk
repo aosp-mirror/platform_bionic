@@ -501,9 +501,6 @@ LOCAL_CFLAGS += \
     -fno-builtin-rintf \
     -fno-builtin-rintl \
 
-LOCAL_CONLY_FLAGS := \
-    -std=c99 \
-
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 LOCAL_ADDRESS_SANITIZER := false
 include $(BUILD_STATIC_LIBRARY)
