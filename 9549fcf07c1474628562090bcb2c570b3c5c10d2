@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "4d0995dc_177be03c",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T18:28:53Z",
+      "side": 1,
+      "message": "api-level.h is included by sys/cdefs.h I would like to avoid this being included everywhere.",
+      "parentUuid": "8d99cdfb_22432a23",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d9499c1_fea55d2a",
         "filename": "libc/include/android/appsdk.h",
         "patchSetId": 2
@@ -115,6 +133,24 @@
       "writtenOn": "2015-05-26T18:25:27Z",
       "side": 1,
       "message": "so all those comments about only setting \u0027target\u0027 are lies and should be removed?",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d99cdfb_4234b689",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-26T18:28:53Z",
+      "side": 1,
+      "message": "no, because art sets only target atm.",
+      "parentUuid": "4d0995dc_b7ff942b",
       "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
