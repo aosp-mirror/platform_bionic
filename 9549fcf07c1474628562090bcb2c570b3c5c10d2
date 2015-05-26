@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0995dc_973a5092",
+        "filename": "libc/bionic/android_app_sdk_version.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "android",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d99cdfb_22432a23",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "i don\u0027t like \"appsdk.h\" much. couldn\u0027t we just put this in api-level.h?",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9499c1_fea55d2a",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "API\n\nthe Android",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9499c1_be04b59c",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "the current\n\ns/once/after/\n\nthe app\n\nloaded.\n\nReturns",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_57d9d8f3",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "replace all this with just \"false if min \u003e target || target \u003e max\"?",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d99cdfb_a293ba32",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0995dc_b7ff942b",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-26T18:25:27Z",
+      "side": 1,
+      "message": "so all those comments about only setting \u0027target\u0027 are lies and should be removed?",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
