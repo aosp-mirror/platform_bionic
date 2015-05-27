@@ -126,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "0d5f9dfa_ce9b63ed",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-27T01:04:04Z",
+      "side": 1,
+      "message": "well, there is nothing wrong with using getter function from jni code... setter does not provide any benefits for developers... so this one we could remove from the header...",
+      "parentUuid": "0d5f9dfa_ae7b8f3a",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d9499c1_fea55d2a",
         "filename": "libc/include/android/appsdk.h",
         "patchSetId": 2
