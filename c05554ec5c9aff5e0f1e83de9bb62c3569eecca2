@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0995dc_195cae58",
+        "filename": "libc/bionic/ftruncate.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-27T06:16:29Z",
+      "side": 1,
+      "message": "the !defined(__USE_FILE_OFFSET64) seems misleading.\n\nisn\u0027t this really\n\n  #if !defined(__LP64__)\n\n  #if defined(__USE_FILE_OFFSET64)\n  #error\n  #endif\n\n  ...\n\n  #endif\n\n?",
+      "revId": "c05554ec5c9aff5e0f1e83de9bb62c3569eecca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d9499c1_eeccc23c",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-27T06:16:29Z",
+      "side": 1,
+      "message": "why the temporaries?",
+      "revId": "c05554ec5c9aff5e0f1e83de9bb62c3569eecca2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
