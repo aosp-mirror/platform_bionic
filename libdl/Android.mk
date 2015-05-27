@@ -15,7 +15,7 @@ include $(CLEAR_VARS)
 #
 # DO NOT REMOVE --exclude-libs!
 
-LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a
+LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a -Wl,--version-script=$(LOCAL_PATH)/libdl.map
 
 # for x86, exclude libgcc_eh.a for the same reasons as above
 LOCAL_LDFLAGS_x86 := -Wl,--exclude-libs=libgcc_eh.a
