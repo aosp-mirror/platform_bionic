@@ -90,6 +90,42 @@
     },
     {
       "key": {
+        "uuid": "0d5f9dfa_ee34a78b",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-27T00:59:13Z",
+      "side": 1,
+      "message": "good point.",
+      "parentUuid": "4d0995dc_177be03c",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d5f9dfa_ae7b8f3a",
+        "filename": "libc/include/android/appsdk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-27T00:59:13Z",
+      "side": 1,
+      "message": "is there a reason we have a header file at all? especially one that will end up in the NDK...",
+      "parentUuid": "4d0995dc_0f48e41d",
+      "revId": "9549fcf07c1474628562090bcb2c570b3c5c10d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d9499c1_fea55d2a",
         "filename": "libc/include/android/appsdk.h",
         "patchSetId": 2
