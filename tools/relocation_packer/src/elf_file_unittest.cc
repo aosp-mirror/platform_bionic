@@ -183,12 +183,36 @@ TEST(ElfFile, PackRelocationsArm64) {
   RunPackRelocationsTestFor("arm64");
 }
 
+TEST(ElfFile, PackRelocationsMips32) {
+  RunPackRelocationsTestFor("mips32");
+}
+
+TEST(ElfFile, PackRelocationsIa32) {
+  RunPackRelocationsTestFor("ia32");
+}
+
+TEST(ElfFile, PackRelocationsX64) {
+  RunPackRelocationsTestFor("x64");
+}
+
 TEST(ElfFile, UnpackRelocationsArm32) {
   RunUnpackRelocationsTestFor("arm32");
 }
 
 TEST(ElfFile, UnpackRelocationsArm64) {
   RunUnpackRelocationsTestFor("arm64");
+}
+
+TEST(ElfFile, UnpackRelocationsMips32) {
+  RunUnpackRelocationsTestFor("mips32");
+}
+
+TEST(ElfFile, UnpackRelocationsIa32) {
+  RunUnpackRelocationsTestFor("ia32");
+}
+
+TEST(ElfFile, UnpackRelocationsX64) {
+  RunUnpackRelocationsTestFor("x64");
 }
 
 }  // namespace relocation_packer
