@@ -16,6 +16,24 @@
       "revId": "980a1d2679bfbec7952ed59692b177aa2ddea2de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed8889a6_341446c6",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1037287
+      },
+      "writtenOn": "2015-05-27T12:21:01Z",
+      "side": 1,
+      "message": "Done, in patch set 3.",
+      "parentUuid": "cd8f45ac_619b70bd",
+      "revId": "980a1d2679bfbec7952ed59692b177aa2ddea2de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
