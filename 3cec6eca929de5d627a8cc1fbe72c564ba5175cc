@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ad3851b1_f053bebe",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1040193
+      },
+      "writtenOn": "2015-05-28T08:47:45Z",
+      "side": 1,
+      "message": "Yes, for all compact branches except JIC. For compatibility with micromips, flag \"-mcompact-branches\u003dnever\" does not affect JIC. \nThis forces us to add unoptimized code here, and leave something for compiler to put in the branch delay slot.",
+      "parentUuid": "ed56c9ec_8eec0e0a",
+      "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d1bb95b_434da6c8",
         "filename": "linker/Android.mk",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-05-28T01:08:23Z",
       "side": 1,
       "message": "LOCAL_CFLAGS_mips64 +\u003d ...",
+      "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad3851b1_10692a6c",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1040193
+      },
+      "writtenOn": "2015-05-28T08:47:45Z",
+      "side": 1,
+      "message": "We are trying to target both mips64r6 and mips32r6 (its second arch), but not mips32r2. Both r6 architectures support compact branches and experience this issue.",
+      "parentUuid": "6d1bb95b_434da6c8",
       "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
