@@ -16,6 +16,23 @@
       "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d1bb95b_434da6c8",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-28T01:08:23Z",
+      "side": 1,
+      "message": "LOCAL_CFLAGS_mips64 +\u003d ...",
+      "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
