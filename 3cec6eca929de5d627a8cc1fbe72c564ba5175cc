@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "ad3851b1_76d6e6ed",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1040193
+      },
+      "writtenOn": "2015-05-28T15:36:31Z",
+      "side": 1,
+      "message": "It is a problem everywhere, but here it is critical. If GDB cannot set a breakpoint on rtld_db_dlactivity(), then it cannot communicate with the linker. We will still be unable to place a breakpoint on a JIC instruction, but at least GDB will get notified of library loads.",
+      "parentUuid": "6d42d931_34d9b6f5",
+      "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d1bb95b_434da6c8",
         "filename": "linker/Android.mk",
         "patchSetId": 1
