@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6d1bb95b_2c56d72e",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-28T03:36:52Z",
+      "side": 1,
+      "message": "oh, subtle. that seems well worth a comment.",
+      "parentUuid": "ed56c9ec_acec7a09",
+      "revId": "3adf5358fbf2aa92d2ea58e978652761ec7f4489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d470d3e_ef183dad",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
