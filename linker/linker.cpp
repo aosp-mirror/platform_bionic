@@ -316,6 +316,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   snprintf(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
+    PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
   }
 
@@ -1272,7 +1273,7 @@ static soinfo* load_library(int fd, off64_t file_offset,
 
   std::string realpath = name;
   if (!realpath_fd(fd, &realpath)) {
-    PRINT("cannot resolve realpath for the library \"%s\": %s", name, strerror(errno));
+    PRINT("warning: unable to get realpath for the library \"%s\". Will use given name.", name);
     realpath = name;
   }
 
@@ -2746,7 +2747,7 @@ bool soinfo::prelink_image() {
         set_dt_flags_1(d->d_un.d_val);
 
         if ((d->d_un.d_val & ~SUPPORTED_DT_FLAGS_1) != 0) {
-          DL_WARN("Unsupported flags DT_FLAGS_1=%p", reinterpret_cast<void*>(d->d_un.d_val));
+          DL_WARN("%s: unsupported flags DT_FLAGS_1=%p", get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
 #if defined(__mips__)
