@@ -158,6 +158,8 @@ int dlclose(void* handle) {
 }
 
 void android_set_application_target_sdk_version(uint32_t target) {
+  // lock to avoid modification in the middle of dlopen.
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   set_application_target_sdk_version(target);
 }
 
