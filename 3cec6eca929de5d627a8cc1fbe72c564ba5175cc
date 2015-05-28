@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed56c9ec_8eec0e0a",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-28T01:05:11Z",
+      "side": 1,
+      "message": "don\u0027t you have another change that turns this off globally?",
+      "revId": "3cec6eca929de5d627a8cc1fbe72c564ba5175cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
