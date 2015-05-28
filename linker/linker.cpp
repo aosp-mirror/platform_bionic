@@ -1215,11 +1215,27 @@ static int open_library(const char* name, off64_t* file_offset) {
   return fd;
 }
 
+static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
+#if !defined(__LP64__)
+  // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
+  uint32_t target_sdk_version = get_application_target_sdk_version();
+  if (target_sdk_version != 0 && target_sdk_version <= 22) {
+    const char* bname = basename(dt_needed);
+    if (bname != dt_needed) {
+      DL_WARN("'%s' library has invalid DT_NEEDED entry '%s'", sopath, dt_needed);
+    }
+
+    return bname;
+  }
+#endif
+  return dt_needed;
+}
+
 template<typename F>
 static void for_each_dt_needed(const soinfo* si, F action) {
   for (ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
     if (d->d_tag == DT_NEEDED) {
-      action(si->get_string(d->d_un.d_val));
+      action(fix_dt_needed(si->get_string(d->d_un.d_val), si->get_realpath()));
     }
   }
 }
