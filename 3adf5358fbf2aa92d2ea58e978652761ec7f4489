@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed56c9ec_acec7a09",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-28T03:15:13Z",
+      "side": 1,
+      "message": "yes... we call for_each_dt_needed multiple times during dlopen (once for every dt_needed and not loaded library). We expect to have the same value...",
+      "parentUuid": "8d470d3e_af0e3569",
+      "revId": "3adf5358fbf2aa92d2ea58e978652761ec7f4489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d470d3e_ef183dad",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6d1bb95b_2967a951",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-28T03:15:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d470d3e_ef183dad",
+      "revId": "3adf5358fbf2aa92d2ea58e978652761ec7f4489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d470d3e_0ffe69aa",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2015-05-28T03:07:15Z",
       "side": 1,
       "message": "why the local? i thought your inner mathematician wouldn\u0027t be scared by three levels of nesting :-)\n\n(i only mention this because of the irony that this line would be shorter if you just did the work from the next line here instead. plus \u0027dt_needed_str\u0027 doesn\u0027t tell me anything i don\u0027t already know.)",
+      "revId": "3adf5358fbf2aa92d2ea58e978652761ec7f4489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d54fde2_451128d5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-05-28T03:15:13Z",
+      "side": 1,
+      "message": "I think it was second iteration and I did not cleanup this part :) done.",
+      "parentUuid": "8d470d3e_0ffe69aa",
       "revId": "3adf5358fbf2aa92d2ea58e978652761ec7f4489",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
