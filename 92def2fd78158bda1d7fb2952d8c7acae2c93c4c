@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed56c9ec_9bbc4149",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-05-28T21:41:23Z",
+      "side": 1,
+      "message": "don\u0027t we have this? isn\u0027t this the GNU basename function?\n\nhttps://cs.corp.google.com/#android/bionic/libc/include/libgen.h\u0026q\u003dgnu_basename\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d37",
+      "revId": "92def2fd78158bda1d7fb2952d8c7acae2c93c4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
