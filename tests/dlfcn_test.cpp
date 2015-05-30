@@ -145,13 +145,28 @@ TEST(dlfcn, dlsym_from_sofile_with_preload) {
   dlclose(preload);
 }
 
+TEST(dlfcn, dlsym_handle_global_sym) {
+  // check that we do not look into global group
+  // when looking up symbol by handle
+  void* handle = dlopen("libtest_empty.so", RTLD_NOW);
+  dlopen("libtest_with_dependency.so", RTLD_NOW | RTLD_GLOBAL);
+  void* sym = dlsym(handle, "getRandomNumber");
+  ASSERT_TRUE(sym == nullptr);
+  ASSERT_SUBSTR("undefined symbol: getRandomNumber", dlerror());
+
+  sym = dlsym(handle, "DlSymTestFunction");
+  ASSERT_TRUE(sym == nullptr);
+  ASSERT_SUBSTR("undefined symbol: DlSymTestFunction", dlerror());
+  dlclose(handle);
+}
+
 TEST(dlfcn, dlsym_with_dependencies) {
   void* handle = dlopen("libtest_with_dependency.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle != nullptr);
   dlerror();
   // This symbol is in DT_NEEDED library.
   void* sym = dlsym(handle, "getRandomNumber");
-  ASSERT_TRUE(sym != NULL);
+  ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
   fn = reinterpret_cast<int (*)(void)>(sym);
   EXPECT_EQ(4, fn());
@@ -583,6 +598,15 @@ TEST(dlfcn, dlopen_check_rtld_global) {
   // RTLD_GLOBAL implies RTLD_NODELETE, let's check that
   void* sym_after_dlclose = dlsym(RTLD_DEFAULT, "dlopen_testlib_simple_func");
   ASSERT_EQ(sym, sym_after_dlclose);
+
+  // Check if dlsym() for main program's handle searches RTLD_GLOBAL
+  // shared libraries after symbol was not found in the main executable
+  // and dependent libraries.
+  void* handle_for_main_executable = dlopen(nullptr, RTLD_NOW);
+  sym = dlsym(handle_for_main_executable, "dlopen_testlib_simple_func");
+  ASSERT_TRUE(sym != nullptr) << dlerror();
+
+  dlclose(handle_for_main_executable);
 }
 
 // libtest_with_dependency_loop.so -> libtest_with_dependency_loop_a.so ->
