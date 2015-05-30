@@ -405,6 +405,14 @@ module := libtest_dlsym_from_this_grandchild
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
+# Empty library
+# -----------------------------------------------------------------------------
+libtest_empty_src_files := empty.cpp
+
+module := libtest_empty
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
 # Library with weak undefined function
 # -----------------------------------------------------------------------------
 libtest_dlopen_weak_undefined_func_src_files := \
