@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "f990500b_7fe3cf19",
+        "filename": "libc/bionic/fgetxattr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-06-01T22:15:08Z",
+      "side": 1,
+      "message": "EBADF is the documented return value of fgetxattr() on O_PATH file descriptors. Please see \"man 2 open\" or look at the O_PATH section of http://man7.org/linux/man-pages/man2/open.2.html . This has been true since Linux 2.6.39. Even though it\u0027s not documented, it\u0027s also true for fsetxattr().\n\nENOTSUP would imply that the call succeeded, but the underlying filesystem didn\u0027t support extended attributes. I can\u0027t imagine the call failing for this, but then somehow succeeding for the /proc/PID/fd/FD case below.",
+      "parentUuid": "f942104b_4973e592",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 38
+      },
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f942104b_9e54619a",
         "filename": "libc/bionic/fsetxattr.cpp",
         "patchSetId": 3
