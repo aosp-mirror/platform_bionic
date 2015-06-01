@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "f942104b_4973e592",
+        "filename": "libc/bionic/fgetxattr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-01T21:58:33Z",
+      "side": 1,
+      "message": "Oops, sorry I read this incorrectly.\n\nIs there any possibility that you might get ENOTSUP instead of EBADF on some kernels?",
+      "parentUuid": "f942104b_693fc9e9",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 38
+      },
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f942104b_9e54619a",
         "filename": "libc/bionic/fsetxattr.cpp",
         "patchSetId": 3
