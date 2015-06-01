@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed56c9ec_06545e55",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 951,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-01T17:14:26Z",
+      "side": 1,
+      "message": "might be worth adding that this is from the dlopen documentation?",
+      "revId": "f452dee6a091391dec0ead679a15fb0bb0d7b012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed56c9ec_91bde6fa",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-01T17:14:26Z",
+      "side": 1,
+      "message": "\"If [dlopen\u0027s] filename...",
+      "revId": "f452dee6a091391dec0ead679a15fb0bb0d7b012",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
