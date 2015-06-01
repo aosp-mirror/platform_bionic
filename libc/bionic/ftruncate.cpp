@@ -18,11 +18,14 @@
 #include <sys/cdefs.h>
 #include <unistd.h>
 
-#if !defined(__USE_FILE_OFFSET64) && !defined(__LP64__)
+#if !defined(__LP64__)
+static_assert(sizeof(off_t) == 4,
+              "libc can't be built with _FILE_OFFSET_BITS=64.");
+
 // The kernel's implementation of ftruncate uses an unsigned long for the length
 // parameter, so it will not catch negative values. On the other hand
 // ftruncate64 does check for this, so just forward the call.
 int ftruncate(int filedes, off_t length) {
   return ftruncate64(filedes, length);
 }
-#endif
+#endif  // !defined(__LP64__)
