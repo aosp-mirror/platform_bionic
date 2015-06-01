@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f95bf03c_c740de06",
+        "filename": "libc/bionic/fgetxattr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-01T21:41:25Z",
+      "side": 1,
+      "message": "Usually, we directly compare against -1 in bionic.\n\nSo: result !\u003d -1.",
+      "range": {
+        "startLine": 42,
+        "startChar": 7,
+        "endLine": 42,
+        "endChar": 19
+      },
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f942104b_be29653e",
+        "filename": "libc/bionic/fgetxattr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-01T21:41:25Z",
+      "side": 1,
+      "message": "It seems there are two errno values for which you want to just return (EBADF, ERANGE).",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 38
+      },
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f942104b_9e54619a",
+        "filename": "libc/bionic/fsetxattr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-01T21:41:25Z",
+      "side": 1,
+      "message": "Same as the other, should you skip if this is ENOSPC?",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 38
+      },
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f95bf03c_a7572a9e",
+        "filename": "tests/sys_xattr_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-01T21:41:25Z",
+      "side": 1,
+      "message": "I think you could use a few negative tests:\n\nTry with a bad file descriptor for fsetxattr/fgetxattr.\n\nAlso, try a few where the buffer passed in is too small for all derivatives.",
+      "revId": "2e4bb2355033d2f84e60f24d0617c3a617abb2c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
