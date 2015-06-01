@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fgetxattr)
+ENTRY(___fgetxattr)
     mov     ip, r7
     ldr     r7, =__NR_fgetxattr
     swi     #0
@@ -11,4 +11,5 @@ ENTRY(fgetxattr)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(fgetxattr)
+END(___fgetxattr)
+.hidden ___fgetxattr

@@ -2,9 +2,9 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fgetxattr)
+ENTRY(___fsetxattr)
     movq    %rcx, %r10
-    movl    $__NR_fgetxattr, %eax
+    movl    $__NR_fsetxattr, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
     jb      1f
@@ -13,4 +13,5 @@ ENTRY(fgetxattr)
     call    __set_errno_internal
 1:
     ret
-END(fgetxattr)
+END(___fsetxattr)
+.hidden ___fsetxattr

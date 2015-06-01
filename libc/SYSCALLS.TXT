@@ -122,8 +122,8 @@ int         fdatasync(int) all
 int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
 void        sync(void)  all
-int         fsetxattr(int, const char*, const void*, size_t, int) all
-ssize_t     fgetxattr(int, const char*, void*, size_t) all
+int         ___fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
+ssize_t     ___fgetxattr:fgetxattr(int, const char*, void*, size_t) all
 ssize_t     flistxattr(int, char*, size_t) all
 int         fremovexattr(int, const char*) all
 

@@ -2,8 +2,8 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fgetxattr)
-    mov     x8, __NR_fgetxattr
+ENTRY(___fsetxattr)
+    mov     x8, __NR_fsetxattr
     svc     #0
 
     cmn     x0, #(MAX_ERRNO + 1)
@@ -11,4 +11,5 @@ ENTRY(fgetxattr)
     b.hi    __set_errno_internal
 
     ret
-END(fgetxattr)
+END(___fsetxattr)
+.hidden ___fsetxattr
