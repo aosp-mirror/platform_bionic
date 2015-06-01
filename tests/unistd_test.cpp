@@ -179,10 +179,8 @@ TEST(unistd, ftruncate64) {
 TEST(unistd, ftruncate_negative) {
   TemporaryFile tf;
   errno = 0;
-  int rc = ftruncate(tf.fd, -123);
-  int err = errno;
-  ASSERT_EQ(-1, rc);
-  ASSERT_EQ(EINVAL, err);
+  ASSERT_EQ(-1, ftruncate(tf.fd, -123));
+  ASSERT_EQ(EINVAL, errno);
 }
 
 static bool g_pause_test_flag = false;
