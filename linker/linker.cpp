@@ -2860,6 +2860,19 @@ bool soinfo::prelink_image() {
     DL_ERR("empty/missing DT_SYMTAB in \"%s\"", get_realpath());
     return false;
   }
+
+  // Before M release linker was using basename in place of soname.
+  // In the case when dt_soname is absent some apps stop working:
+  // because they can't find dt_needed library by soname.
+  // This workaround should keep them working. (applies only
+  // for apps targeting sdk version <=22). Make an exception for main
+  // executable which does not need dt_soname.
+  uint32_t target_sdk_version = get_application_target_sdk_version();
+  if (soname_ == nullptr && this != somain && target_sdk_version != 0 && target_sdk_version <= 22) {
+    soname_ = basename(realpath_.c_str());
+    DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
+        get_realpath(), soname_);
+  }
   return true;
 }
 
