@@ -2,9 +2,9 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(fgetxattr)
-    .set push
+ENTRY(___fgetxattr)
     .set noreorder
+    .cpload t9
     li v0, __NR_fgetxattr
     syscall
     bnez a3, 1f
@@ -12,14 +12,9 @@ ENTRY(fgetxattr)
     j ra
     nop
 1:
-    move t0, ra
-    bal     2f
-    nop
-2:
-    .cpsetup ra, t1, 2b
-    LA t9,__set_errno_internal
-    .cpreturn
+    la t9,__set_errno_internal
     j t9
-    move ra, t0
-    .set pop
-END(fgetxattr)
+    nop
+    .set reorder
+END(___fgetxattr)
+.hidden ___fgetxattr
