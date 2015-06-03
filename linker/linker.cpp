@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <android/api-level.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -1001,7 +1002,10 @@ const ElfW(Sym)* dlsym_linear_lookup(const char* name,
 
   const ElfW(Sym)* s = nullptr;
   for (soinfo* si = start; si != nullptr; si = si->next) {
-    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+    // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
+    // if the library is opened by application with target api level <= 22
+    // See http://b/21565766
+    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() > 22) {
       continue;
     }
 
@@ -1230,8 +1234,7 @@ static int open_library(const char* name, off64_t* file_offset) {
 static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
-  uint32_t target_sdk_version = get_application_target_sdk_version();
-  if (target_sdk_version != 0 && target_sdk_version <= 22) {
+  if (get_application_target_sdk_version() <= 22) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
       DL_WARN("'%s' library has invalid DT_NEEDED entry '%s'", sopath, dt_needed);
@@ -2406,6 +2409,17 @@ soinfo* soinfo::get_local_group_root() const {
   return local_group_root_;
 }
 
+// This function returns api-level at the time of
+// dlopen/load. Note that libraries opened by system
+// will always have 'current' api level.
+uint32_t soinfo::get_target_sdk_version() const {
+  if (!has_min_version(2)) {
+    return __ANDROID_API__;
+  }
+
+  return local_group_root_->target_sdk_version_;
+}
+
 /* Force any of the closed stdin, stdout and stderr to be associated with
    /dev/null. */
 static int nullify_closed_stdio() {
@@ -2877,13 +2891,13 @@ bool soinfo::prelink_image() {
   }
 
   // Before M release linker was using basename in place of soname.
-  // In the case when dt_soname is absent some apps stop working:
+  // In the case when dt_soname is absent some apps stop working
   // because they can't find dt_needed library by soname.
   // This workaround should keep them working. (applies only
-  // for apps targeting sdk version <=22). Make an exception for main
-  // executable which does not need dt_soname.
-  uint32_t target_sdk_version = get_application_target_sdk_version();
-  if (soname_ == nullptr && this != somain && target_sdk_version != 0 && target_sdk_version <= 22) {
+  // for apps targeting sdk version <=22). Make an exception for
+  // the main executable and linker; they do not need to have dt_soname
+  if (soname_ == nullptr && this != somain && (flags_ & FLAG_LINKER) == 0 &&
+      get_application_target_sdk_version() <= 22) {
     soname_ = basename(realpath_.c_str());
     DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
         get_realpath(), soname_);
@@ -2897,6 +2911,10 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   local_group_root_ = local_group.front();
   if (local_group_root_ == nullptr) {
     local_group_root_ = this;
+  }
+
+  if ((flags_ & FLAG_LINKER) == 0 && local_group_root_ == this) {
+    target_sdk_version_ = get_application_target_sdk_version();
   }
 
   VersionTracker version_tracker;
