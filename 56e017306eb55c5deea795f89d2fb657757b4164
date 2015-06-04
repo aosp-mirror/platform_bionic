@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f955b039_afd69fbb",
+        "filename": "libc/include/sys/endian.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1004395
+      },
+      "writtenOn": "2015-06-04T22:51:02Z",
+      "side": 1,
+      "message": "Is this intentional to force little endian always?\nIf so, is it documented somewhere?",
+      "revId": "56e017306eb55c5deea795f89d2fb657757b4164",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
