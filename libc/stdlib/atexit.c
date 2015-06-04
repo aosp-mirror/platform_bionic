@@ -37,7 +37,18 @@
 #include "atexit.h"
 #include "private/thread_private.h"
 
-struct atexit *__atexit;
+struct atexit {
+	struct atexit *next;		/* next in list */
+	int ind;			/* next index in this table */
+	int max;			/* max entries >= ATEXIT_SIZE */
+	struct atexit_fn {
+		void (*fn_ptr)(void *);
+		void *fn_arg;		/* argument for CXA callback */
+		void *fn_dso;		/* shared module handle */
+	} fns[1];			/* the table itself */
+};
+
+static struct atexit *__atexit;
 static int restartloop;
 
 /* BEGIN android-changed: __unregister_atfork is used by __cxa_finalize */
