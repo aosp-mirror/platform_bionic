@@ -74,7 +74,6 @@ __LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
 __LIBC64_HIDDEN__ extern const short* _tolower_tab_;
 __LIBC64_HIDDEN__ extern const short* _toupper_tab_;
 
-__LIBC_HIDDEN__ extern struct atexit* __atexit;
 __LIBC_HIDDEN__ extern const char _C_ctype_[];
 __LIBC_HIDDEN__ extern const short _C_toupper_[];
 __LIBC_HIDDEN__ extern const short _C_tolower_[];
