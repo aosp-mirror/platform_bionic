@@ -57,10 +57,11 @@ def CheckSymbols(library, functions_or_variables):
   for line in subprocess.check_output(['readelf', '-W', '--dyn-syms', so_file]).split('\n'):
     m = r.match(line)
     if m:
+      symbol = string.split(m.group(2), '@')[0]
       if m.group(1) == 'FUNC' and functions_or_variables == 'functions':
-        actual_symbols.add(m.group(2))
+        actual_symbols.add(symbol)
       elif m.group(1) == 'OBJECT' and functions_or_variables == 'variables':
-        actual_symbols.add(m.group(2))
+        actual_symbols.add(symbol)
     #else:
       #print 'ignoring: ' % line
 
