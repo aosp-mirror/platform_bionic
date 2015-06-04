@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f923f0e9_90ee5afd",
+        "filename": "libc/libc.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-04T00:56:32Z",
+      "side": 1,
+      "message": "we need to move some of these to LIBC_PRIVATE version...",
+      "revId": "ced2c7445dd94a3f142d144c42e76771d60b8866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
