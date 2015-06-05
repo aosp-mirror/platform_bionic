@@ -549,14 +549,16 @@ libc_thread_atexit_impl_src_files := \
 libc_arch_static_src_files := \
     bionic/dl_iterate_phdr_static.cpp \
 
-# Various kinds of LP32 cruft.
+# Various kinds of cruft.
 # ========================================================
-libc_bionic_src_files_32 += \
+libc_common_src_files += \
+    bionic/ndk_cruft.cpp \
+
+libc_bionic_ndk_src_files_32 += \
     bionic/mmap.cpp \
 
 libc_common_src_files_32 += \
     bionic/legacy_32_bit_support.cpp \
-    bionic/ndk_cruft.cpp \
     bionic/time64.c \
 
 libc_netbsd_src_files_32 += \
@@ -956,6 +958,7 @@ LOCAL_ADDRESS_SANITIZER := false
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -983,7 +986,7 @@ LOCAL_ADDRESS_SANITIZER := false
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_ndk_src_files))
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
