@@ -34,6 +34,24 @@
       "revId": "56e017306eb55c5deea795f89d2fb657757b4164",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fbd485_f6306df2",
+        "filename": "libc/include/sys/endian.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2015-06-05T00:14:58Z",
+      "side": 1,
+      "message": "Yes, this is definitely intentional. There are many places throughout Android that *require* little endian. I just looked through the L CDD, but it wasn\u0027t mentioned. I suppose this falls under the category of something that we wouldn\u0027t necessarily force on a partner, but we certainly aren\u0027t going to maintain/facilitate it.",
+      "parentUuid": "f955b039_afd69fbb",
+      "revId": "56e017306eb55c5deea795f89d2fb657757b4164",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
