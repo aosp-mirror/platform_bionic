@@ -16,6 +16,24 @@
       "revId": "65e124f4bdff6a46b2fe7ca3d949a72da957af75",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99e914d2_fcab290a",
+        "filename": "libc/libc.map",
+        "patchSetId": 2
+      },
+      "lineNbr": 1105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-05T00:43:28Z",
+      "side": 1,
+      "message": "\u003d \u0027we export for different reasons, but please do not use them\u0027\n\nThis list composed (with some exception) by inspecting libc/include/* files.. symbols which are not there are in this list.",
+      "parentUuid": "19d6040d_40f98e7a",
+      "revId": "65e124f4bdff6a46b2fe7ca3d949a72da957af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
