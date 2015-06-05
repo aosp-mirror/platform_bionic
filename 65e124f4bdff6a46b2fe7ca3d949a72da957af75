@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19d6040d_40f98e7a",
+        "filename": "libc/libc.map",
+        "patchSetId": 2
+      },
+      "lineNbr": 1105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-05T00:14:38Z",
+      "side": 1,
+      "message": "what does \"private\" mean here?",
+      "revId": "65e124f4bdff6a46b2fe7ca3d949a72da957af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
