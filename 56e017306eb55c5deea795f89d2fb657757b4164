@@ -52,6 +52,24 @@
       "revId": "56e017306eb55c5deea795f89d2fb657757b4164",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19d6040d_c0abde5c",
+        "filename": "libc/include/sys/endian.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-05T00:17:07Z",
+      "side": 1,
+      "message": "i think it\u0027s implicitly in the CDD in that we don\u0027t have any BE ABIs in there. only LE ones.",
+      "parentUuid": "99fbd485_f6306df2",
+      "revId": "56e017306eb55c5deea795f89d2fb657757b4164",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
