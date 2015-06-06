@@ -73,6 +73,13 @@ enum {
    */
   ANDROID_DLEXT_FORCE_LOAD = 0x40,
 
+  /* When set, if the minimum p_vaddr of the ELF file's PT_LOAD segments is non-zero,
+   * the dynamic linker will load it at that address.
+   *
+   * This flag is for ART internal use only.
+   */
+  ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -80,7 +87,8 @@ enum {
                                         ANDROID_DLEXT_USE_RELRO |
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
-                                        ANDROID_DLEXT_FORCE_LOAD,
+                                        ANDROID_DLEXT_FORCE_LOAD |
+                                        ANDROID_DLEXT_FORCE_FIXED_VADDR,
 };
 
 typedef struct {
