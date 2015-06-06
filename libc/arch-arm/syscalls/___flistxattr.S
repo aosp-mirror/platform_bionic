@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     mov     ip, r7
     ldr     r7, =__NR_flistxattr
     swi     #0
@@ -11,4 +11,5 @@ ENTRY(flistxattr)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr
