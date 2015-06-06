@@ -44,11 +44,13 @@
 #define dlmalloc dlmalloc_real
 #endif
 
-/* Export two symbols used by the VM. */
-__BEGIN_DECLS
-int dlmalloc_trim(size_t) __LIBC_ABI_PUBLIC__;
-void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void*) __LIBC_ABI_PUBLIC__;
-__END_DECLS
+/* These two symbols are exported on devices that use dlmalloc.
+ * In order to be consistent across all devices, they will
+ * be exported everywhere. Move the real symbols out of the way
+ * so that ndk_cruft.cpp can export these symbols.
+ */
+#define dlmalloc_inspect_all dlmalloc_inspect_all_real
+#define dlmalloc_trim dlmalloc_trim_real
 
 /* Include the proper definitions. */
 #include "../upstream-dlmalloc/malloc.h"
