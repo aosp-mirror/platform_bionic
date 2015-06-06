@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9ab8c9c_412d741f",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-06T01:27:21Z",
+      "side": 1,
+      "message": "__LIBC_HIDDEN__? do we want to export the _real one?",
+      "revId": "f9554a17765fd91d97d1f74913a626f01e880cee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
