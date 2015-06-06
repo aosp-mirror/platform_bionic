@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+ifeq ($(HOST_OS),linux)
 common_cppflags := -Wall -Wextra -Wunused -Werror -Wold-style-cast
 
 LOCAL_PATH := $(call my-dir)
@@ -95,3 +96,5 @@ $(eval $(call copy-test-library,elf_file_unittest_relocs_arm32.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm32_packed.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm64.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm64_packed.so))
+
+endif
