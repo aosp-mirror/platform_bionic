@@ -16,6 +16,24 @@
       "revId": "f9554a17765fd91d97d1f74913a626f01e880cee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ab8c9c_c1e62460",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-06T01:33:35Z",
+      "side": 1,
+      "message": "I checked and it\u0027s local, not global. I don\u0027t think a prototype here causes the symbol to be exported.\n\nIf it did, some of the prototypes above would cause functions be exported.",
+      "parentUuid": "d9ab8c9c_412d741f",
+      "revId": "f9554a17765fd91d97d1f74913a626f01e880cee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
