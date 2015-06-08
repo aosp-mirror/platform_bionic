@@ -130,6 +130,7 @@ libc_bionic_ndk_src_files := \
     bionic/fchmodat.cpp \
     bionic/ffs.cpp \
     bionic/fgetxattr.cpp \
+    bionic/flistxattr.cpp \
     bionic/flockfile.cpp \
     bionic/fpclassify.cpp \
     bionic/fsetxattr.cpp \

@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     movl    $__NR_flistxattr, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(flistxattr)
     call    __set_errno_internal
 1:
     ret
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr

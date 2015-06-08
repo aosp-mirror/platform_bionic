@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     mov     x8, __NR_flistxattr
     svc     #0
 
@@ -11,4 +11,5 @@ ENTRY(flistxattr)
     b.hi    __set_errno_internal
 
     ret
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr

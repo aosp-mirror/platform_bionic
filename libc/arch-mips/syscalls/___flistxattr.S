@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     .set noreorder
     .cpload t9
     li v0, __NR_flistxattr
@@ -16,4 +16,5 @@ ENTRY(flistxattr)
     j t9
     nop
     .set reorder
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr
