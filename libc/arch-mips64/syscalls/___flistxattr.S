@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     .set push
     .set noreorder
     li v0, __NR_flistxattr
@@ -22,4 +22,5 @@ ENTRY(flistxattr)
     j t9
     move ra, t0
     .set pop
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr

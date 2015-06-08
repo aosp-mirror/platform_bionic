@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(flistxattr)
+ENTRY(___flistxattr)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -28,4 +28,5 @@ ENTRY(flistxattr)
     popl    %ecx
     popl    %ebx
     ret
-END(flistxattr)
+END(___flistxattr)
+.hidden ___flistxattr

@@ -80,6 +80,7 @@ TEST(sys_xattr, fsetxattr_with_opath) {
   ASSERT_EQ(-1, res);
   ASSERT_EQ(EBADF, errno);
 #endif
+  close(fd);
 }
 
 TEST(sys_xattr, fsetxattr_with_opath_toosmall) {
@@ -97,4 +98,32 @@ TEST(sys_xattr, fsetxattr_with_opath_toosmall) {
   ASSERT_EQ(-1, res);
   ASSERT_EQ(EBADF, errno);
 #endif
+  close(fd);
+}
+
+TEST(sys_xattr, flistattr) {
+  TemporaryFile tf;
+  char buf[65536];  // 64kB is max possible xattr list size. See "man 7 xattr".
+  ASSERT_EQ(0, fsetxattr(tf.fd, "user.foo", "bar", 4, 0));
+  ssize_t result = flistxattr(tf.fd, buf, sizeof(buf));
+  ASSERT_TRUE(result >= 9);
+  ASSERT_TRUE(memmem(buf, sizeof(buf), "user.foo", 9) != NULL);
+}
+
+TEST(sys_xattr, flistattr_opath) {
+  TemporaryFile tf;
+  char buf[65536];  // 64kB is max possible xattr list size. See "man 7 xattr".
+  ASSERT_EQ(0, fsetxattr(tf.fd, "user.foo", "bar", 4, 0));
+  int fd = open(tf.filename, O_PATH);
+  ASSERT_NE(-1, fd);
+  ssize_t res = flistxattr(fd, buf, sizeof(buf));
+#if defined(__BIONIC__)
+  ASSERT_TRUE(res >= 9);
+  ASSERT_TRUE(static_cast<size_t>(res) <= sizeof(buf));
+  ASSERT_TRUE(memmem(buf, res, "user.foo", 9) != NULL);
+#else
+  ASSERT_EQ(-1, res);
+  ASSERT_EQ(EBADF, errno);
+#endif
+  close(fd);
 }
