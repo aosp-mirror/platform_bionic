@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99ce74a2_148d7403",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2015-06-08T09:10:19Z",
+      "side": 1,
+      "message": "wasn\u0027t this intentional ? We didn\u0027t want any of the cruft for 64-bit IIRC. have we gotten into a state where we have 64 bit cruft (already ??) :(",
+      "revId": "19fee2ca8beb4fae5b5c142de19757410171dc93",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
