@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "796b8031_c953e362",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T20:28:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9d41838_647999f4",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796b8031_f1b88bb4",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -100,6 +118,23 @@
       "writtenOn": "2015-06-09T01:43:39Z",
       "side": 1,
       "message": "...until here. this is new code. we set environ here, and sanitize it in the same function, so we can\u0027t accidentally getenv on an unsantized environment.",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_f649c235",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T20:28:48Z",
+      "side": 1,
+      "message": "i\u0027ve moved this down *after* the __sanitize_environment_variables call so \u0027environ\u0027 isn\u0027t set until it\u0027s been sanitized.",
       "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
