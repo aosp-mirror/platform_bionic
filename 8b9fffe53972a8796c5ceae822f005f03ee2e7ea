@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59c15c6b_b4c5a080",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T01:43:39Z",
+      "side": 1,
+      "message": "we were caching this before, but only for the dynamic linker. if we\u0027re going to cache it, we might as well cache it for everyone.\n\nalternatively, we could remove this special case and just add a local to __sanitize_environment_variables. that sounds pretty tempting to me...",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796b8031_f1b88bb4",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T01:43:39Z",
+      "side": 1,
+      "message": "how paranoid should we be here? i could __libc_fatal, but don\u0027t know whether we want to allow connections to debuggerd from __nullify_closed_stdio.\n\nbut right now, this is pretty useless too if we\u0027re scared about that kind of thing --- who knows where fd 2 points to? do we want \"write(-1,\" instead? you\u0027ll only be able to see the error via strace, but at least we know we\u0027ll never write anywhere we shouldn\u0027t.",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_842a4a30",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T01:43:39Z",
+      "side": 1,
+      "message": "other than not using the linker\u0027s logging macros, code from here is unchanged from the linker...",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9d41838_2468366d",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-09T01:43:39Z",
+      "side": 1,
+      "message": "...until here. this is new code. we set environ here, and sanitize it in the same function, so we can\u0027t accidentally getenv on an unsantized environment.",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
