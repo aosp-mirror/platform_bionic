@@ -1096,11 +1096,11 @@ static int open_library_in_zipfile(const char* const path,
                                    off64_t* file_offset) {
   TRACE("Trying zip file open from path '%s'", path);
 
-  // Treat an '!' character inside a path as the separator between the name
+  // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.
-  // For example, if path is "foo.zip!bar/bas/x.so", then we search for
+  // For example, if path is "foo.zip!/bar/bas/x.so", then we search for
   // "bar/bas/x.so" within "foo.zip".
-  const char* separator = strchr(path, '!');
+  const char* separator = strstr(path, "!/");
   if (separator == nullptr) {
     return -1;
   }
@@ -1114,7 +1114,7 @@ static int open_library_in_zipfile(const char* const path,
   buf[separator - path] = '\0';
 
   const char* zip_path = buf;
-  const char* file_path = &buf[separator - path + 1];
+  const char* file_path = &buf[separator - path + 2];
   int fd = TEMP_FAILURE_RETRY(open(zip_path, O_RDONLY | O_CLOEXEC));
   if (fd == -1) {
     return -1;

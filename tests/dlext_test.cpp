@@ -214,7 +214,7 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 
-  void* handle = dlopen((lib_path + "!libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
+  void* handle = dlopen((lib_path + "!/libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   int (*fn)(void);
@@ -226,7 +226,7 @@ TEST(dlfcn, dlopen_from_zip_absolute_path) {
 }
 
 TEST(dlfcn, dlopen_from_zip_ld_library_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!libdir";
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!/libdir";
 
   typedef void (*fn_t)(const char*);
   fn_t android_update_LD_LIBRARY_PATH =
