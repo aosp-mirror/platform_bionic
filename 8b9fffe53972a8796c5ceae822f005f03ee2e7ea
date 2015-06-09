@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b9d41838_647999f4",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-06-09T18:22:57Z",
+      "side": 1,
+      "message": "ya, I\u0027d prefer that we not cache it here. \n\nA few issues:\n\n1) the default value of __libc_AT_SECURE is false, so if we forget to initialize this, it fails open (insecure).\n2) Line 40 doesn\u0027t have any assertion that __libc_AT_SECURE was initialized before use.",
+      "parentUuid": "59c15c6b_b4c5a080",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796b8031_f1b88bb4",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-09T01:43:39Z",
       "side": 1,
       "message": "how paranoid should we be here? i could __libc_fatal, but don\u0027t know whether we want to allow connections to debuggerd from __nullify_closed_stdio.\n\nbut right now, this is pretty useless too if we\u0027re scared about that kind of thing --- who knows where fd 2 points to? do we want \"write(-1,\" instead? you\u0027ll only be able to see the error via strace, but at least we know we\u0027ll never write anywhere we shouldn\u0027t.",
+      "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9d9cc70_65275a68",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-06-09T18:22:57Z",
+      "side": 1,
+      "message": "in the case where AT_SECURE is true, likely strace won\u0027t work. You can\u0027t strace setuid binaries, for example, and I can\u0027t imagine SELinux policy would allow strace across domain transitions.\n\nI\u0027m tempted to just drop this line entirely, and just call _exit(EXIT_FAILURE) without any error messages. Not very friendly, but I can\u0027t think of a better way. write(-1) would be fine too.",
+      "parentUuid": "796b8031_f1b88bb4",
       "revId": "8b9fffe53972a8796c5ceae822f005f03ee2e7ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
