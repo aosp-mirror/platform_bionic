@@ -1537,3 +1537,37 @@ TEST(pthread, pthread_types_allow_four_bytes_alignment) {
   GTEST_LOG_(INFO) << "This test tests bionic implementation details.";
 #endif
 }
+
+TEST(pthread, pthread_mutex_lock_null_32) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_EQ(EINVAL, pthread_mutex_lock(NULL));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+#endif
+}
+
+TEST(pthread, pthread_mutex_unlock_null_32) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_EQ(EINVAL, pthread_mutex_unlock(NULL));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+#endif
+}
+
+TEST_F(pthread_DeathTest, pthread_mutex_lock_null_64) {
+#if defined(__BIONIC__) && defined(__LP64__)
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EXIT(pthread_mutex_lock(null_value), testing::KilledBySignal(SIGSEGV), "");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+#endif
+}
+
+TEST_F(pthread_DeathTest, pthread_mutex_unlock_null_64) {
+#if defined(__BIONIC__) && defined(__LP64__)
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EXIT(pthread_mutex_unlock(null_value), testing::KilledBySignal(SIGSEGV), "");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+#endif
+}

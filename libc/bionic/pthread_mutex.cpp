@@ -501,6 +501,12 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
 }
 
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
+#if !defined(__LP64__)
+    if (mutex_interface == NULL) {
+        return EINVAL;
+    }
+#endif
+
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
 
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
@@ -516,6 +522,12 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 }
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
+#if !defined(__LP64__)
+    if (mutex_interface == NULL) {
+        return EINVAL;
+    }
+#endif
+
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
 
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
