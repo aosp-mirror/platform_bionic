@@ -16,6 +16,24 @@
       "revId": "1801db3d3fe17df543e721b9fb355e5c882dc6cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9754c3f_d4b6f42b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-10T22:49:54Z",
+      "side": 1,
+      "message": "i\u0027ll do that when i come back to simplify this code, and make the equivalent change to init too.",
+      "parentUuid": "39c4a87c_855b85cc",
+      "revId": "1801db3d3fe17df543e721b9fb355e5c882dc6cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
