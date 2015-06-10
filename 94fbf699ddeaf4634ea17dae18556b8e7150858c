@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3937486d_aaed13b6",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-10T01:39:12Z",
+      "side": 1,
+      "message": "i had to add this so init works.\n\ndo we need to add the \"oh no, even /sys/fs/selinux/null isn\u0027t there\" code that\u0027s in init? or can we remove that from init now?",
+      "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
