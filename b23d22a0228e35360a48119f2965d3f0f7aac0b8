@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "79254042_d697e2ca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-06-10T22:23:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79254042_b35ef86c",
+      "range": {
+        "startLine": 103,
+        "startChar": 25,
+        "endLine": 103,
+        "endChar": 29
+      },
+      "revId": "b23d22a0228e35360a48119f2965d3f0f7aac0b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b92b3816_f8644d42",
         "filename": "linker/linker.h",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2015-06-10T21:33:23Z",
       "side": 1,
       "message": "we might want to check for soinfo version before trying to access this field...",
+      "revId": "b23d22a0228e35360a48119f2965d3f0f7aac0b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79254042_96916ad8",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-06-10T22:23:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b92b3816_f8644d42",
       "revId": "b23d22a0228e35360a48119f2965d3f0f7aac0b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
