@@ -30,10 +30,12 @@
 
 #include <elf.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/auxv.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -118,6 +120,198 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __system_properties_init(); // Requires 'environ'.
 
   __libc_init_vdso();
+}
+
+__noreturn static void __early_abort(int line) {
+  // We can't write to stdout or stderr because we're aborting before we've checked that
+  // it's safe for us to use those file descriptors. We probably can't strace either, so
+  // we rely on the fact that if we dereference a low address, either debuggerd or the
+  // kernel's crash dump will show the fault address.
+  *reinterpret_cast<int*>(line) = 0;
+  _exit(EXIT_FAILURE);
+}
+
+// Force any of the closed stdin, stdout and stderr to be associated with /dev/null.
+static void __nullify_closed_stdio() {
+  int dev_null = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
+  if (dev_null == -1) {
+    // init won't have /dev/null available, but SELinux provides an equivalent.
+    dev_null = TEMP_FAILURE_RETRY(open("/sys/fs/selinux/null", O_RDWR));
+  }
+  if (dev_null == -1) {
+    __early_abort(__LINE__);
+  }
+
+  // If any of the stdio file descriptors is valid and not associated
+  // with /dev/null, dup /dev/null to it.
+  for (int i = 0; i < 3; i++) {
+    // If it is /dev/null already, we are done.
+    if (i == dev_null) {
+      continue;
+    }
+
+    // Is this fd already open?
+    int status = TEMP_FAILURE_RETRY(fcntl(i, F_GETFL));
+    if (status != -1) {
+      continue;
+    }
+
+    // The only error we allow is that the file descriptor does not
+    // exist, in which case we dup /dev/null to it.
+    if (errno == EBADF) {
+      // Try dupping /dev/null to this stdio file descriptor and
+      // repeat if there is a signal. Note that any errors in closing
+      // the stdio descriptor are lost.
+      status = TEMP_FAILURE_RETRY(dup2(dev_null, i));
+      if (status == -1) {
+        __early_abort(__LINE__);
+      }
+    } else {
+      __early_abort(__LINE__);
+    }
+  }
+
+  // If /dev/null is not one of the stdio file descriptors, close it.
+  if (dev_null > 2) {
+    if (close(dev_null) == -1) {
+      __early_abort(__LINE__);
+    }
+  }
+}
+
+// Check if the environment variable definition at 'envstr'
+// starts with '<name>=', and if so return the address of the
+// first character after the equal sign. Otherwise return null.
+static const char* env_match(const char* envstr, const char* name) {
+  size_t i = 0;
+
+  while (envstr[i] == name[i] && name[i] != '\0') {
+    ++i;
+  }
+
+  if (name[i] == '\0' && envstr[i] == '=') {
+    return envstr + i + 1;
+  }
+
+  return nullptr;
+}
+
+static bool __is_valid_environment_variable(const char* name) {
+  // According to the kernel source, by default the kernel uses 32*PAGE_SIZE
+  // as the maximum size for an environment variable definition.
+  const int MAX_ENV_LEN = 32*4096;
+
+  if (name == nullptr) {
+    return false;
+  }
+
+  // Parse the string, looking for the first '=' there, and its size.
+  int pos = 0;
+  int first_equal_pos = -1;
+  while (pos < MAX_ENV_LEN) {
+    if (name[pos] == '\0') {
+      break;
+    }
+    if (name[pos] == '=' && first_equal_pos < 0) {
+      first_equal_pos = pos;
+    }
+    pos++;
+  }
+
+  // Check that it's smaller than MAX_ENV_LEN (to detect non-zero terminated strings).
+  if (pos >= MAX_ENV_LEN) {
+    return false;
+  }
+
+  // Check that it contains at least one equal sign that is not the first character
+  if (first_equal_pos < 1) {
+    return false;
+  }
+
+  return true;
+}
+
+static bool __is_unsafe_environment_variable(const char* name) {
+  // None of these should be allowed in setuid programs.
+  static const char* const UNSAFE_VARIABLE_NAMES[] = {
+      "GCONV_PATH",
+      "GETCONF_DIR",
+      "HOSTALIASES",
+      "JE_MALLOC_CONF",
+      "LD_AOUT_LIBRARY_PATH",
+      "LD_AOUT_PRELOAD",
+      "LD_AUDIT",
+      "LD_DEBUG",
+      "LD_DEBUG_OUTPUT",
+      "LD_DYNAMIC_WEAK",
+      "LD_LIBRARY_PATH",
+      "LD_ORIGIN_PATH",
+      "LD_PRELOAD",
+      "LD_PROFILE",
+      "LD_SHOW_AUXV",
+      "LD_USE_LOAD_BIAS",
+      "LOCALDOMAIN",
+      "LOCPATH",
+      "MALLOC_CHECK_",
+      "MALLOC_CONF",
+      "MALLOC_TRACE",
+      "NIS_PATH",
+      "NLSPATH",
+      "RESOLV_HOST_CONF",
+      "RES_OPTIONS",
+      "TMPDIR",
+      "TZDIR",
+      nullptr
+  };
+  for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != nullptr; ++i) {
+    if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != nullptr) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static void __sanitize_environment_variables(char** env) {
+  bool is_AT_SECURE = getauxval(AT_SECURE);
+  char** src = env;
+  char** dst = env;
+  for (; src[0] != nullptr; ++src) {
+    if (!__is_valid_environment_variable(src[0])) {
+      continue;
+    }
+    // Remove various unsafe environment variables if we're loading a setuid program.
+    if (is_AT_SECURE && __is_unsafe_environment_variable(src[0])) {
+      continue;
+    }
+    dst[0] = src[0];
+    ++dst;
+  }
+  dst[0] = nullptr;
+}
+
+void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
+  __libc_auxv = args.auxv;
+
+  // Check that the kernel provided a value for AT_SECURE.
+  bool found_AT_SECURE = false;
+  for (ElfW(auxv_t)* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
+    if (v->a_type == AT_SECURE) {
+      found_AT_SECURE = true;
+      break;
+    }
+  }
+  if (!found_AT_SECURE) __early_abort(__LINE__);
+
+  if (getauxval(AT_SECURE)) {
+    // If this is a setuid/setgid program, close the security hole described in
+    // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
+    __nullify_closed_stdio();
+
+    __sanitize_environment_variables(args.envp);
+  }
+
+  // Now the environment has been sanitized, make it available.
+  environ = args.envp;
 }
 
 /* This function will be called during normal program termination

@@ -54,14 +54,15 @@
 #include "linker.h"
 #include "linker_block_allocator.h"
 #include "linker_debug.h"
-#include "linker_environ.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
 #include "ziparchive/zip_archive.h"
 
-// Override macros to use C++ style casts
+extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
+
+// Override macros to use C++ style casts.
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
 
@@ -2405,66 +2406,6 @@ uint32_t soinfo::get_target_sdk_version() const {
   return local_group_root_->target_sdk_version_;
 }
 
-/* Force any of the closed stdin, stdout and stderr to be associated with
-   /dev/null. */
-static int nullify_closed_stdio() {
-  int dev_null, i, status;
-  int return_value = 0;
-
-  dev_null = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
-  if (dev_null < 0) {
-    DL_ERR("cannot open /dev/null: %s", strerror(errno));
-    return -1;
-  }
-  TRACE("[ Opened /dev/null file-descriptor=%d]", dev_null);
-
-  /* If any of the stdio file descriptors is valid and not associated
-     with /dev/null, dup /dev/null to it.  */
-  for (i = 0; i < 3; i++) {
-    /* If it is /dev/null already, we are done. */
-    if (i == dev_null) {
-      continue;
-    }
-
-    TRACE("[ Nullifying stdio file descriptor %d]", i);
-    status = TEMP_FAILURE_RETRY(fcntl(i, F_GETFL));
-
-    /* If file is opened, we are good. */
-    if (status != -1) {
-      continue;
-    }
-
-    /* The only error we allow is that the file descriptor does not
-       exist, in which case we dup /dev/null to it. */
-    if (errno != EBADF) {
-      DL_ERR("fcntl failed: %s", strerror(errno));
-      return_value = -1;
-      continue;
-    }
-
-    /* Try dupping /dev/null to this stdio file descriptor and
-       repeat if there is a signal.  Note that any errors in closing
-       the stdio descriptor are lost.  */
-    status = TEMP_FAILURE_RETRY(dup2(dev_null, i));
-    if (status < 0) {
-      DL_ERR("dup2 failed: %s", strerror(errno));
-      return_value = -1;
-      continue;
-    }
-  }
-
-  /* If /dev/null is not one of the stdio file descriptors, close it. */
-  if (dev_null > 2) {
-    TRACE("[ Closing /dev/null file-descriptor=%d]", dev_null);
-    if (close(dev_null) == -1) {
-      DL_ERR("close failed: %s", strerror(errno));
-      return_value = -1;
-    }
-  }
-
-  return return_value;
-}
-
 bool soinfo::prelink_image() {
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
@@ -3107,33 +3048,27 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   gettimeofday(&t0, 0);
 #endif
 
-  // Initialize environment functions, and get to the ELF aux vectors table.
-  linker_env_init(args);
+  // Sanitize the environment.
+  __libc_init_AT_SECURE(args);
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
 
-  // If this is a setuid/setgid program, close the security hole described in
-  // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
-  if (get_AT_SECURE()) {
-    nullify_closed_stdio();
-  }
-
   debuggerd_init();
 
   // Get a few environment variables.
-  const char* LD_DEBUG = linker_env_get("LD_DEBUG");
+  const char* LD_DEBUG = getenv("LD_DEBUG");
   if (LD_DEBUG != nullptr) {
     g_ld_debug_verbosity = atoi(LD_DEBUG);
   }
 
-  // Normally, these are cleaned by linker_env_init, but the test
+  // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
   const char* ldpath_env = nullptr;
   const char* ldpreload_env = nullptr;
-  if (!get_AT_SECURE()) {
-    ldpath_env = linker_env_get("LD_LIBRARY_PATH");
-    ldpreload_env = linker_env_get("LD_PRELOAD");
+  if (!getauxval(AT_SECURE)) {
+    ldpath_env = getenv("LD_LIBRARY_PATH");
+    ldpreload_env = getenv("LD_PRELOAD");
   }
 
 #if !defined(__LP64__)
