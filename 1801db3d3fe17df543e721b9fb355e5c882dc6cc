@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39c4a87c_855b85cc",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-06-10T04:22:42Z",
+      "side": 1,
+      "message": "The code would be simpler if you deleted this line, and just kept line 139 below. /sys/fs/selinux/null will always be created before /dev/null. I can\u0027t imagine a situation where /sys/fs/selinux/null doesn\u0027t exist yet /dev/null does.",
+      "revId": "1801db3d3fe17df543e721b9fb355e5c882dc6cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
