@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "b9fdf8c1_2b713dd6",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-10T03:01:44Z",
+      "side": 1,
+      "message": "what\u0027s missing from the comment in __early_abort? i did want to use __LINE__, but the numbers needed to be small when i was passing them to _exit. but since i\u0027ve switched to dereferencing them, i can use __LINE__. i\u0027ll also switch to casting that rather than \u0027msg\u0027 because both debuggerd and the kernel draw special attention to the fault address...",
+      "parentUuid": "5934fc65_e8aa47df",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 59
+      },
+      "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "193e044a_a982054f",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 3
@@ -71,6 +95,30 @@
       "writtenOn": "2015-06-10T02:30:16Z",
       "side": 1,
       "message": "A nit, but I think duping looks right. dupping looks wrong.",
+      "range": {
+        "startLine": 162,
+        "startChar": 13,
+        "endLine": 162,
+        "endChar": 20
+      },
+      "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99fcb4c6_cdbbe113",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-10T03:01:44Z",
+      "side": 1,
+      "message": "except \"dupe\" is a verb :-)\n\ni actually think using dup2 at all is silly. i didn\u0027t want to rewrite how this works in the same change where i move it out of the dynamic linker, but i think we should just call open(2). (i also don\u0027t think we should open everything O_RDWR.)",
+      "parentUuid": "193e044a_a982054f",
       "range": {
         "startLine": 162,
         "startChar": 13,
