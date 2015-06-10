@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "992af412_5a20d5d1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T22:50:35Z",
+      "side": 1,
+      "message": "It bothers me a little... use temporary buffer and pass it to basename(3)? it introduces one extra copy and free but on the plus side avoids code duplication...",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 48
+      },
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9754c3f_b1025a76",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T22:50:35Z",
+      "side": 1,
+      "message": "nit: set_dt_runpath",
+      "range": {
+        "startLine": 319,
+        "startChar": 13,
+        "endLine": 319,
+        "endChar": 29
+      },
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_b7dc9056",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T22:50:35Z",
+      "side": 1,
+      "message": "sorry have not noticed this before - do we want to replace unsupported LIB and PLATFORM with empty string? wouldn\u0027t it be better to just ignore them?",
+      "range": {
+        "startLine": 325,
+        "startChar": 24,
+        "endLine": 325,
+        "endChar": 55
+      },
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "992af412_3a7399c7",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1078,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T22:50:35Z",
+      "side": 1,
+      "message": "add test for dlopen(\"libtest_dt_runpath_c.so\",...)\n\nwhich is expect to fail...",
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9754c3f_b4c56880",
+        "filename": "tests/libs/dlopen_b.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T22:50:35Z",
+      "side": 1,
+      "message": "move it to dlfcn_tests.cpp / replace comments with ASSERT_*",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 16
+      },
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
