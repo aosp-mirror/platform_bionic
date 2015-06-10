@@ -9,7 +9,6 @@ LOCAL_SRC_FILES:= \
     linker_allocator.cpp \
     linker_sdk_versions.cpp \
     linker_block_allocator.cpp \
-    linker_environ.cpp \
     linker_libc_support.c \
     linker_memory.cpp \
     linker_phdr.cpp \
