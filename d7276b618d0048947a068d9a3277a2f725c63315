@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "39858859_515e94be",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2904,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-06-10T21:09:26Z",
+      "side": 1,
+      "message": "Hm, apparently they can.\nI wonder what happens in the case of a diamond dependency graph a -\u003e b -\u003e d, a -\u003e c -\u003e d, with b and c specifying different DT_RUN_PATHs? I guess we are supposed to take dependency order into account.",
+      "parentUuid": "79254042_b3db5816",
+      "revId": "d7276b618d0048947a068d9a3277a2f725c63315",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39858859_119fac68",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
