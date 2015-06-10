@@ -97,6 +97,14 @@ __LIBC_HIDDEN__ int g_ld_debug_verbosity;
 
 __LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr; // For debuggerd.
 
+static std::string dirname(const char *path) {
+  const char* last_slash = strrchr(path, '/');
+  if (last_slash == path) return "/";
+  else if (last_slash == nullptr) return ".";
+  else
+    return std::string(path, last_slash - path);
+}
+
 #if STATS
 struct linker_stats_t {
   int count[kRelocMax];
@@ -306,6 +314,38 @@ static void parse_path(const char* path, const char* delimiters,
 
 static void parse_LD_LIBRARY_PATH(const char* path) {
   parse_path(path, ":", &g_ld_library_paths);
+}
+
+void soinfo::set_dt_runpath(const char* path) {
+  if (!has_min_version(2)) return;
+  parse_path(path, ":", &dt_runpath_);
+
+  std::string origin = dirname(get_realpath());
+  // FIXME: add $LIB and $PLATFORM.
+  std::pair<std::string, std::string> substs[] = {{"ORIGIN", origin}};
+  for (std::string& s : dt_runpath_) {
+    size_t pos = 0;
+    while (pos < s.size()) {
+      pos = s.find("$", pos);
+      if (pos == std::string::npos) break;
+      for (const auto& subst : substs) {
+        const std::string& token = subst.first;
+        const std::string& replacement = subst.second;
+        if (s.substr(pos + 1, token.size()) == token) {
+          s.replace(pos, token.size() + 1, replacement);
+          // -1 to compensate for the ++pos below.
+          pos += replacement.size() - 1;
+          break;
+        } else if (s.substr(pos + 1, token.size() + 2) == "{" + token + "}") {
+          s.replace(pos, token.size() + 3, replacement);
+          pos += replacement.size() - 1;
+          break;
+        }
+      }
+      // Skip $ in case it did not match any of the known substitutions.
+      ++pos;
+    }
+  }
 }
 
 static void parse_LD_PRELOAD(const char* path) {
@@ -1161,8 +1201,9 @@ static int open_library_on_default_path(const char* name, off64_t* file_offset) 
   return -1;
 }
 
-static int open_library_on_ld_library_path(const char* name, off64_t* file_offset) {
-  for (const auto& path_str : g_ld_library_paths) {
+static int open_library_on_paths(const char* name, off64_t* file_offset,
+                                 const std::vector<std::string>& paths) {
+  for (const auto& path_str : paths) {
     char buf[512];
     const char* const path = path_str.c_str();
     if (!format_path(buf, sizeof(buf), path, name)) {
@@ -1189,7 +1230,7 @@ static int open_library_on_ld_library_path(const char* name, off64_t* file_offse
   return -1;
 }
 
-static int open_library(const char* name, off64_t* file_offset) {
+static int open_library(const char* name, soinfo *needed_by, off64_t* file_offset) {
   TRACE("[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
@@ -1209,7 +1250,10 @@ static int open_library(const char* name, off64_t* file_offset) {
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_ld_library_path(name, file_offset);
+  int fd = open_library_on_paths(name, file_offset, g_ld_library_paths);
+  if (fd == -1 && needed_by) {
+    fd = open_library_on_paths(name, file_offset, needed_by->get_dt_runpath());
+  }
   if (fd == -1) {
     fd = open_library_on_default_path(name, file_offset);
   }
@@ -1319,8 +1363,8 @@ static soinfo* load_library(int fd, off64_t file_offset,
   return si;
 }
 
-static soinfo* load_library(LoadTaskList& load_tasks,
-                            const char* name, int rtld_flags,
+static soinfo* load_library(LoadTaskList& load_tasks, const char* name,
+                            soinfo* needed_by, int rtld_flags,
                             const android_dlextinfo* extinfo) {
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
     off64_t file_offset = 0;
@@ -1332,7 +1376,7 @@ static soinfo* load_library(LoadTaskList& load_tasks,
 
   // Open the file.
   off64_t file_offset;
-  int fd = open_library(name, &file_offset);
+  int fd = open_library(name, needed_by, &file_offset);
   if (fd == -1) {
     DL_ERR("library \"%s\" not found", name);
     return nullptr;
@@ -1358,14 +1402,15 @@ static soinfo *find_loaded_library_by_soname(const char* name) {
 }
 
 static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
-                                     int rtld_flags, const android_dlextinfo* extinfo) {
+                                     soinfo* needed_by, int rtld_flags,
+                                     const android_dlextinfo* extinfo) {
   soinfo* si = find_loaded_library_by_soname(name);
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
   if (si == nullptr) {
     TRACE("[ '%s' has not been found by soname.  Trying harder...]", name);
-    si = load_library(load_tasks, name, rtld_flags, extinfo);
+    si = load_library(load_tasks, name, needed_by, rtld_flags, extinfo);
   }
 
   return si;
@@ -1434,12 +1479,12 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
   for (LoadTask::unique_ptr task(load_tasks.pop_front());
       task.get() != nullptr; task.reset(load_tasks.pop_front())) {
-    soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, extinfo);
+    soinfo* needed_by = task->get_needed_by();
+    soinfo* si = find_library_internal(load_tasks, task->get_name(), needed_by,
+                                       rtld_flags, extinfo);
     if (si == nullptr) {
       return false;
     }
-
-    soinfo* needed_by = task->get_needed_by();
 
     if (needed_by != nullptr) {
       needed_by->add_child(si);
@@ -2337,6 +2382,16 @@ soinfo::soinfo_list_t& soinfo::get_parents() {
   return g_empty_list;
 }
 
+static std::vector<std::string> g_empty_runpath;
+
+const std::vector<std::string>& soinfo::get_dt_runpath() const {
+  if (has_min_version(2)) {
+    return dt_runpath_;
+  }
+
+  return g_empty_runpath;
+}
+
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
@@ -2833,6 +2888,10 @@ bool soinfo::prelink_image() {
         verneed_cnt_ = d->d_un.d_val;
         break;
 
+      case DT_RUNPATH:
+        // this is parsed after we have strtab initialized (see below).
+        break;
+
       default:
         if (!relocating_linker) {
           DL_WARN("%s: unused DT entry: type %p arg %p", get_realpath(),
@@ -2866,12 +2925,17 @@ bool soinfo::prelink_image() {
 
   // second pass - parse entries relying on strtab
   for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-    if (d->d_tag == DT_SONAME) {
-      soname_ = get_string(d->d_un.d_val);
+    switch (d->d_tag) {
+      case DT_SONAME:
+        soname_ = get_string(d->d_un.d_val);
 #if defined(__work_around_b_19059885__)
-      strlcpy(old_name_, soname_, sizeof(old_name_));
+        strlcpy(old_name_, soname_, sizeof(old_name_));
 #endif
-      break;
+        break;
+      case DT_RUNPATH:
+        // FIXME: $LIB, $PLATFORM unsupported.
+        set_dt_runpath(get_string(d->d_un.d_val));
+        break;
     }
   }
 

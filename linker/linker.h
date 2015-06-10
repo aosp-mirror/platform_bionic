@@ -336,6 +336,8 @@ struct soinfo {
 
   uint32_t get_target_sdk_version() const;
 
+  const std::vector<std::string>& get_dt_runpath() const;
+
  private:
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
@@ -396,6 +398,9 @@ struct soinfo {
   size_t verneed_cnt_;
 
   uint32_t target_sdk_version_;
+
+  void set_dt_runpath(const char *);
+  std::vector<std::string> dt_runpath_;
 
   friend soinfo* get_libdl_info();
 };

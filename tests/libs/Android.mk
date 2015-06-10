@@ -20,6 +20,7 @@ TEST_PATH := $(LOCAL_PATH)/..
 common_cppflags += -std=gnu++11
 common_additional_dependencies := \
     $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/Android.build.dt_runpath.mk \
     $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
     $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
@@ -178,6 +179,11 @@ libtest_nodelete_dt_flags_1_ldflags := -Wl,-z,nodelete
 
 module := libtest_nodelete_dt_flags_1
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Build DT_RUNPATH test helper libraries
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.dt_runpath.mk
 
 # -----------------------------------------------------------------------------
 # Build library with two parents
