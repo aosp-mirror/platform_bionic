@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "992af412_942f2415",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2904,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T21:15:33Z",
+      "side": 1,
+      "message": "If \u0027d\u0027 has DT_SONAME:\nwe only use DT_RUNPATH when opening the library.. the your case it is going to be whoever triggered first which is b; d for c is going to be found without using DT_RUNPATH by soname. (we could use the test for it too)\n\nI think the rule is it is used whenever we try to open.. if soname is missing for d we will try to open twice using different paths...\n\nlinker tests can be found in bionic/tests/dlfcn_tests.cpp.. supporting libraries are under bionic/tests/libs/",
+      "parentUuid": "39858859_515e94be",
+      "revId": "d7276b618d0048947a068d9a3277a2f725c63315",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39858859_119fac68",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
