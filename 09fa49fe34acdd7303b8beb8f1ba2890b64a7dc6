@@ -180,6 +180,30 @@
       "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_3a1ac577",
+        "filename": "tests/libs/dlopen_b.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T23:35:40Z",
+      "side": 1,
+      "message": "ah.. ok.",
+      "parentUuid": "b92b3816_de62998e",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 16
+      },
+      "revId": "09fa49fe34acdd7303b8beb8f1ba2890b64a7dc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
