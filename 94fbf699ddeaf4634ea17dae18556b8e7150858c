@@ -16,6 +16,52 @@
       "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5934fc65_e8aa47df",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-10T02:30:16Z",
+      "side": 1,
+      "message": "Did you mean to leave in the __early_abort code and these messages?\n\nIf so, can you describe how you use them to debug in a comment.",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 59
+      },
+      "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "193e044a_a982054f",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-06-10T02:30:16Z",
+      "side": 1,
+      "message": "A nit, but I think duping looks right. dupping looks wrong.",
+      "range": {
+        "startLine": 162,
+        "startChar": 13,
+        "endLine": 162,
+        "endChar": 20
+      },
+      "revId": "94fbf699ddeaf4634ea17dae18556b8e7150858c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
