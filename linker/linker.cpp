@@ -2842,17 +2842,6 @@ bool soinfo::prelink_image() {
     }
   }
 
-  // second pass - parse entries relying on strtab
-  for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-    if (d->d_tag == DT_SONAME) {
-      soname_ = get_string(d->d_un.d_val);
-#if defined(__work_around_b_19059885__)
-      strlcpy(old_name_, soname_, sizeof(old_name_));
-#endif
-      break;
-    }
-  }
-
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
         reinterpret_cast<void*>(base), strtab_, symtab_);
 
@@ -2873,6 +2862,17 @@ bool soinfo::prelink_image() {
   if (symtab_ == 0) {
     DL_ERR("empty/missing DT_SYMTAB in \"%s\"", get_realpath());
     return false;
+  }
+
+  // second pass - parse entries relying on strtab
+  for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_SONAME) {
+      soname_ = get_string(d->d_un.d_val);
+#if defined(__work_around_b_19059885__)
+      strlcpy(old_name_, soname_, sizeof(old_name_));
+#endif
+      break;
+    }
   }
 
   // Before M release linker was using basename in place of soname.
