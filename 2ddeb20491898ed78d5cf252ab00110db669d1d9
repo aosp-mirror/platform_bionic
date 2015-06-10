@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79254042_796a7f14",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T23:37:39Z",
+      "side": 1,
+      "message": "small letters please... we use small for other fields. the LD_LIBRARY_PATH above is an exception.",
+      "range": {
+        "startLine": 319,
+        "startChar": 17,
+        "endLine": 319,
+        "endChar": 27
+      },
+      "revId": "2ddeb20491898ed78d5cf252ab00110db669d1d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
