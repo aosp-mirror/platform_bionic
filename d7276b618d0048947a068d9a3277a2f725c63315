@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79254042_b3db5816",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2904,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T20:46:13Z",
+      "side": 1,
+      "message": "I do not think this is the case.. any library can use DT_RUNPATH, no?",
+      "revId": "d7276b618d0048947a068d9a3277a2f725c63315",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39858859_119fac68",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2908,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-10T20:46:13Z",
+      "side": 1,
+      "message": "in which case dt_runpath and $ORIGIN should be part of soinfo...\n\nAlso as far as I know dlopen ignores DT_RUNPATH.. it is only used to resolve DT_NEEDED entries... we need tests to confirm this.",
+      "revId": "d7276b618d0048947a068d9a3277a2f725c63315",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
