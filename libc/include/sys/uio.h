@@ -34,8 +34,13 @@
 
 __BEGIN_DECLS
 
-int readv(int, const struct iovec *, int);
-int writev(int, const struct iovec *, int);
+int readv(int, const struct iovec*, int);
+int writev(int, const struct iovec*, int);
+
+#if defined(__USE_GNU)
+ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long);
+ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long);
+#endif
 
 __END_DECLS
 
