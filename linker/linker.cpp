@@ -3084,7 +3084,7 @@ static soinfo* linker_soinfo_for_gdb = nullptr;
 static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   linker_soinfo_for_gdb = new (linker_soinfo_for_gdb_buf) soinfo(LINKER_PATH, nullptr, 0, 0);
 
-  linker_soinfo_for_gdb->base = linker_base;
+  linker_soinfo_for_gdb->load_bias = linker_base;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
