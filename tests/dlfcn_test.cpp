@@ -1062,3 +1062,17 @@ extern "C" int version_zero_function() {
 extern "C" int version_zero_function2() {
   return 0;
 }
+
+TEST(dlfcn, dt_runpath) {
+  void* handle = dlopen("libtest_dt_runpath_d.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef void *(* dlopen_b_fn)();
+  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  void *p = fn();
+  ASSERT_TRUE(p == nullptr);
+
+  dlclose(handle);
+}

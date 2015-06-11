@@ -48,6 +48,10 @@ ifneq ($($(module)_multilib),)
     LOCAL_MULTILIB := $($(module)_multilib)
 endif
 
+ifneq ($($(module)_relative_path),)
+    LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
+endif
+
 LOCAL_CFLAGS := \
     $(common_cflags) \
     $($(module)_cflags) \
