@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ecd03d_74d86e96",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-11T23:43:31Z",
+      "side": 1,
+      "message": "typedef struct? what are we; C programmers? :-)",
+      "revId": "1424a860c629426d0e776ea99abb5fd5e82b3b81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59e07c3c_7cd85996",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-11T23:43:31Z",
+      "side": 1,
+      "message": "binutils already outputs this?",
+      "revId": "1424a860c629426d0e776ea99abb5fd5e82b3b81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
