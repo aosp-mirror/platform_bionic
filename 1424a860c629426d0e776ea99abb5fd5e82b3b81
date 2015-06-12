@@ -33,6 +33,24 @@
       "revId": "1424a860c629426d0e776ea99abb5fd5e82b3b81",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "596b1c6a_b334aa69",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-12T18:59:45Z",
+      "side": 1,
+      "message": "This struct is in elf.h of glibc 2.21.\n\nprebuilts/gcc/linux-x86/mips/mips64el-linux-android-4.9\u0027s readelf will print this new info when given the -A option.",
+      "parentUuid": "59e07c3c_7cd85996",
+      "revId": "1424a860c629426d0e776ea99abb5fd5e82b3b81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
