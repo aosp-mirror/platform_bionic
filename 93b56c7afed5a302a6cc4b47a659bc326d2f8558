@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "390ca8ed_284b337c",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-12T21:40:15Z",
+      "side": 1,
+      "message": "missing #if !defined(__LP64__) ?",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59e07c3c_3d9248db",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-12T21:40:15Z",
+      "side": 1,
+      "message": "can this be moved to linker_mips.cpp as well as new function in linker_phdr.cpp?",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "992af412_c072ab8e",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-12T21:40:15Z",
+      "side": 1,
+      "message": "no typedef just struct Elf_MIPS_ABIFlags_v0 { .. };",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
