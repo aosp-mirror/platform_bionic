@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "99abd4ef_d2db4415",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-15T18:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "390ca8ed_284b337c",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59e07c3c_3d9248db",
         "filename": "linker/linker.h",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "19b8c43c_f6811805",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-15T18:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59e07c3c_3d9248db",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "992af412_c072ab8e",
         "filename": "linker/linker.h",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2015-06-12T21:40:15Z",
       "side": 1,
       "message": "no typedef just struct Elf_MIPS_ABIFlags_v0 { .. };",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ba1036_15ac9474",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-15T18:39:18Z",
+      "side": 1,
+      "message": "This temp copy textually matches the declaration in glibc 2.21\u0027s elf.h",
+      "parentUuid": "992af412_c072ab8e",
       "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
