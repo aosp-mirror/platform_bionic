@@ -16,6 +16,24 @@
       "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39b10858_d434d26a",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-15T21:41:59Z",
+      "side": 1,
+      "message": "Ahh.\n\nbionic uses linux kernel\u0027s elf.h, not glibc\u0027s.\n\nSo this code will eventually be seeing upstream kernel\u0027s elf.h definitions of fp_abi stuff.  I can and should copy from there instead of from glibc, without making up yet another view of it.",
+      "parentUuid": "597cfc56_a283b386",
+      "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
