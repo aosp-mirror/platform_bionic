@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "597cfc56_a283b386",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-15T20:17:55Z",
+      "side": 1,
+      "message": "we don\u0027t use glibc, remember.",
+      "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
