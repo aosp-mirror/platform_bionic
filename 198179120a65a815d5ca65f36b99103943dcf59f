@@ -34,6 +34,24 @@
       "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b99c18d9_7677e6fa",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-15T21:47:17Z",
+      "side": 1,
+      "message": "I forgot that linux is GPL\u0027d too.  So I do need to compose yet another view. Or else explain to someone that all this new stuff was composed by Matthew Fortune of Imgtec, who has the rights to submit it to multiple places under multiple licenses.",
+      "parentUuid": "39b10858_d434d26a",
+      "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
