@@ -104,6 +104,24 @@
       "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "594a3c43_f55e526d",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-15T18:56:30Z",
+      "side": 1,
+      "message": "that\u0027s not allowed. please rewrite this. (and remove any other GPL code that\u0027s in this change.)",
+      "parentUuid": "f9ba1036_15ac9474",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
