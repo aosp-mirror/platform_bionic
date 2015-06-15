@@ -158,6 +158,24 @@
       "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5965dcc2_c3b51c70",
+        "filename": "linker/linker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-15T19:56:44Z",
+      "side": 1,
+      "message": "you can use the same field names and sizes --- you have to for interoperability.\n\nbut you can\u0027t copy \u0026 paste their comments.",
+      "parentUuid": "99abd4ef_f272c08d",
+      "revId": "93b56c7afed5a302a6cc4b47a659bc326d2f8558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
