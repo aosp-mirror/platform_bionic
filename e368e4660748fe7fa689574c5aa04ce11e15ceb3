@@ -16,6 +16,24 @@
       "revId": "e368e4660748fe7fa689574c5aa04ce11e15ceb3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b98a589d_1cc68c8b",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T00:53:50Z",
+      "side": 1,
+      "message": "\u003celf.h\u003e is something we wrote ourselves. it includes \u003clinux/*\u003e files that are from linux uapi/. our file just contains stuff that isn\u0027t in the linux uapi headers. so if this is going to be in an upstream uapi header, yeah, just wait and it\u0027ll magically appear. if it\u0027s not, we should add it straight to \u003celf.h\u003e.",
+      "parentUuid": "39b10858_d49052a3",
+      "revId": "e368e4660748fe7fa689574c5aa04ce11e15ceb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
