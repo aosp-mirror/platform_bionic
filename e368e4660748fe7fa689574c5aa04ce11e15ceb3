@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39b10858_d49052a3",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-06-16T00:07:10Z",
+      "side": 1,
+      "message": "I\u0027m still puzzled about whether bionic gets its machine-dependent elf headers from linux or from netbsd or ??.",
+      "revId": "e368e4660748fe7fa689574c5aa04ce11e15ceb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
