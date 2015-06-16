@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b98a589d_dc098467",
+        "filename": "libc/arch-mips64/bionic/stat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T00:59:24Z",
+      "side": 1,
+      "message": "(one day we\u0027ll build with -fvisibility\u003dhidden. until then, we need to manually hide implementation details.)",
+      "revId": "469b418784a01c759a2ddd889437d6e6c18b256e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

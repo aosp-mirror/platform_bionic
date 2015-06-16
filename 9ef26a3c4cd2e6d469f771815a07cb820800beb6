@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "594a3c43_e10e906c",
+        "filename": "libc/arch-mips64/bionic/stat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T00:59:24Z",
+      "side": 0,
+      "message": "i think the addition of \"newfstatat\" here was a misreading of SYSCALLS.TXT --- on the other 64-bit architectures, that\u0027s the system call used to implement fstatat64 and fstatat. it doesn\u0027t actually get an assembler stub of its own.",
+      "revId": "9ef26a3c4cd2e6d469f771815a07cb820800beb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
