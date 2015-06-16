@@ -52,6 +52,24 @@
       "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b98a589d_bcdd9856",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T00:55:52Z",
+      "side": 1,
+      "message": "yeah, if the same guy wants to submit the same change to us, that\u0027s fine.\n\notherwise we have the kernel header scrubbing script that removes comments and inline functions and only leaves behind stuff that it\u0027s okay to copy.",
+      "parentUuid": "b99c18d9_7677e6fa",
+      "revId": "198179120a65a815d5ca65f36b99103943dcf59f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
