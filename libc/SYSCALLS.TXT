@@ -203,7 +203,7 @@ clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
 int           clock_settime(clockid_t, const struct timespec*)  all
 int           clock_getres(clockid_t, struct timespec*)   all
-int           __clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
+int           ___clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
 int           getitimer(int, const struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
 int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all

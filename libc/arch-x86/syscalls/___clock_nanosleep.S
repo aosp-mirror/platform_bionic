@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(__clock_nanosleep)
+ENTRY(___clock_nanosleep)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -33,4 +33,5 @@ ENTRY(__clock_nanosleep)
     popl    %ecx
     popl    %ebx
     ret
-END(__clock_nanosleep)
+END(___clock_nanosleep)
+.hidden ___clock_nanosleep
