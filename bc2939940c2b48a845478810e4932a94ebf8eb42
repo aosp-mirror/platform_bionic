@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ba1036_f80e256c",
+        "filename": "libc/libc.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T02:21:33Z",
+      "side": 1,
+      "message": "oops. is this new leakage in M? if so, we should make it ___clock_nanosleep.",
+      "revId": "bc2939940c2b48a845478810e4932a94ebf8eb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99abd4ef_d5dcce57",
+        "filename": "libc/libc.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 1296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T02:21:33Z",
+      "side": 1,
+      "message": "i\u0027m still not sure about a lot of these DNS ones. they\u0027re in glibc\u0027s \u003cresolv.h\u003e.",
+      "revId": "bc2939940c2b48a845478810e4932a94ebf8eb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19b8c43c_79487b7d",
+        "filename": "libc/libc.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 1343,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T02:21:33Z",
+      "side": 1,
+      "message": "these are needed for -fstack-protector.",
+      "revId": "bc2939940c2b48a845478810e4932a94ebf8eb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39b10858_37cba095",
+        "filename": "libc/libc.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 1413,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T02:21:33Z",
+      "side": 1,
+      "message": "?",
+      "revId": "bc2939940c2b48a845478810e4932a94ebf8eb42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
