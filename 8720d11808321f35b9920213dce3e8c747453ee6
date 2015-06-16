@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "796d40b3_cd038d14",
+        "filename": "libc/bionic/realpath.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T15:44:01Z",
+      "side": 1,
+      "message": "there\u0027s nothing useful in this comment.",
+      "revId": "8720d11808321f35b9920213dce3e8c747453ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "594a3c43_ecaa078d",
+        "filename": "libc/bionic/realpath.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T15:44:01Z",
+      "side": 1,
+      "message": "i think you need a loop here because there\u0027s a race between you measuring the path and reading it.",
+      "revId": "8720d11808321f35b9920213dce3e8c747453ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "594a3c43_0cb02bfc",
+        "filename": "libc/bionic/realpath.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T15:44:01Z",
+      "side": 1,
+      "message": "malloc already did this.",
+      "revId": "8720d11808321f35b9920213dce3e8c747453ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796d40b3_ed084933",
+        "filename": "libc/bionic/realpath.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T15:44:01Z",
+      "side": 1,
+      "message": "UniquePtr?",
+      "revId": "8720d11808321f35b9920213dce3e8c747453ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "796d40b3_2d132166",
+        "filename": "libc/bionic/realpath.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-16T15:44:01Z",
+      "side": 1,
+      "message": "we should probably add a __close_quietly so we can stop repeating this (and lose some gotos).",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 3
+      },
+      "revId": "8720d11808321f35b9920213dce3e8c747453ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
