@@ -42,6 +42,9 @@ typedef fpregset_t elf_fpregset_t;
 typedef elf_gregset_t prgregset_t;
 typedef elf_fpregset_t prfpregset_t;
 
+typedef pid_t lwpid_t;
+typedef void* psaddr_t;
+
 __END_DECLS
 
 #endif /* _SYS_PROCFS_H_ */
