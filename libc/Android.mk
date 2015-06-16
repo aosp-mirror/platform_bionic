@@ -1341,7 +1341,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_REQUIRED_MODULES := tzdata
 LOCAL_ADDITIONAL_DEPENDENCIES := \
     $(libc_common_additional_dependencies) \
-    $(LOCAL_PATH)/version_script.txt \
+    $(LOCAL_PATH)/libc.map \
 
 # Leave the symbols in the shared library so that stack unwinders can produce
 # meaningful name resolution.
@@ -1369,7 +1369,7 @@ LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't re-export new/delete and friends, even if the compiler really wants to.
-LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/libc.map
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
