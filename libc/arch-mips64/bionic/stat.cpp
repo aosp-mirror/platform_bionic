@@ -32,29 +32,28 @@
 #include <unistd.h>
 
 struct kernel_stat {
- unsigned int st_dev;
- unsigned int st_pad0[3];
- unsigned long st_ino;
- mode_t st_mode;
- __u32 st_nlink;
- uid_t st_uid;
- gid_t st_gid;
- unsigned int st_rdev;
- unsigned int st_pad1[3];
- __kernel_off_t st_size;
- unsigned int _st_atime;
- unsigned int st_atime_nsec;
- unsigned int _st_mtime;
- unsigned int st_mtime_nsec;
- unsigned int _st_ctime;
- unsigned int st_ctime_nsec;
- unsigned int st_blksize;
- unsigned int st_pad2;
- unsigned long st_blocks;
+  unsigned int st_dev;
+  unsigned int st_pad0[3];
+  unsigned long st_ino;
+  mode_t st_mode;
+  __u32 st_nlink;
+  uid_t st_uid;
+  gid_t st_gid;
+  unsigned int st_rdev;
+  unsigned int st_pad1[3];
+  __kernel_off_t st_size;
+  unsigned int _st_atime;
+  unsigned int st_atime_nsec;
+  unsigned int _st_mtime;
+  unsigned int st_mtime_nsec;
+  unsigned int _st_ctime;
+  unsigned int st_ctime_nsec;
+  unsigned int st_blksize;
+  unsigned int st_pad2;
+  unsigned long st_blocks;
 };
 
-void copy_stat(struct stat *st, struct kernel_stat *s)
-{
+static void copy_stat(struct stat* st, struct kernel_stat* s) {
   st->st_dev = static_cast<dev_t>(s->st_dev);
   st->st_ino = static_cast<ino_t>(s->st_ino);
   st->st_mode = static_cast<mode_t>(s->st_mode);
@@ -73,30 +72,17 @@ void copy_stat(struct stat *st, struct kernel_stat *s)
   st->st_ctim.tv_nsec = static_cast<long>(s->st_ctime_nsec);
 }
 
-int fstat(int fp, struct stat *st)
-{
+int fstat(int fp, struct stat* st) {
   kernel_stat s;
-  int ret;
-  ret = syscall (__NR_fstat, fp, &s);
-  copy_stat (st, &s);
+  int ret = syscall(__NR_fstat, fp, &s);
+  copy_stat(st, &s);
   return ret;
 }
 __strong_alias(fstat64, fstat);
 
-int newfstatat(int dirfd, const char *pathname, struct stat *buf, int flags)
-{
+int fstatat(int dirfd, const char* pathname, struct stat* buf, int flags) {
    kernel_stat s;
-   int ret;
-   ret = syscall(__NR_newfstatat, dirfd, pathname, &s, flags);
-   copy_stat(buf, &s);
-   return ret;
-}
-
-int fstatat(int dirfd, const char *pathname, struct stat *buf, int flags)
-{
-   kernel_stat s;
-   int ret;
-   ret = syscall(__NR_newfstatat, dirfd, pathname, &s, flags);
+   int ret = syscall(__NR_newfstatat, dirfd, pathname, &s, flags);
    copy_stat(buf, &s);
    return ret;
 }
