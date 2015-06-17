@@ -45,6 +45,9 @@ __BEGIN_DECLS
 #define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
 #define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
 
+#define W_EXITCODE(ret, sig)    ((ret) << 8 | (sig))
+#define W_STOPCODE(sig)         ((sig) << 8 | 0x7f)
+
 extern pid_t  wait(int *);
 extern pid_t  waitpid(pid_t, int *, int);
 extern pid_t  wait4(pid_t, int *, int, struct rusage *);
