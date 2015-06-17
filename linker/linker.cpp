@@ -1393,7 +1393,19 @@ static soinfo *find_loaded_library_by_soname(const char* name) {
     return nullptr;
   }
 
+  uint32_t target_sdk_version = get_application_target_sdk_version();
+
   for (soinfo* si = solist; si != nullptr; si = si->next) {
+    // If the library was opened under different target sdk version
+    // skip this step and try to reopen it. The exceptions are
+    // "libdl.so" and global group. There is no point in skipping
+    // them because relocation process is going to use them
+    // in any case.
+    if (si != solist && (si->get_dt_flags_1() & DF_1_GLOBAL) == 0 &&
+        si->is_linked() && si->get_target_sdk_version() != target_sdk_version) {
+      continue;
+    }
+
     const char* soname = si->get_soname();
     if (soname != nullptr && (strcmp(name, soname) == 0)) {
       return si;
