@@ -1387,31 +1387,64 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name,
   return result;
 }
 
-static soinfo *find_loaded_library_by_soname(const char* name) {
+// Returns true if library was found and false in 2 cases
+// 1. The library was found but loaded under different target_sdk_version
+//    (*candidate != nullptr)
+// 2. The library was not found by soname (*candidate is nullptr)
+static bool find_loaded_library_by_soname(const char* name, soinfo** candidate) {
+  *candidate = nullptr;
+
   // Ignore filename with path.
   if (strchr(name, '/') != nullptr) {
-    return nullptr;
+    return false;
   }
+
+  uint32_t target_sdk_version = get_application_target_sdk_version();
 
   for (soinfo* si = solist; si != nullptr; si = si->next) {
     const char* soname = si->get_soname();
     if (soname != nullptr && (strcmp(name, soname) == 0)) {
-      return si;
+      // If the library was opened under different target sdk version
+      // skip this step and try to reopen it. The exceptions are
+      // "libdl.so" and global group. There is no point in skipping
+      // them because relocation process is going to use them
+      // in any case.
+      bool is_libdl = si == solist;
+      if (is_libdl || (si->get_dt_flags_1() & DF_1_GLOBAL) != 0 ||
+          !si->is_linked() || si->get_target_sdk_version() == target_sdk_version) {
+        *candidate = si;
+        return true;
+      } else if (*candidate == nullptr) {
+        // for the different sdk version - remember the first library.
+        *candidate = si;
+      }
     }
   }
-  return nullptr;
+
+  return false;
 }
 
 static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
                                      soinfo* needed_by, int rtld_flags,
                                      const android_dlextinfo* extinfo) {
-  soinfo* si = find_loaded_library_by_soname(name);
+  soinfo* candidate;
+
+  if (find_loaded_library_by_soname(name, &candidate)) {
+    return candidate;
+  }
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
-  if (si == nullptr) {
-    TRACE("[ '%s' has not been found by soname.  Trying harder...]", name);
-    si = load_library(load_tasks, name, needed_by, rtld_flags, extinfo);
+  TRACE("[ '%s' find_loaded_library_by_soname returned false (*candidate=%s@%p). Trying harder...]",
+      name, candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
+
+  soinfo* si = load_library(load_tasks, name, needed_by, rtld_flags, extinfo);
+
+  // In case we were unable to load the library but there
+  // is a candidate loaded under the same soname but different
+  // sdk level - return it anyways.
+  if (si == nullptr && candidate != nullptr) {
+    si = candidate;
   }
 
   return si;
