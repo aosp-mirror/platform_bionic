@@ -6,6 +6,9 @@
 
 libc_bionic_src_files_mips += \
     arch-mips/string/memcmp.c \
+    arch-mips/string/memcpy.S \
+    arch-mips/string/memset.S \
+    arch-mips/string/strcmp.S \
     bionic/__memcpy_chk.cpp \
     bionic/__memset_chk.cpp \
     bionic/__strcpy_chk.cpp \
@@ -31,7 +34,6 @@ libc_openbsd_src_files_mips += \
     upstream-openbsd/lib/libc/string/stpcpy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
     upstream-openbsd/lib/libc/string/strcat.c \
-    upstream-openbsd/lib/libc/string/strcmp.c \
     upstream-openbsd/lib/libc/string/strcpy.c \
     upstream-openbsd/lib/libc/string/strlcat.c \
     upstream-openbsd/lib/libc/string/strlcpy.c \
@@ -54,14 +56,10 @@ libc_bionic_src_files_mips += \
 
 ifndef ARCH_MIPS_REV6
 libc_bionic_src_files_mips += \
-    arch-mips/string/memcpy.S \
-    arch-mips/string/memset.S \
     arch-mips/string/mips_strlen.c \
 
 else
 libc_bionic_src_files_mips += \
-    arch-mips/string/memcpy.c \
-    arch-mips/string/memset.c \
     arch-mips/string/strlen.c \
 
 endif
