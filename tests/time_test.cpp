@@ -166,7 +166,7 @@ void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time
   ts.it_value.tv_nsec = value_ns;
   ts.it_interval.tv_sec = interval_s;
   ts.it_interval.tv_nsec = interval_ns;
-  ASSERT_EQ(0, timer_settime(t, TIMER_ABSTIME, &ts, NULL));
+  ASSERT_EQ(0, timer_settime(t, 0, &ts, NULL));
 }
 
 static void NoOpNotifyFunction(sigval_t) {
@@ -381,8 +381,8 @@ TEST(time, timer_create_multiple) {
   ASSERT_EQ(0, counter2.Value());
   ASSERT_EQ(0, counter3.Value());
 
-  counter2.SetTime(0, 1, 0, 0);
-  usleep(500000);
+  counter2.SetTime(0, 500000000, 0, 0);
+  sleep(1);
 
   EXPECT_EQ(0, counter1.Value());
   EXPECT_EQ(1, counter2.Value());
