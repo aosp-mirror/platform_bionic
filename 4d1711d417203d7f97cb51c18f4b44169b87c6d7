@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eb50aac_5152863e",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-06-19T22:27:40Z",
+      "side": 1,
+      "message": "thanks, I forgot about these...",
+      "range": {
+        "startLine": 78,
+        "startChar": 53,
+        "endLine": 78,
+        "endChar": 65
+      },
+      "revId": "4d1711d417203d7f97cb51c18f4b44169b87c6d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
