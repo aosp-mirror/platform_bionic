@@ -381,8 +381,8 @@ TEST(time, timer_create_multiple) {
   ASSERT_EQ(0, counter2.Value());
   ASSERT_EQ(0, counter3.Value());
 
-  counter2.SetTime(0, 1, 0, 0);
-  usleep(500000);
+  counter2.SetTime(0, 500000000, 0, 0);
+  sleep(1);
 
   EXPECT_EQ(0, counter1.Value());
   EXPECT_EQ(1, counter2.Value());
