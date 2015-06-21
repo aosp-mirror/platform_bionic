@@ -250,7 +250,9 @@ struct soinfo {
   bool mips_relocate_got(const VersionTracker& version_tracker,
                          const soinfo_list_t& global_group,
                          const soinfo_list_t& local_group);
-
+#if !defined(__LP64__)
+  bool mips_check_and_adjust_fp_modes();
+#endif
 #endif
   size_t ref_count_;
  public:
