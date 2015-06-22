@@ -49,9 +49,6 @@ endif
 test_cppflags = \
     -std=gnu++11 \
 
-libBionicStandardTests_src_files_target := \
-    libdl_test.cpp \
-
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
@@ -275,6 +272,7 @@ bionic-unit-tests_src_files := \
     dlext_test.cpp \
     __cxa_thread_atexit_test.cpp \
     dlfcn_test.cpp \
+    libdl_test.cpp \
     pthread_dlfcn_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
