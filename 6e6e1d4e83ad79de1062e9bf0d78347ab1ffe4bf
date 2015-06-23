@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ecce27c_45427cf3",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-23T18:37:14Z",
+      "side": 1,
+      "message": "where is this a quote from?",
+      "revId": "6e6e1d4e83ad79de1062e9bf0d78347ab1ffe4bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de1a92b3_b5f70acd",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-23T18:37:14Z",
+      "side": 1,
+      "message": "this weird backquote thing looks like a GNU error message, not one of ours...",
+      "revId": "6e6e1d4e83ad79de1062e9bf0d78347ab1ffe4bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
