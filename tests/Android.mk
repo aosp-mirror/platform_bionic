@@ -137,6 +137,11 @@ libBionicStandardTests_static_libraries := \
 libBionicStandardTests_ldlibs_host := \
     -lrt \
 
+# Clang/llvm has incompatible long double (fp128) for x86_64.
+# https://llvm.org/bugs/show_bug.cgi?id=23897
+# This affects most of math_test.cpp.
+libBionicStandardTests_clang_target := false
+
 module := libBionicStandardTests
 module_tag := optional
 build_type := target
