@@ -3,6 +3,12 @@ LOCAL_PATH:= $(call my-dir)
 
 bionic_coverage := false
 
+# Clang/llvm has incompatible long double (fp128) for x86_64.
+# https://llvm.org/bugs/show_bug.cgi?id=23897
+ifeq ($(TARGET_ARCH),x86_64)
+libm_clang := false
+endif
+
 # -----------------------------------------------------------------------------
 # libm.a
 # -----------------------------------------------------------------------------
@@ -473,7 +479,7 @@ LOCAL_C_INCLUDES_x86 += $(LOCAL_PATH)/i387
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
 LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
-LOCAL_CLANG := true
+LOCAL_CLANG := $(libm_clang)
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS := \
     -DFLT_EVAL_METHOD=0 \
@@ -514,7 +520,7 @@ LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/libm.map
 
 LOCAL_MODULE := libm
-LOCAL_CLANG := true
+LOCAL_CLANG := $(libm_clang)
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_WHOLE_STATIC_LIBRARIES := libm
 

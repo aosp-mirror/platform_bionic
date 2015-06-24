@@ -580,6 +580,13 @@ libc_common_cflags += -DTARGET_USES_LOGD
 endif
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
+
+# Clang/llvm has incompatible long double (fp128) for x86_64.
+# https://llvm.org/bugs/show_bug.cgi?id=23897
+ifeq ($(TARGET_ARCH),x86_64)
+  use_clang := false
+endif
+
 ifeq ($(use_clang),)
   use_clang := false
 endif
