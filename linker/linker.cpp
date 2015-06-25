@@ -2875,6 +2875,12 @@ bool soinfo::prelink_image() {
     }
   }
 
+#if defined(__mips__) && !defined(__LP64__)
+  if (!mips_check_and_adjust_fp_modes()) {
+    return false;
+  }
+#endif
+
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
         reinterpret_cast<void*>(base), strtab_, symtab_);
 

@@ -26,8 +26,21 @@
  * SUCH DAMAGE.
  */
 
+#if !defined(__LP64__) && __mips_isa_rev >= 5
+#include <sys/prctl.h>
+#if defined(PR_SET_FP_MODE)
+#error "remove following defs when avail in Android's kernel headers"
+#else
+#define PR_SET_FP_MODE 45
+#define PR_GET_FP_MODE 46
+#define PR_FP_MODE_FR  (1 << 0)
+#define PR_FP_MODE_FRE (1 << 1)
+#endif
+#endif
+
 #include "linker.h"
 #include "linker_debug.h"
+#include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
@@ -62,7 +75,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker,
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
 
-    DEBUG("Processing '%s' relocation at index %zd", get_soname(), idx);
+    DEBUG("Processing '%s' relocation at index %zd", get_realpath(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }
@@ -84,7 +97,8 @@ bool soinfo::relocate(const VersionTracker& version_tracker,
 
       if (s == nullptr) {
         // mips does not support relocation with weak-undefined symbols
-        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, get_soname());
+        DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...",
+               sym_name, get_realpath());
         return false;
       } else {
         // We got a definition.
@@ -171,20 +185,22 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
       }
     } else if (st_visibility == STV_PROTECTED) {
       if (local_sym->st_value == 0) {
-        DL_ERR("%s: invalid symbol \"%s\" (PROTECTED/UNDEFINED) ", get_soname(), sym_name);
+        DL_ERR("%s: invalid symbol \"%s\" (PROTECTED/UNDEFINED) ",
+               get_realpath(), sym_name);
         return false;
       }
       s = local_sym;
       lsi = this;
     } else {
-      DL_ERR("%s: invalid symbol \"%s\" visibility: 0x%x", get_soname(), sym_name, st_visibility);
+      DL_ERR("%s: invalid symbol \"%s\" visibility: 0x%x",
+             get_realpath(), sym_name, st_visibility);
       return false;
     }
 
     if (s == nullptr) {
       // We only allow an undefined symbol if this is a weak reference.
       if (ELF_ST_BIND(local_sym->st_info) != STB_WEAK) {
-        DL_ERR("%s: cannot locate \"%s\"...", get_soname(), sym_name);
+        DL_ERR("%s: cannot locate \"%s\"...", get_realpath(), sym_name);
         return false;
       }
       *got = 0;
@@ -198,3 +214,126 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
   return true;
 }
 
+#if !defined(__LP64__)
+
+// Checks for mips32's various floating point abis.
+// (Mips64 Android has a single floating point abi and doesn't need any checks)
+
+// Linux kernel has declarations similar to the following
+//   in <linux>/arch/mips/include/asm/elf.h,
+// but that non-uapi internal header file will never be imported
+// into bionic's kernel headers.
+
+#define PT_MIPS_ABIFLAGS  0x70000003	// is .MIPS.abiflags segment
+
+struct mips_elf_abiflags_v0 {
+  uint16_t version;  // version of this structure
+  uint8_t  isa_level, isa_rev, gpr_size, cpr1_size, cpr2_size;
+  uint8_t  fp_abi;  // mips32 ABI variants for floating point
+  uint16_t isa_ext, ases, flags1, flags2;
+};
+
+// Bits of flags1:
+#define MIPS_AFL_FLAGS1_ODDSPREG 1  // Uses odd-numbered single-prec fp regs
+
+// Some values of fp_abi:        via compiler flag:
+#define MIPS_ABI_FP_DOUBLE 1  // -mdouble-float
+#define MIPS_ABI_FP_XX     5  // -mfpxx
+#define MIPS_ABI_FP_64A    7  // -mips32r* -mfp64 -mno-odd-spreg
+
+#if __mips_isa_rev >= 5
+static bool mips_fre_mode_on = false;  // have set FRE=1 mode for process
+#endif
+
+bool soinfo::mips_check_and_adjust_fp_modes() {
+  mips_elf_abiflags_v0* abiflags = nullptr;
+  int mips_fpabi;
+
+  // Find soinfo's optional .MIPS.abiflags segment
+  for (size_t i = 0; i<phnum; ++i) {
+    const ElfW(Phdr)& ph = phdr[i];
+    if (ph.p_type == PT_MIPS_ABIFLAGS) {
+      if (ph.p_filesz < sizeof (mips_elf_abiflags_v0)) {
+        DL_ERR("Corrupt PT_MIPS_ABIFLAGS header found \"%s\"", get_realpath());
+        return false;
+      }
+      abiflags = reinterpret_cast<mips_elf_abiflags_v0*>(ph.p_vaddr + load_bias);
+      break;
+    }
+  }
+
+  // FP ABI-variant compatibility checks for MIPS o32 ABI
+  if (abiflags == nullptr) {
+    // Old compiles lack the new abiflags section.
+    // These compilers used -mfp32 -mdouble-float -modd-spreg defaults,
+    //   ie FP32 aka DOUBLE, using odd-numbered single-prec regs
+    mips_fpabi = MIPS_ABI_FP_DOUBLE;
+  } else {
+    mips_fpabi = abiflags->fp_abi;
+    if ( (abiflags->flags1 & MIPS_AFL_FLAGS1_ODDSPREG)
+         && (mips_fpabi == MIPS_ABI_FP_XX ||
+             mips_fpabi == MIPS_ABI_FP_64A   ) ) {
+      // Android supports fewer cases than Linux
+      DL_ERR("Unsupported odd-single-prec FloatPt reg uses in \"%s\"",
+             get_realpath());
+      return false;
+    }
+  }
+  if (!(mips_fpabi == MIPS_ABI_FP_DOUBLE ||
+#if __mips_isa_rev >= 5
+        mips_fpabi == MIPS_ABI_FP_64A    ||
+#endif
+        mips_fpabi == MIPS_ABI_FP_XX       )) {
+    DL_ERR("Unsupported MIPS32 FloatPt ABI %d found in \"%s\"",
+           mips_fpabi, get_realpath());
+    return false;
+  }
+
+#if __mips_isa_rev >= 5
+  // Adjust process's FR Emulation mode, if needed
+  //
+  // On Mips R5 & R6, Android runs continuously in FR=1 64bit-fpreg mode.
+  // NDK mips32 apps compiled with old compilers generate FP32 code
+  //   which expects FR=0 32-bit fp registers.
+  // NDK mips32 apps compiled with newer compilers generate modeless
+  //   FPXX code which runs on both FR=0 and FR=1 modes.
+  // Android itself is compiled in FP64A which requires FR=1 mode.
+  // FP32, FPXX, and FP64A all interlink okay, without dynamic FR mode
+  //   changes during calls.  For details, see
+  //   http://dmz-portal.mips.com/wiki/MIPS_O32_ABI_-_FR0_and_FR1_Interlinking
+  // Processes containing FR32 FR=0 code are run via kernel software assist,
+  //   which maps all odd-numbered single-precision reg refs onto the
+  //   upper half of the paired even-numbered double-precision reg.
+  // FRE=1 triggers traps to the kernel's emulator on every single-precision
+  //   fp op (for both odd and even-numbered registers).
+  // Turning on FRE=1 traps is done at most once per process, simultanously
+  //   for all threads of that process, when dlopen discovers FP32 code.
+  // The kernel repacks threads' registers when FRE mode is turn on or off.
+  //   These asynchronous adjustments are wrong if any thread was executing
+  //   FPXX code using odd-numbered single-precision regs.
+  // Current Android compilers default to the -mno-oddspreg option,
+  //   and this requirement is checked by Android's dlopen.
+  //   So FRE can always be safely turned on for FP32, anytime.
+  // Deferred enhancement: Allow loading of odd-spreg FPXX modules.
+
+  if (mips_fpabi == MIPS_ABI_FP_DOUBLE && !mips_fre_mode_on) {
+    // Turn on FRE mode, which emulates mode-sensitive FR=0 code on FR=1
+    //   register files, by trapping to kernel on refs to single-precision regs
+    if (prctl(PR_SET_FP_MODE, PR_FP_MODE_FR|PR_FP_MODE_FRE)) {
+      DL_ERR("Kernel or cpu failed to set FRE mode required for running \"%s\"",
+             get_realpath());
+      return false;
+    }
+    DL_WARN("Using FRE=1 mode to run \"%s\"", get_realpath());
+    mips_fre_mode_on = true;  // Avoid future redundant mode-switch calls
+    // FRE mode is never turned back off.
+    // Deferred enhancement:
+    //   Reset FRE mode when dlclose() removes all FP32 modules
+  }
+#else
+  // Android runs continuously in FR=0 32bit-fpreg mode.
+#endif  // __mips_isa_rev
+  return true;
+}
+
+#endif  // __LP64___
