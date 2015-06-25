@@ -1293,7 +1293,7 @@ static soinfo* load_library(int fd, off64_t file_offset,
   }
 
   // Read the ELF header and load the segments.
-  ElfReader elf_reader(realpath.c_str(), fd, file_offset);
+  ElfReader elf_reader(realpath.c_str(), fd, file_offset, file_stat.st_size);
   if (!elf_reader.Load(extinfo)) {
     return nullptr;
   }
