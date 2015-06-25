@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "be731e93_753c089d",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-25T21:56:17Z",
+      "side": 1,
+      "message": "it means you can avoid a multi-project change. you can come back and remove the deprecated one later. might be worth commenting here that it\u0027s dead though.",
+      "parentUuid": "3ee3ae4b_8776aafd",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 40
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e0942dc_9d9e073e",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 3
