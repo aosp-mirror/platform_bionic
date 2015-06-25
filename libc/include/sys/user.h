@@ -47,7 +47,7 @@ struct user_fpregs_struct {
   long fos;
   long st_space[20];
 };
-struct user_fxsr_struct {
+struct user_fpxregs_struct {
   unsigned short cwd;
   unsigned short swd;
   unsigned short twd;
