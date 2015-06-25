@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e0942dc_bd994b5a",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2015-06-25T16:21:33Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of this name. net_context? res_context?",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 22
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ee3ae4b_8776aafd",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2015-06-25T16:21:33Z",
+      "side": 1,
+      "message": "Why introduce a new function instead of modifying android_getaddrinfofornet? Are there too many callers?",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 40
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e0942dc_9d9e073e",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2015-06-25T16:21:33Z",
+      "side": 1,
+      "message": "Seems like it would be nicer to initialize all the members explicitly here instead of initializing the structure to NETWORK_CONTEXT_UNSET and then overwriting almost all of it. If what you need is a #define for -1, then perhaps you can #define INVALID_UID (-1) ?",
+      "range": {
+        "startLine": 570,
+        "startChar": 35,
+        "endLine": 570,
+        "endChar": 58
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ee0623c_a509289f",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2015-06-25T16:21:33Z",
+      "side": 1,
+      "message": "Why? Does it simplify things? We only expect to have one caller of this (netd), and I would imagine it will always use a non-null context.",
+      "range": {
+        "startLine": 594,
+        "startChar": 4,
+        "endLine": 594,
+        "endChar": 36
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e5366ca_43d00671",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2015-06-25T16:21:33Z",
+      "side": 1,
+      "message": "This works because UIDs happen to be unsigned, but I think \"!\u003d\" would be better than \"\u003c\".",
+      "range": {
+        "startLine": 1794,
+        "startChar": 20,
+        "endLine": 1794,
+        "endChar": 21
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
