@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe8836a6_9f99b35a",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2015-06-26T08:25:39Z",
+      "side": 1,
+      "message": "i\u0027d suggest changing this to NET_CONTEXT_UID_UNSET. \"UID_UNSET\" is too generic a name and can cause confusion. Also note that \u003clinux/audit.h\u003e chooses AUDIT_UID_UNSET for struct audit.. {}.",
+      "revId": "5b69f6e4bc076d3ba14a25e85b62848c80fe9d12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe8836a6_7fe06fb8",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2015-06-26T08:25:39Z",
+      "side": 1,
+      "message": "are tabs the norm in this project ?",
+      "revId": "5b69f6e4bc076d3ba14a25e85b62848c80fe9d12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
