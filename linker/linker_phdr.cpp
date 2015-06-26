@@ -133,8 +133,8 @@ static int GetTargetElfMachine() {
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-ElfReader::ElfReader(const char* name, int fd, off64_t file_offset)
-    : name_(name), fd_(fd), file_offset_(file_offset),
+ElfReader::ElfReader(const char* name, int fd, off64_t file_offset, off64_t file_size)
+    : name_(name), fd_(fd), file_offset_(file_offset), file_size_(file_size),
       phdr_num_(0), phdr_mmap_(nullptr), phdr_table_(nullptr), phdr_size_(0),
       load_start_(nullptr), load_size_(0), load_bias_(0),
       loaded_phdr_(nullptr) {
@@ -376,6 +376,20 @@ bool ElfReader::LoadSegments() {
 
     ElfW(Addr) file_page_start = PAGE_START(file_start);
     ElfW(Addr) file_length = file_end - file_page_start;
+
+    if (file_size_ <= 0) {
+      DL_ERR("\"%s\" invalid file size: %" PRId64, name_, file_size_);
+      return false;
+    }
+
+    if (file_end >= static_cast<size_t>(file_size_)) {
+      DL_ERR("invalid ELF file \"%s\" load segment[%zd]:"
+          " p_offset (%p) + p_filesz (%p) ( = %p) past end of file (0x%" PRIx64 ")",
+          name_, i, reinterpret_cast<void*>(phdr->p_offset),
+          reinterpret_cast<void*>(phdr->p_filesz),
+          reinterpret_cast<void*>(file_end), file_size_);
+      return false;
+    }
 
     if (file_length != 0) {
       void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
