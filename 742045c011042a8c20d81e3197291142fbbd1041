@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fed3d693_ea2647f0",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-06-26T15:22:05Z",
+      "side": 1,
+      "message": "your comment made me realize that given that this is a public header, android_net_context is probably a good idea.",
+      "revId": "742045c011042a8c20d81e3197291142fbbd1041",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
