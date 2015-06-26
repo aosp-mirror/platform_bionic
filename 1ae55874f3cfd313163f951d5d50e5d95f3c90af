@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7e6d26b3_f35f5067",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "There are already a bunch of *res* structures, so I went with net_context.",
+      "parentUuid": "5e0942dc_bd994b5a",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 22
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ee3ae4b_8776aafd",
         "filename": "libc/dns/include/resolv_netid.h",
         "patchSetId": 3
@@ -72,6 +96,54 @@
     },
     {
       "key": {
+        "uuid": "5e4a2243_15f836bb",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "Yes, it was originally because there are non-bionic callers.\n\nI added a TODO for the refactoring that I really think is required, namely:\n    - make android_getaddrinfo_proxy() serve as an explore_fqdn() dispatch table callable\n    - make android_getaddrinfofornetcontext() actually call DNS-only functions, i.e. _dns_getaddrinfo().",
+      "parentUuid": "be731e93_753c089d",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 40
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e4a2243_d50dce70",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "See below.",
+      "parentUuid": "3ee3ae4b_8776aafd",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 40
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e0942dc_9d9e073e",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 3
@@ -83,6 +155,30 @@
       "writtenOn": "2015-06-25T16:21:33Z",
       "side": 1,
       "message": "Seems like it would be nicer to initialize all the members explicitly here instead of initializing the structure to NETWORK_CONTEXT_UNSET and then overwriting almost all of it. If what you need is a #define for -1, then perhaps you can #define INVALID_UID (-1) ?",
+      "range": {
+        "startLine": 570,
+        "startChar": 35,
+        "endLine": 570,
+        "endChar": 58
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe5676ec_afae39ef",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "Added a UID_UNSET #define.",
+      "parentUuid": "5e0942dc_9d9e073e",
       "range": {
         "startLine": 570,
         "startChar": 35,
@@ -118,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "1e542ae3_f0a82065",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ee0623c_a509289f",
+      "range": {
+        "startLine": 594,
+        "startChar": 4,
+        "endLine": 594,
+        "endChar": 36
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e5366ca_43d00671",
         "filename": "libc/dns/net/getaddrinfo.c",
         "patchSetId": 3
@@ -129,6 +249,30 @@
       "writtenOn": "2015-06-25T16:21:33Z",
       "side": 1,
       "message": "This works because UIDs happen to be unsigned, but I think \"!\u003d\" would be better than \"\u003c\".",
+      "range": {
+        "startLine": 1794,
+        "startChar": 20,
+        "endLine": 1794,
+        "endChar": 21
+      },
+      "revId": "1ae55874f3cfd313163f951d5d50e5d95f3c90af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe5676ec_cfb37d5a",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T06:59:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e5366ca_43d00671",
       "range": {
         "startLine": 1794,
         "startChar": 20,
