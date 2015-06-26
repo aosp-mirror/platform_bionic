@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7e6d26b3_164f5a87",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T10:08:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe8836a6_9f99b35a",
+      "revId": "5b69f6e4bc076d3ba14a25e85b62848c80fe9d12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe8836a6_7fe06fb8",
         "filename": "libc/dns/include/resolv_netid.h",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-06-26T08:25:39Z",
       "side": 1,
       "message": "are tabs the norm in this project ?",
+      "revId": "5b69f6e4bc076d3ba14a25e85b62848c80fe9d12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e4a2243_78ea59e9",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2015-06-26T10:08:06Z",
+      "side": 1,
+      "message": "Hmm..., I originally just copied and pasted from above.\n\nLooking at the file I see examples of both 4-space and 1 tab continuation indents.\n\nI tried to resolve in favor of 4-space, but I will defer to others who can say better.",
+      "parentUuid": "fe8836a6_7fe06fb8",
       "revId": "5b69f6e4bc076d3ba14a25e85b62848c80fe9d12",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
