@@ -51,12 +51,12 @@ TEST(dlfcn, ctor_function_call) {
 
 TEST(dlfcn, dlsym_in_executable) {
   dlerror(); // Clear any pending errors.
-  void* self = dlopen(NULL, RTLD_NOW);
-  ASSERT_TRUE(self != NULL);
-  ASSERT_TRUE(dlerror() == NULL);
+  void* self = dlopen(nullptr, RTLD_NOW);
+  ASSERT_TRUE(self != nullptr);
+  ASSERT_TRUE(dlerror() == nullptr);
 
   void* sym = dlsym(self, "DlSymTestFunction");
-  ASSERT_TRUE(sym != NULL);
+  ASSERT_TRUE(sym != nullptr);
 
   void (*function)() = reinterpret_cast<void(*)()>(sym);
 
@@ -175,11 +175,11 @@ TEST(dlfcn, dlsym_with_dependencies) {
 
 TEST(dlfcn, dlopen_noload) {
   void* handle = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
-  ASSERT_TRUE(handle == NULL);
+  ASSERT_TRUE(handle == nullptr);
   handle = dlopen("libtest_simple.so", RTLD_NOW);
   void* handle2 = dlopen("libtest_simple.so", RTLD_NOW | RTLD_NOLOAD);
-  ASSERT_TRUE(handle != NULL);
-  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle != nullptr);
+  ASSERT_TRUE(handle2 != nullptr);
   ASSERT_TRUE(handle == handle2);
   ASSERT_EQ(0, dlclose(handle));
   ASSERT_EQ(0, dlclose(handle2));
@@ -220,11 +220,11 @@ TEST(dlfcn, ifunc) {
   // first check the set case
   setenv("IFUNC_CHOICE", "set", 1);
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle != nullptr);
   fn_ptr foo_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo"));
   fn_ptr foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
-  ASSERT_TRUE(foo_ptr != NULL);
-  ASSERT_TRUE(foo_library_ptr != NULL);
+  ASSERT_TRUE(foo_ptr != nullptr);
+  ASSERT_TRUE(foo_library_ptr != nullptr);
   ASSERT_EQ(strncmp("set", foo_ptr(), 3), 0);
   ASSERT_EQ(strncmp("set", foo_library_ptr(), 3), 0);
   dlclose(handle);
@@ -232,11 +232,11 @@ TEST(dlfcn, ifunc) {
   // then check the unset case
   unsetenv("IFUNC_CHOICE");
   handle = dlopen("libtest_ifunc.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle != nullptr);
   foo_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo"));
   foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
-  ASSERT_TRUE(foo_ptr != NULL);
-  ASSERT_TRUE(foo_library_ptr != NULL);
+  ASSERT_TRUE(foo_ptr != nullptr);
+  ASSERT_TRUE(foo_library_ptr != nullptr);
   ASSERT_EQ(strncmp("unset", foo_ptr(), 5), 0);
   ASSERT_EQ(strncmp("unset", foo_library_ptr(), 3), 0);
   dlclose(handle);
@@ -315,9 +315,9 @@ TEST(dlfcn, dlopen_check_order_dlsym) {
   typedef int (*fn_t) (void);
   fn_t fn, fn2;
   fn = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer"));
-  ASSERT_TRUE(fn != NULL) << dlerror();
+  ASSERT_TRUE(fn != nullptr) << dlerror();
   fn2 = reinterpret_cast<fn_t>(dlsym(RTLD_DEFAULT, "check_order_dlsym_get_answer2"));
-  ASSERT_TRUE(fn2 != NULL) << dlerror();
+  ASSERT_TRUE(fn2 != nullptr) << dlerror();
 
   ASSERT_EQ(42, fn());
   ASSERT_EQ(43, fn2());
@@ -718,7 +718,7 @@ TEST(dlfcn, dlsym_df_1_global) {
 
 TEST(dlfcn, dlopen_failure) {
   void* self = dlopen("/does/not/exist", RTLD_NOW);
-  ASSERT_TRUE(self == NULL);
+  ASSERT_TRUE(self == nullptr);
 #if defined(__BIONIC__)
   ASSERT_STREQ("dlopen failed: library \"/does/not/exist\" not found", dlerror());
 #else
@@ -737,7 +737,7 @@ TEST(dlfcn, dlerror_concurrent) {
   ASSERT_SUBSTR("/main/thread", main_thread_error);
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, ConcurrentDlErrorFn, NULL));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentDlErrorFn, nullptr));
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   char* child_thread_error = static_cast<char*>(result);
@@ -749,31 +749,31 @@ TEST(dlfcn, dlerror_concurrent) {
 
 TEST(dlfcn, dlsym_failures) {
   dlerror(); // Clear any pending errors.
-  void* self = dlopen(NULL, RTLD_NOW);
-  ASSERT_TRUE(self != NULL);
-  ASSERT_TRUE(dlerror() == NULL);
+  void* self = dlopen(nullptr, RTLD_NOW);
+  ASSERT_TRUE(self != nullptr);
+  ASSERT_TRUE(dlerror() == nullptr);
 
   void* sym;
 
 #if defined(__BIONIC__) && !defined(__LP64__)
   // RTLD_DEFAULT in lp32 bionic is not (void*)0
   // so it can be distinguished from the NULL handle.
-  sym = dlsym(NULL, "test");
-  ASSERT_TRUE(sym == NULL);
+  sym = dlsym(nullptr, "test");
+  ASSERT_TRUE(sym == nullptr);
   ASSERT_SUBSTR("dlsym library handle is null", dlerror());
 #endif
 
   // NULL symbol name.
 #if defined(__BIONIC__)
   // glibc marks this parameter non-null and SEGVs if you cheat.
-  sym = dlsym(self, NULL);
-  ASSERT_TRUE(sym == NULL);
+  sym = dlsym(self, nullptr);
+  ASSERT_TRUE(sym == nullptr);
   ASSERT_SUBSTR("", dlerror());
 #endif
 
   // Symbol that doesn't exist.
   sym = dlsym(self, "ThisSymbolDoesNotExist");
-  ASSERT_TRUE(sym == NULL);
+  ASSERT_TRUE(sym == nullptr);
   ASSERT_SUBSTR("undefined symbol: ThisSymbolDoesNotExist", dlerror());
 
   ASSERT_EQ(0, dlclose(self));
@@ -781,12 +781,12 @@ TEST(dlfcn, dlsym_failures) {
 
 TEST(dlfcn, dladdr_executable) {
   dlerror(); // Clear any pending errors.
-  void* self = dlopen(NULL, RTLD_NOW);
-  ASSERT_TRUE(self != NULL);
-  ASSERT_TRUE(dlerror() == NULL);
+  void* self = dlopen(nullptr, RTLD_NOW);
+  ASSERT_TRUE(self != nullptr);
+  ASSERT_TRUE(dlerror() == nullptr);
 
   void* sym = dlsym(self, "DlSymTestFunction");
-  ASSERT_TRUE(sym != NULL);
+  ASSERT_TRUE(sym != nullptr);
 
   // Deliberately ask dladdr for an address inside a symbol, rather than the symbol base address.
   void* addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(sym) + 2);
@@ -861,12 +861,12 @@ TEST(dlfcn, dladdr_invalid) {
   dlerror(); // Clear any pending errors.
 
   // No symbol corresponding to NULL.
-  ASSERT_EQ(dladdr(NULL, &info), 0); // Zero on error, non-zero on success.
-  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
+  ASSERT_EQ(dladdr(nullptr, &info), 0); // Zero on error, non-zero on success.
+  ASSERT_TRUE(dlerror() == nullptr); // dladdr(3) doesn't set dlerror(3).
 
   // No symbol corresponding to a stack address.
   ASSERT_EQ(dladdr(&info, &info), 0); // Zero on error, non-zero on success.
-  ASSERT_TRUE(dlerror() == NULL); // dladdr(3) doesn't set dlerror(3).
+  ASSERT_TRUE(dlerror() == nullptr); // dladdr(3) doesn't set dlerror(3).
 }
 
 // GNU-style ELF hash tables are incompatible with the MIPS ABI.
@@ -922,49 +922,49 @@ TEST(dlfcn, dlopen_bad_flags) {
 
 #if defined(__GLIBC__)
   // glibc was smart enough not to define RTLD_NOW as 0, so it can detect missing flags.
-  handle = dlopen(NULL, 0);
-  ASSERT_TRUE(handle == NULL);
+  handle = dlopen(nullptr, 0);
+  ASSERT_TRUE(handle == nullptr);
   ASSERT_SUBSTR("invalid", dlerror());
 #endif
 
-  handle = dlopen(NULL, 0xffffffff);
-  ASSERT_TRUE(handle == NULL);
+  handle = dlopen(nullptr, 0xffffffff);
+  ASSERT_TRUE(handle == nullptr);
   ASSERT_SUBSTR("invalid", dlerror());
 
   // glibc actually allows you to choose both RTLD_NOW and RTLD_LAZY at the same time, and so do we.
-  handle = dlopen(NULL, RTLD_NOW|RTLD_LAZY);
-  ASSERT_TRUE(handle != NULL);
-  ASSERT_SUBSTR(NULL, dlerror());
+  handle = dlopen(nullptr, RTLD_NOW|RTLD_LAZY);
+  ASSERT_TRUE(handle != nullptr);
+  ASSERT_SUBSTR(nullptr, dlerror());
 }
 
 TEST(dlfcn, rtld_default_unknown_symbol) {
   void* addr = dlsym(RTLD_DEFAULT, "ANY_UNKNOWN_SYMBOL_NAME");
-  ASSERT_TRUE(addr == NULL);
+  ASSERT_TRUE(addr == nullptr);
 }
 
 TEST(dlfcn, rtld_default_known_symbol) {
   void* addr = dlsym(RTLD_DEFAULT, "fopen");
-  ASSERT_TRUE(addr != NULL);
+  ASSERT_TRUE(addr != nullptr);
 }
 
 TEST(dlfcn, rtld_next_unknown_symbol) {
   void* addr = dlsym(RTLD_NEXT, "ANY_UNKNOWN_SYMBOL_NAME");
-  ASSERT_TRUE(addr == NULL);
+  ASSERT_TRUE(addr == nullptr);
 }
 
 TEST(dlfcn, rtld_next_known_symbol) {
   void* addr = dlsym(RTLD_NEXT, "fopen");
-  ASSERT_TRUE(addr != NULL);
+  ASSERT_TRUE(addr != nullptr);
 }
 
 TEST(dlfcn, dlsym_weak_func) {
   dlerror();
   void* handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW);
-  ASSERT_TRUE(handle != NULL);
+  ASSERT_TRUE(handle != nullptr);
 
   int (*weak_func)();
   weak_func = reinterpret_cast<int (*)()>(dlsym(handle, "weak_func"));
-  ASSERT_TRUE(weak_func != NULL) << "dlerror: " << dlerror();
+  ASSERT_TRUE(weak_func != nullptr) << "dlerror: " << dlerror();
   EXPECT_EQ(42, weak_func());
   dlclose(handle);
 }
@@ -982,8 +982,8 @@ TEST(dlfcn, dlopen_undefined_weak_func) {
 TEST(dlfcn, dlopen_symlink) {
   void* handle1 = dlopen("libdlext_test.so", RTLD_NOW);
   void* handle2 = dlopen("libdlext_test_v2.so", RTLD_NOW);
-  ASSERT_TRUE(handle1 != NULL);
-  ASSERT_TRUE(handle2 != NULL);
+  ASSERT_TRUE(handle1 != nullptr);
+  ASSERT_TRUE(handle2 != nullptr);
   ASSERT_EQ(handle1, handle2);
   dlclose(handle1);
   dlclose(handle2);
