@@ -158,6 +158,11 @@ int dlclose(void* handle) {
   return 0;
 }
 
+int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  return do_dl_iterate_phdr(cb, data);
+}
+
 void android_set_application_target_sdk_version(uint32_t target) {
   // lock to avoid modification in the middle of dlopen.
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
