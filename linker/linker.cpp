@@ -1159,7 +1159,7 @@ static int open_library_in_zipfile(const char* const path,
 
   ZipEntry entry;
 
-  if (FindEntry(handle, ZipEntryName(file_path), &entry) != 0) {
+  if (FindEntry(handle, ZipString(file_path), &entry) != 0) {
     // Entry was not found.
     close(fd);
     return -1;
