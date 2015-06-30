@@ -1699,6 +1699,24 @@ crt_arch_so_flags = crt_arch_flags + {
     },
 }
 
+// Android.mk:start
+// # crt obj files
+// # ========================================================
+// # crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+// libc_crt_target_cflags := \
+//    -I$(LOCAL_PATH)/include \
+//    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+//
+// my_2nd_arch_prefix :=
+// include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+// include $(LOCAL_PATH)/crt.mk
+// ifdef TARGET_2ND_ARCH
+// my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+// include $(LOCAL_PATH)/arch-$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
+// include $(LOCAL_PATH)/crt.mk
+// my_2nd_arch_prefix :=
+// endif
+// Android.mk:end
 cc_object {
     name: "crtbrand",
     local_include_dirs: ["include"],
@@ -1709,6 +1727,7 @@ cc_object {
     arch: crt_arch_so_flags,
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_so1",
     local_include_dirs: ["include"],
@@ -1718,6 +1737,7 @@ cc_object {
     arch: crt_arch_so_flags,
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_so",
     no_default_compiler_flags: true,
@@ -1729,6 +1749,7 @@ cc_object {
     ],
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtend_so",
     local_include_dirs: ["include"],
@@ -1738,6 +1759,7 @@ cc_object {
     arch: crt_arch_so_flags,
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
@@ -1772,6 +1794,7 @@ cc_object {
     },
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_static",
     no_default_compiler_flags: true,
@@ -1783,6 +1806,7 @@ cc_object {
     ],
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
@@ -1817,6 +1841,7 @@ cc_object {
     },
 }
 
+// Android.mk:ignore
 cc_object {
     name: "crtbegin_dynamic",
     no_default_compiler_flags: true,
@@ -1828,6 +1853,7 @@ cc_object {
     ],
 }
 
+// Android.mk:ignore
 cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
