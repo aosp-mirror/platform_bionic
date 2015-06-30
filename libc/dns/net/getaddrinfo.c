@@ -218,7 +218,7 @@ struct res_target {
 
 static int str2number(const char *);
 static int explore_fqdn(const struct addrinfo *, const char *,
-	const char *, struct addrinfo **, unsigned netid, unsigned mark);
+	const char *, struct addrinfo **, const struct android_net_context *);
 static int explore_null(const struct addrinfo *,
 	const char *, struct addrinfo **);
 static int explore_numeric(const struct addrinfo *, const char *,
@@ -244,6 +244,7 @@ static void _endhtent(FILE **);
 static struct addrinfo *_gethtent(FILE **, const char *,
     const struct addrinfo *);
 static int _files_getaddrinfo(void *, void *, va_list);
+static int _find_src_addr(const struct sockaddr *, struct sockaddr *, unsigned , uid_t);
 
 static int res_queryN(const char *, struct res_target *, res_state);
 static int res_searchN(const char *, struct res_target *, res_state);
@@ -360,29 +361,6 @@ str2number(const char *p)
 }
 
 /*
- * Connect a UDP socket to a given unicast address. This will cause no network
- * traffic, but will fail fast if the system has no or limited reachability to
- * the destination (e.g., no IPv4 address, no IPv6 default route, ...).
- */
-static int
-_test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
-	int s = socket(pf, SOCK_DGRAM | SOCK_CLOEXEC, IPPROTO_UDP);
-	if (s < 0)
-		return 0;
-	if (mark != MARK_UNSET && setsockopt(s, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
-		return 0;
-	int ret;
-	do {
-		ret = __connect(s, addr, addrlen);
-	} while (ret < 0 && errno == EINTR);
-	int success = (ret == 0);
-	do {
-		ret = close(s);
-	} while (ret < 0 && errno == EINTR);
-	return success;
-}
-
-/*
  * The following functions determine whether IPv4 or IPv6 connectivity is
  * available in order to implement AI_ADDRCONFIG.
  *
@@ -392,24 +370,24 @@ _test_connect(int pf, struct sockaddr *addr, size_t addrlen, unsigned mark) {
  * so checking for connectivity is the next best thing.
  */
 static int
-_have_ipv6(unsigned mark) {
+_have_ipv6(unsigned mark, uid_t uid) {
 	static const struct sockaddr_in6 sin6_test = {
 		.sin6_family = AF_INET6,
 		.sin6_addr.s6_addr = {  // 2000::
 			0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 		};
 	sockaddr_union addr = { .in6 = sin6_test };
-	return _test_connect(PF_INET6, &addr.generic, sizeof(addr.in6), mark);
+	return _find_src_addr(&addr.generic, NULL, mark, uid) == 1;
 }
 
 static int
-_have_ipv4(unsigned mark) {
+_have_ipv4(unsigned mark, uid_t uid) {
 	static const struct sockaddr_in sin_test = {
 		.sin_family = AF_INET,
 		.sin_addr.s_addr = __constant_htonl(0x08080808L)  // 8.8.8.8
 	};
 	sockaddr_union addr = { .in = sin_test };
-	return _test_connect(PF_INET, &addr.generic, sizeof(addr.in), mark);
+	return _find_src_addr(&addr.generic, NULL, mark, uid) == 1;
 }
 
 bool readBE32(FILE* fp, int32_t* result) {
@@ -474,7 +452,7 @@ android_getaddrinfo_proxy(
 
 	int result_code = (int)strtol(buf, NULL, 10);
 	// verify the code itself
-	if (result_code != DnsProxyQueryResult ) {
+	if (result_code != DnsProxyQueryResult) {
 		fread(buf, 1, sizeof(buf), proxy);
 		goto exit;
 	}
@@ -589,6 +567,21 @@ int
 android_getaddrinfofornet(const char *hostname, const char *servname,
     const struct addrinfo *hints, unsigned netid, unsigned mark, struct addrinfo **res)
 {
+	struct android_net_context netcontext = {
+		.app_netid = netid,
+		.app_mark = mark,
+		.dns_netid = netid,
+		.dns_mark = mark,
+		.uid = NET_CONTEXT_INVALID_UID,
+        };
+	return android_getaddrinfofornetcontext(hostname, servname, hints, &netcontext, res);
+}
+
+int
+android_getaddrinfofornetcontext(const char *hostname, const char *servname,
+    const struct addrinfo *hints, const struct android_net_context *netcontext,
+    struct addrinfo **res)
+{
 	struct addrinfo sentinel;
 	struct addrinfo *cur;
 	int error = 0;
@@ -601,6 +594,7 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 	/* servname is allowed to be NULL */
 	/* hints is allowed to be NULL */
 	assert(res != NULL);
+	assert(netcontext != NULL);
 	memset(&sentinel, 0, sizeof(sentinel));
 	cur = &sentinel;
 	pai = &ai;
@@ -731,7 +725,8 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 		ERR(EAI_NONAME);
 
 #if defined(__ANDROID__)
-	int gai_error = android_getaddrinfo_proxy(hostname, servname, hints, res, netid);
+	int gai_error = android_getaddrinfo_proxy(
+		hostname, servname, hints, res, netcontext->app_netid);
 	if (gai_error != EAI_SYSTEM) {
 		return gai_error;
 	}
@@ -763,8 +758,8 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 		if (pai->ai_protocol == ANY && ex->e_protocol != ANY)
 			pai->ai_protocol = ex->e_protocol;
 
-		error = explore_fqdn(pai, hostname, servname,
-			&cur->ai_next, netid, mark);
+		error = explore_fqdn(
+			pai, hostname, servname, &cur->ai_next, netcontext);
 
 		while (cur && cur->ai_next)
 			cur = cur->ai_next;
@@ -797,7 +792,8 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
  */
 static int
 explore_fqdn(const struct addrinfo *pai, const char *hostname,
-    const char *servname, struct addrinfo **res, unsigned netid, unsigned mark)
+    const char *servname, struct addrinfo **res,
+    const struct android_net_context *netcontext)
 {
 	struct addrinfo *result;
 	struct addrinfo *cur;
@@ -823,7 +819,7 @@ explore_fqdn(const struct addrinfo *pai, const char *hostname,
 		return 0;
 
 	switch (nsdispatch(&result, dtab, NSDB_HOSTS, "getaddrinfo",
-			default_dns_files, hostname, pai, netid, mark)) {
+			default_dns_files, hostname, pai, netcontext)) {
 	case NS_TRYAGAIN:
 		error = EAI_AGAIN;
 		goto free;
@@ -1763,13 +1759,13 @@ _rfc6724_compare(const void *ptr1, const void* ptr2)
  * address. src_addr must be large enough to hold a struct sockaddr_in6.
  *
  * Returns 1 if a source address was found, 0 if the address is unreachable,
- * and -1 if a fatal error occurred. If 0 or 1, the contents of src_addr are
+ * and -1 if a fatal error occurred. If 0 or -1, the contents of src_addr are
  * undefined.
  */
 
 /*ARGSUSED*/
 static int
-_find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned mark)
+_find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned mark, uid_t uid)
 {
 	int sock;
 	int ret;
@@ -1797,6 +1793,8 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned 
 	}
 	if (mark != MARK_UNSET && setsockopt(sock, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
 		return 0;
+	if (uid > 0 && uid != NET_CONTEXT_INVALID_UID && fchown(sock, uid, (gid_t)-1) < 0)
+		return 0;
 	do {
 		ret = __connect(sock, addr, len);
 	} while (ret == -1 && errno == EINTR);
@@ -1806,7 +1804,7 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned 
 		return 0;
 	}
 
-	if (getsockname(sock, src_addr, &len) == -1) {
+	if (src_addr && getsockname(sock, src_addr, &len) == -1) {
 		close(sock);
 		return -1;
 	}
@@ -1821,7 +1819,7 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned 
 
 /*ARGSUSED*/
 static void
-_rfc6724_sort(struct addrinfo *list_sentinel, unsigned mark)
+_rfc6724_sort(struct addrinfo *list_sentinel, unsigned mark, uid_t uid)
 {
 	struct addrinfo *cur;
 	int nelem = 0, i;
@@ -1848,7 +1846,7 @@ _rfc6724_sort(struct addrinfo *list_sentinel, unsigned mark)
 		elems[i].ai = cur;
 		elems[i].original_order = i;
 
-		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.generic, mark);
+		has_src_addr = _find_src_addr(cur->ai_addr, &elems[i].src_addr.generic, mark, uid);
 		if (has_src_addr == -1) {
 			goto error;
 		}
@@ -1879,12 +1877,11 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	struct addrinfo sentinel, *cur;
 	struct res_target q, q2;
 	res_state res;
-	unsigned netid, mark;
+	const struct android_net_context *netcontext;
 
 	name = va_arg(ap, char *);
 	pai = va_arg(ap, const struct addrinfo *);
-	netid = va_arg(ap, unsigned);
-	mark = va_arg(ap, unsigned);
+	netcontext = va_arg(ap, const struct android_net_context *);
 	//fprintf(stderr, "_dns_getaddrinfo() name = '%s'\n", name);
 
 	memset(&q, 0, sizeof(q));
@@ -1913,8 +1910,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		q.anslen = sizeof(buf->buf);
 		int query_ipv6 = 1, query_ipv4 = 1;
 		if (pai->ai_flags & AI_ADDRCONFIG) {
-			query_ipv6 = _have_ipv6(mark);
-			query_ipv4 = _have_ipv4(mark);
+			query_ipv6 = _have_ipv6(netcontext->app_mark, netcontext->uid);
+			query_ipv4 = _have_ipv4(netcontext->app_mark, netcontext->uid);
 		}
 		if (query_ipv6) {
 			q.qtype = T_AAAA;
@@ -1966,8 +1963,8 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	 * fully populate the thread private data here, but if we get down there
 	 * and have a cache hit that would be wasted, so we do the rest there on miss
 	 */
-	res_setnetid(res, netid);
-	res_setmark(res, mark);
+	res_setnetid(res, netcontext->dns_netid);
+	res_setmark(res, netcontext->dns_mark);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
 		free(buf);
@@ -1999,7 +1996,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 		}
 	}
 
-	_rfc6724_sort(&sentinel, netid);
+	_rfc6724_sort(&sentinel, netcontext->app_mark, netcontext->uid);
 
 	__res_put_state(res);
 

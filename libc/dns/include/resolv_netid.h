@@ -53,10 +53,37 @@ struct addrinfo;
 
 #define __used_in_netd __attribute__((visibility ("default")))
 
+/*
+ * A struct to capture context relevant to network operations.
+ *
+ * Application and DNS netids/marks can differ from one another under certain
+ * circumstances, notably when a VPN applies to the given uid's traffic but the
+ * VPN network does not have its own DNS servers explicitly provisioned.
+ *
+ * The introduction of per-UID routing means the uid is also an essential part
+ * of the evaluation context. Its proper uninitialized value is
+ * NET_CONTEXT_INVALID_UID.
+ */
+struct android_net_context {
+    unsigned app_netid;
+    unsigned app_mark;
+    unsigned dns_netid;
+    unsigned dns_mark;
+    uid_t uid;
+} __attribute__((packed));
+
+#define NET_CONTEXT_INVALID_UID ((uid_t)-1)
+
 struct hostent *android_gethostbyaddrfornet(const void *, socklen_t, int, unsigned, unsigned) __used_in_netd;
 struct hostent *android_gethostbynamefornet(const char *, int, unsigned, unsigned) __used_in_netd;
 int android_getaddrinfofornet(const char *, const char *, const struct addrinfo *, unsigned,
-		unsigned, struct addrinfo **) __used_in_netd;
+    unsigned, struct addrinfo **) __used_in_netd;
+/*
+ * TODO: consider refactoring android_getaddrinfo_proxy() to serve as an
+ * explore_fqdn() dispatch table method, with the below function only making DNS calls.
+ */
+int android_getaddrinfofornetcontext(const char *, const char *, const struct addrinfo *,
+    const struct android_net_context *, struct addrinfo **) __used_in_netd;
 
 /* set name servers for a network */
 extern void _resolv_set_nameservers_for_net(unsigned netid,
