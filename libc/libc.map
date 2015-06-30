@@ -306,6 +306,7 @@ LIBC {
     alphasort;
     alphasort64;
     android_getaddrinfofornet;
+    android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
     android_gethostbynamefornet;
     android_set_abort_message;
