@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/auxv.h>
+#include <sys/personality.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -44,6 +45,7 @@
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
+#include "private/libc_logging.h"
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
@@ -289,6 +291,19 @@ static void __sanitize_environment_variables(char** env) {
   dst[0] = nullptr;
 }
 
+static void __initialize_personality() {
+#if !defined(__LP64__)
+  int old_value = personality(0xffffffff);
+  if (old_value == -1) {
+    __libc_fatal("error getting old personality value: %s", strerror(errno));
+  }
+
+  if (personality((static_cast<unsigned int>(old_value) & ~PER_MASK) | PER_LINUX32) == -1) {
+    __libc_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
+  }
+#endif
+}
+
 void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
@@ -312,6 +327,8 @@ void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
 
   // Now the environment has been sanitized, make it available.
   environ = args.envp;
+
+  __initialize_personality();
 }
 
 /* This function will be called during normal program termination
