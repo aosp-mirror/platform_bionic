@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-extern int personality (unsigned long persona);
+extern int personality (unsigned int persona);
 
 __END_DECLS
 

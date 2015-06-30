@@ -37,7 +37,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/param.h>
-#include <sys/personality.h>
 #include <unistd.h>
 
 #include <new>
@@ -3110,12 +3109,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     ldpath_env = getenv("LD_LIBRARY_PATH");
     ldpreload_env = getenv("LD_PRELOAD");
   }
-
-#if !defined(__LP64__)
-  if (personality(PER_LINUX32) == -1) {
-    __libc_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
-  }
-#endif
 
   INFO("[ android linker & debugger ]");
 
