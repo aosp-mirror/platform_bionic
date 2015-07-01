@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__GNUC__) && __GNUC__ >= 5 && !defined(__cplusplus)
+#if __STDC_VERSION__ >= 201112L && !defined(__cplusplus)
 typedef __CHAR16_TYPE__ char16_t;
 typedef __CHAR32_TYPE__ char32_t;
 #endif
