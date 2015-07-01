@@ -788,8 +788,8 @@ cc_library_static {
     srcs: libc_upstream_freebsd_src_files,
     arch: {
         arm64: {
-            srcs: [
-                "-upstream-freebsd/lib/libc/string/wmemmove.c",
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wmemmove.c",
             ],
         },
         arm: {
@@ -885,21 +885,21 @@ cc_library_static {
 
     arch: {
         arm64: {
-            srcs: [
-                "-upstream-openbsd/lib/libc/string/memchr.c",
-                "-upstream-openbsd/lib/libc/string/memmove.c",
-                "-upstream-openbsd/lib/libc/string/stpcpy.c",
-                "-upstream-openbsd/lib/libc/string/strcmp.c",
-                "-upstream-openbsd/lib/libc/string/strcpy.c",
-                "-upstream-openbsd/lib/libc/string/strncmp.c",
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
+                "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
         arm: {
-            srcs: [
-                "-upstream-openbsd/lib/libc/string/stpcpy.c",
-                "-upstream-openbsd/lib/libc/string/strcat.c",
-                "-upstream-openbsd/lib/libc/string/strcmp.c",
-                "-upstream-openbsd/lib/libc/string/strcpy.c",
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
             ],
         },
     },
@@ -1060,9 +1060,6 @@ cc_library_static {
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
 
-                "-bionic/__memcpy_chk.cpp",
-                "-bionic/strchr.cpp",
-                "-bionic/strnlen.c",
                 "arch-arm64/generic/bionic/memchr.S",
                 "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
@@ -1077,15 +1074,16 @@ cc_library_static {
                 "arch-arm64/generic/bionic/strnlen.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
             ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+                "bionic/strchr.cpp",
+                "bionic/strnlen.c",
+            ],
         },
         arm: {
             // memcpy.S, memchr.S, etc. do not compile with Clang.
             clang_asflags: ["-no-integrated-as"],
             srcs: [
-                "-bionic/__memcpy_chk.cpp",
-                "-bionic/__memset_chk.cpp",
-                "-bionic/__strcat_chk.cpp",
-                "-bionic/__strcpy_chk.cpp",
                 "arch-arm/bionic/abort_arm.S",
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
@@ -1104,6 +1102,12 @@ cc_library_static {
                 "arch-arm/cortex-a15/bionic/strcpy.S",
                 "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                 "arch-arm/cortex-a15/bionic/strlen.S",
+            ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+                "bionic/__memset_chk.cpp",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
             ],
         },
     },
@@ -1743,20 +1747,26 @@ cc_object {
     arch: crt_arch_flags + {
         arm64: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-arm64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
         mips: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-mips/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
         mips64: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-mips64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
     },
@@ -1782,20 +1792,26 @@ cc_object {
     arch: crt_arch_flags + {
         arm64: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-arm64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
         mips: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-mips/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
         mips64: {
             srcs: [
-                "-arch-common/bionic/crtbegin.c",
                 "arch-mips64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
             ],
         },
     },
