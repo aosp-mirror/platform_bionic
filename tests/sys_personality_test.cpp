@@ -19,7 +19,7 @@
 #include <sys/personality.h>
 
 TEST(sys_personality, current_persona) {
-  int persona = personality(0xffffffff);
+  int persona = personality(0xffffffff) & PER_MASK;
 #if defined(__BIONIC__)
 #if defined(__LP64__)
   ASSERT_EQ(PER_LINUX, persona);
