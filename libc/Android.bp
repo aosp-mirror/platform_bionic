@@ -1488,8 +1488,7 @@ cc_library {
     system_shared_libs: [],
 
     // Don't re-export new/delete and friends, even if the compiler really wants to.
-    // TODO:
-    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+    version_script: "version_script.txt",
 
     // We'd really like to do this for all architectures, but since this wasn't done
     // before, these symbols must continue to be exported on LP32 for binary
@@ -1574,8 +1573,7 @@ cc_library_shared {
     allow_undefined_symbols: true,
 
     // Don't re-export new/delete and friends, even if the compiler really wants to.
-    // TODO:
-    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+    version_script: "version_script.txt",
 
     // Don't install on release build
     tags: [
@@ -1613,8 +1611,7 @@ cc_library_shared {
     system_shared_libs: [],
 
     // Don't re-export new/delete and friends, even if the compiler really wants to.
-    // TODO:
-    //LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+    version_script: "version_script.txt",
 
     // Don't install on release build
     tags: [
