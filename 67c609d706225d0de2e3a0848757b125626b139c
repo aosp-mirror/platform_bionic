@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f356b1ec_f2790671",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-06T21:55:36Z",
+      "side": 1,
+      "message": "This section still needs to be figured out before we can use the Android.mk translation as a replacement.\n\nAnd we\u0027ll need to move the androidmk files from $OUT/soong/androidmk to $PRODUCT_OUT/... if we\u0027re going to embed product-specific variables.",
+      "revId": "67c609d706225d0de2e3a0848757b125626b139c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
