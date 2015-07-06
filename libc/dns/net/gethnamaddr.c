@@ -640,6 +640,9 @@ android_read_hostent(FILE* proxy, struct hostent* hp, char* hbuf, size_t hbuflen
 		ptr += size;
 	}
 
+	// Fix alignment after variable-length data.
+	ptr = (char*)ALIGN(ptr);
+
 	int aliases_len = ((int)(aliases - aliases_ptrs) + 1) * sizeof(*hp->h_aliases);
 	if (ptr + aliases_len > hbuf_end) {
 		goto nospc;
@@ -673,6 +676,9 @@ android_read_hostent(FILE* proxy, struct hostent* hp, char* hbuf, size_t hbuflen
 		}
 		ptr += size;
 	}
+
+	// Fix alignment after variable-length data.
+	ptr = (char*)ALIGN(ptr);
 
 	int addrs_len = ((int)(addr_p - addr_ptrs) + 1) * sizeof(*hp->h_addr_list);
 	if (ptr + addrs_len > hbuf_end) {
