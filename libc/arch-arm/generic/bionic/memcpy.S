@@ -194,8 +194,7 @@ ENTRY(memcpy)
 
         /* we're done! restore everything and return */
 1:      ldmfd       sp!, {r5-r11}
-        ldmfd       sp!, {r0, r4, lr}
-        bx          lr
+        ldmfd       sp!, {r0, r4, pc}
 
         /********************************************************************/
 
@@ -385,8 +384,7 @@ ENTRY(memcpy)
 
         /* we're done! restore sp and spilled registers and return */
         add         sp,  sp, #28
-        ldmfd       sp!, {r0, r4, lr}
-        bx          lr
+        ldmfd       sp!, {r0, r4, pc}
 END(memcpy)
 
         // Only reached when the __memcpy_chk check fails.
