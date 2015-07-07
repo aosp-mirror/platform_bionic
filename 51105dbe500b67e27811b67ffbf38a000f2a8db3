@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8f4ce42_82b41c24",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1527,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-07-07T17:29:42Z",
+      "side": 1,
+      "message": "this deserves a comment... or maybe a rename of add_as_children argument. The flag only affects adding children to starts_with; the function always adds them for others library-\u003eneeded_by links.",
+      "revId": "51105dbe500b67e27811b67ffbf38a000f2a8db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8fb8a32_4133b421",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-07-07T17:29:42Z",
+      "side": 1,
+      "message": "!\u003d nullptr",
+      "revId": "51105dbe500b67e27811b67ffbf38a000f2a8db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18f28255_8349c009",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1555,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-07-07T17:29:42Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "51105dbe500b67e27811b67ffbf38a000f2a8db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
