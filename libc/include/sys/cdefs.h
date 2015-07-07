@@ -520,6 +520,11 @@
 #include <android/api-level.h>
 
 /* glibc compatibility. */
+#if __POSIX_VISIBLE >= 200809
+#define __USE_ISOC99 1
+#define __USE_XOPEN2K 1
+#define __USE_XOPEN2K8 1
+#endif
 #if __LP64__
 #define __WORDSIZE 64
 #else
