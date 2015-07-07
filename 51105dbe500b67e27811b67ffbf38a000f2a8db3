@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "1840c241_532a7688",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1527,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-07-07T18:09:29Z",
+      "side": 1,
+      "message": "right.. adding child on dlopen will lead to unwanted behaviour on dlclose.",
+      "parentUuid": "534a1d43_bb42fbf1",
+      "revId": "51105dbe500b67e27811b67ffbf38a000f2a8db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8fb8a32_4133b421",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
