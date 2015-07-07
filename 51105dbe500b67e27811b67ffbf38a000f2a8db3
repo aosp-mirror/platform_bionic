@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "534a1d43_bb42fbf1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1527,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-07T17:51:15Z",
+      "side": 1,
+      "message": "Yes. I can\u0027t come up with a better name though. I can a comment.\nWe don\u0027t want to add dlopen-ed libraries as children of the calling library, right? This preserves the current behavior.",
+      "parentUuid": "f8f4ce42_82b41c24",
+      "revId": "51105dbe500b67e27811b67ffbf38a000f2a8db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8fb8a32_4133b421",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
