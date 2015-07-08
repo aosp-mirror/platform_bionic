@@ -1072,7 +1072,7 @@ TEST(dlfcn, dt_runpath) {
   ASSERT_TRUE(fn != nullptr) << dlerror();
 
   void *p = fn();
-  ASSERT_TRUE(p == nullptr);
+  ASSERT_TRUE(p != nullptr);
 
   dlclose(handle);
 }
