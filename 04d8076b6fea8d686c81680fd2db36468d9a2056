@@ -34,6 +34,24 @@
       "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "534a1d43_2f115e5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-08T18:31:35Z",
+      "side": 1,
+      "message": "it\u0027s definitely better, but you\u0027re still leaving it to the reader to guess _why_ you prefer the new code sequence :-)",
+      "parentUuid": "135425e3_21333181",
+      "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
