@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "736d61b3_0e0bb199",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-08T03:37:05Z",
+      "side": 1,
+      "message": "\"Replace bx lr with a pop into pc when already popping.\"? or \"...when shorter\"?",
+      "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
