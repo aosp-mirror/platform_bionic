@@ -52,6 +52,24 @@
       "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f356b1ec_b1169304",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-07-08T19:12:29Z",
+      "side": 1,
+      "message": "I\u0027m going to assume that people understand that removing an instruction is inherently better. I have faith in humanity!",
+      "parentUuid": "534a1d43_2f115e5a",
+      "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
