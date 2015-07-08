@@ -221,8 +221,7 @@ ENTRY(memcmp)
         bne         8b
 
 9:      /* restore registers and return */
-        ldmfd       sp!, {r4, lr}
-        bx          lr
+        ldmfd       sp!, {r4, pc}
 
 10:     /* process less than 12 bytes */
         cmp         r2, #0

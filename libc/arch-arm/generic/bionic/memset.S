@@ -82,8 +82,7 @@ ENTRY(memset)
         strbcs      r1, [r0], #1
         strbmi      r1, [r0], #1
         subs        r2, r2, r3
-        popls       {r0, r4-r7, lr}    /* return */
-        bxls        lr
+        popls       {r0, r4-r7, pc}    /* return */
 
         /* align the destination to a cache-line */
         mov         r12, r1
@@ -126,8 +125,7 @@ ENTRY(memset)
         strhmi      r1, [r0], #2
         movs        r2, r2, lsl #2
         strbcs      r1, [r0]
-        ldmfd       sp!, {r0, r4-r7, lr}
-        bx          lr
+        ldmfd       sp!, {r0, r4-r7, pc}
 END(memset)
 
         .data
