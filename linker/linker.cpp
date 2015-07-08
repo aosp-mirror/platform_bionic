@@ -1469,9 +1469,17 @@ static soinfo::soinfo_list_t make_global_group() {
   return global_group;
 }
 
-static bool find_libraries(soinfo* start_with, const char* const library_names[],
-      size_t library_names_count, soinfo* soinfos[], std::vector<soinfo*>* ld_preloads,
-      size_t ld_preloads_count, int rtld_flags, const android_dlextinfo* extinfo) {
+// add_as_children - add first-level loaded libraries (i.e. library_names[], but
+// not their transitive dependencies) as children of the start_with library.
+// This is false when find_libraries is called for dlopen(), when newly loaded
+// libraries must form a disjoint tree.
+static bool find_libraries(soinfo* start_with,
+                           const char* const library_names[],
+                           size_t library_names_count, soinfo* soinfos[],
+                           std::vector<soinfo*>* ld_preloads,
+                           size_t ld_preloads_count, int rtld_flags,
+                           const android_dlextinfo* extinfo,
+                           bool add_as_children) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
   for (size_t i = 0; i < library_names_count; ++i) {
@@ -1519,7 +1527,7 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
       return false;
     }
 
-    if (needed_by != nullptr) {
+    if (needed_by != nullptr && (needed_by != start_with || add_as_children)) {
       needed_by->add_child(si);
     }
 
@@ -1546,8 +1554,8 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
   // Step 2: link libraries.
   soinfo::soinfo_list_t local_group;
   walk_dependencies_tree(
-      start_with == nullptr ? soinfos : &start_with,
-      start_with == nullptr ? soinfos_count : 1,
+      (start_with != nullptr && add_as_children) ? &start_with : soinfos,
+      (start_with != nullptr && add_as_children) ? 1 : soinfos_count,
       [&] (soinfo* si) {
     local_group.push_back(si);
     return true;
@@ -1579,12 +1587,15 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
   return linked;
 }
 
-static soinfo* find_library(const char* name, int rtld_flags, const android_dlextinfo* extinfo) {
+static soinfo* find_library(const char* name, int rtld_flags,
+                            const android_dlextinfo* extinfo,
+                            soinfo* needed_by) {
   soinfo* si;
 
   if (name == nullptr) {
     si = somain;
-  } else if (!find_libraries(nullptr, &name, 1, &si, nullptr, 0, rtld_flags, extinfo)) {
+  } else if (!find_libraries(needed_by, &name, 1, &si, nullptr, 0, rtld_flags,
+                             extinfo, /* add_as_children */ false)) {
     return nullptr;
   }
 
@@ -1646,7 +1657,7 @@ static void soinfo_unload(soinfo* root) {
           TRACE("deprecated (old format of soinfo): %s needs to unload %s",
               si->get_realpath(), library_name);
 
-          soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr);
+          soinfo* needed = find_library(library_name, RTLD_NOLOAD, nullptr, nullptr);
           if (needed != nullptr) {
             // Not found: for example if symlink was deleted between dlopen and dlclose
             // Since we cannot really handle errors at this point - print and continue.
@@ -1708,7 +1719,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   parse_LD_LIBRARY_PATH(ld_library_path);
 }
 
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo) {
+soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, soinfo *caller) {
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
@@ -1727,7 +1738,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo)
   }
 
   ProtectedDataGuard guard;
-  soinfo* si = find_library(name, flags, extinfo);
+  soinfo* si = find_library(name, flags, extinfo, caller);
   if (si != nullptr) {
     si->call_constructors();
   }
@@ -3265,7 +3276,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   if (needed_libraries_count > 0 &&
       !find_libraries(si, needed_library_names, needed_libraries_count, nullptr,
-          &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr)) {
+                      &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
+                      /* add_as_children */ true)) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
     exit(EXIT_FAILURE);
   } else if (needed_libraries_count == 0) {
