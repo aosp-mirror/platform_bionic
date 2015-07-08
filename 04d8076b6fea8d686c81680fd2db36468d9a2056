@@ -16,6 +16,24 @@
       "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "135425e3_21333181",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-07-08T18:30:28Z",
+      "side": 1,
+      "message": "I changed the commit message a bit, see if it make more sense now.",
+      "parentUuid": "736d61b3_0e0bb199",
+      "revId": "04d8076b6fea8d686c81680fd2db36468d9a2056",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
