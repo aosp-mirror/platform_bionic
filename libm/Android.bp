@@ -283,8 +283,6 @@ libm_ld_local_includes = ["upstream-freebsd/lib/msun/ld128/"]
 cc_library {
     name: "libm",
 
-    // ANDROIDMK TRANSLATION ERROR: unsupported assignment to LOCAL_ARM_MODE
-    // LOCAL_ARM_MODE:=arm
     cflags: libm_common_cflags,
     include_dirs: ["bionic/libc"],
     local_include_dirs: libm_common_local_includes,
@@ -319,7 +317,8 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_sqrt.c",
                 "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_floor.c",
-            ]
+            ],
+            instruction_set: "arm",
         },
 
         arm64: {
