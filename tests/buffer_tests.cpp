@@ -256,7 +256,7 @@ void RunSingleBufferAlignTest(
       VerifyFencepost(&buf_align[len]);
     }
   }
-  delete buf;
+  delete[] buf;
 }
 
 void RunSrcDstBufferAlignTest(
@@ -292,8 +292,8 @@ void RunSrcDstBufferAlignTest(
       VerifyFencepost(&dst_align[len]);
     }
   }
-  delete src;
-  delete dst;
+  delete[] src;
+  delete[] dst;
 }
 
 void RunCmpBufferAlignTest(
@@ -344,8 +344,8 @@ void RunCmpBufferAlignTest(
       }
     }
   }
-  delete buf1;
-  delete buf2;
+  delete[] buf1;
+  delete[] buf2;
 }
 
 void RunSingleBufferOverreadTest(void (*test_func)(uint8_t*, size_t)) {
@@ -389,7 +389,7 @@ void RunSrcDstBufferOverreadTest(void (*test_func)(uint8_t*, uint8_t*, size_t)) 
   }
   ASSERT_TRUE(mprotect(&memory[pagesize], pagesize, PROT_READ | PROT_WRITE) == 0);
   free(memory);
-  delete dst;
+  delete[] dst;
 }
 
 void RunCmpBufferOverreadTest(
