@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "586ddaeb_4e25f36c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1298,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-09T23:58:29Z",
+      "side": 1,
+      "message": "This is missing denver64",
+      "revId": "088a277bb01a8def34b77fa50a201d70bf1565c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98a11261_abf4b5fd",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-09T23:58:29Z",
+      "side": 1,
+      "message": "and x86_64",
+      "revId": "088a277bb01a8def34b77fa50a201d70bf1565c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
