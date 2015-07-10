@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "586ddaeb_6e355766",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-07-10T00:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "188e02f0_8986a1ef",
+      "revId": "9cbbfc4081226d16226598d7d450a9beb8455ba9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "188e02f0_29743578",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-10T00:28:05Z",
       "side": 1,
       "message": "hmm, these are in libc_openbsd in the Android.mk, not libc_openbsd_ndk. But that didn\u0027t change with the change, so it can be fixed later.",
+      "revId": "9cbbfc4081226d16226598d7d450a9beb8455ba9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8970a01_be138e10",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-07-10T00:55:46Z",
+      "side": 1,
+      "message": "Fixed in https://android-review.googlesource.com/158893",
+      "parentUuid": "188e02f0_29743578",
       "revId": "9cbbfc4081226d16226598d7d450a9beb8455ba9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
