@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "387026c3_8d447101",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1689,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-07-10T00:42:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b87b36ac_f5605805",
+      "revId": "3fa737c3da1ab9dfbf11947b3c5f473bc2c86e31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9833d2f4_26620a37",
         "filename": "libc/Android.bp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-10T00:12:57Z",
       "side": 1,
       "message": "crt.mk needs the arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk files to be included first",
+      "revId": "3fa737c3da1ab9dfbf11947b3c5f473bc2c86e31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "387026c3_2d39a58f",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1715,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-07-10T00:42:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9833d2f4_26620a37",
       "revId": "3fa737c3da1ab9dfbf11947b3c5f473bc2c86e31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
