@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7861be1e_b3c73889",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-07-11T10:34:51Z",
+      "side": 1,
+      "message": "is this order correct? shouldn\u0027t /data/lib64 go before /vendor/lib64?",
+      "revId": "40b6c0d66912a1d925c02b8bb497e35297176d4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
