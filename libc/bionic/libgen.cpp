@@ -39,7 +39,7 @@
 static ThreadLocalBuffer<char, MAXPATHLEN> g_basename_tls_buffer;
 static ThreadLocalBuffer<char, MAXPATHLEN> g_dirname_tls_buffer;
 
-__LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_size) {
+static int __basename_r(const char* path, char* buffer, size_t buffer_size) {
   const char* startp = NULL;
   const char* endp = NULL;
   int len;
@@ -91,7 +91,12 @@ __LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_s
   return result;
 }
 
-__LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_size) {
+// Since this is a non-standard symbol, it might be hijacked by a basename_r in the executable.
+__LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_size) {
+  return __basename_r(path, buffer, buffer_size);
+}
+
+static int __dirname_r(const char* path, char* buffer, size_t buffer_size) {
   const char* endp = NULL;
   int len;
   int result;
@@ -150,14 +155,19 @@ __LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_si
   return result;
 }
 
+// Since this is a non-standard symbol, it might be hijacked by a basename_r in the executable.
+__LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_size) {
+  return __dirname_r(path, buffer, buffer_size);
+}
+
 char* basename(const char* path) {
   char* buf = g_basename_tls_buffer.get();
-  int rc = basename_r(path, buf, g_basename_tls_buffer.size());
+  int rc = __basename_r(path, buf, g_basename_tls_buffer.size());
   return (rc < 0) ? NULL : buf;
 }
 
 char* dirname(const char* path) {
   char* buf = g_dirname_tls_buffer.get();
-  int rc = dirname_r(path, buf, g_dirname_tls_buffer.size());
+  int rc = __dirname_r(path, buf, g_dirname_tls_buffer.size());
   return (rc < 0) ? NULL : buf;
 }
