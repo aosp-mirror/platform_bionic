@@ -16,6 +16,24 @@
       "revId": "40b6c0d66912a1d925c02b8bb497e35297176d4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3801063e_515234e1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-11T18:36:12Z",
+      "side": 1,
+      "message": "The usual order is /data/lib:/vendor/lib. If a library is present in both, and for some reason the vendor version could not be instrumented, we should prefer an non-instrumented vendor library to an instrumented system library, I think.",
+      "parentUuid": "7861be1e_b3c73889",
+      "revId": "40b6c0d66912a1d925c02b8bb497e35297176d4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
