@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "987af2a8_a6494809",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-13T18:07:25Z",
+      "side": 1,
+      "message": "Because in SANITIZE_TARGET, the following deps are built with ASan:\nlibziparchive libutils libz liblog\n\nAnd linker can not be built with ASan.\n\nWe can disable ASan on them (undesirable).\nWe can build _noasan versions of those (a lot more build copy-paste than this).",
+      "parentUuid": "78753eb8_62dd6851",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 27
+      },
+      "revId": "40b6c0d66912a1d925c02b8bb497e35297176d4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7861be1e_b3c73889",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
