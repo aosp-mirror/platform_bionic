@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "78753eb8_62dd6851",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-13T17:57:12Z",
+      "side": 1,
+      "message": "Why not reuse the existing module definition? by adding the following lines:\nifneq ($(SANITIZE_TARGET),) # or it equals address?\nLOCAL_CFLAGS +\u003d -DADDRESS_SANITIZER_LINKER\nLOCAL_MODULE_STEM_32 :\u003d linker_asan\nLOCAL_MODULE_STEM_64 :\u003d linker_asan64\nendif",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 27
+      },
+      "revId": "40b6c0d66912a1d925c02b8bb497e35297176d4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7861be1e_b3c73889",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
