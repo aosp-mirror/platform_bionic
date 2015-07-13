@@ -133,8 +133,9 @@ static HashEntry* record_backtrace(uintptr_t* backtrace, size_t numEntries, size
         size |= SIZE_FLAG_ZYGOTE_CHILD;
     }
 
+    // Keep the lock held for as little time as possible to prevent deadlocks.
+    ScopedPthreadMutexLocker locker(&g_hash_table->lock);
     HashEntry* entry = find_entry(g_hash_table, slot, backtrace, numEntries, size);
-
     if (entry != NULL) {
         entry->allocations++;
     } else {
@@ -302,8 +303,6 @@ extern "C" void* leak_malloc(size_t bytes) {
 
     void* base = g_malloc_dispatch->malloc(size);
     if (base != NULL) {
-        ScopedPthreadMutexLocker locker(&g_hash_table->lock);
-
         uintptr_t backtrace[BACKTRACE_SIZE];
         size_t numEntries = GET_BACKTRACE(backtrace, BACKTRACE_SIZE);
 
@@ -328,8 +327,6 @@ extern "C" void leak_free(void* mem) {
     return;
   }
 
-  ScopedPthreadMutexLocker locker(&g_hash_table->lock);
-
   // check the guard to make sure it is valid
   AllocationEntry* header = to_header(mem);
 
@@ -342,6 +339,7 @@ extern "C" void leak_free(void* mem) {
     }
   }
 
+  ScopedPthreadMutexLocker locker(&g_hash_table->lock);
   if (header->guard == GUARD || is_valid_entry(header->entry)) {
     // decrement the allocations
     HashEntry* entry = header->entry;
