@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "187d22ed_5cf17d8f",
+        "filename": "linker/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-14T23:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "187d22ed_bc3519e4",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 18
+      },
+      "revId": "b4734fca5422ea027540718706f2f6a4598fa162",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9870321a_de9f2563",
         "filename": "linker/Android.mk",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2015-07-14T22:53:20Z",
       "side": 1,
       "message": "As we talked, this isn\u0027t needed.",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 37
+      },
+      "revId": "b4734fca5422ea027540718706f2f6a4598fa162",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58987a8f_119b36f8",
+        "filename": "linker/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-14T23:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9870321a_de9f2563",
       "range": {
         "startLine": 97,
         "startChar": 8,
