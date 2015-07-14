@@ -157,6 +157,30 @@
       "revId": "9396895c234261002f0126376bf01f4469043abb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "187d22ed_7c2481ba",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T22:50:38Z",
+      "side": 1,
+      "message": "If you want mm/mmm/etc to also work, you indeed need this line.",
+      "parentUuid": "58987a8f_761dd8eb",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 16
+      },
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
