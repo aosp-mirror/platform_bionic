@@ -95,6 +95,24 @@
     },
     {
       "key": {
+        "uuid": "9870321a_d38e3e02",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-14T20:52:26Z",
+      "side": 1,
+      "message": "Hm, it does seem to work without this. Weird.",
+      "parentUuid": "9870321a_f8107905",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "187d22ed_b1ed4205",
         "filename": "linker/Android.mk",
         "patchSetId": 4
@@ -106,6 +124,30 @@
       "writtenOn": "2015-07-14T18:49:20Z",
       "side": 1,
       "message": "not needed.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 16
+      },
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58987a8f_761dd8eb",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-14T20:52:26Z",
+      "side": 1,
+      "message": "Without this, I get\nmake: *** No rule to make target `linker\u0027, needed by `all_modules\u0027.  Stop.\n\nAn empty \"linker:\" does not build the symlink at all.",
+      "parentUuid": "187d22ed_b1ed4205",
       "range": {
         "startLine": 99,
         "startChar": 0,
