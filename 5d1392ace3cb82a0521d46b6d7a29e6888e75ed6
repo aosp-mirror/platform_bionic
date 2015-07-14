@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78b0de09_9e89992f",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-14T00:52:27Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "5d1392ace3cb82a0521d46b6d7a29e6888e75ed6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9870321a_6a0bd32d",
+        "filename": "tests/sys_prctl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-14T00:52:27Z",
+      "side": 1,
+      "message": "an Android",
+      "revId": "5d1392ace3cb82a0521d46b6d7a29e6888e75ed6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
