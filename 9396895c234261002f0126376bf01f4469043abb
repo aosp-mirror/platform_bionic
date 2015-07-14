@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "98975254_76101d89",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T18:52:02Z",
+      "side": 1,
+      "message": "oh, in LOCAL_POST_INSTALL_CMD we have to use $(LOCAL_INSTALLED_MODULE) instead of $@.",
+      "parentUuid": "98975254_d6ed5104",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9870321a_1860f587",
         "filename": "linker/Android.mk",
         "patchSetId": 4
