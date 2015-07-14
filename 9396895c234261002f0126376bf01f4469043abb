@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "98975254_d6ed5104",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T18:49:20Z",
+      "side": 1,
+      "message": "The simplest and graceful way is:\nifeq ($(PRESANITIZE_TARGET),true)\nLOCAL_POST_INSTALL_CMD \u003d $(hide) ln -sf $(notdir $@) $(subst linker,linker_asan,$@)\nendif\n\nThis will handles the multilib case automatically.\nBut it needs you to set PRESANITIZE_TARGET\u003dtrue in the first normal make, because we build linker in only the first make.",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9870321a_1860f587",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T18:49:20Z",
+      "side": 1,
+      "message": "$$",
+      "range": {
+        "startLine": 94,
+        "startChar": 11,
+        "endLine": 94,
+        "endChar": 12
+      },
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78b0de09_c18aa672",
         "filename": "linker/Android.mk",
         "patchSetId": 4
@@ -13,6 +53,47 @@
       "writtenOn": "2015-07-14T18:20:09Z",
       "side": 1,
       "message": "This touch here ensures that system image is rebuilt when the symlink is added.\nDoes anyone know a better way of achieving this?\nI tried adding \"linker\" to ALL_INSTALLED_MODULES, but that did not do anything.",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9870321a_f8107905",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T18:49:20Z",
+      "side": 1,
+      "message": "You don\u0027t need this.\nThe build system will set up dependency of system.img on $(ALL_MODULES.linker.INSTALLED).",
+      "parentUuid": "78b0de09_c18aa672",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "187d22ed_b1ed4205",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T18:49:20Z",
+      "side": 1,
+      "message": "not needed.",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 16
+      },
       "revId": "9396895c234261002f0126376bf01f4469043abb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
