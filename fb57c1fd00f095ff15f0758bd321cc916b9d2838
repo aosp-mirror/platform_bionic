@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58987a8f_9120662e",
+        "filename": "linker/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-07-14T23:09:23Z",
+      "side": 1,
+      "message": "You don\u0027t need to escape here, since we don\u0027t change value of variable hide in this function and when the rule is executed.\nBut it still works with the escaping.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 9
+      },
+      "revId": "fb57c1fd00f095ff15f0758bd321cc916b9d2838",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
