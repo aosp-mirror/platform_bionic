@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "786b7e31_db064ed4",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1578,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-14T23:52:21Z",
+      "side": 0,
+      "message": "these shouldn\u0027t have been removed",
+      "range": {
+        "startLine": 1576,
+        "startChar": 4,
+        "endLine": 1578,
+        "endChar": 38
+      },
+      "revId": "2803a15d4c68878e41d3da21637771539f31d995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
