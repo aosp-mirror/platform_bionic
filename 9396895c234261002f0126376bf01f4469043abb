@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78b0de09_c18aa672",
+        "filename": "linker/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-07-14T18:20:09Z",
+      "side": 1,
+      "message": "This touch here ensures that system image is rebuilt when the symlink is added.\nDoes anyone know a better way of achieving this?\nI tried adding \"linker\" to ALL_INSTALLED_MODULES, but that did not do anything.",
+      "revId": "9396895c234261002f0126376bf01f4469043abb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
