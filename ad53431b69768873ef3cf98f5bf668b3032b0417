@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b871761d_da8e5102",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1761,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-15T00:16:56Z",
+      "side": 1,
+      "message": "this should be removed -- it\u0027s not in the Android.mk for libc_malloc. It\u0027s in libc.a instead.",
+      "range": {
+        "startLine": 1761,
+        "startChar": 0,
+        "endLine": 1761,
+        "endChar": 47
+      },
+      "revId": "ad53431b69768873ef3cf98f5bf668b3032b0417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "786b7e31_b6f9a9bf",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1785,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-15T00:16:56Z",
+      "side": 1,
+      "message": "This should include device_uses_jemalloc.whole_static_libs: [\"libjemalloc\"]",
+      "revId": "ad53431b69768873ef3cf98f5bf668b3032b0417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
