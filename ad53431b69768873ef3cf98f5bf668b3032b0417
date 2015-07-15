@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "187d22ed_9cfa15e9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1761,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-07-15T00:52:04Z",
+      "side": 1,
+      "message": "Big difference was that libc_ndk.a ends up including two copies libjemalloc -- I haven\u0027t gotten past that yet. I don\u0027t know if just removing libjemalloc from libc_ndk.a will cause any differences.",
+      "parentUuid": "98975254_023313fe",
+      "range": {
+        "startLine": 1761,
+        "startChar": 0,
+        "endLine": 1761,
+        "endChar": 47
+      },
+      "revId": "ad53431b69768873ef3cf98f5bf668b3032b0417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "786b7e31_b6f9a9bf",
         "filename": "libc/Android.bp",
         "patchSetId": 3
