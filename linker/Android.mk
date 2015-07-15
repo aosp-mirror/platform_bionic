@@ -90,10 +90,10 @@ define add-linker-symlink
 $(eval _from := $(TARGET_OUT)/bin/$(1))
 $(eval _to:=$(2))
 $(_from): $(LOCAL_MODULE_MAKEFILE)
-        @echo "Symlink: $$@ -> $(_to)"
-        @mkdir -p $$(dir $$@)
-        @rm -rf $$@
-        $(hide) ln -sf $(_to) $$@
+	@echo "Symlink: $$@ -> $(_to)"
+	@mkdir -p $$(dir $$@)
+	@rm -rf $$@
+	$(hide) ln -sf $(_to) $$@
 ALL_MODULES.linker.INSTALLED += $(_from)
 linker: $(_from)
 endef
