@@ -771,6 +771,26 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
   }
 }
 
+/* Return the program interpreter string, or nullptr if missing.
+ *
+ * Input:
+ *   phdr_table  -> program header table
+ *   phdr_count  -> number of entries in tables
+ *   load_bias   -> load bias
+ * Return:
+ *   pointer to the program interpreter string.
+ */
+const char* phdr_table_get_interpreter_name(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                            ElfW(Addr) load_bias) {
+  for (size_t i = 0; i<phdr_count; ++i) {
+    const ElfW(Phdr)& phdr = phdr_table[i];
+    if (phdr.p_type == PT_INTERP) {
+      return reinterpret_cast<const char*>(load_bias + phdr.p_vaddr);
+    }
+  }
+  return nullptr;
+}
+
 // Sets loaded_phdr_ to the address of the program header table as it appears
 // in the loaded segments in memory. This is in contrast with phdr_table_,
 // which is temporary and will be released before the library is relocated.

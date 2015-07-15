@@ -83,4 +83,26 @@ LOCAL_POST_LINK_CMD = $(hide) $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_OBJCOPY) \
 
 include $(BUILD_EXECUTABLE)
 
+
+ifeq (address, $(strip $(SANITIZE_TARGET)))
+
+define add-linker-symlink
+$(eval _from := $(TARGET_OUT)/bin/$(1))
+$(eval _to:=$(2))
+$(_from): $(LOCAL_MODULE_MAKEFILE)
+        @echo "Symlink: $$@ -> $(_to)"
+        @mkdir -p $$(dir $$@)
+        @rm -rf $$@
+        $(hide) ln -sf $(_to) $$@
+ALL_MODULES.linker.INSTALLED += $(_from)
+linker: $(_from)
+endef
+
+$(eval $(call add-linker-symlink,linker_asan,linker))
+ifeq ($(TARGET_IS_64_BIT),true)
+$(eval $(call add-linker-symlink,linker_asan64,linker64))
+endif
+ALL_MODULES += linker
+endif
+
 include $(call first-makefiles-under,$(LOCAL_PATH))
