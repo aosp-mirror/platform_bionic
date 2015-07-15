@@ -85,9 +85,25 @@ static const char* const kDefaultLdPaths[] = {
   nullptr
 };
 
+static const char* const kAsanDefaultLdPaths[] = {
+#if defined(__LP64__)
+  "/data/vendor/lib64",
+  "/vendor/lib64",
+  "/data/lib64",
+  "/system/lib64",
+#else
+  "/data/vendor/lib",
+  "/vendor/lib",
+  "/data/lib",
+  "/system/lib",
+#endif
+  nullptr
+};
+
 static const ElfW(Versym) kVersymNotNeeded = 0;
 static const ElfW(Versym) kVersymGlobal = 1;
 
+static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_library_paths;
 static std::vector<std::string> g_ld_preload_names;
 
@@ -1186,9 +1202,9 @@ static bool format_path(char* buf, size_t buf_size, const char* path, const char
 }
 
 static int open_library_on_default_path(const char* name, off64_t* file_offset) {
-  for (size_t i = 0; kDefaultLdPaths[i] != nullptr; ++i) {
+  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
     char buf[512];
-    if (!format_path(buf, sizeof(buf), kDefaultLdPaths[i], name)) {
+    if (!format_path(buf, sizeof(buf), g_default_ld_paths[i], name)) {
       continue;
     }
 
@@ -1706,14 +1722,19 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // See b/17302493 for further details.
   // Once the above bug is fixed, this code can be modified to use
   // snprintf again.
-  size_t required_len = strlen(kDefaultLdPaths[0]) + strlen(kDefaultLdPaths[1]) + 2;
+  size_t required_len = 0;
+  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
+    required_len += strlen(g_default_ld_paths[i]) + 1;
+  }
   if (buffer_size < required_len) {
     __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
                  "buffer len %zu, required len %zu", buffer_size, required_len);
   }
-  char* end = stpcpy(buffer, kDefaultLdPaths[0]);
-  *end = ':';
-  strcpy(end + 1, kDefaultLdPaths[1]);
+  char* end = buffer;
+  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
+    if (i > 0) *end++ = ':';
+    end = stpcpy(end, g_default_ld_paths[i]);
+  }
 }
 
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
@@ -3156,6 +3177,16 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   insert_soinfo_into_debug_map(linker_soinfo_for_gdb);
 }
 
+static void init_default_ld_library_path() {
+  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
+                                                       somain->load_bias);
+  const char* bname = basename(interp);
+  if (bname && (strcmp(bname, "linker_asan") == 0 || strcmp(bname, "linker_asan64") == 0))
+    g_default_ld_paths = kAsanDefaultLdPaths;
+  else
+    g_default_ld_paths = kDefaultLdPaths;
+};
+
 extern "C" int __system_properties_init(void);
 
 /*
@@ -3245,6 +3276,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   parse_LD_PRELOAD(ldpreload_env);
 
   somain = si;
+
+  init_default_ld_library_path();
 
   if (!si->prelink_image()) {
     __libc_format_fd(2, "CANNOT LINK EXECUTABLE: %s\n", linker_get_error_buffer());
