@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "98975254_023313fe",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1761,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2015-07-15T00:46:25Z",
+      "side": 1,
+      "message": "Yeah, I rearranged this a little, libjemalloc was getting manually included into everything downstream of libmalloc, I figured putting it next to the wrapper would be better.  Does it change the end result anywhere?",
+      "parentUuid": "b871761d_da8e5102",
+      "range": {
+        "startLine": 1761,
+        "startChar": 0,
+        "endLine": 1761,
+        "endChar": 47
+      },
+      "revId": "ad53431b69768873ef3cf98f5bf668b3032b0417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "786b7e31_b6f9a9bf",
         "filename": "libc/Android.bp",
         "patchSetId": 3
