@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "987f5221_cc4f4f93",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-16T20:48:39Z",
+      "side": 1,
+      "message": "#if defined(_USE_GNU) around them?",
+      "revId": "0875ba3095782387370cba2e36ebc5df7acbcb7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
