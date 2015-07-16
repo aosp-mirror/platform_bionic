@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58823a52_32c99049",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-16T21:33:25Z",
+      "side": 1,
+      "message": "i think we should do this the same way we usually do in bionic, with a separate mmap\u0027ed region that we can name. (rather than a hole punched somewhere in libc.)\n\nlong term it would be nice to use ifuncs and remove this indirection altogether, but that\u0027s not going to be practical for years.",
+      "revId": "d7cae0735e1b79be280b6c1b2d04254782dd352c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
