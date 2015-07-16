@@ -102,6 +102,7 @@ static const char* const kAsanDefaultLdPaths[] = {
 
 static const ElfW(Versym) kVersymNotNeeded = 0;
 static const ElfW(Versym) kVersymGlobal = 1;
+static const char* const kZipFileSeparator = "!/";
 
 static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_library_paths;
@@ -1142,7 +1143,7 @@ static int open_library_in_zipfile(const char* const path,
   // of the zip file on disk and the subdirectory to search within it.
   // For example, if path is "foo.zip!/bar/bas/x.so", then we search for
   // "bar/bas/x.so" within "foo.zip".
-  const char* separator = strstr(path, "!/");
+  const char* separator = strstr(path, kZipFileSeparator);
   if (separator == nullptr) {
     return -1;
   }
@@ -1228,7 +1229,7 @@ static int open_library_on_paths(const char* name, off64_t* file_offset,
     }
 
     int fd = -1;
-    if (strchr(buf, '!') != nullptr) {
+    if (strstr(buf, kZipFileSeparator) != nullptr) {
       fd = open_library_in_zipfile(buf, file_offset);
     }
 
@@ -1252,7 +1253,7 @@ static int open_library(const char* name, soinfo *needed_by, off64_t* file_offse
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
-    if (strchr(name, '!') != nullptr) {
+    if (strstr(name, kZipFileSeparator) != nullptr) {
       int fd = open_library_in_zipfile(name, file_offset);
       if (fd != -1) {
         return fd;
