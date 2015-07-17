@@ -46,6 +46,30 @@
       "revId": "2cc41d3e0054e414caa2022f4b625de2983006a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "987f5221_e006ca90",
+        "filename": "libc/include/sys/vt.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1076138
+      },
+      "writtenOn": "2015-07-17T21:15:05Z",
+      "side": 1,
+      "message": "Makes complete sense.",
+      "parentUuid": "38858659_25b626c6",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "2cc41d3e0054e414caa2022f4b625de2983006a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
