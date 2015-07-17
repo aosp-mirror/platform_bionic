@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "188c4286_5f6e9729",
+        "filename": "libc/include/sys/vt.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1076138
+      },
+      "writtenOn": "2015-07-17T21:04:13Z",
+      "side": 1,
+      "message": "No more header because it\u0027s a simple include?",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "2cc41d3e0054e414caa2022f4b625de2983006a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
