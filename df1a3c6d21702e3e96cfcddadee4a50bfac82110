@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f88e8e7f_5e10d956",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-17T18:13:28Z",
+      "side": 1,
+      "message": "ps5 fixes the build by fixing the C-style cast here.\n\nother than that, just cosmetic changes.",
+      "revId": "df1a3c6d21702e3e96cfcddadee4a50bfac82110",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
