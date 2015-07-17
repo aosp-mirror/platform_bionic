@@ -22,6 +22,30 @@
       "revId": "2cc41d3e0054e414caa2022f4b625de2983006a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38858659_25b626c6",
+        "filename": "libc/include/sys/vt.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-17T21:12:48Z",
+      "side": 1,
+      "message": "yeah. what kind of douche copyrights a single #include line? :-)\n\n(if i think we\u0027re likely to have to add stuff at some point, i think the copyright header makes sense. but if it\u0027s really just a synonym for another header file, that\u0027s silly. this case is borderline, but what convinced me here was that we didn\u0027t have an include guard, so it was a bad attempt at being a \"real\" header.)",
+      "parentUuid": "188c4286_5f6e9729",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "2cc41d3e0054e414caa2022f4b625de2983006a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
