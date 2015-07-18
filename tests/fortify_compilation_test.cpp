@@ -230,3 +230,35 @@ void test_ppoll() {
   // clang should emit a warning, but doesn't
   ppoll(fds, 2, &timeout, NULL);
 }
+
+void test_fread_overflow() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fread_overflow' declared with attribute error: fread called with overflowing size * count
+  // clang should emit a warning, but doesn't
+  fread(buf, 2, (size_t)-1, stdin);
+}
+
+void test_fread_too_big() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fread_too_big_error' declared with attribute error: fread called with size * count bigger than buffer
+  // clang should emit a warning, but doesn't
+  fread(buf, 1, 5, stdin);
+}
+
+void test_fwrite_overflow() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fwrite_overflow' declared with attribute error: fwrite called with overflowing size * count
+  // clang should emit a warning, but doesn't
+  fwrite(buf, 2, (size_t)-1, stdout);
+}
+
+void test_fwrite_too_big() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fwrite_too_big_error' declared with attribute error: fwrite called with size * count bigger than buffer
+  // clang should emit a warning, but doesn't
+  fwrite(buf, 1, 5, stdout);
+}
