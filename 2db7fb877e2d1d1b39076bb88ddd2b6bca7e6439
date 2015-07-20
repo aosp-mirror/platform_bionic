@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18ea8220_89e521cd",
+        "filename": "libc/bionic/__fread_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-20T18:07:35Z",
+      "side": 1,
+      "message": "not need.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 10
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d81c6a21_3feb6ba2",
+        "filename": "libc/bionic/__fwrite_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-20T18:07:35Z",
+      "side": 1,
+      "message": "not need.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 10
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ea8220_e9894d2e",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-20T18:07:35Z",
+      "side": 1,
+      "message": "why not using __builtin_umull_overflow() only? you implies the types are size_t, which I think is the same as unsigned long.",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 6
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8f38a19_e737b00a",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-20T18:07:35Z",
+      "side": 1,
+      "message": "use unsigned long instead of size_t below? or if you insists on using size_t, move this line to the top of the file?",
+      "range": {
+        "startLine": 588,
+        "startChar": 0,
+        "endLine": 588,
+        "endChar": 19
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f805aec3_40748446",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-20T18:07:35Z",
+      "side": 1,
+      "message": "can you build for bionic unit tests without adding __fread_chk and __fwrite_chk to libc.map?",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 651,
+        "endChar": 14
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
