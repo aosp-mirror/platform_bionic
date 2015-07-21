@@ -27,6 +27,7 @@
  */
 
 #include <ctype.h>
+#include <elf.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -35,14 +36,22 @@
 #include "debug_mapinfo.h"
 #include "malloc_debug_disable.h"
 
+#if defined(__LP64__)
+#define Elf_W(x) Elf64_##x
+#else
+#define Elf_W(x) Elf32_##x
+#endif
+
 // Format of /proc/<PID>/maps:
 //   6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so
 static mapinfo_t* parse_maps_line(char* line) {
   uintptr_t start;
   uintptr_t end;
+  uintptr_t offset;
+  char permissions[4];
   int name_pos;
-  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d%n", &start,
-             &end, &name_pos) < 2) {
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d%n", &start,
+             &end, permissions, &offset, &name_pos) < 2) {
     return NULL;
   }
 
@@ -59,6 +68,14 @@ static mapinfo_t* parse_maps_line(char* line) {
   if (mi) {
     mi->start = start;
     mi->end = end;
+    mi->offset = offset;
+    if (permissions[0] != 'r') {
+      // Any unreadable map will just get a zero load base.
+      mi->load_base = 0;
+      mi->load_base_read = true;
+    } else {
+      mi->load_base_read = false;
+    }
     memcpy(mi->name, name, name_len);
     mi->name[name_len] = '\0';
   }
@@ -95,11 +112,58 @@ __LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi) {
   }
 }
 
+template<typename T>
+static inline bool get_val(mapinfo_t* mi, uintptr_t addr, T* store) {
+  if (addr < mi->start || addr + sizeof(T) > mi->end) {
+    return false;
+  }
+  // Make sure the address is aligned properly.
+  if (addr & (sizeof(T)-1)) {
+    return false;
+  }
+  *store = *reinterpret_cast<T*>(addr);
+  return true;
+}
+
+__LIBC_HIDDEN__ void mapinfo_read_loadbase(mapinfo_t* mi) {
+  mi->load_base = 0;
+  mi->load_base_read = true;
+  uintptr_t addr = mi->start;
+  Elf_W(Ehdr) ehdr;
+  if (!get_val<Elf_W(Half)>(mi, addr + offsetof(Elf_W(Ehdr), e_phnum), &ehdr.e_phnum)) {
+    return;
+  }
+  if (!get_val<Elf_W(Off)>(mi, addr + offsetof(Elf_W(Ehdr), e_phoff), &ehdr.e_phoff)) {
+    return;
+  }
+  addr += ehdr.e_phoff;
+  for (size_t i = 0; i < ehdr.e_phnum; i++) {
+    Elf_W(Phdr) phdr;
+    if (!get_val<Elf_W(Word)>(mi, addr + offsetof(Elf_W(Phdr), p_type), &phdr.p_type)) {
+      return;
+    }
+    if (!get_val<Elf_W(Off)>(mi, addr + offsetof(Elf_W(Phdr), p_offset), &phdr.p_offset)) {
+      return;
+    }
+    if (phdr.p_type == PT_LOAD && phdr.p_offset == mi->offset) {
+      if (!get_val<Elf_W(Addr)>(mi, addr + offsetof(Elf_W(Phdr), p_vaddr), &phdr.p_vaddr)) {
+        return;
+      }
+      mi->load_base = phdr.p_vaddr;
+      return;
+    }
+    addr += sizeof(phdr);
+  }
+}
+
 // Find the containing map info for the PC.
 __LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc) {
   for (; mi != NULL; mi = mi->next) {
     if ((pc >= mi->start) && (pc < mi->end)) {
-      *rel_pc = pc - mi->start;
+      if (!mi->load_base_read) {
+        mapinfo_read_loadbase(mi);
+      }
+      *rel_pc = pc - mi->start + mi->load_base;
       return mi;
     }
   }
