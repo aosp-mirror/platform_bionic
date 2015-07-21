@@ -114,7 +114,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
+extern __LIBC_HIDDEN__ void __libc_init_main_thread(KernelArgumentBlock& args);
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */
