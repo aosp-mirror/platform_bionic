@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d83d4aa0_3d443b1b",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-21T19:18:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed97ae00_de60e5af",
+      "revId": "4ed0288593c48ab5ac0b0202cee49ae3f5d30941",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed97ae00_1e4e4d42",
         "filename": "libc/bionic/stubs.cpp",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "78429e31_c5f19e63",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-21T19:18:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed97ae00_1e4e4d42",
+      "revId": "4ed0288593c48ab5ac0b0202cee49ae3f5d30941",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "185442e3_ba974e22",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2015-07-21T17:56:08Z",
       "side": 1,
       "message": "i think the important thing to check with the _r functions is that if you make two different calls from the same thread, the results don\u0027t clobber each other.",
+      "revId": "4ed0288593c48ab5ac0b0202cee49ae3f5d30941",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d6d7eec_3a0a412d",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-21T19:18:44Z",
+      "side": 1,
+      "message": "yes, I was too lazy.",
+      "parentUuid": "185442e3_ba974e22",
       "revId": "4ed0288593c48ab5ac0b0202cee49ae3f5d30941",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
