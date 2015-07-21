@@ -238,10 +238,25 @@ __errordecl(__pread64_dest_size_error, "pread64 called with size bigger than des
 __errordecl(__pread64_count_toobig_error, "pread64 called with count > SSIZE_MAX");
 extern ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64);
 
+extern ssize_t __pwrite_chk(int, const void*, size_t, off_t, size_t);
+__errordecl(__pwrite_dest_size_error, "pwrite called with size bigger than destination");
+__errordecl(__pwrite_count_toobig_error, "pwrite called with count > SSIZE_MAX");
+extern ssize_t __pwrite_real(int, const void*, size_t, off_t) __RENAME(pwrite);
+
+extern ssize_t __pwrite64_chk(int, const void*, size_t, off64_t, size_t);
+__errordecl(__pwrite64_dest_size_error, "pwrite64 called with size bigger than destination");
+__errordecl(__pwrite64_count_toobig_error, "pwrite64 called with count > SSIZE_MAX");
+extern ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64);
+
 extern ssize_t __read_chk(int, void*, size_t, size_t);
 __errordecl(__read_dest_size_error, "read called with size bigger than destination");
 __errordecl(__read_count_toobig_error, "read called with count > SSIZE_MAX");
 extern ssize_t __read_real(int, void*, size_t) __RENAME(read);
+
+extern ssize_t __write_chk(int, const void*, size_t, size_t);
+__errordecl(__write_dest_size_error, "write called with size bigger than destination");
+__errordecl(__write_count_toobig_error, "write called with count > SSIZE_MAX");
+extern ssize_t __write_real(int, const void*, size_t) __RENAME(write);
 
 extern ssize_t __readlink_chk(const char*, char*, size_t, size_t);
 __errordecl(__readlink_dest_size_error, "readlink called with size bigger than destination");
@@ -342,6 +357,62 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
     return __pread64_chk(fd, buf, count, offset, bos);
 }
 
+#if defined(__USE_FILE_OFFSET64)
+#define __PWRITE_PREFIX(x) __pwrite64_ ## x
+#else
+#define __PWRITE_PREFIX(x) __pwrite_ ## x
+#endif
+
+__BIONIC_FORTIFY_INLINE
+ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset) {
+    size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
+        __PWRITE_PREFIX(count_toobig_error)();
+    }
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __PWRITE_PREFIX(real)(fd, buf, count, offset);
+    }
+
+    if (__builtin_constant_p(count) && (count > bos)) {
+        __PWRITE_PREFIX(dest_size_error)();
+    }
+
+    if (__builtin_constant_p(count) && (count <= bos)) {
+        return __PWRITE_PREFIX(real)(fd, buf, count, offset);
+    }
+#endif
+
+    return __PWRITE_PREFIX(chk)(fd, buf, count, offset, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset) {
+    size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
+        __pwrite64_count_toobig_error();
+    }
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __pwrite64_real(fd, buf, count, offset);
+    }
+
+    if (__builtin_constant_p(count) && (count > bos)) {
+        __pwrite64_dest_size_error();
+    }
+
+    if (__builtin_constant_p(count) && (count <= bos)) {
+        return __pwrite64_real(fd, buf, count, offset);
+    }
+#endif
+
+    return __pwrite64_chk(fd, buf, count, offset, bos);
+}
+
 __BIONIC_FORTIFY_INLINE
 ssize_t read(int fd, void* buf, size_t count) {
     size_t bos = __bos0(buf);
@@ -365,6 +436,33 @@ ssize_t read(int fd, void* buf, size_t count) {
 #endif
 
     return __read_chk(fd, buf, count, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+ssize_t write(int fd, const void* buf, size_t count) {
+    size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+#if 0 /* work around a false positive due to a missed optimization */
+    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
+        __write_count_toobig_error();
+    }
+#endif
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __write_real(fd, buf, count);
+    }
+
+    if (__builtin_constant_p(count) && (count > bos)) {
+        __write_dest_size_error();
+    }
+
+    if (__builtin_constant_p(count) && (count <= bos)) {
+        return __write_real(fd, buf, count);
+    }
+#endif
+
+    return __write_chk(fd, buf, count, bos);
 }
 
 __BIONIC_FORTIFY_INLINE
