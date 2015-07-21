@@ -31,7 +31,7 @@ libtest_dt_runpath_b_src_files := \
     empty.cpp
 
 libtest_dt_runpath_b_shared_libraries := libtest_dt_runpath_a
-libtest_dt_runpath_b_ldflags := -Wl,--rpath,\$${ORIGIN}/../dt_runpath_a
+libtest_dt_runpath_b_ldflags := -Wl,--rpath,\$${ORIGIN}/../dt_runpath_a -Wl,--enable-new-dtags
 libtest_dt_runpath_b_relative_path := dt_runpath_b_c_x
 module := libtest_dt_runpath_b
 include $(LOCAL_PATH)/Android.build.testlib.mk
@@ -43,7 +43,7 @@ libtest_dt_runpath_c_src_files := \
     empty.cpp
 
 libtest_dt_runpath_c_shared_libraries := libtest_dt_runpath_a
-libtest_dt_runpath_c_ldflags := -Wl,--rpath,\$${ORIGIN}/invalid_dt_runpath
+libtest_dt_runpath_c_ldflags := -Wl,--rpath,\$${ORIGIN}/invalid_dt_runpath -Wl,--enable-new-dtags
 libtest_dt_runpath_c_relative_path := dt_runpath_b_c_x
 module := libtest_dt_runpath_c
 include $(LOCAL_PATH)/Android.build.testlib.mk
@@ -53,7 +53,7 @@ libtest_dt_runpath_d_src_files := \
     dlopen_b.cpp
 
 libtest_dt_runpath_d_shared_libraries := libtest_dt_runpath_b libtest_dt_runpath_c
-libtest_dt_runpath_d_ldflags := -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x
+libtest_dt_runpath_d_ldflags := -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x -Wl,--enable-new-dtags
 module := libtest_dt_runpath_d
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
