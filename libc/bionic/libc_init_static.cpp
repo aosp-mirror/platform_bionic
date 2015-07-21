@@ -90,7 +90,7 @@ __noreturn void __libc_init(void* raw_args,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
   KernelArgumentBlock args(raw_args);
-  __libc_init_tls(args);
+  __libc_init_main_thread(args);
   __libc_init_AT_SECURE(args);
   __libc_init_common(args);
 
