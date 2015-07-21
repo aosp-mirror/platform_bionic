@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "185442e3_30c8dd97",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-21T20:27:35Z",
+      "side": 1,
+      "message": "isn\u0027t the rest of this all duplicated too? the only difference is getgrgid_internal(gid, state) versus getgrnam_internal(name, state). or does using a template for this make it worse than the duplication?",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78429e31_e059285d",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-21T20:27:35Z",
+      "side": 1,
+      "message": "you could check_group here instead of just asserting non-null. (in fact, for all three initial calls.)",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "185442e3_f0d65534",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-21T20:27:35Z",
+      "side": 1,
+      "message": "large_enough...",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
