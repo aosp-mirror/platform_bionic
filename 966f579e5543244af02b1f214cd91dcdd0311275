@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d849ecc_2261ae03",
+        "filename": "libc/libc.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-21T19:18:44Z",
+      "side": 1,
+      "message": "I have no idea of bionic libc version plan, any suggestion?",
+      "range": {
+        "startLine": 1458,
+        "startChar": 0,
+        "endLine": 1458,
+        "endChar": 9
+      },
+      "revId": "966f579e5543244af02b1f214cd91dcdd0311275",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
