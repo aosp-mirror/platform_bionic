@@ -64,18 +64,15 @@ char** environ;
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
-/* Init TLS for the initial thread. Called by the linker _before_ libc is mapped
- * in memory. Beware: all writes to libc globals from this function will
- * apply to linker-private copies and will not be visible from libc later on.
- *
- * Note: this function creates a pthread_internal_t for the initial thread and
- * stores the pointer in TLS, but does not add it to pthread's thread list. This
- * has to be done later from libc itself (see __libc_init_common).
- *
- * This function also stores a pointer to the kernel argument block in a TLS slot to be
- * picked up by the libc constructor.
- */
-void __libc_init_tls(KernelArgumentBlock& args) {
+// Setup for the main thread. For dynamic executables, this is called by the
+// linker _before_ libc is mapped in memory. This means that all writes to
+// globals from this function will apply to linker-private copies and will not
+// be visible from libc later on.
+//
+// Note: this function creates a pthread_internal_t for the initial thread and
+// stores the pointer in TLS, but does not add it to pthread's thread list. This
+// has to be done later from libc itself (see __libc_init_common).
+void __libc_init_main_thread(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 
   static pthread_internal_t main_thread;
@@ -99,6 +96,9 @@ void __libc_init_tls(KernelArgumentBlock& args) {
   __init_thread(&main_thread);
   __init_tls(&main_thread);
   __set_tls(main_thread.tls);
+
+  // Store a pointer to the kernel argument block in a TLS slot to be
+  // picked up by the libc constructor.
   main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
   __init_alternate_signal_stack(&main_thread);
