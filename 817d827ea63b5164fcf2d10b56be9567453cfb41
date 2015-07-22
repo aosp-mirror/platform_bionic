@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "edc5ee24_31d82a1d",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T01:02:43Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t realize the requirement for duplication is so strict. Using template or macro seems harder to read. I use a common function to pass in all the arguments just like do_getpw_r before, although I don\u0027t like it very much.",
+      "parentUuid": "185442e3_30c8dd97",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78429e31_e059285d",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "cd7bcaab_7b2d17c9",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T01:02:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78429e31_e059285d",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "185442e3_f0d65534",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2015-07-21T20:27:35Z",
       "side": 1,
       "message": "large_enough...",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ddfa2f3_2fbe891f",
+        "filename": "tests/stubs_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T01:02:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "185442e3_f0d65534",
       "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
