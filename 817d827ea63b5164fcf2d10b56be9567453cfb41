@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6dd2dee8_3566da1c",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-22T01:49:18Z",
+      "side": 1,
+      "message": "with the possible exception of unit tests where duplication can sometimes make tests clearer, duplication is pretty much always to be avoided. sometimes the language works against you and makes it hard to factor out the duplication, and then you have to balance the trade off of n simpler copies versus one more complex copy.\n\nduplicated code is harder to review in the first place, leaves the reviewer wondering \"was there some subtle difference in these copies that i just didn\u0027t spot?\" and -- most importantly -- is harder to maintain, especially because people don\u0027t expect (in good code) to have to look for multiple instances of the same mistake. (obviously this isn\u0027t something we can rely on in most of the code we inherited! :-( )\n\n\n\n(as for this specific case, i think your choice of a boolean plus extra arguments is probably clearer than my suggestion of a template. lgtm.)",
+      "parentUuid": "edc5ee24_31d82a1d",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78429e31_e059285d",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 4
