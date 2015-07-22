@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "edc5ee24_54da8462",
+        "filename": "libc/bionic/__fread_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "well, I didn\u0027t realize previous code doesn\u0027t make a convention for this. You can keep this, although personally I prefer letting header file only worry about this.",
+      "parentUuid": "f8568eec_cf053d1c",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 10
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d81c6a21_3feb6ba2",
         "filename": "libc/bionic/__fwrite_chk.cpp",
         "patchSetId": 1
@@ -65,6 +89,52 @@
         "startChar": 0,
         "endLine": 34,
         "endChar": 10
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7bcaab_7ece655c",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "You can test this in compilation time as well by adding test in \nfortify_compilation_test.cpp.",
+      "range": {
+        "startLine": 453,
+        "startChar": 8,
+        "endLine": 457,
+        "endChar": 36
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7a16a8_5d57ef30",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "same as above.",
+      "range": {
+        "startLine": 479,
+        "startChar": 8,
+        "endLine": 483,
+        "endChar": 37
       },
       "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
@@ -119,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "6dd2dee8_75a4628d",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "There is no plan to port bionic to windows, and we can take advantage of this to easy our task.",
+      "parentUuid": "d8f38a19_4757844f",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 6
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8f38a19_e737b00a",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -154,6 +248,30 @@
       "side": 1,
       "message": "I think it\u0027s clearer to leave it as size_t.\n\nI just noticed that it\u0027s also used above in __BIONIC_FORTIFY_UNKNOWN_SIZE so it should already be included for that #define to work with just this header.",
       "parentUuid": "d8f38a19_e737b00a",
+      "range": {
+        "startLine": 588,
+        "startChar": 0,
+        "endLine": 588,
+        "endChar": 19
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dd2dee8_35aeda6d",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "what I concern is, if we include \u003cstddef.h\u003e in sys/cdefs.h, which is included by almost every other header files, then everyone can use size_t for free. This violates our goal to make header files as independent as possible. And if we introduce \u003cstddef.h\u003e in sys/cdefs.h, there will be no way to remove it even if we no longer use it in sys/cdefs.h itself, because there will be many source files depending on having size_t from sys/cdefs.h. So I\u0027d rather use unsigned long here and remove stddef.h.\nFor size_t used above, I think it is never used. the gcc version we are currently using is 4.9.",
+      "parentUuid": "786d3eb3_5333a4fd",
       "range": {
         "startLine": 588,
         "startChar": 0,
