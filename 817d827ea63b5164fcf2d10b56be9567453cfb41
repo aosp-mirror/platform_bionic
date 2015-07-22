@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "2ddc66fc_d30446d0",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T02:37:07Z",
+      "side": 1,
+      "message": "That may explain why I feel the quality requirement of test and code are a little different.",
+      "parentUuid": "6dd2dee8_3566da1c",
+      "revId": "817d827ea63b5164fcf2d10b56be9567453cfb41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78429e31_e059285d",
         "filename": "tests/stubs_test.cpp",
         "patchSetId": 4
