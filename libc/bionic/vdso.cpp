@@ -19,13 +19,12 @@
 #include <sys/auxv.h>
 #include <unistd.h>
 
-// x86 has a vdso, but there's nothing useful to us in it.
-#if defined(__aarch64__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__x86_64__) || defined (__i386__)
 
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
-#elif defined(__x86_64__)
+#elif defined(__x86_64__) || defined(__i386__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
 #endif
