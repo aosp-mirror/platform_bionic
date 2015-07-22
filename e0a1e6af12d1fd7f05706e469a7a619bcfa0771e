@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd7bcaab_bec39d2a",
+        "filename": "libc/libc.map",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-22T03:57:19Z",
+      "side": 1,
+      "message": "move this to the next version LIBC_N, which is added in https://android-review.googlesource.com/#/c/160639/6",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 16
+      },
+      "revId": "e0a1e6af12d1fd7f05706e469a7a619bcfa0771e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
