@@ -285,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "0d2402f2_8a0bcb2d",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-07-23T22:58:12Z",
+      "side": 1,
+      "message": "I realized there\u0027s a __SIZE_TYPE__ define for all -std modes in Clang / GCC, so it can just make use of that.",
+      "parentUuid": "8d61d221_bc1ee5ef",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 6
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8f38a19_e737b00a",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
