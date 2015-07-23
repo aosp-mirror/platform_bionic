@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_gettime)
+ENTRY(__clock_gettime)
     pushl   %ebx
     .cfi_def_cfa_offset 8
     .cfi_rel_offset ebx, 0
@@ -23,4 +23,4 @@ ENTRY(clock_gettime)
     popl    %ecx
     popl    %ebx
     ret
-END(clock_gettime)
+END(__clock_gettime)

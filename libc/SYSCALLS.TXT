@@ -333,7 +333,7 @@ int     __set_tls:set_thread_area(void*) mips,mips64
 int     __set_thread_area:set_thread_area(void*) x86
 
 # vdso stuff.
-int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64,x86
-int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86_64
-int gettimeofday(timeval*, timezone*)                   arm,mips,mips64,x86
-int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86_64
+int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64
+int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86,x86_64
+int gettimeofday(timeval*, timezone*)                   arm,mips,mips64
+int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86,x86_64
