@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dd2dee8_46209256",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-07-23T00:32:31Z",
+      "side": 1,
+      "message": "How can this fail?  It seems to me that if it does, we\u0027re well into undefined behavior anyway, since we fail to initialize the atomics.  I\u0027m not sure what the point of the test is.",
+      "range": {
+        "startLine": 62,
+        "startChar": 6,
+        "endLine": 62,
+        "endChar": 21
+      },
+      "revId": "4bc947669aff320bf9dfef3d88aaf29d0a936457",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edc5ee24_753e97eb",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-07-23T00:32:31Z",
+      "side": 1,
+      "message": "Isn\u0027t there a race here, and you can get inconsistent values of g_serial and g_tags?  Is there a reason not to just use a lock and dispense with the atomics?\n\nGranted none of this is very likely to actually fail in practice.",
+      "range": {
+        "startLine": 82,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 59
+      },
+      "revId": "4bc947669aff320bf9dfef3d88aaf29d0a936457",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
