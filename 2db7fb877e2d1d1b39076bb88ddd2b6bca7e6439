@@ -213,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "edc5ee24_8bce8259",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-07-23T09:54:17Z",
+      "side": 1,
+      "message": "size_t is actually unsigned int* on 32-bit:\n\nerror: invalid conversion from \u0027size_t* {aka unsigned int*}\u0027 to \u0027long unsigned int*\u0027 [-fpermissive]",
+      "parentUuid": "6dd2dee8_75a4628d",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 6
+      },
+      "revId": "2db7fb877e2d1d1b39076bb88ddd2b6bca7e6439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8f38a19_e737b00a",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
