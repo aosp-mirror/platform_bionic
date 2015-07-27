@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdfd8ac1_651c06a1",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d4162d7_ffb75f21",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "no C-style casts. (i thought we had -Wold-style-cast turned on?)",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d86fa2e_958587e5",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "n is really a bool.",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed47aeea_7ef271d9",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "since you\u0027re going to join anyway, it\u0027s not really wrong to pass an on-stack address to pthread_create, but it\u0027s misleading. at least comment that this is only correct because of the join?",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d37da6b_01aaea8a",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "the tests are actually of arrays of structs. is that important?",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfcd6c5_c4429e65",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-27T18:37:20Z",
+      "side": 1,
+      "message": "give run_one_thread a function pointer argument and use it above and down here?",
+      "revId": "2565fe19b8b68fa40d95b1ad25441163bebc1eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
