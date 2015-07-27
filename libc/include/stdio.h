@@ -382,6 +382,16 @@ extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
+extern size_t __fread_chk(void * __restrict, size_t, size_t, FILE * __restrict, size_t);
+extern size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
+__errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
+__errordecl(__fread_overflow, "fread called with overflowing size * count");
+
+extern size_t __fwrite_chk(const void * __restrict, size_t, size_t, FILE * __restrict, size_t);
+extern size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
+__errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
+__errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
+
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
@@ -427,6 +437,58 @@ int sprintf(char *dest, const char *format, ...)
         __bos(dest), format, __builtin_va_arg_pack());
 }
 #endif
+
+__BIONIC_FORTIFY_INLINE
+size_t fread(void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+    size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __fread_real(buf, size, count, stream);
+    }
+
+    if (__builtin_constant_p(size) && __builtin_constant_p(count)) {
+        size_t total;
+        if (__size_mul_overflow(size, count, &total)) {
+            __fread_overflow();
+        }
+
+        if (total > bos) {
+            __fread_too_big_error();
+        }
+
+        return __fread_real(buf, size, count, stream);
+    }
+#endif
+
+    return __fread_chk(buf, size, count, stream, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+    size_t bos = __bos0(buf);
+
+#if !defined(__clang__)
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __fwrite_real(buf, size, count, stream);
+    }
+
+    if (__builtin_constant_p(size) && __builtin_constant_p(count)) {
+        size_t total;
+        if (__size_mul_overflow(size, count, &total)) {
+            __fwrite_overflow();
+        }
+
+        if (total > bos) {
+            __fwrite_too_big_error();
+        }
+
+        return __fwrite_real(buf, size, count, stream);
+    }
+#endif
+
+    return __fwrite_chk(buf, size, count, stream, bos);
+}
 
 #if !defined(__clang__)
 

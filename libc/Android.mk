@@ -70,6 +70,8 @@ libc_common_src_files := \
 libc_common_src_files += \
     bionic/__FD_chk.cpp \
     bionic/__fgets_chk.cpp \
+    bionic/__fread_chk.cpp \
+    bionic/__fwrite_chk.cpp \
     bionic/__memchr_chk.cpp \
     bionic/__memmove_chk.cpp \
     bionic/__memrchr_chk.cpp \
