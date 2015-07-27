@@ -647,6 +647,22 @@ TEST_F(DEATHTEST, read_fortified) {
   close(fd);
 }
 
+TEST_F(DEATHTEST, fread_fortified) {
+  char buf[1];
+  size_t ct = atoi("2"); // prevent optimizations
+  FILE* fp = fopen("/dev/null", "r");
+  ASSERT_FORTIFY(fread(buf, 1, ct, fp));
+  fclose(fp);
+}
+
+TEST_F(DEATHTEST, fwrite_fortified) {
+  char buf[1] = {0};
+  size_t ct = atoi("2"); // prevent optimizations
+  FILE* fp = fopen("/dev/null", "w");
+  ASSERT_FORTIFY(fwrite(buf, 1, ct, fp));
+  fclose(fp);
+}
+
 TEST_F(DEATHTEST, readlink_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
