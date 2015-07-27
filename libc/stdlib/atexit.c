@@ -37,6 +37,10 @@
 #include "atexit.h"
 #include "private/thread_private.h"
 
+/* BEGIN android-changed */
+#include "private/bionic_prctl.h"
+/* END android-changed */
+
 struct atexit {
 	struct atexit *next;		/* next in list */
 	int ind;			/* next index in this table */
@@ -95,6 +99,10 @@ __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 		    MAP_ANON | MAP_PRIVATE, -1, 0);
 		if (p == MAP_FAILED)
 			goto unlock;
+/* BEGIN android-changed */
+		prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, p, pgsize,
+		    "atexit handlers");
+/* END android-changed */
 		if (__atexit == NULL) {
 			memset(&p->fns[0], 0, sizeof(p->fns[0]));
 			p->ind = 1;
@@ -204,6 +212,10 @@ __atexit_register_cleanup(void (*func)(void))
 		    MAP_ANON | MAP_PRIVATE, -1, 0);
 		if (p == MAP_FAILED)
 			goto unlock;
+/* BEGIN android-changed */
+		prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, p, pgsize,
+		    "atexit handlers");
+/* END android-changed */
 		p->ind = 1;
 		p->max = (pgsize - ((char *)&p->fns[0] - (char *)p)) /
 		    sizeof(p->fns[0]);
