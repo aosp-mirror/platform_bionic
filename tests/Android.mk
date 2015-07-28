@@ -280,6 +280,7 @@ bionic-unit-tests_src_files := \
     dlfcn_test.cpp \
     libdl_test.cpp \
     pthread_dlfcn_test.cpp \
+    thread_local_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
 
