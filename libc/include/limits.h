@@ -85,9 +85,6 @@
 #ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
 #endif
-#ifndef PAGESIZE
-#define  PAGESIZE  PAGE_SIZE
-#endif
 
 #define SEM_VALUE_MAX 0x3fffffff
 
