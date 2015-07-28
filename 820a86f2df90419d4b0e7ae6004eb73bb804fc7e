@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4db19a56_25452619",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-28T23:47:27Z",
+      "side": 1,
+      "message": "other than sdcard, there are users in vendor/ but they all seem to define their own anyway.",
+      "revId": "820a86f2df90419d4b0e7ae6004eb73bb804fc7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
