@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edf32e19_3e61a9b2",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-28T00:07:34Z",
+      "side": 1,
+      "message": "just use the short form: http://b/22772147\n\nit\u0027s more stable over time.",
+      "revId": "392157df1c3e8a91049c5226bf0e2a83df80bfc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
