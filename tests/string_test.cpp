@@ -22,6 +22,7 @@
 #include <gtest/gtest.h>
 #include <malloc.h>
 #include <math.h>
+#include <stdint.h>
 
 #include "buffer_tests.h"
 
@@ -1394,6 +1395,10 @@ TEST(string, strnlen_147048) {
   *heap_src = '\0';
   EXPECT_EQ(0U, strnlen(heap_src, 1024*1024*1024));
   delete[] heap_src;
+}
+
+TEST(string, strnlen_74741) {
+  ASSERT_EQ(4U, strnlen("test", SIZE_MAX));
 }
 
 TEST(string, mempcpy) {
