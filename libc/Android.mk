@@ -577,10 +577,6 @@ libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
 
-ifneq ($(TARGET_USES_LOGD),false)
-libc_common_cflags += -DTARGET_USES_LOGD
-endif
-
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
 # Clang/llvm has incompatible long double (fp128) for x86_64.
