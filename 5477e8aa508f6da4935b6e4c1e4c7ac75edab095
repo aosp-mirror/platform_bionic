@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4db19a56_4b62f97f",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-07-29T16:48:28Z",
+      "side": 1,
+      "message": "Add the special check of (buf \u003d\u003d NULL) as clang doesn\u0027t seem to fix this soon? And compile time test?",
+      "range": {
+        "startLine": 262,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 28
+      },
+      "revId": "5477e8aa508f6da4935b6e4c1e4c7ac75edab095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
