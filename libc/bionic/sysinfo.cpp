@@ -29,9 +29,9 @@
 #include <sys/sysinfo.h>
 
 #include <dirent.h>
-#include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "private/ScopedReaddir.h"
 
@@ -94,7 +94,7 @@ static int __get_meminfo_page_count(const char* pattern) {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      page_count = static_cast<int>(total / (PAGE_SIZE / 1024));
+      page_count = static_cast<int>(total / (sysconf(_SC_PAGE_SIZE) / 1024));
       break;
     }
   }
