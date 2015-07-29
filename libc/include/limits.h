@@ -89,9 +89,6 @@
 #define  PAGESIZE  PAGE_SIZE
 #endif
 
-/* glibc's PAGE_MASK is the bitwise negation of BSD's! TODO: remove? */
-#define PAGE_MASK (~(PAGE_SIZE - 1))
-
 #define SEM_VALUE_MAX 0x3fffffff
 
 /* POSIX says these belong in <unistd.h> but BSD has some in <limits.h>. */

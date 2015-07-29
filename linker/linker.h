@@ -29,13 +29,14 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
+#include <android/dlext.h>
 #include <elf.h>
 #include <inttypes.h>
 #include <link.h>
-#include <unistd.h>
-#include <android/dlext.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
+#include "private/bionic_page.h"
 #include "private/libc_logging.h"
 #include "linked_list.h"
 
@@ -76,16 +77,6 @@
 #define ELF64_R_TYPE2(info) (((info) >> 48) & 0xff)
 #define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
 #endif
-
-// Returns the address of the page containing address 'x'.
-#define PAGE_START(x)  ((x) & PAGE_MASK)
-
-// Returns the offset of address 'x' in its page.
-#define PAGE_OFFSET(x) ((x) & ~PAGE_MASK)
-
-// Returns the address of the next page after address 'x', unless 'x' is
-// itself at the start of a page.
-#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
 #define FLAG_LINKED     0x00000001
 #define FLAG_EXE        0x00000004 // The main executable
