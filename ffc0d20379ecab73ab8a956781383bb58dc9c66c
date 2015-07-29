@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eafb1432_a1239857",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-29T20:23:33Z",
+      "side": 1,
+      "message": "i\u0027ve moved this earlier too, because the old behavior seemed surprising: if we have a path, we\u0027ll clear the collection; otherwise we\u0027ll leave it alone.",
+      "revId": "ffc0d20379ecab73ab8a956781383bb58dc9c66c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
