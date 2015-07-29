@@ -612,7 +612,7 @@ extern "C" bool malloc_debug_initialize(HashTable*, const MallocDebug* malloc_di
         error_log("Unable to open /dev/qemu_trace");
         return false;
     } else {
-        qtrace = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        qtrace = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
         close(fd);
 
         if (qtrace == MAP_FAILED) {
