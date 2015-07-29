@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad1696fe_2eeb3bec",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-29T15:15:15Z",
+      "side": 1,
+      "message": "isn\u0027t this where the check should go? otherwise you\u0027d have the same problem with \"a:b:\"?",
+      "revId": "acf3c0f7f9945d33e150e6499d986baafc34bf07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d11d20b_5d960fa5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-29T15:15:15Z",
+      "side": 1,
+      "message": "(plus remove this)",
+      "revId": "acf3c0f7f9945d33e150e6499d986baafc34bf07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
