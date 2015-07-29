@@ -16,6 +16,29 @@
       "revId": "ffc0d20379ecab73ab8a956781383bb58dc9c66c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caf6504b_e34f6688",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-07-29T21:06:51Z",
+      "side": 1,
+      "message": "If there is no delimiter at the end of the string, you are going to access past the end of the string when you hit ++p.\nThat\u0027s probably why the *p !\u003d \u0027\\0\u0027 check was at the end of the loop before.",
+      "range": {
+        "startLine": 323,
+        "startChar": 6,
+        "endLine": 323,
+        "endChar": 15
+      },
+      "revId": "ffc0d20379ecab73ab8a956781383bb58dc9c66c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
