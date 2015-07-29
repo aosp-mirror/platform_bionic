@@ -81,11 +81,6 @@
 
 #define MB_LEN_MAX 4
 
-/* New code should use sysconf(_SC_PAGE_SIZE) instead. */
-#ifndef PAGE_SIZE
-#define PAGE_SIZE 4096
-#endif
-
 #define SEM_VALUE_MAX 0x3fffffff
 
 /* POSIX says these belong in <unistd.h> but BSD has some in <limits.h>. */
