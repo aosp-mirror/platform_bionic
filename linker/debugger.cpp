@@ -135,9 +135,6 @@ static void log_signal_summary(int signum, const siginfo_t* info) {
       signal_name = "SIGILL";
       has_address = true;
       break;
-    case SIGPIPE:
-      signal_name = "SIGPIPE";
-      break;
     case SIGSEGV:
       signal_name = "SIGSEGV";
       has_address = true;
@@ -273,7 +270,7 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
   signal(signal_number, SIG_DFL);
 
   // These signals are not re-thrown when we resume.  This means that
-  // crashing due to (say) SIGPIPE doesn't work the way you'd expect it
+  // crashing due to (say) SIGABRT doesn't work the way you'd expect it
   // to.  We work around this by throwing them manually.  We don't want
   // to do this for *all* signals because it'll screw up the si_addr for
   // faults like SIGSEGV. It does screw up the si_code, which is why we
@@ -281,7 +278,6 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
   switch (signal_number) {
     case SIGABRT:
     case SIGFPE:
-    case SIGPIPE:
 #if defined(SIGSTKFLT)
     case SIGSTKFLT:
 #endif
@@ -307,7 +303,6 @@ __LIBC_HIDDEN__ void debuggerd_init() {
   sigaction(SIGBUS, &action, nullptr);
   sigaction(SIGFPE, &action, nullptr);
   sigaction(SIGILL, &action, nullptr);
-  sigaction(SIGPIPE, &action, nullptr);
   sigaction(SIGSEGV, &action, nullptr);
 #if defined(SIGSTKFLT)
   sigaction(SIGSTKFLT, &action, nullptr);
