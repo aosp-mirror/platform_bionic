@@ -57,6 +57,8 @@
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
+
+#include "base/strings.h"
 #include "ziparchive/zip_archive.h"
 
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
@@ -308,25 +310,9 @@ static void soinfo_free(soinfo* si) {
 
 static void parse_path(const char* path, const char* delimiters,
                        std::vector<std::string>* paths) {
-  if (path == nullptr) {
-    return;
-  }
-
   paths->clear();
-
-  for (const char *p = path; ; ++p) {
-    size_t len = strcspn(p, delimiters);
-    // skip empty tokens
-    if (len == 0) {
-      continue;
-    }
-
-    paths->push_back(std::string(p, len));
-    p += len;
-
-    if (*p == '\0') {
-      break;
-    }
+  if (path != nullptr) {
+    *paths = android::base::Split(path, delimiters);
   }
 }
 
