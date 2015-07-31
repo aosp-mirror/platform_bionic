@@ -224,6 +224,10 @@ extern int   tcsetpgrp(int fd, pid_t _pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
+extern char* __getcwd_chk(char*, size_t, size_t);
+__errordecl(__getcwd_dest_size_error, "getcwd called with size bigger than destination");
+extern char* __getcwd_real(char*, size_t) __RENAME(getcwd);
+
 extern ssize_t __pread_chk(int, void*, size_t, off_t, size_t);
 __errordecl(__pread_dest_size_error, "pread called with size bigger than destination");
 __errordecl(__pread_count_toobig_error, "pread called with count > SSIZE_MAX");
@@ -250,6 +254,37 @@ __errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE
 extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat);
 
 #if defined(__BIONIC_FORTIFY)
+
+__BIONIC_FORTIFY_INLINE
+char* getcwd(char* buf, size_t size) {
+    size_t bos = __bos(buf);
+
+#if defined(__clang__)
+    /*
+     * Work around LLVM's incorrect __builtin_object_size implementation here
+     * to avoid needing the workaround in the __getcwd_chk ABI forever.
+     *
+     * https://llvm.org/bugs/show_bug.cgi?id=23277
+     */
+    if (buf == NULL) {
+        bos = __BIONIC_FORTIFY_UNKNOWN_SIZE;
+    }
+#else
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __getcwd_real(buf, size);
+    }
+
+    if (__builtin_constant_p(size) && (size > bos)) {
+        __getcwd_dest_size_error();
+    }
+
+    if (__builtin_constant_p(size) && (size <= bos)) {
+        return __getcwd_real(buf, size);
+    }
+#endif
+
+    return __getcwd_chk(buf, size, bos);
+}
 
 #if defined(__USE_FILE_OFFSET64)
 #define __PREAD_PREFIX(x) __pread64_ ## x
