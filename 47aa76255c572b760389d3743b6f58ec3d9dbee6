@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a6260ef_b2876198",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-31T19:53:54Z",
+      "side": 1,
+      "message": "compilers",
+      "revId": "47aa76255c572b760389d3743b6f58ec3d9dbee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca2490af_39658a10",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-31T19:53:54Z",
+      "side": 1,
+      "message": "size_t",
+      "revId": "47aa76255c572b760389d3743b6f58ec3d9dbee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a2e188f_9acc71ac",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-07-31T19:53:54Z",
+      "side": 1,
+      "message": "danalbert: should we overload android::base::StartsWith and EndsWith so people aren\u0027t afraid to use them for non-std::strings?",
+      "revId": "47aa76255c572b760389d3743b6f58ec3d9dbee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
