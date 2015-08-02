@@ -27,6 +27,8 @@
 #include <pthread.h>
 #include <signal.h>
 
+#include "private/bionic_prctl.h"
+
 // Android gets these from "thread_private.h".
 #include "thread_private.h"
 //static pthread_mutex_t arc4random_mtx = PTHREAD_MUTEX_INITIALIZER;
@@ -76,11 +78,17 @@ _rs_allocate(struct _rs **rsp, struct _rsx **rsxp)
 	    MAP_ANON|MAP_PRIVATE, -1, 0)) == MAP_FAILED)
 		return (-1);
 
+	prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, *rsp, sizeof(**rsp),
+	    "arc4random _rs structure");
+
 	if ((*rsxp = mmap(NULL, sizeof(**rsxp), PROT_READ|PROT_WRITE,
 	    MAP_ANON|MAP_PRIVATE, -1, 0)) == MAP_FAILED) {
 		munmap(*rsxp, sizeof(**rsxp));
 		return (-1);
 	}
+
+	prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, *rsxp, sizeof(**rsxp),
+	    "arc4random _rsx structure");
 
 	_ARC4_ATFORK(_rs_forkhandler);
 	return (0);
