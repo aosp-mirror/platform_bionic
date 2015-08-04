@@ -30,6 +30,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include "private/bionic_macros.h"
 #include "private/ErrnoRestorer.h"
 
 // mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
@@ -42,6 +43,13 @@ static bool kernel_has_MADV_MERGEABLE = true;
 void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
   if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
     errno = EINVAL;
+    return MAP_FAILED;
+  }
+
+  // prevent allocations large enough for `end - start` to overflow
+  size_t rounded = BIONIC_ALIGN(size, PAGE_SIZE);
+  if (rounded < size || size > PTRDIFF_MAX) {
+    errno = ENOMEM;
     return MAP_FAILED;
   }
 
