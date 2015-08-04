@@ -67,6 +67,9 @@ enum {
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
+  // Fast storage for Thread::Current() in ART.
+  TLS_SLOT_ART_THREAD_SELF,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
 
