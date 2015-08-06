@@ -572,11 +572,17 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#if __ANDROID_API__ >= 21
-#define _BIONIC_NOT_BEFORE_21(x) x
+#ifdef __clang__
+#define __AVAILABILITY(...) __attribute__((availability(android,__VA_ARGS__)))
+#define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
+#define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
+#define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
 #else
-#define _BIONIC_NOT_BEFORE_21(x)
-#endif /* __ANDROID_API__ >= 21 */
+#define __AVAILABILITY(...)
+#define __INTRODUCED_IN(api_level)
+#define __DEPRECATED_IN(api_level)
+#define __REMOVED_IN(api_level)
+#endif // __clang__
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__

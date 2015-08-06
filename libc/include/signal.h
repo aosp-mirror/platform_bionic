@@ -105,15 +105,15 @@ struct sigaction {
 
 extern int sigaction(int, const struct sigaction*, struct sigaction*);
 
-_BIONIC_NOT_BEFORE_21(extern sighandler_t signal(int, sighandler_t);)
+extern sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
 
 extern int siginterrupt(int, int);
 
-_BIONIC_NOT_BEFORE_21(extern int sigaddset(sigset_t*, int);)
-_BIONIC_NOT_BEFORE_21(extern int sigdelset(sigset_t*, int);)
-_BIONIC_NOT_BEFORE_21(extern int sigemptyset(sigset_t*);)
-_BIONIC_NOT_BEFORE_21(extern int sigfillset(sigset_t*);)
-_BIONIC_NOT_BEFORE_21(extern int sigismember(const sigset_t*, int);)
+extern int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
+extern int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
+extern int sigemptyset(sigset_t*) __INTRODUCED_IN(21);
+extern int sigfillset(sigset_t*) __INTRODUCED_IN(21);
+extern int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
 
 extern int sigpending(sigset_t*) __nonnull((1));
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
