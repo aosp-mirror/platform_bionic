@@ -77,7 +77,6 @@ int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  arm,mips,x8
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
 int     setgroups:setgroups(int, const gid_t*)     arm64,mips,mips64,x86_64
 int     setpgid(pid_t, pid_t)  all
-pid_t   vfork(void)  arm
 int     setregid:setregid32(gid_t, gid_t)  arm,x86
 int     setregid:setregid(gid_t, gid_t)    arm64,mips,mips64,x86_64
 int     chroot(const char*)  all
