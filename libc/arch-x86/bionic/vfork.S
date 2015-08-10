@@ -34,6 +34,12 @@ ENTRY(vfork)
   popl    %ecx  // Grab the return address.
   .cfi_adjust_cfa_offset 4
   .cfi_rel_offset ecx, 0
+
+  // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
+  movl    %gs:0, %eax
+  movl    4(%eax), %eax
+  movl    $0, 12(%eax)
+
   movl    $__NR_vfork, %eax
   int     $0x80
   cmpl    $-MAX_ERRNO, %eax
