@@ -402,11 +402,11 @@ static void AssertGetPidCorrect() {
   }
 }
 
-TEST(unistd, getpid_caching_and_fork) {
+static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
-  pid_t fork_result = fork();
+  pid_t fork_result = fork_fn();
   ASSERT_NE(fork_result, -1);
   if (fork_result == 0) {
     // We're the child.
@@ -422,6 +422,14 @@ TEST(unistd, getpid_caching_and_fork) {
     ASSERT_TRUE(WIFEXITED(status));
     ASSERT_EQ(123, WEXITSTATUS(status));
   }
+}
+
+TEST(unistd, getpid_caching_and_fork) {
+  TestGetPidCachingWithFork(fork);
+}
+
+TEST(unistd, getpid_caching_and_vfork) {
+  TestGetPidCachingWithFork(vfork);
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {

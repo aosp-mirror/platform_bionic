@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,24 +28,19 @@
 
 #include <private/bionic_asm.h>
 
-// This custom code preserves the return address across the system call.
-
 ENTRY(vfork)
-  popq    %rdi  // Grab the return address.
+    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
+    mrc     p15, 0, r3, c13, c0, 3
+    ldr     r3, [r3, #4]
+    mov     r0, #0
+    str     r0, [r3, #12]
 
-  // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-  mov    %fs:0, %rax
-  mov    8(%rax), %rax
-  movl   $0, 20(%rax)
-
-  movl    $__NR_vfork, %eax
-  syscall
-  pushq   %rdi  // Restore the return address.
-  cmpq    $-MAX_ERRNO, %rax
-  jb      1f
-  negl    %eax
-  movl    %eax, %edi
-  call    __set_errno_internal
-1:
-  ret
+    mov     ip, r7
+    ldr     r7, =__NR_vfork
+    swi     #0
+    mov     r7, ip
+    cmn     r0, #(MAX_ERRNO + 1)
+    bxls    lr
+    neg     r0, r0
+    b       __set_errno_internal
 END(vfork)
