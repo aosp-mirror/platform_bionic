@@ -256,7 +256,7 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
     while (*p != '\0' && isspace(*p)) {
       ++p;
     }
-    if (*p != '\0') {
+    if (*p != '\0' && *p != '#') {
       // This is not we want, gtest must meet with some error when parsing the arguments.
       fprintf(stderr, "argument error, check with --help\n");
       return false;
