@@ -17,7 +17,7 @@
 LOCAL_PATH := $(call my-dir)
 TEST_PATH := $(LOCAL_PATH)/..
 
-common_cppflags += -std=gnu++11
+common_cppflags :=
 common_additional_dependencies := \
     $(LOCAL_PATH)/Android.mk \
     $(LOCAL_PATH)/Android.build.dt_runpath.mk \
