@@ -271,8 +271,8 @@ TEST(time, timer_settime_0) {
   Counter counter(Counter::CountAndDisarmNotifyFunction);
   ASSERT_EQ(0, counter.Value());
 
-  counter.SetTime(0, 1, 1, 0);
-  usleep(500000);
+  counter.SetTime(0, 500000000, 1, 0);
+  sleep(1);
 
   // The count should just be 1 because we disarmed the timer the first time it fired.
   ASSERT_EQ(1, counter.Value());
