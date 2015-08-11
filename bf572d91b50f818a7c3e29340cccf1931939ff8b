@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a716b7fe_74f6a851",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T18:49:43Z",
+      "side": 1,
+      "message": "just use the usual\n\nBug: xxx\n\n\nformat. but more important for your checkin comment is to explain:\n\n1. what was wrong with the old code.\n2. why the new code is right.\n\nit\u0027s surprising here, for example, that you increased the timer interval.",
+      "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
