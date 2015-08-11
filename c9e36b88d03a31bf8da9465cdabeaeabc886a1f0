@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "07bea3e2_f10d68c8",
+        "filename": "libc/arch-arm/cortex-a53/bionic/__strcat_chk.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T02:26:08Z",
+      "side": 1,
+      "message": "this is the same as the a15 one but without the MEMCPY_BASE_ALIGNED #define? can\u0027t we share?",
+      "revId": "c9e36b88d03a31bf8da9465cdabeaeabc886a1f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7d42f30_eb92115d",
+        "filename": "libc/arch-arm/cortex-a53/bionic/__strcpy_chk.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T02:26:08Z",
+      "side": 1,
+      "message": "likewise.",
+      "revId": "c9e36b88d03a31bf8da9465cdabeaeabc886a1f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7cf2b9d_24b83cab",
+        "filename": "libc/arch-arm/cortex-a53/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T02:26:08Z",
+      "side": 1,
+      "message": "this too?",
+      "revId": "c9e36b88d03a31bf8da9465cdabeaeabc886a1f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47e97bf9_2b7935a0",
+        "filename": "libc/arch-arm/cortex-a53/bionic/memcpy_base.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T02:26:08Z",
+      "side": 1,
+      "message": "the main difference in this file is the removal of some commented-out code and the code that would call. should we remove that from the original copy?",
+      "revId": "c9e36b88d03a31bf8da9465cdabeaeabc886a1f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
