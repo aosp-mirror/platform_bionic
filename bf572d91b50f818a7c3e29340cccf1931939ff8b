@@ -16,6 +16,24 @@
       "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07bb033c_721896a9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-08-11T20:30:45Z",
+      "side": 1,
+      "message": "The test is flaky because the timer-\u003eis_armed is not set to true when the timer is fired. We have been troubled by the same problem in https://b.corp.google.com/issues/20677618. As we can\u0027t change posix_timers.cpp for L. The only way is to loose the test. This change increase the time interval to fire, so timer-\u003eis_armed should have been set to true when the timer is fired.",
+      "parentUuid": "a716b7fe_74f6a851",
+      "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
