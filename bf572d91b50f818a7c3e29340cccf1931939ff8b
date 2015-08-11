@@ -52,6 +52,24 @@
       "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "275487e3_93d7de35",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-08-11T21:06:50Z",
+      "side": 1,
+      "message": "I think it will not go to M. If I find such case, I will revert it.",
+      "parentUuid": "a7207783_44e68e23",
+      "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
