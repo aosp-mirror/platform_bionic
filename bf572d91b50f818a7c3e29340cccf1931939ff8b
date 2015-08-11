@@ -34,6 +34,24 @@
       "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7207783_44e68e23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-11T20:51:32Z",
+      "side": 1,
+      "message": "yes, *that\u0027s* what should have been in the checkin comment :-)\n\ndo we need to revert this in an m branch, or does this not merge anywhere?",
+      "parentUuid": "07bb033c_721896a9",
+      "revId": "bf572d91b50f818a7c3e29340cccf1931939ff8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
