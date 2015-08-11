@@ -29,7 +29,6 @@ benchmark_cflags := \
     -Wunused \
 
 benchmark_cppflags := \
-    -std=gnu++11 \
 
 benchmarklib_src_files := \
     Benchmark.cpp \
