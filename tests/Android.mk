@@ -46,8 +46,7 @@ else
 test_cflags += -DUSE_JEMALLOC
 endif
 
-test_cppflags = \
-    -std=gnu++11 \
+test_cppflags := \
 
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
