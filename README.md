@@ -194,14 +194,15 @@ The tests are all built from the tests/ directory.
 ### Device tests
 
     $ mma
+    $ adb remount
     $ adb sync
     $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
     $ adb shell \
         /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
     # Only for 64-bit targets
-    $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
+    $ adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests64
     $ adb shell \
-        /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static64
+        /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static64
 
 ### Host tests
 
