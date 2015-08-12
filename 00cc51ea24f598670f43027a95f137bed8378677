@@ -70,6 +70,30 @@
       "revId": "00cc51ea24f598670f43027a95f137bed8378677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "046a21d9_dabd41af",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-08-12T19:02:32Z",
+      "side": 1,
+      "message": "Christopher: I had uploaded the patch before fully testing it, so I missed the change I needed to make to libc.map. Fixed.\n\nDan: I\u0027d prefer to keep this in libc. I expect we\u0027re going to have lots and lots of places all throughout Android which reference this function. I\u0027m not picky on the name though. If you have a better name I\u0027m happy to hear it.\n\nDan: How would -fsanitize-failure-function be any different than -ftrap-function?",
+      "parentUuid": "64367de0_f8fca933",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "00cc51ea24f598670f43027a95f137bed8378677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
