@@ -17,6 +17,7 @@
 #include <sys/syscall.h>
 #include <sys/time.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <benchmark/Benchmark.h>
 
