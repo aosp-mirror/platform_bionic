@@ -46,6 +46,30 @@
       "revId": "00cc51ea24f598670f43027a95f137bed8378677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64367de0_f8fca933",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-12T18:48:09Z",
+      "side": 1,
+      "message": "The latter part might be worth adding a -fsanitize-failure-function or similar to clang that would instruct codegen to use a specific function instead of __builtin_trap().",
+      "parentUuid": "a41eb557_6830cb21",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "00cc51ea24f598670f43027a95f137bed8378677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
