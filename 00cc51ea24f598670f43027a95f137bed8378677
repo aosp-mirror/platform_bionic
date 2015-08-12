@@ -94,6 +94,30 @@
       "revId": "00cc51ea24f598670f43027a95f137bed8378677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04f5c13c_7383285d",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-12T19:11:27Z",
+      "side": 1,
+      "message": "#1:\nYes, lots of places, but that\u0027s why it would be handled by the build system. Though I suppose the build system wouldn\u0027t be able to transitively apply it across static library dependencies (until we have soong, anyway), so that probably would be a hassle after all.\n\nA better name would probably be __libc_trap(), and the printed content would have to change as well. Response to #2 explains why.\n\n#2:\nint main() {\n    __builtin_trap();\n}\n\nWill print \"Compiler inserted fsanitize assertion failed\", which isn\u0027t true.\n\n-fsanitize-failure-function would leave __builtin_trap() alone and instruct the sanitizer code gen to directly call our function instead.",
+      "parentUuid": "046a21d9_dabd41af",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "00cc51ea24f598670f43027a95f137bed8378677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
