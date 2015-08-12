@@ -22,6 +22,30 @@
       "revId": "00cc51ea24f598670f43027a95f137bed8378677",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a41eb557_6830cb21",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-12T18:43:04Z",
+      "side": 1,
+      "message": "Can\u0027t be hidden because it needs to be called from any sanitized binary that uses -fsanitize-undefined-trap-on-error (should probably add a comment saying this is for -ftrap-function).\n\nThat said, this may not be the right place or name for this. It doesn\u0027t need to be in libc, it could just be in it\u0027s own static library that the build system adds to builds that need it.\n\nIt\u0027s possibly not the right name because it\u0027s misleading. -trap-function is not specifically for the sanitizers. Anyone calling __builtin_trap() (or doing something that would invoke it) will end up calling this and seeing the message of a ubsan failure, which may or may not be the case.",
+      "parentUuid": "c4f6494b_8654302c",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "00cc51ea24f598670f43027a95f137bed8378677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
