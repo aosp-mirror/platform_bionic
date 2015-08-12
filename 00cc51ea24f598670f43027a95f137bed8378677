@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4f6494b_8654302c",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-12T18:29:27Z",
+      "side": 1,
+      "message": "Is there a reason this isn\u0027t hidden?\n\nBy the way, we have a white list of libc symbols, so I don\u0027t believe this is sufficient to make this function exported.",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "00cc51ea24f598670f43027a95f137bed8378677",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
