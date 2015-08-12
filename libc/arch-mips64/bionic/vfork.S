@@ -46,6 +46,12 @@ LEAF(vfork,FRAMESZ)
 	PTR_SUBU sp, FRAMESZ
 #endif
 	SETUP_GP64(a5, vfork)
+
+	// __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
+	rdhwr	v0, $29			// v0 = tls
+	REG_L	v0, REGSZ*1(v0)		// v0 = v0[TLS_SLOT_THREAD_ID ie 1]
+	sw	$0, REGSZ*2+4(v0)	// v0->cached_pid_ = 0
+
 	LI	a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
 	move	a1, $0
 	move	a2, $0
