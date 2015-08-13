@@ -502,6 +502,9 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
 
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 #if !defined(__LP64__)
+    // Some apps depend on being able to pass NULL as a mutex and get EINVAL
+    // back. Don't need to worry about it for LP64 since the ABI is brand new,
+    // but keep compatibility for LP32. http://b/19995172.
     if (mutex_interface == NULL) {
         return EINVAL;
     }
@@ -523,6 +526,9 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 
 int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
 #if !defined(__LP64__)
+    // Some apps depend on being able to pass NULL as a mutex and get EINVAL
+    // back. Don't need to worry about it for LP64 since the ABI is brand new,
+    // but keep compatibility for LP32. http://b/19995172.
     if (mutex_interface == NULL) {
         return EINVAL;
     }
