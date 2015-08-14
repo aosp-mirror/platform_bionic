@@ -283,9 +283,8 @@ LOCAL_SRC_FILES_arm += \
 
 else
 LOCAL_SRC_FILES_arm += \
-    arm/e_sqrt.S \
-    arm/e_sqrtf.S \
-    arm/s_floor.S \
+    arm/sqrt.S \
+    arm/floor.S \
 
 endif
 
