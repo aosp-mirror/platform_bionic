@@ -16,6 +16,24 @@
       "revId": "b974eb3753ed41dcb99ebea528f994c52f817765",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4a8755c_5954ef2a",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T23:09:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4434d7f_2572add5",
+      "revId": "b974eb3753ed41dcb99ebea528f994c52f817765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
