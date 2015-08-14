@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4434d7f_13553e49",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4a8755c_fe082134",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4aeed64_fa57d150",
         "filename": "tests/thread_local_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-08-14T21:48:22Z",
       "side": 1,
       "message": "you can\u0027t use static_assert?",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8448d1a1_6a21275d",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Done. Original test was written for llvm compiler-rt as C.",
+      "parentUuid": "e4aeed64_fa57d150",
       "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c4a9e95f_1f1bbb79",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4fb1585_5202347f",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "243ac5f6_940c947b",
         "filename": "tests/thread_local_test.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2015-08-14T21:48:22Z",
       "side": 1,
       "message": "size_t and declare it in each for loop, since the value isn\u0027t used between for loops.",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4fb1585_359cb249",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "243ac5f6_940c947b",
       "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "8448d1a1_ca2e7b44",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Trying to mess up malloc space so the next malloc will not have the required alignment, but __emutls_get_address should return an aligned address.",
+      "parentUuid": "a4fb1585_52bb542b",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64591d73_29bbb95e",
         "filename": "tests/thread_local_test.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2015-08-14T21:48:22Z",
       "side": 1,
       "message": "this isn\u0027t checking whether *p is initialized :-)",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64591d73_c9715d04",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-14T22:21:47Z",
+      "side": 1,
+      "message": "Added comment. The \u0027memcpy\u0027 changes value of *p to be tested later at line 254.",
+      "parentUuid": "64591d73_29bbb95e",
       "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
