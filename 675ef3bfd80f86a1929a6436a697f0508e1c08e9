@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4a8755c_fe082134",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4aeed64_fa57d150",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "you can\u0027t use static_assert?",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4fb1585_5202347f",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "constexpr? size_t?",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243ac5f6_940c947b",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "size_t and declare it in each for loop, since the value isn\u0027t used between for loops.",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4fb1585_52bb542b",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "what is this for?",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64591d73_29bbb95e",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T21:48:22Z",
+      "side": 1,
+      "message": "this isn\u0027t checking whether *p is initialized :-)",
+      "revId": "675ef3bfd80f86a1929a6436a697f0508e1c08e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
