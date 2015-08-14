@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4a8755c_de61a5b5",
+        "filename": "libm/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-14T21:55:44Z",
+      "side": 1,
+      "message": "Should this be ifdef, or are you checking the value?",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 17
+      },
+      "revId": "7be1831fcebebf2fe7b79e24cdc1b8f104a68ed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
