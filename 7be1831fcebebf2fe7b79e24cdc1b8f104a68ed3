@@ -22,6 +22,30 @@
       "revId": "7be1831fcebebf2fe7b79e24cdc1b8f104a68ed3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c43e49ec_0c16bf55",
+        "filename": "libm/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T22:14:53Z",
+      "side": 1,
+      "message": "the documentation is frustratingly vague:\n\n  `__FP_FAST_FMA\u0027\n  `__FP_FAST_FMAF\u0027\n  `__FP_FAST_FMAL\u0027\n     These macros are defined with value 1 if the backend supports the\n     `fma\u0027, `fmaf\u0027, and `fmal\u0027 builtin functions, so that the include\n     file `math.h\u0027 can define the macros `FP_FAST_FMA\u0027, `FP_FAST_FMAF\u0027,\n     and `FP_FAST_FMAL\u0027 for compatibility with the 1999 C standard.\n\n#if defined() is probably safer though, so i\u0027ll switch to that.",
+      "parentUuid": "a4a8755c_de61a5b5",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 17
+      },
+      "revId": "7be1831fcebebf2fe7b79e24cdc1b8f104a68ed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
