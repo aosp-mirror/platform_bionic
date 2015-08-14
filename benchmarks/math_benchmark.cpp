@@ -65,6 +65,50 @@ void BM_math_logb::Run(int iters) {
   StopBenchmarkTiming();
 }
 
+BENCHMARK_WITH_ARG(BM_math_isfinite_macro, double)->AT_COMMON_VALS;
+void BM_math_isfinite_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += isfinite(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+#if defined(__BIONIC__)
+#define test_isfinite __isfinite
+#else
+#define test_isfinite __finite
+#endif
+BENCHMARK_WITH_ARG(BM_math_isfinite, double)->AT_COMMON_VALS;
+void BM_math_isfinite::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += test_isfinite(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_isinf_macro, double)->AT_COMMON_VALS;
+void BM_math_isinf_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += isinf(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
 BENCHMARK_WITH_ARG(BM_math_isinf, double)->AT_COMMON_VALS;
 void BM_math_isinf::Run(int iters, double value) {
   StartBenchmarkTiming();
@@ -77,6 +121,60 @@ void BM_math_isinf::Run(int iters, double value) {
 
   StopBenchmarkTiming();
 }
+
+BENCHMARK_WITH_ARG(BM_math_isnan_macro, double)->AT_COMMON_VALS;
+void BM_math_isnan_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += isnan(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_isnan, double)->AT_COMMON_VALS;
+void BM_math_isnan::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += (isnan)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_isnormal_macro, double)->AT_COMMON_VALS;
+void BM_math_isnormal_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += isnormal(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+#if defined(__BIONIC__)
+BENCHMARK_WITH_ARG(BM_math_isnormal, double)->AT_COMMON_VALS;
+void BM_math_isnormal::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += (__isnormal)(v);
+  }
+
+  StopBenchmarkTiming();
+}
+#endif
 
 BENCHMARK_NO_ARG(BM_math_sin_fast);
 void BM_math_sin_fast::Run(int iters) {
@@ -130,6 +228,32 @@ void BM_math_fpclassify::Run(int iters, double value) {
   v = value;
   for (int i = 0; i < iters; ++i) {
     d += fpclassify(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_signbit_macro, double)->AT_COMMON_VALS;
+void BM_math_signbit_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += signbit(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_signbit, double)->AT_COMMON_VALS;
+void BM_math_signbit::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += (__signbit)(v);
   }
 
   StopBenchmarkTiming();
