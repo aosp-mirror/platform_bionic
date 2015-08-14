@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4434d7f_2572add5",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-14T22:33:57Z",
+      "side": 1,
+      "message": "you need to explain in the code, not the review comments. the person scratching their heads looking at this in three years\u0027 time wont have the review comments...",
+      "revId": "b974eb3753ed41dcb99ebea528f994c52f817765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
