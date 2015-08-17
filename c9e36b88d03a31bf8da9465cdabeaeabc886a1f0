@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4434d7f_67d9601e",
+        "filename": "libc/arch-arm/cortex-a53/bionic/__strcat_chk.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-17T21:47:18Z",
+      "side": 1,
+      "message": "I modified this all so that it could be shared properly. I also got rid of all of the crazy weird functions since they simply aren\u0027t needed.",
+      "parentUuid": "07bea3e2_f10d68c8",
+      "revId": "c9e36b88d03a31bf8da9465cdabeaeabc886a1f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7d42f30_eb92115d",
         "filename": "libc/arch-arm/cortex-a53/bionic/__strcpy_chk.S",
         "patchSetId": 1
