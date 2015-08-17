@@ -34,6 +34,24 @@
       "revId": "d640b225ecdd6d2fb74076e9b80ce8afb42e31a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243ac5f6_c75e6df5",
+        "filename": "linker/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2015-08-17T22:28:37Z",
+      "side": 1,
+      "message": "Re 2): yes, we can.\nI need to tune this file a little bit to handle the 32-bit v.s. 64-bit issue.",
+      "parentUuid": "243ac5f6_873c65ec",
+      "revId": "d640b225ecdd6d2fb74076e9b80ce8afb42e31a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
