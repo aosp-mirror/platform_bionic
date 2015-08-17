@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64591d73_daf59ac0",
+        "filename": "linker/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-17T21:36:23Z",
+      "side": 1,
+      "message": "This broke using asan in anything but a SANITIZE_TARGET configuration (the build system uses linker_asan, but it will never be installed).\n\nTwo options:\n1) Make the build system only use linker_asan when SANITIZE_TARGET \u003d\u003d address\n2) Drop this guard and make libasan depend on linker_asan so that it is only built and installed when needed. wangying: is this possible?",
+      "revId": "d640b225ecdd6d2fb74076e9b80ce8afb42e31a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
