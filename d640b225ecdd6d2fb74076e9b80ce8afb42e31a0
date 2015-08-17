@@ -16,6 +16,24 @@
       "revId": "d640b225ecdd6d2fb74076e9b80ce8afb42e31a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243ac5f6_873c65ec",
+        "filename": "linker/Android.mk",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-08-17T21:41:43Z",
+      "side": 1,
+      "message": "1) this will be a big difference in behaviour between sanitize_target and local_sanitize, which does not look good\n2) can we rather make all asan executables depend on linker_asan, the same way they depend on the asan runtime library?",
+      "parentUuid": "64591d73_daf59ac0",
+      "revId": "d640b225ecdd6d2fb74076e9b80ce8afb42e31a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
