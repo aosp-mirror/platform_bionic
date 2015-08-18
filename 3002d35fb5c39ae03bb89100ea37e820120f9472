@@ -22,6 +22,53 @@
       "revId": "3002d35fb5c39ae03bb89100ea37e820120f9472",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c471e91c_34bbfe5e",
+        "filename": "libm/arm/fabs.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-18T22:07:39Z",
+      "side": 1,
+      "message": "As Ian mentions, the actually assembly for this routine is:\n\nbic     r1, r1, #-2147483648    ; 0x80000000\nbx      lr\n\nI have a hard time believing that this version is faster.",
+      "parentUuid": "f0f222e5_9e52a1ba",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 10
+      },
+      "revId": "3002d35fb5c39ae03bb89100ea37e820120f9472",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243ac5f6_4026c3c1",
+        "filename": "libm/arm/fabsf.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-18T22:07:39Z",
+      "side": 1,
+      "message": "As with the other function, the fabs function gets compiled to:\n\nbic     r0, r0, #-2147483648    ; 0x80000000\nbx      lr\n\nThis seems much more efficient than this implementation.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 10
+      },
+      "revId": "3002d35fb5c39ae03bb89100ea37e820120f9472",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
