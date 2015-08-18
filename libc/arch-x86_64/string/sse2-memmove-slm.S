@@ -91,9 +91,6 @@ name:		\
 	.section .text.sse2,"ax",@progbits
 ENTRY (MEMMOVE)
 	ENTRANCE
-#ifdef USE_AS_BCOPY
-	xchg	%rsi, %rdi
-#endif
 	mov	%rdi, %rax
 
 /* Check whether we should copy backward or forward.  */
