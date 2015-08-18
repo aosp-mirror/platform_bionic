@@ -70,6 +70,10 @@ enum {
   // Fast storage for Thread::Current() in ART.
   TLS_SLOT_ART_THREAD_SELF,
 
+  // Lets TSAN avoid using pthread_getspecific for finding the current thread
+  // state.
+  TLS_SLOT_TSAN,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
 
