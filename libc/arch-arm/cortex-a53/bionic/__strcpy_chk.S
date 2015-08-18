@@ -27,6 +27,6 @@
  */
 
 // Indicate which memcpy base file to include.
-#define MEMCPY_BASE "memcpy_base.S"
+#define MEMCPY_BASE "arch-arm/cortex-a53/bionic/memcpy_base.S"
 
-#include "__strcat_chk_common.S"
+#include "arch-arm/cortex-a15/bionic/__strcpy_chk_common.S"
