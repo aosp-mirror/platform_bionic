@@ -85,14 +85,14 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     return _URC_NO_REASON;
   }
 
-#if defined(__arm__)
-  /*
-   * The instruction pointer is pointing at the instruction after the bl(x), and
-   * the _Unwind_Backtrace routine already masks the Thumb mode indicator (LSB
-   * in PC). So we need to do a quick check here to find out if the previous
-   * instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise 4 from PC.
-   */
+  // The instruction pointer is pointing at the instruction after the return
+  // call on all architectures.
+  // Modify the pc to point at the real function.
   if (ip != 0) {
+#if defined(__arm__)
+    // We need to do a quick check here to find out if the previous
+    // instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise
+    // 4 from PC.
     short* ptr = reinterpret_cast<short*>(ip);
     // Thumb BLX(2)
     if ((*(ptr-1) & 0xff80) == 0x4780) {
@@ -100,8 +100,15 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     } else {
       ip -= 4;
     }
-  }
+#elif defined(__aarch64__)
+    // All instructions are 4 bytes long, skip back one instruction.
+    ip -= 4;
+#elif defined(__i386__) || defined(__x86_64__)
+    // It's difficult to decode exactly where the previous instruction is,
+    // so subtract 1 to estimate where the instruction lives.
+    ip--;
 #endif
+  }
 
   state->frames[state->frame_count++] = ip;
   return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
