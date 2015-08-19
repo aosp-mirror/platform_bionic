@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4a9e95f_59d4e5e8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-19T01:25:01Z",
+      "side": 1,
+      "message": "because? (your code comment says it applies to all architectures. is the comment wrong?)",
+      "revId": "224bef8ec492e8c2a88f17f05ab7982495b43d6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
