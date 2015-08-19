@@ -16,6 +16,24 @@
       "revId": "224bef8ec492e8c2a88f17f05ab7982495b43d6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243ac5f6_d67f3984",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-08-19T01:40:59Z",
+      "side": 1,
+      "message": "Technically, my code comment just says that it points at the wrong place, not that I fixed it for all architectures.\n\nI didn\u0027t do mips because I don\u0027t know enough about the assembler to know if doing something naive will work. I was planning to ask the mips folks to look at this.\n\nBy the way, the ip in the mips libunwind code is not adjusted either.\n\nI can change the comment to say excluding mips and have them fix this if you so desire.",
+      "parentUuid": "c4a9e95f_59d4e5e8",
+      "revId": "224bef8ec492e8c2a88f17f05ab7982495b43d6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
