@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e430ad80_367f381d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-08-20T09:41:12Z",
+      "side": 1,
+      "message": "I do not think this is correct.. file_size_ \u003d\u003d file_end is also out of bounds. See line 375",
+      "revId": "93ce35434ca5af43a7449e289959543f0a2426fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
