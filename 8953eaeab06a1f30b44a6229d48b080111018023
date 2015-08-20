@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c42ba915_78ea7de9",
+        "filename": "tests/fortify_compilation_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-08-20T17:29:49Z",
+      "side": 1,
+      "message": "char buf[4] \u003d {0}; ? It doesn\u0027t compile because you don\u0027t include \u003cstdlib.h\u003e.",
+      "range": {
+        "startLine": 283,
+        "startChar": 2,
+        "endLine": 283,
+        "endChar": 35
+      },
+      "revId": "8953eaeab06a1f30b44a6229d48b080111018023",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a47f9520_cc074fa8",
+        "filename": "tests/fortify_compilation_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-08-20T17:29:49Z",
+      "side": 1,
+      "message": "remove this. using #if 0 doesn\u0027t work because file-check-cxx will scan the file for \"GCC: error:\".",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 6
+      },
+      "revId": "8953eaeab06a1f30b44a6229d48b080111018023",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
