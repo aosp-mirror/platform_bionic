@@ -382,7 +382,7 @@ bool ElfReader::LoadSegments() {
       return false;
     }
 
-    if (file_end >= static_cast<size_t>(file_size_)) {
+    if (file_end > static_cast<size_t>(file_size_)) {
       DL_ERR("invalid ELF file \"%s\" load segment[%zd]:"
           " p_offset (%p) + p_filesz (%p) ( = %p) past end of file (0x%" PRIx64 ")",
           name_, i, reinterpret_cast<void*>(phdr->p_offset),
