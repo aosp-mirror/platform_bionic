@@ -21,6 +21,7 @@
 #include <poll.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -248,7 +249,7 @@ void test_fread_too_big() {
 }
 
 void test_fwrite_overflow() {
-  char buf[4];
+  char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fwrite_overflow' declared with attribute error: fwrite called with overflowing size * count
   // clang should emit a warning, but doesn't
@@ -269,4 +270,28 @@ void test_getcwd() {
   // GCC: error: call to '__getcwd_dest_size_error' declared with attribute error: getcwd called with size bigger than destination
   // clang should emit a warning, but doesn't
   getcwd(buf, 5);
+}
+
+void test_pwrite64_size() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__pwrite64_dest_size_error' declared with attribute error: pwrite64 called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  pwrite64(STDOUT_FILENO, buf, 5, 0);
+}
+
+void test_pwrite64_too_big() {
+  void *buf = calloc(atoi("5"), 1);
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__pwrite64_count_toobig_error' declared with attribute error: pwrite64 called with count > SSIZE_MAX
+  // clang should emit a warning, but doesn't
+  pwrite64(STDOUT_FILENO, buf, SIZE_MAX, 0);
+}
+
+void test_write_size() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__write_dest_size_error' declared with attribute error: write called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  write(STDOUT_FILENO, buf, 5);
 }
