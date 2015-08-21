@@ -645,11 +645,35 @@ TEST_F(DEATHTEST, pread64_fortified) {
   close(fd);
 }
 
+TEST_F(DEATHTEST, pwrite_fortified) {
+  char buf[1] = {0};
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_WRONLY);
+  ASSERT_FORTIFY(pwrite(fd, buf, ct, 0));
+  close(fd);
+}
+
+TEST_F(DEATHTEST, pwrite64_fortified) {
+  char buf[1] = {0};
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_WRONLY);
+  ASSERT_FORTIFY(pwrite64(fd, buf, ct, 0));
+  close(fd);
+}
+
 TEST_F(DEATHTEST, read_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_FORTIFY(read(fd, buf, ct));
+  close(fd);
+}
+
+TEST_F(DEATHTEST, write_fortified) {
+  char buf[1] = {0};
+  size_t ct = atoi("2"); // prevent optimizations
+  int fd = open("/dev/null", O_WRONLY);
+  ASSERT_EXIT(write(fd, buf, ct), testing::KilledBySignal(SIGABRT), "");
   close(fd);
 }
 
