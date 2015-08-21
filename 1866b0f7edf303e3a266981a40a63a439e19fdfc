@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "048f817d_1e5b31ce",
+        "filename": "libm/fabs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-21T18:07:02Z",
+      "side": 1,
+      "message": "define \"better\"... i can\u0027t see any difference in our microbenchmarks, and i\u0027m suspicious that both clang and GCC prefer the neon instructions over the bit-twiddling in this one case.",
+      "revId": "1866b0f7edf303e3a266981a40a63a439e19fdfc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
