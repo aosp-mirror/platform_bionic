@@ -147,6 +147,7 @@ libc_bionic_ndk_src_files := \
     bionic/lfs64_support.cpp \
     bionic/__libc_current_sigrtmax.cpp \
     bionic/__libc_current_sigrtmin.cpp \
+    bionic/libc_init_common.cpp \
     bionic/libc_logging.cpp \
     bionic/libgen.cpp \
     bionic/link.cpp \
@@ -672,30 +673,6 @@ include $(BUILD_STATIC_LIBRARY)
 
 
 # ========================================================
-# libc_init_common.a - common static/dynamic init code
-# ========================================================
-#
-# The initialization code needs to be compiled with -fno-stack-protector since
-# it runs before TLS and initial guard value are set up. It takes the address
-# of a stack variable, triggering protection with -fstack-protector-strong.
-
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := bionic/libc_init_common.cpp
-LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
-LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
-LOCAL_CPPFLAGS := $(libc_common_cppflags)
-LOCAL_C_INCLUDES := $(libc_common_c_includes)
-LOCAL_MODULE := libc_init_common
-LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
-LOCAL_SYSTEM_SHARED_LIBRARIES :=
-
-$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-include $(BUILD_STATIC_LIBRARY)
-
-
-# ========================================================
 # libc_tzcode.a - upstream 'tzcode' code
 # ========================================================
 
@@ -985,7 +962,6 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_init_common
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
