@@ -20,6 +20,12 @@
 #include <sys/cdefs.h>
 #include <limits.h>
 
+#if !defined(__BIONIC_NO_MATH_INLINES)
+#define __BIONIC_MATH_INLINE(__def) extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__)) __def
+#else
+#define __BIONIC_MATH_INLINE(__def)
+#endif
+
 __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
@@ -161,6 +167,7 @@ double	sqrt(double);
 
 double	ceil(double);
 double	fabs(double) __pure2;
+__BIONIC_MATH_INLINE(double fabs(double x) { return __builtin_fabs(x); })
 double	floor(double);
 double	fmod(double, double);
 
@@ -279,6 +286,7 @@ float	sqrtf(float);
 
 float	ceilf(float);
 float	fabsf(float) __pure2;
+__BIONIC_MATH_INLINE(float fabsf(float x) { return __builtin_fabsf(x); })
 float	floorf(float);
 float	fmodf(float, float);
 float	roundf(float);
@@ -366,6 +374,7 @@ long double	exp2l(long double);
 long double	expl(long double);
 long double	expm1l(long double);
 long double	fabsl(long double) __pure2;
+__BIONIC_MATH_INLINE(long double fabsl(long double x) { return __builtin_fabsl(x); })
 long double	fdiml(long double, long double);
 long double	floorl(long double);
 long double	fmal(long double, long double, long double);
