@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4750d3f_a4fa0b34",
+        "filename": "libc/arch-arm/bionic/popcount_tab.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-24T18:27:27Z",
+      "side": 1,
+      "message": "}; on next line.",
+      "revId": "9eefc72827fb4ded403b8c13a29463f5e4c66bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
