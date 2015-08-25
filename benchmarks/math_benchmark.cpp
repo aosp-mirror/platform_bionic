@@ -258,3 +258,29 @@ void BM_math_signbit::Run(int iters, double value) {
 
   StopBenchmarkTiming();
 }
+
+BENCHMARK_WITH_ARG(BM_math_fabs_macro, double)->AT_COMMON_VALS;
+void BM_math_fabs_macro::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += fabs(v);
+  }
+
+  StopBenchmarkTiming();
+}
+
+BENCHMARK_WITH_ARG(BM_math_fabs, double)->AT_COMMON_VALS;
+void BM_math_fabs::Run(int iters, double value) {
+  StartBenchmarkTiming();
+
+  d = 0.0;
+  v = value;
+  for (int i = 0; i < iters; ++i) {
+    d += (fabs)(v);
+  }
+
+  StopBenchmarkTiming();
+}

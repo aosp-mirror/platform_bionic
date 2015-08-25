@@ -108,8 +108,6 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/s_exp2.c \
     upstream-freebsd/lib/msun/src/s_exp2f.c \
     upstream-freebsd/lib/msun/src/s_expm1f.c \
-    upstream-freebsd/lib/msun/src/s_fabs.c \
-    upstream-freebsd/lib/msun/src/s_fabsf.c \
     upstream-freebsd/lib/msun/src/s_fdim.c \
     upstream-freebsd/lib/msun/src/s_finite.c \
     upstream-freebsd/lib/msun/src/s_finitef.c \
@@ -175,7 +173,6 @@ LOCAL_SRC_FILES_64 := \
     upstream-freebsd/lib/msun/src/s_copysignl.c \
     upstream-freebsd/lib/msun/src/e_coshl.c \
     upstream-freebsd/lib/msun/src/s_cosl.c \
-    upstream-freebsd/lib/msun/src/s_fabsl.c \
     upstream-freebsd/lib/msun/src/s_floorl.c \
     upstream-freebsd/lib/msun/src/s_fmal.c \
     upstream-freebsd/lib/msun/src/s_fmaxl.c \
@@ -227,6 +224,10 @@ LOCAL_SRC_FILES += \
 # Modified versions of BSD code.
 LOCAL_SRC_FILES += \
     signbit.c \
+
+# Home-grown stuff.
+LOCAL_SRC_FILES += \
+    fabs.cpp \
 
 # Arch specific optimizations.
 
@@ -481,6 +482,7 @@ LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 LOCAL_CLANG := $(libm_clang)
 LOCAL_ARM_MODE := arm
 LOCAL_CFLAGS := \
+    -D__BIONIC_NO_MATH_INLINES \
     -DFLT_EVAL_METHOD=0 \
     -include $(LOCAL_PATH)/freebsd-compat.h \
     -Wno-missing-braces \
