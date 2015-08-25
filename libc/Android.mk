@@ -1445,6 +1445,7 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 # Only need this for arm since libc++ uses its own unwind code that
 # doesn't mix with the other default unwind code.
 LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm
+LOCAL_LDFLAGS_arm := -Wl,--exclude-libs,libunwind_llvm.a
 LOCAL_STATIC_LIBRARIES += libc++abi
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 
