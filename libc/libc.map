@@ -1342,6 +1342,7 @@ LIBC_N {
     __write_chk;
     getgrgid_r;
     getgrnam_r;
+    strchrnul;
 } LIBC;
 
 LIBC_PRIVATE {
