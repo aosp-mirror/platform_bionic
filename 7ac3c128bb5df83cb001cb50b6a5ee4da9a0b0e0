@@ -34,6 +34,24 @@
       "revId": "7ac3c128bb5df83cb001cb50b6a5ee4da9a0b0e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a47f9520_5826a344",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-26T18:09:21Z",
+      "side": 1,
+      "message": "Ah, I had missed that the return type was changing here as well and only saw the argument type. Never mind.",
+      "parentUuid": "e4750d3f_a6cbe594",
+      "revId": "7ac3c128bb5df83cb001cb50b6a5ee4da9a0b0e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
