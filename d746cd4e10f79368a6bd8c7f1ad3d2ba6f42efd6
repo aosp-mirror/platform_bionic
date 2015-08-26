@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "248c8586_f311ade1",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-26T18:34:48Z",
+      "side": 1,
+      "message": "weren\u0027t you going to clean this up?",
+      "revId": "d746cd4e10f79368a6bd8c7f1ad3d2ba6f42efd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
