@@ -15,6 +15,8 @@
  */
 
 #include <gtest/gtest.h>
+#include <stdint.h>
+#include <string.h>
 
 #ifdef __GNUC__
 // Gcc has a bug with -O -fdata-section for the arm target: http://b/22772147.
@@ -165,4 +167,93 @@ TEST(thread_local_storage, local_triangle) {
   ASSERT_EQ(run_one_thread(move_local_triangle), 21);
   ASSERT_EQ(local_triangle[1].y, 4);
   ASSERT_EQ(shared_triangle[1].y, 3);
+}
+
+// Test emutls runtime data structures and __emutls_get_address function.
+typedef unsigned int gcc_word __attribute__((mode(word)));
+typedef unsigned int gcc_pointer __attribute__((mode(pointer)));
+struct gcc_emutls_object {  // for libgcc
+  gcc_word size;
+  gcc_word align;
+  union {
+    gcc_pointer offset;
+    void* ptr;
+  } loc;
+  void* templ;
+};
+
+typedef struct __emutls_control {  // for clang/llvm
+  size_t size;
+  size_t align;
+  union {
+    uintptr_t index;
+    void* address;
+  } object;
+  void* value;
+} __emutls_control;
+
+TEST(thread_local_storage, type_size) {
+  static_assert(sizeof(size_t) == sizeof(gcc_word),
+                "size_t != gcc_word");
+  static_assert(sizeof(uintptr_t) == sizeof(gcc_pointer),
+                "uintptr_t != gcc_pointer");
+  static_assert(sizeof(uintptr_t) == sizeof(void*),
+                "sizoeof(uintptr_t) != sizeof(void*)");
+  static_assert(sizeof(__emutls_control) == sizeof(struct gcc_emutls_object),
+                "sizeof(__emutls_control) != sizeof(struct gcc_emutls_object)");
+}
+
+extern "C" void* __emutls_get_address(__emutls_control*);
+
+TEST(thread_local_storage, init_value) {
+  char tls_value1[] = "123456789";
+  char tls_value2[] = "abcdefghi";
+  constexpr size_t num_saved_values = 10;
+  __emutls_control tls_var[num_saved_values];
+  size_t prev_index = 0;
+  void* saved_gap[num_saved_values];
+  void* saved_p[num_saved_values];
+  ASSERT_TRUE(strlen(tls_value2) <= strlen(tls_value1));
+  __emutls_control c =
+      {strlen(tls_value1) + 1, 1, {0}, tls_value1};
+  for (size_t n = 0; n < num_saved_values; n++) {
+    memcpy(&tls_var[n], &c, sizeof(c));
+    tls_var[n].align = (1 << n);
+  }
+  for (size_t n = 0; n < num_saved_values; n++) {
+    // Try to mess up malloc space so that the next malloc will not have the
+    // required alignment, but __emutls_get_address should still return an
+    // aligned address.
+    saved_gap[n] = malloc(1);
+    void* p = __emutls_get_address(&tls_var[n]);
+    saved_p[n] = p;
+    ASSERT_TRUE(p != nullptr);
+    ASSERT_TRUE(tls_var[n].object.index != 0);
+    // check if p is a new object.
+    if (n > 0) {
+      // In single-thread environment, object.address == p.
+      // In multi-threads environment, object.index is increased.
+      ASSERT_TRUE(prev_index + 1 == tls_var[n].object.index ||
+                  p == tls_var[n].object.address);
+      ASSERT_TRUE(p != saved_p[n - 1]);
+    }
+    prev_index = tls_var[n].object.index;
+    // check if p is aligned
+    uintptr_t align = (1 << n);
+    uintptr_t address= reinterpret_cast<uintptr_t>(p);
+    ASSERT_EQ((address & ~(align - 1)), address);
+    // check if *p is initialized
+    ASSERT_STREQ(tls_value1, static_cast<char*>(p));
+    // change value in *p
+    memcpy(p, tls_value2, strlen(tls_value2) + 1);
+  }
+  for (size_t n = 0; n < num_saved_values; n++) {
+    free(saved_gap[n]);
+  }
+  for (size_t n = 0; n < num_saved_values; n++) {
+    void* p = __emutls_get_address(&tls_var[n]);
+    ASSERT_EQ(p, saved_p[n]);
+    // check if *p has the new value
+    ASSERT_STREQ(tls_value2, static_cast<char*>(p));
+  }
 }
