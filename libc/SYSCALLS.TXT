@@ -94,6 +94,16 @@ ssize_t     pread64(int, void*, size_t, off64_t) arm,mips,x86
 ssize_t     pread64|pread(int, void*, size_t, off_t) arm64,mips64,x86_64
 ssize_t     pwrite64(int, void*, size_t, off64_t) arm,mips,x86
 ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) arm64,mips64,x86_64
+
+# On LP32, preadv/pwritev don't use off64_t --- they use pairs of 32-bit
+# arguments to avoid problems on architectures like ARM where 64-bit arguments
+# must be in a register pair starting with an even-numbered register.
+# See linux/fs/read_write.c and https://lwn.net/Articles/311630/.
+ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) arm,mips,x86
+ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
+ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) arm,mips,x86
+ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
+
 int         ___close:close(int)  all
 pid_t       __getpid:getpid()  all
 int         munmap(void*, size_t)  all
