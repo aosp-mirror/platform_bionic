@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4485f957_3f594961",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-26T17:08:49Z",
+      "side": 1,
+      "message": "I don\u0027t see any docs saying we need this overload.",
+      "revId": "7ac3c128bb5df83cb001cb50b6a5ee4da9a0b0e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
