@@ -16,6 +16,24 @@
       "revId": "7ac3c128bb5df83cb001cb50b6a5ee4da9a0b0e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4750d3f_a6cbe594",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-08-26T18:06:19Z",
+      "side": 1,
+      "message": "well, since it\u0027s a GNU extension there\u0027s no POSIX to look at :-)\n\nbasically glibc has -- for C++ -- const-correct overloads of all the functions that are traditionally incorrect (taking const char* but returning char*). we\u0027ve already followed this in a few places. basename, for example. we should do the rest one day, but it\u0027s easier to do for new functions because you know you have no callers, so you don\u0027t need to worry about const-incorrect callers.",
+      "parentUuid": "4485f957_3f594961",
+      "revId": "7ac3c128bb5df83cb001cb50b6a5ee4da9a0b0e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
