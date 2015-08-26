@@ -53,6 +53,14 @@ extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
 
 extern char*  strchr(const char *, int) __purefunc;
 extern char* __strchr_chk(const char *, int, size_t);
+#if defined(__USE_GNU)
+#if defined(__cplusplus)
+extern "C++" char* strchrnul(char*, int) __RENAME(strchrnul) __purefunc;
+extern "C++" const char* strchrnul(const char*, int) __RENAME(strchrnul) __purefunc;
+#else
+char* strchrnul(const char*, int) __purefunc;
+#endif
+#endif
 
 extern char*  strrchr(const char *, int) __purefunc;
 extern char* __strrchr_chk(const char *, int, size_t);
