@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a47f9520_8daa8f07",
+        "filename": "libc/bionic/debug_stacktrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-08-26T08:32:57Z",
+      "side": 1,
+      "message": "Is this checking for the zero page to make sure we don\u0027t dereference a bad pointer? There are some somewhat hacky ways to do this universally (One that I know of is that write(fd, (void*)ip, 1) will return -1 and set errno to EFAULT).\nIt might not actually be worth doing, though.",
+      "revId": "e25783198c920fe9ac4cceb6a441b0a35c6e9c51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
