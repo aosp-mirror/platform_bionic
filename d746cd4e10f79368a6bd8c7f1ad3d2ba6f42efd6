@@ -16,6 +16,24 @@
       "revId": "d746cd4e10f79368a6bd8c7f1ad3d2ba6f42efd6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4750d3f_86f1090b",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-08-26T20:12:20Z",
+      "side": 1,
+      "message": "Ah, yes. Please take a look of patch set 4.",
+      "parentUuid": "248c8586_f311ade1",
+      "revId": "d746cd4e10f79368a6bd8c7f1ad3d2ba6f42efd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
