@@ -90,15 +90,22 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
   // Modify the pc to point at the real function.
   if (ip != 0) {
 #if defined(__arm__)
-    // We need to do a quick check here to find out if the previous
-    // instruction is a Thumb-mode BLX(2). If so subtract 2 otherwise
-    // 4 from PC.
-    short* ptr = reinterpret_cast<short*>(ip);
-    // Thumb BLX(2)
-    if ((*(ptr-1) & 0xff80) == 0x4780) {
-      ip -= 2;
-    } else {
-      ip -= 4;
+    // If the ip is suspiciously low, do nothing to avoid a segfault trying
+    // to access this memory.
+    if (ip >= 4096) {
+      // Check bits [15:11] of the first halfword assuming the instruction
+      // is 32 bits long. If the bits are any of these values, then our
+      // assumption was correct:
+      //  b11101
+      //  b11110
+      //  b11111
+      // Otherwise, this is a 16 bit instruction.
+      uint16_t value = (*reinterpret_cast<uint16_t*>(ip - 2)) >> 11;
+      if (value == 0x1f || value == 0x1e || value == 0x1d) {
+        ip -= 4;
+      } else {
+        ip -= 2;
+      }
     }
 #elif defined(__aarch64__)
     // All instructions are 4 bytes long, skip back one instruction.
