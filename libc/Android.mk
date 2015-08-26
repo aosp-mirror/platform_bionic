@@ -214,6 +214,7 @@ libc_bionic_ndk_src_files := \
     bionic/socket.cpp \
     bionic/stat.cpp \
     bionic/statvfs.cpp \
+    bionic/strchrnul.cpp \
     bionic/strerror.cpp \
     bionic/strerror_r.cpp \
     bionic/strsignal.cpp \
