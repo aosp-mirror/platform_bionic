@@ -454,6 +454,13 @@ TEST(string, strchr) {
   }
 }
 
+TEST(string, strchrnul) {
+  const char* s = "01234222";
+  EXPECT_TRUE(strchrnul(s, '2') == &s[2]);
+  EXPECT_TRUE(strchrnul(s, '8') == (s + strlen(s)));
+  EXPECT_TRUE(strchrnul(s, '\0') == (s + strlen(s)));
+}
+
 TEST(string, strcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
