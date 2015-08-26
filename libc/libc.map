@@ -1342,6 +1342,10 @@ LIBC_N {
     __write_chk;
     getgrgid_r;
     getgrnam_r;
+    preadv;
+    preadv64;
+    pwritev;
+    pwritev64;
     strchrnul;
 } LIBC;
 
