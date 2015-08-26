@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4700952_3ebb875f",
+        "filename": "tests/sys_uio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-08-26T20:57:09Z",
+      "side": 1,
+      "message": "Don\u0027t you want to test that the cursor hasn\u0027t moved? i.e. SEEK_CUR?",
+      "range": {
+        "startLine": 54,
+        "startChar": 31,
+        "endLine": 54,
+        "endChar": 39
+      },
+      "revId": "f631262c6513939c4a3bec67cbb5fc7ff69eb5c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
