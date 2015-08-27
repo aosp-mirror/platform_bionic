@@ -18,10 +18,60 @@
 
 #include <sys/uio.h>
 
-TEST(sys_uio, process_vm_readv_ESRCH) {
+#include "TemporaryFile.h"
+
+TEST(sys_uio, readv_writev) {
+  TemporaryFile tf;
+
+  char buf1[] = "hello";
+  char buf2[] = "world";
+  iovec ios[] = { { buf1, 5 }, { buf2, 5 } };
+
+  ASSERT_EQ(10, writev(tf.fd, ios, 2));
+
+  ASSERT_EQ(0, lseek(tf.fd, 0, SEEK_SET));
+
+  memset(buf1, '1', sizeof(buf1));
+  memset(buf2, '2', sizeof(buf2));
+
+  ASSERT_EQ(10, readv(tf.fd, ios, 2));
+  buf1[5] = buf2[5] = '\0';
+  ASSERT_STREQ("hello", buf1);
+  ASSERT_STREQ("world", buf2);
+}
+
+template <typename ReadFn, typename WriteFn>
+void TestPreadVPwriteV(ReadFn read_fn, WriteFn write_fn) {
+  TemporaryFile tf;
+
+  char buf[] = "world";
+  iovec ios[] = { { buf, 5 } };
+
+  ASSERT_EQ(5, write_fn(tf.fd, ios, 1, 5));
+  ASSERT_EQ(0, lseek(tf.fd, 0, SEEK_CUR));
+
+  strcpy(buf, "hello");
+  ASSERT_EQ(5, write_fn(tf.fd, ios, 1, 0));
+  ASSERT_EQ(0, lseek(tf.fd, 0, SEEK_CUR));
+
+  ASSERT_EQ(5, read_fn(tf.fd, ios, 1, 5));
+  ASSERT_STREQ("world", buf);
+  ASSERT_EQ(5, read_fn(tf.fd, ios, 1, 0));
+  ASSERT_STREQ("hello", buf);
+}
+
+TEST(sys_uio, preadv_pwritev) {
+  TestPreadVPwriteV(preadv, pwritev);
+}
+
+TEST(sys_uio, preadv64_pwritev64) {
+  TestPreadVPwriteV(preadv64, pwritev64);
+}
+
+TEST(sys_uio, process_vm_readv) {
   ASSERT_EQ(0, process_vm_readv(0, nullptr, 0, nullptr, 0, 0));
 }
 
-TEST(sys_uio, process_vm_writev_ESRCH) {
+TEST(sys_uio, process_vm_writev) {
   ASSERT_EQ(0, process_vm_writev(0, nullptr, 0, nullptr, 0, 0));
 }
