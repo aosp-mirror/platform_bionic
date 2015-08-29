@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_jn.c 279856 2015-03-10 17:10:54Z kargl $");
 
 /*
  * __ieee754_jn(n, x), __ieee754_yn(n, x)
@@ -42,6 +42,8 @@ __FBSDID("$FreeBSD$");
 
 #include "math.h"
 #include "math_private.h"
+
+static const volatile double vone = 1, vzero = 0;
 
 static const double
 invsqrtpi=  5.64189583547756279280e-01, /* 0x3FE20DD7, 0x50429B6D */
@@ -220,10 +222,12 @@ __ieee754_yn(int n, double x)
 
 	EXTRACT_WORDS(hx,lx,x);
 	ix = 0x7fffffff&hx;
-    /* if Y(n,NaN) is NaN */
+	/* yn(n,NaN) = NaN */
 	if((ix|((u_int32_t)(lx|-lx))>>31)>0x7ff00000) return x+x;
-	if((ix|lx)==0) return -one/zero;
-	if(hx<0) return zero/zero;
+	/* yn(n,+-0) = -inf and raise divide-by-zero exception. */
+	if((ix|lx)==0) return -one/vzero;
+	/* yn(n,x<0) = NaN and raise invalid exception. */
+	if(hx<0) return vzero/vzero;
 	sign = 1;
 	if(n<0){
 		n = -n;
