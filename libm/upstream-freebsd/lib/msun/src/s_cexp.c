@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_cexp.c 275819 2014-12-16 09:21:56Z ed $");
 
 #include <complex.h>
 #include <math.h>
@@ -50,22 +50,22 @@ cexp(double complex z)
 
 	/* cexp(x + I 0) = exp(x) + I 0 */
 	if ((hy | ly) == 0)
-		return (cpack(exp(x), y));
+		return (CMPLX(exp(x), y));
 	EXTRACT_WORDS(hx, lx, x);
 	/* cexp(0 + I y) = cos(y) + I sin(y) */
 	if (((hx & 0x7fffffff) | lx) == 0)
-		return (cpack(cos(y), sin(y)));
+		return (CMPLX(cos(y), sin(y)));
 
 	if (hy >= 0x7ff00000) {
 		if (lx != 0 || (hx & 0x7fffffff) != 0x7ff00000) {
 			/* cexp(finite|NaN +- I Inf|NaN) = NaN + I NaN */
-			return (cpack(y - y, y - y));
+			return (CMPLX(y - y, y - y));
 		} else if (hx & 0x80000000) {
 			/* cexp(-Inf +- I Inf|NaN) = 0 + I 0 */
-			return (cpack(0.0, 0.0));
+			return (CMPLX(0.0, 0.0));
 		} else {
 			/* cexp(+Inf +- I Inf|NaN) = Inf + I NaN */
-			return (cpack(x, y - y));
+			return (CMPLX(x, y - y));
 		}
 	}
 
@@ -84,6 +84,6 @@ cexp(double complex z)
 		 *  -  x = NaN (spurious inexact exception from y)
 		 */
 		exp_x = exp(x);
-		return (cpack(exp_x * cos(y), exp_x * sin(y)));
+		return (CMPLX(exp_x * cos(y), exp_x * sin(y)));
 	}
 }
