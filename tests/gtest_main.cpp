@@ -26,15 +26,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
-#include <time.h>
 #include <unistd.h>
 
+#include <chrono>
 #include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
 
-#include "BionicDeathTest.h" // For selftest.
+#ifndef TEMP_FAILURE_RETRY
+
+/* Used to retry syscalls that can return EINTR. */
+#define TEMP_FAILURE_RETRY(exp) ({         \
+    __typeof__(exp) _rc;                   \
+    do {                                   \
+        _rc = (exp);                       \
+    } while (_rc == -1 && errno == EINTR); \
+    _rc; })
+
+#endif
 
 namespace testing {
 namespace internal {
@@ -221,10 +231,8 @@ void TestResultPrinter::OnTestPartResult(const testing::TestPartResult& result) 
 }
 
 static int64_t NanoTime() {
-  struct timespec t;
-  t.tv_sec = t.tv_nsec = 0;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+  std::chrono::nanoseconds duration(std::chrono::steady_clock::now().time_since_epoch());
+  return static_cast<int64_t>(duration.count());
 }
 
 static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
@@ -501,6 +509,43 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
   fclose(fp);
 }
 
+static bool sigint_flag;
+static bool sigquit_flag;
+
+static void signal_handler(int sig) {
+  if (sig == SIGINT) {
+    sigint_flag = true;
+  } else if (sig == SIGQUIT) {
+    sigquit_flag = true;
+  }
+}
+
+static bool RegisterSignalHandler() {
+  sigint_flag = false;
+  sigquit_flag = false;
+  sig_t ret = signal(SIGINT, signal_handler);
+  if (ret != SIG_ERR) {
+    ret = signal(SIGQUIT, signal_handler);
+  }
+  if (ret == SIG_ERR) {
+    perror("RegisterSignalHandler");
+    return false;
+  }
+  return true;
+}
+
+static bool UnregisterSignalHandler() {
+  sig_t ret = signal(SIGINT, SIG_DFL);
+  if (ret != SIG_ERR) {
+    ret = signal(SIGQUIT, SIG_DFL);
+  }
+  if (ret == SIG_ERR) {
+    perror("UnregisterSignalHandler");
+    return false;
+  }
+  return true;
+}
+
 struct ChildProcInfo {
   pid_t pid;
   int64_t start_time_ns;
@@ -530,8 +575,23 @@ static void ChildProcessFn(int argc, char** argv, const std::string& test_name) 
   exit(result);
 }
 
+#if defined(__APPLE__)
+
+static int pipe2(int pipefd[2], int flags) {
+  int ret = pipe(pipefd);
+  if (ret != -1) {
+    ret = fcntl(pipefd[0], F_SETFL, flags);
+  }
+  if (ret != -1) {
+    ret = fcntl(pipefd[1], F_SETFL, flags);
+  }
+  return ret;
+}
+
+#endif
+
 static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_id, int test_id,
-                                     sigset_t sigmask, int argc, char** argv) {
+                                     int argc, char** argv) {
   int pipefd[2];
   int ret = pipe2(pipefd, O_NONBLOCK);
   if (ret == -1) {
@@ -550,8 +610,7 @@ static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_
     dup2(pipefd[1], STDOUT_FILENO);
     dup2(pipefd[1], STDERR_FILENO);
 
-    if (sigprocmask(SIG_SETMASK, &sigmask, NULL) == -1) {
-      perror("sigprocmask SIG_SETMASK");
+    if (!UnregisterSignalHandler()) {
       exit(1);
     }
     ChildProcessFn(argc, argv, test_name);
@@ -572,42 +631,29 @@ static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_
 
 static void HandleSignals(std::vector<TestCase>& testcase_list,
                             std::vector<ChildProcInfo>& child_proc_list) {
-  sigset_t waiting_mask;
-  sigemptyset(&waiting_mask);
-  sigaddset(&waiting_mask, SIGINT);
-  sigaddset(&waiting_mask, SIGQUIT);
-  timespec timeout;
-  timeout.tv_sec = timeout.tv_nsec = 0;
-  while (true) {
-    int signo = TEMP_FAILURE_RETRY(sigtimedwait(&waiting_mask, NULL, &timeout));
-    if (signo == -1) {
-      if (errno == EAGAIN) {
-        return; // Timeout, no pending signals.
+  if (sigquit_flag) {
+    sigquit_flag = false;
+    // Print current running tests.
+    printf("List of current running tests:\n");
+    for (auto& child_proc : child_proc_list) {
+      if (child_proc.pid != 0) {
+        std::string test_name = testcase_list[child_proc.testcase_id].GetTestName(child_proc.test_id);
+        int64_t current_time_ns = NanoTime();
+        int64_t run_time_ms = (current_time_ns - child_proc.start_time_ns) / 1000000;
+        printf("  %s (%" PRId64 " ms)\n", test_name.c_str(), run_time_ms);
       }
-      perror("sigtimedwait");
-      exit(1);
-    } else if (signo == SIGQUIT) {
-      // Print current running tests.
-      printf("List of current running tests:\n");
-      for (auto& child_proc : child_proc_list) {
-        if (child_proc.pid != 0) {
-          std::string test_name = testcase_list[child_proc.testcase_id].GetTestName(child_proc.test_id);
-          int64_t current_time_ns = NanoTime();
-          int64_t run_time_ms = (current_time_ns - child_proc.start_time_ns) / 1000000;
-          printf("  %s (%" PRId64 " ms)\n", test_name.c_str(), run_time_ms);
-        }
-      }
-    } else if (signo == SIGINT) {
-      // Kill current running tests.
-      for (auto& child_proc : child_proc_list) {
-        if (child_proc.pid != 0) {
-          // Send SIGKILL to ensure the child process can be killed unconditionally.
-          kill(child_proc.pid, SIGKILL);
-        }
-      }
-      // SIGINT kills the parent process as well.
-      exit(1);
     }
+  } else if (sigint_flag) {
+    sigint_flag = false;
+    // Kill current running tests.
+    for (auto& child_proc : child_proc_list) {
+      if (child_proc.pid != 0) {
+        // Send SIGKILL to ensure the child process can be killed unconditionally.
+        kill(child_proc.pid, SIGKILL);
+      }
+    }
+    // SIGINT kills the parent process as well.
+    exit(1);
   }
 }
 
@@ -750,13 +796,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
                         testing::UnitTest::GetInstance()->listeners().default_result_printer());
   testing::UnitTest::GetInstance()->listeners().Append(new TestResultPrinter);
 
-  // Signals are blocked here as we want to handle them in HandleSignals() later.
-  sigset_t block_mask, orig_mask;
-  sigemptyset(&block_mask);
-  sigaddset(&block_mask, SIGINT);
-  sigaddset(&block_mask, SIGQUIT);
-  if (sigprocmask(SIG_BLOCK, &block_mask, &orig_mask) == -1) {
-    perror("sigprocmask SIG_BLOCK");
+  if (!RegisterSignalHandler()) {
     exit(1);
   }
 
@@ -785,7 +825,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
       while (child_proc_list.size() < job_count && next_testcase_id < testcase_list.size()) {
         std::string test_name = testcase_list[next_testcase_id].GetTestName(next_test_id);
         ChildProcInfo child_proc = RunChildProcess(test_name, next_testcase_id, next_test_id,
-                                                   orig_mask, argc, argv);
+                                                   argc, argv);
         child_proc_list.push_back(child_proc);
         if (++next_test_id == testcase_list[next_testcase_id].TestCount()) {
           next_test_id = 0;
@@ -830,9 +870,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
     }
   }
 
-  // Restore signal mask.
-  if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) == -1) {
-    perror("sigprocmask SIG_SETMASK");
+  if (!UnregisterSignalHandler()) {
     exit(1);
   }
 
@@ -1103,7 +1141,12 @@ TEST(bionic_selftest, test_signal_SEGV_terminated) {
   *p = 3;
 }
 
-class bionic_selftest_DeathTest : public BionicDeathTest {};
+class bionic_selftest_DeathTest : public ::testing::Test {
+ protected:
+  virtual void SetUp() {
+    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+  }
+};
 
 static void deathtest_helper_success() {
   ASSERT_EQ(1, 1);
