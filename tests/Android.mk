@@ -236,7 +236,13 @@ build_type := target
 build_target := STATIC_TEST_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 build_type := host
+
+ifeq ($(HOST_OS),$(filter $(HOST_OS),linux darwin))
+saved_build_host := $(build_host)
+build_host := true
 include $(LOCAL_PATH)/Android.build.mk
+build_host := $(saved_build_host)
+endif
 
 # -----------------------------------------------------------------------------
 # Library of bionic customized gtest main function, with normal gtest output format,
