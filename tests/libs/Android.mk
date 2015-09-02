@@ -67,6 +67,8 @@ libdlext_test_src_files := \
 libdlext_test_ldflags := \
     -Wl,-z,relro \
 
+libdlext_test_shared_libraries := libtest_simple
+
 module := libdlext_test
 module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk

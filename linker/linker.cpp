@@ -1468,12 +1468,13 @@ static bool find_libraries(soinfo* start_with, const char* const library_names[]
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
   for (LoadTask::unique_ptr task(load_tasks.pop_front());
       task.get() != nullptr; task.reset(load_tasks.pop_front())) {
-    soinfo* si = find_library_internal(load_tasks, task->get_name(), rtld_flags, extinfo);
+    soinfo* needed_by = task->get_needed_by();
+
+    soinfo* si = find_library_internal(load_tasks, task->get_name(),
+                                       rtld_flags, needed_by == nullptr ? extinfo : nullptr);
     if (si == nullptr) {
       return false;
     }
-
-    soinfo* needed_by = task->get_needed_by();
 
     if (needed_by != nullptr) {
       needed_by->add_child(si);
