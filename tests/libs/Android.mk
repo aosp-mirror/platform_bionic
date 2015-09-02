@@ -68,6 +68,8 @@ libdlext_test_src_files := \
 libdlext_test_ldflags := \
     -Wl,-z,relro \
 
+libdlext_test_shared_libraries := libtest_simple
+
 module := libdlext_test
 module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
@@ -101,6 +103,8 @@ libdlext_test_norelro_src_files := \
 libdlext_test_norelro_ldflags := \
     -Wl,-z,norelro \
 
+libdlext_test_norelro_shared_libraries := libtest_simple
+
 module := libdlext_test_norelro
 module_tag := optional
 build_type := target
@@ -112,6 +116,8 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 libdlext_test_fd_src_files := \
     dlext_test_library.cpp \
+
+libdlext_test_fd_shared_libraries := libtest_simple
 
 libdlext_test_fd_install_to_out_data := true
 module := libdlext_test_fd
