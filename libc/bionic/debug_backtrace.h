@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_STACKTRACE_H
-#define DEBUG_STACKTRACE_H
+#ifndef DEBUG_BACKTRACE_H
+#define DEBUG_BACKTRACE_H
 
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -37,4 +37,4 @@ __LIBC_HIDDEN__ void backtrace_shutdown();
 __LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
 __LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
 
-#endif /* DEBUG_STACKTRACE_H */
+#endif /* DEBUG_BACKTRACE_H */

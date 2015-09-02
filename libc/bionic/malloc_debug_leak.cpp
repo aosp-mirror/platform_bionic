@@ -46,7 +46,7 @@
 #include <unistd.h>
 #include <unwind.h>
 
-#include "debug_stacktrace.h"
+#include "debug_backtrace.h"
 #include "malloc_debug_backtrace.h"
 #include "malloc_debug_common.h"
 #include "malloc_debug_disable.h"
