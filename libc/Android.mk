@@ -1428,8 +1428,8 @@ LOCAL_C_INCLUDES := \
     $(libc_common_c_includes) \
 
 LOCAL_SRC_FILES := \
+    bionic/debug_backtrace.cpp \
     bionic/debug_mapinfo.cpp \
-    bionic/debug_stacktrace.cpp \
     bionic/libc_logging.cpp \
     bionic/malloc_debug_leak.cpp \
     bionic/malloc_debug_check.cpp \
