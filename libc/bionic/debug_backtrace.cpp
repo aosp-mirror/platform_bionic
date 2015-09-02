@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "debug_stacktrace.h"
+#include "debug_backtrace.h"
 
 #include <dlfcn.h>
 #include <inttypes.h>
