@@ -114,6 +114,10 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_EQ(4, f());
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
@@ -372,6 +376,10 @@ protected:
     fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
     ASSERT_DL_NOTNULL(f);
     EXPECT_EQ(4, f());
+
+    uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+    ASSERT_DL_NOTNULL(taxicab_number);
+    EXPECT_EQ(1729U, *taxicab_number);
   }
 
   void SpawnChildrenAndMeasurePss(const char* lib, bool share_relro, size_t* pss_out);
