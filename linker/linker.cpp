@@ -1525,13 +1525,16 @@ static bool find_libraries(soinfo* start_with,
   for (LoadTask::unique_ptr task(load_tasks.pop_front());
       task.get() != nullptr; task.reset(load_tasks.pop_front())) {
     soinfo* needed_by = task->get_needed_by();
+    bool is_dt_needed = needed_by != nullptr && (needed_by != start_with || add_as_children);
+
     soinfo* si = find_library_internal(load_tasks, task->get_name(), needed_by,
-                                       rtld_flags, extinfo);
+                                       rtld_flags,
+                                       is_dt_needed ? nullptr : extinfo);
     if (si == nullptr) {
       return false;
     }
 
-    if (needed_by != nullptr && (needed_by != start_with || add_as_children)) {
+    if (is_dt_needed) {
       needed_by->add_child(si);
     }
 
