@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "644d9e85_f955b15e",
+        "filename": "linker/linker_mips.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1010669
+      },
+      "writtenOn": "2015-09-08T16:54:25Z",
+      "side": 1,
+      "message": "Bug: these fields should be 32 bit.  Patch from Douglas Leung is pending.",
+      "revId": "d02ec08427b006e80191ce60690ce48a788fb832",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
