@@ -75,146 +75,168 @@ __BEGIN_DECLS
 
 extern char** environ;
 
-extern __noreturn void _exit(int);
+extern __noreturn void _exit(int __status);
 
 extern pid_t  fork(void);
 extern pid_t  vfork(void);
 extern pid_t  getpid(void);
 extern pid_t  gettid(void) __pure2;
-extern pid_t  getpgid(pid_t);
-extern int    setpgid(pid_t, pid_t);
+extern pid_t  getpgid(pid_t __pid);
+extern int    setpgid(pid_t __pid, pid_t __pgid);
 extern pid_t  getppid(void);
 extern pid_t  getpgrp(void);
 extern int    setpgrp(void);
-extern pid_t  getsid(pid_t);
+extern pid_t  getsid(pid_t __pid) __INTRODUCED_IN(21);
 extern pid_t  setsid(void);
 
-extern int execv(const char *, char * const *);
-extern int execvp(const char *, char * const *);
-extern int execvpe(const char *, char * const *, char * const *);
-extern int execve(const char *, char * const *, char * const *);
-extern int execl(const char *, const char *, ...);
-extern int execlp(const char *, const char *, ...);
-extern int execle(const char *, const char *, ...);
+extern int execv(const char* __path, char* const* __argv);
+extern int execvp(const char* __file, char* const* __argv);
+extern int execvpe(const char* __file, char* const* __argv, char* const* __envp)
+  __INTRODUCED_IN(21);
+extern int execve(const char* __file, char* const* __argv, char* const* __envp);
+extern int execl(const char* __path, const char* __arg0, ...);
+extern int execlp(const char* __file, const char* __arg0, ...);
+extern int execle(const char* __path, const char* __arg0, ...);
 
-extern int nice(int);
+extern int nice(int __incr);
 
-extern int setuid(uid_t);
+extern int setuid(uid_t __uid);
 extern uid_t getuid(void);
-extern int seteuid(uid_t);
+extern int seteuid(uid_t __uid);
 extern uid_t geteuid(void);
-extern int setgid(gid_t);
+extern int setgid(gid_t __gid);
 extern gid_t getgid(void);
-extern int setegid(gid_t);
+extern int setegid(gid_t __gid);
 extern gid_t getegid(void);
-extern int getgroups(int, gid_t *);
-extern int setgroups(size_t, const gid_t *);
-extern int setreuid(uid_t, uid_t);
-extern int setregid(gid_t, gid_t);
-extern int setresuid(uid_t, uid_t, uid_t);
-extern int setresgid(gid_t, gid_t, gid_t);
-extern int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);
-extern int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);
+extern int getgroups(int __size, gid_t* __list);
+extern int setgroups(size_t __size, const gid_t* __list);
+extern int setreuid(uid_t __ruid, uid_t __euid);
+extern int setregid(gid_t __rgid, gid_t __egid);
+extern int setresuid(uid_t __ruid, uid_t __euid, uid_t __suid);
+extern int setresgid(gid_t __rgid, gid_t __egid, gid_t __sgid);
+extern int getresuid(uid_t* __ruid, uid_t* __euid, uid_t* __suid);
+extern int getresgid(gid_t* __rgid, gid_t* __egid, gid_t* __sgid);
 extern char* getlogin(void);
 
-extern long fpathconf(int, int);
-extern long pathconf(const char*, int);
+extern long fpathconf(int __fd, int __name);
+extern long pathconf(const char* __path, int __name);
 
-extern int access(const char*, int);
-extern int faccessat(int, const char*, int, int);
-extern int link(const char*, const char*);
-extern int linkat(int, const char*, int, const char*, int);
-extern int unlink(const char*);
-extern int unlinkat(int, const char*, int);
-extern int chdir(const char *);
-extern int fchdir(int);
-extern int rmdir(const char *);
-extern int pipe(int *);
+extern int access(const char* __path, int __mode);
+extern int faccessat(int __dirfd, const char* __path, int __mode, int __flags)
+  __INTRODUCED_IN(21);
+extern int link(const char* __oldpath, const char* __newpath);
+extern int linkat(int __olddirfd, const char* __oldpath, int __newdirfd,
+                  const char* __newpath, int __flags) __INTRODUCED_IN(21);
+extern int unlink(const char* __path);
+extern int unlinkat(int __dirfd, const char* __path, int __flags);
+extern int chdir(const char* __path);
+extern int fchdir(int __fd);
+extern int rmdir(const char* __path);
+extern int pipe(int* __pipefd);
 #if defined(__USE_GNU)
-extern int pipe2(int *, int);
+extern int pipe2(int* __pipefd, int __flags) __INTRODUCED_IN(9);
 #endif
-extern int chroot(const char *);
-extern int symlink(const char*, const char*);
-extern int symlinkat(const char*, int, const char*);
-extern ssize_t readlink(const char*, char*, size_t);
-extern ssize_t readlinkat(int, const char*, char*, size_t);
-extern int chown(const char *, uid_t, gid_t);
-extern int fchown(int, uid_t, gid_t);
-extern int fchownat(int, const char*, uid_t, gid_t, int);
-extern int lchown(const char *, uid_t, gid_t);
-extern char *getcwd(char *, size_t);
+extern int chroot(const char* __path);
+extern int symlink(const char* __oldpath, const char* __newpath);
+extern int symlinkat(const char* __oldpath, int __newdirfd,
+                     const char* __newpath) __INTRODUCED_IN(21);
+extern ssize_t readlink(const char* __path, char* __buf, size_t __bufsiz);
+extern ssize_t readlinkat(int __dirfd, const char* __path, char* __buf,
+                          size_t __bufsiz) __INTRODUCED_IN(21);
+extern int chown(const char* __path, uid_t __owner, gid_t __group);
+extern int fchown(int __fd, uid_t __owner, gid_t __group);
+extern int fchownat(int __dirfd, const char* __path, uid_t __owner,
+                    gid_t __group, int __flags);
+extern int lchown(const char* __path, uid_t __owner, gid_t __group);
+extern char* getcwd(char* __buf, size_t __size);
 
 extern int sync(void);
 
-extern int close(int);
+extern int close(int __fd);
 
-extern ssize_t read(int, void *, size_t);
-extern ssize_t write(int, const void *, size_t);
+extern ssize_t read(int __fd, void* __buf, size_t __count);
+extern ssize_t write(int __fd, const void* __buf, size_t __count);
 
-extern int dup(int);
-extern int dup2(int, int);
-extern int dup3(int, int, int);
-extern int fcntl(int, int, ...);
-extern int ioctl(int, int, ...);
-extern int fsync(int);
-extern int fdatasync(int);
+extern int dup(int __oldfd);
+extern int dup2(int __oldfd, int __newfd);
+extern int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
+extern int fcntl(int __fd, int __cmd, ...);
+extern int ioctl(int __fd, int __request, ...);
+extern int fsync(int __fd);
+extern int fdatasync(int __fd) __INTRODUCED_IN(9);
 
 #if defined(__USE_FILE_OFFSET64)
-extern int truncate(const char *, off_t) __RENAME(truncate64);
-extern off_t lseek(int, off_t, int) __RENAME(lseek64);
-extern ssize_t pread(int, void *, size_t, off_t) __RENAME(pread64);
-extern ssize_t pwrite(int, const void *, size_t, off_t) __RENAME(pwrite64);
-extern int ftruncate(int, off_t) __RENAME(ftruncate64);
+extern off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
 #else
-extern int truncate(const char *, off_t);
-extern off_t lseek(int, off_t, int);
-extern ssize_t pread(int, void *, size_t, off_t);
-extern ssize_t pwrite(int, const void *, size_t, off_t);
-extern int ftruncate(int, off_t);
+extern off_t lseek(int __fd, off_t __offset, int __whence);
 #endif
-extern int truncate64(const char *, off64_t);
-extern off64_t lseek64(int, off64_t, int);
-extern ssize_t pread64(int, void *, size_t, off64_t);
-extern ssize_t pwrite64(int, const void *, size_t, off64_t);
-extern int ftruncate64(int, off64_t);
+
+extern off64_t lseek64(int __fd, off64_t __offset, int __whence);
+
+#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= 21
+extern int truncate(const char* __path, off_t __length) __RENAME(truncate64);
+extern ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
+  __RENAME(pread64);
+extern ssize_t pwrite(int __fd, const void* __buf, size_t __count,
+                      off_t __offset) __RENAME(pwrite64);
+extern int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64);
+#else
+extern int truncate(const char* __path, off_t __length);
+extern ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset);
+extern ssize_t pwrite(int __fd, const void* __buf, size_t __count,
+                      off_t __offset);
+extern int ftruncate(int __fd, off_t __length);
+#endif
+
+extern int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
+extern ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(21);
+extern ssize_t pwrite64(int __fd, const void* __buf, size_t __count,
+                        off64_t __offset) __INTRODUCED_IN(21);
+extern int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(21);
 
 extern int pause(void);
-extern unsigned int alarm(unsigned int);
-extern unsigned int sleep(unsigned int);
-extern int usleep(useconds_t);
+extern unsigned int alarm(unsigned int __seconds);
+extern unsigned int sleep(unsigned int __seconds);
+extern int usleep(useconds_t __usec);
 
-int gethostname(char*, size_t);
-int sethostname(const char*, size_t);
+int gethostname(char* __name, size_t __len);
+int sethostname(const char* __name, size_t __len);
 
-extern void *__brk(void *);
-extern int brk(void *);
-extern void *sbrk(ptrdiff_t);
+extern void* __brk(void* __addr);
+extern int brk(void* __addr);
+extern void* sbrk(ptrdiff_t __increment);
 
-extern int getopt(int, char * const *, const char *);
-extern char *optarg;
+extern int getopt(int __argc, char* const* __argv, const char* __argstring);
+extern char* optarg;
 extern int optind, opterr, optopt;
 
-extern int isatty(int);
-extern char* ttyname(int);
-extern int ttyname_r(int, char*, size_t);
+extern int isatty(int __fd);
+extern char* ttyname(int __fd);
+extern int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
 
-extern int  acct(const char*  filepath);
+extern int acct(const char* __filepath);
 
+long sysconf(int __name);
+
+#if __ANDROID_API__ >= 21
 int getpagesize(void);
+#else
+__inline__ int getpagesize(void) {
+  return sysconf(_SC_PAGESIZE);
+}
+#endif
 
-long sysconf(int);
+long syscall(long __number, ...);
 
-long syscall(long number, ...);
-
-extern int daemon(int, int);
+extern int daemon(int __nochdir, int __noclose);
 
 #if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
-extern int cacheflush(long, long, long);
+extern int cacheflush(long __addr, long __nbytes, long __cache);
     /* __attribute__((deprecated("use __builtin___clear_cache instead"))); */
 #endif
 
-extern pid_t tcgetpgrp(int fd);
-extern int   tcsetpgrp(int fd, pid_t _pid);
+extern pid_t tcgetpgrp(int __fd);
+extern int tcsetpgrp(int __fd, pid_t __pid);
 
 /* Used to retry syscalls that can return EINTR. */
 #define TEMP_FAILURE_RETRY(exp) ({         \
@@ -224,6 +246,7 @@ extern int   tcsetpgrp(int fd, pid_t _pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
+/* TODO(unified-headers): Factor out all the FORTIFY features. */
 extern char* __getcwd_chk(char*, size_t, size_t);
 __errordecl(__getcwd_dest_size_error, "getcwd called with size bigger than destination");
 extern char* __getcwd_real(char*, size_t) __RENAME(getcwd);
