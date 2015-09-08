@@ -171,7 +171,7 @@ mode_t umask(mode_t mode) {
 }
 #endif /* defined(__BIONIC_FORTIFY) */
 
-_BIONIC_NOT_BEFORE_21(extern int mkfifo(const char*, mode_t);)
+extern int mkfifo(const char*, mode_t) __INTRODUCED_IN(21);
 extern int mkfifoat(int, const char*, mode_t);
 
 extern int fchmodat(int, const char*, mode_t, int);
