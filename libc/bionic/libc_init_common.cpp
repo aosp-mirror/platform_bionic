@@ -49,6 +49,7 @@
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
+extern "C" void __bionic_setjmp_cookie_init(void);
 extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
@@ -121,6 +122,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
 
   __system_properties_init(); // Requires 'environ'.
 
+  __bionic_setjmp_cookie_init();
   __libc_init_vdso();
 }
 
