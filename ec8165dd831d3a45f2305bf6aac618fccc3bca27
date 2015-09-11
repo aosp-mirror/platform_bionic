@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6473de94_1522f4b2",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "tst?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "249486c0_7b6ddf86",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "we usually use uintptr_t.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44725a92_54caac2e",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "why the temporary?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_177e7479",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "sizeof(value)\n\nabort on failure?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_39f0cf5a",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "end comments with \u0027.\u0027.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_56147409",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "you\u0027ve said \"signal flag\" elsewhere.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_59fd8331",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "__libc_fatal with a message?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_fe256143",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "prefer defined()/!defined()",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_f75f4008",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "type*\n\nno C-style casts.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_3e28a919",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "include your failure message (when you have one :-) ) here.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_191a2b3a",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T21:19:26Z",
+      "side": 1,
+      "message": "just ASSERT_EQ 0 above instead?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
