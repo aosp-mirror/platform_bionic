@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c45e4afd_3bf0c35a",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6473de94_1522f4b2",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "249486c0_7b6ddf86",
         "filename": "libc/bionic/setjmp_cookie.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "848ff2ac_c14fe4a8",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "long is more correct to represent a register-sized value (and also matches our headers defining jmp_buf as a long[])",
+      "parentUuid": "249486c0_7b6ddf86",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_54caac2e",
         "filename": "libc/bionic/setjmp_cookie.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2015-09-11T21:19:26Z",
       "side": 1,
       "message": "why the temporary?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_960b6c9f",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "I want to retry if 0 or 1 are generated so that we can tell if the cookie hasn\u0027t been initialized",
+      "parentUuid": "44725a92_54caac2e",
       "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "848ff2ac_a1fc98ad",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e467cecb_39f0cf5a",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8478d270_56147409",
         "filename": "libc/bionic/setjmp_cookie.cpp",
         "patchSetId": 2
@@ -98,6 +170,24 @@
       "writtenOn": "2015-09-11T21:19:26Z",
       "side": 1,
       "message": "you\u0027ve said \"signal flag\" elsewhere.",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_5d12cf8f",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8478d270_56147409",
       "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "e467cecb_594ca308",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e467cecb_59fd8331",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "848ff2ac_fe256143",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 2
@@ -132,6 +240,24 @@
       "writtenOn": "2015-09-11T21:19:26Z",
       "side": 1,
       "message": "prefer defined()/!defined()",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_81b07cc2",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "848ff2ac_fe256143",
       "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "e467cecb_1cc3f973",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a46156bd_f75f4008",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "848ff2ac_3e28a919",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 2
@@ -172,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "e467cecb_5ccd719b",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "848ff2ac_3e28a919",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e467cecb_191a2b3a",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 2
@@ -183,6 +345,24 @@
       "writtenOn": "2015-09-11T21:19:26Z",
       "side": 1,
       "message": "just ASSERT_EQ 0 above instead?",
+      "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_57a8ecc0",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T22:21:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e467cecb_191a2b3a",
       "revId": "ec8165dd831d3a45f2305bf6aac618fccc3bca27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
