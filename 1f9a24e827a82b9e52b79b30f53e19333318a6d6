@@ -50,6 +50,24 @@
       "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_b90a1be9",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T23:00:33Z",
+      "side": 1,
+      "message": "It\u0027s not a long (4 bytes in both mips32 and mips64). There\u0027s spare room in the struct at SC_SPARE_OFFSET, but I figured it\u0027s better to leave it out and fix it up in here when actually implementing the mips part.",
+      "parentUuid": "6473de94_b5e9402c",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
