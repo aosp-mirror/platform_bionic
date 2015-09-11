@@ -1220,6 +1220,67 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 #endif
 }
 
+struct GetStackSignalHandlerArg {
+  volatile bool done;
+  void* signal_handler_sp;
+  void* main_stack_base;
+  size_t main_stack_size;
+};
+
+static GetStackSignalHandlerArg getstack_signal_handler_arg;
+
+static void getstack_signal_handler(int sig) {
+  ASSERT_EQ(SIGUSR1, sig);
+  // Use sleep() to make current thread be switched out by the kernel to provoke the error.
+  sleep(1);
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attr));
+  void* stack_base;
+  size_t stack_size;
+  ASSERT_EQ(0, pthread_attr_getstack(&attr, &stack_base, &stack_size));
+  getstack_signal_handler_arg.signal_handler_sp = &attr;
+  getstack_signal_handler_arg.main_stack_base = stack_base;
+  getstack_signal_handler_arg.main_stack_size = stack_size;
+  getstack_signal_handler_arg.done = true;
+}
+
+// The previous code obtained the main thread's stack by reading the entry in
+// /proc/self/task/<pid>/maps that was labeled [stack]. Unfortunately, on x86/x86_64, the kernel
+// relies on sp0 in task state segment(tss) to label the stack map with [stack]. If the kernel
+// switches a process while the main thread is in an alternate stack, then the kernel will label
+// the wrong map with [stack]. This test verifies that when the above situation happens, the main
+// thread's stack is found correctly.
+TEST(pthread, pthread_attr_getstack_in_signal_handler) {
+  const size_t sig_stack_size = 16 * 1024;
+  void* sig_stack = mmap(NULL, sig_stack_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
+                         -1, 0);
+  ASSERT_NE(MAP_FAILED, sig_stack);
+  stack_t ss;
+  ss.ss_sp = sig_stack;
+  ss.ss_size = sig_stack_size;
+  ss.ss_flags = 0;
+  stack_t oss;
+  ASSERT_EQ(0, sigaltstack(&ss, &oss));
+
+  ScopedSignalHandler handler(SIGUSR1, getstack_signal_handler, SA_ONSTACK);
+  getstack_signal_handler_arg.done = false;
+  kill(getpid(), SIGUSR1);
+  ASSERT_EQ(true, getstack_signal_handler_arg.done);
+
+  // Verify if the stack used by the signal handler is the alternate stack just registered.
+  ASSERT_LE(sig_stack, getstack_signal_handler_arg.signal_handler_sp);
+  ASSERT_GE(reinterpret_cast<char*>(sig_stack) + sig_stack_size,
+            getstack_signal_handler_arg.signal_handler_sp);
+
+  // Verify if the main thread's stack got in the signal handler is correct.
+  ASSERT_LE(getstack_signal_handler_arg.main_stack_base, &ss);
+  ASSERT_GE(reinterpret_cast<char*>(getstack_signal_handler_arg.main_stack_base) +
+            getstack_signal_handler_arg.main_stack_size, reinterpret_cast<void*>(&ss));
+
+  ASSERT_EQ(0, sigaltstack(&oss, nullptr));
+  ASSERT_EQ(0, munmap(sig_stack, sig_stack_size));
+}
+
 static void pthread_attr_getstack_18908062_helper(void*) {
   char local_variable;
   pthread_attr_t attributes;
