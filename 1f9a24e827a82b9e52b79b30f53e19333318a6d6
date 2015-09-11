@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c45e4afd_fb600b95",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T22:35:28Z",
+      "side": 1,
+      "message": ". on all these",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_dab8a101",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T22:35:28Z",
+      "side": 1,
+      "message": "(i suspect we could just teq r0 here, which normally i wouldn\u0027t suggest, but this mov is a bit weird. better or worse?)",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6473de94_b5e9402c",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-11T22:35:28Z",
+      "side": 1,
+      "message": "why? isn\u0027t mips\u0027 SC_FLAG_OFFSET what you need?",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
