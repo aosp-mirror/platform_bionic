@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a46156bd_fac3a521",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T23:03:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c45e4afd_fb600b95",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a46156bd_dab8a101",
         "filename": "libc/arch-arm/bionic/setjmp.S",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-09-11T22:35:28Z",
       "side": 1,
       "message": "(i suspect we could just teq r0 here, which normally i wouldn\u0027t suggest, but this mov is a bit weird. better or worse?)",
+      "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44725a92_d78cfefe",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-11T23:03:56Z",
+      "side": 1,
+      "message": "It\u0027s a bit nonobvious where the condition is actually coming from with the teq up here, I think. (especially with the .cfi stuff in between). \n\nI guess the mov is strange too, though.",
+      "parentUuid": "a46156bd_dab8a101",
       "revId": "1f9a24e827a82b9e52b79b30f53e19333318a6d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
