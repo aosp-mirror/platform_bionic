@@ -25,6 +25,64 @@
     },
     {
       "key": {
+        "uuid": "c45e4afd_e1e85c77",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-12T03:26:41Z",
+      "side": 1,
+      "message": "or just write it out longhand. the proc man page gives the scanf specifiers for each of the fields.",
+      "parentUuid": "44725a92_ba368919",
+      "range": {
+        "startLine": 135,
+        "startChar": 2,
+        "endLine": 135,
+        "endChar": 32
+      },
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_e093f694",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-12T03:26:41Z",
+      "side": 1,
+      "message": "call this \"startstack\" like the kernel does?",
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "249486c0_44a1240c",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-12T03:26:41Z",
+      "side": 1,
+      "message": "alternatively, __libc_init_main_thread could just store this somewhere and we read it directly here.",
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_7a023115",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 3
