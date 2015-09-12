@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "0465c2c3_23ea58e4",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1044078
+      },
+      "writtenOn": "2015-09-12T07:16:23Z",
+      "side": 1,
+      "message": "Exactly, hard code is bad, I can provide a separated function to get this value following the proc man page and give clear explaining.",
+      "parentUuid": "c45e4afd_e1e85c77",
+      "range": {
+        "startLine": 135,
+        "startChar": 2,
+        "endLine": 135,
+        "endChar": 32
+      },
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0465c2c3_e093f694",
         "filename": "libc/bionic/pthread_attr.cpp",
         "patchSetId": 3
@@ -66,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "e467cecb_3fa6ef8d",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1044078
+      },
+      "writtenOn": "2015-09-12T07:16:23Z",
+      "side": 1,
+      "message": "Well",
+      "parentUuid": "0465c2c3_e093f694",
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "249486c0_44a1240c",
         "filename": "libc/bionic/pthread_attr.cpp",
         "patchSetId": 3
@@ -77,6 +119,24 @@
       "writtenOn": "2015-09-12T03:26:41Z",
       "side": 1,
       "message": "alternatively, __libc_init_main_thread could just store this somewhere and we read it directly here.",
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_7db06fc1",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1044078
+      },
+      "writtenOn": "2015-09-12T07:16:23Z",
+      "side": 1,
+      "message": "Yes, so that it can help to avoid scan the file every time.",
+      "parentUuid": "249486c0_44a1240c",
       "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
