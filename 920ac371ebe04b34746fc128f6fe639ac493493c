@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "848ff2ac_7226e095",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-14T19:54:23Z",
+      "side": 1,
+      "message": "yes.",
+      "parentUuid": "44725a92_7a023115",
+      "range": {
+        "startLine": 1234,
+        "startChar": 5,
+        "endLine": 1234,
+        "endChar": 46
+      },
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "848ff2ac_c4b9b2b5",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 3
@@ -189,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "848ff2ac_b2dea8cf",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-14T19:54:23Z",
+      "side": 1,
+      "message": "much clearer, thanks!",
+      "parentUuid": "848ff2ac_c4b9b2b5",
+      "range": {
+        "startLine": 1247,
+        "startChar": 3,
+        "endLine": 1247,
+        "endChar": 19
+      },
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_1a221db3",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 3
@@ -200,6 +248,30 @@
       "writtenOn": "2015-09-12T01:00:29Z",
       "side": 1,
       "message": "This is a bit complicated, can you add comments describing what you are testing? I think I understand this, but I want to make sure I understand your intentions.",
+      "range": {
+        "startLine": 1269,
+        "startChar": 0,
+        "endLine": 1275,
+        "endChar": 87
+      },
+      "revId": "920ac371ebe04b34746fc128f6fe639ac493493c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_72fd0032",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-14T19:54:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44725a92_1a221db3",
       "range": {
         "startLine": 1269,
         "startChar": 0,
