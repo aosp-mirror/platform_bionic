@@ -264,12 +264,7 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/gen/ldexp.c \
     upstream-freebsd/lib/libc/gen/sleep.c \
     upstream-freebsd/lib/libc/gen/usleep.c \
-    upstream-freebsd/lib/libc/stdlib/abs.c \
     upstream-freebsd/lib/libc/stdlib/getopt_long.c \
-    upstream-freebsd/lib/libc/stdlib/imaxabs.c \
-    upstream-freebsd/lib/libc/stdlib/imaxdiv.c \
-    upstream-freebsd/lib/libc/stdlib/labs.c \
-    upstream-freebsd/lib/libc/stdlib/llabs.c \
     upstream-freebsd/lib/libc/stdlib/qsort.c \
     upstream-freebsd/lib/libc/stdlib/quick_exit.c \
     upstream-freebsd/lib/libc/stdlib/realpath.c \
@@ -497,11 +492,16 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/wprintf.c \
     upstream-openbsd/lib/libc/stdio/wscanf.c \
     upstream-openbsd/lib/libc/stdio/wsetup.c \
+    upstream-openbsd/lib/libc/stdlib/abs.c \
     upstream-openbsd/lib/libc/stdlib/atoi.c \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
     upstream-openbsd/lib/libc/stdlib/insque.c \
+    upstream-openbsd/lib/libc/stdlib/imaxabs.c \
+    upstream-openbsd/lib/libc/stdlib/imaxdiv.c \
+    upstream-openbsd/lib/libc/stdlib/labs.c \
+    upstream-openbsd/lib/libc/stdlib/llabs.c \
     upstream-openbsd/lib/libc/stdlib/lsearch.c \
     upstream-openbsd/lib/libc/stdlib/reallocarray.c \
     upstream-openbsd/lib/libc/stdlib/remque.c \
