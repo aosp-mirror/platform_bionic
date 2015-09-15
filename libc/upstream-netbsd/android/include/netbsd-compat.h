@@ -31,4 +31,7 @@
 #define __readlockenv() 0
 #define __unlockenv() 0
 
+#include <stddef.h>
+int reallocarr(void*, size_t, size_t);
+
 #endif
