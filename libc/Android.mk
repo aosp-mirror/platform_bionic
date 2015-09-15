@@ -349,6 +349,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/libc/stdlib/mrand48.c \
     upstream-netbsd/libc/stdlib/nrand48.c \
     upstream-netbsd/libc/stdlib/_rand48.c \
+    upstream-netbsd/libc/stdlib/reallocarr.c \
     upstream-netbsd/libc/stdlib/seed48.c \
     upstream-netbsd/libc/stdlib/srand48.c \
     upstream-netbsd/libc/stdlib/tdelete.c \
