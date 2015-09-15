@@ -41,30 +41,49 @@
 #define _JB_SIGMASK 6
 #define _JB_SIGFLAG 7
 
+.macro m_mangle_registers reg
+  xorl \reg,%edx
+  xorl \reg,%ebx
+  xorl \reg,%esp
+  xorl \reg,%ebp
+  xorl \reg,%esi
+  xorl \reg,%edi
+.endm
+
+.macro m_unmangle_registers reg
+  m_mangle_registers \reg
+.endm
+
 ENTRY(setjmp)
   movl 4(%esp),%ecx
-  movl $1,(_JB_SIGFLAG * 4)(%ecx)
-  jmp .L_sigsetjmp_signal_mask
+  mov $1,%eax
+  jmp .L_sigsetjmp
 END(setjmp)
 
 ENTRY(_setjmp)
   movl 4(%esp),%ecx
-  movl $0,(_JB_SIGFLAG * 4)(%ecx)
-  jmp .L_sigsetjmp_no_signal_mask
+  movl $0,%eax
+  jmp .L_sigsetjmp
 END(_setjmp)
 
 ENTRY(sigsetjmp)
   movl 4(%esp),%ecx
   movl 8(%esp),%eax
 
-  // Record whether or not the signal mask is valid.
+.L_sigsetjmp:
+  PIC_PROLOGUE
+  pushl %eax
+  call PIC_PLT(__bionic_setjmp_cookie_get)
+  addl $4,%esp
+  PIC_EPILOGUE
+
+  // Record the setjmp cookie and whether or not we're saving the signal mask.
   movl %eax,(_JB_SIGFLAG * 4)(%ecx)
 
   // Do we need to save the signal mask?
-  testl %eax,%eax
+  testl $1,%eax
   jz 1f
 
-.L_sigsetjmp_signal_mask:
   // Get the current signal mask.
   PIC_PROLOGUE
   pushl $0
@@ -76,16 +95,21 @@ ENTRY(sigsetjmp)
   movl 4(%esp),%ecx
   movl %eax,(_JB_SIGMASK * 4)(%ecx)
 
-.L_sigsetjmp_no_signal_mask:
 1:
+  // Fetch the setjmp cookie and clear the signal flag bit.
+  movl (_JB_SIGFLAG * 4)(%ecx),%eax
+  andl $-2,%eax
+
   // Save the callee-save registers.
   movl 0(%esp),%edx
+  m_mangle_registers %eax
   movl %edx,(_JB_EDX * 4)(%ecx)
   movl %ebx,(_JB_EBX * 4)(%ecx)
   movl %esp,(_JB_ESP * 4)(%ecx)
   movl %ebp,(_JB_EBP * 4)(%ecx)
   movl %esi,(_JB_ESI * 4)(%ecx)
   movl %edi,(_JB_EDI * 4)(%ecx)
+  m_unmangle_registers %eax
 
   xorl %eax,%eax
   ret
@@ -94,7 +118,8 @@ END(sigsetjmp)
 ENTRY(siglongjmp)
   // Do we have a signal mask to restore?
   movl 4(%esp),%edx
-  cmpl $0,(_JB_SIGFLAG * 4)(%edx)
+  movl (_JB_SIGFLAG * 4)(%edx), %eax
+  testl $1,%eax
   jz 1f
 
   // Restore the signal mask.
@@ -108,12 +133,29 @@ ENTRY(siglongjmp)
   // Restore the callee-save registers.
   movl 4(%esp),%edx
   movl 8(%esp),%eax
-  movl (_JB_EDX * 4)(%edx),%ecx
-  movl (_JB_EBX * 4)(%edx),%ebx
-  movl (_JB_ESP * 4)(%edx),%esp
-  movl (_JB_EBP * 4)(%edx),%ebp
-  movl (_JB_ESI * 4)(%edx),%esi
-  movl (_JB_EDI * 4)(%edx),%edi
+
+  movl (_JB_SIGFLAG * 4)(%edx),%ecx
+  andl $-2,%ecx
+
+  movl %ecx,%ebx
+  movl %ecx,%esp
+  movl %ecx,%ebp
+  movl %ecx,%esi
+  movl %ecx,%edi
+  xorl (_JB_EDX * 4)(%edx),%ecx
+  xorl (_JB_EBX * 4)(%edx),%ebx
+  xorl (_JB_ESP * 4)(%edx),%esp
+  xorl (_JB_EBP * 4)(%edx),%ebp
+  xorl (_JB_ESI * 4)(%edx),%esi
+  xorl (_JB_EDI * 4)(%edx),%edi
+
+  PIC_PROLOGUE
+  pushl %eax
+  pushl (_JB_SIGFLAG * 4)(%edx)
+  call PIC_PLT(__bionic_setjmp_cookie_check)
+  addl $4,%esp
+  popl %eax
+  PIC_EPILOGUE
 
   testl %eax,%eax
   jnz 2f
