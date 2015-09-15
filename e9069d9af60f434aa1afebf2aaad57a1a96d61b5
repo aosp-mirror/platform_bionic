@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "6473de94_61736170",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "type*\n\nmove these up by alternate_signal_stack?",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9420f4a_182d2472",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -30,6 +47,75 @@
       "writtenOn": "2015-09-15T23:10:53Z",
       "side": 1,
       "message": "Is it OK for the compiler to know the value of TLS_SLOT_SAFESTACK? This is already the case with TLS_SLOT_STACK_GUARD, so the answer is probably yes.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_f1e9ff2a",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "yes, i think that\u0027s fine.",
+      "parentUuid": "a9420f4a_182d2472",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0465c2c3_d5db0b08",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "size_t\n\nconstexpr?",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_d10b239e",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "pthread_create?",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_e23cd7ad",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "yeah, that\u0027s a good idea. we should probably do this for the signal stacks. (i agree with you that it\u0027s not worth the bother for the guard pages, since they\u0027re inherently adjacent.)",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +139,57 @@
     },
     {
       "key": {
+        "uuid": "c45e4afd_0a11ddce",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "nullptr",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_5b5c9c63",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "{}",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_42458334",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "i think i prefer your internal names!",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "648afea0_1a64cce6",
         "filename": "libc/private/bionic_safestack.h",
         "patchSetId": 2
@@ -64,6 +201,41 @@
       "writtenOn": "2015-09-15T23:10:53Z",
       "side": 1,
       "message": "This probably should be a build property instead, so that we do not have two different builds of bionic.\n\nImplementation is less than 100 lines of code and is called only on thread create and destruction, so replacing this with a runtime check would not have any noticable effect on performance or binary size.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_422ca376",
+        "filename": "libc/private/bionic_safestack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "agreed.",
+      "parentUuid": "648afea0_1a64cce6",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6473de94_a19bb9d9",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T23:24:22Z",
+      "side": 1,
+      "message": "comment? (and if you hard-code this in the compiler, add the \u003d here like TLS_SLOT_STACK_GUARD, just to be really super clear that we must not fuck with this :-) )",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
