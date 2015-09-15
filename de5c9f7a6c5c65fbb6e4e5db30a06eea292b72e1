@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "44725a92_8aca542c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-15T16:05:05Z",
+      "side": 1,
+      "message": "which compiler? can\u0027t we fix the compiler instead?",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 11,
+        "endChar": 52
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_6a7178d6",
         "filename": "libm/arm64/cos.c",
         "patchSetId": 1
