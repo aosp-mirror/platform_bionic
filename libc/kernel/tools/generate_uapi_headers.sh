@@ -99,6 +99,35 @@ function copy_if_exists () {
   done
 }
 
+function check_hdrs () {
+  local src_dir=$1
+  local tgt_dir=$2
+  local kernel_dir=$3
+
+  local search_dirs=()
+
+  # This only works if none of the filenames have spaces.
+  for file in $(ls -d ${src_dir}/* 2> /dev/null); do
+    if [[ -d "${file}" ]]; then
+      search_dirs+=("${file}")
+    elif [[ -f  "${file}" ]] && [[ "${file}" =~ .h$ ]]; then
+      tgt_file=${tgt_dir}/$(basename ${file})
+      if [[ -e ${tgt_file} ]] && ! diff "${file}" "${tgt_file}" > /dev/null; then
+        if [[ ${file} =~ ${kernel_dir}/*(.+) ]]; then
+          echo "New version of ${BASH_REMATCH[1]} found in kernel headers."
+        else
+          echo "New version of ${file} found in kernel headers."
+        fi
+        echo "This file needs to be updated manually."
+      fi
+    fi
+  done
+
+  for dir in "${search_dirs[@]}"; do
+    check_hdrs "${dir}" ${tgt_dir}/$(basename ${dir}) "${kernel_dir}"
+  done
+}
+
 trap cleanup EXIT
 # This automatically triggers a call to cleanup.
 trap "exit 1" HUP INT TERM TSTP
@@ -207,3 +236,8 @@ for arch in "${ARCH_LIST[@]}"; do
                  "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/generated/asm" \
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
+
+# Verify if modified headers have changed.
+check_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+           "${ANDROID_KERNEL_DIR}/scsi" \
+           "${KERNEL_DIR}/${src_dir}"
