@@ -16,6 +16,24 @@
       "revId": "8ac3ebcc723e3fc20d3c8cf8b03d1112e2244638",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c453aafb_d0207c36",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-09-15T08:10:21Z",
+      "side": 1,
+      "message": "It would make sense to use the 2nd half of AT_RANDOM here and switch ART to using arc4random (or getentropy, but the main use case for getentropy is implementing arc4random).",
+      "parentUuid": "8478d270_9d11c41b",
+      "revId": "8ac3ebcc723e3fc20d3c8cf8b03d1112e2244638",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
