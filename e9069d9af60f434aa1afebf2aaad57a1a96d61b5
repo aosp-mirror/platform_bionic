@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9420f4a_18f2c465",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 1049,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-15T23:10:53Z",
+      "side": 1,
+      "message": "This is intended to be used on the make command line, or in board config files, similar to USE_CLANG_PLATFORM_BUILD.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9420f4a_182d2472",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-15T23:10:53Z",
+      "side": 1,
+      "message": "Is it OK for the compiler to know the value of TLS_SLOT_SAFESTACK? This is already the case with TLS_SLOT_STACK_GUARD, so the answer is probably yes.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ff2ac_7bcdd89b",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-15T23:10:53Z",
+      "side": 1,
+      "message": "This is how it looks in proc/maps:\n\nb62c2000-b62c3000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb62c3000-b63c1000 rw-p 00000000 00:00 0          [anon:unsafe-stack:3959]\nb63c1000-b63c2000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb63c2000-b64c0000 rw-p 00000000 00:00 0          [stack:3959]\nb64c0000-b6540000 rw-p 00000000 00:00 0          [anon:libc_malloc]\nb656c000-b656d000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb656d000-b656f000 rw-p 00000000 00:00 0          [anon:thread signal stack]",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "648afea0_1a64cce6",
+        "filename": "libc/private/bionic_safestack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-15T23:10:53Z",
+      "side": 1,
+      "message": "This probably should be a build property instead, so that we do not have two different builds of bionic.\n\nImplementation is less than 100 lines of code and is called only on thread create and destruction, so replacing this with a runtime check would not have any noticable effect on performance or binary size.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
