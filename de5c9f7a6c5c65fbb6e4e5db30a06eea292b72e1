@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6473de94_ef203d36",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "AArch64",
+      "range": {
+        "startLine": 11,
+        "startChar": 28,
+        "endLine": 11,
+        "endChar": 34
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44725a92_6a7178d6",
+        "filename": "libm/arm64/cos.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "\" \u003c \"",
+      "range": {
+        "startLine": 75,
+        "startChar": 13,
+        "endLine": 75,
+        "endChar": 14
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "648afea0_e9e040b7",
+        "filename": "libm/arm64/cos.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "\" \u0026 \"",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c45e4afd_73725725",
+        "filename": "libm/arm64/fd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "What\u0027s the significance of this being in a new file called \"fd.h\", is there a more intention revealing name?",
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8478d270_40749fc7",
+        "filename": "libm/arm64/fd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "Describe what this does and why it needs to be assembly code?",
+      "range": {
+        "startLine": 28,
+        "startChar": 8,
+        "endLine": 28,
+        "endChar": 18
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_93f8d4b3",
+        "filename": "libm/arm64/ksincos.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2015-09-15T15:36:49Z",
+      "side": 1,
+      "message": "why not static inline (or always inline) also?\nNormal style is in arguments on the left and outs on the right.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 27
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
