@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6473de94_5445450b",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-16T01:43:13Z",
+      "side": 1,
+      "message": "This is a bit awkward. How about something like:\n\nThe startstack value is the 28th element in /proc/[pid]/stat. The code below discards the first 27 elements of the process status information and then acquires the 28th element. For more information about this data, please refer to the man page for proc and look for the /proc/[pid]/stat section.",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 95
+      },
+      "revId": "e3e1b33a812e7892b57796dbb4d735ce2d5da4a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44725a92_ef53d3de",
+        "filename": "libc/bionic/pthread_attr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-16T01:43:13Z",
+      "side": 1,
+      "message": "This doesn\u0027t check for errors. You should add a check to see if -1 is returned.",
+      "range": {
+        "startLine": 141,
+        "startChar": 4,
+        "endLine": 141,
+        "endChar": 26
+      },
+      "revId": "e3e1b33a812e7892b57796dbb4d735ce2d5da4a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
