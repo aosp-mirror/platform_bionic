@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29753fb9_76e20ec0",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T17:43:22Z",
+      "side": 1,
+      "message": "lose this, since we\u0027ll have already crashed from an uninitialized jmp_buf?",
+      "revId": "a8f4f69fdade011d58a3872637d58a9cc63f0eba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
