@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29753fb9_96b1eac8",
+        "filename": "libc/arch-x86/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T17:42:15Z",
+      "side": 1,
+      "message": "since we don\u0027t get the ability to turn this off for free, do we really want to keep it?",
+      "revId": "9173c70cbcfdf4900e90b925cc4bf9b1ba5c4a85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
