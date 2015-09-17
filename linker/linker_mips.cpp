@@ -230,7 +230,7 @@ struct mips_elf_abiflags_v0 {
   uint16_t version;  // version of this structure
   uint8_t  isa_level, isa_rev, gpr_size, cpr1_size, cpr2_size;
   uint8_t  fp_abi;  // mips32 ABI variants for floating point
-  uint16_t isa_ext, ases, flags1, flags2;
+  uint32_t isa_ext, ases, flags1, flags2;
 };
 
 // Bits of flags1:
