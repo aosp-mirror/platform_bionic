@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "299c5f29_5b0dc3b0",
+        "filename": "libc/Android.mk",
+        "patchSetId": 8
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T01:42:03Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in the block above, s/three/four/?",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_7a0c3905",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T01:42:03Z",
+      "side": 1,
+      "message": "presumably this is no longer worthwhile? i assume the intent was to detect a jmp_buf where setjmp hadn\u0027t been called, but now we\u0027d already have aborted in that case.",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9666312_98427504",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T01:42:03Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49a1935d_bcc72124",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T01:42:03Z",
+      "side": 1,
+      "message": "do the \u0026~1 on another line (with a comment?) since it\u0027s unrelated?",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_d67e8478",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T01:42:03Z",
+      "side": 1,
+      "message": "why? we don\u0027t do this anywhere else. and i\u0027m not sure this is a rational response anyway.",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
