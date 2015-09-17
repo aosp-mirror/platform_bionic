@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a9692fe6_775530eb",
+        "filename": "libc/Android.mk",
+        "patchSetId": 8
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-17T16:58:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "299c5f29_5b0dc3b0",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_7a0c3905",
         "filename": "libc/arch-arm/bionic/setjmp.S",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2015-09-17T01:42:03Z",
       "side": 1,
       "message": "presumably this is no longer worthwhile? i assume the intent was to detect a jmp_buf where setjmp hadn\u0027t been called, but now we\u0027d already have aborted in that case.",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9692fe6_57502cfc",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-17T16:58:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "096ddbec_7a0c3905",
       "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "29753fb9_56fcb2ab",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-17T16:58:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9666312_98427504",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49a1935d_bcc72124",
         "filename": "libc/bionic/setjmp_cookie.cpp",
         "patchSetId": 8
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "e96fa7e4_dc00e178",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-17T16:58:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49a1935d_bcc72124",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8980ebc5_d67e8478",
         "filename": "libc/bionic/setjmp_cookie.cpp",
         "patchSetId": 8
@@ -81,6 +153,24 @@
       "writtenOn": "2015-09-17T01:42:03Z",
       "side": 1,
       "message": "why? we don\u0027t do this anywhere else. and i\u0027m not sure this is a rational response anyway.",
+      "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "299c5f29_3b8f9761",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-17T16:58:44Z",
+      "side": 1,
+      "message": "It seems bad for setjmp/longjmp to have a 1 in 2 billion chance of not working, especially since the manifestation could be an application crashing reliably until a reboot, since the cookie will be shared across zygotes.",
+      "parentUuid": "8980ebc5_d67e8478",
       "revId": "352f8905d652b61976dd302bd34bd7f25a3bb451",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
