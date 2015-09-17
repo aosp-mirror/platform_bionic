@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "0465c2c3_954c330a",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6473de94_61736170",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9420f4a_182d2472",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -88,6 +106,41 @@
     },
     {
       "key": {
+        "uuid": "6473de94_348d2927",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0465c2c3_d5db0b08",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9a3c3b1_5065ece3",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "I\u0027ve renamed this to look less ugly. We should keep this for platforms where the compiler can not (yet) emit direct TLS access.",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "843d32a1_58a1120c",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -99,6 +152,24 @@
       "writtenOn": "2015-09-16T22:32:22Z",
       "side": 1,
       "message": "nullptr",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "099a3b78_52e89473",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "843d32a1_58a1120c",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -122,6 +193,24 @@
     },
     {
       "key": {
+        "uuid": "49c27358_b48aa09b",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Right. There is no way to proceed if the code expects an unsafe stack and we can not provide it.",
+      "parentUuid": "843d32a1_f8ee3e30",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8478d270_d10b239e",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -133,6 +222,24 @@
       "writtenOn": "2015-09-15T23:24:22Z",
       "side": 1,
       "message": "pthread_create?",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "648afea0_d5aeb7ba",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8478d270_d10b239e",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -190,6 +297,24 @@
     },
     {
       "key": {
+        "uuid": "29bd3fca_d333b48d",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64383eb1_36945e02",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c45e4afd_0a11ddce",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -201,6 +326,24 @@
       "writtenOn": "2015-09-15T23:24:22Z",
       "side": 1,
       "message": "nullptr",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e467cecb_223def55",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c45e4afd_0a11ddce",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -224,6 +367,24 @@
     },
     {
       "key": {
+        "uuid": "099a3b78_92f11c63",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "848ff2ac_5b5c9c63",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e467cecb_42458334",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -235,6 +396,24 @@
       "writtenOn": "2015-09-15T23:24:22Z",
       "side": 1,
       "message": "i think i prefer your internal names!",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a46156bd_564f05fe",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e467cecb_42458334",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -276,6 +455,24 @@
     },
     {
       "key": {
+        "uuid": "6473de94_342c4976",
+        "filename": "libc/private/bionic_safestack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "System properties are initialized in __libc_init_common, which runs after .preinit_array constructors. This way safestack code can not be run in .preinit_array.\n\nIt\u0027s probably fine - this is not the only thing that does not work in .preinit_array.\n\nIf necessary, we could allocate unsafe stack in __libc_init_main_thread in all cases, and then deallocate in __libc_init_common if the system property is not set.",
+      "parentUuid": "e467cecb_422ca376",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6473de94_a19bb9d9",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 2
@@ -287,6 +484,24 @@
       "writtenOn": "2015-09-15T23:24:22Z",
       "side": 1,
       "message": "comment? (and if you hard-code this in the compiler, add the \u003d here like TLS_SLOT_STACK_GUARD, just to be really super clear that we must not fuck with this :-) )",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44725a92_4f5a076c",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-17T22:10:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6473de94_a19bb9d9",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
