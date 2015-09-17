@@ -1,0 +1,382 @@
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// ifneq ($(TARGET_USE_PRIVATE_LIBM),true)
+
+bionic_coverage = false
+
+// TODO: this comes from from upstream's libc, not libm, but it's an
+// implementation detail that should have hidden visibility, so it needs
+// to be in whatever library the math code is in.
+libm_common_src_files = ["digittoint.c"]
+
+// TODO: this is not in the BSDs.
+libm_common_src_files += [
+    "significandl.c",
+    "sincos.c",
+]
+
+libm_common_src_files += [
+    "upstream-freebsd/lib/msun/bsdsrc/b_exp.c",
+    "upstream-freebsd/lib/msun/bsdsrc/b_log.c",
+    "upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c",
+    "upstream-freebsd/lib/msun/src/catrig.c",
+    "upstream-freebsd/lib/msun/src/catrigf.c",
+    "upstream-freebsd/lib/msun/src/e_acos.c",
+    "upstream-freebsd/lib/msun/src/e_acosf.c",
+    "upstream-freebsd/lib/msun/src/e_acosh.c",
+    "upstream-freebsd/lib/msun/src/e_acoshf.c",
+    "upstream-freebsd/lib/msun/src/e_asin.c",
+    "upstream-freebsd/lib/msun/src/e_asinf.c",
+    "upstream-freebsd/lib/msun/src/e_atan2.c",
+    "upstream-freebsd/lib/msun/src/e_atan2f.c",
+    "upstream-freebsd/lib/msun/src/e_atanh.c",
+    "upstream-freebsd/lib/msun/src/e_atanhf.c",
+    "upstream-freebsd/lib/msun/src/e_cosh.c",
+    "upstream-freebsd/lib/msun/src/e_coshf.c",
+    "upstream-freebsd/lib/msun/src/e_exp.c",
+    "upstream-freebsd/lib/msun/src/e_expf.c",
+    "upstream-freebsd/lib/msun/src/e_fmod.c",
+    "upstream-freebsd/lib/msun/src/e_fmodf.c",
+    "upstream-freebsd/lib/msun/src/e_gamma.c",
+    "upstream-freebsd/lib/msun/src/e_gammaf.c",
+    "upstream-freebsd/lib/msun/src/e_gammaf_r.c",
+    "upstream-freebsd/lib/msun/src/e_gamma_r.c",
+    "upstream-freebsd/lib/msun/src/e_hypot.c",
+    "upstream-freebsd/lib/msun/src/e_hypotf.c",
+    "upstream-freebsd/lib/msun/src/e_j0.c",
+    "upstream-freebsd/lib/msun/src/e_j0f.c",
+    "upstream-freebsd/lib/msun/src/e_j1.c",
+    "upstream-freebsd/lib/msun/src/e_j1f.c",
+    "upstream-freebsd/lib/msun/src/e_jn.c",
+    "upstream-freebsd/lib/msun/src/e_jnf.c",
+    "upstream-freebsd/lib/msun/src/e_lgamma.c",
+    "upstream-freebsd/lib/msun/src/e_lgammaf.c",
+    "upstream-freebsd/lib/msun/src/e_lgammaf_r.c",
+    "upstream-freebsd/lib/msun/src/e_lgamma_r.c",
+    "upstream-freebsd/lib/msun/src/e_log10.c",
+    "upstream-freebsd/lib/msun/src/e_log10f.c",
+    "upstream-freebsd/lib/msun/src/e_log2.c",
+    "upstream-freebsd/lib/msun/src/e_log2f.c",
+    "upstream-freebsd/lib/msun/src/e_log.c",
+    "upstream-freebsd/lib/msun/src/e_logf.c",
+    "upstream-freebsd/lib/msun/src/e_pow.c",
+    "upstream-freebsd/lib/msun/src/e_powf.c",
+    "upstream-freebsd/lib/msun/src/e_remainder.c",
+    "upstream-freebsd/lib/msun/src/e_remainderf.c",
+    "upstream-freebsd/lib/msun/src/e_rem_pio2.c",
+    "upstream-freebsd/lib/msun/src/e_rem_pio2f.c",
+    "upstream-freebsd/lib/msun/src/e_scalb.c",
+    "upstream-freebsd/lib/msun/src/e_scalbf.c",
+    "upstream-freebsd/lib/msun/src/e_sinh.c",
+    "upstream-freebsd/lib/msun/src/e_sinhf.c",
+    "upstream-freebsd/lib/msun/src/e_sqrt.c",
+    "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+    "upstream-freebsd/lib/msun/src/imprecise.c",
+    "upstream-freebsd/lib/msun/src/k_cos.c",
+    "upstream-freebsd/lib/msun/src/k_cosf.c",
+    "upstream-freebsd/lib/msun/src/k_exp.c",
+    "upstream-freebsd/lib/msun/src/k_expf.c",
+    "upstream-freebsd/lib/msun/src/k_rem_pio2.c",
+    "upstream-freebsd/lib/msun/src/k_sin.c",
+    "upstream-freebsd/lib/msun/src/k_sinf.c",
+    "upstream-freebsd/lib/msun/src/k_tan.c",
+    "upstream-freebsd/lib/msun/src/k_tanf.c",
+    "upstream-freebsd/lib/msun/src/s_asinh.c",
+    "upstream-freebsd/lib/msun/src/s_asinhf.c",
+    "upstream-freebsd/lib/msun/src/s_atan.c",
+    "upstream-freebsd/lib/msun/src/s_atanf.c",
+    "upstream-freebsd/lib/msun/src/s_carg.c",
+    "upstream-freebsd/lib/msun/src/s_cargf.c",
+    "upstream-freebsd/lib/msun/src/s_cargl.c",
+    "upstream-freebsd/lib/msun/src/s_cbrt.c",
+    "upstream-freebsd/lib/msun/src/s_cbrtf.c",
+    "upstream-freebsd/lib/msun/src/s_ccosh.c",
+    "upstream-freebsd/lib/msun/src/s_ccoshf.c",
+    "upstream-freebsd/lib/msun/src/s_ceil.c",
+    "upstream-freebsd/lib/msun/src/s_ceilf.c",
+    "upstream-freebsd/lib/msun/src/s_cexp.c",
+    "upstream-freebsd/lib/msun/src/s_cexpf.c",
+    "upstream-freebsd/lib/msun/src/s_cimag.c",
+    "upstream-freebsd/lib/msun/src/s_cimagf.c",
+    "upstream-freebsd/lib/msun/src/s_cimagl.c",
+    "upstream-freebsd/lib/msun/src/s_conj.c",
+    "upstream-freebsd/lib/msun/src/s_conjf.c",
+    "upstream-freebsd/lib/msun/src/s_conjl.c",
+    "upstream-freebsd/lib/msun/src/s_copysign.c",
+    "upstream-freebsd/lib/msun/src/s_copysignf.c",
+    "upstream-freebsd/lib/msun/src/s_cos.c",
+    "upstream-freebsd/lib/msun/src/s_cosf.c",
+    "upstream-freebsd/lib/msun/src/s_cproj.c",
+    "upstream-freebsd/lib/msun/src/s_cprojf.c",
+    "upstream-freebsd/lib/msun/src/s_cprojl.c",
+    "upstream-freebsd/lib/msun/src/s_creal.c",
+    "upstream-freebsd/lib/msun/src/s_crealf.c",
+    "upstream-freebsd/lib/msun/src/s_creall.c",
+    "upstream-freebsd/lib/msun/src/s_csinh.c",
+    "upstream-freebsd/lib/msun/src/s_csinhf.c",
+    "upstream-freebsd/lib/msun/src/s_csqrt.c",
+    "upstream-freebsd/lib/msun/src/s_csqrtf.c",
+    "upstream-freebsd/lib/msun/src/s_csqrtl.c",
+    "upstream-freebsd/lib/msun/src/s_ctanh.c",
+    "upstream-freebsd/lib/msun/src/s_ctanhf.c",
+    "upstream-freebsd/lib/msun/src/s_erf.c",
+    "upstream-freebsd/lib/msun/src/s_erff.c",
+    "upstream-freebsd/lib/msun/src/s_exp2.c",
+    "upstream-freebsd/lib/msun/src/s_exp2f.c",
+    "upstream-freebsd/lib/msun/src/s_expm1.c",
+    "upstream-freebsd/lib/msun/src/s_expm1f.c",
+    "upstream-freebsd/lib/msun/src/s_fdim.c",
+    "upstream-freebsd/lib/msun/src/s_finite.c",
+    "upstream-freebsd/lib/msun/src/s_finitef.c",
+    "upstream-freebsd/lib/msun/src/s_floor.c",
+    "upstream-freebsd/lib/msun/src/s_floorf.c",
+    "upstream-freebsd/lib/msun/src/s_fma.c",
+    "upstream-freebsd/lib/msun/src/s_fmaf.c",
+    "upstream-freebsd/lib/msun/src/s_fmax.c",
+    "upstream-freebsd/lib/msun/src/s_fmaxf.c",
+    "upstream-freebsd/lib/msun/src/s_fmin.c",
+    "upstream-freebsd/lib/msun/src/s_fminf.c",
+    "upstream-freebsd/lib/msun/src/s_frexp.c",
+    "upstream-freebsd/lib/msun/src/s_frexpf.c",
+    "upstream-freebsd/lib/msun/src/s_ilogb.c",
+    "upstream-freebsd/lib/msun/src/s_ilogbf.c",
+    "upstream-freebsd/lib/msun/src/s_llrint.c",
+    "upstream-freebsd/lib/msun/src/s_llrintf.c",
+    "upstream-freebsd/lib/msun/src/s_llround.c",
+    "upstream-freebsd/lib/msun/src/s_llroundf.c",
+    "upstream-freebsd/lib/msun/src/s_log1p.c",
+    "upstream-freebsd/lib/msun/src/s_log1pf.c",
+    "upstream-freebsd/lib/msun/src/s_logb.c",
+    "upstream-freebsd/lib/msun/src/s_logbf.c",
+    "upstream-freebsd/lib/msun/src/s_lrint.c",
+    "upstream-freebsd/lib/msun/src/s_lrintf.c",
+    "upstream-freebsd/lib/msun/src/s_lround.c",
+    "upstream-freebsd/lib/msun/src/s_lroundf.c",
+    "upstream-freebsd/lib/msun/src/s_modf.c",
+    "upstream-freebsd/lib/msun/src/s_modff.c",
+    "upstream-freebsd/lib/msun/src/s_nan.c",
+    "upstream-freebsd/lib/msun/src/s_nearbyint.c",
+    "upstream-freebsd/lib/msun/src/s_nextafter.c",
+    "upstream-freebsd/lib/msun/src/s_nextafterf.c",
+    "upstream-freebsd/lib/msun/src/s_remquo.c",
+    "upstream-freebsd/lib/msun/src/s_remquof.c",
+    "upstream-freebsd/lib/msun/src/s_rint.c",
+    "upstream-freebsd/lib/msun/src/s_rintf.c",
+    "upstream-freebsd/lib/msun/src/s_round.c",
+    "upstream-freebsd/lib/msun/src/s_roundf.c",
+    "upstream-freebsd/lib/msun/src/s_scalbln.c",
+    "upstream-freebsd/lib/msun/src/s_scalbn.c",
+    "upstream-freebsd/lib/msun/src/s_scalbnf.c",
+    "upstream-freebsd/lib/msun/src/s_signgam.c",
+    "upstream-freebsd/lib/msun/src/s_significand.c",
+    "upstream-freebsd/lib/msun/src/s_significandf.c",
+    "upstream-freebsd/lib/msun/src/s_sin.c",
+    "upstream-freebsd/lib/msun/src/s_sinf.c",
+    "upstream-freebsd/lib/msun/src/s_tan.c",
+    "upstream-freebsd/lib/msun/src/s_tanf.c",
+    "upstream-freebsd/lib/msun/src/s_tanh.c",
+    "upstream-freebsd/lib/msun/src/s_tanhf.c",
+    "upstream-freebsd/lib/msun/src/s_tgammaf.c",
+    "upstream-freebsd/lib/msun/src/s_trunc.c",
+    "upstream-freebsd/lib/msun/src/s_truncf.c",
+    "upstream-freebsd/lib/msun/src/w_cabs.c",
+    "upstream-freebsd/lib/msun/src/w_cabsf.c",
+    "upstream-freebsd/lib/msun/src/w_cabsl.c",
+    "upstream-freebsd/lib/msun/src/w_drem.c",
+    "upstream-freebsd/lib/msun/src/w_dremf.c",
+]
+
+libm_common_src_files += [
+    "fake_long_double.c",
+    "signbit.c",
+    "fabs.cpp",
+]
+
+libm_ld128_src_files = [
+    "upstream-freebsd/lib/msun/src/e_acosl.c",
+    "upstream-freebsd/lib/msun/src/e_acoshl.c",
+    "upstream-freebsd/lib/msun/src/e_asinl.c",
+    "upstream-freebsd/lib/msun/src/e_atan2l.c",
+    "upstream-freebsd/lib/msun/src/e_atanhl.c",
+    "upstream-freebsd/lib/msun/src/e_fmodl.c",
+    "upstream-freebsd/lib/msun/src/e_hypotl.c",
+    "upstream-freebsd/lib/msun/src/e_lgammal.c",
+    "upstream-freebsd/lib/msun/src/e_remainderl.c",
+    "upstream-freebsd/lib/msun/src/e_sqrtl.c",
+    "upstream-freebsd/lib/msun/src/s_asinhl.c",
+    "upstream-freebsd/lib/msun/src/s_atanl.c",
+    "upstream-freebsd/lib/msun/src/s_cbrtl.c",
+    "upstream-freebsd/lib/msun/src/s_ceill.c",
+    "upstream-freebsd/lib/msun/src/s_copysignl.c",
+    "upstream-freebsd/lib/msun/src/e_coshl.c",
+    "upstream-freebsd/lib/msun/src/s_cosl.c",
+    "upstream-freebsd/lib/msun/src/s_floorl.c",
+    "upstream-freebsd/lib/msun/src/s_fmal.c",
+    "upstream-freebsd/lib/msun/src/s_fmaxl.c",
+    "upstream-freebsd/lib/msun/src/s_fminl.c",
+    "upstream-freebsd/lib/msun/src/s_modfl.c",
+    "upstream-freebsd/lib/msun/src/s_frexpl.c",
+    "upstream-freebsd/lib/msun/src/s_ilogbl.c",
+    "upstream-freebsd/lib/msun/src/s_llrintl.c",
+    "upstream-freebsd/lib/msun/src/s_llroundl.c",
+    "upstream-freebsd/lib/msun/src/s_logbl.c",
+    "upstream-freebsd/lib/msun/src/s_lrintl.c",
+    "upstream-freebsd/lib/msun/src/s_lroundl.c",
+    "upstream-freebsd/lib/msun/src/s_nextafterl.c",
+    "upstream-freebsd/lib/msun/src/s_nexttoward.c",
+    "upstream-freebsd/lib/msun/src/s_nexttowardf.c",
+    "upstream-freebsd/lib/msun/src/s_remquol.c",
+    "upstream-freebsd/lib/msun/src/s_rintl.c",
+    "upstream-freebsd/lib/msun/src/s_roundl.c",
+    "upstream-freebsd/lib/msun/src/s_scalbnl.c",
+    "upstream-freebsd/lib/msun/src/e_sinhl.c",
+    "upstream-freebsd/lib/msun/src/s_sinl.c",
+    "upstream-freebsd/lib/msun/src/s_tanhl.c",
+    "upstream-freebsd/lib/msun/src/s_tanl.c",
+    "upstream-freebsd/lib/msun/src/s_truncl.c",
+]
+
+libm_ld128_src_files += [
+    "upstream-freebsd/lib/msun/ld128/invtrig.c",
+    "upstream-freebsd/lib/msun/ld128/e_lgammal_r.c",
+    "upstream-freebsd/lib/msun/ld128/k_cosl.c",
+    "upstream-freebsd/lib/msun/ld128/k_sinl.c",
+    "upstream-freebsd/lib/msun/ld128/k_tanl.c",
+    "upstream-freebsd/lib/msun/ld128/s_erfl.c",
+    "upstream-freebsd/lib/msun/ld128/s_exp2l.c",
+    "upstream-freebsd/lib/msun/ld128/s_expl.c",
+    "upstream-freebsd/lib/msun/ld128/s_logl.c",
+    "upstream-freebsd/lib/msun/ld128/s_nanl.c",
+]
+
+// TODO: re-enable i387/e_sqrtf.S for x86, and maybe others.
+
+libm_common_cflags = [
+    "-D__BIONIC_NO_MATH_INLINES",
+    "-DFLT_EVAL_METHOD=0",
+    "-include freebsd-compat.h",
+    "-Wno-missing-braces",
+    "-Wno-parentheses",
+    "-Wno-sign-compare",
+    "-Wno-uninitialized",
+    "-Wno-unknown-pragmas",
+    "-fvisibility=hidden",
+]
+
+// Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
+// self recursions for lrint, lrintf, and lrintl.
+// BUG: 14225968
+libm_common_cflags += [
+    "-fno-builtin-rint",
+    "-fno-builtin-rintf",
+    "-fno-builtin-rintl",
+]
+
+libm_common_local_includes = ["upstream-freebsd/lib/msun/src/"]
+
+libm_ld_local_includes = ["upstream-freebsd/lib/msun/ld128/"]
+
+//
+// libm.so and libm.a for target.
+//
+cc_library {
+    name: "libm",
+
+    cflags: libm_common_cflags,
+    include_dirs: ["bionic/libc"],
+    local_include_dirs: libm_common_local_includes,
+    srcs: libm_common_src_files,
+    system_shared_libs: ["libc"],
+
+    native_coverage: bionic_coverage,
+    sanitize: ["never"],
+
+    version_script: "libm.map",
+
+    multilib: {
+        lib64: {
+            srcs: libm_ld128_src_files,
+            local_include_dirs: libm_ld_local_includes,
+            // We'd really like to do this for all architectures, but since this wasn't done
+            // before, these symbols must continue to be exported on LP32 for binary
+            // compatibility.
+            ldflags: ["-Wl,--exclude-libs,libgcc.a"],
+        },
+    },
+
+    // arch-specific settings
+    arch: {
+        arm: {
+            srcs: [
+                "arm/fenv.c",
+                "arm/sqrt.S",
+                "arm/floor.S",
+            ],
+            exclude_srcs: [
+                // TODO: these require neon not available in arm
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                "upstream-freebsd/lib/msun/src/s_floor.c",
+            ],
+            instruction_set: "arm",
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+
+        arm64: {
+            srcs: [
+                "arm64/fenv.c",
+                "arm64/ceil.S",
+                "arm64/fma.S",
+                "arm64/floor.S",
+                "arm64/lrint.S",
+                "arm64/rint.S",
+                "arm64/sqrt.S",
+                "arm64/trunc.S",
+            ],
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_ceil.c",
+                "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                "upstream-freebsd/lib/msun/src/s_fma.c",
+                "upstream-freebsd/lib/msun/src/s_fmaf.c",
+                "upstream-freebsd/lib/msun/src/s_floor.c",
+                "upstream-freebsd/lib/msun/src/s_floorf.c",
+                "upstream-freebsd/lib/msun/src/s_llrint.c",
+                "upstream-freebsd/lib/msun/src/s_llrintf.c",
+                "upstream-freebsd/lib/msun/src/s_lrint.c",
+                "upstream-freebsd/lib/msun/src/s_lrintf.c",
+                "upstream-freebsd/lib/msun/src/s_rint.c",
+                "upstream-freebsd/lib/msun/src/s_rintf.c",
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                "upstream-freebsd/lib/msun/src/s_trunc.c",
+                "upstream-freebsd/lib/msun/src/s_truncf.c",
+            ],
+        },
+
+        mips: {
+            srcs: ["mips/fenv.c"],
+        },
+
+        mips64: {
+            srcs: ["mips/fenv.c"],
+        },
+
+        x86: {
+            local_include_dirs: ["i387"],
+            srcs: ["i387/fenv.c"],
+            // Clang has wrong long double sizes for x86.
+            clang: false,
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+
+        x86_64: {
+            srcs: ["amd64/fenv.c"],
+            // Clang has wrong long double sizes for x86.
+            clang: false,
+        },
+    },
+
+    stl: "none",
+}
+
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// endif

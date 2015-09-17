@@ -1,0 +1,2306 @@
+bionic_coverage = false
+
+// Define the common source files for all the libc instances
+// =========================================================
+libc_common_src_files = [
+    "bionic/bindresvport.c",
+    "bionic/ether_aton.c",
+    "bionic/ether_ntoa.c",
+    "bionic/fts.c",
+    "bionic/getpriority.c",
+    "bionic/if_indextoname.c",
+    "bionic/if_nametoindex.c",
+    "bionic/initgroups.c",
+    "bionic/ioctl.c",
+    "bionic/isatty.c",
+    "bionic/memmem.c",
+    "bionic/pututline.c",
+    "bionic/sched_cpualloc.c",
+    "bionic/sched_cpucount.c",
+    "bionic/sigblock.c",
+    "bionic/siginterrupt.c",
+    "bionic/sigsetmask.c",
+    "bionic/system_properties_compat.c",
+    "stdio/findfp.c",
+    "stdio/fread.c",
+    "stdio/snprintf.c",
+    "stdio/sprintf.c",
+    "stdio/stdio.c",
+    "stdio/stdio_ext.cpp",
+    "stdlib/atexit.c",
+    "stdlib/exit.c",
+
+    // Fortify implementations of libc functions.
+    "bionic/__FD_chk.cpp",
+    "bionic/__fgets_chk.cpp",
+    "bionic/__fread_chk.cpp",
+    "bionic/__fwrite_chk.cpp",
+    "bionic/__getcwd_chk.cpp",
+    "bionic/__memchr_chk.cpp",
+    "bionic/__memmove_chk.cpp",
+    "bionic/__memrchr_chk.cpp",
+    "bionic/__poll_chk.cpp",
+    "bionic/__pread64_chk.cpp",
+    "bionic/__pread_chk.cpp",
+    "bionic/__pwrite64_chk.cpp",
+    "bionic/__pwrite_chk.cpp",
+    "bionic/__read_chk.cpp",
+    "bionic/__readlink_chk.cpp",
+    "bionic/__readlinkat_chk.cpp",
+    "bionic/__recvfrom_chk.cpp",
+    "bionic/__stpcpy_chk.cpp",
+    "bionic/__stpncpy_chk.cpp",
+    "bionic/__strchr_chk.cpp",
+    "bionic/__strlcat_chk.cpp",
+    "bionic/__strlcpy_chk.cpp",
+    "bionic/__strlen_chk.cpp",
+    "bionic/__strncat_chk.cpp",
+    "bionic/__strncpy_chk.cpp",
+    "bionic/__strrchr_chk.cpp",
+    "bionic/__umask_chk.cpp",
+    "bionic/__vsnprintf_chk.cpp",
+    "bionic/__vsprintf_chk.cpp",
+    "bionic/__write_chk.cpp",
+]
+
+// Various kinds of cruft.
+// ========================================================
+libc_common_src_files += [
+    "bionic/ndk_cruft.cpp",
+]
+
+libc_common_src_files_32 = [
+    "bionic/legacy_32_bit_support.cpp",
+    "bionic/time64.c",
+]
+
+// Define some common cflags
+// ========================================================
+libc_common_cflags = [
+    "-D_LIBC=1",
+    "-Wall",
+    "-Wextra",
+    "-Wunused",
+
+// Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+    "-Werror=pointer-to-int-cast",
+    "-Werror=int-to-pointer-cast",
+    "-Werror=type-limits",
+    "-Werror",
+]
+
+libc_common_product_variables = {
+    device_uses_jemalloc: {
+        cflags: ["-DUSE_JEMALLOC"],
+        include_dirs: ["external/jemalloc/include"],
+    },
+    device_uses_dlmalloc: {
+        cflags: ["-DUSE_DLMALLOC"],
+    },
+    // To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
+    // the appropriate BoardConfig.mk file.
+    dlmalloc_alignment: {
+        cflags: ["-DMALLOC_ALIGNMENT=%d"],
+    },
+}
+
+// Clang/llvm has incompatible long double (fp128) for x86_64.
+// https://llvm.org/bugs/show_bug.cgi?id=23897
+use_clang_x86_64 = false
+
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
+//libc_common_cflags += ["-DDEBUG"]
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// endif
+
+//
+// Define some common conlyflags
+libc_common_conlyflags = ["-std=gnu99"]
+
+// Define some common cppflags
+libc_common_cppflags = []
+
+// ========================================================
+// libc_stack_protector.a - stack protector code
+// ========================================================
+//
+// The stack protector code needs to be compiled
+// with -fno-stack-protector, since it modifies the
+// stack canary.
+
+cc_library_static {
+
+    srcs: ["bionic/__stack_chk_fail.cpp"],
+    cflags: libc_common_cflags + ["-fno-stack-protector"],
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    name: "libc_stack_protector",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+}
+
+// ========================================================
+// libc_tzcode.a - upstream 'tzcode' code
+// ========================================================
+
+cc_library_static {
+
+    srcs: [
+        "tzcode/asctime.c",
+        "tzcode/difftime.c",
+        "tzcode/localtime.c",
+        "tzcode/strftime.c",
+        "tzcode/strptime.c",
+        "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
+    ],
+
+    cflags: libc_common_cflags + [
+        "-fvisibility=hidden",
+        // Don't use ridiculous amounts of stack.
+        "-DALL_STATE",
+        // Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
+        "-DSTD_INSPIRED",
+        // The name of the tm_gmtoff field in our struct tm.
+        "-DTM_GMTOFF=tm_gmtoff",
+        // Where we store our tzdata.
+        "-DTZDIR=\\\"/system/usr/share/zoneinfo\\\"",
+        // Include timezone and daylight globals.
+        "-DUSG_COMPAT=1",
+        "-DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU",
+        "-Dlint",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: ["tzcode/"],
+    name: "libc_tzcode",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc_dns.a - modified NetBSD DNS code
+// ========================================================
+
+cc_library_static {
+
+    srcs: [
+        "dns/net/gethnamaddr.c",
+        "dns/net/getservbyname.c",
+        "dns/net/getservbyport.c",
+        "dns/net/getaddrinfo.c",
+        "dns/net/getnameinfo.c",
+        "dns/net/sethostent.c",
+        "dns/net/getservent.c",
+        "dns/net/nsdispatch.c",
+        "dns/net/base64.c",
+        "dns/resolv/res_state.c",
+        "dns/resolv/res_init.c",
+        "dns/resolv/res_mkquery.c",
+        "dns/resolv/res_data.c",
+        "dns/resolv/res_debug.c",
+        "dns/resolv/herror.c",
+        "dns/resolv/res_cache.c",
+        "dns/resolv/res_query.c",
+        "dns/resolv/res_comp.c",
+        "dns/resolv/res_send.c",
+        "dns/nameser/ns_name.c",
+        "dns/nameser/ns_print.c",
+        "dns/nameser/ns_parse.c",
+        "dns/nameser/ns_ttl.c",
+        "dns/nameser/ns_netint.c",
+        "dns/nameser/ns_samedomain.c",
+
+        "upstream-netbsd/lib/libc/isc/ev_streams.c",
+        "upstream-netbsd/lib/libc/isc/ev_timers.c",
+        "upstream-netbsd/lib/libc/resolv/mtctxres.c",
+        // We use the OpenBSD res_random.
+        "upstream-openbsd/lib/libc/net/res_random.c",
+    ],
+
+    cflags: ["-Dres_randomid=__res_randomid"] +
+    libc_common_cflags + [
+        "-DANDROID_CHANGES",
+        "-DINET6",
+        "-fvisibility=hidden",
+        "-Wno-unused-parameter",
+        "-include netbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "dns/include",
+        "private",
+        "upstream-netbsd/lib/libc/include",
+        "upstream-netbsd/android/include",
+    ],
+
+    name: "libc_dns",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc_freebsd.a - upstream FreeBSD C library code
+// ========================================================
+//
+// These files are built with the freebsd-compat.h header file
+// automatically included.
+
+cc_library_static {
+    srcs: [
+        "upstream-freebsd/lib/libc/gen/ldexp.c",
+        "upstream-freebsd/lib/libc/gen/sleep.c",
+        "upstream-freebsd/lib/libc/gen/usleep.c",
+        "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
+        "upstream-freebsd/lib/libc/stdlib/qsort.c",
+        "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
+        "upstream-freebsd/lib/libc/stdlib/realpath.c",
+        "upstream-freebsd/lib/libc/string/wcpcpy.c",
+        "upstream-freebsd/lib/libc/string/wcpncpy.c",
+        "upstream-freebsd/lib/libc/string/wcscasecmp.c",
+        "upstream-freebsd/lib/libc/string/wcscspn.c",
+        "upstream-freebsd/lib/libc/string/wcsdup.c",
+        "upstream-freebsd/lib/libc/string/wcslcat.c",
+        "upstream-freebsd/lib/libc/string/wcsncasecmp.c",
+        "upstream-freebsd/lib/libc/string/wcsncat.c",
+        "upstream-freebsd/lib/libc/string/wcsncmp.c",
+        "upstream-freebsd/lib/libc/string/wcsncpy.c",
+        "upstream-freebsd/lib/libc/string/wcsnlen.c",
+        "upstream-freebsd/lib/libc/string/wcspbrk.c",
+        "upstream-freebsd/lib/libc/string/wcsspn.c",
+        "upstream-freebsd/lib/libc/string/wcstok.c",
+        "upstream-freebsd/lib/libc/string/wmemchr.c",
+        "upstream-freebsd/lib/libc/string/wmemset.c",
+
+        // May be overriden by per-arch optimized versions
+        "upstream-freebsd/lib/libc/string/wcscat.c",
+        "upstream-freebsd/lib/libc/string/wcschr.c",
+        "upstream-freebsd/lib/libc/string/wcscmp.c",
+        "upstream-freebsd/lib/libc/string/wcscpy.c",
+        "upstream-freebsd/lib/libc/string/wcslen.c",
+        "upstream-freebsd/lib/libc/string/wcsrchr.c",
+        "upstream-freebsd/lib/libc/string/wmemcmp.c",
+        "upstream-freebsd/lib/libc/string/wmemmove.c",
+    ],
+    arch: {
+        arm64: {
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wmemmove.c",
+            ],
+        },
+        x86: {
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wcschr.c",
+                "upstream-freebsd/lib/libc/string/wcscmp.c",
+                "upstream-freebsd/lib/libc/string/wcslen.c",
+                "upstream-freebsd/lib/libc/string/wcsrchr.c",
+            ],
+        },
+        x86_sse3: {
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wcscpy.c",
+                "upstream-freebsd/lib/libc/string/wcscat.c",
+            ],
+        },
+        x86_sse4: {
+            exclude_srcs: [
+                "upstream-freebsd/lib/libc/string/wmemcmp.c",
+            ],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-include freebsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "upstream-freebsd/android/include",
+    ],
+
+    name: "libc_freebsd",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+}
+
+// ========================================================
+// libc_netbsd.a - upstream NetBSD C library code
+// ========================================================
+//
+// These files are built with the netbsd-compat.h header file
+// automatically included.
+
+cc_library_static {
+
+    srcs: [
+        "upstream-netbsd/common/lib/libc/stdlib/random.c",
+        "upstream-netbsd/lib/libc/gen/ftw.c",
+        "upstream-netbsd/lib/libc/gen/nftw.c",
+        "upstream-netbsd/lib/libc/gen/nice.c",
+        "upstream-netbsd/lib/libc/gen/popen.c",
+        "upstream-netbsd/lib/libc/gen/psignal.c",
+        "upstream-netbsd/lib/libc/gen/utime.c",
+        "upstream-netbsd/lib/libc/gen/utmp.c",
+        "upstream-netbsd/lib/libc/inet/nsap_addr.c",
+        "upstream-netbsd/lib/libc/regex/regcomp.c",
+        "upstream-netbsd/lib/libc/regex/regerror.c",
+        "upstream-netbsd/lib/libc/regex/regexec.c",
+        "upstream-netbsd/lib/libc/regex/regfree.c",
+        "upstream-netbsd/lib/libc/stdlib/bsearch.c",
+        "upstream-netbsd/lib/libc/stdlib/div.c",
+        "upstream-netbsd/lib/libc/stdlib/drand48.c",
+        "upstream-netbsd/lib/libc/stdlib/erand48.c",
+        "upstream-netbsd/lib/libc/stdlib/jrand48.c",
+        "upstream-netbsd/lib/libc/stdlib/lcong48.c",
+        "upstream-netbsd/lib/libc/stdlib/ldiv.c",
+        "upstream-netbsd/lib/libc/stdlib/lldiv.c",
+        "upstream-netbsd/lib/libc/stdlib/lrand48.c",
+        "upstream-netbsd/lib/libc/stdlib/mrand48.c",
+        "upstream-netbsd/lib/libc/stdlib/nrand48.c",
+        "upstream-netbsd/lib/libc/stdlib/_rand48.c",
+        "upstream-netbsd/lib/libc/stdlib/rand_r.c",
+        "upstream-netbsd/lib/libc/stdlib/reallocarr.c",
+        "upstream-netbsd/lib/libc/stdlib/seed48.c",
+        "upstream-netbsd/lib/libc/stdlib/srand48.c",
+        "upstream-netbsd/lib/libc/string/memccpy.c",
+        "upstream-netbsd/lib/libc/string/strcasestr.c",
+        "upstream-netbsd/lib/libc/string/strcoll.c",
+        "upstream-netbsd/lib/libc/string/strxfrm.c",
+    ],
+    multilib: {
+        lib32: {
+            // LP32 cruft
+            srcs: ["upstream-netbsd/common/lib/libc/hash/sha1/sha1.c"],
+        },
+    },
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-DPOSIX_MISTAKE",
+        "-include netbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "upstream-netbsd/android/include",
+        "upstream-netbsd/lib/libc/include",
+    ],
+
+    name: "libc_netbsd",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc_openbsd_ndk.a - upstream OpenBSD C library code
+// that can be safely included in the libc_ndk.a (doesn't
+// contain any troublesome global data or constructors).
+// ========================================================
+//
+// These files are built with the openbsd-compat.h header file
+// automatically included.
+
+cc_library_static {
+    name: "libc_openbsd_ndk",
+    srcs: [
+        "upstream-openbsd/lib/libc/compat-43/killpg.c",
+        "upstream-openbsd/lib/libc/gen/alarm.c",
+        "upstream-openbsd/lib/libc/gen/ctype_.c",
+        "upstream-openbsd/lib/libc/gen/daemon.c",
+        "upstream-openbsd/lib/libc/gen/err.c",
+        "upstream-openbsd/lib/libc/gen/errx.c",
+        "upstream-openbsd/lib/libc/gen/exec.c",
+        "upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "upstream-openbsd/lib/libc/gen/ftok.c",
+        "upstream-openbsd/lib/libc/gen/getprogname.c",
+        "upstream-openbsd/lib/libc/gen/isctype.c",
+        "upstream-openbsd/lib/libc/gen/setprogname.c",
+        "upstream-openbsd/lib/libc/gen/time.c",
+        "upstream-openbsd/lib/libc/gen/tolower_.c",
+        "upstream-openbsd/lib/libc/gen/toupper_.c",
+        "upstream-openbsd/lib/libc/gen/verr.c",
+        "upstream-openbsd/lib/libc/gen/verrx.c",
+        "upstream-openbsd/lib/libc/gen/vwarn.c",
+        "upstream-openbsd/lib/libc/gen/vwarnx.c",
+        "upstream-openbsd/lib/libc/gen/warn.c",
+        "upstream-openbsd/lib/libc/gen/warnx.c",
+        "upstream-openbsd/lib/libc/locale/btowc.c",
+        "upstream-openbsd/lib/libc/locale/mbrlen.c",
+        "upstream-openbsd/lib/libc/locale/mbstowcs.c",
+        "upstream-openbsd/lib/libc/locale/mbtowc.c",
+        "upstream-openbsd/lib/libc/locale/wcscoll.c",
+        "upstream-openbsd/lib/libc/locale/wcstod.c",
+        "upstream-openbsd/lib/libc/locale/wcstof.c",
+        "upstream-openbsd/lib/libc/locale/wcstoimax.c",
+        "upstream-openbsd/lib/libc/locale/wcstol.c",
+        "upstream-openbsd/lib/libc/locale/wcstold.c",
+        "upstream-openbsd/lib/libc/locale/wcstoll.c",
+        "upstream-openbsd/lib/libc/locale/wcstombs.c",
+        "upstream-openbsd/lib/libc/locale/wcstoul.c",
+        "upstream-openbsd/lib/libc/locale/wcstoull.c",
+        "upstream-openbsd/lib/libc/locale/wcstoumax.c",
+        "upstream-openbsd/lib/libc/locale/wcsxfrm.c",
+        "upstream-openbsd/lib/libc/locale/wctob.c",
+        "upstream-openbsd/lib/libc/locale/wctomb.c",
+        "upstream-openbsd/lib/libc/net/htonl.c",
+        "upstream-openbsd/lib/libc/net/htons.c",
+        "upstream-openbsd/lib/libc/net/inet_addr.c",
+        "upstream-openbsd/lib/libc/net/inet_lnaof.c",
+        "upstream-openbsd/lib/libc/net/inet_makeaddr.c",
+        "upstream-openbsd/lib/libc/net/inet_netof.c",
+        "upstream-openbsd/lib/libc/net/inet_network.c",
+        "upstream-openbsd/lib/libc/net/inet_ntoa.c",
+        "upstream-openbsd/lib/libc/net/inet_ntop.c",
+        "upstream-openbsd/lib/libc/net/inet_pton.c",
+        "upstream-openbsd/lib/libc/net/ntohl.c",
+        "upstream-openbsd/lib/libc/net/ntohs.c",
+        "upstream-openbsd/lib/libc/stdio/asprintf.c",
+        "upstream-openbsd/lib/libc/stdio/clrerr.c",
+        "upstream-openbsd/lib/libc/stdio/dprintf.c",
+        "upstream-openbsd/lib/libc/stdio/fclose.c",
+        "upstream-openbsd/lib/libc/stdio/fdopen.c",
+        "upstream-openbsd/lib/libc/stdio/feof.c",
+        "upstream-openbsd/lib/libc/stdio/ferror.c",
+        "upstream-openbsd/lib/libc/stdio/fflush.c",
+        "upstream-openbsd/lib/libc/stdio/fgetc.c",
+        "upstream-openbsd/lib/libc/stdio/fgetln.c",
+        "upstream-openbsd/lib/libc/stdio/fgetpos.c",
+        "upstream-openbsd/lib/libc/stdio/fgets.c",
+        "upstream-openbsd/lib/libc/stdio/fgetwc.c",
+        "upstream-openbsd/lib/libc/stdio/fgetws.c",
+        "upstream-openbsd/lib/libc/stdio/fileno.c",
+        "upstream-openbsd/lib/libc/stdio/flags.c",
+        "upstream-openbsd/lib/libc/stdio/fmemopen.c",
+        "upstream-openbsd/lib/libc/stdio/fopen.c",
+        "upstream-openbsd/lib/libc/stdio/fprintf.c",
+        "upstream-openbsd/lib/libc/stdio/fpurge.c",
+        "upstream-openbsd/lib/libc/stdio/fputc.c",
+        "upstream-openbsd/lib/libc/stdio/fputs.c",
+        "upstream-openbsd/lib/libc/stdio/fputwc.c",
+        "upstream-openbsd/lib/libc/stdio/fputws.c",
+        "upstream-openbsd/lib/libc/stdio/freopen.c",
+        "upstream-openbsd/lib/libc/stdio/fscanf.c",
+        "upstream-openbsd/lib/libc/stdio/fseek.c",
+        "upstream-openbsd/lib/libc/stdio/fsetpos.c",
+        "upstream-openbsd/lib/libc/stdio/ftell.c",
+        "upstream-openbsd/lib/libc/stdio/funopen.c",
+        "upstream-openbsd/lib/libc/stdio/fvwrite.c",
+        "upstream-openbsd/lib/libc/stdio/fwalk.c",
+        "upstream-openbsd/lib/libc/stdio/fwide.c",
+        "upstream-openbsd/lib/libc/stdio/fwprintf.c",
+        "upstream-openbsd/lib/libc/stdio/fwrite.c",
+        "upstream-openbsd/lib/libc/stdio/fwscanf.c",
+        "upstream-openbsd/lib/libc/stdio/getc.c",
+        "upstream-openbsd/lib/libc/stdio/getchar.c",
+        "upstream-openbsd/lib/libc/stdio/getdelim.c",
+        "upstream-openbsd/lib/libc/stdio/getline.c",
+        "upstream-openbsd/lib/libc/stdio/gets.c",
+        "upstream-openbsd/lib/libc/stdio/getwc.c",
+        "upstream-openbsd/lib/libc/stdio/getwchar.c",
+        "upstream-openbsd/lib/libc/stdio/makebuf.c",
+        "upstream-openbsd/lib/libc/stdio/mktemp.c",
+        "upstream-openbsd/lib/libc/stdio/open_memstream.c",
+        "upstream-openbsd/lib/libc/stdio/open_wmemstream.c",
+        "upstream-openbsd/lib/libc/stdio/perror.c",
+        "upstream-openbsd/lib/libc/stdio/printf.c",
+        "upstream-openbsd/lib/libc/stdio/putc.c",
+        "upstream-openbsd/lib/libc/stdio/putchar.c",
+        "upstream-openbsd/lib/libc/stdio/puts.c",
+        "upstream-openbsd/lib/libc/stdio/putwc.c",
+        "upstream-openbsd/lib/libc/stdio/putwchar.c",
+        "upstream-openbsd/lib/libc/stdio/refill.c",
+        "upstream-openbsd/lib/libc/stdio/remove.c",
+        "upstream-openbsd/lib/libc/stdio/rewind.c",
+        "upstream-openbsd/lib/libc/stdio/rget.c",
+        "upstream-openbsd/lib/libc/stdio/scanf.c",
+        "upstream-openbsd/lib/libc/stdio/setbuf.c",
+        "upstream-openbsd/lib/libc/stdio/setbuffer.c",
+        "upstream-openbsd/lib/libc/stdio/setvbuf.c",
+        "upstream-openbsd/lib/libc/stdio/sscanf.c",
+        "upstream-openbsd/lib/libc/stdio/swprintf.c",
+        "upstream-openbsd/lib/libc/stdio/swscanf.c",
+        "upstream-openbsd/lib/libc/stdio/tempnam.c",
+        "upstream-openbsd/lib/libc/stdio/tmpnam.c",
+        "upstream-openbsd/lib/libc/stdio/ungetc.c",
+        "upstream-openbsd/lib/libc/stdio/ungetwc.c",
+        "upstream-openbsd/lib/libc/stdio/vasprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vdprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vfprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vfscanf.c",
+        "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
+        "upstream-openbsd/lib/libc/stdio/vprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vscanf.c",
+        "upstream-openbsd/lib/libc/stdio/vsnprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vsprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vsscanf.c",
+        "upstream-openbsd/lib/libc/stdio/vswprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vswscanf.c",
+        "upstream-openbsd/lib/libc/stdio/vwprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vwscanf.c",
+        "upstream-openbsd/lib/libc/stdio/wbuf.c",
+        "upstream-openbsd/lib/libc/stdio/wprintf.c",
+        "upstream-openbsd/lib/libc/stdio/wscanf.c",
+        "upstream-openbsd/lib/libc/stdio/wsetup.c",
+        "upstream-openbsd/lib/libc/stdlib/abs.c",
+        "upstream-openbsd/lib/libc/stdlib/atoi.c",
+        "upstream-openbsd/lib/libc/stdlib/atol.c",
+        "upstream-openbsd/lib/libc/stdlib/atoll.c",
+        "upstream-openbsd/lib/libc/stdlib/getenv.c",
+        "upstream-openbsd/lib/libc/stdlib/insque.c",
+        "upstream-openbsd/lib/libc/stdlib/imaxabs.c",
+        "upstream-openbsd/lib/libc/stdlib/imaxdiv.c",
+        "upstream-openbsd/lib/libc/stdlib/labs.c",
+        "upstream-openbsd/lib/libc/stdlib/llabs.c",
+        "upstream-openbsd/lib/libc/stdlib/lsearch.c",
+        "upstream-openbsd/lib/libc/stdlib/reallocarray.c",
+        "upstream-openbsd/lib/libc/stdlib/remque.c",
+        "upstream-openbsd/lib/libc/stdlib/setenv.c",
+        "upstream-openbsd/lib/libc/stdlib/strtoimax.c",
+        "upstream-openbsd/lib/libc/stdlib/strtol.c",
+        "upstream-openbsd/lib/libc/stdlib/strtoll.c",
+        "upstream-openbsd/lib/libc/stdlib/strtoul.c",
+        "upstream-openbsd/lib/libc/stdlib/strtoull.c",
+        "upstream-openbsd/lib/libc/stdlib/strtoumax.c",
+        "upstream-openbsd/lib/libc/stdlib/system.c",
+        "upstream-openbsd/lib/libc/stdlib/tfind.c",
+        "upstream-openbsd/lib/libc/stdlib/tsearch.c",
+        "upstream-openbsd/lib/libc/string/strcasecmp.c",
+        "upstream-openbsd/lib/libc/string/strcspn.c",
+        "upstream-openbsd/lib/libc/string/strdup.c",
+        "upstream-openbsd/lib/libc/string/strndup.c",
+        "upstream-openbsd/lib/libc/string/strpbrk.c",
+        "upstream-openbsd/lib/libc/string/strsep.c",
+        "upstream-openbsd/lib/libc/string/strspn.c",
+        "upstream-openbsd/lib/libc/string/strstr.c",
+        "upstream-openbsd/lib/libc/string/strtok.c",
+        "upstream-openbsd/lib/libc/string/wmemcpy.c",
+        "upstream-openbsd/lib/libc/string/wcslcpy.c",
+        "upstream-openbsd/lib/libc/string/wcsstr.c",
+        "upstream-openbsd/lib/libc/string/wcswidth.c",
+    ],
+
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-Wno-unused-parameter",
+        "-include openbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "private",
+        "stdio",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/lib/libc/gdtoa/",
+    ],
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc_openbsd.a - upstream OpenBSD C library code
+// ========================================================
+//
+// These files are built with the openbsd-compat.h header file
+// automatically included.
+cc_library_static {
+    srcs: [
+        // These two depend on getentropy_linux.cpp, which isn't in libc_ndk.a.
+        "upstream-openbsd/lib/libc/crypt/arc4random.c",
+        "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
+
+        // May be overriden by per-arch optimized versions
+        "upstream-openbsd/lib/libc/string/memchr.c",
+        "upstream-openbsd/lib/libc/string/memmove.c",
+        "upstream-openbsd/lib/libc/string/memrchr.c",
+        "upstream-openbsd/lib/libc/string/stpcpy.c",
+        "upstream-openbsd/lib/libc/string/stpncpy.c",
+        "upstream-openbsd/lib/libc/string/strcat.c",
+        "upstream-openbsd/lib/libc/string/strcmp.c",
+        "upstream-openbsd/lib/libc/string/strcpy.c",
+        "upstream-openbsd/lib/libc/string/strlcat.c",
+        "upstream-openbsd/lib/libc/string/strlcpy.c",
+        "upstream-openbsd/lib/libc/string/strncat.c",
+        "upstream-openbsd/lib/libc/string/strncmp.c",
+        "upstream-openbsd/lib/libc/string/strncpy.c",
+    ],
+    multilib: {
+        lib32: {
+            // LP32 cruft
+            srcs: ["upstream-openbsd/lib/libc/stdio/putw.c"],
+        },
+    },
+
+    arch: {
+        arm: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
+            ],
+        },
+        cortex_a7: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        cortex_a53: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        cortex_a8: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        cortex_a9: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        cortex_a15: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        denver: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+        krait: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcat.c",
+            ],
+        },
+
+        arm64: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/stpcpy.c",
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
+                "upstream-openbsd/lib/libc/string/strncmp.c",
+            ],
+        },
+
+        mips: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+            ],
+        },
+
+        mips64: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+            ],
+        },
+
+        x86: {
+             exclude_srcs: [
+                 "upstream-openbsd/lib/libc/string/memchr.c",
+                 "upstream-openbsd/lib/libc/string/memmove.c",
+                 "upstream-openbsd/lib/libc/string/memrchr.c",
+                 "upstream-openbsd/lib/libc/string/stpcpy.c",
+                 "upstream-openbsd/lib/libc/string/stpncpy.c",
+                 "upstream-openbsd/lib/libc/string/strcat.c",
+                 "upstream-openbsd/lib/libc/string/strcmp.c",
+                 "upstream-openbsd/lib/libc/string/strcpy.c",
+                 "upstream-openbsd/lib/libc/string/strncmp.c",
+                 "upstream-openbsd/lib/libc/string/strncpy.c",
+                 ],
+        },
+        x86_sse3: {
+             exclude_srcs: [
+                 "upstream-openbsd/lib/libc/string/strlcat.c",
+                 "upstream-openbsd/lib/libc/string/strlcpy.c",
+                 "upstream-openbsd/lib/libc/string/strncat.c",
+             ],
+        },
+
+        x86_64: {
+             exclude_srcs: [
+                 "upstream-openbsd/lib/libc/string/memmove.c",
+                 "upstream-openbsd/lib/libc/string/stpcpy.c",
+                 "upstream-openbsd/lib/libc/string/stpncpy.c",
+                 "upstream-openbsd/lib/libc/string/strcat.c",
+                 "upstream-openbsd/lib/libc/string/strcmp.c",
+                 "upstream-openbsd/lib/libc/string/strcpy.c",
+                 "upstream-openbsd/lib/libc/string/strlcat.c",
+                 "upstream-openbsd/lib/libc/string/strlcpy.c",
+                 "upstream-openbsd/lib/libc/string/strncat.c",
+                 "upstream-openbsd/lib/libc/string/strncmp.c",
+                 "upstream-openbsd/lib/libc/string/strncpy.c",
+             ],
+            clang: use_clang_x86_64,
+        },
+    },
+
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-Wno-unused-parameter",
+        "-include openbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "private",
+        "stdio",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/lib/libc/gdtoa/",
+    ],
+
+    name: "libc_openbsd",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+}
+
+// ========================================================
+// libc_gdtoa.a - upstream OpenBSD C library gdtoa code
+// ========================================================
+//
+// These files are built with the openbsd-compat.h header file
+// automatically included.
+
+cc_library_static {
+    srcs: [
+        "upstream-openbsd/android/gdtoa_support.cpp",
+        "upstream-openbsd/lib/libc/gdtoa/dmisc.c",
+        "upstream-openbsd/lib/libc/gdtoa/dtoa.c",
+        "upstream-openbsd/lib/libc/gdtoa/gdtoa.c",
+        "upstream-openbsd/lib/libc/gdtoa/gethex.c",
+        "upstream-openbsd/lib/libc/gdtoa/gmisc.c",
+        "upstream-openbsd/lib/libc/gdtoa/hd_init.c",
+        "upstream-openbsd/lib/libc/gdtoa/hdtoa.c",
+        "upstream-openbsd/lib/libc/gdtoa/hexnan.c",
+        "upstream-openbsd/lib/libc/gdtoa/ldtoa.c",
+        "upstream-openbsd/lib/libc/gdtoa/misc.c",
+        "upstream-openbsd/lib/libc/gdtoa/smisc.c",
+        "upstream-openbsd/lib/libc/gdtoa/strtod.c",
+        "upstream-openbsd/lib/libc/gdtoa/strtodg.c",
+        "upstream-openbsd/lib/libc/gdtoa/strtof.c",
+        "upstream-openbsd/lib/libc/gdtoa/strtord.c",
+        "upstream-openbsd/lib/libc/gdtoa/sum.c",
+        "upstream-openbsd/lib/libc/gdtoa/ulp.c",
+    ],
+    multilib: {
+        lib64: {
+            srcs: ["upstream-openbsd/lib/libc/gdtoa/strtorQ.c"]
+        },
+    },
+
+    cflags: libc_common_cflags + [
+        "-Wno-sign-compare",
+        "-Wno-uninitialized",
+        "-fvisibility=hidden",
+        "-include openbsd-compat.h",
+    ],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+    ],
+
+    name: "libc_gdtoa",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc_bionic.a - home-grown C library code
+// ========================================================
+
+cc_library_static {
+    srcs: [
+        // The fork implementation depends on pthread data, so we can't include
+        // it in libc_ndk.a.
+        "bionic/fork.cpp",
+
+        // The data that backs getauxval is initialized in the libc init
+        // functions which are invoked by the linker. If this file is included
+        // in libc_ndk.a, only one of the copies of the global data will be
+        // initialized, resulting in nullptr dereferences.
+        "bionic/getauxval.cpp",
+
+        // These three require getauxval, which isn't available on older
+        // platforms.
+        "bionic/getentropy_linux.c",
+        "bionic/sysconf.cpp",
+        "bionic/vdso.cpp",
+    ],
+    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
+    product_variables: libc_common_product_variables,
+    include_dirs: ["bionic/libstdc++/include"],
+    name: "libc_bionic",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+}
+
+// ========================================================
+// libc_bionic_ndk.a- The portions of libc_bionic that can
+// be safely used in libc_ndk.a (no troublesome global data
+// or constructors).
+// ========================================================
+cc_library_static {
+    srcs: [
+        "bionic/abort.cpp",
+        "bionic/accept.cpp",
+        "bionic/accept4.cpp",
+        "bionic/access.cpp",
+        "bionic/assert.cpp",
+        "bionic/atof.cpp",
+        "bionic/bionic_systrace.cpp",
+        "bionic/bionic_time_conversions.cpp",
+        "bionic/brk.cpp",
+        "bionic/c16rtomb.cpp",
+        "bionic/c32rtomb.cpp",
+        "bionic/chmod.cpp",
+        "bionic/chown.cpp",
+        "bionic/clearenv.cpp",
+        "bionic/clock.cpp",
+        "bionic/clock_getcpuclockid.cpp",
+        "bionic/clock_nanosleep.cpp",
+        "bionic/clone.cpp",
+        "bionic/close.cpp",
+        "bionic/__cmsg_nxthdr.cpp",
+        "bionic/connect.cpp",
+        "bionic/ctype.cpp",
+        "bionic/dirent.cpp",
+        "bionic/dup2.cpp",
+        "bionic/epoll_create.cpp",
+        "bionic/epoll_pwait.cpp",
+        "bionic/epoll_wait.cpp",
+        "bionic/__errno.cpp",
+        "bionic/error.cpp",
+        "bionic/eventfd_read.cpp",
+        "bionic/eventfd_write.cpp",
+        "bionic/faccessat.cpp",
+        "bionic/fchmod.cpp",
+        "bionic/fchmodat.cpp",
+        "bionic/ffs.cpp",
+        "bionic/fgetxattr.cpp",
+        "bionic/flistxattr.cpp",
+        "bionic/flockfile.cpp",
+        "bionic/fpclassify.cpp",
+        "bionic/fsetxattr.cpp",
+        "bionic/ftruncate.cpp",
+        "bionic/futimens.cpp",
+        "bionic/getcwd.cpp",
+        "bionic/gethostname.cpp",
+        "bionic/getpgrp.cpp",
+        "bionic/getpid.cpp",
+        "bionic/gettid.cpp",
+        "bionic/__gnu_basename.cpp",
+        "bionic/inotify_init.cpp",
+        "bionic/lchown.cpp",
+        "bionic/lfs64_support.cpp",
+        "bionic/__libc_current_sigrtmax.cpp",
+        "bionic/__libc_current_sigrtmin.cpp",
+        "bionic/libc_init_common.cpp",
+        "bionic/libc_logging.cpp",
+        "bionic/libgen.cpp",
+        "bionic/link.cpp",
+        "bionic/locale.cpp",
+        "bionic/lstat.cpp",
+        "bionic/malloc_info.cpp",
+        "bionic/mbrtoc16.cpp",
+        "bionic/mbrtoc32.cpp",
+        "bionic/mbstate.cpp",
+        "bionic/mempcpy.cpp",
+        "bionic/mkdir.cpp",
+        "bionic/mkfifo.cpp",
+        "bionic/mknod.cpp",
+        "bionic/mntent.cpp",
+        "bionic/NetdClientDispatch.cpp",
+        "bionic/open.cpp",
+        "bionic/pathconf.cpp",
+        "bionic/pause.cpp",
+        "bionic/pipe.cpp",
+        "bionic/poll.cpp",
+        "bionic/posix_fadvise.cpp",
+        "bionic/posix_fallocate.cpp",
+        "bionic/posix_madvise.cpp",
+        "bionic/posix_timers.cpp",
+        "bionic/ptrace.cpp",
+        "bionic/pty.cpp",
+        "bionic/raise.cpp",
+        "bionic/rand.cpp",
+        "bionic/readlink.cpp",
+        "bionic/reboot.cpp",
+        "bionic/recv.cpp",
+        "bionic/rename.cpp",
+        "bionic/rmdir.cpp",
+        "bionic/scandir.cpp",
+        "bionic/sched_getaffinity.cpp",
+        "bionic/sched_getcpu.cpp",
+        "bionic/semaphore.cpp",
+        "bionic/send.cpp",
+        "bionic/setegid.cpp",
+        "bionic/__set_errno.cpp",
+        "bionic/seteuid.cpp",
+        "bionic/setpgrp.cpp",
+        "bionic/sigaction.cpp",
+        "bionic/sigaddset.cpp",
+        "bionic/sigdelset.cpp",
+        "bionic/sigemptyset.cpp",
+        "bionic/sigfillset.cpp",
+        "bionic/sigismember.cpp",
+        "bionic/signal.cpp",
+        "bionic/signalfd.cpp",
+        "bionic/sigpending.cpp",
+        "bionic/sigprocmask.cpp",
+        "bionic/sigqueue.cpp",
+        "bionic/sigsuspend.cpp",
+        "bionic/sigtimedwait.cpp",
+        "bionic/sigwait.cpp",
+        "bionic/sigwaitinfo.cpp",
+        "bionic/socket.cpp",
+        "bionic/stat.cpp",
+        "bionic/statvfs.cpp",
+        "bionic/strchrnul.cpp",
+        "bionic/strerror.cpp",
+        "bionic/strerror_r.cpp",
+        "bionic/strsignal.cpp",
+        "bionic/strtold.cpp",
+        "bionic/stubs.cpp",
+        "bionic/symlink.cpp",
+        "bionic/sysinfo.cpp",
+        "bionic/syslog.cpp",
+        "bionic/sys_siglist.c",
+        "bionic/sys_signame.c",
+        "bionic/system_properties.cpp",
+        "bionic/tdestroy.cpp",
+        "bionic/termios.cpp",
+        "bionic/thread_private.cpp",
+        "bionic/tmpfile.cpp",
+        "bionic/umount.cpp",
+        "bionic/unlink.cpp",
+        "bionic/utimes.cpp",
+        "bionic/wait.cpp",
+        "bionic/wchar.cpp",
+        "bionic/wctype.cpp",
+        "bionic/wmempcpy.cpp",
+
+        // May be overriden by per-arch optimized versions
+        "bionic/__memcpy_chk.cpp",
+        "bionic/__memset_chk.cpp",
+        "bionic/__strcat_chk.cpp",
+        "bionic/__strcpy_chk.cpp",
+        "bionic/strchr.cpp",
+        "bionic/strnlen.c",
+        "bionic/strrchr.cpp",
+    ],
+    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+
+    arch: {
+
+        arm: {
+            srcs: [
+                "arch-arm/bionic/abort_arm.S",
+                "arch-arm/bionic/atomics_arm.c",
+                "arch-arm/bionic/__bionic_clone.S",
+                "arch-arm/bionic/_exit_with_stack_teardown.S",
+                "arch-arm/bionic/libgcc_compat.c",
+                "arch-arm/bionic/popcount_tab.c",
+                "arch-arm/bionic/__restore.S",
+                "arch-arm/bionic/setjmp.S",
+                "arch-arm/bionic/syscall.S",
+                "arch-arm/bionic/vfork.S",
+
+                "arch-arm/generic/bionic/memcmp.S",
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+            ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+                "bionic/__memset_chk.cpp",
+            ],
+        },
+        cortex_a7: {
+            srcs: [
+                "arch-arm/cortex-a7/bionic/memset.S",
+
+                "arch-arm/cortex-a15/bionic/memcpy.S",
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        cortex_a53: {
+            srcs: [
+                "arch-arm/cortex-a53/bionic/memcpy.S",
+                "arch-arm/cortex-a53/bionic/__strcat_chk.S",
+                "arch-arm/cortex-a53/bionic/__strcpy_chk.S",
+
+                "arch-arm/cortex-a7/bionic/memset.S",
+
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        cortex_a8: {
+            srcs: [
+                "arch-arm/cortex-a15/bionic/memcpy.S",
+                "arch-arm/cortex-a15/bionic/memset.S",
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        cortex_a9: {
+            srcs: [
+                "arch-arm/cortex-a9/bionic/memcpy.S",
+                "arch-arm/cortex-a9/bionic/memset.S",
+                "arch-arm/cortex-a9/bionic/stpcpy.S",
+                "arch-arm/cortex-a9/bionic/strcat.S",
+                "arch-arm/cortex-a9/bionic/__strcat_chk.S",
+                "arch-arm/cortex-a9/bionic/strcmp.S",
+                "arch-arm/cortex-a9/bionic/strcpy.S",
+                "arch-arm/cortex-a9/bionic/__strcpy_chk.S",
+                "arch-arm/cortex-a9/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        cortex_a15: {
+            srcs: [
+                "arch-arm/cortex-a15/bionic/memcpy.S",
+                "arch-arm/cortex-a15/bionic/memset.S",
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        denver: {
+            srcs: [
+                "arch-arm/denver/bionic/memcpy.S",
+                "arch-arm/denver/bionic/memmove.S",
+                "arch-arm/denver/bionic/memset.S",
+                "arch-arm/denver/bionic/__strcat_chk.S",
+                "arch-arm/denver/bionic/__strcpy_chk.S",
+
+                // Use cortex-a15 versions of strcat/strcpy/strlen.
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+        krait: {
+            srcs: [
+                "arch-arm/krait/bionic/memcpy.S",
+                "arch-arm/krait/bionic/memset.S",
+                "arch-arm/krait/bionic/strcmp.S",
+                "arch-arm/krait/bionic/__strcat_chk.S",
+                "arch-arm/krait/bionic/__strcpy_chk.S",
+
+                // Use cortex-a15 versions of strcat/strcpy/strlen.
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
+
+                "arch-arm/denver/bionic/memmove.S",
+            ],
+            exclude_srcs: [
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+                "bionic/__strcat_chk.cpp",
+                "bionic/__strcpy_chk.cpp",
+            ],
+        },
+
+        arm64: {
+            srcs: [
+                "arch-arm64/bionic/__bionic_clone.S",
+                "arch-arm64/bionic/_exit_with_stack_teardown.S",
+                "arch-arm64/bionic/setjmp.S",
+                "arch-arm64/bionic/__set_tls.c",
+                "arch-arm64/bionic/syscall.S",
+                "arch-arm64/bionic/vfork.S",
+
+                "arch-arm64/generic/bionic/memchr.S",
+                "arch-arm64/generic/bionic/memcmp.S",
+                "arch-arm64/generic/bionic/memcpy.S",
+                "arch-arm64/generic/bionic/memmove.S",
+                "arch-arm64/generic/bionic/memset.S",
+                "arch-arm64/generic/bionic/stpcpy.S",
+                "arch-arm64/generic/bionic/strchr.S",
+                "arch-arm64/generic/bionic/strcmp.S",
+                "arch-arm64/generic/bionic/strcpy.S",
+                "arch-arm64/generic/bionic/strlen.S",
+                "arch-arm64/generic/bionic/strncmp.S",
+                "arch-arm64/generic/bionic/strnlen.S",
+                "arch-arm64/generic/bionic/wmemmove.S",
+            ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+                "bionic/strchr.cpp",
+                "bionic/strnlen.c",
+            ],
+        },
+        denver64: {
+            srcs: [
+                "arch-arm64/denver64/bionic/memcpy.S",
+                "arch-arm64/denver64/bionic/memset.S",
+            ],
+            exclude_srcs: [
+                "arch-arm64/generic/bionic/memcpy.S",
+                "arch-arm64/generic/bionic/memset.S",
+            ],
+        },
+
+        mips: {
+            srcs: [
+                "arch-mips/bionic/__bionic_clone.S",
+                "arch-mips/bionic/bzero.S",
+                "arch-mips/bionic/cacheflush.cpp",
+                "arch-mips/bionic/_exit_with_stack_teardown.S",
+                "arch-mips/bionic/setjmp.S",
+                "arch-mips/bionic/syscall.S",
+                "arch-mips/bionic/vfork.S",
+
+                "arch-mips/string/memcmp.c",
+                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memset.S",
+                "arch-mips/string/strcmp.S",
+                "arch-mips/string/strlen.c",
+            ],
+        },
+        mips_rev6: {
+            srcs: [
+                "arch-mips/string/mips_strlen.c"
+            ],
+            exclude_srcs: [
+                "arch-mips/string/strlen.c"
+            ],
+        },
+
+        mips64: {
+            srcs: [
+                "arch-mips64/bionic/__bionic_clone.S",
+                "arch-mips64/bionic/_exit_with_stack_teardown.S",
+                "arch-mips64/bionic/setjmp.S",
+                "arch-mips64/bionic/syscall.S",
+                "arch-mips64/bionic/vfork.S",
+                "arch-mips64/bionic/stat.cpp",
+
+                "arch-mips/string/memcmp.c",
+                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memset.S",
+                "arch-mips/string/strcmp.S",
+                "arch-mips/string/strlen.c",
+            ],
+        },
+
+        x86: {
+            srcs: [
+                "arch-x86/bionic/__bionic_clone.S",
+                "arch-x86/bionic/_exit_with_stack_teardown.S",
+                "arch-x86/bionic/libgcc_compat.c",
+                "arch-x86/bionic/__restore.S",
+                "arch-x86/bionic/setjmp.S",
+                "arch-x86/bionic/__set_tls.c",
+                "arch-x86/bionic/syscall.S",
+                "arch-x86/bionic/vfork.S",
+
+                "arch-x86/generic/string/memcmp.S",
+                "arch-x86/generic/string/strcmp.S",
+                "arch-x86/generic/string/strncmp.S",
+                "arch-x86/generic/string/strcat.S",
+                "arch-x86/atom/string/sse2-memchr-atom.S",
+                "arch-x86/atom/string/sse2-memrchr-atom.S",
+                "arch-x86/atom/string/sse2-strchr-atom.S",
+                "arch-x86/atom/string/sse2-strnlen-atom.S",
+                "arch-x86/atom/string/sse2-strrchr-atom.S",
+                "arch-x86/atom/string/sse2-wcschr-atom.S",
+                "arch-x86/atom/string/sse2-wcsrchr-atom.S",
+                "arch-x86/atom/string/sse2-wcslen-atom.S",
+                "arch-x86/atom/string/sse2-wcscmp-atom.S",
+                "arch-x86/silvermont/string/sse2-bcopy-slm.S",
+                "arch-x86/silvermont/string/sse2-bzero-slm.S",
+                "arch-x86/silvermont/string/sse2-memcpy-slm.S",
+                "arch-x86/silvermont/string/sse2-memmove-slm.S",
+                "arch-x86/silvermont/string/sse2-memset-slm.S",
+                "arch-x86/silvermont/string/sse2-stpcpy-slm.S",
+                "arch-x86/silvermont/string/sse2-stpncpy-slm.S",
+                "arch-x86/silvermont/string/sse2-strcpy-slm.S",
+                "arch-x86/silvermont/string/sse2-strlen-slm.S",
+                "arch-x86/silvermont/string/sse2-strncpy-slm.S",
+            ],
+        },
+        x86_sse3: {
+            srcs: [
+                "arch-x86/atom/string/ssse3-strncat-atom.S",
+                "arch-x86/atom/string/ssse3-strlcat-atom.S",
+                "arch-x86/atom/string/ssse3-strlcpy-atom.S",
+                "arch-x86/atom/string/ssse3-strcmp-atom.S",
+                "arch-x86/atom/string/ssse3-strncmp-atom.S",
+                "arch-x86/atom/string/ssse3-strcat-atom.S",
+                "arch-x86/atom/string/ssse3-wcscat-atom.S",
+                "arch-x86/atom/string/ssse3-wcscpy-atom.S",
+            ],
+            exclude_srcs: [
+                "arch-x86/generic/string/strcmp.S",
+                "arch-x86/generic/string/strncmp.S",
+                "arch-x86/generic/string/strcat.S",
+            ],
+        },
+        x86_sse4: {
+            srcs: [
+                "arch-x86/silvermont/string/sse4-memcmp-slm.S",
+                "arch-x86/silvermont/string/sse4-wmemcmp-slm.S",
+            ],
+            exclude_srcs: [
+                "arch-x86/generic/string/memcmp.S",
+            ],
+        },
+
+
+        x86_64: {
+            clang: use_clang_x86_64,
+            srcs: [
+                "arch-x86_64/bionic/__bionic_clone.S",
+                "arch-x86_64/bionic/_exit_with_stack_teardown.S",
+                "arch-x86_64/bionic/__restore_rt.S",
+                "arch-x86_64/bionic/setjmp.S",
+                "arch-x86_64/bionic/__set_tls.c",
+                "arch-x86_64/bionic/syscall.S",
+                "arch-x86_64/bionic/vfork.S",
+
+                "arch-x86_64/string/sse2-memcpy-slm.S",
+                "arch-x86_64/string/sse2-memmove-slm.S",
+                "arch-x86_64/string/sse2-memset-slm.S",
+                "arch-x86_64/string/sse2-stpcpy-slm.S",
+                "arch-x86_64/string/sse2-stpncpy-slm.S",
+                "arch-x86_64/string/sse2-strcat-slm.S",
+                "arch-x86_64/string/sse2-strcpy-slm.S",
+                "arch-x86_64/string/sse2-strlcat-slm.S",
+                "arch-x86_64/string/sse2-strlcpy-slm.S",
+                "arch-x86_64/string/sse2-strlen-slm.S",
+                "arch-x86_64/string/sse2-strncat-slm.S",
+                "arch-x86_64/string/sse2-strncpy-slm.S",
+                "arch-x86_64/string/sse4-memcmp-slm.S",
+                "arch-x86_64/string/ssse3-strcmp-slm.S",
+                "arch-x86_64/string/ssse3-strncmp-slm.S",
+            ],
+        },
+
+    },
+    multilib: {
+        lib32: {
+            // LP32 cruft
+            srcs: ["bionic/mmap.cpp"]
+        },
+    },
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
+    product_variables: libc_common_product_variables,
+    local_include_dirs: ["stdio"],
+    include_dirs: ["bionic/libstdc++/include"],
+    name: "libc_bionic_ndk",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+}
+
+cc_library_static {
+    name: "libc_thread_atexit_impl",
+    srcs: ["bionic/__cxa_thread_atexit_impl.cpp"],
+    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
+    product_variables: libc_common_product_variables,
+    include_dirs: ["bionic/libstdc++/include"],
+    // TODO: Clang tries to use __tls_get_addr which is not supported yet
+    // remove after it is implemented.
+    clang: false,
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_pthread.a - pthreads parts that previously lived in
+// libc_bionic.a. Relocated to their own library because
+// they can't be included in libc_ndk.a (as they layout of
+// pthread_t has changed over the years and has ABI
+// compatibility issues).
+// ========================================================
+
+cc_library_static {
+    srcs: [
+        "bionic/pthread_atfork.cpp",
+        "bionic/pthread_attr.cpp",
+        "bionic/pthread_cond.cpp",
+        "bionic/pthread_create.cpp",
+        "bionic/pthread_detach.cpp",
+        "bionic/pthread_equal.cpp",
+        "bionic/pthread_exit.cpp",
+        "bionic/pthread_getcpuclockid.cpp",
+        "bionic/pthread_getschedparam.cpp",
+        "bionic/pthread_gettid_np.cpp",
+        "bionic/pthread_internal.cpp",
+        "bionic/pthread_join.cpp",
+        "bionic/pthread_key.cpp",
+        "bionic/pthread_kill.cpp",
+        "bionic/pthread_mutex.cpp",
+        "bionic/pthread_once.cpp",
+        "bionic/pthread_rwlock.cpp",
+        "bionic/pthread_self.cpp",
+        "bionic/pthread_setname_np.cpp",
+        "bionic/pthread_setschedparam.cpp",
+        "bionic/pthread_sigmask.cpp",
+    ],
+    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
+    product_variables: libc_common_product_variables,
+    include_dirs: ["bionic/libstdc++/include"],
+    name: "libc_pthread",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_cxa.a - Things traditionally in libstdc++
+// ========================================================
+
+cc_library_static {
+    srcs: [
+        "bionic/__cxa_guard.cpp",
+        "bionic/__cxa_pure_virtual.cpp",
+        "bionic/new.cpp",
+    ],
+    cflags: libc_common_cflags + ["-fvisibility=hidden"],
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    include_dirs: ["bionic/libstdc++/include"],
+    name: "libc_cxa",
+    clang: true, // GCC refuses to hide new/delete
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    // b/17574078: Need to disable coverage until we have a prebuilt libprofile_rt.
+    // Since this is a static library built with clang, it needs to link
+    // libprofile_rt when it is linked into the final binary. Since the final binary
+    // is built with GCC, it won't link libprofile_rt. We can't very easily just add
+    // libprofile_rt to all link lines the way we've done for libgcov because
+    // libprofile_rt isn't prebuilt, and it would be tricky to write a rule that
+    // would make sure libprofile_rt is built.
+    native_coverage: false,
+}
+
+// ========================================================
+// libc_syscalls.a
+// ========================================================
+
+cc_library_static {
+    arch: {
+        arm: {
+            srcs: ["arch-arm/syscalls/**/*.S"],
+        },
+        arm64: {
+            srcs: ["arch-arm64/syscalls/**/*.S"],
+        },
+        mips: {
+            srcs: ["arch-mips/syscalls/**/*.S"],
+        },
+        mips64: {
+            srcs: ["arch-mips64/syscalls/**/*.S"],
+        },
+        x86: {
+            srcs: ["arch-x86/syscalls/**/*.S"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+            srcs: ["arch-x86_64/syscalls/**/*.S"],
+        },
+    },
+    name: "libc_syscalls",
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_aeabi.a
+// This is an LP32 ARM-only library that needs to be built with -fno-builtin
+// to avoid infinite recursion. For the other architectures we just build an
+// empty library to keep this makefile simple.
+// ========================================================
+
+cc_library_static {
+    arch: {
+        arm: {
+            srcs: ["arch-arm/bionic/__aeabi.c"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+    name: "libc_aeabi",
+    cflags: libc_common_cflags + ["-fno-builtin"],
+    product_variables: libc_common_product_variables,
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_ndk.a
+// Compatibility library for the NDK. This library contains
+// all the parts of libc that are safe to statically link.
+// We can't safely statically link things that can only run
+// on a certain version of the OS. Examples include
+// anything that talks to netd (a large portion of the DNS
+// code) and anything that is dependent on the layout of a
+// data structure that has changed across releases (such as
+// pthread_t).
+// ========================================================
+
+cc_library_static {
+    name: "libc_ndk",
+    srcs: libc_common_src_files + ["bionic/malloc_debug_common.cpp"],
+    multilib: {
+        lib32: {
+            srcs: libc_common_src_files_32,
+        },
+    },
+    arch: {
+        arm: {
+            srcs: [
+                "arch-arm/bionic/exidx_dynamic.c",
+                "arch-common/bionic/crtbegin_so.c",
+                "arch-arm/bionic/atexit_legacy.c",
+                "arch-common/bionic/crtend_so.S",
+            ],
+            whole_static_libs: ["libc_aeabi"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    cflags: libc_common_cflags + [
+        "-fvisibility=hidden",
+        "-DLIBC_STATIC",
+    ],
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+
+    whole_static_libs: [
+        "libc_bionic_ndk",
+        "libc_cxa",
+        "libc_freebsd",
+        "libc_gdtoa",
+        "libc_malloc",
+        "libc_netbsd",
+        "libc_openbsd_ndk",
+        "libc_stack_protector",
+        "libc_syscalls",
+        "libc_tzcode",
+        "libm",
+    ],
+
+    stl: "none",
+    system_shared_libs: [],
+
+    // TODO: split out the asflags.
+    asflags: libc_common_cflags,
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_common.a
+// ========================================================
+
+cc_library_static {
+    srcs: libc_common_src_files,
+    multilib: {
+        lib32: {
+            srcs: libc_common_src_files_32,
+        },
+    },
+    cflags: libc_common_cflags,
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    name: "libc_common",
+
+    whole_static_libs: [
+        "libc_bionic",
+        "libc_bionic_ndk",
+        "libc_cxa",
+        "libc_dns",
+        "libc_freebsd",
+        "libc_gdtoa",
+        "libc_malloc",
+        "libc_netbsd",
+        "libc_openbsd",
+        "libc_openbsd_ndk",
+        "libc_pthread",
+        "libc_stack_protector",
+        "libc_syscalls",
+        "libc_thread_atexit_impl",
+        "libc_tzcode",
+    ],
+
+    arch: {
+        arm: {
+            whole_static_libs: ["libc_aeabi"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    stl: "none",
+    system_shared_libs: [],
+
+    // TODO: split out the asflags.
+    asflags: libc_common_cflags,
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_nomalloc.a
+// ========================================================
+//
+// This is a version of the static C library that does not
+// include malloc. It's useful in situations when the user wants
+// to provide their own malloc implementation, or wants to
+// explicitly disallow the use of malloc, such as in the
+// dynamic linker.
+
+cc_library_static {
+    srcs: [
+        "bionic/dl_iterate_phdr_static.cpp",
+        "bionic/libc_init_static.cpp",
+    ],
+
+    arch: {
+        arm: {
+            srcs: ["arch-arm/bionic/exidx_static.c"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+
+    cflags: libc_common_cflags + ["-DLIBC_STATIC"],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+
+    name: "libc_nomalloc",
+
+    whole_static_libs: ["libc_common"],
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+}
+
+// ========================================================
+// libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
+// ========================================================
+cc_library_static {
+    product_variables: libc_common_product_variables + {
+        device_uses_jemalloc: {
+            srcs: ["bionic/jemalloc_wrapper.cpp"],
+            whole_static_libs: ["libjemalloc"],
+        },
+        device_uses_dlmalloc: {
+            srcs: ["bionic/dlmalloc.c"],
+        },
+    },
+    cflags: libc_common_cflags + ["-fvisibility=hidden"],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    name: "libc_malloc",
+    stl: "none",
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ========================================================
+// libc.a + libc.so
+// ========================================================
+cc_library {
+    name: "libc",
+    cflags: libc_common_cflags,
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables + {
+        platform_sdk_version: {
+            asflags: ["-DPLATFORM_SDK_VERSION=%d"],
+        },
+    },
+    srcs: ["bionic/malloc_debug_common.cpp"],
+    static: {
+        srcs: [
+            "bionic/dl_iterate_phdr_static.cpp",
+            "bionic/libc_init_static.cpp",
+        ],
+        cflags: ["-DLIBC_STATIC"],
+    },
+    shared: {
+        srcs: [
+            "arch-common/bionic/crtbegin_so.c",
+            "arch-common/bionic/crtbrand.S",
+            "bionic/libc_init_dynamic.cpp",
+            "bionic/NetdClient.cpp",
+            "arch-common/bionic/crtend_so.S",
+        ],
+    },
+
+    required: ["tzdata"],
+
+    // Leave the symbols in the shared library so that stack unwinders can produce
+    // meaningful name resolution.
+    strip: "keep_symbols",
+
+    // WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
+    // make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
+    // ensures that symbols that are pulled into those new libraries from libgcc.a are not declared
+    // external; if that were the case, then libc would not pull those symbols from libgcc.a as it
+    // should, instead relying on the external symbols from the dependent libraries.  That would
+    // create a "cloaked" dependency on libgcc.a in libc though the libraries, which is not what
+    // you wanted!
+
+    shared_libs: ["libdl"],
+    whole_static_libs: ["libc_common"],
+    stl: "none",
+    system_shared_libs: [],
+
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    version_script: "libc.map",
+
+    // We'd really like to do this for all architectures, but since this wasn't done
+    // before, these symbols must continue to be exported on LP32 for binary
+    // compatibility.
+    multilib: {
+        lib64: {
+            ldflags: ["-Wl,--exclude-libs,libgcc.a"],
+        },
+    },
+
+    nocrt: true,
+
+    // special for arm
+    arch: {
+        arm: {
+            //TODO: This is to work around b/19059885. Remove after root cause is fixed
+            ldflags: ["-Wl,--hash-style=both"],
+
+            shared: {
+                srcs: ["arch-arm/bionic/exidx_dynamic.c"],
+            },
+            static: {
+                srcs: ["arch-arm/bionic/exidx_static.c"],
+            },
+            cflags: ["-DCRT_LEGACY_WORKAROUND"],
+            srcs: [
+                "arch-arm/bionic/atexit_legacy.c",
+            ],
+        },
+        x86: {
+            //TODO: This is to work around b/19059885. Remove after root cause is fixed
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// For all builds, except for the -user build we will enable memory
+// allocation checking (including memory leaks, buffer overwrites, etc.)
+// Note that all these checks are also controlled by env. settings
+// that can enable, or disable specific checks. Note also that some of
+// the checks are available only in emulator and are implemeted in
+// libc_malloc_qemu_instrumented.so.
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// ifneq ($(TARGET_BUILD_VARIANT),user)
+// ========================================================
+// libc_malloc_debug_leak.so
+// ========================================================
+cc_library_shared {
+    cflags: libc_common_cflags,
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+
+    srcs: [
+        "bionic/debug_backtrace.cpp",
+        "bionic/debug_mapinfo.cpp",
+        "bionic/libc_logging.cpp",
+        "bionic/malloc_debug_leak.cpp",
+        "bionic/malloc_debug_check.cpp",
+    ],
+
+    name: "libc_malloc_debug_leak",
+
+    shared_libs: [
+        "libc",
+        "libdl",
+    ],
+    stl: "none",
+    system_shared_libs: [],
+    // Only need this for arm since libc++ uses its own unwind code that
+    // doesn't mix with the other default unwind code.
+    arch: {
+        arm: {
+            static_libs: [
+                "libunwind_llvm",
+                "libc++abi",
+            ],
+            ldflags: ["-Wl,--exclude-libs,libunwind_llvm.a"],
+        },
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+    allow_undefined_symbols: true,
+
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    version_script: "version_script.txt",
+
+    // Don't install on release build
+    tags: [
+        "eng",
+        "debug",
+    ],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+}
+
+// ========================================================
+// libc_malloc_debug_qemu.so
+// ========================================================
+cc_library_shared {
+    cflags: libc_common_cflags + ["-DMALLOC_QEMU_INSTRUMENT"],
+
+    conlyflags: libc_common_conlyflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+
+    srcs: [
+        "bionic/libc_logging.cpp",
+        "bionic/malloc_debug_qemu.cpp",
+    ],
+
+    name: "libc_malloc_debug_qemu",
+
+    shared_libs: [
+        "libc",
+        "libdl",
+    ],
+    stl: "none",
+    system_shared_libs: [],
+
+    // Don't re-export new/delete and friends, even if the compiler really wants to.
+    version_script: "version_script.txt",
+
+    // Don't install on release build
+    tags: [
+        "eng",
+        "debug",
+    ],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    arch: {
+        x86_64: {
+            clang: use_clang_x86_64,
+        },
+    },
+}
+
+// ANDROIDMK TRANSLATION ERROR: unsupported directive
+// endif
+//!user
+
+// ========================================================
+// libstdc++.so + libstdc++.a
+// ========================================================
+cc_library {
+    include_dirs: ["bionic/libstdc++/include"],
+    cflags: libc_common_cflags,
+    cppflags: libc_common_cppflags,
+    product_variables: libc_common_product_variables,
+    srcs: [
+        "bionic/__cxa_guard.cpp",
+        "bionic/__cxa_pure_virtual.cpp",
+        "bionic/new.cpp",
+        "bionic/libc_logging.cpp",
+    ],
+    name: "libstdc++",
+
+    stl: "none",
+    system_shared_libs: ["libc"],
+    sanitize: ["never"],
+    native_coverage: bionic_coverage,
+
+    //TODO: This is to work around b/19059885. Remove after root cause is fixed
+    arch: {
+        arm: {
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+        x86: {
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+    },
+}
+
+crt_arch_flags = {
+    arm: {
+        local_include_dirs: ["arch-arm/include"],
+        cflags: ["-mthumb-interwork"],
+    },
+    arm64: {
+        local_include_dirs: ["arch-arm64/include"],
+    },
+    mips: {
+        local_include_dirs: ["arch-mips/include"],
+        ldflags: ["-melf32ltsmip"],
+    },
+    mips64: {
+        local_include_dirs: ["arch-mips64/include"],
+        ldflags: ["-melf64ltsmip"],
+    },
+    x86: {
+        cflags: ["-m32"],
+        ldflags: ["-melf_i386"],
+        local_include_dirs: ["arch-x86/include"],
+    },
+    x86_64: {
+        cflags: ["-m64"],
+        ldflags: ["-melf_x86_64"],
+        local_include_dirs: ["arch-x86_64/include"],
+    },
+}
+
+crt_arch_so_flags = crt_arch_flags + {
+    mips: {
+        cflags: ["-fPIC"],
+    },
+    mips64: {
+        cflags: ["-fPIC"],
+    },
+    x86: {
+        cflags: ["-fPIC"],
+    },
+    x86_64: {
+        cflags: ["-fPIC"],
+    },
+}
+
+// Android.mk:start
+// # crt obj files
+// # ========================================================
+// # crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
+// libc_crt_target_cflags := \
+//    -I$(LOCAL_PATH)/include \
+//    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
+//
+// my_2nd_arch_prefix :=
+// include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
+// include $(LOCAL_PATH)/crt.mk
+// ifdef TARGET_2ND_ARCH
+// my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+// include $(LOCAL_PATH)/arch-$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
+// include $(LOCAL_PATH)/crt.mk
+// my_2nd_arch_prefix :=
+// endif
+//
+// include $(call all-makefiles-under,$(LOCAL_PATH))
+// Android.mk:end
+cc_object {
+    name: "crtbrand",
+    local_include_dirs: ["include"],
+    product_variables: {
+        platform_sdk_version: {
+            asflags: ["-DPLATFORM_SDK_VERSION=%d"],
+        },
+    },
+    srcs: ["arch-common/bionic/crtbrand.S"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_so_flags,
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_so1",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin_so.c"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_so_flags,
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_so",
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_so_flags,
+    deps: [
+        "crtbegin_so1",
+        "crtbrand",
+    ],
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtend_so",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtend_so.S"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_so_flags,
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_static1",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin.c"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_flags + {
+        arm64: {
+            srcs: [
+                "arch-arm64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+        mips: {
+            srcs: [
+                "arch-mips/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+        mips64: {
+            srcs: [
+                "arch-mips64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+    },
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_static",
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_flags,
+    deps: [
+        "crtbegin_static1",
+        "crtbrand",
+    ],
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_dynamic1",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin.c"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_flags + {
+        arm64: {
+            srcs: [
+                "arch-arm64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+        mips: {
+            srcs: [
+                "arch-mips/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+        mips64: {
+            srcs: [
+                "arch-mips64/bionic/crtbegin.c",
+            ],
+            exclude_srcs: [
+                "arch-common/bionic/crtbegin.c",
+            ],
+        },
+    },
+}
+
+// Android.mk:ignore
+cc_object {
+    name: "crtbegin_dynamic",
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_flags,
+    deps: [
+        "crtbegin_dynamic1",
+        "crtbrand",
+    ],
+}
+
+// Android.mk:ignore
+cc_object {
+    // We rename crtend.o to crtend_android.o to avoid a
+    // name clash between gcc and bionic.
+    name: "crtend_android",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtend.S"],
+    no_default_compiler_flags: true,
+
+    arch: crt_arch_flags,
+}
