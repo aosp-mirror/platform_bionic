@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e96fa7e4_3c547dc5",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 87,
+        "startChar": 47,
+        "endLine": 87,
+        "endChar": 48
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_39bd6bed",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "it\u0027s a no-op, but might be better to remove \u0027/\u0027",
+      "range": {
+        "startLine": 120,
+        "startChar": 43,
+        "endLine": 120,
+        "endChar": 44
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96fa7e4_bc264d7b",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "we may change unused variable to \"_\"",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 12
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_19b8affc",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "i would prefer using tuple instead of list, since we are not mutating the elements. but in this case it actually looks a bit odd to embed the key as part of the value again, plus the dict values are sorted into a list later in L91. we may just use the dict here.\n\nsources[path] \u003d True",
+      "range": {
+        "startLine": 63,
+        "startChar": 12,
+        "endLine": 63,
+        "endChar": 40
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9666312_bb26537b",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "\u0027os.chdir(working_dir)\u0027 is needed in case that modified_dir is provided with a relative path.",
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29753fb9_f3d4f05d",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "_",
+      "range": {
+        "startLine": 73,
+        "startChar": 14,
+        "endLine": 73,
+        "endChar": 18
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "697bb7ad_15639452",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "_",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 16
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "096ddbec_e08bb610",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "same here.\n\nsources[path] \u003d False",
+      "range": {
+        "startLine": 78,
+        "startChar": 32,
+        "endLine": 78,
+        "endChar": 45
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "697bb7ad_55690c30",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 62
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96fa7e4_dc1f811f",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2015-09-17T15:56:43Z",
+      "side": 1,
+      "message": "for rel_path in sorted(sources):\n  original \u003d sources[rel_path]",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
