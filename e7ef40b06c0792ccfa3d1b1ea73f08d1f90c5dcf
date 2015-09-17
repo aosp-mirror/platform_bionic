@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e92967cb_092a49bd",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Oops, muscle memory must of kicked in here.\n\nFixed.",
+      "parentUuid": "e96fa7e4_3c547dc5",
+      "range": {
+        "startLine": 87,
+        "startChar": 47,
+        "endLine": 87,
+        "endChar": 48
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8980ebc5_39bd6bed",
         "filename": "libc/kernel/tools/clean_header.py",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-17T15:56:43Z",
       "side": 1,
       "message": "it\u0027s a no-op, but might be better to remove \u0027/\u0027",
+      "range": {
+        "startLine": 120,
+        "startChar": 43,
+        "endLine": 120,
+        "endChar": 44
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69ec97ce_ed954530",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Yep, done.",
+      "parentUuid": "8980ebc5_39bd6bed",
       "range": {
         "startLine": 120,
         "startChar": 43,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e92967cb_6954a53f",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "e96fa7e4_bc264d7b",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 12
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8980ebc5_19b8affc",
         "filename": "libc/kernel/tools/update_all.py",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2015-09-17T15:56:43Z",
       "side": 1,
       "message": "i would prefer using tuple instead of list, since we are not mutating the elements. but in this case it actually looks a bit odd to embed the key as part of the value again, plus the dict values are sorted into a list later in L91. we may just use the dict here.\n\nsources[path] \u003d True",
+      "range": {
+        "startLine": 63,
+        "startChar": 12,
+        "endLine": 63,
+        "endChar": 40
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8980ebc5_7c867108",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Yeah, this is overly complicated. For some reason, I was trying to avoid the dictionary look up, but I don\u0027t think that makes sense at all.",
+      "parentUuid": "8980ebc5_19b8affc",
       "range": {
         "startLine": 63,
         "startChar": 12,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "a90a0f5b_8f92b516",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "It\u0027s not necessary because down below I check if modified_dir starts with a / then I use it as the target. If it is a relative dir, I append the working_dir and chdir to it.\n\nAfter all of this, I chdir back to working dir then.",
+      "parentUuid": "c9666312_bb26537b",
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29753fb9_f3d4f05d",
         "filename": "libc/kernel/tools/update_all.py",
         "patchSetId": 3
@@ -122,6 +236,30 @@
       "writtenOn": "2015-09-17T15:56:43Z",
       "side": 1,
       "message": "_",
+      "range": {
+        "startLine": 73,
+        "startChar": 14,
+        "endLine": 73,
+        "endChar": 18
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89f1cba4_4e6a93b4",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29753fb9_f3d4f05d",
       "range": {
         "startLine": 73,
         "startChar": 14,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "8980ebc5_bc92c944",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "697bb7ad_15639452",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 16
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "096ddbec_e08bb610",
         "filename": "libc/kernel/tools/update_all.py",
         "patchSetId": 3
@@ -168,6 +330,30 @@
       "writtenOn": "2015-09-17T15:56:43Z",
       "side": 1,
       "message": "same here.\n\nsources[path] \u003d False",
+      "range": {
+        "startLine": 78,
+        "startChar": 32,
+        "endLine": 78,
+        "endChar": 45
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69ec97ce_2de62dec",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "096ddbec_e08bb610",
       "range": {
         "startLine": 78,
         "startChar": 32,
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "e92967cb_29810def",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "697bb7ad_55690c30",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 62
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e96fa7e4_dc1f811f",
         "filename": "libc/kernel/tools/update_all.py",
         "patchSetId": 3
@@ -214,6 +424,30 @@
       "writtenOn": "2015-09-17T15:56:43Z",
       "side": 1,
       "message": "for rel_path in sorted(sources):\n  original \u003d sources[rel_path]",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "e7ef40b06c0792ccfa3d1b1ea73f08d1f90c5dcf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69ec97ce_adf97d89",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-17T20:05:18Z",
+      "side": 1,
+      "message": "Done, well a similar change.",
+      "parentUuid": "e96fa7e4_dc1f811f",
       "range": {
         "startLine": 95,
         "startChar": 0,
