@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "29753fb9_d31a1438",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T04:38:38Z",
+      "side": 1,
+      "message": "we\u0027re moving away from GCC to clang, so going forward it only matters what clang does. but please try to improve clang if there are known patterns it generates bad arm64 code for.",
+      "parentUuid": "299c5f29_9e78198b",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 11,
+        "endChar": 52
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_6a7178d6",
         "filename": "libm/arm64/cos.c",
         "patchSetId": 1
