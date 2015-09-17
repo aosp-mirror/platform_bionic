@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6992d715_8301a247",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T18:05:39Z",
+      "side": 1,
+      "message": "yeah, that comment is very old, and refers to the pre-uapi headers where it may actually have been true.",
+      "revId": "b1d1759c6ed7e1386a9ba9ecd47f0ba808c95492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "299c5f29_c4f81443",
+        "filename": "libc/include/netinet/udp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T18:05:39Z",
+      "side": 1,
+      "message": "this is weird. current glibc doesn\u0027t seem to have this...",
+      "revId": "b1d1759c6ed7e1386a9ba9ecd47f0ba808c95492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e96fa7e4_df2c5378",
+        "filename": "libc/include/netinet/udp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-17T18:05:39Z",
+      "side": 1,
+      "message": "but it does have an anonymous union inside struct udphdr so you can just use either set of field names. i\u0027d rather go that way.\n\nyou can edit kernel_arch_token_replacements in defaults.py to rewrite udphdr to __kernel_udphdr, regenerate the headers, and then just define udphdr with both sets of names here (and #include \u003clinux/udp.h\u003e unconditionally).\n\n(i\u0027m happy to do this for you, since i\u0027m putting more work on your plate when you\u0027re fixing our bugs, so just say if you\u0027d like me to do it.)",
+      "revId": "b1d1759c6ed7e1386a9ba9ecd47f0ba808c95492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
