@@ -273,6 +273,24 @@
     },
     {
       "key": {
+        "uuid": "89470bec_3eaf0961",
+        "filename": "libm/arm64/fd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2015-09-18T14:58:42Z",
+      "side": 1,
+      "message": "Could go in ksincos.c",
+      "parentUuid": "a9f20fe4_8f5395de",
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8478d270_40749fc7",
         "filename": "libm/arm64/fd.h",
         "patchSetId": 1
