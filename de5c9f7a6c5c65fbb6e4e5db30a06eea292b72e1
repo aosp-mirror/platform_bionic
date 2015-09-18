@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "a9f20fe4_cf599d00",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1043975
+      },
+      "writtenOn": "2015-09-18T09:13:08Z",
+      "side": 1,
+      "message": "I check clang and find that it can generate umull and umulh instruction correct now, but gcc failed. I\u0027ve updated the patch.\n\nAnd I feel I may have not made myself clear. The implementation of sin and cos is porting from ARM\u0027s mathlib, the algorithm changes. I update the comment to make it not so confusing.",
+      "parentUuid": "29753fb9_d31a1438",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 11,
+        "endChar": 52
+      },
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44725a92_6a7178d6",
         "filename": "libm/arm64/cos.c",
         "patchSetId": 1
@@ -225,6 +249,24 @@
       "writtenOn": "2015-09-15T15:36:49Z",
       "side": 1,
       "message": "What\u0027s the significance of this being in a new file called \"fd.h\", is there a more intention revealing name?",
+      "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9f20fe4_8f5395de",
+        "filename": "libm/arm64/fd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1043975
+      },
+      "writtenOn": "2015-09-18T09:13:08Z",
+      "side": 1,
+      "message": "I also have not much idea of where to put following definition. Do you have any suggestion?",
+      "parentUuid": "c45e4afd_73725725",
       "revId": "de5c9f7a6c5c65fbb6e4e5db30a06eea292b72e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
