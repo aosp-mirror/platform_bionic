@@ -257,6 +257,17 @@ First, build and run the host tests as usual (see above).
 The coverage report is now available at `covreport/index.html`.
 
 
+Attaching GDB to the tests
+--------------------------
+
+Bionic's test runner will run each test in its own process by default to prevent
+tests failures from impacting other tests. This also has the added benefit of
+running them in parallel, so they are much faster.
+
+However, this also makes it difficult to run the tests under GDB. To prevent
+each test from being forked, run the tests with the flag `--no-isolate`.
+
+
 LP32 ABI bugs
 -------------
 
