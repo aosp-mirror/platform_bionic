@@ -50,19 +50,15 @@ struct timespec;
 #ifdef __mips__
 #define SOCK_DGRAM      1
 #define SOCK_STREAM     2
+#else
+#define SOCK_STREAM     1
+#define SOCK_DGRAM      2
+#endif
 #define SOCK_RAW        3
 #define SOCK_RDM        4
 #define SOCK_SEQPACKET  5
 #define SOCK_DCCP       6
 #define SOCK_PACKET     10
-#else
-#define SOCK_STREAM      1
-#define SOCK_DGRAM       2
-#define SOCK_RAW         3
-#define SOCK_RDM         4
-#define SOCK_SEQPACKET   5
-#define SOCK_PACKET      10
-#endif
 
 #define SOCK_CLOEXEC O_CLOEXEC
 #define SOCK_NONBLOCK O_NONBLOCK
