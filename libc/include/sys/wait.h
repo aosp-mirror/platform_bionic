@@ -44,6 +44,7 @@ __BEGIN_DECLS
 #define WIFEXITED(s)    (WTERMSIG(s) == 0)
 #define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
 #define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
+#define WIFCONTINUED(s) ((s) == 0xffff)
 
 #define W_EXITCODE(ret, sig)    ((ret) << 8 | (sig))
 #define W_STOPCODE(sig)         ((sig) << 8 | 0x7f)
