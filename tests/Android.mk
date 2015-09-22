@@ -69,6 +69,7 @@ libBionicStandardTests_src_files := \
     math_test.cpp \
     mntent_test.cpp \
     netdb_test.cpp \
+    netinet_udp_test.cpp \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
