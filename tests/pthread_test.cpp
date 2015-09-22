@@ -1163,9 +1163,9 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   char line[BUFSIZ];
   while (fgets(line, sizeof(line), fp) != NULL) {
     uintptr_t lo, hi;
-    char name[10];
-    sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %10s", &lo, &hi, name);
-    if (strcmp(name, "[stack]") == 0) {
+    int name_pos;
+    sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %n", &lo, &hi, &name_pos);
+    if (strcmp(line + name_pos, "[stack]\n") == 0) {
       maps_stack_hi = reinterpret_cast<void*>(hi);
       break;
     }
