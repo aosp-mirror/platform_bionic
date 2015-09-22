@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e984075f_5a77895d",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-22T18:56:58Z",
+      "side": 1,
+      "message": "or just use sscanf for this whole function?",
+      "revId": "2719f6cd2be84664647824fc79b7914a59d32484",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "692bb717_ef323d29",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-22T18:56:58Z",
+      "side": 1,
+      "message": "characters",
+      "revId": "2719f6cd2be84664647824fc79b7914a59d32484",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
