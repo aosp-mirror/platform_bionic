@@ -122,6 +122,14 @@ TEST(getpwnam, app_id_radio) {
   check_get_passwd("radio", 1001, TYPE_SYSTEM);
 }
 
+TEST(getpwnam, oem_id_0) {
+  check_get_passwd("oem_0", 5000, TYPE_SYSTEM);
+}
+
+TEST(getpwnam, oem_id_999) {
+  check_get_passwd("oem_999", 5999, TYPE_SYSTEM);
+}
+
 TEST(getpwnam, app_id_nobody) {
   check_get_passwd("nobody", 9999, TYPE_SYSTEM);
 }
@@ -245,6 +253,14 @@ TEST(getgrnam, system_id_system) {
 
 TEST(getgrnam, app_id_radio) {
   check_get_group("radio", 1001);
+}
+
+TEST(getgrnam, oem_id_0) {
+  check_get_group("oem_0", 5000);
+}
+
+TEST(getgrnam, oem_id_999) {
+  check_get_group("oem_999", 5999);
 }
 
 TEST(getgrnam, app_id_nobody) {
