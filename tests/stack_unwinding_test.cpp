@@ -34,7 +34,7 @@
 #define noinline __attribute__((__noinline__))
 #define __unused __attribute__((__unused__))
 
-static _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
+_Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
   int* count_ptr = reinterpret_cast<int*>(arg);
 
 #if SHOW_FRAME_LOCATIONS
