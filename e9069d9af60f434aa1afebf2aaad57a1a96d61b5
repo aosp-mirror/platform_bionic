@@ -473,6 +473,24 @@
     },
     {
       "key": {
+        "uuid": "692bb717_a4322cd6",
+        "filename": "libc/private/bionic_safestack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-09-22T18:05:15Z",
+      "side": 1,
+      "message": "In fact, system properties are available in __linker_init_post_relocation, just a little bit after the main thread is initialized. We can initialize safestack then.\n\nThis CL also needs tests.",
+      "parentUuid": "6473de94_342c4976",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6473de94_a19bb9d9",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 2
