@@ -41,6 +41,8 @@
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
 
+#include "utils.h"
+
 extern "C" pid_t gettid();
 
 TEST(pthread, pthread_key_create) {
@@ -1158,19 +1160,14 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 #if defined(__BIONIC__)
   // What does /proc/self/maps' [stack] line say?
   void* maps_stack_hi = NULL;
-  FILE* fp = fopen("/proc/self/maps", "r");
-  ASSERT_TRUE(fp != NULL);
-  char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != NULL) {
-    uintptr_t lo, hi;
-    int name_pos;
-    sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %n", &lo, &hi, &name_pos);
-    if (strcmp(line + name_pos, "[stack]\n") == 0) {
-      maps_stack_hi = reinterpret_cast<void*>(hi);
+  std::vector<map_record> maps;
+  ASSERT_TRUE(Maps::parse_maps(&maps));
+  for (auto& map : maps) {
+    if (map.pathname == "[stack]") {
+      maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
       break;
     }
   }
-  fclose(fp);
 
   // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
   // Remember that the stack grows down (and is mapped in on demand), so the low address of the
