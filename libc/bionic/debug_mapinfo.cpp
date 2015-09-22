@@ -50,14 +50,11 @@ static mapinfo_t* parse_maps_line(char* line) {
   uintptr_t offset;
   char permissions[4];
   int name_pos;
-  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d%n", &start,
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start,
              &end, permissions, &offset, &name_pos) < 2) {
     return NULL;
   }
 
-  while (isspace(line[name_pos])) {
-    name_pos += 1;
-  }
   const char* name = line + name_pos;
   size_t name_len = strlen(name);
   if (name_len && name[name_len - 1] == '\n') {
