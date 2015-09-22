@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9ae6393_f826c694",
+        "filename": "libc/include/netinet/udp.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-22T19:48:13Z",
+      "side": 1,
+      "message": "Will we have any issue with this if we use this header directly in the ndk? For example, will the windows/mac compilers all understand this?\n\nPerhaps we don\u0027t care about this yet though.",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 17
+      },
+      "revId": "f8a2243ebeb3ce60e412cd7b71b31c7b31313d58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
