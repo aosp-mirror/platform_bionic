@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c91663dc_ad1e959c",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1076138
+      },
+      "writtenOn": "2015-09-22T20:56:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e984075f_5a77895d",
+      "revId": "2719f6cd2be84664647824fc79b7914a59d32484",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "692bb717_ef323d29",
         "filename": "libc/bionic/stubs.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-09-22T18:56:58Z",
       "side": 1,
       "message": "characters",
+      "revId": "2719f6cd2be84664647824fc79b7914a59d32484",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e984075f_25714667",
+        "filename": "libc/bionic/stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1076138
+      },
+      "writtenOn": "2015-09-22T20:56:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "692bb717_ef323d29",
       "revId": "2719f6cd2be84664647824fc79b7914a59d32484",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
