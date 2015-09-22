@@ -491,6 +491,24 @@
     },
     {
       "key": {
+        "uuid": "099a3b78_4fb6225e",
+        "filename": "libc/private/bionic_safestack.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-22T18:36:34Z",
+      "side": 1,
+      "message": "i think you were right both times; once for static executables, the other for dynamic.",
+      "parentUuid": "692bb717_a4322cd6",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6473de94_a19bb9d9",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 2
