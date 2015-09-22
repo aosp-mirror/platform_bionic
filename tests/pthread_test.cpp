@@ -27,6 +27,7 @@
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
+#include <unwind.h>
 
 #include <atomic>
 #include <regex>
@@ -1570,4 +1571,27 @@ TEST_F(pthread_DeathTest, pthread_mutex_unlock_null_64) {
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
 #endif
+}
+
+extern _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx, void* arg);
+
+static volatile bool signal_handler_on_altstack_done;
+
+static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
+  ASSERT_EQ(SIGUSR1, signo);
+  // Check if we have enough stack space for unwinding.
+  int count = 0;
+  _Unwind_Backtrace(FrameCounter, &count);
+  ASSERT_GT(count, 0);
+  // Check if we have enough stack space for logging.
+  std::string s(2048, '*');
+  GTEST_LOG_(INFO) << s;
+  signal_handler_on_altstack_done = true;
+}
+
+TEST(pthread, big_enough_signal_stack_for_64bit_arch) {
+  signal_handler_on_altstack_done = false;
+  ScopedSignalHandler handler(SIGUSR1, SignalHandlerOnAltStack, SA_SIGINFO | SA_ONSTACK);
+  kill(getpid(), SIGUSR1);
+  ASSERT_TRUE(signal_handler_on_altstack_done);
 }
