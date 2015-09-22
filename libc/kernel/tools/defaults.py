@@ -64,6 +64,8 @@ kernel_token_replacements = {
     # The kernel's SIGRTMIN/SIGRTMAX are absolute limits; userspace steals a few.
     "SIGRTMIN": "__SIGRTMIN",
     "SIGRTMAX": "__SIGRTMAX",
+    # We want to support both BSD and Linux member names in struct udphdr.
+    "udphdr": "__kernel_udphdr",
     }
 
 # this is the set of known static inline functions that we want to keep
