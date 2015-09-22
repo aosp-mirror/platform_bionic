@@ -130,28 +130,7 @@
 #define	__volatile
 #endif	/* !__GNUC__ */
 
-/*
- * In non-ANSI C environments, new programs will want ANSI-only C keywords
- * deleted from the program and old programs will want them left alone.
- * Programs using the ANSI C keywords const, inline etc. as normal
- * identifiers should define -DNO_ANSI_KEYWORDS.
- */
-#ifndef	NO_ANSI_KEYWORDS
-#define	const		__const		/* convert ANSI C keywords */
-#define	inline		__inline
-#define	signed		__signed
-#define	volatile	__volatile
-#endif /* !NO_ANSI_KEYWORDS */
 #endif	/* !(__STDC__ || __cplusplus) */
-
-/*
- * Used for internal auditing of the NetBSD source tree.
- */
-#ifdef __AUDIT__
-#define	__aconst	__const
-#else
-#define	__aconst
-#endif
 
 /*
  * The following macro is used to remove const cast-away warnings
@@ -164,75 +143,19 @@
  */
 #define __UNCONST(a)	((void *)(unsigned long)(const void *)(a))
 
-/*
- * GCC2 provides __extension__ to suppress warnings for various GNU C
- * language extensions under "-ansi -pedantic".
- */
-#if !__GNUC_PREREQ(2, 0)
-#define	__extension__		/* delete __extension__ if non-gcc or gcc1 */
-#endif
-
-/*
- * GCC1 and some versions of GCC2 declare dead (non-returning) and
- * pure (no side effects) functions using "volatile" and "const";
- * unfortunately, these then cause warnings under "-ansi -pedantic".
- * GCC2 uses a new, peculiar __attribute__((attrs)) style.  All of
- * these work for GNU C++ (modulo a slight glitch in the C++ grammar
- * in the distribution version of 2.5.5).
- */
-#if !__GNUC_PREREQ(2, 5)
-#define	__attribute__(x)	/* delete __attribute__ if non-gcc or gcc1 */
-#if defined(__GNUC__) && !defined(__STRICT_ANSI__)
-#define	__dead		__volatile
-#define	__pure		__const
-#endif
-#endif
-
-/* Delete pseudo-keywords wherever they are not available or needed. */
-#ifndef __dead
-#define	__dead
-#define	__pure
-#endif
-
-#if __GNUC_PREREQ(2, 7)
-#define	__unused	__attribute__((__unused__))
-#else
-#define	__unused	/* delete */
-#endif
-
+#define __dead __attribute__((__noreturn__))
+#define __pure __attribute__((__const__))
 #define __pure2 __attribute__((__const__)) /* Android-added: used by FreeBSD libm */
 
-#if __GNUC_PREREQ(3, 1)
-#define	__used		__attribute__((__used__))
-#else
-#define	__used		/* delete */
-#endif
+#define	__unused	__attribute__((__unused__))
 
-#if __GNUC_PREREQ(2, 7)
+#define	__used		__attribute__((__used__))
+
 #define	__packed	__attribute__((__packed__))
 #define	__aligned(x)	__attribute__((__aligned__(x)))
 #define	__section(x)	__attribute__((__section__(x)))
-#elif defined(__lint__)
-#define	__packed	/* delete */
-#define	__aligned(x)	/* delete */
-#define	__section(x)	/* delete */
-#else
-#define	__packed	error: no __packed for this compiler
-#define	__aligned(x)	error: no __aligned for this compiler
-#define	__section(x)	error: no __section for this compiler
-#endif
 
-#if !__GNUC_PREREQ(2, 8)
-#define	__extension__
-#endif
-
-#if __GNUC_PREREQ(2, 8)
 #define __statement(x)	__extension__(x)
-#elif defined(lint)
-#define __statement(x)	(0)
-#else
-#define __statement(x)	(x)
-#endif
 
 #define __nonnull(args) __attribute__((__nonnull__ args))
 
@@ -240,41 +163,18 @@
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
 
 /*
- * C99 defines the restrict type qualifier keyword, which was made available
- * in GCC 2.92.
+ * C99 defines the restrict type qualifier keyword.
  */
 #if defined(__STDC__VERSION__) && __STDC_VERSION__ >= 199901L
 #define	__restrict	restrict
-#else
-#if !__GNUC_PREREQ(2, 92)
-#define	__restrict	/* delete __restrict when not supported */
-#endif
 #endif
 
 /*
- * C99 defines __func__ predefined identifier, which was made available
- * in GCC 2.95.
+ * C99 defines __func__ predefined identifier.
  */
 #if !defined(__STDC_VERSION__) || !(__STDC_VERSION__ >= 199901L)
-#if __GNUC_PREREQ(2, 6)
 #define	__func__	__PRETTY_FUNCTION__
-#elif __GNUC_PREREQ(2, 4)
-#define	__func__	__FUNCTION__
-#else
-#define	__func__	""
-#endif
 #endif /* !(__STDC_VERSION__ >= 199901L) */
-
-/*
- * A barrier to stop the optimizer from moving code or assume live
- * register values. This is gcc specific, the version is more or less
- * arbitrary, might work with older compilers.
- */
-#if __GNUC_PREREQ(2, 95)
-#define	__insn_barrier()	__asm __volatile("":::"memory")
-#else
-#define	__insn_barrier()	/* */
-#endif
 
 /*
  * GNU C version 2.96 adds explicit branch prediction so that
@@ -304,43 +204,19 @@
  *	  basic block reordering that this affects can often generate
  *	  larger code.
  */
-#if __GNUC_PREREQ(2, 96)
 #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
 #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
-#else
-#define	__predict_true(exp)	(exp)
-#define	__predict_false(exp)	(exp)
-#endif
 
-#if __GNUC_PREREQ(2, 96)
 #define __noreturn    __attribute__((__noreturn__))
 #define __mallocfunc  __attribute__((malloc))
 #define __purefunc    __attribute__((pure))
-#else
-#define __noreturn
-#define __mallocfunc
-#define __purefunc
-#endif
 
-#if __GNUC_PREREQ(3, 1)
 #define __always_inline __attribute__((__always_inline__))
-#else
-#define __always_inline
-#endif
 
-#if __GNUC_PREREQ(3, 4)
 #define __wur __attribute__((__warn_unused_result__))
-#else
-#define __wur
-#endif
 
-#if __GNUC_PREREQ(4, 3)
 #define __errorattr(msg) __attribute__((__error__(msg)))
 #define __warnattr(msg) __attribute__((__warning__(msg)))
-#else
-#define __errorattr(msg)
-#define __warnattr(msg)
-#endif
 
 #define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 
@@ -540,19 +416,14 @@
  * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
  */
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
-#define __BIONIC_FORTIFY 1
-#if _FORTIFY_SOURCE == 2
-#define __bos(s) __builtin_object_size((s), 1)
-#else
-#define __bos(s) __builtin_object_size((s), 0)
-#endif
-#define __bos0(s) __builtin_object_size((s), 0)
-
-#if __GNUC_PREREQ(4,3) || __has_attribute(__artificial__)
-#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
-#else
-#define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
-#endif
+#  define __BIONIC_FORTIFY 1
+#  if _FORTIFY_SOURCE == 2
+#    define __bos(s) __builtin_object_size((s), 1)
+#  else
+#    define __bos(s) __builtin_object_size((s), 0)
+#  endif
+#  define __bos0(s) __builtin_object_size((s), 0)
+#  define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
 #endif
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
