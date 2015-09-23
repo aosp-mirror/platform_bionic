@@ -1387,6 +1387,10 @@ LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/libc.map
 # compatibility.
 LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 
+# Unfortunately --exclude-libs clobbers our version script, so we have to
+# prevent the build system from using this flag.
+LOCAL_NO_EXCLUDE_LIBS := true
+
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
@@ -1455,6 +1459,10 @@ LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 # Don't re-export new/delete and friends, even if the compiler really wants to.
 LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
 
+# Unfortunately --exclude-libs clobbers our version script, so we have to
+# prevent the build system from using this flag.
+LOCAL_NO_EXCLUDE_LIBS := true
+
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
 LOCAL_SANITIZE := never
@@ -1494,6 +1502,10 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't re-export new/delete and friends, even if the compiler really wants to.
 LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
+
+# Unfortunately --exclude-libs clobbers our version script, so we have to
+# prevent the build system from using this flag.
+LOCAL_NO_EXCLUDE_LIBS := true
 
 # Don't install on release build
 LOCAL_MODULE_TAGS := eng debug
