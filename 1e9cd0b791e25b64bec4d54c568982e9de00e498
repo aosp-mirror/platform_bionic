@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "891c6b20_cadc3302",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-09-23T20:43:50Z",
+      "side": 1,
+      "message": "Will do",
+      "parentUuid": "2911bf09_27c36294",
+      "range": {
+        "startLine": 662,
+        "startChar": 11,
+        "endLine": 662,
+        "endChar": 35
+      },
+      "revId": "1e9cd0b791e25b64bec4d54c568982e9de00e498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "691737fc_de0b599a",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-09-23T20:37:08Z",
       "side": 1,
       "message": "check nullptr? How about adding an inline function like get_system_property_area(), and add nullptr check there?",
+      "range": {
+        "startLine": 777,
+        "startChar": 15,
+        "endLine": 777,
+        "endChar": 39
+      },
+      "revId": "1e9cd0b791e25b64bec4d54c568982e9de00e498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9ba0f35_7857d567",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-09-23T20:43:50Z",
+      "side": 1,
+      "message": "Will do.\n\nget_system_property_area() is already planned in a 2nd patch where there are different property areas depending on the name of the property.",
+      "parentUuid": "691737fc_de0b599a",
       "range": {
         "startLine": 777,
         "startChar": 15,
