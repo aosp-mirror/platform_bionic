@@ -38,9 +38,7 @@ struct map_record {
 class Maps {
  public:
   static bool parse_maps(std::vector<map_record>* maps) {
-    char path[64];
-    snprintf(path, sizeof(path), "/proc/self/task/%d/maps", getpid());
-    FILE* fp = fopen(path, "re");
+    FILE* fp = fopen("/proc/self/maps", "re");
     if (fp == nullptr) {
       return false;
     }
@@ -53,11 +51,11 @@ class Maps {
     while (fgets(line, sizeof(line), fp) != nullptr) {
       map_record record;
       uint32_t dev_major, dev_minor;
-      char pathstr[BUFSIZ];
+      int path_offset;
       char prot[5]; // sizeof("rwxp")
-      if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR " %4s %" SCNxPTR " %x:%x %lu %s",
+      if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR " %4s %" SCNxPTR " %x:%x %lu %n",
             &record.addr_start, &record.addr_end, prot, &record.offset,
-            &dev_major, &dev_minor, &record.inode, pathstr) == 8) {
+            &dev_major, &dev_minor, &record.inode, &path_offset) == 7) {
         record.perms = 0;
         if (prot[0] == 'r') {
           record.perms |= PROT_READ;
@@ -72,7 +70,10 @@ class Maps {
         // TODO: parse shared/private?
 
         record.device = makedev(dev_major, dev_minor);
-        record.pathname = pathstr;
+        record.pathname = line + path_offset;
+        if (!record.pathname.empty() && record.pathname.back() == '\n') {
+          record.pathname.pop_back();
+        }
         maps->push_back(record);
       }
     }
