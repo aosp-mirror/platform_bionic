@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2911bf09_27c36294",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-23T20:37:08Z",
+      "side": 1,
+      "message": "check if __system_property_area__ is nullptr here?",
+      "range": {
+        "startLine": 662,
+        "startChar": 11,
+        "endLine": 662,
+        "endChar": 35
+      },
+      "revId": "1e9cd0b791e25b64bec4d54c568982e9de00e498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "691737fc_de0b599a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-23T20:37:08Z",
+      "side": 1,
+      "message": "check nullptr? How about adding an inline function like get_system_property_area(), and add nullptr check there?",
+      "range": {
+        "startLine": 777,
+        "startChar": 15,
+        "endLine": 777,
+        "endChar": 39
+      },
+      "revId": "1e9cd0b791e25b64bec4d54c568982e9de00e498",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
