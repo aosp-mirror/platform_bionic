@@ -301,7 +301,6 @@ bionic-unit-tests_ldflags := \
 
 bionic-unit-tests_c_includes := \
     bionic/libc \
-    $(call include-path-for, libpagemap) \
 
 bionic-unit-tests_shared_libraries_target := \
     libdl \
