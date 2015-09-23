@@ -22,6 +22,30 @@
       "revId": "15dfd63aba596f95f2478bfca36b91f69ed7f9b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a905afc4_974384de",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-23T00:18:47Z",
+      "side": 1,
+      "message": "no the push_back is unconditional. this is just saying \"remove any trailing \u0027\\n\u0027\".",
+      "parentUuid": "09aebbf9_b2b320d5",
+      "range": {
+        "startLine": 74,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 70
+      },
+      "revId": "15dfd63aba596f95f2478bfca36b91f69ed7f9b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
