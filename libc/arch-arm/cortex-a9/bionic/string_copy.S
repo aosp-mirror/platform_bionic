@@ -244,13 +244,20 @@ ENTRY(strcpy)
 .Lstringcopy_align_to_64:
     tst     r3, #4
     beq     .Lstringcopy_check_src_align
-    ldr     r2, [r1], #4
-
-    sub     ip, r2, #0x01010101
-    bic     ip, ip, r2
-    ands    ip, ip, #0x80808080
-    bne     .Lstringcopy_zero_in_first_register
-    stmia   r0!, {r2}
+    // Read one byte at a time since we don't have any idea about the alignment
+    // of the source and we don't want to read into a different page.
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .Lstringcopy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .Lstringcopy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .Lstringcopy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .Lstringcopy_complete
     b       .Lstringcopy_check_src_align
 
 .Lstringcopy_complete:
