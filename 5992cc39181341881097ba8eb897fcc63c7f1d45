@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee616dea_fdda4f86",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-24T21:16:08Z",
+      "side": 1,
+      "message": "16?",
+      "revId": "5992cc39181341881097ba8eb897fcc63c7f1d45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
