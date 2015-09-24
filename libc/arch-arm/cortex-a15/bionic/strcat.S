@@ -169,13 +169,20 @@ ENTRY(strcat)
 .L_strcpy_align_to_64:
     tst     r3, #4
     beq     .L_strcpy_check_src_align
-    ldr     r2, [r1], #4
-
-    sub     ip, r2, #0x01010101
-    bic     ip, ip, r2
-    ands    ip, ip, #0x80808080
-    bne     .L_strcpy_zero_in_first_register
-    str     r2, [r0], #4
+    // Read one byte at a time since we don't know the src alignment
+    // and we don't want to read into a different page.
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .L_strcpy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .L_strcpy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .L_strcpy_complete
+    ldrb    r2, [r1], #1
+    strb    r2, [r0], #1
+    cbz     r2, .L_strcpy_complete
 
 .L_strcpy_check_src_align:
     // At this point dst is aligned to a double word, check if src
