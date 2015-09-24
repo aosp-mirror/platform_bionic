@@ -1174,7 +1174,7 @@ static size_t LargeSetIncrement(size_t len) {
   return 1;
 }
 
-#define STRCAT_DST_LEN  128
+#define STRCAT_DST_LEN  64
 
 static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
   if (len >= 1) {
@@ -1189,7 +1189,7 @@ static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
       int value2 = 32 + (value + 2) % 96;
       memset(cmp_buf, value2, sizeof(cmp_buf));
 
-      for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
+      for (size_t i = 1; i <= STRCAT_DST_LEN;) {
         memset(dst, value2, i-1);
         memset(dst+i-1, 0, len-i);
         src[len-i] = '\0';
@@ -1197,6 +1197,13 @@ static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
                                                          reinterpret_cast<char*>(src))));
         ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
         ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+        // This is an expensive loop, so don't loop through every value,
+        // get to a certain size and then start doubling.
+        if (i < 16) {
+          i++;
+        } else {
+          i <<= 1;
+        }
       }
     } else {
       dst[0] = '\0';
@@ -1229,7 +1236,7 @@ static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
       int value2 = 32 + (value + 2) % 96;
       memset(cmp_buf, value2, sizeof(cmp_buf));
 
-      for (size_t i = 1; i <= STRCAT_DST_LEN; i++) {
+      for (size_t i = 1; i <= STRCAT_DST_LEN;) {
         memset(dst, value2, i-1);
         memset(dst+i-1, 0, len-i);
         src[len-i] = '\0';
@@ -1237,6 +1244,13 @@ static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
                                  reinterpret_cast<char*>(src), len));
         ASSERT_TRUE(memcmp(dst, cmp_buf, i-1) == 0);
         ASSERT_TRUE(memcmp(src, dst+i-1, len-i+1) == 0);
+        // This is an expensive loop, so don't loop through every value,
+        // get to a certain size and then start doubling.
+        if (i < 16) {
+          i++;
+        } else {
+          i <<= 1;
+        }
       }
     } else {
       dst[0] = '\0';
