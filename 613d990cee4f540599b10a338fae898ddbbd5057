@@ -116,6 +116,23 @@
       "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae5bf53d_f3a71b8a",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 997,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-09-25T03:57:14Z",
+      "side": 1,
+      "message": "Could rename the function `GetDefaultJobCount()` and move this ifdef up there. A little cleaner imo.",
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
