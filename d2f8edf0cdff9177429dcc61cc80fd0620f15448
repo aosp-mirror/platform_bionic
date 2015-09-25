@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae5bf53d_d0988d66",
+        "filename": "libc/private/WPVector.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T00:31:45Z",
+      "side": 1,
+      "message": "google3 style.",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e5fa128_048dcab8",
+        "filename": "libc/private/WPVector.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T00:31:45Z",
+      "side": 1,
+      "message": "i think you should probably start with the callers. that will help convince the reader (and you) that this is a good API.",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee86cdd4_95e314c3",
+        "filename": "libc/private/WPVector.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T00:31:45Z",
+      "side": 1,
+      "message": "how much of this functionality do we actually need? do we believe we\u0027ll want enough of the rest in future to motivate this?",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e4c398b_1e0bdd2f",
+        "filename": "tests/wpvector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T00:31:45Z",
+      "side": 1,
+      "message": "yeah, yet another reason to just inline the builtins.",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
