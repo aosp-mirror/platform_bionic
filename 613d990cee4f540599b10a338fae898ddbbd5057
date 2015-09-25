@@ -92,6 +92,30 @@
       "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e470569_8fb2f864",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-25T03:36:47Z",
+      "side": 1,
+      "message": "In simpleperf, it needs to know the cpu index for each online cpu. So I think it can\u0027t be switched back to sysconf.",
+      "parentUuid": "4e4c398b_fe5da187",
+      "range": {
+        "startLine": 882,
+        "startChar": 2,
+        "endLine": 882,
+        "endChar": 60
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
