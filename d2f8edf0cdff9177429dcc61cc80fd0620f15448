@@ -94,6 +94,24 @@
     },
     {
       "key": {
+        "uuid": "ce582944_62091af7",
+        "filename": "libc/private/WPVector.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T03:09:02Z",
+      "side": 1,
+      "message": "we don\u0027t have any code using std::vector, so there\u0027s no dropping in going to happen :-)\n\nand this isn\u0027t a type that\u0027s going to be generally useful --- or if you think it is, you need to explain that because other applications are not obvious.\n\nwhat do the callers actually need, and what will they look like when rewritten?",
+      "parentUuid": "4e4c398b_7edd31d2",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e4c398b_1e0bdd2f",
         "filename": "tests/wpvector_test.cpp",
         "patchSetId": 1
