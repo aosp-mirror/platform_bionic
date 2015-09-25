@@ -112,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "2e470569_efa28c12",
+        "filename": "libc/private/WPVector.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-25T04:14:08Z",
+      "side": 1,
+      "message": "Right, I meant that I chose the vector API because it should be fairly familiar to anyone using it.\n\nIt seemed to me that there would be multiple places that would want something like this, but the only ones I can think of are the atexit/atfork handlers, and ART\u0027s sigchain function pointer array.\n\nAlternatively, we could have something like a smart pointer that returns a const T\u0026 when dereferenced, and a similar mutate() method that returns another type that mprotects appropriately when constructed and destructed and allows modification. If we can put a cap on the number of atfork handlers, etc. to 512, this might be better.",
+      "parentUuid": "ce582944_62091af7",
+      "revId": "d2f8edf0cdff9177429dcc61cc80fd0620f15448",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e4c398b_1e0bdd2f",
         "filename": "tests/wpvector_test.cpp",
         "patchSetId": 1
