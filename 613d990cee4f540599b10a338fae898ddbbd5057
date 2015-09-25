@@ -68,6 +68,30 @@
       "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e4c398b_fe5da187",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-25T03:19:11Z",
+      "side": 1,
+      "message": "(btw, in case he doesn\u0027t remember, yabinc\u0027s already written the code to parse /sys/.../online for simpleperf, so we have that code lying around. and an open question about switching simpleperf back to sysconf :-) .)",
+      "parentUuid": "ee86cdd4_9588f45c",
+      "range": {
+        "startLine": 882,
+        "startChar": 2,
+        "endLine": 882,
+        "endChar": 60
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
