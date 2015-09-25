@@ -450,6 +450,7 @@ include $(BUILD_STATIC_LIBRARY)
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # Use the current target out directory as ANDROID_DATA.
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
+.PHONY: bionic-unit-tests-glibc-run
 bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
@@ -467,6 +468,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 TEST_TIMEOUT := 0
 
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
+.PHONY: bionic-unit-tests-run-on-host32
 bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
@@ -476,6 +478,7 @@ bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
 
 ifeq ($(TARGET_IS_64_BIT),true)
 # add target to run lp64 tests
+.PHONY: bionic-unit-tests-run-on-host64
 bionic-unit-tests-run-on-host64: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
