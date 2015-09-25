@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e5fa128_bf6f2bf3",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-25T02:39:21Z",
+      "side": 1,
+      "message": "move to cppflags? As it only affects gtest_main.cpp.",
+      "range": {
+        "startLine": 254,
+        "startChar": 46,
+        "endLine": 254,
+        "endChar": 66
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee86cdd4_9588f45c",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-25T02:39:21Z",
+      "side": 1,
+      "message": "Add comment like: sysconf(_SC_NPROCESSORS_ONLN) doesn\u0027t work correctly some devices like n5, because the kernel is trying to cheat us?",
+      "range": {
+        "startLine": 882,
+        "startChar": 2,
+        "endLine": 882,
+        "endChar": 60
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
