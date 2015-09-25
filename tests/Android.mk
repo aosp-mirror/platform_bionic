@@ -241,7 +241,12 @@ libBionicCtsGtestMain_src_files := gtest_main.cpp
 
 libBionicCtsGtestMain_cflags := $(test_cflags)
 
-libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT
+libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT \
+
+# Temporarily fix the job count to 1 for CTS since on some devices the
+# number of online cores is incorrectly read as the total number of cores
+# in the system. When b/24376925 is fixed, this should be removed.
+libBionicCtsGtestMain_cppflags += -DJOB_COUNT_FIXED=1
 
 module := libBionicCtsGtestMain
 module_tag := optional
