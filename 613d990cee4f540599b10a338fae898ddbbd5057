@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2e2e2591_7a1545d1",
+        "filename": "tests/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-25T16:14:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e5fa128_bf6f2bf3",
+      "range": {
+        "startLine": 254,
+        "startChar": 46,
+        "endLine": 254,
+        "endChar": 66
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e4d7d85_fa46cd43",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 2
@@ -119,6 +143,54 @@
     },
     {
       "key": {
+        "uuid": "ee616dea_b2c88136",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-25T16:14:24Z",
+      "side": 1,
+      "message": "I added a comment in the makefile since it seems more appropriate.",
+      "parentUuid": "ee86cdd4_9588f45c",
+      "range": {
+        "startLine": 882,
+        "startChar": 2,
+        "endLine": 882,
+        "endChar": 60
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee616dea_9281fdc9",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-25T16:14:24Z",
+      "side": 1,
+      "message": "I pushed the timeout up a bit too, but I think that it\u0027s still good to fix this to a single job until the other bug is fixed.",
+      "parentUuid": "2e470569_8fb2f864",
+      "range": {
+        "startLine": 882,
+        "startChar": 2,
+        "endLine": 882,
+        "endChar": 60
+      },
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae5bf53d_f3a71b8a",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 2
@@ -130,6 +202,24 @@
       "writtenOn": "2015-09-25T03:57:14Z",
       "side": 1,
       "message": "Could rename the function `GetDefaultJobCount()` and move this ifdef up there. A little cleaner imo.",
+      "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e5fa128_5f1a6f03",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 997,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-25T16:14:24Z",
+      "side": 1,
+      "message": "Good idea, this isolates to a single place where this change lives.",
+      "parentUuid": "ae5bf53d_f3a71b8a",
       "revId": "613d990cee4f540599b10a338fae898ddbbd5057",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
