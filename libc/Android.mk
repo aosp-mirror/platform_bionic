@@ -1391,7 +1391,7 @@ LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 # prevent the build system from using this flag.
 LOCAL_NO_EXCLUDE_LIBS := true
 
-# TODO: This is to work around b/19059885. Remove after root cause is fixed
+# TODO: This is to work around b/24465209. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
@@ -1531,7 +1531,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 
-# TODO: This is to work around b/19059885. Remove after root cause is fixed
+# TODO: This is to work around b/24465209. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
