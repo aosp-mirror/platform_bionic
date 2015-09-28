@@ -739,7 +739,7 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   VLOG(1) << "Packed         (no padding): " << packed_bytes_estimate << " bytes";
 
   if (packed.empty()) {
-    LOG(INFO) << "Too few relocations to pack";
+    VLOG(1) << "Too few relocations to pack";
     return true;
   }
 
@@ -752,16 +752,16 @@ bool ElfFile<ELF>::PackTypedRelocations(std::vector<typename ELF::Rela>* relocat
   // hole_size needs to be page_aligned.
   hole_size -= hole_size % kPreserveAlignment;
 
-  LOG(INFO) << "Compaction                 : " << hole_size << " bytes";
+  VLOG(1) << "Compaction                 : " << hole_size << " bytes";
 
   // Adjusting for alignment may have removed any packing benefit.
   if (hole_size == 0) {
-    LOG(INFO) << "Too few relocations to pack after alignment";
+    VLOG(1) << "Too few relocations to pack after alignment";
     return true;
   }
 
   if (hole_size <= 0) {
-    LOG(INFO) << "Packing relocations saves no space";
+    VLOG(1) << "Packing relocations saves no space";
     return true;
   }
 
