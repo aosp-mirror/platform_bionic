@@ -514,7 +514,7 @@ include $(CLEAR_VARS)
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/libm.map
 
-# TODO: This is to work around b/19059885. Remove after root cause is fixed
+# TODO: This is to work around b/24465209. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
