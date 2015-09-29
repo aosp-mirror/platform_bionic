@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f86a1765_aa066f95",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1134,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-29T18:10:57Z",
+      "side": 1,
+      "message": "I think unordered_map is probably better here?",
+      "revId": "315297f6f09afebeef4548b4e86092aaa45b1a27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
