@@ -45,6 +45,30 @@
       "revId": "ff6da66e030b4006858d3af341322660ea9349df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce582944_00cc8c49",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-29T16:53:50Z",
+      "side": 1,
+      "message": "this has already been fixed upstream; i\u0027d just copy that. https://github.com/eggert/tz/blob/master/private.h#L492",
+      "parentUuid": "6e4d7d85_5cf4b38e",
+      "range": {
+        "startLine": 334,
+        "startChar": 15,
+        "endLine": 334,
+        "endChar": 20
+      },
+      "revId": "ff6da66e030b4006858d3af341322660ea9349df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
