@@ -59,7 +59,7 @@ using testing::internal::COLOR_GREEN;
 using testing::internal::COLOR_YELLOW;
 using testing::internal::ColoredPrintf;
 
-constexpr int DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS = 60000;
+constexpr int DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS = 90000;
 constexpr int DEFAULT_GLOBAL_TEST_RUN_WARNLINE_MS = 2000;
 
 // The time each test can run before killed for the reason of timeout.
@@ -839,8 +839,12 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   return all_tests_passed;
 }
 
-static size_t GetProcessorCount() {
+static size_t GetDefaultJobCount() {
+#if defined(JOB_COUNT_FIXED)
+  return JOB_COUNT_FIXED;
+#else
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
+#endif
 }
 
 static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
@@ -950,7 +954,7 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
   }
 
   // Init default isolation test options.
-  options.job_count = GetProcessorCount();
+  options.job_count = GetDefaultJobCount();
   options.test_deadline_ms = DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS;
   options.test_warnline_ms = DEFAULT_GLOBAL_TEST_RUN_WARNLINE_MS;
   options.gtest_color = testing::GTEST_FLAG(color);
