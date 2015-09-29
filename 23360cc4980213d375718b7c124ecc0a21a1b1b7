@@ -16,6 +16,24 @@
       "revId": "23360cc4980213d375718b7c124ecc0a21a1b1b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f86a1765_6da2d177",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-29T19:24:14Z",
+      "side": 1,
+      "message": "I guess it always returns 1 when time_t is signed.",
+      "parentUuid": "0e5fa128_e1b17ac3",
+      "revId": "23360cc4980213d375718b7c124ecc0a21a1b1b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
