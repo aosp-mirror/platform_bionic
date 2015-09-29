@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e5fa128_e1b17ac3",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-09-29T18:27:52Z",
+      "side": 1,
+      "message": "I don\u0027t think this does what it says it does? Sign-magnitude has ~0 \u003c 0 as well.",
+      "revId": "23360cc4980213d375718b7c124ecc0a21a1b1b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
