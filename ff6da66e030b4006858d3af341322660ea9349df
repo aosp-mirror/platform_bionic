@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae5bf53d_4e92b188",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2015-09-29T16:34:41Z",
+      "side": 1,
+      "message": "I thought about renaming this to SEMCOUNT_ALL_ONES.",
+      "range": {
+        "startLine": 83,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 26
+      },
+      "revId": "ff6da66e030b4006858d3af341322660ea9349df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e4d7d85_5cf4b38e",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2015-09-29T16:34:41Z",
+      "side": 1,
+      "message": "I can switch to using a constexpr here if you think the repetition of this nasty constant is too ugly. If we use \"uint64_t\", it would also allow me to drop the \"ULL\" suffix.",
+      "range": {
+        "startLine": 334,
+        "startChar": 15,
+        "endLine": 334,
+        "endChar": 20
+      },
+      "revId": "ff6da66e030b4006858d3af341322660ea9349df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
