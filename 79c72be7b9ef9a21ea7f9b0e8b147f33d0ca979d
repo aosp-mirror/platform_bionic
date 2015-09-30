@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "354d9aaf_df9f5fc8",
+        "filename": "libc/arch-arm/krait/bionic/memcpy_base.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-30T20:12:49Z",
+      "side": 1,
+      "message": "this comment appears to be false.",
+      "revId": "79c72be7b9ef9a21ea7f9b0e8b147f33d0ca979d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
