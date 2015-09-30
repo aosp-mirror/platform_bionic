@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1548969f_6ff1399d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-09-30T23:29:46Z",
+      "side": 1,
+      "message": "Would it be better to have the linker set the locale to some known value and restore it after it\u0027s done the work? This would avoid any other weird problems using any other functions that are affected by locale changes.\n\nTo be clear, this would not be in this function, but in some more global location. I don\u0027t know if you would run into problems executing the constructors for a shared library though.",
+      "range": {
+        "startLine": 363,
+        "startChar": 2,
+        "endLine": 363,
+        "endChar": 22
+      },
+      "revId": "3a5adb7de6f3666bb2c30e1e5d2a02123964b3b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
