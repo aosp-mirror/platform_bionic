@@ -126,6 +126,32 @@ build_type := target
 build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
+
+# -----------------------------------------------------------------------------
+# Libraries used by dlext tests for open from a zip-file
+# -----------------------------------------------------------------------------
+libdlext_test_zip_src_files := \
+    dlext_test_library.cpp \
+
+libdlext_test_zip_shared_libraries := libatest_simple_zip
+
+libdlext_test_zip_install_to_out_data := true
+module := libdlext_test_zip
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
+libatest_simple_zip_src_files := \
+    dlopen_testlib_simple.cpp
+
+libatest_simple_zip_install_to_out_data := true
+module := libatest_simple_zip
+module_tag := optional
+build_type := target
+build_target := SHARED_LIBRARY
+include $(TEST_PATH)/Android.build.mk
+
 # ----------------------------------------------------------------------------
 # Library with soname which does not match filename
 # ----------------------------------------------------------------------------
