@@ -40,7 +40,7 @@
 ENTRY(__strcat_chk)
     pld     [r0, #0]
     push    {r0, lr}
-    .cfi_def_cfa_offset 8
+    .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
     push    {r4, r5}
@@ -177,7 +177,7 @@ ENTRY(__strcat_chk)
 .L_strlen_done:
     add     r2, r3, r4
     cmp     r2, lr
-    bhi     __strcat_chk_failed
+    bhi     .L_strcat_chk_failed
 
     // Set up the registers for the memcpy code.
     mov     r1, r5
@@ -185,20 +185,17 @@ ENTRY(__strcat_chk)
     mov     r2, r4
     add     r0, r0, r3
     pop     {r4, r5}
-END(__strcat_chk)
+    .cfi_adjust_cfa_offset -8
+    .cfi_restore r4
+    .cfi_restore r5
 
-#define MEMCPY_BASE         __strcat_chk_memcpy_base
-#define MEMCPY_BASE_ALIGNED __strcat_chk_memcpy_base_aligned
 #include "memcpy_base.S"
 
-ENTRY_PRIVATE(__strcat_chk_failed)
-    .cfi_def_cfa_offset 8
-    .cfi_rel_offset r0, 0
-    .cfi_rel_offset lr, 4
+    // Undo the above cfi directives.
     .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r4, 0
     .cfi_rel_offset r5, 4
-
+.L_strcat_chk_failed:
     ldr     r0, error_message
     ldr     r1, error_code
 1:
@@ -208,7 +205,7 @@ error_code:
     .word   BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
-END(__strcat_chk_failed)
+END(__strcat_chk)
 
     .data
 error_string:
