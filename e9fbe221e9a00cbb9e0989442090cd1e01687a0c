@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e4d7d85_e8195581",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-30T00:53:00Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "e9fbe221e9a00cbb9e0989442090cd1e01687a0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae5bf53d_d1263dfc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-30T00:53:00Z",
+      "side": 1,
+      "message": "indentation",
+      "revId": "e9fbe221e9a00cbb9e0989442090cd1e01687a0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
