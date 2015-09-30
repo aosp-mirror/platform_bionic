@@ -30,6 +30,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <base/file.h>
+#include <base/strings.h>
+
+#include "private/get_cpu_count_from_string.h"
+
 static void* get_brk() {
   return sbrk(0);
 }
@@ -817,6 +822,29 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_SHM);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_UUCP);
 #endif // defined(__BIONIC__)
+}
+
+TEST(unistd, get_cpu_count_from_string) {
+  ASSERT_EQ(0, GetCpuCountFromString(" "));
+  ASSERT_EQ(1, GetCpuCountFromString("0"));
+  ASSERT_EQ(40, GetCpuCountFromString("0-39"));
+  ASSERT_EQ(4, GetCpuCountFromString("0, 1-2, 4\n"));
+}
+
+TEST(unistd, sysconf_SC_NPROCESSORS_ONLN) {
+  std::string s;
+  ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &s));
+  std::vector<std::string> strs = android::base::Split(s, ",");
+  long online_cpus = 0;
+  for (auto& s : strs) {
+    std::vector<std::string> numbers = android::base::Split(s, "-");
+    if (numbers.size() == 1u) {
+      online_cpus++;
+    } else {
+      online_cpus += atoi(numbers[1].c_str()) - atoi(numbers[0].c_str()) + 1;
+    }
+  }
+  ASSERT_EQ(online_cpus, sysconf(_SC_NPROCESSORS_ONLN));
 }
 
 TEST(unistd, dup2_same) {
