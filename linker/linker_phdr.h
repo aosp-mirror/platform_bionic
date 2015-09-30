@@ -39,7 +39,7 @@
 
 class ElfReader {
  public:
-  ElfReader(const char* name, int fd, off64_t file_offset);
+  ElfReader(const char* name, int fd, off64_t file_offset, off64_t file_size);
   ~ElfReader();
 
   bool Load(const android_dlextinfo* extinfo);
@@ -62,6 +62,7 @@ class ElfReader {
   const char* name_;
   int fd_;
   off64_t file_offset_;
+  off64_t file_size_;
 
   ElfW(Ehdr) header_;
   size_t phdr_num_;
@@ -107,5 +108,8 @@ int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count, El
 void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                     ElfW(Addr) load_bias, ElfW(Dyn)** dynamic,
                                     ElfW(Word)* dynamic_flags);
+
+const char* phdr_table_get_interpreter_name(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                            ElfW(Addr) load_bias);
 
 #endif /* LINKER_PHDR_H */

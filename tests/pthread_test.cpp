@@ -27,6 +27,7 @@
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
+#include <unwind.h>
 
 #include <atomic>
 #include <regex>
@@ -39,6 +40,8 @@
 #include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
+
+#include "utils.h"
 
 extern "C" pid_t gettid();
 
@@ -403,7 +406,9 @@ TEST(pthread, pthread_sigmask) {
 }
 
 TEST(pthread, pthread_setname_np__too_long) {
-  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "this name is far too long for linux"));
+  // The limit is 15 characters --- the kernel's buffer is 16, but includes a NUL.
+  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "123456789012345"));
+  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "1234567890123456"));
 }
 
 TEST(pthread, pthread_setname_np__self) {
@@ -454,42 +459,6 @@ TEST(pthread, pthread_detach__no_such_thread) {
   MakeDeadThread(dead_thread);
 
   ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
-}
-
-TEST(pthread, pthread_detach_no_leak) {
-  size_t initial_bytes = 0;
-  // Run this loop more than once since the first loop causes some memory
-  // to be allocated permenantly. Run an extra loop to help catch any subtle
-  // memory leaks.
-  for (size_t loop = 0; loop < 3; loop++) {
-    // Set the initial bytes on the second loop since the memory in use
-    // should have stabilized.
-    if (loop == 1) {
-      initial_bytes = mallinfo().uordblks;
-    }
-
-    pthread_attr_t attr;
-    ASSERT_EQ(0, pthread_attr_init(&attr));
-    ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
-
-    std::vector<pthread_t> threads;
-    for (size_t i = 0; i < 32; ++i) {
-      pthread_t t;
-      ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, NULL));
-      threads.push_back(t);
-    }
-
-    sleep(1);
-
-    for (size_t i = 0; i < 32; ++i) {
-      ASSERT_EQ(0, pthread_detach(threads[i])) << i;
-    }
-  }
-
-  size_t final_bytes = mallinfo().uordblks;
-  int leaked_bytes = (final_bytes - initial_bytes);
-
-  ASSERT_EQ(0, leaked_bytes);
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
@@ -987,14 +956,14 @@ TEST(pthread, pthread_once_1934122) {
 }
 
 static int g_atfork_prepare_calls = 0;
-static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 1; }
-static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls << 4) | 2; }
+static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 1; }
+static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 2; }
 static int g_atfork_parent_calls = 0;
-static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 1; }
-static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls << 4) | 2; }
+static void AtForkParent1() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 1; }
+static void AtForkParent2() { g_atfork_parent_calls = (g_atfork_parent_calls * 10) + 2; }
 static int g_atfork_child_calls = 0;
-static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 1; }
-static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls << 4) | 2; }
+static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 1; }
+static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 2; }
 
 TEST(pthread, pthread_atfork_smoke) {
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
@@ -1005,13 +974,15 @@ TEST(pthread, pthread_atfork_smoke) {
 
   // Child and parent calls are made in the order they were registered.
   if (pid == 0) {
-    ASSERT_EQ(0x12, g_atfork_child_calls);
+    ASSERT_EQ(12, g_atfork_child_calls);
     _exit(0);
   }
-  ASSERT_EQ(0x12, g_atfork_parent_calls);
+  ASSERT_EQ(12, g_atfork_parent_calls);
 
   // Prepare calls are made in the reverse order.
-  ASSERT_EQ(0x21, g_atfork_prepare_calls);
+  ASSERT_EQ(21, g_atfork_prepare_calls);
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
 }
 
 TEST(pthread, pthread_attr_getscope) {
@@ -1186,42 +1157,36 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   // The two methods of asking for the stack size should agree.
   EXPECT_EQ(stack_size, stack_size2);
 
+#if defined(__BIONIC__)
   // What does /proc/self/maps' [stack] line say?
   void* maps_stack_hi = NULL;
-  FILE* fp = fopen("/proc/self/maps", "r");
-  ASSERT_TRUE(fp != NULL);
-  char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != NULL) {
-    uintptr_t lo, hi;
-    char name[10];
-    sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %*4s %*x %*x:%*x %*d %10s", &lo, &hi, name);
-    if (strcmp(name, "[stack]") == 0) {
-      maps_stack_hi = reinterpret_cast<void*>(hi);
+  std::vector<map_record> maps;
+  ASSERT_TRUE(Maps::parse_maps(&maps));
+  for (auto& map : maps) {
+    if (map.pathname == "[stack]") {
+      maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
       break;
     }
   }
-  fclose(fp);
+
+  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
+  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
+  // region isn't very interesting.
+  EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
 
   // The stack size should correspond to RLIMIT_STACK.
   rlimit rl;
   ASSERT_EQ(0, getrlimit(RLIMIT_STACK, &rl));
   uint64_t original_rlim_cur = rl.rlim_cur;
-#if defined(__BIONIC__)
   if (rl.rlim_cur == RLIM_INFINITY) {
     rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
   }
-#endif
   EXPECT_EQ(rl.rlim_cur, stack_size);
 
   auto guard = make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
-
-  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
-  // Remember that the stack grows down (and is mapped in on demand), so the low address of the
-  // region isn't very interesting.
-  EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);
 
   //
   // What if RLIMIT_STACK is smaller than the stack's current extent?
@@ -1250,6 +1215,68 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 
   EXPECT_EQ(stack_size, stack_size2);
   ASSERT_EQ(6666U, stack_size);
+#endif
+}
+
+struct GetStackSignalHandlerArg {
+  volatile bool done;
+  void* signal_handler_sp;
+  void* main_stack_base;
+  size_t main_stack_size;
+};
+
+static GetStackSignalHandlerArg getstack_signal_handler_arg;
+
+static void getstack_signal_handler(int sig) {
+  ASSERT_EQ(SIGUSR1, sig);
+  // Use sleep() to make current thread be switched out by the kernel to provoke the error.
+  sleep(1);
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attr));
+  void* stack_base;
+  size_t stack_size;
+  ASSERT_EQ(0, pthread_attr_getstack(&attr, &stack_base, &stack_size));
+  getstack_signal_handler_arg.signal_handler_sp = &attr;
+  getstack_signal_handler_arg.main_stack_base = stack_base;
+  getstack_signal_handler_arg.main_stack_size = stack_size;
+  getstack_signal_handler_arg.done = true;
+}
+
+// The previous code obtained the main thread's stack by reading the entry in
+// /proc/self/task/<pid>/maps that was labeled [stack]. Unfortunately, on x86/x86_64, the kernel
+// relies on sp0 in task state segment(tss) to label the stack map with [stack]. If the kernel
+// switches a process while the main thread is in an alternate stack, then the kernel will label
+// the wrong map with [stack]. This test verifies that when the above situation happens, the main
+// thread's stack is found correctly.
+TEST(pthread, pthread_attr_getstack_in_signal_handler) {
+  const size_t sig_stack_size = 16 * 1024;
+  void* sig_stack = mmap(NULL, sig_stack_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
+                         -1, 0);
+  ASSERT_NE(MAP_FAILED, sig_stack);
+  stack_t ss;
+  ss.ss_sp = sig_stack;
+  ss.ss_size = sig_stack_size;
+  ss.ss_flags = 0;
+  stack_t oss;
+  ASSERT_EQ(0, sigaltstack(&ss, &oss));
+
+  ScopedSignalHandler handler(SIGUSR1, getstack_signal_handler, SA_ONSTACK);
+  getstack_signal_handler_arg.done = false;
+  kill(getpid(), SIGUSR1);
+  ASSERT_EQ(true, getstack_signal_handler_arg.done);
+
+  // Verify if the stack used by the signal handler is the alternate stack just registered.
+  ASSERT_LE(sig_stack, getstack_signal_handler_arg.signal_handler_sp);
+  ASSERT_GE(reinterpret_cast<char*>(sig_stack) + sig_stack_size,
+            getstack_signal_handler_arg.signal_handler_sp);
+
+  // Verify if the main thread's stack got in the signal handler is correct.
+  ASSERT_LE(getstack_signal_handler_arg.main_stack_base, &ss);
+  ASSERT_GE(reinterpret_cast<char*>(getstack_signal_handler_arg.main_stack_base) +
+            getstack_signal_handler_arg.main_stack_size, reinterpret_cast<void*>(&ss));
+
+  ASSERT_EQ(0, sigaltstack(&oss, nullptr));
+  ASSERT_EQ(0, munmap(sig_stack, sig_stack_size));
 }
 
 static void pthread_attr_getstack_18908062_helper(void*) {
@@ -1568,4 +1595,61 @@ TEST(pthread, pthread_types_allow_four_bytes_alignment) {
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details.";
 #endif
+}
+
+TEST(pthread, pthread_mutex_lock_null_32) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_EQ(EINVAL, pthread_mutex_lock(NULL));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+#endif
+}
+
+TEST(pthread, pthread_mutex_unlock_null_32) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_EQ(EINVAL, pthread_mutex_unlock(NULL));
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+#endif
+}
+
+TEST_F(pthread_DeathTest, pthread_mutex_lock_null_64) {
+#if defined(__BIONIC__) && defined(__LP64__)
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EXIT(pthread_mutex_lock(null_value), testing::KilledBySignal(SIGSEGV), "");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+#endif
+}
+
+TEST_F(pthread_DeathTest, pthread_mutex_unlock_null_64) {
+#if defined(__BIONIC__) && defined(__LP64__)
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EXIT(pthread_mutex_unlock(null_value), testing::KilledBySignal(SIGSEGV), "");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+#endif
+}
+
+extern _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx, void* arg);
+
+static volatile bool signal_handler_on_altstack_done;
+
+static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
+  ASSERT_EQ(SIGUSR1, signo);
+  // Check if we have enough stack space for unwinding.
+  int count = 0;
+  _Unwind_Backtrace(FrameCounter, &count);
+  ASSERT_GT(count, 0);
+  // Check if we have enough stack space for logging.
+  std::string s(2048, '*');
+  GTEST_LOG_(INFO) << s;
+  signal_handler_on_altstack_done = true;
+}
+
+TEST(pthread, big_enough_signal_stack_for_64bit_arch) {
+  signal_handler_on_altstack_done = false;
+  ScopedSignalHandler handler(SIGUSR1, SignalHandlerOnAltStack, SA_SIGINFO | SA_ONSTACK);
+  kill(getpid(), SIGUSR1);
+  ASSERT_TRUE(signal_handler_on_altstack_done);
 }

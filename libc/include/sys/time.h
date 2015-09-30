@@ -25,12 +25,16 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_TIME_H_
 #define _SYS_TIME_H_
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <linux/time.h>
+
+/* POSIX says <sys/time.h> gets you most of <sys/select.h> and may get you all of it. */
+#include <sys/select.h>
 
 __BEGIN_DECLS
 
@@ -72,6 +76,15 @@ extern int utimes(const char *, const struct timeval *);
             (res)->tv_sec  -= 1;                      \
         }                                             \
     } while (0)
+
+#define TIMEVAL_TO_TIMESPEC(tv, ts) {     \
+    (ts)->tv_sec = (tv)->tv_sec;          \
+    (ts)->tv_nsec = (tv)->tv_usec * 1000; \
+}
+#define TIMESPEC_TO_TIMEVAL(tv, ts) {     \
+    (tv)->tv_sec = (ts)->tv_sec;          \
+    (tv)->tv_usec = (ts)->tv_nsec / 1000; \
+}
 
 __END_DECLS
 

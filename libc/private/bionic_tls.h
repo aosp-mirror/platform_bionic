@@ -67,6 +67,13 @@ enum {
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
+  // Fast storage for Thread::Current() in ART.
+  TLS_SLOT_ART_THREAD_SELF,
+
+  // Lets TSAN avoid using pthread_getspecific for finding the current thread
+  // state.
+  TLS_SLOT_TSAN,
+
   BIONIC_TLS_SLOTS // Must come last!
 };
 
@@ -114,7 +121,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-extern __LIBC_HIDDEN__ void __libc_init_tls(KernelArgumentBlock& args);
+extern __LIBC_HIDDEN__ void __libc_init_main_thread(KernelArgumentBlock& args);
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */

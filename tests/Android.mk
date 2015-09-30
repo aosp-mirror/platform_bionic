@@ -46,8 +46,7 @@ else
 test_cflags += -DUSE_JEMALLOC
 endif
 
-test_cppflags = \
-    -std=gnu++11 \
+test_cppflags := \
 
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
@@ -70,6 +69,7 @@ libBionicStandardTests_src_files := \
     math_test.cpp \
     mntent_test.cpp \
     netdb_test.cpp \
+    netinet_udp_test.cpp \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
@@ -93,6 +93,8 @@ libBionicStandardTests_src_files := \
     sys_epoll_test.cpp \
     sys_mman_test.cpp \
     sys_personality_test.cpp \
+    sys_prctl_test.cpp \
+    sys_procfs_test.cpp \
     sys_resource_test.cpp \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
@@ -103,7 +105,9 @@ libBionicStandardTests_src_files := \
     sys_sysinfo_test.cpp \
     sys_time_test.cpp \
     sys_types_test.cpp \
+    sys_uio_test.cpp \
     sys_vfs_test.cpp \
+    sys_xattr_test.cpp \
     system_properties_test.cpp \
     time_test.cpp \
     uchar_test.cpp \
@@ -133,6 +137,11 @@ libBionicStandardTests_static_libraries := \
 
 libBionicStandardTests_ldlibs_host := \
     -lrt \
+
+# Clang/llvm has incompatible long double (fp128) for x86_64.
+# https://llvm.org/bugs/show_bug.cgi?id=23897
+# This affects most of math_test.cpp.
+libBionicStandardTests_clang_target := false
 
 module := libBionicStandardTests
 module_tag := optional
@@ -228,7 +237,13 @@ build_type := target
 build_target := STATIC_TEST_LIBRARY
 include $(LOCAL_PATH)/Android.build.mk
 build_type := host
+
+ifeq ($(HOST_OS),$(filter $(HOST_OS),linux darwin))
+saved_build_host := $(build_host)
+build_host := true
 include $(LOCAL_PATH)/Android.build.mk
+build_host := $(saved_build_host)
+endif
 
 # -----------------------------------------------------------------------------
 # Library of bionic customized gtest main function, with normal gtest output format,
@@ -238,7 +253,12 @@ libBionicCtsGtestMain_src_files := gtest_main.cpp
 
 libBionicCtsGtestMain_cflags := $(test_cflags)
 
-libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT
+libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT \
+
+# Temporarily fix the job count to 1 for CTS since on some devices the
+# number of online cores is incorrectly read as the total number of cores
+# in the system. When b/24376925 is fixed, this should be removed.
+libBionicCtsGtestMain_cppflags += -DJOB_COUNT_FIXED=1
 
 module := libBionicCtsGtestMain
 module_tag := optional
@@ -269,6 +289,9 @@ bionic-unit-tests_src_files := \
     dlext_test.cpp \
     __cxa_thread_atexit_test.cpp \
     dlfcn_test.cpp \
+    libdl_test.cpp \
+    pthread_dlfcn_test.cpp \
+    thread_local_test.cpp \
 
 bionic-unit-tests_cflags := $(test_cflags)
 
@@ -283,7 +306,6 @@ bionic-unit-tests_ldflags := \
 
 bionic-unit-tests_c_includes := \
     bionic/libc \
-    $(call include-path-for, libpagemap) \
 
 bionic-unit-tests_shared_libraries_target := \
     libdl \
@@ -295,9 +317,7 @@ bionic-unit-tests_shared_libraries_target := \
 # which bionic does not support. Reenable this once this question is resolved.
 bionic-unit-tests_clang_target := false
 
-ifneq ($(filter $(TARGET_ARCH),arm arm64),$(TARGET_ARCH))
 bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
-endif
 
 module := bionic-unit-tests
 module_tag := optional
@@ -348,6 +368,7 @@ bionic-unit-tests-glibc_src_files := \
     atexit_test.cpp \
     dlfcn_test.cpp \
     dl_test.cpp \
+    pthread_dlfcn_test.cpp \
 
 bionic-unit-tests-glibc_shared_libraries := \
     libdl_preempt_test_1 \
@@ -398,12 +419,14 @@ LOCAL_ADDITIONAL_DEPENDENCIES := \
 
 LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx \
     $(HOST_OUT_EXECUTABLES)/FileCheck \
-    $($(LOCAL_2ND_ARCH_VAR_PREFIX)CXX_BARE) \
+    $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_CXX) \
     GCC \
 
 LOCAL_CLANG := false
 LOCAL_MODULE := bionic-compile-time-tests-g++
 LOCAL_CPPFLAGS := -Wall
+# Disable color diagnostics so the warnings output matches the source
+LOCAL_CPPFLAGS +=  -fdiagnostics-color=never
 LOCAL_SRC_FILES := fortify_compilation_test.cpp
 include $(BUILD_STATIC_LIBRARY)
 
@@ -421,6 +444,8 @@ LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests-clang++
 LOCAL_CPPFLAGS := -Wall
+# Disable color diagnostics so the warnings output matches the source
+LOCAL_CPPFLAGS += -fno-color-diagnostics
 # FileCheck will error if there aren't any CLANG: lines in the file, but there
 # don't appear to be any cases where clang _does_ emit warnings for sn?printf :(
 LOCAL_SRC_FILES :=
@@ -434,6 +459,7 @@ include $(BUILD_STATIC_LIBRARY)
 # Make sure to create ANDROID_DATA/local/tmp if doesn't exist.
 # Use the current target out directory as ANDROID_DATA.
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
+.PHONY: bionic-unit-tests-glibc-run
 bionic-unit-tests-glibc-run: bionic-unit-tests-glibc
 	mkdir -p $(TARGET_OUT_DATA)/local/tmp
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
@@ -451,6 +477,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86 x86_64))
 TEST_TIMEOUT := 0
 
 # BIONIC_TEST_FLAGS is either empty or it comes from the user.
+.PHONY: bionic-unit-tests-run-on-host32
 bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \
@@ -460,6 +487,7 @@ bionic-unit-tests-run-on-host32: bionic-unit-tests bionic-prepare-run-on-host
 
 ifeq ($(TARGET_IS_64_BIT),true)
 # add target to run lp64 tests
+.PHONY: bionic-unit-tests-run-on-host64
 bionic-unit-tests-run-on-host64: bionic-unit-tests bionic-prepare-run-on-host
 	ANDROID_DATA=$(TARGET_OUT_DATA) \
 	ANDROID_DNS_MODE=local \

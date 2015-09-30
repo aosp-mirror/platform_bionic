@@ -77,7 +77,6 @@ int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  arm,mips,x8
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
 int     setgroups:setgroups(int, const gid_t*)     arm64,mips,mips64,x86_64
 int     setpgid(pid_t, pid_t)  all
-pid_t   vfork(void)  arm
 int     setregid:setregid32(gid_t, gid_t)  arm,x86
 int     setregid:setregid(gid_t, gid_t)    arm64,mips,mips64,x86_64
 int     chroot(const char*)  all
@@ -95,7 +94,17 @@ ssize_t     pread64(int, void*, size_t, off64_t) arm,mips,x86
 ssize_t     pread64|pread(int, void*, size_t, off_t) arm64,mips64,x86_64
 ssize_t     pwrite64(int, void*, size_t, off64_t) arm,mips,x86
 ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) arm64,mips64,x86_64
-int         close(int)                      all
+
+# On LP32, preadv/pwritev don't use off64_t --- they use pairs of 32-bit
+# arguments to avoid problems on architectures like ARM where 64-bit arguments
+# must be in a register pair starting with an even-numbered register.
+# See linux/fs/read_write.c and https://lwn.net/Articles/311630/.
+ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) arm,mips,x86
+ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
+ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) arm,mips,x86
+ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
+
+int         ___close:close(int)  all
 pid_t       __getpid:getpid()  all
 int         munmap(void*, size_t)  all
 void*       mremap(void*, size_t, size_t, unsigned long)  all
@@ -122,9 +131,9 @@ int         fdatasync(int) all
 int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
 void        sync(void)  all
-int         fsetxattr(int, const char*, const void*, size_t, int) all
-ssize_t     fgetxattr(int, const char*, void*, size_t) all
-ssize_t     flistxattr(int, char*, size_t) all
+int         ___fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
+ssize_t     ___fgetxattr:fgetxattr(int, const char*, void*, size_t) all
+ssize_t     ___flistxattr:flistxattr(int, char*, size_t) all
 int         fremovexattr(int, const char*) all
 
 int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   arm,arm64,mips,mips64,x86,x86_64
@@ -151,7 +160,6 @@ int utimensat(int, const char*, const struct timespec times[2], int)  all
 off_t lseek(int, off_t, int) arm,mips,x86
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
 off_t lseek|lseek64(int, off_t, int) arm64,mips64,x86_64
-int ftruncate(int, off_t) arm,mips,x86
 int ftruncate64(int, off64_t) arm,mips,x86
 int ftruncate|ftruncate64(int, off_t) arm64,mips64,x86_64
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) arm,mips,x86
@@ -204,7 +212,7 @@ clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
 int           clock_settime(clockid_t, const struct timespec*)  all
 int           clock_getres(clockid_t, struct timespec*)   all
-int           __clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
+int           ___clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
 int           getitimer(int, const struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
 int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
@@ -223,7 +231,7 @@ int     __rt_sigpending:rt_sigpending(sigset_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t)  all
 int     __rt_sigsuspend:rt_sigsuspend(const sigset_t*, size_t)  all
 int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, struct timespec_t*, size_t)  all
-int     __rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
+int     ___rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
 int     __signalfd4:signalfd4(int, const sigset_t*, size_t, int)  all
 
 # sockets
@@ -309,6 +317,9 @@ int inotify_rm_watch(int, unsigned int)  all
 int __pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
 int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  all
 
+ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
+ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
+
 int __set_tid_address:set_tid_address(int*)  all
 
 int setfsgid(gid_t)  all
@@ -331,7 +342,7 @@ int     __set_tls:set_thread_area(void*) mips,mips64
 int     __set_thread_area:set_thread_area(void*) x86
 
 # vdso stuff.
-int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64,x86
-int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86_64
-int gettimeofday(timeval*, timezone*)                   arm,mips,mips64,x86
-int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86_64
+int clock_gettime(clockid_t, timespec*)                 arm,mips,mips64
+int __clock_gettime:clock_gettime(clockid_t, timespec*) arm64,x86,x86_64
+int gettimeofday(timeval*, timezone*)                   arm,mips,mips64
+int __gettimeofday:gettimeofday(timeval*, timezone*)    arm64,x86,x86_64

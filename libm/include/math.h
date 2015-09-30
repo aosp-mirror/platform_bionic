@@ -15,116 +15,70 @@
  */
 
 #ifndef _MATH_H_
-#define	_MATH_H_
+#define _MATH_H_
 
 #include <sys/cdefs.h>
 #include <limits.h>
 
+#if !defined(__BIONIC_NO_MATH_INLINES)
+#define __BIONIC_MATH_INLINE(__def) extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__)) __def
+#else
+#define __BIONIC_MATH_INLINE(__def)
+#endif
+
 __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
-/*
- * ANSI/POSIX
- */
-extern const union __infinity_un {
-	unsigned char	__uc[8];
-	double		__ud;
-} __infinity;
-
-extern const union __nan_un {
-	unsigned char	__uc[sizeof(float)];
-	float		__uf;
-} __nan;
-
-#if __GNUC_PREREQ(3, 3) || (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 800)
-#define	__MATH_BUILTIN_CONSTANTS
-#endif
-
-#if __GNUC_PREREQ(3, 0) && !defined(__INTEL_COMPILER)
-#define	__MATH_BUILTIN_RELOPS
-#endif
-
-#ifdef __MATH_BUILTIN_CONSTANTS
-#define	HUGE_VAL	__builtin_huge_val()
-#else
-#define	HUGE_VAL	(__infinity.__ud)
-#endif
+#define HUGE_VAL	__builtin_huge_val()
 
 #if __ISO_C_VISIBLE >= 1999
-#define	FP_ILOGB0	(-INT_MAX) /* Android-changed */
-#define	FP_ILOGBNAN	INT_MAX /* Android-changed */
+#define FP_ILOGB0	(-INT_MAX)
+#define FP_ILOGBNAN	INT_MAX
 
-#ifdef __MATH_BUILTIN_CONSTANTS
-#define	HUGE_VALF	__builtin_huge_valf()
-#define	HUGE_VALL	__builtin_huge_vall()
-#define	INFINITY	__builtin_inff()
-#define	NAN		__builtin_nanf("")
-#else
-#define	HUGE_VALF	(float)HUGE_VAL
-#define	HUGE_VALL	(long double)HUGE_VAL
-#define	INFINITY	HUGE_VALF
-#define	NAN		(__nan.__uf)
-#endif /* __MATH_BUILTIN_CONSTANTS */
+#define HUGE_VALF	__builtin_huge_valf()
+#define HUGE_VALL	__builtin_huge_vall()
+#define INFINITY	__builtin_inff()
+#define NAN		__builtin_nanf("")
 
-#define	MATH_ERRNO	1
-#define	MATH_ERREXCEPT	2
-#define	math_errhandling	MATH_ERREXCEPT
+#define MATH_ERRNO	1
+#define MATH_ERREXCEPT	2
+#define math_errhandling	MATH_ERREXCEPT
 
-#define	FP_FAST_FMAF	1
-#ifdef __ia64__
-#define	FP_FAST_FMA	1
-#define	FP_FAST_FMAL	1
+#if defined(__FP_FAST_FMA)
+#define FP_FAST_FMA 1
+#endif
+#if defined(__FP_FAST_FMAF)
+#define FP_FAST_FMAF 1
+#endif
+#if defined(__FP_FAST_FMAL)
+#define FP_FAST_FMAL 1
 #endif
 
 /* Symbolic constants to classify floating point numbers. */
-#define	FP_INFINITE	0x01
-#define	FP_NAN		0x02
-#define	FP_NORMAL	0x04
-#define	FP_SUBNORMAL	0x08
-#define	FP_ZERO		0x10
-#define	fpclassify(x) \
-    ((sizeof (x) == sizeof (float)) ? __fpclassifyf(x) \
-    : (sizeof (x) == sizeof (double)) ? __fpclassifyd(x) \
-    : __fpclassifyl(x))
+#define FP_INFINITE	0x01
+#define FP_NAN		0x02
+#define FP_NORMAL	0x04
+#define FP_SUBNORMAL	0x08
+#define FP_ZERO		0x10
+#define fpclassify(x) \
+    __builtin_fpclassify(FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, x)
 
-#define	isfinite(x)					\
-    ((sizeof (x) == sizeof (float)) ? __isfinitef(x)	\
-    : (sizeof (x) == sizeof (double)) ? __isfinite(x)	\
-    : __isfinitel(x))
-#define	isinf(x)					\
-    ((sizeof (x) == sizeof (float)) ? __isinff(x)	\
-    : (sizeof (x) == sizeof (double)) ? isinf(x)	\
-    : __isinfl(x))
-#define	isnan(x)					\
-    ((sizeof (x) == sizeof (float)) ? __isnanf(x)	\
-    : (sizeof (x) == sizeof (double)) ? isnan(x)	\
-    : __isnanl(x))
-#define	isnormal(x)					\
-    ((sizeof (x) == sizeof (float)) ? __isnormalf(x)	\
-    : (sizeof (x) == sizeof (double)) ? __isnormal(x)	\
-    : __isnormall(x))
+#define isfinite(x) __builtin_isfinite(x)
+#define isinf(x) __builtin_isinf(x)
+#define isnan(x) __builtin_isnan(x)
+#define isnormal(x) __builtin_isnormal(x)
 
-#ifdef __MATH_BUILTIN_RELOPS
-#define	isgreater(x, y)		__builtin_isgreater((x), (y))
-#define	isgreaterequal(x, y)	__builtin_isgreaterequal((x), (y))
-#define	isless(x, y)		__builtin_isless((x), (y))
-#define	islessequal(x, y)	__builtin_islessequal((x), (y))
-#define	islessgreater(x, y)	__builtin_islessgreater((x), (y))
-#define	isunordered(x, y)	__builtin_isunordered((x), (y))
-#else
-#define	isgreater(x, y)		(!isunordered((x), (y)) && (x) > (y))
-#define	isgreaterequal(x, y)	(!isunordered((x), (y)) && (x) >= (y))
-#define	isless(x, y)		(!isunordered((x), (y)) && (x) < (y))
-#define	islessequal(x, y)	(!isunordered((x), (y)) && (x) <= (y))
-#define	islessgreater(x, y)	(!isunordered((x), (y)) && \
-					((x) > (y) || (y) > (x)))
-#define	isunordered(x, y)	(isnan(x) || isnan(y))
-#endif /* __MATH_BUILTIN_RELOPS */
+#define isgreater(x, y) __builtin_isgreater((x), (y))
+#define isgreaterequal(x, y) __builtin_isgreaterequal((x), (y))
+#define isless(x, y) __builtin_isless((x), (y))
+#define islessequal(x, y) __builtin_islessequal((x), (y))
+#define islessgreater(x, y) __builtin_islessgreater((x), (y))
+#define isunordered(x, y) __builtin_isunordered((x), (y))
 
-#define	signbit(x)					\
-    ((sizeof (x) == sizeof (float)) ? __signbitf(x)	\
-    : (sizeof (x) == sizeof (double)) ? __signbit(x)	\
-    : __signbitl(x))
+#define signbit(x) \
+    ((sizeof(x) == sizeof(float)) ? __builtin_signbitf(x) \
+    : (sizeof(x) == sizeof(double)) ? __builtin_signbit(x) \
+    : __builtin_signbitl(x))
 
 typedef double __double_t;
 typedef __double_t double_t;
@@ -213,6 +167,7 @@ double	sqrt(double);
 
 double	ceil(double);
 double	fabs(double) __pure2;
+__BIONIC_MATH_INLINE(double fabs(double x) { return __builtin_fabs(x); })
 double	floor(double);
 double	fmod(double, double);
 
@@ -331,6 +286,7 @@ float	sqrtf(float);
 
 float	ceilf(float);
 float	fabsf(float) __pure2;
+__BIONIC_MATH_INLINE(float fabsf(float x) { return __builtin_fabsf(x); })
 float	floorf(float);
 float	fmodf(float, float);
 float	roundf(float);
@@ -418,6 +374,7 @@ long double	exp2l(long double);
 long double	expl(long double);
 long double	expm1l(long double);
 long double	fabsl(long double) __pure2;
+__BIONIC_MATH_INLINE(long double fabsl(long double x) { return __builtin_fabsl(x); })
 long double	fdiml(long double, long double);
 long double	floorl(long double);
 long double	fmal(long double, long double, long double);

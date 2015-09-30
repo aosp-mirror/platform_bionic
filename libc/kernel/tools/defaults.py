@@ -12,12 +12,6 @@ kernel_archs = [ 'arm', 'arm64', 'mips', 'x86' ]
 # tree. used when looking for sources...
 kernel_dirs = [ "linux", "asm", "asm-generic", "mtd" ]
 
-# path to the directory containing the original kernel headers
-kernel_original_path = os.path.normpath( find_program_dir() + '/../../../../external/kernel-headers/original' )
-
-# path to the default location of the cleaned-up headers
-kernel_cleaned_path = os.path.normpath( find_program_dir() + '/..' )
-
 # a special value that is used to indicate that a given macro is known to be
 # undefined during optimization
 kCppUndefinedMacro = "<<<undefined>>>"
@@ -70,6 +64,8 @@ kernel_token_replacements = {
     # The kernel's SIGRTMIN/SIGRTMAX are absolute limits; userspace steals a few.
     "SIGRTMIN": "__SIGRTMIN",
     "SIGRTMAX": "__SIGRTMAX",
+    # We want to support both BSD and Linux member names in struct udphdr.
+    "udphdr": "__kernel_udphdr",
     }
 
 # this is the set of known static inline functions that we want to keep

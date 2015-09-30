@@ -15,7 +15,7 @@ include $(CLEAR_VARS)
 #
 # DO NOT REMOVE --exclude-libs!
 
-LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a
+LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a -Wl,--version-script=$(LOCAL_PATH)/libdl.map
 
 # for x86, exclude libgcc_eh.a for the same reasons as above
 LOCAL_LDFLAGS_x86 := -Wl,--exclude-libs=libgcc_eh.a
@@ -36,7 +36,7 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 include $(BUILD_SHARED_LIBRARY)
 
 # A dummy libdl.a. Need for static executables using the LLVM unwinder. Most
@@ -49,5 +49,5 @@ LOCAL_CXX_STL := none
 
 LOCAL_MODULE := libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 include $(BUILD_STATIC_LIBRARY)

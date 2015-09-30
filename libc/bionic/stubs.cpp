@@ -39,6 +39,7 @@
 #include <unistd.h>
 
 #include "private/android_filesystem_config.h"
+#include "private/bionic_macros.h"
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
 #include "private/ThreadLocalBuffer.h"
@@ -66,11 +67,15 @@ struct passwd_state_t {
 static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
 static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
 
+static void init_group_state(group_state_t* state) {
+  memset(state, 0, sizeof(group_state_t));
+  state->group_.gr_mem = state->group_members_;
+}
+
 static group_state_t* __group_state() {
   group_state_t* result = g_group_tls_buffer.get();
   if (result != nullptr) {
-    memset(result, 0, sizeof(group_state_t));
-    result->group_.gr_mem = result->group_members_;
+    init_group_state(result);
   }
   return result;
 }
@@ -201,7 +206,7 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
 // u0_a1234 -> 0 * AID_USER + AID_APP + 1234
 // u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
 // u1_system -> 1 * AID_USER + android_ids['system']
-// returns 0 and sets errno to ENOENT in case of error
+// returns 0 and sets errno to ENOENT in case of error.
 static id_t app_id_from_name(const char* name, bool is_group) {
   char* end;
   unsigned long userid;
@@ -307,6 +312,54 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+// Translate an OEM name to the corresponding user/group id.
+// oem_XXX -> AID_OEM_RESERVED_2_START + XXX, iff XXX is within range.
+static id_t oem_id_from_name(const char* name) {
+  unsigned int id;
+  if (sscanf(name, "oem_%u", &id) != 1) {
+    return 0;
+  }
+  // Check OEM id is within range.
+  if (id > (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START)) {
+    return 0;
+  }
+  return AID_OEM_RESERVED_2_START + static_cast<id_t>(id);
+}
+
+static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
+  if (uid < AID_OEM_RESERVED_2_START || uid > AID_OEM_RESERVED_2_END) {
+    return NULL;
+  }
+
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u",
+           uid - AID_OEM_RESERVED_2_START);
+  snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+
+  passwd* pw = &state->passwd_;
+  pw->pw_name  = state->name_buffer_;
+  pw->pw_dir   = state->dir_buffer_;
+  pw->pw_shell = state->sh_buffer_;
+  pw->pw_uid   = uid;
+  pw->pw_gid   = uid;
+  return pw;
+}
+
+static group* oem_id_to_group(gid_t gid, group_state_t* state) {
+  if (gid < AID_OEM_RESERVED_2_START || gid > AID_OEM_RESERVED_2_END) {
+    return NULL;
+  }
+
+  snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
+           "oem_%u", gid - AID_OEM_RESERVED_2_START);
+
+  group* gr = &state->group_;
+  gr->gr_name   = state->group_name_buffer_;
+  gr->gr_gid    = gid;
+  gr->gr_mem[0] = gr->gr_name;
+  return gr;
+}
+
 // Translate a uid into the corresponding name.
 // 0 to AID_APP-1                   -> "system", "radio", etc.
 // AID_APP to AID_ISOLATED_START-1  -> u0_a1234
@@ -366,6 +419,11 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
   if (pw != NULL) {
     return pw;
   }
+  // Handle OEM range.
+  pw = oem_id_to_passwd(uid, state);
+  if (pw != NULL) {
+    return pw;
+  }
   return app_id_to_passwd(uid, state);
 }
 
@@ -376,6 +434,11 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   }
 
   passwd* pw = android_name_to_passwd(state, login);
+  if (pw != NULL) {
+    return pw;
+  }
+  // Handle OEM range.
+  pw = oem_id_to_passwd(oem_id_from_name(login), state);
   if (pw != NULL) {
     return pw;
   }
@@ -397,17 +460,38 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+static group* getgrgid_internal(gid_t gid, group_state_t* state) {
+  group* grp = android_id_to_group(state, gid);
+  if (grp != NULL) {
+    return grp;
+  }
+  // Handle OEM range.
+  grp = oem_id_to_group(gid, state);
+  if (grp != NULL) {
+    return grp;
+  }
+  return app_id_to_group(gid, state);
+}
+
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
   group_state_t* state = __group_state();
   if (state == NULL) {
     return NULL;
   }
+  return getgrgid_internal(gid, state);
+}
 
-  group* gr = android_id_to_group(state, gid);
-  if (gr != NULL) {
-    return gr;
+static group* getgrnam_internal(const char* name, group_state_t* state) {
+  group* grp = android_name_to_group(state, name);
+  if (grp != NULL) {
+    return grp;
   }
-  return app_id_to_group(gid, state);
+  // Handle OEM range.
+  grp = oem_id_to_group(oem_id_from_name(name), state);
+  if (grp != NULL) {
+    return grp;
+  }
+  return app_id_to_group(app_id_from_name(name, true), state);
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
@@ -415,11 +499,36 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
   if (state == NULL) {
     return NULL;
   }
+  return getgrnam_internal(name, state);
+}
 
-  if (android_name_to_group(state, name) != 0) {
-    return &state->group_;
+static int getgroup_r(bool by_name, const char* name, gid_t gid, struct group* grp, char* buf,
+                      size_t buflen, struct group** result) {
+  ErrnoRestorer errno_restorer;
+  *result = NULL;
+  char* p = reinterpret_cast<char*>(
+      BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
+  if (p + sizeof(group_state_t) > buf + buflen) {
+    return ERANGE;
   }
-  return app_id_to_group(app_id_from_name(name, true), state);
+  group_state_t* state = reinterpret_cast<group_state_t*>(p);
+  init_group_state(state);
+  group* retval = (by_name ? getgrnam_internal(name, state) : getgrgid_internal(gid, state));
+  if (retval != NULL) {
+    *grp = *retval;
+    *result = grp;
+    return 0;
+  }
+  return errno;
+}
+
+int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct group** result) {
+  return getgroup_r(false, NULL, gid, grp, buf, buflen, result);
+}
+
+int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
+               struct group **result) {
+  return getgroup_r(true, name, 0, grp, buf, buflen, result);
 }
 
 // We don't have an /etc/networks, so all inputs return NULL.

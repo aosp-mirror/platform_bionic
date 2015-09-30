@@ -41,13 +41,19 @@
 
 extern "C" int __getdents64(unsigned int, dirent*, unsigned int);
 
+// Apportable decided to copy the data structure from this file
+// and use it in their own code, but they also call into readdir.
+// In order to avoid a lockup, the structure must be maintained in
+// the exact same order as in L and below. New structure members
+// need to be added to the end of this structure.
+// See b/21037208 for more details.
 struct DIR {
   int fd_;
   size_t available_bytes_;
   dirent* next_;
-  long current_pos_;
   pthread_mutex_t mutex_;
   dirent buff_[15];
+  long current_pos_;
 };
 
 static DIR* __allocate_DIR(int fd) {

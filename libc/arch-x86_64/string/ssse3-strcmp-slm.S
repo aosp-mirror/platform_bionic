@@ -1897,8 +1897,8 @@ L(strcmp_exitz):
 
 	.p2align 4
 L(Byte0):
-	movzx	(%rsi), %ecx
-	movzx	(%rdi), %eax
+	movzbl	(%rsi), %ecx
+	movzbl	(%rdi), %eax
 
 	sub	%ecx, %eax
 	ret

@@ -34,6 +34,11 @@
 
 #include <machine/elf_machdep.h>
 
+#define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
+#define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
+
+typedef __s64 Elf32_Sxword;
+
 typedef struct {
   __u32 a_type;
   union {
@@ -186,6 +191,11 @@ typedef struct {
 #define STT_HIOS      12
 #define STT_LOPROC    13
 #define STT_HIPROC    15
+
+#define STV_DEFAULT   0
+#define STV_INTERNAL  1
+#define STV_HIDDEN    2
+#define STV_PROTECTED 3
 
 /* The kernel uses NT_PRFPREG but glibc also offers NT_FPREGSET */
 #define NT_FPREGSET NT_PRFPREG

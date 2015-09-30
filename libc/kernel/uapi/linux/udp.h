@@ -19,7 +19,7 @@
 #ifndef _UAPI_LINUX_UDP_H
 #define _UAPI_LINUX_UDP_H
 #include <linux/types.h>
-struct udphdr {
+struct __kernel_udphdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __be16 source;
   __be16 dest;

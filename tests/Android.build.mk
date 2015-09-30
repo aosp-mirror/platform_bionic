@@ -37,7 +37,7 @@ endif
 LOCAL_CLANG := $($(module)_clang_$(build_type))
 
 ifneq ($($(module)_allow_asan),true)
-LOCAL_ADDRESS_SANITIZER := false
+LOCAL_SANITIZE := never
 endif
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
@@ -46,6 +46,10 @@ LOCAL_ALLOW_UNDEFINED_SYMBOLS := $($(module)_allow_undefined_symbols)
 
 ifneq ($($(module)_multilib),)
     LOCAL_MULTILIB := $($(module)_multilib)
+endif
+
+ifneq ($($(module)_relative_path),)
+    LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
 endif
 
 LOCAL_CFLAGS := \

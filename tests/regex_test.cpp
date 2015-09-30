@@ -36,3 +36,13 @@ TEST(regex, smoke) {
 
   regfree(&re);
 }
+
+TEST(regex, match_offsets) {
+  regex_t re;
+  regmatch_t matches[1];
+  ASSERT_EQ(0, regcomp(&re, "b", 0));
+  ASSERT_EQ(0, regexec(&re, "abc", 1, matches, 0));
+  ASSERT_EQ(1, matches[0].rm_so);
+  ASSERT_EQ(2, matches[0].rm_eo);
+  regfree(&re);
+}

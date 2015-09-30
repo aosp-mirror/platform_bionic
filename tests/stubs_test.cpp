@@ -122,6 +122,14 @@ TEST(getpwnam, app_id_radio) {
   check_get_passwd("radio", 1001, TYPE_SYSTEM);
 }
 
+TEST(getpwnam, oem_id_0) {
+  check_get_passwd("oem_0", 5000, TYPE_SYSTEM);
+}
+
+TEST(getpwnam, oem_id_999) {
+  check_get_passwd("oem_999", 5999, TYPE_SYSTEM);
+}
+
 TEST(getpwnam, app_id_nobody) {
   check_get_passwd("nobody", 9999, TYPE_SYSTEM);
 }
@@ -163,8 +171,6 @@ TEST(getpwnam, app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
 }
 
-#if defined(__BIONIC__)
-
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
   ASSERT_TRUE(grp != NULL);
   ASSERT_STREQ(group_name, grp->gr_name);
@@ -173,6 +179,8 @@ static void check_group(const group* grp, const char* group_name, gid_t gid) {
   ASSERT_STREQ(group_name, grp->gr_mem[0]);
   ASSERT_TRUE(grp->gr_mem[1] == NULL);
 }
+
+#if defined(__BIONIC__)
 
 static void check_getgrgid(const char* group_name, gid_t gid) {
   errno = 0;
@@ -190,15 +198,47 @@ static void check_getgrnam(const char* group_name, gid_t gid) {
   check_group(grp, group_name, gid);
 }
 
+static void check_getgrgid_r(const char* group_name, gid_t gid) {
+  group grp_storage;
+  char buf[512];
+  group* grp;
+
+  errno = 0;
+  int result = getgrgid_r(gid, &grp_storage, buf, sizeof(buf), &grp);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrgid_r");
+  check_group(grp, group_name, gid);
+}
+
+static void check_getgrnam_r(const char* group_name, gid_t gid) {
+  group grp_storage;
+  char buf[512];
+  group* grp;
+
+  errno = 0;
+  int result = getgrnam_r(group_name, &grp_storage, buf, sizeof(buf), &grp);
+  ASSERT_EQ(0, result);
+  ASSERT_EQ(0, errno);
+  SCOPED_TRACE("getgrnam_r");
+  check_group(grp, group_name, gid);
+}
+
 static void check_get_group(const char* group_name, gid_t gid) {
   check_getgrgid(group_name, gid);
   check_getgrnam(group_name, gid);
+  check_getgrgid_r(group_name, gid);
+  check_getgrnam_r(group_name, gid);
 }
 
 #else // !defined(__BIONIC__)
 
-static void check_get_group(const char* /* group_name */, gid_t /* gid */) {
+static void print_no_getgrnam_test_info() {
   GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+}
+
+static void check_get_group(const char*, gid_t) {
+  print_no_getgrnam_test_info();
 }
 
 #endif
@@ -213,6 +253,14 @@ TEST(getgrnam, system_id_system) {
 
 TEST(getgrnam, app_id_radio) {
   check_get_group("radio", 1001);
+}
+
+TEST(getgrnam, oem_id_0) {
+  check_get_group("oem_0", 5000);
+}
+
+TEST(getgrnam, oem_id_999) {
+  check_get_group("oem_999", 5999);
 }
 
 TEST(getgrnam, app_id_nobody) {
@@ -258,4 +306,54 @@ TEST(getgrnam, app_id_u1_a40000) {
 
 TEST(getgrnam, app_id_u1_i0) {
   check_get_group("u1_i0", 199000);
+}
+
+TEST(getgrnam_r, reentrancy) {
+#if defined(__BIONIC__)
+  group grp_storage[2];
+  char buf[2][512];
+  group* grp[3];
+  int result = getgrnam_r("root", &grp_storage[0], buf[0], sizeof(buf[0]), &grp[0]);
+  ASSERT_EQ(0, result);
+  check_group(grp[0], "root", 0);
+  grp[1] = getgrnam("system");
+  check_group(grp[1], "system", 1000);
+  result = getgrnam_r("radio", &grp_storage[1], buf[1], sizeof(buf[1]), &grp[2]);
+  ASSERT_EQ(0, result);
+  check_group(grp[2], "radio", 1001);
+  check_group(grp[0], "root", 0);
+  check_group(grp[1], "system", 1000);
+#else
+  print_no_getgrnam_test_info();
+#endif
+}
+
+TEST(getgrgid_r, reentrancy) {
+#if defined(__BIONIC__)
+  group grp_storage[2];
+  char buf[2][512];
+  group* grp[3];
+  int result = getgrgid_r(0, &grp_storage[0], buf[0], sizeof(buf[0]), &grp[0]);
+  ASSERT_EQ(0, result);
+  check_group(grp[0], "root", 0);
+  grp[1] = getgrgid(1000);
+  check_group(grp[1], "system", 1000);
+  result = getgrgid_r(1001, &grp_storage[1], buf[1], sizeof(buf[1]), &grp[2]);
+  ASSERT_EQ(0, result);
+  check_group(grp[2], "radio", 1001);
+  check_group(grp[0], "root", 0);
+  check_group(grp[1], "system", 1000);
+#else
+  print_no_getgrnam_test_info();
+#endif
+}
+
+TEST(getgrnam_r, large_enough_suggested_buffer_size) {
+  long size = sysconf(_SC_GETGR_R_SIZE_MAX);
+  ASSERT_GT(size, 0);
+  char buf[size];
+  group grp_storage;
+  group* grp;
+  ASSERT_EQ(0, getgrnam_r("root", &grp_storage, buf, size, &grp));
+  check_group(grp, "root", 0);
 }

@@ -76,10 +76,10 @@ extern unsigned long long strtoull(const char *, char **, int);
 
 extern int posix_memalign(void **memptr, size_t alignment, size_t size);
 
-_BIONIC_NOT_BEFORE_21(extern double atof(const char*);)
+extern double atof(const char*) __INTRODUCED_IN(21);
 
 extern double strtod(const char*, char**) __LIBC_ABI_PUBLIC__;
-_BIONIC_NOT_BEFORE_21(extern float strtof(const char*, char**) __LIBC_ABI_PUBLIC__;)
+extern float strtof(const char*, char**) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
 extern long double strtold(const char*, char**) __LIBC_ABI_PUBLIC__;
 
 extern long double strtold_l(const char *, char **, locale_t) __LIBC_ABI_PUBLIC__;
@@ -90,9 +90,9 @@ extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;
 extern long long atoll(const char*) __purefunc;
 
-_BIONIC_NOT_BEFORE_21(extern int abs(int) __pure2;)
-_BIONIC_NOT_BEFORE_21(extern long labs(long) __pure2;)
-_BIONIC_NOT_BEFORE_21(extern long long llabs(long long) __pure2;)
+extern int abs(int) __pure2 __INTRODUCED_IN(21);
+extern long labs(long) __pure2 __INTRODUCED_IN(21);
+extern long long llabs(long long) __pure2 __INTRODUCED_IN(21);
 
 extern char * realpath(const char *path, char *resolved);
 extern int system(const char *string);
@@ -109,9 +109,9 @@ void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
 
-_BIONIC_NOT_BEFORE_21(int rand(void);)
+int rand(void) __INTRODUCED_IN(21);
 int rand_r(unsigned int*);
-_BIONIC_NOT_BEFORE_21(void srand(unsigned int);)
+void srand(unsigned int) __INTRODUCED_IN(21);
 
 double drand48(void);
 double erand48(unsigned short[3]);
@@ -124,12 +124,12 @@ unsigned short* seed48(unsigned short[3]);
 void srand48(long);
 
 char* initstate(unsigned int, char*, size_t);
-_BIONIC_NOT_BEFORE_21(long random(void);)
+long random(void) __INTRODUCED_IN(21);
 char* setstate(char*);
-_BIONIC_NOT_BEFORE_21(void srandom(unsigned int);)
+void srandom(unsigned int) __INTRODUCED_IN(21);
 
 int getpt(void);
-_BIONIC_NOT_BEFORE_21(int grantpt(int);)
+int grantpt(int) __INTRODUCED_IN(21);
 int posix_openpt(int);
 char* ptsname(int);
 int ptsname_r(int, char*, size_t);
@@ -175,6 +175,27 @@ extern size_t __ctype_get_mb_cur_max(void);
 #if __ANDROID_API__ < 21
 #include <android/legacy_stdlib_inlines.h>
 #endif
+
+#if defined(__BIONIC_FORTIFY)
+
+extern char* __realpath_real(const char*, char*) __RENAME(realpath);
+__errordecl(__realpath_size_error, "realpath output parameter must be NULL or a >= PATH_MAX bytes buffer");
+
+#if !defined(__clang__)
+__BIONIC_FORTIFY_INLINE
+char* realpath(const char* path, char* resolved) {
+    size_t bos = __bos(resolved);
+
+    /* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
+    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE && bos < 4096) {
+        __realpath_size_error();
+    }
+
+    return __realpath_real(path, resolved);
+}
+#endif
+
+#endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS
 

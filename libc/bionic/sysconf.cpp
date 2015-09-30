@@ -97,8 +97,11 @@ long sysconf(int name) {
     case _SC_ATEXIT_MAX:        return LONG_MAX;    // Unlimited.
     case _SC_IOV_MAX:           return UIO_MAXIOV;
 
-    case _SC_PAGESIZE:          // Fall through, PAGESIZE and PAGE_SIZE always hold the same value.
-    case _SC_PAGE_SIZE:         return PAGE_SIZE;
+    // _SC_PAGESIZE and _SC_PAGE_SIZE are distinct, but return the same value.
+    case _SC_PAGESIZE:
+    case _SC_PAGE_SIZE:
+      return static_cast<long>(getauxval(AT_PAGESZ));
+
     case _SC_XOPEN_UNIX:        return _XOPEN_UNIX;
     case _SC_AIO_LISTIO_MAX:    return _POSIX_AIO_LISTIO_MAX;     // Minimum requirement.
     case _SC_AIO_MAX:           return _POSIX_AIO_MAX;            // Minimum requirement.

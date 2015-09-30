@@ -73,8 +73,10 @@ def clean_project(dry_run):
     build = 'clean-bionic-presubmit'
     if build in jenkins:
         if not dry_run:
-            job = jenkins[build].invoke()
-            url = job.get_build().baseurl
+            _ = jenkins[build].invoke()
+            # https://issues.jenkins-ci.org/browse/JENKINS-27256
+            # url = job.get_build().baseurl
+            url = 'URL UNAVAILABLE'
         else:
             url = 'DRY_RUN_URL'
         logging.info('Cleaning: %s %s', build, url)

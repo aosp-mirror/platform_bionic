@@ -17,14 +17,16 @@
 LOCAL_PATH := $(call my-dir)
 TEST_PATH := $(LOCAL_PATH)/..
 
-common_cppflags += -std=gnu++11
+common_cppflags :=
 common_additional_dependencies := \
     $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/Android.build.dt_runpath.mk \
     $(LOCAL_PATH)/Android.build.dlext_testzip.mk \
     $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
+    $(LOCAL_PATH)/Android.build.pthread_atfork.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
     $(LOCAL_PATH)/Android.build.versioned_lib.mk \
     $(TEST_PATH)/Android.build.mk
@@ -66,6 +68,8 @@ libdlext_test_src_files := \
 libdlext_test_ldflags := \
     -Wl,-z,relro \
 
+libdlext_test_shared_libraries := libtest_simple
+
 module := libdlext_test
 module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
@@ -99,6 +103,8 @@ libdlext_test_norelro_src_files := \
 libdlext_test_norelro_ldflags := \
     -Wl,-z,norelro \
 
+libdlext_test_norelro_shared_libraries := libtest_simple
+
 module := libdlext_test_norelro
 module_tag := optional
 build_type := target
@@ -110,6 +116,8 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 libdlext_test_fd_src_files := \
     dlext_test_library.cpp \
+
+libdlext_test_fd_shared_libraries := libtest_simple
 
 libdlext_test_fd_install_to_out_data := true
 module := libdlext_test_fd
@@ -179,6 +187,11 @@ module := libtest_nodelete_dt_flags_1
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
+# Build DT_RUNPATH test helper libraries
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.dt_runpath.mk
+
+# -----------------------------------------------------------------------------
 # Build library with two parents
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk
@@ -202,6 +215,11 @@ include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
 # Build libtest_versioned_lib.so with its dependencies.
 # -----------------------------------------------------------------------------
 include $(LOCAL_PATH)/Android.build.versioned_lib.mk
+
+# -----------------------------------------------------------------------------
+# Build libraries needed by pthread_atfork tests
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
 
 # -----------------------------------------------------------------------------
 # Library with dependency loop used by dlfcn tests
@@ -348,17 +366,14 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # Library with DF_1_GLOBAL
 # -----------------------------------------------------------------------------
 libdl_test_df_1_global_src_files := dl_df_1_global.cpp
-libdl_test_df_1_global_ldflags := -fuse-ld=bfd -Wl,-z,global
+libdl_test_df_1_global_ldflags := -Wl,-z,global
+
+# TODO (dimitry): host ld.gold does not yet support -z global
+# remove this line once it is updated.
+libdl_test_df_1_global_ldflags_host := -fuse-ld=bfd
+
 module := libdl_test_df_1_global
-# TODO: re-enable arm once b/18137520 or b/18130452 are fixed
-ifeq ($(filter $(TARGET_ARCH),arm arm64),)
 include $(LOCAL_PATH)/Android.build.testlib.mk
-else
-# build it for host only
-build_target := SHARED_LIBRARY
-build_type := host
-include $(TEST_PATH)/Android.build.mk
-endif
 
 # -----------------------------------------------------------------------------
 # Library using symbol from libdl_test_df_1_global
@@ -379,11 +394,34 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # -----------------------------------------------------------------------------
 # Library to check RTLD_LOCAL with dlsym in 'this'
 # -----------------------------------------------------------------------------
-libtest_dlsym_from_this_src_files := dlsym_from_this.cpp
+libtest_dlsym_from_this_src_files := dlsym_from_this_symbol.cpp
+
+libtest_dlsym_from_this_shared_libraries_target := libdl
+libtest_dlsym_from_this_shared_libraries := libtest_dlsym_from_this_child
 
 module := libtest_dlsym_from_this
-libtest_dlsym_from_this_shared_libraries_target := libdl
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_child_src_files := dlsym_from_this_functions.cpp
+
+libtest_dlsym_from_this_child_shared_libraries := libtest_dlsym_from_this_grandchild
+
+module := libtest_dlsym_from_this_child
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+libtest_dlsym_from_this_grandchild_src_files := dlsym_from_this_symbol2.cpp
+
+module := libtest_dlsym_from_this_grandchild
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Empty library
+# -----------------------------------------------------------------------------
+libtest_empty_src_files := empty.cpp
+
+module := libtest_empty
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------

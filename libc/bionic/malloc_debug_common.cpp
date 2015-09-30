@@ -486,18 +486,19 @@ static void malloc_init_impl() {
 }
 
 static void malloc_fini_impl() {
-  // Our BSD stdio implementation doesn't close the standard streams, it only flushes them.
-  // And it doesn't do that until its atexit handler is run, and we run first!
-  // It's great that other unclosed FILE*s show up as malloc leaks, but we need to manually
-  // clean up the standard streams ourselves.
-  fclose(stdin);
-  fclose(stdout);
-  fclose(stderr);
-
   if (libc_malloc_impl_handle != NULL) {
     MallocDebugFini malloc_debug_finalize =
       reinterpret_cast<MallocDebugFini>(dlsym(libc_malloc_impl_handle, "malloc_debug_finalize"));
     if (malloc_debug_finalize != NULL) {
+      // Our BSD stdio implementation doesn't close the standard streams,
+      // it only flushes them. And it doesn't do that until its atexit
+      // handler is run, and we run first! It's great that other unclosed
+      // FILE*s show up as malloc leaks, but we need to manually clean up
+      // the standard streams ourselves.
+      fclose(stdin);
+      fclose(stdout);
+      fclose(stderr);
+
       malloc_debug_finalize(g_malloc_debug_level);
     }
   }

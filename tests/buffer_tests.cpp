@@ -256,7 +256,7 @@ void RunSingleBufferAlignTest(
       VerifyFencepost(&buf_align[len]);
     }
   }
-  delete buf;
+  delete[] buf;
 }
 
 void RunSrcDstBufferAlignTest(
@@ -292,8 +292,8 @@ void RunSrcDstBufferAlignTest(
       VerifyFencepost(&dst_align[len]);
     }
   }
-  delete src;
-  delete dst;
+  delete[] src;
+  delete[] dst;
 }
 
 void RunCmpBufferAlignTest(
@@ -344,8 +344,8 @@ void RunCmpBufferAlignTest(
       }
     }
   }
-  delete buf1;
-  delete buf2;
+  delete[] buf1;
+  delete[] buf2;
 }
 
 void RunSingleBufferOverreadTest(void (*test_func)(uint8_t*, size_t)) {
@@ -381,15 +381,19 @@ void RunSrcDstBufferOverreadTest(void (*test_func)(uint8_t*, uint8_t*, size_t)) 
   // Make the second page unreadable and unwritable.
   ASSERT_TRUE(mprotect(&memory[pagesize], pagesize, PROT_NONE) == 0);
 
-  uint8_t* dst = new uint8_t[pagesize];
-  for (size_t i = 0; i < pagesize; i++) {
-    uint8_t* src = &memory[pagesize-i];
+  uint8_t* dst_buffer = new uint8_t[2*pagesize];
+  // Change the dst alignment as we change the source.
+  for (size_t i = 0; i < 16; i++) {
+    uint8_t* dst = &dst_buffer[i];
+    for (size_t j = 0; j < pagesize; j++) {
+      uint8_t* src = &memory[pagesize-j];
 
-    test_func(src, dst, i);
+      test_func(src, dst, j);
+    }
   }
   ASSERT_TRUE(mprotect(&memory[pagesize], pagesize, PROT_READ | PROT_WRITE) == 0);
   free(memory);
-  delete dst;
+  delete[] dst_buffer;
 }
 
 void RunCmpBufferOverreadTest(

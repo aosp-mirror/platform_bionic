@@ -44,7 +44,7 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         /* check if buffers are aligned. If so, run arm-only version */
         eor         r3, r0, r1
         ands        r3, r3, #0x3
-        beq         __memcpy_base_aligned
+        beq         MEMCPY_BASE_ALIGNED
 
         /* Check the upper size limit for Neon unaligned memory access in memcpy */
         cmp         r2, #224
@@ -133,8 +133,7 @@ ENTRY_PRIVATE(MEMCPY_BASE)
         strbcs      ip, [r0], #1
         strbcs      lr, [r0], #1
 
-        ldmfd       sp!, {r0, lr}
-        bx          lr
+        ldmfd       sp!, {r0, pc}
 END(MEMCPY_BASE)
 
 ENTRY_PRIVATE(MEMCPY_BASE_ALIGNED)

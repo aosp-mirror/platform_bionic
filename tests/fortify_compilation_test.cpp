@@ -21,6 +21,7 @@
 #include <poll.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -229,4 +230,68 @@ void test_ppoll() {
   // GCC: error: call to '__ppoll_too_small_error' declared with attribute error: ppoll: pollfd array smaller than fd count
   // clang should emit a warning, but doesn't
   ppoll(fds, 2, &timeout, NULL);
+}
+
+void test_fread_overflow() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fread_overflow' declared with attribute error: fread called with overflowing size * count
+  // clang should emit a warning, but doesn't
+  fread(buf, 2, (size_t)-1, stdin);
+}
+
+void test_fread_too_big() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fread_too_big_error' declared with attribute error: fread called with size * count bigger than buffer
+  // clang should emit a warning, but doesn't
+  fread(buf, 1, 5, stdin);
+}
+
+void test_fwrite_overflow() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fwrite_overflow' declared with attribute error: fwrite called with overflowing size * count
+  // clang should emit a warning, but doesn't
+  fwrite(buf, 2, (size_t)-1, stdout);
+}
+
+void test_fwrite_too_big() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__fwrite_too_big_error' declared with attribute error: fwrite called with size * count bigger than buffer
+  // clang should emit a warning, but doesn't
+  fwrite(buf, 1, 5, stdout);
+}
+
+void test_getcwd() {
+  char buf[4];
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__getcwd_dest_size_error' declared with attribute error: getcwd called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  getcwd(buf, 5);
+}
+
+void test_pwrite64_size() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__pwrite64_dest_size_error' declared with attribute error: pwrite64 called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  pwrite64(STDOUT_FILENO, buf, 5, 0);
+}
+
+void test_pwrite64_too_big() {
+  void *buf = calloc(atoi("5"), 1);
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__pwrite64_count_toobig_error' declared with attribute error: pwrite64 called with count > SSIZE_MAX
+  // clang should emit a warning, but doesn't
+  pwrite64(STDOUT_FILENO, buf, SIZE_MAX, 0);
+}
+
+void test_write_size() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__write_dest_size_error' declared with attribute error: write called with size bigger than destination
+  // clang should emit a warning, but doesn't
+  write(STDOUT_FILENO, buf, 5);
 }

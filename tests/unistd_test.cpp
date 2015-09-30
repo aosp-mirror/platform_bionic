@@ -30,6 +30,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <base/file.h>
+#include <base/strings.h>
+
+#include "private/get_cpu_count_from_string.h"
+
 static void* get_brk() {
   return sbrk(0);
 }
@@ -174,6 +179,13 @@ TEST(unistd, ftruncate64) {
   struct stat sb;
   ASSERT_EQ(0, stat(tf.filename, &sb));
   ASSERT_EQ(123, sb.st_size);
+}
+
+TEST(unistd, ftruncate_negative) {
+  TemporaryFile tf;
+  errno = 0;
+  ASSERT_EQ(-1, ftruncate(tf.fd, -123));
+  ASSERT_EQ(EINVAL, errno);
 }
 
 static bool g_pause_test_flag = false;
@@ -395,11 +407,11 @@ static void AssertGetPidCorrect() {
   }
 }
 
-TEST(unistd, getpid_caching_and_fork) {
+static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
-  pid_t fork_result = fork();
+  pid_t fork_result = fork_fn();
   ASSERT_NE(fork_result, -1);
   if (fork_result == 0) {
     // We're the child.
@@ -415,6 +427,14 @@ TEST(unistd, getpid_caching_and_fork) {
     ASSERT_TRUE(WIFEXITED(status));
     ASSERT_EQ(123, WEXITSTATUS(status));
   }
+}
+
+TEST(unistd, getpid_caching_and_fork) {
+  TestGetPidCachingWithFork(fork);
+}
+
+TEST(unistd, getpid_caching_and_vfork) {
+  TestGetPidCachingWithFork(vfork);
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {
@@ -687,6 +707,8 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_POSITIVE(_SC_IOV_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_PAGESIZE);
   VERIFY_SYSCONF_POSITIVE(_SC_PAGE_SIZE);
+  VerifySysconf(_SC_PAGE_SIZE, "_SC_PAGE_SIZE",
+                [](long v){return v == sysconf(_SC_PAGESIZE) && v == getpagesize();});
   VERIFY_SYSCONF_POSITIVE(_SC_XOPEN_UNIX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_LISTIO_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_MAX);
@@ -800,6 +822,29 @@ TEST(unistd, sysconf) {
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_SHM);
   VERIFY_SYSCONF_NOT_SUPPORT(_SC_XOPEN_UUCP);
 #endif // defined(__BIONIC__)
+}
+
+TEST(unistd, get_cpu_count_from_string) {
+  ASSERT_EQ(0, GetCpuCountFromString(" "));
+  ASSERT_EQ(1, GetCpuCountFromString("0"));
+  ASSERT_EQ(40, GetCpuCountFromString("0-39"));
+  ASSERT_EQ(4, GetCpuCountFromString("0, 1-2, 4\n"));
+}
+
+TEST(unistd, sysconf_SC_NPROCESSORS_ONLN) {
+  std::string s;
+  ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &s));
+  std::vector<std::string> strs = android::base::Split(s, ",");
+  long online_cpus = 0;
+  for (auto& s : strs) {
+    std::vector<std::string> numbers = android::base::Split(s, "-");
+    if (numbers.size() == 1u) {
+      online_cpus++;
+    } else {
+      online_cpus += atoi(numbers[1].c_str()) - atoi(numbers[0].c_str()) + 1;
+    }
+  }
+  ASSERT_EQ(online_cpus, sysconf(_SC_NPROCESSORS_ONLN));
 }
 
 TEST(unistd, dup2_same) {

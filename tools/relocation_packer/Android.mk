@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+ifeq ($(HOST_OS),linux)
 common_cppflags := -Wall -Wextra -Wunused -Werror -Wold-style-cast
 
 LOCAL_PATH := $(call my-dir)
@@ -26,7 +27,6 @@ LOCAL_SRC_FILES := \
   src/debug.cc \
   src/delta_encoder.cc \
   src/elf_file.cc \
-  src/leb128.cc \
   src/packer.cc \
   src/sleb128.cc \
 
@@ -46,6 +46,9 @@ LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := src/main.cc
 LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf
+
+# Statically linking libc++ to make it work from prebuilts
+LOCAL_CXX_STL := libc++_static
 LOCAL_C_INCLUDES := external/elfutils/src/libelf libnativehelper/include
 
 LOCAL_MODULE := relocation_packer
@@ -64,7 +67,6 @@ LOCAL_SRC_FILES := \
   src/debug_unittest.cc \
   src/delta_encoder_unittest.cc \
   src/elf_file_unittest.cc \
-  src/leb128_unittest.cc \
   src/sleb128_unittest.cc \
   src/packer_unittest.cc \
 
@@ -94,3 +96,11 @@ $(eval $(call copy-test-library,elf_file_unittest_relocs_arm32.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm32_packed.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm64.so))
 $(eval $(call copy-test-library,elf_file_unittest_relocs_arm64_packed.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_ia32.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_ia32_packed.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_x64.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_x64_packed.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_mips32.so))
+$(eval $(call copy-test-library,elf_file_unittest_relocs_mips32_packed.so))
+
+endif

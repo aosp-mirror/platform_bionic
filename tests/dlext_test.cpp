@@ -114,6 +114,10 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_EQ(4, f());
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
@@ -214,7 +218,7 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 
-  void* handle = dlopen((lib_path + "!libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
+  void* handle = dlopen((lib_path + "!/libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   int (*fn)(void);
@@ -226,7 +230,7 @@ TEST(dlfcn, dlopen_from_zip_absolute_path) {
 }
 
 TEST(dlfcn, dlopen_from_zip_ld_library_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!libdir";
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!/libdir";
 
   typedef void (*fn_t)(const char*);
   fn_t android_update_LD_LIBRARY_PATH =
@@ -372,6 +376,10 @@ protected:
     fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
     ASSERT_DL_NOTNULL(f);
     EXPECT_EQ(4, f());
+
+    uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+    ASSERT_DL_NOTNULL(taxicab_number);
+    EXPECT_EQ(1729U, *taxicab_number);
   }
 
   void SpawnChildrenAndMeasurePss(const char* lib, bool share_relro, size_t* pss_out);

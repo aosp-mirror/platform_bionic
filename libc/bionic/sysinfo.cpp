@@ -29,10 +29,11 @@
 #include <sys/sysinfo.h>
 
 #include <dirent.h>
-#include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
+#include "private/get_cpu_count_from_string.h"
 #include "private/ScopedReaddir.h"
 
 static bool __matches_cpuN(const char* s) {
@@ -61,26 +62,18 @@ int get_nprocs_conf() {
 }
 
 int get_nprocs() {
-  FILE* fp = fopen("/proc/stat", "re");
-  if (fp == NULL) {
-    return 1;
-  }
-
-  int result = 0;
-  char buf[256];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    // Extract just the first word from the line.
-    // 'cpu0 7976751 1364388 3116842 469770388 8629405 0 49047 0 0 0'
-    char* p = strchr(buf, ' ');
-    if (p != NULL) {
-      *p = 0;
+  int cpu_count = 1;
+  FILE* fp = fopen("/sys/devices/system/cpu/online", "re");
+  if (fp != nullptr) {
+    char* line = nullptr;
+    size_t len = 0;
+    if (getline(&line, &len, fp) != -1) {
+      cpu_count = GetCpuCountFromString(line);
+      free(line);
     }
-    if (__matches_cpuN(buf)) {
-      ++result;
-    }
+    fclose(fp);
   }
-  fclose(fp);
-  return result;
+  return cpu_count;
 }
 
 static int __get_meminfo_page_count(const char* pattern) {
@@ -94,7 +87,7 @@ static int __get_meminfo_page_count(const char* pattern) {
   while (fgets(buf, sizeof(buf), fp) != NULL) {
     long total;
     if (sscanf(buf, pattern, &total) == 1) {
-      page_count = static_cast<int>(total / (PAGE_SIZE / 1024));
+      page_count = static_cast<int>(total / (sysconf(_SC_PAGE_SIZE) / 1024));
       break;
     }
   }

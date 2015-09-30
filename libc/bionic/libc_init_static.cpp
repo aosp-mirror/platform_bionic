@@ -49,15 +49,9 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "private/bionic_page.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
-
-// Returns the address of the page containing address 'x'.
-#define PAGE_START(x)  ((x) & PAGE_MASK)
-
-// Returns the address of the next page after address 'x', unless 'x' is
-// itself at the start of a page.
-#define PAGE_END(x)    PAGE_START((x) + (PAGE_SIZE-1))
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
@@ -90,7 +84,8 @@ __noreturn void __libc_init(void* raw_args,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
   KernelArgumentBlock args(raw_args);
-  __libc_init_tls(args);
+  __libc_init_main_thread(args);
+  __libc_init_AT_SECURE(args);
   __libc_init_common(args);
 
   apply_gnu_relro();

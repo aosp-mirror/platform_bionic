@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <stdlib.h>
 
 #include <benchmark/Benchmark.h>
 
@@ -73,7 +74,7 @@ static void FopenFgetsFclose(int iters, bool no_locking) {
   for (int i = 0; i < iters; ++i) {
     FILE* fp = fopen("/proc/version", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
-    fgets(buf, sizeof(buf), fp);
+    if (fgets(buf, sizeof(buf), fp) == nullptr) abort();
     fclose(fp);
   }
 }
