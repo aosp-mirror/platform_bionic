@@ -52,15 +52,15 @@ typedef int (*fn)(void);
 #define LIBSIZE 1024*1024 // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define LIBPATH_PREFIX "/nativetest64/libdlext_test_fd/"
+#define LIBPATH_PREFIX "/nativetest64/"
 #else
-#define LIBPATH_PREFIX "/nativetest/libdlext_test_fd/"
+#define LIBPATH_PREFIX "/nativetest/"
 #endif
 
-#define LIBPATH LIBPATH_PREFIX "libdlext_test_fd.so"
-#define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_fd_zipaligned.zip"
+#define LIBPATH LIBPATH_PREFIX "libdlext_test_fd/libdlext_test_fd.so"
+#define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
 
-#define LIBZIP_OFFSET 2*PAGE_SIZE
+#define LIBZIP_OFFSET PAGE_SIZE
 
 class DlExtTest : public ::testing::Test {
 protected:
@@ -131,9 +131,9 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   handle_ = android_dlopen_ext(lib_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
 
-  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
-  ASSERT_DL_NOTNULL(f);
-  EXPECT_EQ(4, f());
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
@@ -163,7 +163,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" is negative", dlerror());
 
-  extinfo.library_fd_offset = PAGE_SIZE;
+  extinfo.library_fd_offset = 0;
   handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_EQ("dlopen failed: \"" + lib_realpath + "\" has bad ELF magic", dlerror());
@@ -218,13 +218,12 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
 
-  void* handle = dlopen((lib_path + "!/libdir/libdlext_test_fd.so").c_str(), RTLD_NOW);
+  void* handle = dlopen((lib_path + "!/libdir/libatest_simple_zip.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  int (*fn)(void);
-  fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
-  ASSERT_TRUE(fn != nullptr);
-  EXPECT_EQ(4, fn());
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
 
   dlclose(handle);
 }
@@ -238,18 +237,22 @@ TEST(dlfcn, dlopen_from_zip_ld_library_path) {
 
   ASSERT_TRUE(android_update_LD_LIBRARY_PATH != nullptr) << dlerror();
 
-  void* handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
+  void* handle = dlopen("libdlext_test_zip.so", RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
 
   android_update_LD_LIBRARY_PATH(lib_path.c_str());
 
-  handle = dlopen("libdlext_test_fd.so", RTLD_NOW);
+  handle = dlopen("libdlext_test_zip.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   int (*fn)(void);
   fn = reinterpret_cast<int (*)(void)>(dlsym(handle, "getRandomNumber"));
   ASSERT_TRUE(fn != nullptr);
   EXPECT_EQ(4, fn());
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
 
   dlclose(handle);
 }
