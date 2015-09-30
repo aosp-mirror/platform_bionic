@@ -16,6 +16,24 @@
       "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9555663b_8b1bddb1",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-09-30T23:37:15Z",
+      "side": 1,
+      "message": "locale_t l;\nl-\u003emb_cur_max \u003d 0;\nuselocale(\u0026l);\n// do not restore locale\n...\ndlopen(\"libbla.so\");",
+      "parentUuid": "354d9aaf_c5eb10d9",
+      "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
