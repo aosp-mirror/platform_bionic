@@ -22,6 +22,30 @@
       "revId": "3a5adb7de6f3666bb2c30e1e5d2a02123964b3b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d55b5e6b_cda849f0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-09-30T23:35:02Z",
+      "side": 1,
+      "message": "this is the only place in the linker when we use snprintf.. I think it is easier to just avoid it.. we can set up LC_GLOBAL_LOCALE and restore it for every snprintf call (or on every entry function) but this seems unnecessary.",
+      "parentUuid": "1548969f_6ff1399d",
+      "range": {
+        "startLine": 363,
+        "startChar": 2,
+        "endLine": 363,
+        "endChar": 22
+      },
+      "revId": "3a5adb7de6f3666bb2c30e1e5d2a02123964b3b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
