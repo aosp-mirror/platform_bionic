@@ -38,23 +38,34 @@
 
 #include <machine/asm.h>
 
-#define ENTRY(f) \
+#define ENTRY_NO_DWARF(f) \
     .text; \
     .globl f; \
     .align __bionic_asm_align; \
     .type f, __bionic_asm_function_type; \
     f: \
     __bionic_asm_custom_entry(f); \
+
+#define ENTRY(f) \
+    ENTRY_NO_DWARF(f) \
     .cfi_startproc \
+
+#define END_NO_DWARF(f) \
+    .size f, .-f; \
+    __bionic_asm_custom_end(f) \
 
 #define END(f) \
     .cfi_endproc; \
-    .size f, .-f; \
-    __bionic_asm_custom_end(f) \
+    END_NO_DWARF(f) \
 
 /* Like ENTRY, but with hidden visibility. */
 #define ENTRY_PRIVATE(f) \
     ENTRY(f); \
+    .hidden f \
+
+/* Like ENTRY_NO_DWARF, but with hidden visibility. */
+#define ENTRY_PRIVATE_NO_DWARF(f) \
+    ENTRY_NO_DWARF(f); \
     .hidden f \
 
 #define ALIAS_SYMBOL(alias, original) \
