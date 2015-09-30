@@ -34,6 +34,24 @@
       "revId": "23360cc4980213d375718b7c124ecc0a21a1b1b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5586271_babd51ea",
+        "filename": "libc/tzcode/private.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2015-09-30T02:13:48Z",
+      "side": 1,
+      "message": "Yes, time_t is int64_t, and thus there is no issue with this (unless they decide to start applying it to unsigned types).",
+      "parentUuid": "f86a1765_6da2d177",
+      "revId": "23360cc4980213d375718b7c124ecc0a21a1b1b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
