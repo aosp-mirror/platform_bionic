@@ -34,6 +34,24 @@
       "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354d9aaf_c561501c",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-09-30T23:39:03Z",
+      "side": 1,
+      "message": "you can\u0027t do that. locale_t is opaque:\n\n  struct __locale_t;\n  typedef struct __locale_t* locale_t;",
+      "parentUuid": "9555663b_8b1bddb1",
+      "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
