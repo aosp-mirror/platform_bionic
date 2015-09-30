@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ce582944_c97d7ff1",
+        "filename": "libc/bionic/sysinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-30T00:51:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce582944_695a13e3",
+      "revId": "58115cfda7f1e7fe8d19cc9f0f2e33f840f01fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4e4c398b_1d7072ce",
         "filename": "libc/bionic/sysinfo.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-09-30T00:12:01Z",
       "side": 1,
       "message": "factor this out into a helper we can put in a .h file and then test it directly that way instead?",
+      "revId": "58115cfda7f1e7fe8d19cc9f0f2e33f840f01fa2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f86a1765_5efc55dc",
+        "filename": "libc/bionic/sysinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-09-30T00:51:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e4c398b_1d7072ce",
       "revId": "58115cfda7f1e7fe8d19cc9f0f2e33f840f01fa2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
