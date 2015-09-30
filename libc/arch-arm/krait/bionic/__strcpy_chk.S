@@ -39,7 +39,7 @@
 ENTRY(__strcpy_chk)
     pld     [r0, #0]
     push    {r0, lr}
-    .cfi_def_cfa_offset 8
+    .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
 
@@ -149,21 +149,14 @@ ENTRY(__strcpy_chk)
     pld     [r1, #64]
     ldr     r0, [sp]
     cmp     r3, lr
-    bhs     __strcpy_chk_failed
+    bhs     .L_strcpy_chk_failed
 
     // Add 1 for copy length to get the string terminator.
     add     r2, r3, #1
-END(__strcpy_chk)
 
-#define MEMCPY_BASE         __strcpy_chk_memcpy_base
-#define MEMCPY_BASE_ALIGNED __strcpy_chk_memcpy_base_aligned
 #include "memcpy_base.S"
 
-ENTRY_PRIVATE(__strcpy_chk_failed)
-    .cfi_def_cfa_offset 8
-    .cfi_rel_offset r0, 0
-    .cfi_rel_offset lr, 4
-
+.L_strcpy_chk_failed:
     ldr     r0, error_message
     ldr     r1, error_code
 1:
@@ -173,7 +166,7 @@ error_code:
     .word   BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
-END(__strcpy_chk_failed)
+END(__strcpy_chk)
 
     .data
 error_string:
