@@ -41,6 +41,7 @@
 
 #include <new>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Private C library headers.
@@ -1121,7 +1122,50 @@ ElfW(Sym)* soinfo::elf_addr_lookup(const void* addr) {
   return nullptr;
 }
 
-static int open_library_in_zipfile(const char* const path,
+class ZipArchiveCache {
+ public:
+  ZipArchiveCache() {}
+  ~ZipArchiveCache();
+
+  bool get_or_open(const char* zip_path, ZipArchiveHandle* handle);
+ private:
+  DISALLOW_COPY_AND_ASSIGN(ZipArchiveCache);
+
+  std::unordered_map<std::string, ZipArchiveHandle> cache_;
+};
+
+bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle) {
+  std::string key(zip_path);
+
+  auto it = cache_.find(key);
+  if (it != cache_.end()) {
+    *handle = it->second;
+    return true;
+  }
+
+  int fd = TEMP_FAILURE_RETRY(open(zip_path, O_RDONLY | O_CLOEXEC));
+  if (fd == -1) {
+    return false;
+  }
+
+  if (OpenArchiveFd(fd, "", handle) != 0) {
+    // invalid zip-file (?)
+    close(fd);
+    return false;
+  }
+
+  cache_[key] = *handle;
+  return true;
+}
+
+ZipArchiveCache::~ZipArchiveCache() {
+  for (auto it : cache_) {
+    CloseArchive(it.second);
+  }
+}
+
+static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
+                                   const char* const path,
                                    off64_t* file_offset) {
   TRACE("Trying zip file open from path '%s'", path);
 
@@ -1150,15 +1194,11 @@ static int open_library_in_zipfile(const char* const path,
   }
 
   ZipArchiveHandle handle;
-  if (OpenArchiveFd(fd, "", &handle, false) != 0) {
+  if (!zip_archive_cache->get_or_open(zip_path, &handle)) {
     // invalid zip-file (?)
     close(fd);
     return -1;
   }
-
-  auto archive_guard = make_scope_guard([&]() {
-    CloseArchive(handle);
-  });
 
   ZipEntry entry;
 
@@ -1205,7 +1245,8 @@ static int open_library_on_default_path(const char* name, off64_t* file_offset) 
   return -1;
 }
 
-static int open_library_on_paths(const char* name, off64_t* file_offset,
+static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
+                                 const char* name, off64_t* file_offset,
                                  const std::vector<std::string>& paths) {
   for (const auto& path_str : paths) {
     char buf[512];
@@ -1216,7 +1257,7 @@ static int open_library_on_paths(const char* name, off64_t* file_offset,
 
     int fd = -1;
     if (strstr(buf, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(buf, file_offset);
+      fd = open_library_in_zipfile(zip_archive_cache, buf, file_offset);
     }
 
     if (fd == -1) {
@@ -1234,13 +1275,15 @@ static int open_library_on_paths(const char* name, off64_t* file_offset,
   return -1;
 }
 
-static int open_library(const char* name, soinfo *needed_by, off64_t* file_offset) {
+static int open_library(ZipArchiveCache* zip_archive_cache,
+                        const char* name, soinfo *needed_by,
+                        off64_t* file_offset) {
   TRACE("[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
     if (strstr(name, kZipFileSeparator) != nullptr) {
-      int fd = open_library_in_zipfile(name, file_offset);
+      int fd = open_library_in_zipfile(zip_archive_cache, name, file_offset);
       if (fd != -1) {
         return fd;
       }
@@ -1254,13 +1297,15 @@ static int open_library(const char* name, soinfo *needed_by, off64_t* file_offse
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_paths(name, file_offset, g_ld_library_paths);
+  int fd = open_library_on_paths(zip_archive_cache, name, file_offset, g_ld_library_paths);
   if (fd == -1 && needed_by) {
-    fd = open_library_on_paths(name, file_offset, needed_by->get_dt_runpath());
+    fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath());
   }
+
   if (fd == -1) {
     fd = open_library_on_default_path(name, file_offset);
   }
+
   return fd;
 }
 
@@ -1367,7 +1412,8 @@ static soinfo* load_library(int fd, off64_t file_offset,
   return si;
 }
 
-static soinfo* load_library(LoadTaskList& load_tasks, const char* name,
+static soinfo* load_library(ZipArchiveCache* zip_archive_cache,
+                            LoadTaskList& load_tasks, const char* name,
                             soinfo* needed_by, int rtld_flags,
                             const android_dlextinfo* extinfo) {
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
@@ -1380,7 +1426,7 @@ static soinfo* load_library(LoadTaskList& load_tasks, const char* name,
 
   // Open the file.
   off64_t file_offset;
-  int fd = open_library(name, needed_by, &file_offset);
+  int fd = open_library(zip_archive_cache, name, needed_by, &file_offset);
   if (fd == -1) {
     DL_ERR("library \"%s\" not found", name);
     return nullptr;
@@ -1427,7 +1473,8 @@ static bool find_loaded_library_by_soname(const char* name, soinfo** candidate) 
   return false;
 }
 
-static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
+static soinfo* find_library_internal(ZipArchiveCache* zip_archive_cache,
+                                     LoadTaskList& load_tasks, const char* name,
                                      soinfo* needed_by, int rtld_flags,
                                      const android_dlextinfo* extinfo) {
   soinfo* candidate;
@@ -1441,7 +1488,7 @@ static soinfo* find_library_internal(LoadTaskList& load_tasks, const char* name,
   TRACE("[ '%s' find_loaded_library_by_soname returned false (*candidate=%s@%p). Trying harder...]",
       name, candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  soinfo* si = load_library(load_tasks, name, needed_by, rtld_flags, extinfo);
+  soinfo* si = load_library(zip_archive_cache, load_tasks, name, needed_by, rtld_flags, extinfo);
 
   // In case we were unable to load the library but there
   // is a candidate loaded under the same soname but different
@@ -1521,15 +1568,18 @@ static bool find_libraries(soinfo* start_with,
     }
   });
 
+  ZipArchiveCache zip_archive_cache;
+
   // Step 1: load and pre-link all DT_NEEDED libraries in breadth first order.
   for (LoadTask::unique_ptr task(load_tasks.pop_front());
       task.get() != nullptr; task.reset(load_tasks.pop_front())) {
     soinfo* needed_by = task->get_needed_by();
     bool is_dt_needed = needed_by != nullptr && (needed_by != start_with || add_as_children);
 
-    soinfo* si = find_library_internal(load_tasks, task->get_name(), needed_by,
-                                       rtld_flags,
+    soinfo* si = find_library_internal(&zip_archive_cache, load_tasks,
+                                       task->get_name(), needed_by, rtld_flags,
                                        is_dt_needed ? nullptr : extinfo);
+
     if (si == nullptr) {
       return false;
     }
