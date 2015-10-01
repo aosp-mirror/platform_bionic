@@ -80,7 +80,7 @@ static inline int SEMCOUNT_TO_VALUE(unsigned int sval) {
 #define SEMCOUNT_ONE              SEMCOUNT_FROM_VALUE(1)
 
 // The value -1 as a sem->count bit-pattern.
-#define SEMCOUNT_MINUS_ONE        SEMCOUNT_FROM_VALUE(-1)
+#define SEMCOUNT_MINUS_ONE        SEMCOUNT_FROM_VALUE(~0U)
 
 #define SEMCOUNT_DECREMENT(sval)    (((sval) - (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
 #define SEMCOUNT_INCREMENT(sval)    (((sval) + (1U << SEMCOUNT_VALUE_SHIFT)) & SEMCOUNT_VALUE_MASK)
