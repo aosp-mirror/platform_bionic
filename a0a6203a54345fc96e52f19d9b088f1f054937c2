@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1548969f_9a379cc3",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-01T23:41:12Z",
+      "side": 1,
+      "message": "1. because if mmap can not map exactly at the hint address, it picks up the first available address anywhere else, and that\u0027s not random at all - it happens to be adjacent to the regular, safe stack. So we try a few times with random addresses first.\n2. fixed",
+      "parentUuid": "953c86f3_e8d38277",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "354d9aaf_3174b297",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-01T23:20:56Z",
       "side": 1,
       "message": "This check is unnecessary. randomized_stack_mmap never returns MAP_FAILED",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354d9aaf_f127ea8a",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-01T23:41:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "354d9aaf_3174b297",
       "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
