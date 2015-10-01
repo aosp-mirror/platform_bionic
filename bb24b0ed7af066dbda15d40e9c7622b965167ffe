@@ -52,6 +52,24 @@
       "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1548969f_af18613b",
+        "filename": "libc/bionic/locale.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-01T00:00:26Z",
+      "side": 1,
+      "message": "yes.. this is not what happened.. I added explicit check to uselocale - it was never called with *l \u003d\u003d 0, and still we get 0 on snprintf...",
+      "parentUuid": "354d9aaf_c561501c",
+      "revId": "bb24b0ed7af066dbda15d40e9c7622b965167ffe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
