@@ -237,38 +237,37 @@ static bool __is_valid_environment_variable(const char* name) {
 
 static bool __is_unsafe_environment_variable(const char* name) {
   // None of these should be allowed in setuid programs.
-  static const char* const UNSAFE_VARIABLE_NAMES[] = {
-      "GCONV_PATH",
-      "GETCONF_DIR",
-      "HOSTALIASES",
-      "JE_MALLOC_CONF",
-      "LD_AOUT_LIBRARY_PATH",
-      "LD_AOUT_PRELOAD",
-      "LD_AUDIT",
-      "LD_DEBUG",
-      "LD_DEBUG_OUTPUT",
-      "LD_DYNAMIC_WEAK",
-      "LD_LIBRARY_PATH",
-      "LD_ORIGIN_PATH",
-      "LD_PRELOAD",
-      "LD_PROFILE",
-      "LD_SHOW_AUXV",
-      "LD_USE_LOAD_BIAS",
-      "LOCALDOMAIN",
-      "LOCPATH",
-      "MALLOC_CHECK_",
-      "MALLOC_CONF",
-      "MALLOC_TRACE",
-      "NIS_PATH",
-      "NLSPATH",
-      "RESOLV_HOST_CONF",
-      "RES_OPTIONS",
-      "TMPDIR",
-      "TZDIR",
-      nullptr
+  static constexpr const char* UNSAFE_VARIABLE_NAMES[] = {
+    "GCONV_PATH",
+    "GETCONF_DIR",
+    "HOSTALIASES",
+    "JE_MALLOC_CONF",
+    "LD_AOUT_LIBRARY_PATH",
+    "LD_AOUT_PRELOAD",
+    "LD_AUDIT",
+    "LD_DEBUG",
+    "LD_DEBUG_OUTPUT",
+    "LD_DYNAMIC_WEAK",
+    "LD_LIBRARY_PATH",
+    "LD_ORIGIN_PATH",
+    "LD_PRELOAD",
+    "LD_PROFILE",
+    "LD_SHOW_AUXV",
+    "LD_USE_LOAD_BIAS",
+    "LOCALDOMAIN",
+    "LOCPATH",
+    "MALLOC_CHECK_",
+    "MALLOC_CONF",
+    "MALLOC_TRACE",
+    "NIS_PATH",
+    "NLSPATH",
+    "RESOLV_HOST_CONF",
+    "RES_OPTIONS",
+    "TMPDIR",
+    "TZDIR",
   };
-  for (size_t i = 0; UNSAFE_VARIABLE_NAMES[i] != nullptr; ++i) {
-    if (env_match(name, UNSAFE_VARIABLE_NAMES[i]) != nullptr) {
+  for (const auto& unsafe_variable_name : UNSAFE_VARIABLE_NAMES) {
+    if (env_match(name, unsafe_variable_name) != nullptr) {
       return true;
     }
   }
