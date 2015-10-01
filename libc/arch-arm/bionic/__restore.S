@@ -34,7 +34,9 @@
 // __restore_rt (but covered by the .fnstart/.fnend) so that although they're
 // not inside the functions from objdump's point of view, an unwinder that
 // blindly looks at the previous instruction (but is then smart enough to check
-// the DWARF information to find out where it landed) gets the right answer.
+// the unwind information to find out where it landed) gets the right answer.
+// Make sure not to have both DWARF and ARM unwind information, so only
+// use the ARM unwind information.
 
 // We need to place .fnstart ourselves (but we may as well keep the free .fnend).
 #undef __bionic_asm_custom_entry
@@ -44,18 +46,18 @@
   .save {r0-r15}
   .pad #32
   nop
-ENTRY_PRIVATE(__restore)
+ENTRY_PRIVATE_NO_DWARF(__restore)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_sigreturn
   swi #0
-END(__restore)
+END_NO_DWARF(__restore)
 
   .fnstart
   .save {r0-r15}
   .pad #160
   nop
-ENTRY_PRIVATE(__restore_rt)
+ENTRY_PRIVATE_NO_DWARF(__restore_rt)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_rt_sigreturn
   swi #0
-END(__restore_rt)
+END_NO_DWARF(__restore_rt)
