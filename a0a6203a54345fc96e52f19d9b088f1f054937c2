@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "953c86f3_e8d38277",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-01T23:20:56Z",
+      "side": 1,
+      "message": "1. Why is space !\u003d addr not satisfactory?\n2. when they are not equal - aren\u0027t we leaking address space?",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354d9aaf_3174b297",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-01T23:20:56Z",
+      "side": 1,
+      "message": "This check is unnecessary. randomized_stack_mmap never returns MAP_FAILED",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
