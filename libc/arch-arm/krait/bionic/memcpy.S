@@ -45,7 +45,7 @@
 
 ENTRY(__memcpy_chk)
         cmp         r2, r3
-        bhi         __memcpy_chk_fail
+        bhi         .L_memcpy_chk_fail
 
         // Fall through to memcpy...
 END(__memcpy_chk)
@@ -53,19 +53,20 @@ END(__memcpy_chk)
 ENTRY(memcpy)
         pld     [r1, #64]
         stmfd   sp!, {r0, lr}
-        .cfi_def_cfa_offset 8
+        .cfi_adjust_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
-END(memcpy)
 
-#define MEMCPY_BASE         __memcpy_base
-#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
 #include "memcpy_base.S"
 
-ENTRY_PRIVATE(__memcpy_chk_fail)
+        // Undo the cfi directives from above.
+        .cfi_adjust_cfa_offset -8
+        .cfi_restore r0
+        .cfi_restore lr
+.L_memcpy_chk_fail:
         // Preserve lr for backtrace.
         push    {lr}
-        .cfi_def_cfa_offset 4
+        .cfi_adjust_cfa_offset 4
         .cfi_rel_offset lr, 0
 
         ldr     r0, error_message
@@ -77,7 +78,7 @@ error_code:
         .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
 error_message:
         .word   error_string-(1b+4)
-END(__memcpy_chk_fail)
+END(memcpy)
 
         .data
 error_string:
