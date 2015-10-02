@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5526a4f_ad223534",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-02T16:37:46Z",
+      "side": 1,
+      "message": "nit: remove? this file does not have any other changes.",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "354d9aaf_a3d359f2",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-02T16:37:46Z",
+      "side": 1,
+      "message": "What happens if code is compiled with safestack support but this property is not set for the device code is trying to run on (say app-library)?\n\nAs far as I understand the problem of enabling this by default is that it is going to put address-space pressure (maped but not used space). maybe lp64 should have this always enabled?",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "953c86f3_abd69489",
+        "filename": "libc/libc.map",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-02T16:37:46Z",
+      "side": 1,
+      "message": "This should go to LIBC_N section: L1337",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
