@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b5526a4f_626787ac",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-02T21:43:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5526a4f_ad223534",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "354d9aaf_a3d359f2",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1548969f_53421f2f",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-02T21:43:44Z",
+      "side": 1,
+      "message": "I think we should keep this for now so that we can easily opt a device out of safestack.",
+      "parentUuid": "354d9aaf_a3d359f2",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "953c86f3_abd69489",
         "filename": "libc/libc.map",
         "patchSetId": 8
@@ -47,6 +83,24 @@
       "writtenOn": "2015-10-02T16:37:46Z",
       "side": 1,
       "message": "This should go to LIBC_N section: L1337",
+      "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5398a03_4a26e4f7",
+        "filename": "libc/libc.map",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-02T21:43:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "953c86f3_abd69489",
       "revId": "c6a44285b461477dce3b0c5d8b25e6ff51be804b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
