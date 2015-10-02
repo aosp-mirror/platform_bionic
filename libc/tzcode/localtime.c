@@ -1211,7 +1211,9 @@ tzsetwall(void)
     settzname();
 }
 
-#include <sys/system_properties.h> // For __system_property_get.
+#include <stdbool.h>
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h> // For __system_property_serial.
 
 static void
 tzset_locked(void)
@@ -1221,9 +1223,27 @@ tzset_locked(void)
     name = getenv("TZ");
 
     // try the "persist.sys.timezone" system property first
-    static char buf[PROP_VALUE_MAX];
-    if (name == NULL && __system_property_get("persist.sys.timezone", buf) > 0) {
-        name = buf;
+    if (name == NULL) {
+        static const prop_info *pi;
+
+        if (!pi) {
+            pi = __system_property_find("persist.sys.timezone");
+        }
+        if (pi) {
+            static char buf[PROP_VALUE_MAX];
+            static uint32_t s = -1;
+            static bool ok = false;
+            uint32_t serial;
+
+            serial = __system_property_serial(pi);
+            if (serial != s) {
+                ok = __system_property_read(pi, 0, buf) > 0;
+                s = serial;
+            }
+            if (ok) {
+                name = buf;
+            }
+        }
     }
 
     if (name == NULL) {
