@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5cefe75_e76b96f6",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-02T01:44:39Z",
+      "side": 1,
+      "message": "(what does clang-format think? i never know if this counts as a wrapped line or not.)",
+      "revId": "c24a5d9da455d72a12081648b9fa96e5ae5e5367",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75df1224_4dde25fd",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-02T01:44:39Z",
+      "side": 1,
+      "message": "const auto\u0026?",
+      "revId": "c24a5d9da455d72a12081648b9fa96e5ae5e5367",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
