@@ -58,6 +58,7 @@
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
+#include "linker_utils.h"
 
 #include "base/strings.h"
 #include "ziparchive/zip_archive.h"
@@ -360,13 +361,13 @@ static void parse_LD_PRELOAD(const char* path) {
 
 static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
-  snprintf(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
+  __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
     PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
   }
 
-  *realpath = std::string(&buf[0]);
+  *realpath = &buf[0];
   return true;
 }
 
@@ -1165,15 +1166,21 @@ ZipArchiveCache::~ZipArchiveCache() {
 }
 
 static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
-                                   const char* const path,
-                                   off64_t* file_offset) {
-  TRACE("Trying zip file open from path '%s'", path);
+                                   const char* const input_path,
+                                   off64_t* file_offset, std::string* realpath) {
+  std::string normalized_path;
+  if (!normalize_path(input_path, &normalized_path)) {
+    return -1;
+  }
+
+  const char* const path = normalized_path.c_str();
+  TRACE("Trying zip file open from path '%s' -> normalized '%s'", input_path, path);
 
   // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.
   // For example, if path is "foo.zip!/bar/bas/x.so", then we search for
   // "bar/bas/x.so" within "foo.zip".
-  const char* separator = strstr(path, kZipFileSeparator);
+  const char* const separator = strstr(path, kZipFileSeparator);
   if (separator == nullptr) {
     return -1;
   }
@@ -1215,6 +1222,15 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   *file_offset = entry.offset;
+
+  if (realpath_fd(fd, realpath)) {
+    *realpath += separator;
+  } else {
+    PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+          normalized_path.c_str());
+    *realpath = normalized_path;
+  }
+
   return fd;
 }
 
@@ -1228,7 +1244,7 @@ static bool format_path(char* buf, size_t buf_size, const char* path, const char
   return true;
 }
 
-static int open_library_on_default_path(const char* name, off64_t* file_offset) {
+static int open_library_on_default_path(const char* name, off64_t* file_offset, std::string* realpath) {
   for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
     char buf[512];
     if (!format_path(buf, sizeof(buf), g_default_ld_paths[i], name)) {
@@ -1238,6 +1254,10 @@ static int open_library_on_default_path(const char* name, off64_t* file_offset) 
     int fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       *file_offset = 0;
+      if (!realpath_fd(fd, realpath)) {
+        PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", buf);
+        *realpath = buf;
+      }
       return fd;
     }
   }
@@ -1247,7 +1267,8 @@ static int open_library_on_default_path(const char* name, off64_t* file_offset) 
 
 static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
                                  const char* name, off64_t* file_offset,
-                                 const std::vector<std::string>& paths) {
+                                 const std::vector<std::string>& paths,
+                                 std::string* realpath) {
   for (const auto& path_str : paths) {
     char buf[512];
     const char* const path = path_str.c_str();
@@ -1257,13 +1278,17 @@ static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
 
     int fd = -1;
     if (strstr(buf, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(zip_archive_cache, buf, file_offset);
+      fd = open_library_in_zipfile(zip_archive_cache, buf, file_offset, realpath);
     }
 
     if (fd == -1) {
       fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
       if (fd != -1) {
         *file_offset = 0;
+        if (!realpath_fd(fd, realpath)) {
+          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", buf);
+          *realpath = buf;
+        }
       }
     }
 
@@ -1277,13 +1302,13 @@ static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
 
 static int open_library(ZipArchiveCache* zip_archive_cache,
                         const char* name, soinfo *needed_by,
-                        off64_t* file_offset) {
+                        off64_t* file_offset, std::string* realpath) {
   TRACE("[ opening %s ]", name);
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
     if (strstr(name, kZipFileSeparator) != nullptr) {
-      int fd = open_library_in_zipfile(zip_archive_cache, name, file_offset);
+      int fd = open_library_in_zipfile(zip_archive_cache, name, file_offset, realpath);
       if (fd != -1) {
         return fd;
       }
@@ -1297,13 +1322,13 @@ static int open_library(ZipArchiveCache* zip_archive_cache,
   }
 
   // Otherwise we try LD_LIBRARY_PATH first, and fall back to the built-in well known paths.
-  int fd = open_library_on_paths(zip_archive_cache, name, file_offset, g_ld_library_paths);
+  int fd = open_library_on_paths(zip_archive_cache, name, file_offset, g_ld_library_paths, realpath);
   if (fd == -1 && needed_by) {
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath());
+    fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath(), realpath);
   }
 
   if (fd == -1) {
-    fd = open_library_on_default_path(name, file_offset);
+    fd = open_library_on_default_path(name, file_offset, realpath);
   }
 
   return fd;
@@ -1336,7 +1361,8 @@ static void for_each_dt_needed(const soinfo* si, F action) {
 static soinfo* load_library(int fd, off64_t file_offset,
                             LoadTaskList& load_tasks,
                             const char* name, int rtld_flags,
-                            const android_dlextinfo* extinfo) {
+                            const android_dlextinfo* extinfo,
+                            const std::string& realpath) {
   if ((file_offset % PAGE_SIZE) != 0) {
     DL_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return nullptr;
@@ -1378,12 +1404,6 @@ static soinfo* load_library(int fd, off64_t file_offset,
     return nullptr;
   }
 
-  std::string realpath = name;
-  if (!realpath_fd(fd, &realpath)) {
-    PRINT("warning: unable to get realpath for the library \"%s\". Will use given name.", name);
-    realpath = name;
-  }
-
   // Read the ELF header and load the segments.
   ElfReader elf_reader(realpath.c_str(), fd, file_offset, file_stat.st_size);
   if (!elf_reader.Load(extinfo)) {
@@ -1416,22 +1436,29 @@ static soinfo* load_library(ZipArchiveCache* zip_archive_cache,
                             LoadTaskList& load_tasks, const char* name,
                             soinfo* needed_by, int rtld_flags,
                             const android_dlextinfo* extinfo) {
+  off64_t file_offset;
+  std::string realpath;
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
-    off64_t file_offset = 0;
+    file_offset = 0;
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
       file_offset = extinfo->library_fd_offset;
     }
-    return load_library(extinfo->library_fd, file_offset, load_tasks, name, rtld_flags, extinfo);
+
+    if (!realpath_fd(extinfo->library_fd, &realpath)) {
+      PRINT("warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
+            "Will use given name.", name);
+      realpath = name;
+    }
+    return load_library(extinfo->library_fd, file_offset, load_tasks, name, rtld_flags, extinfo, realpath);
   }
 
   // Open the file.
-  off64_t file_offset;
-  int fd = open_library(zip_archive_cache, name, needed_by, &file_offset);
+  int fd = open_library(zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
     DL_ERR("library \"%s\" not found", name);
     return nullptr;
   }
-  soinfo* result = load_library(fd, file_offset, load_tasks, name, rtld_flags, extinfo);
+  soinfo* result = load_library(fd, file_offset, load_tasks, name, rtld_flags, extinfo, realpath);
   close(fd);
   return result;
 }
