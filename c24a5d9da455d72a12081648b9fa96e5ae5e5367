@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9555663b_964bfd27",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-02T18:31:22Z",
+      "side": 1,
+      "message": "This is what clang-format gave me (although I\u0027ve seen it align everything on the right of the brace as well. I think it depends on how much stuff there is and how wide it is?)",
+      "parentUuid": "d5cefe75_e76b96f6",
+      "revId": "c24a5d9da455d72a12081648b9fa96e5ae5e5367",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75df1224_4dde25fd",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-02T01:44:39Z",
       "side": 1,
       "message": "const auto\u0026?",
+      "revId": "c24a5d9da455d72a12081648b9fa96e5ae5e5367",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5586271_1a827239",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-02T18:31:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75df1224_4dde25fd",
       "revId": "c24a5d9da455d72a12081648b9fa96e5ae5e5367",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
