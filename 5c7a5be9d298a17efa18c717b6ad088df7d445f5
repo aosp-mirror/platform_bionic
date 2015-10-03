@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15a33681_450881a2",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "why the reformatting?",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75439281_b4670d59",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "comments like these just go stale, and the current truth is trivial seen from the top of the file anyway. they\u0027re only really confusing if they\u0027re nested, so we can just refrain from doing that :-)",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15a33681_05fa89df",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "this entire file is meaningless in C.",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5398a03_fd9fc0c7",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "typedef struct?",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d55b5e6b_4c8a720e",
+        "filename": "libc/private/wp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "i think you can probably come up with a better name, especially for a class that will only have a few references.",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75439281_946c913c",
+        "filename": "libc/private/wp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:38:48Z",
+      "side": 1,
+      "message": "is the mutator class useful or would it be simpler to just have mutate take a lambda?",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
