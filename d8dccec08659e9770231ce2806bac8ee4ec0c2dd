@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9555663b_efed3c7f",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:41:03Z",
+      "side": 1,
+      "message": "(oops. useless line from before.)",
+      "revId": "d8dccec08659e9770231ce2806bac8ee4ec0c2dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5398a03_5d122cf2",
+        "filename": "libc/bionic/setjmp_cookie.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:41:03Z",
+      "side": 1,
+      "message": "(does dimitry\u0027s link map mean there\u0027s no point in __LIBC_HIDDEN__ any more?)",
+      "revId": "d8dccec08659e9770231ce2806bac8ee4ec0c2dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
