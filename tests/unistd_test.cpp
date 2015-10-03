@@ -832,11 +832,10 @@ TEST(unistd, get_cpu_count_from_string) {
 }
 
 TEST(unistd, sysconf_SC_NPROCESSORS_ONLN) {
-  std::string s;
-  ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &s));
-  std::vector<std::string> strs = android::base::Split(s, ",");
+  std::string line;
+  ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &line));
   long online_cpus = 0;
-  for (auto& s : strs) {
+  for (const std::string& s : android::base::Split(line, ",")) {
     std::vector<std::string> numbers = android::base::Split(s, "-");
     if (numbers.size() == 1u) {
       online_cpus++;
