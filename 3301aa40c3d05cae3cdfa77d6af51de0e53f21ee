@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15a33681_850e79b0",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:30:15Z",
+      "side": 1,
+      "message": "make the name a parameter of allocate?",
+      "revId": "3301aa40c3d05cae3cdfa77d6af51de0e53f21ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15a33681_2503058b",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-03T03:30:15Z",
+      "side": 1,
+      "message": "is this worthwhile, if we\u0027re only doing it in the case where we exit anyway?",
+      "revId": "3301aa40c3d05cae3cdfa77d6af51de0e53f21ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
