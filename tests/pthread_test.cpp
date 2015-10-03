@@ -70,7 +70,7 @@ TEST(pthread, pthread_key_many_distinct) {
   std::vector<pthread_key_t> keys;
 
   auto scope_guard = make_scope_guard([&keys]{
-    for (auto key : keys) {
+    for (const auto& key : keys) {
       EXPECT_EQ(0, pthread_key_delete(key));
     }
   });
@@ -108,7 +108,7 @@ TEST(pthread, pthread_key_not_exceed_PTHREAD_KEYS_MAX) {
   }
 
   // Don't leak keys.
-  for (auto key : keys) {
+  for (const auto& key : keys) {
     EXPECT_EQ(0, pthread_key_delete(key));
   }
   keys.clear();
@@ -1162,7 +1162,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   void* maps_stack_hi = NULL;
   std::vector<map_record> maps;
   ASSERT_TRUE(Maps::parse_maps(&maps));
-  for (auto& map : maps) {
+  for (const auto& map : maps) {
     if (map.pathname == "[stack]") {
       maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
       break;
@@ -1552,8 +1552,8 @@ class StrictAlignmentAllocator {
   }
 
   ~StrictAlignmentAllocator() {
-    for (auto& p : allocated_array) {
-      delete [] p;
+    for (const auto& p : allocated_array) {
+      delete[] p;
     }
   }
 
