@@ -635,7 +635,7 @@ static void HandleSignals(std::vector<TestCase>& testcase_list,
     sigquit_flag = false;
     // Print current running tests.
     printf("List of current running tests:\n");
-    for (auto& child_proc : child_proc_list) {
+    for (const auto& child_proc : child_proc_list) {
       if (child_proc.pid != 0) {
         std::string test_name = testcase_list[child_proc.testcase_id].GetTestName(child_proc.test_id);
         int64_t current_time_ns = NanoTime();
@@ -646,7 +646,7 @@ static void HandleSignals(std::vector<TestCase>& testcase_list,
   } else if (sigint_flag) {
     sigint_flag = false;
     // Kill current running tests.
-    for (auto& child_proc : child_proc_list) {
+    for (const auto& child_proc : child_proc_list) {
       if (child_proc.pid != 0) {
         // Send SIGKILL to ensure the child process can be killed unconditionally.
         kill(child_proc.pid, SIGKILL);
