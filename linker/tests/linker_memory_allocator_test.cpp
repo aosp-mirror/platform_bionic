@@ -53,7 +53,7 @@ TEST(linker_memory, test_alloc_0) {
   LinkerMemoryAllocator allocator;
   void* ptr = allocator.alloc(0);
   ASSERT_TRUE(ptr != nullptr);
-  free(ptr);
+  allocator.free(ptr);
 }
 
 TEST(linker_memory, test_free_nullptr) {
@@ -110,7 +110,7 @@ TEST(linker_memory, test_realloc) {
 
   ASSERT_TRUE(memcmp(reallocated_ptr, model, 4000) == 0);
 
-  ASSERT_EQ(nullptr, realloc(reallocated_ptr, 0));
+  ASSERT_EQ(nullptr, allocator.realloc(reallocated_ptr, 0));
 }
 
 TEST(linker_memory, test_small_smoke) {
