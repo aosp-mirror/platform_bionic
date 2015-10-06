@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "105c2963_3c793dbc",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Removed the comment, moved this call and the one in the linker back to __libc_init_main_thread.",
+      "parentUuid": "1001893d_5167d4dc",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "504861a0_bb126727",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-06T21:14:18Z",
       "side": 1,
       "message": "why aren\u0027t you relying on the kernel?",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1001893d_940daa77",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Because kernel mmap is not random.\nIt starts at a random base address, but the following mappings are packed nearby. Since we use mmap for the regular stack as well, offset from unsafe to safe stack ends up constant.",
+      "parentUuid": "504861a0_bb126727",
       "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5061411e_56fb32e9",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Yes, and the kernel mmap is not random at all.",
+      "parentUuid": "30592d74_fad7c945",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "105c2963_d91e5329",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 10
@@ -64,6 +118,24 @@
       "writtenOn": "2015-10-06T21:17:52Z",
       "side": 1,
       "message": "why are we allocating unsafe stacks at all for LP32?",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d03c51f4_42fff420",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Even without randomization safestack gives some measure of protection, because there is always a guard page between any overflowable stack buffer and any return address slot.",
+      "parentUuid": "105c2963_d91e5329",
       "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "30592d74_2030ee26",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3298,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0435d80_1ec54dc2",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "704d65ae_7c41f9cb",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 10
@@ -98,6 +188,24 @@
       "writtenOn": "2015-10-06T21:14:18Z",
       "side": 1,
       "message": "cruft?",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d00a915c_32a32ef5",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "704d65ae_7c41f9cb",
       "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "d00a915c_729db6a9",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d03c51f4_7fc44f95",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0435d80_7eca91d1",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 10
@@ -138,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "d03c51f4_224c7004",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0435d80_7eca91d1",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0435d80_9eb03d6d",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 10
@@ -149,6 +293,24 @@
       "writtenOn": "2015-10-06T21:14:18Z",
       "side": 1,
       "message": "this is now broken.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_614cb033",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-06T23:36:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0435d80_9eb03d6d",
       "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
