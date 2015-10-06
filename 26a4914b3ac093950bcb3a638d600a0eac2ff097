@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30592d74_1ad43d1f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T19:37:49Z",
+      "side": 1,
+      "message": "canonize means something very different from canonicalize. i\u0027m not sure canonization is in your power unless you\u0027ve started your own church :-)",
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d03c51f4_df075b53",
+        "filename": "linker/linker_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T19:37:49Z",
+      "side": 1,
+      "message": "hmm. i\u0027m not sure what the right verb for this is. canonicalization usually implies resolving symlinks. \"clean\"? worth a comment too.",
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5061411e_33cfa88c",
+        "filename": "linker/tests/linker_utils_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T19:37:49Z",
+      "side": 1,
+      "message": "i think the code\u0027s right, but it would be good to have a test for \"/a/../../x\" too.",
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
