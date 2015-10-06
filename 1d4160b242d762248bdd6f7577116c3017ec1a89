@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1001893d_5167d4dc",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "no longer true.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "504861a0_bb126727",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "why aren\u0027t you relying on the kernel?",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30592d74_fad7c945",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "that\u0027s not true. you\u0027re just relying on the kernel.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_1ec54dc2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3298,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "no longer true.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "704d65ae_7c41f9cb",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "cruft?",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d03c51f4_7fc44f95",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "type* here and elsewhere.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_7eca91d1",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "no c-style casts.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_9eb03d6d",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-06T21:14:18Z",
+      "side": 1,
+      "message": "this is now broken.",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
