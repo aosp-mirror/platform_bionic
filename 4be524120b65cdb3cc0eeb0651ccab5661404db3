@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d03c51f4_ee938fc8",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T22:27:12Z",
+      "side": 1,
+      "message": "time to rename to __libc_init_setjmp_cookie?",
+      "revId": "4be524120b65cdb3cc0eeb0651ccab5661404db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
