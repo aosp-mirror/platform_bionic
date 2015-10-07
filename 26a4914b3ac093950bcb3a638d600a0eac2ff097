@@ -36,6 +36,69 @@
     },
     {
       "key": {
+        "uuid": "504861a0_a10d1a77",
+        "filename": "linker/linker_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-07T00:27:30Z",
+      "side": 1,
+      "message": "Isn\u0027t this unnecessary?",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 20
+      },
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "704d65ae_c2d82602",
+        "filename": "linker/linker_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-07T00:27:30Z",
+      "side": 1,
+      "message": "You need a:\n\n*out_ptr \u003d \u0027\\0\u0027;\n\nOr something like this will be incorrect:\n\npath \u003d \"/path/another/..\"\n\n\nThere is one pathological case that still fails:\n\npath \u003d \"/path/..\"\n\nThat yields a completely empty buf, which seems like an error so you might want to check for that.",
+      "range": {
+        "startLine": 45,
+        "startChar": 10,
+        "endLine": 45,
+        "endChar": 11
+      },
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_a49a4635",
+        "filename": "linker/tests/linker_utils_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-07T00:27:30Z",
+      "side": 1,
+      "message": "You need a couple of test cases:\n\n/hello/world/..\n\n/hello/..",
+      "revId": "26a4914b3ac093950bcb3a638d600a0eac2ff097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5061411e_33cfa88c",
         "filename": "linker/tests/linker_utils_test.cpp",
         "patchSetId": 1
