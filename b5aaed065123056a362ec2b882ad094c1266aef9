@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "105c2963_3c881d61",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T00:53:52Z",
+      "side": 1,
+      "message": "hmm. this might be awkward for CTS if we can\u0027t actually detect at runtime whether we have safestack or not. we have two constraints: 1. we to have the same set of tests because they\u0027re enumerated at build time, not run time. 2. we only have one CTS that gets run on every device. if this was just \"LP64 only\" we\u0027d move the #if inside the TESTs, but then devices without safestack couldn\u0027t pass CTS...",
+      "revId": "b5aaed065123056a362ec2b882ad094c1266aef9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
