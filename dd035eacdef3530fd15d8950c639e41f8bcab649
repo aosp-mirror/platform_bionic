@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d00a915c_693309cb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T22:19:04Z",
+      "side": 1,
+      "message": "should this come first? i worry about debugging failures caused by those nullptrs lurking if you call clock_gettime or gettimeofday before this.",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30592d74_2122ad71",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T22:19:04Z",
+      "side": 1,
+      "message": "does auto make these fit? or just lose the local?",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0435d80_f808713c",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T22:19:04Z",
+      "side": 1,
+      "message": "not ctor",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
