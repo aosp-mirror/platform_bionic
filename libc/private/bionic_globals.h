@@ -34,6 +34,7 @@
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
+  long setjmp_cookie;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
@@ -41,5 +42,7 @@ __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 class KernelArgumentBlock;
 __LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals,
                                       KernelArgumentBlock& args);
+__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
+                                               KernelArgumentBlock& args);
 
 #endif
