@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "5061411e_fc24ddc6",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-07T00:45:42Z",
+      "side": 1,
+      "message": "ok, disabled on !lp64.",
+      "parentUuid": "d03c51f4_255d9a0b",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0435d80_1ec54dc2",
         "filename": "linker/linker.cpp",
         "patchSetId": 10
