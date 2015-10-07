@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "504861a0_01904ed5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T01:31:21Z",
+      "side": 1,
+      "message": "this seems like a bad use of auto. (should we change ::add to return bool? we can\u0027t fix the public API but we can fix the internal stuff to be less confusing.)",
+      "revId": "ca8844f60f6e4988f70e6cdbf5a1c0e2170978b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
