@@ -159,8 +159,10 @@ ENTRY(siglongjmp)
 
   // Check the cookie.
   pushq %rax
+  pushq %r11
   movq %rcx, %rdi
   call PIC_PLT(__bionic_setjmp_cookie_check)
+  popq %r11
   popq %rax
 
   // Return 1 if value is 0.
