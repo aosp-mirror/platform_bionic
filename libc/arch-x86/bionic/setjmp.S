@@ -151,9 +151,11 @@ ENTRY(siglongjmp)
 
   PIC_PROLOGUE
   pushl %eax
+  pushl %ecx
   pushl (_JB_SIGFLAG * 4)(%edx)
   call PIC_PLT(__bionic_setjmp_cookie_check)
   addl $4,%esp
+  popl %ecx
   popl %eax
   PIC_EPILOGUE
 
