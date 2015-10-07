@@ -100,7 +100,7 @@ static void PrintHelpInfo() {
          "      Don't use isolation mode, run all tests in a single process.\n"
          "  --deadline=[TIME_IN_MS]\n"
          "      Run each test in no longer than [TIME_IN_MS] time.\n"
-         "      It takes effect only in isolation mode. Deafult deadline is 60000 ms.\n"
+         "      It takes effect only in isolation mode. Deafult deadline is 90000 ms.\n"
          "  --warnline=[TIME_IN_MS]\n"
          "      Test running longer than [TIME_IN_MS] will be warned.\n"
          "      It takes effect only in isolation mode. Default warnline is 2000 ms.\n"
@@ -878,11 +878,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
 }
 
 static size_t GetDefaultJobCount() {
-#if defined(JOB_COUNT_FIXED)
-  return JOB_COUNT_FIXED;
-#else
   return static_cast<size_t>(sysconf(_SC_NPROCESSORS_ONLN));
-#endif
 }
 
 static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
