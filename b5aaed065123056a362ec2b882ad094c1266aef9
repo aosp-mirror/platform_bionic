@@ -16,6 +16,24 @@
       "revId": "b5aaed065123056a362ec2b882ad094c1266aef9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5061411e_9c484946",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-07T01:04:11Z",
+      "side": 1,
+      "message": "Are you saying that we can\u0027t completely omit a TEST() based on __LP64__?\nWhy can\u0027t we move this whole condition inside TESTs? If it\u0027s because of the __safestack_pointer_address declaration, that can be made weak.\nWe could also export __safestack_pointer_address on LP32 as well. It would always be zero, which would make it a good run-time test for safestack.",
+      "parentUuid": "105c2963_3c881d61",
+      "revId": "b5aaed065123056a362ec2b882ad094c1266aef9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
