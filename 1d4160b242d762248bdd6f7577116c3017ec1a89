@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "d03c51f4_255d9a0b",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T00:27:29Z",
+      "side": 1,
+      "message": "my point was more that i don\u0027t think we can afford to do anything for LP32. we should only be building LP64 with safestack.",
+      "parentUuid": "d03c51f4_42fff420",
+      "revId": "1d4160b242d762248bdd6f7577116c3017ec1a89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0435d80_1ec54dc2",
         "filename": "linker/linker.cpp",
         "patchSetId": 10
