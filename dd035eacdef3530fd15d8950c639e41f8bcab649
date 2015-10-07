@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "504861a0_752aa8b4",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T23:18:11Z",
+      "side": 1,
+      "message": "This needs to happen after __libc_init_main_thread, or else the TLS for errno hasn\u0027t been allocated yet and we blow up in mmap. Moved it above AT_SECURE and added comments.\n\nI also made the gettimeofday/clock_gettime functions check the function pointer and do the syscall if it can\u0027t find the vdso.",
+      "parentUuid": "d00a915c_693309cb",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30592d74_2122ad71",
         "filename": "libc/bionic/vdso.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "504861a0_35294059",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T23:18:11Z",
+      "side": 1,
+      "message": "Used auto to make it fit on two lines, and also used reinterpret_cast to decltype(\u0026clock_gettime) instead to make it look more convincingly correct.",
+      "parentUuid": "30592d74_2122ad71",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0435d80_f808713c",
         "filename": "libc/private/WriteProtected.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2015-10-07T22:19:04Z",
       "side": 1,
       "message": "not ctor",
+      "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105c2963_cd7b29f7",
+        "filename": "libc/private/WriteProtected.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T23:18:11Z",
+      "side": 1,
+      "message": "oops, copy paste strikes again",
+      "parentUuid": "b0435d80_f808713c",
       "revId": "dd035eacdef3530fd15d8950c639e41f8bcab649",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
