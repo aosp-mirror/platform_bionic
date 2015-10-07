@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8b92a812_8c8eaf6d",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Oops, overzealous clang-formatting.",
+      "parentUuid": "15a33681_450881a2",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75439281_b4670d59",
         "filename": "libc/bionic/vdso.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-03T03:38:48Z",
       "side": 1,
       "message": "comments like these just go stale, and the current truth is trivial seen from the top of the file anyway. they\u0027re only really confusing if they\u0027re nested, so we can just refrain from doing that :-)",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b6d3ced_cebb434d",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75439281_b4670d59",
       "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "cb6900e6_cb1fb525",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15a33681_05fa89df",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5398a03_fd9fc0c7",
         "filename": "libc/private/bionic_globals.h",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2015-10-03T03:38:48Z",
       "side": 1,
       "message": "typedef struct?",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb6900e6_8b51bdd0",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5398a03_fd9fc0c7",
       "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "5061411e_e8d41744",
+        "filename": "libc/private/wp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Renamed to WriteProtected",
+      "parentUuid": "d55b5e6b_4c8a720e",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75439281_946c913c",
         "filename": "libc/private/wp.h",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2015-10-03T03:38:48Z",
       "side": 1,
       "message": "is the mutator class useful or would it be simpler to just have mutate take a lambda?",
+      "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30592d74_4146c137",
+        "filename": "libc/private/wp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-07T22:05:29Z",
+      "side": 1,
+      "message": "Probably not, switched it to take a lambda",
+      "parentUuid": "75439281_946c913c",
       "revId": "5c7a5be9d298a17efa18c717b6ad088df7d445f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
