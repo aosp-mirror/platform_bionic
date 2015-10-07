@@ -34,6 +34,24 @@
       "revId": "b5aaed065123056a362ec2b882ad094c1266aef9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90673931_7e3ba5ba",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-07T01:12:09Z",
+      "side": 1,
+      "message": "based on LP64, yes. (but even then, the #if has to be inside the test, making it a present but no-op test on LP32.)\n\nwe can\u0027t move the whole condition inside because there\u0027s only one CTS, but this condition would mean that you\u0027d need a safestack-CTS and a non-safestack-CTS.\n\nalways exporting the symbol(s) is probably the best idea, moving \"do we have safestack?\" to be a runtime check.",
+      "parentUuid": "5061411e_9c484946",
+      "revId": "b5aaed065123056a362ec2b882ad094c1266aef9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
