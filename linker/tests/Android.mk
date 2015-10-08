@@ -27,11 +27,14 @@ LOCAL_CFLAGS += -g -Wall -Wextra -Wunused -Werror
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
+  linker_globals.cpp \
   linked_list_test.cpp \
   linker_block_allocator_test.cpp \
   ../linker_block_allocator.cpp \
   linker_memory_allocator_test.cpp \
-  ../linker_allocator.cpp
+  ../linker_allocator.cpp \
+  linker_utils_test.cpp \
+  ../linker_utils.cpp
 
 # for __libc_fatal
 LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
