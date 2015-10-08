@@ -688,11 +688,13 @@ LOCAL_SRC_FILES += upstream-openbsd/lib/libc/time/wcsftime.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -fvisibility=hidden \
+    -Wno-unused-parameter \
 
 # Don't use ridiculous amounts of stack.
 LOCAL_CFLAGS += -DALL_STATE
 # Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
 LOCAL_CFLAGS += -DSTD_INSPIRED
+LOCAL_CFLAGS += -DTHREAD_SAFE
 # The name of the tm_gmtoff field in our struct tm.
 LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
 # Where we store our tzdata.

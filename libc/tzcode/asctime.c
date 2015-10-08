@@ -55,7 +55,7 @@
 ** ??? ???-2147483648 -2147483648:-2147483648:-2147483648     -2147483648\n
 ** (two three-character abbreviations, five strings denoting integers,
 ** seven explicit spaces, two explicit colons, a newline,
-** and a trailing ASCII nul).
+** and a trailing NUL byte).
 ** The values above are for systems where an int is 32 bits and are provided
 ** as an example; the define below calculates the maximum for the system at
 ** hand.
@@ -99,11 +99,11 @@ asctime_r(register const struct tm *timeptr, char *buf)
 	** Assume that strftime is unaffected by other out-of-range members
 	** (e.g., timeptr->tm_mday) when processing "%Y".
 	*/
-	(void) strftime(year, sizeof year, "%Y", timeptr);
+	strftime(year, sizeof year, "%Y", timeptr);
 	/*
 	** We avoid using snprintf since it's not available on all systems.
 	*/
-	(void) snprintf(result, sizeof(result), /* Android change: use snprintf. */
+	snprintf(result, sizeof(result), /* Android change: use snprintf. */
 		((strlen(year) <= 4) ? ASCTIME_FMT : ASCTIME_FMT_B),
 		wn, mn,
 		timeptr->tm_mday, timeptr->tm_hour,
@@ -112,11 +112,7 @@ asctime_r(register const struct tm *timeptr, char *buf)
 	if (strlen(result) < STD_ASCTIME_BUF_SIZE || buf == buf_asctime)
 		return strcpy(buf, result);
 	else {
-#ifdef EOVERFLOW
 		errno = EOVERFLOW;
-#else /* !defined EOVERFLOW */
-		errno = EINVAL;
-#endif /* !defined EOVERFLOW */
 		return NULL;
 	}
 }
