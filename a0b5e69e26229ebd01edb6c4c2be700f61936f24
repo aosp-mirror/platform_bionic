@@ -16,6 +16,24 @@
       "revId": "a0b5e69e26229ebd01edb6c4c2be700f61936f24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8538d9b1_2d9b2de4",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-08T23:23:58Z",
+      "side": 1,
+      "message": "We don\u0027t know how large the space needs to be, considering we\u0027ll have a bss.",
+      "parentUuid": "0536a9c7_e997550d",
+      "revId": "a0b5e69e26229ebd01edb6c4c2be700f61936f24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
