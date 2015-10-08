@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0536a9c7_e997550d",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-08T22:46:11Z",
+      "side": 1,
+      "message": "can\u0027t art use the existing RESERVED_ADDRESS flag?",
+      "revId": "a0b5e69e26229ebd01edb6c4c2be700f61936f24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
