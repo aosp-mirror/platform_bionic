@@ -12,6 +12,7 @@ LOCAL_SRC_FILES:= \
     linker_libc_support.c \
     linker_memory.cpp \
     linker_phdr.cpp \
+    linker_utils.cpp \
     rt.cpp \
 
 LOCAL_SRC_FILES_arm     := arch/arm/begin.S
