@@ -59,6 +59,7 @@ typedef int (*fn)(void);
 
 #define LIBPATH LIBPATH_PREFIX "libdlext_test_fd/libdlext_test_fd.so"
 #define LIBZIPPATH LIBPATH_PREFIX "libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
+#define LIBZIPPATH_WITH_RUNPATH LIBPATH_PREFIX "libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
 
 #define LIBZIP_OFFSET PAGE_SIZE
 
@@ -225,6 +226,24 @@ TEST(dlfcn, dlopen_from_zip_absolute_path) {
   ASSERT_DL_NOTNULL(taxicab_number);
   EXPECT_EQ(1729U, *taxicab_number);
 
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlopen_from_zip_with_dt_runpath) {
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH_WITH_RUNPATH;
+
+  void* handle = dlopen((lib_path + "!/libdir/libtest_dt_runpath_d_zip.so").c_str(), RTLD_NOW);
+
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef void *(* dlopen_b_fn)();
+  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  void *p = fn();
+  ASSERT_TRUE(p != nullptr) << dlerror();
+
+  dlclose(p);
   dlclose(handle);
 }
 
