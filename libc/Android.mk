@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-bionic_coverage := false
+bionic_coverage ?= false
 
 # Make everything depend on any changes to included makefiles.
 libc_common_additional_dependencies := $(LOCAL_PATH)/Android.mk
