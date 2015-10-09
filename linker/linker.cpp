@@ -63,6 +63,7 @@
 #include "base/strings.h"
 #include "ziparchive/zip_archive.h"
 
+extern void __libc_init_globals(KernelArgumentBlock&);
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
 
 // Override macros to use C++ style casts.
@@ -3578,6 +3579,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   }
 
   __libc_init_main_thread(args);
+
+  // Initialize the linker's static libc's globals
+  __libc_init_globals(args);
 
   // Initialize the linker's own global variables
   linker_so.call_constructors();
