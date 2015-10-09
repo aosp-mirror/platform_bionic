@@ -3102,9 +3102,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Fail if app is targeting sdk version > 22
-    // TODO (dimitry): remove != __ANDROID_API__ check once http://b/20020312 is fixed
-    if (get_application_target_sdk_version() != __ANDROID_API__
-        && get_application_target_sdk_version() > 22) {
+    if (get_application_target_sdk_version() > 22) {
       DL_ERR("%s: has text relocations", get_realpath());
       return false;
     }
