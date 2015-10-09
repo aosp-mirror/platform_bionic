@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e55355fb_dfc8873d",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-09T22:09:03Z",
+      "side": 1,
+      "message": "yeah, the ones above are really bad. \"your system is corrupt, and i\u0027m going to tell you about it\". this one happens normally. the caller will output an error if all its calls to this function fail, but if you\u0027re debugging this was useful once. maybe i should just remove it instead.",
+      "parentUuid": "eaf16251_f439600d",
+      "range": {
+        "startLine": 2337,
+        "startChar": 4,
+        "endLine": 2337,
+        "endChar": 7
+      },
+      "revId": "642606d3332eb510c6b4d69f2fa8c451e3d08522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a526bd9a_1512fe96",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2015-10-09T21:50:58Z",
       "side": 1,
       "message": "Same as above.",
+      "range": {
+        "startLine": 2429,
+        "startChar": 4,
+        "endLine": 2429,
+        "endChar": 7
+      },
+      "revId": "642606d3332eb510c6b4d69f2fa8c451e3d08522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaf16251_94fd7428",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 2429,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-09T22:09:03Z",
+      "side": 1,
+      "message": "yeah, this can happen during normal use too. \"adb shell TZ\u003dgobshite date\", for example.",
+      "parentUuid": "a526bd9a_1512fe96",
       "range": {
         "startLine": 2429,
         "startChar": 4,
