@@ -104,6 +104,7 @@ libc_bionic_ndk_src_files := \
     bionic/accept.cpp \
     bionic/accept4.cpp \
     bionic/access.cpp \
+    bionic/arpa_inet.cpp \
     bionic/assert.cpp \
     bionic/atof.cpp \
     bionic/bionic_systrace.cpp \
@@ -395,11 +396,9 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/locale/wctomb.c \
     upstream-openbsd/lib/libc/net/htonl.c \
     upstream-openbsd/lib/libc/net/htons.c \
-    upstream-openbsd/lib/libc/net/inet_addr.c \
     upstream-openbsd/lib/libc/net/inet_lnaof.c \
     upstream-openbsd/lib/libc/net/inet_makeaddr.c \
     upstream-openbsd/lib/libc/net/inet_netof.c \
-    upstream-openbsd/lib/libc/net/inet_network.c \
     upstream-openbsd/lib/libc/net/inet_ntoa.c \
     upstream-openbsd/lib/libc/net/inet_ntop.c \
     upstream-openbsd/lib/libc/net/inet_pton.c \
