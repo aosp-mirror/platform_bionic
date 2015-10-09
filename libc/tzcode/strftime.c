@@ -55,15 +55,7 @@ struct lc_time_T {
     const char *    date_fmt;
 };
 
-#ifdef LOCALE_HOME
-#include "sys/stat.h"
-static struct lc_time_T                localebuf;
-static struct lc_time_T *      _loc(void);
-#define Locale _loc()
-#endif /* defined LOCALE_HOME */
-#ifndef LOCALE_HOME
 #define Locale  (&C_time_locale)
-#endif /* !defined LOCALE_HOME */
 
 static const struct lc_time_T   C_time_locale = {
     {
@@ -115,7 +107,7 @@ static char *   _add(const char *, char *, const char *, int);
 static char *   _conv(int, const char *, char *, const char *);
 static char *   _fmt(const char *, const struct tm *, char *, const char *,
             int *);
-static char *   _yconv(int, int, int, int, char *, const char *, int);
+static char *   _yconv(int, int, bool, bool, char *, const char *, int);
 static char *   getformat(int, char *, char *, char *, char *);
 
 extern char *   tzname[];
@@ -132,32 +124,28 @@ extern char *   tzname[];
 #define FORCE_LOWER_CASE 0x100
 
 size_t
-strftime(char * const s, const size_t maxsize, const char *const format,
-        const struct tm *const t)
+strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
 {
     char *  p;
     int warn;
 
     tzset();
-#ifdef LOCALE_HOME
-    localebuf.mon[0] = 0;
-#endif /* defined LOCALE_HOME */
     warn = IN_NONE;
     p = _fmt(((format == NULL) ? "%c" : format), t, s, s + maxsize, &warn);
 #ifndef NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
     if (warn != IN_NONE && getenv(YEAR_2000_NAME) != NULL) {
-        (void) fprintf(stderr, "\n");
+        fprintf(stderr, "\n");
         if (format == NULL)
-            (void) fprintf(stderr, "NULL strftime format ");
-        else    (void) fprintf(stderr, "strftime format \"%s\" ",
+            fprintf(stderr, "NULL strftime format ");
+        else    fprintf(stderr, "strftime format \"%s\" ",
                 format);
-        (void) fprintf(stderr, "yields only two digits of years in ");
+        fprintf(stderr, "yields only two digits of years in ");
         if (warn == IN_SOME)
-            (void) fprintf(stderr, "some locales");
+            fprintf(stderr, "some locales");
         else if (warn == IN_THIS)
-            (void) fprintf(stderr, "the current locale");
-        else    (void) fprintf(stderr, "all locales");
-        (void) fprintf(stderr, "\n");
+            fprintf(stderr, "the current locale");
+        else    fprintf(stderr, "all locales");
+        fprintf(stderr, "\n");
     }
 #endif /* !defined NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU */
     if (p == s + maxsize)
@@ -171,20 +159,17 @@ static char *getformat(int modifier, char *normal, char *underscore,
     switch (modifier) {
     case '_':
         return underscore;
-
     case '-':
         return dash;
-
     case '0':
         return zero;
     }
-
     return normal;
 }
 
 static char *
-_fmt(const char *format, const struct tm *const t, char * pt,
-        const char *const ptlim, int *warnp)
+_fmt(const char *format, const struct tm *t, char *pt,
+        const char *ptlim, int *warnp)
 {
     for ( ; *format; ++format) {
         if (*format == '%') {
@@ -227,8 +212,8 @@ label:
                 ** something completely different.
                 ** (ado, 1993-05-24)
                 */
-                pt = _yconv(t->tm_year, TM_YEAR_BASE, 1, 0,
-                    pt, ptlim, modifier);
+                pt = _yconv(t->tm_year, TM_YEAR_BASE,
+                    true, false, pt, ptlim, modifier);
                 continue;
             case 'c':
                 {
@@ -245,10 +230,7 @@ label:
                                 pt = _fmt("%m/%d/%y", t, pt, ptlim, warnp);
                 continue;
             case 'd':
-                                pt = _conv(t->tm_mday,
-                                           getformat(modifier, "%02d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                                pt = _conv(t->tm_mday, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'E':
             case 'O':
@@ -270,31 +252,21 @@ label:
                 modifier = *format;
                 goto label;
             case 'e':
-                pt = _conv(t->tm_mday,
-                                           getformat(modifier, "%2d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_mday, getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'F':
                 pt = _fmt("%Y-%m-%d", t, pt, ptlim, warnp);
                 continue;
             case 'H':
-                pt = _conv(t->tm_hour,
-                                           getformat(modifier, "%02d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_hour, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'I':
                 pt = _conv((t->tm_hour % 12) ?
                     (t->tm_hour % 12) : 12,
-                    getformat(modifier, "%02d",
-                                                  "%2d", "%d", "%02d"),
-                                        pt, ptlim);
+                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'j':
-                pt = _conv(t->tm_yday + 1,
-                           getformat(modifier, "%03d", "%3d", "%d", "%03d"),
-                           pt, ptlim);
+                pt = _conv(t->tm_yday + 1, getformat(modifier, "%03d", "%3d", "%d", "%03d"), pt, ptlim);
                 continue;
             case 'k':
                 /*
@@ -307,10 +279,7 @@ label:
                 ** "%l" have been swapped.
                 ** (ado, 1993-05-24)
                 */
-                pt = _conv(t->tm_hour,
-                                           getformat(modifier, "%2d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_hour, getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
 #ifdef KITCHEN_SINK
             case 'K':
@@ -332,36 +301,23 @@ label:
                 */
                 pt = _conv((t->tm_hour % 12) ?
                     (t->tm_hour % 12) : 12,
-                    getformat(modifier, "%2d",
-                                                  "%2d", "%d", "%02d"),
-                                        pt, ptlim);
+                    getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'M':
-                pt = _conv(t->tm_min,
-                                           getformat(modifier, "%02d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_min, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'm':
-                pt = _conv(t->tm_mon + 1,
-                                           getformat(modifier, "%02d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_mon + 1, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'n':
                 pt = _add("\n", pt, ptlim, modifier);
                 continue;
+            case 'P':
             case 'p':
                 pt = _add((t->tm_hour >= (HOURSPERDAY / 2)) ?
                     Locale->pm :
                     Locale->am,
-                    pt, ptlim, modifier);
-                continue;
-            case 'P':
-                pt = _add((t->tm_hour >= (HOURSPERDAY / 2)) ?
-                    Locale->pm :
-                    Locale->am,
-                    pt, ptlim, FORCE_LOWER_CASE);
+                    pt, ptlim, (*format == 'P') ? FORCE_LOWER_CASE : modifier);
                 continue;
             case 'R':
                 pt = _fmt("%H:%M", t, pt, ptlim, warnp);
@@ -370,10 +326,7 @@ label:
                 pt = _fmt("%I:%M:%S %p", t, pt, ptlim, warnp);
                 continue;
             case 'S':
-                pt = _conv(t->tm_sec,
-                                           getformat(modifier, "%02d",
-                                                     "%2d", "%d", "%02d"),
-                                           pt, ptlim);
+                pt = _conv(t->tm_sec, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 's':
                 {
@@ -385,10 +338,10 @@ label:
                     tm = *t;
                     mkt = mktime64(&tm);
                     if (TYPE_SIGNED(time64_t))
-                        (void) snprintf(buf, sizeof(buf), "%lld",
-                            (long long) mkt);
-                    else    (void) snprintf(buf, sizeof(buf), "%llu",
-                            (unsigned long long) mkt);
+                        snprintf(buf, sizeof(buf), "%"PRIdMAX,
+                                 (intmax_t) mkt);
+                    else    snprintf(buf, sizeof(buf), "%"PRIuMAX,
+                                     (uintmax_t) mkt);
                     pt = _add(buf, pt, ptlim, modifier);
                 }
                 continue;
@@ -401,9 +354,7 @@ label:
             case 'U':
                 pt = _conv((t->tm_yday + DAYSPERWEEK -
                     t->tm_wday) / DAYSPERWEEK,
-                    getformat(modifier, "%02d",
-                                                  "%2d", "%d", "%02d"),
-                                        pt, ptlim);
+                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'u':
                 /*
@@ -413,7 +364,8 @@ label:
                 ** (ado, 1993-05-24)
                 */
                 pt = _conv((t->tm_wday == 0) ?
-                    DAYSPERWEEK : t->tm_wday, "%d", pt, ptlim);
+                    DAYSPERWEEK : t->tm_wday,
+                    "%d", pt, ptlim);
                 continue;
             case 'V':   /* ISO 8601 week number */
             case 'G':   /* ISO 8601 year (four digits) */
@@ -493,14 +445,15 @@ label:
                             w = 53;
 #endif /* defined XPG4_1994_04_09 */
                     if (*format == 'V')
-                        pt = _conv(w,
-                                getformat(modifier, "%02d", "%2d", "%d", "%02d"),
+                        pt = _conv(w, getformat(modifier, "%02d", "%2d", "%d", "%02d"),
                                pt, ptlim);
                     else if (*format == 'g') {
                         *warnp = IN_ALL;
-                        pt = _yconv(year, base, 0, 1,
+                        pt = _yconv(year, base,
+                            false, true,
                             pt, ptlim, modifier);
-                    } else  pt = _yconv(year, base, 1, 1,
+                    } else  pt = _yconv(year, base,
+                            true, true,
                             pt, ptlim, modifier);
                 }
                 continue;
@@ -517,9 +470,7 @@ label:
                     (t->tm_wday ?
                     (t->tm_wday - 1) :
                     (DAYSPERWEEK - 1))) / DAYSPERWEEK,
-                    getformat(modifier, "%02d",
-                                                  "%2d", "%d", "%02d"),
-                                        pt, ptlim);
+                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
                 continue;
             case 'w':
                 pt = _conv(t->tm_wday, "%d", pt, ptlim);
@@ -540,23 +491,23 @@ label:
                 continue;
             case 'y':
                 *warnp = IN_ALL;
-                pt = _yconv(t->tm_year, TM_YEAR_BASE, 0, 1,
+                pt = _yconv(t->tm_year, TM_YEAR_BASE,
+                    false, true,
                     pt, ptlim, modifier);
                 continue;
             case 'Y':
-                pt = _yconv(t->tm_year, TM_YEAR_BASE, 1, 1,
+                pt = _yconv(t->tm_year, TM_YEAR_BASE,
+                    true, true,
                     pt, ptlim, modifier);
                 continue;
             case 'Z':
 #ifdef TM_ZONE
-                if (t->TM_ZONE != NULL)
-                    pt = _add(t->TM_ZONE, pt, ptlim,
-                                                  modifier);
-                else
-#endif /* defined TM_ZONE */
+                pt = _add(t->TM_ZONE, pt, ptlim, modifier);
+#else
                 if (t->tm_isdst >= 0)
                     pt = _add(tzname[t->tm_isdst != 0],
-                        pt, ptlim, modifier);
+                        pt, ptlim);
+#endif
                 /*
                 ** C99 says that %Z must be replaced by the
                 ** empty string if the time zone is not
@@ -613,10 +564,7 @@ label:
                 diff /= SECSPERMIN;
                 diff = (diff / MINSPERHOUR) * 100 +
                     (diff % MINSPERHOUR);
-                pt = _conv(diff,
-                                           getformat(modifier, "%04d",
-                                                     "%4d", "%d", "%04d"),
-                                           pt, ptlim);
+                pt = _conv(diff, getformat(modifier, "%04d", "%4d", "%d", "%04d"), pt, ptlim);
                 }
                 continue;
             case '+':
@@ -641,13 +589,12 @@ label:
 }
 
 static char *
-_conv(const int n, const char *const format, char *const pt,
-        const char *const ptlim)
+_conv(int n, const char *format, char *pt, const char *ptlim)
 {
-    char    buf[INT_STRLEN_MAXIMUM(int) + 1];
+	char	buf[INT_STRLEN_MAXIMUM(int) + 1];
 
-    (void) snprintf(buf, sizeof(buf), format, n);
-    return _add(buf, pt, ptlim, 0);
+	snprintf(buf, sizeof(buf), format, n);
+	return _add(buf, pt, ptlim, 0);
 }
 
 static char *
@@ -699,8 +646,8 @@ _add(const char *str, char *pt, const char *const ptlim, int modifier)
 */
 
 static char *
-_yconv(const int a, const int b, const int convert_top, const int convert_yy,
-        char *pt, const char *const ptlim, int modifier)
+_yconv(int a, int b, bool convert_top, bool convert_yy,
+       char *pt, const char *ptlim, int modifier)
 {
     register int    lead;
     register int    trail;
