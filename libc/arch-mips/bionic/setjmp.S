@@ -132,10 +132,9 @@
 /*     	field:		byte offset:	size:						*/
 /*     	dynam filler	(0*4)		   0-4 bytes of rounddown filler, DON'T TOUCH!!
 						often overlays user storage!!		*/
-#define	SC_MAGIC_OFFSET	(1*4)		/* 4 bytes, identify jmpbuf, first actual field */
-#define	SC_FLAG_OFFSET	(2*4)		/* 4 bytes, savesigs flag */
-#define	SC_FPSR_OFFSET	(3*4)		/* 4 bytes, floating point control/status reg */
+#define	SC_FPSR_OFFSET	(1*4)		/* 4 bytes, floating point control/status reg */
 /* following fields are 8-byte aligned */
+#define	SC_FLAG_OFFSET	(2*4)		/* 8 bytes, cookie and savesigs flag, first actual field  */
 #define	SC_MASK_OFFSET	(4*4)		/* 16 bytes, mips32/mips64 version of sigset_t */
 #define	SC_SPARE_OFFSET	(8*4)		/* 8 bytes, reserved for future uses */
 
@@ -166,6 +165,16 @@
 #error _JBLEN is too small
 #endif
 
+.macro m_mangle_reg_and_store reg, cookie, temp, offset
+	xor	\temp, \reg, \cookie
+	REG_S	\temp, \offset
+.endm
+
+.macro m_unmangle_reg_and_load reg, cookie, temp, offset
+	REG_L	\temp, \offset
+	xor	\reg, \temp, \cookie
+.endm
+
 /*
  *
  *  GPOFF and FRAMESIZE must be the same for all setjmp/longjmp routines
@@ -190,36 +199,46 @@ setjmp_common:
 	li	t0, ~7
 	and	a0, t0				# round jmpbuf addr DOWN to 8-byte boundary
 #endif
-	sw	a1, SC_FLAG_OFFSET(a0)		# save savesigs flag
-	beqz	a1, 1f				# do saving of signal mask?
-
 	REG_S	ra, RAOFF(sp)			# spill state
 	REG_S	a0, A0OFF(sp)
+
+	# get the cookie and store it along with the signal flag.
+	move	a0, a1
+	jal	__bionic_setjmp_cookie_get
+	REG_L	a0, A0OFF(sp)
+
+	REG_S	v0, SC_FLAG_OFFSET(a0)		# save cookie and savesigs flag
+	andi	t0, v0, 1			# extract savesigs flag
+
+	beqz	t0, 1f				# do saving of signal mask?
+
 	# call sigprocmask(int how ignored, sigset_t* null, sigset_t* SC_MASK(a0)):
 	LA	a2, SC_MASK_OFFSET(a0)		# gets current signal mask
 	li	a0, 0				# how; ignored when new mask is null
 	li	a1, 0				# null new mask
 	jal	sigprocmask			# get current signal mask
 	REG_L	a0, A0OFF(sp)
-	REG_L	ra, RAOFF(sp)
 1:
-	li	v0, 0xACEDBADE			# sigcontext magic number
-	sw	v0, SC_MAGIC_OFFSET(a0)
+	REG_L	gp, GPOFF(sp)			# restore spills
+	REG_L	ra, RAOFF(sp)
+	REG_L	t0, SC_FLAG_OFFSET(a0)		# move cookie to temp reg
+
 	# callee-saved long-sized regs:
-	REG_S	ra, SC_REGS+0*REGSZ(a0)
-	REG_S	s0, SC_REGS+1*REGSZ(a0)
-	REG_S	s1, SC_REGS+2*REGSZ(a0)
-	REG_S	s2, SC_REGS+3*REGSZ(a0)
-	REG_S	s3, SC_REGS+4*REGSZ(a0)
-	REG_S	s4, SC_REGS+5*REGSZ(a0)
-	REG_S	s5, SC_REGS+6*REGSZ(a0)
-	REG_S	s6, SC_REGS+7*REGSZ(a0)
-	REG_S	s7, SC_REGS+8*REGSZ(a0)
-	REG_S	s8, SC_REGS+9*REGSZ(a0)
-	REG_L	v0, GPOFF(sp)
-	REG_S	v0, SC_REGS+10*REGSZ(a0)	# save gp
-	PTR_ADDU v0, sp, FRAMESZ
-	REG_S	v0, SC_REGS+11*REGSZ(a0)	# save orig sp
+	PTR_ADDU v1, sp, FRAMESZ		# save orig sp
+
+	# m_mangle_reg_and_store reg, cookie, temp, offset
+	m_mangle_reg_and_store	ra, t0, t1, SC_REGS+0*REGSZ(a0)
+	m_mangle_reg_and_store	s0, t0, t2, SC_REGS+1*REGSZ(a0)
+	m_mangle_reg_and_store	s1, t0, t3, SC_REGS+2*REGSZ(a0)
+	m_mangle_reg_and_store	s2, t0, t1, SC_REGS+3*REGSZ(a0)
+	m_mangle_reg_and_store	s3, t0, t2, SC_REGS+4*REGSZ(a0)
+	m_mangle_reg_and_store	s4, t0, t3, SC_REGS+5*REGSZ(a0)
+	m_mangle_reg_and_store	s5, t0, t1, SC_REGS+6*REGSZ(a0)
+	m_mangle_reg_and_store	s6, t0, t2, SC_REGS+7*REGSZ(a0)
+	m_mangle_reg_and_store	s7, t0, t3, SC_REGS+8*REGSZ(a0)
+	m_mangle_reg_and_store	s8, t0, t1, SC_REGS+9*REGSZ(a0)
+	m_mangle_reg_and_store	gp, t0, t2, SC_REGS+10*REGSZ(a0)
+	m_mangle_reg_and_store	v1, t0, t3, SC_REGS+11*REGSZ(a0)
 
 	cfc1	v0, $31
 
@@ -288,36 +307,41 @@ NON_LEAF(siglongjmp, FRAMESZ, ra)
 	li	t0, ~7
 	and	a0, t0				# round jmpbuf addr DOWN to 8-byte boundary
 #endif
-	lw	v0, SC_MAGIC_OFFSET(a0)
-	li	t0, 0xACEDBADE
-	bne	v0, t0, longjmp_botch		# jump if error
 
-	lw	t0, SC_FLAG_OFFSET(a0)		# get savesigs flag
+	move	s1, a1				# temp spill
+	move	s0, a0
+
+	# extract savesigs flag
+	REG_L	s2, SC_FLAG_OFFSET(s0)
+	andi	t0, s2, 1
 	beqz	t0, 1f				# restore signal mask?
 
-	REG_S	a1, A1OFF(sp)			# temp spill
-	REG_S	a0, A0OFF(sp)
-        # call sigprocmask(int how SIG_SETMASK, sigset_t* SC_MASK(a0), sigset_t* null):
-	LA	a1, SC_MASK_OFFSET(a0)		# signals being restored
+	# call sigprocmask(int how SIG_SETMASK, sigset_t* SC_MASK(a0), sigset_t* null):
+	LA	a1, SC_MASK_OFFSET(s0)		# signals being restored
 	li	a0, 3				# mips SIG_SETMASK
 	li	a2, 0				# null
 	jal	sigprocmask			# restore signal mask
-	REG_L	a0, A0OFF(sp)
-	REG_L	a1, A1OFF(sp)
 1:
+	move	t0, s2				# get cookie to temp reg
+	move	a1, s1
+	move	a0, s0
+
 	# callee-saved long-sized regs:
-	REG_L	ra, SC_REGS+0*REGSZ(a0)
-	REG_L	s0, SC_REGS+1*REGSZ(a0)
-	REG_L	s1, SC_REGS+2*REGSZ(a0)
-	REG_L	s2, SC_REGS+3*REGSZ(a0)
-	REG_L	s3, SC_REGS+4*REGSZ(a0)
-	REG_L	s4, SC_REGS+5*REGSZ(a0)
-	REG_L	s5, SC_REGS+6*REGSZ(a0)
-	REG_L	s6, SC_REGS+7*REGSZ(a0)
-	REG_L	s7, SC_REGS+8*REGSZ(a0)
-	REG_L	s8, SC_REGS+9*REGSZ(a0)
-	REG_L	gp, SC_REGS+10*REGSZ(a0)
-	REG_L	sp, SC_REGS+11*REGSZ(a0)
+
+	# m_unmangle_reg_and_load reg, cookie, temp, offset
+	# don't restore gp yet, old value is needed for cookie_check call
+	m_unmangle_reg_and_load ra, t0, t1, SC_REGS+0*REGSZ(a0)
+	m_unmangle_reg_and_load s0, t0, t2, SC_REGS+1*REGSZ(a0)
+	m_unmangle_reg_and_load s1, t0, t3, SC_REGS+2*REGSZ(a0)
+	m_unmangle_reg_and_load s2, t0, t1, SC_REGS+3*REGSZ(a0)
+	m_unmangle_reg_and_load s3, t0, t2, SC_REGS+4*REGSZ(a0)
+	m_unmangle_reg_and_load s4, t0, t3, SC_REGS+5*REGSZ(a0)
+	m_unmangle_reg_and_load s5, t0, t1, SC_REGS+6*REGSZ(a0)
+	m_unmangle_reg_and_load s6, t0, t2, SC_REGS+7*REGSZ(a0)
+	m_unmangle_reg_and_load s7, t0, t3, SC_REGS+8*REGSZ(a0)
+	m_unmangle_reg_and_load s8, t0, t1, SC_REGS+9*REGSZ(a0)
+	m_unmangle_reg_and_load v1, t0, t2, SC_REGS+10*REGSZ(a0)
+	m_unmangle_reg_and_load sp, t0, t3, SC_REGS+11*REGSZ(a0)
 
 	lw	v0, SC_FPSR_OFFSET(a0)
 	ctc1	v0, $31			# restore old fr mode before fp values
@@ -341,15 +365,22 @@ NON_LEAF(siglongjmp, FRAMESZ, ra)
 	l.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
 	l.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
 #endif
-	bne	a1, zero, 1f
-	li	a1, 1			# never return 0!
-1:
-	move	v0, a1
-	j	ra			# return to setjmp call site
 
-longjmp_botch:
-	jal	longjmperror
-	jal	abort
+	# check cookie
+	PTR_SUBU sp, FRAMESZ
+	REG_S	v1, GPOFF(sp)
+	REG_S	ra, RAOFF(sp)
+	REG_S	a1, A1OFF(sp)
+	move	a0, t0
+	jal	__bionic_setjmp_cookie_check
+	REG_L	gp, GPOFF(sp)
+	REG_L	ra, RAOFF(sp)
+	REG_L	a1, A1OFF(sp)
+	PTR_ADDU sp, FRAMESZ
+
+	sltiu	t0, a1, 1		# never return 0!
+	xor	v0, a1, t0
+	j	ra			# return to setjmp call site
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
