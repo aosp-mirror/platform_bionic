@@ -42,10 +42,12 @@
 #include <unistd.h>
 
 #include "private/bionic_auxv.h"
+#include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/libc_logging.h"
+#include "private/WriteProtected.h"
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
@@ -54,7 +56,7 @@ extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
 
-__LIBC_HIDDEN__ void __libc_init_vdso();
+__LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -105,6 +107,16 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   __init_alternate_signal_stack(&main_thread);
 }
 
+void __libc_init_globals(KernelArgumentBlock& args) {
+  // Initialize libc globals that are needed in both the linker and in libc.
+  // In dynamic binaries, this is run at least twice for different copies of the
+  // globals, once for the linker's copy and once for the one in libc.so.
+  __libc_globals.initialize();
+  __libc_globals.mutate([&args](libc_globals* globals) {
+    __libc_init_vdso(globals, args);
+  });
+}
+
 void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
   environ = args.envp;
@@ -121,9 +133,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
-
   __bionic_setjmp_cookie_init();
-  __libc_init_vdso();
 }
 
 __noreturn static void __early_abort(int line) {

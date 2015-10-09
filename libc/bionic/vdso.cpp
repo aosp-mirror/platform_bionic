@@ -14,66 +14,47 @@
  * limitations under the License.
  */
 
-#include <link.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include <unistd.h>
+#include "private/bionic_globals.h"
+#include "private/bionic_vdso.h"
 
 #if defined(__aarch64__) || defined(__x86_64__) || defined (__i386__)
 
-#if defined(__aarch64__)
-#define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
-#elif defined(__x86_64__) || defined(__i386__)
-#define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
-#endif
-
-#include <errno.h>
 #include <limits.h>
-#include <sys/mman.h>
+#include <link.h>
+#include <string.h>
+#include <sys/cdefs.h>
+#include <sys/time.h>
 #include <time.h>
-
-#include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
-
-extern "C" int __clock_gettime(int, timespec*);
-extern "C" int __gettimeofday(timeval*, struct timezone*);
-
-struct vdso_entry {
-  const char* name;
-  void* fn;
-};
-
-enum {
-  VDSO_CLOCK_GETTIME = 0,
-  VDSO_GETTIMEOFDAY,
-  VDSO_END
-};
-
-static union {
-  vdso_entry entries[VDSO_END];
-  char padding[PAGE_SIZE];
-} vdso __attribute__((aligned(PAGE_SIZE))) = {{
-  [VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, reinterpret_cast<void*>(__clock_gettime) },
-  [VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, reinterpret_cast<void*>(__gettimeofday) },
-}};
+#include <unistd.h>
+#include "private/KernelArgumentBlock.h"
 
 int clock_gettime(int clock_id, timespec* tp) {
-  int (*vdso_clock_gettime)(int, timespec*) =
-      reinterpret_cast<int (*)(int, timespec*)>(vdso.entries[VDSO_CLOCK_GETTIME].fn);
-  return vdso_clock_gettime(clock_id, tp);
+  auto vdso_clock_gettime = reinterpret_cast<decltype(&clock_gettime)>(
+    __libc_globals->vdso[VDSO_CLOCK_GETTIME].fn);
+  if (__predict_true(vdso_clock_gettime)) {
+    return vdso_clock_gettime(clock_id, tp);
+  }
+  return __clock_gettime(clock_id, tp);
 }
 
 int gettimeofday(timeval* tv, struct timezone* tz) {
-  int (*vdso_gettimeofday)(timeval*, struct timezone*) =
-      reinterpret_cast<int (*)(timeval*, struct timezone*)>(vdso.entries[VDSO_GETTIMEOFDAY].fn);
-  return vdso_gettimeofday(tv, tz);
+  auto vdso_gettimeofday = reinterpret_cast<decltype(&gettimeofday)>(
+    __libc_globals->vdso[VDSO_GETTIMEOFDAY].fn);
+  if (__predict_true(vdso_gettimeofday)) {
+    return vdso_gettimeofday(tv, tz);
+  }
+  return __gettimeofday(tv, tz);
 }
 
-static void __libc_init_vdso_entries() {
+void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
+  auto&& vdso = globals->vdso;
+  vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL,
+                               reinterpret_cast<void*>(__clock_gettime) };
+  vdso[VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL,
+                              reinterpret_cast<void*>(__gettimeofday) };
+
   // Do we have a vdso?
-  uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
+  uintptr_t vdso_ehdr_addr = args.getauxval(AT_SYSINFO_EHDR);
   ElfW(Ehdr)* vdso_ehdr = reinterpret_cast<ElfW(Ehdr)*>(vdso_ehdr_addr);
   if (vdso_ehdr == nullptr) {
     return;
@@ -123,27 +104,16 @@ static void __libc_init_vdso_entries() {
   // Are there any symbols we want?
   for (size_t i = 0; i < symbol_count; ++i) {
     for (size_t j = 0; j < VDSO_END; ++j) {
-      if (strcmp(vdso.entries[j].name, strtab + symtab[i].st_name) == 0) {
-        vdso.entries[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
+      if (strcmp(vdso[j].name, strtab + symtab[i].st_name) == 0) {
+        vdso[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
       }
     }
   }
 }
 
-void __libc_init_vdso() {
-  __libc_init_vdso_entries();
-
-  // We can't use PR_SET_VMA because this isn't an anonymous region.
-  // Long-term we should be able to replace all of this with ifuncs.
-  static_assert(PAGE_SIZE == sizeof(vdso), "sizeof(vdso) too large");
-  if (mprotect(vdso.entries, sizeof(vdso), PROT_READ) == -1) {
-    __libc_fatal("failed to mprotect PROT_READ vdso function pointer table: %s", strerror(errno));
-  }
-}
-
 #else
 
-void __libc_init_vdso() {
+void __libc_init_vdso(libc_globals*, KernelArgumentBlock&) {
 }
 
 #endif
