@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "054dc959_b48dae05",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-09T01:45:05Z",
+      "side": 1,
+      "message": "A few more positive cases:\n\n036\n0Xff",
+      "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a526bd9a_090aeda1",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-09T01:45:05Z",
+      "side": 1,
+      "message": "I think it would be good to add a few more test cases:\n\n1.2.3.4.5\n0347",
+      "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
