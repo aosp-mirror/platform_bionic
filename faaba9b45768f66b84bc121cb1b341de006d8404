@@ -69,6 +69,24 @@
       "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaf16251_e3808c89",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-09T06:54:49Z",
+      "side": 1,
+      "message": "It\u0027s the octect numbering and should have been an illegal value but brain fade took over. I meant it to be 0348. That\u0027s why I suggested the 0 value above too.",
+      "parentUuid": "eaf16251_c3234876",
+      "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
