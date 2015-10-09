@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e55355fb_56bd649f",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-09T05:35:57Z",
+      "side": 1,
+      "message": "ps2 improves the hex tests.\n\nwhat does 036 test that isn\u0027t otherwise tested?",
+      "parentUuid": "054dc959_b48dae05",
+      "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a526bd9a_090aeda1",
         "filename": "tests/arpa_inet_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-09T01:45:05Z",
       "side": 1,
       "message": "I think it would be good to add a few more test cases:\n\n1.2.3.4.5\n0347",
+      "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaf16251_c3234876",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-09T05:35:57Z",
+      "side": 1,
+      "message": "added the two many dots case, but i don\u0027t get the \"0347\" case?",
+      "parentUuid": "a526bd9a_090aeda1",
       "revId": "faaba9b45768f66b84bc121cb1b341de006d8404",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
