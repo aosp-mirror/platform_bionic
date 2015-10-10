@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ae8da64_96457cdf",
+        "filename": "libc/stdio/refill.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-10T00:58:55Z",
+      "side": 1,
+      "message": "i\u0027m assuming that we\u0027ll fork stdio soon, but in the meantime i\u0027m staying close.",
+      "revId": "8ab433df132aa59db08b4548155d72574ad06421",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
