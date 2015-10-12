@@ -32,16 +32,113 @@
  * SUCH DAMAGE.
  */
 
+#ifndef __BIONIC_STDIO_LOCAL_H__
+#define __BIONIC_STDIO_LOCAL_H__
+
+#include <pthread.h>
+#include <stdbool.h>
+#include <wchar.h>
+#include "wcio.h"
+
 /*
  * Information local to this implementation of stdio,
  * in particular, macros and private variables.
  */
 
-#include <wchar.h>
-#include "wcio.h"
-#include "fileext.h"
-
 __BEGIN_DECLS
+
+struct __sbuf {
+  unsigned char* _base;
+#if defined(__LP64__)
+  size_t _size;
+#else
+  int _size;
+#endif
+};
+
+struct __sFILE {
+	unsigned char *_p;	/* current position in (some) buffer */
+	int	_r;		/* read space left for getc() */
+	int	_w;		/* write space left for putc() */
+#if defined(__LP64__)
+	int	_flags;		/* flags, below; this FILE is free if 0 */
+	int	_file;		/* fileno, if Unix descriptor, else -1 */
+#else
+	short	_flags;		/* flags, below; this FILE is free if 0 */
+	short	_file;		/* fileno, if Unix descriptor, else -1 */
+#endif
+	struct	__sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
+	int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
+
+	/* operations */
+	void	*_cookie;	/* cookie passed to io functions */
+	int	(*_close)(void *);
+	int	(*_read)(void *, char *, int);
+	fpos_t	(*_seek)(void *, fpos_t, int);
+	int	(*_write)(void *, const char *, int);
+
+	/* extension data, to avoid further ABI breakage */
+	struct	__sbuf _ext;
+	/* data for long sequences of ungetc() */
+	unsigned char *_up;	/* saved _p when _p is doing ungetc data */
+	int	_ur;		/* saved _r when _r is counting ungetc data */
+
+	/* tricks to meet minimum requirements even when malloc() fails */
+	unsigned char _ubuf[3];	/* guarantee an ungetc() buffer */
+	unsigned char _nbuf[1];	/* guarantee a getc() buffer */
+
+	/* separate buffer for fgetln() when line crosses buffer boundary */
+	struct	__sbuf _lb;	/* buffer for fgetln() */
+
+	/* Unix stdio files get aligned to block boundaries on fseek() */
+	int	_blksize;	/* stat.st_blksize (may be != _bf._size) */
+	fpos_t	_offset;	/* current lseek offset */
+};
+
+/*
+ * file extension
+ */
+struct __sfileext {
+  /* ungetc buffer */
+  struct __sbuf _ub;
+
+  /* wide char io status */
+  struct wchar_io_data _wcio;
+
+  /* file lock */
+  pthread_mutex_t _lock;
+
+  /* __fsetlocking support */
+  bool _stdio_handles_locking;
+};
+
+#if defined(__cplusplus)
+#define _EXT(fp) reinterpret_cast<__sfileext*>((fp)->_ext._base)
+#else
+#define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
+#endif
+
+#define _UB(fp) _EXT(fp)->_ub
+#define _FLOCK(fp)  _EXT(fp)->_lock
+
+#define _FILEEXT_INIT(fp) \
+do { \
+	_UB(fp)._base = NULL; \
+	_UB(fp)._size = 0; \
+	WCIO_INIT(fp); \
+	pthread_mutexattr_t attr; \
+	pthread_mutexattr_init(&attr); \
+	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE); \
+	pthread_mutex_init(&_FLOCK(fp), &attr); \
+	pthread_mutexattr_destroy(&attr); \
+	_EXT(fp)->_stdio_handles_locking = true; \
+} while (0)
+
+#define _FILEEXT_SETUP(f, fext) \
+do { \
+	(f)->_ext._base = (unsigned char *)(fext); \
+	_FILEEXT_INIT(f); \
+} while (0)
 
 /*
  * Android <= KitKat had getc/putc macros in <stdio.h> that referred
@@ -143,3 +240,5 @@ wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
 #pragma GCC visibility pop
 
 __END_DECLS
+
+#endif
