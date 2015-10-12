@@ -74,6 +74,7 @@ __attribute__((constructor)) static void __libc_preinit() {
   // __libc_init_common() will change the TLS area so the old one won't be accessible anyway.
   *args_slot = NULL;
 
+  __libc_init_globals(*args);
   __libc_init_common(*args);
 
   // Hooks for various libraries to let them know that we're starting up.
