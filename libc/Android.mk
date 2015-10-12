@@ -59,6 +59,7 @@ libc_common_src_files := \
     bionic/system_properties_compat.c \
     stdio/findfp.c \
     stdio/fread.c \
+    stdio/refill.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
     stdio/stdio.c \
@@ -458,7 +459,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/puts.c \
     upstream-openbsd/lib/libc/stdio/putwc.c \
     upstream-openbsd/lib/libc/stdio/putwchar.c \
-    upstream-openbsd/lib/libc/stdio/refill.c \
     upstream-openbsd/lib/libc/stdio/remove.c \
     upstream-openbsd/lib/libc/stdio/rewind.c \
     upstream-openbsd/lib/libc/stdio/rget.c \
