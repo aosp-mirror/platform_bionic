@@ -1012,3 +1012,39 @@ TEST(stdio, fread_after_fseek) {
 
   fclose(fp);
 }
+
+// https://code.google.com/p/android/issues/detail?id=184847
+TEST(stdio, fread_EOF_184847) {
+  TemporaryFile tf;
+  char buf[6] = {0};
+
+  FILE* fw = fopen(tf.filename, "w");
+  ASSERT_TRUE(fw != nullptr);
+
+  FILE* fr = fopen(tf.filename, "r");
+  ASSERT_TRUE(fr != nullptr);
+
+  fwrite("a", 1, 1, fw);
+  fflush(fw);
+  ASSERT_EQ(1U, fread(buf, 1, 1, fr));
+  ASSERT_STREQ("a", buf);
+
+  // 'fr' is now at EOF.
+  ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+  ASSERT_TRUE(feof(fr));
+
+  // Write some more...
+  fwrite("z", 1, 1, fw);
+  fflush(fw);
+
+  // ...and check that we can read it back.
+  // (BSD thinks that once a stream has hit EOF, it must always return EOF. SysV disagrees.)
+  ASSERT_EQ(1U, fread(buf, 1, 1, fr));
+  ASSERT_STREQ("z", buf);
+
+  // But now we're done.
+  ASSERT_EQ(0U, fread(buf, 1, 1, fr));
+
+  fclose(fr);
+  fclose(fw);
+}
