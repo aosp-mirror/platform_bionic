@@ -39,8 +39,9 @@ int inet_aton(const char* cp, in_addr* addr) {
   size_t i;
   for (i = 0; i < 4; ++i) {
     char* end;
+    errno = 0;
     parts[i] = strtoul(cp, &end, 0);
-    if (end == cp || (*end != '.' && *end != '\0')) return 0;
+    if (errno != 0 || end == cp || (*end != '.' && *end != '\0')) return 0;
     if (*end == '\0') break;
     cp = end + 1;
   }

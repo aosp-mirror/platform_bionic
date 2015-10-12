@@ -98,7 +98,11 @@ TEST(arpa_inet, inet_aton_invalid) {
   // Out of range a form.
   ASSERT_EQ(0, inet_aton("0x100000000", nullptr));
 
-  ASSERT_EQ(0, inet_aton("0400.0.0.1", nullptr)); // Out of range octal.
+  // 64-bit overflow.
+  ASSERT_EQ(0, inet_aton("0x10000000000000000", nullptr));
+
+  // Out of range octal.
+  ASSERT_EQ(0, inet_aton("0400.0.0.1", nullptr));
 }
 
 TEST(arpa_inet, inet_lnaof) {
