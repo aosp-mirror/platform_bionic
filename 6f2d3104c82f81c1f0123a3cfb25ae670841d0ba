@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f2b7617_78b7dd27",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-13T19:27:25Z",
+      "side": 1,
+      "message": "Is there a reason you broke this into two macros? Do you expect to use PATH_TO_SYSTEM_LIB somewhere else?\n\nI think you could also change this to a constexpr, but I don\u0027t know what\u0027s better. I\u0027m starting to prefer changing constants to constepxrs.",
+      "range": {
+        "startLine": 835,
+        "startChar": 8,
+        "endLine": 835,
+        "endChar": 26
+      },
+      "revId": "6f2d3104c82f81c1f0123a3cfb25ae670841d0ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
