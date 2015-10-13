@@ -2937,6 +2937,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     // TODO (dimitry): remove != __ANDROID_API__ check once http://b/20020312 is fixed
     if (get_application_target_sdk_version() != __ANDROID_API__
         && get_application_target_sdk_version() > 22) {
+      PRINT("%s: has text relocations", get_realpath());
       DL_ERR("%s: has text relocations", get_realpath());
       return false;
     }
