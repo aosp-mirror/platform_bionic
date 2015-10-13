@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfb7aeb4_56f11ac6",
+        "filename": "libc/bionic/malloc_debug_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-13T02:03:51Z",
+      "side": 1,
+      "message": "Why the unused attribute here?",
+      "range": {
+        "startLine": 61,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 25
+      },
+      "revId": "3c8fc2fea9dac044f4903b0c315b5cda1c1f5301",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
