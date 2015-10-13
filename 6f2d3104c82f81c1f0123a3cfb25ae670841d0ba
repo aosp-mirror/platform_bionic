@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "7fa9b65d_ee714e5c",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-13T20:24:49Z",
+      "side": 1,
+      "message": "Fair enough.",
+      "parentUuid": "7fa9b65d_2ef52682",
+      "range": {
+        "startLine": 835,
+        "startChar": 8,
+        "endLine": 835,
+        "endChar": 26
+      },
+      "revId": "6f2d3104c82f81c1f0123a3cfb25ae670841d0ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df39c202_7ac8d93b",
         "filename": "tests/dlfcn_test.cpp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "writtenOn": "2015-10-13T19:33:12Z",
       "side": 1,
       "message": "I can convert this to constexpr...",
+      "range": {
+        "startLine": 837,
+        "startChar": 21,
+        "endLine": 837,
+        "endChar": 39
+      },
+      "revId": "6f2d3104c82f81c1f0123a3cfb25ae670841d0ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fa9b65d_4e5d02d5",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-13T20:24:49Z",
+      "side": 1,
+      "message": "It\u0027s probably better to leave them both the same, both as macros.",
+      "parentUuid": "df39c202_7ac8d93b",
       "range": {
         "startLine": 837,
         "startChar": 21,
