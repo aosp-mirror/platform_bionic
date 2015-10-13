@@ -2,7 +2,9 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES:= \
+LOCAL_CLANG := true
+
+LOCAL_SRC_FILES := \
     debugger.cpp \
     dlfcn.cpp \
     linker.cpp \
