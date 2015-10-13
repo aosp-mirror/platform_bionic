@@ -1318,6 +1318,10 @@ static int open_library(ZipArchiveCache* zip_archive_cache,
     int fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
     if (fd != -1) {
       *file_offset = 0;
+      if (!realpath_fd(fd, realpath)) {
+        PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", name);
+        *realpath = name;
+      }
     }
     return fd;
   }

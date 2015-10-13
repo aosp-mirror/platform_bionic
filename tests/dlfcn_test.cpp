@@ -830,10 +830,11 @@ TEST(dlfcn, dladdr_executable) {
 }
 
 #if defined(__LP64__)
-#define BIONIC_PATH_TO_LIBC "/system/lib64/libc.so"
+#define PATH_TO_SYSTEM_LIB "/system/lib64/"
 #else
-#define BIONIC_PATH_TO_LIBC "/system/lib/libc.so"
+#define PATH_TO_SYSTEM_LIB "/system/lib/"
 #endif
+#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__BIONIC__)
@@ -843,7 +844,7 @@ TEST(dlfcn, dladdr_libc) {
 
   // /system/lib is symlink when this test is executed on host.
   char libc_realpath[PATH_MAX];
-  ASSERT_TRUE(realpath(BIONIC_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+  ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
 
   ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
@@ -1063,8 +1064,22 @@ extern "C" int version_zero_function2() {
   return 0;
 }
 
-TEST(dlfcn, dt_runpath) {
+TEST(dlfcn, dt_runpath_smoke) {
   void* handle = dlopen("libtest_dt_runpath_d.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef void *(* dlopen_b_fn)();
+  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  void *p = fn();
+  ASSERT_TRUE(p != nullptr);
+
+  dlclose(handle);
+}
+
+TEST(dlfcn, dt_runpath_absolute_path) {
+  void* handle = dlopen(PATH_TO_SYSTEM_LIB "libtest_dt_runpath_d.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   typedef void *(* dlopen_b_fn)();
