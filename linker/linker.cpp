@@ -330,7 +330,7 @@ void soinfo::set_dt_runpath(const char* path) {
   std::string origin = dirname(get_realpath());
   // FIXME: add $LIB and $PLATFORM.
   std::pair<std::string, std::string> substs[] = {{"ORIGIN", origin}};
-  for (std::string& s : dt_runpath_) {
+  for (auto&& s : dt_runpath_) {
     size_t pos = 0;
     while (pos < s.size()) {
       pos = s.find("$", pos);
@@ -1161,7 +1161,7 @@ bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle
 }
 
 ZipArchiveCache::~ZipArchiveCache() {
-  for (auto it : cache_) {
+  for (const auto& it : cache_) {
     CloseArchive(it.second);
   }
 }
