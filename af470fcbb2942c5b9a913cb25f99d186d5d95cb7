@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df39c202_d4b61c14",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-13T00:37:15Z",
+      "side": 1,
+      "message": "given that we\u0027re switching to clang for a side-effect, it\u0027s probably worth explaining that here.",
+      "revId": "af470fcbb2942c5b9a913cb25f99d186d5d95cb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
