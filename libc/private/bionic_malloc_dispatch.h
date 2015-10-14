@@ -25,26 +25,44 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_GLOBALS_H
-#define _PRIVATE_BIONIC_GLOBALS_H
 
-#include <sys/cdefs.h>
-#include "private/bionic_malloc_dispatch.h"
-#include "private/bionic_vdso.h"
-#include "private/WriteProtected.h"
+#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
 
-struct libc_globals {
-  vdso_entry vdso[VDSO_END];
-  long setjmp_cookie;
-  MallocDebug malloc_dispatch;
-};
+#include <stddef.h>
+#include "private/bionic_config.h"
 
-__LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
+/* Entry in malloc dispatch table. */
+typedef void* (*MallocDebugCalloc)(size_t, size_t);
+typedef void (*MallocDebugFree)(void*);
+typedef struct mallinfo (*MallocDebugMallinfo)();
+typedef void* (*MallocDebugMalloc)(size_t);
+typedef size_t (*MallocDebugMallocUsableSize)(const void*);
+typedef void* (*MallocDebugMemalign)(size_t, size_t);
+typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+typedef void* (*MallocDebugPvalloc)(size_t);
+#endif
+typedef void* (*MallocDebugRealloc)(void*, size_t);
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+typedef void* (*MallocDebugValloc)(size_t);
+#endif
 
-class KernelArgumentBlock;
-__LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals,
-                                      KernelArgumentBlock& args);
-__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals,
-                                               KernelArgumentBlock& args);
-__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
+struct MallocDebug {
+  MallocDebugCalloc calloc;
+  MallocDebugFree free;
+  MallocDebugMallinfo mallinfo;
+  MallocDebugMalloc malloc;
+  MallocDebugMallocUsableSize malloc_usable_size;
+  MallocDebugMemalign memalign;
+  MallocDebugPosixMemalign posix_memalign;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  MallocDebugPvalloc pvalloc;
+#endif
+  MallocDebugRealloc realloc;
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  MallocDebugValloc valloc;
+#endif
+} __attribute__((aligned(32)));
+
 #endif
