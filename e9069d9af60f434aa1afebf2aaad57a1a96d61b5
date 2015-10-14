@@ -211,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "bfb7aeb4_e4a97350",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-10-14T23:08:28Z",
+      "side": 1,
+      "message": "but from the user\u0027s side, their application may abort just because they failed to call pthread_create. this seems too strict. how about return a success flag in unsafe_stack_alloc?",
+      "parentUuid": "49c27358_b48aa09b",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8478d270_d10b239e",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
