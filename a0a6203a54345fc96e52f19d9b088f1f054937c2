@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dfb462b2_3a231fbb",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-10-14T23:08:28Z",
+      "side": 1,
+      "message": "I prefer to use recommended space provided by the kernel if randomization fails, instead of aborting. Or you are confident that it will never fail in normal situations?",
+      "parentUuid": "1548969f_9a379cc3",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "354d9aaf_3174b297",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 7
