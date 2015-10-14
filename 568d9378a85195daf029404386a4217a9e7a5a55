@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fae6a64_23a0ddde",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-10-14T23:08:28Z",
+      "side": 1,
+      "message": "Why moving this line here which is different from patch 10? I noticed that the unsafe stack is allocated in the newly created thread and can be freed before the thread end, why it is safe? what is the rule to decide when to allocate and free the unsafe stack?",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 124,
+        "endChar": 30
+      },
+      "revId": "568d9378a85195daf029404386a4217a9e7a5a55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
