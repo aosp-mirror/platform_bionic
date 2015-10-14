@@ -38,6 +38,7 @@
 #include <stdlib.h>
 
 #include "private/bionic_config.h"
+#include "private/bionic_malloc_dispatch.h"
 #include "private/libc_logging.h"
 
 #define HASHTABLE_SIZE      1543
@@ -70,39 +71,6 @@ struct HashTable {
     pthread_mutex_t lock;
     size_t count;
     HashEntry* slots[HASHTABLE_SIZE];
-};
-
-/* Entry in malloc dispatch table. */
-typedef void* (*MallocDebugCalloc)(size_t, size_t);
-typedef void (*MallocDebugFree)(void*);
-typedef struct mallinfo (*MallocDebugMallinfo)();
-typedef void* (*MallocDebugMalloc)(size_t);
-typedef size_t (*MallocDebugMallocUsableSize)(const void*);
-typedef void* (*MallocDebugMemalign)(size_t, size_t);
-typedef int (*MallocDebugPosixMemalign)(void**, size_t, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocDebugPvalloc)(size_t);
-#endif
-typedef void* (*MallocDebugRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocDebugValloc)(size_t);
-#endif
-
-struct MallocDebug {
-  MallocDebugCalloc calloc;
-  MallocDebugFree free;
-  MallocDebugMallinfo mallinfo;
-  MallocDebugMalloc malloc;
-  MallocDebugMallocUsableSize malloc_usable_size;
-  MallocDebugMemalign memalign;
-  MallocDebugPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocDebugPvalloc pvalloc;
-#endif
-  MallocDebugRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocDebugValloc valloc;
-#endif
 };
 
 typedef bool (*MallocDebugInit)(HashTable*, const MallocDebug*);
