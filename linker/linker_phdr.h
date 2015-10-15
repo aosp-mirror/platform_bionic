@@ -40,26 +40,34 @@
 
 class ElfReader {
  public:
-  ElfReader(const char* name, int fd, off64_t file_offset, off64_t file_size);
+  ElfReader();
 
+  bool Read(const char* name, int fd, off64_t file_offset, off64_t file_size);
   bool Load(const android_dlextinfo* extinfo);
 
-  size_t phdr_count() { return phdr_num_; }
-  ElfW(Addr) load_start() { return reinterpret_cast<ElfW(Addr)>(load_start_); }
-  size_t load_size() { return load_size_; }
-  ElfW(Addr) load_bias() { return load_bias_; }
-  const ElfW(Phdr)* loaded_phdr() { return loaded_phdr_; }
+  const char* name() const { return name_.c_str(); }
+  size_t phdr_count() const { return phdr_num_; }
+  ElfW(Addr) load_start() const { return reinterpret_cast<ElfW(Addr)>(load_start_); }
+  size_t load_size() const { return load_size_; }
+  ElfW(Addr) load_bias() const { return load_bias_; }
+  const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
+  const ElfW(Dyn)* dynamic() const { return dynamic_; }
+  const char* get_string(ElfW(Word) index) const;
 
  private:
   bool ReadElfHeader();
   bool VerifyElfHeader();
-  bool ReadProgramHeader();
+  bool ReadProgramHeaders();
+  bool ReadSectionHeaders();
+  bool ReadDynamicSection();
   bool ReserveAddressSpace(const android_dlextinfo* extinfo);
   bool LoadSegments();
   bool FindPhdr();
   bool CheckPhdr(ElfW(Addr));
 
-  const char* name_;
+  bool did_read_;
+  bool did_load_;
+  std::string name_;
   int fd_;
   off64_t file_offset_;
   off64_t file_size_;
@@ -69,6 +77,17 @@ class ElfReader {
 
   MappedFileFragment phdr_fragment_;
   const ElfW(Phdr)* phdr_table_;
+
+  MappedFileFragment shdr_fragment_;
+  const ElfW(Shdr)* shdr_table_;
+  size_t shdr_num_;
+
+  MappedFileFragment dynamic_fragment_;
+  const ElfW(Dyn)* dynamic_;
+
+  MappedFileFragment strtab_fragment_;
+  const char* strtab_;
+  size_t strtab_size_;
 
   // First page of reserved address space.
   void* load_start_;
