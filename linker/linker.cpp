@@ -2165,24 +2165,23 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
+                   reloc, sym_addr + addend, sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
       case R_AARCH64_ABS32:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + addend), sym_name);
+                   reloc, sym_addr + addend, sym_name);
         {
-          const ElfW(Addr) reloc_value = *reinterpret_cast<ElfW(Addr)*>(reloc);
           const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
           const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (reloc_value + (sym_addr + addend))) &&
-              ((reloc_value + (sym_addr + addend)) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
+          if ((min_value <= (sym_addr + addend)) &&
+              ((sym_addr + addend) <= max_value)) {
+            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
           } else {
             DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   (reloc_value + (sym_addr + addend)), min_value, max_value);
+                   sym_addr + addend, min_value, max_value);
             return false;
           }
         }
@@ -2191,17 +2190,16 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, (sym_addr + addend), sym_name);
+                   reloc, sym_addr + addend, sym_name);
         {
-          const ElfW(Addr) reloc_value = *reinterpret_cast<ElfW(Addr)*>(reloc);
           const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
           const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (reloc_value + (sym_addr + addend))) &&
-              ((reloc_value + (sym_addr + addend)) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend);
+          if ((min_value <= (sym_addr + addend)) &&
+              ((sym_addr + addend) <= max_value)) {
+            *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
           } else {
             DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   reloc_value + (sym_addr + addend), min_value, max_value);
+                   sym_addr + addend, min_value, max_value);
             return false;
           }
         }
@@ -2210,24 +2208,23 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr + addend) - rel->r_offset;
+                   reloc, sym_addr + addend, rel->r_offset, sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
         break;
       case R_AARCH64_PREL32:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
+                   reloc, sym_addr + addend, rel->r_offset, sym_name);
         {
-          const ElfW(Addr) reloc_value = *reinterpret_cast<ElfW(Addr)*>(reloc);
           const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
           const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (reloc_value + ((sym_addr + addend) - rel->r_offset))) &&
-              ((reloc_value + ((sym_addr + addend) - rel->r_offset)) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + addend) - rel->r_offset);
+          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
+              ((sym_addr + addend - rel->r_offset) <= max_value)) {
+            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
           } else {
             DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   reloc_value + ((sym_addr + addend) - rel->r_offset), min_value, max_value);
+                   sym_addr + addend - rel->r_offset, min_value, max_value);
             return false;
           }
         }
@@ -2236,17 +2233,16 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, (sym_addr + addend), rel->r_offset, sym_name);
+                   reloc, sym_addr + addend, rel->r_offset, sym_name);
         {
-          const ElfW(Addr) reloc_value = *reinterpret_cast<ElfW(Addr)*>(reloc);
           const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
           const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (reloc_value + ((sym_addr + addend) - rel->r_offset))) &&
-              ((reloc_value + ((sym_addr + addend) - rel->r_offset)) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) += ((sym_addr + addend) - rel->r_offset);
+          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
+              ((sym_addr + addend - rel->r_offset) <= max_value)) {
+            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
           } else {
             DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   reloc_value + ((sym_addr + addend) - rel->r_offset), min_value, max_value);
+                   sym_addr + addend - rel->r_offset, min_value, max_value);
             return false;
           }
         }
