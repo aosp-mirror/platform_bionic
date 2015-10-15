@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d952c250_fe4df903",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-15T21:54:45Z",
+      "side": 1,
+      "message": "actually, I think this should be replaced with\n#if defined(__mips__) || defined(__work_around_b_24465209__)\n\nquestion... is __work_around_b_24465209__ defined for brillo?",
+      "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d952c250_9edb1d86",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-15T21:54:45Z",
+      "side": 1,
+      "message": ".. \u0026\u0026 !defined(__BRILLO__)",
+      "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
