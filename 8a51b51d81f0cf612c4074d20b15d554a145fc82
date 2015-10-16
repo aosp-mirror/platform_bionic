@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39de7e5b_4b5005f1",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-16T17:48:59Z",
+      "side": 1,
+      "message": "defined(__BIONIC_LIBC32_LEGACY__)",
+      "revId": "8a51b51d81f0cf612c4074d20b15d554a145fc82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
