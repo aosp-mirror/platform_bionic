@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99020a8c_4951259c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-16T20:42:14Z",
+      "side": 1,
+      "message": "torne: Can chrome use ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS instead of this one?",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
