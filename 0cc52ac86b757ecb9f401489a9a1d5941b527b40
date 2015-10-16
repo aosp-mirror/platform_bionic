@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d952c250_216474d6",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-16T01:38:09Z",
+      "side": 1,
+      "message": "It depends on how their makefiles are set up. If they use ours exactly as they are now, then yes it will be for arm and x86. I\u0027ll check in with them to figure out how they are compiling.",
+      "parentUuid": "d952c250_fe4df903",
+      "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d952c250_9edb1d86",
         "filename": "linker/linker.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-15T21:54:45Z",
       "side": 1,
       "message": ".. \u0026\u0026 !defined(__BRILLO__)",
+      "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "996cca16_5f022756",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-16T01:38:09Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure if the brillo folks wanted this. I asked and they said, yes, disallow text relocations.",
+      "parentUuid": "d952c250_9edb1d86",
       "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
