@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99d92a72_ee757ffa",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "maybe move this to ndk_cruft, where the existing #ifs would have kept it out of mischief?",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99020a8c_89015d53",
+        "filename": "libc/bionic/libgen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "yeah, that\u0027s a better name than the old one anyway.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99020a8c_e919f1c3",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "link.map keeps us safe now, so we could just remove all this or have __LIBC_HIDDEN__.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f26ee4_4f2a4d1a",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "that\u0027s not true, because you didn\u0027t change \u003csys/cdefs.h\u003e.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d47637_b0aa36aa",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f91146d4_ac09cb44",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "did you actually fix this? i didn\u0027t see it.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39de7e5b_8bd5cd74",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f26ee4_8f3ef552",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-16T18:21:56Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
