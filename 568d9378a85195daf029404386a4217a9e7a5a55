@@ -22,6 +22,30 @@
       "revId": "568d9378a85195daf029404386a4217a9e7a5a55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfb7aeb4_3a81e08f",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-16T00:07:54Z",
+      "side": 1,
+      "message": "Ouch, good catch.\nThe line was moved because sigprocmask may be (and is) interposed in the user code (libsigchain in this case) and use the unsafe stack.\n\nThis is wrong.\n\nI\u0027ve moved the line immediately before _exit_with_stack_teardown, and the unmapping for the non-detached threads is handled in pthread_join.",
+      "parentUuid": "9fae6a64_23a0ddde",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 124,
+        "endChar": 30
+      },
+      "revId": "568d9378a85195daf029404386a4217a9e7a5a55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
