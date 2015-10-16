@@ -229,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "996cca16_4aa1c3ce",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-16T00:07:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfb7aeb4_e4a97350",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8478d270_d10b239e",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 2
@@ -275,6 +293,24 @@
       "writtenOn": "2015-09-15T23:24:22Z",
       "side": 1,
       "message": "yeah, that\u0027s a good idea. we should probably do this for the signal stacks. (i agree with you that it\u0027s not worth the bother for the guard pages, since they\u0027re inherently adjacent.)",
+      "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "996cca16_8aabdbae",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-16T00:07:54Z",
+      "side": 1,
+      "message": "Added VMA names for signal threads. This is a sample /proc/maps:\n\nb5014000-b5015000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5015000-b5113000 rw-p 00000000 00:00 0          [anon:unsafe stack:1860]\nb5113000-b5114000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5114000-b5212000 rw-p 00000000 00:00 0          [stack:1860]\nb5212000-b5213000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5213000-b5311000 rw-p 00000000 00:00 0          [anon:unsafe stack:1859]\nb5311000-b5312000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5312000-b5410000 rw-p 00000000 00:00 0          [stack:1859]\nb5410000-b5411000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5411000-b550f000 rw-p 00000000 00:00 0          [anon:unsafe stack:1858]\nb550f000-b5510000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5510000-b560e000 rw-p 00000000 00:00 0          [stack:1858]\nb560e000-b560f000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb560f000-b570d000 rw-p 00000000 00:00 0          [anon:unsafe stack:1857]\nb570d000-b570e000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb570e000-b580c000 rw-p 00000000 00:00 0          [stack:1857]\nb580c000-b580d000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb580d000-b590b000 rw-p 00000000 00:00 0          [anon:unsafe stack:1856]\nb590b000-b590c000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb590c000-b5a0a000 rw-p 00000000 00:00 0          [stack:1856]\nb5a0a000-b5a0b000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5a0b000-b5b09000 rw-p 00000000 00:00 0          [anon:unsafe stack:1855]\nb5b09000-b5b0a000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5b0a000-b5c08000 rw-p 00000000 00:00 0          [stack:1855]\nb5c08000-b5c09000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5c09000-b5d07000 rw-p 00000000 00:00 0          [anon:unsafe stack:1854]\nb5d07000-b5d08000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5d08000-b5e06000 rw-p 00000000 00:00 0          [stack:1854]\nb5e06000-b5e07000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb5e07000-b5f05000 rw-p 00000000 00:00 0          [anon:unsafe stack:1853]\nb5f05000-b5f06000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb5f06000-b6004000 rw-p 00000000 00:00 0          [stack:1853]\nb6004000-b6005000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb6005000-b6103000 rw-p 00000000 00:00 0          [anon:unsafe stack:1852]\nb6103000-b6104000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb6104000-b6202000 rw-p 00000000 00:00 0          [stack:1852]\nb6202000-b6203000 ---p 00000000 00:00 0          [anon:unsafe stack guard page]\nb6203000-b6301000 rw-p 00000000 00:00 0          [anon:unsafe stack:1851]\nb6301000-b6302000 ---p 00000000 00:00 0          [anon:thread stack guard page]\nb6302000-b6400000 rw-p 00000000 00:00 0          [stack:1851]\nb6400000-b6500000 rw-p 00000000 00:00 0          [anon:libc_malloc]\nb651f000-b6520000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6520000-b6522000 rw-p 00000000 00:00 0          [anon:thread signal stack:1860]\nb6522000-b6523000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6523000-b6525000 rw-p 00000000 00:00 0          [anon:thread signal stack:1859]\nb6525000-b6526000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6526000-b6528000 rw-p 00000000 00:00 0          [anon:thread signal stack:1858]\nb6528000-b6529000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6529000-b652b000 rw-p 00000000 00:00 0          [anon:thread signal stack:1857]\nb652b000-b652c000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb652c000-b652e000 rw-p 00000000 00:00 0          [anon:thread signal stack:1856]\nb652e000-b652f000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb652f000-b6531000 rw-p 00000000 00:00 0          [anon:thread signal stack:1852]\nb6531000-b6532000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6532000-b6534000 rw-p 00000000 00:00 0          [anon:thread signal stack:1855]\nb6534000-b6535000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6535000-b6537000 rw-p 00000000 00:00 0          [anon:thread signal stack:1854]\nb6537000-b6538000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb6538000-b653a000 rw-p 00000000 00:00 0          [anon:thread signal stack:1853]\nb653a000-b653b000 ---p 00000000 00:00 0          [anon:thread signal stack guard page]\nb653b000-b653d000 rw-p 00000000 00:00 0          [anon:thread signal stack:1851]",
+      "parentUuid": "e467cecb_e23cd7ad",
       "revId": "e9069d9af60f434aa1afebf2aaad57a1a96d61b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
