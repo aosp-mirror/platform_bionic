@@ -16,6 +16,24 @@
       "revId": "8a51b51d81f0cf612c4074d20b15d554a145fc82",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79fd56bf_c54e1a34",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-16T18:12:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39de7e5b_4b5005f1",
+      "revId": "8a51b51d81f0cf612c4074d20b15d554a145fc82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
