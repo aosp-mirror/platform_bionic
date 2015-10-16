@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "99ae8a64_401152d5",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2015-10-16T00:07:54Z",
+      "side": 1,
+      "message": "This code only aborts if mmap returns with an error. Otherwise it returns the address from the last iteration no matter if what we asked for or not.\n\nRefactored the code a bit to make this more clear.",
+      "parentUuid": "dfb462b2_3a231fbb",
+      "revId": "a0a6203a54345fc96e52f19d9b088f1f054937c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "354d9aaf_3174b297",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 7
