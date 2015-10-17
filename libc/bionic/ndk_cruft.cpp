@@ -47,7 +47,10 @@
 
 #include "private/libc_logging.h"
 
-// The part is only for 32-bit targets.
+// Brillo doesn't need to support any legacy cruft.
+#if !defined(__BRILLO__)
+
+// Most of the cruft is only for 32-bit Android targets.
 #if !defined(__LP64__)
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
@@ -375,20 +378,18 @@ extern "C" void endpwent() { }
 #if defined(USE_JEMALLOC)
 extern "C" void dlmalloc_inspect_all(void (*)(void*, void*, size_t, void*), void*) {
 }
+extern "C" int dlmalloc_trim(size_t) {
+    return 0;
+}
 #else
 extern "C" void dlmalloc_inspect_all_real(void (*)(void*, void*, size_t, void*), void*);
 extern "C" void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void* arg) {
   dlmalloc_inspect_all_real(handler, arg);
 }
-#endif
-
-#if defined(USE_JEMALLOC)
-extern "C" int dlmalloc_trim(size_t) {
-  return 0;
-}
-#else
 extern "C" int dlmalloc_trim_real(size_t);
 extern "C" int dlmalloc_trim(size_t pad) {
   return dlmalloc_trim_real(pad);
 }
 #endif
+
+#endif // !defined(__BRILLO__)
