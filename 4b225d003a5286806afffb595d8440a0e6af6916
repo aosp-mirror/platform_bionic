@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "592a5215_54d66cd7",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-17T01:54:45Z",
+      "side": 1,
+      "message": "i.e. just using access(...) and falling back to something like this since arc4random_buf(...) would abort.",
+      "parentUuid": "39259e43_d38cd40e",
+      "revId": "4b225d003a5286806afffb595d8440a0e6af6916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19829a51_b2c90044",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 15
