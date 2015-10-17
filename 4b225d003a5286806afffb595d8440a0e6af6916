@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "39259e43_d38cd40e",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-17T01:53:42Z",
+      "side": 1,
+      "message": "This should probably just be arc4random, with a workaround for when /dev/urandom isn\u0027t available (until Android has getrandom(...), then no need for a workaround).",
+      "revId": "4b225d003a5286806afffb595d8440a0e6af6916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19829a51_b2c90044",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 15
@@ -13,6 +30,24 @@
       "writtenOn": "2015-10-17T01:46:30Z",
       "side": 1,
       "message": "Randomization like this will fail under virtual memory exhaustion, which an attacker can often force. Randomization should be done via forced gaps (i.e. PROT_NONE regions with the same lifetime as the stack).\n\nFor example, allocating a large PROT_NONE region and then choosing a random stack base within that range and making it usable via mprotect. That way, you choose how much entropy you want and size the region appropriately to get a strong guarantee about the amount of entropy. This is also a working solution for 32-bit, it can just be low entropy.\n\nNote that hints are also fully ignored with PaX ASLR rather than just being unreliable as they are elsewhere.",
+      "revId": "4b225d003a5286806afffb595d8440a0e6af6916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f984e65e_716dd87e",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-17T01:53:42Z",
+      "side": 1,
+      "message": "I have a simple version of that here, for example:\n\nhttps://android-review.googlesource.com/#/c/161453/\n\nIt could be done differently (random gaps before *and* after). The main goal there was making stack overflows harder to exploit, not protecting the stack itself.",
+      "parentUuid": "19829a51_b2c90044",
       "revId": "4b225d003a5286806afffb595d8440a0e6af6916",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
