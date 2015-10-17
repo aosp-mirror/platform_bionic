@@ -16,6 +16,23 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d98ba26e_f014605a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-17T23:48:25Z",
+      "side": 1,
+      "message": "FWIW, this would make ART incompatible with PaX ASLR. What\u0027s the reason for requiring a fixed address? Could it just reserve a bunch of virtual memory and then have a way of query how much was used, so it knows how much is free?",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
