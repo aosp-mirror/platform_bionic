@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19829a51_b2c90044",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-17T01:46:30Z",
+      "side": 1,
+      "message": "Randomization like this will fail under virtual memory exhaustion, which an attacker can often force. Randomization should be done via forced gaps (i.e. PROT_NONE regions with the same lifetime as the stack).\n\nFor example, allocating a large PROT_NONE region and then choosing a random stack base within that range and making it usable via mprotect. That way, you choose how much entropy you want and size the region appropriately to get a strong guarantee about the amount of entropy. This is also a working solution for 32-bit, it can just be low entropy.\n\nNote that hints are also fully ignored with PaX ASLR rather than just being unreliable as they are elsewhere.",
+      "revId": "4b225d003a5286806afffb595d8440a0e6af6916",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
