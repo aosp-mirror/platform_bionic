@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b90b4ea8_0aa8bb4c",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "Good point, moved.",
+      "parentUuid": "99d92a72_ee757ffa",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99020a8c_89015d53",
         "filename": "libc/bionic/libgen.cpp",
         "patchSetId": 4
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "b90b4ea8_ea5e870a",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "Changed to __LIBC_HIDDEN__. If we want to do anything fancier, I can do it in a separate CL.",
+      "parentUuid": "99020a8c_e919f1c3",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9f26ee4_4f2a4d1a",
         "filename": "libc/tzcode/localtime.c",
         "patchSetId": 4
@@ -64,6 +100,24 @@
       "writtenOn": "2015-10-16T18:21:56Z",
       "side": 1,
       "message": "that\u0027s not true, because you didn\u0027t change \u003csys/cdefs.h\u003e.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39de7e5b_cb44f5e4",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "In fact, it\u0027s not even true on glibc 32 bit. Changing back to lp64 and adjusting the comment slightly.",
+      "parentUuid": "b9f26ee4_4f2a4d1a",
       "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "f91146d4_ac68abab",
+        "filename": "libc/tzcode/strftime.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "Moved back to a LP64 check.",
+      "parentUuid": "79d47637_b0aa36aa",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f91146d4_ac09cb44",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 4
@@ -98,6 +170,24 @@
       "writtenOn": "2015-10-16T18:21:56Z",
       "side": 1,
       "message": "did you actually fix this? i didn\u0027t see it.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99d92a72_91acde0e",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "Actually, it looks kind of complicated, so I\u0027ll do this in a separate change.",
+      "parentUuid": "f91146d4_ac09cb44",
       "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "f91146d4_0fee89e2",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "Saving for a separate CL.",
+      "parentUuid": "39de7e5b_8bd5cd74",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9f26ee4_8f3ef552",
         "filename": "tests/time_test.cpp",
         "patchSetId": 4
@@ -132,6 +240,24 @@
       "writtenOn": "2015-10-16T18:21:56Z",
       "side": 1,
       "message": "same.",
+      "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99020a8c_299ca9db",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-18T04:54:44Z",
+      "side": 1,
+      "message": "I verified again that glibc 32 bit has the same signed time_t and operates the same way as bionic.\n\nSo changed this back and modified the comment slightly.",
+      "parentUuid": "b9f26ee4_8f3ef552",
       "revId": "35c806760cfbd6636e7703f90a476e1ded61d2f3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
