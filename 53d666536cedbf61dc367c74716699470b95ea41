@@ -87,6 +87,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99f3ea1a_84efca6e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-19T20:46:23Z",
+      "side": 1,
+      "message": "I don\u0027t follow your comment.\n\nNo, the hint is required for our PIC mode. In non-PIC, the boot.oat has a non-zero vaddr and that takes care of things. In PIC mode, we want to have both ASLR (so the boot.art is copied and patched into /data) *and* be able to load boot.oat from /system without patching, but it still *must* follow immediately after the art file in memory. So we cannot use a non-zero vaddr (because patching/ASLR of boot.art would invalidate it) and a zero vaddr doesn\u0027t work either (as it allows the linker to load things anywhere).",
+      "parentUuid": "f9c30674_5c80b13a",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
