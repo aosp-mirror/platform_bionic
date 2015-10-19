@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "79ee3638_1de2f387",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-19T23:30:32Z",
+      "side": 1,
+      "message": "The problem with MAP_FIXED here is that something else could map the region in the meantime (ART can guarantee that won\u0027t happen but Bionic can\u0027t really do that because it\u0027s just library code).",
+      "parentUuid": "b9f26ee4_848b7421",
+      "range": {
+        "startLine": 345,
+        "startChar": 21,
+        "endLine": 345,
+        "endChar": 48
+      },
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d98ba26e_f014605a",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
@@ -215,6 +239,24 @@
       "side": 1,
       "message": "The requirement of MAP_FIXED is actually correct, dimitry will have to add that (when I mentioned MAP_FIXED, that is when we use the ART internal loader).\n\nWe\u0027re aware that this isn\u0027t optimal from a *security* perspective, as it\u0027s somewhat of a one-time ASLR (once per install/OTA per device). However, for boot time and memory savings, this is as good as it gets. If you want to read up on what academia thinks we should do, google for Morula.",
       "parentUuid": "19c1ba6c_e0935698",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79ee3638_7defb76f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-19T23:30:32Z",
+      "side": 1,
+      "message": "Well, we already just use exec spawning across the board on CopperheadOS (excluding system_server itself due to breakage without preloading, but it ends up being the only thing sharing ASLR bases and the SSP canary with the Zygote). It could be optimized with a pre-spawning pool but it\u0027s much less necessary with ART than it was with Dalvik. AFAIK the base image issue wasn\u0027t looked at in the Morula paper.",
+      "parentUuid": "79fd56bf_4e3a42ff",
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
