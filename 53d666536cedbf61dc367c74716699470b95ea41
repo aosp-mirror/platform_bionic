@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "b9f26ee4_a4f79886",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-19T23:32:38Z",
+      "side": 1,
+      "message": "MAP_FIXED discards overlapped memory and we want to avoid that: \" If the memory region specified by addr and len overlaps pages of any existing mapping(s), then the overlapped part of the existing mapping(s) will be discarded.\"\n\nThis is why the right way is to mmap with hint and then check the result.",
+      "parentUuid": "b9f26ee4_848b7421",
+      "range": {
+        "startLine": 345,
+        "startChar": 21,
+        "endLine": 345,
+        "endChar": 48
+      },
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d98ba26e_f014605a",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
