@@ -123,6 +123,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b90b4ea8_9f24dec4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-19T22:55:19Z",
+      "side": 1,
+      "message": "I\u0027m curious how you think that the location is chosen by PaX.\n\nART itself randomizes the boot.art address on first boot, when it is either compiled from source or patched from the preopted file in /system. The address in your link is perfectly inside the range (current base address is 0x70000000 for arm32, and we add +-0x1000000).\n\nIn L, and for the art file in general, we don\u0027t use the dynamic loader. We mmap ourself, with MAP_FIXED. If you wanted to change that, you\u0027d have to do relocations at runtime, and we don\u0027t support that (it removes half of the advantage of having a boot image - file-backed mostly clean heap full of preloaded classes).",
+      "parentUuid": "9975aa40_91a07e9b",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
