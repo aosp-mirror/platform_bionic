@@ -344,6 +344,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c30674_1f922b50",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-19T23:56:27Z",
+      "side": 1,
+      "message": "The boot image is a problem right now that\u0027s not addressed yet. Using exec is still beneficial to get a new SSP canary, but that could be done without exec too (a function exposed from libc to re-randomize the canary, and making sure to call it where there aren\u0027t going to be any returns where an old canary value would be checked).\n\nThe spawning time is slower, but it\u0027s much less than it second. It might be ~150ms more on the Nexus 5 (not quite sure). It\u0027s definitely 1-2s more if preloading is left is place, but leaving that all out works fine (well, not for system_server, but 0 app incompatibilities found so far).\n\nI did send one relevant patch so far:\n\nhttps://android-review.googlesource.com/#/c/172080/\n\nIt avoids a pointless extra fork per exec.",
+      "parentUuid": "79fd56bf_4e8242cc",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
