@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "b9f26ee4_848b7421",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-19T23:26:40Z",
+      "side": 1,
+      "message": "Dimitry, this needs MAP_FIXED when we have the strict_hint, or it will with high probability fail on PaX as mentioned by Daniel.",
+      "range": {
+        "startLine": 345,
+        "startChar": 21,
+        "endLine": 345,
+        "endChar": 48
+      },
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d98ba26e_f014605a",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
@@ -174,6 +197,24 @@
       "side": 1,
       "message": "The worst-case scenario is that I\u0027ll need to give a RANDMMAP exception to ART stuff (stronger ASLR isn\u0027t really accomplishing anything for ART at the moment anyway) but I just wanted to make you aware of a use case where the code here might be problematic.",
       "parentUuid": "79ee3638_fd3f479f",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79fd56bf_4e3a42ff",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-19T23:26:40Z",
+      "side": 1,
+      "message": "The requirement of MAP_FIXED is actually correct, dimitry will have to add that (when I mentioned MAP_FIXED, that is when we use the ART internal loader).\n\nWe\u0027re aware that this isn\u0027t optimal from a *security* perspective, as it\u0027s somewhat of a one-time ASLR (once per install/OTA per device). However, for boot time and memory savings, this is as good as it gets. If you want to read up on what academia thinks we should do, google for Morula.",
+      "parentUuid": "19c1ba6c_e0935698",
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
