@@ -326,6 +326,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79fd56bf_4e8242cc",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2015-10-19T23:42:31Z",
+      "side": 1,
+      "message": "If you keep a boot image, you\u0027ll still get the boot image at the same address every single time (if you added relocations, we\u0027d be interested in your memory numbers).\n\nEven with the boot image, starting the runtime still takes a while (was somewhere around a second or so in L, if I remember correctly), plus you have the time of initializing the framework. If you made improvements to that, upstream patches are always welcome.\n\nIf you didn\u0027t keep the boot image, how does compiled code work? Or are you running straight interpreter all the time?",
+      "parentUuid": "79ee3638_7defb76f",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
