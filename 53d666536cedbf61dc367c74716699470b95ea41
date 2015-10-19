@@ -141,6 +141,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79ee3638_fd3f479f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-19T23:01:57Z",
+      "side": 1,
+      "message": "Ah, I didn\u0027t realize you used MAP_FIXED. I thought it was just passing a hint (without MAP_FIXED) and that this was just a MAP_32BIT address chosen by PaX. As long as it\u0027s still using MAP_FIXED then nothing will break with PaX (it\u0027s far from ideal security-wise though) but passing only a hint will just be ignore, and that seems to be what this Bionic code is doing (since it can\u0027t be sure that other threads aren\u0027t going map stuff, resulting in memory corruption).",
+      "parentUuid": "b90b4ea8_9f24dec4",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
