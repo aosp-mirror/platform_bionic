@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99020a8c_f549c22d",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-19T21:35:54Z",
+      "side": 1,
+      "message": "Is lr still allowed? Is so, can you rearrange this so you only need one store?\n\nstmia r1, {r4-r12,lr}\nstr sp,...\n\nAnd the same down below.",
+      "range": {
+        "startLine": 156,
+        "startChar": 2,
+        "endLine": 156,
+        "endChar": 20
+      },
+      "revId": "d5616b5d33b1558a642934f3e8cbc62b746a9c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
