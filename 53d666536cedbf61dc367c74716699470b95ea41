@@ -159,6 +159,24 @@
       "revId": "53d666536cedbf61dc367c74716699470b95ea41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19c1ba6c_e0935698",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-10-19T23:04:40Z",
+      "side": 1,
+      "message": "The worst-case scenario is that I\u0027ll need to give a RANDMMAP exception to ART stuff (stronger ASLR isn\u0027t really accomplishing anything for ART at the moment anyway) but I just wanted to make you aware of a use case where the code here might be problematic.",
+      "parentUuid": "79ee3638_fd3f479f",
+      "revId": "53d666536cedbf61dc367c74716699470b95ea41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
