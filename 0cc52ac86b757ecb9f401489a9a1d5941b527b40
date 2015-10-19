@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d9ef22fe_93c97e44",
+        "filename": "linker/linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1040868
+      },
+      "writtenOn": "2015-10-19T21:13:51Z",
+      "side": 1,
+      "message": "Brillo boards haven\u0027t changed any of the bionic code.  we\u0027re building things pretty much the same as master -- we\u0027ve got device/product mk files that bring everything together.",
+      "parentUuid": "d952c250_216474d6",
+      "revId": "0cc52ac86b757ecb9f401489a9a1d5941b527b40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d952c250_9edb1d86",
         "filename": "linker/linker.h",
         "patchSetId": 1
