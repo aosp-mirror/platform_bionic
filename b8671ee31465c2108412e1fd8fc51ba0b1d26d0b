@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b90b4ea8_7aced8b9",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-20T02:41:02Z",
+      "side": 1,
+      "message": "PAGE_MASK? kPageMask?",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b90b4ea8_9ad18c58",
+        "filename": "linker/linker_map.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-20T02:41:02Z",
+      "side": 1,
+      "message": "rename the file to match the class?",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b90b4ea8_bacb30aa",
+        "filename": "linker/linker_map.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-20T02:41:02Z",
+      "side": 1,
+      "message": "not data() and size()?",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
