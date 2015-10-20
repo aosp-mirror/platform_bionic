@@ -198,6 +198,24 @@
     },
     {
       "key": {
+        "uuid": "b9ec2e3d_0b3f4051",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T21:05:32Z",
+      "side": 1,
+      "message": "I got compilation error when tried to use it",
+      "parentUuid": "d90802ae_a3179111",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
