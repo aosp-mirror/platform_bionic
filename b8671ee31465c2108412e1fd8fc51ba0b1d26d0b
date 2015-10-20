@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "79d47637_afdf68c3",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T17:51:15Z",
+      "side": 1,
+      "message": "__builtin_saddll_overflow has a bug, the last parameter is long* instead of long long*, this is not what we want...",
+      "parentUuid": "79d47637_99df5e73",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
