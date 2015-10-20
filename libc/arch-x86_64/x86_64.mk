@@ -1,31 +1,20 @@
 # 64-bit x86.
 
 #
-# Default implementations of functions that are commonly optimized.
+# Remove default implementations that we have optimized versions of.
 #
 
-libc_bionic_src_files_x86_64 += \
-    bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
-    bionic/strchr.cpp \
-    bionic/strnlen.c \
-    bionic/strrchr.cpp \
-
-libc_freebsd_src_files_x86_64 += \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
-    upstream-freebsd/lib/libc/string/wmemmove.c \
-
-libc_openbsd_src_files_x86_64 += \
-    upstream-openbsd/lib/libc/string/memchr.c \
-    upstream-openbsd/lib/libc/string/memrchr.c \
+libc_openbsd_src_files_exclude_x86_64 += \
+    upstream-openbsd/lib/libc/string/memmove.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/stpncpy.c \
+    upstream-openbsd/lib/libc/string/strcat.c \
+    upstream-openbsd/lib/libc/string/strcpy.c \
+    upstream-openbsd/lib/libc/string/strlcat.c \
+    upstream-openbsd/lib/libc/string/strlcpy.c \
+    upstream-openbsd/lib/libc/string/strncat.c \
+    upstream-openbsd/lib/libc/string/strncmp.c \
+    upstream-openbsd/lib/libc/string/strncpy.c \
 
 #
 # Inherently architecture-specific code.
