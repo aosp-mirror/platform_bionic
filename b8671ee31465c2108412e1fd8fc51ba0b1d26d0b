@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "99f3ea1a_53d626d7",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T21:04:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b90b4ea8_7aced8b9",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79d47637_99df5e73",
         "filename": "linker/linker_map.cpp",
         "patchSetId": 1
@@ -162,6 +180,24 @@
     },
     {
       "key": {
+        "uuid": "99020a8c_305ac511",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T21:04:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9ec2e3d_8b9990ee",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
@@ -179,6 +215,24 @@
     },
     {
       "key": {
+        "uuid": "99f3ea1a_f3e012ab",
+        "filename": "linker/linker_map.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T21:04:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b90b4ea8_9ad18c58",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_bacb30aa",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
@@ -190,6 +244,24 @@
       "writtenOn": "2015-10-20T02:41:02Z",
       "side": 1,
       "message": "not data() and size()?",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec2e3d_ab37347b",
+        "filename": "linker/linker_map.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T21:04:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b90b4ea8_bacb30aa",
       "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
