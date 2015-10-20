@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "d90802ae_a3179111",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-20T21:03:35Z",
+      "side": 1,
+      "message": "Really? It seems correct in the patch that added it (which matches the code we have in external/clang)\n\nBUILTIN(__builtin_saddll_overflow, \"bSLLiCSLLiCSLLi*\", \"n\")",
+      "parentUuid": "b9ec2e3d_8b9990ee",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
