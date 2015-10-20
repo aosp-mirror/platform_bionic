@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "99f3ea1a_7369a2e1",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-20T20:41:37Z",
+      "side": 1,
+      "message": "does not work with off64_t + size_t (always returns false)",
+      "parentUuid": "39de7e5b_f479c94e",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
