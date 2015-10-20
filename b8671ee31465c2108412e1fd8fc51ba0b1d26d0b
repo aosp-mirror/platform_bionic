@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "79d47637_99df5e73",
+        "filename": "linker/linker_map.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-20T02:59:17Z",
+      "side": 1,
+      "message": "Undefined behavior has already happened by this point, if the compiler hates you enough, this could get optimized out entirely.\n\nClang has __builtin_addll_overflow, you\u0027ll have to add an inline function for gcc since we don\u0027t have 5.0. (I have something similar for size_t addition here: https://android-review.googlesource.com/#/c/172962/)",
+      "revId": "b8671ee31465c2108412e1fd8fc51ba0b1d26d0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b90b4ea8_9ad18c58",
         "filename": "linker/linker_map.h",
         "patchSetId": 1
