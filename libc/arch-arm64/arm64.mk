@@ -1,32 +1,38 @@
 # 64-bit arm.
 
 #
-# Default implementations of functions that are commonly optimized.
+# Generic arm64 optimizations, may be overriden by CPU variants.
 #
 
 libc_bionic_src_files_arm64 += \
-    bionic/__memset_chk.cpp \
-    bionic/__strcpy_chk.cpp \
-    bionic/__strcat_chk.cpp \
-    bionic/strrchr.cpp \
+    arch-arm64/generic/bionic/memchr.S \
+    arch-arm64/generic/bionic/memcmp.S \
+    arch-arm64/generic/bionic/memcpy.S \
+    arch-arm64/generic/bionic/memmove.S \
+    arch-arm64/generic/bionic/memset.S \
+    arch-arm64/generic/bionic/stpcpy.S \
+    arch-arm64/generic/bionic/strchr.S \
+    arch-arm64/generic/bionic/strcmp.S \
+    arch-arm64/generic/bionic/strcpy.S \
+    arch-arm64/generic/bionic/strlen.S \
+    arch-arm64/generic/bionic/strncmp.S \
+    arch-arm64/generic/bionic/strnlen.S \
+    arch-arm64/generic/bionic/wmemmove.S \
 
-libc_freebsd_src_files_arm64 += \
-    upstream-freebsd/lib/libc/string/wcscat.c \
-    upstream-freebsd/lib/libc/string/wcschr.c \
-    upstream-freebsd/lib/libc/string/wcscmp.c \
-    upstream-freebsd/lib/libc/string/wcscpy.c \
-    upstream-freebsd/lib/libc/string/wcslen.c \
-    upstream-freebsd/lib/libc/string/wcsrchr.c \
-    upstream-freebsd/lib/libc/string/wmemcmp.c \
+libc_bionic_src_files_exclude_arm64 += \
+    bionic/__memcpy_chk.cpp \
+    bionic/strchr.cpp \
+    bionic/strnlen.c \
 
-libc_openbsd_src_files_arm64 += \
-    upstream-openbsd/lib/libc/string/memrchr.c \
-    upstream-openbsd/lib/libc/string/stpncpy.c \
-    upstream-openbsd/lib/libc/string/strcat.c \
-    upstream-openbsd/lib/libc/string/strlcat.c \
-    upstream-openbsd/lib/libc/string/strlcpy.c \
-    upstream-openbsd/lib/libc/string/strncat.c \
-    upstream-openbsd/lib/libc/string/strncpy.c \
+libc_freebsd_src_files_exclude_arm64 += \
+    upstream-freebsd/lib/libc/string/wmemmove.c \
+
+libc_openbsd_src_files_exclude_arm64 += \
+    upstream-openbsd/lib/libc/string/memchr.c \
+    upstream-openbsd/lib/libc/string/memmove.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/strcpy.c \
+    upstream-openbsd/lib/libc/string/strncmp.c \
 
 #
 # Inherently architecture-specific code.
@@ -54,6 +60,7 @@ libc_crt_target_crtbegin_so_file_arm64 := \
 ifeq ($(strip $(TARGET_CPU_VARIANT)),)
   $(warning TARGET_ARCH is arm64, but TARGET_CPU_VARIANT is not defined)
 endif
+ifneq ($(TARGET_CPU_VARIANT),generic)
 cpu_variant_mk := $(LOCAL_PATH)/arch-arm64/$(TARGET_CPU_VARIANT)/$(TARGET_CPU_VARIANT).mk
 ifeq ($(wildcard $(cpu_variant_mk)),)
 $(error "TARGET_CPU_VARIANT not set or set to an unknown value. Possible values are generic, denver64. Use generic for devices that do not have a CPU similar to any of the supported cpu variants.")
@@ -62,3 +69,4 @@ include $(cpu_variant_mk)
 libc_common_additional_dependencies += $(cpu_variant_mk)
 
 cpu_variant_mk :=
+endif
