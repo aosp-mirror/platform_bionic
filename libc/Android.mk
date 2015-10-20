@@ -258,6 +258,15 @@ libc_bionic_src_files += bionic/sysconf.cpp
 libc_bionic_src_files += bionic/vdso.cpp
 libc_bionic_src_files += bionic/setjmp_cookie.cpp
 
+libc_bionic_src_files += \
+    bionic/__memcpy_chk.cpp \
+    bionic/__memset_chk.cpp \
+    bionic/__strcat_chk.cpp \
+    bionic/__strcpy_chk.cpp \
+    bionic/strchr.cpp \
+    bionic/strnlen.c \
+    bionic/strrchr.cpp \
+
 libc_cxa_src_files := \
     bionic/__cxa_guard.cpp \
     bionic/__cxa_pure_virtual.cpp \
@@ -274,18 +283,26 @@ libc_upstream_freebsd_src_files := \
     upstream-freebsd/lib/libc/string/wcpcpy.c \
     upstream-freebsd/lib/libc/string/wcpncpy.c \
     upstream-freebsd/lib/libc/string/wcscasecmp.c \
+    upstream-freebsd/lib/libc/string/wcscat.c \
+    upstream-freebsd/lib/libc/string/wcschr.c \
+    upstream-freebsd/lib/libc/string/wcscmp.c \
+    upstream-freebsd/lib/libc/string/wcscpy.c \
     upstream-freebsd/lib/libc/string/wcscspn.c \
     upstream-freebsd/lib/libc/string/wcsdup.c \
     upstream-freebsd/lib/libc/string/wcslcat.c \
+    upstream-freebsd/lib/libc/string/wcslen.c \
     upstream-freebsd/lib/libc/string/wcsncasecmp.c \
     upstream-freebsd/lib/libc/string/wcsncat.c \
     upstream-freebsd/lib/libc/string/wcsncmp.c \
     upstream-freebsd/lib/libc/string/wcsncpy.c \
     upstream-freebsd/lib/libc/string/wcsnlen.c \
     upstream-freebsd/lib/libc/string/wcspbrk.c \
+    upstream-freebsd/lib/libc/string/wcsrchr.c \
     upstream-freebsd/lib/libc/string/wcsspn.c \
     upstream-freebsd/lib/libc/string/wcstok.c \
     upstream-freebsd/lib/libc/string/wmemchr.c \
+    upstream-freebsd/lib/libc/string/wmemcmp.c \
+    upstream-freebsd/lib/libc/string/wmemmove.c \
     upstream-freebsd/lib/libc/string/wmemset.c \
 
 libc_upstream_netbsd_src_files := \
@@ -354,6 +371,20 @@ libc_upstream_openbsd_gdtoa_src_files_64 := \
 libc_upstream_openbsd_src_files := \
     upstream-openbsd/lib/libc/crypt/arc4random.c \
     upstream-openbsd/lib/libc/crypt/arc4random_uniform.c \
+
+libc_upstream_openbsd_src_files += \
+    upstream-openbsd/lib/libc/string/memchr.c \
+    upstream-openbsd/lib/libc/string/memmove.c \
+    upstream-openbsd/lib/libc/string/memrchr.c \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+    upstream-openbsd/lib/libc/string/stpncpy.c \
+    upstream-openbsd/lib/libc/string/strcat.c \
+    upstream-openbsd/lib/libc/string/strcpy.c \
+    upstream-openbsd/lib/libc/string/strlcat.c \
+    upstream-openbsd/lib/libc/string/strlcpy.c \
+    upstream-openbsd/lib/libc/string/strncat.c \
+    upstream-openbsd/lib/libc/string/strncmp.c \
+    upstream-openbsd/lib/libc/string/strncpy.c \
 
 libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/compat-43/killpg.c \
@@ -794,7 +825,7 @@ LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_freebsd_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES_EXCLUDE,libc_freebsd_src_files_exclude))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -908,7 +939,7 @@ LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_openbsd_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES_EXCLUDE,libc_openbsd_src_files_exclude))
 include $(BUILD_STATIC_LIBRARY)
 
 
@@ -972,6 +1003,7 @@ LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_bionic_src_files))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES_EXCLUDE,libc_bionic_src_files_exclude))
 include $(BUILD_STATIC_LIBRARY)
 
 
