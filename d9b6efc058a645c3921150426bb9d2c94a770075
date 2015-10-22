@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19337ad8_9e228d73",
+        "filename": "linker/linker_mapped_file_fragment.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-22T00:38:52Z",
+      "side": 1,
+      "message": "Is this necessary? I\u0027m pretty sure that sizes passed to the mmap libc functions don\u0027t have to be page aligned.",
+      "revId": "d9b6efc058a645c3921150426bb9d2c94a770075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
