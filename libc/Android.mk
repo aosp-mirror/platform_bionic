@@ -309,6 +309,7 @@ libc_upstream_netbsd_src_files := \
     upstream-netbsd/lib/libc/stdlib/nrand48.c \
     upstream-netbsd/lib/libc/stdlib/_rand48.c \
     upstream-netbsd/lib/libc/stdlib/rand_r.c \
+    upstream-netbsd/lib/libc/stdlib/reallocarr.c \
     upstream-netbsd/lib/libc/stdlib/seed48.c \
     upstream-netbsd/lib/libc/stdlib/srand48.c \
     upstream-netbsd/lib/libc/string/memccpy.c \
