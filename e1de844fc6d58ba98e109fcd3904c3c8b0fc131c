@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "968019c6_3f9d4ba3",
+        "filename": "libc/private/ScopedPthreadMutexLocker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-10-23T04:31:11Z",
+      "side": 1,
+      "message": "where do you intend to use this? You can just merge this CL into that change. And it makes more sense.",
+      "range": {
+        "startLine": 37,
+        "startChar": 2,
+        "endLine": 37,
+        "endChar": 15
+      },
+      "revId": "e1de844fc6d58ba98e109fcd3904c3c8b0fc131c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
