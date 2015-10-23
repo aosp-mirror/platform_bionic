@@ -32,6 +32,6 @@
 #define __unlockenv() 0
 
 #include <stddef.h>
-int reallocarr(void*, size_t, size_t);
+__LIBC_HIDDEN__ int reallocarr(void*, size_t, size_t);
 
 #endif
