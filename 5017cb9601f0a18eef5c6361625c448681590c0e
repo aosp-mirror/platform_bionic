@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "16d269e7_359d7aa3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1669,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T01:13:20Z",
+      "side": 1,
+      "message": "it does... removed.",
+      "parentUuid": "f66f95e4_e215fc0b",
+      "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "968019c6_9c8b4d5e",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,41 @@
       "writtenOn": "2015-10-22T23:55:10Z",
       "side": 1,
       "message": "add bug link?",
+      "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "369ccd29_e43af0ad",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1768,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T01:13:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "968019c6_9c8b4d5e",
+      "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "968019c6_ff8593d4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3237,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T01:13:20Z",
+      "side": 1,
+      "message": "wrong place for this comment... moved to the right one.",
       "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "166d09ed_c0af92cc",
+        "filename": "linker/linker_libc_support.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T01:13:20Z",
+      "side": 1,
+      "message": "pthread_atfork is called by arc4random",
+      "parentUuid": "d6661112_feb03917",
+      "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "166d09ed_4074e28b",
         "filename": "linker/linker_phdr.h",
         "patchSetId": 1
@@ -64,6 +135,24 @@
       "writtenOn": "2015-10-22T23:55:10Z",
       "side": 1,
       "message": "maybe did_read_ and did_load_ because \u0027read\u0027 is annoyingly ambiguous in English?",
+      "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f66f95e4_ed9f2d29",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T01:13:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "166d09ed_4074e28b",
       "revId": "5017cb9601f0a18eef5c6361625c448681590c0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
