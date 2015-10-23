@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56a1415d_c237a613",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-23T00:01:17Z",
+      "side": 1,
+      "message": "the library",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3675adb9_1cc3b96c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-23T00:01:17Z",
+      "side": 1,
+      "message": "why is it ignored?",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "166d09ed_4046223c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-23T00:01:17Z",
+      "side": 1,
+      "message": "the linker\nthe size (of what?)",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
