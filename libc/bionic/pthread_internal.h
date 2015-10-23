@@ -31,6 +31,7 @@
 #include <pthread.h>
 #include <stdatomic.h>
 
+#include "private/bionic_lock.h"
 #include "private/bionic_tls.h"
 
 /* Has the thread been detached by a pthread_join or pthread_detach call? */
@@ -89,7 +90,7 @@ struct pthread_internal_t {
 
   void* alternate_signal_stack;
 
-  pthread_mutex_t startup_handshake_mutex;
+  Lock startup_handshake_lock;
 
   size_t mmap_size;
 
