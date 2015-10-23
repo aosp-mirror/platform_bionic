@@ -92,7 +92,7 @@ static int __basename_r(const char* path, char* buffer, size_t buffer_size) {
 }
 
 // Since this is a non-standard symbol, it might be hijacked by a basename_r in the executable.
-__LIBC64_HIDDEN__ int basename_r(const char* path, char* buffer, size_t buffer_size) {
+__LIBC32_LEGACY_PUBLIC__ int basename_r(const char* path, char* buffer, size_t buffer_size) {
   return __basename_r(path, buffer, buffer_size);
 }
 
@@ -156,7 +156,7 @@ static int __dirname_r(const char* path, char* buffer, size_t buffer_size) {
 }
 
 // Since this is a non-standard symbol, it might be hijacked by a basename_r in the executable.
-__LIBC64_HIDDEN__ int dirname_r(const char* path, char* buffer, size_t buffer_size) {
+__LIBC32_LEGACY_PUBLIC__ int dirname_r(const char* path, char* buffer, size_t buffer_size) {
   return __dirname_r(path, buffer, buffer_size);
 }
 
