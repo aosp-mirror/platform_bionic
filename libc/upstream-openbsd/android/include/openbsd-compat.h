@@ -71,8 +71,8 @@ __LIBC_HIDDEN__ extern int getentropy(void*, size_t);
 __LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
 
 /* LP32 NDK ctype.h contained references to these. */
-__LIBC64_HIDDEN__ extern const short* _tolower_tab_;
-__LIBC64_HIDDEN__ extern const short* _toupper_tab_;
+__LIBC32_LEGACY_PUBLIC__ extern const short* _tolower_tab_;
+__LIBC32_LEGACY_PUBLIC__ extern const short* _toupper_tab_;
 
 __LIBC_HIDDEN__ extern const char _C_ctype_[];
 __LIBC_HIDDEN__ extern const short _C_toupper_[];
