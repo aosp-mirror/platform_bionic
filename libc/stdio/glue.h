@@ -47,6 +47,6 @@ struct glue {
 };
 
 /* This was referenced by a couple of different pieces of middleware and the Crystax NDK. */
-__LIBC64_HIDDEN__ extern struct glue __sglue;
+__LIBC32_LEGACY_PUBLIC__ extern struct glue __sglue;
 
 __END_DECLS
