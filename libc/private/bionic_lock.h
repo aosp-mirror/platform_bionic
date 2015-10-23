@@ -31,6 +31,8 @@
 #include <stdatomic.h>
 #include "private/bionic_futex.h"
 
+// Lock is used in places like pthread_rwlock_t, which can be initialized without calling
+// an initialization function. So make sure Lock can be initialized by setting its memory to 0.
 class Lock {
  private:
   enum LockState {
@@ -42,10 +44,6 @@ class Lock {
   bool process_shared;
 
  public:
-  Lock(bool process_shared = false) {
-    init(process_shared);
-  }
-
   void init(bool process_shared) {
     atomic_init(&state, Unlocked);
     this->process_shared = process_shared;
