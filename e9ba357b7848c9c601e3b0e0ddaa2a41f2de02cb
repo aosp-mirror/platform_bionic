@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "16d269e7_b5af2acd",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T00:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56a1415d_c237a613",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3675adb9_1cc3b96c",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "56a1415d_02e10e83",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T00:57:39Z",
+      "side": 1,
+      "message": "We need to choose one over the other (ignore this flag or ignore FIXED_VADDR one). And this is the way art wants it.",
+      "parentUuid": "3675adb9_1cc3b96c",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "166d09ed_4046223c",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2015-10-23T00:01:17Z",
       "side": 1,
       "message": "the linker\nthe size (of what?)",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3675adb9_5c47f139",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-23T00:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "166d09ed_4046223c",
       "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
