@@ -134,16 +134,9 @@ static int GetTargetElfMachine() {
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
 ElfReader::ElfReader(const char* name, int fd, off64_t file_offset, off64_t file_size)
-    : name_(name), fd_(fd), file_offset_(file_offset), file_size_(file_size),
-      phdr_num_(0), phdr_mmap_(nullptr), phdr_table_(nullptr), phdr_size_(0),
-      load_start_(nullptr), load_size_(0), load_bias_(0),
+    : name_(name), fd_(fd), file_offset_(file_offset), file_size_(file_size), phdr_num_(0),
+      phdr_table_(nullptr), load_start_(nullptr), load_size_(0), load_bias_(0),
       loaded_phdr_(nullptr) {
-}
-
-ElfReader::~ElfReader() {
-  if (phdr_mmap_ != nullptr) {
-    munmap(phdr_mmap_, phdr_size_);
-  }
 }
 
 bool ElfReader::Load(const android_dlextinfo* extinfo) {
@@ -234,21 +227,12 @@ bool ElfReader::ReadProgramHeader() {
     return false;
   }
 
-  ElfW(Addr) page_min = PAGE_START(header_.e_phoff);
-  ElfW(Addr) page_max = PAGE_END(header_.e_phoff + (phdr_num_ * sizeof(ElfW(Phdr))));
-  ElfW(Addr) page_offset = PAGE_OFFSET(header_.e_phoff);
-
-  phdr_size_ = page_max - page_min;
-
-  void* mmap_result =
-      mmap64(nullptr, phdr_size_, PROT_READ, MAP_PRIVATE, fd_, file_offset_ + page_min);
-  if (mmap_result == MAP_FAILED) {
+  if (!phdr_fragment_.Map(fd_, file_offset_, header_.e_phoff, phdr_num_ * sizeof(ElfW(Phdr)))) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_, strerror(errno));
     return false;
   }
 
-  phdr_mmap_ = mmap_result;
-  phdr_table_ = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(mmap_result) + page_offset);
+  phdr_table_ = static_cast<ElfW(Phdr)*>(phdr_fragment_.data());
   return true;
 }
 
@@ -829,7 +813,7 @@ bool ElfReader::FindPhdr() {
 bool ElfReader::CheckPhdr(ElfW(Addr) loaded) {
   const ElfW(Phdr)* phdr_limit = phdr_table_ + phdr_num_;
   ElfW(Addr) loaded_end = loaded + (phdr_num_ * sizeof(ElfW(Phdr)));
-  for (ElfW(Phdr)* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
+  for (const ElfW(Phdr)* phdr = phdr_table_; phdr < phdr_limit; ++phdr) {
     if (phdr->p_type != PT_LOAD) {
       continue;
     }
