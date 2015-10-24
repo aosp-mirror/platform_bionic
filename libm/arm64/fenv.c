@@ -26,6 +26,7 @@
  * $FreeBSD: libm/aarch64/fenv.c $
  */
 
+#include <stdint.h>
 #include <fenv.h>
 
 #define FPCR_EXCEPT_SHIFT 8
@@ -38,10 +39,20 @@ const fenv_t __fe_dfl_env = { 0 /* control */, 0 /* status */};
 typedef __uint32_t fpu_control_t;   // FPCR, Floating-point Control Register.
 typedef __uint32_t fpu_status_t;    // FPSR, Floating-point Status Register.
 
-#define __get_fpcr(__fpcr) __asm__ __volatile__("mrs %0,fpcr" : "=r" (__fpcr))
-#define __get_fpsr(__fpsr) __asm__ __volatile__("mrs %0,fpsr" : "=r" (__fpsr))
-#define __set_fpcr(__fpcr) __asm__ __volatile__("msr fpcr,%0" : :"ri" (__fpcr))
-#define __set_fpsr(__fpsr) __asm__ __volatile__("msr fpsr,%0" : :"ri" (__fpsr))
+#define __get(REGISTER, __value) { \
+  uint64_t __value64; \
+  __asm__ __volatile__("mrs %0," REGISTER : "=r" (__value64)); \
+  __value = (__uint32_t) __value64; \
+}
+#define __get_fpcr(__fpcr) __get("fpcr", __fpcr)
+#define __get_fpsr(__fpsr) __get("fpsr", __fpsr)
+
+#define __set(REGISTER, __value) { \
+  uint64_t __value64 = __value; \
+  __asm__ __volatile__("msr " REGISTER ",%0" : : "ri" (__value64)); \
+}
+#define __set_fpcr(__fpcr) __set("fpcr", __fpcr)
+#define __set_fpsr(__fpsr) __set("fpsr", __fpsr)
 
 int fegetenv(fenv_t* envp) {
   __get_fpcr(envp->__control);
