@@ -317,6 +317,7 @@ struct soinfo {
 
   soinfo* get_local_group_root() const;
 
+  void set_soname(const char* soname);
   const char* get_soname() const;
   const char* get_realpath() const;
   const ElfW(Versym)* get_versym(size_t n) const;
@@ -329,6 +330,7 @@ struct soinfo {
 
   uint32_t get_target_sdk_version() const;
 
+  void set_dt_runpath(const char *);
   const std::vector<std::string>& get_dt_runpath() const;
 
  private:
@@ -392,7 +394,6 @@ struct soinfo {
 
   uint32_t target_sdk_version_;
 
-  void set_dt_runpath(const char *);
   std::vector<std::string> dt_runpath_;
 
   friend soinfo* get_libdl_info();
