@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "f6b795e1_4d84590c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-10-26T18:43:01Z",
+      "side": 1,
+      "message": "Art wants to use this option for PI executables (they have zero vaddr)\n\nNote that ANDROID_DLEXT_FORCE_FIXED_VADDR does not return an error when the elf-file has non-zero vaddr.\n\nIf the linker generates an error when these two options are combined the caller will be forced to read elf-file in order to figure out which option to use.\n\nThis is something we want to avoid.",
+      "parentUuid": "f66f95e4_48a5e7a8",
+      "revId": "e9ba357b7848c9c601e3b0e0ddaa2a41f2de02cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "166d09ed_4046223c",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 4
