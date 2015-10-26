@@ -15,7 +15,9 @@
  */
 
 #include "../libc/arch-common/bionic/__dso_handle.h"
+#include "../libc/arch-common/bionic/pthread_atfork.h"
 
 int atexit(void (*function)(void) __attribute__((__unused__))) {
   return -1;
 }
+
