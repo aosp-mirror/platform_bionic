@@ -23,3 +23,9 @@ TEST(utmp, login_tty) {
   // This test just checks that we're exporting the symbol independently.
   ASSERT_EQ(-1, login_tty(-1));
 }
+
+TEST(utmp, setutent_getutent_endutent) {
+  setutent();
+  getutent();
+  endutent();
+}
