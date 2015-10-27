@@ -140,6 +140,30 @@
       "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d63d314e_8086f6de",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T20:28:12Z",
+      "side": 1,
+      "message": "(and caught a bug where we\u0027d fstat the -1 from the open and return EBADF rather than the actual failure from open.)",
+      "parentUuid": "b640bdd4_9f9f335c",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 0
+      },
+      "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
