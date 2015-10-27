@@ -386,8 +386,9 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   void* start;
   size_t reserved_size = 0;
   bool reserved_hint = true;
+  bool strict_hint = false;
   // Assume position independent executable by default.
-  uint8_t* mmap_hint = nullptr;
+  void* mmap_hint = nullptr;
 
   if (extinfo != nullptr) {
     if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
@@ -397,8 +398,11 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
       reserved_size = extinfo->reserved_size;
     }
 
-    if ((extinfo->flags & ANDROID_DLEXT_FORCE_FIXED_VADDR) != 0) {
+    if (addr != nullptr && (extinfo->flags & ANDROID_DLEXT_FORCE_FIXED_VADDR) != 0) {
       mmap_hint = addr;
+    } else if ((extinfo->flags & ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS) != 0) {
+      mmap_hint = extinfo->reserved_addr;
+      strict_hint = true;
     }
   }
 
@@ -412,6 +416,12 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
     start = mmap(mmap_hint, load_size_, PROT_NONE, mmap_flags, -1, 0);
     if (start == MAP_FAILED) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
+      return false;
+    }
+    if (strict_hint && (start != mmap_hint)) {
+      munmap(start, load_size_);
+      DL_ERR("couldn't reserve %zd bytes of address space at %p for \"%s\"",
+             load_size_, mmap_hint, name_.c_str());
       return false;
     }
   } else {
