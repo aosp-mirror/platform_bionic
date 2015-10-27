@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f636b56e_6173b6d4",
+        "filename": "libc/bionic/scandir.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T20:26:38Z",
+      "side": 1,
+      "message": "consensus last time we discussed this was a preference for being explicit.",
+      "parentUuid": "f6b795e1_8e274752",
+      "range": {
+        "startLine": 113,
+        "startChar": 37,
+        "endLine": 113,
+        "endChar": 48
+      },
+      "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36e4cdf6_f36d0b80",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "56fce1c4_44d46ecd",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T20:26:38Z",
+      "side": 1,
+      "message": "yes. (we\u0027re not opening any of the files. just listing them.)",
+      "parentUuid": "36e4cdf6_f36d0b80",
+      "range": {
+        "startLine": 85,
+        "startChar": 25,
+        "endLine": 85,
+        "endChar": 38
+      },
+      "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76d48537_963badb2",
         "filename": "tests/dirent_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-10-27T19:18:55Z",
       "side": 1,
       "message": "I think it would be useful to have a test of the failing case, if the directory to open doesn\u0027t exist.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 0
+      },
+      "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b640bdd4_9f9f335c",
+        "filename": "tests/dirent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T20:26:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d48537_963badb2",
       "range": {
         "startLine": 115,
         "startChar": 0,
