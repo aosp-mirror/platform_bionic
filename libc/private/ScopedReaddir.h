@@ -23,8 +23,11 @@
 
 class ScopedReaddir {
  public:
-  ScopedReaddir(const char* path) {
-    dir_ = opendir(path);
+  ScopedReaddir(const char* path) : ScopedReaddir(opendir(path)) {
+  }
+
+  ScopedReaddir(DIR* dir) {
+    dir_ = dir;
   }
 
   ~ScopedReaddir() {
