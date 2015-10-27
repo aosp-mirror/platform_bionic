@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16b509da_772727ec",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T02:28:35Z",
+      "side": 1,
+      "message": "whereas",
+      "revId": "0963809db7855333fdbfe1c126e069d9ea73c10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d48537_87ddba43",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T02:28:35Z",
+      "side": 1,
+      "message": "when",
+      "revId": "0963809db7855333fdbfe1c126e069d9ea73c10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6ceb575_438c2d0c",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T02:28:35Z",
+      "side": 1,
+      "message": "the linker",
+      "revId": "0963809db7855333fdbfe1c126e069d9ea73c10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d48537_47d7d221",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-27T02:28:35Z",
+      "side": 1,
+      "message": "an error",
+      "revId": "0963809db7855333fdbfe1c126e069d9ea73c10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
