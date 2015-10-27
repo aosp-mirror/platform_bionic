@@ -80,6 +80,24 @@ enum {
    */
   ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80,
 
+  /* Instructs dlopen to load the library at the address specified by reserved_addr.
+   *
+   * The difference between ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS and ANDROID_DLEXT_RESERVED_ADDRESS
+   * is that for ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS the linker reserves memory at reserved_addr
+   * whereas for ANDROID_DLEXT_RESERVED_ADDRESS the linker relies on the caller to reserve the memory.
+   *
+   * This flag can be used with ANDROID_DLEXT_FORCE_FIXED_VADDR; when ANDROID_DLEXT_FORCE_FIXED_VADDR
+   * is set and load_bias is not 0 (load_bias is min(p_vaddr) of PT_LOAD segments) this flag is ignored.
+   * This is implemented this way because the linker has to pick one address over the other and this
+   * way is more convenient for art. Note that ANDROID_DLEXT_FORCE_FIXED_VADDR does not generate
+   * an error when min(p_vaddr) is 0.
+   *
+   * Cannot be used with ANDROID_DLEXT_RESERVED_ADDRESS or ANDROID_DLEXT_RESERVED_ADDRESS_HINT.
+   *
+   * This flag is for ART internal use only.
+   */
+  ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -88,7 +106,8 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
-                                        ANDROID_DLEXT_FORCE_FIXED_VADDR,
+                                        ANDROID_DLEXT_FORCE_FIXED_VADDR |
+                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS,
 };
 
 typedef struct {
