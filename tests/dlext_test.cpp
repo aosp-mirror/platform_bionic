@@ -343,6 +343,43 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   EXPECT_EQ(4, f());
 }
 
+TEST_F(DlExtTest, LoadAtFixedAddress) {
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
+                     -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  munmap(start, LIBSIZE);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
+  extinfo.reserved_addr = start;
+
+  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  ASSERT_DL_NOTNULL(handle_);
+  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
+  ASSERT_DL_NOTNULL(f);
+  EXPECT_GE(reinterpret_cast<void*>(f), start);
+  EXPECT_LT(reinterpret_cast<void*>(f), reinterpret_cast<char*>(start) + LIBSIZE);
+
+  EXPECT_EQ(4, f());
+}
+
+TEST_F(DlExtTest, LoadAtFixedAddressTooSmall) {
+  void* start = mmap(nullptr, LIBSIZE + PAGE_SIZE, PROT_NONE,
+                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(start != MAP_FAILED);
+  munmap(start, LIBSIZE + PAGE_SIZE);
+  void* new_addr = mmap(reinterpret_cast<uint8_t*>(start) + PAGE_SIZE, LIBSIZE, PROT_NONE,
+                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_TRUE(new_addr != MAP_FAILED);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
+  extinfo.reserved_addr = start;
+
+  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle_ == nullptr);
+}
+
 class DlExtRelroSharingTest : public DlExtTest {
 protected:
   virtual void SetUp() {
