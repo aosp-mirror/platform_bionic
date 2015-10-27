@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6b795e1_8e274752",
+        "filename": "libc/bionic/scandir.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-27T18:38:20Z",
+      "side": 1,
+      "message": "Should we bother with the explicit \u0027!\u003d nullptr\u0027 in code like this? It seems to me that this is just adding noise.",
+      "range": {
+        "startLine": 113,
+        "startChar": 37,
+        "endLine": 113,
+        "endChar": 48
+      },
+      "revId": "06c84a6d0aed0cc44750f98ff0cd84347733c534",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
