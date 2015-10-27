@@ -81,6 +81,72 @@ TEST(dirent, scandir_scandir64) {
   CheckProcSelf(name_set);
 }
 
+TEST(dirent, scandirat_scandirat64) {
+  // Get everything from /proc/self...
+  dirent** entries;
+  int entry_count = scandir("/proc/self", &entries, NULL, alphasort);
+  ASSERT_GE(entry_count, 0);
+
+  int proc_fd = open("/proc", O_DIRECTORY);
+  ASSERT_NE(-1, proc_fd);
+
+  dirent** entries_at;
+  int entry_count_at = scandirat(proc_fd, "self", &entries_at, NULL, alphasort);
+  ASSERT_EQ(entry_count, entry_count_at);
+
+  dirent64** entries_at64;
+  int entry_count_at64 = scandirat64(proc_fd, "self", &entries_at64, NULL, alphasort64);
+  ASSERT_EQ(entry_count, entry_count_at64);
+
+  close(proc_fd);
+
+  // scandirat and scandirat64 should return the same results as scandir.
+  std::set<std::string> name_set, name_set_at, name_set_at64;
+  std::vector<std::string> unsorted_name_list, unsorted_name_list_at, unsorted_name_list_at64;
+  ScanEntries(entries, entry_count, name_set, unsorted_name_list);
+  ScanEntries(entries_at, entry_count_at, name_set_at, unsorted_name_list_at);
+  ScanEntries(entries_at64, entry_count_at64, name_set_at64, unsorted_name_list_at64);
+
+  ASSERT_EQ(name_set, name_set_at);
+  ASSERT_EQ(name_set, name_set_at64);
+  ASSERT_EQ(unsorted_name_list, unsorted_name_list_at);
+  ASSERT_EQ(unsorted_name_list, unsorted_name_list_at64);
+}
+
+TEST(dirent, scandir_ENOENT) {
+  dirent** entries;
+  errno = 0;
+  ASSERT_EQ(-1, scandir("/does-not-exist", &entries, nullptr, nullptr));
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(dirent, scandir64_ENOENT) {
+  dirent64** entries;
+  errno = 0;
+  ASSERT_EQ(-1, scandir64("/does-not-exist", &entries, nullptr, nullptr));
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(dirent, scandirat_ENOENT) {
+  int root_fd = open("/", O_DIRECTORY | O_RDONLY);
+  ASSERT_NE(-1, root_fd);
+  dirent** entries;
+  errno = 0;
+  ASSERT_EQ(-1, scandirat(root_fd, "does-not-exist", &entries, nullptr, nullptr));
+  ASSERT_EQ(ENOENT, errno);
+  close(root_fd);
+}
+
+TEST(dirent, scandirat64_ENOENT) {
+  int root_fd = open("/", O_DIRECTORY | O_RDONLY);
+  ASSERT_NE(-1, root_fd);
+  dirent64** entries;
+  errno = 0;
+  ASSERT_EQ(-1, scandirat64(root_fd, "does-not-exist", &entries, nullptr, nullptr));
+  ASSERT_EQ(ENOENT, errno);
+  close(root_fd);
+}
+
 TEST(dirent, fdopendir_invalid) {
   ASSERT_TRUE(fdopendir(-1) == NULL);
   ASSERT_EQ(EBADF, errno);
