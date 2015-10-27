@@ -75,10 +75,6 @@ __END_DECLS
 #define	HTONL(x) (x) = htonl((u_int32_t)(x))
 #define	HTONS(x) (x) = htons((u_int16_t)(x))
 
-#define swap16 __swap16
-#define swap32 __swap32
-#define swap64 __swap64
-
 #define htobe16 __swap16
 #define htobe32 __swap32
 #define htobe64 __swap64
