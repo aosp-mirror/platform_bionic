@@ -81,8 +81,13 @@ extern long telldir(DIR*);
 extern int dirfd(DIR*);
 extern int alphasort(const struct dirent**, const struct dirent**);
 extern int alphasort64(const struct dirent64**, const struct dirent64**);
-extern int scandir(const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
 extern int scandir64(const char*, struct dirent64***, int (*)(const struct dirent64*), int (*)(const struct dirent64**, const struct dirent64**));
+extern int scandir(const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
+
+#if defined(__USE_GNU)
+int scandirat64(int, const char*, struct dirent64***, int (*)(const struct dirent64*), int (*)(const struct dirent64**, const struct dirent64**));
+int scandirat(int, const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
+#endif
 
 __END_DECLS
 
