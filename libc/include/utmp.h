@@ -97,8 +97,9 @@ struct utmp
 __BEGIN_DECLS
 
 int utmpname(const char*);
-void setutent();
-struct utmp* getutent();
+void setutent(void);
+struct utmp* getutent(void);
+void endutent(void);
 
 int login_tty(int);
 
