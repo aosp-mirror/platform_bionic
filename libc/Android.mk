@@ -1385,7 +1385,12 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_REQUIRED_MODULES := tzdata
 LOCAL_ADDITIONAL_DEPENDENCIES := \
     $(libc_common_additional_dependencies) \
-    $(LOCAL_PATH)/libc.map \
+    $(LOCAL_PATH)/libc.arm.map \
+    $(LOCAL_PATH)/libc.arm64.map \
+    $(LOCAL_PATH)/libc.mips.map \
+    $(LOCAL_PATH)/libc.mips64.map \
+    $(LOCAL_PATH)/libc.x86.map \
+    $(LOCAL_PATH)/libc.x86_64.map \
 
 # Leave the symbols in the shared library so that stack unwinders can produce
 # meaningful name resolution.
@@ -1413,7 +1418,12 @@ LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
 # Don't re-export new/delete and friends, even if the compiler really wants to.
-LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/libc.map
+LOCAL_LDFLAGS_arm    := -Wl,--version-script,$(LOCAL_PATH)/libc.arm.map
+LOCAL_LDFLAGS_arm64  := -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.map
+LOCAL_LDFLAGS_mips   := -Wl,--version-script,$(LOCAL_PATH)/libc.mips.map
+LOCAL_LDFLAGS_mips64 := -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
+LOCAL_LDFLAGS_x86    := -Wl,--version-script,$(LOCAL_PATH)/libc.x86.map
+LOCAL_LDFLAGS_x86_64 := -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
