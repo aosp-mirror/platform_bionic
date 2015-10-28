@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "76c565cc_f94d7fae",
+        "filename": "libc/tools/genversion-scripts.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T23:34:32Z",
+      "side": 1,
+      "message": "ah, sorry, i misunderstood this. i actually meant all the per-architecture files. i don\u0027t think they should be checked in.",
+      "parentUuid": "56c4e1d1_8d7b69ed",
+      "revId": "9c16bba5e421db239822ff7674d9eb8befea74bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76c565cc_f9a9ffb6",
         "filename": "libc/tools/genversion-scripts.py",
         "patchSetId": 1
