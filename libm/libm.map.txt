@@ -271,8 +271,8 @@ LIBC {
     *;
 };
 
-LIBC_PRIVATE {
-  global:
+LIBC_PRIVATE { # arm
+  global: # arm
     ___Unwind_Backtrace; # arm
     ___Unwind_ForcedUnwind; # arm
     ___Unwind_RaiseException; # arm
@@ -375,4 +375,4 @@ LIBC_PRIVATE {
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
     restore_core_regs; # arm
-} LIBC;
+} LIBC; # arm
