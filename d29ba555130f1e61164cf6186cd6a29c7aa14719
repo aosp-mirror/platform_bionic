@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99020a8c_4f86c5a8",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 0,
+      "message": "right now. but it will. i think we should either leave this in, or break up ndk_cruft.",
+      "revId": "d29ba555130f1e61164cf6186cd6a29c7aa14719",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

@@ -16,6 +16,125 @@
       "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f26ee4_d8ef2123",
+        "filename": "libc/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "i think we should do this inside ndk_cruft, as we\u0027ve been doing so far. or we need to break ndk_cruft up. because right now, it\u0027s past, present, and future cruft, not just \"legacy 32-bit stuff\".",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79d47637_9ca511ab",
+        "filename": "libc/bionic/__set_errno.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "want to pull the __set_errno change out and submit it separately?",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f26ee4_b8f45df4",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "we could just implement the usershell functions and remove endpwent to see what breaks. (i\u0027m having trouble understanding how anything could be using endpwent without getpwent or setpwent.)\n\nor, apparently, we could just remove them. i\u0027ll do that in a separate change. (this doesn\u0027t affect brillo because we already submitted the \"no ndk cruft for brillo\" change.)",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f91146d4_63563e3f",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "(continuing the \"should we split this file up?\" thought...)\n\n...then we\u0027d only have the jemalloc stuff in here that isn\u0027t 32-bit only, and we could have a dlmalloc_cruft for that? might be clearer than the current \"mostly but not entirely 32-bit legacy cruft\".",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99020a8c_2f9389e6",
+        "filename": "libc/bionic/pthread_rwlock.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "i feel like there\u0027s a difference between using __BIONIC_LIBC32_LEGACY__ to not expose cruft (which i think there\u0027s no real argument against) and using it for things like this which mean that Android code only using non-cruft doesn\u0027t work on Brillo (and vice versa).\n\ni don\u0027t think the latter kind of change is a good idea for anyone, because we\u0027ll be converging in future rather than diverging. (and, sadly, it\u0027s not like 32-bit Android is going to die overnight.)",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9ec2e3d_3fb52706",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "(this could easily be in its own tiny unobjectionable change.)",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d0d18a_4ed4c71b",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-28T21:35:36Z",
+      "side": 1,
+      "message": "yeah, we should fix this comment.",
+      "revId": "b1d3b090886cc1e63b2f9b4f1f91d8e512027aaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
