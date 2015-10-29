@@ -1417,13 +1417,17 @@ endif
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
+# TODO: This is to work around b/24465209. Remove after root cause is fixed
+LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
+LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
+
 # Don't re-export new/delete and friends, even if the compiler really wants to.
-LOCAL_LDFLAGS_arm    := -Wl,--version-script,$(LOCAL_PATH)/libc.arm.map
-LOCAL_LDFLAGS_arm64  := -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.map
-LOCAL_LDFLAGS_mips   := -Wl,--version-script,$(LOCAL_PATH)/libc.mips.map
-LOCAL_LDFLAGS_mips64 := -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
-LOCAL_LDFLAGS_x86    := -Wl,--version-script,$(LOCAL_PATH)/libc.x86.map
-LOCAL_LDFLAGS_x86_64 := -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
+LOCAL_LDFLAGS_arm    += -Wl,--version-script,$(LOCAL_PATH)/libc.arm.map
+LOCAL_LDFLAGS_arm64  += -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.map
+LOCAL_LDFLAGS_mips   += -Wl,--version-script,$(LOCAL_PATH)/libc.mips.map
+LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
+LOCAL_LDFLAGS_x86    += -Wl,--version-script,$(LOCAL_PATH)/libc.x86.map
+LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
@@ -1433,10 +1437,6 @@ LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
 # Unfortunately --exclude-libs clobbers our version script, so we have to
 # prevent the build system from using this flag.
 LOCAL_NO_EXCLUDE_LIBS := true
-
-# TODO: This is to work around b/24465209. Remove after root cause is fixed
-LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
-LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_arch_dynamic_src_files))
