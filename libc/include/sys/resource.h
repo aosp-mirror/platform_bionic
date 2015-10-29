@@ -53,10 +53,7 @@ extern int setpriority(int, int, int);
 
 extern int getrusage(int, struct rusage*);
 
-#if __LP64__
-/* Implementing prlimit for 32-bit isn't worth the effort. */
 extern int prlimit(pid_t, int, const struct rlimit*, struct rlimit*);
-#endif
 extern int prlimit64(pid_t, int, const struct rlimit64*, struct rlimit64*);
 
 __END_DECLS
