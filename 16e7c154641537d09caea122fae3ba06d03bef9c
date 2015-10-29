@@ -22,6 +22,30 @@
       "revId": "16e7c154641537d09caea122fae3ba06d03bef9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36a68d28_5abbe9f7",
+        "filename": "libc/bionic/legacy_32_bit_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-10-29T03:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96cad9dc_9a4b9d43",
+      "range": {
+        "startLine": 128,
+        "startChar": 34,
+        "endLine": 128,
+        "endChar": 36
+      },
+      "revId": "16e7c154641537d09caea122fae3ba06d03bef9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
