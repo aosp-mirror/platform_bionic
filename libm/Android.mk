@@ -525,12 +525,12 @@ LOCAL_ADDITIONAL_DEPENDENCIES := \
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 LOCAL_LDFLAGS_x86 := -Wl,--hash-style=both
 
-LOCAL_LDFLAGS_arm    := -Wl,--version-script,$(LOCAL_PATH)/libm.arm.map
-LOCAL_LDFLAGS_arm64  := -Wl,--version-script,$(LOCAL_PATH)/libm.arm64.map
-LOCAL_LDFLAGS_mips   := -Wl,--version-script,$(LOCAL_PATH)/libm.mips.map
-LOCAL_LDFLAGS_mips64 := -Wl,--version-script,$(LOCAL_PATH)/libm.mips64.map
-LOCAL_LDFLAGS_x86    := -Wl,--version-script,$(LOCAL_PATH)/libm.x86.map
-LOCAL_LDFLAGS_x86_64 := -Wl,--version-script,$(LOCAL_PATH)/libm.x86_64.map
+LOCAL_LDFLAGS_arm    += -Wl,--version-script,$(LOCAL_PATH)/libm.arm.map
+LOCAL_LDFLAGS_arm64  += -Wl,--version-script,$(LOCAL_PATH)/libm.arm64.map
+LOCAL_LDFLAGS_mips   += -Wl,--version-script,$(LOCAL_PATH)/libm.mips.map
+LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libm.mips64.map
+LOCAL_LDFLAGS_x86    += -Wl,--version-script,$(LOCAL_PATH)/libm.x86.map
+LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libm.x86_64.map
 
 
 LOCAL_MODULE := libm

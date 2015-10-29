@@ -347,7 +347,6 @@ LIBC {
     endmntent;
     endpwent;
     endservent;
-    endusershell;
     endutent;
     environ;
     epoll_create;
@@ -538,7 +537,6 @@ LIBC {
     gettid;
     gettimeofday;
     getuid;
-    getusershell;
     getutent;
     getwc;
     getwchar;
@@ -985,7 +983,6 @@ LIBC {
     setstate;
     settimeofday;
     setuid;
-    setusershell;
     setutent;
     setvbuf;
     setxattr;
