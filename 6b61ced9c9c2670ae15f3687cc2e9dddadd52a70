@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7643a650_e3d3da51",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-30T18:11:24Z",
+      "side": 1,
+      "message": "There should probably be a way to disable this. For routines that are sensitive to memory being in the cache or not, this might cause different results because it causes memory to be evicted. That might be what you want, but it might not be what you want.",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 45
+      },
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "161fca56_c8e0ff19",
+        "filename": "benchmarks/malloc_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-30T18:11:24Z",
+      "side": 1,
+      "message": "Unfortunately, these benchmarks aren\u0027t very useful for a native memory allocator. It can be useful to tell if the allocator is not good at all, but not much more than that.\n\nI\u0027ve written a trace based native memory allocator benchmark at system/extras/memory_replay, along with traces.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 25
+      },
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "562a227b_772202e8",
+        "filename": "benchmarks/math_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-30T18:11:24Z",
+      "side": 1,
+      "message": "Why have you changed all of these calls? This will fail if each individual call is very quick. For example, if a call looks like it takes 0 ns, then the whole run will be useless.\n\nThere is a bit of overhead included in these benchmarks (increment and check counter, branch back), but honestly, you cannot use these to get an absolute number. These are only really useful to do comparisons to determine if your new algorithm is better than the old one.",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
