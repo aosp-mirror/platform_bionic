@@ -357,6 +357,12 @@ extern "C" pthread_internal_t* __get_thread() {
   return __real_get_thread();
 }
 
+// This one exists only for the LP32 NDK and is not present anywhere else.
+extern "C" long __set_errno_internal(int);
+extern "C" long __set_errno(int n) {
+  return __set_errno_internal(n);
+}
+
 #endif // !defined(__LP64__)
 
 // This was never implemented in bionic, only needed for ABI compatibility with the NDK.

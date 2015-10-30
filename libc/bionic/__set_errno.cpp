@@ -36,20 +36,13 @@
 // system these are the same size, but on a 64-bit system they're not.
 // 'long' gives us 32-bit on 32-bit systems, 64-bit on 64-bit systems.
 
-// __set_errno was mistakenly exposed in <errno.h> in the 32-bit NDK.
-// We need the extra level of indirection so that the .hidden directives
-// in the system call stubs don't cause __set_errno to be hidden, breaking
-// old NDK apps.
+// Since __set_errno was mistakenly exposed in <errno.h> in the 32-bit
+// NDK, use a differently named internal function for the system call
+// stubs. This avoids having the stubs .hidden directives accidentally
+// hide __set_errno for old NDK apps.
 
 // This one is for internal use only and used by both LP32 and LP64 assembler.
 extern "C" __LIBC_HIDDEN__ long __set_errno_internal(int n) {
   errno = n;
   return -1;
 }
-
-// This one exists for the LP32 NDK and is not present at all in LP64.
-#if !defined(__LP64__)
-extern "C" long __set_errno(int n) {
-  return __set_errno_internal(n);
-}
-#endif
