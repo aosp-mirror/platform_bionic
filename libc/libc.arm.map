@@ -1314,6 +1314,7 @@ LIBC_N {
     getgrnam_r;
     preadv;
     preadv64;
+    prlimit; # arm mips x86
     pwritev;
     pwritev64;
     scandirat;
