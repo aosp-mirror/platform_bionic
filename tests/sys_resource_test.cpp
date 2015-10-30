@@ -33,7 +33,8 @@ class SysResourceTest : public ::testing::Test {
   virtual void SetUp() {
     ASSERT_EQ(0, getrlimit(RLIMIT_CORE, &l32_));
     ASSERT_EQ(0, getrlimit64(RLIMIT_CORE, &l64_));
-    ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, NULL, &pr_l64_));
+    ASSERT_EQ(0, prlimit(0, RLIMIT_CORE, nullptr, &pr_l32_));
+    ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, nullptr, &pr_l64_));
   }
 
   void CheckResourceLimits();
@@ -41,21 +42,28 @@ class SysResourceTest : public ::testing::Test {
  protected:
   rlimit l32_;
   rlimit64 l64_;
+  rlimit pr_l32_;
   rlimit64 pr_l64_;
 };
 
 void SysResourceTest::CheckResourceLimits() {
   ASSERT_EQ(0, getrlimit(RLIMIT_CORE, &l32_));
   ASSERT_EQ(0, getrlimit64(RLIMIT_CORE, &l64_));
-  ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, NULL, &pr_l64_));
+  ASSERT_EQ(0, prlimit(0, RLIMIT_CORE, nullptr, &pr_l32_));
+  ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, nullptr, &pr_l64_));
+
+  ASSERT_EQ(l32_.rlim_cur, pr_l32_.rlim_cur);
   ASSERT_EQ(l64_.rlim_cur, pr_l64_.rlim_cur);
+
   if (l64_.rlim_cur == RLIM64_INFINITY) {
     ASSERT_EQ(RLIM_INFINITY, l32_.rlim_cur);
   } else {
     ASSERT_EQ(l64_.rlim_cur, l32_.rlim_cur);
   }
 
+  ASSERT_EQ(l32_.rlim_max, pr_l32_.rlim_max);
   ASSERT_EQ(l64_.rlim_max, pr_l64_.rlim_max);
+
   if (l64_.rlim_max == RLIM64_INFINITY) {
     ASSERT_EQ(RLIM_INFINITY, l32_.rlim_max);
   } else {
@@ -88,13 +96,16 @@ TEST_F(SysResourceTest, setrlimit64) {
   ASSERT_EQ(456U, l64_.rlim_cur);
 }
 
-TEST_F(SysResourceTest, prlimit64) {
-  pr_l64_.rlim_cur = pr_l64_.rlim_max;
-  ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, &pr_l64_, NULL));
+TEST_F(SysResourceTest, prlimit) {
+  pr_l32_.rlim_cur = pr_l32_.rlim_max;
+  ASSERT_EQ(0, prlimit(0, RLIMIT_CORE, &pr_l32_, nullptr));
   CheckResourceLimits();
-  ASSERT_EQ(pr_l64_.rlim_max, pr_l64_.rlim_cur);
+  ASSERT_EQ(pr_l32_.rlim_max, pr_l32_.rlim_cur);
 }
 
-TEST_F(SysResourceTest, prlimit) {
-  // prlimit is prlimit64 on LP64 and unimplemented on 32-bit. So we only test prlimit64.
+TEST_F(SysResourceTest, prlimit64) {
+  pr_l64_.rlim_cur = pr_l64_.rlim_max;
+  ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, &pr_l64_, nullptr));
+  CheckResourceLimits();
+  ASSERT_EQ(pr_l64_.rlim_max, pr_l64_.rlim_cur);
 }
