@@ -28,10 +28,16 @@ LIBC {
     *;
 };
 
+LIBC_N {
+  global:
+    android_init_public_namespace;
+    android_create_namespace;
+} LIBC;
+
 LIBC_PRIVATE {
   global:
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;
-} LIBC;
+} LIBC_N;

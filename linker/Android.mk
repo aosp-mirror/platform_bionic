@@ -9,12 +9,12 @@ LOCAL_SRC_FILES := \
     dlfcn.cpp \
     linker.cpp \
     linker_allocator.cpp \
-    linker_sdk_versions.cpp \
     linker_block_allocator.cpp \
     linker_libc_support.c \
     linker_mapped_file_fragment.cpp \
     linker_memory.cpp \
     linker_phdr.cpp \
+    linker_sdk_versions.cpp \
     linker_utils.cpp \
     rt.cpp \
 

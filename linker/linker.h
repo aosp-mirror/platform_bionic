@@ -86,7 +86,7 @@
 
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
 
-#define SOINFO_VERSION 2
+#define SOINFO_VERSION 3
 
 #if defined(__work_around_b_24465209__)
 #define SOINFO_NAME_LEN 128
@@ -261,7 +261,8 @@ struct soinfo {
   bool has_DT_SYMBOLIC;
 
  public:
-  soinfo(const char* name, const struct stat* file_stat, off64_t file_offset, int rtld_flags);
+  soinfo(android_namespace_t* ns, const char* name, const struct stat* file_stat,
+         off64_t file_offset, int rtld_flags);
 
   void call_constructors();
   void call_destructors();
@@ -311,6 +312,7 @@ struct soinfo {
   void set_linked();
   void set_linker_flag();
   void set_main_executable();
+  void set_nodelete();
 
   void increment_ref_count();
   size_t decrement_ref_count();
@@ -332,6 +334,7 @@ struct soinfo {
 
   void set_dt_runpath(const char *);
   const std::vector<std::string>& get_dt_runpath() const;
+  android_namespace_t* get_namespace();
 
  private:
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
@@ -394,7 +397,9 @@ struct soinfo {
 
   uint32_t target_sdk_version_;
 
+  // version >= 3
   std::vector<std::string> dt_runpath_;
+  android_namespace_t* namespace_;
 
   friend soinfo* get_libdl_info();
 };
@@ -422,7 +427,9 @@ void do_dlclose(soinfo* si);
 
 int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data);
 
-const ElfW(Sym)* dlsym_linear_lookup(const char* name, soinfo** found, soinfo* caller, void* handle);
+const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns, const char* name, soinfo** found,
+                                     soinfo* caller, void* handle);
+
 soinfo* find_containing_library(const void* addr);
 
 const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
@@ -436,5 +443,9 @@ size_t linker_get_error_buffer_size();
 
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
+
+bool init_public_namespace(const char* path);
+android_namespace_t* create_namespace(const char* name, const char* ld_library_path,
+                                      const char* default_library_path, bool is_isolated);
 
 #endif
