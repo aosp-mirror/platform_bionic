@@ -16,6 +16,24 @@
       "revId": "1721cd6a74996104d07bcdfd8581da4189cb1a6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "562a227b_a2626655",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-10-31T00:27:52Z",
+      "side": 1,
+      "message": "I don\u0027t know, we use 100 columns for all bionic code. I believe the red dotted line is set to 100 columns so you know when we violate it.",
+      "parentUuid": "36204e91_0a582707",
+      "revId": "1721cd6a74996104d07bcdfd8581da4189cb1a6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
