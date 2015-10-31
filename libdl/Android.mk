@@ -15,11 +15,18 @@ include $(CLEAR_VARS)
 #
 # DO NOT REMOVE --exclude-libs!
 
-LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a -Wl,--version-script=$(LOCAL_PATH)/libdl.map
+LOCAL_LDFLAGS := -Wl,--exclude-libs=libgcc.a
 
 # for x86, exclude libgcc_eh.a for the same reasons as above
 LOCAL_LDFLAGS_x86 := -Wl,--exclude-libs=libgcc_eh.a
 LOCAL_LDFLAGS_x86_64 := $(LOCAL_LDFLAGS_x86)
+
+LOCAL_LDFLAGS_arm    += -Wl,--version-script=$(LOCAL_PATH)/libdl.arm.map
+LOCAL_LDFLAGS_arm64  += -Wl,--version-script=$(LOCAL_PATH)/libdl.arm64.map
+LOCAL_LDFLAGS_mips   += -Wl,--version-script=$(LOCAL_PATH)/libdl.mips.map
+LOCAL_LDFLAGS_mips64 += -Wl,--version-script=$(LOCAL_PATH)/libdl.mips64.map
+LOCAL_LDFLAGS_x86    += -Wl,--version-script=$(LOCAL_PATH)/libdl.x86.map
+LOCAL_LDFLAGS_x86_64 += -Wl,--version-script=$(LOCAL_PATH)/libdl.x86_64.map
 
 LOCAL_SRC_FILES:= libdl.c
 LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror
