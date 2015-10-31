@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36204e91_0a582707",
+        "filename": "libc/bionic/signal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-10-31T00:24:21Z",
+      "side": 1,
+      "message": "Does clang-format approve of the line length?",
+      "revId": "1721cd6a74996104d07bcdfd8581da4189cb1a6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
