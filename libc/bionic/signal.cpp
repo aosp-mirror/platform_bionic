@@ -28,12 +28,7 @@
 
 #include <signal.h>
 
-#ifdef __LP64__
-static
-#else
-__LIBC_HIDDEN__
-#endif
-sighandler_t _signal(int signum, sighandler_t handler, int flags) {
+__LIBC_HIDDEN__ sighandler_t _signal(int signum, sighandler_t handler, int flags) {
   struct sigaction sa;
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = handler;
