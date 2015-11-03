@@ -254,6 +254,7 @@ libm_common_cflags = [
     "-D__BIONIC_NO_MATH_INLINES",
     "-DFLT_EVAL_METHOD=0",
     "-include freebsd-compat.h",
+    "-Werror",
     "-Wno-missing-braces",
     "-Wno-parentheses",
     "-Wno-sign-compare",
@@ -290,8 +291,6 @@ cc_library {
     native_coverage: bionic_coverage,
     sanitize: ["never"],
 
-    version_script: "libm.map",
-
     multilib: {
         lib64: {
             srcs: libm_ld128_src_files,
@@ -319,6 +318,7 @@ cc_library {
             ],
             instruction_set: "arm",
             ldflags: ["-Wl,--hash-style=both"],
+            version_script: "libm.arm.map",
         },
 
         arm64: {
@@ -350,14 +350,17 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_trunc.c",
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
+            version_script: "libm.arm64.map",
         },
 
         mips: {
             srcs: ["mips/fenv.c"],
+            version_script: "libm.mips.map",
         },
 
         mips64: {
             srcs: ["mips/fenv.c"],
+            version_script: "libm.mips64.map",
         },
 
         x86: {
@@ -366,12 +369,14 @@ cc_library {
             // Clang has wrong long double sizes for x86.
             clang: false,
             ldflags: ["-Wl,--hash-style=both"],
+            version_script: "libm.x86.map",
         },
 
         x86_64: {
             srcs: ["amd64/fenv.c"],
             // Clang has wrong long double sizes for x86.
             clang: false,
+            version_script: "libm.x86_64.map",
         },
     },
 
