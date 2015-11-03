@@ -13,15 +13,28 @@ cc_library {
     // DO NOT REMOVE --exclude-libs!
 
     ldflags: ["-Wl,--exclude-libs=libgcc.a"],
-    version_script: "libdl.map",
 
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {
+        arm: {
+            version_script: "libdl.arm.map",
+        },
+        arm64: {
+            version_script: "libdl.arm64.map",
+        },
+        mips: {
+            version_script: "libdl.mips.map",
+        },
+        mips64: {
+            version_script: "libdl.mips64.map",
+        },
         x86: {
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "libdl.x86.map",
         },
         x86_64: {
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "libdl.x86_64.map",
         },
     },
     srcs: ["libdl.c"],
