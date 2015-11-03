@@ -107,7 +107,7 @@ ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) arm64,mips64
 int         ___close:close(int)  all
 pid_t       __getpid:getpid()  all
 int         munmap(void*, size_t)  all
-void*       mremap(void*, size_t, size_t, unsigned long)  all
+void*       ___mremap:mremap(void*, size_t, size_t, int, void*)  all
 int         msync(const void*, size_t, int)    all
 int         mprotect(const void*, size_t, int)  all
 int         madvise(void*, size_t, int)  all

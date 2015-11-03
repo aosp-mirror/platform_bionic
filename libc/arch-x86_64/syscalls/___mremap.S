@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(mremap)
+ENTRY(___mremap)
     movq    %rcx, %r10
     movl    $__NR_mremap, %eax
     syscall
@@ -13,4 +13,5 @@ ENTRY(mremap)
     call    __set_errno_internal
 1:
     ret
-END(mremap)
+END(___mremap)
+.hidden ___mremap
