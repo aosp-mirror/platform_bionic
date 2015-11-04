@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36c12e1a_f382a86c",
+        "filename": "libc/include/libgen.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "s/our/this/",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b65c3e65_62630cc0",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "why not just use __gnu_basename, since that\u0027s what the symbol actually is?",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16d0aae3_e06baa35",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16a98a5f_8da8e9f9",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "should we #define basename basename, so we can lose the __BIONIC__ here?",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36c12e1a_937fa443",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6335e1f_87474a30",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-04T06:12:23Z",
+      "side": 1,
+      "message": "rename this file to lose the \"gnu\"?",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
