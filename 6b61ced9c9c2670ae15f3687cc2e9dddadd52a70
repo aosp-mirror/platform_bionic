@@ -68,6 +68,30 @@
       "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96401a44_2477aa1f",
+        "filename": "benchmarks/math_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1079655
+      },
+      "writtenOn": "2015-11-04T01:34:51Z",
+      "side": 1,
+      "message": "I changed it because I have to record each iteration\u0027s time. And then we can know the distribution of the benchmark. Use the standard deviation to eliminate the extreme values call confidence interval, so that the value of each operation\u0027s time will be more precisely. \nI thought the individual call won\u0027t smaller than 1 ns, so each record should still be useful. \nThe overhead will increase indeed, but the efficiency of the benchmarks is not important than the result of correctness. If there have any mistake, please give me an error correction. \n\nThanks, \n-- Neal Liu",
+      "parentUuid": "562a227b_772202e8",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 24
+      },
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
