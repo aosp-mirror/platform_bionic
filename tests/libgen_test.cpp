@@ -19,15 +19,6 @@
 #include <errno.h>
 #include <gtest/gtest.h>
 
-static void TestBasename(const char* in, const char* expected_out) {
-  char* writable_in = (in != NULL) ? strdup(in) : NULL;
-  errno = 0;
-  const char* out = basename(&writable_in[0]);
-  ASSERT_STREQ(expected_out, out) << in;
-  ASSERT_EQ(0, errno) << in;
-  free(writable_in);
-}
-
 static void TestDirname(const char* in, const char* expected_out) {
   char* writable_in = (in != NULL) ? strdup(in) : NULL;
   errno = 0;
@@ -35,21 +26,6 @@ static void TestDirname(const char* in, const char* expected_out) {
   ASSERT_STREQ(expected_out, out) << in;
   ASSERT_EQ(0, errno) << in;
   free(writable_in);
-}
-
-// Do not use basename as the test name, it's defined to another value in glibc
-// so leads to a differently named test on host versus target architectures.
-TEST(libgen, posix_basename) {
-  TestBasename(NULL, ".");
-  TestBasename("", ".");
-  TestBasename("/usr/lib", "lib");
-  TestBasename("/usr/", "usr");
-  TestBasename("usr", "usr");
-  TestBasename("/", "/");
-  TestBasename(".", ".");
-  TestBasename("..", "..");
-  TestBasename("///", "/");
-  TestBasename("//usr//lib//", "lib");
 }
 
 TEST(libgen, dirname) {

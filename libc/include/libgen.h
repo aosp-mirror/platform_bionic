@@ -32,18 +32,19 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+
 __BEGIN_DECLS
 
-#if !defined(__bionic_using_gnu_basename)
 /*
- * <string.h> gets you the GNU basename.
- * <libgen.h> the POSIX one.
- * Note that our "POSIX" one has the wrong argument cv-qualifiers, but doesn't
- * modify its input and uses thread-local storage for the result if necessary.
+ * Including <string.h> will get you the GNU basename, unless <libgen.h> is
+ * included, either before or after including <string.h>.
+ *
+ * Note that this has the wrong argument cv-qualifiers, but doesn't modify its
+ * input and uses thread-local storage for the result if necessary.
  */
-extern char* basename(const char*);
-#define __bionic_using_posix_basename
-#endif
+extern char* __posix_basename(const char*) __RENAME(basename);
+
+#define basename __posix_basename
 
 /* This has the wrong argument cv-qualifiers, but doesn't modify its input and uses thread-local storage for the result if necessary. */
 extern char* dirname(const char*);
