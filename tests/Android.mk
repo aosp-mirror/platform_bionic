@@ -63,6 +63,7 @@ libBionicStandardTests_src_files := \
     getcwd_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
+    libgen_basename_test.cpp \
     libgen_test.cpp \
     locale_test.cpp \
     malloc_test.cpp \
