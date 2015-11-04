@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "f6923665_6b77611e",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-04T21:17:57Z",
+      "side": 1,
+      "message": "Then the definition of __gnu_basename can\u0027t include string.h, because it uses extern \"C\", and it\u0027ll get an conflicting extern \"C++\" definition from string.h.",
+      "parentUuid": "b65c3e65_62630cc0",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16d0aae3_e06baa35",
         "filename": "tests/Android.mk",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2015-11-04T06:12:23Z",
       "side": 1,
       "message": "|sort",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76a726c0_f29fc61c",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-04T21:17:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16d0aae3_e06baa35",
       "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "f6923665_cb65b561",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-04T21:17:57Z",
+      "side": 1,
+      "message": "Yeah, it\u0027ll let us match glibc behavior more closely too (I found some stackoverflow posts suggesting `#undef basename; #include \u003cstring.h\u003e` to explicitly get the GNU version.)",
+      "parentUuid": "16a98a5f_8da8e9f9",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36c12e1a_937fa443",
         "filename": "tests/libgen_gnu_basename_test.cpp",
         "patchSetId": 1
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "d69a9277_d5f46e80",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-04T21:17:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36c12e1a_937fa443",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6335e1f_87474a30",
         "filename": "tests/libgen_gnu_basename_test.cpp",
         "patchSetId": 1
@@ -98,6 +170,24 @@
       "writtenOn": "2015-11-04T06:12:23Z",
       "side": 1,
       "message": "rename this file to lose the \"gnu\"?",
+      "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "568ea242_51ffb6cf",
+        "filename": "tests/libgen_gnu_basename_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-04T21:17:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6335e1f_87474a30",
       "revId": "1d459ca706401c52de7dd10d382f6dad27a37e7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
