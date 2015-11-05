@@ -1,5 +1,3 @@
-bionic_coverage = false
-
 // Define the common source files for all the libc instances
 // =========================================================
 libc_common_src_files = [
@@ -77,50 +75,69 @@ libc_common_src_files_32 = [
 
 // Define some common cflags
 // ========================================================
-libc_common_cflags = [
-    "-D_LIBC=1",
-    "-Wall",
-    "-Wextra",
-    "-Wunused",
+cc_defaults {
+    name: "libc_defaults",
+    cflags: [
+        "-D_LIBC=1",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
 
-// Try to catch typical 32-bit assumptions that break with 64-bit pointers.
-    "-Werror=pointer-to-int-cast",
-    "-Werror=int-to-pointer-cast",
-    "-Werror=type-limits",
-    "-Werror",
-]
+        // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+        "-Werror=pointer-to-int-cast",
+        "-Werror=int-to-pointer-cast",
+        "-Werror=type-limits",
+        "-Werror",
+    ],
+    // TODO: split out the asflags.
+    asflags: [
+        "-D_LIBC=1",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
 
-libc_common_product_variables = {
-    device_uses_jemalloc: {
-        cflags: ["-DUSE_JEMALLOC"],
-        include_dirs: ["external/jemalloc/include"],
+        // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+        "-Werror=pointer-to-int-cast",
+        "-Werror=int-to-pointer-cast",
+        "-Werror=type-limits",
+        "-Werror",
+    ],
+    conlyflags: ["-std=gnu99"],
+    cppflags: [],
+
+    product_variables: {
+        device_uses_jemalloc: {
+            cflags: ["-DUSE_JEMALLOC"],
+            include_dirs: ["external/jemalloc/include"],
+        },
+        device_uses_dlmalloc: {
+            cflags: ["-DUSE_DLMALLOC"],
+        },
+        // To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
+        // the appropriate BoardConfig.mk file.
+        dlmalloc_alignment: {
+            cflags: ["-DMALLOC_ALIGNMENT=%d"],
+        },
     },
-    device_uses_dlmalloc: {
-        cflags: ["-DUSE_DLMALLOC"],
+    // Clang/llvm has incompatible long double (fp128) for x86_64.
+    // https://llvm.org/bugs/show_bug.cgi?id=23897
+    arch: {
+        x86_64: {
+            clang: false,
+        },
     },
-    // To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
-    // the appropriate BoardConfig.mk file.
-    dlmalloc_alignment: {
-        cflags: ["-DMALLOC_ALIGNMENT=%d"],
-    },
+
+    stl: "none",
+    system_shared_libs: [],
+    sanitize: ["never"],
+    native_coverage: false,
 }
-
-// Clang/llvm has incompatible long double (fp128) for x86_64.
-// https://llvm.org/bugs/show_bug.cgi?id=23897
-use_clang_x86_64 = false
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
 // ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
 //libc_common_cflags += ["-DDEBUG"]
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
 // endif
-
-//
-// Define some common conlyflags
-libc_common_conlyflags = ["-std=gnu99"]
-
-// Define some common cppflags
-libc_common_cppflags = []
 
 // ========================================================
 // libc_stack_protector.a - stack protector code
@@ -133,23 +150,9 @@ libc_common_cppflags = []
 cc_library_static {
 
     srcs: ["bionic/__stack_chk_fail.cpp"],
-    cflags: libc_common_cflags + ["-fno-stack-protector"],
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
+    defaults: ["libc_defaults"],
+    cflags: ["-fno-stack-protector"],
     name: "libc_stack_protector",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
-
 }
 
 // ========================================================
@@ -158,6 +161,7 @@ cc_library_static {
 
 cc_library_static {
 
+    defaults: ["libc_defaults"],
     srcs: [
         "tzcode/asctime.c",
         "tzcode/difftime.c",
@@ -167,7 +171,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
     ],
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-fvisibility=hidden",
         "-Wno-unused-parameter",
         // Don't use ridiculous amounts of stack.
@@ -185,22 +189,8 @@ cc_library_static {
         "-Dlint",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: ["tzcode/"],
     name: "libc_tzcode",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
@@ -209,6 +199,7 @@ cc_library_static {
 
 cc_library_static {
 
+    defaults: ["libc_defaults"],
     srcs: [
         "dns/net/gethnamaddr.c",
         "dns/net/getservbyname.c",
@@ -243,8 +234,8 @@ cc_library_static {
         "upstream-openbsd/lib/libc/net/res_random.c",
     ],
 
-    cflags: ["-Dres_randomid=__res_randomid"] +
-    libc_common_cflags + [
+    cflags: [
+        "-Dres_randomid=__res_randomid",
         "-DANDROID_CHANGES",
         "-DINET6",
         "-fvisibility=hidden",
@@ -252,9 +243,6 @@ cc_library_static {
         "-include netbsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "dns/include",
         "private",
@@ -263,17 +251,6 @@ cc_library_static {
     ],
 
     name: "libc_dns",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
@@ -284,6 +261,7 @@ cc_library_static {
 // automatically included.
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/gen/sleep.c",
@@ -347,31 +325,19 @@ cc_library_static {
                 "upstream-freebsd/lib/libc/string/wmemcmp.c",
             ],
         },
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
     },
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-include freebsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "upstream-freebsd/android/include",
     ],
 
     name: "libc_freebsd",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
 }
 
 // ========================================================
@@ -383,6 +349,7 @@ cc_library_static {
 
 cc_library_static {
 
+    defaults: ["libc_defaults"],
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
         "upstream-netbsd/lib/libc/gen/ftw.c",
@@ -424,33 +391,19 @@ cc_library_static {
             srcs: ["upstream-netbsd/common/lib/libc/hash/sha1/sha1.c"],
         },
     },
-    cflags: libc_common_cflags + [
+    cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-DPOSIX_MISTAKE",
         "-include netbsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "upstream-netbsd/android/include",
         "upstream-netbsd/lib/libc/include",
     ],
 
     name: "libc_netbsd",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
@@ -464,6 +417,7 @@ cc_library_static {
 
 cc_library_static {
     name: "libc_openbsd_ndk",
+    defaults: ["libc_defaults"],
     srcs: [
         "upstream-openbsd/lib/libc/compat-43/killpg.c",
         "upstream-openbsd/lib/libc/gen/alarm.c",
@@ -639,16 +593,13 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/wcswidth.c",
     ],
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-Wno-unused-parameter",
         "-include openbsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "private",
         "stdio",
@@ -656,17 +607,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/include",
         "upstream-openbsd/lib/libc/gdtoa/",
     ],
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
@@ -676,6 +616,7 @@ cc_library_static {
 // These files are built with the openbsd-compat.h header file
 // automatically included.
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         // These two depend on getentropy_linux.c, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
@@ -809,20 +750,16 @@ cc_library_static {
                  "upstream-openbsd/lib/libc/string/strncmp.c",
                  "upstream-openbsd/lib/libc/string/strncpy.c",
              ],
-            clang: use_clang_x86_64,
         },
     },
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-Wno-unused-parameter",
         "-include openbsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "private",
         "stdio",
@@ -832,12 +769,6 @@ cc_library_static {
     ],
 
     name: "libc_openbsd",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
 }
 
 // ========================================================
@@ -848,6 +779,7 @@ cc_library_static {
 // automatically included.
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "upstream-openbsd/android/gdtoa_support.cpp",
         "upstream-openbsd/lib/libc/gdtoa/dmisc.c",
@@ -874,16 +806,13 @@ cc_library_static {
         },
     },
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-fvisibility=hidden",
         "-include openbsd-compat.h",
     ],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     local_include_dirs: [
         "private",
         "upstream-openbsd/android/include",
@@ -891,17 +820,6 @@ cc_library_static {
     ],
 
     name: "libc_gdtoa",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
@@ -909,6 +827,7 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         // The fork implementation depends on pthread data, so we can't include
         // it in libc_ndk.a.
@@ -935,7 +854,7 @@ cc_library_static {
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
     ],
-    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+    cflags: ["-Wframe-larger-than=2048"],
 
     arch: {
         arm: {
@@ -1338,7 +1257,6 @@ cc_library_static {
         },
 
         x86_64: {
-            clang: use_clang_x86_64,
             srcs: [
                 "arch-x86_64/bionic/__bionic_clone.S",
                 "arch-x86_64/bionic/_exit_with_stack_teardown.S",
@@ -1367,17 +1285,9 @@ cc_library_static {
         },
     },
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
-    product_variables: libc_common_product_variables,
+    cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
 }
 
 // ========================================================
@@ -1386,6 +1296,7 @@ cc_library_static {
 // or constructors).
 // ========================================================
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "bionic/abort.cpp",
         "bionic/accept.cpp",
@@ -1526,13 +1437,8 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wmempcpy.cpp",
     ],
-    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+    cflags: ["-Wframe-larger-than=2048"],
 
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
     multilib: {
         lib32: {
             // LP32 cruft
@@ -1540,35 +1446,22 @@ cc_library_static {
         },
     },
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
-    product_variables: libc_common_product_variables,
+    cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
 }
 
 cc_library_static {
     name: "libc_thread_atexit_impl",
+    defaults: ["libc_defaults"],
     srcs: ["bionic/__cxa_thread_atexit_impl.cpp"],
-    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
-    product_variables: libc_common_product_variables,
+    cflags: ["-Wframe-larger-than=2048"],
+    cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     // TODO: Clang tries to use __tls_get_addr which is not supported yet
     // remove after it is implemented.
     clang: false,
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
@@ -1580,6 +1473,7 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "bionic/pthread_atfork.cpp",
         "bionic/pthread_attr.cpp",
@@ -1603,24 +1497,11 @@ cc_library_static {
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_sigmask.cpp",
     ],
-    cflags: libc_common_cflags + ["-Wframe-larger-than=2048"],
+    cflags: ["-Wframe-larger-than=2048"],
 
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
-
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags + ["-Wold-style-cast"],
-    product_variables: libc_common_product_variables,
+    cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_pthread",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
@@ -1628,21 +1509,17 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "bionic/__cxa_guard.cpp",
         "bionic/__cxa_pure_virtual.cpp",
         "bionic/new.cpp",
     ],
-    cflags: libc_common_cflags + ["-fvisibility=hidden"],
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
+    cflags: ["-fvisibility=hidden"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_cxa",
     clang: true, // GCC refuses to hide new/delete
 
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
     // b/17574078: Need to disable coverage until we have a prebuilt libprofile_rt.
     // Since this is a static library built with clang, it needs to link
     // libprofile_rt when it is linked into the final binary. Since the final binary
@@ -1675,16 +1552,10 @@ cc_library_static {
             srcs: ["arch-x86/syscalls/**/*.S"],
         },
         x86_64: {
-            clang: use_clang_x86_64,
             srcs: ["arch-x86_64/syscalls/**/*.S"],
         },
     },
     name: "libc_syscalls",
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
@@ -1695,22 +1566,14 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     arch: {
         arm: {
             srcs: ["arch-arm/bionic/__aeabi.c"],
         },
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
     },
     name: "libc_aeabi",
-    cflags: libc_common_cflags + ["-fno-builtin"],
-    product_variables: libc_common_product_variables,
-
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
+    cflags: ["-fno-builtin"],
 }
 
 // ========================================================
@@ -1727,6 +1590,7 @@ cc_library_static {
 
 cc_library_static {
     name: "libc_ndk",
+    defaults: ["libc_defaults"],
     srcs: libc_common_src_files + ["bionic/malloc_debug_common.cpp"],
     multilib: {
         lib32: {
@@ -1743,18 +1607,12 @@ cc_library_static {
             ],
             whole_static_libs: ["libc_aeabi"],
         },
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
     },
 
-    cflags: libc_common_cflags + [
+    cflags: [
         "-fvisibility=hidden",
         "-DLIBC_STATIC",
     ],
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
 
     whole_static_libs: [
         "libc_bionic_ndk",
@@ -1769,14 +1627,6 @@ cc_library_static {
         "libc_tzcode",
         "libm",
     ],
-
-    stl: "none",
-    system_shared_libs: [],
-
-    // TODO: split out the asflags.
-    asflags: libc_common_cflags,
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
@@ -1784,16 +1634,13 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: libc_common_src_files,
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
         },
     },
-    cflags: libc_common_cflags,
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     name: "libc_common",
 
     whole_static_libs: [
@@ -1818,18 +1665,7 @@ cc_library_static {
         arm: {
             whole_static_libs: ["libc_aeabi"],
         },
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
     },
-
-    stl: "none",
-    system_shared_libs: [],
-
-    // TODO: split out the asflags.
-    asflags: libc_common_cflags,
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
@@ -1843,6 +1679,7 @@ cc_library_static {
 // dynamic linker.
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     srcs: [
         "bionic/dl_iterate_phdr_static.cpp",
         "bionic/libc_init_static.cpp",
@@ -1852,32 +1689,21 @@ cc_library_static {
         arm: {
             srcs: ["arch-arm/bionic/exidx_static.c"],
         },
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
     },
 
-    cflags: libc_common_cflags + ["-DLIBC_STATIC"],
-
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
+    cflags: ["-DLIBC_STATIC"],
 
     name: "libc_nomalloc",
 
     whole_static_libs: ["libc_common"],
-    stl: "none",
-    system_shared_libs: [],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
 }
 
 // ========================================================
 // libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
 // ========================================================
 cc_library_static {
-    product_variables: libc_common_product_variables + {
+    defaults: ["libc_defaults"],
+    product_variables: {
         device_uses_jemalloc: {
             srcs: ["bionic/jemalloc_wrapper.cpp"],
             whole_static_libs: ["libjemalloc"],
@@ -1886,31 +1712,18 @@ cc_library_static {
             srcs: ["bionic/dlmalloc.c"],
         },
     },
-    cflags: libc_common_cflags + ["-fvisibility=hidden"],
+    cflags: ["-fvisibility=hidden"],
 
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
     name: "libc_malloc",
-    stl: "none",
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ========================================================
 // libc.a + libc.so
 // ========================================================
 cc_library {
+    defaults: ["libc_defaults"],
     name: "libc",
-    cflags: libc_common_cflags,
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables + {
+    product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
         },
@@ -1949,8 +1762,6 @@ cc_library {
 
     shared_libs: ["libdl"],
     whole_static_libs: ["libc_common"],
-    stl: "none",
-    system_shared_libs: [],
 
     // We'd really like to do this for all architectures, but since this wasn't done
     // before, these symbols must continue to be exported on LP32 for binary
@@ -2003,14 +1814,10 @@ cc_library {
             version_script: "libc.x86.map",
         },
         x86_64: {
-            clang: use_clang_x86_64,
-
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.x86_64.map",
         },
     },
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // For all builds, except for the -user build we will enable memory
@@ -2025,10 +1832,7 @@ cc_library {
 // libc_malloc_debug_leak.so
 // ========================================================
 cc_library_shared {
-    cflags: libc_common_cflags,
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
+    defaults: ["libc_defaults"],
 
     srcs: [
         "bionic/debug_backtrace.cpp",
@@ -2044,8 +1848,6 @@ cc_library_shared {
         "libc",
         "libdl",
     ],
-    stl: "none",
-    system_shared_libs: [],
     // Only need this for arm since libc++ uses its own unwind code that
     // doesn't mix with the other default unwind code.
     arch: {
@@ -2055,9 +1857,6 @@ cc_library_shared {
                 "libc++abi",
             ],
             ldflags: ["-Wl,--exclude-libs,libunwind_llvm.a"],
-        },
-        x86_64: {
-            clang: use_clang_x86_64,
         },
     },
     allow_undefined_symbols: true,
@@ -2070,19 +1869,14 @@ cc_library_shared {
         "eng",
         "debug",
     ],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 }
 
 // ========================================================
 // libc_malloc_debug_qemu.so
 // ========================================================
 cc_library_shared {
-    cflags: libc_common_cflags + ["-DMALLOC_QEMU_INSTRUMENT"],
-
-    conlyflags: libc_common_conlyflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
+    defaults: ["libc_defaults"],
+    cflags: ["-DMALLOC_QEMU_INSTRUMENT"],
 
     srcs: [
         "bionic/libc_logging.cpp",
@@ -2095,8 +1889,6 @@ cc_library_shared {
         "libc",
         "libdl",
     ],
-    stl: "none",
-    system_shared_libs: [],
 
     // Don't re-export new/delete and friends, even if the compiler really wants to.
     version_script: "version_script.txt",
@@ -2106,14 +1898,6 @@ cc_library_shared {
         "eng",
         "debug",
     ],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
-
-    arch: {
-        x86_64: {
-            clang: use_clang_x86_64,
-        },
-    },
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
@@ -2124,10 +1908,8 @@ cc_library_shared {
 // libstdc++.so + libstdc++.a
 // ========================================================
 cc_library {
+    defaults: ["libc_defaults"],
     include_dirs: ["bionic/libstdc++/include"],
-    cflags: libc_common_cflags,
-    cppflags: libc_common_cppflags,
-    product_variables: libc_common_product_variables,
     srcs: [
         "bionic/__cxa_guard.cpp",
         "bionic/__cxa_pure_virtual.cpp",
@@ -2135,11 +1917,7 @@ cc_library {
         "bionic/libc_logging.cpp",
     ],
     name: "libstdc++",
-
-    stl: "none",
     system_shared_libs: ["libc"],
-    sanitize: ["never"],
-    native_coverage: bionic_coverage,
 
     //TODO: This is to work around b/24465209. Remove after root cause is fixed
     arch: {
@@ -2152,46 +1930,56 @@ cc_library {
     },
 }
 
-crt_arch_flags = {
-    arm: {
-        local_include_dirs: ["arch-arm/include"],
-        cflags: ["-mthumb-interwork"],
-    },
-    arm64: {
-        local_include_dirs: ["arch-arm64/include"],
-    },
-    mips: {
-        local_include_dirs: ["arch-mips/include"],
-        ldflags: ["-melf32ltsmip"],
-    },
-    mips64: {
-        local_include_dirs: ["arch-mips64/include"],
-        ldflags: ["-melf64ltsmip"],
-    },
-    x86: {
-        cflags: ["-m32"],
-        ldflags: ["-melf_i386"],
-        local_include_dirs: ["arch-x86/include"],
-    },
-    x86_64: {
-        cflags: ["-m64"],
-        ldflags: ["-melf_x86_64"],
-        local_include_dirs: ["arch-x86_64/include"],
+cc_defaults {
+    name: "crt_defaults",
+
+    no_default_compiler_flags: true,
+
+    arch: {
+        arm: {
+            local_include_dirs: ["arch-arm/include"],
+            cflags: ["-mthumb-interwork"],
+        },
+        arm64: {
+            local_include_dirs: ["arch-arm64/include"],
+        },
+        mips: {
+            local_include_dirs: ["arch-mips/include"],
+            ldflags: ["-melf32ltsmip"],
+        },
+        mips64: {
+            local_include_dirs: ["arch-mips64/include"],
+            ldflags: ["-melf64ltsmip"],
+        },
+        x86: {
+            cflags: ["-m32"],
+            ldflags: ["-melf_i386"],
+            local_include_dirs: ["arch-x86/include"],
+        },
+        x86_64: {
+            cflags: ["-m64"],
+            ldflags: ["-melf_x86_64"],
+            local_include_dirs: ["arch-x86_64/include"],
+        },
     },
 }
 
-crt_arch_so_flags = crt_arch_flags + {
-    mips: {
-        cflags: ["-fPIC"],
-    },
-    mips64: {
-        cflags: ["-fPIC"],
-    },
-    x86: {
-        cflags: ["-fPIC"],
-    },
-    x86_64: {
-        cflags: ["-fPIC"],
+cc_defaults {
+    name: "crt_so_defaults",
+
+    arch: {
+        mips: {
+            cflags: ["-fPIC"],
+        },
+        mips64: {
+            cflags: ["-fPIC"],
+        },
+        x86: {
+            cflags: ["-fPIC"],
+        },
+        x86_64: {
+            cflags: ["-fPIC"],
+        },
     },
 }
 
@@ -2224,9 +2012,8 @@ cc_object {
         },
     },
     srcs: ["arch-common/bionic/crtbrand.S"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_so_flags,
+    defaults: ["crt_defaults", "crt_so_defaults"],
 }
 
 // Android.mk:ignore
@@ -2234,17 +2021,15 @@ cc_object {
     name: "crtbegin_so1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin_so.c"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_so_flags,
+    defaults: ["crt_defaults", "crt_so_defaults"],
 }
 
 // Android.mk:ignore
 cc_object {
     name: "crtbegin_so",
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_so_flags,
+    defaults: ["crt_defaults", "crt_so_defaults"],
     deps: [
         "crtbegin_so1",
         "crtbrand",
@@ -2256,9 +2041,8 @@ cc_object {
     name: "crtend_so",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtend_so.S"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_so_flags,
+    defaults: ["crt_defaults", "crt_so_defaults"],
 }
 
 // Android.mk:ignore
@@ -2266,9 +2050,8 @@ cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_flags + {
+    arch: {
         arm64: {
             srcs: [
                 "arch-arm64/bionic/crtbegin.c",
@@ -2294,18 +2077,19 @@ cc_object {
             ],
         },
     },
+
+    defaults: ["crt_defaults"],
 }
 
 // Android.mk:ignore
 cc_object {
     name: "crtbegin_static",
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_flags,
     deps: [
         "crtbegin_static1",
         "crtbrand",
     ],
+    defaults: ["crt_defaults"],
 }
 
 // Android.mk:ignore
@@ -2313,9 +2097,8 @@ cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_flags + {
+    arch: {
         arm64: {
             srcs: [
                 "arch-arm64/bionic/crtbegin.c",
@@ -2341,18 +2124,18 @@ cc_object {
             ],
         },
     },
+    defaults: ["crt_defaults"],
 }
 
 // Android.mk:ignore
 cc_object {
     name: "crtbegin_dynamic",
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_flags,
     deps: [
         "crtbegin_dynamic1",
         "crtbrand",
     ],
+    defaults: ["crt_defaults"],
 }
 
 // Android.mk:ignore
@@ -2362,7 +2145,6 @@ cc_object {
     name: "crtend_android",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtend.S"],
-    no_default_compiler_flags: true,
 
-    arch: crt_arch_flags,
+    defaults: ["crt_defaults"],
 }
