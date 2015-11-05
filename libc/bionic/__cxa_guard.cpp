@@ -109,7 +109,7 @@ extern "C" int __cxa_guard_acquire(_guard_t* gv) {
       }
     }
 
-    __futex_wait_ex(&gv->state, false, CONSTRUCTION_UNDERWAY_WITH_WAITER, NULL);
+    __futex_wait_ex(&gv->state, false, CONSTRUCTION_UNDERWAY_WITH_WAITER, false, nullptr);
     old_value = atomic_load_explicit(&gv->state, memory_order_relaxed);
   }
 }
