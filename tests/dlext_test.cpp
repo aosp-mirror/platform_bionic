@@ -169,6 +169,11 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_EQ("dlopen failed: \"" + lib_realpath + "\" has bad ELF magic", dlerror());
 
+  // Check if dlsym works after unsuccessful dlopen().
+  // Supply non-exiting one to make linker visit every soinfo.
+  void* sym = dlsym(RTLD_DEFAULT, "this_symbol_does_not_exist___");
+  ASSERT_TRUE(sym == nullptr);
+
   close(extinfo.library_fd);
 }
 
