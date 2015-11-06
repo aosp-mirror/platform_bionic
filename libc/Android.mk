@@ -563,6 +563,7 @@ libc_upstream_openbsd_ndk_src_files := \
 libc_pthread_src_files := \
     bionic/pthread_atfork.cpp \
     bionic/pthread_attr.cpp \
+    bionic/pthread_barrier.cpp \
     bionic/pthread_cond.cpp \
     bionic/pthread_create.cpp \
     bionic/pthread_detach.cpp \
