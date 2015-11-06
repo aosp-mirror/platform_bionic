@@ -47,7 +47,6 @@ libc_common_src_files := \
     bionic/if_indextoname.c \
     bionic/if_nametoindex.c \
     bionic/initgroups.c \
-    bionic/ioctl.c \
     bionic/isatty.c \
     bionic/memmem.c \
     bionic/pututline.c \
@@ -151,6 +150,7 @@ libc_bionic_ndk_src_files := \
     bionic/gettid.cpp \
     bionic/__gnu_basename.cpp \
     bionic/inotify_init.cpp \
+    bionic/ioctl.cpp \
     bionic/lchown.cpp \
     bionic/lfs64_support.cpp \
     bionic/__libc_current_sigrtmax.cpp \
@@ -170,6 +170,7 @@ libc_bionic_ndk_src_files := \
     bionic/mkfifo.cpp \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
+    bionic/mremap.cpp \
     bionic/NetdClientDispatch.cpp \
     bionic/open.cpp \
     bionic/pathconf.cpp \
