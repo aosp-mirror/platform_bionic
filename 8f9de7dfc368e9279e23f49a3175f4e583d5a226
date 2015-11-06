@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76be46e4_f7f440f5",
+        "filename": "libc/bionic/mremap.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-11-06T01:12:03Z",
+      "side": 1,
+      "message": "BTW, to fully avoid undefined behaviour, I think it has to be done like this:\n\nhttp://git.musl-libc.org/cgit/musl/commit/?id\u003dfda365a53074f97f3213caefe70ea13297acecb2\n\n(just ignore the __vm_wait bit there, I think that has to do with how musl implements robust futexes)\n\nI agree that it\u0027s a bad idea to do it without a wrapper, as there\u0027s no real guarantee from the compiler that it will work. Going to need the wrapper to add a check for PTRDIFF_MAX as was done for mmap too (which is why I was looking at mremap).",
+      "revId": "8f9de7dfc368e9279e23f49a3175f4e583d5a226",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
