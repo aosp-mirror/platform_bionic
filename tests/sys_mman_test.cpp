@@ -215,3 +215,7 @@ TEST(sys_mman, posix_madvise_POSIX_MADV_DONTNEED) {
 
   ASSERT_EQ(0, munmap(map, pagesize));
 }
+
+TEST(sys_mman, mremap) {
+  ASSERT_EQ(MAP_FAILED, mremap(nullptr, 0, 0, 0));
+}
