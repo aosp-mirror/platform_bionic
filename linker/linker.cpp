@@ -1523,6 +1523,8 @@ static bool load_library(LoadTask* task,
 
   // Read the ELF header and some of the segments.
   if (!task->read(realpath.c_str(), file_stat.st_size)) {
+    soinfo_free(si);
+    task->set_soinfo(nullptr);
     return false;
   }
 
