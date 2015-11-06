@@ -133,6 +133,23 @@ TEST(linked_list, remove_if_then_pop) {
   ASSERT_TRUE(list.pop_front() == nullptr);
 }
 
+TEST(linked_list, remove_if_last_then_push_back) {
+  test_list_t list;
+
+  list.push_back("a");
+  list.push_back("b");
+  list.push_back("c");
+  list.push_back("d");
+
+  list.remove_if([](const char* c) {
+    return *c == 'c' || *c == 'd';
+  });
+
+  ASSERT_EQ("ab", test_list_to_string(list));
+  list.push_back("d");
+  ASSERT_EQ("abd", test_list_to_string(list));
+}
+
 TEST(linked_list, copy_to_array) {
   test_list_t list;
   const size_t max_size = 128;
