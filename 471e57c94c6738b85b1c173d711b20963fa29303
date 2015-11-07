@@ -118,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "f6923665_d9265e95",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-07T05:19:24Z",
+      "side": 1,
+      "message": "That\u0027s how I read it.  The final thread returns ...SERIAL_THREAD immediately after decrementing wait_count once, but wait_count is only decremented more as the other threads wake up.",
+      "parentUuid": "b620be2e_0ddea190",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 3
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36712e54_0d91d101",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 3
