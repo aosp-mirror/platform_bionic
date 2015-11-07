@@ -99,3 +99,7 @@ int feof_unlocked(FILE* fp) {
 int ferror_unlocked(FILE* fp) {
   return __sferror(fp);
 }
+
+int fileno_unlocked(FILE* fp) {
+  return __sfileno(fp);
+}

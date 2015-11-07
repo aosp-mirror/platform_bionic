@@ -270,6 +270,7 @@ int	 vasprintf(char ** __restrict, const char * __restrict,
 void clearerr_unlocked(FILE*);
 int feof_unlocked(FILE*);
 int ferror_unlocked(FILE*);
+int fileno_unlocked(FILE*);
 
 /*
  * Stdio function-access interface.
