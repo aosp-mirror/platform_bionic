@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36a76ed3_208ca456",
+        "filename": "libc/bionic/pthread_yield.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1040868
+      },
+      "writtenOn": "2015-11-07T00:29:29Z",
+      "side": 1,
+      "message": "is creating aliases for symbols not something normally done ?",
+      "revId": "3698d5653f14dee117de352860c6f2b2ce413af7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96bbbaf1_be30e196",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1040868
+      },
+      "writtenOn": "2015-11-07T00:29:29Z",
+      "side": 1,
+      "message": "needs to be (void)",
+      "range": {
+        "startLine": 219,
+        "startChar": 17,
+        "endLine": 219,
+        "endChar": 19
+      },
+      "revId": "3698d5653f14dee117de352860c6f2b2ce413af7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
