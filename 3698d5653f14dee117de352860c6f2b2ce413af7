@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5676a24b_6e32cfed",
+        "filename": "libc/bionic/pthread_yield.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-07T00:36:56Z",
+      "side": 1,
+      "message": "yes, if we did do this, we\u0027d actually change the sched_yield line in SYSCALLS.TXT to say\n\n  int sched_yield|pthread_yield:sched_yield(void) all\n\nin hand-written assembler, we\u0027d use ALIAS_SYMBOL.\n\nin C++ we\u0027d use __strong_alias.",
+      "parentUuid": "36a76ed3_208ca456",
+      "revId": "3698d5653f14dee117de352860c6f2b2ce413af7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96bbbaf1_be30e196",
         "filename": "libc/include/pthread.h",
         "patchSetId": 2
