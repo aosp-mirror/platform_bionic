@@ -1271,6 +1271,7 @@ LIBC_N {
     __pwrite_chk;
     __pwrite64_chk;
     __write_chk;
+    fileno_unlocked;
     getgrgid_r;
     getgrnam_r;
     preadv;
