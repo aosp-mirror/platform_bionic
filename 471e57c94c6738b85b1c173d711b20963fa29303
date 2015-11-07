@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "b686fe2b_461c43f9",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-07T02:11:37Z",
+      "side": 1,
+      "message": "Please add comments defining at least the atomics.  I\u0027d like to see something like:\n\n// Number of threads that have entered but not left barrier_wait().\natomic_uint wait_count;\n\n// Barrier epoch number\natomic_uint wait_serial;",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 26
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b686fe2b_06b88b01",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-07T02:11:37Z",
+      "side": 1,
+      "message": "I don\u0027t think this works.  Assume I\u0027m the last thread in, so I increment serial and decrement wait_count.  Assume I then immediately try to reenter the barrier.  I see a new serial number, and I again see value + 1 \u003d\u003d barrier-\u003einit_count.  I think I can do this indefinitely without any other threads running.\n\nI think there are also more complicated failure scenarios.\n\nYou might ask the Google authors of WG21/N4392 whether they have code lying around that can be adapted.",
+      "range": {
+        "startLine": 70,
+        "startChar": 2,
+        "endLine": 70,
+        "endChar": 92
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5676a24b_b1125aa0",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-07T02:11:37Z",
+      "side": 1,
+      "message": "We need to revisit memory ordering after addressing the preceding comment.  I don\u0027t think this ensures that all accesses prior to one round of barrier_wait() calls are visible after.",
+      "range": {
+        "startLine": 79,
+        "startChar": 53,
+        "endLine": 79,
+        "endChar": 73
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6923665_f95dda57",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-07T02:11:37Z",
+      "side": 1,
+      "message": "I don\u0027t think this is allowed.  I think the spec allows this to be called while a barrier_wait() call is in progress, so long as the call has been unblocked.  In particular, if a barrier is used only once, I think that intent is that the thread getting PTHREAD_BARRIER_SERIAL_THREAD can immediately call pthread_barrier_destroy().",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 3
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36712e54_0d91d101",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 3
