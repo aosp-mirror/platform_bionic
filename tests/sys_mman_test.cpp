@@ -219,3 +219,15 @@ TEST(sys_mman, posix_madvise_POSIX_MADV_DONTNEED) {
 TEST(sys_mman, mremap) {
   ASSERT_EQ(MAP_FAILED, mremap(nullptr, 0, 0, 0));
 }
+
+const size_t huge = PTRDIFF_MAX + 1;
+
+TEST(sys_mman, mmap_PTRDIFF_MAX) {
+  ASSERT_EQ(MAP_FAILED, mmap(nullptr, huge, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+}
+
+TEST(sys_mman, mremap_PTRDIFF_MAX) {
+  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+  ASSERT_EQ(MAP_FAILED, mremap(map, PAGE_SIZE, huge, MREMAP_MAYMOVE));
+}
