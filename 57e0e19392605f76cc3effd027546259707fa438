@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b66efe78_89929939",
+        "filename": "libc/bionic/mremap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-08T01:29:14Z",
+      "side": 1,
+      "message": "EINVAL instead? From \"man mremap\":\n\n  EINVAL An  invalid  argument  was  given.   Possible causes are: ... new_size or new_address was invalid",
+      "revId": "57e0e19392605f76cc3effd027546259707fa438",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
