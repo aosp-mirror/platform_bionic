@@ -16,6 +16,24 @@
       "revId": "57e0e19392605f76cc3effd027546259707fa438",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6b0760b_21e82acf",
+        "filename": "libc/bionic/mremap.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-11-08T01:33:16Z",
+      "side": 1,
+      "message": "It\u0027s pretending it ran out of memory though, since that\u0027s more backwards compatible. It makes sense for an application to ask for this much memory, but it just shouldn\u0027t get it (i.e. it\u0027s not really invalid).",
+      "parentUuid": "b66efe78_89929939",
+      "revId": "57e0e19392605f76cc3effd027546259707fa438",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
