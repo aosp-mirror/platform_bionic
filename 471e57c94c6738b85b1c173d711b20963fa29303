@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1617cafd_d7fdfe26",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-09T22:54:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b686fe2b_461c43f9",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 26
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b686fe2b_06b88b01",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-07T02:11:37Z",
       "side": 1,
       "message": "I don\u0027t think this works.  Assume I\u0027m the last thread in, so I increment serial and decrement wait_count.  Assume I then immediately try to reenter the barrier.  I see a new serial number, and I again see value + 1 \u003d\u003d barrier-\u003einit_count.  I think I can do this indefinitely without any other threads running.\n\nI think there are also more complicated failure scenarios.\n\nYou might ask the Google authors of WG21/N4392 whether they have code lying around that can be adapted.",
+      "range": {
+        "startLine": 70,
+        "startChar": 2,
+        "endLine": 70,
+        "endChar": 92
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56a22212_2ee98717",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-09T22:54:00Z",
+      "side": 1,
+      "message": "I didn\u0027t consider that situation. Added thread_count_can_enter field in pthread_barrier_internal_t to deal with that.",
+      "parentUuid": "b686fe2b_06b88b01",
       "range": {
         "startLine": 70,
         "startChar": 2,
@@ -154,6 +202,30 @@
       "side": 1,
       "message": "ah, yes, we\u0027re counting up, not down.",
       "parentUuid": "f6923665_d9265e95",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 90,
+        "endChar": 3
+      },
+      "revId": "471e57c94c6738b85b1c173d711b20963fa29303",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9603babe_9b028f20",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-09T22:54:00Z",
+      "side": 1,
+      "message": "I didn\u0027t consider that a barrier is destroyed in the release phase.",
+      "parentUuid": "b686fe2b_01a955fc",
       "range": {
         "startLine": 88,
         "startChar": 2,
