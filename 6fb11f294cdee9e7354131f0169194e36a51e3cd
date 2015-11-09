@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96b81a3f_b38a0292",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-09T21:47:24Z",
+      "side": 1,
+      "message": "what happens if we pass a timespec with a negative value?",
+      "revId": "6fb11f294cdee9e7354131f0169194e36a51e3cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96b81a3f_f3948ab7",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-09T21:47:24Z",
+      "side": 1,
+      "message": "same question here and elsewhere.",
+      "revId": "6fb11f294cdee9e7354131f0169194e36a51e3cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6b19e59_91c7fc90",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-09T21:47:24Z",
+      "side": 1,
+      "message": "all the others are A-from-B, so it\u0027s a bit confusing to have one B-to-A function...",
+      "revId": "6fb11f294cdee9e7354131f0169194e36a51e3cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
