@@ -42,6 +42,7 @@ static char* posix_basename(char* in) {
 #include <gtest/gtest.h>
 
 static void __TestGnuBasename(const char* in, const char* expected_out, int line) {
+  errno = 0;
   const char* out = gnu_basename(in);
   ASSERT_STREQ(expected_out, out) << "(" << line << "): " << in << std::endl;
   ASSERT_EQ(0, errno) << "(" << line << "): " << in << std::endl;
