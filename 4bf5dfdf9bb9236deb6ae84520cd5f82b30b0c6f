@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "d6d7f27c_f030f897",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2015-11-10T17:57:09Z",
+      "side": 1,
+      "message": "The commit message depicts what were doing but not why were doing it, can you elaborate here?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7689e6a7_22125071",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
