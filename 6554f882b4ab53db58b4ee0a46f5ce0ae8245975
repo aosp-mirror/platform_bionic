@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "369daed4_c13a5219",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T23:34:22Z",
+      "side": 1,
+      "message": "I think we need to prevent these from being reordered, and the final wait_count read needs to happen after all the other wait_count increments in this epoch.  I would make the fetch_add acq_rel and the load relaxed.\n\nAs it is, I don\u0027t see the proper happens-before relationship between the other threads entering and the final thread.",
+      "range": {
+        "startLine": 125,
+        "startChar": 2,
+        "endLine": 126,
+        "endChar": 102
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_9af1d1c5",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T23:34:22Z",
+      "side": 1,
+      "message": "Since readers use memory_order_relaxed, I would make this relaxed as well.  Doesn\u0027t really matter, though.",
+      "range": {
+        "startLine": 132,
+        "startChar": 6,
+        "endLine": 132,
+        "endChar": 49
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_3c3b897b",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T23:34:22Z",
+      "side": 1,
+      "message": "I can\u0027t convince myself this works if wait_count is decremented before wait_serial is incremented.  I expect these two again need to be ordered.  Make this a release operation?",
+      "range": {
+        "startLine": 140,
+        "startChar": 57,
+        "endLine": 140,
+        "endChar": 77
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7689e6a7_bf767771",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 6
@@ -42,6 +111,53 @@
         "startChar": 4,
         "endLine": 142,
         "endChar": 103
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_3f852f2e",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T23:34:22Z",
+      "side": 1,
+      "message": "Agreed.  I think this does however need to be memory_order_release to ensure ordering with respect to post-destruction accesses to the memory.",
+      "parentUuid": "96d1fa8e_7ceb41ce",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 103
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16ac2a06_7b522be8",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T23:34:22Z",
+      "side": 1,
+      "message": "I would make this one memory_order_acquire, and the CAS relaxed.  We should establish that all subsequent changes to the memory happen after all wait operations have completed.",
+      "range": {
+        "startLine": 154,
+        "startChar": 93,
+        "endLine": 154,
+        "endChar": 100
       },
       "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
