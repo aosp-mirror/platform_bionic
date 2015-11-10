@@ -19,6 +19,57 @@
     },
     {
       "key": {
+        "uuid": "7662c6c1_773890aa",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1010111
+      },
+      "writtenOn": "2015-11-10T18:33:34Z",
+      "side": 1,
+      "message": "Possibly add fsetfilecon() to bionic and drop from libselinux if building on bionic?\nSetting a userspace object (property) context on a file is decidedly unusual; not sure of the implications.",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b668be9f_b9021f20",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1010111
+      },
+      "writtenOn": "2015-11-10T18:33:34Z",
+      "side": 1,
+      "message": "The above code isn\u0027t consistent with libselinux code for opening and parsing property_contexts.  Obviously can be fixed but possible concern about future divergence.  Maybe take common helper to bionic and reuse in libselinux if building on bionic?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56794272_96728cc7",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1010111
+      },
+      "writtenOn": "2015-11-10T18:33:34Z",
+      "side": 1,
+      "message": "Why are we still opening the old properties file?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7689e6a7_22125071",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
