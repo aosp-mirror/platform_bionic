@@ -123,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "7689e6a7_c8caa372",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-10T21:57:11Z",
+      "side": 1,
+      "message": "Right, I did not want to have libc depend on libselinux and thought that the format of property_contexts was simple and consistent enough to have the duplication.  I\u0027m open to other options here.",
+      "parentUuid": "16ac2a06_15277692",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -158,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_56561a52",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-10T21:57:11Z",
+      "side": 1,
+      "message": "Yes, in this code all that exists in the old property file is the global serial number.  While designing this, there was a point in time where we were thinking of keeping a few properties in the old properties file for backwards compatibility (old app with statically linked libc + new android).  \n\nKeeping properties in that file got dropped, but I kept the serial number there so these apps would at least have some interaction with the property system.  This can be removed too and the global serial number can be kept elsewhere.",
+      "parentUuid": "d6d7f27c_13de762c",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7689e6a7_22125071",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -169,6 +205,24 @@
       "writtenOn": "2015-11-10T06:36:01Z",
       "side": 1,
       "message": "I don\u0027t think we use legacy_prop anymore, do we?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16ac2a06_6059dad9",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-10T21:57:11Z",
+      "side": 1,
+      "message": "I actually could use a null string here, since that field isn\u0027t actually used in this case where we\u0027ve provided a prop_area already.  \n\nI thought that having \"legacy_prop\" canary would help future debugging if we see it up in a place it isn\u0027t meant to be.\n\nI can remove it if it\u0027ll confuse us with actual property labels.",
+      "parentUuid": "7689e6a7_22125071",
       "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -198,6 +252,30 @@
     },
     {
       "key": {
+        "uuid": "56cb02e2_b5c2ea80",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-10T21:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "369daed4_907c1a05",
+      "range": {
+        "startLine": 873,
+        "startChar": 58,
+        "endLine": 873,
+        "endChar": 60
+      },
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56cb02e2_6c0a6fa7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -209,6 +287,30 @@
       "writtenOn": "2015-11-10T06:36:01Z",
       "side": 1,
       "message": "surround by double quotes",
+      "range": {
+        "startLine": 994,
+        "startChar": 57,
+        "endLine": 994,
+        "endChar": 59
+      },
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b0e2f2a_57a92c4f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 994,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-10T21:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56cb02e2_6c0a6fa7",
       "range": {
         "startLine": 994,
         "startChar": 57,
