@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7689e6a7_bf767771",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-10T02:11:51Z",
+      "side": 1,
+      "message": "This can\u0027t work.  Once we\u0027re past this statement, destroy sees this thread as done.  But we\u0027re still touching the barrier.",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 103
+      },
+      "revId": "6554f882b4ab53db58b4ee0a46f5ce0ae8245975",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
