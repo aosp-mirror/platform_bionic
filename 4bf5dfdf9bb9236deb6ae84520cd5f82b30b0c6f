@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "56cb02e2_afc29980",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T18:42:54Z",
+      "side": 1,
+      "message": "I\u0027ve been working under the assumption that Elliot / the libc team doesn\u0027t want to export a fsetfilecon() from libc.so, hence the current solution. They are being careful about what symbols are exported.\n\nI\u0027ve tested this patch myself, and setting a property context for a file is unusual but seems to work. I guess in theory we could typeattribute each \"property_type\" with \"file_type\", but I don\u0027t think it\u0027s necessary.",
+      "parentUuid": "7662c6c1_773890aa",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b668be9f_b9021f20",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "16ac2a06_15277692",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T18:42:54Z",
+      "side": 1,
+      "message": "More of an Elliott / libc team question as to whether they want to export a new libc symbol. My assumption was that they didn\u0027t want to, hence the duplication.",
+      "parentUuid": "b668be9f_b9021f20",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -64,6 +100,24 @@
       "writtenOn": "2015-11-10T18:33:34Z",
       "side": 1,
       "message": "Why are we still opening the old properties file?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d7f27c_13de762c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T18:42:54Z",
+      "side": 1,
+      "message": "My understanding from Tom is that the old property file should only contain the global serial number, which is needed for property space version control.",
+      "parentUuid": "56794272_96728cc7",
       "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
