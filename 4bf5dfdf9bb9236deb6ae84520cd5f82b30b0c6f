@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7689e6a7_22125071",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T06:36:01Z",
+      "side": 1,
+      "message": "I don\u0027t think we use legacy_prop anymore, do we?",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "369daed4_907c1a05",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T06:36:01Z",
+      "side": 1,
+      "message": "Can you surround this by double quotes:\n\n  ... finding property \\\"%s\\\"\", name",
+      "range": {
+        "startLine": 873,
+        "startChar": 58,
+        "endLine": 873,
+        "endChar": 60
+      },
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56cb02e2_6c0a6fa7",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 994,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-10T06:36:01Z",
+      "side": 1,
+      "message": "surround by double quotes",
+      "range": {
+        "startLine": 994,
+        "startChar": 57,
+        "endLine": 994,
+        "endChar": 59
+      },
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
