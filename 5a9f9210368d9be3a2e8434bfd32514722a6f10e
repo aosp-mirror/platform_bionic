@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16c50ace_de2065dd",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-11T02:32:34Z",
+      "side": 1,
+      "message": "Delete.  I like the change away from a full epoch number.\n\nCan we drop can_enter, and just wait for a WAIT state?",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 98
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c50ace_3e36d928",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-11T02:32:34Z",
+      "side": 1,
+      "message": "\"waiting for\"",
+      "range": {
+        "startLine": 75,
+        "startChar": 34,
+        "endLine": 75,
+        "endChar": 42
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
