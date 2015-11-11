@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6a6b626_f48109b4",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2015-11-11T19:16:12Z",
+      "side": 1,
+      "message": "if asprintf fails, the value of filename_with_context will be undefined (per man asprintf). This you could be passing some weird pointer to open() in the map_prop_area_*() routines.\n\nLikely want to check for -1 failure and fail hard.",
+      "revId": "895e8648b7b3948e9fea93183fef38595f6de184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
