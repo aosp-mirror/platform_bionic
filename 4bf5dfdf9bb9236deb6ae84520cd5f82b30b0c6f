@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "f6a6b626_54645d25",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-11T19:06:05Z",
+      "side": 1,
+      "message": "I doubt exporting these as symbols from libc or having libselinux try to grab a source file from libc (or vice versa) are viable options.  Maybe the header approach is acceptable?\n\n@enh - what is your opinion here?",
+      "parentUuid": "16c50ace_be592943",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
