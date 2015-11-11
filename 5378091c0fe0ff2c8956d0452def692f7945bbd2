@@ -33,6 +33,24 @@
       "revId": "5378091c0fe0ff2c8956d0452def692f7945bbd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c50ace_7e917101",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-11T04:57:01Z",
+      "side": 1,
+      "message": "Clean build was no help; something explicitly requires the debug properties to be in /dev/__properties__",
+      "parentUuid": "96d1fa8e_e2494ab5",
+      "revId": "5378091c0fe0ff2c8956d0452def692f7945bbd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
