@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6a6b626_255fe2c1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-11-11T04:12:52Z",
+      "side": 1,
+      "message": "Is this intentional?",
+      "revId": "5378091c0fe0ff2c8956d0452def692f7945bbd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
