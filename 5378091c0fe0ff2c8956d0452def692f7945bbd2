@@ -16,6 +16,23 @@
       "revId": "5378091c0fe0ff2c8956d0452def692f7945bbd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_e2494ab5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-11T04:17:13Z",
+      "side": 1,
+      "message": "At the moment, yes unfortunately.\n\nIf debug_prop isn\u0027t in the legacy /dev/__properties__, adb stops working on my N9.  This line adds does that.\n\nI\u0027ve forced adb to be rebuilt and it didn\u0027t help.  I\u0027m doing a clean build in case there is something fundamentally wrong with linking statically to libc.  If that doesn\u0027t work, it may be that N9 has other libraries that statically linked to an old libc.  And if not that, then I\u0027ll continue searching for other reasons this is needed.",
+      "revId": "5378091c0fe0ff2c8956d0452def692f7945bbd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
