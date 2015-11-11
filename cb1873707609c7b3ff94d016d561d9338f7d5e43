@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6a6b626_77599bd9",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-11-11T22:39:46Z",
+      "side": 1,
+      "message": "I am testing this workaround first.\nWill try to revert the ld.gold after that.",
+      "parentUuid": "f6a6b626_97aec7eb",
+      "revId": "cb1873707609c7b3ff94d016d561d9338f7d5e43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56cb02e2_1793fb3f",
         "filename": "tests/thread_local_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-11T22:31:09Z",
       "side": 1,
       "message": "is this really only for arm? if so, we should probably update the #if.",
+      "revId": "cb1873707609c7b3ff94d016d561d9338f7d5e43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_2855fece",
+        "filename": "tests/thread_local_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-11-11T22:39:46Z",
+      "side": 1,
+      "message": "b/22772147 was found on arm and arm64.\nWill try narrow down the condition.",
+      "parentUuid": "56cb02e2_1793fb3f",
       "revId": "cb1873707609c7b3ff94d016d561d9338f7d5e43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
