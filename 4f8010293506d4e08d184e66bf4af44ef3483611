@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d1fa8e_9ddb8f10",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-11T19:12:00Z",
+      "side": 1,
+      "message": "Is there a reason not to just use PTHREAD_MUTEX_INITIALIZER?",
+      "range": {
+        "startLine": 1247,
+        "startChar": 0,
+        "endLine": 1247,
+        "endChar": 36
+      },
+      "revId": "4f8010293506d4e08d184e66bf4af44ef3483611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "369daed4_279c06db",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-11T19:12:00Z",
+      "side": 1,
+      "message": "I would move this up a line and add a comment before the lock acquisition (creating an empty critical section): \"Wait for parent to retrieve our tid.\"\n\nI found this code needlessly confusing as is.  You are NOT protecting the assignment, as this appears to claim, and there is no reason it should be in the critical section.",
+      "range": {
+        "startLine": 1251,
+        "startChar": 0,
+        "endLine": 1251,
+        "endChar": 38
+      },
+      "revId": "4f8010293506d4e08d184e66bf4af44ef3483611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
