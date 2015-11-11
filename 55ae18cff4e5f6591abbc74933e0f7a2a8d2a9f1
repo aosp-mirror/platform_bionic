@@ -1,0 +1,333 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6da7ea7_52f2aa92",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "s/to/in a/",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_57cd7fdd",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "do we really want to hide the * in the type? i\u0027ve always disliked that. why not just use android_namespace_t* everywhere?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7689e6a7_e2214891",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "document parameters, especially \u0027is_isolated\u0027.",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7689e6a7_02270ca4",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "s/the/its/? (though this is going to be a pretty confusing error no matter what we write :-) do we have suggestions of what the developer might do to try to fix it?)",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c50ace_ea5da3fb",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "explicit on these?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_f2f75e7c",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "no one should be using this, right? should we just leave it out?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_eef77b7c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "document what \"accessible\" means?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "369daed4_f344889d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "(blank line before access modifiers.)",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_71809064",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "pull small utilities like this out so we can write unit tests?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16ac2a06_b277981f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "strncmp?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16ac2a06_f271202b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "why aren\u0027t subdirectories allowed? seems like the query is usually \"under\" rather than \"directly in\".",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6d7f27c_7016c833",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "also seems like it could be pulled out and tested.",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_f00f5607",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c50ace_2a869b82",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "\"resolve\" is pretty overloaded already in the dynamic linker. can we be more specific?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56cb02e2_afd619e6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1060,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "the \\n shouldn\u0027t be necessary; no other calls to __libc_fatal have one.",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_4e09673f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "can\u0027t we use the range for loop now?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_5021027a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "since path is only used here, call \u0027p\u0027 \u0027path\u0027 and inline path.c_str() here instead?",
+      "range": {
+        "startLine": 1564,
+        "startChar": 39,
+        "endLine": 1564,
+        "endChar": 43
+      },
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16ac2a06_b59e6277",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "since this touches realpath, should it be in the \u0027if\u0027 above?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b0e2f2a_0b026de7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3811,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-11T22:28:43Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
