@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "16c50ace_be592943",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2015-11-11T05:12:12Z",
+      "side": 1,
+      "message": "Could we just move the implementation of read_spec_entries() into something that can be easily included in the build... ie an additional source file/header? I don\u0027t necessarily know if its cleaner, especially considering this is all cpp and you have the option of more language and rich library support for various constructs.",
+      "parentUuid": "7689e6a7_c8caa372",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
