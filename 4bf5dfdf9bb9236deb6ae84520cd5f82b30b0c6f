@@ -213,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "7b0e2f2a_40ccc4b3",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2015-11-11T19:17:58Z",
+      "side": 1,
+      "message": "It was only meant to be an alternative idea, but I would just keep copies of it like you have, and then when/if we can coordinate a move of properties code out of bionic. Which I would be willing to help with, its something thats always bothered me :-)",
+      "parentUuid": "f6a6b626_54645d25",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
