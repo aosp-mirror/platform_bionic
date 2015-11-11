@@ -245,7 +245,11 @@ static bool __is_valid_environment_variable(const char* name) {
 }
 
 static bool __is_unsafe_environment_variable(const char* name) {
-  // None of these should be allowed in setuid programs.
+  // None of these should be allowed when the AT_SECURE auxv
+  // flag is set. This flag is set to inform userspace that a
+  // security transition has occurred, for example, as a result
+  // of executing a setuid program or the result of an SELinux
+  // security transition.
   static constexpr const char* UNSAFE_VARIABLE_NAMES[] = {
     "GCONV_PATH",
     "GETCONF_DIR",
