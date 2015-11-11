@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "369daed4_bc592d43",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-11T02:56:04Z",
+      "side": 1,
+      "message": "Probably no. If threads for the next cycle jump in before the final thread in current cycle setting state to RELEASE, they would have no place to wait.",
+      "parentUuid": "16c50ace_de2065dd",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 98
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_3e36d928",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-11T02:32:34Z",
       "side": 1,
       "message": "\"waiting for\"",
+      "range": {
+        "startLine": 75,
+        "startChar": 34,
+        "endLine": 75,
+        "endChar": 42
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56cb02e2_702d1dcf",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-11T02:56:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16c50ace_3e36d928",
       "range": {
         "startLine": 75,
         "startChar": 34,
