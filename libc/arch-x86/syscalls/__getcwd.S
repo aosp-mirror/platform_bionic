@@ -9,10 +9,18 @@ ENTRY(__getcwd)
     pushl   %ecx
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ecx, 0
-    mov     12(%esp), %ebx
-    mov     16(%esp), %ecx
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+    mov     16(%esp), %ebx
+    mov     20(%esp), %ecx
     movl    $__NR_getcwd, %eax
-    int     $0x80
+    call    *(%esp)
+    addl    $4, %esp
+
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

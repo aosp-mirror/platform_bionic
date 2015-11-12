@@ -166,9 +166,20 @@ END(%(func)s)
 
 x86_registers = [ "ebx", "ecx", "edx", "esi", "edi", "ebp" ]
 
+x86_call_prepare = """\
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
+"""
+
 x86_call = """\
     movl    $%(__NR_name)s, %%eax
-    int     $0x80
+    call    *(%%esp)
+    addl    $4, %%esp
+
     cmpl    $-MAX_ERRNO, %%eax
     jb      1f
     negl    %%eax
@@ -311,7 +322,7 @@ def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
 
     numparams = count_generic_param_registers(syscall["params"])
-    stack_bias = numparams*4 + 4
+    stack_bias = numparams*4 + 8
     offset = 0
     mov_result = ""
     first_push = True
@@ -327,6 +338,7 @@ def x86_genstub(syscall):
         mov_result += "    mov     %d(%%esp), %%%s\n" % (stack_bias+offset, register)
         offset += 4
 
+    result += x86_call_prepare
     result += mov_result
     result += x86_call % syscall
 
@@ -352,7 +364,9 @@ def x86_genstub_socketcall(syscall):
     result += "    pushl   %ecx\n"
     result += "    .cfi_adjust_cfa_offset 4\n"
     result += "    .cfi_rel_offset ecx, 0\n"
-    stack_bias = 12
+    stack_bias = 16
+
+    result += x86_call_prepare
 
     # set the call id (%ebx)
     result += "    mov     $%d, %%ebx\n" % syscall["socketcall_id"]

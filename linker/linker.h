@@ -275,6 +275,7 @@ struct soinfo {
   bool prelink_image();
   bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
                   const android_dlextinfo* extinfo);
+  bool protect_relro();
 
   void add_child(soinfo* child);
   void remove_all_links();
