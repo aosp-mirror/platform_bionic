@@ -142,7 +142,9 @@ libBionicStandardTests_ldlibs_host := \
 # Clang/llvm has incompatible long double (fp128) for x86_64.
 # https://llvm.org/bugs/show_bug.cgi?id=23897
 # This affects most of math_test.cpp.
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64))
 libBionicStandardTests_clang_target := false
+endif
 
 module := libBionicStandardTests
 module_tag := optional
@@ -309,9 +311,14 @@ bionic-unit-tests_shared_libraries_target := \
     libdl_preempt_test_1 \
     libdl_preempt_test_2
 
-# TODO: clang support for thread_local on arm is done via __aeabi_read_tp()
-# which bionic does not support. Reenable this once this question is resolved.
+# Clang/llvm has incompatible long double (fp128) for x86_64.
+# https://llvm.org/bugs/show_bug.cgi?id=23897
+# This affects most of math_test.cpp.
+# For arm and arm64 target, b/25643775:
+# external/libcxx/include/sstream:859: warning: relocation refers to discarded section
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),x86_64 arm arm64))
 bionic-unit-tests_clang_target := false
+endif
 
 bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
 
