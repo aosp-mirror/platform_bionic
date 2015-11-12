@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "96d1fa8e_e84c881d",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-12T19:07:34Z",
+      "side": 1,
+      "message": "I have simplified the implementation by removing thread_count_can_enter. As suggested by hboehm@, I agree that it doesn\u0027t make sense to have more than [init_count] threads trying to enter the barrier in one cycle. So now it is undefined behavior if users do that. Unfortunately, we didn\u0027t find any word about that in posix standard. So if anyone complains, I don\u0027t mind to change back.",
+      "parentUuid": "96d1fa8e_6538c1aa",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 98
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_3e36d928",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 8
