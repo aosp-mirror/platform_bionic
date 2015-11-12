@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bb3987d2_3a46a536",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-12T19:30:57Z",
+      "side": 1,
+      "message": "But the iterator is supposed to pretend to be a pointer to the underlying T. For example, the following code works with std::forward_list, which is basically what your linked list is attempting to be:\n\n    struct foo { int a; };\n    std::forward_list\u003cfoo\u003e list;\n    list.push_front(foo{123});\n    printf(\"%d\\n\", (*list.begin()).a);\n    printf(\"%d\\n\", list.begin()-\u003ea);\n\nYour code would need to dereference the iterator twice.",
+      "parentUuid": "b6da7ea7_c1451d4a",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 4
+      },
+      "revId": "98daa87cdeeba7edeca66e077cde8867088d34fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b2597a9_4d04192e",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
