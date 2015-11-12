@@ -1303,11 +1303,14 @@ TEST(pthread, pthread_attr_getstack_18908062) {
 }
 
 #if defined(__BIONIC__)
-static pthread_mutex_t gettid_mutex;
+static pthread_mutex_t pthread_gettid_np_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 static void* pthread_gettid_np_helper(void* arg) {
-  pthread_mutex_lock(&gettid_mutex);
   *reinterpret_cast<pid_t*>(arg) = gettid();
-  pthread_mutex_unlock(&gettid_mutex);
+
+  // Wait for our parent to call pthread_gettid_np on us before exiting.
+  pthread_mutex_lock(&pthread_gettid_np_mutex);
+  pthread_mutex_unlock(&pthread_gettid_np_mutex);
   return NULL;
 }
 #endif
@@ -1316,17 +1319,19 @@ TEST(pthread, pthread_gettid_np) {
 #if defined(__BIONIC__)
   ASSERT_EQ(gettid(), pthread_gettid_np(pthread_self()));
 
+  // Ensure the other thread doesn't exit until after we've called
+  // pthread_gettid_np on it.
+  pthread_mutex_lock(&pthread_gettid_np_mutex);
+
   pid_t t_gettid_result;
   pthread_t t;
-  pthread_mutex_init(&gettid_mutex, NULL);
-  pthread_mutex_lock(&gettid_mutex);
   pthread_create(&t, NULL, pthread_gettid_np_helper, &t_gettid_result);
 
   pid_t t_pthread_gettid_np_result = pthread_gettid_np(t);
-  pthread_mutex_unlock(&gettid_mutex);
 
+  // Release the other thread and wait for it to exit.
+  pthread_mutex_unlock(&pthread_gettid_np_mutex);
   pthread_join(t, NULL);
-  pthread_mutex_destroy(&gettid_mutex);
 
   ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
 #else
