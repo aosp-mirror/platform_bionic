@@ -1049,6 +1049,9 @@ LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
+# b/25662915, clang compiled __cxa_thread_atexit_impl.cpp still failed.
+LOCAL_CLANG_arm64 := false
+
 include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
