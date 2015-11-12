@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b2a4b7b_d4bd3484",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "We need to make sure that all memory operations before a barrier_wait() are visible to all other threads when they complete the barrier_wait().  Thus we need to establish a happens-before relationship between all threads entering the barrier and all threads exiting.  Thus we want a release operation on entry and an acquire operation on exit, both on the same variable.\n\nThus I think this needs to be memory_order_release, at a minimum.  But it\u0027s also the communicating load that tells us we\u0027ve seen all other threads arrive.  So it should be memory_order_acq_rel.\n\nThat also enforces the required ordering relationship with the previous state read.",
+      "range": {
+        "startLine": 119,
+        "startChar": 55,
+        "endLine": 119,
+        "endChar": 75
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb3987d2_e5551ed1",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "I would fail with EINVAL (maybe after again decrementing wait_count) if prev_wait_count \u003e\u003d init_count, and add the following comment.  (I think that in reality this is unclear and it can be read either way.  Let\u0027s read it the way we like until someone objects.)\n\nWe read the Posix standard as disallowing this, since additional arriving threads are not synchronized with respect to the barrier reset.  We also do not know of any reasonable cases in which this would be intentional.",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 51
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_13aab4ab",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "I think this is not safe to reorder with the count update.  Make it memory_order_release.",
+      "range": {
+        "startLine": 124,
+        "startChar": 54,
+        "endLine": 124,
+        "endChar": 74
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_548f04a2",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "Similarly, this shouldn\u0027t be reordered with respect to the later count decrement.  Make it memory_order_acquire.\n\nI think that\u0027s also the final link in establishing the required happens-before relationship.  The initial count increment performed by every thread happens before the store of RELEASE, which happens before the rest of the SERIAL_THREAD, and the load of RELEASE by every other thread.",
+      "range": {
+        "startLine": 128,
+        "startChar": 49,
+        "endLine": 128,
+        "endChar": 69
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c50ace_7f0a08fe",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "We probably need to keep this.  Otherwise the store of RELEASE can be reordered, which gets messy.\n\nAlso the the corresponding destroy comment below.",
+      "range": {
+        "startLine": 132,
+        "startChar": 57,
+        "endLine": 132,
+        "endChar": 77
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_b9665d6a",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "And we don\u0027t want this to be reordered with respect to the fetch_sub.  Make it memory_order_release.\n\nUnfortunately, you\u0027re going to end up with enough memory barriers on ARM that the lock-based implementation may be faster in the end.\n\nThough if we really needed this to be performant, it might also be important to spin for a few iterations before resorting to futexes.",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 69
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_76d686eb",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "memory_order_acquire.\n\nIf the wait_count read is reordered with this, we may get failures.",
+      "range": {
+        "startLine": 144,
+        "startChar": 47,
+        "endLine": 144,
+        "endChar": 67
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_1c983759",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1682,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T23:26:56Z",
+      "side": 1,
+      "message": "Could we add an additional test that minimally checks ordering, etc.?\n\nI would run with 4 threads, ideally for at least thousands of operations, and have each do the following in a loop:\n\na[my_id] \u003d ++my_count;\nbarrier_wait();\nfor (i \u003d 0; i \u003c 4; ++i) ASSERT_EQ(my_count, a[i]);\nbarrier_wait();\n\nSince we heavily rely on futex blocking, this may be too slow to run for very many iterations.  But we should do what we can.\n\nI would run the check loop in all threads.",
+      "range": {
+        "startLine": 1682,
+        "startChar": 0,
+        "endLine": 1682,
+        "endChar": 38
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
