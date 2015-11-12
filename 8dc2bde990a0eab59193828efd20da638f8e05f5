@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56794272_d96b5788",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1010111
+      },
+      "writtenOn": "2015-11-12T19:40:15Z",
+      "side": 1,
+      "message": "Needs to be a fatal error.\nAlternative model to performing fsetxattr() after open(O_CREAT) would be to perform equivalent of libselinux setfscreatecon(context) before open(O_CREAT); then the new file is created with the context in the first place (note that this then removes the need for relabelfrom/to).  setfscreatecon(context) is same as writing context to /proc/self/attr/fscreate.",
+      "revId": "8dc2bde990a0eab59193828efd20da638f8e05f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
