@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b6da7ea7_cb137ca7",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6da7ea7_52f2aa92",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6a6b626_57cd7fdd",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "do we really want to hide the * in the type? i\u0027ve always disliked that. why not just use android_namespace_t* everywhere?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_3233ad39",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6a6b626_57cd7fdd",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "369daed4_f64911b5",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7689e6a7_e2214891",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7689e6a7_02270ca4",
         "filename": "linker/dlfcn.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "s/the/its/? (though this is going to be a pretty confusing error no matter what we write :-) do we have suggestions of what the developer might do to try to fix it?)",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_6b56d052",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "this could happen if call comes from the code manually loaded by someone else (not android linker).\n\nI think the developer will be aware of this.",
+      "parentUuid": "7689e6a7_02270ca4",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "bb3987d2_7115788c",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16c50ace_ea5da3fb",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b6da7ea7_f2f75e7c",
         "filename": "linker/linked_list.h",
         "patchSetId": 2
@@ -98,6 +188,47 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "no one should be using this, right? should we just leave it out?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_b22cbd8a",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "I prefer to have full implementation of ForwardInputIterator concept here (it is only one extra operator after all)..",
+      "parentUuid": "b6da7ea7_f2f75e7c",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7689e6a7_854fa63b",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "forgot to remove - removed.",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 5
+      },
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +252,24 @@
     },
     {
       "key": {
+        "uuid": "16ac2a06_6cf27093",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96d1fa8e_eef77b7c",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "369daed4_f344889d",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -132,6 +281,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "(blank line before access modifiers.)",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "369daed4_56c0e5fd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "369daed4_f344889d",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +322,24 @@
     },
     {
       "key": {
+        "uuid": "7b0e2f2a_2699e8ec",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6a6b626_71809064",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16ac2a06_b277981f",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -166,6 +351,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "strncmp?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_6a3892aa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16ac2a06_b277981f",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +392,24 @@
     },
     {
       "key": {
+        "uuid": "96d1fa8e_12478931",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "if we do that we introduce ambiguity to the search-path beeing different from the \"isolation_path\". There are 2 ways.. make them behave in exactly the same ways. Or let user explicitly specify \"isolation_path\" and allow it to be superset of the search_path... Sense there is no actual need for the isolation_path to be different from the search path I chose the first way.",
+      "parentUuid": "16ac2a06_f271202b",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6d7f27c_7016c833",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -200,6 +421,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "also seems like it could be pulled out and tested.",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_a40abba3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6d7f27c_7016c833",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -223,6 +462,24 @@
     },
     {
       "key": {
+        "uuid": "b6da7ea7_8b3b44a7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_f00f5607",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_2a869b82",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -234,6 +491,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "\"resolve\" is pretty overloaded already in the dynamic linker. can we be more specific?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b3453db_8c8207e3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16c50ace_2a869b82",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -257,6 +532,24 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_bf3f6207",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1060,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56cb02e2_afd619e6",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96d1fa8e_4e09673f",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -268,6 +561,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "can\u0027t we use the range for loop now?",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_2abb2a02",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "nope... for_each does not support early breaks and for does not really support ranges based on iterators (unless I am missing something)",
+      "parentUuid": "96d1fa8e_4e09673f",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -297,6 +608,30 @@
     },
     {
       "key": {
+        "uuid": "369daed4_16481d08",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_5021027a",
+      "range": {
+        "startLine": 1564,
+        "startChar": 39,
+        "endLine": 1564,
+        "endChar": 43
+      },
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16ac2a06_b59e6277",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -314,6 +649,24 @@
     },
     {
       "key": {
+        "uuid": "5b25eb9e_7c40913a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "ops... fixed",
+      "parentUuid": "16ac2a06_b59e6277",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b0e2f2a_0b026de7",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -325,6 +678,24 @@
       "writtenOn": "2015-11-11T22:28:43Z",
       "side": 1,
       "message": "ws",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6a6b626_6dba6ce4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3811,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T02:15:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b0e2f2a_0b026de7",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
