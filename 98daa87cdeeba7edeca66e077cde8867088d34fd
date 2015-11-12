@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b6da7ea7_c1451d4a",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T07:47:43Z",
+      "side": 1,
+      "message": "linked list elements are pointers, so -\u003e is kind of useless in this context.. the const version is needed for linked_list::const_iterator which we do not support.",
+      "parentUuid": "bb3987d2_9407aa9c",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 4
+      },
+      "revId": "98daa87cdeeba7edeca66e077cde8867088d34fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b2597a9_4d04192e",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-12T02:47:23Z",
       "side": 1,
       "message": "\u003d\u003d 0 seems more natural to me. Also, we use TEMP_FAILURE_RETRY below. Is it unnecessary?",
+      "range": {
+        "startLine": 401,
+        "startChar": 34,
+        "endLine": 401,
+        "endChar": 39
+      },
+      "revId": "98daa87cdeeba7edeca66e077cde8867088d34fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6da7ea7_214b595f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T07:47:43Z",
+      "side": 1,
+      "message": "done. stat does not return EINTR so no TEMP_FAILURE_RETRY necessary.",
+      "parentUuid": "3b2597a9_4d04192e",
       "range": {
         "startLine": 401,
         "startChar": 34,
