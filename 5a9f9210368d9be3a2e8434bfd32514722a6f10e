@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "96d1fa8e_6538c1aa",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-12T03:25:54Z",
+      "side": 1,
+      "message": "It seems to me that having both enter_the_barrier and destroy just wait for WAIT state is sufficient.  At that point you know that the previous epoch is complete and all threads have left the barrier.  Neither functions can be entered before the preceding WAIT phase is complete.\n\nDid you have a scenario in mind in which that fails?",
+      "parentUuid": "369daed4_bc592d43",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 98
+      },
+      "revId": "5a9f9210368d9be3a2e8434bfd32514722a6f10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_3e36d928",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 8
