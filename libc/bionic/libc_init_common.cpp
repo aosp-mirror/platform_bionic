@@ -70,7 +70,23 @@ void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
   __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
 }
 
+#if defined(__i386__)
+__LIBC_HIDDEN__ void* __libc_sysinfo = nullptr;
+
+__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
+  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+}
+
+// TODO: lose this function and just access __libc_sysinfo directly.
+extern "C" void* __kernel_syscall() {
+  return __libc_sysinfo;
+}
+#endif
+
 void __libc_init_globals(KernelArgumentBlock& args) {
+#if defined(__i386__)
+  __libc_init_sysinfo(args);
+#endif
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.

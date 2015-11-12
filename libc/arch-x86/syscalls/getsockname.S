@@ -9,11 +9,19 @@ ENTRY(getsockname)
     pushl   %ecx
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ecx, 0
+
+    call    __kernel_syscall
+    pushl   %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
     mov     $6, %ebx
     mov     %esp, %ecx
-    addl    $12, %ecx
+    addl    $16, %ecx
     movl    $__NR_socketcall, %eax
-    int     $0x80
+    call    *(%esp)
+    addl    $4, %esp
+
     cmpl    $-MAX_ERRNO, %eax
     jb      1f
     negl    %eax

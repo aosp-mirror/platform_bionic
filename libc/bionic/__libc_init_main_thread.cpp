@@ -51,6 +51,9 @@ extern "C" int __set_tid_address(int* tid_address);
 
 void __libc_init_main_thread(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
+#if defined(__i386__)
+  __libc_init_sysinfo(args);
+#endif
 
   static pthread_internal_t main_thread;
 

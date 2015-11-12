@@ -27,18 +27,25 @@ ENTRY(syscall)
     .cfi_adjust_cfa_offset 4
     .cfi_rel_offset ebp, 0
 
+    # Get and save the system call entry address.
+    call    __kernel_syscall
+    push    %eax
+    .cfi_adjust_cfa_offset 4
+    .cfi_rel_offset eax, 0
+
     # Load all the arguments from the calling frame.
     # (Not all will be valid, depending on the syscall.)
-    mov     20(%esp),%eax
-    mov     24(%esp),%ebx
-    mov     28(%esp),%ecx
-    mov     32(%esp),%edx
-    mov     36(%esp),%esi
-    mov     40(%esp),%edi
-    mov     44(%esp),%ebp
+    mov     24(%esp),%eax
+    mov     28(%esp),%ebx
+    mov     32(%esp),%ecx
+    mov     36(%esp),%edx
+    mov     40(%esp),%esi
+    mov     44(%esp),%edi
+    mov     48(%esp),%ebp
 
     # Make the system call.
-    int     $0x80
+    call    *(%esp)
+    addl    $4, %esp
 
     # Error?
     cmpl    $-MAX_ERRNO, %eax
