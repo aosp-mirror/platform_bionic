@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_716572c6",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-12T19:34:29Z",
+      "side": 1,
+      "message": "The linked_list value_type is T*; see linked_list::pop_front for example",
+      "parentUuid": "bb3987d2_3a46a536",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 4
+      },
+      "revId": "98daa87cdeeba7edeca66e077cde8867088d34fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b2597a9_4d04192e",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
