@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_d5f3eb95",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T23:50:46Z",
+      "side": 1,
+      "message": "for the hairier stuff, yeah, clearly we don\u0027t want that. for the trivial one-liners, we could either have them inlined in a header file, or built into a libselinux_core.a that we link into libselinux and bionic. dimitry\u0027s switched us over to a link map so we\u0027d have to explicitly export the symbols even if we wanted to.",
+      "parentUuid": "56cb02e2_afc29980",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b0be317_186405c7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
