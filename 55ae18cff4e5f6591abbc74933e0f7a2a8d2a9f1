@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "5b532b27_acbb87e5",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T18:07:52Z",
+      "side": 1,
+      "message": "oh, this isn\u0027t that GCC tail call optimization we were having trouble with? this is \"the caller was code not loaded by the dynamic linker\"? maybe say that explicitly? (useful to include the pc?)",
+      "parentUuid": "b6da7ea7_6b56d052",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_ea5da3fb",
         "filename": "linker/linked_list.h",
         "patchSetId": 2
@@ -206,6 +224,24 @@
       "side": 1,
       "message": "I prefer to have full implementation of ForwardInputIterator concept here (it is only one extra operator after all)..",
       "parentUuid": "b6da7ea7_f2f75e7c",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b2597a9_c78582ee",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T18:07:52Z",
+      "side": 1,
+      "message": "i didn\u0027t mean \"i don\u0027t think you\u0027re using this\", i meant \"i don\u0027t think you\u0027d ever want to use this\". wouldn\u0027t it be a mistake if we ever did use this, and removing it makes that a compile-time error?",
+      "parentUuid": "96d1fa8e_b22cbd8a",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -404,6 +440,24 @@
       "side": 1,
       "message": "if we do that we introduce ambiguity to the search-path beeing different from the \"isolation_path\". There are 2 ways.. make them behave in exactly the same ways. Or let user explicitly specify \"isolation_path\" and allow it to be superset of the search_path... Sense there is no actual need for the isolation_path to be different from the search path I chose the first way.",
       "parentUuid": "16ac2a06_f271202b",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_2cc1d754",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T18:07:52Z",
+      "side": 1,
+      "message": "i don\u0027t understand. do you mean symbolic links?",
+      "parentUuid": "96d1fa8e_12478931",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
