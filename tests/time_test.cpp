@@ -143,6 +143,44 @@ TEST(time, strftime) {
   EXPECT_STREQ("Sun Mar 10 00:00:00 2100", buf);
 }
 
+TEST(time, strftime_null_tm_zone) {
+  // Netflix on Nexus Player wouldn't start (http://b/25170306).
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+
+  char buf[64];
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  t.tm_isdst = 0; // "0 if Daylight Savings Time is not in effect".
+  EXPECT_EQ(5U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<PST>", buf);
+
+#if defined(__BIONIC__) // glibc 2.19 only copes with tm_isdst being 0 and 1.
+  t.tm_isdst = 2; // "positive if Daylight Savings Time is in effect"
+  EXPECT_EQ(5U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<PDT>", buf);
+
+  t.tm_isdst = -123; // "and negative if the information is not available".
+  EXPECT_EQ(2U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<>", buf);
+#endif
+
+  setenv("TZ", "UTC", 1);
+  tzset();
+
+  t.tm_isdst = 0;
+  EXPECT_EQ(5U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<UTC>", buf);
+
+#if defined(__BIONIC__) // glibc 2.19 thinks UTC DST is "UTC".
+  t.tm_isdst = 1; // UTC has no DST.
+  EXPECT_EQ(2U, strftime(buf, sizeof(buf), "<%Z>", &t));
+  EXPECT_STREQ("<>", buf);
+#endif
+}
+
 TEST(time, strptime) {
   setenv("TZ", "UTC", 1);
 
