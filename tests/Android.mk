@@ -171,6 +171,7 @@ $(foreach compiler,gcc clang, \
   ) \
 )
 
+fortify1-tests-gcc_clang_target := false
 module := fortify1-tests-gcc
 module_tag := optional
 build_type := target
@@ -179,6 +180,7 @@ include $(LOCAL_PATH)/Android.build.mk
 build_type := host
 include $(LOCAL_PATH)/Android.build.mk
 
+fortify2-tests-gcc_clang_target := false
 module := fortify2-tests-gcc
 module_tag := optional
 build_type := target
