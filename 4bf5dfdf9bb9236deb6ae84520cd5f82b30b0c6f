@@ -231,6 +231,24 @@
     },
     {
       "key": {
+        "uuid": "b6da7ea7_6c36dd29",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T23:42:53Z",
+      "side": 1,
+      "message": "we\u0027ve certainly shared things to other libraries via header files before.",
+      "parentUuid": "f6a6b626_54645d25",
+      "revId": "4bf5dfdf9bb9236deb6ae84520cd5f82b30b0c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56794272_96728cc7",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
