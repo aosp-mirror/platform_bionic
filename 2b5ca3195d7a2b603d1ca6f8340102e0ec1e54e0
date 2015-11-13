@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b25eb9e_aba49924",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T18:48:15Z",
+      "side": 1,
+      "message": "(when you\u0027ve helped me understand the is-in-dir versus under-dir thing, we should definitely document it.)",
+      "revId": "2b5ca3195d7a2b603d1ca6f8340102e0ec1e54e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_bdb84b02",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-13T18:48:15Z",
+      "side": 1,
+      "message": "continue on each of these, for clarity? (this is a pretty large loop body.)",
+      "revId": "2b5ca3195d7a2b603d1ca6f8340102e0ec1e54e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
