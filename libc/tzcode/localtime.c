@@ -1316,9 +1316,10 @@ static void
 tzset_unlocked(void)
 {
 #if defined(__ANDROID__)
+  // The TZ environment variable is meant to override the system-wide setting.
   const char * name = getenv("TZ");
 
-  // Try the "persist.sys.timezone" system property.
+  // If that's not set, look at the "persist.sys.timezone" system property.
   if (name == NULL) {
     static const prop_info *pi;
 
@@ -1339,6 +1340,10 @@ tzset_unlocked(void)
       }
     }
   }
+
+  // If that's not available (because you're running AOSP on a WiFi-only
+  // device, say), fall back to GMT.
+  if (name == NULL) name = gmt;
 
   tzsetlcl(name);
 #else
