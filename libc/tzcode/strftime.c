@@ -502,7 +502,23 @@ label:
                 continue;
             case 'Z':
 #ifdef TM_ZONE
-                pt = _add(t->TM_ZONE, pt, ptlim, modifier);
+                // BEGIN: Android-changed.
+                {
+                    const char* zone = t->TM_ZONE;
+                    if (!zone || !*zone) {
+                        // "The value of tm_isdst shall be positive if Daylight Savings Time is
+                        // in effect, 0 if Daylight Savings Time is not in effect, and negative
+                        // if the information is not available."
+                        if (t->tm_isdst == 0) zone = tzname[0];
+                        else if (t->tm_isdst > 0) zone = tzname[1];
+
+                        // "Replaced by the timezone name or abbreviation, or by no bytes if no
+                        // timezone information exists."
+                        if (!zone || !*zone) zone = "";
+                    }
+                    pt = _add(zone, pt, ptlim, modifier);
+                }
+                // END: Android-changed.
 #else
                 if (t->tm_isdst >= 0)
                     pt = _add(tzname[t->tm_isdst != 0],
