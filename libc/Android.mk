@@ -725,6 +725,7 @@ LOCAL_CFLAGS := $(libc_common_cflags) \
 LOCAL_CFLAGS += -DALL_STATE
 # Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
 LOCAL_CFLAGS += -DSTD_INSPIRED
+# Obviously, we want to be thread-safe.
 LOCAL_CFLAGS += -DTHREAD_SAFE
 # The name of the tm_gmtoff field in our struct tm.
 LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
@@ -732,6 +733,8 @@ LOCAL_CFLAGS += -DTM_GMTOFF=tm_gmtoff
 LOCAL_CFLAGS += -DTZDIR=\"/system/usr/share/zoneinfo\"
 # Include timezone and daylight globals.
 LOCAL_CFLAGS += -DUSG_COMPAT=1
+# Use the empty string (instead of "   ") as the timezone abbreviation fallback.
+LOCAL_CFLAGS += -DWILDABBR=\"\"
 LOCAL_CFLAGS += -DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
 LOCAL_CFLAGS += -Dlint
 
