@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "db847bce_625b3639",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-15T20:07:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b532b27_acbb87e5",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16c50ace_ea5da3fb",
         "filename": "linker/linked_list.h",
         "patchSetId": 2
@@ -242,6 +260,24 @@
       "side": 1,
       "message": "i didn\u0027t mean \"i don\u0027t think you\u0027re using this\", i meant \"i don\u0027t think you\u0027d ever want to use this\". wouldn\u0027t it be a mistake if we ever did use this, and removing it makes that a compile-time error?",
       "parentUuid": "96d1fa8e_b22cbd8a",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_55f3765c",
+        "filename": "linker/linked_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-15T20:07:22Z",
+      "side": 1,
+      "message": "removed.",
+      "parentUuid": "3b2597a9_c78582ee",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -458,6 +494,24 @@
       "side": 1,
       "message": "i don\u0027t understand. do you mean symbolic links?",
       "parentUuid": "96d1fa8e_12478931",
+      "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_35f8fa34",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-15T20:07:22Z",
+      "side": 1,
+      "message": "example:\n/a/libsome.so\n/a/b/libother.so\n\nif the ld_library_path\u003d/a libother.so cannot be found by soname: dlopen(\"libother.so\", ...) will fail. Therefore we shouldn\u0027t include into isolated path in case the user calls dlopen /a/b/libother.so",
+      "parentUuid": "5b532b27_2cc1d754",
       "revId": "55ae18cff4e5f6591abbc74933e0f7a2a8d2a9f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
