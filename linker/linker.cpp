@@ -469,7 +469,7 @@ static void resolve_paths(std::vector<std::string>& paths,
 
 static void split_path(const char* path, const char* delimiters,
                        std::vector<std::string>* paths) {
-  if (path != nullptr) {
+  if (path != nullptr && path[0] != 0) {
     *paths = android::base::Split(path, delimiters);
   }
 }
