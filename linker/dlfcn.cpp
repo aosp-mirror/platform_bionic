@@ -108,9 +108,16 @@ void* dlsym(void* handle, const char* symbol) {
   const ElfW(Sym)* sym = nullptr;
   void* caller_addr = __builtin_return_address(0);
   soinfo* caller = find_containing_library(caller_addr);
+  if (caller == nullptr) {
+    char buf[256];
+    __libc_format_buffer(buf, sizeof(buf), "dlsym couldn't locate its caller address=%p; "
+                         "the caller was code not loaded by the dynamic linker", caller_addr);
+    __bionic_format_dlerror(buf, nullptr);
+    return nullptr;
+  }
 
   if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
-    sym = dlsym_linear_lookup(symbol, &found, caller, handle);
+    sym = dlsym_linear_lookup(caller->get_namespace(), symbol, &found, caller, handle);
   } else {
     sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, symbol);
   }
@@ -177,6 +184,30 @@ uint32_t android_get_application_target_sdk_version() {
   return get_application_target_sdk_version();
 }
 
+bool android_init_public_namespace(const char* path) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  bool success = init_public_namespace(path);
+  if (!success) {
+    __bionic_format_dlerror("android_init_public_namespace failed", linker_get_error_buffer());
+  }
+
+  return success;
+}
+
+android_namespace_t* android_create_namespace(const char* name, const char* ld_library_path,
+                                              const char* default_library_path, bool is_isolated) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+
+  android_namespace_t* result = create_namespace(name, ld_library_path,
+                                                 default_library_path, is_isolated);
+
+  if (result == nullptr) {
+    __bionic_format_dlerror("android_create_namespace failed", linker_get_error_buffer());
+  }
+
+  return result;
+}
+
 // name_offset: starting index of the name in libdl_info.strtab
 #define ELF32_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
@@ -203,11 +234,11 @@ static const char ANDROID_LIBDL_STRTAB[] =
   // 00000000001 1111111112222222222 3333333333444444444455555555556666666666777 777777788888888889999999999
   // 01234567890 1234567890123456789 0123456789012345678901234567890123456789012 345678901234567890123456789
     "erate_phdr\0android_dlopen_ext\0android_set_application_target_sdk_version\0android_get_application_tar"
-  // 0000000000111111
-  // 0123456789012345
-    "get_sdk_version\0"
+  // 0000000000111111 111122222222223333333333444444 4444555555555566666666667
+  // 0123456789012345 678901234567890123456789012345 6789012345678901234567890
+    "get_sdk_version\0android_init_public_namespace\0android_create_namespace\0"
 #if defined(__arm__)
-  // 216
+  // 271
     "dl_unwind_find_exidx\0"
 #endif
     ;
@@ -229,8 +260,10 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)(111, &android_dlopen_ext, 1),
   ELFW(SYM_INITIALIZER)(130, &android_set_application_target_sdk_version, 1),
   ELFW(SYM_INITIALIZER)(173, &android_get_application_target_sdk_version, 1),
+  ELFW(SYM_INITIALIZER)(216, &android_init_public_namespace, 1),
+  ELFW(SYM_INITIALIZER)(246, &android_create_namespace, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(216, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(271, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -247,18 +280,20 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
+extern android_namespace_t g_default_namespace;
+
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {
   if (__libdl_info == nullptr) {
-    __libdl_info = new (__libdl_info_buf) soinfo("libdl.so", nullptr, 0, RTLD_GLOBAL);
+    __libdl_info = new (__libdl_info_buf) soinfo(&g_default_namespace, "libdl.so", nullptr, 0, RTLD_GLOBAL);
     __libdl_info->flags_ |= FLAG_LINKED;
     __libdl_info->strtab_ = ANDROID_LIBDL_STRTAB;
     __libdl_info->symtab_ = g_libdl_symtab;

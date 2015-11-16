@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __LINKER_UTILS_H
-#define __LINKER_UTILS_H
 
-#include <string>
+const char* g_private_extern_string = "This string is from private namespace";
 
-extern const char* const kZipFileSeparator;
-
-bool normalize_path(const char* path, std::string* normalized_path);
-bool file_is_in_dir(const std::string& file, const std::string& dir);
-bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* entry_path);
-
-#endif
