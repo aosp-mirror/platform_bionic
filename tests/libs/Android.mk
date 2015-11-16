@@ -26,6 +26,7 @@ common_additional_dependencies := \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk \
     $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk \
+    $(LOCAL_PATH)/Android.build.linker_namespaces.mk \
     $(LOCAL_PATH)/Android.build.pthread_atfork.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
     $(LOCAL_PATH)/Android.build.versioned_lib.mk \
@@ -211,6 +212,11 @@ libtest_nodelete_dt_flags_1_ldflags := -Wl,-z,nodelete
 
 module := libtest_nodelete_dt_flags_1
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Build test helper libraries for linker namespaces
+# -----------------------------------------------------------------------------
+include $(LOCAL_PATH)/Android.build.linker_namespaces.mk
 
 # -----------------------------------------------------------------------------
 # Build DT_RUNPATH test helper libraries

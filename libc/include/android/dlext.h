@@ -98,6 +98,11 @@ enum {
    */
   ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100,
 
+  /* This flag used to load library in a different namespace. The namespace is
+   * specified in library_namespace.
+   */
+  ANDROID_DLEXT_USE_NAMESPACE = 0x200,
+
   /* Mask of valid bits */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -107,8 +112,11 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
                                         ANDROID_DLEXT_FORCE_FIXED_VADDR |
-                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS,
+                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS |
+                                        ANDROID_DLEXT_USE_NAMESPACE,
 };
+
+struct android_namespace_t;
 
 typedef struct {
   uint64_t flags;
@@ -117,9 +125,39 @@ typedef struct {
   int     relro_fd;
   int     library_fd;
   off64_t library_fd_offset;
+  struct android_namespace_t* library_namespace;
 } android_dlextinfo;
 
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+
+/*
+ * Initializes public namespace. The path is the list of sonames
+ * separated by colon. Example: "libc.so:libm.so:libdl.so".
+ *
+ * The libraries in this list should be loaded prior to this call.
+ */
+extern bool android_init_public_namespace(const char* path);
+
+/*
+ * Creates new linker namespace.
+ * ld_library_path and default_library_path represent the search path
+ * for the libraries in the namespace.
+ *
+ * The libraries in the namespace are searched by folowing order:
+ * 1. ld_library_path (Think of this as namespace-local LD_LIBRARY_PATH)
+ * 2. In directories specified by DT_RUNPATH of the "needed by" binary.
+ * 3. deault_library_path (This of this as namespace-local default library path)
+ *
+ * When is_isolated is true the resulted namespace requires all of the libraries
+ * to be on the search path; the search_path is ld_library_path:default_library_path.
+ *
+ * If a library or any of its dependencies are outside of the search path and not
+ * part of the public namespace dlopen will fail.
+ */
+extern struct android_namespace_t* android_create_namespace(const char* name,
+                                                            const char* ld_library_path,
+                                                            const char* default_library_path,
+                                                            bool is_isolated);
 
 __END_DECLS
 

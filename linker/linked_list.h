@@ -25,12 +25,49 @@ struct LinkedListEntry {
   T* element;
 };
 
+// ForwardInputIterator
+template<typename T>
+class LinkedListIterator {
+ public:
+  LinkedListIterator() : entry_(nullptr) {}
+  LinkedListIterator(const LinkedListIterator<T>& that) : entry_(that.entry_) {}
+  explicit LinkedListIterator(LinkedListEntry<T>* entry) : entry_(entry) {}
+
+  LinkedListIterator<T>& operator=(const LinkedListIterator<T>& that) {
+    entry_ = that.entry_;
+    return *this;
+  }
+
+  LinkedListIterator<T>& operator++() {
+    entry_ = entry_->next;
+    return *this;
+  }
+
+  T* operator*() {
+    return entry_->element;
+  }
+
+  bool operator==(const LinkedListIterator<T>& that) const {
+    return entry_ == that.entry_;
+  }
+
+  bool operator!=(const LinkedListIterator<T>& that) const {
+    return entry_ != that.entry_;
+  }
+
+ private:
+  LinkedListEntry<T> *entry_;
+};
+
 /*
  * Represents linked list of objects of type T
  */
 template<typename T, typename Allocator>
 class LinkedList {
  public:
+  typedef LinkedListIterator<T> iterator;
+  typedef T* value_type;
+
   LinkedList() : head_(nullptr), tail_(nullptr) {}
   ~LinkedList() {
     clear();
@@ -133,6 +170,7 @@ class LinkedList {
         }
 
         Allocator::free(e);
+
         e = next;
       } else {
         p = e;
@@ -150,6 +188,24 @@ class LinkedList {
     }
 
     return nullptr;
+  }
+
+  iterator begin() {
+    return iterator(head_);
+  }
+
+  iterator end() {
+    return iterator(nullptr);
+  }
+
+  iterator find(T* value) {
+    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+      if (e->element == value) {
+        return iterator(e);
+      }
+    }
+
+    return end();
   }
 
   size_t copy_to_array(T* array[], size_t array_length) const {
