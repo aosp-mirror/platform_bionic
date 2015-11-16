@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fb2e9f8f_17bf37ee",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done. the synchronization relationship here is more complex than locks, as we need to synchronize between all threads entering the barrier and leaving the barrier.",
+      "parentUuid": "5b2a4b7b_d4bd3484",
+      "range": {
+        "startLine": 119,
+        "startChar": 55,
+        "endLine": 119,
+        "endChar": 75
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb3987d2_e5551ed1",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-12T23:26:56Z",
       "side": 1,
       "message": "I would fail with EINVAL (maybe after again decrementing wait_count) if prev_wait_count \u003e\u003d init_count, and add the following comment.  (I think that in reality this is unclear and it can be read either way.  Let\u0027s read it the way we like until someone objects.)\n\nWe read the Posix standard as disallowing this, since additional arriving threads are not synchronized with respect to the barrier reset.  We also do not know of any reasonable cases in which this would be intentional.",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 51
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_e9f16eff",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t do the check because I think we can\u0027t check all unexpected situations unless we read barrier-\u003estate again here, which might not worth just for error checking. But I agree that a partial check is better than none.",
+      "parentUuid": "bb3987d2_e5551ed1",
       "range": {
         "startLine": 121,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5b25eb9e_91dd8b95",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b2597a9_13aab4ab",
+      "range": {
+        "startLine": 124,
+        "startChar": 54,
+        "endLine": 124,
+        "endChar": 74
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b2a4b7b_548f04a2",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2015-11-12T23:26:56Z",
       "side": 1,
       "message": "Similarly, this shouldn\u0027t be reordered with respect to the later count decrement.  Make it memory_order_acquire.\n\nI think that\u0027s also the final link in establishing the required happens-before relationship.  The initial count increment performed by every thread happens before the store of RELEASE, which happens before the rest of the SERIAL_THREAD, and the load of RELEASE by every other thread.",
+      "range": {
+        "startLine": 128,
+        "startChar": 49,
+        "endLine": 128,
+        "endChar": 69
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb2e9f8f_379fd383",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2a4b7b_548f04a2",
       "range": {
         "startLine": 128,
         "startChar": 49,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "1b3453db_8cf43cf6",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Even if the store of RELEASE and wait_count are reordered, I think it doesn\u0027t matter (although a little harmful for (\u003e\u003d init_count) error checking). But no harm to keep it.",
+      "parentUuid": "16c50ace_7f0a08fe",
+      "range": {
+        "startLine": 132,
+        "startChar": 57,
+        "endLine": 132,
+        "endChar": 77
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76d4867d_b9665d6a",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 10
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "76d4867d_98354ad6",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76d4867d_b9665d6a",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 69
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b2597a9_76d686eb",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 10
@@ -151,6 +295,30 @@
       "writtenOn": "2015-11-12T23:26:56Z",
       "side": 1,
       "message": "memory_order_acquire.\n\nIf the wait_count read is reordered with this, we may get failures.",
+      "range": {
+        "startLine": 144,
+        "startChar": 47,
+        "endLine": 144,
+        "endChar": 67
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b532b27_db279791",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-16T20:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b2597a9_76d686eb",
       "range": {
         "startLine": 144,
         "startChar": 47,
