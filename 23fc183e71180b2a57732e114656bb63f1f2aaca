@@ -308,6 +308,30 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_641da3a1",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-16T21:33:58Z",
+      "side": 1,
+      "message": "It would have to.  It would essentially have to block on a cv.",
+      "parentUuid": "5b25eb9e_d140a3e5",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 69
+      },
+      "revId": "23fc183e71180b2a57732e114656bb63f1f2aaca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b2597a9_76d686eb",
         "filename": "libc/bionic/pthread_barrier.cpp",
         "patchSetId": 10
