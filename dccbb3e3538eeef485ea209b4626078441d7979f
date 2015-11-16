@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb2e9f8f_976567c9",
+        "filename": "tests/atexit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-11-16T19:29:48Z",
+      "side": 1,
+      "message": "Can you add the defined() around all of these?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 13
+      },
+      "revId": "dccbb3e3538eeef485ea209b4626078441d7979f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
