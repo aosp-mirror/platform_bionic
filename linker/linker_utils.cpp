@@ -20,7 +20,7 @@
 bool normalize_path(const char* path, std::string* normalized_path) {
   // Input should be an absolute path
   if (path[0] != '/') {
-    PRINT("canonize_path - invalid input: '%s', the input path should be absolute", path);
+    PRINT("normalize_path - invalid input: '%s', the input path should be absolute", path);
     return false;
   }
 
@@ -58,6 +58,50 @@ bool normalize_path(const char* path, std::string* normalized_path) {
 
   *out_ptr = 0;
   *normalized_path = buf;
+  return true;
+}
+
+bool file_is_in_dir(const std::string& file, const std::string& dir) {
+  const char* needle = dir.c_str();
+  const char* haystack = file.c_str();
+  size_t needle_len = strlen(needle);
+
+  return (strncmp(haystack, needle, needle_len) == 0 &&
+          haystack[needle_len] == '/' &&
+          strchr(haystack + needle_len + 1, '/') == nullptr);
+}
+
+const char* const kZipFileSeparator = "!/";
+
+bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* entry_path) {
+  std::string normalized_path;
+  if (!normalize_path(input_path, &normalized_path)) {
+    return false;
+  }
+
+  const char* const path = normalized_path.c_str();
+  TRACE("Trying zip file open from path '%s' -> normalized '%s'", input_path, path);
+
+  // Treat an '!/' separator inside a path as the separator between the name
+  // of the zip file on disk and the subdirectory to search within it.
+  // For example, if path is "foo.zip!/bar/bas/x.so", then we search for
+  // "bar/bas/x.so" within "foo.zip".
+  const char* const separator = strstr(path, kZipFileSeparator);
+  if (separator == nullptr) {
+    return false;
+  }
+
+  char buf[512];
+  if (strlcpy(buf, path, sizeof(buf)) >= sizeof(buf)) {
+    PRINT("Warning: ignoring very long library path: %s", path);
+    return false;
+  }
+
+  buf[separator - path] = '\0';
+
+  *zip_path = buf;
+  *entry_path = &buf[separator - path + 2];
+
   return true;
 }
 

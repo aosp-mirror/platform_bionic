@@ -43,3 +43,29 @@ TEST(linker_utils, normalize_path_smoke) {
   ASSERT_FALSE(normalize_path("root///dir/.///dir2/somedir/../zipfile!/dir/dir9//..///afile", &output));
   ASSERT_EQ("unchanged", output);
 }
+
+TEST(linker_utils, file_is_in_dir_smoke) {
+  ASSERT_TRUE(file_is_in_dir("/foo/bar/file", "/foo/bar"));
+  ASSERT_FALSE(file_is_in_dir("/foo/bar/file", "/foo"));
+
+  ASSERT_FALSE(file_is_in_dir("/foo/bar/file", "/bar/foo"));
+
+  ASSERT_TRUE(file_is_in_dir("/file", ""));
+  ASSERT_FALSE(file_is_in_dir("/file", "/"));
+}
+
+TEST(linker_utils, parse_zip_path_smoke) {
+  std::string zip_path;
+  std::string entry_path;
+
+  ASSERT_FALSE(parse_zip_path("/not/a/zip/path/file.zip", &zip_path, &entry_path));
+  ASSERT_FALSE(parse_zip_path("/not/a/zip/path/file.zip!path/in/zip", &zip_path, &entry_path));
+  ASSERT_TRUE(parse_zip_path("/zip/path/file.zip!/path/in/zip", &zip_path, &entry_path));
+  ASSERT_EQ("/zip/path/file.zip", zip_path);
+  ASSERT_EQ("path/in/zip", entry_path);
+
+  ASSERT_TRUE(parse_zip_path("/zip/path/file2.zip!/", &zip_path, &entry_path));
+  ASSERT_EQ("/zip/path/file2.zip", zip_path);
+  ASSERT_EQ("", entry_path);
+}
+
