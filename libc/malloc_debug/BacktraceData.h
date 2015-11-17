@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_BACKTRACE_H
-#define MALLOC_DEBUG_BACKTRACE_H
+#ifndef DEBUG_MALLOC_BACKTRACEDATA_H
+#define DEBUG_MALLOC_BACKTRACEDATA_H
 
-extern bool g_backtrace_enabled;
+#include <stdint.h>
 
-#define GET_BACKTRACE(bt, depth) \
-  (g_backtrace_enabled ? get_backtrace(bt, depth) : 0)
+#include <private/bionic_macros.h>
 
-#endif  // MALLOC_DEBUG_BACKTRACE_H
+// Forward declarations.
+struct Config;
+
+class BacktraceData {
+ public:
+  BacktraceData(const Config& config, size_t* offset);
+  virtual ~BacktraceData() = default;
+
+  bool Initialize(const Config& config);
+
+  inline size_t alloc_offset() { return alloc_offset_; }
+  inline size_t free_offset() { return free_offset_; }
+
+  bool enabled() { return enabled_; }
+  void set_enabled(bool enabled) { enabled_ = enabled; }
+
+ private:
+  size_t alloc_offset_ = 0;
+  size_t free_offset_ = 0;
+
+  volatile bool enabled_ = false;
+
+  DISALLOW_COPY_AND_ASSIGN(BacktraceData);
+};
+
+#endif // DEBUG_MALLOC_BACKTRACEDATA_H

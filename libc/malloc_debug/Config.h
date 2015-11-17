@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_BACKTRACE_H
-#define DEBUG_BACKTRACE_H
+#ifndef MALLOC_DEBUG_CONFIG_H
+#define MALLOC_DEBUG_CONFIG_H
 
 #include <stdint.h>
-#include <sys/cdefs.h>
 
-__LIBC_HIDDEN__ void backtrace_startup();
-__LIBC_HIDDEN__ void backtrace_shutdown();
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* stack_frames, size_t max_depth);
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* stack_frames, size_t frame_count);
+constexpr uint64_t FRONT_GUARD = 0x1;
+constexpr uint64_t REAR_GUARD = 0x2;
+constexpr uint64_t BACKTRACE = 0x4;
+constexpr uint64_t FILL_ON_ALLOC = 0x8;
+constexpr uint64_t FILL_ON_FREE = 0x10;
+constexpr uint64_t EXPAND_ALLOC = 0x20;
+constexpr uint64_t FREE_TRACK = 0x40;
+constexpr uint64_t TRACK_ALLOCS = 0x80;
+constexpr uint64_t LEAK_TRACK = 0x100;
 
-#endif /* DEBUG_BACKTRACE_H */
+// If only one or more of these options is set, then no special header is needed.
+constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
+
+struct Config {
+  bool SetFromProperties();
+
+  size_t front_guard_bytes = 0;
+  size_t rear_guard_bytes = 0;
+
+  bool backtrace_enable_on_signal = false;
+  int backtrace_signal = 0;
+  bool backtrace_enabled = false;
+  size_t backtrace_frames = 0;
+
+  size_t fill_on_alloc_bytes = 0;
+  size_t fill_on_free_bytes = 0;
+
+  size_t expand_alloc_bytes = 0;
+
+  size_t free_track_allocations = 0;
+
+  uint64_t options = 0;
+  uint8_t fill_alloc_value;
+  uint8_t fill_free_value;
+  uint8_t front_guard_value;
+  uint8_t rear_guard_value;
+};
+
+#endif  // MALLOC_DEBUG_CONFIG_H

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2013 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MAPINFO_H
-#define DEBUG_MAPINFO_H
+#ifndef MALLOC_DEBUG_BACKTRACE_H
+#define MALLOC_DEBUG_BACKTRACE_H
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 
-struct mapinfo_t {
-  struct mapinfo_t* next;
-  uintptr_t start;
-  uintptr_t end;
-  uintptr_t offset;
-  uintptr_t load_base;
-  bool load_base_read;
-  char name[];
-};
+void backtrace_startup();
+void backtrace_shutdown();
+size_t backtrace_get(uintptr_t* frames, size_t frame_count);
+void backtrace_log(uintptr_t* frames, size_t frame_count);
 
-__LIBC_HIDDEN__ mapinfo_t* mapinfo_create(pid_t pid);
-__LIBC_HIDDEN__ void mapinfo_destroy(mapinfo_t* mi);
-__LIBC_HIDDEN__ const mapinfo_t* mapinfo_find(mapinfo_t* mi, uintptr_t pc, uintptr_t* rel_pc);
-
-#endif /* DEBUG_MAPINFO_H */
+#endif // MALLOC_DEBUG_BACKTRACE_H
