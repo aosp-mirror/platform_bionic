@@ -1161,6 +1161,13 @@ LIBC_N {
     getgrnam_r;
     preadv;
     preadv64;
+    pthread_barrierattr_destroy;
+    pthread_barrierattr_getpshared;
+    pthread_barrierattr_init;
+    pthread_barrierattr_setpshared;
+    pthread_barrier_destroy;
+    pthread_barrier_init;
+    pthread_barrier_wait;
     pwritev;
     pwritev64;
     scandirat;
