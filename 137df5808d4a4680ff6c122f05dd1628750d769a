@@ -22,6 +22,30 @@
       "revId": "137df5808d4a4680ff6c122f05dd1628750d769a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_b6729ac7",
+        "filename": "libc/bionic/pthread_spinlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-18T18:35:32Z",
+      "side": 1,
+      "message": "Changed. Remove sched_yield() as it is as expensive as futex_wait().",
+      "parentUuid": "1b3453db_4d14078e",
+      "range": {
+        "startLine": 64,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 3
+      },
+      "revId": "137df5808d4a4680ff6c122f05dd1628750d769a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
