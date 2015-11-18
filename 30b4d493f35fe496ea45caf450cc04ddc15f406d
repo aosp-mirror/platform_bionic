@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b2a4b7b_30db5246",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-18T00:18:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb75bfb9_1cc7391b",
+      "range": {
+        "startLine": 10,
+        "startChar": 6,
+        "endLine": 10,
+        "endChar": 8
+      },
+      "revId": "30b4d493f35fe496ea45caf450cc04ddc15f406d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b6aafda_66c7c06c",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-17T21:51:50Z",
       "side": 1,
       "message": "Any reason not to just do a store here?  This returns EBUSY in the error case with very slightly higher probability, but it doesn\u0027t really seem to matter.",
+      "range": {
+        "startLine": 647,
+        "startChar": 8,
+        "endLine": 648,
+        "endChar": 94
+      },
+      "revId": "30b4d493f35fe496ea45caf450cc04ddc15f406d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_060e1811",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-18T00:18:41Z",
+      "side": 1,
+      "message": "comment added. As this is not performance critical, I prefer to keep the original behavior.",
+      "parentUuid": "7b6aafda_66c7c06c",
       "range": {
         "startLine": 647,
         "startChar": 8,
