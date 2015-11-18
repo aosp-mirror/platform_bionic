@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b816bc7_8b60dde6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2749,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T21:05:33Z",
+      "side": 1,
+      "message": "s/ElfW/Elf/",
+      "revId": "f7f21dff6740f6c7eafb80e4ffa6a095e76fcdb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
