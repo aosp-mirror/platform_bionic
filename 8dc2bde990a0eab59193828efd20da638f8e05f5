@@ -16,6 +16,24 @@
       "revId": "8dc2bde990a0eab59193828efd20da638f8e05f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_a961dd16",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-18T02:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56794272_d96b5788",
+      "revId": "8dc2bde990a0eab59193828efd20da638f8e05f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
