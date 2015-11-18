@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7b6aafda_0cb2a354",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2261,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T03:39:24Z",
+      "side": 1,
+      "message": "It is ok for initializing public namespace.",
+      "parentUuid": "db847bce_987262c8",
+      "range": {
+        "startLine": 2261,
+        "startChar": 4,
+        "endLine": 2261,
+        "endChar": 84
+      },
+      "revId": "3cc35e224c6fe6bb82685ff8b2758553563e2a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db847bce_587cda99",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2015-11-18T03:35:03Z",
       "side": 1,
       "message": "Theoretically, this could fail at some point in the future. Is there a way to find the real current SDK version and adding ten rather than using this hard-coded value?",
+      "range": {
+        "startLine": 720,
+        "startChar": 45,
+        "endLine": 720,
+        "endChar": 48
+      },
+      "revId": "3cc35e224c6fe6bb82685ff8b2758553563e2a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76d4867d_c986d181",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T03:39:24Z",
+      "side": 1,
+      "message": "In order to reproduce the problem it should be different from previous one which is PLATFORM_SDK_VERION... any number will do. \u003e23 because this is where namespaces are introduced.. calling android_init_public_namespace for \u003c\u003d23 would be a mistake; I still do this for testing purposes so there is no test for it;",
+      "parentUuid": "db847bce_587cda99",
       "range": {
         "startLine": 720,
         "startChar": 45,
