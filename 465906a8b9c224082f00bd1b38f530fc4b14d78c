@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3453db_9228cac5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-18T02:06:33Z",
+      "side": 1,
+      "message": "It\u0027s not good to have pthread_mutex_lock() call into properties like this, because it precludes locking, memory allocation, etc from this entire file.  \n\nI\u0027m making an assumption that initialization is safe since I believe up through the linking phase where __system_properties_init() is called, a given app is single threaded and won\u0027t cause contention for any locks.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
