@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7bf54f3c_b48cf6e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-18T03:30:18Z",
+      "side": 1,
+      "message": "Ah okay, I wasn\u0027t too sure about aarch64 bits but I didn\u0027t have a handy device to test this on.",
+      "parentUuid": "5b816bc7_e57bc0ce",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_2ae2e755",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-18T02:33:10Z",
       "side": 1,
       "message": "This part is not neccessary, arm does not have with reloc field !\u003d word32",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b5c6f36_765b1e39",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2756,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-18T03:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_2ae2e755",
       "revId": "7882908229377c69e39ff4bd4301a003552091ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dbe8fb67_48e073bc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-18T03:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_eacb8fc8",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b25eb9e_8d468734",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "7bf54f3c_945b3238",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2782,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-18T03:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b25eb9e_8d468734",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b2a4b7b_90c7a692",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2015-11-18T02:33:10Z",
       "side": 1,
       "message": "same here",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bf75749_83c7826b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2789,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-18T03:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2a4b7b_90c7a692",
       "revId": "7882908229377c69e39ff4bd4301a003552091ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
