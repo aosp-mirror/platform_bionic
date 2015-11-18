@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d1fa8e_b55bf561",
+        "filename": "libc/bionic/pthread_spinlock.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-18T18:53:13Z",
+      "side": 1,
+      "message": "Perhaps add a comment along the lines of\n\nUser-level spinlocks can be hazardous to battery life on Android.\nWe implement a simple compromise that behaves mostly like a spinlock, but prevents excessively long spinning.",
+      "range": {
+        "startLine": 27,
+        "startChar": 1,
+        "endLine": 27,
+        "endChar": 3
+      },
+      "revId": "9b705b501826cd3c3778109758a19114eaf7a8a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
