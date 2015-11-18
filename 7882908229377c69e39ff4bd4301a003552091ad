@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b816bc7_e57bc0ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T02:33:10Z",
+      "side": 1,
+      "message": "It seems to be x86_64 abi specific.. it does not apply to other architectures (arm/arm64 always assume that *reloc is sizeof ElfW(Addr)).",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_2ae2e755",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2756,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T02:33:10Z",
+      "side": 1,
+      "message": "This part is not neccessary, arm does not have with reloc field !\u003d word32",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_eacb8fc8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T02:33:10Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_8d468734",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2782,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T02:33:10Z",
+      "side": 1,
+      "message": "i386 is 32 bit so.. this is no-op",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b2a4b7b_90c7a692",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2789,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-18T02:33:10Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "7882908229377c69e39ff4bd4301a003552091ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
