@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3453db_4d14078e",
+        "filename": "libc/bionic/pthread_spinlock.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-18T04:29:54Z",
+      "side": 1,
+      "message": "I would try this for something like 10000 iterations first.  If somebody wanted a spin lock, I would try that first.  Sched_yield() is expensive, and much slower in the case in which you are waiting for a short critical section that\u0027s currently running on another core.\n\nOther than that, I like it.",
+      "range": {
+        "startLine": 64,
+        "startChar": 2,
+        "endLine": 66,
+        "endChar": 3
+      },
+      "revId": "137df5808d4a4680ff6c122f05dd1628750d769a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
