@@ -707,6 +707,8 @@ TEST(dlext, ns_smoke) {
   dlclose(handle2);
 }
 
+extern "C" void android_set_application_target_sdk_version(uint32_t target);
+
 TEST(dlext, ns_isolated) {
   static const char* root_lib = "libnstest_root_not_isolated.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
@@ -714,6 +716,8 @@ TEST(dlext, ns_isolated) {
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
   void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
+
+  android_set_application_target_sdk_version(42U); // something > 23
 
   ASSERT_TRUE(android_init_public_namespace(path.c_str())) << dlerror();
 

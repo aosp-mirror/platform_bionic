@@ -2255,9 +2255,12 @@ bool init_public_namespace(const char* libs) {
     g_public_namespace.clear();
   });
 
-  soinfo* candidate;
   for (const auto& soname : sonames) {
-    if (!find_loaded_library_by_soname(&g_default_namespace, soname.c_str(), &candidate)) {
+    soinfo* candidate = nullptr;
+
+    find_loaded_library_by_soname(&g_default_namespace, soname.c_str(), &candidate);
+
+    if (candidate == nullptr) {
       DL_ERR("Error initializing public namespace: \"%s\" was not found"
              " in the default namespace", soname.c_str());
       return false;
