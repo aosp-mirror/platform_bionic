@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb75bfb9_dfff6e80",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2015-11-18T22:44:25Z",
+      "side": 1,
+      "message": "I meant something along the lines of\n\nif (MUTEX_STATE_BITS_IS_UNLOCKED(old_state)) {\n  atomic_store_explicit(\u0026memory_state, 0xffff, memory_order_relaxed);\n  return 0;\n}\n\nIf the lock is prematurely destroyed, there is a very short window during which this can clobber a locked state.  But either version has a much more likely failure mode in which the CAS succeeds, the lock is acquired afterwards, before or after being deallocated by the destroying thread, and thus getting overwritten with random stuff.  It doesn\u0027t seem worth it to me to make destroy more expensive (especially on x86) to mitigate the the tiny execution window problem while leaving the much more major one.\n\nBut I don\u0027t feel strongly about this.",
+      "range": {
+        "startLine": 646,
+        "startChar": 4,
+        "endLine": 646,
+        "endChar": 98
+      },
+      "revId": "0307eee293e90e8584104a3c55bf2f270b1149b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
