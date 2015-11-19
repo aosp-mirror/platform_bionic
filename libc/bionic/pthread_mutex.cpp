@@ -166,11 +166,14 @@ int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared) 
 #define  MUTEX_STATE_BITS_LOCKED_UNCONTENDED  MUTEX_STATE_TO_BITS(MUTEX_STATE_LOCKED_UNCONTENDED)
 #define  MUTEX_STATE_BITS_LOCKED_CONTENDED    MUTEX_STATE_TO_BITS(MUTEX_STATE_LOCKED_CONTENDED)
 
-/* return true iff the mutex if locked with no waiters */
-#define  MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(v)  (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_UNCONTENDED)
+// Return true iff the mutex is unlocked.
+#define MUTEX_STATE_BITS_IS_UNLOCKED(v) (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_UNLOCKED)
 
-/* return true iff the mutex if locked with maybe waiters */
-#define  MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(v)   (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_CONTENDED)
+// Return true iff the mutex is locked with no waiters.
+#define MUTEX_STATE_BITS_IS_LOCKED_UNCONTENDED(v)  (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_UNCONTENDED)
+
+// return true iff the mutex is locked with maybe waiters.
+#define MUTEX_STATE_BITS_IS_LOCKED_CONTENDED(v)   (((v) & MUTEX_STATE_MASK) == MUTEX_STATE_BITS_LOCKED_CONTENDED)
 
 /* used to flip from LOCKED_UNCONTENDED to LOCKED_CONTENDED */
 #define  MUTEX_STATE_BITS_FLIP_CONTENTION(v)      ((v) ^ (MUTEX_STATE_BITS_LOCKED_CONTENDED ^ MUTEX_STATE_BITS_LOCKED_UNCONTENDED))
@@ -637,10 +640,14 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
 }
 
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
-    // Use trylock to ensure that the mutex is valid and not already locked.
-    int error = pthread_mutex_trylock(mutex_interface);
-    if (error != 0) {
-        return error;
+    pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
+    uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    // Store 0xffff to make the mutex unusable. Although POSIX standard says it is undefined
+    // behavior to destroy a locked mutex, we prefer not to change mutex->state in that situation.
+    if (MUTEX_STATE_BITS_IS_UNLOCKED(old_state) &&
+        atomic_compare_exchange_strong_explicit(&mutex->state, &old_state, 0xffff,
+                                                memory_order_relaxed, memory_order_relaxed)) {
+      return 0;
     }
-    return 0;
+    return EBUSY;
 }
