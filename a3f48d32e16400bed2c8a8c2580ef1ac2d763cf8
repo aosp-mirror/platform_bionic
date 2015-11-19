@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7b6aafda_a5c625bd",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-19T21:44:24Z",
+      "side": 1,
+      "message": "The abs_ts will be checked by check_timespec() later, so I think no need to duplicate check here. Remove timespec_from_absolute_timespec() as it is no longer used.",
+      "parentUuid": "fb75bfb9_c809fb3f",
+      "revId": "a3f48d32e16400bed2c8a8c2580ef1ac2d763cf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_1034fc1e",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-19T18:44:54Z",
       "side": 1,
       "message": "s/ret/result/ in all these?",
+      "revId": "a3f48d32e16400bed2c8a8c2580ef1ac2d763cf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_e13a9f17",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-19T21:44:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_1034fc1e",
       "revId": "a3f48d32e16400bed2c8a8c2580ef1ac2d763cf8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
