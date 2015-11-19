@@ -16,6 +16,24 @@
       "revId": "f7f21dff6740f6c7eafb80e4ffa6a095e76fcdb5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bf75749_e382c6b5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2749,
+      "author": {
+        "id": 1067793
+      },
+      "writtenOn": "2015-11-19T02:30:49Z",
+      "side": 1,
+      "message": "grr, I noticed that I was compile-testing with wrong target.",
+      "parentUuid": "5b816bc7_8b60dde6",
+      "revId": "f7f21dff6740f6c7eafb80e4ffa6a095e76fcdb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
