@@ -30,6 +30,7 @@
 
 #include <stdatomic.h>
 #include "private/bionic_futex.h"
+#include "private/bionic_macros.h"
 
 // Lock is used in places like pthread_rwlock_t, which can be initialized without calling
 // an initialization function. So make sure Lock can be initialized by setting its memory to 0.
@@ -47,6 +48,12 @@ class Lock {
   void init(bool process_shared) {
     atomic_init(&state, Unlocked);
     this->process_shared = process_shared;
+  }
+
+  bool trylock() {
+    LockState old_state = Unlocked;
+    return __predict_true(atomic_compare_exchange_strong_explicit(&state, &old_state,
+                        LockedWithoutWaiter, memory_order_acquire, memory_order_relaxed));
   }
 
   void lock() {
