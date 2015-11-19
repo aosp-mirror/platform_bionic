@@ -16,6 +16,23 @@
       "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_e1905f76",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-19T22:53:09Z",
+      "side": 1,
+      "message": "This needs to be removed as well.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
