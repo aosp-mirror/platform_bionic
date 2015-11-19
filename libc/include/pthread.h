@@ -108,6 +108,14 @@ typedef int pthread_barrierattr_t;
 
 #define PTHREAD_BARRIER_SERIAL_THREAD -1
 
+typedef struct {
+#if defined(__LP64__)
+  int64_t __private;
+#else
+  int32_t __private[2];
+#endif
+} pthread_spinlock_t;
+
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
 #else
@@ -228,6 +236,12 @@ int pthread_barrierattr_setpshared(pthread_barrierattr_t* attr, int pshared) __n
 int pthread_barrier_init(pthread_barrier_t*, const pthread_barrierattr_t*, unsigned) __nonnull((1));
 int pthread_barrier_destroy(pthread_barrier_t*) __nonnull((1));
 int pthread_barrier_wait(pthread_barrier_t*) __nonnull((1));
+
+int pthread_spin_destroy(pthread_spinlock_t*) __nonnull((1));
+int pthread_spin_init(pthread_spinlock_t*, int) __nonnull((1));
+int pthread_spin_lock(pthread_spinlock_t*) __nonnull((1));
+int pthread_spin_trylock(pthread_spinlock_t*) __nonnull((1));
+int pthread_spin_unlock(pthread_spinlock_t*) __nonnull((1));
 
 pthread_t pthread_self(void) __pure2;
 
