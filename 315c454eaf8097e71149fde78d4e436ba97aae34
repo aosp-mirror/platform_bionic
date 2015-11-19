@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b6aafda_a5f3855b",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-19T19:59:25Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 52,
+        "startChar": 32,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "315c454eaf8097e71149fde78d4e436ba97aae34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
