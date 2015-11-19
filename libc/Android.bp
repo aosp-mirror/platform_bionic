@@ -177,6 +177,7 @@ cc_library_static {
         "-DALL_STATE",
         // Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
         "-DSTD_INSPIRED",
+        // Obviously, we want to be thread-safe.
         "-DTHREAD_SAFE",
         // The name of the tm_gmtoff field in our struct tm.
         "-DTM_GMTOFF=tm_gmtoff",
@@ -184,6 +185,9 @@ cc_library_static {
         "-DTZDIR=\\\"/system/usr/share/zoneinfo\\\"",
         // Include timezone and daylight globals.
         "-DUSG_COMPAT=1",
+        // Use the empty string (instead of "   ") as the timezone abbreviation
+        // fallback.
+        "-DWILDABBR=\\\"\\\"",
         "-DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU",
         "-Dlint",
     ],
@@ -1460,9 +1464,13 @@ cc_library_static {
     cflags: ["-Wframe-larger-than=2048"],
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
-    // TODO: Clang tries to use __tls_get_addr which is not supported yet
-    // remove after it is implemented.
-    clang: false,
+
+    arch: {
+        arm64: {
+            // b/25662915, clang compiled __cxa_thread_atexit_impl.cpp still failed.
+            clang: false,
+        },
+    },
 }
 
 // ========================================================
@@ -1478,6 +1486,7 @@ cc_library_static {
     srcs: [
         "bionic/pthread_atfork.cpp",
         "bionic/pthread_attr.cpp",
+        "bionic/pthread_barrier.cpp",
         "bionic/pthread_cond.cpp",
         "bionic/pthread_create.cpp",
         "bionic/pthread_detach.cpp",
@@ -1497,6 +1506,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_sigmask.cpp",
+        "bionic/pthread_spinlock.cpp",
     ],
     cflags: ["-Wframe-larger-than=2048"],
 
