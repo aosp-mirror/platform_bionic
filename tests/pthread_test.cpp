@@ -30,11 +30,7 @@
 #include <unwind.h>
 
 #include <atomic>
-#include <regex>
 #include <vector>
-
-#include <base/file.h>
-#include <base/stringprintf.h>
 
 #include "private/bionic_macros.h"
 #include "private/ScopeGuard.h"
@@ -42,8 +38,6 @@
 #include "ScopedSignalHandler.h"
 
 #include "utils.h"
-
-extern "C" pid_t gettid();
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
@@ -719,23 +713,6 @@ TEST(pthread, pthread_rwlock_smoke) {
   ASSERT_EQ(0, pthread_rwlock_unlock(&l));
 
   ASSERT_EQ(0, pthread_rwlock_destroy(&l));
-}
-
-static void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
-  while (tid == 0) {
-    usleep(1000);
-  }
-  std::string filename = android::base::StringPrintf("/proc/%d/stat", tid.load());
-  std::regex regex {R"(\s+S\s+)"};
-
-  while (true) {
-    std::string content;
-    ASSERT_TRUE(android::base::ReadFileToString(filename, &content));
-    if (std::regex_search(content, regex)) {
-      break;
-    }
-    usleep(1000);
-  }
 }
 
 struct RwlockWakeupHelperArg {
