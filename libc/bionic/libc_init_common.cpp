@@ -110,6 +110,7 @@ void __libc_init_globals(KernelArgumentBlock& args) {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
+  __libc_auxv = args.auxv;
   __libc_globals.initialize();
   __libc_globals.mutate([&args](libc_globals* globals) {
     __libc_init_vdso(globals, args);
@@ -121,7 +122,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
   environ = args.envp;
   errno = 0;
-  __libc_auxv = args.auxv;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
   __abort_message_ptr = args.abort_message_ptr;
 
