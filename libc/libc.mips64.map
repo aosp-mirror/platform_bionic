@@ -1168,6 +1168,11 @@ LIBC_N {
     pthread_barrier_destroy;
     pthread_barrier_init;
     pthread_barrier_wait;
+    pthread_spin_destroy;
+    pthread_spin_init;
+    pthread_spin_lock;
+    pthread_spin_trylock;
+    pthread_spin_unlock;
     pwritev;
     pwritev64;
     scandirat;

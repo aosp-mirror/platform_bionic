@@ -584,6 +584,7 @@ libc_pthread_src_files := \
     bionic/pthread_setname_np.cpp \
     bionic/pthread_setschedparam.cpp \
     bionic/pthread_sigmask.cpp \
+    bionic/pthread_spinlock.cpp \
 
 libc_thread_atexit_impl_src_files := \
     bionic/__cxa_thread_atexit_impl.cpp \
