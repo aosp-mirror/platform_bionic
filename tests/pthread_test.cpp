@@ -1779,3 +1779,14 @@ TEST(pthread, pthread_barrier_check_ordering) {
     ASSERT_EQ(0, pthread_join(threads[i], nullptr));
   }
 }
+
+TEST(pthread, pthread_spinlock_smoke) {
+  pthread_spinlock_t lock;
+  ASSERT_EQ(0, pthread_spin_init(&lock, 0));
+  ASSERT_EQ(0, pthread_spin_trylock(&lock));
+  ASSERT_EQ(0, pthread_spin_unlock(&lock));
+  ASSERT_EQ(0, pthread_spin_lock(&lock));
+  ASSERT_EQ(EBUSY, pthread_spin_trylock(&lock));
+  ASSERT_EQ(0, pthread_spin_unlock(&lock));
+  ASSERT_EQ(0, pthread_spin_destroy(&lock));
+}
