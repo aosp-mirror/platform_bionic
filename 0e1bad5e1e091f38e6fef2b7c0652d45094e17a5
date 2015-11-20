@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db847bce_cd17bc24",
+        "filename": "libc/bionic/flockfile.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-20T01:46:49Z",
+      "side": 1,
+      "message": "I do not think this function is supposed to depend on _stdio_handles_locking. the man page on __fsetlocking explicitly tells that when it is set to FSETLOCKING_BYCALLER user should take care of locking using this method.",
+      "revId": "0e1bad5e1e091f38e6fef2b7c0652d45094e17a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
