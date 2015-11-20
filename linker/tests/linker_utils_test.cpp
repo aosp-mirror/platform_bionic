@@ -69,3 +69,24 @@ TEST(linker_utils, parse_zip_path_smoke) {
   ASSERT_EQ("", entry_path);
 }
 
+TEST(linker_utils, page_start) {
+  ASSERT_EQ(0x0001000, page_start(0x0001000));
+  ASSERT_EQ(0x3002000, page_start(0x300222f));
+  ASSERT_EQ(0x6001000, page_start(0x6001fff));
+}
+
+TEST(linker_utils, page_offset) {
+  ASSERT_EQ(0x0U, page_offset(0x0001000));
+  ASSERT_EQ(0x22fU, page_offset(0x300222f));
+  ASSERT_EQ(0xfffU, page_offset(0x6001fff));
+}
+
+TEST(linker_utils, safe_add) {
+  int64_t val = 42;
+  ASSERT_FALSE(safe_add(&val, INT64_MAX-20, 21U));
+  ASSERT_EQ(42, val);
+  ASSERT_TRUE(safe_add(&val, INT64_MAX-42, 42U));
+  ASSERT_EQ(INT64_MAX, val);
+  ASSERT_TRUE(safe_add(&val, 2000, 42U));
+  ASSERT_EQ(2042, val);
+}
