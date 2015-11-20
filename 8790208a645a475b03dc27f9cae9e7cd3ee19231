@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3453db_d4d877a5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1170,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "Looks like clang-format erroneously added this.",
+      "range": {
+        "startLine": 1170,
+        "startChar": 26,
+        "endLine": 1170,
+        "endChar": 27
+      },
+      "revId": "8790208a645a475b03dc27f9cae9e7cd3ee19231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
