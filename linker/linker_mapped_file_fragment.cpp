@@ -16,31 +16,12 @@
 
 #include "linker_mapped_file_fragment.h"
 #include "linker_debug.h"
+#include "linker_utils.h"
 
 #include <inttypes.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <unistd.h>
-
-constexpr off64_t kPageMask = ~static_cast<off64_t>(PAGE_SIZE-1);
-
-static off64_t page_start(off64_t offset) {
-  return offset & kPageMask;
-}
-
-static bool safe_add(off64_t* out, off64_t a, size_t b) {
-  CHECK(a >= 0);
-  if (static_cast<uint64_t>(INT64_MAX - a) < b) {
-    return false;
-  }
-
-  *out = a + b;
-  return true;
-}
-
-static size_t page_offset(off64_t offset) {
-  return static_cast<size_t>(offset & (PAGE_SIZE-1));
-}
 
 MappedFileFragment::MappedFileFragment() : map_start_(nullptr), map_size_(0),
                                            data_(nullptr), size_ (0)
