@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b3a03f5_e07d624a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-11-20T18:46:41Z",
+      "side": 1,
+      "message": "Should this be there are no section headers? This is a bit of a nit though.",
+      "range": {
+        "startLine": 272,
+        "startChar": 33,
+        "endLine": 272,
+        "endChar": 41
+      },
+      "revId": "6276c8888c027ac5c521178ec3b62e76083f77be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
