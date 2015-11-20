@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b153384_677ccc9a",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-20T22:30:18Z",
+      "side": 1,
+      "message": "maybe just compile this file with with gcc? So that we can keep this test.",
+      "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
