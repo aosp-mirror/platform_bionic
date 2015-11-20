@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "db847bce_5adb6444",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-20T00:06:25Z",
+      "side": 1,
+      "message": "These should be static, right?",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b3453db_9228cac5",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 9
@@ -13,6 +30,69 @@
       "writtenOn": "2015-11-18T02:06:33Z",
       "side": 1,
       "message": "It\u0027s not good to have pthread_mutex_lock() call into properties like this, because it precludes locking, memory allocation, etc from this entire file.  \n\nI\u0027m making an assumption that initialization is safe since I believe up through the linking phase where __system_properties_init() is called, a given app is single threaded and won\u0027t cause contention for any locks.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_11307bc3",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-20T00:06:25Z",
+      "side": 1,
+      "message": "Looks like you forgot to update the message",
+      "range": {
+        "startLine": 740,
+        "startChar": 22,
+        "endLine": 740,
+        "endChar": 30
+      },
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_81ee7971",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-20T00:06:25Z",
+      "side": 1,
+      "message": "Unnecessary line break (we use 100col).\nThere are some other formatting errors in this patch, you can use `git clang-format --style\u003dfile HEAD~` to automatically fix all of it for you.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b6aafda_89d1bb4f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-11-20T00:06:25Z",
+      "side": 1,
+      "message": "This isn\u0027t an fd. (Also, it might be worth getting rid of fopen to avoid allocation? It looks suspicious, even if it is safe (is it?))",
+      "range": {
+        "startLine": 865,
+        "startChar": 10,
+        "endLine": 865,
+        "endChar": 12
+      },
       "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
