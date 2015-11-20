@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b2a4b7b_4d34fcd8",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-20T06:14:35Z",
+      "side": 1,
+      "message": "if you want the constant, it\u0027s in \u003clinux/xattr.h\u003e.",
+      "revId": "02b0cb583c89abb1b34da6506efe45f9b6c87795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b816bc7_e7b89dea",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-20T06:14:35Z",
+      "side": 1,
+      "message": "\"re\" is SOP.",
+      "revId": "02b0cb583c89abb1b34da6506efe45f9b6c87795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
