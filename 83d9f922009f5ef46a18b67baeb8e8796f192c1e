@@ -34,6 +34,24 @@
       "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bfc537c_6f730d34",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-20T22:52:28Z",
+      "side": 1,
+      "message": "This test actually aimed at testing libc pthread_atexit() functionality... It does not depend on having clang support for thread_local. \n\nCan we avoid disabling these tests by using gcc for this file on arm64 until clang is fixed?",
+      "parentUuid": "bb2a67bd_8ce647d5",
+      "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
