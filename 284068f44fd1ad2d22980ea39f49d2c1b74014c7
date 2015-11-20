@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b6aafda_4fe723d3",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-20T05:55:00Z",
+      "side": 1,
+      "message": "should __libc_auxv move into libc_globals?",
+      "revId": "284068f44fd1ad2d22980ea39f49d2c1b74014c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
