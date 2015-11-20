@@ -268,6 +268,11 @@ bool ElfReader::ReadProgramHeaders() {
 bool ElfReader::ReadSectionHeaders() {
   shdr_num_ = header_.e_shnum;
 
+  if (shdr_num_ == 0) {
+    DL_ERR("\"%s\" there are no section headers in this file", name_.c_str());
+    return false;
+  }
+
   if (!shdr_fragment_.Map(fd_, file_offset_, header_.e_shoff, shdr_num_ * sizeof(ElfW(Shdr)))) {
     DL_ERR("\"%s\" shdr mmap failed: %s", name_.c_str(), strerror(errno));
     return false;
@@ -288,7 +293,7 @@ bool ElfReader::ReadDynamicSection() {
   }
 
   if (dynamic_shdr == nullptr) {
-    DL_ERR("\"%s\" .dynamic section was not found", name_.c_str());
+    DL_ERR("\"%s\" .dynamic section header was not found", name_.c_str());
     return false;
   }
 
