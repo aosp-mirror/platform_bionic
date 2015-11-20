@@ -16,6 +16,24 @@
       "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb2a67bd_8ce647d5",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-11-20T22:41:26Z",
+      "side": 1,
+      "message": "Is there a simple way to disable only one file?\nOtherwise, we will have to disable 8 test files in bionic-unit-tests or separate this file into one static library.",
+      "parentUuid": "1b153384_677ccc9a",
+      "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
