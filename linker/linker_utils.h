@@ -24,4 +24,8 @@ bool normalize_path(const char* path, std::string* normalized_path);
 bool file_is_in_dir(const std::string& file, const std::string& dir);
 bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* entry_path);
 
+off64_t page_start(off64_t offset);
+size_t page_offset(off64_t offset);
+bool safe_add(off64_t* out, off64_t a, size_t b);
+
 #endif
