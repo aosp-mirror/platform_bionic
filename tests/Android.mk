@@ -272,18 +272,20 @@ include $(LOCAL_PATH)/Android.build.mk
 # Tests for the device using bionic's .so. Run with:
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
 #   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
+#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc32
+#   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc64
 # -----------------------------------------------------------------------------
-bionic-unit-tests_whole_static_libraries := \
+common_bionic-unit-tests_whole_static_libraries := \
     libBionicTests \
     libBionicGtestMain \
 
-bionic-unit-tests_static_libraries := \
+common_bionic-unit-tests_static_libraries := \
     libtinyxml2 \
     liblog \
     libbase \
 
 # TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
-bionic-unit-tests_src_files := \
+common_bionic-unit-tests_src_files := \
     atexit_test.cpp \
     dl_test.cpp \
     dlext_test.cpp \
@@ -293,32 +295,56 @@ bionic-unit-tests_src_files := \
     pthread_dlfcn_test.cpp \
     thread_local_test.cpp \
 
-bionic-unit-tests_cflags := $(test_cflags)
+common_bionic-unit-tests_cflags := $(test_cflags)
 
-bionic-unit-tests_conlyflags := \
+common_bionic-unit-tests_conlyflags := \
     -fexceptions \
     -fnon-call-exceptions \
 
-bionic-unit-tests_cppflags := $(test_cppflags)
+common_bionic-unit-tests_cppflags := $(test_cppflags)
 
-bionic-unit-tests_ldflags := \
+common_bionic-unit-tests_ldflags := \
     -Wl,--export-dynamic
 
-bionic-unit-tests_c_includes := \
+common_bionic-unit-tests_c_includes := \
     bionic/libc \
 
-bionic-unit-tests_shared_libraries_target := \
+common_bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
     libdl_preempt_test_1 \
     libdl_preempt_test_2
 
-bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
+common_bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
 
-module := bionic-unit-tests
 module_tag := optional
 build_type := target
 build_target := NATIVE_TEST
+
+module := bionic-unit-tests
+bionic-unit-tests_clang_target := true
+bionic-unit-tests_whole_static_libraries := $(common_bionic-unit-tests_whole_static_libraries)
+bionic-unit-tests_static_libraries := $(common_bionic-unit-tests_static_libraries)
+bionic-unit-tests_src_files := $(common_bionic-unit-tests_src_files)
+bionic-unit-tests_cflags := $(common_bionic-unit-tests_cflags)
+bionic-unit-tests_conlyflags := $(common_bionic-unit-tests_conlyflags)
+bionic-unit-tests_cppflags := $(common_bionic-unit-tests_cppflags)
+bionic-unit-tests_ldflags := $(common_bionic-unit-tests_ldflags)
+bionic-unit-tests_c_includes := $(common_bionic-unit-tests_c_includes)
+bionic-unit-tests_shared_libraries_target := $(common_bionic-unit-tests_shared_libraries_target)
+include $(LOCAL_PATH)/Android.build.mk
+
+module := bionic-unit-tests-gcc
+bionic-unit-tests-gcc_clang_target := false
+bionic-unit-tests-gcc_whole_static_libraries := $(common_bionic-unit-tests_whole_static_libraries)
+bionic-unit-tests-gcc_static_libraries := $(common_bionic-unit-tests_static_libraries)
+bionic-unit-tests-gcc_src_files := $(common_bionic-unit-tests_src_files)
+bionic-unit-tests-gcc_cflags := $(common_bionic-unit-tests_cflags)
+bionic-unit-tests-gcc_conlyflags := $(common_bionic-unit-tests_conlyflags)
+bionic-unit-tests-gcc_cppflags := $(common_bionic-unit-tests_cppflags)
+bionic-unit-tests-gcc_ldflags := $(common_bionic-unit-tests_ldflags)
+bionic-unit-tests-gcc_c_includes := $(common_bionic-unit-tests_c_includes)
+bionic-unit-tests-gcc_shared_libraries_target := $(common_bionic-unit-tests_shared_libraries_target)
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
