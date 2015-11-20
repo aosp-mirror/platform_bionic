@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5b816bc7_2c0e7cba",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db847bce_5adb6444",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b3453db_9228cac5",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 9
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "3b2597a9_29bc02f6",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_11307bc3",
+      "range": {
+        "startLine": 740,
+        "startChar": 22,
+        "endLine": 740,
+        "endChar": 30
+      },
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb75bfb9_81ee7971",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 9
@@ -70,6 +112,24 @@
       "writtenOn": "2015-11-20T00:06:25Z",
       "side": 1,
       "message": "Unnecessary line break (we use 100col).\nThere are some other formatting errors in this patch, you can use `git clang-format --style\u003dfile HEAD~` to automatically fix all of it for you.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_1fd61674",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "Done, except I skipped the functions that came from SELinux as they\u0027re C code and will likely move out of this file into a header at some point.",
+      "parentUuid": "fb75bfb9_81ee7971",
       "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -99,6 +159,30 @@
     },
     {
       "key": {
+        "uuid": "5b816bc7_ec07249b",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "It should be safe; there\u0027s a strndup() that gets called as well as numerous calls to new in this function, so avoiding allocations isn\u0027t possible here.",
+      "parentUuid": "7b6aafda_89d1bb4f",
+      "range": {
+        "startLine": 865,
+        "startChar": 10,
+        "endLine": 865,
+        "endChar": 12
+      },
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b25eb9e_e1905f76",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 9
@@ -110,6 +194,24 @@
       "writtenOn": "2015-11-19T22:53:09Z",
       "side": 1,
       "message": "This needs to be removed as well.",
+      "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b25eb9e_ffd23a7d",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-20T03:57:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b25eb9e_e1905f76",
       "revId": "465906a8b9c224082f00bd1b38f530fc4b14d78c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
