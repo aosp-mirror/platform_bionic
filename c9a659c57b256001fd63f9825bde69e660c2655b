@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3453db_b4ddeb94",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-20T03:56:24Z",
+      "side": 1,
+      "message": "what if rel_timeout is slightly negative? the addition of the current time will make it positive, so the check in __pthread_cond_timedwait will pass, even though rel_timeout was actually invalid, no?",
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
