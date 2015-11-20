@@ -52,6 +52,24 @@
       "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db271bf3_cdd2fd7d",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-11-20T23:26:48Z",
+      "side": 1,
+      "message": "Would it be better if we always build two copies of complete bionic unit tests, one with gcc and one with clang?",
+      "parentUuid": "1bfc537c_6f730d34",
+      "revId": "83d9f922009f5ef46a18b67baeb8e8796f192c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
