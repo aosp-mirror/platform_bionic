@@ -27,6 +27,7 @@
  */
 
 #include <errno.h>
+#include <stdint.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
