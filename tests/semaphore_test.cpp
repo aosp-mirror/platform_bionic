@@ -117,6 +117,16 @@ TEST(semaphore, sem_timedwait) {
   ts.tv_nsec = -1;
   ASSERT_EQ(-1, sem_timedwait(&s, &ts));
   ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  ts.tv_nsec = NS_PER_S;
+  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(EINVAL, errno);
+
+  errno = 0;
+  ts.tv_nsec = NS_PER_S - 1;
+  ts.tv_sec = -1;
+  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(ETIMEDOUT, errno);
 
   ASSERT_EQ(0, sem_destroy(&s));
 }
