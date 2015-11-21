@@ -16,6 +16,24 @@
       "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb75bfb9_28650523",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-21T00:30:54Z",
+      "side": 1,
+      "message": "If rel_timeout is slightly negative, abs_timeout will be positive but \u003c cur time. futex_wait_ex() will return ETIMEDOUT in this situation. Although it doesn\u0027t check if rel_timeout is valid, the behavior is the same as before. And even if we add a check for rel_timeout here, it returns ETIMEDOUT when tv_sec \u003c 0 (same as current implementation). It has a slightly difference that tv_nsec of rel_timeout is checked, which I think doesn\u0027t matter.",
+      "parentUuid": "1b3453db_b4ddeb94",
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
