@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7b246ff3_0d953564",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T04:32:44Z",
+      "side": 1,
+      "message": "but your safe_add is the other way round.\n\n(plus you inverted the return value from the builtins because you thought that was unreasonable.)",
+      "parentUuid": "3b167790_ebf1a5ff",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db271bf3_d03614be",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "This works with off64_t + size_t. we do not have builtins for this. Using the one from linker_utils.h",
       "parentUuid": "1b153384_8a83cf71",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b2123e5_71e2ca56",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T04:32:44Z",
+      "side": 1,
+      "message": "can we come up with clearer names? safe_add sounds general-purpose, and so does linker_safe_add. (and the latter sounds like it\u0027s the one that should be used in the linker.) would overloading be better?",
+      "parentUuid": "db271bf3_108f0ca3",
       "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
