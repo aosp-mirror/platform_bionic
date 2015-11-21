@@ -64,6 +64,7 @@ class ElfReader {
   bool LoadSegments();
   bool FindPhdr();
   bool CheckPhdr(ElfW(Addr));
+  bool CheckFileRange(ElfW(Addr) offset, size_t size);
 
   bool did_read_;
   bool did_load_;
