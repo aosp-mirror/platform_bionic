@@ -79,7 +79,7 @@ int pthread_once(pthread_once_t* once_control, void (*init_routine)(void)) {
     }
 
     // The initialization is underway, wait for its finish.
-    __futex_wait_ex(once_control_ptr, 0, old_value, NULL);
+    __futex_wait_ex(once_control_ptr, 0, old_value, false, nullptr);
     old_value = atomic_load_explicit(once_control_ptr, memory_order_acquire);
   }
 }

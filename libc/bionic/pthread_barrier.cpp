@@ -118,7 +118,7 @@ int pthread_barrier_wait(pthread_barrier_t* barrier_interface) {
   // threads have left the barrier. Use acquire operation here to synchronize with
   // the last thread leaving the previous cycle, so we can read correct wait_count below.
   while(atomic_load_explicit(&barrier->state, memory_order_acquire) == RELEASE) {
-    __futex_wait_ex(&barrier->state, barrier->pshared, RELEASE, nullptr);
+    __futex_wait_ex(&barrier->state, barrier->pshared, RELEASE, false, nullptr);
   }
 
   uint32_t prev_wait_count = atomic_load_explicit(&barrier->wait_count, memory_order_relaxed);
@@ -152,7 +152,7 @@ int pthread_barrier_wait(pthread_barrier_t* barrier_interface) {
     // Use acquire operation here to synchronize between the last thread entering the
     // barrier with all threads leaving the barrier.
     while (atomic_load_explicit(&barrier->state, memory_order_acquire) == WAIT) {
-      __futex_wait_ex(&barrier->state, barrier->pshared, WAIT, nullptr);
+      __futex_wait_ex(&barrier->state, barrier->pshared, WAIT, false, nullptr);
     }
   }
   // Use release operation here to make it not reordered with previous operations.
@@ -173,7 +173,7 @@ int pthread_barrier_destroy(pthread_barrier_t* barrier_interface) {
   // Use acquire operation here to synchronize with the last thread leaving the barrier.
   // So we can read correct wait_count below.
   while (atomic_load_explicit(&barrier->state, memory_order_acquire) == RELEASE) {
-    __futex_wait_ex(&barrier->state, barrier->pshared, RELEASE, nullptr);
+    __futex_wait_ex(&barrier->state, barrier->pshared, RELEASE, false, nullptr);
   }
   if (atomic_load_explicit(&barrier->wait_count, memory_order_relaxed) != 0) {
     return EBUSY;
