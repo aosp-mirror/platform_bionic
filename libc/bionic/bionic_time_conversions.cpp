@@ -52,18 +52,12 @@ void timeval_from_timespec(timeval& tv, const timespec& ts) {
   tv.tv_usec = ts.tv_nsec / 1000;
 }
 
-// Initializes 'ts' with the difference between 'abs_ts' and the current time
-// according to 'clock'. Returns false if abstime already expired, true otherwise.
-bool timespec_from_absolute_timespec(timespec& ts, const timespec& abs_ts, clockid_t clock) {
-  clock_gettime(clock, &ts);
-  ts.tv_sec = abs_ts.tv_sec - ts.tv_sec;
-  ts.tv_nsec = abs_ts.tv_nsec - ts.tv_nsec;
-  if (ts.tv_nsec < 0) {
-    ts.tv_sec--;
-    ts.tv_nsec += NS_PER_S;
+void absolute_timespec_from_timespec(timespec& abs_ts, const timespec& ts, clockid_t clock) {
+  clock_gettime(clock, &abs_ts);
+  abs_ts.tv_sec += ts.tv_sec;
+  abs_ts.tv_nsec += ts.tv_nsec;
+  if (abs_ts.tv_nsec >= NS_PER_S) {
+    abs_ts.tv_nsec -= NS_PER_S;
+    abs_ts.tv_sec++;
   }
-  if (ts.tv_nsec < 0 || ts.tv_sec < 0) {
-    return false;
-  }
-  return true;
 }

@@ -36,6 +36,7 @@
 #include <base/file.h>
 #include <base/stringprintf.h>
 
+#include "private/bionic_constants.h"
 #include "private/bionic_macros.h"
 #include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
@@ -744,35 +745,41 @@ struct RwlockWakeupHelperArg {
     LOCK_INITIALIZED,
     LOCK_WAITING,
     LOCK_RELEASED,
-    LOCK_ACCESSED
+    LOCK_ACCESSED,
+    LOCK_TIMEDOUT,
   };
   std::atomic<Progress> progress;
   std::atomic<pid_t> tid;
+  std::function<int (pthread_rwlock_t*)> trylock_function;
+  std::function<int (pthread_rwlock_t*)> lock_function;
+  std::function<int (pthread_rwlock_t*, const timespec*)> timed_lock_function;
 };
 
-static void pthread_rwlock_reader_wakeup_writer_helper(RwlockWakeupHelperArg* arg) {
+static void pthread_rwlock_wakeup_helper(RwlockWakeupHelperArg* arg) {
   arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
 
-  ASSERT_EQ(EBUSY, pthread_rwlock_trywrlock(&arg->lock));
-  ASSERT_EQ(0, pthread_rwlock_wrlock(&arg->lock));
+  ASSERT_EQ(EBUSY, arg->trylock_function(&arg->lock));
+  ASSERT_EQ(0, arg->lock_function(&arg->lock));
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
   ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
 
   arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
 }
 
-TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
+static void test_pthread_rwlock_reader_wakeup_writer(std::function<int (pthread_rwlock_t*)> lock_function) {
   RwlockWakeupHelperArg wakeup_arg;
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
+  wakeup_arg.trylock_function = pthread_rwlock_trywrlock;
+  wakeup_arg.lock_function = lock_function;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
-    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_reader_wakeup_writer_helper), &wakeup_arg));
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_helper), &wakeup_arg));
   WaitUntilThreadSleep(wakeup_arg.tid);
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
 
@@ -784,29 +791,31 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
   ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
 }
 
-static void pthread_rwlock_writer_wakeup_reader_helper(RwlockWakeupHelperArg* arg) {
-  arg->tid = gettid();
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
-  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
-
-  ASSERT_EQ(EBUSY, pthread_rwlock_tryrdlock(&arg->lock));
-  ASSERT_EQ(0, pthread_rwlock_rdlock(&arg->lock));
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_RELEASED, arg->progress);
-  ASSERT_EQ(0, pthread_rwlock_unlock(&arg->lock));
-
-  arg->progress = RwlockWakeupHelperArg::LOCK_ACCESSED;
+TEST(pthread, pthread_rwlock_reader_wakeup_writer) {
+  test_pthread_rwlock_reader_wakeup_writer(pthread_rwlock_wrlock);
 }
 
-TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
+TEST(pthread, pthread_rwlock_reader_wakeup_writer_timedwait) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_reader_wakeup_writer([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_timedwrlock(lock, &ts);
+  });
+}
+
+static void test_pthread_rwlock_writer_wakeup_reader(std::function<int (pthread_rwlock_t*)> lock_function) {
   RwlockWakeupHelperArg wakeup_arg;
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
+  wakeup_arg.trylock_function = pthread_rwlock_tryrdlock;
+  wakeup_arg.lock_function = lock_function;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, NULL,
-    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_writer_wakeup_reader_helper), &wakeup_arg));
+    reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_helper), &wakeup_arg));
   WaitUntilThreadSleep(wakeup_arg.tid);
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
 
@@ -815,6 +824,85 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
 
   ASSERT_EQ(0, pthread_join(thread, NULL));
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_ACCESSED, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader) {
+  test_pthread_rwlock_writer_wakeup_reader(pthread_rwlock_rdlock);
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader_timedwait) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_writer_wakeup_reader([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_timedrdlock(lock, &ts);
+  });
+}
+
+static void pthread_rwlock_wakeup_timeout_helper(RwlockWakeupHelperArg* arg) {
+  arg->tid = gettid();
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_WAITING;
+
+  ASSERT_EQ(EBUSY, arg->trylock_function(&arg->lock));
+
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
+  ts.tv_nsec = -1;
+  ASSERT_EQ(EINVAL, arg->timed_lock_function(&arg->lock, &ts));
+  ts.tv_nsec = NS_PER_S;
+  ASSERT_EQ(EINVAL, arg->timed_lock_function(&arg->lock, &ts));
+  ts.tv_nsec = NS_PER_S - 1;
+  ts.tv_sec = -1;
+  ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, arg->progress);
+  arg->progress = RwlockWakeupHelperArg::LOCK_TIMEDOUT;
+}
+
+TEST(pthread, pthread_rwlock_timedrdlock_timeout) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
+  ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
+  wakeup_arg.trylock_function = pthread_rwlock_tryrdlock;
+  wakeup_arg.timed_lock_function = pthread_rwlock_timedrdlock;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+      reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_timeout_helper), &wakeup_arg));
+  WaitUntilThreadSleep(wakeup_arg.tid);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_TIMEDOUT, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+TEST(pthread, pthread_rwlock_timedwrlock_timeout) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
+  wakeup_arg.trylock_function = pthread_rwlock_trywrlock;
+  wakeup_arg.timed_lock_function = pthread_rwlock_timedwrlock;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+      reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_timeout_helper), &wakeup_arg));
+  WaitUntilThreadSleep(wakeup_arg.tid);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_TIMEDOUT, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
   ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
 }
 
@@ -1062,28 +1150,36 @@ class pthread_CondWakeupTest : public ::testing::Test {
   };
   std::atomic<Progress> progress;
   pthread_t thread;
+  std::function<int (pthread_cond_t* cond, pthread_mutex_t* mutex)> wait_function;
 
  protected:
-  virtual void SetUp() {
-    ASSERT_EQ(0, pthread_mutex_init(&mutex, NULL));
-    ASSERT_EQ(0, pthread_cond_init(&cond, NULL));
+  void SetUp() override {
+    ASSERT_EQ(0, pthread_mutex_init(&mutex, nullptr));
+  }
+
+  void InitCond(clockid_t clock=CLOCK_REALTIME) {
+    pthread_condattr_t attr;
+    ASSERT_EQ(0, pthread_condattr_init(&attr));
+    ASSERT_EQ(0, pthread_condattr_setclock(&attr, clock));
+    ASSERT_EQ(0, pthread_cond_init(&cond, &attr));
+    ASSERT_EQ(0, pthread_condattr_destroy(&attr));
+  }
+
+  void StartWaitingThread(std::function<int (pthread_cond_t* cond, pthread_mutex_t* mutex)> wait_function) {
     progress = INITIALIZED;
-    ASSERT_EQ(0,
-      pthread_create(&thread, NULL, reinterpret_cast<void* (*)(void*)>(WaitThreadFn), this));
-  }
-
-  virtual void TearDown() {
-    ASSERT_EQ(0, pthread_join(thread, NULL));
-    ASSERT_EQ(FINISHED, progress);
-    ASSERT_EQ(0, pthread_cond_destroy(&cond));
-    ASSERT_EQ(0, pthread_mutex_destroy(&mutex));
-  }
-
-  void SleepUntilProgress(Progress expected_progress) {
-    while (progress != expected_progress) {
+    this->wait_function = wait_function;
+    ASSERT_EQ(0, pthread_create(&thread, NULL, reinterpret_cast<void* (*)(void*)>(WaitThreadFn), this));
+    while (progress != WAITING) {
       usleep(5000);
     }
     usleep(5000);
+  }
+
+  void TearDown() override {
+    ASSERT_EQ(0, pthread_join(thread, nullptr));
+    ASSERT_EQ(FINISHED, progress);
+    ASSERT_EQ(0, pthread_cond_destroy(&cond));
+    ASSERT_EQ(0, pthread_mutex_destroy(&mutex));
   }
 
  private:
@@ -1091,7 +1187,7 @@ class pthread_CondWakeupTest : public ::testing::Test {
     ASSERT_EQ(0, pthread_mutex_lock(&test->mutex));
     test->progress = WAITING;
     while (test->progress == WAITING) {
-      ASSERT_EQ(0, pthread_cond_wait(&test->cond, &test->mutex));
+      ASSERT_EQ(0, test->wait_function(&test->cond, &test->mutex));
     }
     ASSERT_EQ(SIGNALED, test->progress);
     test->progress = FINISHED;
@@ -1099,39 +1195,65 @@ class pthread_CondWakeupTest : public ::testing::Test {
   }
 };
 
-TEST_F(pthread_CondWakeupTest, signal) {
-  SleepUntilProgress(WAITING);
+TEST_F(pthread_CondWakeupTest, signal_wait) {
+  InitCond();
+  StartWaitingThread([](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    return pthread_cond_wait(cond, mutex);
+  });
   progress = SIGNALED;
-  pthread_cond_signal(&cond);
+  ASSERT_EQ(0, pthread_cond_signal(&cond));
 }
 
-TEST_F(pthread_CondWakeupTest, broadcast) {
-  SleepUntilProgress(WAITING);
+TEST_F(pthread_CondWakeupTest, broadcast_wait) {
+  InitCond();
+  StartWaitingThread([](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    return pthread_cond_wait(cond, mutex);
+  });
   progress = SIGNALED;
-  pthread_cond_broadcast(&cond);
+  ASSERT_EQ(0, pthread_cond_broadcast(&cond));
 }
 
-TEST(pthread, pthread_mutex_timedlock) {
-  pthread_mutex_t m;
-  ASSERT_EQ(0, pthread_mutex_init(&m, NULL));
-
-  // If the mutex is already locked, pthread_mutex_timedlock should time out.
-  ASSERT_EQ(0, pthread_mutex_lock(&m));
-
+TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_REALTIME) {
+  InitCond(CLOCK_REALTIME);
   timespec ts;
   ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
-  ts.tv_nsec += 1;
-  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+  ts.tv_sec += 1;
+  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    return pthread_cond_timedwait(cond, mutex, &ts);
+  });
+  progress = SIGNALED;
+  ASSERT_EQ(0, pthread_cond_signal(&cond));
+}
 
-  // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
-  ASSERT_EQ(0, pthread_mutex_unlock(&m));
+TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC) {
+  InitCond(CLOCK_MONOTONIC);
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    return pthread_cond_timedwait(cond, mutex, &ts);
+  });
+  progress = SIGNALED;
+  ASSERT_EQ(0, pthread_cond_signal(&cond));
+}
 
+TEST(pthread, pthread_cond_timedwait_timeout) {
+  pthread_mutex_t mutex;
+  ASSERT_EQ(0, pthread_mutex_init(&mutex, nullptr));
+  pthread_cond_t cond;
+  ASSERT_EQ(0, pthread_cond_init(&cond, nullptr));
+  ASSERT_EQ(0, pthread_mutex_lock(&mutex));
+  timespec ts;
   ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
-  ts.tv_nsec += 1;
-  ASSERT_EQ(0, pthread_mutex_timedlock(&m, &ts));
-
-  ASSERT_EQ(0, pthread_mutex_unlock(&m));
-  ASSERT_EQ(0, pthread_mutex_destroy(&m));
+  ASSERT_EQ(ETIMEDOUT, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ts.tv_nsec = -1;
+  ASSERT_EQ(EINVAL, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ts.tv_nsec = NS_PER_S;
+  ASSERT_EQ(EINVAL, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ts.tv_nsec = NS_PER_S - 1;
+  ts.tv_sec = -1;
+  ASSERT_EQ(ETIMEDOUT, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ASSERT_EQ(0, pthread_mutex_unlock(&mutex));
 }
 
 TEST(pthread, pthread_attr_getstack__main_thread) {
@@ -1552,6 +1674,35 @@ TEST(pthread, pthread_mutex_owner_tid_limit) {
 #endif
 }
 
+TEST(pthread, pthread_mutex_timedlock) {
+  pthread_mutex_t m;
+  ASSERT_EQ(0, pthread_mutex_init(&m, nullptr));
+
+  // If the mutex is already locked, pthread_mutex_timedlock should time out.
+  ASSERT_EQ(0, pthread_mutex_lock(&m));
+
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+  ts.tv_nsec = -1;
+  ASSERT_EQ(EINVAL, pthread_mutex_timedlock(&m, &ts));
+  ts.tv_nsec = NS_PER_S;
+  ASSERT_EQ(EINVAL, pthread_mutex_timedlock(&m, &ts));
+  ts.tv_nsec = NS_PER_S - 1;
+  ts.tv_sec = -1;
+  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+
+  // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
+  ASSERT_EQ(0, pthread_mutex_unlock(&m));
+
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  ASSERT_EQ(0, pthread_mutex_timedlock(&m, &ts));
+
+  ASSERT_EQ(0, pthread_mutex_unlock(&m));
+  ASSERT_EQ(0, pthread_mutex_destroy(&m));
+}
+
 class StrictAlignmentAllocator {
  public:
   void* allocate(size_t size, size_t alignment) {
@@ -1749,13 +1900,13 @@ void BarrierOrderingTestHelper(BarrierOrderingTestHelperArg* arg) {
   const size_t ITERATION_COUNT = 10000;
   for (size_t i = 1; i <= ITERATION_COUNT; ++i) {
     arg->array[arg->id] = i;
-    int ret = pthread_barrier_wait(arg->barrier);
-    ASSERT_TRUE(ret == 0 || ret == PTHREAD_BARRIER_SERIAL_THREAD);
+    int result = pthread_barrier_wait(arg->barrier);
+    ASSERT_TRUE(result == 0 || result == PTHREAD_BARRIER_SERIAL_THREAD);
     for (size_t j = 0; j < arg->array_length; ++j) {
       ASSERT_EQ(i, arg->array[j]);
     }
-    ret = pthread_barrier_wait(arg->barrier);
-    ASSERT_TRUE(ret == 0 || ret == PTHREAD_BARRIER_SERIAL_THREAD);
+    result = pthread_barrier_wait(arg->barrier);
+    ASSERT_TRUE(result == 0 || result == PTHREAD_BARRIER_SERIAL_THREAD);
   }
 }
 

@@ -29,8 +29,11 @@
 #ifndef _BIONIC_TIME_CONVERSIONS_H
 #define _BIONIC_TIME_CONVERSIONS_H
 
+#include <errno.h>
 #include <time.h>
 #include <sys/cdefs.h>
+
+#include "private/bionic_constants.h"
 
 __BEGIN_DECLS
 
@@ -39,8 +42,21 @@ __LIBC_HIDDEN__ void timespec_from_ms(timespec& ts, const int ms);
 
 __LIBC_HIDDEN__ void timeval_from_timespec(timeval& tv, const timespec& ts);
 
-__LIBC_HIDDEN__ bool timespec_from_absolute_timespec(timespec& ts, const timespec& abs_ts, clockid_t clock);
+__LIBC_HIDDEN__ void absolute_timespec_from_timespec(timespec& abs_ts, const timespec& ts,
+                                                     clockid_t clock);
 
 __END_DECLS
+
+static inline int check_timespec(const timespec* ts) {
+  if (ts != nullptr) {
+    if (ts->tv_nsec < 0 || ts->tv_nsec >= NS_PER_S) {
+      return EINVAL;
+    }
+    if (ts->tv_sec < 0) {
+      return ETIMEDOUT;
+    }
+  }
+  return 0;
+}
 
 #endif
