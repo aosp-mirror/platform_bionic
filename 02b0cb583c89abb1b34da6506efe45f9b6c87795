@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3bed97ca_70fe4ed4",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-21T00:07:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2a4b7b_4d34fcd8",
+      "revId": "02b0cb583c89abb1b34da6506efe45f9b6c87795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b816bc7_e7b89dea",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2015-11-20T06:14:35Z",
       "side": 1,
       "message": "\"re\" is SOP.",
+      "revId": "02b0cb583c89abb1b34da6506efe45f9b6c87795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b153384_c78ae03a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-21T00:07:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b816bc7_e7b89dea",
       "revId": "02b0cb583c89abb1b34da6506efe45f9b6c87795",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
