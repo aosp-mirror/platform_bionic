@@ -294,24 +294,18 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_internal_t* rwlock,
   }
 
   while (true) {
-    int ret = __pthread_rwlock_tryrdlock(rwlock);
-    if (ret == 0 || ret == EAGAIN) {
-      return ret;
+    int result = __pthread_rwlock_tryrdlock(rwlock);
+    if (result == 0 || result == EAGAIN) {
+      return result;
+    }
+    result = check_timespec(abs_timeout_or_null);
+    if (result != 0) {
+      return result;
     }
 
     int old_state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
     if (__can_acquire_read_lock(old_state, rwlock->writer_nonrecursive_preferred)) {
       continue;
-    }
-
-    timespec ts;
-    timespec* rel_timeout = NULL;
-
-    if (abs_timeout_or_null != NULL) {
-      rel_timeout = &ts;
-      if (!timespec_from_absolute_timespec(*rel_timeout, *abs_timeout_or_null, CLOCK_REALTIME)) {
-        return ETIMEDOUT;
-      }
     }
 
     rwlock->pending_lock.lock();
@@ -327,10 +321,10 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_internal_t* rwlock,
     int old_serial = rwlock->pending_reader_wakeup_serial;
     rwlock->pending_lock.unlock();
 
-    int futex_ret = 0;
+    int futex_result = 0;
     if (!__can_acquire_read_lock(old_state, rwlock->writer_nonrecursive_preferred)) {
-      futex_ret = __futex_wait_ex(&rwlock->pending_reader_wakeup_serial, rwlock->pshared,
-                                  old_serial, rel_timeout);
+      futex_result = __futex_wait_ex(&rwlock->pending_reader_wakeup_serial, rwlock->pshared,
+                                  old_serial, true, abs_timeout_or_null);
     }
 
     rwlock->pending_lock.lock();
@@ -341,7 +335,7 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_internal_t* rwlock,
     }
     rwlock->pending_lock.unlock();
 
-    if (futex_ret == -ETIMEDOUT) {
+    if (futex_result == -ETIMEDOUT) {
       return ETIMEDOUT;
     }
   }
@@ -372,24 +366,18 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_internal_t* rwlock,
     return EDEADLK;
   }
   while (true) {
-    int ret = __pthread_rwlock_trywrlock(rwlock);
-    if (ret == 0) {
-      return ret;
+    int result = __pthread_rwlock_trywrlock(rwlock);
+    if (result == 0) {
+      return result;
+    }
+    result = check_timespec(abs_timeout_or_null);
+    if (result != 0) {
+      return result;
     }
 
     int old_state = atomic_load_explicit(&rwlock->state, memory_order_relaxed);
     if (__can_acquire_write_lock(old_state)) {
       continue;
-    }
-
-    timespec ts;
-    timespec* rel_timeout = NULL;
-
-    if (abs_timeout_or_null != NULL) {
-      rel_timeout = &ts;
-      if (!timespec_from_absolute_timespec(*rel_timeout, *abs_timeout_or_null, CLOCK_REALTIME)) {
-        return ETIMEDOUT;
-      }
     }
 
     rwlock->pending_lock.lock();
@@ -401,10 +389,10 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_internal_t* rwlock,
     int old_serial = rwlock->pending_writer_wakeup_serial;
     rwlock->pending_lock.unlock();
 
-    int futex_ret = 0;
+    int futex_result = 0;
     if (!__can_acquire_write_lock(old_state)) {
-      futex_ret = __futex_wait_ex(&rwlock->pending_writer_wakeup_serial, rwlock->pshared,
-                                  old_serial, rel_timeout);
+      futex_result = __futex_wait_ex(&rwlock->pending_writer_wakeup_serial, rwlock->pshared,
+                                  old_serial, true, abs_timeout_or_null);
     }
 
     rwlock->pending_lock.lock();
@@ -415,7 +403,7 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_internal_t* rwlock,
     }
     rwlock->pending_lock.unlock();
 
-    if (futex_ret == -ETIMEDOUT) {
+    if (futex_result == -ETIMEDOUT) {
       return ETIMEDOUT;
     }
   }
@@ -427,7 +415,7 @@ int pthread_rwlock_rdlock(pthread_rwlock_t* rwlock_interface) {
   if (__predict_true(__pthread_rwlock_tryrdlock(rwlock) == 0)) {
     return 0;
   }
-  return __pthread_rwlock_timedrdlock(rwlock, NULL);
+  return __pthread_rwlock_timedrdlock(rwlock, nullptr);
 }
 
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* rwlock_interface, const timespec* abs_timeout) {
@@ -446,7 +434,7 @@ int pthread_rwlock_wrlock(pthread_rwlock_t* rwlock_interface) {
   if (__predict_true(__pthread_rwlock_trywrlock(rwlock) == 0)) {
     return 0;
   }
-  return __pthread_rwlock_timedwrlock(rwlock, NULL);
+  return __pthread_rwlock_timedwrlock(rwlock, nullptr);
 }
 
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* rwlock_interface, const timespec* abs_timeout) {
