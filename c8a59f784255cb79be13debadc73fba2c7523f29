@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b246ff3_4d4f2d68",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:40:41Z",
+      "side": 1,
+      "message": "you prefer intel syntax rather than having the destination first?",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db271bf3_d03614be",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:40:41Z",
+      "side": 1,
+      "message": "why are these CHECKs rather than DL_ERRs?",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b153384_8a83cf71",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:40:41Z",
+      "side": 1,
+      "message": "why safe_add rather than linker_safe_add?",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
