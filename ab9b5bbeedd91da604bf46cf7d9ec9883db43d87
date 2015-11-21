@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb2a67bd_2c263b64",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-11-21T00:07:41Z",
+      "side": 1,
+      "message": "I\u0027ll want to write tests for this new mechanism as well, which will require sepolicy changes for the tester executable, but in the shorter term this allows the bionic tests to pass.\n\nIt is kind of awful, but less bad than the alternative of having a runtime flag to disable the check.",
+      "revId": "ab9b5bbeedd91da604bf46cf7d9ec9883db43d87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
