@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bfc537c_f5306a2c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:43:56Z",
+      "side": 1,
+      "message": "the code below might be more readable if these were range_start/range_end?",
+      "revId": "eb8c1b3371e8ea1acaea77a57483c3f2a55f149b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb2a67bd_ef0c1552",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:43:56Z",
+      "side": 1,
+      "message": "ah, safe_add is for off64_t? can we have a template so the types are in the names? (or we just have one function?)",
+      "revId": "eb8c1b3371e8ea1acaea77a57483c3f2a55f149b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b1b2bb8_afdfb927",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-21T01:43:56Z",
+      "side": 1,
+      "message": "\"has no section headers\"? (it\u0027s shorter, and more like the other errors.)",
+      "revId": "eb8c1b3371e8ea1acaea77a57483c3f2a55f149b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
