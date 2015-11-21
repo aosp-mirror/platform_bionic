@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3b167790_ebf1a5ff",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-21T02:01:41Z",
+      "side": 1,
+      "message": "I just followed __builtin_* signature.",
+      "parentUuid": "7b246ff3_4d4f2d68",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db271bf3_d03614be",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2015-11-21T01:40:41Z",
       "side": 1,
       "message": "why safe_add rather than linker_safe_add?",
+      "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db271bf3_108f0ca3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-21T02:01:41Z",
+      "side": 1,
+      "message": "This works with off64_t + size_t. we do not have builtins for this. Using the one from linker_utils.h",
+      "parentUuid": "1b153384_8a83cf71",
       "revId": "c8a59f784255cb79be13debadc73fba2c7523f29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
