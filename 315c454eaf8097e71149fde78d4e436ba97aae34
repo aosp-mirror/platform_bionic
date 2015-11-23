@@ -22,6 +22,30 @@
       "revId": "315c454eaf8097e71149fde78d4e436ba97aae34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96d1fa8e_4a1c93f8",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1044078
+      },
+      "writtenOn": "2015-11-23T13:33:52Z",
+      "side": 1,
+      "message": "typo, Done",
+      "parentUuid": "7b6aafda_a5f3855b",
+      "range": {
+        "startLine": 52,
+        "startChar": 32,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "315c454eaf8097e71149fde78d4e436ba97aae34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
