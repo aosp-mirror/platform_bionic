@@ -40,7 +40,7 @@ void flockfile(FILE* fp) {
     __sinit();
   }
 
-  if (fp != NULL) {
+  if (fp != nullptr) {
     pthread_mutex_lock(&_FLOCK(fp));
   }
 }
@@ -52,7 +52,7 @@ int ftrylockfile(FILE* fp) {
 
   // The specification for ftrylockfile() says it returns 0 on success,
   // or non-zero on error. So return an errno code directly on error.
-  if (fp == NULL) {
+  if (fp == nullptr) {
     return EINVAL;
   }
 
@@ -64,7 +64,7 @@ void funlockfile(FILE* fp) {
     __sinit();
   }
 
-  if (fp != NULL) {
+  if (fp != nullptr) {
     pthread_mutex_unlock(&_FLOCK(fp));
   }
 }

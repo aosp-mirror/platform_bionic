@@ -30,6 +30,7 @@
 #include <locale.h>
 
 #include "TemporaryFile.h"
+#include "utils.h"
 
 TEST(stdio_ext, __fbufsize) {
   FILE* fp = fopen("/proc/version", "r");
@@ -139,4 +140,25 @@ TEST(stdio_ext, __fsetlocking) {
   ASSERT_EQ(FSETLOCKING_BYCALLER, __fsetlocking(fp, FSETLOCKING_INTERNAL));
   ASSERT_EQ(FSETLOCKING_INTERNAL, __fsetlocking(fp, FSETLOCKING_QUERY));
   fclose(fp);
+}
+
+static void LockingByCallerHelper(std::atomic<pid_t>* pid) {
+  *pid = gettid();
+  flockfile(stdout);
+  funlockfile(stdout);
+}
+
+TEST(stdio_ext, __fsetlocking_BYCALLER) {
+  // Check if users can use flockfile/funlockfile to protect stdio operations.
+  int old_state = __fsetlocking(stdout, FSETLOCKING_BYCALLER);
+  flockfile(stdout);
+  pthread_t thread;
+  std::atomic<pid_t> pid(0);
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+                              reinterpret_cast<void* (*)(void*)>(LockingByCallerHelper), &pid));
+  WaitUntilThreadSleep(pid);
+  funlockfile(stdout);
+
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  __fsetlocking(stdout, old_state);
 }
