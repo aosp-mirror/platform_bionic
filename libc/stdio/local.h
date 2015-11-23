@@ -109,7 +109,7 @@ struct __sfileext {
   pthread_mutex_t _lock;
 
   /* __fsetlocking support */
-  bool _stdio_handles_locking;
+  bool _caller_handles_locking;
 };
 
 #if defined(__cplusplus)
@@ -131,7 +131,7 @@ do { \
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE); \
 	pthread_mutex_init(&_FLOCK(fp), &attr); \
 	pthread_mutexattr_destroy(&attr); \
-	_EXT(fp)->_stdio_handles_locking = true; \
+	_EXT(fp)->_caller_handles_locking = false; \
 } while (0)
 
 #define _FILEEXT_SETUP(f, fext) \
@@ -208,8 +208,8 @@ extern void __atexit_register_cleanup(void (*)(void));
 	(fp)->_lb._base = NULL; \
 }
 
-#define FLOCKFILE(fp)   if (_EXT(fp)->_stdio_handles_locking) flockfile(fp)
-#define FUNLOCKFILE(fp) if (_EXT(fp)->_stdio_handles_locking) funlockfile(fp)
+#define FLOCKFILE(fp)   if (!_EXT(fp)->_caller_handles_locking) flockfile(fp)
+#define FUNLOCKFILE(fp) if (!_EXT(fp)->_caller_handles_locking) funlockfile(fp)
 
 #define FLOATING_POINT
 #define PRINTF_WIDE_CHAR

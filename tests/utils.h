@@ -18,6 +18,14 @@
 #define __TEST_UTILS_H
 #include <inttypes.h>
 #include <sys/mman.h>
+#include <unistd.h>
+
+#include <atomic>
+#include <string>
+#include <regex>
+
+#include <base/file.h>
+#include <base/stringprintf.h>
 
 #include "private/ScopeGuard.h"
 
@@ -81,5 +89,24 @@ class Maps {
     return true;
   }
 };
+
+extern "C" pid_t gettid();
+
+static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
+  while (tid == 0) {
+    usleep(1000);
+  }
+  std::string filename = android::base::StringPrintf("/proc/%d/stat", tid.load());
+  std::regex regex {R"(\s+S\s+)"};
+
+  while (true) {
+    std::string content;
+    ASSERT_TRUE(android::base::ReadFileToString(filename, &content));
+    if (std::regex_search(content, regex)) {
+      break;
+    }
+    usleep(1000);
+  }
+}
 
 #endif
