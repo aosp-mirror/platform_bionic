@@ -37,6 +37,7 @@
 
 #include "linker.h"
 #include "linker_debug.h"
+#include "linker_utils.h"
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -244,6 +245,16 @@ bool ElfReader::VerifyElfHeader() {
   return true;
 }
 
+bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size) {
+  off64_t range_start;
+  off64_t range_end;
+
+  return safe_add(&range_start, file_offset_, offset) &&
+         safe_add(&range_end, range_start, size) &&
+         range_start < file_size_ &&
+         range_end <= file_size_;
+}
+
 // Loads the program header table from an ELF file into a read-only private
 // anonymous mmap-ed block.
 bool ElfReader::ReadProgramHeaders() {
@@ -256,7 +267,14 @@ bool ElfReader::ReadProgramHeaders() {
     return false;
   }
 
-  if (!phdr_fragment_.Map(fd_, file_offset_, header_.e_phoff, phdr_num_ * sizeof(ElfW(Phdr)))) {
+  // Boundary checks
+  size_t size = phdr_num_ * sizeof(ElfW(Phdr));
+  if (!CheckFileRange(header_.e_phoff, size)) {
+    DL_ERR("\"%s\" has invalid phdr offset/size", name_.c_str());
+    return false;
+  }
+
+  if (!phdr_fragment_.Map(fd_, file_offset_, header_.e_phoff, size)) {
     DL_ERR("\"%s\" phdr mmap failed: %s", name_.c_str(), strerror(errno));
     return false;
   }
@@ -269,11 +287,17 @@ bool ElfReader::ReadSectionHeaders() {
   shdr_num_ = header_.e_shnum;
 
   if (shdr_num_ == 0) {
-    DL_ERR("\"%s\" there are no section headers in this file", name_.c_str());
+    DL_ERR("\"%s\" has no section headers", name_.c_str());
     return false;
   }
 
-  if (!shdr_fragment_.Map(fd_, file_offset_, header_.e_shoff, shdr_num_ * sizeof(ElfW(Shdr)))) {
+  size_t size = shdr_num_ * sizeof(ElfW(Shdr));
+  if (!CheckFileRange(header_.e_shoff, size)) {
+    DL_ERR("\"%s\" has invalid shdr offset/size", name_.c_str());
+    return false;
+  }
+
+  if (!shdr_fragment_.Map(fd_, file_offset_, header_.e_shoff, size)) {
     DL_ERR("\"%s\" shdr mmap failed: %s", name_.c_str(), strerror(errno));
     return false;
   }
@@ -310,12 +334,24 @@ bool ElfReader::ReadDynamicSection() {
     return false;
   }
 
+  if (!CheckFileRange(dynamic_shdr->sh_offset, dynamic_shdr->sh_size)) {
+    DL_ERR("\"%s\" has invalid offset/size of .dynamic section", name_.c_str());
+    PRINT("\"%s\" has invalid offset/size of .dynamic section", name_.c_str());
+    return false;
+  }
+
   if (!dynamic_fragment_.Map(fd_, file_offset_, dynamic_shdr->sh_offset, dynamic_shdr->sh_size)) {
     DL_ERR("\"%s\" dynamic section mmap failed: %s", name_.c_str(), strerror(errno));
     return false;
   }
 
   dynamic_ = static_cast<const ElfW(Dyn)*>(dynamic_fragment_.data());
+
+  if (!CheckFileRange(strtab_shdr->sh_offset, strtab_shdr->sh_size)) {
+    DL_ERR("\"%s\" has invalid offset/size of the .strtab section linked from .dynamic section",
+           name_.c_str());
+    return false;
+  }
 
   if (!strtab_fragment_.Map(fd_, file_offset_, strtab_shdr->sh_offset, strtab_shdr->sh_size)) {
     DL_ERR("\"%s\" strtab section mmap failed: %s", name_.c_str(), strerror(errno));
