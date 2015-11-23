@@ -49,7 +49,11 @@ void* android_dlopen_ext(const char* filename __unused, int flag __unused,
 void android_set_application_target_sdk_version(uint32_t target __unused) { }
 uint32_t android_get_application_target_sdk_version() { return 0; }
 
-bool android_init_public_namespace(const char* paths __unused) { return false; }
+bool android_init_namespaces(const char* public_ns_sonames __unused,
+                             const char* anon_ns_library_path __unused) {
+  return false;
+}
+
 struct android_namespace_t* android_create_namespace(const char* name __unused,
                                                      const char* ld_library_path __unused,
                                                      const char* default_library_path __unused,
