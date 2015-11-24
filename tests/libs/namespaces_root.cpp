@@ -40,10 +40,12 @@ extern "C" const char* ns_get_dlopened_string() {
     return nullptr;
   }
 
-  const char* result = *static_cast<const char**>(dlsym(handle, "g_private_dlopened_string"));
-  if (result != nullptr) {
+  const char** result = static_cast<const char**>(dlsym(handle, "g_private_dlopened_string"));
+  if (result == nullptr) {
+    return nullptr;
+  } else {
     g_dlopened = true;
   }
 
-  return result;
+  return *result;
 }
