@@ -33,7 +33,13 @@ LOCAL_CFLAGS := -Wall -Wextra -Wunused -Werror
 LOCAL_CXX_STL := none
 
 LOCAL_MODULE := libdl
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk \
+                                 $(LOCAL_PATH)/libdl.arm.map \
+                                 $(LOCAL_PATH)/libdl.arm64.map \
+                                 $(LOCAL_PATH)/libdl.mips.map \
+                                 $(LOCAL_PATH)/libdl.mips64.map \
+                                 $(LOCAL_PATH)/libdl.x86.map \
+                                 $(LOCAL_PATH)/libdl.x86_64.map \
 
 # NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
 # few symbols from libc. Using --no-undefined here results in having to link
