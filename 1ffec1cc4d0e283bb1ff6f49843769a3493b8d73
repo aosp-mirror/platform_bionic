@@ -22,6 +22,30 @@
       "revId": "1ffec1cc4d0e283bb1ff6f49843769a3493b8d73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db271bf3_24780e5e",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-24T02:05:27Z",
+      "side": 1,
+      "message": "Yes, this particular list does not reflect the actual public list used by zygote. The latter can be found here: https://android-review.googlesource.com/182901\n\nI basically added all system libraries which are referenced by libnstest_root.so and co.",
+      "parentUuid": "3bed97ca_47f432f5",
+      "range": {
+        "startLine": 802,
+        "startChar": 42,
+        "endLine": 802,
+        "endChar": 51
+      },
+      "revId": "1ffec1cc4d0e283bb1ff6f49843769a3493b8d73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
