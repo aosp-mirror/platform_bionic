@@ -1946,30 +1946,24 @@ cc_defaults {
     arch: {
         arm: {
             local_include_dirs: ["arch-arm/include"],
-            cflags: ["-mthumb-interwork"],
         },
         arm64: {
             local_include_dirs: ["arch-arm64/include"],
         },
         mips: {
             local_include_dirs: ["arch-mips/include"],
-            ldflags: ["-melf32ltsmip"],
         },
         mips64: {
             local_include_dirs: ["arch-mips64/include"],
-            ldflags: ["-melf64ltsmip"],
         },
         x86: {
-            cflags: ["-m32"],
-            ldflags: ["-melf_i386"],
             local_include_dirs: ["arch-x86/include"],
         },
         x86_64: {
-            cflags: ["-m64"],
-            ldflags: ["-melf_x86_64"],
             local_include_dirs: ["arch-x86_64/include"],
         },
     },
+    clang: false,
 }
 
 cc_defaults {
