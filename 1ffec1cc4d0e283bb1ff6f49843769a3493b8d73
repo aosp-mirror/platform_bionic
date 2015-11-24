@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bed97ca_47f432f5",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2015-11-24T02:00:57Z",
+      "side": 1,
+      "message": "This is a list of public libs, right? Why is libc++.so here? (I know it\u0027s just a test, I\u0027m more asking to make sure we\u0027re on the same page)",
+      "range": {
+        "startLine": 802,
+        "startChar": 42,
+        "endLine": 802,
+        "endChar": 51
+      },
+      "revId": "1ffec1cc4d0e283bb1ff6f49843769a3493b8d73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
