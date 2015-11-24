@@ -111,6 +111,7 @@ struct android_namespace_t {
 };
 
 android_namespace_t g_default_namespace;
+android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -2201,7 +2202,7 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
     return nullptr;
   }
 
-  android_namespace_t* ns = caller->get_namespace();
+  android_namespace_t* ns = caller != nullptr ? caller->get_namespace() : g_anonymous_namespace;
 
   if (extinfo != nullptr) {
     if ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0) {
@@ -2246,14 +2247,14 @@ void do_dlclose(soinfo* si) {
   soinfo_unload(si);
 }
 
-bool init_public_namespace(const char* libs) {
-  CHECK(libs != nullptr);
+bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path) {
+  CHECK(public_ns_sonames != nullptr);
   if (g_public_namespace_initialized) {
-    DL_ERR("Public namespace has already been initialized.");
+    DL_ERR("public namespace has already been initialized.");
     return false;
   }
 
-  std::vector<std::string> sonames = android::base::Split(libs, ":");
+  std::vector<std::string> sonames = android::base::Split(public_ns_sonames, ":");
 
   ProtectedDataGuard guard;
 
@@ -2267,7 +2268,7 @@ bool init_public_namespace(const char* libs) {
     find_loaded_library_by_soname(&g_default_namespace, soname.c_str(), &candidate);
 
     if (candidate == nullptr) {
-      DL_ERR("Error initializing public namespace: \"%s\" was not found"
+      DL_ERR("error initializing public namespace: \"%s\" was not found"
              " in the default namespace", soname.c_str());
       return false;
     }
@@ -2276,8 +2277,18 @@ bool init_public_namespace(const char* libs) {
     g_public_namespace.push_back(candidate);
   }
 
-  failure_guard.disable();
   g_public_namespace_initialized = true;
+
+  // create anonymous namespace
+  android_namespace_t* anon_ns =
+      create_namespace("(anonymous)", nullptr, anon_ns_library_path, false);
+
+  if (anon_ns == nullptr) {
+    g_public_namespace_initialized = false;
+    return false;
+  }
+  g_anonymous_namespace = anon_ns;
+  failure_guard.disable();
   return true;
 }
 
@@ -2286,7 +2297,7 @@ android_namespace_t* create_namespace(const char* name,
                                       const char* default_library_path,
                                       bool is_isolated) {
   if (!g_public_namespace_initialized) {
-    DL_ERR("Cannot create namespace: public namespace is not initialized.");
+    DL_ERR("cannot create namespace: public namespace is not initialized.");
     return nullptr;
   }
 
