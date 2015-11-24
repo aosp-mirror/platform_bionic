@@ -16,7 +16,7 @@ LIBC {
 
 LIBC_N {
   global:
-    android_init_public_namespace;
+    android_init_namespaces;
     android_create_namespace;
 } LIBC;
 

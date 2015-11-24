@@ -32,6 +32,7 @@
 #include <pagemap/pagemap.h>
 
 #include "TemporaryFile.h"
+#include "utils.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE(ptr != nullptr) << "dlerror: " << dlerror()
@@ -610,8 +611,8 @@ TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  ASSERT_FALSE(android_init_public_namespace(path.c_str()));
-  ASSERT_STREQ("android_init_public_namespace failed: Error initializing public namespace: "
+  ASSERT_FALSE(android_init_namespaces(path.c_str(), nullptr));
+  ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
                "\"libnstest_public.so\" was not found in the default namespace", dlerror());
 
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
@@ -619,7 +620,7 @@ TEST(dlext, ns_smoke) {
   void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_public_namespace(path.c_str())) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
 
   // Check that libraries added to public namespace are NODELETE
   dlclose(handle_public);
@@ -719,7 +720,7 @@ TEST(dlext, ns_isolated) {
 
   android_set_application_target_sdk_version(42U); // something > 23
 
-  ASSERT_TRUE(android_init_public_namespace(path.c_str())) << dlerror();
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
 
   android_namespace_t* ns_not_isolated = android_create_namespace("private", nullptr, (lib_path + "/private_namespace_libs").c_str(), false);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
@@ -794,4 +795,95 @@ TEST(dlext, ns_isolated) {
   ASSERT_STREQ("This string is from private namespace (dlopened library)", ns_get_dlopened_string());
 
   dlclose(handle1);
+}
+
+TEST(dlext, ns_anonymous) {
+  static const char* root_lib = "libnstest_root.so";
+  std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
+
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
+
+  void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(),
+                               RTLD_NOW);
+  ASSERT_TRUE(handle_public != nullptr) << dlerror();
+
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), (lib_path + "/private_namespace_libs").c_str()))
+      << dlerror();
+
+  android_namespace_t* ns = android_create_namespace(
+                                "private", nullptr,
+                                (lib_path + "/private_namespace_libs").c_str(),
+                                false);
+
+  ASSERT_TRUE(ns != nullptr) << dlerror();
+
+  std::string private_library_absolute_path = lib_path + "/private_namespace_libs/" + root_lib;
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns;
+
+  // we are going to copy this library to anonymous mmap and call the copy of ns_get_dlopened_string
+  void* handle = android_dlopen_ext(private_library_absolute_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  uintptr_t ns_get_dlopened_string_addr =
+      reinterpret_cast<uintptr_t>(dlsym(handle, "ns_get_dlopened_string"));
+  ASSERT_TRUE(ns_get_dlopened_string_addr != 0) << dlerror();
+  typedef const char* (*fn_t)();
+  fn_t ns_get_dlopened_string_private = reinterpret_cast<fn_t>(ns_get_dlopened_string_addr);
+
+  std::vector<map_record> maps;
+  Maps::parse_maps(&maps);
+
+  uintptr_t addr_start = 0;
+  uintptr_t addr_end = 0;
+  std::vector<map_record> maps_to_copy;
+
+  for (const auto& rec : maps) {
+    if (rec.pathname == private_library_absolute_path) {
+      if (addr_start == 0) {
+        addr_start = rec.addr_start;
+      }
+      addr_end = rec.addr_end;
+
+      maps_to_copy.push_back(rec);
+    }
+  }
+
+  // some sanity checks..
+  ASSERT_TRUE(addr_start > 0);
+  ASSERT_TRUE(addr_end > 0);
+  ASSERT_EQ(3U, maps_to_copy.size());
+  ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
+  ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
+
+  // copy
+  uintptr_t reserved_addr = reinterpret_cast<uintptr_t>(mmap(nullptr, addr_end - addr_start,
+                                                             PROT_NONE, MAP_ANON | MAP_PRIVATE,
+                                                             -1, 0));
+  ASSERT_TRUE(reinterpret_cast<void*>(reserved_addr) != MAP_FAILED);
+
+  for (const auto& rec : maps_to_copy) {
+    uintptr_t offset = rec.addr_start - addr_start;
+    size_t size = rec.addr_end - rec.addr_start;
+    void* addr = reinterpret_cast<void*>(reserved_addr + offset);
+    void* map = mmap(addr, size, PROT_READ | PROT_WRITE,
+                     MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
+    ASSERT_TRUE(map != MAP_FAILED);
+    memcpy(map, reinterpret_cast<void*>(rec.addr_start), size);
+    mprotect(map, size, rec.perms);
+  }
+
+  // call the function copy
+  uintptr_t ns_get_dlopened_string_offset  = ns_get_dlopened_string_addr - addr_start;
+  fn_t ns_get_dlopened_string_anon = reinterpret_cast<fn_t>(reserved_addr + ns_get_dlopened_string_offset);
+  ASSERT_STREQ("This string is from private namespace (dlopened library)",
+               ns_get_dlopened_string_anon());
+
+  // They should belong to different namespaces (private and anonymous)
+  ASSERT_STREQ("This string is from private namespace (dlopened library)",
+               ns_get_dlopened_string_private());
+
+  ASSERT_TRUE(ns_get_dlopened_string_anon() != ns_get_dlopened_string_private());
 }
