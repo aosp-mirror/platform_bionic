@@ -131,12 +131,16 @@ typedef struct {
 extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
 
 /*
- * Initializes public namespace. The path is the list of sonames
- * separated by colon. Example: "libc.so:libm.so:libdl.so".
- *
+ * Initializes public and anonymous namespaces. The public_ns_sonames is the list of sonames
+ * to be included into public namespace separated by colon. Example: "libc.so:libm.so:libdl.so".
  * The libraries in this list should be loaded prior to this call.
+ *
+ * The anon_ns_library_path is the search path for anonymous namespace. The anonymous namespace
+ * is used in the case when linker cannot identify the caller of dlopen/dlsym. This happens
+ * for the code not loaded by dynamic linker; for example calls from the mono-compiled code.
  */
-extern bool android_init_public_namespace(const char* path);
+extern bool android_init_namespaces(const char* public_ns_sonames,
+                                    const char* anon_ns_library_path);
 
 /*
  * Creates new linker namespace.

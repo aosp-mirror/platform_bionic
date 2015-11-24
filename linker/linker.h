@@ -444,7 +444,7 @@ size_t linker_get_error_buffer_size();
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
 
-bool init_public_namespace(const char* path);
+bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);
 android_namespace_t* create_namespace(const char* name, const char* ld_library_path,
                                       const char* default_library_path, bool is_isolated);
 
