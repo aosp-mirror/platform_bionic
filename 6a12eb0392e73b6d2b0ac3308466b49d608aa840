@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bbbe3f1_b22130e2",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-26T02:16:22Z",
+      "side": 1,
+      "message": "maybe just fail unconditionally here? this is something that is going to be fixed not something \"just the way it is\"",
+      "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
