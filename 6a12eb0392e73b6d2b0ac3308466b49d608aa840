@@ -34,6 +34,24 @@
       "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1267d6_29170d31",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-30T18:37:10Z",
+      "side": 1,
+      "message": "we don\u0027t have any mechanism for expected failures. maybe this is the most reasonable thing for us to do. we should add the bug to the log output though, to make it easier for people to check on the status.",
+      "parentUuid": "1be45325_8c59673f",
+      "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
