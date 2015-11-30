@@ -159,7 +159,7 @@ TEST(pthread, pthread_key_dirty) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, NULL));
 
-  size_t stack_size = 128 * 1024;
+  size_t stack_size = 640 * 1024;
   void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, stack);
   memset(stack, 0xff, stack_size);
@@ -217,13 +217,13 @@ class SpinFunctionHelper {
     while (spin_flag_) {}
     return NULL;
   }
-  static volatile bool spin_flag_;
+  static std::atomic<bool> spin_flag_;
 };
 
 // It doesn't matter if spin_flag_ is used in several tests,
 // because it is always set to false after each test. Each thread
 // loops on spin_flag_ can find it becomes false at some time.
-volatile bool SpinFunctionHelper::spin_flag_ = false;
+std::atomic<bool> SpinFunctionHelper::spin_flag_;
 
 static void* JoinFn(void* arg) {
   return reinterpret_cast<void*>(pthread_join(reinterpret_cast<pthread_t>(arg), NULL));
@@ -416,6 +416,8 @@ TEST(pthread, pthread_setname_np__other) {
   pthread_t t1;
   ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
   ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
+  spinhelper.UnSpin();
+  ASSERT_EQ(0, pthread_join(t1, nullptr));
 }
 
 TEST(pthread, pthread_setname_np__no_such_thread) {
@@ -466,6 +468,8 @@ TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
   timespec ts;
   ASSERT_EQ(0, clock_gettime(c, &ts));
+  spinhelper.UnSpin();
+  ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
 TEST(pthread, pthread_getcpuclockid__no_such_thread) {
@@ -534,7 +538,7 @@ TEST(pthread, pthread_join__race) {
   // http://b/11693195 --- pthread_join could return before the thread had actually exited.
   // If the joiner unmapped the thread's stack, that could lead to SIGSEGV in the thread.
   for (size_t i = 0; i < 1024; ++i) {
-    size_t stack_size = 64*1024;
+    size_t stack_size = 640*1024;
     void* stack = mmap(NULL, stack_size, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE, -1, 0);
 
     pthread_attr_t a;
