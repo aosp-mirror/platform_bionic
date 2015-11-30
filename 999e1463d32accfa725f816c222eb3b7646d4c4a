@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b0923b2_cb7d0900",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-11-30T22:46:24Z",
+      "side": 1,
+      "message": "can\u0027t be included in libc_ndk.a, so moved to libc_bionic_src_files.",
+      "parentUuid": "9b0923b2_cbdce998",
+      "revId": "999e1463d32accfa725f816c222eb3b7646d4c4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bf043de_f622f8e6",
         "filename": "libc/Android.mk",
         "patchSetId": 1
