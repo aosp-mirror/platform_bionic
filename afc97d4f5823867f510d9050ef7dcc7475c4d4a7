@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db0f1bb0_6d59910b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-11-30T20:14:34Z",
+      "side": 1,
+      "message": "I think it would be useful to add a comment about why you are doing this here. Also, the name doesn\u0027t really necessarily invoke the idea that this is initializing stdio code, so a comment describing what this inits would also be useful.",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 12
+      },
+      "revId": "afc97d4f5823867f510d9050ef7dcc7475c4d4a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
