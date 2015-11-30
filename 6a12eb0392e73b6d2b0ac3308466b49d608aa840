@@ -16,6 +16,24 @@
       "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1be45325_8c59673f",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2015-11-30T18:26:39Z",
+      "side": 1,
+      "message": "Yes, it should be fixed. Before it is fixed, is there a way to mark it as expected failure? I just want to avoid blocking other tests.",
+      "parentUuid": "9bbbe3f1_b22130e2",
+      "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
