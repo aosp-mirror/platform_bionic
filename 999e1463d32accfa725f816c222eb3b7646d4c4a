@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b0923b2_cbdce998",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-30T22:16:12Z",
+      "side": 1,
+      "message": "actually this can be moved to libc_common_src_files; and this static lib can be removed. (iirc this was separated because of lack of __thread support from llvm)",
+      "revId": "999e1463d32accfa725f816c222eb3b7646d4c4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bf043de_f622f8e6",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-11-30T22:16:12Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 1047,
+        "startChar": 0,
+        "endLine": 1063,
+        "endChar": 31
+      },
+      "revId": "999e1463d32accfa725f816c222eb3b7646d4c4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
