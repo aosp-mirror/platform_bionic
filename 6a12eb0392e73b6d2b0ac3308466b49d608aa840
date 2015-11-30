@@ -88,6 +88,24 @@
       "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bf38fea_2f814969",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-11-30T19:02:37Z",
+      "side": 1,
+      "message": "(this fails to link.)",
+      "parentUuid": "9b0923b2_c8698fa2",
+      "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
