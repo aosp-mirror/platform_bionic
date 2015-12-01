@@ -141,6 +141,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b17f3fd_1a62fd1a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-01T23:42:20Z",
+      "side": 1,
+      "message": "I would agree with that.  The stack size limitation is generic for all of libc from what I understand to ensure that core library calls don\u0027t blow up the stack, but it probably is fair to treat system properties separately than the core functionality.\n\nIf we agree to making this exception then that can definitely clean up some of this ugliness.",
+      "parentUuid": "9bb8433f_7381ba68",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
