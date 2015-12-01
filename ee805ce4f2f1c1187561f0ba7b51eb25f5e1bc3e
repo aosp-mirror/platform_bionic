@@ -22,6 +22,30 @@
       "revId": "ee805ce4f2f1c1187561f0ba7b51eb25f5e1bc3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb113f0a_19b20b55",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-01T23:56:23Z",
+      "side": 1,
+      "message": "It is long-lived, unfortunately it can change over the lifetime of the process because when used in the developer/engineering context, one sets the property and then starts doing system tracing, and if an errant process still has the old value, then the logger will get confused as it also switches over internal workings (yes, there is a race, but it is very small).\n\nAgreed about returning clockid_t. Will look into changing the public interface for android_log_timestamp() in liblog so we can reduce maintenance by keeping the implementations close in design so fixes are identical here and there.",
+      "parentUuid": "1bac5306_4f005144",
+      "range": {
+        "startLine": 520,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 32
+      },
+      "revId": "ee805ce4f2f1c1187561f0ba7b51eb25f5e1bc3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
