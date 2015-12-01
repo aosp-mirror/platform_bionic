@@ -31,6 +31,7 @@
 
 #include <android/set_abort_message.h>
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -45,6 +46,9 @@
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
+
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
 
 static pthread_mutex_t g_abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -481,6 +485,64 @@ static int __libc_open_log_socket() {
   return log_fd;
 }
 
+struct cache {
+  const prop_info* pinfo;
+  uint32_t serial;
+  char c;
+};
+
+static void refresh_cache(struct cache *cache, const char *key)
+{
+  if (!cache->pinfo) {
+    cache->pinfo = __system_property_find(key);
+    if (!cache->pinfo) {
+      return;
+    }
+  }
+  uint32_t serial = __system_property_serial(cache->pinfo);
+  if (serial == cache->serial) {
+    return;
+  }
+  cache->serial = serial;
+
+  char buf[PROP_VALUE_MAX];
+  __system_property_read(cache->pinfo, 0, buf);
+  cache->c = buf[0];
+}
+
+// Timestamp state generally remains constant, since a change is
+// rare, we can accept a trylock failure gracefully.
+static pthread_mutex_t lock_clockid = PTHREAD_MUTEX_INITIALIZER;
+
+static clockid_t android_log_clockid()
+{
+  static struct cache r_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
+  static struct cache p_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
+  char c;
+
+  if (pthread_mutex_trylock(&lock_clockid)) {
+    // We are willing to accept some race in this context
+    if (!(c = p_time_cache.c)) {
+      c = r_time_cache.c;
+    }
+  } else {
+    static uint32_t serial;
+    uint32_t current_serial = __system_property_area_serial();
+    if (current_serial != serial) {
+      refresh_cache(&r_time_cache, "ro.logd.timestamp");
+      refresh_cache(&p_time_cache, "persist.logd.timestamp");
+      serial = current_serial;
+    }
+    if (!(c = p_time_cache.c)) {
+      c = r_time_cache.c;
+    }
+
+    pthread_mutex_unlock(&lock_clockid);
+  }
+
+  return (tolower(c) == 'm') ? CLOCK_MONOTONIC : CLOCK_REALTIME;
+}
+
 struct log_time { // Wire format
   uint32_t tv_sec;
   uint32_t tv_nsec;
@@ -501,7 +563,7 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[1].iov_base = &tid;
   vec[1].iov_len = sizeof(tid);
   timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(android_log_clockid(), &ts);
   log_time realtime_ts;
   realtime_ts.tv_sec = ts.tv_sec;
   realtime_ts.tv_nsec = ts.tv_nsec;
@@ -544,7 +606,7 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   vec[1].iov_base = &tid;
   vec[1].iov_len = sizeof(tid);
   timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(android_log_clockid(), &ts);
   log_time realtime_ts;
   realtime_ts.tv_sec = ts.tv_sec;
   realtime_ts.tv_nsec = ts.tv_nsec;
