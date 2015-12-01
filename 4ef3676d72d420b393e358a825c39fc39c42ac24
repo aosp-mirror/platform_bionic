@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1be45325_b545822a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-01T02:03:45Z",
+      "side": 1,
+      "message": "Interesting; looks like we\u0027re stuck without pthread mutexes here then.",
+      "parentUuid": "bb1267d6_32f4167e",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbe987fc_baf8d56e",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2015-12-01T01:48:18Z",
       "side": 1,
       "message": "why static?",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db0f1bb0_de40251c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-01T02:03:45Z",
+      "side": 1,
+      "message": "Stack frame limits for libc prevent a PATH_MAX size char[] from being on the stack and the comment above describes why dynamic allocation isn\u0027t doable.  I can add a line about the stack frame limits if it makes it more clear.",
+      "parentUuid": "bbe987fc_baf8d56e",
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
