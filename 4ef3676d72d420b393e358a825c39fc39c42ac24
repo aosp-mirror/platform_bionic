@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb1267d6_32f4167e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-01T01:48:18Z",
+      "side": 1,
+      "message": "(btw, after we\u0027d asked \"does anyone use this\", the next day anwarg mentioned that this is sometimes useful.)",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbe987fc_baf8d56e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-01T01:48:18Z",
+      "side": 1,
+      "message": "why static?",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
