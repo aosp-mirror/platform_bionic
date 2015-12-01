@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7bf38fea_d875e1d8",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-01T02:06:23Z",
+      "side": 1,
+      "message": "i think that\u0027s fine. bionic internal code should probably be using Lock anyway.",
+      "parentUuid": "1be45325_b545822a",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbe987fc_baf8d56e",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 17
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Stack frame limits for libc prevent a PATH_MAX size char[] from being on the stack and the comment above describes why dynamic allocation isn\u0027t doable.  I can add a line about the stack frame limits if it makes it more clear.",
       "parentUuid": "bbe987fc_baf8d56e",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbe987fc_da2dd985",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-01T02:06:23Z",
+      "side": 1,
+      "message": "ah, yes, you\u0027d told me that before. yeah, comment that directly here (rather than adding it to the comment block above; folks are more likely to look one line above than 10 ;-) ).",
+      "parentUuid": "db0f1bb0_de40251c",
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
