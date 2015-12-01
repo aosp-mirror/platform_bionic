@@ -831,8 +831,9 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // The fork implementation depends on pthread data, so we can't include
-        // it in libc_ndk.a.
+        // The following implementations depend on pthread data, so we can't
+        // include them in libc_ndk.a.
+        "bionic/__cxa_thread_atexit_impl.cpp",
         "bionic/fork.cpp",
 
         // The data that backs getauxval is initialized in the libc init
@@ -1454,22 +1455,6 @@ cc_library_static {
     name: "libc_bionic_ndk",
 }
 
-cc_library_static {
-    name: "libc_thread_atexit_impl",
-    defaults: ["libc_defaults"],
-    srcs: ["bionic/__cxa_thread_atexit_impl.cpp"],
-    cflags: ["-Wframe-larger-than=2048"],
-    cppflags: ["-Wold-style-cast"],
-    include_dirs: ["bionic/libstdc++/include"],
-
-    arch: {
-        arm64: {
-            // b/25662915, clang compiled __cxa_thread_atexit_impl.cpp still failed.
-            clang: false,
-        },
-    },
-}
-
 // ========================================================
 // libc_pthread.a - pthreads parts that previously lived in
 // libc_bionic.a. Relocated to their own library because
@@ -1665,7 +1650,6 @@ cc_library_static {
         "libc_pthread",
         "libc_stack_protector",
         "libc_syscalls",
-        "libc_thread_atexit_impl",
         "libc_tzcode",
     ],
 
