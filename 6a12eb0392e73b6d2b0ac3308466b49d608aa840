@@ -106,6 +106,24 @@
       "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbe987fc_1a000143",
+        "filename": "tests/__cxa_thread_atexit_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-12-01T01:13:20Z",
+      "side": 1,
+      "message": "It fails to link only when we use thread_local; I was thinking along the lines of replacing GTEST_LOG with GTETST_FAIL",
+      "parentUuid": "7bf38fea_2f814969",
+      "revId": "6a12eb0392e73b6d2b0ac3308466b49d608aa840",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
