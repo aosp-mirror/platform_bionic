@@ -105,6 +105,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fba69f26_8e76bbba",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-01T22:49:24Z",
+      "side": 1,
+      "message": "That said, these functions need to be thread safe, so that static wouldn\u0027t work.  Latest patch uses anonymous mappings instead.",
+      "parentUuid": "bbe987fc_da2dd985",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
