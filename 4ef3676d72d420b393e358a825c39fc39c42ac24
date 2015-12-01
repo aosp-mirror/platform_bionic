@@ -123,6 +123,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bb8433f_7381ba68",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2015-12-01T23:23:47Z",
+      "side": 1,
+      "message": "Instead of using mmap, should we instead use `#pragma GCC diagnostic ignored \"-Wframe-larger-than\u003d\"` for this function?\n\nWas there a particular reason for limiting the amount of stack usage? My first thought was a tiny sigaltstack, but the change that added the warning fixed tmpfile, which isn\u0027t async signal safe.",
+      "parentUuid": "fba69f26_8e76bbba",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
