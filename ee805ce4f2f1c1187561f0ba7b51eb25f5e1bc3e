@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bac5306_4f005144",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-01T22:01:37Z",
+      "side": 1,
+      "message": "This function is a bit confusing. Do you expect the properties to ever change over the lifetime of the process?\n\nRegardless, I think it would be better to do a single one time initialization, maybe using pthread_once, or doing it in some other static initialization.\n\nAlso, rather than return a character, it would be better to return either CLOCK_MONOTONIC or CLOCK_REALTIME. That way none of the callers need to check if the timestamp is \u0027m\u0027.\n\nIf you do this, you can just cache the clockid_t value instead of anything else.",
+      "range": {
+        "startLine": 520,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 32
+      },
+      "revId": "ee805ce4f2f1c1187561f0ba7b51eb25f5e1bc3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
