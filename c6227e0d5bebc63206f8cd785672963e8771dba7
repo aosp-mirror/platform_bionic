@@ -105,6 +105,24 @@
       "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb113f0a_88a883f9",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T22:53:34Z",
+      "side": 1,
+      "message": "it doesn\u0027t seem particularly tempting unless there\u0027s a clean split.\n\nnoinline might be cleaner than #pragma; at least it makes the intended scope clearer.",
+      "parentUuid": "5b1deb19_a5cbe874",
+      "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
