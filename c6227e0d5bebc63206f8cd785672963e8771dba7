@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbae3bf9_66645664",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:58:25Z",
+      "side": 1,
+      "message": "no need for \\n in logging.",
+      "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b18372c_e49844eb",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:58:25Z",
+      "side": 1,
+      "message": "why does this need to be so low? can\u0027t we just have this around the functions with the large arrays?",
+      "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
