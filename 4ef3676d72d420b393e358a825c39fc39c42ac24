@@ -213,6 +213,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbb18759_0bcc71b2",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-02T22:48:40Z",
+      "side": 1,
+      "message": "I had in a previous patch set a hardcoded max size for the context that I would read from property_contexts and therefore limit the maximum filesize, but that was rejected since selinux doesn\u0027t restrict the length of a context.  If we can agree defining a maximum here is acceptable, then I\u0027ll make that change.\n\nIn my opinion, 1024 is plenty reasonable.  \n\nIn theory we could limit the prefix (/dev/__properties__) size and then the total size of the allowable properties, but just having one limit and aborting in init if any property file exceeds it is probably sufficient.",
+      "parentUuid": "5b1deb19_eaa92fb8",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
