@@ -69,6 +69,24 @@
       "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbb18759_6b41bde7",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T22:27:33Z",
+      "side": 1,
+      "message": "or move them into their own file so they stop getting inlined. (a pity the inliner can\u0027t take \"this would use too much stack\" as a hint not to inline...)",
+      "parentUuid": "3b18372c_647ef446",
+      "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
