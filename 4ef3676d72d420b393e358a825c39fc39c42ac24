@@ -159,6 +159,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b17f3fd_0ef63fbb",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:56:25Z",
+      "side": 1,
+      "message": "the main goal with the stack frame limit was to avoid code like localtime requiring two 64KiB buffers on the stack at the same time. this broke everyone who was trying to use small stacks (which they probably shouldn\u0027t have been doing, but 128KiB is definitely unreasonable).\n\naiui though, we chose a limit of 2048 so that code that used PATH_MAX would work. all i see in this function is one 1024-byte char[] and one 4-byte int. why are we hitting the limit here?",
+      "parentUuid": "1b17f3fd_1a62fd1a",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
