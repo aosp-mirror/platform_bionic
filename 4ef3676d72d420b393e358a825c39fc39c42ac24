@@ -195,6 +195,24 @@
       "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b1deb19_eaa92fb8",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T22:27:33Z",
+      "side": 1,
+      "message": "ah, yes, i think i may have done that on purpose to stop us from accidentally hard-coding filename limits. here it doesn\u0027t matter, since these aren\u0027t general-purpose filenames. so maybe #define PROPERTY_FILENAME_MAX 1024?",
+      "parentUuid": "9bb8433f_ca8f0751",
+      "revId": "4ef3676d72d420b393e358a825c39fc39c42ac24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
