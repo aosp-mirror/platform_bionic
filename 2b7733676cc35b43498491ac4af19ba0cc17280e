@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bac5306_9540861b",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:39:29Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "2b7733676cc35b43498491ac4af19ba0cc17280e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b17f3fd_e8801bb2",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:39:29Z",
+      "side": 1,
+      "message": "declare when you can define.",
+      "revId": "2b7733676cc35b43498491ac4af19ba0cc17280e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb113f0a_22107067",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-02T21:39:29Z",
+      "side": 1,
+      "message": "this isn\u0027t the return value.",
+      "revId": "2b7733676cc35b43498491ac4af19ba0cc17280e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
