@@ -87,6 +87,24 @@
       "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b1deb19_a5cbe874",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-02T22:48:40Z",
+      "side": 1,
+      "message": "Is that desirable though to move to two files?  Seems a little bit messy.\n\nI could use __attribute__((noinline)) as well if it\u0027s the inliner that\u0027s causing the problem.",
+      "parentUuid": "bbb18759_6b41bde7",
+      "revId": "c6227e0d5bebc63206f8cd785672963e8771dba7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
