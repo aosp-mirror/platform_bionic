@@ -34,7 +34,7 @@ class ScopedPthreadMutexLocker {
  private:
   pthread_mutex_t* mu_;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedPthreadMutexLocker);
+  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedPthreadMutexLocker);
 };
 
 #endif // SCOPED_PTHREAD_MUTEX_LOCKER_H
