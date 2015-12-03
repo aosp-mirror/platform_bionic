@@ -25,34 +25,38 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <new>
-#include <stdatomic.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stddef.h>
+#include <ctype.h>
 #include <errno.h>
-#include <poll.h>
 #include <fcntl.h>
+#include <poll.h>
+#include <stdatomic.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <new>
 
+#include <linux/xattr.h>
+#include <netinet/in.h>
 #include <sys/mman.h>
-
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <sys/select.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <netinet/in.h>
+#include <sys/un.h>
+#include <sys/xattr.h>
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
 #include "private/bionic_futex.h"
+#include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
+#include "private/libc_logging.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
@@ -192,7 +196,7 @@ struct find_nth_cookie {
     }
 };
 
-static char property_filename[PATH_MAX] = PROP_FILENAME;
+static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
 static bool compat_mode = false;
 static size_t pa_data_size;
 static size_t pa_size;
@@ -216,13 +220,12 @@ static int get_fd_from_env(void)
     return atoi(env);
 }
 
-static int map_prop_area_rw()
-{
+static prop_area* map_prop_area_rw(const char* filename, const char* context,
+                                   bool* fsetxattr_failed) {
     /* dev is a tmpfs that we can use to carve a shared workspace
      * out of, so let's do that...
      */
-    const int fd = open(property_filename,
-                        O_RDWR | O_CREAT | O_NOFOLLOW | O_CLOEXEC | O_EXCL, 0444);
+    const int fd = open(filename, O_RDWR | O_CREAT | O_NOFOLLOW | O_CLOEXEC | O_EXCL, 0444);
 
     if (fd < 0) {
         if (errno == EACCES) {
@@ -231,12 +234,31 @@ static int map_prop_area_rw()
              */
             abort();
         }
-        return -1;
+        return nullptr;
+    }
+
+    if (context) {
+        if (fsetxattr(fd, XATTR_NAME_SELINUX, context, strlen(context) + 1, 0) != 0) {
+            __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                              "fsetxattr failed to set context (%s) for \"%s\"", context, filename);
+            /*
+             * fsetxattr() will fail during system properties tests due to selinux policy.
+             * We do not want to create a custom policy for the tester, so we will continue in
+             * this function but set a flag that an error has occurred.
+             * Init, which is the only daemon that should ever call this function will abort
+             * when this error occurs.
+             * Otherwise, the tester will ignore it and continue, albeit without any selinux
+             * property separation.
+             */
+            if (fsetxattr_failed) {
+                *fsetxattr_failed = true;
+            }
+        }
     }
 
     if (ftruncate(fd, PA_SIZE) < 0) {
         close(fd);
-        return -1;
+        return nullptr;
     }
 
     pa_size = PA_SIZE;
@@ -246,29 +268,26 @@ static int map_prop_area_rw()
     void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (memory_area == MAP_FAILED) {
         close(fd);
-        return -1;
+        return nullptr;
     }
 
     prop_area *pa = new(memory_area) prop_area(PROP_AREA_MAGIC, PROP_AREA_VERSION);
 
-    /* plug into the lib property services */
-    __system_property_area__ = pa;
-
     close(fd);
-    return 0;
+    return pa;
 }
 
-static int map_fd_ro(const int fd) {
+static prop_area* map_fd_ro(const int fd) {
     struct stat fd_stat;
     if (fstat(fd, &fd_stat) < 0) {
-        return -1;
+        return nullptr;
     }
 
     if ((fd_stat.st_uid != 0)
             || (fd_stat.st_gid != 0)
             || ((fd_stat.st_mode & (S_IWGRP | S_IWOTH)) != 0)
             || (fd_stat.st_size < static_cast<off_t>(sizeof(prop_area))) ) {
-        return -1;
+        return nullptr;
     }
 
     pa_size = fd_stat.st_size;
@@ -276,7 +295,7 @@ static int map_fd_ro(const int fd) {
 
     void* const map_result = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
     if (map_result == MAP_FAILED) {
-        return -1;
+        return nullptr;
     }
 
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
@@ -284,22 +303,20 @@ static int map_fd_ro(const int fd) {
         (pa->version() != PROP_AREA_VERSION &&
          pa->version() != PROP_AREA_VERSION_COMPAT)) {
         munmap(pa, pa_size);
-        return -1;
+        return nullptr;
     }
 
     if (pa->version() == PROP_AREA_VERSION_COMPAT) {
         compat_mode = true;
     }
 
-    __system_property_area__ = pa;
-    return 0;
+    return pa;
 }
 
-static int map_prop_area()
-{
-    int fd = open(property_filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
+static prop_area* map_prop_area(const char* filename, bool is_legacy) {
+    int fd = open(filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
     bool close_fd = true;
-    if (fd == -1 && errno == ENOENT) {
+    if (fd == -1 && errno == ENOENT && is_legacy) {
         /*
          * For backwards compatibility, if the file doesn't
          * exist, we use the environment to get the file descriptor.
@@ -308,16 +325,18 @@ static int map_prop_area()
          * returns other errors such as ENOMEM or ENFILE, since it
          * might be possible for an external program to trigger this
          * condition.
+         * Only do this for the legacy prop file, secured prop files
+         * do not have a backup
          */
         fd = get_fd_from_env();
         close_fd = false;
     }
 
     if (fd < 0) {
-        return -1;
+        return nullptr;
     }
 
-    const int map_result = map_fd_ro(fd);
+    prop_area* map_result = map_fd_ro(fd);
     if (close_fd) {
         close(fd);
     }
@@ -623,9 +642,325 @@ bool prop_area::foreach(void (*propfn)(const prop_info* pi, void* cookie), void*
     return foreach_property(root_node(), propfn, cookie);
 }
 
+struct context_node {
+    context_node(struct context_node* next, const char* context, prop_area* pa)
+        : context(strdup(context)), pa(pa), checked_access(false), next(next) {
+        lock.init(false);
+    }
+    ~context_node() {
+        if (pa) {
+            munmap(pa, pa_size);
+        }
+        free(context);
+    }
+    Lock lock;
+    char* context;
+    prop_area* pa;
+    bool checked_access;
+    struct context_node* next;
+};
+
+struct prefix_node {
+    prefix_node(struct prefix_node* next, const char* prefix, context_node* context)
+        : prefix(strdup(prefix)), prefix_len(strlen(prefix)), context(context), next(next) {
+    }
+    ~prefix_node() {
+        free(prefix);
+    }
+    char* prefix;
+    const size_t prefix_len;
+    context_node* context;
+    struct prefix_node* next;
+};
+
+template <typename List, typename... Args>
+static inline void list_add(List** list, Args... args) {
+    *list = new List(*list, args...);
+}
+
+static void list_add_after_len(prefix_node** list, const char* prefix, context_node* context) {
+    size_t prefix_len = strlen(prefix);
+
+    auto next_list = list;
+
+    while (*next_list) {
+        if ((*next_list)->prefix_len < prefix_len || (*next_list)->prefix[0] == '*') {
+            list_add(next_list, prefix, context);
+            return;
+        }
+        next_list = &(*next_list)->next;
+    }
+    list_add(next_list, prefix, context);
+}
+
+template <typename List, typename Func>
+static void list_foreach(List* list, Func func) {
+    while (list) {
+        func(list);
+        list = list->next;
+    }
+}
+
+template <typename List, typename Func>
+static List* list_find(List* list, Func func) {
+    while (list) {
+        if (func(list)) {
+            return list;
+        }
+        list = list->next;
+    }
+    return nullptr;
+}
+
+template <typename List>
+static void list_free(List** list) {
+    while (*list) {
+        auto old_list = *list;
+        *list = old_list->next;
+        delete old_list;
+    }
+}
+
+static prefix_node* prefixes = nullptr;
+static context_node* contexts = nullptr;
+
+/*
+ * pthread_mutex_lock() calls into system_properties in the case of contention.
+ * This creates a risk of dead lock if any system_properties functions
+ * use pthread locks after system_property initialization.
+ *
+ * For this reason, the below three functions use a bionic Lock and static
+ * allocation of memory for each filename.
+ */
+
+static bool open_prop_file(context_node* cnode, bool access_rw, bool* fsetxattr_failed) {
+    cnode->lock.lock();
+    if (cnode->pa) {
+        cnode->lock.unlock();
+        return true;
+    }
+
+    char filename[PROP_FILENAME_MAX];
+    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, cnode->context);
+    if (len < 0 || len > PROP_FILENAME_MAX) {
+        cnode->lock.unlock();
+        return false;
+    }
+
+    if (access_rw) {
+        cnode->pa = map_prop_area_rw(filename, cnode->context, fsetxattr_failed);
+    } else {
+        cnode->pa = map_prop_area(filename, false);
+    }
+    cnode->lock.unlock();
+    return cnode->pa;
+}
+
+static bool check_access(context_node* cnode) {
+    char filename[PROP_FILENAME_MAX];
+    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, cnode->context);
+    if (len < 0 || len > PROP_FILENAME_MAX) {
+        return false;
+    }
+
+    return access(filename, R_OK) == 0;
+}
+
+static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
+    char filename[PROP_FILENAME_MAX];
+    int len = snprintf(filename, sizeof(filename), "%s/properties_serial", property_filename);
+    if (len < 0 || len > PROP_FILENAME_MAX) {
+        __system_property_area__ = nullptr;
+        return false;
+    }
+
+    if (access_rw) {
+        __system_property_area__ =
+            map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
+    } else {
+        __system_property_area__ = map_prop_area(filename, false);
+    }
+    return __system_property_area__;
+}
+
+static prop_area* get_prop_area_for_name(const char* name) {
+    auto entry = list_find(prefixes, [name](auto l) {
+        return l->prefix[0] == '*' || !strncmp(l->prefix, name, l->prefix_len);
+    });
+    if (!entry) {
+        return nullptr;
+    }
+
+    auto cnode = entry->context;
+    if (!cnode->pa) {
+        open_prop_file(cnode, false, nullptr);
+    }
+    return cnode->pa;
+}
+
+/*
+ * The below two functions are duplicated from label_support.c in libselinux.
+ * TODO: Find a location suitable for these functions such that both libc and
+ * libselinux can share a common source file.
+ */
+
+/*
+ * The read_spec_entries and read_spec_entry functions may be used to
+ * replace sscanf to read entries from spec files. The file and
+ * property services now use these.
+ */
+
+/* Read an entry from a spec file (e.g. file_contexts) */
+static inline int read_spec_entry(char **entry, char **ptr, int *len)
+{
+    *entry = NULL;
+    char *tmp_buf = NULL;
+
+    while (isspace(**ptr) && **ptr != '\0')
+        (*ptr)++;
+
+    tmp_buf = *ptr;
+    *len = 0;
+
+    while (!isspace(**ptr) && **ptr != '\0') {
+        (*ptr)++;
+        (*len)++;
+    }
+
+    if (*len) {
+        *entry = strndup(tmp_buf, *len);
+        if (!*entry)
+            return -1;
+    }
+
+    return 0;
+}
+
+/*
+ * line_buf - Buffer containing the spec entries .
+ * num_args - The number of spec parameter entries to process.
+ * ...      - A 'char **spec_entry' for each parameter.
+ * returns  - The number of items processed.
+ *
+ * This function calls read_spec_entry() to do the actual string processing.
+ */
+static int read_spec_entries(char *line_buf, int num_args, ...)
+{
+    char **spec_entry, *buf_p;
+    int len, rc, items, entry_len = 0;
+    va_list ap;
+
+    len = strlen(line_buf);
+    if (line_buf[len - 1] == '\n')
+        line_buf[len - 1] = '\0';
+    else
+        /* Handle case if line not \n terminated by bumping
+         * the len for the check below (as the line is NUL
+         * terminated by getline(3)) */
+        len++;
+
+    buf_p = line_buf;
+    while (isspace(*buf_p))
+        buf_p++;
+
+    /* Skip comment lines and empty lines. */
+    if (*buf_p == '#' || *buf_p == '\0')
+        return 0;
+
+    /* Process the spec file entries */
+    va_start(ap, num_args);
+
+    items = 0;
+    while (items < num_args) {
+        spec_entry = va_arg(ap, char **);
+
+        if (len - 1 == buf_p - line_buf) {
+            va_end(ap);
+            return items;
+        }
+
+        rc = read_spec_entry(spec_entry, &buf_p, &entry_len);
+        if (rc < 0) {
+            va_end(ap);
+            return rc;
+        }
+        if (entry_len)
+            items++;
+    }
+    va_end(ap);
+    return items;
+}
+
+static bool initialize_properties() {
+    list_free(&prefixes);
+    list_free(&contexts);
+
+    FILE* file = fopen("/property_contexts", "re");
+
+    if (!file) {
+        return false;
+    }
+
+    char* buffer = nullptr;
+    size_t line_len;
+    char* prop_prefix = nullptr;
+    char* context = nullptr;
+
+    while (getline(&buffer, &line_len, file) > 0) {
+        int items = read_spec_entries(buffer, 2, &prop_prefix, &context);
+        if (items <= 0) {
+            continue;
+        }
+        if (items == 1) {
+            free(prop_prefix);
+            continue;
+        }
+
+        auto old_context =
+            list_find(contexts, [context](auto l) { return !strcmp(l->context, context); });
+        if (old_context) {
+            list_add_after_len(&prefixes, prop_prefix, old_context);
+        } else {
+            list_add(&contexts, context, nullptr);
+            list_add_after_len(&prefixes, prop_prefix, contexts);
+        }
+        free(prop_prefix);
+        free(context);
+    }
+
+    free(buffer);
+    fclose(file);
+    return true;
+}
+
+static bool is_dir(const char* pathname) {
+    struct stat info;
+    if (stat(pathname, &info) == -1) {
+        return false;
+    }
+    return S_ISDIR(info.st_mode);
+}
+
 int __system_properties_init()
 {
-    return map_prop_area();
+    if (is_dir(property_filename)) {
+        if (!initialize_properties()) {
+            return -1;
+        }
+        if (!map_system_property_area(false, nullptr)) {
+            list_free(&prefixes);
+            list_free(&contexts);
+            return -1;
+        }
+    } else {
+        __system_property_area__ = map_prop_area(property_filename, true);
+        if (!__system_property_area__) {
+            return -1;
+        }
+        list_add(&contexts, "legacy_system_prop_area", __system_property_area__);
+        list_add_after_len(&prefixes, "*", contexts);
+    }
+    return 0;
 }
 
 int __system_property_set_filename(const char *filename)
@@ -640,7 +975,23 @@ int __system_property_set_filename(const char *filename)
 
 int __system_property_area_init()
 {
-    return map_prop_area_rw();
+    mkdir(property_filename, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    if (!initialize_properties()) {
+        return -1;
+    }
+    bool open_prop_file_failed = false;
+    bool fsetxattr_failed = false;
+    list_foreach(contexts, [&fsetxattr_failed, &open_prop_file_failed](auto l) {
+        if (!open_prop_file(l, true, &fsetxattr_failed)) {
+            open_prop_file_failed = true;
+        }
+    });
+    if (open_prop_file_failed || !map_system_property_area(true, &fsetxattr_failed)) {
+        list_free(&prefixes);
+        list_free(&contexts);
+        return -1;
+    }
+    return fsetxattr_failed ? -2 : 0;
 }
 
 unsigned int __system_property_area_serial()
@@ -659,11 +1010,13 @@ const prop_info *__system_property_find(const char *name)
         return __system_property_find_compat(name);
     }
 
-    if (!__system_property_area__) {
+    prop_area* pa = get_prop_area_for_name(name);
+    if (!pa) {
+        __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
         return nullptr;
     }
 
-    return __system_property_area__->find(name);
+    return pa->find(name);
 }
 
 // The C11 standard doesn't allow atomic loads from const fields,
@@ -769,8 +1122,6 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    prop_area *pa = __system_property_area__;
-
     if (namelen >= PROP_NAME_MAX)
         return -1;
     if (valuelen >= PROP_VALUE_MAX)
@@ -778,21 +1129,24 @@ int __system_property_add(const char *name, unsigned int namelen,
     if (namelen < 1)
         return -1;
 
-    if (!__system_property_area__) {
+    prop_area* pa = get_prop_area_for_name(name);
+
+    if (!pa) {
+        __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
         return -1;
     }
 
-    bool ret = __system_property_area__->add(name, namelen, value, valuelen);
+    bool ret = pa->add(name, namelen, value, valuelen);
     if (!ret)
         return -1;
 
     // There is only a single mutator, but we want to make sure that
     // updates are visible to a reader waiting for the update.
     atomic_store_explicit(
-        pa->serial(),
-        atomic_load_explicit(pa->serial(), memory_order_relaxed) + 1,
+        __system_property_area__->serial(),
+        atomic_load_explicit(__system_property_area__->serial(), memory_order_relaxed) + 1,
         memory_order_release);
-    __futex_wake(pa->serial(), INT32_MAX);
+    __futex_wake(__system_property_area__->serial(), INT32_MAX);
     return 0;
 }
 
@@ -841,9 +1195,16 @@ int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         return __system_property_foreach_compat(propfn, cookie);
     }
 
-    if (!__system_property_area__) {
-        return -1;
-    }
-
-    return __system_property_area__->foreach(propfn, cookie) ? 0 : -1;
+    list_foreach(contexts, [propfn, cookie](auto l) {
+        if (!l->pa && !l->checked_access) {
+            if (check_access(l)) {
+                open_prop_file(l, false, nullptr);
+            }
+            l->checked_access = true;
+        }
+        if (l->pa) {
+            l->pa->foreach(propfn, cookie);
+        }
+    });
+    return 0;
 }
