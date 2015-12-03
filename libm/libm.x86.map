@@ -272,7 +272,3 @@ LIBC {
     *;
 };
 
-LIBC_PRIVATE { # arm x86 mips
-  global: # arm x86 mips
-    __muldc3; # arm x86 mips
-} LIBC; # arm x86 mips
