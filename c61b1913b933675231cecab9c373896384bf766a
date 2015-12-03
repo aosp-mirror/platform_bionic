@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "404ed883_256a0e88",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:41:32Z",
+      "side": 1,
+      "message": "Should this be marked as deprecated? The comment in the source code it seems to error out if the property value \u003e 92, it doesn\u0027t truncate the property to 92 as the comment above implies.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "204d6487_e45f5abe",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:41:32Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 56,
+        "startChar": 53,
+        "endLine": 56,
+        "endChar": 54
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c08728d0_044a78a8",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:41:32Z",
+      "side": 1,
+      "message": "Same as above, should this be marked deprecated?",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 26
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20a2c463_3c1d51f0",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:41:32Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 80,
+        "startChar": 61,
+        "endLine": 80,
+        "endChar": 62
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40933818_007ca8c4",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:41:32Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 88,
+        "startChar": 2,
+        "endLine": 88,
+        "endChar": 3
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
