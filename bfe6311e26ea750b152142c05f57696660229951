@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "40933818_e06bbcc7",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-12-03T21:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00486077_c3357682",
+      "range": {
+        "startLine": 582,
+        "startChar": 6,
+        "endLine": 582,
+        "endChar": 9
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c08728d0_2410dc96",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "e0842cce_4279520e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-12-03T21:24:09Z",
+      "side": 1,
+      "message": "It wouldn\u0027t block on a read because all read_fds have been marked as O_NONBLOCK at L586. The reason to not use poll/epoll here is because I want to monitor many events in WaitChildProcs(), ReadChildProcOutput() is just one of them.",
+      "parentUuid": "c08728d0_2410dc96",
+      "range": {
+        "startLine": 678,
+        "startChar": 12,
+        "endLine": 678,
+        "endChar": 31
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "40933818_c02a40ba",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2015-12-03T20:34:45Z",
       "side": 1,
       "message": "This might be better as std::string msg \u003d android::base::StringPrintf(...);",
+      "range": {
+        "startLine": 781,
+        "startChar": 6,
+        "endLine": 781,
+        "endChar": 21
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c08728d0_04983834",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-12-03T21:24:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40933818_c02a40ba",
       "range": {
         "startLine": 781,
         "startChar": 6,
