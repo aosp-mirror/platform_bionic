@@ -272,11 +272,10 @@ LIBC {
     *;
 };
 
-LIBC_PRIVATE { # arm x86 mips
-  global: # arm x86 mips
+LIBC_PRIVATE { # arm mips
+  global: # arm mips
     __fixdfdi; # arm mips
     __fixsfdi; # arm mips
     __fixunsdfdi; # arm mips
     __fixunssfdi; # arm mips
-    __muldc3; # arm x86 mips
-} LIBC; # arm x86 mips
+} LIBC; # arm mips
