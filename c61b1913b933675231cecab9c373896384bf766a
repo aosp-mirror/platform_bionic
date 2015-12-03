@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "40933818_a021347f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2015-12-03T21:48:59Z",
+      "side": 1,
+      "message": "value_size \u003c\u003d len?",
+      "range": {
+        "startLine": 733,
+        "startChar": 4,
+        "endLine": 733,
+        "endChar": 27
+      },
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "404ed883_256a0e88",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 1
