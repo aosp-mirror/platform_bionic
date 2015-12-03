@@ -41,6 +41,7 @@ typedef struct prop_msg prop_msg;
 #define PROP_AREA_VERSION_COMPAT 0x45434f76
 
 #define PROP_SERVICE_NAME "property_service"
+#define PROP_FILENAME_MAX 1024
 #define PROP_FILENAME "/dev/__properties__"
 
 #define PA_SIZE         (128 * 1024)
