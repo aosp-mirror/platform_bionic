@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "40933818_00bfc87b",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2015-12-03T21:06:58Z",
+      "side": 1,
+      "message": "If (name) is better I believe.",
+      "revId": "c61b1913b933675231cecab9c373896384bf766a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "404ed883_256a0e88",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 1
