@@ -48,7 +48,6 @@ typedef struct prop_msg prop_msg;
 
 #define PA_SIZE         (128 * 1024)
 
-#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 #define SERIAL_DIRTY(serial) ((serial) & 1)
 
 __BEGIN_DECLS
@@ -61,6 +60,18 @@ struct prop_msg
 };
 
 #define PROP_MSG_SETPROP 1
+#define PROP_MSG_SETPROP2 0x00020001
+
+#define PROP_SUCCESS 0
+#define PROP_ERROR_READ_CMD 0x0004
+#define PROP_ERROR_READ_DATA 0x0008
+#define PROP_ERROR_READ_ONLY_PROPERTY 0x000B
+#define PROP_ERROR_INVALID_NAME 0x0010
+#define PROP_ERROR_INVALID_VALUE 0x0014
+#define PROP_ERROR_PERMISSION_DENIED 0x0018
+#define PROP_ERROR_INVALID_CMD 0x001B
+#define PROP_ERROR_HANDLE_CONTROL_MESSAGE 0x0020
+#define PROP_ERROR_SET_FAILED 0x0024
 
 /*
 ** Rules:
