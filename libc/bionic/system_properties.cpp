@@ -784,7 +784,7 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
 }
 
 static prop_area* get_prop_area_for_name(const char* name) {
-    auto entry = list_find(prefixes, [name](auto l) {
+    auto entry = list_find(prefixes, [name](prefix_node* l) {
         return l->prefix[0] == '*' || !strncmp(l->prefix, name, l->prefix_len);
     });
     if (!entry) {
@@ -916,8 +916,8 @@ static bool initialize_properties() {
             continue;
         }
 
-        auto old_context =
-            list_find(contexts, [context](auto l) { return !strcmp(l->context, context); });
+        auto old_context = list_find(
+            contexts, [context](context_node* l) { return !strcmp(l->context, context); });
         if (old_context) {
             list_add_after_len(&prefixes, prop_prefix, old_context);
         } else {
@@ -981,7 +981,7 @@ int __system_property_area_init()
     }
     bool open_prop_file_failed = false;
     bool fsetxattr_failed = false;
-    list_foreach(contexts, [&fsetxattr_failed, &open_prop_file_failed](auto l) {
+    list_foreach(contexts, [&fsetxattr_failed, &open_prop_file_failed](context_node* l) {
         if (!open_prop_file(l, true, &fsetxattr_failed)) {
             open_prop_file_failed = true;
         }
@@ -1195,7 +1195,7 @@ int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         return __system_property_foreach_compat(propfn, cookie);
     }
 
-    list_foreach(contexts, [propfn, cookie](auto l) {
+    list_foreach(contexts, [propfn, cookie](context_node* l) {
         if (!l->pa && !l->checked_access) {
             if (check_access(l)) {
                 open_prop_file(l, false, nullptr);
