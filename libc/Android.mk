@@ -949,6 +949,7 @@ LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+$(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES,libc_openbsd_src_files))
 $(eval $(call patch-up-arch-specific-flags,LOCAL_SRC_FILES_EXCLUDE,libc_openbsd_src_files_exclude))
 include $(BUILD_STATIC_LIBRARY)
 
