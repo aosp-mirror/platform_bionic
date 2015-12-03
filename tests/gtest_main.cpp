@@ -34,6 +34,8 @@
 #include <utility>
 #include <vector>
 
+#include <base/stringprintf.h>
+
 #ifndef TEMP_FAILURE_RETRY
 
 /* Used to retry syscalls that can return EINTR. */
@@ -575,27 +577,15 @@ static void ChildProcessFn(int argc, char** argv, const std::string& test_name) 
   exit(result);
 }
 
-#if defined(__APPLE__)
-
-static int pipe2(int pipefd[2], int flags) {
-  int ret = pipe(pipefd);
-  if (ret != -1) {
-    ret = fcntl(pipefd[0], F_SETFL, flags);
-  }
-  if (ret != -1) {
-    ret = fcntl(pipefd[1], F_SETFL, flags);
-  }
-  return ret;
-}
-
-#endif
-
 static ChildProcInfo RunChildProcess(const std::string& test_name, int testcase_id, int test_id,
                                      int argc, char** argv) {
   int pipefd[2];
-  int ret = pipe2(pipefd, O_NONBLOCK);
-  if (ret == -1) {
-    perror("pipe2 in RunTestInSeparateProc");
+  if (pipe(pipefd) == -1) {
+    perror("pipe in RunTestInSeparateProc");
+    exit(1);
+  }
+  if (fcntl(pipefd[0], F_SETFL, O_NONBLOCK) == -1) {
+    perror("fcntl in RunTestInSeparateProc");
     exit(1);
   }
   pid_t pid = fork();
@@ -685,6 +675,30 @@ static size_t CheckChildProcTimeout(std::vector<ChildProcInfo>& child_proc_list)
   return timeout_child_count;
 }
 
+static void ReadChildProcOutput(std::vector<TestCase>& testcase_list,
+                                std::vector<ChildProcInfo>& child_proc_list) {
+  for (const auto& child_proc : child_proc_list) {
+    TestCase& testcase = testcase_list[child_proc.testcase_id];
+    int test_id = child_proc.test_id;
+    while (true) {
+      char buf[1024];
+      ssize_t bytes_read = TEMP_FAILURE_RETRY(read(child_proc.child_read_fd, buf, sizeof(buf) - 1));
+      if (bytes_read > 0) {
+        buf[bytes_read] = '\0';
+        testcase.GetTest(test_id).AppendTestOutput(buf);
+      } else if (bytes_read == 0) {
+        break; // Read end.
+      } else {
+        if (errno == EAGAIN) {
+          break;
+        }
+        perror("failed to read child_read_fd");
+        exit(1);
+      }
+    }
+  }
+}
+
 static void WaitChildProcs(std::vector<TestCase>& testcase_list,
                            std::vector<ChildProcInfo>& child_proc_list) {
   size_t finished_child_count = 0;
@@ -709,6 +723,7 @@ static void WaitChildProcs(std::vector<TestCase>& testcase_list,
       finished_child_count += CheckChildProcTimeout(child_proc_list);
     }
 
+    ReadChildProcOutput(testcase_list, child_proc_list);
     if (finished_child_count > 0) {
       return;
     }
@@ -742,26 +757,6 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     kill(child_proc.pid, SIGKILL);
     WaitForOneChild(child_proc.pid);
   }
-
-  while (true) {
-    char buf[1024];
-    ssize_t bytes_read = TEMP_FAILURE_RETRY(read(child_proc.child_read_fd, buf, sizeof(buf) - 1));
-    if (bytes_read > 0) {
-      buf[bytes_read] = '\0';
-      testcase.GetTest(test_id).AppendTestOutput(buf);
-    } else if (bytes_read == 0) {
-      break; // Read end.
-    } else {
-      if (errno == EAGAIN) {
-        // No data is available. This rarely happens, only when the child process created other
-        // processes which have not exited so far. But the child process has already exited or
-        // been killed, so the test has finished, and we shouldn't wait further.
-        break;
-      }
-      perror("read child_read_fd in RunTestInSeparateProc");
-      exit(1);
-    }
-  }
   close(child_proc.child_read_fd);
 
   if (child_proc.timed_out) {
@@ -780,8 +775,14 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     testcase.GetTest(test_id).AppendTestOutput(buf);
 
   } else {
-    testcase.SetTestResult(test_id, WEXITSTATUS(child_proc.exit_status) == 0 ?
-                           TEST_SUCCESS : TEST_FAILED);
+    int exitcode = WEXITSTATUS(child_proc.exit_status);
+    testcase.SetTestResult(test_id, exitcode == 0 ? TEST_SUCCESS : TEST_FAILED);
+    if (exitcode != 0) {
+      std::string s = android::base::StringPrintf("%s exited with exitcode %d.\n",
+                                                  testcase.GetTestName(test_id).c_str(),
+                                                  exitcode);
+      testcase.GetTest(test_id).AppendTestOutput(s);
+    }
   }
 }
 
