@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00486077_c3357682",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:34:45Z",
+      "side": 1,
+      "message": "You aren\u0027t actually using this ret value here or below. You can collapse this into just if (pipe(...) ...).",
+      "range": {
+        "startLine": 582,
+        "startChar": 6,
+        "endLine": 582,
+        "endChar": 9
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c08728d0_2410dc96",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:34:45Z",
+      "side": 1,
+      "message": "Would it be better to use epoll and only read from file descriptors that have something to read? Otherwise, this function will either spin around or block on a read, while some processes will have data to read.",
+      "range": {
+        "startLine": 678,
+        "startChar": 12,
+        "endLine": 678,
+        "endChar": 31
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40933818_c02a40ba",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2015-12-03T20:34:45Z",
+      "side": 1,
+      "message": "This might be better as std::string msg \u003d android::base::StringPrintf(...);",
+      "range": {
+        "startLine": 781,
+        "startChar": 6,
+        "endLine": 781,
+        "endChar": 21
+      },
+      "revId": "bfe6311e26ea750b152142c05f57696660229951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
