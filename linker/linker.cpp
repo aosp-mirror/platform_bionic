@@ -60,7 +60,7 @@
 #include "linker_reloc_iterators.h"
 #include "linker_utils.h"
 
-#include "base/strings.h"
+#include "android-base/strings.h"
 #include "ziparchive/zip_archive.h"
 
 extern void __libc_init_globals(KernelArgumentBlock&);

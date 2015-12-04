@@ -30,8 +30,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include <base/file.h>
-#include <base/strings.h>
+#include <android-base/file.h>
+#include <android-base/strings.h>
 
 #include "private/get_cpu_count_from_string.h"
 
