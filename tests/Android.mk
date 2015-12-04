@@ -236,8 +236,6 @@ libBionicGtestMain_cflags := $(test_cflags)
 
 libBionicGtestMain_cppflags := $(test_cppflags)
 
-libBionicGtestMain_static_libraries := libbase
-
 module := libBionicGtestMain
 module_tag := optional
 build_type := target
@@ -261,8 +259,6 @@ libBionicCtsGtestMain_src_files := gtest_main.cpp
 libBionicCtsGtestMain_cflags := $(test_cflags)
 
 libBionicCtsGtestMain_cppflags := $(test_cppflags) -DUSING_GTEST_OUTPUT_FORMAT \
-
-libBionicCtsGtestMain_static_libraries := libbase
 
 module := libBionicCtsGtestMain
 module_tag := optional
