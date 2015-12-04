@@ -34,8 +34,6 @@
 #include <utility>
 #include <vector>
 
-#include <base/stringprintf.h>
-
 #ifndef TEMP_FAILURE_RETRY
 
 /* Used to retry syscalls that can return EINTR. */
@@ -778,10 +776,10 @@ static void CollectChildTestResult(const ChildProcInfo& child_proc, TestCase& te
     int exitcode = WEXITSTATUS(child_proc.exit_status);
     testcase.SetTestResult(test_id, exitcode == 0 ? TEST_SUCCESS : TEST_FAILED);
     if (exitcode != 0) {
-      std::string s = android::base::StringPrintf("%s exited with exitcode %d.\n",
-                                                  testcase.GetTestName(test_id).c_str(),
-                                                  exitcode);
-      testcase.GetTest(test_id).AppendTestOutput(s);
+      char buf[1024];
+      snprintf(buf, sizeof(buf), "%s exited with exitcode %d.\n",
+               testcase.GetTestName(test_id).c_str(), exitcode);
+      testcase.GetTest(test_id).AppendTestOutput(buf);
     }
   }
 }
