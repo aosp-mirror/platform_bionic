@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e06d0cee_ef4c01c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-12-04T21:55:16Z",
+      "side": 1,
+      "message": "This function no longer exists. It was renamed in https://android-review.googlesource.com/#/c/160607/1/libc/bionic/libc_init_common.cpp\n\nAt a minimum, the commit message should be updated.",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 19
+      },
+      "revId": "6ffced2ca3248df9c795f8fe83d350dd14028969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0842cce_b13c2a9e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2015-12-04T21:55:16Z",
+      "side": 1,
+      "message": "What local variable?",
+      "revId": "6ffced2ca3248df9c795f8fe83d350dd14028969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
