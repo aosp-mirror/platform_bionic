@@ -39,6 +39,24 @@
       "revId": "6ffced2ca3248df9c795f8fe83d350dd14028969",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60983c34_3ed0e945",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1069238
+      },
+      "writtenOn": "2015-12-04T21:57:19Z",
+      "side": 1,
+      "message": "The pthread_internal_t it puts on the stack. The reference it takes to it breaks -fstack-protector-strong here. I can\u0027t even sideload because the edify thing doesn\u0027t run.",
+      "parentUuid": "e0842cce_b13c2a9e",
+      "revId": "6ffced2ca3248df9c795f8fe83d350dd14028969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
