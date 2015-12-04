@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20a2c463_8598c89a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-04T00:46:36Z",
+      "side": 1,
+      "message": "that doesn\u0027t seem to match what you\u0027re actually doing here. isn\u0027t the real change here \"don\u0027t zero-out the TLS?\". because moving the code down into the caller is a no-op, right? just the line that\u0027s removed is the difference?",
+      "revId": "d5e7184eea8a52c93df0d99b3dd4c159c140a634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
