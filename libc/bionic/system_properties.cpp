@@ -1006,6 +1006,10 @@ unsigned int __system_property_area_serial()
 
 const prop_info *__system_property_find(const char *name)
 {
+    if (!__system_property_area__) {
+        return nullptr;
+    }
+
     if (__predict_false(compat_mode)) {
         return __system_property_find_compat(name);
     }
@@ -1091,10 +1095,14 @@ int __system_property_set(const char *key, const char *value)
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    prop_area *pa = __system_property_area__;
-
     if (len >= PROP_VALUE_MAX)
         return -1;
+
+    prop_area* pa = __system_property_area__;
+
+    if (!pa) {
+        return -1;
+    }
 
     uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_relaxed);
     serial |= 1;
@@ -1128,6 +1136,10 @@ int __system_property_add(const char *name, unsigned int namelen,
         return -1;
     if (namelen < 1)
         return -1;
+
+    if (!__system_property_area__) {
+        return -1;
+    }
 
     prop_area* pa = get_prop_area_for_name(name);
 
@@ -1168,6 +1180,10 @@ unsigned int __system_property_wait_any(unsigned int serial)
     prop_area *pa = __system_property_area__;
     uint32_t my_serial;
 
+    if (!pa) {
+        return 0;
+    }
+
     do {
         __futex_wait(pa->serial(), serial, NULL);
         my_serial = atomic_load_explicit(pa->serial(), memory_order_acquire);
@@ -1191,6 +1207,10 @@ const prop_info *__system_property_find_nth(unsigned n)
 int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
         void *cookie)
 {
+    if (!__system_property_area__) {
+        return -1;
+    }
+
     if (__predict_false(compat_mode)) {
         return __system_property_foreach_compat(propfn, cookie);
     }
