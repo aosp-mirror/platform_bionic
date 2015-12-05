@@ -617,7 +617,8 @@ TEST(dlext, ns_smoke) {
 
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
 
-  void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(), RTLD_NOW);
+  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
@@ -651,6 +652,14 @@ TEST(dlext, ns_smoke) {
   ASSERT_TRUE(handle2 != nullptr) << dlerror();
 
   ASSERT_TRUE(handle1 != handle2);
+
+  // dlopen for a public library using an absolute path should work for isolated namespaces
+  extinfo.library_namespace = ns2;
+  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  ASSERT_TRUE(handle == handle_public);
+
+  dlclose(handle);
 
   typedef const char* (*fn_t)();
 
@@ -715,7 +724,8 @@ TEST(dlext, ns_isolated) {
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-  void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(), RTLD_NOW);
+  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
   android_set_application_target_sdk_version(42U); // something > 23
@@ -758,7 +768,7 @@ TEST(dlext, ns_isolated) {
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" not found", dlerror());
+  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" is not accessible for the namespace \"private_isolated1\"", dlerror());
 
   extinfo.library_namespace = ns_isolated2;
 
@@ -769,7 +779,7 @@ TEST(dlext, ns_isolated) {
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" not found", dlerror());
+  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" is not accessible for the namespace \"private_isolated2\"", dlerror());
 
   typedef const char* (*fn_t)();
   fn_t ns_get_local_string = reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_local_string"));
@@ -803,8 +813,9 @@ TEST(dlext, ns_anonymous) {
 
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
 
-  void* handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(),
-                               RTLD_NOW);
+  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
+
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), (lib_path + "/private_namespace_libs").c_str()))
