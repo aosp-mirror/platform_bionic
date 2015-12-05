@@ -54,7 +54,7 @@ extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
-extern "C" int __libc_init_stdio(void);
+extern "C" int __sinit(void);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
@@ -134,9 +134,9 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __pthread_internal_add(main_thread);
 
   __system_properties_init(); // Requires 'environ'.
-
-  // Initialize stdio to avoid data races caused by BSD-style lazy initialization.
-  __libc_init_stdio();
+  // Initialize stdio here to get rid of data races caused by lazy initialization.
+  // TODO: Remove other calls to __sinit().
+  __sinit();
 }
 
 __noreturn static void __early_abort(int line) {
