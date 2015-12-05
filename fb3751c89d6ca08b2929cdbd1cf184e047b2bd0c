@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20a2c463_594b8406",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-05T05:56:20Z",
+      "side": 1,
+      "message": "i\u0027ll rebase and submit the big-extern-C patch afterwards.",
+      "revId": "fb3751c89d6ca08b2929cdbd1cf184e047b2bd0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
