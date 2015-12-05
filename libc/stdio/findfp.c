@@ -44,6 +44,8 @@
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
+int	__sdidinit;
+
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define	std(flags, file) \
@@ -112,6 +114,9 @@ __sfp(void)
 	int n;
 	struct glue *g;
 
+	if (!__sdidinit)
+		__sinit();
+
 	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
 	for (g = &__sglue; g != NULL; g = g->next) {
 		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
@@ -144,21 +149,48 @@ found:
 	return (fp);
 }
 
-static void __stdio_cleanup(void) {
+/*
+ * exit() and abort() call _cleanup() through the callback registered
+ * with __atexit_register_cleanup(), set whenever we open or buffer a
+ * file. This chicanery is done so that programs that do not use stdio
+ * need not link it all in.
+ *
+ * The name `_cleanup' is, alas, fairly well known outside stdio.
+ */
+void
+_cleanup(void)
+{
 	/* (void) _fwalk(fclose); */
 	(void) _fwalk(__sflush);		/* `cheating' */
 }
 
-void __libc_init_stdio(void) {
-	// Initialize stdin/stdout/stderr (for the recursive mutex). http://b/18208568.
+/*
+ * __sinit() is called whenever stdio's internal variables must be set up.
+ */
+void
+__sinit(void)
+{
+	_THREAD_PRIVATE_MUTEX(__sinit_mutex);
+
+	_THREAD_PRIVATE_MUTEX_LOCK(__sinit_mutex);
+	if (__sdidinit) {
+		/* bail out if caller lost the race */
+		_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
+		return;
+	}
+
+	/* Initialize stdin/stdout/stderr (for the recursive mutex). http://b/18208568. */
 	for (size_t i = 0; i < 3; ++i) {
 		_FILEEXT_SETUP(__sF+i, __sFext+i);
 	}
-	// Initialize the pre-allocated (but initially unused) streams.
+	/* Initialize the pre-allocated (but initially unused) streams. */
 	for (size_t i = 0; i < FOPEN_MAX - 3; ++i) {
 		_FILEEXT_SETUP(usual+i, usualext+i);
 	}
 
-	// Make sure we clean up on exit.
-	__atexit_register_cleanup(__stdio_cleanup); /* conservative */
+	/* make sure we clean up on exit */
+	__atexit_register_cleanup(_cleanup); /* conservative */
+	__sdidinit = 1;
+
+	_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
 }
