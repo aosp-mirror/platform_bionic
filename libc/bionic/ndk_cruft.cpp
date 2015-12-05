@@ -286,13 +286,6 @@ extern "C" int getdtablesize() {
   return r.rlim_cur;
 }
 
-// A leaked BSD stdio implementation detail that's now a no-op.
-// (GCC doesn't like 'extern "C"' on a definition.)
-extern "C" {
-void __sinit() {}
-int __sdidinit = 1;
-}
-
 // Only used by ftime, which was removed from POSIX 2008.
 struct timeb {
   time_t          time;
