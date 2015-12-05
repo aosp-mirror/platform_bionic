@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20a2c463_39e5585e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1703,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-05T04:49:14Z",
+      "side": 1,
+      "message": "s/in/is/",
+      "revId": "8b1f7c9ba4d7b3e62fe78a3ee7c6ea7c87d9188c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0842cce_77ce923b",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-05T04:49:14Z",
+      "side": 1,
+      "message": "a public\nan absolute",
+      "revId": "8b1f7c9ba4d7b3e62fe78a3ee7c6ea7c87d9188c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8091b00f_99c6eb96",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-05T04:49:14Z",
+      "side": 1,
+      "message": "?",
+      "revId": "8b1f7c9ba4d7b3e62fe78a3ee7c6ea7c87d9188c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
