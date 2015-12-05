@@ -36,20 +36,12 @@
 // struct __sfileext (see fileext.h).
 
 void flockfile(FILE* fp) {
-  if (!__sdidinit) {
-    __sinit();
-  }
-
   if (fp != nullptr) {
     pthread_mutex_lock(&_FLOCK(fp));
   }
 }
 
 int ftrylockfile(FILE* fp) {
-  if (!__sdidinit) {
-    __sinit();
-  }
-
   // The specification for ftrylockfile() says it returns 0 on success,
   // or non-zero on error. So return an errno code directly on error.
   if (fp == nullptr) {
@@ -60,10 +52,6 @@ int ftrylockfile(FILE* fp) {
 }
 
 void funlockfile(FILE* fp) {
-  if (!__sdidinit) {
-    __sinit();
-  }
-
   if (fp != nullptr) {
     pthread_mutex_unlock(&_FLOCK(fp));
   }
