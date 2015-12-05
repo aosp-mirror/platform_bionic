@@ -915,6 +915,16 @@ static bool initialize_properties() {
             free(prop_prefix);
             continue;
         }
+        /*
+         * init uses ctl.* properties as an IPC mechanism and does not write them
+         * to a property file, therefore we do not need to create property files
+         * to store them.
+         */
+        if (!strncmp(prop_prefix, "ctl.", 4)) {
+            free(prop_prefix);
+            free(context);
+            continue;
+        }
 
         auto old_context = list_find(
             contexts, [context](context_node* l) { return !strcmp(l->context, context); });
