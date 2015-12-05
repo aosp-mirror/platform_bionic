@@ -53,13 +53,6 @@ extern "C" int __isthreaded;
 
 // This code is used both by each new pthread and the code that initializes the main thread.
 void __init_tls(pthread_internal_t* thread) {
-  if (thread->mmap_size == 0) {
-    // If the TLS area was not allocated by mmap(), it may not have been cleared to zero.
-    // So assume the worst and zero the TLS area.
-    memset(thread->tls, 0, sizeof(thread->tls));
-    memset(thread->key_data, 0, sizeof(thread->key_data));
-  }
-
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
@@ -175,6 +168,11 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
                 (reinterpret_cast<uintptr_t>(stack_top) - sizeof(pthread_internal_t)) & ~0xf);
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
+  if (mmap_size == 0) {
+    // If thread was not allocated by mmap(), it may not have been cleared to zero.
+    // So assume the worst and zero it.
+    memset(thread, 0, sizeof(pthread_internal_t));
+  }
   attr->stack_size = stack_top - reinterpret_cast<uint8_t*>(attr->stack_base);
 
   thread->mmap_size = mmap_size;
