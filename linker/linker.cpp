@@ -1582,9 +1582,6 @@ static int open_library(android_namespace_t* ns,
       }
     }
 
-    if (fd != -1 && !ns->is_accessible(*realpath)) {
-      fd = -1;
-    }
     return fd;
   }
 
@@ -1698,6 +1695,13 @@ static bool load_library(android_namespace_t* ns,
 
   if ((rtld_flags & RTLD_NOLOAD) != 0) {
     DL_ERR("library \"%s\" wasn't loaded and RTLD_NOLOAD prevented it", name);
+    return false;
+  }
+
+  if (!ns->is_accessible(realpath)) {
+    // do not load libraries if they are not accessible for the specified namespace.
+    DL_ERR("library \"%s\" is not accessible for the namespace \"%s\"",
+           name, ns->get_name());
     return false;
   }
 
