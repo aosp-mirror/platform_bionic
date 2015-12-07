@@ -52,10 +52,19 @@
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
+// TODO: when we no longer have to support both clang and GCC, we can simplify all this.
+#define SBUF_INIT {0,0}
+#if defined(__LP64__)
+#define MBSTATE_T_INIT {{0},{0}}
+#else
+#define MBSTATE_T_INIT {{0}}
+#endif
+#define WCHAR_IO_DATA_INIT {MBSTATE_T_INIT,MBSTATE_T_INIT,{0},0,0}
+
 static struct __sfileext __sFext[3] = {
-  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
-  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
-  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
 };
 
 // __sF is exported for backwards compatibility. Until M, we didn't have symbols
