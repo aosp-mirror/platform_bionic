@@ -44,36 +44,34 @@
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
-int	__sdidinit;
-
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define	std(flags, file) \
 	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
 	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0,0}
 
-				/* the usual - (stdin + stdout + stderr) */
-static FILE usual[FOPEN_MAX - 3];
-static struct __sfileext usualext[FOPEN_MAX - 3];
-static struct glue uglue = { 0, FOPEN_MAX - 3, usual };
-static struct glue *lastglue = &uglue;
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
-static struct __sfileext __sFext[3];
+static struct __sfileext __sFext[3] = {
+  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { { NULL, 0 }, {}, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+};
 
 // __sF is exported for backwards compatibility. Until M, we didn't have symbols
 // for stdin/stdout/stderr; they were macros accessing __sF.
 FILE __sF[3] = {
-	std(__SRD, STDIN_FILENO),		/* stdin */
-	std(__SWR, STDOUT_FILENO),		/* stdout */
-	std(__SWR|__SNBF, STDERR_FILENO)	/* stderr */
+  std(__SRD, STDIN_FILENO),
+  std(__SWR, STDOUT_FILENO),
+  std(__SWR|__SNBF, STDERR_FILENO),
 };
-
-struct glue __sglue = { &uglue, 3, __sF };
 
 FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
+
+struct glue __sglue = { NULL, 3, __sF };
+static struct glue* lastglue = &__sglue;
 
 static struct glue *
 moreglue(int n)
@@ -114,9 +112,6 @@ __sfp(void)
 	int n;
 	struct glue *g;
 
-	if (!__sdidinit)
-		__sinit();
-
 	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
 	for (g = &__sglue; g != NULL; g = g->next) {
 		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
@@ -149,48 +144,7 @@ found:
 	return (fp);
 }
 
-/*
- * exit() and abort() call _cleanup() through the callback registered
- * with __atexit_register_cleanup(), set whenever we open or buffer a
- * file. This chicanery is done so that programs that do not use stdio
- * need not link it all in.
- *
- * The name `_cleanup' is, alas, fairly well known outside stdio.
- */
-void
-_cleanup(void)
-{
+__LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
 	/* (void) _fwalk(fclose); */
 	(void) _fwalk(__sflush);		/* `cheating' */
-}
-
-/*
- * __sinit() is called whenever stdio's internal variables must be set up.
- */
-void
-__sinit(void)
-{
-	_THREAD_PRIVATE_MUTEX(__sinit_mutex);
-
-	_THREAD_PRIVATE_MUTEX_LOCK(__sinit_mutex);
-	if (__sdidinit) {
-		/* bail out if caller lost the race */
-		_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
-		return;
-	}
-
-	/* Initialize stdin/stdout/stderr (for the recursive mutex). http://b/18208568. */
-	for (size_t i = 0; i < 3; ++i) {
-		_FILEEXT_SETUP(__sF+i, __sFext+i);
-	}
-	/* Initialize the pre-allocated (but initially unused) streams. */
-	for (size_t i = 0; i < FOPEN_MAX - 3; ++i) {
-		_FILEEXT_SETUP(usual+i, usualext+i);
-	}
-
-	/* make sure we clean up on exit */
-	__atexit_register_cleanup(_cleanup); /* conservative */
-	__sdidinit = 1;
-
-	_THREAD_PRIVATE_MUTEX_UNLOCK(__sinit_mutex);
 }
