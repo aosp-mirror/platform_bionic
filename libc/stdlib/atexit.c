@@ -185,51 +185,12 @@ restart:
 	}
 	_ATEXIT_UNLOCK();
 
+  extern void __libc_stdio_cleanup(void);
+  __libc_stdio_cleanup();
+
   /* BEGIN android-changed: call __unregister_atfork if dso is not null */
   if (dso != NULL) {
     __unregister_atfork(dso);
   }
   /* END android-changed */
-}
-
-/*
- * Register the cleanup function
- */
-void
-__atexit_register_cleanup(void (*func)(void))
-{
-	struct atexit *p;
-	size_t pgsize = getpagesize();
-
-	if (pgsize < sizeof(*p))
-		return;
-	_ATEXIT_LOCK();
-	p = __atexit;
-	while (p != NULL && p->next != NULL)
-		p = p->next;
-	if (p == NULL) {
-		p = mmap(NULL, pgsize, PROT_READ | PROT_WRITE,
-		    MAP_ANON | MAP_PRIVATE, -1, 0);
-		if (p == MAP_FAILED)
-			goto unlock;
-/* BEGIN android-changed */
-		prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, p, pgsize,
-		    "atexit handlers");
-/* END android-changed */
-		p->ind = 1;
-		p->max = (pgsize - ((char *)&p->fns[0] - (char *)p)) /
-		    sizeof(p->fns[0]);
-		p->next = NULL;
-		__atexit = p;
-	} else {
-		if (mprotect(p, pgsize, PROT_READ | PROT_WRITE))
-			goto unlock;
-	}
-	p->fns[0].fn_ptr = (void (*)(void *))func;
-	p->fns[0].fn_arg = NULL;
-	p->fns[0].fn_dso = NULL;
-	mprotect(p, pgsize, PROT_READ);
-	restartloop = 1;
-unlock:
-	_ATEXIT_UNLOCK();
 }

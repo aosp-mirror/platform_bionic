@@ -153,10 +153,8 @@ __LIBC32_LEGACY_PUBLIC__ int __srefill(FILE*);
 __LIBC32_LEGACY_PUBLIC__ int __swsetup(FILE*);
 
 /* These were referenced by a couple of different pieces of middleware and the Crystax NDK. */
-__LIBC32_LEGACY_PUBLIC__ extern int __sdidinit;
 __LIBC32_LEGACY_PUBLIC__ int __sflags(const char*, int*);
 __LIBC32_LEGACY_PUBLIC__ FILE* __sfp(void);
-__LIBC32_LEGACY_PUBLIC__ void __sinit(void);
 __LIBC32_LEGACY_PUBLIC__ void __smakebuf(FILE*);
 
 /* These are referenced by the Greed for Glory franchise. */
@@ -170,7 +168,6 @@ __LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE *));
 #pragma GCC visibility push(hidden)
 
 int	__sflush_locked(FILE *);
-void	_cleanup(void);
 int	__swhatbuf(FILE *, size_t *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
@@ -178,8 +175,6 @@ int	__vfprintf(FILE *, const char *, __va_list);
 int	__svfscanf(FILE * __restrict, const char * __restrict, __va_list);
 int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
-
-extern void __atexit_register_cleanup(void (*)(void));
 
 /*
  * Return true if the given FILE cannot be written now.
@@ -236,6 +231,10 @@ static __inline int __sputc(int _c, FILE* _p) {
 struct __suio;
 extern int __sfvwrite(FILE *, struct __suio *);
 wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+
+/* Remove the if (!__sdidinit) __sinit() idiom from untouched upstream stdio code. */
+extern void __sinit(void); // Not actually implemented.
+#define __sdidinit 1
 
 #pragma GCC visibility pop
 
