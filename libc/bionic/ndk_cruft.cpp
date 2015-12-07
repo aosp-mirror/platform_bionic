@@ -47,6 +47,8 @@
 
 #include "private/libc_logging.h"
 
+extern "C" {
+
 // Brillo doesn't need to support any legacy cruft.
 #if !defined(__BRILLO__)
 
@@ -55,29 +57,27 @@
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
-extern "C" {
-  unsigned int __page_size = PAGE_SIZE;
-  unsigned int __page_shift = 12;
-}
+unsigned int __page_size = PAGE_SIZE;
+unsigned int __page_shift = 12;
 
 // TODO: remove this backward compatibility hack (for jb-mr1 strace binaries).
-extern "C" pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
+pid_t __wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
   return wait4(pid, status, options, rusage);
 }
 
 // TODO: does anything still need this?
-extern "C" int __open() {
+int __open() {
   abort();
 }
 
 // TODO: does anything still need this?
-extern "C" void** __get_tls() {
+void** __get_tls() {
 #include "private/__get_tls.h"
   return __get_tls();
 }
 
 // This non-standard function was in our <string.h> for some reason.
-extern "C" void memswap(void* m1, void* m2, size_t n) {
+void memswap(void* m1, void* m2, size_t n) {
   char* p = reinterpret_cast<char*>(m1);
   char* p_end = p + n;
   char* q = reinterpret_cast<char*>(m2);
@@ -90,13 +90,13 @@ extern "C" void memswap(void* m1, void* m2, size_t n) {
   }
 }
 
-extern "C" int pthread_attr_setstackaddr(pthread_attr_t*, void*) {
+int pthread_attr_setstackaddr(pthread_attr_t*, void*) {
   // This was removed from POSIX.1-2008, and is not implemented on bionic.
   // Needed for ABI compatibility with the NDK.
   return ENOSYS;
 }
 
-extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stack_addr) {
+int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stack_addr) {
   // This was removed from POSIX.1-2008.
   // Needed for ABI compatibility with the NDK.
   *stack_addr = (char*)attr->stack_base + attr->stack_size;
@@ -104,7 +104,7 @@ extern "C" int pthread_attr_getstackaddr(const pthread_attr_t* attr, void** stac
 }
 
 // Non-standard cruft that should only ever have been in system/core/toolbox.
-extern "C" char* strtotimeval(const char* str, struct timeval* ts) {
+char* strtotimeval(const char* str, struct timeval* ts) {
   char* s;
   ts->tv_sec = strtoumax(str, &s, 10);
 
@@ -146,7 +146,7 @@ static inline int digitval(int ch) {
 }
 
 // This non-standard function was in our <inttypes.h> for some reason.
-extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_t n) {
+uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_t n) {
   const unsigned char*  p   = (const unsigned char *)nptr;
   const unsigned char*  end = p + n;
   int                   minus = 0;
@@ -194,12 +194,12 @@ extern "C" uintmax_t strntoumax(const char *nptr, char **endptr, int base, size_
 }
 
 // This non-standard function was in our <inttypes.h> for some reason.
-extern "C" intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t n) {
+intmax_t strntoimax(const char* nptr, char** endptr, int base, size_t n) {
   return (intmax_t) strntoumax(nptr, endptr, base, n);
 }
 
 // POSIX calls this dprintf, but LP32 Android had fdprintf instead.
-extern "C" int fdprintf(int fd, const char* fmt, ...) {
+int fdprintf(int fd, const char* fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   int rc = vdprintf(fd, fmt, ap);
@@ -208,7 +208,7 @@ extern "C" int fdprintf(int fd, const char* fmt, ...) {
 }
 
 // POSIX calls this vdprintf, but LP32 Android had fdprintf instead.
-extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
+int vfdprintf(int fd, const char* fmt, va_list ap) {
   return vdprintf(fd, fmt, ap);
 }
 
@@ -219,34 +219,34 @@ extern "C" int vfdprintf(int fd, const char* fmt, va_list ap) {
 #undef __futex_wait
 
 // This used to be in <sys/atomics.h>.
-extern "C" int __futex_wake(volatile void* ftx, int count) {
+int __futex_wake(volatile void* ftx, int count) {
   return __real_futex_wake(ftx, count);
 }
 
 // This used to be in <sys/atomics.h>.
-extern "C" int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
+int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
   return __real_futex_wait(ftx, value, timeout);
 }
 
 // Unity's libmono uses this.
-extern "C" int tkill(pid_t tid, int sig) {
+int tkill(pid_t tid, int sig) {
   return syscall(__NR_tkill, tid, sig);
 }
 
 // This was removed from POSIX 2008.
-extern "C" wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
+wchar_t* wcswcs(wchar_t* haystack, wchar_t* needle) {
   return wcsstr(haystack, needle);
 }
 
 // This was removed from POSIX 2008.
-extern "C" sighandler_t bsd_signal(int signum, sighandler_t handler) {
+sighandler_t bsd_signal(int signum, sighandler_t handler) {
   return signal(signum, handler);
 }
 
 #if !defined(__i386__)
 // This was removed from POSIX 2008.
 #undef bcopy
-extern "C" void bcopy(const void* src, void* dst, size_t n) {
+void bcopy(const void* src, void* dst, size_t n) {
   memcpy(dst, src, n);
 }
 #else
@@ -254,29 +254,29 @@ extern "C" void bcopy(const void* src, void* dst, size_t n) {
 #endif
 
 // sysv_signal() was never in POSIX.
-extern sighandler_t _signal(int signum, sighandler_t handler, int flags);
-extern "C" sighandler_t sysv_signal(int signum, sighandler_t handler) {
+extern "C++" sighandler_t _signal(int signum, sighandler_t handler, int flags);
+sighandler_t sysv_signal(int signum, sighandler_t handler) {
   return _signal(signum, handler, SA_RESETHAND);
 }
 
 // This is a system call that was never in POSIX. Use readdir(3) instead.
-extern "C" int __getdents64(unsigned int, dirent*, unsigned int);
-extern "C" int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
+int __getdents64(unsigned int, dirent*, unsigned int);
+int getdents(unsigned int fd, dirent* dirp, unsigned int count) {
   return __getdents64(fd, dirp, count);
 }
 
 // This is a BSDism that we never implemented correctly. Used by Firefox.
-extern "C" int issetugid() {
+int issetugid() {
   return 0;
 }
 
 // This was removed from POSIX 2004.
-extern "C" pid_t wait3(int* status, int options, struct rusage* rusage) {
+pid_t wait3(int* status, int options, struct rusage* rusage) {
   return wait4(-1, status, options, rusage);
 }
 
 // This was removed from POSIX 2004.
-extern "C" int getdtablesize() {
+int getdtablesize() {
   struct rlimit r;
 
   if (getrlimit(RLIMIT_NOFILE, &r) < 0) {
@@ -287,11 +287,8 @@ extern "C" int getdtablesize() {
 }
 
 // A leaked BSD stdio implementation detail that's now a no-op.
-// (GCC doesn't like 'extern "C"' on a definition.)
-extern "C" {
 void __sinit() {}
 int __sdidinit = 1;
-}
 
 // Only used by ftime, which was removed from POSIX 2008.
 struct timeb {
@@ -302,7 +299,7 @@ struct timeb {
 };
 
 // This was removed from POSIX 2008.
-extern "C" int ftime(struct timeb* tb) {
+int ftime(struct timeb* tb) {
   struct timeval  tv;
   struct timezone tz;
 
@@ -324,35 +321,35 @@ extern "C" int ftime(struct timeb* tb) {
 }
 
 // This was removed from POSIX 2008.
-extern "C" char* index(const char* str, int ch) {
+char* index(const char* str, int ch) {
   return strchr(str, ch);
 }
 
 // This was removed from BSD.
-extern "C" void arc4random_stir(void) {
+void arc4random_stir(void) {
   // The current implementation stirs itself as needed.
 }
 
 // This was removed from BSD.
-extern "C" void arc4random_addrandom(unsigned char*, int) {
+void arc4random_addrandom(unsigned char*, int) {
   // The current implementation adds randomness as needed.
 }
 
 // Old versions of the NDK did not export malloc_usable_size, but did
 // export dlmalloc_usable_size. We are moving away from dlmalloc in L
 // so make this call malloc_usable_size.
-extern "C" size_t dlmalloc_usable_size(void* ptr) {
+size_t dlmalloc_usable_size(void* ptr) {
   return malloc_usable_size(ptr);
 }
 
 // In L we added a public pthread_gettid_np, but some apps were using the private API.
-extern "C" pid_t __pthread_gettid(pthread_t t) {
+pid_t __pthread_gettid(pthread_t t) {
   return pthread_gettid_np(t);
 }
 
 // Older versions of apportable used dlmalloc directly instead of malloc,
 // so export this compatibility shim that simply calls malloc.
-extern "C" void* dlmalloc(size_t size) {
+void* dlmalloc(size_t size) {
   return malloc(size);
 }
 
@@ -360,13 +357,13 @@ extern "C" void* dlmalloc(size_t size) {
 #include "pthread_internal.h"
 #undef __get_thread
 // Various third-party apps contain a backport of our pthread_rwlock implementation that uses this.
-extern "C" pthread_internal_t* __get_thread() {
+pthread_internal_t* __get_thread() {
   return __real_get_thread();
 }
 
 // This one exists only for the LP32 NDK and is not present anywhere else.
-extern "C" long __set_errno_internal(int);
-extern "C" long __set_errno(int n) {
+extern long __set_errno_internal(int);
+long __set_errno(int n) {
   return __set_errno_internal(n);
 }
 
@@ -374,25 +371,27 @@ extern "C" long __set_errno(int n) {
 
 // This was never implemented in bionic, only needed for ABI compatibility with the NDK.
 // In the M time frame, over 1000 apps have a reference to this!
-extern "C" void endpwent() { }
+void endpwent() { }
 
 // Since dlmalloc_inspect_all and dlmalloc_trim are exported for systems
 // that use dlmalloc, be consistent and export them everywhere.
 #if defined(USE_JEMALLOC)
-extern "C" void dlmalloc_inspect_all(void (*)(void*, void*, size_t, void*), void*) {
+void dlmalloc_inspect_all(void (*)(void*, void*, size_t, void*), void*) {
 }
-extern "C" int dlmalloc_trim(size_t) {
+int dlmalloc_trim(size_t) {
     return 0;
 }
 #else
-extern "C" void dlmalloc_inspect_all_real(void (*)(void*, void*, size_t, void*), void*);
-extern "C" void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void* arg) {
+void dlmalloc_inspect_all_real(void (*)(void*, void*, size_t, void*), void*);
+void dlmalloc_inspect_all(void (*handler)(void*, void*, size_t, void*), void* arg) {
   dlmalloc_inspect_all_real(handler, arg);
 }
-extern "C" int dlmalloc_trim_real(size_t);
-extern "C" int dlmalloc_trim(size_t pad) {
+int dlmalloc_trim_real(size_t);
+int dlmalloc_trim(size_t pad) {
   return dlmalloc_trim_real(pad);
 }
 #endif
 
 #endif // !defined(__BRILLO__)
+
+} // extern "C"
