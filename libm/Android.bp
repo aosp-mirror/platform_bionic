@@ -3,18 +3,7 @@
 
 bionic_coverage = false
 
-// TODO: this comes from from upstream's libc, not libm, but it's an
-// implementation detail that should have hidden visibility, so it needs
-// to be in whatever library the math code is in.
-libm_common_src_files = ["digittoint.c"]
-
-// TODO: this is not in the BSDs.
-libm_common_src_files += [
-    "significandl.c",
-    "sincos.c",
-]
-
-libm_common_src_files += [
+libm_common_src_files = [
     "upstream-freebsd/lib/msun/bsdsrc/b_exp.c",
     "upstream-freebsd/lib/msun/bsdsrc/b_log.c",
     "upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c",
@@ -186,8 +175,19 @@ libm_common_src_files += [
 ]
 
 libm_common_src_files += [
-    "fake_long_double.c",
+    // TODO: this comes from from upstream's libc, not libm, but it's an
+    // implementation detail that should have hidden visibility, so it needs
+    // to be in whatever library the math code is in.
+    "digittoint.c",
+
+    // Functionality not in the BSDs.
+    "significandl.c",
+    "sincos.c",
+
+    // Modified versions of BSD code.
     "signbit.c",
+
+    // Home-grown stuff.
     "fabs.cpp",
 ]
 
@@ -292,6 +292,9 @@ cc_library {
     sanitize: ["never"],
 
     multilib: {
+        lib32: {
+            srcs: ["fake_long_double.c"],
+        },
         lib64: {
             srcs: libm_ld128_src_files,
             local_include_dirs: libm_ld_local_includes,
@@ -307,15 +310,18 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
-                "arm/sqrt.S",
-                "arm/floor.S",
             ],
-            exclude_srcs: [
-                // TODO: these require neon not available in arm
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
-                "upstream-freebsd/lib/msun/src/s_floor.c",
-            ],
+            armv7_a_neon: {
+                srcs: [
+                    "arm/sqrt.S",
+                    "arm/floor.S",
+                ],
+                exclude_srcs: [
+                    "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                    "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                    "upstream-freebsd/lib/msun/src/s_floor.c",
+                ],
+            },
             instruction_set: "arm",
             ldflags: ["-Wl,--hash-style=both"],
             version_script: "libm.arm.map",
@@ -323,8 +329,8 @@ cc_library {
 
         arm64: {
             srcs: [
-                "arm64/fenv.c",
                 "arm64/ceil.S",
+                "arm64/fenv.c",
                 "arm64/fma.S",
                 "arm64/floor.S",
                 "arm64/lrint.S",
@@ -333,6 +339,8 @@ cc_library {
                 "arm64/trunc.S",
             ],
             exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -345,8 +353,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
                 "upstream-freebsd/lib/msun/src/s_rint.c",
                 "upstream-freebsd/lib/msun/src/s_rintf.c",
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_trunc.c",
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
@@ -364,8 +370,73 @@ cc_library {
         },
 
         x86: {
+            srcs: [
+                "i387/fenv.c",
+                "x86/sqrt.S",
+                "x86/sqrtf.S",
+                "x86/e_acos.S",
+                "x86/e_asin.S",
+                "x86/e_atan2.S",
+                "x86/e_cosh.S",
+                "x86/e_exp.S",
+                "x86/e_hypot.S",
+                "x86/e_log10.S",
+                "x86/e_log.S",
+                "x86/e_pow.S",
+                "x86/e_sinh.S",
+                "x86/libm_reduce_pi04l.S",
+                "x86/libm_sincos_huge.S",
+                "x86/libm_tancot_huge.S",
+                "x86/s_atan.S",
+                "x86/s_cbrt.S",
+                "x86/s_cos.S",
+                "x86/s_expm1.S",
+                "x86/s_log1p.S",
+                "x86/s_sin.S",
+                "x86/s_tanh.S",
+                "x86/s_tan.S",
+            ],
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/e_acos.c",
+                "upstream-freebsd/lib/msun/src/e_asin.c",
+                "upstream-freebsd/lib/msun/src/e_atan2.c",
+                "upstream-freebsd/lib/msun/src/e_cosh.c",
+                "upstream-freebsd/lib/msun/src/e_exp.c",
+                "upstream-freebsd/lib/msun/src/e_hypot.c",
+                "upstream-freebsd/lib/msun/src/e_log.c",
+                "upstream-freebsd/lib/msun/src/e_log10.c",
+                "upstream-freebsd/lib/msun/src/e_pow.c",
+                "upstream-freebsd/lib/msun/src/e_sinh.c",
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                "upstream-freebsd/lib/msun/src/s_atan.c",
+                "upstream-freebsd/lib/msun/src/s_cbrt.c",
+                "upstream-freebsd/lib/msun/src/s_cos.c",
+                "upstream-freebsd/lib/msun/src/s_expm1.c",
+                "upstream-freebsd/lib/msun/src/s_log1p.c",
+                "upstream-freebsd/lib/msun/src/s_sin.c",
+                "upstream-freebsd/lib/msun/src/s_tan.c",
+                "upstream-freebsd/lib/msun/src/s_tanh.c",
+            ],
+            sse4_1: {
+                srcs: [
+                    "x86/ceil.S",
+                    "x86/ceilf.S",
+                    "x86/floor.S",
+                    "x86/floorf.S",
+                    "x86/trunc.S",
+                    "x86/truncf.S",
+                ],
+                exclude_srcs: [
+                    "upstream-freebsd/lib/msun/src/s_ceil.c",
+                    "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                    "upstream-freebsd/lib/msun/src/s_floor.c",
+                    "upstream-freebsd/lib/msun/src/s_floorf.c",
+                    "upstream-freebsd/lib/msun/src/s_trunc.c",
+                    "upstream-freebsd/lib/msun/src/s_truncf.c",
+                ],
+            },
             local_include_dirs: ["i387"],
-            srcs: ["i387/fenv.c"],
             // Clang has wrong long double sizes for x86.
             clang: false,
             ldflags: ["-Wl,--hash-style=both"],
@@ -373,7 +444,69 @@ cc_library {
         },
 
         x86_64: {
-            srcs: ["amd64/fenv.c"],
+            srcs: [
+                "amd64/fenv.c",
+                "x86_64/sqrt.S",
+                "x86_64/sqrtf.S",
+                "x86_64/e_acos.S",
+                "x86_64/e_asin.S",
+                "x86_64/e_atan2.S",
+                "x86_64/e_cosh.S",
+                "x86_64/e_exp.S",
+                "x86_64/e_hypot.S",
+                "x86_64/e_log10.S",
+                "x86_64/e_log.S",
+                "x86_64/e_pow.S",
+                "x86_64/e_sinh.S",
+                "x86_64/s_atan.S",
+                "x86_64/s_cbrt.S",
+                "x86_64/s_cos.S",
+                "x86_64/s_expm1.S",
+                "x86_64/s_log1p.S",
+                "x86_64/s_sin.S",
+                "x86_64/s_tanh.S",
+                "x86_64/s_tan.S",
+            ],
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/e_acos.c",
+                "upstream-freebsd/lib/msun/src/e_asin.c",
+                "upstream-freebsd/lib/msun/src/e_atan2.c",
+                "upstream-freebsd/lib/msun/src/e_cosh.c",
+                "upstream-freebsd/lib/msun/src/e_exp.c",
+                "upstream-freebsd/lib/msun/src/e_hypot.c",
+                "upstream-freebsd/lib/msun/src/e_log.c",
+                "upstream-freebsd/lib/msun/src/e_log10.c",
+                "upstream-freebsd/lib/msun/src/e_pow.c",
+                "upstream-freebsd/lib/msun/src/e_sinh.c",
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                "upstream-freebsd/lib/msun/src/s_atan.c",
+                "upstream-freebsd/lib/msun/src/s_cbrt.c",
+                "upstream-freebsd/lib/msun/src/s_cos.c",
+                "upstream-freebsd/lib/msun/src/s_expm1.c",
+                "upstream-freebsd/lib/msun/src/s_log1p.c",
+                "upstream-freebsd/lib/msun/src/s_sin.c",
+                "upstream-freebsd/lib/msun/src/s_tan.c",
+                "upstream-freebsd/lib/msun/src/s_tanh.c",
+            ],
+            sse4_1: {
+                srcs: [
+                    "x86_64/ceil.S",
+                    "x86_64/ceilf.S",
+                    "x86_64/floor.S",
+                    "x86_64/floorf.S",
+                    "x86_64/trunc.S",
+                    "x86_64/truncf.S",
+                ],
+                exclude_srcs: [
+                    "upstream-freebsd/lib/msun/src/s_ceil.c",
+                    "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                    "upstream-freebsd/lib/msun/src/s_floor.c",
+                    "upstream-freebsd/lib/msun/src/s_floorf.c",
+                    "upstream-freebsd/lib/msun/src/s_trunc.c",
+                    "upstream-freebsd/lib/msun/src/s_truncf.c",
+                ],
+            },
             // Clang has wrong long double sizes for x86.
             clang: false,
             version_script: "libm.x86_64.map",
