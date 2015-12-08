@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0b808d7_338b080b",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-08T16:35:08Z",
+      "side": 1,
+      "message": "shouldn\u0027t we cache the clockid_t, not the char?",
+      "revId": "870f165ceb3348d79499d40ce8b629f62a15ff2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
