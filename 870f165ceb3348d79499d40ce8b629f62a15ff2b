@@ -16,6 +16,24 @@
       "revId": "870f165ceb3348d79499d40ce8b629f62a15ff2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c012c8d7_69e985a8",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-08T18:39:32Z",
+      "side": 1,
+      "message": "I was trying to keep this code similar to the multi-use code we have in liblog to ease maintenance.\n\nQuick check makes the code more complicated as it would need to be tristate and introduce a magical non-conflicting CLOCK_UNDEFINED that denotes not set in order to preserve the logic hierarchy, then expand lines 525+526 and 536+537 followed by the check here to eliminate CLOCK_UNDEFINED. Seems like no gains at all?",
+      "parentUuid": "c0b808d7_338b080b",
+      "revId": "870f165ceb3348d79499d40ce8b629f62a15ff2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
