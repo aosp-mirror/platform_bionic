@@ -94,6 +94,10 @@ struct android_namespace_t {
     default_library_paths_ = library_paths;
   }
 
+  void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
+    permitted_paths_ = permitted_paths;
+  }
+
   soinfo::soinfo_list_t& soinfo_list() { return soinfo_list_; }
 
   // For isolated namespaces - checks if the file is on the search path;
@@ -105,6 +109,7 @@ struct android_namespace_t {
   bool is_isolated_;
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
+  std::vector<std::string> permitted_paths_;
   soinfo::soinfo_list_t soinfo_list_;
 
   DISALLOW_COPY_AND_ASSIGN(android_namespace_t);
@@ -312,6 +317,12 @@ bool android_namespace_t::is_accessible(const std::string& file) {
 
   for (const auto& dir : default_library_paths_) {
     if (file_is_in_dir(file, dir)) {
+      return true;
+    }
+  }
+
+  for (const auto& dir : permitted_paths_) {
+    if (file_is_under_dir(file, dir)) {
       return true;
     }
   }
@@ -2285,7 +2296,7 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
 
   // create anonymous namespace
   android_namespace_t* anon_ns =
-      create_namespace("(anonymous)", nullptr, anon_ns_library_path, false);
+      create_namespace("(anonymous)", nullptr, anon_ns_library_path, false, nullptr);
 
   if (anon_ns == nullptr) {
     g_public_namespace_initialized = false;
@@ -2299,7 +2310,8 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
 android_namespace_t* create_namespace(const char* name,
                                       const char* ld_library_path,
                                       const char* default_library_path,
-                                      bool is_isolated) {
+                                      bool is_isolated,
+                                      const char* permitted_when_isolated_path) {
   if (!g_public_namespace_initialized) {
     DL_ERR("cannot create namespace: public namespace is not initialized.");
     return nullptr;
@@ -2308,15 +2320,18 @@ android_namespace_t* create_namespace(const char* name,
   ProtectedDataGuard guard;
   std::vector<std::string> ld_library_paths;
   std::vector<std::string> default_library_paths;
+  std::vector<std::string> permitted_paths;
 
   parse_path(ld_library_path, ":", &ld_library_paths);
   parse_path(default_library_path, ":", &default_library_paths);
+  parse_path(permitted_when_isolated_path, ":", &permitted_paths);
 
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated(is_isolated);
   ns->set_ld_library_paths(std::move(ld_library_paths));
   ns->set_default_library_paths(std::move(default_library_paths));
+  ns->set_permitted_paths(std::move(permitted_paths));
 
   // TODO(dimtiry): Should this be global group of caller's namespace?
   auto global_group = make_global_group(&g_default_namespace);

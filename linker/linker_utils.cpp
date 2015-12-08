@@ -66,9 +66,18 @@ bool file_is_in_dir(const std::string& file, const std::string& dir) {
   const char* haystack = file.c_str();
   size_t needle_len = strlen(needle);
 
-  return (strncmp(haystack, needle, needle_len) == 0 &&
-          haystack[needle_len] == '/' &&
-          strchr(haystack + needle_len + 1, '/') == nullptr);
+  return strncmp(haystack, needle, needle_len) == 0 &&
+         haystack[needle_len] == '/' &&
+         strchr(haystack + needle_len + 1, '/') == nullptr;
+}
+
+bool file_is_under_dir(const std::string& file, const std::string& dir) {
+  const char* needle = dir.c_str();
+  const char* haystack = file.c_str();
+  size_t needle_len = strlen(needle);
+
+  return strncmp(haystack, needle, needle_len) == 0 &&
+         haystack[needle_len] == '/';
 }
 
 const char* const kZipFileSeparator = "!/";
