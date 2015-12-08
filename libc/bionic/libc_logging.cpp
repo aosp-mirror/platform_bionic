@@ -514,7 +514,7 @@ static void refresh_cache(struct cache *cache, const char *key)
 // rare, we can accept a trylock failure gracefully.
 static pthread_mutex_t lock_clockid = PTHREAD_MUTEX_INITIALIZER;
 
-static clockid_t android_log_clockid()
+static clockid_t __android_log_clockid()
 {
   static struct cache r_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
   static struct cache p_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
@@ -563,7 +563,7 @@ static int __libc_write_log(int priority, const char* tag, const char* msg) {
   vec[1].iov_base = &tid;
   vec[1].iov_len = sizeof(tid);
   timespec ts;
-  clock_gettime(android_log_clockid(), &ts);
+  clock_gettime(__android_log_clockid(), &ts);
   log_time realtime_ts;
   realtime_ts.tv_sec = ts.tv_sec;
   realtime_ts.tv_nsec = ts.tv_nsec;
@@ -606,7 +606,7 @@ static int __libc_android_log_event(int32_t tag, char type, const void* payload,
   vec[1].iov_base = &tid;
   vec[1].iov_len = sizeof(tid);
   timespec ts;
-  clock_gettime(android_log_clockid(), &ts);
+  clock_gettime(__android_log_clockid(), &ts);
   log_time realtime_ts;
   realtime_ts.tv_sec = ts.tv_sec;
   realtime_ts.tv_nsec = ts.tv_nsec;
