@@ -37,7 +37,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/param.h>
-#include <sys/prctl.h>
 #include <unistd.h>
 
 #include <new>
@@ -364,13 +363,6 @@ static void parse_LD_PRELOAD(const char* path) {
 static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
-  // set DUMPABLE to 1 to access /proc/self/fd
-  int dumpable = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
-  prctl(PR_SET_DUMPABLE, 1, 0, 0, 0);
-  auto guard = make_scope_guard([&]() {
-    // restore dumpable
-    prctl(PR_SET_DUMPABLE, dumpable, 0, 0, 0);
-  });
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
     PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
