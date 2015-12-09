@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e55fde25_2a6bff8b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-09T17:59:07Z",
+      "side": 1,
+      "message": "is a",
+      "revId": "116dbd8c4d07b421f2a678a0f550391e43419355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6553ee27_664dae1b",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-09T17:59:07Z",
+      "side": 1,
+      "message": "resulting",
+      "revId": "116dbd8c4d07b421f2a678a0f550391e43419355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
