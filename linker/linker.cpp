@@ -125,11 +125,9 @@ static soinfo* somain; // main process, always the one after libdl_info
 
 static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
-  "/odm/lib64",
   "/vendor/lib64",
   "/system/lib64",
 #else
-  "/odm/lib",
   "/vendor/lib",
   "/system/lib",
 #endif
@@ -138,15 +136,11 @@ static const char* const kDefaultLdPaths[] = {
 
 static const char* const kAsanDefaultLdPaths[] = {
 #if defined(__LP64__)
-  "/data/odm/lib64",
-  "/odm/lib64",
   "/data/vendor/lib64",
   "/vendor/lib64",
   "/data/lib64",
   "/system/lib64",
 #else
-  "/data/odm/lib",
-  "/odm/lib",
   "/data/vendor/lib",
   "/vendor/lib",
   "/data/lib",
