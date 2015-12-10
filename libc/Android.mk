@@ -697,6 +697,9 @@ endef
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
+# On x86, the __set_tls implementation is complex enough that
+# -fstack-protector-strong inserts a check.
+LOCAL_SRC_FILES_x86 := arch-x86/bionic/__set_tls.c
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
