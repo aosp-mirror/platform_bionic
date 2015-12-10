@@ -45,7 +45,7 @@ struct atfork_t {
 
 class atfork_list_t {
  public:
-  atfork_list_t() : first_(nullptr), last_(nullptr) {}
+  constexpr atfork_list_t() : first_(nullptr), last_(nullptr) {}
 
   template<typename F>
   void walk_forward(F f) {
