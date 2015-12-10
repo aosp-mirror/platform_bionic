@@ -79,6 +79,10 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   static pthread_internal_t main_thread;
 
+  // The x86 -fstack-protector implementation uses TLS, so make sure that's
+  // set up before we call any function that might get a stack check inserted.
+  __set_tls(main_thread.tls);
+
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
   main_thread.tid = __set_tid_address(&main_thread.tid);
@@ -97,7 +101,6 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   __init_thread(&main_thread);
   __init_tls(&main_thread);
-  __set_tls(main_thread.tls);
 
   // Store a pointer to the kernel argument block in a TLS slot to be
   // picked up by the libc constructor.
