@@ -54,6 +54,18 @@ TEST(linker_utils, file_is_in_dir_smoke) {
   ASSERT_FALSE(file_is_in_dir("/file", "/"));
 }
 
+TEST(linker_utils, file_is_under_dir_smoke) {
+  ASSERT_TRUE(file_is_under_dir("/foo/bar/file", "/foo/bar"));
+  ASSERT_TRUE(file_is_under_dir("/foo/bar/file", "/foo"));
+
+  ASSERT_FALSE(file_is_under_dir("/foo/bar/file", "/bar/foo"));
+
+  ASSERT_TRUE(file_is_under_dir("/file", ""));
+  ASSERT_TRUE(file_is_under_dir("/foo/bar/file", ""));
+  ASSERT_FALSE(file_is_under_dir("/file", "/"));
+  ASSERT_FALSE(file_is_under_dir("/foo/bar/file", "/"));
+}
+
 TEST(linker_utils, parse_zip_path_smoke) {
   std::string zip_path;
   std::string entry_path;

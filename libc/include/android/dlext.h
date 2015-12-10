@@ -152,16 +152,20 @@ extern bool android_init_namespaces(const char* public_ns_sonames,
  * 2. In directories specified by DT_RUNPATH of the "needed by" binary.
  * 3. deault_library_path (This of this as namespace-local default library path)
  *
- * When is_isolated is true the resulted namespace requires all of the libraries
- * to be on the search path; the search_path is ld_library_path:default_library_path.
+ * When is_isolated is true the resulting namespace requires all of the libraries
+ * to be on the search path or under the permitted_when_isolated_path; the search_path is
+ * ld_library_path:default_library_path. Note that the permitted_when_isolated_path path
+ * is not part of the search_path and does not affect the search order. It is a way
+ * to allow loading libraries from specific locations when using absolute path.
  *
- * If a library or any of its dependencies are outside of the search path and not
- * part of the public namespace dlopen will fail.
+ * If a library or any of its dependencies are outside of the permitted_when_isolated_path
+ * and search_path, and it is not part of the public namespace dlopen will fail.
  */
 extern struct android_namespace_t* android_create_namespace(const char* name,
                                                             const char* ld_library_path,
                                                             const char* default_library_path,
-                                                            bool is_isolated);
+                                                            bool is_isolated,
+                                                            const char* permitted_when_isolated_path);
 
 __END_DECLS
 

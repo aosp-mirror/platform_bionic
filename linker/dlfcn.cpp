@@ -193,11 +193,12 @@ bool android_init_namespaces(const char* public_ns_sonames,
 }
 
 android_namespace_t* android_create_namespace(const char* name, const char* ld_library_path,
-                                              const char* default_library_path, bool is_isolated) {
+                                              const char* default_library_path, bool is_isolated,
+                                              const char* permitted_when_isolated_path) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
-  android_namespace_t* result = create_namespace(name, ld_library_path,
-                                                 default_library_path, is_isolated);
+  android_namespace_t* result = create_namespace(name, ld_library_path, default_library_path,
+                                                 is_isolated, permitted_when_isolated_path);
 
   if (result == nullptr) {
     __bionic_format_dlerror("android_create_namespace failed", linker_get_error_buffer());
