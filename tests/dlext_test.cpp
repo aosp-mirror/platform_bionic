@@ -628,10 +628,10 @@ TEST(dlext, ns_smoke) {
   handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(), RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  android_namespace_t* ns1 = android_create_namespace("private", nullptr, (lib_path + "/private_namespace_libs").c_str(), false);
+  android_namespace_t* ns1 = android_create_namespace("private", nullptr, (lib_path + "/private_namespace_libs").c_str(), false, nullptr);
   ASSERT_TRUE(ns1 != nullptr) << dlerror();
 
-  android_namespace_t* ns2 = android_create_namespace("private_isolated", nullptr, (lib_path + "/private_namespace_libs").c_str(), true);
+  android_namespace_t* ns2 = android_create_namespace("private_isolated", nullptr, (lib_path + "/private_namespace_libs").c_str(), true, nullptr);
   ASSERT_TRUE(ns2 != nullptr) << dlerror();
 
   // This should not have affect search path for default namespace:
@@ -732,13 +732,13 @@ TEST(dlext, ns_isolated) {
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
 
-  android_namespace_t* ns_not_isolated = android_create_namespace("private", nullptr, (lib_path + "/private_namespace_libs").c_str(), false);
+  android_namespace_t* ns_not_isolated = android_create_namespace("private", nullptr, (lib_path + "/private_namespace_libs").c_str(), false, nullptr);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
 
-  android_namespace_t* ns_isolated = android_create_namespace("private_isolated1", nullptr, (lib_path + "/private_namespace_libs").c_str(), true);
+  android_namespace_t* ns_isolated = android_create_namespace("private_isolated1", nullptr, (lib_path + "/private_namespace_libs").c_str(), true, nullptr);
   ASSERT_TRUE(ns_isolated != nullptr) << dlerror();
 
-  android_namespace_t* ns_isolated2 = android_create_namespace("private_isolated2", (lib_path + "/private_namespace_libs").c_str(), nullptr, true);
+  android_namespace_t* ns_isolated2 = android_create_namespace("private_isolated2", (lib_path + "/private_namespace_libs").c_str(), nullptr, true, lib_path.c_str());
   ASSERT_TRUE(ns_isolated2 != nullptr) << dlerror();
 
   ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
@@ -772,14 +772,15 @@ TEST(dlext, ns_isolated) {
 
   extinfo.library_namespace = ns_isolated2;
 
+  // this should work because isolation_path for private_isolated2 includes lib_path
   handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
-  ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+  dlclose(handle2);
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
-  ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" is not accessible for the namespace \"private_isolated2\"", dlerror());
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+  dlclose(handle2);
 
   typedef const char* (*fn_t)();
   fn_t ns_get_local_string = reinterpret_cast<fn_t>(dlsym(handle1, "ns_get_local_string"));
@@ -824,7 +825,7 @@ TEST(dlext, ns_anonymous) {
   android_namespace_t* ns = android_create_namespace(
                                 "private", nullptr,
                                 (lib_path + "/private_namespace_libs").c_str(),
-                                false);
+                                false, nullptr);
 
   ASSERT_TRUE(ns != nullptr) << dlerror();
 
