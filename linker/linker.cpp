@@ -27,7 +27,6 @@
  */
 
 #include <android/api-level.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -891,20 +890,23 @@ soinfo::soinfo(android_namespace_t* ns, const char* realpath,
   this->namespace_ = ns;
 }
 
+static uint32_t calculate_elf_hash(const char* name) {
+  const uint8_t* name_bytes = reinterpret_cast<const uint8_t*>(name);
+  uint32_t h = 0, g;
+
+  while (*name_bytes) {
+    h = (h << 4) + *name_bytes++;
+    g = h & 0xf0000000;
+    h ^= g;
+    h ^= g >> 24;
+  }
+
+  return h;
+}
 
 uint32_t SymbolName::elf_hash() {
   if (!has_elf_hash_) {
-    const uint8_t* name = reinterpret_cast<const uint8_t*>(name_);
-    uint32_t h = 0, g;
-
-    while (*name) {
-      h = (h << 4) + *name++;
-      g = h & 0xf0000000;
-      h ^= g;
-      h ^= g >> 24;
-    }
-
-    elf_hash_ = h;
+    elf_hash_ = calculate_elf_hash(name_);
     has_elf_hash_ = true;
   }
 
@@ -1243,7 +1245,8 @@ static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_s
 
 
 static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
-                                            soinfo** found, SymbolName& symbol_name) {
+                                            soinfo** found, SymbolName& symbol_name,
+                                            const version_info* vi) {
   const ElfW(Sym)* result = nullptr;
   bool skip_lookup = skip_until != nullptr;
 
@@ -1253,7 +1256,7 @@ static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
       return true;
     }
 
-    if (!current_soinfo->find_symbol_by_name(symbol_name, nullptr, &result)) {
+    if (!current_soinfo->find_symbol_by_name(symbol_name, vi, &result)) {
       result = nullptr;
       return false;
     }
@@ -1269,9 +1272,17 @@ static const ElfW(Sym)* dlsym_handle_lookup(soinfo* root, soinfo* skip_until,
   return result;
 }
 
+static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
+                                            const char* name,
+                                            const version_info* vi,
+                                            soinfo** found,
+                                            soinfo* caller,
+                                            void* handle);
+
 // This is used by dlsym(3).  It performs symbol lookup only within the
 // specified soinfo object and its dependencies in breadth first order.
-const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name) {
+static const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found,
+                                            const char* name, const version_info* vi) {
   // According to man dlopen(3) and posix docs in the case when si is handle
   // of the main executable we need to search not only in the executable and its
   // dependencies but also in all libraries loaded with RTLD_GLOBAL.
@@ -1280,11 +1291,11 @@ const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* nam
   // libraries and they are loaded in breath-first (correct) order we can just execute
   // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
   if (si == somain) {
-    return dlsym_linear_lookup(&g_default_namespace, name, found, nullptr, RTLD_DEFAULT);
+    return dlsym_linear_lookup(&g_default_namespace, name, vi, found, nullptr, RTLD_DEFAULT);
   }
 
   SymbolName symbol_name(name);
-  return dlsym_handle_lookup(si, nullptr, found, symbol_name);
+  return dlsym_handle_lookup(si, nullptr, found, symbol_name, vi);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -1292,11 +1303,12 @@ const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* nam
    beginning of the global solist. Otherwise the search starts at the
    specified soinfo (for RTLD_NEXT).
  */
-const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
-                                     const char* name,
-                                     soinfo** found,
-                                     soinfo* caller,
-                                     void* handle) {
+static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
+                                            const char* name,
+                                            const version_info* vi,
+                                            soinfo** found,
+                                            soinfo* caller,
+                                            void* handle) {
   SymbolName symbol_name(name);
 
   soinfo::soinfo_list_t& soinfo_list = ns->soinfo_list();
@@ -1322,7 +1334,7 @@ const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
       continue;
     }
 
-    if (!si->find_symbol_by_name(symbol_name, nullptr, &s)) {
+    if (!si->find_symbol_by_name(symbol_name, vi, &s)) {
       return nullptr;
     }
 
@@ -1338,7 +1350,7 @@ const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   if (s == nullptr && caller != nullptr &&
       (caller->get_rtld_flags() & RTLD_GLOBAL) == 0) {
     return dlsym_handle_lookup(caller->get_local_group_root(),
-        (handle == RTLD_NEXT) ? caller : nullptr, found, symbol_name);
+        (handle == RTLD_NEXT) ? caller : nullptr, found, symbol_name, vi);
   }
 
   if (s != nullptr) {
@@ -2176,6 +2188,14 @@ static void soinfo_unload(soinfo* root) {
   }
 }
 
+static std::string symbol_display_name(const char* sym_name, const char* sym_ver) {
+  if (sym_ver == nullptr) {
+    return sym_name;
+  }
+
+  return std::string(sym_name) + "@" + sym_ver;
+}
+
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // Use basic string manipulation calls to avoid snprintf.
   // snprintf indirectly calls pthread_getspecific to get the size of a buffer.
@@ -2203,7 +2223,10 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   parse_LD_LIBRARY_PATH(ld_library_path);
 }
 
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, soinfo *caller) {
+soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
+                  void* caller_addr) {
+  soinfo* const caller = find_containing_library(caller_addr);
+
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
@@ -2247,6 +2270,79 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   }
 
   return si;
+}
+
+int do_dladdr(const void* addr, Dl_info* info) {
+  // Determine if this address can be found in any library currently mapped.
+  soinfo* si = find_containing_library(addr);
+  if (si == nullptr) {
+    return 0;
+  }
+
+  memset(info, 0, sizeof(Dl_info));
+
+  info->dli_fname = si->get_realpath();
+  // Address at which the shared object is loaded.
+  info->dli_fbase = reinterpret_cast<void*>(si->base);
+
+  // Determine if any symbol in the library contains the specified address.
+  ElfW(Sym)* sym = si->find_symbol_by_address(addr);
+  if (sym != nullptr) {
+    info->dli_sname = si->get_string(sym->st_name);
+    info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));
+  }
+
+  return 1;
+}
+
+bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
+              void* caller_addr, void** symbol) {
+#if !defined(__LP64__)
+  if (handle == nullptr) {
+    DL_ERR("dlsym failed: library handle is null");
+    return false;
+  }
+#endif
+
+  if (sym_name == nullptr) {
+    DL_ERR("dlsym failed: symbol name is null");
+    return false;
+  }
+
+  soinfo* found = nullptr;
+  const ElfW(Sym)* sym = nullptr;
+  soinfo* caller = find_containing_library(caller_addr);
+  android_namespace_t* ns = caller != nullptr ? caller->get_namespace() : g_anonymous_namespace;
+
+  version_info vi_instance;
+  version_info* vi = nullptr;
+
+  if (sym_ver != nullptr) {
+    vi_instance.name = sym_name;
+    vi_instance.elf_hash = calculate_elf_hash(sym_name);
+    vi = &vi_instance;
+  }
+
+  if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
+    sym = dlsym_linear_lookup(ns, sym_name, vi, &found, caller, handle);
+  } else {
+    sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, sym_name, vi);
+  }
+
+  if (sym != nullptr) {
+    uint32_t bind = ELF_ST_BIND(sym->st_info);
+
+    if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
+      *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+      return true;
+    }
+
+    DL_ERR("symbol \"%s\" found but not global", symbol_display_name(sym_name, sym_ver).c_str());
+    return false;
+  }
+
+  DL_ERR("undefined symbol: %s", symbol_display_name(sym_name, sym_ver).c_str());
+  return false;
 }
 
 void do_dlclose(soinfo* si) {

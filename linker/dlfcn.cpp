@@ -16,12 +16,10 @@
 
 #include "linker.h"
 
-#include <dlfcn.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <android/dlext.h>
 #include <android/api-level.h>
 
 #include <bionic/pthread_internal.h>
@@ -70,8 +68,7 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 static void* dlopen_ext(const char* filename, int flags,
                         const android_dlextinfo* extinfo, void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  soinfo* caller = find_containing_library(caller_addr);
-  soinfo* result = do_dlopen(filename, flags, extinfo, caller);
+  soinfo* result = do_dlopen(filename, flags, extinfo, caller_addr);
   if (result == nullptr) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return nullptr;
@@ -92,71 +89,20 @@ void* dlopen(const char* filename, int flags) {
 extern android_namespace_t* g_anonymous_namespace;
 
 void* dlsym(void* handle, const char* symbol) {
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
-
-  // TODO(dimitry): move (most of) the code below to linker.cpp
-#if !defined(__LP64__)
-  if (handle == nullptr) {
-    __bionic_format_dlerror("dlsym library handle is null", nullptr);
-    return nullptr;
-  }
-#endif
-
-  if (symbol == nullptr) {
-    __bionic_format_dlerror("dlsym symbol name is null", nullptr);
-    return nullptr;
-  }
-
-  soinfo* found = nullptr;
-  const ElfW(Sym)* sym = nullptr;
   void* caller_addr = __builtin_return_address(0);
-  soinfo* caller = find_containing_library(caller_addr);
-  android_namespace_t* ns = caller != nullptr ? caller->get_namespace() : g_anonymous_namespace;
-
-  if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
-    sym = dlsym_linear_lookup(ns, symbol, &found, caller, handle);
-  } else {
-    sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, symbol);
-  }
-
-  if (sym != nullptr) {
-    unsigned bind = ELF_ST_BIND(sym->st_info);
-
-    if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
-      return reinterpret_cast<void*>(found->resolve_symbol_address(sym));
-    }
-
-    __bionic_format_dlerror("symbol found but not global", symbol);
-    return nullptr;
-  } else {
-    __bionic_format_dlerror("undefined symbol", symbol);
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  void* result;
+  if (!do_dlsym(handle, symbol, nullptr, caller_addr, &result)) {
+    __bionic_format_dlerror(linker_get_error_buffer(), nullptr);
     return nullptr;
   }
+
+  return result;
 }
 
 int dladdr(const void* addr, Dl_info* info) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-
-  // Determine if this address can be found in any library currently mapped.
-  soinfo* si = find_containing_library(addr);
-  if (si == nullptr) {
-    return 0;
-  }
-
-  memset(info, 0, sizeof(Dl_info));
-
-  info->dli_fname = si->get_realpath();
-  // Address at which the shared object is loaded.
-  info->dli_fbase = reinterpret_cast<void*>(si->base);
-
-  // Determine if any symbol in the library contains the specified address.
-  ElfW(Sym)* sym = si->find_symbol_by_address(addr);
-  if (sym != nullptr) {
-    info->dli_sname = si->get_string(sym->st_name);
-    info->dli_saddr = reinterpret_cast<void*>(si->resolve_symbol_address(sym));
-  }
-
-  return 1;
+  return do_dladdr(addr, info);
 }
 
 int dlclose(void* handle) {
