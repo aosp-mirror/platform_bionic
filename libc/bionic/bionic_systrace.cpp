@@ -34,27 +34,25 @@ constexpr char SYSTRACE_PROPERTY_NAME[] = "debug.atrace.tags.enableflags";
 
 static Lock g_lock;
 static const prop_info* g_pinfo;
-static uint32_t g_serial = -1;
+static uint32_t g_property_serial = -1;
+static uint32_t g_property_area_serial = -1;
 static uint64_t g_tags;
 static int g_trace_marker_fd = -1;
 
 static bool should_trace() {
   bool result = false;
   g_lock.lock();
-  // If g_pinfo is null, this means that systrace hasn't been run and it's safe to
-  // assume that no trace writing will need to take place.  However, to avoid running
-  // this costly find check each time, we set it to a non-tracing value so that next
-  // time, it will just check the serial to see if the value has been changed.
-  // this function also deals with the bootup case, during which the call to property
-  // set will fail if the property server hasn't yet started.
-  if (g_pinfo == NULL) {
+  // debug.atrace.tags.enableflags is set to a safe non-tracing value during property
+  // space initialization, so it should only be null in two cases, if there are
+  // insufficient permissions for this process to access the property, in which
+  // case an audit will be logged, and during boot before the property server has
+  // been started, in which case we store the global property_area serial to prevent
+  // the costly find operation until we see a changed property_area.
+  if (!g_pinfo && g_property_area_serial != __system_property_area_serial()) {
+    g_property_area_serial = __system_property_area_serial();
     g_pinfo = __system_property_find(SYSTRACE_PROPERTY_NAME);
-    if (g_pinfo == NULL) {
-      __system_property_set(SYSTRACE_PROPERTY_NAME, "0");
-      g_pinfo = __system_property_find(SYSTRACE_PROPERTY_NAME);
-    }
   }
-  if (g_pinfo != NULL) {
+  if (g_pinfo) {
     // Find out which tags have been enabled on the command line and set
     // the value of tags accordingly.  If the value of the property changes,
     // the serial will also change, so the costly system_property_read function
@@ -62,11 +60,11 @@ static bool should_trace() {
     // first.  The values within pinfo may change, but its location is guaranteed
     // not to move.
     uint32_t cur_serial = __system_property_serial(g_pinfo);
-    if (cur_serial != g_serial) {
-      g_serial = cur_serial;
+    if (cur_serial != g_property_serial) {
+      g_property_serial = cur_serial;
       char value[PROP_VALUE_MAX];
       __system_property_read(g_pinfo, 0, value);
-      g_tags = strtoull(value, NULL, 0);
+      g_tags = strtoull(value, nullptr, 0);
     }
     result = ((g_tags & ATRACE_TAG_BIONIC) != 0);
   }
