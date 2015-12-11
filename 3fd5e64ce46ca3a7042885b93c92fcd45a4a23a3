@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "855c6237_f3639b1e",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-11T16:44:49Z",
+      "side": 1,
+      "message": "let\u0027s keep this out of the makefile and in the test, where you can include the checkin comment\u0027s explanation as a code comment.",
+      "revId": "3fd5e64ce46ca3a7042885b93c92fcd45a4a23a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
