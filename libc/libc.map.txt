@@ -1438,7 +1438,6 @@ LIBC_PRIVATE {
     __ashrdi3; # arm
     __bionic_brk; # arm x86 mips
     __bionic_libgcc_compat_symbols; # arm x86
-    __bionic_libgcc_unwind_symbols; # arm
     __dso_handle; # arm
     __gnu_Unwind_Backtrace; # arm
     __gnu_unwind_execute; # arm
