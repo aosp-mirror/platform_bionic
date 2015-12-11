@@ -88,16 +88,25 @@ void* dlopen(const char* filename, int flags) {
 
 extern android_namespace_t* g_anonymous_namespace;
 
-void* dlsym(void* handle, const char* symbol) {
-  void* caller_addr = __builtin_return_address(0);
+void* dlsym_impl(void* handle, const char* symbol, const char* version, void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   void* result;
-  if (!do_dlsym(handle, symbol, nullptr, caller_addr, &result)) {
+  if (!do_dlsym(handle, symbol, version, caller_addr, &result)) {
     __bionic_format_dlerror(linker_get_error_buffer(), nullptr);
     return nullptr;
   }
 
   return result;
+}
+
+void* dlsym(void* handle, const char* symbol) {
+  void* caller_addr = __builtin_return_address(0);
+  return dlsym_impl(handle, symbol, nullptr, caller_addr);
+}
+
+void* dlvsym(void* handle, const char* symbol, const char* version) {
+  void* caller_addr = __builtin_return_address(0);
+  return dlsym_impl(handle, symbol, version, caller_addr);
 }
 
 int dladdr(const void* addr, Dl_info* info) {
@@ -179,11 +188,11 @@ static const char ANDROID_LIBDL_STRTAB[] =
   // 00000000001 1111111112222222222 3333333333444444444455555555556666666666777 777777788888888889999999999
   // 01234567890 1234567890123456789 0123456789012345678901234567890123456789012 345678901234567890123456789
     "erate_phdr\0android_dlopen_ext\0android_set_application_target_sdk_version\0android_get_application_tar"
-  // 0000000000111111 111122222222223333333333 4444444444555555555566666
-  // 0123456789012345 678901234567890123456789 0123456789012345678901234
-    "get_sdk_version\0android_init_namespaces\0android_create_namespace\0"
+  // 0000000000111111 111122222222223333333333 4444444444555555555566666 6666677
+  // 0123456789012345 678901234567890123456789 0123456789012345678901234 5678901
+    "get_sdk_version\0android_init_namespaces\0android_create_namespace\0dlvsym\0"
 #if defined(__arm__)
-  // 265
+  // 272
     "dl_unwind_find_exidx\0"
 #endif
     ;
@@ -207,8 +216,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)(173, &android_get_application_target_sdk_version, 1),
   ELFW(SYM_INITIALIZER)(216, &android_init_namespaces, 1),
   ELFW(SYM_INITIALIZER)(240, &android_create_namespace, 1),
+  ELFW(SYM_INITIALIZER)(265, &dlvsym, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(265, &dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(272, &dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -225,9 +235,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
