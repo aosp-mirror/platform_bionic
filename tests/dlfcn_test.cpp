@@ -760,7 +760,7 @@ TEST(dlfcn, dlsym_failures) {
   // so it can be distinguished from the NULL handle.
   sym = dlsym(nullptr, "test");
   ASSERT_TRUE(sym == nullptr);
-  ASSERT_SUBSTR("dlsym library handle is null", dlerror());
+  ASSERT_STREQ("dlsym failed: library handle is null", dlerror());
 #endif
 
   // NULL symbol name.
@@ -768,7 +768,7 @@ TEST(dlfcn, dlsym_failures) {
   // glibc marks this parameter non-null and SEGVs if you cheat.
   sym = dlsym(self, nullptr);
   ASSERT_TRUE(sym == nullptr);
-  ASSERT_SUBSTR("", dlerror());
+  ASSERT_STREQ("dlsym failed: symbol name is null", dlerror());
 #endif
 
   // Symbol that doesn't exist.
