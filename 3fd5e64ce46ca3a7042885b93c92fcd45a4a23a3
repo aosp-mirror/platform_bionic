@@ -34,6 +34,24 @@
       "revId": "3fd5e64ce46ca3a7042885b93c92fcd45a4a23a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25157684_44fc2e5f",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-11T21:42:55Z",
+      "side": 1,
+      "message": "lgtm.",
+      "parentUuid": "25673634_14a1b4bb",
+      "revId": "3fd5e64ce46ca3a7042885b93c92fcd45a4a23a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
