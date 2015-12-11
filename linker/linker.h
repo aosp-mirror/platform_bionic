@@ -29,6 +29,7 @@
 #ifndef _LINKER_H_
 #define _LINKER_H_
 
+#include <dlfcn.h>
 #include <android/dlext.h>
 #include <elf.h>
 #include <inttypes.h>
@@ -135,7 +136,7 @@ class SymbolName {
 };
 
 struct version_info {
-  version_info() : elf_hash(0), name(nullptr), target_si(nullptr) {}
+  constexpr version_info() : elf_hash(0), name(nullptr), target_si(nullptr) {}
 
   uint32_t elf_hash;
   const char* name;
@@ -422,17 +423,15 @@ soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, soinfo *caller);
+soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, void* caller_addr);
 void do_dlclose(soinfo* si);
 
 int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data);
 
-const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns, const char* name, soinfo** found,
-                                     soinfo* caller, void* handle);
+bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
+              void* caller_addr, void** symbol);
 
-soinfo* find_containing_library(const void* addr);
-
-const ElfW(Sym)* dlsym_handle_lookup(soinfo* si, soinfo** found, const char* name);
+int do_dladdr(const void* addr, Dl_info* info);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;
