@@ -16,6 +16,24 @@
       "revId": "3fd5e64ce46ca3a7042885b93c92fcd45a4a23a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25673634_14a1b4bb",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1081519
+      },
+      "writtenOn": "2015-12-11T18:12:59Z",
+      "side": 1,
+      "message": "Would this be ok (in the test):\n\n// When personality syscall is executed on mips64, for a 32bit process\n// sys_32_personality() is called, which converts PER_LINUX32 -\u003e PER_LINUX\n#if defined(__LP64__) || (__mips\u003d\u003d32 \u0026\u0026 __mips_isa_rev\u003e2)\n  ASSERT_EQ(PER_LINUX, persona);\n#else",
+      "parentUuid": "855c6237_f3639b1e",
+      "revId": "3fd5e64ce46ca3a7042885b93c92fcd45a4a23a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
