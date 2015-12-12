@@ -48,6 +48,11 @@
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/STATIC_LIBRARIES/libc_*)
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/SHARED_LIBRARIES/libc_*)
 
+# Required due to the replacement of a symlink with a shared library
+# (commit b952f42bef69e5c in frameworks/native).
+$(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib/libGLES*)
+$(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib64/libGLES*)
+
 # ************************************************
 # NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
 # ************************************************
