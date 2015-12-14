@@ -65,7 +65,7 @@ bool android_init_namespaces(const char* public_ns_sonames __unused,
 struct android_namespace_t* android_create_namespace(const char* name __unused,
                                                      const char* ld_library_path __unused,
                                                      const char* default_library_path __unused,
-                                                     bool isolated __unused,
+                                                     uint64_t type __unused,
                                                      const char* permitted_when_isolated_path __unused) {
   return 0;
 }
