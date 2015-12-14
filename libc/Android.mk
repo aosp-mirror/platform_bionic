@@ -1424,14 +1424,6 @@ LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
 LOCAL_LDFLAGS_x86    += -Wl,--version-script,$(LOCAL_PATH)/libc.x86.map
 LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
 
-# Brillo doesn't use the same libc 32-bit ABI as Android (no ndk cruft)
-ifdef BRILLO
-# TODO: b/26164862 provide alternate version scripts instead of disabling verification.
-LOCAL_LDFLAGS_arm += -Wl,--undefined-version
-LOCAL_LDFLAGS_mips += -Wl,--undefined-version
-LOCAL_LDFLAGS_x86 += -Wl,--undefined-version
-endif
-
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
 # compatibility.
