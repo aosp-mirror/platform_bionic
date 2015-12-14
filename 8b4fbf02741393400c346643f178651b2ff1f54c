@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5865a2d_2c29fb32",
+        "filename": "libc/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2015-12-14T21:57:52Z",
+      "side": 1,
+      "message": "Just moving to LOCAL_LDFLAGS would be appropriate here, but I tried this, and arm64 doesn\u0027t build (the linker didn\u0027t recognize the option)",
+      "revId": "8b4fbf02741393400c346643f178651b2ff1f54c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
