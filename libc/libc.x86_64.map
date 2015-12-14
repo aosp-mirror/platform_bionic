@@ -241,7 +241,7 @@ LIBC {
     dup3;
     duplocale;
     endmntent;
-    endpwent;
+    endpwent; # arm arm64 x86 x86_64 mips mips64 nobrillo
     endservent;
     endutent;
     environ;
@@ -1182,7 +1182,7 @@ LIBC_N {
 
 LIBC_PRIVATE {
   global:
-    dlmalloc_inspect_all;
-    dlmalloc_trim;
+    dlmalloc_inspect_all; # arm arm64 x86 x86_64 mips mips64 nobrillo
+    dlmalloc_trim; # arm arm64 x86 x86_64 mips mips64 nobrillo
     gMallocLeakZygoteChild;
 } LIBC_N;
