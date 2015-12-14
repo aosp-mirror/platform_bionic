@@ -36,20 +36,26 @@ class VersionScriptGenerator(object):
       basename = os.path.basename(script)
       dirname = os.path.dirname(script)
       for arch in all_arches:
-        name = basename.split(".")[0] + "." + arch + ".map"
-        tmp_path = os.path.join(bionic_temp, name)
-        dest_path = os.path.join(dirname, name)
-        with open(tmp_path, "w") as fout:
-          with open(script, "r") as fin:
-            fout.write("# %s\n" % warning)
-            for line in fin:
-              index = line.find("#")
-              if index != -1:
-                arches = line[index+1:].split()
-                if arch not in arches:
-                  continue
-              fout.write(line)
-        shutil.copyfile(tmp_path, dest_path)
+        for brillo in [False, True]:
+          has_nobrillo = False
+          name = basename.split(".")[0] + "." + arch + (".brillo" if brillo else "") + ".map"
+          tmp_path = os.path.join(bionic_temp, name)
+          dest_path = os.path.join(dirname, name)
+          with open(tmp_path, "w") as fout:
+            with open(script, "r") as fin:
+              fout.write("# %s\n" % warning)
+              for line in fin:
+                index = line.find("#")
+                if index != -1:
+                  tags = line[index+1:].split()
+                  if arch not in tags:
+                    continue
+                  if brillo and "nobrillo" in tags:
+                    has_nobrillo = True
+                    continue
+                fout.write(line)
+          if not brillo or has_nobrillo:
+            shutil.copyfile(tmp_path, dest_path)
 
 
 generator = VersionScriptGenerator()
