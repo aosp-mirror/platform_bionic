@@ -1387,8 +1387,11 @@ LOCAL_ADDITIONAL_DEPENDENCIES := \
     $(LOCAL_PATH)/libc.x86.map \
     $(LOCAL_PATH)/libc.x86_64.map \
     $(LOCAL_PATH)/libc.arm.brillo.map \
+    $(LOCAL_PATH)/libc.arm64.brillo.map \
     $(LOCAL_PATH)/libc.mips.brillo.map \
+    $(LOCAL_PATH)/libc.mips64.brillo.map \
     $(LOCAL_PATH)/libc.x86.brillo.map \
+    $(LOCAL_PATH)/libc.x86_64.brillo.map \
 
 # Leave the symbols in the shared library so that stack unwinders can produce
 # meaningful name resolution.
@@ -1424,15 +1427,17 @@ ifdef BRILLO
 LOCAL_LDFLAGS_arm    += -Wl,--version-script,$(LOCAL_PATH)/libc.arm.brillo.map
 LOCAL_LDFLAGS_mips   += -Wl,--version-script,$(LOCAL_PATH)/libc.mips.brillo.map
 LOCAL_LDFLAGS_x86    += -Wl,--version-script,$(LOCAL_PATH)/libc.x86.brillo.map
+LOCAL_LDFLAGS_arm64  += -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.brillo.map
+LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.brillo.map
+LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.brillo.map
 else
 LOCAL_LDFLAGS_arm    += -Wl,--version-script,$(LOCAL_PATH)/libc.arm.map
 LOCAL_LDFLAGS_mips   += -Wl,--version-script,$(LOCAL_PATH)/libc.mips.map
 LOCAL_LDFLAGS_x86    += -Wl,--version-script,$(LOCAL_PATH)/libc.x86.map
-endif
-
 LOCAL_LDFLAGS_arm64  += -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.map
 LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
 LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
+endif
 
 # We'd really like to do this for all architectures, but since this wasn't done
 # before, these symbols must continue to be exported on LP32 for binary
