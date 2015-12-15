@@ -387,7 +387,7 @@ LIBC {
     dup3;
     duplocale;
     endmntent;
-    endpwent; # arm x86 mips nobrillo
+    endpwent; # arm arm64 x86 x86_64 mips mips64 nobrillo
     endservent;
     endutent;
     environ;
@@ -1474,8 +1474,8 @@ LIBC_PRIVATE {
     _Unwind_VRS_Set; # arm
     atexit; # arm
     dlmalloc; # arm x86 mips nobrillo
-    dlmalloc_inspect_all; # arm x86 mips nobrillo
-    dlmalloc_trim; # arm x86 mips nobrillo
+    dlmalloc_inspect_all; # arm arm64 x86 x86_64 mips mips64 nobrillo
+    dlmalloc_trim; # arm arm64 x86 x86_64 mips mips64 nobrillo
     dlmalloc_usable_size; # arm x86 mips nobrillo
     gMallocLeakZygoteChild;
     SHA1Final; # arm x86 mips
