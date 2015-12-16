@@ -235,7 +235,7 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
   }
 
   // Check it as per POSIX.
-  int result = check_timespec(abs_timeout);
+  int result = check_timespec(abs_timeout, false);
   if (result != 0) {
     errno = result;
     return -1;

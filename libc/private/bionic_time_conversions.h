@@ -47,14 +47,17 @@ __LIBC_HIDDEN__ void absolute_timespec_from_timespec(timespec& abs_ts, const tim
 
 __END_DECLS
 
-static inline int check_timespec(const timespec* ts) {
-  if (ts != nullptr) {
-    if (ts->tv_nsec < 0 || ts->tv_nsec >= NS_PER_S) {
-      return EINVAL;
-    }
-    if (ts->tv_sec < 0) {
-      return ETIMEDOUT;
-    }
+static inline int check_timespec(const timespec* ts, bool null_allowed) {
+  if (null_allowed && ts == nullptr) {
+    return 0;
+  }
+  // glibc just segfaults if you pass a null timespec.
+  // That seems a lot more likely to catch bad code than returning EINVAL.
+  if (ts->tv_nsec < 0 || ts->tv_nsec >= NS_PER_S) {
+    return EINVAL;
+  }
+  if (ts->tv_sec < 0) {
+    return ETIMEDOUT;
   }
   return 0;
 }
