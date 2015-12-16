@@ -4822,8 +4822,13 @@ void* dlcalloc(size_t n_elements, size_t elem_size) {
       req = MAX_SIZE_T; /* force downstream failure on overflow */
   }
   mem = dlmalloc(req);
-  if (mem != 0 && calloc_must_clear(mem2chunk(mem)))
-    memset(mem, 0, req);
+  if (mem != 0) {
+    mchunkptr p = mem2chunk(mem);
+    if (calloc_must_clear(p)) {
+      /* Make sure to clear all of the buffer, not just the requested size. */
+      memset(mem, 0, chunksize(p) - overhead_for(p));
+    }
+  }
   return mem;
 }
 
