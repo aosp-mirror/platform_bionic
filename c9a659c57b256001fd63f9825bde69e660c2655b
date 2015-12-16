@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "4518aa2c_15d1344a",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-16T22:58:42Z",
+      "side": 1,
+      "message": "yeah, that seems like a bug. did you hit this in practice?",
+      "parentUuid": "a5d1668e_08d6471a",
+      "range": {
+        "startLine": 238,
+        "startChar": 15,
+        "endLine": 238,
+        "endChar": 42
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5b1fa58_71889806",
         "filename": "libc/private/bionic_futex.h",
         "patchSetId": 5
@@ -95,6 +119,30 @@
       "side": 1,
       "message": "manpage excerpt:\n\n.BR FUTEX_WAKE_BITSET \" (since Linux 2.6.25)\"\n.\\\" commit cd689985cf49f6ff5c8eddc48d98b9d581d9475d\nThis operation is the same as\n.BR FUTEX_WAKE\nexcept that the\n.I val3 \nargument is used to provide a 32-bit bitset to the kernel.",
       "parentUuid": "c5b1fa58_71889806",
+      "range": {
+        "startLine": 48,
+        "startChar": 66,
+        "endLine": 48,
+        "endChar": 72
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0512320e_364c36c3",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-16T22:58:42Z",
+      "side": 1,
+      "message": "looks right to me...\n\n       int futex(int *uaddr, int op, int val, const struct timespec *timeout,\n                 int *uaddr2, int val3);\n\n\n  __NR_futex, ftx, op, value, timeout, NULL, bitset\n\nuaddr\u003dftx\nop\u003dop\nval\u003dvalue\ntimeout\u003dtimeout\nuaddr2\u003dNULL\nval3\u003dbitset",
+      "parentUuid": "a5b8863e_f093e03b",
       "range": {
         "startLine": 48,
         "startChar": 66,
