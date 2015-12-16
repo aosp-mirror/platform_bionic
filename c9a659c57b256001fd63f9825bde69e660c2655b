@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "850622ce_baa5cd7a",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-16T23:18:20Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/188101",
+      "parentUuid": "4518aa2c_15d1344a",
+      "range": {
+        "startLine": 238,
+        "startChar": 15,
+        "endLine": 238,
+        "endChar": 42
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5b1fa58_71889806",
         "filename": "libc/private/bionic_futex.h",
         "patchSetId": 5
