@@ -16,6 +16,24 @@
       "revId": "ed722195009db182e1f65e444a823b604f974d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5b8863e_b0415843",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2015-12-16T22:39:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85bb823a_0ffda520",
+      "revId": "ed722195009db182e1f65e444a823b604f974d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
