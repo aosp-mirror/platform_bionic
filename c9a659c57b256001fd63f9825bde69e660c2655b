@@ -57,6 +57,29 @@
       "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5b1fa58_71889806",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-16T21:46:38Z",
+      "side": 1,
+      "message": "This is val2, but val3 is the one that should take the bitset?",
+      "range": {
+        "startLine": 48,
+        "startChar": 66,
+        "endLine": 48,
+        "endChar": 72
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
