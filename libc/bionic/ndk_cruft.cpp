@@ -49,11 +49,8 @@
 
 extern "C" {
 
-// Brillo doesn't need to support any legacy cruft.
-#if !defined(__BRILLO__)
-
-// Most of the cruft is only for 32-bit Android targets.
-#if !defined(__LP64__)
+// Brillo and LP64 don't need to support any legacy cruft.
+#if !defined(__BRILLO__) && !defined(__LP64__)
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
@@ -367,8 +364,6 @@ long __set_errno(int n) {
   return __set_errno_internal(n);
 }
 
-#endif // !defined(__LP64__)
-
 // This was never implemented in bionic, only needed for ABI compatibility with the NDK.
 // In the M time frame, over 1000 apps have a reference to this!
 void endpwent() { }
@@ -392,6 +387,6 @@ int dlmalloc_trim(size_t pad) {
 }
 #endif
 
-#endif // !defined(__BRILLO__)
+#endif // !defined(__BRILLO__) && !defined (__LP64__)
 
 } // extern "C"
