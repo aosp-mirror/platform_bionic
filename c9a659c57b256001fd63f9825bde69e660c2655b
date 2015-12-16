@@ -34,6 +34,29 @@
       "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5d1668e_08d6471a",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-16T21:34:25Z",
+      "side": 1,
+      "message": "This returns zero if abs_timeout \u003d\u003d NULL, whereas before the call would return EINVAL?",
+      "range": {
+        "startLine": 238,
+        "startChar": 15,
+        "endLine": 238,
+        "endChar": 42
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
