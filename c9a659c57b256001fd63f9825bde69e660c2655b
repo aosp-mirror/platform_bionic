@@ -200,6 +200,29 @@
       "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5b8863e_16cbfccc",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-17T15:50:20Z",
+      "side": 1,
+      "message": "This sem_timedwait needs to take ~100ms to occur, could you please add this to the test conditions? An immediate return would be \u0027bad\u0027.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 30
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
