@@ -131,6 +131,13 @@ TEST(semaphore, sem_timedwait) {
   ASSERT_EQ(0, sem_destroy(&s));
 }
 
+TEST(semaphore_DeathTest, sem_timedwait_null_timeout) {
+  sem_t s;
+  ASSERT_EQ(0, sem_init(&s, 0, 0));
+
+  ASSERT_EXIT(sem_timedwait(&s, nullptr), testing::KilledBySignal(SIGSEGV), "");
+}
+
 TEST(semaphore, sem_getvalue) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));

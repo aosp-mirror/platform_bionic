@@ -298,7 +298,7 @@ static int __pthread_rwlock_timedrdlock(pthread_rwlock_internal_t* rwlock,
     if (result == 0 || result == EAGAIN) {
       return result;
     }
-    result = check_timespec(abs_timeout_or_null);
+    result = check_timespec(abs_timeout_or_null, true);
     if (result != 0) {
       return result;
     }
@@ -370,7 +370,7 @@ static int __pthread_rwlock_timedwrlock(pthread_rwlock_internal_t* rwlock,
     if (result == 0) {
       return result;
     }
-    result = check_timespec(abs_timeout_or_null);
+    result = check_timespec(abs_timeout_or_null, true);
     if (result != 0) {
       return result;
     }
