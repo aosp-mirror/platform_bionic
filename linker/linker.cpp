@@ -2187,7 +2187,7 @@ static std::string symbol_display_name(const char* sym_name, const char* sym_ver
     return sym_name;
   }
 
-  return std::string(sym_name) + "@" + sym_ver;
+  return std::string(sym_name) + ", version " + sym_ver;
 }
 
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
@@ -2312,8 +2312,8 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
   version_info* vi = nullptr;
 
   if (sym_ver != nullptr) {
-    vi_instance.name = sym_name;
-    vi_instance.elf_hash = calculate_elf_hash(sym_name);
+    vi_instance.name = sym_ver;
+    vi_instance.elf_hash = calculate_elf_hash(sym_ver);
     vi = &vi_instance;
   }
 

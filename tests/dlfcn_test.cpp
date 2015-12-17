@@ -624,8 +624,10 @@ TEST(dlfcn, dlopen_check_loop) {
   handle = dlopen("libtest_with_dependency_loop.so", RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #ifdef __BIONIC__
-  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
   ASSERT_STREQ("dlopen failed: library \"libtest_with_dependency_loop.so\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+#else
+  // TODO: glibc returns nullptr on dlerror() here. Is it bug?
+  ASSERT_TRUE(dlerror() == nullptr);
 #endif
 
   handle = dlopen("libtest_with_dependency_a.so", RTLD_NOW | RTLD_NOLOAD);
@@ -761,14 +763,6 @@ TEST(dlfcn, dlsym_failures) {
   sym = dlsym(nullptr, "test");
   ASSERT_TRUE(sym == nullptr);
   ASSERT_STREQ("dlsym failed: library handle is null", dlerror());
-#endif
-
-  // NULL symbol name.
-#if defined(__BIONIC__)
-  // glibc marks this parameter non-null and SEGVs if you cheat.
-  sym = dlsym(self, nullptr);
-  ASSERT_TRUE(sym == nullptr);
-  ASSERT_STREQ("dlsym failed: symbol name is null", dlerror());
 #endif
 
   // Symbol that doesn't exist.
@@ -1051,6 +1045,26 @@ TEST(dlfcn, symbol_versioning_default_via_dlsym) {
   fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "versioned_function"));
   ASSERT_TRUE(fn != nullptr) << dlerror();
   ASSERT_EQ(3, fn()); // the default version is 3
+  dlclose(handle);
+}
+
+TEST(dlfcn, dlvsym_smoke) {
+  void* handle = dlopen("libtest_versioned_lib.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*fn_t)();
+
+  {
+    fn_t fn = reinterpret_cast<fn_t>(dlvsym(handle, "versioned_function", "nonversion"));
+    ASSERT_TRUE(fn == nullptr);
+    ASSERT_SUBSTR("undefined symbol: versioned_function, version nonversion", dlerror());
+  }
+
+  {
+    fn_t fn = reinterpret_cast<fn_t>(dlvsym(handle, "versioned_function", "TESTLIB_V2"));
+    ASSERT_TRUE(fn != nullptr) << dlerror();
+    ASSERT_EQ(2, fn());
+  }
+
   dlclose(handle);
 }
 
