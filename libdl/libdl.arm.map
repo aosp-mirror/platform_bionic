@@ -18,6 +18,7 @@ LIBC_N {
   global:
     android_init_namespaces;
     android_create_namespace;
+    dlvsym;
 } LIBC;
 
 LIBC_PRIVATE {

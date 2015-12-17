@@ -24,9 +24,17 @@
 // in the dynamic linker and hijacked at runtime.
 
 void* dlopen(const char* filename __unused, int flag __unused) { return 0; }
+
 const char* dlerror(void) { return 0; }
+
 void* dlsym(void* handle __unused, const char* symbol __unused) { return 0; }
+
+void* dlvsym(void* handle __unused, const char* symbol __unused, const char* version __unused) {
+  return 0;
+}
+
 int dladdr(const void* addr __unused, Dl_info* info __unused) { return 0; }
+
 int dlclose(void* handle __unused) { return 0; }
 
 #if defined(__arm__)
