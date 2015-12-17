@@ -372,3 +372,22 @@ TEST(malloc, malloc_info) {
   }
 #endif
 }
+
+TEST(malloc, calloc_usable_size) {
+  for (size_t size = 1; size <= 2048; size++) {
+    void* pointer = malloc(size);
+    ASSERT_TRUE(pointer != nullptr);
+    memset(pointer, 0xeb, malloc_usable_size(pointer));
+    free(pointer);
+
+    // We should get a previous pointer that has been set to non-zero.
+    // If calloc does not zero out all of the data, this will fail.
+    uint8_t* zero_mem = reinterpret_cast<uint8_t*>(calloc(1, size));
+    ASSERT_TRUE(pointer != nullptr);
+    size_t usable_size = malloc_usable_size(zero_mem);
+    for (size_t i = 0; i < usable_size; i++) {
+      ASSERT_EQ(0, zero_mem[i]) << "Failed at allocation size " << size << " at byte " << i;
+    }
+    free(zero_mem);
+  }
+}
