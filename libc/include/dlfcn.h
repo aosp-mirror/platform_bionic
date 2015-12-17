@@ -43,11 +43,12 @@ typedef struct {
                                in dli_sname */
 } Dl_info;
 
-extern void*        dlopen(const char*  filename, int flag);
-extern int          dlclose(void*  handle);
-extern const char*  dlerror(void);
-extern void*        dlsym(void*  handle, const char*  symbol);
-extern int          dladdr(const void* addr, Dl_info *info);
+extern void* dlopen(const char*  filename, int flag);
+extern int dlclose(void*  handle);
+extern const char* dlerror(void);
+extern void* dlsym(void* handle, const char* symbol) __nonnull((2));
+extern void* dlvsym(void* handle, const char* symbol, const char* version) __nonnull((2, 3));
+extern int dladdr(const void* addr, Dl_info *info);
 
 enum {
 #if defined(__LP64__)
