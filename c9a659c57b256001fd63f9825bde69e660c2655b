@@ -176,6 +176,30 @@
       "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5b8863e_567c644a",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2015-12-17T15:26:13Z",
+      "side": 1,
+      "message": "Got it, val2 \u003d\u003d \u003cother arguments, timeout or addr2, depending on function according to documentation\u003e.\n\nI saw this inside the kernel:\n\nlong do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout, u32 __user *uaddr2, u32 val2, u32 val3)\n\nThat confused me, but am now reassured with:\n\nSYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op, u32, val, struct timespec __user *, utime, u32 __user *, uaddr2, u32, val3)\n\n:-)\n\nSo we are OK here.",
+      "parentUuid": "0512320e_364c36c3",
+      "range": {
+        "startLine": 48,
+        "startChar": 66,
+        "endLine": 48,
+        "endChar": 72
+      },
+      "revId": "c9a659c57b256001fd63f9825bde69e660c2655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
