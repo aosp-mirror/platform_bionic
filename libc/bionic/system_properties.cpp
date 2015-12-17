@@ -200,6 +200,7 @@ static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
 static bool compat_mode = false;
 static size_t pa_data_size;
 static size_t pa_size;
+static bool initialized = false;
 
 // NOTE: This isn't static because system_properties_compat.c
 // requires it.
@@ -642,22 +643,33 @@ bool prop_area::foreach(void (*propfn)(const prop_info* pi, void* cookie), void*
     return foreach_property(root_node(), propfn, cookie);
 }
 
-struct context_node {
-    context_node(struct context_node* next, const char* context, prop_area* pa)
-        : context(strdup(context)), pa(pa), checked_access(false), next(next) {
-        lock.init(false);
+class context_node {
+public:
+    context_node(context_node* next, const char* context, prop_area* pa)
+        : next(next), context_(strdup(context)), pa_(pa), no_access_(false) {
+        lock_.init(false);
     }
     ~context_node() {
-        if (pa) {
-            munmap(pa, pa_size);
-        }
-        free(context);
+        unmap();
+        free(context_);
     }
-    Lock lock;
-    char* context;
-    prop_area* pa;
-    bool checked_access;
-    struct context_node* next;
+    bool open(bool access_rw, bool* fsetxattr_failed);
+    bool check_access_and_open();
+    void reset_access();
+
+    const char* context() const { return context_; }
+    prop_area* pa() { return pa_; }
+
+    context_node* next;
+
+private:
+    bool check_access();
+    void unmap();
+
+    Lock lock_;
+    char* context_;
+    prop_area* pa_;
+    bool no_access_;
 };
 
 struct prefix_node {
@@ -733,37 +745,67 @@ static context_node* contexts = nullptr;
  * allocation of memory for each filename.
  */
 
-static bool open_prop_file(context_node* cnode, bool access_rw, bool* fsetxattr_failed) {
-    cnode->lock.lock();
-    if (cnode->pa) {
-        cnode->lock.unlock();
+bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
+    lock_.lock();
+    if (pa_) {
+        lock_.unlock();
         return true;
     }
 
     char filename[PROP_FILENAME_MAX];
-    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, cnode->context);
+    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, context_);
     if (len < 0 || len > PROP_FILENAME_MAX) {
-        cnode->lock.unlock();
+        lock_.unlock();
         return false;
     }
 
     if (access_rw) {
-        cnode->pa = map_prop_area_rw(filename, cnode->context, fsetxattr_failed);
+        pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed);
     } else {
-        cnode->pa = map_prop_area(filename, false);
+        pa_ = map_prop_area(filename, false);
     }
-    cnode->lock.unlock();
-    return cnode->pa;
+    lock_.unlock();
+    return pa_;
 }
 
-static bool check_access(context_node* cnode) {
+bool context_node::check_access_and_open() {
+    if (!pa_ && !no_access_) {
+        if (!check_access() || !open(false, nullptr)) {
+            no_access_ = true;
+        }
+    }
+    return pa_;
+}
+
+void context_node::reset_access() {
+    if (!check_access()) {
+        unmap();
+        no_access_ = true;
+    } else {
+        no_access_ = false;
+    }
+}
+
+bool context_node::check_access() {
     char filename[PROP_FILENAME_MAX];
-    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, cnode->context);
+    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, context_);
     if (len < 0 || len > PROP_FILENAME_MAX) {
         return false;
     }
 
     return access(filename, R_OK) == 0;
+}
+
+void context_node::unmap() {
+    if (!pa_) {
+        return;
+    }
+
+    munmap(pa_, pa_size);
+    if (pa_ == __system_property_area__) {
+        __system_property_area__ = nullptr;
+    }
+    pa_ = nullptr;
 }
 
 static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
@@ -792,10 +834,15 @@ static prop_area* get_prop_area_for_name(const char* name) {
     }
 
     auto cnode = entry->context;
-    if (!cnode->pa) {
-        open_prop_file(cnode, false, nullptr);
+    if (!cnode->pa()) {
+        /*
+         * We explicitly do not check no_access_ in this case because unlike the
+         * case of foreach(), we want to generate an selinux audit for each
+         * non-permitted property access in this function.
+         */
+        cnode->open(false, nullptr);
     }
-    return cnode->pa;
+    return cnode->pa();
 }
 
 /*
@@ -892,9 +939,6 @@ static int read_spec_entries(char *line_buf, int num_args, ...)
 }
 
 static bool initialize_properties() {
-    list_free(&prefixes);
-    list_free(&contexts);
-
     FILE* file = fopen("/property_contexts", "re");
 
     if (!file) {
@@ -927,7 +971,7 @@ static bool initialize_properties() {
         }
 
         auto old_context = list_find(
-            contexts, [context](context_node* l) { return !strcmp(l->context, context); });
+            contexts, [context](context_node* l) { return !strcmp(l->context(), context); });
         if (old_context) {
             list_add_after_len(&prefixes, prop_prefix, old_context);
         } else {
@@ -951,15 +995,27 @@ static bool is_dir(const char* pathname) {
     return S_ISDIR(info.st_mode);
 }
 
+static void free_and_unmap_contexts() {
+    list_free(&prefixes);
+    list_free(&contexts);
+    if (__system_property_area__) {
+        munmap(__system_property_area__, pa_size);
+        __system_property_area__ = nullptr;
+    }
+}
+
 int __system_properties_init()
 {
+    if (initialized) {
+        list_foreach(contexts, [](context_node* l) { l->reset_access(); });
+        return 0;
+    }
     if (is_dir(property_filename)) {
         if (!initialize_properties()) {
             return -1;
         }
         if (!map_system_property_area(false, nullptr)) {
-            list_free(&prefixes);
-            list_free(&contexts);
+            free_and_unmap_contexts();
             return -1;
         }
     } else {
@@ -970,6 +1026,7 @@ int __system_properties_init()
         list_add(&contexts, "legacy_system_prop_area", __system_property_area__);
         list_add_after_len(&prefixes, "*", contexts);
     }
+    initialized = true;
     return 0;
 }
 
@@ -985,22 +1042,23 @@ int __system_property_set_filename(const char *filename)
 
 int __system_property_area_init()
 {
+    free_and_unmap_contexts();
     mkdir(property_filename, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
     if (!initialize_properties()) {
         return -1;
     }
-    bool open_prop_file_failed = false;
+    bool open_failed = false;
     bool fsetxattr_failed = false;
-    list_foreach(contexts, [&fsetxattr_failed, &open_prop_file_failed](context_node* l) {
-        if (!open_prop_file(l, true, &fsetxattr_failed)) {
-            open_prop_file_failed = true;
+    list_foreach(contexts, [&fsetxattr_failed, &open_failed](context_node* l) {
+        if (!l->open(true, &fsetxattr_failed)) {
+            open_failed = true;
         }
     });
-    if (open_prop_file_failed || !map_system_property_area(true, &fsetxattr_failed)) {
-        list_free(&prefixes);
-        list_free(&contexts);
+    if (open_failed || !map_system_property_area(true, &fsetxattr_failed)) {
+        free_and_unmap_contexts();
         return -1;
     }
+    initialized = true;
     return fsetxattr_failed ? -2 : 0;
 }
 
@@ -1226,14 +1284,8 @@ int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
     }
 
     list_foreach(contexts, [propfn, cookie](context_node* l) {
-        if (!l->pa && !l->checked_access) {
-            if (check_access(l)) {
-                open_prop_file(l, false, nullptr);
-            }
-            l->checked_access = true;
-        }
-        if (l->pa) {
-            l->pa->foreach(propfn, cookie);
+        if (l->check_access_and_open()) {
+            l->pa()->foreach(propfn, cookie);
         }
     });
     return 0;
