@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "850622ce_3abd3df2",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2015-12-17T00:35:41Z",
+      "side": 1,
+      "message": "ah, that\u0027s why you didn\u0027t just do this first time.",
+      "revId": "9cf99cbad89c8495828788ce693a99ced434f66f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
