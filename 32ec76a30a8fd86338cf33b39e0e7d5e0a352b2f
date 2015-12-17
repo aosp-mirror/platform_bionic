@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5b8863e_938ede15",
+        "filename": "libc/arch-x86/bionic/__syscall.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1090553
+      },
+      "writtenOn": "2015-12-17T00:13:37Z",
+      "side": 1,
+      "message": "This can race against asynchronous signal delivery.  Unlike x86_64, 32-bit x86 has no stack redzone, so references to stack values below the stack pointer are unsafe.",
+      "range": {
+        "startLine": 16,
+        "startChar": 4,
+        "endLine": 16,
+        "endChar": 20
+      },
+      "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4518aa2c_d829b17a",
+        "filename": "libc/arch-x86/bionic/__syscall.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1090553
+      },
+      "writtenOn": "2015-12-17T00:13:37Z",
+      "side": 1,
+      "message": "As above this is racy.  It\u0027s probably best to do this with an indirect call or jump relative to esp (with a negative offset) if you want to use a local variable or relative to %gs if you can use TLS.  Most libc implementations do the latter.",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5b1fa58_b42aee6e",
+        "filename": "libc/arch-x86/bionic/syscall.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1090553
+      },
+      "writtenOn": "2015-12-17T00:13:37Z",
+      "side": 1,
+      "message": "You could arrange for the AT_SYSINFO address to already be on the stack when you get here, in which case this could be:\n\ncall 48(%esp)\n\nwhere 48 would be substituted with an appropriate offset.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 21
+      },
+      "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85bb823a_52dbd267",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1090553
+      },
+      "writtenOn": "2015-12-17T00:13:37Z",
+      "side": 1,
+      "message": "This is more complicated than it needs to be.  The normal way to do this is to do the equivalent of getauxval(AT_SYSINFO).  If that\u0027s too slow, then the same code that parses the vDSO headers can also cache the AT_SYSINFO value somewhere.",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 51
+      },
+      "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
