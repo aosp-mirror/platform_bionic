@@ -304,7 +304,7 @@ static inline __always_inline int __pthread_normal_mutex_lock(pthread_mutex_inte
     if (__predict_true(__pthread_normal_mutex_trylock(mutex, shared) == 0)) {
         return 0;
     }
-    int result = check_timespec(abs_timeout_or_null);
+    int result = check_timespec(abs_timeout_or_null, true);
     if (result != 0) {
         return result;
     }
@@ -487,7 +487,7 @@ static int __pthread_mutex_lock_with_timeout(pthread_mutex_internal_t* mutex,
             old_state = new_state;
         }
 
-        int result = check_timespec(abs_timeout_or_null);
+        int result = check_timespec(abs_timeout_or_null, true);
         if (result != 0) {
             return result;
         }

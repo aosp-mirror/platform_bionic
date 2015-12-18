@@ -172,7 +172,7 @@ static int __pthread_cond_pulse(pthread_cond_internal_t* cond, int thread_count)
 
 static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex_t* mutex,
                                     bool use_realtime_clock, const timespec* abs_timeout_or_null) {
-  int result = check_timespec(abs_timeout_or_null);
+  int result = check_timespec(abs_timeout_or_null, true);
   if (result != 0) {
     return result;
   }
