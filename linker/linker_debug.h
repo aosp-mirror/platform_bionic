@@ -55,6 +55,7 @@
  *********************************************************************/
 
 #include "private/libc_logging.h"
+#include <unistd.h>
 
 __LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
 
