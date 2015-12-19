@@ -169,9 +169,10 @@ As mentioned above, this is currently a two-step process:
 Updating tzdata
 ---------------
 
-This is fully automated:
+This is fully automated (and these days handled by the libcore team, because
+they own icu, and that needs to be updated in sync with bionic):
 
-  1. Run update-tzdata.py.
+  1. Run update-tzdata.py in external/icu/tools/.
 
 
 Verifying changes
@@ -268,18 +269,22 @@ However, this also makes it difficult to run the tests under GDB. To prevent
 each test from being forked, run the tests with the flag `--no-isolate`.
 
 
-LP32 ABI bugs
--------------
+32-bit ABI bugs
+---------------
 
 This probably belongs in the NDK documentation rather than here, but these
-are the known ABI bugs in LP32:
+are the known ABI bugs in the 32-bit ABI:
 
- * `time_t` is 32-bit. <http://b/5819737>
+ * `time_t` is 32-bit. <http://b/5819737>. In the 64-bit ABI, time_t is
+   64-bit.
 
- * `off_t` is 32-bit. There is `off64_t`, but no `_FILE_OFFSET_BITS` support.
-   Many of the `off64_t` functions are missing in older releases, and
-   stdio uses 32-bit offsets, so there's no way to fully implement
-   `_FILE_OFFSET_BITS`.
+ * `off_t` is 32-bit. There is `off64_t`, and in newer releases there is
+   almost-complete support for `_FILE_OFFSET_BITS`. Unfortunately our stdio
+   implementation uses 32-bit offsets and -- worse -- function pointers to
+   functions that use 32-bit offsets, so there's no good way to implement
+   the last few pieces <http://b/24807045>. In the 64-bit ABI, off_t is
+   off64_t.
 
  * `sigset_t` is too small on ARM and x86 (but correct on MIPS), so support
-   for real-time signals is broken. <http://b/5828899>
+   for real-time signals is broken. <http://b/5828899> In the 64-bit ABI,
+   `sigset_t` is the correct size for every architecture.
