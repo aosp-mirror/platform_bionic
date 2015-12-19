@@ -91,6 +91,30 @@
       "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a2adb7b_c29452f8",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1044078
+      },
+      "writtenOn": "2015-12-19T05:01:16Z",
+      "side": 1,
+      "message": "Patch: https://android-review.googlesource.com/#/c/162925/2\nIt is a dedicated TLS SLOT implementation, similar Glibc\u0027s.\nI used a dedicate TLS SLOT to save the entry address from getauxval(AT_SYSINFO). but it is work well on 5.0, after, the code updated, in order to following the implementation of current Google VDSO initialization, I override the patch, however, the modification wildly impact bionic.",
+      "parentUuid": "85bb823a_52dbd267",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 51
+      },
+      "revId": "32ec76a30a8fd86338cf33b39e0e7d5e0a352b2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
