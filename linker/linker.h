@@ -444,8 +444,8 @@ void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
 
 bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);
-android_namespace_t* create_namespace(const char* name, const char* ld_library_path,
-                                      const char* default_library_path, bool is_isolated,
-                                      const char* permitted_when_isolated_path);
+android_namespace_t* create_namespace(const void* caller_addr, const char* name,
+                                      const char* ld_library_path, const char* default_library_path,
+                                      uint64_t type, const char* permitted_when_isolated_path);
 
 #endif
