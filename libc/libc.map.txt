@@ -40,15 +40,10 @@ LIBC {
     __freadable;
     __fsetlocking;
     __fstatfs64; # arm x86 mips
-    __futex_wait; # arm x86 mips nobrillo
-    __futex_wake; # arm x86 mips nobrillo
     __fwritable;
     __get_h_errno;
-    __get_thread; # arm x86 mips nobrillo
-    __get_tls; # arm x86 mips nobrillo
     __getcpu; # arm x86 mips
     __getcwd; # arm x86 mips
-    __getdents64; # arm x86 mips
     __getpid; # arm x86 mips
     __getpriority; # arm x86 mips
     __gnu_basename;
@@ -103,7 +98,6 @@ LIBC {
     __ns_skiprr; # arm x86 mips
     __ns_sprintrr; # arm x86 mips
     __ns_sprintrrf; # arm x86 mips
-    __open; # arm x86 mips nobrillo
     __open_2;
     __openat; # arm x86 mips
     __openat_2;
@@ -120,8 +114,6 @@ LIBC {
     __p_time;
     __p_type;
     __p_type_syms;
-    __page_shift; # arm x86 mips nobrillo
-    __page_size; # arm x86 mips nobrillo
     __poll_chk;
     __ppoll; # arm x86 mips
     __ppoll_chk;
@@ -170,28 +162,16 @@ LIBC {
     __sched_cpucount;
     __sched_cpufree;
     __sched_getaffinity; # arm x86 mips
-    __sclose; # arm x86 mips
-    __sdidinit; # arm x86 mips nobrillo
     __set_errno; # arm x86 mips nobrillo
     __set_thread_area; # x86
     __set_tid_address; # arm x86 mips
     __set_tls; # arm mips
     __sF;
-    __sflags; # arm x86 mips
-    __sflush; # arm x86 mips
-    __sfp; # arm x86 mips
-    __sglue; # arm x86 mips
     __sigaction; # arm x86 mips
     __signalfd4; # arm x86 mips
-    __sinit; # arm x86 mips nobrillo
-    __smakebuf; # arm x86 mips
     __snprintf_chk;
     __socket; # arm x86 mips
     __sprintf_chk;
-    __sread; # arm x86 mips
-    __srefill; # arm x86 mips
-    __srget; # arm x86 mips
-    __sseek; # arm x86 mips
     __stack_chk_fail;
     __stack_chk_guard;
     __statfs64; # arm x86 mips
@@ -208,9 +188,6 @@ LIBC {
     __strncpy_chk;
     __strncpy_chk2;
     __strrchr_chk;
-    __swbuf; # arm x86 mips
-    __swrite; # arm x86 mips
-    __swsetup; # arm x86 mips
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
@@ -237,14 +214,12 @@ LIBC {
     __umask_chk;
     __vsnprintf_chk;
     __vsprintf_chk;
-    __wait4; # arm x86 mips nobrillo
     __waitid; # arm x86 mips
     _ctype_;
     _Exit;
     _exit;
     _flush_cache; # mips
     _flushlbf;
-    _fwalk; # arm x86 mips
     _getlong;
     _getshort;
     _longjmp;
@@ -426,7 +401,6 @@ LIBC {
     fputws;
     fread;
     free;
-    free_malloc_leak_info;
     freeaddrinfo;
     freelocale;
     fremovexattr;
@@ -468,7 +442,6 @@ LIBC {
     fwscanf;
     gai_strerror;
     get_avphys_pages;
-    get_malloc_leak_info;
     get_nprocs;
     get_nprocs_conf;
     get_phys_pages;
@@ -1416,7 +1389,12 @@ LIBC_PRIVATE {
     __floatundisf; # arm
     __floatunsidf; # arm
     __floatunsisf; # arm
+    __futex_wait; # arm x86 mips nobrillo
+    __futex_wake; # arm x86 mips nobrillo
     __gedf2; # arm
+    __get_thread; # arm x86 mips nobrillo
+    __get_tls; # arm x86 mips nobrillo
+    __getdents64; # arm x86 mips
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
     __gnu_Unwind_Backtrace; # arm
@@ -1445,17 +1423,37 @@ LIBC_PRIVATE {
     __muldi3; # arm
     __mulsf3; # arm
     __nedf2; # arm
+    __open; # arm x86 mips nobrillo
+    __page_shift; # arm x86 mips nobrillo
+    __page_size; # arm x86 mips nobrillo
     __popcount_tab; # arm
     __popcountsi2; # arm x86 mips
     __restore_core_regs; # arm
+    __sclose; # arm x86 mips
+    __sdidinit; # arm x86 mips nobrillo
+    __sflags; # arm x86 mips
+    __sflush; # arm x86 mips
+    __sfp; # arm x86 mips
+    __sglue; # arm x86 mips
+    __sinit; # arm x86 mips nobrillo
+    __smakebuf; # arm x86 mips
+    __sread; # arm x86 mips
+    __srefill; # arm x86 mips
+    __srget; # arm x86 mips
+    __sseek; # arm x86 mips
     __subdf3; # arm
     __subsf3; # arm
+    __swbuf; # arm x86 mips
+    __swrite; # arm x86 mips
+    __swsetup; # arm x86 mips
     __truncdfsf2; # arm
     __udivdi3; # arm x86 mips
     __udivsi3; # arm
     __umoddi3; # x86 mips
     __unorddf2; # arm
     __unordsf2; # arm
+    __wait4; # arm x86 mips nobrillo
+    _fwalk; # arm x86 mips
     _Unwind_Backtrace; # arm
     _Unwind_Complete; # arm
     _Unwind_DeleteException; # arm
@@ -1476,6 +1474,8 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips nobrillo
     dlmalloc_trim; # arm x86 mips nobrillo
     dlmalloc_usable_size; # arm x86 mips nobrillo
+    free_malloc_leak_info;
+    get_malloc_leak_info;
     gMallocLeakZygoteChild;
     restore_core_regs; # arm
     SHA1Final; # arm x86 mips
