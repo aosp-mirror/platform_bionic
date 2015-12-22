@@ -29,6 +29,7 @@
 #include <ifaddrs.h>
 
 #include <errno.h>
+#include <linux/if_packet.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
@@ -93,6 +94,13 @@ struct ifaddrs_storage {
       ifa.ifa_netmask = reinterpret_cast<sockaddr*>(&netmask);
   }
 
+  void SetPacketAttributes(int ifindex, unsigned short hatype, unsigned char halen) {
+    sockaddr_ll* sll = reinterpret_cast<sockaddr_ll*>(&addr);
+    sll->sll_ifindex = ifindex;
+    sll->sll_hatype = hatype;
+    sll->sll_halen = halen;
+  }
+
  private:
   // Returns a pointer to the first byte in the address data (which is
   // stored in network byte order).
@@ -103,6 +111,9 @@ struct ifaddrs_storage {
     } else if (family == AF_INET6) {
       sockaddr_in6* ss6 = reinterpret_cast<sockaddr_in6*>(ss);
       return reinterpret_cast<uint8_t*>(&ss6->sin6_addr);
+    } else if (family == AF_PACKET) {
+      sockaddr_ll* sll = reinterpret_cast<sockaddr_ll*>(ss);
+      return reinterpret_cast<uint8_t*>(&sll->sll_addr);
     }
     return nullptr;
   }
@@ -127,11 +138,21 @@ static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
     rtattr* rta = IFLA_RTA(ifi);
     size_t rta_len = IFLA_PAYLOAD(hdr);
     while (RTA_OK(rta, rta_len)) {
-      if (rta->rta_type == IFLA_IFNAME) {
-        if (RTA_PAYLOAD(rta) < sizeof(new_addr->name)) {
-          memcpy(new_addr->name, RTA_DATA(rta), RTA_PAYLOAD(rta));
-          new_addr->ifa.ifa_name = new_addr->name;
-        }
+      if (rta->rta_type == IFLA_ADDRESS) {
+          if (RTA_PAYLOAD(rta) < sizeof(new_addr->addr)) {
+            new_addr->SetAddress(AF_PACKET, RTA_DATA(rta), RTA_PAYLOAD(rta));
+            new_addr->SetPacketAttributes(ifi->ifi_index, ifi->ifi_type, RTA_PAYLOAD(rta));
+          }
+      } else if (rta->rta_type == IFLA_BROADCAST) {
+          if (RTA_PAYLOAD(rta) < sizeof(new_addr->ifa_ifu)) {
+            new_addr->SetBroadcastAddress(AF_PACKET, RTA_DATA(rta), RTA_PAYLOAD(rta));
+            new_addr->SetPacketAttributes(ifi->ifi_index, ifi->ifi_type, RTA_PAYLOAD(rta));
+          }
+      } else if (rta->rta_type == IFLA_IFNAME) {
+          if (RTA_PAYLOAD(rta) < sizeof(new_addr->name)) {
+            memcpy(new_addr->name, RTA_DATA(rta), RTA_PAYLOAD(rta));
+            new_addr->ifa.ifa_name = new_addr->name;
+          }
       }
       rta = RTA_NEXT(rta, rta_len);
     }
@@ -139,9 +160,9 @@ static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
     ifaddrmsg* msg = reinterpret_cast<ifaddrmsg*>(NLMSG_DATA(hdr));
 
     // We should already know about this from an RTM_NEWLINK message.
-    ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*out);
+    const ifaddrs_storage* addr = reinterpret_cast<const ifaddrs_storage*>(*out);
     while (addr != nullptr && addr->interface_index != static_cast<int>(msg->ifa_index)) {
-      addr = reinterpret_cast<ifaddrs_storage*>(addr->ifa.ifa_next);
+      addr = reinterpret_cast<const ifaddrs_storage*>(addr->ifa.ifa_next);
     }
     // If this is an unknown interface, ignore whatever we're being told about it.
     if (addr == nullptr) return;
@@ -161,12 +182,12 @@ static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
     while (RTA_OK(rta, rta_len)) {
       if (rta->rta_type == IFA_ADDRESS) {
         if (msg->ifa_family == AF_INET || msg->ifa_family == AF_INET6) {
-          addr->SetAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
-          addr->SetNetmask(msg->ifa_family, msg->ifa_prefixlen);
+          new_addr->SetAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
+          new_addr->SetNetmask(msg->ifa_family, msg->ifa_prefixlen);
         }
       } else if (rta->rta_type == IFA_BROADCAST) {
         if (msg->ifa_family == AF_INET || msg->ifa_family == AF_INET6) {
-          addr->SetBroadcastAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
+          new_addr->SetBroadcastAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
         }
       }
       rta = RTA_NEXT(rta, rta_len);
