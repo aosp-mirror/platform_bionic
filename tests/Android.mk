@@ -61,7 +61,6 @@ libBionicStandardTests_src_files := \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
-    ifaddrs_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
     libgen_basename_test.cpp \
