@@ -12,7 +12,6 @@ LIBC {
     __cxa_atexit;
     __cxa_finalize;
     __cxa_thread_atexit_impl;
-    __divdi3; # arm x86 mips
     __dn_comp;
     __dn_count_labels;
     __dn_skipname;
@@ -121,7 +120,6 @@ LIBC {
     __page_shift; # arm x86 mips nobrillo
     __page_size; # arm x86 mips nobrillo
     __poll_chk;
-    __popcountsi2; # arm x86 mips
     __ppoll; # arm x86 mips
     __ppoll_chk;
     __pread64_chk;
@@ -232,9 +230,7 @@ LIBC {
     __timer_getoverrun; # arm x86 mips
     __timer_gettime; # arm x86 mips
     __timer_settime; # arm x86 mips
-    __udivdi3; # arm x86 mips
     __umask_chk;
-    __umoddi3; # x86 mips
     __vsnprintf_chk;
     __vsprintf_chk;
     __wait4; # arm x86 mips nobrillo
@@ -1302,6 +1298,10 @@ LIBC_PRIVATE {
   global:
     __accept4; # arm x86 mips
     __bionic_brk; # arm x86 mips
+    __divdi3; # arm x86 mips
+    __popcountsi2; # arm x86 mips
+    __udivdi3; # arm x86 mips
+    __umoddi3; # x86 mips
     dlmalloc; # arm x86 mips nobrillo
     dlmalloc_inspect_all; # arm x86 mips nobrillo
     dlmalloc_trim; # arm x86 mips nobrillo
