@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aeaa3c4_9c88654c",
+        "filename": "libc/upstream-dlmalloc/malloc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2836,
+      "author": {
+        "id": 1002471
+      },
+      "writtenOn": "2015-12-23T08:12:38Z",
+      "side": 1,
+      "message": "Append defined(__aarch64__) as well.",
+      "revId": "bab97ed195e8e1f66db57c288856faab25ee06af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
