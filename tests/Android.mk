@@ -51,6 +51,7 @@ test_cppflags := \
 libBionicStandardTests_src_files := \
     arpa_inet_test.cpp \
     buffer_tests.cpp \
+    bug_26110743_test.cpp \
     complex_test.cpp \
     ctype_test.cpp \
     dirent_test.cpp \
