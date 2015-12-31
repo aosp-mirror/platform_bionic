@@ -58,14 +58,24 @@ static void* page_align(uintptr_t addr) {
 TEST(UNISTD_TEST, brk) {
   void* initial_break = get_brk();
 
-  // The kernel aligns the break to a page.
   void* new_break = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(initial_break) + 1);
-  ASSERT_EQ(0, brk(new_break));
-  ASSERT_GE(get_brk(), new_break);
+  int ret = brk(new_break);
+  if (ret == -1) {
+    ASSERT_EQ(errno, ENOMEM);
+  } else {
+    ASSERT_EQ(0, ret);
+    ASSERT_GE(get_brk(), new_break);
+  }
 
+  // Expand by a full page to force the mapping to expand
   new_break = page_align(reinterpret_cast<uintptr_t>(initial_break) + sysconf(_SC_PAGE_SIZE));
-  ASSERT_EQ(0, brk(new_break));
-  ASSERT_EQ(get_brk(), new_break);
+  ret = brk(new_break);
+  if (ret == -1) {
+    ASSERT_EQ(errno, ENOMEM);
+  } else {
+    ASSERT_EQ(0, ret);
+    ASSERT_EQ(get_brk(), new_break);
+  }
 }
 
 TEST(UNISTD_TEST, brk_ENOMEM) {
