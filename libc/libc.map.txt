@@ -123,7 +123,6 @@ LIBC {
     __pselect6; # arm x86 mips
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
-    __pthread_gettid; # arm x86 mips nobrillo
     __ptrace; # arm x86 mips
     __putlong;
     __putshort;
@@ -162,7 +161,6 @@ LIBC {
     __sched_cpucount;
     __sched_cpufree;
     __sched_getaffinity; # arm x86 mips
-    __set_errno; # arm x86 mips nobrillo
     __set_thread_area; # x86
     __set_tid_address; # arm x86 mips
     __set_tls; # arm mips
@@ -246,9 +244,7 @@ LIBC {
     android_gethostbynamefornet;
     android_set_abort_message;
     arc4random;
-    arc4random_addrandom; # arm x86 mips nobrillo
     arc4random_buf;
-    arc4random_stir; # arm x86 mips nobrillo
     arc4random_uniform;
     asctime;
     asctime64; # arm x86 mips
@@ -262,11 +258,9 @@ LIBC {
     atoll;
     basename;
     basename_r; # arm x86 mips
-    bcopy; # arm x86 mips nobrillo
     bind;
     bindresvport;
     brk;
-    bsd_signal; # arm x86 mips nobrillo
     bsearch;
     btowc;
     bzero; # arm x86 mips
@@ -322,7 +316,6 @@ LIBC {
     dup3;
     duplocale;
     endmntent;
-    endpwent; # arm x86 mips nobrillo
     endservent;
     endutent;
     environ;
@@ -369,7 +362,6 @@ LIBC {
     fdatasync;
     fdopen;
     fdopendir;
-    fdprintf; # arm x86 mips nobrillo
     feof;
     feof_unlocked;
     ferror;
@@ -421,7 +413,6 @@ LIBC {
     fsync;
     ftell;
     ftello;
-    ftime; # arm x86 mips nobrillo
     ftok;
     ftruncate;
     ftruncate64;
@@ -453,8 +444,6 @@ LIBC {
     getchar_unlocked;
     getcwd;
     getdelim;
-    getdents; # arm x86 mips nobrillo
-    getdtablesize; # arm x86 mips nobrillo
     getegid;
     getenv;
     geteuid;
@@ -529,7 +518,6 @@ LIBC {
     if_nametoindex;
     imaxabs;
     imaxdiv;
-    index; # arm x86 mips nobrillo
     inet_addr;
     inet_aton;
     inet_lnaof;
@@ -582,7 +570,6 @@ LIBC {
     isprint_l;
     ispunct;
     ispunct_l;
-    issetugid; # arm x86 mips nobrillo
     isspace;
     isspace_l;
     isupper;
@@ -672,7 +659,6 @@ LIBC {
     mempcpy;
     memrchr;
     memset;
-    memswap; # arm x86 mips nobrillo
     mincore;
     mkdir;
     mkdirat;
@@ -786,7 +772,6 @@ LIBC {
     pthread_attr_getschedpolicy;
     pthread_attr_getscope;
     pthread_attr_getstack;
-    pthread_attr_getstackaddr; # arm x86 mips nobrillo
     pthread_attr_getstacksize;
     pthread_attr_init;
     pthread_attr_setdetachstate;
@@ -795,7 +780,6 @@ LIBC {
     pthread_attr_setschedpolicy;
     pthread_attr_setscope;
     pthread_attr_setstack;
-    pthread_attr_setstackaddr; # arm x86 mips nobrillo
     pthread_attr_setstacksize;
     pthread_cond_broadcast;
     pthread_cond_destroy;
@@ -1053,8 +1037,6 @@ LIBC {
     strncpy;
     strndup;
     strnlen;
-    strntoimax; # arm x86 mips nobrillo
-    strntoumax; # arm x86 mips nobrillo
     strpbrk;
     strptime;
     strrchr;
@@ -1073,7 +1055,6 @@ LIBC {
     strtoll;
     strtoll_l;
     strtoq;
-    strtotimeval; # arm x86 mips nobrillo
     strtoul;
     strtoull;
     strtoull_l;
@@ -1095,7 +1076,6 @@ LIBC {
     sysinfo;
     syslog;
     system;
-    sysv_signal; # arm x86 mips nobrillo
     tcdrain;
     tcflow;
     tcflush;
@@ -1127,7 +1107,6 @@ LIBC {
     timerfd_settime;
     times;
     timezone;
-    tkill; # arm x86 mips nobrillo
     tmpfile;
     tmpnam;
     toascii;
@@ -1169,7 +1148,6 @@ LIBC {
     vdprintf;
     verr;
     verrx;
-    vfdprintf; # arm x86 mips nobrillo
     vfork;
     vfprintf;
     vfscanf;
@@ -1189,7 +1167,6 @@ LIBC {
     vwprintf;
     vwscanf;
     wait;
-    wait3; # arm x86 mips nobrillo
     wait4;
     waitid;
     waitpid;
@@ -1238,7 +1215,6 @@ LIBC {
     wcstoull;
     wcstoull_l;
     wcstoumax;
-    wcswcs; # arm x86 mips nobrillo
     wcswidth;
     wcsxfrm;
     wcsxfrm_l;
@@ -1428,9 +1404,11 @@ LIBC_PRIVATE {
     __page_size; # arm x86 mips nobrillo
     __popcount_tab; # arm
     __popcountsi2; # arm x86 mips
+    __pthread_gettid; # arm x86 mips nobrillo
     __restore_core_regs; # arm
     __sclose; # arm x86 mips
     __sdidinit; # arm x86 mips nobrillo
+    __set_errno; # arm x86 mips nobrillo
     __sflags; # arm x86 mips
     __sflush; # arm x86 mips
     __sfp; # arm x86 mips
@@ -1469,17 +1447,39 @@ LIBC_PRIVATE {
     _Unwind_VRS_Get; # arm
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
+    arc4random_addrandom; # arm x86 mips nobrillo
+    arc4random_stir; # arm x86 mips nobrillo
     atexit; # arm
+    bcopy; # arm x86 mips nobrillo
+    bsd_signal; # arm x86 mips nobrillo
     dlmalloc; # arm x86 mips nobrillo
     dlmalloc_inspect_all; # arm x86 mips nobrillo
     dlmalloc_trim; # arm x86 mips nobrillo
     dlmalloc_usable_size; # arm x86 mips nobrillo
+    endpwent; # arm x86 mips nobrillo
+    fdprintf; # arm x86 mips nobrillo
     free_malloc_leak_info;
+    ftime; # arm x86 mips nobrillo
     get_malloc_leak_info;
+    getdents; # arm x86 mips nobrillo
+    getdtablesize; # arm x86 mips nobrillo
     gMallocLeakZygoteChild;
+    index; # arm x86 mips nobrillo
+    issetugid; # arm x86 mips nobrillo
+    memswap; # arm x86 mips nobrillo
+    pthread_attr_getstackaddr; # arm x86 mips nobrillo
+    pthread_attr_setstackaddr; # arm x86 mips nobrillo
     restore_core_regs; # arm
     SHA1Final; # arm x86 mips
     SHA1Init; # arm x86 mips
     SHA1Transform; # arm x86 mips
     SHA1Update; # arm x86 mips
+    strntoimax; # arm x86 mips nobrillo
+    strntoumax; # arm x86 mips nobrillo
+    strtotimeval; # arm x86 mips nobrillo
+    sysv_signal; # arm x86 mips nobrillo
+    tkill; # arm x86 mips nobrillo
+    vfdprintf; # arm x86 mips nobrillo
+    wait3; # arm x86 mips nobrillo
+    wcswcs; # arm x86 mips nobrillo
 } LIBC_N;
