@@ -189,21 +189,21 @@ LIBC {
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
-    __system_properties_init;
-    __system_property_add;
-    __system_property_area__;
-    __system_property_area_init;
-    __system_property_area_serial;
-    __system_property_find;
-    __system_property_find_nth;
-    __system_property_foreach;
-    __system_property_get;
-    __system_property_read;
-    __system_property_serial;
-    __system_property_set;
-    __system_property_set_filename;
-    __system_property_update;
-    __system_property_wait_any;
+    __system_properties_init; # arm x86 mips
+    __system_property_add; # arm x86 mips
+    __system_property_area__; # arm x86 mips
+    __system_property_area_init; # arm x86 mips
+    __system_property_area_serial; # arm x86 mips
+    __system_property_find; # arm x86 mips
+    __system_property_find_nth; # arm x86 mips
+    __system_property_foreach; # arm x86 mips
+    __system_property_get; # arm x86 mips
+    __system_property_read; # arm x86 mips
+    __system_property_serial; # arm x86 mips
+    __system_property_set; # arm x86 mips
+    __system_property_set_filename; # arm x86 mips
+    __system_property_update; # arm x86 mips
+    __system_property_wait_any; # arm x86 mips
     __timer_create; # arm x86 mips
     __timer_delete; # arm x86 mips
     __timer_getoverrun; # arm x86 mips
@@ -1424,6 +1424,21 @@ LIBC_PRIVATE {
     __swbuf; # arm x86 mips
     __swrite; # arm x86 mips
     __swsetup; # arm x86 mips
+    __system_properties_init; # arm64 x86_64 mips64
+    __system_property_add; # arm64 x86_64 mips64
+    __system_property_area__; # arm64 x86_64 mips64
+    __system_property_area_init; # arm64 x86_64 mips64
+    __system_property_area_serial; # arm64 x86_64 mips64
+    __system_property_find; # arm64 x86_64 mips64
+    __system_property_find_nth; # arm64 x86_64 mips64
+    __system_property_foreach; # arm64 x86_64 mips64
+    __system_property_get; # arm64 x86_64 mips64
+    __system_property_read; # arm64 x86_64 mips64
+    __system_property_serial; # arm64 x86_64 mips64
+    __system_property_set; # arm64 x86_64 mips64
+    __system_property_set_filename; # arm64 x86_64 mips64
+    __system_property_update; # arm64 x86_64 mips64
+    __system_property_wait_any; # arm64 x86_64 mips64
     __truncdfsf2; # arm
     __udivdi3; # arm x86 mips
     __udivsi3; # arm
