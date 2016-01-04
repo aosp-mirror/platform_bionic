@@ -149,6 +149,7 @@ libc_bionic_ndk_src_files := \
     bionic/getpid.cpp \
     bionic/gettid.cpp \
     bionic/__gnu_basename.cpp \
+    bionic/ifaddrs.cpp \
     bionic/inotify_init.cpp \
     bionic/ioctl.cpp \
     bionic/lchown.cpp \
