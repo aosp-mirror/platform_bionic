@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a0b8f60_8499f4f4",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-04T21:03:12Z",
+      "side": 1,
+      "message": "this is the new bit.",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 6
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
