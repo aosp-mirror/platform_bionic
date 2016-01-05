@@ -22,6 +22,29 @@
       "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a154384_0aeebfde",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-01-05T05:06:59Z",
+      "side": 1,
+      "message": "I think you need to check for IFA_LOCAL here:\n\nhttps://android.googlesource.com/platform/libcore/+/3a9a00ad1f166a8e5ea810099b057522f9aecb48",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
