@@ -340,9 +340,16 @@ size_t dlmalloc_usable_size(void* ptr) {
 }
 
 // In L we added a public pthread_gettid_np, but some apps were using the private API.
-pid_t __pthread_gettid(pthread_t t) {
+pid_t __pthread_gettid_libc(pthread_t t) {
   return pthread_gettid_np(t);
 }
+
+pid_t __pthread_gettid_libc_private(pthread_t t) {
+  return pthread_gettid_np(t);
+}
+
+__asm__(".symver __pthread_gettid_libc,__pthread_gettid@LIBC");
+__asm__(".symver __pthread_gettid_libc_private,__pthread_gettid@@LIBC_PRIVATE");
 
 // Older versions of apportable used dlmalloc directly instead of malloc,
 // so export this compatibility shim that simply calls malloc.

@@ -122,6 +122,7 @@ LIBC {
     __pselect6; # arm x86 mips
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
+    __pthread_gettid; # arm x86 mips nobrillo
     __ptrace; # arm x86 mips
     __putlong;
     __putshort;
