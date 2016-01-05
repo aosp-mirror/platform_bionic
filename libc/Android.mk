@@ -645,7 +645,7 @@ ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
   libc_common_cflags += -DDEBUG
 endif
 
-ifeq ($(MALLOC_IMPL),dlmalloc)
+ifeq ($(MALLOC_SVELTE),true)
   libc_common_cflags += -DUSE_DLMALLOC
   libc_malloc_src := bionic/dlmalloc.c
 else
@@ -1206,7 +1206,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := \
 LOCAL_WHOLE_STATIC_LIBRARIES_arm := libc_aeabi
 LOCAL_CXX_STL := none
 
-ifneq ($(MALLOC_IMPL),dlmalloc)
+ifneq ($(MALLOC_SVELTE),true)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
@@ -1343,7 +1343,7 @@ LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 
-ifneq ($(MALLOC_IMPL),dlmalloc)
+ifneq ($(MALLOC_SVELTE),true)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
@@ -1409,7 +1409,7 @@ LOCAL_PACK_MODULE_RELOCATIONS := false
 LOCAL_SHARED_LIBRARIES := libdl
 LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
 
-ifneq ($(MALLOC_IMPL),dlmalloc)
+ifneq ($(MALLOC_SVELTE),true)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
 endif
 
