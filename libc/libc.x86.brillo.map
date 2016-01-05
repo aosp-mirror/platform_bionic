@@ -205,6 +205,7 @@ LIBC {
     __timer_getoverrun; # arm x86 mips
     __timer_gettime; # arm x86 mips
     __timer_settime; # arm x86 mips
+    __udivdi3; # x86
     __umask_chk;
     __vsnprintf_chk;
     __vsprintf_chk;
@@ -1263,7 +1264,6 @@ LIBC_PRIVATE {
     __swbuf; # arm x86 mips
     __swrite; # arm x86 mips
     __swsetup; # arm x86 mips
-    __udivdi3; # arm x86 mips
     __umoddi3; # x86 mips
     _fwalk; # arm x86 mips
     free_malloc_leak_info;

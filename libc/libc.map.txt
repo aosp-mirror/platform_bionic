@@ -223,6 +223,7 @@ LIBC {
     __timer_getoverrun; # arm x86 mips
     __timer_gettime; # arm x86 mips
     __timer_settime; # arm x86 mips
+    __udivdi3; # x86
     __umask_chk;
     __vsnprintf_chk;
     __vsprintf_chk;
@@ -1455,7 +1456,7 @@ LIBC_PRIVATE {
     __system_property_update; # arm64 x86_64 mips64
     __system_property_wait_any; # arm64 x86_64 mips64
     __truncdfsf2; # arm
-    __udivdi3; # arm x86 mips
+    __udivdi3; # arm mips
     __udivsi3; # arm
     __umoddi3; # x86 mips
     __unorddf2; # arm
