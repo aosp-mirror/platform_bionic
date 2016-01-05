@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "8ad9cf40_c5368e23",
+        "filename": "benchmarks/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1002471
+      },
+      "writtenOn": "2016-01-05T02:12:33Z",
+      "side": 1,
+      "message": "You should explain why you would enable static executable.",
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7643a650_e3d3da51",
         "filename": "benchmarks/Benchmark.cpp",
         "patchSetId": 3
@@ -19,6 +36,23 @@
         "endLine": 98,
         "endChar": 45
       },
+      "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a80ef14_2a4abf5e",
+        "filename": "benchmarks/Benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1002471
+      },
+      "writtenOn": "2016-01-05T02:12:33Z",
+      "side": 1,
+      "message": "The coding style is inconsistent. (extra space)",
       "revId": "6b61ced9c9c2670ae15f3687cc2e9dddadd52a70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
