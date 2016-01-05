@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cac4a77f_429fa823",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-05T06:08:25Z",
+      "side": 1,
+      "message": "shouldn\u0027t IFLA_BROADCAST set the broadcast address instead?\n\n(also, sort alphabetically unless there\u0027s a reason not to [in which case that reason should be commented]. so here IFLA_ADDRESS, IFLA_BROADCAST, IFLA_IFNAME.)\n\nalso, i think you\u0027ll need new methods --- this is a sockaddr_ll, and the bytes you\u0027re copying are just the sll_addr field. you still need to fill out the other fields in the structure.",
+      "revId": "d5dcafb7d9f4099226eb1670771dc526fdfc3285",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
