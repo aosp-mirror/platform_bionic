@@ -3267,7 +3267,7 @@ bool soinfo::prelink_image() {
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
-    INFO("[ linking %s ]", get_realpath());
+    INFO("[ Linking '%s' ]", get_realpath());
     DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
@@ -3954,16 +3954,26 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     g_ld_debug_verbosity = atoi(LD_DEBUG);
   }
 
+#if defined(__LP64__)
+  INFO("[ Android dynamic linker (64-bit) ]");
+#else
+  INFO("[ Android dynamic linker (32-bit) ]");
+#endif
+
   // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
   const char* ldpath_env = nullptr;
   const char* ldpreload_env = nullptr;
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
+    if (ldpath_env != nullptr) {
+      INFO("[ LD_LIBRARY_PATH set to '%s' ]", ldpath_env);
+    }
     ldpreload_env = getenv("LD_PRELOAD");
+    if (ldpreload_env != nullptr) {
+      INFO("[ LD_PRELOAD set to '%s' ]", ldpreload_env);
+    }
   }
-
-  INFO("[ android linker & debugger ]");
 
   soinfo* si = soinfo_alloc(&g_default_namespace, args.argv[0], nullptr, 0, RTLD_GLOBAL);
   if (si == nullptr) {
@@ -4213,7 +4223,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
 
-  INFO("[ jumping to _start ]");
+  INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
   // Return the address that the calling assembly stub should jump to.
   return start_address;
