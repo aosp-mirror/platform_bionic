@@ -40,7 +40,7 @@ test_cflags = \
 
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
-ifeq ($(MALLOC_IMPL),dlmalloc)
+ifeq ($(MALLOC_SVELTE),true)
 test_cflags += -DUSE_DLMALLOC
 else
 test_cflags += -DUSE_JEMALLOC
@@ -122,7 +122,7 @@ libBionicStandardTests_src_files := \
 libBionicStandardTests_cflags := \
     $(test_cflags) \
 
-ifeq ($(MALLOC_IMPL),dlmalloc)
+ifeq ($(MALLOC_SVELTE),true)
   libBionicStandardTests_cflags += -DUSE_DLMALLOC
 else
   libBionicStandardTests_cflags += -DUSE_JEMALLOC
