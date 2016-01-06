@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa3e9347_e67b5a08",
+        "filename": "libc/arch-arm/bionic/__aeabi.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-06T01:38:51Z",
+      "side": 1,
+      "message": "I have to admit, I\u0027m not sure exactly what\u0027s going on here.\n\nI assume that you can\u0027t .symver the same symbol two different ways, is that why you created two functions that do the same thing?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 71
+      },
+      "revId": "24ae5100f2a3eb9a615c4cb41d8edbdb746e2607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
