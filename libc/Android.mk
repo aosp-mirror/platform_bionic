@@ -655,13 +655,6 @@ else
   libc_common_c_includes += external/jemalloc/include
 endif
 
-# To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
-# the appropriate BoardConfig.mk file.
-#
-ifneq ($(BOARD_MALLOC_ALIGNMENT),)
-  libc_common_cflags += -DMALLOC_ALIGNMENT=$(BOARD_MALLOC_ALIGNMENT)
-endif
-
 # Define some common conlyflags
 libc_common_conlyflags := \
     -std=gnu99
