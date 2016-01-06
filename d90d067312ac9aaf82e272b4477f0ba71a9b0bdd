@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a4ddf0f_c49df4de",
+        "filename": "libc/arch-arm/bionic/__aeabi.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-06T02:55:46Z",
+      "side": 1,
+      "message": "so as long as the \"true\" name is different from any of the versioned names, you can have multiple versioned names point to the same function? do you want to change any of the functions you\u0027ve already duplicated to use this trick instead?",
+      "revId": "d90d067312ac9aaf82e272b4477f0ba71a9b0bdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
