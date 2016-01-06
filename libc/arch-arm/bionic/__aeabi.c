@@ -55,9 +55,13 @@ __aeabi_atexit_impl(void *object, void (*destructor) (void *), void *dso_handle)
     return __cxa_atexit(destructor, object, dso_handle);
 }
 
+int __attribute__((weak))
+__aeabi_atexit_impl2(void *object, void (*destructor) (void *), void *dso_handle) {
+    return __cxa_atexit(destructor, object, dso_handle);
+}
 
-void __attribute__((weak))
-__aeabi_memcpy8_impl(void *dest, const void *src, size_t n) {
+
+void __attribute__((weak)) __aeabi_memcpy8_impl(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
 
@@ -66,6 +70,18 @@ void __attribute__((weak)) __aeabi_memcpy4_impl(void *dest, const void *src, siz
 }
 
 void __attribute__((weak)) __aeabi_memcpy_impl(void *dest, const void *src, size_t n) {
+    memcpy(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memcpy8_impl2(void *dest, const void *src, size_t n) {
+    memcpy(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memcpy4_impl2(void *dest, const void *src, size_t n) {
+    memcpy(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memcpy_impl2(void *dest, const void *src, size_t n) {
     memcpy(dest, src, n);
 }
 
@@ -79,6 +95,18 @@ void __attribute__((weak)) __aeabi_memmove4_impl(void *dest, const void *src, si
 }
 
 void __attribute__((weak)) __aeabi_memmove_impl(void *dest, const void *src, size_t n) {
+    memmove(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memmove8_impl2(void *dest, const void *src, size_t n) {
+    memmove(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memmove4_impl2(void *dest, const void *src, size_t n) {
+    memmove(dest, src, n);
+}
+
+void __attribute__((weak)) __aeabi_memmove_impl2(void *dest, const void *src, size_t n) {
     memmove(dest, src, n);
 }
 
@@ -99,6 +127,18 @@ void __attribute__((weak)) __aeabi_memset_impl(void *dest, size_t n, int c) {
     memset(dest, c, n);
 }
 
+void __attribute__((weak)) __aeabi_memset8_impl2(void *dest, size_t n, int c) {
+    memset(dest, c, n);
+}
+
+void __attribute__((weak)) __aeabi_memset4_impl2(void *dest, size_t n, int c) {
+    memset(dest, c, n);
+}
+
+void __attribute__((weak)) __aeabi_memset_impl2(void *dest, size_t n, int c) {
+    memset(dest, c, n);
+}
+
 
 void __attribute__((weak)) __aeabi_memclr8_impl(void *dest, size_t n) {
     __aeabi_memset8_impl(dest, n, 0);
@@ -112,9 +152,21 @@ void __attribute__((weak)) __aeabi_memclr_impl(void *dest, size_t n) {
     __aeabi_memset_impl(dest, n, 0);
 }
 
+void __attribute__((weak)) __aeabi_memclr8_impl2(void *dest, size_t n) {
+    __aeabi_memset8_impl(dest, n, 0);
+}
+
+void __attribute__((weak)) __aeabi_memclr4_impl2(void *dest, size_t n) {
+    __aeabi_memset4_impl(dest, n, 0);
+}
+
+void __attribute__((weak)) __aeabi_memclr_impl2(void *dest, size_t n) {
+    __aeabi_memset_impl(dest, n, 0);
+}
+
 #define __AEABI_SYMVERS(fn_name) \
 __asm__(".symver " #fn_name "_impl, " #fn_name "@@LIBC"); \
-__asm__(".symver " #fn_name "_impl, " #fn_name "@LIBC_PRIVATE")
+__asm__(".symver " #fn_name "_impl2, " #fn_name "@LIBC_PRIVATE")
 
 __AEABI_SYMVERS(__aeabi_atexit);
 __AEABI_SYMVERS(__aeabi_memcpy8);
