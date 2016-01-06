@@ -273,7 +273,6 @@ LIBC {
     brk;
     bsearch;
     btowc;
-    bzero; # arm x86 mips
     c16rtomb;
     c32rtomb;
     cacheflush; # arm mips
