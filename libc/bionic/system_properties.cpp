@@ -826,10 +826,6 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
 }
 
 static prop_area* get_prop_area_for_name(const char* name) {
-    if (strncmp(name, "ro.", 3) == 0) {
-        name += 3;
-    }
-
     auto entry = list_find(prefixes, [name](prefix_node* l) {
         return l->prefix[0] == '*' || !strncmp(l->prefix, name, l->prefix_len);
     });
