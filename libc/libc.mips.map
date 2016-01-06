@@ -260,7 +260,6 @@ LIBC {
     brk;
     bsearch;
     btowc;
-    bzero; # arm x86 mips
     c16rtomb;
     c32rtomb;
     cacheflush; # arm mips
@@ -1284,6 +1283,7 @@ LIBC_PRIVATE {
     arc4random_addrandom; # arm x86 mips nobrillo
     arc4random_stir; # arm x86 mips nobrillo
     bcopy; # arm x86 mips nobrillo
+    bzero; # arm x86 mips nobrillo
     bsd_signal; # arm x86 mips nobrillo
     dlmalloc; # arm x86 mips nobrillo
     dlmalloc_inspect_all; # arm x86 mips nobrillo
