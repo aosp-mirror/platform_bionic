@@ -581,7 +581,6 @@ LIBC {
     mkstemps64;
     mktemp;
     mktime;
-    mktime_tz;
     mlock;
     mlockall;
     mmap;
