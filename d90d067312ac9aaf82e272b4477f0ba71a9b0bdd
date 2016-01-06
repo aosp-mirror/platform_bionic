@@ -16,6 +16,24 @@
       "revId": "d90d067312ac9aaf82e272b4477f0ba71a9b0bdd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a4ddf0f_24db78a1",
+        "filename": "libc/arch-arm/bionic/__aeabi.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-06T04:08:05Z",
+      "side": 1,
+      "message": "well, gcc does not handle this well - it does require different function names for different versions :/",
+      "parentUuid": "0a4ddf0f_c49df4de",
+      "revId": "d90d067312ac9aaf82e272b4477f0ba71a9b0bdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
