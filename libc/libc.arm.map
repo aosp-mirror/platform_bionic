@@ -1270,6 +1270,7 @@ LIBC_PRIVATE {
     __accept4; # arm x86 mips
     __adddf3; # arm
     __addsf3; # arm
+    __aeabi_atexit; # arm
     __aeabi_cdcmpeq; # arm
     __aeabi_cdcmple; # arm
     __aeabi_cdrcmple; # arm
@@ -1308,6 +1309,18 @@ LIBC_PRIVATE {
     __aeabi_llsl; # arm
     __aeabi_llsr; # arm
     __aeabi_lmul; # arm
+    __aeabi_memclr; # arm
+    __aeabi_memclr4; # arm
+    __aeabi_memclr8; # arm
+    __aeabi_memcpy; # arm
+    __aeabi_memcpy4; # arm
+    __aeabi_memcpy8; # arm
+    __aeabi_memmove; # arm
+    __aeabi_memmove4; # arm
+    __aeabi_memmove8; # arm
+    __aeabi_memset; # arm
+    __aeabi_memset4; # arm
+    __aeabi_memset8; # arm
     __aeabi_ui2d; # arm
     __aeabi_ui2f; # arm
     __aeabi_uidiv; # arm
