@@ -112,11 +112,6 @@ cc_defaults {
         device_uses_dlmalloc: {
             cflags: ["-DUSE_DLMALLOC"],
         },
-        // To customize dlmalloc's alignment, set BOARD_MALLOC_ALIGNMENT in
-        // the appropriate BoardConfig.mk file.
-        dlmalloc_alignment: {
-            cflags: ["-DMALLOC_ALIGNMENT=%d"],
-        },
     },
     // Clang/llvm has incompatible long double (fp128) for x86_64.
     // https://llvm.org/bugs/show_bug.cgi?id=23897
