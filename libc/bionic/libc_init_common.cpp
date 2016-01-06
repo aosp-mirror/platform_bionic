@@ -336,7 +336,7 @@ void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
 
   if (getauxval(AT_SECURE)) {
     // If this is a setuid/setgid program, close the security hole described in
-    // ftp://ftp.freebsd.org/pub/FreeBSD/CERT/advisories/FreeBSD-SA-02:23.stdio.asc
+    // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
     __nullify_closed_stdio();
 
     __sanitize_environment_variables(args.envp);
