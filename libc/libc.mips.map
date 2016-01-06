@@ -1276,7 +1276,7 @@ LIBC_PRIVATE {
     __swbuf; # arm x86 mips
     __swrite; # arm x86 mips
     __swsetup; # arm x86 mips
-    __udivdi3; # arm x86 mips
+    __udivdi3; # arm mips
     __umoddi3; # x86 mips
     __wait4; # arm x86 mips nobrillo
     _fwalk; # arm x86 mips

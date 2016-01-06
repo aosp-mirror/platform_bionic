@@ -1414,7 +1414,7 @@ LIBC_PRIVATE {
     __swrite; # arm x86 mips
     __swsetup; # arm x86 mips
     __truncdfsf2; # arm
-    __udivdi3; # arm x86 mips
+    __udivdi3; # arm mips
     __udivsi3; # arm
     __unorddf2; # arm
     __unordsf2; # arm
