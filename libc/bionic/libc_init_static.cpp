@@ -25,17 +25,6 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-/*
- * libc_init_static.c
- *
- * The program startup function __libc_init() defined here is
- * used for static executables only (i.e. those that don't depend
- * on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
- * which is directly invoked by the kernel when the program is launched.
- *
- * The 'structors' parameter contains pointers to various initializer
- * arrays that must be run before the program's 'main' routine is launched.
- */
 
 #include <elf.h>
 #include <errno.h>
@@ -79,12 +68,19 @@ static void apply_gnu_relro() {
   }
 }
 
+// The program startup function __libc_init() defined here is
+// used for static executables only (i.e. those that don't depend
+// on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
+// which is directly invoked by the kernel when the program is launched.
+//
+// The 'structors' parameter contains pointers to various initializer
+// arrays that must be run before the program's 'main' routine is launched.
+
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
   KernelArgumentBlock args(raw_args);
-
   __libc_init_main_thread(args);
 
   // Initializing the globals requires TLS to be available for errno.
