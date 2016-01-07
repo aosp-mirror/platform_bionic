@@ -103,13 +103,9 @@ enum {
 
 #define LIBC_PTHREAD_KEY_RESERVED_COUNT 12
 
-#if defined(USE_JEMALLOC)
 /* Internally, jemalloc uses a single key for per thread data. */
 #define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 1
 #define BIONIC_PTHREAD_KEY_RESERVED_COUNT (LIBC_PTHREAD_KEY_RESERVED_COUNT + JEMALLOC_PTHREAD_KEY_RESERVED_COUNT)
-#else
-#define BIONIC_PTHREAD_KEY_RESERVED_COUNT LIBC_PTHREAD_KEY_RESERVED_COUNT
-#endif
 
 /*
  * Maximum number of pthread keys allocated.
