@@ -153,51 +153,36 @@ static const char* const kAsanDefaultLdPaths[] = {
   nullptr
 };
 
+static bool is_system_library(const std::string& realpath) {
+  for (const auto& dir : g_default_namespace.get_default_library_paths()) {
+    if (file_is_in_dir(realpath, dir)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // TODO(dimitry): This is workaround for http://b/26394120 - it will be removed before the release
-static bool is_greylisted(const char* name) {
+static bool is_greylisted(const char* name, const soinfo* needed_by) {
   static const char* const kLibraryGreyList[] = {
-    "libLLVM.so",
-    "libRScpp.so",
-    "libaudioutils.so",
-    "libbacktrace.so",
-    "libbase.so",
+    "libandroid_runtime.so",
     "libbinder.so",
-    "libc++.so",
-    "libcamera_client.so",
-    "libcamera_metadata.so",
-    "libcommon_time_client.so",
     "libcrypto.so",
     "libcutils.so",
-    "libdrmframework.so",
-    "libexpat.so",
-    "libgui.so",
-    "libhardware.so",
-    "libicui18n.so",
-    "libicuuc.so",
-    "libmediautils.so",
     "libmedia.so",
     "libnativehelper.so",
-    "libnbaio.so",
-    "libnetd_client.so",
-    "libopus.so",
-    "libpowermanager.so",
-    "libsonivox.so",
-    "libspeexresampler.so",
-    "libpowermanager.so",
     "libssl.so",
-    "libstagefright_avc_common.so",
-    "libstagefright_enc_common.so",
-    "libstagefright_foundation.so",
-    "libstagefright_omx.so",
-    "libstagefright_yuv.so",
     "libstagefright.so",
-    "libsync.so",
-    "libui.so",
-    "libunwind.so",
     "libutils.so",
-    "libvorbisidec.so",
     nullptr
   };
+
+  // if the library needed by a system library - implicitly assume it
+  // is greylisted
+
+  if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
+    return true;
+  }
 
   for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
     if (strcmp(name, kLibraryGreyList[i]) == 0) {
@@ -1665,7 +1650,7 @@ static int open_library(android_namespace_t* ns,
   }
 
   // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
-  if (fd == -1 && ns != &g_default_namespace && is_greylisted(name)) {
+  if (fd == -1 && ns != &g_default_namespace && is_greylisted(name, needed_by)) {
     // try searching for it on default_namespace default_library_path
     fd = open_library_on_paths(zip_archive_cache, name, file_offset,
                                g_default_namespace.get_default_library_paths(), realpath);
@@ -1773,9 +1758,13 @@ static bool load_library(android_namespace_t* ns,
 
   if (!ns->is_accessible(realpath)) {
     // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
-    if (is_greylisted(name)) {
-      DL_WARN("library \"%s\" (\"%s\") is not accessible for the namespace \"%s\" - the access is temporarily granted as a workaround for http://b/26394120",
-              name, realpath.c_str(), ns->get_name());
+    const soinfo* needed_by = task->get_needed_by();
+    if (is_greylisted(name, needed_by)) {
+      // print warning only if needed by non-system library
+      if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
+        DL_WARN("library \"%s\" (\"%s\") is not accessible for the namespace \"%s\" - the access is temporarily granted as a workaround for http://b/26394120",
+                name, realpath.c_str(), ns->get_name());
+      }
     } else {
       // do not load libraries if they are not accessible for the specified namespace.
       DL_ERR("library \"%s\" is not accessible for the namespace \"%s\"",
