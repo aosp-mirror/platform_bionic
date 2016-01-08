@@ -165,7 +165,7 @@ void __attribute__((weak)) __aeabi_memclr_impl2(void *dest, size_t n) {
 }
 
 #define __AEABI_SYMVERS(fn_name) \
-__asm__(".symver " #fn_name "_impl, " #fn_name "@@LIBC"); \
+__asm__(".symver " #fn_name "_impl, " #fn_name "@@LIBC_N"); \
 __asm__(".symver " #fn_name "_impl2, " #fn_name "@LIBC_PRIVATE")
 
 __AEABI_SYMVERS(__aeabi_atexit);
