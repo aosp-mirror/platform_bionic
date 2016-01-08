@@ -40,7 +40,8 @@
 /* Has the thread been joined by another thread? */
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000002
 
-struct pthread_key_data_t {
+class pthread_key_data_t {
+ public:
   uintptr_t seq; // Use uintptr_t just for alignment, as we use pointer below.
   void* data;
 };
@@ -52,11 +53,12 @@ enum ThreadJoinState {
   THREAD_DETACHED
 };
 
-struct thread_local_dtor;
+class thread_local_dtor;
 
-struct pthread_internal_t {
-  struct pthread_internal_t* next;
-  struct pthread_internal_t* prev;
+class pthread_internal_t {
+ public:
+  class pthread_internal_t* next;
+  class pthread_internal_t* prev;
 
   pid_t tid;
 

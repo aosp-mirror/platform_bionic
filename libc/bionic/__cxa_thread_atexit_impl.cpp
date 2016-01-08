@@ -17,7 +17,8 @@
 
 #include "pthread_internal.h"
 
-struct thread_local_dtor {
+class thread_local_dtor {
+ public:
   void (*func) (void *);
   void *arg;
   void *dso_handle; // unused...
