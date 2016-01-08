@@ -37,7 +37,13 @@
  * the expectation that libc will define it and call through to
  * a differently-named function in the dynamic linker.
  */
-_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc, int *pcount)
-{
+_Unwind_Ptr __gnu_Unwind_Find_exidx_impl(_Unwind_Ptr pc, int *pcount) {
     return dl_unwind_find_exidx(pc, pcount);
 }
+
+_Unwind_Ptr __gnu_Unwind_Find_exidx_impl2(_Unwind_Ptr pc, int *pcount) {
+    return dl_unwind_find_exidx(pc, pcount);
+}
+
+__asm__(".symver __gnu_Unwind_Find_exidx_impl,__gnu_Unwind_Find_exidx@LIBC_PRIVATE");
+__asm__(".symver __gnu_Unwind_Find_exidx_impl2,__gnu_Unwind_Find_exidx@@LIBC_N");
