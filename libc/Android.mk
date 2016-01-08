@@ -616,7 +616,6 @@ libc_openbsd_src_files_32 += \
 libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
-    -fno-stack-protector \
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
@@ -685,21 +684,50 @@ endef
 # libc_stack_protector.a - stack protector code
 # ========================================================
 #
-# The stack protector code needs to be compiled
-# with -fno-stack-protector, since it modifies the
-# stack canary.
+# Code that implements the stack protector (or that runs
+# before TLS has been set up) needs to be compiled with
+# -fno-stack-protector, since it accesses the stack canary
+# TLS slot.
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := bionic/__stack_chk_fail.cpp
-# On x86, the __set_tls implementation is complex enough that
-# -fstack-protector-strong inserts a check.
+LOCAL_SRC_FILES := \
+    bionic/__libc_init_main_thread.cpp \
+    bionic/__stack_chk_fail.cpp \
+
+LOCAL_SRC_FILES_arm64 := arch-arm64/bionic/__set_tls.c
 LOCAL_SRC_FILES_x86 := arch-x86/bionic/__set_tls.c
+LOCAL_SRC_FILES_x86_64 := arch-x86_64/bionic/__set_tls.c
+
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc_stack_protector
+LOCAL_CLANG := $(use_clang)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
+LOCAL_CXX_STL := none
+LOCAL_SYSTEM_SHARED_LIBRARIES :=
+LOCAL_SANITIZE := never
+LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
+
+$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
+include $(BUILD_STATIC_LIBRARY)
+
+
+# libc_init_static.cpp also needs to be built without stack protector,
+# because it's responsible for setting up TLS for static executables.
+# This isn't the case for dynamic executables because the dynamic linker
+# has already set up the main thread's TLS.
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := bionic/libc_init_static.cpp
+LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
+LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
+LOCAL_CPPFLAGS := $(libc_common_cppflags)
+LOCAL_C_INCLUDES := $(libc_common_c_includes)
+LOCAL_MODULE := libc_init_static
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_CXX_STL := none
@@ -1272,7 +1300,6 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
-    bionic/libc_init_static.cpp
 
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_CFLAGS := $(libc_common_cflags) \
@@ -1284,7 +1311,7 @@ LOCAL_CPPFLAGS := $(libc_common_cppflags)
 LOCAL_MODULE := libc_nomalloc
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common libc_init_static
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 LOCAL_SANITIZE := never
@@ -1324,7 +1351,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
     bionic/malloc_debug_common.cpp \
-    bionic/libc_init_static.cpp \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -DLIBC_STATIC \
@@ -1335,7 +1361,7 @@ LOCAL_C_INCLUDES := $(libc_common_c_includes)
 LOCAL_MODULE := libc
 LOCAL_CLANG := $(use_clang)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
-LOCAL_WHOLE_STATIC_LIBRARIES := libc_common
+LOCAL_WHOLE_STATIC_LIBRARIES := libc_common libc_init_static
 
 ifneq ($(MALLOC_SVELTE),true)
 LOCAL_WHOLE_STATIC_LIBRARIES += libjemalloc
