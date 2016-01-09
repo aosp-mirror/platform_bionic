@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a95dfbc_649f0024",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 0,
+      "message": "one of my (admittedly low-impact) dreams is to kill LIBC_STATIC one day. progress!",
+      "revId": "32388ba4dc765619e89dac5b71a68372019da58e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

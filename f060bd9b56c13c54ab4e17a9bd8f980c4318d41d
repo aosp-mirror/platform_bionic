@@ -1,0 +1,265 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a95dfbc_e4f3108d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "i\u0027ve been wanting to remove that for years...",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a74377b_db118be3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "most \u003d\u003e not all?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a62afbe_7d1dcf40",
+        "filename": "README.md",
+        "patchSetId": 10
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "nit: since we always call this \"debug malloc\" when we\u0027re talking about it out loud...",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a95dfbc_e4aa3041",
+        "filename": "libc/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 1535,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "heh. i like this change already :-)",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a9aa3ee_45d84074",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "gah!\n\noh well, dimitry will save us with libdl.a one day...",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a8b57a3_e66dd409",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "we already have __libc_fatal. i wouldn\u0027t be against a __libc_error and __libc_info...",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a901bcb_641a9e5d",
+        "filename": "libc/malloc_debug/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a62afbe_bd93e7d2",
+        "filename": "libc/malloc_debug/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "tab",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a95dfbc_045d5c2d",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "we can\u0027t use android::base::Split?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a62afbe_3d87d782",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "no %d here?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a901bcb_c416122b",
+        "filename": "libc/malloc_debug/DebugData.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "no std::unique_ptr?",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 93,
+        "endChar": 38
+      },
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a95dfbc_247258b9",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "how does this differ from ElfW?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a9aa3ee_70fed884",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "explain that this is to make the dlsym lookup easier?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a74377b_3b6d1f46",
+        "filename": "libc/malloc_debug/malloc_debug.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "explain that these are the file format?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a79fb72_9c22ad49",
+        "filename": "libc/malloc_debug/tests/log_fake.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T00:42:19Z",
+      "side": 1,
+      "message": "didn\u0027t we need this already for simpleperf? should we have another separate library for this kind of stuff?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
