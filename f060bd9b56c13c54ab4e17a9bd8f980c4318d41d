@@ -104,6 +104,23 @@
     },
     {
       "key": {
+        "uuid": "aa1773d7_cd72e9e9",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-01-09T00:43:56Z",
+      "side": 1,
+      "message": "This should maybe require LIBC_DEBUG_MALLOC_ENABLE\u003d1, instead of it just being defined.",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a901bcb_641a9e5d",
         "filename": "libc/malloc_debug/Android.mk",
         "patchSetId": 10
@@ -166,6 +183,23 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "no %d here?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3e9347_5ab695fa",
+        "filename": "libc/malloc_debug/DebugData.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-01-09T00:43:56Z",
+      "side": 1,
+      "message": "Looks like these can be unique_ptrs?",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
