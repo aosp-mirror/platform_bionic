@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "ca7f474b_61e7f6fc",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-01-09T07:31:23Z",
+      "side": 1,
+      "message": "As for a way to test this - create a point-to-point tun interface, call SIOCSIFDSTADDR on it, and verify that the address reported by getifaddrs is the same as the one reported by SIOCGIFADDR and/or \"ip addr show\"?\n\nAs for what the kernel header says we\u0027re supposed to do - can we document that here? We need to ensure that that advice also works for IPv6, which only ever uses IFA_ADDRESS unless the peer address is set.",
+      "parentUuid": "4a8b57a3_91e44cf8",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a899739_ed3365c7",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 2
