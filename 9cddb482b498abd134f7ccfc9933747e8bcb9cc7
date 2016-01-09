@@ -45,6 +45,30 @@
       "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a74377b_fec6351e",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T01:23:48Z",
+      "side": 1,
+      "message": "do we have a current device with a similar setup? we pass the unit test that motivated that change (because the new implementation only looks at IFA_ADDRESS; the original problem was an implementation taht only looked at IFA_LOCAL). i don\u0027t think the other implementation that treated IFA_LOCAL and IFA_ADDRESS as interchangeable is correct.",
+      "parentUuid": "2a154384_0aeebfde",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
