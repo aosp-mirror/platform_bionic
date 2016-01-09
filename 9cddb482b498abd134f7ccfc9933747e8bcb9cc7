@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "4a8b57a3_91e44cf8",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T07:22:59Z",
+      "side": 1,
+      "message": "the unit test in the patch you linked to :-)\n\nthe kernel header file is pretty clear about what we should do (and it\u0027s not _quite_ what you suggest). my real concern is that i don\u0027t have an actual example to test with. (and that\u0027s how i\u0027ve found all the bugs i\u0027ve found so far --- dumping the result of getifaddrs(3) on various devices/hosts. i should probably check that code in somewhere.)",
+      "parentUuid": "aa869394_80cdd689",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a899739_ed3365c7",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 2
@@ -107,6 +131,30 @@
       "writtenOn": "2016-01-09T05:06:26Z",
       "side": 1,
       "message": "For a point-to-point interface, the code should set ifa_dstaddr instead. See the glibc man page.",
+      "range": {
+        "startLine": 167,
+        "startChar": 34,
+        "endLine": 167,
+        "endChar": 47
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47f7d247_bdb73ff7",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-09T07:22:59Z",
+      "side": 1,
+      "message": "they\u0027re just two names for the same storage.",
+      "parentUuid": "4a899739_ed3365c7",
       "range": {
         "startLine": 167,
         "startChar": 34,
