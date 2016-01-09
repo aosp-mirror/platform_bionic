@@ -69,6 +69,76 @@
       "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa869394_80cdd689",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-01-09T05:06:26Z",
+      "side": 1,
+      "message": "Hmm. I thought that for IPv4 IFA_LOCAL was always correct. That\u0027s what SIOCGIFADDR returns: http://lxr.free-electrons.com/source/net/ipv4/devinet.c?v\u003d3.18#L992\n\nSIOCSIFADDR sets ifa_local and ifa_address to the same value. However, SIOCSIFDSTADDR can be used to set ifa_address. http://lxr.free-electrons.com/source/net/ipv4/devinet.c?v\u003d3.18#L1021\n\nThat makes me think that the local address is always in IFA_LOCAL and that\u0027s what we should use. Where is the unit test you\u0027re referring to?\n\n\nThe situation is different for IPv6, where the local address is always in IFA_ADDRESS except if there\u0027s a peer address, in which case the local address is in IFA_LOCAL and the peer address is in IFA_ADDRESS:\n\nhttp://lxr.free-electrons.com/source/net/ipv6/addrconf.c?v\u003d3.18#L4001\n\n\nSo I think what this code should do is: if IFA_LOCAL is present, use that. Otherwise, use IFA_ADDRESS.",
+      "parentUuid": "4a74377b_fec6351e",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a899739_ed3365c7",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-01-09T05:06:26Z",
+      "side": 1,
+      "message": "For a point-to-point interface, the code should set ifa_dstaddr instead. See the glibc man page.",
+      "range": {
+        "startLine": 167,
+        "startChar": 34,
+        "endLine": 167,
+        "endChar": 47
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea988b91_e87a2754",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-01-09T05:06:26Z",
+      "side": 1,
+      "message": "There is no broadcast in IPv6.",
+      "range": {
+        "startLine": 168,
+        "startChar": 61,
+        "endLine": 168,
+        "endChar": 69
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
