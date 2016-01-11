@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "0a95dfbc_75d08822",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-11T17:14:08Z",
+      "side": 1,
+      "message": "can you rewrite the first paragraph in the form of copy \u0026 paste instructions? (preferably ones that won\u0027t drop my machine off the corp network :-) )\n\nis there a way to get an IPv6 address with an interesting scope too? as usual, i\u0027m left thinking we\u0027re probably not handling scopes correctly.",
+      "parentUuid": "ca7f474b_61e7f6fc",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a899739_ed3365c7",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 2
