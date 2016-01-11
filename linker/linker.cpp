@@ -177,6 +177,11 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     nullptr
   };
 
+  // limit greylisting to apps targeting sdk version 23 and below
+  if (get_application_target_sdk_version() > 23) {
+    return false;
+  }
+
   // if the library needed by a system library - implicitly assume it
   // is greylisted
 
