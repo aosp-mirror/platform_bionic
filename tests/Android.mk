@@ -71,6 +71,7 @@ libBionicStandardTests_src_files := \
     malloc_test.cpp \
     math_test.cpp \
     mntent_test.cpp \
+    net_if_test.cpp \
     netdb_test.cpp \
     netinet_udp_test.cpp \
     pthread_test.cpp \
