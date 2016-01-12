@@ -173,6 +173,7 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     "libnativehelper.so",
     "libssl.so",
     "libstagefright.so",
+    "libui.so",
     "libutils.so",
     nullptr
   };
