@@ -139,19 +139,18 @@ typedef __kernel_ssize_t ssize_t;
 typedef unsigned int        uint_t;
 typedef unsigned int        uint;
 
-/* for some applications */
+#ifdef __BSD_VISIBLE
 #include <sys/sysmacros.h>
 
-#ifdef __BSD_VISIBLE
-typedef	unsigned char	u_char;
-typedef	unsigned short	u_short;
-typedef	unsigned int	u_int;
-typedef	unsigned long	u_long;
+typedef unsigned char  u_char;
+typedef unsigned short u_short;
+typedef unsigned int   u_int;
+typedef unsigned long  u_long;
 
-typedef uint32_t       u_int32_t;
-typedef uint16_t       u_int16_t;
-typedef uint8_t        u_int8_t;
-typedef uint64_t       u_int64_t;
+typedef uint32_t u_int32_t;
+typedef uint16_t u_int16_t;
+typedef uint8_t  u_int8_t;
+typedef uint64_t u_int64_t;
 #endif
 
 #endif
