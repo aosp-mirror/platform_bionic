@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "274e5eac_85e62864",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2016-01-12T16:38:30Z",
+      "side": 1,
+      "message": "shall we add const-ness here and L77?\n\nalso print_ll() sounds like a weird name, maybe print_sll_addr() or print_packet()?",
+      "range": {
+        "startLine": 68,
+        "startChar": 39,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "7bfb1f529073223634684f1c9ca6dd9ad7268394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_3fc64b9c",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2016-01-12T16:38:30Z",
+      "side": 1,
+      "message": "missing space?",
+      "range": {
+        "startLine": 72,
+        "startChar": 19,
+        "endLine": 72,
+        "endChar": 36
+      },
+      "revId": "7bfb1f529073223634684f1c9ca6dd9ad7268394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
