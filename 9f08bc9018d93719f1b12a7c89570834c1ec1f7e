@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "274e5eac_852748a1",
+        "filename": "Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003981
+      },
+      "writtenOn": "2016-01-12T02:50:55Z",
+      "side": 1,
+      "message": "$(LOCAL_PATH)/libc\n\nBetter with:\ninclude $(call all-makefiles-under,$(LOCAL_PATH)) \\\n        $(call all-makefiles-under,$(LOCAL_PATH)/libc)",
+      "range": {
+        "startLine": 19,
+        "startChar": 64,
+        "endLine": 19,
+        "endChar": 68
+      },
+      "revId": "9f08bc9018d93719f1b12a7c89570834c1ec1f7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
