@@ -280,7 +280,7 @@ L(find_zero):
 
 	.p2align 4
 L(find_zero_in_second_wchar):
-	and	$1 << 5 - 1, %eax
+	and	$(1 << 5) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%esi)
@@ -296,7 +296,7 @@ L(find_zero_in_second_wchar):
 L(find_zero_in_third_or_fourth_wchar):
 	test	$15, %ch
 	jz	L(find_zero_in_fourth_wchar)
-	and	$1 << 9 - 1, %eax
+	and	$(1 << 9) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%esi)
@@ -368,7 +368,7 @@ L(prolog_find_zero_1):
 
 	.p2align 4
 L(prolog_find_zero_in_second_wchar):
-	and	$1 << 5 - 1, %eax
+	and	$(1 << 5) - 1, %eax
 	jz	L(return_null)
 
 	test	$15 << 4, %al
@@ -380,7 +380,7 @@ L(prolog_find_zero_in_second_wchar):
 L(prolog_find_zero_in_third_or_fourth_wchar):
 	test	$15, %ch
 	jz	L(prolog_find_zero_in_fourth_wchar)
-	and	$1 << 9 - 1, %eax
+	and	$(1 << 9) - 1, %eax
 	jz	L(return_null)
 
 	test	%ah, %ah
