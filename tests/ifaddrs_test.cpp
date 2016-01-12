@@ -19,6 +19,9 @@
 #include <ifaddrs.h>
 
 #include <linux/if_packet.h>
+#include <net/ethernet.h>
+#include <net/if.h>
+#include <netdb.h>
 #include <netinet/in.h>
 
 TEST(ifaddrs, freeifaddrs_null) {
@@ -58,6 +61,66 @@ TEST(ifaddrs, getifaddrs_smoke) {
   ASSERT_TRUE(lo_packet != nullptr);
   const sockaddr_ll* sa_ll = reinterpret_cast<const sockaddr_ll*>(lo_packet->ifa_addr);
   ASSERT_EQ(6, sa_ll->sll_halen);
+
+  freeifaddrs(addrs);
+}
+
+static void print_sockaddr_ll(const char* what, const sockaddr* p) {
+  const sockaddr_ll* s = reinterpret_cast<const sockaddr_ll*>(p);
+  printf("\t%s\t", what);
+  for (int i = 0; i < s->sll_halen; ++i) {
+    if (i > 0) printf(":");
+    printf("%02X", s->sll_addr[i]);
+  }
+  printf(" (%d bytes)\n", s->sll_halen);
+}
+
+static void print_sockaddr_inet(const char* what, const sockaddr* addr) {
+  char host[NI_MAXHOST];
+  int family = addr->sa_family;
+  int error = getnameinfo(addr,
+                          (family == AF_INET) ? sizeof(sockaddr_in) : sizeof(sockaddr_in6),
+                          host, NI_MAXHOST, nullptr, 0, NI_NUMERICHOST);
+  if (error != 0) {
+    printf("%d getnameinfo() failed: %s\n", family, gai_strerror(error));
+    strcpy(host, "???");
+  }
+  printf("\t%s: <%s>\n", what, host);
+}
+
+static const char* family_to_name(int family) {
+  if (family == AF_INET) return "AF_INET";
+  if (family == AF_INET6) return "AF_INET6";
+  if (family == AF_PACKET) return "AF_PACKET";
+  if (family == AF_UNSPEC) return "AF_UNSPEC";
+  return "?";
+}
+
+// Not really a test, but a useful debugging tool.
+TEST(ifaddrs, dump) {
+  ifaddrs* addrs;
+  ASSERT_EQ(0, getifaddrs(&addrs));
+
+  for (ifaddrs* ifa = addrs; ifa != nullptr; ifa = ifa->ifa_next) {
+    int family = ifa->ifa_addr ? ifa->ifa_addr->sa_family :
+                                 ifa->ifa_broadaddr ? ifa->ifa_broadaddr->sa_family : AF_UNSPEC;
+
+    printf("%s\n\t%s (%d) flags=%#x\n",
+           ifa->ifa_name, family_to_name(family), family, ifa->ifa_flags);
+
+    if (family == AF_PACKET) {
+      if (ifa->ifa_addr) print_sockaddr_ll("hwaddr", ifa->ifa_addr);
+      if (ifa->ifa_broadaddr) print_sockaddr_ll("hwbroad", ifa->ifa_addr);
+    } else if (family == AF_INET || family == AF_INET6) {
+      if (ifa->ifa_addr) print_sockaddr_inet("address", ifa->ifa_addr);
+      if (ifa->ifa_broadaddr && (ifa->ifa_flags & (IFF_BROADCAST | IFF_POINTOPOINT)) != 0) {
+        print_sockaddr_inet((ifa->ifa_flags & IFF_BROADCAST) ? "broadcast" : "destination",
+                            ifa->ifa_broadaddr);
+      }
+    }
+
+    fflush(stdout);
+  }
 
   freeifaddrs(addrs);
 }
