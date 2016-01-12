@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "676db610_bc0c29c7",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-01-12T01:02:22Z",
+      "side": 1,
+      "message": "This is a little ugly, but will help get soong enabled with USE_SOONG\u003dtrue and can go away as soong as we have prebuilt support in soong and can put an Android.bp file in libc/zoneinfo",
+      "revId": "6d5553e58540b6f1f5c16bad74b4182b3c79b084",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
