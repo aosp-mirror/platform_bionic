@@ -46,6 +46,30 @@
       "revId": "592c7b4cd72e18f2f1941df3d63026d7f94ef7ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_594a4304",
+        "filename": "libc/arch-x86/atom/string/sse2-strrchr-atom.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-12T18:07:20Z",
+      "side": 1,
+      "message": "(i\u0027m kind of surprised that it\u0027s not $((1 \u003c\u003c 4) -1), but none of this legacy syntax makes much sense. i assume you\u0027ve looked at objdump to check the right constants get emitted.)",
+      "parentUuid": "a7532e54_acfa3b25",
+      "range": {
+        "startLine": 281,
+        "startChar": 5,
+        "endLine": 281,
+        "endChar": 14
+      },
+      "revId": "592c7b4cd72e18f2f1941df3d63026d7f94ef7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
