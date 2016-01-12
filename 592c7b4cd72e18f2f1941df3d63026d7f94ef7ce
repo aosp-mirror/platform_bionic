@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "676db610_eaec0fb1",
+        "filename": "libc/arch-x86/atom/string/sse2-strrchr-atom.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-12T18:00:53Z",
+      "side": 1,
+      "message": "($1 \u003c\u003c 4) ?",
+      "range": {
+        "startLine": 281,
+        "startChar": 5,
+        "endLine": 281,
+        "endChar": 14
+      },
+      "revId": "592c7b4cd72e18f2f1941df3d63026d7f94ef7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
