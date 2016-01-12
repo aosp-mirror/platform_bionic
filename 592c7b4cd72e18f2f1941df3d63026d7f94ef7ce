@@ -70,6 +70,30 @@
       "revId": "592c7b4cd72e18f2f1941df3d63026d7f94ef7ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07f79a9a_ab2b2951",
+        "filename": "libc/arch-x86/atom/string/sse2-strrchr-atom.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2016-01-12T18:29:37Z",
+      "side": 1,
+      "message": "$ here means \"immediate expression will follow\", thus ($1 \u003c\u003c 4) would make absolutely no sense since $ is not the first character of an argument.\n\n$((1 \u003c\u003c 4) - 1) works, of course.",
+      "parentUuid": "07623a24_594a4304",
+      "range": {
+        "startLine": 281,
+        "startChar": 5,
+        "endLine": 281,
+        "endChar": 14
+      },
+      "revId": "592c7b4cd72e18f2f1941df3d63026d7f94ef7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
