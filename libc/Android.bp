@@ -137,17 +137,46 @@ cc_defaults {
 // libc_stack_protector.a - stack protector code
 // ========================================================
 //
-// The stack protector code needs to be compiled
-// with -fno-stack-protector, since it modifies the
-// stack canary.
+// Code that implements the stack protector (or that runs
+// before TLS has been set up) needs to be compiled with
+// -fno-stack-protector, since it accesses the stack canary
+// TLS slot.
 
 cc_library_static {
 
-    srcs: ["bionic/__stack_chk_fail.cpp"],
+    srcs: [
+        "bionic/__libc_init_main_thread.cpp",
+        "bionic/__stack_chk_fail.cpp",
+    ],
+    arch: {
+        arm64: {
+            srcs: ["arch-arm64/bionic/__set_tls.c"],
+        },
+        x86: {
+            srcs: ["arch-arm64/bionic/__set_tls.c"],
+        },
+        x86_64: {
+            srcs: ["arch-x86_64/bionic/__set_tls.c"],
+        },
+    },
+
     defaults: ["libc_defaults"],
     cflags: ["-fno-stack-protector"],
     name: "libc_stack_protector",
 }
+
+// libc_init_static.cpp also needs to be built without stack protector,
+// because it's responsible for setting up TLS for static executables.
+// This isn't the case for dynamic executables because the dynamic linker
+// has already set up the main thread's TLS.
+
+cc_library_static {
+    name: "libc_init_static",
+    defaults: ["libc_defaults"],
+    srcs: ["bionic/libc_init_static.cpp"],
+    cflags: ["-fno-stack-protector"],
+}
+
 
 // ========================================================
 // libc_tzcode.a - upstream 'tzcode' code
@@ -1084,7 +1113,6 @@ cc_library_static {
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
                 "arch-arm64/bionic/setjmp.S",
-                "arch-arm64/bionic/__set_tls.c",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
 
@@ -1168,7 +1196,6 @@ cc_library_static {
                 "arch-x86/bionic/libgcc_compat.c",
                 "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
-                "arch-x86/bionic/__set_tls.c",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
 
@@ -1258,7 +1285,6 @@ cc_library_static {
                 "arch-x86_64/bionic/_exit_with_stack_teardown.S",
                 "arch-x86_64/bionic/__restore_rt.S",
                 "arch-x86_64/bionic/setjmp.S",
-                "arch-x86_64/bionic/__set_tls.c",
                 "arch-x86_64/bionic/syscall.S",
                 "arch-x86_64/bionic/vfork.S",
 
@@ -1670,7 +1696,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "bionic/dl_iterate_phdr_static.cpp",
-        "bionic/libc_init_static.cpp",
     ],
 
     arch: {
@@ -1683,7 +1708,10 @@ cc_library_static {
 
     name: "libc_nomalloc",
 
-    whole_static_libs: ["libc_common"],
+    whole_static_libs: [
+        "libc_common",
+        "libc_init_static",
+    ],
 }
 
 // ========================================================
@@ -1720,9 +1748,9 @@ cc_library {
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
-            "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
+        whole_static_libs: ["libc_init_static"],
     },
     shared: {
         srcs: [
