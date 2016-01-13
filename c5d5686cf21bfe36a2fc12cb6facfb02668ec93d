@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "07623a24_687c87fd",
+        "filename": "tests/rtc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-01-13T20:37:08Z",
+      "side": 1,
+      "message": "The only time this is _critical_ is for 2015 and higher, set_hwtime should be allowed to return an EINVAL for the values below without harm or foul. If we can set it, it _must_ read back correctly.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 34
+      },
+      "revId": "c5d5686cf21bfe36a2fc12cb6facfb02668ec93d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
