@@ -1629,6 +1629,3 @@ LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 include $(BUILD_STATIC_LIBRARY)
 
-
-# ========================================================
-include $(call all-makefiles-under,$(LOCAL_PATH))
