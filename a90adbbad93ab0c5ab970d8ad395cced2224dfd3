@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27673e34_c937a1d8",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "this should be down in the next block of #includes.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_4ddc3d9c",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "move this comment up to L35 to explain what we mean by getifaddrs_lo?",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_86c2ab5a",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "check result.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_a1bfd919",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "always use { unless you\u0027re writing it on one line. (like the google c++ style guide.)",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_e00eeb4d",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "type*. use unique_ptr.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87562a44_ac01974f",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "oh, i\u0027d never heard of this! i bet we can simplify a bunch of our tests with this!",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_e1b8b131",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "inet. or INET. but not INet :-)",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c75ca266_225c6f75",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "assert",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_20090344",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "merge these two lines.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "678e9643_a2fde621",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T15:56:39Z",
+      "side": 1,
+      "message": "i don\u0027t think this is right. one of the limitations of teh old ioctl-based implementation for IPv4 is that you could only get the primary address that way. netlink will give you secondary ones. so i think you\u0027d have to flip this and check that any IPv4 address we get from ioctl is also known to getifaddrs.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
