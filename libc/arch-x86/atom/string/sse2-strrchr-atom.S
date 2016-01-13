@@ -278,7 +278,7 @@ L(find_zero):
 	jnz	L(FindZeroExit2)
 	test	$0x04, %cl
 	jnz	L(FindZeroExit3)
-	and	$1 << 4 - 1, %eax
+	and	$(1 << 4) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -296,7 +296,7 @@ L(find_zero_8):
 	jnz	L(FindZeroExit6)
 	test	$0x40, %cl
 	jnz	L(FindZeroExit7)
-	and	$1 << 8 - 1, %eax
+	and	$(1 << 8) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -317,7 +317,7 @@ L(find_zero_high):
 	jnz	L(FindZeroExit10)
 	test	$0x04, %ch
 	jnz	L(FindZeroExit11)
-	and	$1 << 12 - 1, %eax
+	and	$(1 << 12) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -335,7 +335,7 @@ L(find_zero_high_8):
 	jnz	L(FindZeroExit14)
 	test	$0x40, %ch
 	jnz	L(FindZeroExit15)
-	and	$1 << 16 - 1, %eax
+	and	$(1 << 16) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -359,7 +359,7 @@ L(FindZeroExit1):
 
 	.p2align 4
 L(FindZeroExit2):
-	and	$1 << 2 - 1, %eax
+	and	$(1 << 2) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -371,7 +371,7 @@ L(FindZeroExit2):
 
 	.p2align 4
 L(FindZeroExit3):
-	and	$1 << 3 - 1, %eax
+	and	$(1 << 3) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -383,7 +383,7 @@ L(FindZeroExit3):
 
 	.p2align 4
 L(FindZeroExit5):
-	and	$1 << 5 - 1, %eax
+	and	$(1 << 5) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -395,7 +395,7 @@ L(FindZeroExit5):
 
 	.p2align 4
 L(FindZeroExit6):
-	and	$1 << 6 - 1, %eax
+	and	$(1 << 6) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -407,7 +407,7 @@ L(FindZeroExit6):
 
 	.p2align 4
 L(FindZeroExit7):
-	and	$1 << 7 - 1, %eax
+	and	$(1 << 7) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -419,7 +419,7 @@ L(FindZeroExit7):
 
 	.p2align 4
 L(FindZeroExit9):
-	and	$1 << 9 - 1, %eax
+	and	$(1 << 9) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -431,7 +431,7 @@ L(FindZeroExit9):
 
 	.p2align 4
 L(FindZeroExit10):
-	and	$1 << 10 - 1, %eax
+	and	$(1 << 10) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -443,7 +443,7 @@ L(FindZeroExit10):
 
 	.p2align 4
 L(FindZeroExit11):
-	and	$1 << 11 - 1, %eax
+	and	$(1 << 11) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -455,7 +455,7 @@ L(FindZeroExit11):
 
 	.p2align 4
 L(FindZeroExit13):
-	and	$1 << 13 - 1, %eax
+	and	$(1 << 13) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -467,7 +467,7 @@ L(FindZeroExit13):
 
 	.p2align 4
 L(FindZeroExit14):
-	and	$1 << 14 - 1, %eax
+	and	$(1 << 14) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -479,7 +479,7 @@ L(FindZeroExit14):
 
 	.p2align 4
 L(FindZeroExit15):
-	and	$1 << 15 - 1, %eax
+	and	$(1 << 15) - 1, %eax
 	jz	L(return_value)
 
 	POP	(%ebx)
@@ -619,7 +619,7 @@ L(prolog_find_zero_1):
 	jnz	L(PrologFindZeroExit2)
 	test	$0x04, %cl
 	jnz	L(PrologFindZeroExit3)
-	and	$1 << 4 - 1, %eax
+	and	$(1 << 4) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
@@ -632,7 +632,7 @@ L(prolog_find_zero_8):
 	jnz	L(PrologFindZeroExit6)
 	test	$0x40, %cl
 	jnz	L(PrologFindZeroExit7)
-	and	$1 << 8 - 1, %eax
+	and	$(1 << 8) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
@@ -648,7 +648,7 @@ L(prolog_find_zero_high):
 	jnz	L(PrologFindZeroExit10)
 	test	$0x04, %ch
 	jnz	L(PrologFindZeroExit11)
-	and	$1 << 12 - 1, %eax
+	and	$(1 << 12) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
@@ -661,7 +661,7 @@ L(prolog_find_zero_high_8):
 	jnz	L(PrologFindZeroExit14)
 	test	$0x40, %ch
 	jnz	L(PrologFindZeroExit15)
-	and	$1 << 16 - 1, %eax
+	and	$(1 << 16) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
@@ -675,77 +675,77 @@ L(PrologFindZeroExit1):
 
 	.p2align 4
 L(PrologFindZeroExit2):
-	and	$1 << 2 - 1, %eax
+	and	$(1 << 2) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit3):
-	and	$1 << 3 - 1, %eax
+	and	$(1 << 3) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit5):
-	and	$1 << 5 - 1, %eax
+	and	$(1 << 5) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit6):
-	and	$1 << 6 - 1, %eax
+	and	$(1 << 6) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit7):
-	and	$1 << 7 - 1, %eax
+	and	$(1 << 7) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit9):
-	and	$1 << 9 - 1, %eax
+	and	$(1 << 9) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit10):
-	and	$1 << 10 - 1, %eax
+	and	$(1 << 10) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit11):
-	and	$1 << 11 - 1, %eax
+	and	$(1 << 11) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit13):
-	and	$1 << 13 - 1, %eax
+	and	$(1 << 13) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit14):
-	and	$1 << 14 - 1, %eax
+	and	$(1 << 14) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
 
 	.p2align 4
 L(PrologFindZeroExit15):
-	and	$1 << 15 - 1, %eax
+	and	$(1 << 15) - 1, %eax
 	jnz	L(match_case1)
 	xor	%eax, %eax
 	RETURN
