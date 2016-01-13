@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27673e34_be1d3655",
+        "filename": "tests/stdio_nofortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-13T22:30:55Z",
+      "side": 1,
+      "message": "we could maybe check here that _FORTIFY_SOURCE is still unset? (to check that we didn\u0027t decide in a future release to have #define _FORTIFY_SOURCE 2 in \u003csys/cdefs.h\u003e, say. i think what you have at the top protects us from the compiler.)",
+      "revId": "91cf4d5c7f6da7b75f33d5222b99b6b537c73fec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
