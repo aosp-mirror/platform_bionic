@@ -16,6 +16,24 @@
       "revId": "91cf4d5c7f6da7b75f33d5222b99b6b537c73fec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c75ca266_bb51cae9",
+        "filename": "tests/stdio_nofortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-14T01:25:17Z",
+      "side": 1,
+      "message": "Sounds good to me.",
+      "parentUuid": "27673e34_be1d3655",
+      "revId": "91cf4d5c7f6da7b75f33d5222b99b6b537c73fec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
