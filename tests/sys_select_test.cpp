@@ -89,7 +89,13 @@ TEST(sys_select, select_smoke) {
   ASSERT_EQ(-1, select(-1, &r, &w, &e, NULL));
   ASSERT_EQ(EINVAL, errno);
 
-  ASSERT_EQ(2, select(max, &r, &w, &e, NULL));
+  int num_fds = select(max, &r, &w, &e, NULL);
+  ASSERT_TRUE(num_fds == 2 || num_fds == 3) << "Num fds returned " << num_fds;
+  ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w));
+  ASSERT_TRUE(FD_ISSET(STDERR_FILENO, &w));
+  if (num_fds == 3) {
+    ASSERT_TRUE(FD_ISSET(STDIN_FILENO, &r));
+  }
 
   // Invalid timeout.
   timeval tv;
@@ -135,7 +141,13 @@ TEST(sys_select, pselect_smoke) {
   ASSERT_EQ(-1, pselect(-1, &r, &w, &e, NULL, &ss));
   ASSERT_EQ(EINVAL, errno);
 
-  ASSERT_EQ(2, pselect(max, &r, &w, &e, NULL, &ss));
+  int num_fds = pselect(max, &r, &w, &e, NULL, &ss);
+  ASSERT_TRUE(num_fds == 2 || num_fds == 3) << "Num fds returned " << num_fds;
+  ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w));
+  ASSERT_TRUE(FD_ISSET(STDERR_FILENO, &w));
+  if (num_fds == 3) {
+    ASSERT_TRUE(FD_ISSET(STDIN_FILENO, &r));
+  }
 
   // Invalid timeout.
   timespec tv;
