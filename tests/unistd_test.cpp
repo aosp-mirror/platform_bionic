@@ -35,6 +35,14 @@
 
 #include "private/get_cpu_count_from_string.h"
 
+#if defined(NOFORTIFY)
+#define UNISTD_TEST unistd_nofortify
+#define UNISTD_DEATHTEST unistd_nofortify_DeathTest
+#else
+#define UNISTD_TEST unistd
+#define UNISTD_DEATHTEST unistd_DeathTest
+#endif
+
 static void* get_brk() {
   return sbrk(0);
 }
@@ -44,7 +52,7 @@ static void* page_align(uintptr_t addr) {
   return reinterpret_cast<void*>((addr + mask) & ~mask);
 }
 
-TEST(unistd, brk) {
+TEST(UNISTD_TEST, brk) {
   void* initial_break = get_brk();
 
   // The kernel aligns the break to a page.
@@ -57,7 +65,7 @@ TEST(unistd, brk) {
   ASSERT_EQ(get_brk(), new_break);
 }
 
-TEST(unistd, brk_ENOMEM) {
+TEST(UNISTD_TEST, brk_ENOMEM) {
   ASSERT_EQ(-1, brk(reinterpret_cast<void*>(-1)));
   ASSERT_EQ(ENOMEM, errno);
 }
@@ -70,7 +78,7 @@ TEST(unistd, brk_ENOMEM) {
 #define SBRK_MAX PTRDIFF_MAX
 #endif
 
-TEST(unistd, sbrk_ENOMEM) {
+TEST(UNISTD_TEST, sbrk_ENOMEM) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   // There is no way to guarantee that all overflow conditions can be tested
   // without manipulating the underlying values of the current break.
@@ -141,7 +149,7 @@ TEST(unistd, sbrk_ENOMEM) {
 #endif
 }
 
-TEST(unistd, truncate) {
+TEST(UNISTD_TEST, truncate) {
   TemporaryFile tf;
   ASSERT_EQ(0, close(tf.fd));
   ASSERT_EQ(0, truncate(tf.filename, 123));
@@ -151,7 +159,7 @@ TEST(unistd, truncate) {
   ASSERT_EQ(123, sb.st_size);
 }
 
-TEST(unistd, truncate64) {
+TEST(UNISTD_TEST, truncate64) {
   TemporaryFile tf;
   ASSERT_EQ(0, close(tf.fd));
   ASSERT_EQ(0, truncate64(tf.filename, 123));
@@ -161,7 +169,7 @@ TEST(unistd, truncate64) {
   ASSERT_EQ(123, sb.st_size);
 }
 
-TEST(unistd, ftruncate) {
+TEST(UNISTD_TEST, ftruncate) {
   TemporaryFile tf;
   ASSERT_EQ(0, ftruncate(tf.fd, 123));
   ASSERT_EQ(0, close(tf.fd));
@@ -171,7 +179,7 @@ TEST(unistd, ftruncate) {
   ASSERT_EQ(123, sb.st_size);
 }
 
-TEST(unistd, ftruncate64) {
+TEST(UNISTD_TEST, ftruncate64) {
   TemporaryFile tf;
   ASSERT_EQ(0, ftruncate64(tf.fd, 123));
   ASSERT_EQ(0, close(tf.fd));
@@ -181,7 +189,7 @@ TEST(unistd, ftruncate64) {
   ASSERT_EQ(123, sb.st_size);
 }
 
-TEST(unistd, ftruncate_negative) {
+TEST(UNISTD_TEST, ftruncate_negative) {
   TemporaryFile tf;
   errno = 0;
   ASSERT_EQ(-1, ftruncate(tf.fd, -123));
@@ -193,7 +201,7 @@ static void PauseTestSignalHandler(int) {
   g_pause_test_flag = true;
 }
 
-TEST(unistd, pause) {
+TEST(UNISTD_TEST, pause) {
   ScopedSignalHandler handler(SIGALRM, PauseTestSignalHandler);
 
   alarm(1);
@@ -202,7 +210,7 @@ TEST(unistd, pause) {
   ASSERT_TRUE(g_pause_test_flag);
 }
 
-TEST(unistd, read) {
+TEST(UNISTD_TEST, read) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_TRUE(fd != -1);
 
@@ -216,7 +224,7 @@ TEST(unistd, read) {
   close(fd);
 }
 
-TEST(unistd, read_EBADF) {
+TEST(UNISTD_TEST, read_EBADF) {
   // read returns ssize_t which is 64-bits on LP64, so it's worth explicitly checking that
   // our syscall stubs correctly return a 64-bit -1.
   char buf[1];
@@ -224,7 +232,7 @@ TEST(unistd, read_EBADF) {
   ASSERT_EQ(EBADF, errno);
 }
 
-TEST(unistd, syscall_long) {
+TEST(UNISTD_TEST, syscall_long) {
   // Check that syscall(3) correctly returns long results.
   // https://code.google.com/p/android/issues/detail?id=73952
   // We assume that the break is > 4GiB, but this is potentially flaky.
@@ -232,11 +240,11 @@ TEST(unistd, syscall_long) {
   ASSERT_EQ(p, static_cast<uintptr_t>(syscall(__NR_brk, 0)));
 }
 
-TEST(unistd, alarm) {
+TEST(UNISTD_TEST, alarm) {
   ASSERT_EQ(0U, alarm(0));
 }
 
-TEST(unistd, _exit) {
+TEST(UNISTD_TEST, _exit) {
   int pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
@@ -250,21 +258,21 @@ TEST(unistd, _exit) {
   ASSERT_EQ(99, WEXITSTATUS(status));
 }
 
-TEST(unistd, getenv_unsetenv) {
+TEST(UNISTD_TEST, getenv_unsetenv) {
   ASSERT_EQ(0, setenv("test-variable", "hello", 1));
   ASSERT_STREQ("hello", getenv("test-variable"));
   ASSERT_EQ(0, unsetenv("test-variable"));
   ASSERT_TRUE(getenv("test-variable") == NULL);
 }
 
-TEST(unistd, unsetenv_EINVAL) {
+TEST(UNISTD_TEST, unsetenv_EINVAL) {
   EXPECT_EQ(-1, unsetenv(""));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, unsetenv("a=b"));
   EXPECT_EQ(EINVAL, errno);
 }
 
-TEST(unistd, setenv_EINVAL) {
+TEST(UNISTD_TEST, setenv_EINVAL) {
   EXPECT_EQ(-1, setenv(NULL, "value", 0));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv(NULL, "value", 1));
@@ -279,7 +287,7 @@ TEST(unistd, setenv_EINVAL) {
   EXPECT_EQ(EINVAL, errno);
 }
 
-TEST(unistd, setenv) {
+TEST(UNISTD_TEST, setenv) {
   ASSERT_EQ(0, unsetenv("test-variable"));
 
   char a[] = "a";
@@ -305,7 +313,7 @@ TEST(unistd, setenv) {
   ASSERT_EQ(0, unsetenv("test-variable"));
 }
 
-TEST(unistd, putenv) {
+TEST(UNISTD_TEST, putenv) {
   ASSERT_EQ(0, unsetenv("a"));
 
   char* s1 = strdup("a=b");
@@ -326,7 +334,7 @@ TEST(unistd, putenv) {
   free(s2);
 }
 
-TEST(unistd, clearenv) {
+TEST(UNISTD_TEST, clearenv) {
   extern char** environ;
 
   // Guarantee that environ is not initially empty...
@@ -391,11 +399,11 @@ static void TestFsyncFunction(int (*fn)(int)) {
   close(fd);
 }
 
-TEST(unistd, fdatasync) {
+TEST(UNISTD_TEST, fdatasync) {
   TestFsyncFunction(fdatasync);
 }
 
-TEST(unistd, fsync) {
+TEST(UNISTD_TEST, fsync) {
   TestFsyncFunction(fsync);
 }
 
@@ -429,11 +437,11 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   }
 }
 
-TEST(unistd, getpid_caching_and_fork) {
+TEST(UNISTD_TEST, getpid_caching_and_fork) {
   TestGetPidCachingWithFork(fork);
 }
 
-TEST(unistd, getpid_caching_and_vfork) {
+TEST(UNISTD_TEST, getpid_caching_and_vfork) {
   TestGetPidCachingWithFork(vfork);
 }
 
@@ -442,7 +450,7 @@ static int GetPidCachingCloneStartRoutine(void*) {
   return 123;
 }
 
-TEST(unistd, getpid_caching_and_clone) {
+TEST(UNISTD_TEST, getpid_caching_and_clone) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
@@ -467,7 +475,7 @@ static void* GetPidCachingPthreadStartRoutine(void*) {
   return NULL;
 }
 
-TEST(unistd, getpid_caching_and_pthread_create) {
+TEST(UNISTD_TEST, getpid_caching_and_pthread_create) {
   pid_t parent_pid = getpid();
 
   pthread_t t;
@@ -480,13 +488,13 @@ TEST(unistd, getpid_caching_and_pthread_create) {
   ASSERT_EQ(NULL, result);
 }
 
-class unistd_DeathTest : public BionicDeathTest {};
+class UNISTD_DEATHTEST : public BionicDeathTest {};
 
-TEST_F(unistd_DeathTest, abort) {
+TEST_F(UNISTD_DEATHTEST, abort) {
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
 }
 
-TEST(unistd, sethostname) {
+TEST(UNISTD_TEST, sethostname) {
   // The permissions check happens before the argument check, so this will
   // fail for a different reason if you're running as root than if you're
   // not, but it'll fail either way. Checking that we have the symbol is about
@@ -494,7 +502,7 @@ TEST(unistd, sethostname) {
   ASSERT_EQ(-1, sethostname("", -1));
 }
 
-TEST(unistd, gethostname) {
+TEST(UNISTD_TEST, gethostname) {
   char hostname[HOST_NAME_MAX + 1];
   memset(hostname, 0, sizeof(hostname));
 
@@ -517,7 +525,7 @@ TEST(unistd, gethostname) {
   ASSERT_EQ(ENAMETOOLONG, errno);
 }
 
-TEST(unistd, pathconf_fpathconf) {
+TEST(UNISTD_TEST, pathconf_fpathconf) {
   TemporaryFile tf;
   long rc = 0L;
   // As a file system's block size is always power of 2, the configure values
@@ -538,7 +546,7 @@ TEST(unistd, pathconf_fpathconf) {
 }
 
 
-TEST(unistd, _POSIX_macros_smoke) {
+TEST(UNISTD_TEST, _POSIX_macros_smoke) {
   // Make a tight verification of _POSIX_* / _POSIX2_* / _XOPEN_* macros, to prevent change by mistake.
   // Verify according to POSIX.1-2008.
   EXPECT_EQ(200809L, _POSIX_VERSION);
@@ -677,7 +685,7 @@ static void VerifySysconf(int option, const char *option_name, bool (*verify)(lo
       << ret <<", Error Message: " << strerror(errno);
 }
 
-TEST(unistd, sysconf) {
+TEST(UNISTD_TEST, sysconf) {
   VERIFY_SYSCONF_POSIX_VERSION(_SC_ADVISORY_INFO);
   VERIFY_SYSCONF_POSITIVE(_SC_ARG_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_BC_BASE_MAX);
@@ -824,14 +832,14 @@ TEST(unistd, sysconf) {
 #endif // defined(__BIONIC__)
 }
 
-TEST(unistd, get_cpu_count_from_string) {
+TEST(UNISTD_TEST, get_cpu_count_from_string) {
   ASSERT_EQ(0, GetCpuCountFromString(" "));
   ASSERT_EQ(1, GetCpuCountFromString("0"));
   ASSERT_EQ(40, GetCpuCountFromString("0-39"));
   ASSERT_EQ(4, GetCpuCountFromString("0, 1-2, 4\n"));
 }
 
-TEST(unistd, sysconf_SC_NPROCESSORS_ONLN) {
+TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_ONLN) {
   std::string line;
   ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &line));
   long online_cpus = 0;
@@ -846,7 +854,7 @@ TEST(unistd, sysconf_SC_NPROCESSORS_ONLN) {
   ASSERT_EQ(online_cpus, sysconf(_SC_NPROCESSORS_ONLN));
 }
 
-TEST(unistd, dup2_same) {
+TEST(UNISTD_TEST, dup2_same) {
   // POSIX says of dup2:
   // If fildes2 is already a valid open file descriptor ...
   // [and] fildes is equal to fildes2 ... dup2() shall return
