@@ -442,6 +442,36 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   fflush(stdout);
 }
 
+std::string XmlEscape(const std::string& xml) {
+  std::string escaped;
+  escaped.reserve(xml.size());
+
+  for (auto c : xml) {
+    switch (c) {
+    case '<':
+      escaped.append("&lt;");
+      break;
+    case '>':
+      escaped.append("&gt;");
+      break;
+    case '&':
+      escaped.append("&amp;");
+      break;
+    case '\'':
+      escaped.append("&apos;");
+      break;
+    case '"':
+      escaped.append("&quot;");
+      break;
+    default:
+      escaped.append(1, c);
+      break;
+    }
+  }
+
+  return escaped;
+}
+
 // Output xml file when --gtest_output is used, write this function as we can't reuse
 // gtest.cc:XmlUnitTestResultPrinter. The reason is XmlUnitTestResultPrinter is totally
 // defined in gtest.cc and not expose to outside. What's more, as we don't run gtest in
@@ -497,7 +527,8 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
       } else {
         fputs(">\n", fp);
         const std::string& test_output = testcase.GetTest(j).GetTestOutput();
-        fprintf(fp, "      <failure message=\"%s\" type=\"\">\n", test_output.c_str());
+        const std::string escaped_test_output = XmlEscape(test_output);
+        fprintf(fp, "      <failure message=\"%s\" type=\"\">\n", escaped_test_output.c_str());
         fputs("      </failure>\n", fp);
         fputs("    </testcase>\n", fp);
       }
