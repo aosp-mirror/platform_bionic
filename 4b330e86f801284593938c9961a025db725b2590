@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27673e34_d4045161",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T04:02:26Z",
+      "side": 1,
+      "message": "this in particular suggests that this shouldn\u0027t be a bionic test.\n\nyou\u0027re allowed to add your own gtests to CTS...",
+      "revId": "4b330e86f801284593938c9961a025db725b2590",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
