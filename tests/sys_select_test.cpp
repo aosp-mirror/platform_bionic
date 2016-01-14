@@ -90,6 +90,9 @@ TEST(sys_select, select_smoke) {
   ASSERT_EQ(EINVAL, errno);
 
   int num_fds = select(max, &r, &w, &e, NULL);
+  // If there is data to be read on STDIN, then the number of
+  // fds ready will be 3 instead of 2. Allow this case, but verify
+  // every fd that is set.
   ASSERT_TRUE(num_fds == 2 || num_fds == 3) << "Num fds returned " << num_fds;
   ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w));
   ASSERT_TRUE(FD_ISSET(STDERR_FILENO, &w));
@@ -141,6 +144,9 @@ TEST(sys_select, pselect_smoke) {
   ASSERT_EQ(-1, pselect(-1, &r, &w, &e, NULL, &ss));
   ASSERT_EQ(EINVAL, errno);
 
+  // If there is data to be read on STDIN, then the number of
+  // fds ready will be 3 instead of 2. Allow this case, but verify
+  // every fd that is set.
   int num_fds = pselect(max, &r, &w, &e, NULL, &ss);
   ASSERT_TRUE(num_fds == 2 || num_fds == 3) << "Num fds returned " << num_fds;
   ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w));
