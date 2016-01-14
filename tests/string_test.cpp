@@ -26,6 +26,12 @@
 
 #include "buffer_tests.h"
 
+#if defined(NOFORTIFY)
+#define STRING_TEST string_nofortify
+#else
+#define STRING_TEST string
+#endif
+
 #if defined(__BIONIC__)
 #define STRLCPY_SUPPORTED
 #define STRLCAT_SUPPORTED
@@ -45,7 +51,7 @@ static int signum(int i) {
   return 0;
 }
 
-TEST(string, strerror) {
+TEST(STRING_TEST, strerror) {
   // Valid.
   ASSERT_STREQ("Success", strerror(0));
   ASSERT_STREQ("Operation not permitted", strerror(1));
@@ -63,7 +69,7 @@ static void* ConcurrentStrErrorFn(void*) {
 #endif // __BIONIC__
 
 // glibc's strerror isn't thread safe, only its strsignal.
-TEST(string, strerror_concurrent) {
+TEST(STRING_TEST, strerror_concurrent) {
 #if defined(__BIONIC__)
   const char* strerror1001 = strerror(1001);
   ASSERT_STREQ("Unknown error 1001", strerror1001);
@@ -80,7 +86,7 @@ TEST(string, strerror_concurrent) {
 #endif // __BIONIC__
 }
 
-TEST(string, gnu_strerror_r) {
+TEST(STRING_TEST, gnu_strerror_r) {
   char buf[256];
 
   // Note that glibc doesn't necessarily write into the buffer.
@@ -110,7 +116,7 @@ TEST(string, gnu_strerror_r) {
   ASSERT_EQ(0, errno);
 }
 
-TEST(string, strsignal) {
+TEST(STRING_TEST, strsignal) {
   // A regular signal.
   ASSERT_STREQ("Hangup", strsignal(1));
 
@@ -130,7 +136,7 @@ static void* ConcurrentStrSignalFn(void*) {
   return reinterpret_cast<void*>(equal);
 }
 
-TEST(string, strsignal_concurrent) {
+TEST(STRING_TEST, strsignal_concurrent) {
   const char* strsignal1001 = strsignal(1001);
   ASSERT_STREQ("Unknown signal 1001", strsignal1001);
 
@@ -243,7 +249,7 @@ size_t StringTestState<Character>::alignments[] = { 24, 32, 16, 48, 0, 1, 2, 3, 
 template<class Character>
 size_t StringTestState<Character>::alignments_size = sizeof(alignments)/sizeof(size_t);
 
-TEST(string, strcat) {
+TEST(STRING_TEST, strcat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -264,7 +270,7 @@ TEST(string, strcat) {
 }
 
 // one byte target with "\0" source
-TEST(string, strcpy2) {
+TEST(STRING_TEST, strcpy2) {
   char buf[1];
   char* orig = strdup("");
   ASSERT_EQ(buf, strcpy(buf, orig));
@@ -273,7 +279,7 @@ TEST(string, strcpy2) {
 }
 
 // multibyte target where we under fill target
-TEST(string, strcpy3) {
+TEST(STRING_TEST, strcpy3) {
   char buf[10];
   char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
@@ -287,7 +293,7 @@ TEST(string, strcpy3) {
 }
 
 // multibyte target where we fill target exactly
-TEST(string, strcpy4) {
+TEST(STRING_TEST, strcpy4) {
   char buf[10];
   char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
@@ -297,7 +303,7 @@ TEST(string, strcpy4) {
 }
 
 // one byte target with "\0" source
-TEST(string, stpcpy2) {
+TEST(STRING_TEST, stpcpy2) {
   char buf[1];
   char* orig = strdup("");
   ASSERT_EQ(buf, stpcpy(buf, orig));
@@ -306,7 +312,7 @@ TEST(string, stpcpy2) {
 }
 
 // multibyte target where we under fill target
-TEST(string, stpcpy3) {
+TEST(STRING_TEST, stpcpy3) {
   char buf[10];
   char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
@@ -320,7 +326,7 @@ TEST(string, stpcpy3) {
 }
 
 // multibyte target where we fill target exactly
-TEST(string, stpcpy4) {
+TEST(STRING_TEST, stpcpy4) {
   char buf[10];
   char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
@@ -329,7 +335,7 @@ TEST(string, stpcpy4) {
   free(orig);
 }
 
-TEST(string, strcat2) {
+TEST(STRING_TEST, strcat2) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -342,7 +348,7 @@ TEST(string, strcat2) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(string, strcat3) {
+TEST(STRING_TEST, strcat3) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -352,7 +358,7 @@ TEST(string, strcat3) {
   ASSERT_STREQ("a01234567", buf);
 }
 
-TEST(string, strncat2) {
+TEST(STRING_TEST, strncat2) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -365,7 +371,7 @@ TEST(string, strncat2) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(string, strncat3) {
+TEST(STRING_TEST, strncat3) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -378,7 +384,7 @@ TEST(string, strncat3) {
   ASSERT_EQ('A',  buf[9]);
 }
 
-TEST(string, strncat4) {
+TEST(STRING_TEST, strncat4) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -388,7 +394,7 @@ TEST(string, strncat4) {
   ASSERT_STREQ("a01234567", buf);
 }
 
-TEST(string, strncat5) {
+TEST(STRING_TEST, strncat5) {
   char buf[10];
   memset(buf, 'A', sizeof(buf));
   buf[0] = 'a';
@@ -398,14 +404,14 @@ TEST(string, strncat5) {
   ASSERT_STREQ("a01234567", buf);
 }
 
-TEST(string, strchr_with_0) {
+TEST(STRING_TEST, strchr_with_0) {
   char buf[10];
   const char* s = "01234";
   memcpy(buf, s, strlen(s) + 1);
   EXPECT_TRUE(strchr(buf, '\0') == (buf + strlen(s)));
 }
 
-TEST(string, strchr_multiple) {
+TEST(STRING_TEST, strchr_multiple) {
   char str[128];
   memset(str, 'a', sizeof(str) - 1);
   str[sizeof(str)-1] = '\0';
@@ -423,7 +429,7 @@ TEST(string, strchr_multiple) {
   }
 }
 
-TEST(string, strchr) {
+TEST(STRING_TEST, strchr) {
   int seek_char = 'R';
 
   StringTestState<char> state(SMALL);
@@ -454,14 +460,14 @@ TEST(string, strchr) {
   }
 }
 
-TEST(string, strchrnul) {
+TEST(STRING_TEST, strchrnul) {
   const char* s = "01234222";
   EXPECT_TRUE(strchrnul(s, '2') == &s[2]);
   EXPECT_TRUE(strchrnul(s, '8') == (s + strlen(s)));
   EXPECT_TRUE(strchrnul(s, '\0') == (s + strlen(s)));
 }
 
-TEST(string, strcmp) {
+TEST(STRING_TEST, strcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -496,7 +502,7 @@ TEST(string, strcmp) {
   }
 }
 
-TEST(string, stpcpy) {
+TEST(STRING_TEST, stpcpy) {
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
@@ -520,7 +526,7 @@ TEST(string, stpcpy) {
   }
 }
 
-TEST(string, strcpy) {
+TEST(STRING_TEST, strcpy) {
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     size_t pos = random() % state.MAX_LEN;
@@ -544,7 +550,7 @@ TEST(string, strcpy) {
   }
 }
 
-TEST(string, strlcat) {
+TEST(STRING_TEST, strlcat) {
 #if defined(STRLCAT_SUPPORTED)
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
@@ -573,7 +579,7 @@ TEST(string, strlcat) {
 #endif
 }
 
-TEST(string, strlcpy) {
+TEST(STRING_TEST, strlcpy) {
 #if defined(STRLCPY_SUPPORTED)
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -605,7 +611,7 @@ TEST(string, strlcpy) {
 #endif
 }
 
-TEST(string, strncat) {
+TEST(STRING_TEST, strncat) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -629,7 +635,7 @@ TEST(string, strncat) {
   }
 }
 
-TEST(string, strncmp) {
+TEST(STRING_TEST, strncmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -664,7 +670,7 @@ TEST(string, strncmp) {
   }
 }
 
-TEST(string, stpncpy) {
+TEST(STRING_TEST, stpncpy) {
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     memset(state.ptr1, 'J', state.MAX_LEN);
@@ -699,7 +705,7 @@ TEST(string, stpncpy) {
   }
 }
 
-TEST(string, strncpy) {
+TEST(STRING_TEST, strncpy) {
   StringTestState<char> state(SMALL);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     // Choose a random value to fill the string, except \0 (string terminator),
@@ -736,7 +742,7 @@ TEST(string, strncpy) {
   }
 }
 
-TEST(string, strrchr) {
+TEST(STRING_TEST, strrchr) {
   int seek_char = 'M';
   StringTestState<char> state(SMALL);
   for (size_t i = 1; i < state.n; i++) {
@@ -766,7 +772,7 @@ TEST(string, strrchr) {
   }
 }
 
-TEST(string, memchr) {
+TEST(STRING_TEST, memchr) {
   int seek_char = 'N';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
@@ -787,7 +793,7 @@ TEST(string, memchr) {
   }
 }
 
-TEST(string, memchr_zero) {
+TEST(STRING_TEST, memchr_zero) {
   uint8_t* buffer;
   ASSERT_EQ(0, posix_memalign(reinterpret_cast<void**>(&buffer), 64, 64));
   memset(buffer, 10, 64);
@@ -795,7 +801,7 @@ TEST(string, memchr_zero) {
   ASSERT_TRUE(NULL == memchr(buffer, 10, 0));
 }
 
-TEST(string, memrchr) {
+TEST(STRING_TEST, memrchr) {
   int seek_char = 'P';
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
@@ -816,7 +822,7 @@ TEST(string, memrchr) {
   }
 }
 
-TEST(string, memcmp) {
+TEST(STRING_TEST, memcmp) {
   StringTestState<char> state(SMALL);
   for (size_t i = 0; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -836,7 +842,7 @@ TEST(string, memcmp) {
   }
 }
 
-TEST(string, wmemcmp) {
+TEST(STRING_TEST, wmemcmp) {
   StringTestState<wchar_t> state(SMALL);
 
   for (size_t i = 0; i < state.n; i++) {
@@ -858,7 +864,7 @@ TEST(string, wmemcmp) {
   }
 }
 
-TEST(string, memcpy) {
+TEST(STRING_TEST, memcpy) {
   StringTestState<char> state(LARGE);
   int rand = 4;
   for (size_t i = 0; i < state.n - 1; i++) {
@@ -878,7 +884,7 @@ TEST(string, memcpy) {
   }
 }
 
-TEST(string, memset) {
+TEST(STRING_TEST, memset) {
   StringTestState<char> state(LARGE);
   char ch = 'P';
   for (size_t i = 0; i < state.n - 1; i++) {
@@ -898,7 +904,7 @@ TEST(string, memset) {
   }
 }
 
-TEST(string, memmove) {
+TEST(STRING_TEST, memmove) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n - 1; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -917,7 +923,7 @@ TEST(string, memmove) {
   }
 }
 
-TEST(string, memmove_cache_size) {
+TEST(STRING_TEST, memmove_cache_size) {
   size_t len = 600000;
   int max_alignment = 31;
   int alignments[] = {0, 5, 11, 29, 30};
@@ -955,7 +961,7 @@ static void verify_memmove(char* src_copy, char* dst, char* src, size_t size) {
 
 #define MEMMOVE_DATA_SIZE (1024*1024*3)
 
-TEST(string, memmove_check) {
+TEST(STRING_TEST, memmove_check) {
   char* buffer = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
   ASSERT_TRUE(buffer != NULL);
 
@@ -996,7 +1002,7 @@ TEST(string, memmove_check) {
   }
 }
 
-TEST(string, bcopy) {
+TEST(STRING_TEST, bcopy) {
   StringTestState<char> state(LARGE);
   for (size_t i = 0; i < state.n; i++) {
     for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
@@ -1013,7 +1019,7 @@ TEST(string, bcopy) {
   }
 }
 
-TEST(string, bzero) {
+TEST(STRING_TEST, bzero) {
   StringTestState<char> state(LARGE);
   for (state.BeginIterations(); state.HasNextIteration(); state.NextIteration()) {
     memset(state.ptr1, 'R', state.MAX_LEN);
@@ -1039,11 +1045,11 @@ static void DoMemcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   ASSERT_TRUE(memcmp(src, dst, len) == 0);
 }
 
-TEST(string, memcpy_align) {
+TEST(STRING_TEST, memcpy_align) {
   RunSrcDstBufferAlignTest(LARGE, DoMemcpyTest);
 }
 
-TEST(string, memcpy_overread) {
+TEST(STRING_TEST, memcpy_overread) {
   RunSrcDstBufferOverreadTest(DoMemcpyTest);
 }
 
@@ -1055,11 +1061,11 @@ static void DoMemmoveTest(uint8_t* src, uint8_t* dst, size_t len) {
   ASSERT_TRUE(memcmp(src, dst, len) == 0);
 }
 
-TEST(string, memmove_align) {
+TEST(STRING_TEST, memmove_align) {
   RunSrcDstBufferAlignTest(LARGE, DoMemmoveTest);
 }
 
-TEST(string, memmove_overread) {
+TEST(STRING_TEST, memmove_overread) {
   RunSrcDstBufferOverreadTest(DoMemmoveTest);
 }
 
@@ -1074,7 +1080,7 @@ static void DoMemsetTest(uint8_t* buf, size_t len) {
   }
 }
 
-TEST(string, memset_align) {
+TEST(STRING_TEST, memset_align) {
   RunSingleBufferAlignTest(LARGE, DoMemsetTest);
 }
 
@@ -1086,11 +1092,11 @@ static void DoStrlenTest(uint8_t* buf, size_t len) {
   }
 }
 
-TEST(string, strlen_align) {
+TEST(STRING_TEST, strlen_align) {
   RunSingleBufferAlignTest(LARGE, DoStrlenTest);
 }
 
-TEST(string, strlen_overread) {
+TEST(STRING_TEST, strlen_overread) {
   RunSingleBufferOverreadTest(DoStrlenTest);
 }
 
@@ -1105,11 +1111,11 @@ static void DoStrcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   }
 }
 
-TEST(string, strcpy_align) {
+TEST(STRING_TEST, strcpy_align) {
   RunSrcDstBufferAlignTest(LARGE, DoStrcpyTest);
 }
 
-TEST(string, strcpy_overread) {
+TEST(STRING_TEST, strcpy_overread) {
   RunSrcDstBufferOverreadTest(DoStrcpyTest);
 }
 
@@ -1126,7 +1132,7 @@ static void DoStrlcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
 }
 #endif
 
-TEST(string, strlcpy_align) {
+TEST(STRING_TEST, strlcpy_align) {
 #if defined(STRLCPY_SUPPORTED)
   RunSrcDstBufferAlignTest(LARGE, DoStrlcpyTest);
 #else
@@ -1134,7 +1140,7 @@ TEST(string, strlcpy_align) {
 #endif
 }
 
-TEST(string, strlcpy_overread) {
+TEST(STRING_TEST, strlcpy_overread) {
 #if defined(STRLCPY_SUPPORTED)
   RunSrcDstBufferOverreadTest(DoStrlcpyTest);
 #else
@@ -1154,11 +1160,11 @@ static void DoStpcpyTest(uint8_t* src, uint8_t* dst, size_t len) {
   }
 }
 
-TEST(string, stpcpy_align) {
+TEST(STRING_TEST, stpcpy_align) {
   RunSrcDstBufferAlignTest(LARGE, DoStpcpyTest);
 }
 
-TEST(string, stpcpy_overread) {
+TEST(STRING_TEST, stpcpy_overread) {
   RunSrcDstBufferOverreadTest(DoStpcpyTest);
 }
 
@@ -1214,11 +1220,11 @@ static void DoStrcatTest(uint8_t* src, uint8_t* dst, size_t len) {
   }
 }
 
-TEST(string, strcat_align) {
+TEST(STRING_TEST, strcat_align) {
   RunSrcDstBufferAlignTest(MEDIUM, DoStrcatTest, LargeSetIncrement);
 }
 
-TEST(string, strcat_overread) {
+TEST(STRING_TEST, strcat_overread) {
   RunSrcDstBufferOverreadTest(DoStrcatTest);
 }
 
@@ -1262,7 +1268,7 @@ static void DoStrlcatTest(uint8_t* src, uint8_t* dst, size_t len) {
 }
 #endif
 
-TEST(string, strlcat_align) {
+TEST(STRING_TEST, strlcat_align) {
 #if defined(STRLCAT_SUPPORTED)
   RunSrcDstBufferAlignTest(MEDIUM, DoStrlcatTest, LargeSetIncrement);
 #else
@@ -1270,7 +1276,7 @@ TEST(string, strlcat_align) {
 #endif
 }
 
-TEST(string, strlcat_overread) {
+TEST(STRING_TEST, strlcat_overread) {
 #if defined(STRLCAT_SUPPORTED)
   RunSrcDstBufferOverreadTest(DoStrlcatTest);
 #else
@@ -1323,11 +1329,11 @@ static void DoStrcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t l
   }
 }
 
-TEST(string, strcmp_align) {
+TEST(STRING_TEST, strcmp_align) {
   RunCmpBufferAlignTest(MEDIUM, DoStrcmpTest, DoStrcmpFailTest, LargeSetIncrement);
 }
 
-TEST(string, strcmp_overread) {
+TEST(STRING_TEST, strcmp_overread) {
   RunCmpBufferOverreadTest(DoStrcmpTest, DoStrcmpFailTest);
 }
 
@@ -1355,11 +1361,11 @@ static void DoMemcmpFailTest(uint8_t* buf1, uint8_t* buf2, size_t len1, size_t l
   ASSERT_NE(0, memcmp(buf1, buf2, len));
 }
 
-TEST(string, memcmp_align) {
+TEST(STRING_TEST, memcmp_align) {
   RunCmpBufferAlignTest(MEDIUM, DoMemcmpTest, DoMemcmpFailTest, LargeSetIncrement);
 }
 
-TEST(string, memcmp_overread) {
+TEST(STRING_TEST, memcmp_overread) {
   RunCmpBufferOverreadTest(DoMemcmpTest, DoMemcmpFailTest);
 }
 
@@ -1381,11 +1387,11 @@ static void DoStrchrTest(uint8_t* buf, size_t len) {
   }
 }
 
-TEST(string, strchr_align) {
+TEST(STRING_TEST, strchr_align) {
   RunSingleBufferAlignTest(MEDIUM, DoStrchrTest);
 }
 
-TEST(string, strchr_overread) {
+TEST(STRING_TEST, strchr_overread) {
   RunSingleBufferOverreadTest(DoStrchrTest);
 }
 
@@ -1396,7 +1402,7 @@ static void TestBasename(const char* in, const char* expected_out) {
   ASSERT_EQ(0, errno) << in;
 }
 
-TEST(string, __gnu_basename) {
+TEST(STRING_TEST, __gnu_basename) {
   TestBasename("", "");
   TestBasename("/usr/lib", "lib");
   TestBasename("/usr/", "");
@@ -1408,7 +1414,7 @@ TEST(string, __gnu_basename) {
   TestBasename("//usr//lib//", "");
 }
 
-TEST(string, strnlen_147048) {
+TEST(STRING_TEST, strnlen_147048) {
   // https://code.google.com/p/android/issues/detail?id=147048
   char stack_src[64] = {0};
   EXPECT_EQ(0U, strnlen(stack_src, 1024*1024*1024));
@@ -1418,11 +1424,11 @@ TEST(string, strnlen_147048) {
   delete[] heap_src;
 }
 
-TEST(string, strnlen_74741) {
+TEST(STRING_TEST, strnlen_74741) {
   ASSERT_EQ(4U, strnlen("test", SIZE_MAX));
 }
 
-TEST(string, mempcpy) {
+TEST(STRING_TEST, mempcpy) {
   char dst[6];
   ASSERT_EQ(&dst[4], reinterpret_cast<char*>(mempcpy(dst, "hello", 4)));
 }

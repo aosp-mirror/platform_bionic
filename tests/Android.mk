@@ -86,11 +86,14 @@ libBionicStandardTests_src_files := \
     stack_unwinding_test.cpp \
     stdatomic_test.cpp \
     stdint_test.cpp \
+    stdio_nofortify_test.cpp \
     stdio_test.cpp \
     stdio_ext_test.cpp \
     stdlib_test.cpp \
+    string_nofortify_test.cpp \
     string_test.cpp \
     string_posix_strerror_r_test.cpp \
+    strings_nofortify_test.cpp \
     strings_test.cpp \
     stubs_test.cpp \
     sstream_test.cpp \
@@ -117,6 +120,7 @@ libBionicStandardTests_src_files := \
     time_test.cpp \
     uchar_test.cpp \
     uniqueptr_test.cpp \
+    unistd_nofortify_test.cpp \
     unistd_test.cpp \
     utmp_test.cpp \
     wchar_test.cpp \

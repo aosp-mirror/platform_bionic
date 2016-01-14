@@ -20,7 +20,13 @@
 #include <locale.h>
 #include <strings.h>
 
-TEST(strings, ffs) {
+#if defined(NOFORTIFY)
+#define STRINGS_TEST strings_nofortify
+#else
+#define STRINGS_TEST strings
+#endif
+
+TEST(STRINGS_TEST, ffs) {
   ASSERT_EQ( 0, ffs(0x00000000));
   ASSERT_EQ( 1, ffs(0x00000001));
   ASSERT_EQ( 6, ffs(0x00000020));
@@ -32,13 +38,13 @@ TEST(strings, ffs) {
   ASSERT_EQ(32, ffs(0x80000000));
 }
 
-TEST(strings, strcasecmp) {
+TEST(STRINGS_TEST, strcasecmp) {
   ASSERT_EQ(0, strcasecmp("hello", "HELLO"));
   ASSERT_LT(strcasecmp("hello1", "hello2"), 0);
   ASSERT_GT(strcasecmp("hello2", "hello1"), 0);
 }
 
-TEST(strings, strcasecmp_l) {
+TEST(STRINGS_TEST, strcasecmp_l) {
   locale_t l = newlocale(LC_ALL, "C", 0);
   ASSERT_EQ(0, strcasecmp_l("hello", "HELLO", l));
   ASSERT_LT(strcasecmp_l("hello1", "hello2", l), 0);
@@ -46,14 +52,14 @@ TEST(strings, strcasecmp_l) {
   freelocale(l);
 }
 
-TEST(strings, strncasecmp) {
+TEST(STRINGS_TEST, strncasecmp) {
   ASSERT_EQ(0, strncasecmp("hello", "HELLO", 3));
   ASSERT_EQ(0, strncasecmp("abcXX", "ABCYY", 3));
   ASSERT_LT(strncasecmp("hello1", "hello2", 6), 0);
   ASSERT_GT(strncasecmp("hello2", "hello1", 6), 0);
 }
 
-TEST(strings, strncasecmp_l) {
+TEST(STRINGS_TEST, strncasecmp_l) {
   locale_t l = newlocale(LC_ALL, "C", 0);
   ASSERT_EQ(0, strncasecmp_l("hello", "HELLO", 3, l));
   ASSERT_EQ(0, strncasecmp_l("abcXX", "ABCYY", 3, l));
