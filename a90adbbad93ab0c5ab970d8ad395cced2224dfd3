@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "47ed12c9_70f5ae72",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27673e34_c937a1d8",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07623a24_4ddc3d9c",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-13T15:56:39Z",
       "side": 1,
       "message": "move this comment up to L35 to explain what we mean by getifaddrs_lo?",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c701023f_f4feb681",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07623a24_4ddc3d9c",
       "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "07f79a9a_6edcaf0a",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "274e5eac_86c2ab5a",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4768b202_a1bfd919",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "47ed12c9_50fa3262",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4768b202_a1bfd919",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "676db610_e00eeb4d",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2016-01-13T15:56:39Z",
       "side": 1,
       "message": "type*. use unique_ptr.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7088e64_5653441a",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "We need plain pointer for the C library calls. Making it unique_ptr would add unnecessary complexity to get the raw pointer each time we use it.",
+      "parentUuid": "676db610_e00eeb4d",
       "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "a7088e64_966f6ccd",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4768b202_e1b8b131",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c75ca266_225c6f75",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -132,6 +240,24 @@
       "writtenOn": "2016-01-13T15:56:39Z",
       "side": 1,
       "message": "assert",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c72ae2be_6fa4a5c5",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c75ca266_225c6f75",
       "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "a7088e64_b67270b7",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "676db610_20090344",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "678e9643_a2fde621",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -166,6 +310,24 @@
       "writtenOn": "2016-01-13T15:56:39Z",
       "side": 1,
       "message": "i don\u0027t think this is right. one of the limitations of teh old ioctl-based implementation for IPv4 is that you could only get the primary address that way. netlink will give you secondary ones. so i think you\u0027d have to flip this and check that any IPv4 address we get from ioctl is also known to getifaddrs.",
+      "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "076cfa46_c389160d",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-14T00:07:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "678e9643_a2fde621",
       "revId": "a90adbbad93ab0c5ab970d8ad395cced2224dfd3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
