@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4768b202_cd9e84d7",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "only macros should be capitals. https://google.github.io/styleguide/cppguide.html#Macro_Names",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_114ffb41",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "\u0027d\u0027 is only referenced in two places, so the \"complexity\" favors sticking to SOP and not having a raw pointer that we actually need to clean up.",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87562a44_b6656120",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "actually, just ASSERT?",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07623a24_7fa39acc",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4768b202_4d9394d4",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "ASSERT",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "678e9643_58d7d2e8",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "https://google.github.io/styleguide/cppguide.html#Preincrement_and_Predecrement",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07495aa4_da35a482",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-14T01:34:49Z",
+      "side": 1,
+      "message": "seems like enough code to be worth factoring out.",
+      "revId": "4f6168902ea0a02756fb164b28560186474258ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
