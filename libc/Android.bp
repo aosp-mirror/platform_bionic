@@ -113,10 +113,17 @@ cc_defaults {
             cflags: ["-DUSE_DLMALLOC"],
         },
     },
-    // Clang/llvm has incompatible long double (fp128) for x86_64.
-    // https://llvm.org/bugs/show_bug.cgi?id=23897
     arch: {
+        // Clang/llvm has incompatible long double (fp128) for x86_64.
+        // https://llvm.org/bugs/show_bug.cgi?id=23897
         x86_64: {
+            clang: false,
+        },
+        // b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
+        mips: {
+            clang: false,
+        },
+        mips64: {
             clang: false,
         },
     },
