@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e759a674_02d03c7b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-15T21:22:15Z",
+      "side": 1,
+      "message": "reserved\n\n(also: _the_ reserved)",
+      "revId": "f9b040f1a657b44ed5653560a1f42f907d3cfde9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07495aa4_53b85ae5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-15T21:22:15Z",
+      "side": 1,
+      "message": "wah! i can\u0027t see that bug :-(",
+      "revId": "f9b040f1a657b44ed5653560a1f42f907d3cfde9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
