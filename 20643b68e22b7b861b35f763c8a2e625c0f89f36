@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c75ca266_aac84d2b",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-15T16:17:57Z",
+      "side": 1,
+      "message": "+check dlerror\n\ndlext test are not included in glibc test suite - and this is something we would like to see run against glibc as well, can you move this test to dlfcn?",
+      "revId": "20643b68e22b7b861b35f763c8a2e625c0f89f36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
