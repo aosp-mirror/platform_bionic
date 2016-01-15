@@ -53,6 +53,7 @@ class ElfReader {
   const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
   const char* get_string(ElfW(Word) index) const;
+  bool is_mapped_by_caller() const { return mapped_by_caller_; }
 
  private:
   bool ReadElfHeader();
@@ -99,6 +100,9 @@ class ElfReader {
 
   // Loaded phdr.
   const ElfW(Phdr)* loaded_phdr_;
+
+  // Is map owned by the caller
+  bool mapped_by_caller_;
 };
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,

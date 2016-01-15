@@ -275,7 +275,8 @@ TEST(dlfcn, dlopen_from_zip_ld_library_path) {
   ASSERT_TRUE(fn != nullptr);
   EXPECT_EQ(4, fn());
 
-  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  uint32_t* taxicab_number =
+          reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
   ASSERT_DL_NOTNULL(taxicab_number);
   EXPECT_EQ(1729U, *taxicab_number);
 
@@ -284,8 +285,7 @@ TEST(dlfcn, dlopen_from_zip_ld_library_path) {
 
 
 TEST_F(DlExtTest, Reserved) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
@@ -299,11 +299,17 @@ TEST_F(DlExtTest, Reserved) {
   EXPECT_LT(reinterpret_cast<void*>(f),
             reinterpret_cast<char*>(start) + LIBSIZE);
   EXPECT_EQ(4, f());
+
+  // Check that after dlclose reserved address space is unmapped (and can be reused)
+  dlclose(handle_);
+  handle_ = nullptr;
+
+  void* new_start = mmap(start, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(start, new_start) << "dlclose unmapped reserved space";
 }
 
 TEST_F(DlExtTest, ReservedTooSmall) {
-  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
+  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
@@ -314,8 +320,7 @@ TEST_F(DlExtTest, ReservedTooSmall) {
 }
 
 TEST_F(DlExtTest, ReservedHint) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS_HINT;
@@ -332,8 +337,7 @@ TEST_F(DlExtTest, ReservedHint) {
 }
 
 TEST_F(DlExtTest, ReservedHintTooSmall) {
-  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
+  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS_HINT;
@@ -350,8 +354,7 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
 }
 
 TEST_F(DlExtTest, LoadAtFixedAddress) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                     -1, 0);
+  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   munmap(start, LIBSIZE);
 
@@ -367,6 +370,12 @@ TEST_F(DlExtTest, LoadAtFixedAddress) {
   EXPECT_LT(reinterpret_cast<void*>(f), reinterpret_cast<char*>(start) + LIBSIZE);
 
   EXPECT_EQ(4, f());
+  dlclose(handle_);
+  handle_ = nullptr;
+
+  // Check that dlclose unmapped the file
+  void* addr = mmap(start, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_EQ(start, addr) << "dlclose did not unmap the memory";
 }
 
 TEST_F(DlExtTest, LoadAtFixedAddressTooSmall) {
@@ -390,8 +399,7 @@ class DlExtRelroSharingTest : public DlExtTest {
 protected:
   virtual void SetUp() {
     DlExtTest::SetUp();
-    void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS,
-                       -1, 0);
+    void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     ASSERT_TRUE(start != MAP_FAILED);
     extinfo_.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
     extinfo_.reserved_addr = start;
@@ -442,7 +450,8 @@ protected:
     ASSERT_DL_NOTNULL(f);
     EXPECT_EQ(4, f());
 
-    uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
+    uint32_t* taxicab_number =
+            reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
     ASSERT_DL_NOTNULL(taxicab_number);
     EXPECT_EQ(1729U, *taxicab_number);
   }
