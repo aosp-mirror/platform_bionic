@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "676db610_b89ee388",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-15T22:22:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e759a674_02d03c7b",
+      "revId": "f9b040f1a657b44ed5653560a1f42f907d3cfde9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07495aa4_53b85ae5",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-15T21:22:15Z",
       "side": 1,
       "message": "wah! i can\u0027t see that bug :-(",
+      "revId": "f9b040f1a657b44ed5653560a1f42f907d3cfde9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "274e5eac_62ef806a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-15T22:22:14Z",
+      "side": 1,
+      "message": "nobody can - chromium bugs are supposed to be fixed in blind mode. :)",
+      "parentUuid": "07495aa4_53b85ae5",
       "revId": "f9b040f1a657b44ed5653560a1f42f907d3cfde9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
