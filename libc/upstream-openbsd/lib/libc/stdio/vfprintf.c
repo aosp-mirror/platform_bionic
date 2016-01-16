@@ -1,4 +1,4 @@
-/*	$OpenBSD: vfprintf.c,v 1.67 2014/12/21 00:23:30 daniel Exp $	*/
+/*	$OpenBSD: vfprintf.c,v 1.71 2016/01/04 15:47:47 schwarze Exp $	*/
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -165,10 +165,8 @@ __wcsconv(wchar_t *wcsarg, int prec)
 		memset(&mbs, 0, sizeof(mbs));
 		p = wcsarg;
 		nbytes = wcsrtombs(NULL, (const wchar_t **)&p, 0, &mbs);
-		if (nbytes == (size_t)-1) {
-			errno = EILSEQ;
+		if (nbytes == (size_t)-1)
 			return (NULL);
-		}
 	} else {
 		/*
 		 * Optimisation: if the output precision is small enough,
@@ -188,10 +186,8 @@ __wcsconv(wchar_t *wcsarg, int prec)
 					break;
 				nbytes += clen;
 			}
-			if (clen == (size_t)-1) {
-				errno = EILSEQ;
+			if (clen == (size_t)-1)
 				return (NULL);
-			}
 		}
 	}
 	if ((convbuf = malloc(nbytes + 1)) == NULL)
@@ -203,7 +199,6 @@ __wcsconv(wchar_t *wcsarg, int prec)
 	if ((nbytes = wcsrtombs(convbuf, (const wchar_t **)&p,
 	    nbytes, &mbs)) == (size_t)-1) {
 		free(convbuf);
-		errno = EILSEQ;
 		return (NULL);
 	}
 	convbuf[nbytes] = '\0';
@@ -268,6 +263,7 @@ vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	FUNLOCKFILE(fp);
 	return (ret);
 }
+DEF_STRONG(vfprintf);
 
 int
 __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
@@ -437,7 +433,11 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 		int hold = nextarg; \
 		if (argtable == NULL) { \
 			argtable = statargtable; \
-			__find_arguments(fmt0, orgap, &argtable, &argtablesiz); \
+			if (__find_arguments(fmt0, orgap, &argtable, \
+			    &argtablesiz) == -1) { \
+				ret = -1; \
+				goto error; \
+			} \
 		} \
 		nextarg = n2; \
 		val = GETARG(int); \
@@ -493,6 +493,10 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 				break;
 			}
 		}
+		if (n < 0) {
+			ret = -1;
+			goto error;
+		}
 		if (fmt != cp) {
 			ptrdiff_t m = fmt - cp;
 			if (m < 0 || m > INT_MAX - ret)
@@ -500,7 +504,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 			PRINT(cp, m);
 			ret += m;
 		}
-		if (n <= 0)
+		if (n == 0)
 			goto done;
 		fmt++;		/* skip over '%' */
 
@@ -563,8 +567,11 @@ reswitch:	switch (ch) {
 				nextarg = n;
 				if (argtable == NULL) {
 					argtable = statargtable;
-					__find_arguments(fmt0, orgap,
-					    &argtable, &argtablesiz);
+					if (__find_arguments(fmt0, orgap,
+					    &argtable, &argtablesiz) == -1) {
+						ret = -1;
+						goto error;
+					}
 				}
 				goto rflag;
 			}
@@ -589,8 +596,11 @@ reswitch:	switch (ch) {
 				nextarg = n;
 				if (argtable == NULL) {
 					argtable = statargtable;
-					__find_arguments(fmt0, orgap,
-					    &argtable, &argtablesiz);
+					if (__find_arguments(fmt0, orgap,
+					    &argtable, &argtablesiz) == -1) {
+						ret = -1;
+						goto error;
+					}
 				}
 				goto rflag;
 			}
@@ -639,8 +649,7 @@ reswitch:	switch (ch) {
 				mbseqlen = wcrtomb(buf,
 				    (wchar_t)GETARG(wint_t), &mbs);
 				if (mbseqlen == (size_t)-1) {
-					fp->_flags |= __SERR;
-					errno = EILSEQ;
+					ret = -1;
 					goto error;
 				}
 				cp = buf;
@@ -835,7 +844,6 @@ fp_common:
 			 * defined manner.''
 			 *	-- ANSI X3J11
 			 */
-			/* NOSTRICT */
 			_umax = (u_long)GETARG(void *);
 			base = HEX;
 			xdigs = xdigs_lower;
@@ -846,16 +854,14 @@ fp_common:
 			if (flags & LONGINT) {
 				wchar_t *wcp;
 
-				if (convbuf != NULL) {
-					free(convbuf);
-					convbuf = NULL;
-				}
+				free(convbuf);
+				convbuf = NULL;
 				if ((wcp = GETARG(wchar_t *)) == NULL) {
 					cp = "(null)";
 				} else {
 					convbuf = __wcsconv(wcp, prec);
 					if (convbuf == NULL) {
-						fp->_flags = __SERR;
+						ret = -1;
 						goto error;
 					}
 					cp = convbuf;
@@ -1075,8 +1081,7 @@ overflow:
 
 finish:
 #ifdef PRINTF_WIDE_CHAR
-	if (convbuf)
-		free(convbuf);
+	free(convbuf);
 #endif
 #ifdef FLOATING_POINT
 	if (dtoaresult)
@@ -1214,7 +1219,9 @@ __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
 				break;
 			}
 		}
-		if (n <= 0)
+		if (n < 0)
+			return (-1);
+		if (n == 0)
 			goto done;
 		fmt++;		/* skip over '%' */
 
