@@ -1,6 +1,4 @@
-/*	$OpenBSD: wcsftime.c,v 1.3 2014/05/06 15:49:45 tedu Exp $ */
-#include "private.h"
-
+/*	$OpenBSD: wcsftime.c,v 1.6 2015/02/09 14:52:28 tedu Exp $ */
 /*
 ** Based on the UCB version with the ID appearing below.
 ** This is ANSIish only when "multibyte character == plain character".
@@ -33,10 +31,12 @@
 ** SUCH DAMAGE.
 */
 
-#include "tzfile.h"
-#include "fcntl.h"
+#include <fcntl.h>
 #include <locale.h>
 #include <wchar.h>
+
+#include "private.h"
+#include "tzfile.h"
 
 struct lc_time_T {
 	const wchar_t *	mon[MONSPERYEAR];
@@ -292,14 +292,9 @@ label:
 
 				tm = *t;
 				mkt = mktime(&tm);
-				if (TYPE_SIGNED(time_t))
-					(void) swprintf(buf, 
-					    sizeof buf/sizeof buf[0],
-					    L"%ld", (long) mkt);
-				else	
-					(void) swprintf(buf, 
-					    sizeof buf/sizeof buf[0],
-					    L"%lu", (unsigned long) mkt);
+				(void) swprintf(buf, 
+				    sizeof buf/sizeof buf[0],
+				    L"%ld", (long) mkt);
 				pt = _add(buf, pt, ptlim);
 			}
 			continue;
@@ -529,8 +524,8 @@ static wchar_t *
 _yconv(int a, int b, int convert_top, int convert_yy, wchar_t *pt, 
     const wchar_t *ptlim)
 {
-	register int	lead;
-	register int	trail;
+	int	lead;
+	int	trail;
 
 #define DIVISOR	100
 	trail = a % DIVISOR + b % DIVISOR;

@@ -1,4 +1,4 @@
-/*	$OpenBSD: vasprintf.c,v 1.16 2009/11/09 00:18:27 kurt Exp $	*/
+/*	$OpenBSD: vasprintf.c,v 1.19 2015/12/28 22:08:18 mmcc Exp $	*/
 
 /*
  * Copyright (c) 1997 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -33,7 +33,7 @@ vasprintf(char **str, const char *fmt, __va_list ap)
 	_FILEEXT_SETUP(&f, &fext);
 	f._file = -1;
 	f._flags = __SWR | __SSTR | __SALC;
-	f._bf._base = f._p = (unsigned char *)malloc(128);
+	f._bf._base = f._p = malloc(128);
 	if (f._bf._base == NULL)
 		goto err;
 	f._bf._size = f._w = 127;		/* Leave room for the NUL */
@@ -48,11 +48,10 @@ vasprintf(char **str, const char *fmt, __va_list ap)
 	return (ret);
 
 err:
-	if (f._bf._base) {
-		free(f._bf._base);
-		f._bf._base = NULL;
-	}
+	free(f._bf._base);
+	f._bf._base = NULL;
 	*str = NULL;
 	errno = ENOMEM;
 	return (-1);
 }
+DEF_WEAK(vasprintf);

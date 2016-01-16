@@ -32,8 +32,9 @@
 #define _warn warn
 #define _warnx warnx
 
-/* Ignore all __weak_alias in OpenBSD. */
-#define __weak_alias(alias,sym)
+/* Ignore all DEF_STRONG/DEF_WEAK in OpenBSD. */
+#define DEF_STRONG(sym)
+#define DEF_WEAK(sym)
 
 /* Ignore all __warn_references in OpenBSD. */
 #define __warn_references(sym,msg)

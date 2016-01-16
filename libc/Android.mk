@@ -440,6 +440,7 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/net/inet_pton.c \
     upstream-openbsd/lib/libc/net/ntohl.c \
     upstream-openbsd/lib/libc/net/ntohs.c \
+    upstream-openbsd/lib/libc/net/res_random.c \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/dprintf.c \
@@ -796,12 +797,6 @@ LOCAL_SRC_FILES := \
     upstream-netbsd/lib/libc/isc/ev_streams.c \
     upstream-netbsd/lib/libc/isc/ev_timers.c \
     upstream-netbsd/lib/libc/resolv/mtctxres.c \
-
-# We use the OpenBSD res_random.
-LOCAL_CFLAGS += \
-    -Dres_randomid=__res_randomid
-LOCAL_SRC_FILES += \
-    upstream-openbsd/lib/libc/net/res_random.c \
 
 LOCAL_CFLAGS += \
     $(libc_common_cflags) \
