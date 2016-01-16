@@ -193,11 +193,7 @@ cc_library_static {
 
     defaults: ["libc_defaults"],
     srcs: [
-        "tzcode/asctime.c",
-        "tzcode/difftime.c",
-        "tzcode/localtime.c",
-        "tzcode/strftime.c",
-        "tzcode/strptime.c",
+        "tzcode/**/*.c",
         "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
     ],
 
@@ -235,31 +231,7 @@ cc_library_static {
 
     defaults: ["libc_defaults"],
     srcs: [
-        "dns/net/gethnamaddr.c",
-        "dns/net/getservbyname.c",
-        "dns/net/getservbyport.c",
-        "dns/net/getaddrinfo.c",
-        "dns/net/getnameinfo.c",
-        "dns/net/sethostent.c",
-        "dns/net/getservent.c",
-        "dns/net/nsdispatch.c",
-        "dns/net/base64.c",
-        "dns/resolv/res_state.c",
-        "dns/resolv/res_init.c",
-        "dns/resolv/res_mkquery.c",
-        "dns/resolv/res_data.c",
-        "dns/resolv/res_debug.c",
-        "dns/resolv/herror.c",
-        "dns/resolv/res_cache.c",
-        "dns/resolv/res_query.c",
-        "dns/resolv/res_comp.c",
-        "dns/resolv/res_send.c",
-        "dns/nameser/ns_name.c",
-        "dns/nameser/ns_print.c",
-        "dns/nameser/ns_parse.c",
-        "dns/nameser/ns_ttl.c",
-        "dns/nameser/ns_netint.c",
-        "dns/nameser/ns_samedomain.c",
+        "dns/**/*.c",
 
         "upstream-netbsd/lib/libc/isc/ev_streams.c",
         "upstream-netbsd/lib/libc/isc/ev_timers.c",
@@ -326,8 +298,8 @@ cc_library_static {
         "upstream-freebsd/lib/libc/string/wcstok.c",
         "upstream-freebsd/lib/libc/string/wmemchr.c",
         "upstream-freebsd/lib/libc/string/wmemcmp.c",
-        "upstream-freebsd/lib/libc/string/wmemset.c",
         "upstream-freebsd/lib/libc/string/wmemmove.c",
+        "upstream-freebsd/lib/libc/string/wmemset.c",
     ],
     arch: {
         arm64: {
