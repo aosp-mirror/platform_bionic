@@ -67,7 +67,7 @@ TEST(ifaddrs, getifaddrs_smoke) {
 
 static void print_sockaddr_ll(const char* what, const sockaddr* p) {
   const sockaddr_ll* s = reinterpret_cast<const sockaddr_ll*>(p);
-  printf("\t%s\t", what);
+  printf("\t\t%s\t", what);
   for (int i = 0; i < s->sll_halen; ++i) {
     if (i > 0) printf(":");
     printf("%02X", s->sll_addr[i]);
@@ -85,7 +85,7 @@ static void print_sockaddr_inet(const char* what, const sockaddr* addr) {
     printf("%d getnameinfo() failed: %s\n", family, gai_strerror(error));
     strcpy(host, "???");
   }
-  printf("\t%s: <%s>\n", what, host);
+  printf("\t\t%s: <%s>\n", what, host);
 }
 
 static const char* family_to_name(int family) {
@@ -105,7 +105,8 @@ TEST(ifaddrs, dump) {
     int family = ifa->ifa_addr ? ifa->ifa_addr->sa_family :
                                  ifa->ifa_broadaddr ? ifa->ifa_broadaddr->sa_family : AF_UNSPEC;
 
-    printf("%s\n\t%s (%d) flags=%#x\n",
+    printf("\t%s\n"
+           "\t\t%s (%d) flags=%#x\n",
            ifa->ifa_name, family_to_name(family), family, ifa->ifa_flags);
 
     if (family == AF_PACKET) {
