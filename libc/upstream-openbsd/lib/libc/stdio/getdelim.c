@@ -1,4 +1,4 @@
-/*	$OpenBSD: getdelim.c,v 1.2 2014/10/16 17:31:51 millert Exp $	*/
+/*	$OpenBSD: getdelim.c,v 1.4 2015/08/31 02:53:57 guenther Exp $	*/
 /* $NetBSD: getdelim.c,v 1.13 2011/07/22 23:12:30 joerg Exp $ */
 
 /*
@@ -30,6 +30,7 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -96,7 +97,7 @@ getdelim(char **__restrict buf, size_t *__restrict buflen,
 				newlen |= newlen >> 4;
 				newlen |= newlen >> 8;
 				newlen |= newlen >> 16;
-#if SIZE_T_MAX > 0xffffffffU
+#if SIZE_MAX > 0xffffffffU
 				newlen |= newlen >> 32;
 #endif
 				newlen++;
@@ -131,3 +132,4 @@ error:
 	FUNLOCKFILE(fp);
 	return -1;
 }
+DEF_WEAK(getdelim);
