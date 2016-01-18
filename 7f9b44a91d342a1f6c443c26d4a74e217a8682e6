@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e798c691_68fbb72c",
+        "filename": "libc/bionic/net_if.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2016-01-18T11:20:57Z",
+      "side": 1,
+      "message": "This would miss out rmnet_* interfaces, which doesn\u0027t have ifa_addr.",
+      "range": {
+        "startLine": 89,
+        "startChar": 6,
+        "endLine": 89,
+        "endChar": 65
+      },
+      "revId": "7f9b44a91d342a1f6c443c26d4a74e217a8682e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
