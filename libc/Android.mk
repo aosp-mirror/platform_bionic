@@ -632,7 +632,7 @@ ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
 endif
 
 ifeq ($(use_clang),)
-  use_clang := false
+  use_clang := true
 endif
 
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
