@@ -71,6 +71,9 @@ glibc = set(map(MangleGlibcNameToBionic, glibc))
 
 # bionic includes various BSD symbols to ease porting other BSD-licensed code.
 bsd_stuff = set([
+  'arc4random',
+  'arc4random_buf',
+  'arc4random_uniform',
   'basename_r',
   'dirname_r',
   'fgetln',
@@ -91,6 +94,11 @@ FORTIFY_stuff = set([
   '__FD_CLR_chk',
   '__FD_ISSET_chk',
   '__FD_SET_chk',
+  '__fwrite_chk',
+  '__memchr_chk',
+  '__memrchr_chk',
+  '__pwrite64_chk',
+  '__pwrite_chk',
   '__stack_chk_guard',
   '__stpncpy_chk2',
   '__strchr_chk',
@@ -100,6 +108,7 @@ FORTIFY_stuff = set([
   '__strncpy_chk2',
   '__strrchr_chk',
   '__umask_chk'
+  '__write_chk',
 ])
 # Some symbols are used to implement public macros.
 macro_stuff = set([
