@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c75ca266_81944c6e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-19T19:04:57Z",
+      "side": 1,
+      "message": "when does this happen? is that a build system bug? shouldn\u0027t this be set to true unless you\u0027ve explicitly set it to false in your BoardConfig.mk?",
+      "revId": "b43ee658bbb071cc45bbd8455d3a9b8ec0cbbd4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
