@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
-#include <unistd.h>
-#include <linux/sockios.h>
-#include <net/if.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
+#ifndef BIONIC_NETLINK_H
+#define BIONIC_NETLINK_H
 
-/*
- * Map an interface name into its corresponding index.
- * Returns 0 on error, as 0 is not a valid index.
- */
-unsigned int if_nametoindex(const char *ifname)
-{
-    int index;
-    int ctl_sock;
-    struct ifreq ifr;
+#include <sys/types.h>
 
-    memset(&ifr, 0, sizeof(struct ifreq));
-    strncpy(ifr.ifr_name, ifname, IFNAMSIZ);
-    ifr.ifr_name[IFNAMSIZ - 1] = 0;
+#include <linux/netlink.h>
+#include <linux/rtnetlink.h>
 
-    index = 0;
-    if ((ctl_sock = socket(AF_INET, SOCK_DGRAM, 0)) >= 0) {
-        if (ioctl(ctl_sock, SIOCGIFINDEX, &ifr) >= 0) {
-            index = ifr.ifr_ifindex;
-        }
-        close(ctl_sock);
-    }
-    return index;
-}
+struct nlmsghdr;
+
+class NetlinkConnection {
+ public:
+  NetlinkConnection();
+  ~NetlinkConnection();
+
+  bool SendRequest(int type);
+  bool ReadResponses(void callback(void*, nlmsghdr*), void* context);
+
+ private:
+  int fd_;
+  char* data_;
+  size_t size_;
+};
+
+#if !defined(__clang__)
+// GCC gets confused by NLMSG_DATA and doesn't realize that the old-style
+// cast is from a system header and should be ignored.
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
+
+#endif

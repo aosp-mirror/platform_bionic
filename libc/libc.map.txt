@@ -1264,6 +1264,8 @@ LIBC_N {
     getgrgid_r;
     getgrnam_r;
     getifaddrs;
+    if_freenameindex;
+    if_nameindex;
     preadv;
     preadv64;
     prlimit; # arm mips x86
