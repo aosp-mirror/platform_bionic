@@ -48,7 +48,8 @@ char* if_indextoname(unsigned ifindex, char* ifname) {
   int s = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
   if (s == -1) return nullptr;
 
-  struct ifreq ifr = {};
+  struct ifreq ifr;
+  memset(&ifr, 0, sizeof(ifr));
   ifr.ifr_ifindex = ifindex;
 
   int rc = ioctl(s, SIOCGIFNAME, &ifr);
@@ -61,7 +62,8 @@ unsigned if_nametoindex(const char* ifname) {
   int s = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
   if (s == -1) return 0;
 
-  struct ifreq ifr = {};
+  struct ifreq ifr;
+  memset(&ifr, 0, sizeof(ifr));
   strncpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
   ifr.ifr_name[IFNAMSIZ - 1] = 0;
 
