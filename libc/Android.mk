@@ -444,7 +444,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/dprintf.c \
-    upstream-openbsd/lib/libc/stdio/fclose.c \
     upstream-openbsd/lib/libc/stdio/fdopen.c \
     upstream-openbsd/lib/libc/stdio/feof.c \
     upstream-openbsd/lib/libc/stdio/ferror.c \
@@ -455,7 +454,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/fgets.c \
     upstream-openbsd/lib/libc/stdio/fgetwc.c \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
-    upstream-openbsd/lib/libc/stdio/fileno.c \
     upstream-openbsd/lib/libc/stdio/flags.c \
     upstream-openbsd/lib/libc/stdio/fmemopen.c \
     upstream-openbsd/lib/libc/stdio/fopen.c \
@@ -1623,4 +1621,3 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 include $(BUILD_STATIC_LIBRARY)
-
