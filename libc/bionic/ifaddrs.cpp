@@ -30,8 +30,6 @@
 
 #include <errno.h>
 #include <linux/if_packet.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <netinet/in.h>
 #include <stdint.h>
@@ -39,6 +37,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "private/ErrnoRestorer.h"
+
+#include "bionic_netlink.h"
 
 // The public ifaddrs struct is full of pointers. Rather than track several
 // different allocations, we use a maximally-sized structure with the public
@@ -119,13 +121,9 @@ struct ifaddrs_storage {
   }
 };
 
-#if !defined(__clang__)
-// GCC gets confused by NLMSG_DATA and doesn't realize that the old-style
-// cast is from a system header and should be ignored.
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
+static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
+  ifaddrs** out = reinterpret_cast<ifaddrs**>(context);
 
-static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
   if (hdr->nlmsg_type == RTM_NEWLINK) {
     ifinfomsg* ifi = reinterpret_cast<ifinfomsg*>(NLMSG_DATA(hdr));
 
@@ -195,62 +193,22 @@ static void __handle_netlink_response(ifaddrs** out, nlmsghdr* hdr) {
   }
 }
 
-static bool __send_netlink_request(int fd, int type) {
-  struct NetlinkMessage {
-    nlmsghdr hdr;
-    rtgenmsg msg;
-  } request;
-  memset(&request, 0, sizeof(request));
-  request.hdr.nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;
-  request.hdr.nlmsg_type = type;
-  request.hdr.nlmsg_len = sizeof(request);
-  request.msg.rtgen_family = AF_UNSPEC; // All families.
-  return (TEMP_FAILURE_RETRY(send(fd, &request, sizeof(request), 0)) == sizeof(request));
-}
-
-static bool __read_netlink_responses(int fd, ifaddrs** out, char* buf, size_t buf_len) {
-  ssize_t bytes_read;
-  // Read through all the responses, handing interesting ones to __handle_netlink_response.
-  while ((bytes_read = TEMP_FAILURE_RETRY(recv(fd, buf, buf_len, 0))) > 0) {
-    nlmsghdr* hdr = reinterpret_cast<nlmsghdr*>(buf);
-    for (; NLMSG_OK(hdr, static_cast<size_t>(bytes_read)); hdr = NLMSG_NEXT(hdr, bytes_read)) {
-      if (hdr->nlmsg_type == NLMSG_DONE) return true;
-      if (hdr->nlmsg_type == NLMSG_ERROR) return false;
-      __handle_netlink_response(out, hdr);
-    }
-  }
-  // We only get here if recv fails before we see a NLMSG_DONE.
-  return false;
-}
-
 int getifaddrs(ifaddrs** out) {
-  // Make cleanup easy.
+  // We construct the result directly into `out`, so terminate the list.
   *out = nullptr;
 
-  // The kernel keeps packets under 8KiB (NLMSG_GOODSIZE),
-  // but that's a bit too large to go on the stack.
-  size_t buf_len = 8192;
-  char* buf = new char[buf_len];
-  if (buf == nullptr) return -1;
-
   // Open the netlink socket and ask for all the links and addresses.
-  int fd = socket(PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
-  bool okay = fd != -1 &&
-      __send_netlink_request(fd, RTM_GETLINK) && __read_netlink_responses(fd, out, buf, buf_len) &&
-      __send_netlink_request(fd, RTM_GETADDR) && __read_netlink_responses(fd, out, buf, buf_len);
-
+  NetlinkConnection nc;
+  bool okay = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out) &&
+              nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
   if (!okay) {
     freeifaddrs(*out);
     // Ensure that callers crash if they forget to check for success.
     *out = nullptr;
+    return -1;
   }
-  {
-    int saved_errno = errno;
-    close(fd);
-    delete[] buf;
-    errno = saved_errno;
-  }
-  return okay ? 0 : -1;
+
+  return 0;
 }
 
 void freeifaddrs(ifaddrs* list) {
