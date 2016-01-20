@@ -54,12 +54,11 @@ libc_common_src_files := \
     bionic/siginterrupt.c \
     bionic/sigsetmask.c \
     bionic/system_properties_compat.c \
-    stdio/findfp.c \
     stdio/fread.c \
     stdio/refill.c \
     stdio/snprintf.c\
     stdio/sprintf.c \
-    stdio/stdio.c \
+    stdio/stdio.cpp \
     stdio/stdio_ext.cpp \
     stdlib/atexit.c \
     stdlib/exit.c \

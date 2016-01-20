@@ -31,12 +31,15 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/param.h>
-#include <unistd.h>
 #include <stdio.h>
+
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
+#include <unistd.h>
+
 #include "local.h"
 #include "glue.h"
 #include "private/thread_private.h"
@@ -82,41 +85,31 @@ FILE* stderr = &__sF[2];
 struct glue __sglue = { NULL, 3, __sF };
 static struct glue* lastglue = &__sglue;
 
-static struct glue *
-moreglue(int n)
-{
-	struct glue *g;
-	FILE *p;
-	struct __sfileext *pext;
-	static FILE empty;
-	char *data;
+static glue* moreglue(int n) {
+    static FILE empty;
 
-	data = malloc(sizeof(*g) + ALIGNBYTES + n * sizeof(FILE)
-	    + n * sizeof(struct __sfileext));
-	if (data == NULL)
-		return (NULL);
-	g = (struct glue *)data;
-	p = (FILE *)ALIGN(data + sizeof(*g));
-	pext = (struct __sfileext *)
-	    (ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
-	g->next = NULL;
-	g->niobs = n;
-	g->iobs = p;
-	while (--n >= 0) {
-		*p = empty;
-		_FILEEXT_SETUP(p, pext);
-		p++;
-		pext++;
-	}
-	return (g);
+    char* data = new char[sizeof(glue) + ALIGNBYTES + n * sizeof(FILE) + n * sizeof(__sfileext)];
+    if (data == nullptr) return nullptr;
+
+    glue* g = reinterpret_cast<glue*>(data);
+    FILE* p = reinterpret_cast<FILE*>(ALIGN(data + sizeof(*g)));
+    __sfileext* pext = reinterpret_cast<__sfileext*>(ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
+    g->next = NULL;
+    g->niobs = n;
+    g->iobs = p;
+    while (--n >= 0) {
+        *p = empty;
+        _FILEEXT_SETUP(p, pext);
+        p++;
+        pext++;
+    }
+    return g;
 }
 
 /*
  * Find a free FILE for fopen et al.
  */
-FILE *
-__sfp(void)
-{
+FILE* __sfp(void) {
 	FILE *fp;
 	int n;
 	struct glue *g;
@@ -153,7 +146,7 @@ found:
 	return (fp);
 }
 
-__LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
+extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
 	/* (void) _fwalk(fclose); */
 	(void) _fwalk(__sflush);		/* `cheating' */
 }
@@ -190,4 +183,45 @@ int fileno(FILE* fp) {
     int result = fileno_unlocked(fp);
     FUNLOCKFILE(fp);
     return result;
+}
+
+// Small standard I/O/seek/close functions.
+// These maintain the `known seek offset' for seek optimisation.
+int __sread(void* cookie, char* buf, int n) {
+    FILE* fp = reinterpret_cast<FILE*>(cookie);
+    int ret = TEMP_FAILURE_RETRY(read(fp->_file, buf, n));
+    // If the read succeeded, update the current offset.
+    if (ret >= 0) {
+        fp->_offset += ret;
+    } else {
+        fp->_flags &= ~__SOFF; // Paranoia.
+    }
+    return ret;
+}
+
+int __swrite(void* cookie, const char* buf, int n) {
+    FILE* fp = reinterpret_cast<FILE*>(cookie);
+    if (fp->_flags & __SAPP) {
+        (void) TEMP_FAILURE_RETRY(lseek(fp->_file, 0, SEEK_END));
+    }
+    fp->_flags &= ~__SOFF; // In case FAPPEND mode is set.
+    return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
+}
+
+// TODO: _FILE_OFFSET_BITS=64.
+fpos_t __sseek(void* cookie, fpos_t offset, int whence) {
+    FILE* fp = reinterpret_cast<FILE*>(cookie);
+    off_t ret = TEMP_FAILURE_RETRY(lseek(fp->_file, offset, whence));
+    if (ret == -1) {
+        fp->_flags &= ~__SOFF;
+    } else {
+        fp->_flags |= __SOFF;
+        fp->_offset = ret;
+    }
+    return ret;
+}
+
+int __sclose(void* cookie) {
+    FILE* fp = reinterpret_cast<FILE*>(cookie);
+    return close(fp->_file);
 }
