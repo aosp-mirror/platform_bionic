@@ -486,3 +486,18 @@ libtest_dlopen_from_ctor_main_shared_libraries := libtest_dlopen_from_ctor
 
 module := libtest_dlopen_from_ctor_main
 include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
+# Tool to use to align the shared libraries in a zip file.
+# -----------------------------------------------------------------------------
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := bionic_tests_zipalign.cpp
+LOCAL_MODULE := bionic_tests_zipalign
+LOCAL_CFLAGS := -Wall -Werror
+
+LOCAL_STATIC_LIBRARIES := libziparchive-host liblog libbase libz libutils
+
+LOCAL_MODULE_HOST_OS := darwin linux windows
+
+include $(BUILD_HOST_EXECUTABLE)
