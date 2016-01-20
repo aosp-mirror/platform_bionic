@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "274e5eac_8e7ab2c1",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Is this memory ever freed? Since I don\u0027t see a corresponding change of a free to a delete, I assume it is not, but I\u0027m not sure.",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 91,
+        "endChar": 14
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_cd4ddcc4",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Do you need this check since you are using new instead of malloc?",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 40
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07495aa4_593fd4ad",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Do we need the LIBC_HIDDEN any more?",
+      "range": {
+        "startLine": 149,
+        "startChar": 11,
+        "endLine": 149,
+        "endChar": 26
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_2d529065",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Are you using C style comments here on purpose and down below?",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 2
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07495aa4_b92d3884",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be ssize_t, then convert it to int before returning? I don\u0027t know if there is a problem converting to int, but on a 64 bit compile, I wonder if something bad might happen.",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 7
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_0d4fd4ba",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Is this necessary since we are C++?",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 207,
+        "endChar": 14
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_ba31b097",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "Same as above, does there need to be an explicit cast, or is an implicit one good enough. It does make me nervous.",
+      "range": {
+        "startLine": 210,
+        "startChar": 10,
+        "endLine": 210,
+        "endChar": 11
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e759a674_b67a6cc1",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-20T08:09:00Z",
+      "side": 1,
+      "message": "c style cast, same as below.",
+      "range": {
+        "startLine": 215,
+        "startChar": 52,
+        "endLine": 215,
+        "endChar": 59
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
