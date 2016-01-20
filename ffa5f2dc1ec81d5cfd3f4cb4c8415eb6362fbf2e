@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "27fe5ee6_221eaa4f",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T23:07:38Z",
+      "side": 1,
+      "message": "when that dimitry guy removes all his from bionic/linker, i\u0027ll look into removing them from the other directories :-)",
+      "parentUuid": "27fe5ee6_fff3bb55",
+      "range": {
+        "startLine": 149,
+        "startChar": 11,
+        "endLine": 149,
+        "endChar": 26
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27673e34_2d529065",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
