@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "27fe5ee6_fff3bb55",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-20T20:59:23Z",
+      "side": 1,
+      "message": "yes, __LIBC_HIDDEN__ is no-op at this point",
+      "parentUuid": "27673e34_edc3780f",
+      "range": {
+        "startLine": 149,
+        "startChar": 11,
+        "endLine": 149,
+        "endChar": 26
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27673e34_2d529065",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
