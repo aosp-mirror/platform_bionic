@@ -215,7 +215,6 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 #define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
 #define __sferror(p)   (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
-#define __sfileno(p)   ((p)->_file)
 #if !defined(__cplusplus)
 #define __sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
 static __inline int __sputc(int _c, FILE* _p) {

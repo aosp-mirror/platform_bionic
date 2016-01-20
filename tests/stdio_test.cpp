@@ -1054,3 +1054,17 @@ TEST(STDIO_TEST, fread_EOF_184847) {
   fclose(fr);
   fclose(fw);
 }
+
+TEST(STDIO_TEST, fclose_invalidates_fd) {
+  // The typical error we're trying to help people catch involves accessing
+  // memory after it's been freed. But we know that stdin/stdout/stderr are
+  // special and don't get deallocated, so this test uses stdin.
+  ASSERT_EQ(0, fclose(stdin));
+
+  // Even though using a FILE* after close is undefined behavior, I've closed
+  // this bug as "WAI" too many times. We shouldn't hand out stale fds,
+  // especially because they might actually correspond to a real stream.
+  errno = 0;
+  ASSERT_EQ(-1, fileno(stdin));
+  ASSERT_EQ(EBADF, errno);
+}

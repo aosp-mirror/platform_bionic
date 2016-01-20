@@ -27,6 +27,8 @@
  */
 
 #include <stdio_ext.h>
+
+#include <errno.h>
 #include <stdlib.h>
 
 #include "local.h"
@@ -101,5 +103,10 @@ int ferror_unlocked(FILE* fp) {
 }
 
 int fileno_unlocked(FILE* fp) {
-  return __sfileno(fp);
+  int fd = fp->_file;
+  if (fd == -1) {
+    errno = EBADF;
+    return -1;
+  }
+  return fd;
 }

@@ -157,3 +157,37 @@ __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
 	/* (void) _fwalk(fclose); */
 	(void) _fwalk(__sflush);		/* `cheating' */
 }
+
+int fclose(FILE* fp) {
+    if (fp->_flags == 0) {
+        // Already freed!
+        errno = EBADF;
+        return EOF;
+    }
+
+    FLOCKFILE(fp);
+    WCIO_FREE(fp);
+    int r = fp->_flags & __SWR ? __sflush(fp) : 0;
+    if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0) {
+        r = EOF;
+    }
+    if (fp->_flags & __SMBF) free(fp->_bf._base);
+    if (HASUB(fp)) FREEUB(fp);
+    if (HASLB(fp)) FREELB(fp);
+
+    // Poison this FILE so accesses after fclose will be obvious.
+    fp->_file = -1;
+    fp->_r = fp->_w = 0;
+
+    // Release this FILE for reuse.
+    fp->_flags = 0;
+    FUNLOCKFILE(fp);
+    return (r);
+}
+
+int fileno(FILE* fp) {
+    FLOCKFILE(fp);
+    int result = fileno_unlocked(fp);
+    FUNLOCKFILE(fp);
+    return result;
+}
