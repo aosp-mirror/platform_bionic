@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4768b202_5185e177",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "no, it isn\u0027t. that\u0027s one of the things i want to change about this code, and one of the reasons i\u0027m moving the allocation and [would-be] free together, but i\u0027m not fixing that yet.",
+      "parentUuid": "274e5eac_8e7ab2c1",
+      "range": {
+        "startLine": 91,
+        "startChar": 10,
+        "endLine": 91,
+        "endChar": 14
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27673e34_cd4ddcc4",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "27673e34_edc3780f",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "no, dimitry should have made them redundant, but i wasn\u0027t planning on removing any until we\u0027re at the point where we want to remove them all.",
+      "parentUuid": "07495aa4_593fd4ad",
+      "range": {
+        "startLine": 149,
+        "startChar": 11,
+        "endLine": 149,
+        "endChar": 26
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27673e34_2d529065",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -82,6 +130,30 @@
       "writtenOn": "2016-01-20T08:09:00Z",
       "side": 1,
       "message": "Are you using C style comments here on purpose and down below?",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 2
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27673e34_cdc83c2d",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "this is just from the old file. i plan on removing this comment when i come back to remove the \"known seek offset\" [so-called] optimization later. in the meantime, /* comments */ switched to // comments anyway (since i did replace tabs with spaces so it\u0027s not like i can claim to have done no reformatting).",
+      "parentUuid": "27673e34_2d529065",
       "range": {
         "startLine": 188,
         "startChar": 0,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "27673e34_2dbd7080",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "since `n` is also int, it\u0027s \"fine\". but it is one of our problems. these functions are used with the function pointers in struct FILE and funopen, and get in the way of full _FILE_OFFSET_BITS\u003d64.",
+      "parentUuid": "07495aa4_b92d3884",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 7
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27673e34_0d4fd4ba",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -128,6 +224,30 @@
       "writtenOn": "2016-01-20T08:09:00Z",
       "side": 1,
       "message": "Is this necessary since we are C++?",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 207,
+        "endChar": 14
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "676db610_951125a7",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "it\u0027s not necessary in C either, but since i\u0027m not fixing the apparent bug (that we\u0027ll write to the wrong offset if the seek fails), i was leaving around the ugly marker.",
+      "parentUuid": "27673e34_0d4fd4ba",
       "range": {
         "startLine": 207,
         "startChar": 8,
@@ -174,6 +294,30 @@
       "writtenOn": "2016-01-20T08:09:00Z",
       "side": 1,
       "message": "c style cast, same as below.",
+      "range": {
+        "startLine": 215,
+        "startChar": 52,
+        "endLine": 215,
+        "endChar": 59
+      },
+      "revId": "ffa5f2dc1ec81d5cfd3f4cb4c8415eb6362fbf2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07f95afe_9b9e0b7a",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-20T16:47:48Z",
+      "side": 1,
+      "message": "done. (though again, the real problem here is that we\u0027re not using 64-bit offsets.)",
+      "parentUuid": "e759a674_b67a6cc1",
       "range": {
         "startLine": 215,
         "startChar": 52,
