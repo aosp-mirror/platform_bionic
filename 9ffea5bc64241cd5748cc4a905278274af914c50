@@ -81,6 +81,30 @@
       "revId": "9ffea5bc64241cd5748cc4a905278274af914c50",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d487f2cf_c72ed2ca",
+        "filename": "linker/linker_block_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2016-01-21T21:19:02Z",
+      "side": 1,
+      "message": "I\u0027d maybe suggest another static_assert asserting page size. :-)",
+      "parentUuid": "d4eb7261_c7447250",
+      "range": {
+        "startLine": 27,
+        "startChar": 2,
+        "endLine": 27,
+        "endChar": 90
+      },
+      "revId": "9ffea5bc64241cd5748cc4a905278274af914c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
