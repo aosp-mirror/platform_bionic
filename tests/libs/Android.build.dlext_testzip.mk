@@ -18,6 +18,8 @@
 # Library used by dlext tests - zipped and aligned
 # -----------------------------------------------------------------------------
 
+BIONIC_TESTS_ZIPALIGN := $(HOST_OUT_EXECUTABLES)/bionic_tests_zipalign
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
@@ -33,12 +35,12 @@ my_shared_libs := \
   $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_zip.so \
   $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libatest_simple_zip.so
 
-$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
-	@echo "Zipalign: $@"
+$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(BIONIC_TESTS_ZIPALIGN)
+	@echo "Aligning zip: $@"
 	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir
 	$(hide) cp $^ $(dir $@)/libdir
 	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -qrD0 $(notdir $@).unaligned empty_file.txt libdir/*.so)
-	$(hide) $(ZIPALIGN) -p 4 $@.unaligned $@
+	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
 
 include $(CLEAR_VARS)
 
@@ -68,8 +70,8 @@ $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_C := \
   $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_c.so
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_X := \
   $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_x.so
-$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
-	@echo "Zipalign: $@"
+$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(BIONIC_TESTS_ZIPALIGN)
+	@echo "Aligning zip: $@"
 	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir && \
     mkdir -p $(dir $@)/libdir/dt_runpath_a && mkdir -p $(dir $@)/libdir/dt_runpath_b_c_x
 	$(hide) cp $(PRIVATE_LIB_D) $(dir $@)/libdir
@@ -78,5 +80,5 @@ $(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(ZIPALIGN)
 	$(hide) cp $(PRIVATE_LIB_C) $(dir $@)/libdir/dt_runpath_b_c_x
 	$(hide) cp $(PRIVATE_LIB_X) $(dir $@)/libdir/dt_runpath_b_c_x
 	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -qrD0 $(notdir $@).unaligned empty_file.txt libdir)
-	$(hide) $(ZIPALIGN) -p 4 $@.unaligned $@
+	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
 
