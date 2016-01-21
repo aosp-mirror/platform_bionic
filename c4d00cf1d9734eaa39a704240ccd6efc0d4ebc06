@@ -22,6 +22,30 @@
       "revId": "c4d00cf1d9734eaa39a704240ccd6efc0d4ebc06",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54f78247_3dad6f5b",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:34:09Z",
+      "side": 1,
+      "message": "no, that\u0027s a bug. i\u0027ll fix it and add the missing test.",
+      "parentUuid": "940e5a27_97fc6489",
+      "range": {
+        "startLine": 276,
+        "startChar": 24,
+        "endLine": 276,
+        "endChar": 33
+      },
+      "revId": "c4d00cf1d9734eaa39a704240ccd6efc0d4ebc06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
