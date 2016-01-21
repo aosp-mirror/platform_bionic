@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d439b2d1_fa96dd0d",
+        "filename": "linker/linker_block_allocator.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-01-21T22:27:47Z",
+      "side": 1,
+      "message": "multiplier",
+      "range": {
+        "startLine": 25,
+        "startChar": 7,
+        "endLine": 25,
+        "endChar": 17
+      },
+      "revId": "c6d0f00cff119c2cd3fb34e7fc8a706cf710a6bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
