@@ -137,7 +137,8 @@ static int GetTargetElfMachine() {
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
       phdr_table_(nullptr), shdr_table_(nullptr), shdr_num_(0), dynamic_(nullptr), strtab_(nullptr),
-      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), loaded_phdr_(nullptr) {
+      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), loaded_phdr_(nullptr),
+      mapped_by_caller_(false) {
 }
 
 bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file_size) {
@@ -467,6 +468,7 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
     }
   } else {
     start = extinfo->reserved_addr;
+    mapped_by_caller_ = true;
   }
 
   load_start_ = start;
