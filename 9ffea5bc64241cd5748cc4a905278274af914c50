@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "141a6a67_79765fe0",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2016-01-21T21:17:05Z",
+      "side": 1,
+      "message": "I was wondering about that too and looked at the attribute definition. Supposedly sizeof returns multiples of alignment, so it should be fine:\n\n\"When applied to a class type, the result is the size of an object of that class plus any additional padding required to place such object in an array.\"\n\nPersonally I\u0027d suggest a static_assert, though. :-)",
+      "parentUuid": "141a6a67_b95ab777",
+      "revId": "9ffea5bc64241cd5748cc4a905278274af914c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b40b5e17_9e60fd0d",
         "filename": "linker/linker_block_allocator.cpp",
         "patchSetId": 3
