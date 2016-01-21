@@ -1068,3 +1068,28 @@ TEST(STDIO_TEST, fclose_invalidates_fd) {
   ASSERT_EQ(-1, fileno(stdin));
   ASSERT_EQ(EBADF, errno);
 }
+
+TEST(STDIO_TEST, fseek_ftell_unseekable) {
+#if defined(__BIONIC__) // glibc has fopencookie instead.
+  auto read_fn = [](void*, char*, int) { return -1; };
+  FILE* fp = funopen(nullptr, read_fn, nullptr, nullptr, nullptr);
+  ASSERT_TRUE(fp != nullptr);
+
+  // Check that ftell balks on an unseekable FILE*.
+  errno = 0;
+  ASSERT_EQ(-1, ftell(fp));
+  ASSERT_EQ(ESPIPE, errno);
+
+  // SEEK_CUR is rewritten as SEEK_SET internally...
+  errno = 0;
+  ASSERT_EQ(-1, fseek(fp, 0, SEEK_CUR));
+  ASSERT_EQ(ESPIPE, errno);
+
+  // ...so it's worth testing the direct seek path too.
+  errno = 0;
+  ASSERT_EQ(-1, fseek(fp, 0, SEEK_SET));
+  ASSERT_EQ(ESPIPE, errno);
+
+  fclose(fp);
+#endif
+}
