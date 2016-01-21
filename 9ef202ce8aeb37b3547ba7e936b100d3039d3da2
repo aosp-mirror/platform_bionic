@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "54206291_7ec5258f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-21T19:54:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b40b5e17_1b199f07",
+      "revId": "9ef202ce8aeb37b3547ba7e936b100d3039d3da2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54206291_7e21a546",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b40b5e17_9bb6cf0e",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-21T19:54:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54206291_7e21a546",
+      "revId": "9ef202ce8aeb37b3547ba7e936b100d3039d3da2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "940e5a27_9aeda920",
         "filename": "linker/linker_block_allocator.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2016-01-21T19:45:23Z",
       "side": 1,
       "message": "don\u0027t we already have a roundup macro somewhere?",
+      "revId": "9ef202ce8aeb37b3547ba7e936b100d3039d3da2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "141a6a67_362b5629",
+        "filename": "linker/linker_block_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-21T19:54:48Z",
+      "side": 1,
+      "message": "it rounds up to the power of 2...",
+      "parentUuid": "940e5a27_9aeda920",
       "revId": "9ef202ce8aeb37b3547ba7e936b100d3039d3da2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
