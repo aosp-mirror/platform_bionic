@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "940e5a27_97fc6489",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-21T03:33:14Z",
+      "side": 1,
+      "message": "If whence is not SEEK_CUR, then you never verify that fp-\u003e_seek is not null. Was this intentional?",
+      "range": {
+        "startLine": 276,
+        "startChar": 24,
+        "endLine": 276,
+        "endChar": 33
+      },
+      "revId": "c4d00cf1d9734eaa39a704240ccd6efc0d4ebc06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
