@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34068e0b_5cb15d1b",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:52:17Z",
+      "side": 1,
+      "message": "// Find the offset of the .so file in the apk?\n\n(it\u0027s fairly obvious now, but won\u0027t be. maybe even split out into a GetOffsetOfFileInZip function?)",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4eb7261_21566e08",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:52:17Z",
+      "side": 1,
+      "message": "Without",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "141a6a67_b305382c",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:52:17Z",
+      "side": 1,
+      "message": "// Doesn\u0027t matter.\n\n(since i was confused why 0 was right until i realized this is a test of a failure case!)",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
