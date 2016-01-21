@@ -35,6 +35,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
@@ -51,7 +52,7 @@
 
 #define	std(flags, file) \
 	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
-	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0,0}
+	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0}
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
@@ -85,25 +86,38 @@ FILE* stderr = &__sF[2];
 struct glue __sglue = { NULL, 3, __sF };
 static struct glue* lastglue = &__sglue;
 
+class ScopedFileLock {
+ public:
+  ScopedFileLock(FILE* fp) : fp_(fp) {
+    FLOCKFILE(fp_);
+  }
+  ~ScopedFileLock() {
+    FUNLOCKFILE(fp_);
+  }
+
+ private:
+  FILE* fp_;
+};
+
 static glue* moreglue(int n) {
-    static FILE empty;
+  static FILE empty;
 
-    char* data = new char[sizeof(glue) + ALIGNBYTES + n * sizeof(FILE) + n * sizeof(__sfileext)];
-    if (data == nullptr) return nullptr;
+  char* data = new char[sizeof(glue) + ALIGNBYTES + n * sizeof(FILE) + n * sizeof(__sfileext)];
+  if (data == nullptr) return nullptr;
 
-    glue* g = reinterpret_cast<glue*>(data);
-    FILE* p = reinterpret_cast<FILE*>(ALIGN(data + sizeof(*g)));
-    __sfileext* pext = reinterpret_cast<__sfileext*>(ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
-    g->next = NULL;
-    g->niobs = n;
-    g->iobs = p;
-    while (--n >= 0) {
-        *p = empty;
-        _FILEEXT_SETUP(p, pext);
-        p++;
-        pext++;
-    }
-    return g;
+  glue* g = reinterpret_cast<glue*>(data);
+  FILE* p = reinterpret_cast<FILE*>(ALIGN(data + sizeof(*g)));
+  __sfileext* pext = reinterpret_cast<__sfileext*>(ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
+  g->next = NULL;
+  g->niobs = n;
+  g->iobs = p;
+  while (--n >= 0) {
+    *p = empty;
+    _FILEEXT_SETUP(p, pext);
+    p++;
+    pext++;
+  }
+  return g;
 }
 
 /*
@@ -147,81 +161,155 @@ found:
 }
 
 extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
-	/* (void) _fwalk(fclose); */
-	(void) _fwalk(__sflush);		/* `cheating' */
+  // Equivalent to fflush(nullptr), but without all the locking since we're shutting down anyway.
+  _fwalk(__sflush);
 }
 
 int fclose(FILE* fp) {
-    if (fp->_flags == 0) {
-        // Already freed!
-        errno = EBADF;
-        return EOF;
-    }
+  if (fp->_flags == 0) {
+    // Already freed!
+    errno = EBADF;
+    return EOF;
+  }
 
-    FLOCKFILE(fp);
-    WCIO_FREE(fp);
-    int r = fp->_flags & __SWR ? __sflush(fp) : 0;
-    if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0) {
-        r = EOF;
-    }
-    if (fp->_flags & __SMBF) free(fp->_bf._base);
-    if (HASUB(fp)) FREEUB(fp);
-    if (HASLB(fp)) FREELB(fp);
+  ScopedFileLock sfl(fp);
+  WCIO_FREE(fp);
+  int r = fp->_flags & __SWR ? __sflush(fp) : 0;
+  if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0) {
+    r = EOF;
+  }
+  if (fp->_flags & __SMBF) free(fp->_bf._base);
+  if (HASUB(fp)) FREEUB(fp);
+  if (HASLB(fp)) FREELB(fp);
 
-    // Poison this FILE so accesses after fclose will be obvious.
-    fp->_file = -1;
-    fp->_r = fp->_w = 0;
+  // Poison this FILE so accesses after fclose will be obvious.
+  fp->_file = -1;
+  fp->_r = fp->_w = 0;
 
-    // Release this FILE for reuse.
-    fp->_flags = 0;
-    FUNLOCKFILE(fp);
-    return (r);
+  // Release this FILE for reuse.
+  fp->_flags = 0;
+  return r;
 }
 
 int fileno(FILE* fp) {
-    FLOCKFILE(fp);
-    int result = fileno_unlocked(fp);
-    FUNLOCKFILE(fp);
-    return result;
+  ScopedFileLock sfl(fp);
+  return fileno_unlocked(fp);
 }
 
-// Small standard I/O/seek/close functions.
-// These maintain the `known seek offset' for seek optimisation.
 int __sread(void* cookie, char* buf, int n) {
-    FILE* fp = reinterpret_cast<FILE*>(cookie);
-    int ret = TEMP_FAILURE_RETRY(read(fp->_file, buf, n));
-    // If the read succeeded, update the current offset.
-    if (ret >= 0) {
-        fp->_offset += ret;
-    } else {
-        fp->_flags &= ~__SOFF; // Paranoia.
-    }
-    return ret;
+  FILE* fp = reinterpret_cast<FILE*>(cookie);
+  return TEMP_FAILURE_RETRY(read(fp->_file, buf, n));
 }
 
 int __swrite(void* cookie, const char* buf, int n) {
-    FILE* fp = reinterpret_cast<FILE*>(cookie);
-    if (fp->_flags & __SAPP) {
-        (void) TEMP_FAILURE_RETRY(lseek(fp->_file, 0, SEEK_END));
-    }
-    fp->_flags &= ~__SOFF; // In case FAPPEND mode is set.
-    return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
+  FILE* fp = reinterpret_cast<FILE*>(cookie);
+  if (fp->_flags & __SAPP) {
+    // The FILE* is in append mode, but the underlying fd doesn't have O_APPEND set.
+    // We need to seek manually.
+    // TODO: can we use fcntl(2) to set O_APPEND in fdopen(3) instead?
+    TEMP_FAILURE_RETRY(lseek64(fp->_file, 0, SEEK_END));
+  }
+  return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
 // TODO: _FILE_OFFSET_BITS=64.
 fpos_t __sseek(void* cookie, fpos_t offset, int whence) {
-    FILE* fp = reinterpret_cast<FILE*>(cookie);
-    off_t ret = TEMP_FAILURE_RETRY(lseek(fp->_file, offset, whence));
-    if (ret == -1) {
-        fp->_flags &= ~__SOFF;
-    } else {
-        fp->_flags |= __SOFF;
-        fp->_offset = ret;
-    }
-    return ret;
+  FILE* fp = reinterpret_cast<FILE*>(cookie);
+  return TEMP_FAILURE_RETRY(lseek(fp->_file, offset, whence));
 }
 
 int __sclose(void* cookie) {
-    FILE* fp = reinterpret_cast<FILE*>(cookie);
-    return close(fp->_file);
+  FILE* fp = reinterpret_cast<FILE*>(cookie);
+  return close(fp->_file);
+}
+
+static bool __file_is_seekable(FILE* fp) {
+  if (fp->_seek == nullptr) {
+    errno = ESPIPE;  // Historic practice.
+    return false;
+  }
+  return true;
+}
+
+// TODO: _FILE_OFFSET_BITS=64.
+static off_t __ftello_unlocked(FILE* fp) {
+  if (!__file_is_seekable(fp)) return -1;
+
+  // Find offset of underlying I/O object, then
+  // adjust for buffered bytes.
+  __sflush(fp);  // May adjust seek offset on append stream.
+  fpos_t result = (*fp->_seek)(fp->_cookie, 0, SEEK_CUR);
+  if (result == -1) {
+    return -1;
+  }
+
+  if (fp->_flags & __SRD) {
+    // Reading.  Any unread characters (including
+    // those from ungetc) cause the position to be
+    // smaller than that in the underlying object.
+    result -= fp->_r;
+    if (HASUB(fp)) result -= fp->_ur;
+  } else if (fp->_flags & __SWR && fp->_p != NULL) {
+    // Writing.  Any buffered characters cause the
+    // position to be greater than that in the
+    // underlying object.
+    result += fp->_p - fp->_bf._base;
+  }
+  return result;
+}
+
+int fseeko(FILE* fp, off_t offset, int whence) {
+  ScopedFileLock sfl(fp);
+
+  if (!__file_is_seekable(fp)) return -1;
+
+  // Change any SEEK_CUR to SEEK_SET, and check `whence' argument.
+  // After this, whence is either SEEK_SET or SEEK_END.
+  if (whence == SEEK_CUR) {
+    fpos_t current_offset = __ftello_unlocked(fp);
+    if (current_offset == -1) {
+      return EOF;
+    }
+    offset += current_offset;
+    whence = SEEK_SET;
+  } else if (whence != SEEK_SET && whence != SEEK_END) {
+    errno = EINVAL;
+    return EOF;
+  }
+
+  if (fp->_bf._base == NULL) __smakebuf(fp);
+
+  // Flush unwritten data and attempt the seek.
+  if (__sflush(fp) || (*fp->_seek)(fp->_cookie, offset, whence) == -1) {
+    return EOF;
+  }
+
+  // Success: clear EOF indicator and discard ungetc() data.
+  if (HASUB(fp)) FREEUB(fp);
+  fp->_p = fp->_bf._base;
+  fp->_r = 0;
+  /* fp->_w = 0; */	/* unnecessary (I think...) */
+  fp->_flags &= ~__SEOF;
+  return 0;
+}
+
+// TODO: _FILE_OFFSET_BITS=64.
+int fseek(FILE* fp, long offset, int whence) {
+  return fseeko(fp, offset, whence);
+}
+
+// TODO: _FILE_OFFSET_BITS=64.
+off_t ftello(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return __ftello_unlocked(fp);
+}
+
+// TODO: _FILE_OFFSET_BITS=64
+long ftell(FILE* fp) {
+  off_t offset = ftello(fp);
+  if (offset > LONG_MAX) {
+    errno = EOVERFLOW;
+    return -1;
+  }
+  return offset;
 }
