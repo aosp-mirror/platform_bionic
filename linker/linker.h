@@ -79,11 +79,13 @@
 #define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
 #endif
 
-#define FLAG_LINKED     0x00000001
-#define FLAG_EXE        0x00000004 // The main executable
-#define FLAG_LINKER     0x00000010 // The linker itself
-#define FLAG_GNU_HASH   0x00000040 // uses gnu hash
-#define FLAG_NEW_SOINFO 0x40000000 // new soinfo format
+#define FLAG_LINKED           0x00000001
+#define FLAG_EXE              0x00000004 // The main executable
+#define FLAG_LINKER           0x00000010 // The linker itself
+#define FLAG_GNU_HASH         0x00000040 // uses gnu hash
+#define FLAG_MAPPED_BY_CALLER 0x00000080 // the map is reserved by the caller
+                                         // and should not be unmapped
+#define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE)
 
@@ -336,6 +338,9 @@ struct soinfo {
   void set_dt_runpath(const char *);
   const std::vector<std::string>& get_dt_runpath() const;
   android_namespace_t* get_namespace();
+
+  void set_mapped_by_caller(bool reserved_map);
+  bool is_mapped_by_caller() const;
 
  private:
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;

@@ -356,7 +356,13 @@ static void soinfo_free(soinfo* si) {
   }
 
   if (si->base != 0 && si->size != 0) {
-    munmap(reinterpret_cast<void*>(si->base), si->size);
+    if (!si->is_mapped_by_caller()) {
+      munmap(reinterpret_cast<void*>(si->base), si->size);
+    } else {
+      // remap the region as PROT_NONE, MAP_ANONYMOUS | MAP_NORESERVE
+      mmap(reinterpret_cast<void*>(si->base), si->size, PROT_NONE,
+           MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+    }
   }
 
   soinfo *prev = nullptr, *trav;
@@ -1160,6 +1166,7 @@ class LoadTask {
 
     si_->base = elf_reader.load_start();
     si_->size = elf_reader.load_size();
+    si_->set_mapped_by_caller(elf_reader.is_mapped_by_caller());
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
@@ -3246,6 +3253,19 @@ size_t soinfo::decrement_ref_count() {
 
 soinfo* soinfo::get_local_group_root() const {
   return local_group_root_;
+}
+
+
+void soinfo::set_mapped_by_caller(bool mapped_by_caller) {
+  if (mapped_by_caller) {
+    flags_ |= FLAG_MAPPED_BY_CALLER;
+  } else {
+    flags_ &= ~FLAG_MAPPED_BY_CALLER;
+  }
+}
+
+bool soinfo::is_mapped_by_caller() const {
+  return (flags_ & FLAG_MAPPED_BY_CALLER) != 0;
 }
 
 // This function returns api-level at the time of
