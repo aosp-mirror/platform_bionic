@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "141a6a67_b95ab777",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-01-21T21:07:47Z",
+      "side": 1,
+      "message": "I don\u0027t think this actually works. The problem is that the entire page_info struct needs to be a multiple of 16-bytes (or 8-bytes), since you then use the following space to refer to the rest of the page itself. Perhaps it would be better to end this struct with an aligned void* that actually means the rest of the page. You could then use offsetof to drive size calculations, etc.",
+      "revId": "9ffea5bc64241cd5748cc4a905278274af914c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b40b5e17_9e60fd0d",
         "filename": "linker/linker_block_allocator.cpp",
         "patchSetId": 3
@@ -13,6 +30,30 @@
       "writtenOn": "2016-01-21T20:59:38Z",
       "side": 1,
       "message": "Is that really what you want? It looks to me like this would mean it\u0027s larger than a page...",
+      "range": {
+        "startLine": 27,
+        "startChar": 2,
+        "endLine": 27,
+        "endChar": 90
+      },
+      "revId": "9ffea5bc64241cd5748cc4a905278274af914c50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4eb7261_c7447250",
+        "filename": "linker/linker_block_allocator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-01-21T21:07:47Z",
+      "side": 1,
+      "message": "Good catch. This is why I just padded it out myself explicitly.",
+      "parentUuid": "b40b5e17_9e60fd0d",
       "range": {
         "startLine": 27,
         "startChar": 2,
