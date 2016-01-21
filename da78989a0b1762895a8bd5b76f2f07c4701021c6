@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4f27e53_a0183a60",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T04:55:09Z",
+      "side": 1,
+      "message": "s/reserved/owned/",
+      "revId": "da78989a0b1762895a8bd5b76f2f07c4701021c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4eb7261_8162daba",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T04:55:09Z",
+      "side": 1,
+      "message": "unmapped",
+      "revId": "da78989a0b1762895a8bd5b76f2f07c4701021c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
