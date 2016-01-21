@@ -22,9 +22,14 @@
 
 #include "private/bionic_prctl.h"
 
+// the multiplier should be power of 2
+static constexpr size_t round_up(size_t size, size_t multiplier) {
+  return (size + (multiplier - 1)) & ~(multiplier-1);
+}
+
 struct LinkerBlockAllocatorPage {
   LinkerBlockAllocatorPage* next;
-  uint8_t bytes[PAGE_SIZE-sizeof(LinkerBlockAllocatorPage*)];
+  uint8_t bytes[PAGE_SIZE - 16] __attribute__((aligned(16)));
 };
 
 struct FreeBlockInfo {
@@ -33,7 +38,8 @@ struct FreeBlockInfo {
 };
 
 LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
-  : block_size_(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size),
+  : block_size_(
+      round_up(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size, 16)),
     page_list_(nullptr),
     free_block_list_(nullptr)
 {}
@@ -95,6 +101,9 @@ void LinkerBlockAllocator::protect_all(int prot) {
 }
 
 void LinkerBlockAllocator::create_new_page() {
+  static_assert(sizeof(LinkerBlockAllocatorPage) == PAGE_SIZE,
+                "Invalid sizeof(LinkerBlockAllocatorPage)");
+
   LinkerBlockAllocatorPage* page = reinterpret_cast<LinkerBlockAllocatorPage*>(
       mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
 
