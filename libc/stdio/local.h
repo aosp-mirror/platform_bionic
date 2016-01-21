@@ -92,7 +92,6 @@ struct __sFILE {
 
 	/* Unix stdio files get aligned to block boundaries on fseek() */
 	int	_blksize;	/* stat.st_blksize (may be != _bf._size) */
-	fpos_t	_offset;	/* current lseek offset */
 };
 
 /*
@@ -111,6 +110,10 @@ struct __sfileext {
   /* __fsetlocking support */
   bool _caller_handles_locking;
 };
+
+// TODO: remove remaining references to these obsolete flags.
+#define __SNPT 0
+#define __SOPT 0
 
 #if defined(__cplusplus)
 #define _EXT(fp) reinterpret_cast<__sfileext*>((fp)->_ext._base)
