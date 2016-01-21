@@ -321,9 +321,15 @@ common_bionic-unit-tests_shared_libraries_target := \
     libdl \
     libpagemap \
     libdl_preempt_test_1 \
-    libdl_preempt_test_2
+    libdl_preempt_test_2 \
+    libdl_test_df_1_global \
 
-common_bionic-unit-tests_shared_libraries_target += libdl_test_df_1_global
+# The order of these libraries matters, do not shuffle them.
+common_bionic-unit-tests_static_libraries_target := \
+    libbase \
+    libziparchive \
+    libz \
+    libutils \
 
 module_tag := optional
 build_type := target
@@ -340,6 +346,7 @@ bionic-unit-tests_cppflags := $(common_bionic-unit-tests_cppflags)
 bionic-unit-tests_ldflags := $(common_bionic-unit-tests_ldflags)
 bionic-unit-tests_c_includes := $(common_bionic-unit-tests_c_includes)
 bionic-unit-tests_shared_libraries_target := $(common_bionic-unit-tests_shared_libraries_target)
+bionic-unit-tests_static_libraries_target := $(common_bionic-unit-tests_static_libraries_target)
 include $(LOCAL_PATH)/Android.build.mk
 
 module := bionic-unit-tests-gcc
@@ -353,6 +360,7 @@ bionic-unit-tests-gcc_cppflags := $(common_bionic-unit-tests_cppflags)
 bionic-unit-tests-gcc_ldflags := $(common_bionic-unit-tests_ldflags)
 bionic-unit-tests-gcc_c_includes := $(common_bionic-unit-tests_c_includes)
 bionic-unit-tests-gcc_shared_libraries_target := $(common_bionic-unit-tests_shared_libraries_target)
+bionic-unit-tests-gcc_static_libraries_target := $(common_bionic-unit-tests_static_libraries_target)
 include $(LOCAL_PATH)/Android.build.mk
 
 # -----------------------------------------------------------------------------
