@@ -16,6 +16,24 @@
       "revId": "c0ffceccf93e1752a555086a04d1484c1df1b165",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4eb7261_24e0bcb7",
+        "filename": "tests/libs/bionic_tests_zipalign.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-21T18:31:05Z",
+      "side": 1,
+      "message": "We might be able to do something, but the underlying code we use makes this check too (StartAlignedEntry()). So I\u0027m not sure how easy it is to do this.",
+      "parentUuid": "54206291_b55520a2",
+      "revId": "c0ffceccf93e1752a555086a04d1484c1df1b165",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
