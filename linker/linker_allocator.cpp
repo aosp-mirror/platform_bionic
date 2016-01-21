@@ -189,6 +189,8 @@ void LinkerSmallObjectAllocator::create_page_record(void* page_addr, size_t free
 }
 
 void LinkerSmallObjectAllocator::alloc_page() {
+  static_assert(sizeof(page_info) % 16 == 0,
+                "sizeof(page_info) is not multiple of 16");
   void* map_ptr = mmap(nullptr, PAGE_SIZE,
       PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
   if (map_ptr == MAP_FAILED) {

@@ -53,10 +53,12 @@ TEST(linker_allocator, test_nominal) {
 
   test_struct_nominal* ptr1 = allocator.alloc();
   ASSERT_TRUE(ptr1 != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
   test_struct_nominal* ptr2 = allocator.alloc();
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
   ASSERT_TRUE(ptr2 != nullptr);
   // they should be next to each other.
-  ASSERT_EQ(ptr1+1, ptr2);
+  ASSERT_EQ(reinterpret_cast<uint8_t*>(ptr1)+16, reinterpret_cast<uint8_t*>(ptr2));
 
   ptr1->value = 42;
 
@@ -71,8 +73,10 @@ TEST(linker_allocator, test_small) {
   char* ptr2 = reinterpret_cast<char*>(allocator.alloc());
 
   ASSERT_TRUE(ptr1 != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
   ASSERT_TRUE(ptr2 != nullptr);
-  ASSERT_EQ(ptr1+2*sizeof(void*), ptr2);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
+  ASSERT_EQ(ptr1+16, ptr2); // aligned to 16
 }
 
 TEST(linker_allocator, test_larger) {
@@ -82,9 +86,11 @@ TEST(linker_allocator, test_larger) {
   test_struct_larger* ptr2 = allocator.alloc();
 
   ASSERT_TRUE(ptr1 != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
   ASSERT_TRUE(ptr2 != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
 
-  ASSERT_EQ(ptr1+1, ptr2);
+  ASSERT_EQ(reinterpret_cast<uint8_t*>(ptr1) + 1024, reinterpret_cast<uint8_t*>(ptr2));
 
   // lets allocate until we reach next page.
   size_t n = kPageSize/sizeof(test_struct_larger) + 1 - 2;

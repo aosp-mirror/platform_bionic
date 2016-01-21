@@ -45,7 +45,7 @@ struct page_info {
     // and allocator_addr for small ones.
     LinkerSmallObjectAllocator* allocator_addr;
   };
-};
+} __attribute__((aligned(16)));
 
 struct small_object_page_record {
   void* page_addr;
