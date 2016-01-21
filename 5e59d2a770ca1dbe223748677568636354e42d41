@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f4115643_7a489910",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-21T03:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34068e0b_5cb15d1b",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4eb7261_21566e08",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "d439b2d1_f18848de",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-21T03:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4eb7261_21566e08",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "141a6a67_b305382c",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2016-01-21T03:52:17Z",
       "side": 1,
       "message": "// Doesn\u0027t matter.\n\n(since i was confused why 0 was right until i realized this is a test of a failure case!)",
+      "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34068e0b_5c9cbd91",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-21T03:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "141a6a67_b305382c",
       "revId": "5e59d2a770ca1dbe223748677568636354e42d41",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
