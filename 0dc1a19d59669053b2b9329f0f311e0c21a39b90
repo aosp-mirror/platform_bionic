@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d439b2d1_1184ecc7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:56:40Z",
+      "side": 1,
+      "message": "especially if a \"reserved\" map means it\u0027s mapped MAP_NORESERVE :-)",
+      "revId": "0dc1a19d59669053b2b9329f0f311e0c21a39b90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4f27e53_805c1634",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-21T03:56:40Z",
+      "side": 1,
+      "message": "FLAG_RESERVED_MAP seems like an odd choice that doesn\u0027t really explain what it\u0027s for (to me at least). FLAG_DO_NOT_UNMAP? FLAG_MAPPED_BY_CALLER? FLAG_CALLER_OWNS_MAP?",
+      "revId": "0dc1a19d59669053b2b9329f0f311e0c21a39b90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
