@@ -349,8 +349,6 @@ LIBC {
     execvpe;
     exit;
     faccessat;
-    fake_gmtime_r; # arm x86 mips
-    fake_localtime_r; # arm x86 mips
     fallocate;
     fallocate64;
     fchdir;
