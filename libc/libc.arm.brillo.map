@@ -164,7 +164,6 @@ LIBC {
     __set_tls; # arm mips
     __sF;
     __sigaction; # arm x86 mips
-    __signalfd4; # arm x86 mips
     __snprintf_chk;
     __socket; # arm x86 mips
     __sprintf_chk;
