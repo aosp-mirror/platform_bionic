@@ -39,10 +39,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "local.h"
 #include "glue.h"
+#include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
 
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
@@ -50,9 +52,9 @@
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
-#define	std(flags, file) \
-	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
-	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0,0}
+#define std(flags, file) \
+    {0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,nullptr,__swrite, \
+    {(unsigned char *)(__sFext+file), 0},nullptr,0,{0},{0},{0,0},0,0}
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
@@ -66,9 +68,9 @@ _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 #define WCHAR_IO_DATA_INIT {MBSTATE_T_INIT,MBSTATE_T_INIT,{0},0,0}
 
 static struct __sfileext __sFext[3] = {
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
+  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
 };
 
 // __sF is exported for backwards compatibility. Until M, we didn't have symbols
@@ -153,16 +155,208 @@ found:
 	fp->_bf._size = 0;
 	fp->_lbfsize = 0;	/* not line buffered */
 	fp->_file = -1;		/* no file */
-/*	fp->_cookie = <any>; */	/* caller sets cookie, _read/_write etc */
+
 	fp->_lb._base = NULL;	/* no line buffer */
 	fp->_lb._size = 0;
 	_FILEEXT_INIT(fp);
-	return (fp);
+
+	// Caller sets cookie, _read/_write etc.
+	// We explicitly clear _seek and _seek64 to prevent subtle bugs.
+	fp->_seek = nullptr;
+	_EXT(fp)->_seek64 = nullptr;
+
+	return fp;
 }
 
 extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
   // Equivalent to fflush(nullptr), but without all the locking since we're shutting down anyway.
   _fwalk(__sflush);
+}
+
+static FILE* __fopen(int fd, int flags) {
+#if !defined(__LP64__)
+  if (fd > SHRT_MAX) {
+    errno = EMFILE;
+    return nullptr;
+  }
+#endif
+
+  FILE* fp = __sfp();
+  if (fp != nullptr) {
+    fp->_file = fd;
+    fp->_flags = flags;
+    fp->_cookie = fp;
+    fp->_read = __sread;
+    fp->_write = __swrite;
+    fp->_close = __sclose;
+    _EXT(fp)->_seek64 = __sseek64;
+  }
+  return fp;
+}
+
+FILE* fopen(const char* file, const char* mode) {
+  int oflags;
+  int flags = __sflags(mode, &oflags);
+  if (flags == 0) return nullptr;
+
+  int fd = open(file, oflags, DEFFILEMODE);
+  if (fd == -1) {
+    return nullptr;
+  }
+
+  FILE* fp = __fopen(fd, flags);
+  if (fp == nullptr) {
+    ErrnoRestorer errno_restorer;
+    close(fd);
+    return nullptr;
+  }
+
+  // When opening in append mode, even though we use O_APPEND,
+  // we need to seek to the end so that ftell() gets the right
+  // answer.  If the user then alters the seek pointer, or
+  // the file extends, this will fail, but there is not much
+  // we can do about this.  (We could set __SAPP and check in
+  // fseek and ftell.)
+  // TODO: check in __sseek instead.
+  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
+
+  return fp;
+}
+
+FILE* fdopen(int fd, const char* mode) {
+  int oflags;
+  int flags = __sflags(mode, &oflags);
+  if (flags == 0) return nullptr;
+
+  // Make sure the mode the user wants is a subset of the actual mode.
+  int fdflags = fcntl(fd, F_GETFL, 0);
+  if (fdflags < 0) return nullptr;
+  int tmp = fdflags & O_ACCMODE;
+  if (tmp != O_RDWR && (tmp != (oflags & O_ACCMODE))) {
+    errno = EINVAL;
+    return nullptr;
+  }
+
+  // If opened for appending, but underlying descriptor does not have
+  // O_APPEND bit set, assert __SAPP so that __swrite() will lseek to
+  // end before each write.
+  // TODO: use fcntl(2) to set O_APPEND instead.
+  if ((oflags & O_APPEND) && !(fdflags & O_APPEND)) flags |= __SAPP;
+
+  // If close-on-exec was requested, then turn it on if not already.
+  if ((oflags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
+    fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
+  }
+
+  return __fopen(fd, flags);
+}
+
+// Re-direct an existing, open (probably) file to some other file.
+// ANSI is written such that the original file gets closed if at
+// all possible, no matter what.
+// TODO: rewrite this mess completely.
+FILE* freopen(const char* file, const char* mode, FILE* fp) {
+  int oflags;
+  int flags = __sflags(mode, &oflags);
+  if (flags == 0) {
+    fclose(fp);
+    return nullptr;
+  }
+
+  ScopedFileLock sfl(fp);
+
+  // There are actually programs that depend on being able to "freopen"
+  // descriptors that weren't originally open.  Keep this from breaking.
+  // Remember whether the stream was open to begin with, and which file
+  // descriptor (if any) was associated with it.  If it was attached to
+  // a descriptor, defer closing it; freopen("/dev/stdin", "r", stdin)
+  // should work.  This is unnecessary if it was not a Unix file.
+  int isopen, wantfd;
+  if (fp->_flags == 0) {
+    fp->_flags = __SEOF; // Hold on to it.
+    isopen = 0;
+    wantfd = -1;
+  } else {
+    // Flush the stream; ANSI doesn't require this.
+    if (fp->_flags & __SWR) __sflush(fp);
+
+    // If close is NULL, closing is a no-op, hence pointless.
+    isopen = fp->_close != NULL;
+    if ((wantfd = fp->_file) < 0 && isopen) {
+        (*fp->_close)(fp->_cookie);
+        isopen = 0;
+    }
+  }
+
+  // Get a new descriptor to refer to the new file.
+  int fd = open(file, oflags, DEFFILEMODE);
+  if (fd < 0 && isopen) {
+    // If out of fd's close the old one and try again.
+    if (errno == ENFILE || errno == EMFILE) {
+      (*fp->_close)(fp->_cookie);
+      isopen = 0;
+      fd = open(file, oflags, DEFFILEMODE);
+    }
+  }
+
+  int sverrno = errno;
+
+  // Finish closing fp.  Even if the open succeeded above, we cannot
+  // keep fp->_base: it may be the wrong size.  This loses the effect
+  // of any setbuffer calls, but stdio has always done this before.
+  if (isopen && fd != wantfd) (*fp->_close)(fp->_cookie);
+  if (fp->_flags & __SMBF) free(fp->_bf._base);
+  fp->_w = 0;
+  fp->_r = 0;
+  fp->_p = NULL;
+  fp->_bf._base = NULL;
+  fp->_bf._size = 0;
+  fp->_lbfsize = 0;
+  if (HASUB(fp)) FREEUB(fp);
+  _UB(fp)._size = 0;
+  WCIO_FREE(fp);
+  if (HASLB(fp)) FREELB(fp);
+  fp->_lb._size = 0;
+
+  if (fd < 0) { // Did not get it after all.
+    fp->_flags = 0; // Release.
+    errno = sverrno; // Restore errno in case _close clobbered it.
+    return nullptr;
+  }
+
+  // If reopening something that was open before on a real file, try
+  // to maintain the descriptor.  Various C library routines (perror)
+  // assume stderr is always fd STDERR_FILENO, even if being freopen'd.
+  if (wantfd >= 0 && fd != wantfd) {
+    if (dup3(fd, wantfd, oflags & O_CLOEXEC) >= 0) {
+      close(fd);
+      fd = wantfd;
+    }
+  }
+
+  // _file is only a short.
+  if (fd > SHRT_MAX) {
+      fp->_flags = 0; // Release.
+      errno = EMFILE;
+      return nullptr;
+  }
+
+  fp->_flags = flags;
+  fp->_file = fd;
+  fp->_cookie = fp;
+  fp->_read = __sread;
+  fp->_write = __swrite;
+  fp->_close = __sclose;
+  _EXT(fp)->_seek64 = __sseek64;
+
+  // When opening in append mode, even though we use O_APPEND,
+  // we need to seek to the end so that ftell() gets the right
+  // answer.  If the user then alters the seek pointer, or
+  // the file extends, this will fail, but there is not much
+  // we can do about this.  (We could set __SAPP and check in
+  // fseek and ftell.)
+  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
+  return fp;
 }
 
 int fclose(FILE* fp) {
@@ -206,16 +400,20 @@ int __swrite(void* cookie, const char* buf, int n) {
   if (fp->_flags & __SAPP) {
     // The FILE* is in append mode, but the underlying fd doesn't have O_APPEND set.
     // We need to seek manually.
-    // TODO: can we use fcntl(2) to set O_APPEND in fdopen(3) instead?
+    // TODO: use fcntl(2) to set O_APPEND in fdopen(3) instead?
     TEMP_FAILURE_RETRY(lseek64(fp->_file, 0, SEEK_END));
   }
   return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
-// TODO: _FILE_OFFSET_BITS=64.
 fpos_t __sseek(void* cookie, fpos_t offset, int whence) {
   FILE* fp = reinterpret_cast<FILE*>(cookie);
   return TEMP_FAILURE_RETRY(lseek(fp->_file, offset, whence));
+}
+
+off64_t __sseek64(void* cookie, off64_t offset, int whence) {
+  FILE* fp = reinterpret_cast<FILE*>(cookie);
+  return TEMP_FAILURE_RETRY(lseek64(fp->_file, offset, whence));
 }
 
 int __sclose(void* cookie) {
@@ -223,22 +421,23 @@ int __sclose(void* cookie) {
   return close(fp->_file);
 }
 
-static bool __file_is_seekable(FILE* fp) {
-  if (fp->_seek == nullptr) {
-    errno = ESPIPE;  // Historic practice.
-    return false;
+static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
+  // Use `_seek64` if set, but fall back to `_seek`.
+  if (_EXT(fp)->_seek64 != nullptr) {
+    return (*_EXT(fp)->_seek64)(fp->_cookie, offset, whence);
+  } else if (fp->_seek != nullptr) {
+    return (*fp->_seek)(fp->_cookie, offset, whence);
+  } else {
+    errno = ESPIPE;
+    return -1;
   }
-  return true;
 }
 
 // TODO: _FILE_OFFSET_BITS=64.
 static off_t __ftello_unlocked(FILE* fp) {
-  if (!__file_is_seekable(fp)) return -1;
-
-  // Find offset of underlying I/O object, then
-  // adjust for buffered bytes.
+  // Find offset of underlying I/O object, then adjust for buffered bytes.
   __sflush(fp);  // May adjust seek offset on append stream.
-  fpos_t result = (*fp->_seek)(fp->_cookie, 0, SEEK_CUR);
+  fpos_t result = __seek_unlocked(fp, 0, SEEK_CUR);
   if (result == -1) {
     return -1;
   }
@@ -258,12 +457,11 @@ static off_t __ftello_unlocked(FILE* fp) {
   return result;
 }
 
+// TODO: _FILE_OFFSET_BITS=64.
 int fseeko(FILE* fp, off_t offset, int whence) {
   ScopedFileLock sfl(fp);
 
-  if (!__file_is_seekable(fp)) return -1;
-
-  // Change any SEEK_CUR to SEEK_SET, and check `whence' argument.
+  // Change any SEEK_CUR to SEEK_SET, and check `whence` argument.
   // After this, whence is either SEEK_SET or SEEK_END.
   if (whence == SEEK_CUR) {
     fpos_t current_offset = __ftello_unlocked(fp);
@@ -280,7 +478,7 @@ int fseeko(FILE* fp, off_t offset, int whence) {
   if (fp->_bf._base == NULL) __smakebuf(fp);
 
   // Flush unwritten data and attempt the seek.
-  if (__sflush(fp) || (*fp->_seek)(fp->_cookie, offset, whence) == -1) {
+  if (__sflush(fp) || __seek_unlocked(fp, offset, whence) == -1) {
     return EOF;
   }
 
@@ -312,4 +510,15 @@ long ftell(FILE* fp) {
     return -1;
   }
   return offset;
+}
+
+// TODO: _FILE_OFFSET_BITS=64
+int fgetpos(FILE* fp, fpos_t* pos) {
+  *pos = ftello(fp);
+  return (*pos == -1);
+}
+
+// TODO: _FILE_OFFSET_BITS=64
+int fsetpos(FILE* fp, const fpos_t* pos) {
+  return fseeko(fp, *pos, SEEK_SET);
 }

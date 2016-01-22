@@ -443,28 +443,23 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/asprintf.c \
     upstream-openbsd/lib/libc/stdio/clrerr.c \
     upstream-openbsd/lib/libc/stdio/dprintf.c \
-    upstream-openbsd/lib/libc/stdio/fdopen.c \
     upstream-openbsd/lib/libc/stdio/feof.c \
     upstream-openbsd/lib/libc/stdio/ferror.c \
     upstream-openbsd/lib/libc/stdio/fflush.c \
     upstream-openbsd/lib/libc/stdio/fgetc.c \
     upstream-openbsd/lib/libc/stdio/fgetln.c \
-    upstream-openbsd/lib/libc/stdio/fgetpos.c \
     upstream-openbsd/lib/libc/stdio/fgets.c \
     upstream-openbsd/lib/libc/stdio/fgetwc.c \
     upstream-openbsd/lib/libc/stdio/fgetws.c \
     upstream-openbsd/lib/libc/stdio/flags.c \
     upstream-openbsd/lib/libc/stdio/fmemopen.c \
-    upstream-openbsd/lib/libc/stdio/fopen.c \
     upstream-openbsd/lib/libc/stdio/fprintf.c \
     upstream-openbsd/lib/libc/stdio/fpurge.c \
     upstream-openbsd/lib/libc/stdio/fputc.c \
     upstream-openbsd/lib/libc/stdio/fputs.c \
     upstream-openbsd/lib/libc/stdio/fputwc.c \
     upstream-openbsd/lib/libc/stdio/fputws.c \
-    upstream-openbsd/lib/libc/stdio/freopen.c \
     upstream-openbsd/lib/libc/stdio/fscanf.c \
-    upstream-openbsd/lib/libc/stdio/fsetpos.c \
     upstream-openbsd/lib/libc/stdio/funopen.c \
     upstream-openbsd/lib/libc/stdio/fvwrite.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
