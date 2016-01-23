@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4bb169e_f985a3c3",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-23T05:09:21Z",
+      "side": 1,
+      "message": "(or just remove this stupid comment.)",
+      "revId": "5197e92f9e59bc7e7333731385517cc238a084ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
