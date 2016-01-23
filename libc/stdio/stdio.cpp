@@ -52,7 +52,7 @@
 
 #define	std(flags, file) \
 	{0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,__sseek,__swrite, \
-	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0}
+	    {(unsigned char *)(__sFext+file), 0},NULL,0,{0},{0},{0,0},0,0}
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
