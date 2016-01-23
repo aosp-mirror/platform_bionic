@@ -16,6 +16,24 @@
       "revId": "32388ba4dc765619e89dac5b71a68372019da58e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74c64632_5424c4ef",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 0,
+      "message": "Agreed.",
+      "parentUuid": "0a95dfbc_649f0024",
+      "revId": "32388ba4dc765619e89dac5b71a68372019da58e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

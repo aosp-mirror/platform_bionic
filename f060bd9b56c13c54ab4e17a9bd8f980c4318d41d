@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d4be1290_6fc56566",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Hopefully, no one complains.",
+      "parentUuid": "0a95dfbc_e4f3108d",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a74377b_db118be3",
         "filename": "/COMMIT_MSG",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "most \u003d\u003e not all?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74af2662_49df4590",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "I thought maybe there was a possibility that this might break down so I didn\u0027t feel comfortable saying all.",
+      "parentUuid": "4a74377b_db118be3",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "34d04ee4_3256e808",
+        "filename": "README.md",
+        "patchSetId": 10
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Fair point. I left it as malloc_debug since I wanted to group this as malloc (debugging code). But I don\u0027t know if that matters too much.",
+      "parentUuid": "8a62afbe_7d1dcf40",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a95dfbc_e4aa3041",
         "filename": "libc/Android.mk",
         "patchSetId": 10
@@ -64,6 +118,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "heh. i like this change already :-)",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34d04ee4_75f0dab8",
+        "filename": "libc/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 1535,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Yes, removing things is always nice.",
+      "parentUuid": "0a95dfbc_e4aa3041",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "b4b51eae_8edc5f96",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Yeah, one day. At some point, it might even be better to split this code out completely.",
+      "parentUuid": "2a9aa3ee_45d84074",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a8b57a3_e66dd409",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 10
@@ -98,6 +188,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "we already have __libc_fatal. i wouldn\u0027t be against a __libc_error and __libc_info...",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74af2662_c9349584",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Filed b/26744979 for this.",
+      "parentUuid": "4a8b57a3_e66dd409",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "f4bb169e_90b31c50",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure how this would be used, so for now, I\u0027ll leave this as is, but add it to the polish bug b/26739265.",
+      "parentUuid": "aa1773d7_cd72e9e9",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a901bcb_641a9e5d",
         "filename": "libc/malloc_debug/Android.mk",
         "patchSetId": 10
@@ -132,6 +258,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "why?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14cb4a3e_8eaa1bee",
+        "filename": "libc/malloc_debug/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "The stack protector code fails because this code is called during libc init, before something has been initialized.\n\nAdding to the polish bug to determine if this is still necessary after all of your changes.",
+      "parentUuid": "6a901bcb_641a9e5d",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "f4bb169e_70f8e8e1",
+        "filename": "libc/malloc_debug/Android.mk",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a62afbe_bd93e7d2",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a95dfbc_045d5c2d",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 10
@@ -166,6 +328,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "we can\u0027t use android::base::Split?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34d04ee4_75cf7a39",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Added to polish bug. I\u0027m not sure if it can be used as expected.",
+      "parentUuid": "0a95dfbc_045d5c2d",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "f4bb169e_334cbac9",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "I need to slightly rework some of this to make it easier to pass in the default value. Added to polish bug.",
+      "parentUuid": "8a62afbe_3d87d782",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa3e9347_5ab695fa",
         "filename": "libc/malloc_debug/DebugData.h",
         "patchSetId": 10
@@ -200,6 +398,24 @@
       "writtenOn": "2016-01-09T00:43:56Z",
       "side": 1,
       "message": "Looks like these can be unique_ptrs?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4b51eae_91b79e9c",
+        "filename": "libc/malloc_debug/DebugData.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa3e9347_5ab695fa",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -229,6 +445,30 @@
     },
     {
       "key": {
+        "uuid": "94b81aa8_4dc50d8f",
+        "filename": "libc/malloc_debug/DebugData.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a901bcb_c416122b",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 93,
+        "endChar": 38
+      },
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a95dfbc_247258b9",
         "filename": "libc/malloc_debug/MapData.cpp",
         "patchSetId": 10
@@ -240,6 +480,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "how does this differ from ElfW?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4b51eae_91923e07",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Oops, I didn\u0027t see that we had this defined in link.h.",
+      "parentUuid": "0a95dfbc_247258b9",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -263,6 +521,24 @@
     },
     {
       "key": {
+        "uuid": "d4be1290_8f69b9cc",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a9aa3ee_70fed884",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a74377b_3b6d1f46",
         "filename": "libc/malloc_debug/malloc_debug.h",
         "patchSetId": 10
@@ -280,6 +556,24 @@
     },
     {
       "key": {
+        "uuid": "f4bb169e_53ca8e2a",
+        "filename": "libc/malloc_debug/malloc_debug.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "I have an explanation of the header in malloc_debug.cpp, is that something that should be here instead?\n\nThat one is kind of free standing, but it might be better here.",
+      "parentUuid": "4a74377b_3b6d1f46",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a79fb72_9c22ad49",
         "filename": "libc/malloc_debug/tests/log_fake.cpp",
         "patchSetId": 10
@@ -291,6 +585,24 @@
       "writtenOn": "2016-01-09T00:42:19Z",
       "side": 1,
       "message": "didn\u0027t we need this already for simpleperf? should we have another separate library for this kind of stuff?",
+      "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4be1290_0f286971",
+        "filename": "libc/malloc_debug/tests/log_fake.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-23T01:50:22Z",
+      "side": 1,
+      "message": "I don\u0027t know if in simpleperf, but definitely in debuggerd.\n\nFiled b/26747921 to do this.",
+      "parentUuid": "6a79fb72_9c22ad49",
       "revId": "f060bd9b56c13c54ab4e17a9bd8f980c4318d41d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
