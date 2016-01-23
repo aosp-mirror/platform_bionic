@@ -92,6 +92,15 @@ struct __sFILE {
 
 	/* Unix stdio files get aligned to block boundaries on fseek() */
 	int	_blksize;	/* stat.st_blksize (may be != _bf._size) */
+
+	fpos_t _unused_0; // This was the `_offset` field (see below).
+
+	// Do not add new fields here. (Or remove or change the size of any above.)
+	// Although bionic currently exports `stdin`, `stdout`, and `stderr` symbols,
+	// that still hasn't made it to the NDK. All NDK-built apps index directly
+	// into an array of this struct (which was in <stdio.h> historically), so if
+	// you need to make any changes, they need to be in the `__sfileext` struct
+	// below, and accessed via `_EXT`.
 };
 
 /*
