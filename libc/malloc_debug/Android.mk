@@ -37,10 +37,12 @@ LOCAL_C_INCLUDES += bionic/libc
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := false
 
+# -Wno-error=format-zero-length needed for gcc to compile.
 LOCAL_CFLAGS := \
     -Wall \
     -Werror \
     -fno-stack-protector \
+    -Wno-error=format-zero-length \
 
 include $(BUILD_SHARED_LIBRARY)
 
