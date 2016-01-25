@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "94b2daf4_f73b406e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-01-25T21:46:32Z",
+      "side": 1,
+      "message": "declared in private/bionic_sdk_version.h.",
+      "parentUuid": "d4b8d2d6_b97fffb5",
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f49a3677_b234601a",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-25T20:47:24Z",
       "side": 1,
       "message": "hmm... missing static_cast\u003cuint32_t\u003e()? Maybe use __ANDROID_API__ instead?",
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4afde8e_b80a99aa",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-01-25T21:46:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f49a3677_b234601a",
       "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "b4a43ebb_905594d4",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-01-25T21:46:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4b5d6da_ba37f1d4",
+      "range": {
+        "startLine": 191,
+        "startChar": 47,
+        "endLine": 191,
+        "endChar": 48
+      },
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f49a3677_92375c1e",
         "filename": "tests/semaphore_test.cpp",
         "patchSetId": 1
@@ -70,6 +130,30 @@
       "writtenOn": "2016-01-25T20:47:24Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 213,
+        "startChar": 47,
+        "endLine": 213,
+        "endChar": 48
+      },
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f49a3677_72567809",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-01-25T21:46:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f49a3677_92375c1e",
       "range": {
         "startLine": 213,
         "startChar": 47,
