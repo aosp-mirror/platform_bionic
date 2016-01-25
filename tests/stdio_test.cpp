@@ -1093,3 +1093,31 @@ TEST(STDIO_TEST, fseek_ftell_unseekable) {
   fclose(fp);
 #endif
 }
+
+TEST(STDIO_TEST, lots_of_concurrent_files) {
+  std::vector<TemporaryFile*> tfs;
+  std::vector<FILE*> fps;
+
+  for (size_t i = 0; i < 256; ++i) {
+    TemporaryFile* tf = new TemporaryFile;
+    tfs.push_back(tf);
+    FILE* fp = fopen(tf->filename, "w+");
+    fps.push_back(fp);
+    fprintf(fp, "hello %zu!\n", i);
+    fflush(fp);
+  }
+
+  for (size_t i = 0; i < 256; ++i) {
+    rewind(fps[i]);
+
+    char buf[BUFSIZ];
+    ASSERT_TRUE(fgets(buf, sizeof(buf), fps[i]) != nullptr);
+
+    char expected[BUFSIZ];
+    snprintf(expected, sizeof(expected), "hello %zu!\n", i);
+    ASSERT_STREQ(expected, buf);
+
+    fclose(fps[i]);
+    delete tfs[i];
+  }
+}
