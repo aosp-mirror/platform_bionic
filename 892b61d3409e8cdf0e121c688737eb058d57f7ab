@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74c9e678_7619f006",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T21:55:03Z",
+      "side": 1,
+      "message": "move the call to function out of while() loop?",
+      "range": {
+        "startLine": 225,
+        "startChar": 8,
+        "endLine": 225,
+        "endChar": 51
+      },
+      "revId": "892b61d3409e8cdf0e121c688737eb058d57f7ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
