@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d42a92be_2c8d9bb1",
+        "filename": "tools/relocation_packer/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T18:58:26Z",
+      "side": 1,
+      "message": "do we need this include - doesn\u0027t LOCAL_STATIC_LIBRARIES +\u003d libz take care of include path?",
+      "revId": "0846c26661e14f9d5ac025fc1fc0c707f843dd77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
