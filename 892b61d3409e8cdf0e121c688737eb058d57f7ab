@@ -46,6 +46,30 @@
       "revId": "892b61d3409e8cdf0e121c688737eb058d57f7ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74c9e678_d9b7579b",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-01-25T22:44:20Z",
+      "side": 1,
+      "message": "I slightly suggest not to move bionic_get_application_target_..() out of while() loop:\n1. It needs another variable to store sdk version, and make the places using variable and create variable farther to each other.\n2. It costs almost nothing to call bionic_get_application...(). Even if we consider performance, it depends on how semaphore is used. If __sem_dec() \u003e 0, it doesn\u0027t need to wait and get_sdk_version. If futex_wait() is not interrupted by signals, move get_sdk_version outside has no benefits as it is only called once.",
+      "parentUuid": "34c3ee5c_17219647",
+      "range": {
+        "startLine": 225,
+        "startChar": 8,
+        "endLine": 225,
+        "endChar": 51
+      },
+      "revId": "892b61d3409e8cdf0e121c688737eb058d57f7ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
