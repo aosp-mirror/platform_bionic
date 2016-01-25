@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef DEBUG_MALLOC_MAPDATA_H
+#define DEBUG_MALLOC_MAPDATA_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <sys/cdefs.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+#include <string>
+#include <vector>
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+#include <private/bionic_macros.h>
 
-#endif
+struct MapEntry {
+  MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len)
+      : start(start), end(end), offset(offset), name(name, name_len) {}
+
+  uintptr_t start;
+  uintptr_t end;
+  uintptr_t offset;
+  uintptr_t load_base;
+  bool load_base_read = false;
+  std::string name;
+};
+
+class MapData {
+ public:
+  static MapData* Create();
+  ~MapData();
+
+  const MapEntry* find(uintptr_t pc, uintptr_t* rel_pc = nullptr);
+
+ private:
+  MapData() = default;
+  bool Initialize();
+
+  std::vector<MapEntry*> entries_;
+
+  DISALLOW_COPY_AND_ASSIGN(MapData);
+};
+
+#endif  // DEBUG_MALLOC_MAPDATA_H

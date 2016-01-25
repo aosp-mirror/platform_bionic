@@ -26,41 +26,41 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#include <pthread.h>
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include "DebugData.h"
+#include "debug_disable.h"
+#include "debug_log.h"
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+extern DebugData* g_debug;
+pthread_key_t g_disable_key;
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+bool DebugCallsDisabled() {
+  if (g_debug == nullptr || pthread_getspecific(g_disable_key) != nullptr) {
+    return true;
+  }
+  return false;
+}
 
-#endif
+bool DebugDisableInitialize() {
+  int error = pthread_key_create(&g_disable_key, nullptr);
+  if (error != 0) {
+    error_log("pthread_key_create failed: %s", strerror(error));
+    return false;
+  }
+  pthread_setspecific(g_disable_key, nullptr);
+
+  return true;
+}
+
+void DebugDisableFinalize() {
+  pthread_key_delete(g_disable_key);
+}
+
+void DebugDisableSet(bool disable) {
+  if (disable) {
+    pthread_setspecific(g_disable_key, reinterpret_cast<void*>(1));
+  } else {
+    pthread_setspecific(g_disable_key, nullptr);
+  }
+}

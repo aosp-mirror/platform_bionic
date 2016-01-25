@@ -26,18 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#include "debug_backtrace.h"
-
 #include <dlfcn.h>
+#include <errno.h>
 #include <inttypes.h>
 #include <malloc.h>
+#include <pthread.h>
+#include <string.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <unwind.h>
-#include <sys/types.h>
 
-#include "debug_mapinfo.h"
-#include "malloc_debug_disable.h"
-#include "private/libc_logging.h"
+#include "backtrace.h"
+#include "debug_disable.h"
+#include "debug_log.h"
+#include "MapData.h"
 
 #if defined(__LP64__)
 #define PAD_PTR "016" PRIxPTR
@@ -49,41 +51,48 @@ typedef struct _Unwind_Context __unwind_context;
 
 extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
-static mapinfo_t* g_map_info = NULL;
+static MapData* g_map_data = nullptr;
+static const MapEntry* g_current_code_map = nullptr;
 
-__LIBC_HIDDEN__ void backtrace_startup() {
-  ScopedDisableDebugCalls disable;
+static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
+  uintptr_t ip = _Unwind_GetIP(context);
 
-  g_map_info = mapinfo_create(getpid());
+  if (ip == 0) {
+    return _URC_END_OF_STACK;
+  }
+  g_current_code_map = g_map_data->find(ip);
+  return _URC_END_OF_STACK;
 }
 
-__LIBC_HIDDEN__ void backtrace_shutdown() {
+void backtrace_startup() {
   ScopedDisableDebugCalls disable;
 
-  mapinfo_destroy(g_map_info);
+  g_map_data = MapData::Create();
+  if (g_map_data) {
+    _Unwind_Backtrace(find_current_map, nullptr);
+  }
+}
+
+void backtrace_shutdown() {
+  ScopedDisableDebugCalls disable;
+
+  delete g_map_data;
+  g_map_data = nullptr;
 }
 
 struct stack_crawl_state_t {
   uintptr_t* frames;
   size_t frame_count;
-  size_t max_depth;
-  bool have_skipped_self;
+  size_t cur_frame = 0;
 
-  stack_crawl_state_t(uintptr_t* frames, size_t max_depth)
-      : frames(frames), frame_count(0), max_depth(max_depth), have_skipped_self(false) {
-  }
+  stack_crawl_state_t(uintptr_t* frames, size_t frame_count)
+      : frames(frames), frame_count(frame_count) {}
 };
 
 static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) {
   stack_crawl_state_t* state = static_cast<stack_crawl_state_t*>(arg);
 
   uintptr_t ip = _Unwind_GetIP(context);
-
-  // The first stack frame is get_backtrace itself. Skip it.
-  if (ip != 0 && !state->have_skipped_self) {
-    state->have_skipped_self = true;
-    return _URC_NO_REASON;
-  }
 
   // The instruction pointer is pointing at the instruction after the return
   // call on all architectures.
@@ -115,61 +124,56 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
     // so subtract 1 to estimate where the instruction lives.
     ip--;
 #endif
+
+    // Do not record the frames that fall in our own shared library.
+    if (g_current_code_map && (ip >= g_current_code_map->start) && ip < g_current_code_map->end) {
+      return _URC_NO_REASON;
+    }
   }
 
-  state->frames[state->frame_count++] = ip;
-  return (state->frame_count >= state->max_depth) ? _URC_END_OF_STACK : _URC_NO_REASON;
+  state->frames[state->cur_frame++] = ip;
+  return (state->cur_frame >= state->frame_count) ? _URC_END_OF_STACK : _URC_NO_REASON;
 }
 
-__LIBC_HIDDEN__ int get_backtrace(uintptr_t* frames, size_t max_depth) {
+size_t backtrace_get(uintptr_t* frames, size_t frame_count) {
   ScopedDisableDebugCalls disable;
 
-  stack_crawl_state_t state(frames, max_depth);
+  stack_crawl_state_t state(frames, frame_count);
   _Unwind_Backtrace(trace_function, &state);
-  return state.frame_count;
+  return state.cur_frame;
 }
 
-__LIBC_HIDDEN__ void log_backtrace(uintptr_t* frames, size_t frame_count) {
+void backtrace_log(uintptr_t* frames, size_t frame_count) {
   ScopedDisableDebugCalls disable;
 
-  uintptr_t self_bt[16];
-  if (frames == NULL) {
-    frame_count = get_backtrace(self_bt, 16);
-    frames = self_bt;
-  }
-
-  __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                    "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-
-  for (size_t i = 0 ; i < frame_count; ++i) {
+  for (size_t frame_num = 0; frame_num < frame_count; frame_num++) {
     uintptr_t offset = 0;
-    const char* symbol = NULL;
+    const char* symbol = nullptr;
 
     Dl_info info;
-    if (dladdr((void*) frames[i], &info) != 0) {
+    if (dladdr(reinterpret_cast<void*>(frames[frame_num]), &info) != 0) {
       offset = reinterpret_cast<uintptr_t>(info.dli_saddr);
       symbol = info.dli_sname;
     }
 
     uintptr_t rel_pc = offset;
-    const mapinfo_t* mi = (g_map_info != NULL) ? mapinfo_find(g_map_info, frames[i], &rel_pc) : NULL;
-    const char* soname = (mi != NULL) ? mi->name : info.dli_fname;
-    if (soname == NULL) {
+    const MapEntry* entry = nullptr;
+    if (g_map_data) {
+      entry = g_map_data->find(frames[frame_num], &rel_pc);
+    }
+    const char* soname = (entry != nullptr) ? entry->name.c_str() : info.dli_fname;
+    if (soname == nullptr) {
       soname = "<unknown>";
     }
-    if (symbol != NULL) {
-      char* demangled_symbol = __cxa_demangle(symbol, NULL, NULL, NULL);
-      const char* best_name = (demangled_symbol != NULL) ? demangled_symbol : symbol;
+    if (symbol != nullptr) {
+      char* demangled_symbol = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
+      const char* best_name = (demangled_symbol != nullptr) ? demangled_symbol : symbol;
 
-      __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
-                        i, rel_pc, soname, best_name, frames[i] - offset);
-
+      error_log("          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
+                frame_num, rel_pc, soname, best_name, frames[frame_num] - offset);
       free(demangled_symbol);
     } else {
-      __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "          #%02zd  pc %" PAD_PTR "  %s",
-                        i, rel_pc, soname);
+      error_log("          #%02zd  pc %" PAD_PTR "  %s", frame_num, rel_pc, soname);
     }
   }
 }

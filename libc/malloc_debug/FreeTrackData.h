@@ -26,41 +26,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_MALLOC_DISPATCH_H
-#define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
+#ifndef DEBUG_MALLOC_FREETRACKDATA_H
+#define DEBUG_MALLOC_FREETRACKDATA_H
 
-#include <stddef.h>
-#include <private/bionic_config.h>
+#include <stdint.h>
+#include <pthread.h>
 
-// Entry in malloc dispatch table.
-typedef void* (*MallocCalloc)(size_t, size_t);
-typedef void (*MallocFree)(void*);
-typedef struct mallinfo (*MallocMallinfo)();
-typedef void* (*MallocMalloc)(size_t);
-typedef size_t (*MallocMallocUsableSize)(const void*);
-typedef void* (*MallocMemalign)(size_t, size_t);
-typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
-typedef void* (*MallocRealloc)(void*, size_t);
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-typedef void* (*MallocPvalloc)(size_t);
-typedef void* (*MallocValloc)(size_t);
-#endif
+#include <deque>
+#include <vector>
 
-struct MallocDispatch {
-  MallocCalloc calloc;
-  MallocFree free;
-  MallocMallinfo mallinfo;
-  MallocMalloc malloc;
-  MallocMallocUsableSize malloc_usable_size;
-  MallocMemalign memalign;
-  MallocPosixMemalign posix_memalign;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocPvalloc pvalloc;
-#endif
-  MallocRealloc realloc;
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  MallocValloc valloc;
-#endif
-} __attribute__((aligned(32)));
+#include <private/bionic_macros.h>
 
-#endif
+// Forward declarations.
+struct Header;
+class DebugData;
+struct Config;
+
+class FreeTrackData {
+ public:
+  FreeTrackData(const Config& config);
+  virtual ~FreeTrackData() = default;
+
+  void Add(DebugData& debug, const Header* header);
+
+  void VerifyAll(DebugData& debug);
+
+ private:
+  void LogFreeError(DebugData& debug, const Header* header, const uint8_t* pointer);
+  void VerifyAndFree(DebugData& debug, const Header* header, const void* pointer);
+
+  pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
+  std::deque<const Header*> list_;
+  std::vector<uint8_t> cmp_mem_;
+
+  DISALLOW_COPY_AND_ASSIGN(FreeTrackData);
+};
+
+#endif // DEBUG_MALLOC_FREETRACKDATA_H
