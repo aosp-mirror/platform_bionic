@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_DISABLE_H
-#define MALLOC_DEBUG_DISABLE_H
+#ifndef DEBUG_MALLOC_TRACKDATA_H
+#define DEBUG_MALLOC_TRACKDATA_H
 
+#include <stdint.h>
 #include <pthread.h>
 
-#include "private/bionic_macros.h"
+#include <vector>
+#include <unordered_set>
 
-// =============================================================================
-// Used to disable the debug allocation calls.
-// =============================================================================
-extern pthread_key_t g_debug_calls_disabled;
+#include <private/bionic_macros.h>
 
-static inline bool DebugCallsDisabled() {
-  return pthread_getspecific(g_debug_calls_disabled) != NULL;
-}
+// Forward declarations.
+struct Header;
+struct Config;
+class DebugData;
 
-class ScopedDisableDebugCalls {
+class TrackData {
  public:
-  ScopedDisableDebugCalls() : disabled_(DebugCallsDisabled()) {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, reinterpret_cast<const void*>(1));
-    }
-  }
-  ~ScopedDisableDebugCalls() {
-    if (!disabled_) {
-      pthread_setspecific(g_debug_calls_disabled, NULL);
-    }
-  }
+  TrackData() = default;
+  virtual ~TrackData() = default;
+
+  void GetList(std::vector<Header*>* list);
+
+  void Add(Header* header, bool backtrace_found);
+
+  void Remove(Header* header, bool backtrace_found);
+
+  void GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
+               size_t* info_size, size_t* total_memory, size_t* backtrace_size);
+
+  void DisplayLeaks(DebugData& debug);
 
  private:
-  bool disabled_;
+  pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
+  std::unordered_set<Header*> headers_;
+  size_t total_backtrace_allocs_ = 0;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
+  DISALLOW_COPY_AND_ASSIGN(TrackData);
 };
 
-#endif  // MALLOC_DEBUG_DISABLE_H
+#endif // DEBUG_MALLOC_TRACKDATA_H

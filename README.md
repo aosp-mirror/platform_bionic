@@ -118,6 +118,10 @@ libc/
     # current upstream source in one of the upstream directories or by
     # switching the file to C++ and cleaning it up.
 
+  malloc_debug/
+    # The code that implements the functionality to enable debugging of
+    # native allocation problems.
+
   stdio/
     # These are legacy files of dubious provenance. We're working to clean
     # this mess up, and this directory should disappear.
