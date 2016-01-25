@@ -96,7 +96,6 @@ libc/
   dns/
     # Contains the DNS resolver (originates from NetBSD code).
 
-  upstream-dlmalloc/
   upstream-freebsd/
   upstream-netbsd/
   upstream-openbsd/
