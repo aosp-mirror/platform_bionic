@@ -1181,7 +1181,7 @@ LOCAL_SRC_FILES := \
     $(libc_common_src_files) \
     $(libc_arch_dynamic_src_files) \
     $(libc_ndk_stub_src_files) \
-    bionic/malloc_debug_common.cpp \
+    bionic/malloc_common.cpp \
 
 LOCAL_SRC_FILES_arm += \
     arch-common/bionic/crtbegin_so.c \
@@ -1326,7 +1326,8 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
     $(libc_arch_static_src_files) \
-    bionic/malloc_debug_common.cpp \
+    bionic/malloc_common.cpp \
+    bionic/libc_init_static.cpp \
 
 LOCAL_CFLAGS := $(libc_common_cflags) \
     -DLIBC_STATIC \
@@ -1363,7 +1364,7 @@ LOCAL_SRC_FILES := \
     arch-common/bionic/crtbegin_so.c \
     arch-common/bionic/crtbrand.S \
     $(libc_arch_dynamic_src_files) \
-    bionic/malloc_debug_common.cpp \
+    bionic/malloc_common.cpp \
     bionic/libc_init_dynamic.cpp \
     bionic/NetdClient.cpp \
     arch-common/bionic/crtend_so.S \
@@ -1448,111 +1449,30 @@ LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 include $(BUILD_SHARED_LIBRARY)
 
-
-# For all builds, except for the -user build we will enable memory
-# allocation checking (including memory leaks, buffer overwrites, etc.)
-# Note that all these checks are also controlled by env. settings
-# that can enable, or disable specific checks. Note also that some of
-# the checks are available only in emulator and are implemeted in
-# libc_malloc_qemu_instrumented.so.
-ifneq ($(TARGET_BUILD_VARIANT),user)
-
 # ========================================================
-# libc_malloc_debug_leak.so
+# libc_logging.a
 # ========================================================
 include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := $(libc_common_cflags)
 LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
 LOCAL_CPPFLAGS := $(libc_common_cppflags)
-
-# Make sure that unwind.h comes from libunwind.
-LOCAL_C_INCLUDES := \
-    $(libc_common_c_includes) \
-
-LOCAL_SRC_FILES := \
-    bionic/debug_backtrace.cpp \
-    bionic/debug_mapinfo.cpp \
-    bionic/libc_logging.cpp \
-    bionic/malloc_debug_leak.cpp \
-    bionic/malloc_debug_check.cpp \
-
-LOCAL_MODULE := libc_malloc_debug_leak
-LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(libc_common_additional_dependencies) \
-    $(LOCAL_PATH)/version_script.txt \
-
-LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_CXX_STL := none
-LOCAL_SYSTEM_SHARED_LIBRARIES :=
-# Only need this for arm since libc++ uses its own unwind code that
-# doesn't mix with the other default unwind code.
-LOCAL_STATIC_LIBRARIES_arm := libunwind_llvm
-LOCAL_LDFLAGS_arm := -Wl,--exclude-libs,libunwind_llvm.a
-LOCAL_STATIC_LIBRARIES += libc++abi
-LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
-
-# Don't re-export new/delete and friends, even if the compiler really wants to.
-LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
-
-# Unfortunately --exclude-libs clobbers our version script, so we have to
-# prevent the build system from using this flag.
-LOCAL_NO_EXCLUDE_LIBS := true
-
-# Don't install on release build
-LOCAL_MODULE_TAGS := eng debug
-LOCAL_SANITIZE := never
-LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
-
-$(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-include $(BUILD_SHARED_LIBRARY)
-
-
-# ========================================================
-# libc_malloc_debug_qemu.so
-# ========================================================
-include $(CLEAR_VARS)
-
-LOCAL_CFLAGS := \
-    $(libc_common_cflags) \
-    -DMALLOC_QEMU_INSTRUMENT \
-
-LOCAL_CONLYFLAGS := $(libc_common_conlyflags)
-LOCAL_CPPFLAGS := $(libc_common_cppflags)
-
 LOCAL_C_INCLUDES := $(libc_common_c_includes)
 
 LOCAL_SRC_FILES := \
     bionic/libc_logging.cpp \
-    bionic/malloc_debug_qemu.cpp \
 
-LOCAL_MODULE := libc_malloc_debug_qemu
+LOCAL_MODULE := libc_logging
+
 LOCAL_CLANG := $(use_clang)
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(libc_common_additional_dependencies) \
-    $(LOCAL_PATH)/version_script.txt \
-
-LOCAL_SHARED_LIBRARIES := libc libdl
-LOCAL_CXX_STL := none
+LOCAL_ADDITIONAL_DEPENDENCIES := $(libc_common_additional_dependencies)
 LOCAL_SYSTEM_SHARED_LIBRARIES :=
 
-# Don't re-export new/delete and friends, even if the compiler really wants to.
-LOCAL_LDFLAGS := -Wl,--version-script,$(LOCAL_PATH)/version_script.txt
-
-# Unfortunately --exclude-libs clobbers our version script, so we have to
-# prevent the build system from using this flag.
-LOCAL_NO_EXCLUDE_LIBS := true
-
-# Don't install on release build
-LOCAL_MODULE_TAGS := eng debug
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 
 $(eval $(call patch-up-arch-specific-flags,LOCAL_CFLAGS,libc_common_cflags))
-include $(BUILD_SHARED_LIBRARY)
-
-endif  #!user
+include $(BUILD_STATIC_LIBRARY)
 
 # ========================================================
 # libstdc++.so
@@ -1561,7 +1481,6 @@ libstdcxx_common_src_files := \
     bionic/__cxa_guard.cpp \
     bionic/__cxa_pure_virtual.cpp \
     bionic/new.cpp \
-    bionic/libc_logging.cpp \
 
 include $(CLEAR_VARS)
 LOCAL_C_INCLUDES := $(libc_common_c_includes) bionic/libstdc++/include
@@ -1577,6 +1496,7 @@ LOCAL_MODULE:= libstdc++
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 LOCAL_CXX_STL := none
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+LOCAL_STATIC_LIBRARIES := libc_logging
 LOCAL_SANITIZE := never
 LOCAL_NATIVE_COVERAGE := $(bionic_coverage)
 include $(BUILD_SHARED_LIBRARY)

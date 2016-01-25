@@ -36,7 +36,7 @@
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
-  MallocDebug malloc_dispatch;
+  MallocDispatch malloc_dispatch;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;

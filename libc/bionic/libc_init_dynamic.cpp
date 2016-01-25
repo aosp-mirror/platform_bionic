@@ -56,7 +56,6 @@
 #include "private/KernelArgumentBlock.h"
 
 extern "C" {
-  extern void malloc_debug_fini(void);
   extern void netdClientInit(void);
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
@@ -81,11 +80,6 @@ __attribute__((constructor)) static void __libc_preinit() {
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);
   netdClientInit();
-}
-
-__LIBC_HIDDEN__ void __libc_postfini() {
-  // A hook for the debug malloc library to let it know that we're shutting down.
-  malloc_debug_fini();
 }
 
 // This function is called from the executable's _start entry point

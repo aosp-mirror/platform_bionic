@@ -1,0 +1,20 @@
+LIBC_MALLOC_DEBUG {
+  global:
+    debug_calloc;
+    debug_finalize;
+    debug_free;
+    debug_free_malloc_leak_info;
+    debug_get_malloc_leak_info;
+    debug_initialize;
+    debug_mallinfo;
+    debug_malloc;
+    debug_malloc_usable_size;
+    debug_memalign;
+    debug_posix_memalign;
+    debug_pvalloc;
+    debug_realloc;
+    debug_valloc;
+
+  local:
+    *;
+};
