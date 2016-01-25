@@ -70,6 +70,30 @@
       "revId": "892b61d3409e8cdf0e121c688737eb058d57f7ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74c9e678_b937fbd4",
+        "filename": "libc/bionic/semaphore.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T22:52:43Z",
+      "side": 1,
+      "message": "lgtm",
+      "parentUuid": "74c9e678_d9b7579b",
+      "range": {
+        "startLine": 225,
+        "startChar": 8,
+        "endLine": 225,
+        "endChar": 51
+      },
+      "revId": "892b61d3409e8cdf0e121c688737eb058d57f7ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
