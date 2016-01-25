@@ -280,7 +280,7 @@ TEST(STDIO_TEST, snprintf_n) {
   EXPECT_EQ(1234, i);
   EXPECT_STREQ("a n b", buf);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "This test does nothing on glibc.\n";
 #endif
 }
 
@@ -831,7 +831,7 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_LOG_(INFO) << "This test does nothing on glibc.\n";
 #endif
 }
 
@@ -962,7 +962,7 @@ static void test_fwrite_after_fread(size_t n) {
 
   // But hitting EOF doesn't prevent us from writing...
   errno = 0;
-  ASSERT_EQ(1U, fwrite("2", 1, 1, fp)) << errno;
+  ASSERT_EQ(1U, fwrite("2", 1, 1, fp)) << strerror(errno);
 
   // And if we rewind, everything's there.
   rewind(fp);
@@ -1011,7 +1011,7 @@ TEST(STDIO_TEST, fread_after_fseek) {
   ASSERT_EQ(memcmp(file_data+cur_location, buffer, 8192), 0);
 
   // Small backwards seek to verify fseek does not reuse the internal buffer.
-  ASSERT_EQ(0, fseek(fp, -22, SEEK_CUR));
+  ASSERT_EQ(0, fseek(fp, -22, SEEK_CUR)) << strerror(errno);
   cur_location = static_cast<size_t>(ftell(fp));
   ASSERT_EQ(22U, fread(buffer, 1, 22, fp));
   ASSERT_EQ(memcmp(file_data+cur_location, buffer, 22), 0);
@@ -1120,4 +1120,91 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
     fclose(fps[i]);
     delete tfs[i];
   }
+}
+
+static void AssertFileOffsetAt(FILE* fp, off64_t offset) {
+  EXPECT_EQ(offset, ftell(fp));
+  EXPECT_EQ(offset, ftello(fp));
+  fpos_t pos;
+  fpos64_t pos64;
+  EXPECT_EQ(0, fgetpos(fp, &pos));
+  EXPECT_EQ(0, fgetpos64(fp, &pos64));
+#if defined(__BIONIC__)
+  EXPECT_EQ(offset, static_cast<off64_t>(pos));
+  EXPECT_EQ(offset, static_cast<off64_t>(pos64));
+#else
+  GTEST_LOG_(INFO) << "glibc's fpos_t is opaque.\n";
+#endif
+}
+
+TEST(STDIO_TEST, seek_tell_family_smoke) {
+  TemporaryFile tf;
+  FILE* fp = fdopen(tf.fd, "w+");
+
+  // Initially we should be at 0.
+  AssertFileOffsetAt(fp, 0);
+
+  // Seek to offset 8192.
+  ASSERT_EQ(0, fseek(fp, 8192, SEEK_SET));
+  AssertFileOffsetAt(fp, 8192);
+  fpos_t eight_k_pos;
+  ASSERT_EQ(0, fgetpos(fp, &eight_k_pos));
+
+  // Seek forward another 8192...
+  ASSERT_EQ(0, fseek(fp, 8192, SEEK_CUR));
+  AssertFileOffsetAt(fp, 8192 + 8192);
+  fpos64_t sixteen_k_pos64;
+  ASSERT_EQ(0, fgetpos64(fp, &sixteen_k_pos64));
+
+  // Seek back 8192...
+  ASSERT_EQ(0, fseek(fp, -8192, SEEK_CUR));
+  AssertFileOffsetAt(fp, 8192);
+
+  // Since we haven't written anything, the end is also at 0.
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  AssertFileOffsetAt(fp, 0);
+
+  // Check that our fpos64_t from 16KiB works...
+  ASSERT_EQ(0, fsetpos64(fp, &sixteen_k_pos64));
+  AssertFileOffsetAt(fp, 8192 + 8192);
+  // ...as does our fpos_t from 8192.
+  ASSERT_EQ(0, fsetpos(fp, &eight_k_pos));
+  AssertFileOffsetAt(fp, 8192);
+
+  // Do fseeko and fseeko64 work too?
+  ASSERT_EQ(0, fseeko(fp, 1234, SEEK_SET));
+  AssertFileOffsetAt(fp, 1234);
+  ASSERT_EQ(0, fseeko64(fp, 5678, SEEK_SET));
+  AssertFileOffsetAt(fp, 5678);
+
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, fseek_fseeko_EINVAL) {
+  TemporaryFile tf;
+  FILE* fp = fdopen(tf.fd, "w+");
+
+  // Bad whence.
+  errno = 0;
+  ASSERT_EQ(-1, fseek(fp, 0, 123));
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  ASSERT_EQ(-1, fseeko(fp, 0, 123));
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  ASSERT_EQ(-1, fseeko64(fp, 0, 123));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Bad offset.
+  errno = 0;
+  ASSERT_EQ(-1, fseek(fp, -1, SEEK_SET));
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  ASSERT_EQ(-1, fseeko(fp, -1, SEEK_SET));
+  ASSERT_EQ(EINVAL, errno);
+  errno = 0;
+  ASSERT_EQ(-1, fseeko64(fp, -1, SEEK_SET));
+  ASSERT_EQ(EINVAL, errno);
+
+  fclose(fp);
 }
