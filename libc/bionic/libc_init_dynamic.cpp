@@ -114,3 +114,9 @@ __noreturn void __libc_init(void* raw_args,
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }
+
+extern "C" uint32_t android_get_application_target_sdk_version();
+
+uint32_t bionic_get_application_target_sdk_version() {
+  return android_get_application_target_sdk_version();
+}
