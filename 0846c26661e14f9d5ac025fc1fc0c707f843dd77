@@ -16,6 +16,24 @@
       "revId": "0846c26661e14f9d5ac025fc1fc0c707f843dd77",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c14218_a16b6632",
+        "filename": "tools/relocation_packer/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2016-01-25T19:14:12Z",
+      "side": 1,
+      "message": "You are right. Reverted the change in new patch set 2.",
+      "parentUuid": "d42a92be_2c8d9bb1",
+      "revId": "0846c26661e14f9d5ac025fc1fc0c707f843dd77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
