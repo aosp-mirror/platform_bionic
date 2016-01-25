@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4b8d2d6_b97fffb5",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T20:47:24Z",
+      "side": 1,
+      "message": "maybe declare this f-n somewhere in private/bionic_utils.h?",
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f49a3677_b234601a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T20:47:24Z",
+      "side": 1,
+      "message": "hmm... missing static_cast\u003cuint32_t\u003e()? Maybe use __ANDROID_API__ instead?",
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4b5d6da_ba37f1d4",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T20:47:24Z",
+      "side": 1,
+      "message": "U",
+      "range": {
+        "startLine": 191,
+        "startChar": 47,
+        "endLine": 191,
+        "endChar": 48
+      },
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f49a3677_92375c1e",
+        "filename": "tests/semaphore_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-25T20:47:24Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 213,
+        "startChar": 47,
+        "endLine": 213,
+        "endChar": 48
+      },
+      "revId": "5d1e44cd9d4b7b1aee38c9f9c050fbbe4f036aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
