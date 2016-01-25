@@ -45,6 +45,10 @@
 #include "debug_log.h"
 
 struct Feature {
+  Feature(std::string name, size_t default_value, uint64_t option, size_t* value,
+          bool* config, bool combo_option)
+      : name(name), default_value(default_value), option(option), value(value),
+        config(config), combo_option(combo_option) {}
   std::string name;
   size_t default_value = 0;
 
@@ -235,47 +239,43 @@ bool Config::SetFromProperties() {
 
   // Supported features:
   const Feature features[] = {
-    { .name="guard", .default_value=32, .option=0, .combo_option=true },
+    Feature("guard", 32, 0, nullptr, nullptr, true),
     // Enable front guard. Value is the size of the guard.
-    { .name="front_guard", .default_value=32, .option=FRONT_GUARD,
-      .value=&this->front_guard_bytes, .combo_option=true },
+    Feature("front_guard", 32, FRONT_GUARD, &this->front_guard_bytes, nullptr, true),
     // Enable end guard. Value is the size of the guard.
-    { .name="rear_guard", .default_value=32, .option=REAR_GUARD,
-      .value=&this->rear_guard_bytes, .combo_option=true },
+    Feature("rear_guard", 32, REAR_GUARD, &this->rear_guard_bytes, nullptr, true),
 
     // Enable logging the backtrace on allocation. Value is the total
     // number of frames to log.
-    { .name="backtrace", .default_value=16, .option=BACKTRACE | TRACK_ALLOCS,
-      .value=&this->backtrace_frames, .config=&this->backtrace_enabled },
+    Feature("backtrace", 16, BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames,
+            &this->backtrace_enabled, false),
     // Enable gathering backtrace values on a signal.
-    { .name="backtrace_enable_on_signal", .default_value=16, .option=BACKTRACE | TRACK_ALLOCS,
-      .value=&this->backtrace_frames, .config=&this->backtrace_enable_on_signal },
+    Feature("backtrace_enable_on_signal", 16, BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames,
+            &this->backtrace_enable_on_signal, false),
 
-    { .name="fill", .default_value=SIZE_MAX, .option=0, .combo_option=true },
+    Feature("fill", SIZE_MAX, 0, nullptr, nullptr, true),
     // Fill the allocation with an arbitrary pattern on allocation.
     // Value is the number of bytes of the allocation to fill
     // (default entire allocation).
-    { .name="fill_on_alloc", .default_value=SIZE_MAX, .option=FILL_ON_ALLOC,
-      .value=&this->fill_on_alloc_bytes, .combo_option=true },
+    Feature("fill_on_alloc", SIZE_MAX, FILL_ON_ALLOC, &this->fill_on_alloc_bytes,
+            nullptr, true),
     // Fill the allocation with an arbitrary pattern on free.
     // Value is the number of bytes of the allocation to fill
     // (default entire allocation).
-    { .name="fill_on_free", .default_value=SIZE_MAX, .option=FILL_ON_FREE,
-      .value=&this->fill_on_free_bytes, .combo_option=true },
+    Feature("fill_on_free", SIZE_MAX, FILL_ON_FREE, &this->fill_on_free_bytes, nullptr, true),
 
     // Expand the size of every alloc by this number bytes. Value is
     // the total number of bytes to expand every allocation by.
-    { .name="expand_alloc", .default_value=16, .option=EXPAND_ALLOC,
-      .value=&this->expand_alloc_bytes, },
+    Feature ("expand_alloc", 16, EXPAND_ALLOC, &this->expand_alloc_bytes, nullptr, false),
 
     // Keep track of the freed allocations and verify at a later date
     // that they have not been used. Turning this on, also turns on
     // fill on free.
-    { .name="free_track", .default_value=100, .option=FREE_TRACK | FILL_ON_FREE,
-      .value=&this->free_track_allocations, },
+    Feature("free_track", 100, FREE_TRACK | FILL_ON_FREE, &this->free_track_allocations,
+            nullptr, false),
 
     // Enable printing leaked allocations.
-    { .name="leak_track", .option=LEAK_TRACK | TRACK_ALLOCS },
+    Feature("leak_track", 0, LEAK_TRACK | TRACK_ALLOCS, nullptr, nullptr, false),
   };
 
   // Process each property name we can find.
