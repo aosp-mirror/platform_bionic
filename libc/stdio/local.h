@@ -125,6 +125,25 @@ struct __sfileext {
   off64_t (*_seek64)(void*, off64_t, int);
 };
 
+// Values for `__sFILE::_flags`.
+#define __SLBF 0x0001  // Line buffered.
+#define __SNBF 0x0002  // Unbuffered.
+// RD and WR are never simultaneously asserted: use _SRW instead.
+#define __SRD  0x0004  // OK to read.
+#define __SWR  0x0008  // OK to write.
+#define __SRW  0x0010  // Open for reading & writing.
+#define __SEOF 0x0020  // Found EOF.
+#define __SERR 0x0040  // Found error.
+#define __SMBF 0x0080  // `_buf` is from malloc.
+#define __SAPP 0x0100  // fdopen()ed in append mode.
+#define __SSTR 0x0200  // This is an sprintf/snprintf string.
+// #define __SOPT 0x0400 --- historical (do fseek() optimization).
+// #define __SNPT 0x0800 --- historical (do not do fseek() optimization).
+// #define __SOFF 0x1000 --- historical (set iff _offset is in fact correct).
+#define __SMOD 0x2000  // true => fgetln modified _p text.
+#define __SALC 0x4000  // Allocate string space dynamically.
+#define __SIGN 0x8000  // Ignore this file in _fwalk.
+
 // TODO: remove remaining references to these obsolete flags.
 #define __SNPT 0
 #define __SOPT 0
