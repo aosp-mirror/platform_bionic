@@ -70,12 +70,16 @@ struct __sFILE {
 	struct	__sbuf _bf;	/* the buffer (at least 1 byte, if !NULL) */
 	int	_lbfsize;	/* 0 or -_bf._size, for inline putc */
 
-	/* operations */
-	void	*_cookie;	/* cookie passed to io functions */
-	int	(*_close)(void *);
-	int	(*_read)(void *, char *, int);
-	fpos_t	(*_seek)(void *, fpos_t, int);
-	int	(*_write)(void *, const char *, int);
+	// Function pointers used by `funopen`.
+	// Note that `_seek` is ignored if `_seek64` (in __sfileext) is set.
+	// TODO: implement `funopen64`.
+	// TODO: NetBSD has `funopen2` which corrects the `int`s to `size_t`s.
+	// TODO: glibc has `fopencookie` which passes the function pointers in a struct.
+	void* _cookie;	/* cookie passed to io functions */
+	int (*_close)(void*);
+	int (*_read)(void*, char*, int);
+	fpos_t (*_seek)(void*, fpos_t, int);
+	int (*_write)(void*, const char*, int);
 
 	/* extension data, to avoid further ABI breakage */
 	struct	__sbuf _ext;
@@ -103,21 +107,22 @@ struct __sFILE {
 	// below, and accessed via `_EXT`.
 };
 
-/*
- * file extension
- */
 struct __sfileext {
-  /* ungetc buffer */
+  // ungetc buffer.
   struct __sbuf _ub;
 
-  /* wide char io status */
+  // Wide char io status.
   struct wchar_io_data _wcio;
 
-  /* file lock */
+  // File lock.
   pthread_mutex_t _lock;
 
-  /* __fsetlocking support */
+  // __fsetlocking support.
   bool _caller_handles_locking;
+
+  // Equivalent to `_seek` but for _FILE_OFFSET_BITS=64.
+  // Callers should use this but fall back to `__sFILE::_seek`.
+  off64_t (*_seek64)(void*, off64_t, int);
 };
 
 // TODO: remove remaining references to these obsolete flags.
@@ -179,6 +184,7 @@ __LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE *));
 
 #pragma GCC visibility push(hidden)
 
+off64_t __sseek64(void*, off64_t, int);
 int	__sflush_locked(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
 wint_t __fgetwc_unlock(FILE *);
