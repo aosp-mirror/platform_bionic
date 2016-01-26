@@ -24,6 +24,7 @@
 #include <unistd.h>
 
 #include "private/bionic_constants.h"
+#include "ScopedSignalHandler.h"
 
 TEST(semaphore, sem_init) {
   sem_t s;
@@ -157,4 +158,72 @@ TEST(semaphore, sem_getvalue) {
   ASSERT_EQ(0, sem_wait(&s));
   ASSERT_EQ(0, sem_getvalue(&s, &i));
   ASSERT_EQ(1, i);
+}
+
+extern "C" void android_set_application_target_sdk_version(uint32_t target);
+
+static void sem_wait_test_signal_handler(int) {
+}
+
+static void* SemWaitEINTRThreadFn(void* arg) {
+  sem_t* sem = reinterpret_cast<sem_t*>(arg);
+  uintptr_t have_eintr = 0;
+  uintptr_t have_error = 0;
+  while (true) {
+    int result = sem_wait(sem);
+    if (result == 0) {
+      break;
+    }
+    if (result == -1) {
+      if (errno == EINTR) {
+        have_eintr = 1;
+      } else {
+        have_error = 1;
+        break;
+      }
+    }
+  }
+  return reinterpret_cast<void*>((have_eintr << 1) | have_error);
+}
+
+TEST(semaphore, sem_wait_no_EINTR_in_sdk_less_equal_than_23) {
+#if defined(__BIONIC__)
+  android_set_application_target_sdk_version(23U);
+  sem_t s;
+  ASSERT_EQ(0, sem_init(&s, 0, 0));
+  ScopedSignalHandler handler(SIGUSR1, sem_wait_test_signal_handler);
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr, SemWaitEINTRThreadFn, &s));
+  // Give some time for the thread to run sem_wait.
+  usleep(500000);
+  ASSERT_EQ(0, pthread_kill(thread, SIGUSR1));
+  // Give some time for the thread to handle signal.
+  usleep(500000);
+  ASSERT_EQ(0, sem_post(&s));
+  void* result;
+  ASSERT_EQ(0, pthread_join(thread, &result));
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(result));
+#else
+  GTEST_LOG_(INFO) << "This test tests sem_wait's compatibility for old sdk versions";
+#endif
+}
+
+TEST(semaphore, sem_wait_EINTR_in_sdk_greater_than_23) {
+#if defined(__BIONIC__)
+  android_set_application_target_sdk_version(24U);
+#endif
+  sem_t s;
+  ASSERT_EQ(0, sem_init(&s, 0, 0));
+  ScopedSignalHandler handler(SIGUSR1, sem_wait_test_signal_handler);
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr, SemWaitEINTRThreadFn, &s));
+  // Give some time for the thread to run sem_wait.
+  usleep(500000);
+  ASSERT_EQ(0, pthread_kill(thread, SIGUSR1));
+  // Give some time for the thread to handle signal.
+  usleep(500000);
+  ASSERT_EQ(0, sem_post(&s));
+  void* result;
+  ASSERT_EQ(0, pthread_join(thread, &result));
+  ASSERT_EQ(2U, reinterpret_cast<uintptr_t>(result));
 }
