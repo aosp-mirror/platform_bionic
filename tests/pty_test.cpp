@@ -19,6 +19,8 @@
 #include <pty.h>
 #include <sys/ioctl.h>
 
+#include "utils.h"
+
 TEST(pty, openpty) {
   int master, slave;
   char name[32];
@@ -58,10 +60,7 @@ TEST(pty, forkpty) {
 
   ASSERT_EQ(sid, getsid(0));
 
-  int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(0, WEXITSTATUS(status));
+  AssertChildExited(pid, 0);
 
   close(master);
 }
