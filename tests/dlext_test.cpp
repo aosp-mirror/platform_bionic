@@ -442,10 +442,7 @@ protected:
     // continuing in parent
     ASSERT_NOERROR(close(relro_fd));
     ASSERT_NOERROR(pid);
-    int status;
-    ASSERT_EQ(pid, waitpid(pid, &status, 0));
-    ASSERT_TRUE(WIFEXITED(status));
-    ASSERT_EQ(0, WEXITSTATUS(status));
+    AssertChildExited(pid, 0);
 
     // reopen file for reading so it can be used
     relro_fd = open(relro_file, O_RDONLY);
@@ -554,7 +551,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
   const int CHILDREN = 20;
 
   // Create children
-  pid_t childpid[CHILDREN];
+  pid_t child_pids[CHILDREN];
   int childpipe[CHILDREN];
   for (int i=0; i<CHILDREN; ++i) {
     char read_buf;
@@ -599,7 +596,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
     close(child_done_pipe[0]);
 
     // save the child's pid and the parent_done_pipe
-    childpid[i] = child;
+    child_pids[i] = child;
     childpipe[i] = parent_done_pipe[1];
   }
 
@@ -607,7 +604,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
   size_t total_pss = 0;
   for (int i=0; i<CHILDREN; ++i) {
     size_t child_pss;
-    ASSERT_NO_FATAL_FAILURE(getPss(childpid[i], &child_pss));
+    ASSERT_NO_FATAL_FAILURE(getPss(child_pids[i], &child_pss));
     total_pss += child_pss;
   }
   *pss_out = total_pss;
@@ -616,11 +613,8 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
   for (int i=0; i<CHILDREN; ++i) {
     ASSERT_NOERROR(close(childpipe[i]));
   }
-  for (int i=0; i<CHILDREN; ++i) {
-    int status;
-    ASSERT_EQ(childpid[i], waitpid(childpid[i], &status, 0));
-    ASSERT_TRUE(WIFEXITED(status));
-    ASSERT_EQ(0, WEXITSTATUS(status));
+  for (int i = 0; i < CHILDREN; ++i) {
+    AssertChildExited(child_pids[i], 0);
   }
 }
 

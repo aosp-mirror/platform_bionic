@@ -15,9 +15,11 @@
  */
 
 #include <gtest/gtest.h>
+
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
 #include "TemporaryFile.h"
+#include "utils.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -245,17 +247,14 @@ TEST(UNISTD_TEST, alarm) {
 }
 
 TEST(UNISTD_TEST, _exit) {
-  int pid = fork();
+  pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
   if (pid == 0) {
     _exit(99);
   }
 
-  int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(99, WEXITSTATUS(status));
+  AssertChildExited(pid, 99);
 }
 
 TEST(UNISTD_TEST, getenv_unsetenv) {
@@ -429,11 +428,7 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   } else {
     // We're the parent.
     ASSERT_EQ(parent_pid, getpid());
-
-    int status;
-    ASSERT_EQ(fork_result, waitpid(fork_result, &status, 0));
-    ASSERT_TRUE(WIFEXITED(status));
-    ASSERT_EQ(123, WEXITSTATUS(status));
+    AssertChildExited(fork_result, 123);
   }
 }
 
@@ -464,10 +459,7 @@ TEST(UNISTD_TEST, getpid_caching_and_clone) {
 
   ASSERT_EQ(parent_pid, getpid());
 
-  int status;
-  ASSERT_EQ(clone_result, waitpid(clone_result, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(123, WEXITSTATUS(status));
+  AssertChildExited(clone_result, 123);
 }
 
 static void* GetPidCachingPthreadStartRoutine(void*) {
@@ -873,13 +865,6 @@ TEST(UNISTD_TEST, dup2_same) {
   ASSERT_EQ(EBADF, errno);
 }
 
-static void WaitForChildExit() {
-  int status;
-  wait(&status);
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(0, WEXITSTATUS(status));
-}
-
 TEST(UNISTD_TEST, lockf_smoke) {
   constexpr off64_t file_size = 32*1024LL;
 
@@ -964,7 +949,7 @@ TEST(UNISTD_TEST, lockf_with_child) {
     ASSERT_EQ(EACCES, errno);
     _exit(0);
   }
-  WaitForChildExit();
+  AssertChildExited(pid, 0);
 }
 
 TEST(UNISTD_TEST, lockf_partial_with_child) {
@@ -994,7 +979,7 @@ TEST(UNISTD_TEST, lockf_partial_with_child) {
     ASSERT_EQ(EACCES, errno);
     _exit(0);
   }
-  WaitForChildExit();
+  AssertChildExited(pid, 0);
 
   // The second half was locked by the child, but the lock disappeared
   // when the process exited, so check it can be locked now.
