@@ -41,7 +41,6 @@
 
 #include "private/bionic_constants.h"
 #include "private/bionic_futex.h"
-#include "private/bionic_sdk_version.h"
 #include "private/bionic_time_conversions.h"
 
 // In this implementation, a semaphore contains a
@@ -221,13 +220,7 @@ int sem_wait(sem_t* sem) {
       return 0;
     }
 
-    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
-    if (bionic_get_application_target_sdk_version() > 23) {
-      if (result ==-EINTR) {
-        errno = EINTR;
-        return -1;
-      }
-    }
+    __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
   }
 }
 
