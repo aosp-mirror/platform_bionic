@@ -22,6 +22,30 @@
       "revId": "dffe80e57c6c21ce84490fdf2e45f92311e3015f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14beeac6_e7aaaaee",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-26T17:17:29Z",
+      "side": 1,
+      "message": "done. and the one other \"\u003c\u003c errno\" in our tests, also my fault, also in this file. (maybe we should add a PASSERT or something to our helpers. for our tests \"what was errno?\" is pretty much always interesting.)\n\n\u003c\u003c always fools me because i have higher expectations. in a sane world there would be an actual error type and a corresponding operator\u003c\u003c. back in 1970, though...",
+      "parentUuid": "f49a3677_18e9cd68",
+      "range": {
+        "startLine": 1014,
+        "startChar": 44,
+        "endLine": 1014,
+        "endChar": 49
+      },
+      "revId": "dffe80e57c6c21ce84490fdf2e45f92311e3015f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
