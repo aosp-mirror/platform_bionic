@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b4afde8e_c7020853",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-26T18:45:18Z",
+      "side": 1,
+      "message": "posix says no, glibc says \"if gnu stuff is enabled\". since it\u0027s only a header file change, i was going to wait until we had a customer. but i\u0027ll add that to the checkin comment.",
+      "parentUuid": "f4b5d6da_a3d3482d",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 16
+      },
+      "revId": "c61d6920d64c8fc628a4925384612f483a1914c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4b8d2d6_1f8d2bb1",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b4afde8e_07b400ee",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-26T18:45:18Z",
+      "side": 1,
+      "message": "done. i\u0027ve also added a test for the negative size case too.\n\n(this is one of those borderline cases where it feels like we\u0027re testing the kernel more than the C library, but since (a) we\u0027re actually translating to a different system call and (b) it\u0027s not like the kernel never has bugs, and no one else is writing tests for it...)",
+      "parentUuid": "d4b8d2d6_1f8d2bb1",
+      "range": {
+        "startLine": 889,
+        "startChar": 5,
+        "endLine": 889,
+        "endChar": 21
+      },
+      "revId": "c61d6920d64c8fc628a4925384612f483a1914c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f49a3677_b81e014d",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-01-26T03:03:11Z",
       "side": 1,
       "message": "If the forked process fails, does the test fail? I assume that a failure leads to a non-zero exit status, so I think it should work.",
+      "range": {
+        "startLine": 927,
+        "startChar": 4,
+        "endLine": 927,
+        "endChar": 29
+      },
+      "revId": "c61d6920d64c8fc628a4925384612f483a1914c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34c3ee5c_0958997e",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-26T18:45:18Z",
+      "side": 1,
+      "message": "you ask this every time we write one of these tests :-)\n\n...which suggests it might be a good idea to factor out this code (and WaitForChildExit too). if we were just calling some test helper we\u0027d have slightly less duplication _and_ the advantage of making it clear that this is fine. i\u0027ll do that in another patch though.",
+      "parentUuid": "f49a3677_b81e014d",
       "range": {
         "startLine": 927,
         "startChar": 4,
