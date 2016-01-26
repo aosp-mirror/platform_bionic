@@ -29,8 +29,8 @@
 #ifndef _STDINT_H
 #define _STDINT_H
 
+#include <bits/wchar_limits.h>
 #include <stddef.h>
-#include <machine/wchar_limits.h>
 
 typedef __signed char __int8_t;
 typedef unsigned char __uint8_t;

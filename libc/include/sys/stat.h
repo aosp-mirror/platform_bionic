@@ -29,8 +29,8 @@
 #ifndef _SYS_STAT_H_
 #define _SYS_STAT_H_
 
+#include <bits/timespec.h>
 #include <linux/stat.h>
-#include <machine/timespec.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _MACHINE_PTHREAD_TYPES_H_
-#define _MACHINE_PTHREAD_TYPES_H_
+#include <unistd.h>
 
-#include <sys/types.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
 
-typedef long pthread_t;
+int lockf64(int fd, int cmd, off64_t length) {
+  // Translate POSIX lockf into fcntl.
+  struct flock fl;
+  memset(&fl, 0, sizeof(fl));
+  fl.l_whence = SEEK_CUR;
+  fl.l_start = 0;
+  fl.l_len = length;
 
-typedef struct {
-  uint32_t flags;
-  void* stack_base;
-  size_t stack_size;
-  size_t guard_size;
-  int32_t sched_policy;
-  int32_t sched_priority;
-#ifdef __LP64__
-  char __reserved[16];
-#endif
-} pthread_attr_t;
+  if (cmd == F_ULOCK) {
+    fl.l_type = F_UNLCK;
+    cmd = F_SETLK64;
+    return fcntl(fd, F_SETLK64, &fl);
+  }
 
-#endif /* _MACHINE_PTHREAD_TYPES_H_ */
+  if (cmd == F_LOCK) {
+    fl.l_type = F_WRLCK;
+    return fcntl(fd, F_SETLKW64, &fl);
+  }
+
+  if (cmd == F_TLOCK) {
+    fl.l_type = F_WRLCK;
+    return fcntl(fd, F_SETLK64, &fl);
+  }
+
+  if (cmd == F_TEST) {
+    fl.l_type = F_RDLCK;
+    if (fcntl(fd, F_GETLK64, &fl) == -1) return -1;
+    if (fl.l_type == F_UNLCK || fl.l_pid == getpid()) return 0;
+    errno = EACCES;
+    return -1;
+  }
+
+  errno = EINVAL;
+  return -1;
+}
+
+int lockf(int fd, int cmd, off_t length) {
+  return lockf64(fd, cmd, length);
+}

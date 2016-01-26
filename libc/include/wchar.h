@@ -36,7 +36,7 @@
 #include <time.h>
 #include <xlocale.h>
 
-#include <machine/wchar_limits.h>
+#include <bits/wchar_limits.h>
 
 __BEGIN_DECLS
 

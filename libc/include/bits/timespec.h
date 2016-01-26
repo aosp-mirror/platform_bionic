@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _MACHINE_TIMESPEC_H_
-#define _MACHINE_TIMESPEC_H_
+#ifndef _BITS_TIMESPEC_H_
+#define _BITS_TIMESPEC_H_
 
 #include <sys/types.h>
 
@@ -43,4 +43,4 @@ struct timespec {
 };
 #endif
 
-#endif /* _MACHINE_TIMESPEC_H_ */
+#endif
