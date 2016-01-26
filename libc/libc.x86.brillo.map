@@ -1219,6 +1219,8 @@ LIBC_N {
     getifaddrs;
     if_freenameindex;
     if_nameindex;
+    lockf;
+    lockf64;
     preadv;
     preadv64;
     prlimit; # arm mips x86
