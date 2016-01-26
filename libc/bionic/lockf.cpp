@@ -34,7 +34,7 @@
 
 int lockf64(int fd, int cmd, off64_t length) {
   // Translate POSIX lockf into fcntl.
-  struct flock fl;
+  struct flock64 fl;
   memset(&fl, 0, sizeof(fl));
   fl.l_whence = SEEK_CUR;
   fl.l_start = 0;
