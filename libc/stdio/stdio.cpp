@@ -538,3 +538,56 @@ int fgetpos64(FILE* fp, fpos64_t* pos) {
   *pos = ftello64(fp);
   return (*pos == -1);
 }
+
+static FILE* __funopen(const void* cookie,
+                       int (*read_fn)(void*, char*, int),
+                       int (*write_fn)(void*, const char*, int),
+                       int (*close_fn)(void*)) {
+  if (read_fn == nullptr && write_fn == nullptr) {
+    errno = EINVAL;
+    return nullptr;
+  }
+
+  FILE* fp = __sfp();
+  if (fp == nullptr) return nullptr;
+
+  if (read_fn != nullptr && write_fn != nullptr) {
+    fp->_flags = __SRW;
+  } else if (read_fn != nullptr) {
+    fp->_flags = __SRD;
+  } else if (write_fn != nullptr) {
+    fp->_flags = __SWR;
+  }
+
+  fp->_file = -1;
+  fp->_cookie = const_cast<void*>(cookie); // The funopen(3) API is incoherent.
+  fp->_read = read_fn;
+  fp->_write = write_fn;
+  fp->_close = close_fn;
+
+  return fp;
+}
+
+FILE* funopen(const void* cookie,
+              int (*read_fn)(void*, char*, int),
+              int (*write_fn)(void*, const char*, int),
+              fpos_t (*seek_fn)(void*, fpos_t, int),
+              int (*close_fn)(void*)) {
+  FILE* fp = __funopen(cookie, read_fn, write_fn, close_fn);
+  if (fp != nullptr) {
+    fp->_seek = seek_fn;
+  }
+  return fp;
+}
+
+FILE* funopen64(const void* cookie,
+                int (*read_fn)(void*, char*, int),
+                int (*write_fn)(void*, const char*, int),
+                fpos64_t (*seek_fn)(void*, fpos64_t, int),
+                int (*close_fn)(void*)) {
+  FILE* fp = __funopen(cookie, read_fn, write_fn, close_fn);
+  if (fp != nullptr) {
+    _EXT(fp)->_seek64 = seek_fn;
+  }
+  return fp;
+}
