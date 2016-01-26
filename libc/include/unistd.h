@@ -35,7 +35,8 @@
 #include <sys/select.h>
 #include <sys/sysconf.h>
 
-#include <machine/posix_limits.h>
+#include <bits/lockf.h>
+#include <bits/posix_limits.h>
 
 __BEGIN_DECLS
 

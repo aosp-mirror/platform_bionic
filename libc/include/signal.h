@@ -30,9 +30,9 @@
 #define _SIGNAL_H_
 
 #include <asm/sigcontext.h>
+#include <bits/pthread_types.h>
+#include <bits/timespec.h>
 #include <limits.h>
-#include <machine/pthread_types.h>
-#include <machine/timespec.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
