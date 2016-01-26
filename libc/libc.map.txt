@@ -238,10 +238,6 @@ LIBC {
     alarm;
     alphasort;
     alphasort64;
-    android_getaddrinfofornet;
-    android_getaddrinfofornetcontext;
-    android_gethostbyaddrfornet;
-    android_gethostbynamefornet;
     android_set_abort_message;
     arc4random;
     arc4random_buf;
@@ -1461,6 +1457,10 @@ LIBC_PRIVATE {
     _Unwind_VRS_Get; # arm
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
+    android_getaddrinfofornet;
+    android_getaddrinfofornetcontext;
+    android_gethostbyaddrfornet;
+    android_gethostbynamefornet;
     arc4random_addrandom; # arm x86 mips nobrillo
     arc4random_stir; # arm x86 mips nobrillo
     atexit; # arm
