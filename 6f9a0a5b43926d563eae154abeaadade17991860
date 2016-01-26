@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4a43ebb_9f875f84",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-26T22:21:59Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be else if? Otherwise if readn_fn is not nullptr, you\u0027ll always set the flags to __SRD.\n\nSame with the check down below.",
+      "range": {
+        "startLine": 555,
+        "startChar": 2,
+        "endLine": 555,
+        "endChar": 4
+      },
+      "revId": "6f9a0a5b43926d563eae154abeaadade17991860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
