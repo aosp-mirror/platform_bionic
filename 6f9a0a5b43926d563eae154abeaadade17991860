@@ -22,6 +22,30 @@
       "revId": "6f9a0a5b43926d563eae154abeaadade17991860",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4a43ebb_1f1a8fff",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-01-26T22:45:02Z",
+      "side": 1,
+      "message": "d\u0027oh! the original version had this in its own function, and these were all \"return ...\".\n\none day i\u0027ll work out whether we can remove this apparent insanity; then we\u0027d be able to use |\u003d here instead...\n\n  // RD and WR are never simultaneously asserted: use _SRW instead.\n  #define __SRD  0x0004  // OK to read.\n  #define __SWR  0x0008  // OK to write.\n  #define __SRW  0x0010  // Open for reading \u0026 writing.",
+      "parentUuid": "b4a43ebb_9f875f84",
+      "range": {
+        "startLine": 555,
+        "startChar": 2,
+        "endLine": 555,
+        "endChar": 4
+      },
+      "revId": "6f9a0a5b43926d563eae154abeaadade17991860",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
