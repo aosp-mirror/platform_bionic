@@ -1213,8 +1213,11 @@ LIBC_N {
     __pwrite_chk;
     __pwrite64_chk;
     __write_chk;
+    fgetpos64;
     fileno_unlocked;
     freeifaddrs;
+    fseeko64;
+    fsetpos64;
     getgrgid_r;
     getgrnam_r;
     getifaddrs;
