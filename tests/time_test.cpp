@@ -27,6 +27,7 @@
 #include <atomic>
 
 #include "ScopedSignalHandler.h"
+#include "utils.h"
 
 #include "private/bionic_constants.h"
 
@@ -218,7 +219,7 @@ TEST(time, timer_create) {
   timer_t timer_id;
   ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
 
-  int pid = fork();
+  pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
   if (pid == 0) {
@@ -228,10 +229,7 @@ TEST(time, timer_create) {
     _exit(0);
   }
 
-  int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(0, WEXITSTATUS(status));
+  AssertChildExited(pid, 0);
 
   ASSERT_EQ(0, timer_delete(timer_id));
 }

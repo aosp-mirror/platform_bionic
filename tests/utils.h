@@ -16,8 +16,11 @@
 
 #ifndef __TEST_UTILS_H
 #define __TEST_UTILS_H
+
 #include <inttypes.h>
 #include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <atomic>
@@ -107,6 +110,13 @@ static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
     }
     usleep(1000);
   }
+}
+
+static inline void AssertChildExited(int pid, int expected_exit_status) {
+  int status;
+  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
 }
 
 #endif

@@ -23,6 +23,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "utils.h"
+
 TEST(sys_select, fd_set_smoke) {
   fd_set fds;
   FD_ZERO(&fds);
@@ -68,7 +70,8 @@ static void DelayedWriteCleanup(int pid, int fd) {
   char buf[sizeof(DELAY_MSG)];
   ASSERT_EQ(static_cast<ssize_t>(sizeof(DELAY_MSG)), read(fd, buf, sizeof(DELAY_MSG)));
   ASSERT_STREQ(DELAY_MSG, buf);
-  ASSERT_EQ(pid, waitpid(pid, NULL, 0));
+
+  AssertChildExited(pid, 0);
 }
 
 TEST(sys_select, select_smoke) {
