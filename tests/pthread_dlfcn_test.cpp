@@ -17,6 +17,8 @@
 
 #include <dlfcn.h>
 
+#include "utils.h"
+
 static int g_atfork_prepare_calls = 0;
 static void AtForkPrepare1() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 1; }
 static void AtForkPrepare2() { g_atfork_prepare_calls = (g_atfork_prepare_calls * 10) + 2; }
@@ -49,7 +51,7 @@ TEST(pthread, pthread_atfork_with_dlclose) {
 
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare4, AtForkParent4, AtForkChild4));
 
-  int pid = fork();
+  pid_t pid = fork();
 
   ASSERT_NE(-1, pid) << strerror(errno);
 
@@ -64,8 +66,7 @@ TEST(pthread, pthread_atfork_with_dlclose) {
   EXPECT_EQ(0, dlclose(handle));
   g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
 
-  int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  AssertChildExited(pid, 0);
 
   pid = fork();
 
@@ -79,5 +80,5 @@ TEST(pthread, pthread_atfork_with_dlclose) {
   ASSERT_EQ(14, g_atfork_parent_calls);
   ASSERT_EQ(41, g_atfork_prepare_calls);
 
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  AssertChildExited(pid, 0);
 }
