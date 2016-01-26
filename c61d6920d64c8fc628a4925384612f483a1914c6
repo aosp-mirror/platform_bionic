@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4b8d2d6_1f8d2bb1",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-26T03:03:11Z",
+      "side": 1,
+      "message": "It might be worth doing a test of file_size being zero to indicate lock everything.",
+      "range": {
+        "startLine": 889,
+        "startChar": 5,
+        "endLine": 889,
+        "endChar": 21
+      },
+      "revId": "c61d6920d64c8fc628a4925384612f483a1914c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f49a3677_b81e014d",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-26T03:03:11Z",
+      "side": 1,
+      "message": "If the forked process fails, does the test fail? I assume that a failure leads to a non-zero exit status, so I think it should work.",
+      "range": {
+        "startLine": 927,
+        "startChar": 4,
+        "endLine": 927,
+        "endChar": 29
+      },
+      "revId": "c61d6920d64c8fc628a4925384612f483a1914c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
