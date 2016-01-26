@@ -170,21 +170,43 @@ int renameat(int, const char*, int, const char*);
 
 int fseek(FILE*, long, int);
 long ftell(FILE*);
+
 #if defined(__USE_FILE_OFFSET64)
 int fgetpos(FILE*, fpos_t*) __RENAME(fgetpos64);
 int fsetpos(FILE*, const fpos_t*) __RENAME(fsetpos64);
 int fseeko(FILE*, off_t, int) __RENAME(fseeko64);
 off_t ftello(FILE*) __RENAME(ftello64);
+#  if defined(__USE_BSD)
+FILE* funopen(const void*,
+              int (*)(void*, char*, int),
+              int (*)(void*, const char*, int),
+              fpos_t (*)(void*, fpos_t, int),
+              int (*)(void*)) __RENAME(funopen64);
+#  endif
 #else
 int fgetpos(FILE*, fpos_t*);
 int fsetpos(FILE*, const fpos_t*);
 int fseeko(FILE*, off_t, int);
 off_t ftello(FILE*);
+#  if defined(__USE_BSD)
+FILE* funopen(const void*,
+              int (*)(void*, char*, int),
+              int (*)(void*, const char*, int),
+              fpos_t (*)(void*, fpos_t, int),
+              int (*)(void*));
+#  endif
 #endif
 int fgetpos64(FILE*, fpos64_t*);
 int fsetpos64(FILE*, const fpos64_t*);
 int fseeko64(FILE*, off64_t, int);
 off64_t ftello64(FILE*);
+#if defined(__USE_BSD)
+FILE* funopen64(const void*,
+                int (*)(void*, char*, int),
+                int (*)(void*, const char*, int),
+                fpos64_t (*)(void*, fpos64_t, int),
+                int (*)(void*));
+#endif
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
@@ -254,18 +276,8 @@ int feof_unlocked(FILE*);
 int ferror_unlocked(FILE*);
 int fileno_unlocked(FILE*);
 
-/*
- * Stdio function-access interface.
- * TODO: __USE_FILE_OFFSET64
- */
-FILE	*funopen(const void *,
-		int (*)(void *, char *, int),
-		int (*)(void *, const char *, int),
-		fpos_t (*)(void *, fpos_t, int),
-		int (*)(void *));
-
-#define	fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
-#define	fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
+#define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
+#define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __BSD_VISIBLE */
 
 extern char* __fgets_chk(char*, int, FILE*, size_t);

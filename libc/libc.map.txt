@@ -1260,6 +1260,7 @@ LIBC_N {
     freeifaddrs;
     fseeko64;
     fsetpos64;
+    funopen64;
     getgrgid_r;
     getgrnam_r;
     getifaddrs;
