@@ -433,11 +433,10 @@ static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
   }
 }
 
-// TODO: _FILE_OFFSET_BITS=64.
-static off_t __ftello_unlocked(FILE* fp) {
+static off64_t __ftello64_unlocked(FILE* fp) {
   // Find offset of underlying I/O object, then adjust for buffered bytes.
   __sflush(fp);  // May adjust seek offset on append stream.
-  fpos_t result = __seek_unlocked(fp, 0, SEEK_CUR);
+  off64_t result = __seek_unlocked(fp, 0, SEEK_CUR);
   if (result == -1) {
     return -1;
   }
@@ -457,29 +456,34 @@ static off_t __ftello_unlocked(FILE* fp) {
   return result;
 }
 
-// TODO: _FILE_OFFSET_BITS=64.
-int fseeko(FILE* fp, off_t offset, int whence) {
+int __fseeko64(FILE* fp, off64_t offset, int whence, int off_t_bits) {
   ScopedFileLock sfl(fp);
 
   // Change any SEEK_CUR to SEEK_SET, and check `whence` argument.
   // After this, whence is either SEEK_SET or SEEK_END.
   if (whence == SEEK_CUR) {
-    fpos_t current_offset = __ftello_unlocked(fp);
+    fpos64_t current_offset = __ftello64_unlocked(fp);
     if (current_offset == -1) {
-      return EOF;
+      return -1;
     }
     offset += current_offset;
     whence = SEEK_SET;
   } else if (whence != SEEK_SET && whence != SEEK_END) {
     errno = EINVAL;
-    return EOF;
+    return -1;
+  }
+
+  // If our caller has a 32-bit interface, refuse to go past a 32-bit file offset.
+  if (off_t_bits == 32 && offset > LONG_MAX) {
+    errno = EOVERFLOW;
+    return -1;
   }
 
   if (fp->_bf._base == NULL) __smakebuf(fp);
 
   // Flush unwritten data and attempt the seek.
   if (__sflush(fp) || __seek_unlocked(fp, offset, whence) == -1) {
-    return EOF;
+    return -1;
   }
 
   // Success: clear EOF indicator and discard ungetc() data.
@@ -491,34 +495,46 @@ int fseeko(FILE* fp, off_t offset, int whence) {
   return 0;
 }
 
-// TODO: _FILE_OFFSET_BITS=64.
-int fseek(FILE* fp, long offset, int whence) {
-  return fseeko(fp, offset, whence);
+int fseeko(FILE* fp, off_t offset, int whence) {
+  static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
+  return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
+}
+__strong_alias(fseek, fseeko);
+
+int fseeko64(FILE* fp, off64_t offset, int whence) {
+  return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
 }
 
-// TODO: _FILE_OFFSET_BITS=64.
+int fsetpos(FILE* fp, const fpos_t* pos) {
+  return fseeko(fp, *pos, SEEK_SET);
+}
+
+int fsetpos64(FILE* fp, const fpos64_t* pos) {
+  return fseeko64(fp, *pos, SEEK_SET);
+}
+
 off_t ftello(FILE* fp) {
-  ScopedFileLock sfl(fp);
-  return __ftello_unlocked(fp);
-}
-
-// TODO: _FILE_OFFSET_BITS=64
-long ftell(FILE* fp) {
-  off_t offset = ftello(fp);
-  if (offset > LONG_MAX) {
+  static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
+  off64_t result = ftello64(fp);
+  if (result > LONG_MAX) {
     errno = EOVERFLOW;
     return -1;
   }
-  return offset;
+  return result;
+}
+__strong_alias(ftell, ftello);
+
+off64_t ftello64(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return __ftello64_unlocked(fp);
 }
 
-// TODO: _FILE_OFFSET_BITS=64
 int fgetpos(FILE* fp, fpos_t* pos) {
   *pos = ftello(fp);
   return (*pos == -1);
 }
 
-// TODO: _FILE_OFFSET_BITS=64
-int fsetpos(FILE* fp, const fpos_t* pos) {
-  return fseeko(fp, *pos, SEEK_SET);
+int fgetpos64(FILE* fp, fpos64_t* pos) {
+  *pos = ftello64(fp);
+  return (*pos == -1);
 }

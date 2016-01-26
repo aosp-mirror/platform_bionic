@@ -49,7 +49,8 @@
 
 __BEGIN_DECLS
 
-typedef off_t fpos_t;		/* stdio file position type */
+typedef off_t fpos_t;
+typedef off64_t fpos64_t;
 
 struct __sFILE;
 typedef struct __sFILE FILE;
@@ -118,8 +119,6 @@ FILE	*freopen(const char * __restrict, const char * __restrict,
 	    FILE * __restrict);
 int	 fscanf(FILE * __restrict, const char * __restrict, ...)
 		__scanflike(2, 3);
-int	 fseek(FILE *, long, int);
-long	 ftell(FILE *);
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
@@ -166,25 +165,26 @@ char* tempnam(const char*, const char*)
 #endif
 #endif
 
-extern int rename(const char*, const char*);
-extern int renameat(int, const char*, int, const char*);
+int rename(const char*, const char*);
+int renameat(int, const char*, int, const char*);
 
+int fseek(FILE*, long, int);
+long ftell(FILE*);
 #if defined(__USE_FILE_OFFSET64)
-/* Not possible. */
-int	 fgetpos(FILE * __restrict, fpos_t * __restrict)
-	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
-int	 fsetpos(FILE *, const fpos_t *)
-	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
-int	 fseeko(FILE *, off_t, int)
-	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
-off_t	 ftello(FILE *)
-	__attribute__((__error__("not available with _FILE_OFFSET_BITS=64")));
+int fgetpos(FILE*, fpos_t*) __RENAME(fgetpos64);
+int fsetpos(FILE*, const fpos_t*) __RENAME(fsetpos64);
+int fseeko(FILE*, off_t, int) __RENAME(fseeko64);
+off_t ftello(FILE*) __RENAME(ftello64);
 #else
-int	 fgetpos(FILE * __restrict, fpos_t * __restrict);
-int	 fsetpos(FILE *, const fpos_t *);
-int	 fseeko(FILE *, off_t, int);
-off_t	 ftello(FILE *);
+int fgetpos(FILE*, fpos_t*);
+int fsetpos(FILE*, const fpos_t*);
+int fseeko(FILE*, off_t, int);
+off_t ftello(FILE*);
 #endif
+int fgetpos64(FILE*, fpos64_t*);
+int fsetpos64(FILE*, const fpos64_t*);
+int fseeko64(FILE*, off64_t, int);
+off64_t ftello64(FILE*);
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
@@ -256,6 +256,7 @@ int fileno_unlocked(FILE*);
 
 /*
  * Stdio function-access interface.
+ * TODO: __USE_FILE_OFFSET64
  */
 FILE	*funopen(const void *,
 		int (*)(void *, char *, int),
