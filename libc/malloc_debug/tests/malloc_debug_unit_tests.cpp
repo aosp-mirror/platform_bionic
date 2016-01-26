@@ -111,14 +111,20 @@ class MallocDebugTest : public ::testing::Test {
 };
 
 MallocDispatch MallocDebugTest::dispatch = {
-  .calloc = calloc,
-  .free = free,
-  .mallinfo = mallinfo,
-  .malloc = malloc,
-  .malloc_usable_size = malloc_usable_size,
-  .memalign = memalign,
-  .posix_memalign = posix_memalign,
-  .realloc = realloc,
+  calloc,
+  free,
+  mallinfo,
+  malloc,
+  malloc_usable_size,
+  memalign,
+  posix_memalign,
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  nullptr,
+#endif
+  realloc,
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  nullptr,
+#endif
 };
 
 void VerifyAllocCalls() {

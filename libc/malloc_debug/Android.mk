@@ -72,5 +72,6 @@ LOCAL_SHARED_LIBRARIES := libbase
 LOCAL_CFLAGS := \
     -Wall \
     -Werror \
+    -Wno-error=format-zero-length \
 
 include $(BUILD_NATIVE_TEST)
