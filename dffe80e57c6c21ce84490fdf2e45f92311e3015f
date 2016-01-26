@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f49a3677_18e9cd68",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-26T08:17:00Z",
+      "side": 1,
+      "message": "Would this be better as strerror(errno)?",
+      "range": {
+        "startLine": 1014,
+        "startChar": 44,
+        "endLine": 1014,
+        "endChar": 49
+      },
+      "revId": "dffe80e57c6c21ce84490fdf2e45f92311e3015f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
