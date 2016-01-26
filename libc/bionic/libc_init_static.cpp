@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <android/api-level.h>
 #include <elf.h>
 #include <errno.h>
 #include <stddef.h>
@@ -105,4 +106,8 @@ __noreturn void __libc_init(void* raw_args,
   }
 
   exit(slingshot(args.argc, args.argv, args.envp));
+}
+
+uint32_t bionic_get_application_target_sdk_version() {
+  return __ANDROID_API__;
 }
