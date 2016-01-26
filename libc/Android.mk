@@ -461,7 +461,6 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdio/fputwc.c \
     upstream-openbsd/lib/libc/stdio/fputws.c \
     upstream-openbsd/lib/libc/stdio/fscanf.c \
-    upstream-openbsd/lib/libc/stdio/funopen.c \
     upstream-openbsd/lib/libc/stdio/fvwrite.c \
     upstream-openbsd/lib/libc/stdio/fwalk.c \
     upstream-openbsd/lib/libc/stdio/fwide.c \

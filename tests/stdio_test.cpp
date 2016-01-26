@@ -1091,6 +1091,41 @@ TEST(STDIO_TEST, fseek_ftell_unseekable) {
   ASSERT_EQ(ESPIPE, errno);
 
   fclose(fp);
+#else
+  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
+#endif
+}
+
+TEST(STDIO_TEST, funopen_EINVAL) {
+#if defined(__BIONIC__)
+  errno = 0;
+  ASSERT_EQ(nullptr, funopen(nullptr, nullptr, nullptr, nullptr, nullptr));
+  ASSERT_EQ(EINVAL, errno);
+#else
+  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
+#endif
+}
+
+TEST(STDIO_TEST, funopen_seek) {
+#if defined(__BIONIC__)
+  auto read_fn = [](void*, char*, int) { return -1; };
+
+  auto seek_fn = [](void*, fpos_t, int) -> fpos_t { return 0xfedcba12; };
+  auto seek64_fn = [](void*, fpos64_t, int) -> fpos64_t { return 0xfedcba12345678; };
+
+  FILE* fp = funopen(nullptr, read_fn, nullptr, seek_fn, nullptr);
+  ASSERT_TRUE(fp != nullptr);
+  fpos_t pos;
+  ASSERT_EQ(0, fgetpos(fp, &pos));
+  ASSERT_EQ(0xfedcba12LL, pos);
+
+  FILE* fp64 = funopen64(nullptr, read_fn, nullptr, seek64_fn, nullptr);
+  ASSERT_TRUE(fp64 != nullptr);
+  fpos64_t pos64;
+  ASSERT_EQ(0, fgetpos64(fp64, &pos64));
+  ASSERT_EQ(0xfedcba12345678, pos64);
+#else
+  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
 #endif
 }
 
