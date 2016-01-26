@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _MACHINE_WCHAR_LIMITS_H_
-#define _MACHINE_WCHAR_LIMITS_H_
+#ifndef _BITS_PTHREAD_TYPES_H_
+#define _BITS_PTHREAD_TYPES_H_
 
-/* Both GCC and clang define __WCHAR_MAX__. */
-#define WCHAR_MAX __WCHAR_MAX__
+#include <sys/types.h>
 
-/* As of 3.4, clang still doesn't define __WCHAR_MIN__. */
-#if defined(__WCHAR_UNSIGNED__)
-#  define WCHAR_MIN L'\0'
-#else
-#  define WCHAR_MIN (-(WCHAR_MAX) - 1)
+typedef long pthread_t;
+
+typedef struct {
+  uint32_t flags;
+  void* stack_base;
+  size_t stack_size;
+  size_t guard_size;
+  int32_t sched_policy;
+  int32_t sched_priority;
+#ifdef __LP64__
+  char __reserved[16];
 #endif
+} pthread_attr_t;
 
-#endif /* _MACHINE_WCHAR_LIMITS_H_ */
+#endif

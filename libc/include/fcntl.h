@@ -36,6 +36,10 @@
 #include <linux/stat.h>
 #include <linux/uio.h>
 
+#if defined(__USE_GNU) || defined(__USE_BSD)
+#include <bits/lockf.h>
+#endif
+
 __BEGIN_DECLS
 
 #ifdef __LP64__

@@ -872,3 +872,132 @@ TEST(UNISTD_TEST, dup2_same) {
   ASSERT_EQ(-1, dup2(fd, fd));
   ASSERT_EQ(EBADF, errno);
 }
+
+static void WaitForChildExit() {
+  int status;
+  wait(&status);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
+}
+
+TEST(UNISTD_TEST, lockf_smoke) {
+  constexpr off64_t file_size = 32*1024LL;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, ftruncate(tf.fd, file_size));
+
+  // Lock everything.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_LOCK, file_size));
+
+  // Try-lock everything, this should succeed too.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TLOCK, file_size));
+
+  // Check status.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TEST, file_size));
+
+  // Unlock file.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_ULOCK, file_size));
+}
+
+TEST(UNISTD_TEST, lockf_zero) {
+  constexpr off64_t file_size = 32*1024LL;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, ftruncate(tf.fd, file_size));
+
+  // Lock everything by specifying a size of 0 (meaning "to the end, even if it changes").
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_LOCK, 0));
+
+  // Check that it's locked.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TEST, file_size));
+
+  // Move the end.
+  ASSERT_EQ(0, ftruncate(tf.fd, 2*file_size));
+
+  // Check that the new section is locked too.
+  ASSERT_EQ(file_size, lseek64(tf.fd, file_size, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TEST, 2*file_size));
+}
+
+TEST(UNISTD_TEST, lockf_negative) {
+  constexpr off64_t file_size = 32*1024LL;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, ftruncate(tf.fd, file_size));
+
+  // Lock everything, but specifying the range in reverse.
+  ASSERT_EQ(file_size, lseek64(tf.fd, file_size, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_LOCK, -file_size));
+
+  // Check that it's locked.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TEST, file_size));
+}
+
+TEST(UNISTD_TEST, lockf_with_child) {
+  constexpr off64_t file_size = 32*1024LL;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, ftruncate(tf.fd, file_size));
+
+  // Lock everything.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_LOCK, file_size));
+
+  // Fork a child process
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid);
+  if (pid == 0) {
+    // Check that the child cannot lock the file.
+    ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+    ASSERT_EQ(-1, lockf64(tf.fd, F_TLOCK, file_size));
+    ASSERT_EQ(EAGAIN, errno);
+    // Check also that it reports itself as locked.
+    ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+    ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size));
+    ASSERT_EQ(EACCES, errno);
+    _exit(0);
+  }
+  WaitForChildExit();
+}
+
+TEST(UNISTD_TEST, lockf_partial_with_child) {
+  constexpr off64_t file_size = 32*1024LL;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, ftruncate(tf.fd, file_size));
+
+  // Lock the first half of the file.
+  ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_LOCK, file_size/2));
+
+  // Fork a child process.
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid);
+  if (pid == 0) {
+    // Check that the child can lock the other half.
+    ASSERT_EQ(file_size/2, lseek64(tf.fd, file_size/2, SEEK_SET));
+    ASSERT_EQ(0, lockf64(tf.fd, F_TLOCK, file_size/2));
+    // Check that the child cannot lock the first half.
+    ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+    ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size/2));
+    ASSERT_EQ(EACCES, errno);
+    // Check also that it reports itself as locked.
+    ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
+    ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size/2));
+    ASSERT_EQ(EACCES, errno);
+    _exit(0);
+  }
+  WaitForChildExit();
+
+  // The second half was locked by the child, but the lock disappeared
+  // when the process exited, so check it can be locked now.
+  ASSERT_EQ(file_size/2, lseek64(tf.fd, file_size/2, SEEK_SET));
+  ASSERT_EQ(0, lockf64(tf.fd, F_TLOCK, file_size/2));
+}

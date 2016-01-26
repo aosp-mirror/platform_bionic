@@ -159,6 +159,7 @@ libc_bionic_ndk_src_files := \
     bionic/libgen.cpp \
     bionic/link.cpp \
     bionic/locale.cpp \
+    bionic/lockf.cpp \
     bionic/lstat.cpp \
     bionic/malloc_info.cpp \
     bionic/mbrtoc16.cpp \

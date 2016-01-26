@@ -30,7 +30,7 @@
 #define _PTHREAD_H_
 
 #include <limits.h>
-#include <machine/pthread_types.h>
+#include <bits/pthread_types.h>
 #include <sched.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
