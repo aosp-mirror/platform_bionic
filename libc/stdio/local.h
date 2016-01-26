@@ -72,7 +72,6 @@ struct __sFILE {
 
 	// Function pointers used by `funopen`.
 	// Note that `_seek` is ignored if `_seek64` (in __sfileext) is set.
-	// TODO: implement `funopen64`.
 	// TODO: NetBSD has `funopen2` which corrects the `int`s to `size_t`s.
 	// TODO: glibc has `fopencookie` which passes the function pointers in a struct.
 	void* _cookie;	/* cookie passed to io functions */
