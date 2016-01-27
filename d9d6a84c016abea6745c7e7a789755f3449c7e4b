@@ -16,6 +16,24 @@
       "revId": "d9d6a84c016abea6745c7e7a789755f3449c7e4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54c4e260_aa0b1340",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-01-27T02:06:05Z",
+      "side": 1,
+      "message": "linker_alloc is usually readonly... whereas these are rw.. I do not think the same name will help here...",
+      "parentUuid": "b4a43ebb_858470ca",
+      "revId": "d9d6a84c016abea6745c7e7a789755f3449c7e4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
