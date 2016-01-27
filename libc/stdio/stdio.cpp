@@ -426,7 +426,12 @@ static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
   if (_EXT(fp)->_seek64 != nullptr) {
     return (*_EXT(fp)->_seek64)(fp->_cookie, offset, whence);
   } else if (fp->_seek != nullptr) {
-    return (*fp->_seek)(fp->_cookie, offset, whence);
+    off64_t result = (*fp->_seek)(fp->_cookie, offset, whence);
+#if !defined(__LP64__)
+    // Avoid sign extension if off64_t is larger than off_t.
+    if (result != -1) result &= 0xffffffff;
+#endif
+    return result;
   } else {
     errno = ESPIPE;
     return -1;
@@ -531,12 +536,12 @@ off64_t ftello64(FILE* fp) {
 
 int fgetpos(FILE* fp, fpos_t* pos) {
   *pos = ftello(fp);
-  return (*pos == -1);
+  return (*pos == -1) ? -1 : 0;
 }
 
 int fgetpos64(FILE* fp, fpos64_t* pos) {
   *pos = ftello64(fp);
-  return (*pos == -1);
+  return (*pos == -1) ? -1 : 0;
 }
 
 static FILE* __funopen(const void* cookie,
