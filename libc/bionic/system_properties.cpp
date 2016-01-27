@@ -753,7 +753,8 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
     }
 
     char filename[PROP_FILENAME_MAX];
-    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, context_);
+    int len = __libc_format_buffer(filename, sizeof(filename), "%s/%s",
+                                   property_filename, context_);
     if (len < 0 || len > PROP_FILENAME_MAX) {
         lock_.unlock();
         return false;
@@ -788,7 +789,8 @@ void context_node::reset_access() {
 
 bool context_node::check_access() {
     char filename[PROP_FILENAME_MAX];
-    int len = snprintf(filename, sizeof(filename), "%s/%s", property_filename, context_);
+    int len = __libc_format_buffer(filename, sizeof(filename), "%s/%s",
+                                   property_filename, context_);
     if (len < 0 || len > PROP_FILENAME_MAX) {
         return false;
     }
@@ -810,7 +812,8 @@ void context_node::unmap() {
 
 static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
     char filename[PROP_FILENAME_MAX];
-    int len = snprintf(filename, sizeof(filename), "%s/properties_serial", property_filename);
+    int len = __libc_format_buffer(filename, sizeof(filename),
+                                   "%s/properties_serial", property_filename);
     if (len < 0 || len > PROP_FILENAME_MAX) {
         __system_property_area__ = nullptr;
         return false;
