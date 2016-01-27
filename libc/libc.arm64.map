@@ -47,7 +47,6 @@ LIBC {
     __isnormal;
     __isnormalf;
     __isnormall;
-    __isthreaded;
     __libc_current_sigrtmax;
     __libc_current_sigrtmin;
     __libc_init;
