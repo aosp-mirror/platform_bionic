@@ -1116,14 +1116,19 @@ TEST(STDIO_TEST, funopen_seek) {
   FILE* fp = funopen(nullptr, read_fn, nullptr, seek_fn, nullptr);
   ASSERT_TRUE(fp != nullptr);
   fpos_t pos;
-  ASSERT_EQ(0, fgetpos(fp, &pos));
-  ASSERT_EQ(0xfedcba12LL, pos);
+#if defined(__LP64__)
+  EXPECT_EQ(0, fgetpos(fp, &pos)) << strerror(errno);
+  EXPECT_EQ(0xfedcba12LL, pos);
+#else
+  EXPECT_EQ(-1, fgetpos(fp, &pos)) << strerror(errno);
+  EXPECT_EQ(EOVERFLOW, errno);
+#endif
 
   FILE* fp64 = funopen64(nullptr, read_fn, nullptr, seek64_fn, nullptr);
   ASSERT_TRUE(fp64 != nullptr);
   fpos64_t pos64;
-  ASSERT_EQ(0, fgetpos64(fp64, &pos64));
-  ASSERT_EQ(0xfedcba12345678, pos64);
+  EXPECT_EQ(0, fgetpos64(fp64, &pos64)) << strerror(errno);
+  EXPECT_EQ(0xfedcba12345678, pos64);
 #else
   GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
 #endif
