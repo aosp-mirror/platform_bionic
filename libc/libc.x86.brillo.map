@@ -59,7 +59,7 @@ LIBC {
     __isnormal;
     __isnormalf;
     __isnormall;
-    __isthreaded;
+    __isthreaded; # arm x86 mips
     __libc_current_sigrtmax;
     __libc_current_sigrtmin;
     __libc_init;
