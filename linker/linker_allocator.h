@@ -101,7 +101,7 @@ typedef
 class LinkerSmallObjectAllocator {
  public:
   LinkerSmallObjectAllocator();
-  void init(uint32_t type, size_t block_size, const char* name);
+  void init(uint32_t type, size_t block_size);
   void* alloc();
   void free(void* ptr);
 
@@ -113,7 +113,6 @@ class LinkerSmallObjectAllocator {
   void create_page_record(void* page_addr, size_t free_blocks_cnt);
 
   uint32_t type_;
-  const char* name_;
   size_t block_size_;
 
   size_t free_pages_cnt_;
