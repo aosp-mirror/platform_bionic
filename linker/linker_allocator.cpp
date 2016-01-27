@@ -70,7 +70,7 @@ static inline uint16_t log2(size_t number) {
 }
 
 LinkerSmallObjectAllocator::LinkerSmallObjectAllocator()
-    : type_(0), name_(nullptr), block_size_(0), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
+    : type_(0), block_size_(0), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
 
 void* LinkerSmallObjectAllocator::alloc() {
   if (free_blocks_list_ == nullptr) {
@@ -156,10 +156,9 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
   }
 }
 
-void LinkerSmallObjectAllocator::init(uint32_t type, size_t block_size, const char* name) {
+void LinkerSmallObjectAllocator::init(uint32_t type, size_t block_size) {
   type_ = type;
   block_size_ = block_size;
-  name_ = name;
 }
 
 linker_vector_t::iterator LinkerSmallObjectAllocator::find_page_record(void* ptr) {
@@ -197,7 +196,7 @@ void LinkerSmallObjectAllocator::alloc_page() {
     __libc_fatal("mmap failed");
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, name_);
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, "linker_alloc_small_objects");
 
   memset(map_ptr, 0, PAGE_SIZE);
 
@@ -220,19 +219,9 @@ void LinkerSmallObjectAllocator::alloc_page() {
 
 
 LinkerMemoryAllocator::LinkerMemoryAllocator() {
-  static const char* allocator_names[kSmallObjectAllocatorsCount] = {
-    "linker_alloc_16", // 2^4
-    "linker_alloc_32", // 2^5
-    "linker_alloc_64", // and so on...
-    "linker_alloc_128",
-    "linker_alloc_256",
-    "linker_alloc_512",
-    "linker_alloc_1024", // 2^10
-  };
-
   for (size_t i = 0; i < kSmallObjectAllocatorsCount; ++i) {
     uint32_t type = i + kSmallObjectMinSizeLog2;
-    allocators_[i].init(type, 1 << type, allocator_names[i]);
+    allocators_[i].init(type, 1 << type);
   }
 }
 
