@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4a43ebb_858470ca",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-01-27T02:03:14Z",
+      "side": 1,
+      "message": "I saw a lot of alternating between linker_alloc_16 and linker_alloc, using linker_alloc here would result in combining with the block allocator.",
+      "revId": "d9d6a84c016abea6745c7e7a789755f3449c7e4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
