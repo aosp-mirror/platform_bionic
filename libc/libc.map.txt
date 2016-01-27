@@ -75,7 +75,6 @@ LIBC {
     __memrchr_chk;
     __memset_chk;
     __mmap2; # arm x86 mips
-    __moddi3; # x86 mips
     __ns_format_ttl; # arm x86 mips
     __ns_get16; # arm x86 mips
     __ns_get32; # arm x86 mips
