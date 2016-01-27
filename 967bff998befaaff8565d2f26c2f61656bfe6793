@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "940c9ac1_2acedf87",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1840,
+      "author": {
+        "id": 1087715
+      },
+      "writtenOn": "2016-01-27T13:07:09Z",
+      "side": 1,
+      "message": "Given that each message can be very long (including the full path of the file), I think that putting them on a single line is quite unreadable.",
+      "parentUuid": "54c14218_8d946165",
+      "revId": "967bff998befaaff8565d2f26c2f61656bfe6793",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54206291_290f7510",
         "filename": "tests/Android.mk",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "b4f0bedd_b3f2424f",
+        "filename": "tests/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1087715
+      },
+      "writtenOn": "2016-01-27T13:07:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54206291_290f7510",
+      "range": {
+        "startLine": 537,
+        "startChar": 0,
+        "endLine": 537,
+        "endChar": 1
+      },
+      "revId": "967bff998befaaff8565d2f26c2f61656bfe6793",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4eb7261_673366e6",
         "filename": "tests/Android.mk",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2016-01-22T19:21:03Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 540,
+        "startChar": 0,
+        "endLine": 540,
+        "endChar": 1
+      },
+      "revId": "967bff998befaaff8565d2f26c2f61656bfe6793",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "940c9ac1_0acb1b78",
+        "filename": "tests/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1087715
+      },
+      "writtenOn": "2016-01-27T13:07:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4eb7261_673366e6",
       "range": {
         "startLine": 540,
         "startChar": 0,
@@ -93,6 +159,30 @@
       "writtenOn": "2016-01-22T19:21:03Z",
       "side": 1,
       "message": "nit: just ()",
+      "range": {
+        "startLine": 17,
+        "startChar": 9,
+        "endLine": 17,
+        "endChar": 13
+      },
+      "revId": "967bff998befaaff8565d2f26c2f61656bfe6793",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14dfca57_ebe8d166",
+        "filename": "tests/empty_program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1087715
+      },
+      "writtenOn": "2016-01-27T13:07:09Z",
+      "side": 1,
+      "message": "Done (for some reason I was thinking we were compiling this as C, not C++)",
+      "parentUuid": "b40b5e17_9e023d20",
       "range": {
         "startLine": 17,
         "startChar": 9,
