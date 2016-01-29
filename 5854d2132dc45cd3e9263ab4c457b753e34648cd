@@ -16,6 +16,24 @@
       "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d468d2a0_88617f13",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-01-29T20:55:54Z",
+      "side": 1,
+      "message": "Sorry, I mean calling to a call instruction seems strange and this seems more work than the normal \"thunk ebx\"",
+      "parentUuid": "749006cb_52fac427",
+      "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
