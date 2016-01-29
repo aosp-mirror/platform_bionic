@@ -1187,6 +1187,14 @@ class LoadTask {
     extinfo_ = extinfo;
   }
 
+  bool is_dt_needed() const {
+    return is_dt_needed_;
+  }
+
+  void set_dt_needed(bool is_dt_needed) {
+    is_dt_needed_ = is_dt_needed;
+  }
+
   const ElfReader& get_elf_reader() const {
     CHECK(si_ != nullptr);
     return (*elf_readers_map_)[si_];
@@ -1226,7 +1234,8 @@ class LoadTask {
   LoadTask(const char* name, soinfo* needed_by,
            std::unordered_map<const soinfo*, ElfReader>* readers_map)
     : name_(name), needed_by_(needed_by), si_(nullptr),
-      fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map) {}
+      fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map),
+      is_dt_needed_(false) {}
 
   ~LoadTask() {
     if (fd_ != -1 && close_fd_) {
@@ -1242,6 +1251,9 @@ class LoadTask {
   bool close_fd_;
   off64_t file_offset_;
   std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
+  // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
+  bool is_dt_needed_;
+  // END OF WORKAROUND
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(LoadTask);
 };
@@ -1772,7 +1784,7 @@ static bool load_library(android_namespace_t* ns,
 
   if (!ns->is_accessible(realpath)) {
     // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
-    const soinfo* needed_by = task->get_needed_by();
+    const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_greylisted(name, needed_by)) {
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
@@ -2040,6 +2052,7 @@ static bool find_libraries(android_namespace_t* ns,
 
     bool is_dt_needed = needed_by != nullptr && (needed_by != start_with || add_as_children);
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
+    task->set_dt_needed(is_dt_needed);
 
     if(!find_library_internal(ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
       return false;
