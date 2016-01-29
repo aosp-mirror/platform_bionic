@@ -630,6 +630,9 @@ LIBC {
     madvise;
     mallinfo;
     malloc;
+    malloc_disable;
+    malloc_enable;
+    malloc_iterate;
     malloc_info;
     malloc_usable_size;
     mbrlen;

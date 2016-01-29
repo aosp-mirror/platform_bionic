@@ -44,7 +44,7 @@
 #include "malloc_debug.h"
 #include "TrackData.h"
 
-void TrackData::GetList(std::vector<Header*>* list) {
+void TrackData::GetList(std::vector<const Header*>* list) {
   ScopedDisableDebugCalls disable;
 
   for (const auto& header : headers_) {
@@ -52,13 +52,13 @@ void TrackData::GetList(std::vector<Header*>* list) {
   }
 
   // Sort by the size of the allocation.
-  std::sort(list->begin(), list->end(), [](Header* a, Header* b) {
+  std::sort(list->begin(), list->end(), [](const Header* a, const Header* b) {
     if (a->size == b->size) return a < b;
     return a->size > b->size;
   });
 }
 
-void TrackData::Add(Header* header, bool backtrace_found) {
+void TrackData::Add(const Header* header, bool backtrace_found) {
   ScopedDisableDebugCalls disable;
 
   pthread_mutex_lock(&mutex_);
@@ -69,7 +69,7 @@ void TrackData::Add(Header* header, bool backtrace_found) {
   pthread_mutex_unlock(&mutex_);
 }
 
-void TrackData::Remove(Header* header, bool backtrace_found) {
+void TrackData::Remove(const Header* header, bool backtrace_found) {
   ScopedDisableDebugCalls disable;
 
   pthread_mutex_lock(&mutex_);
@@ -80,10 +80,19 @@ void TrackData::Remove(Header* header, bool backtrace_found) {
   pthread_mutex_unlock(&mutex_);
 }
 
+bool TrackData::Contains(const Header* header) {
+  ScopedDisableDebugCalls disable;
+
+  pthread_mutex_lock(&mutex_);
+  bool found = headers_.count(header);
+  pthread_mutex_unlock(&mutex_);
+  return found;
+}
+
 void TrackData::DisplayLeaks(DebugData& debug) {
   ScopedDisableDebugCalls disable;
 
-  std::vector<Header*> list;
+  std::vector<const Header*> list;
   GetList(&list);
 
   size_t track_count = 0;
@@ -117,7 +126,7 @@ void TrackData::GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
   }
   *overall_size = *info_size * total_backtrace_allocs_;
 
-  std::vector<Header*> list;
+  std::vector<const Header*> list;
   GetList(&list);
 
   uint8_t* data = *info;

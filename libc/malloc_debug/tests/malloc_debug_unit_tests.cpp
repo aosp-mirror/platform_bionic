@@ -121,6 +121,9 @@ MallocDispatch MallocDebugTest::dispatch = {
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   nullptr,
 #endif
+  nullptr,
+  nullptr,
+  nullptr,
 };
 
 void VerifyAllocCalls() {
