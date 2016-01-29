@@ -30,6 +30,7 @@
 #define _PRIVATE_BIONIC_MALLOC_DISPATCH_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <private/bionic_config.h>
 
 // Entry in malloc dispatch table.
@@ -41,6 +42,10 @@ typedef size_t (*MallocMallocUsableSize)(const void*);
 typedef void* (*MallocMemalign)(size_t, size_t);
 typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
 typedef void* (*MallocRealloc)(void*, size_t);
+typedef int (*MallocIterate)(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
+typedef void (*MallocMallocDisable)();
+typedef void (*MallocMallocEnable)();
+
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocPvalloc)(size_t);
 typedef void* (*MallocValloc)(size_t);
@@ -61,6 +66,9 @@ struct MallocDispatch {
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   MallocValloc valloc;
 #endif
+  MallocIterate iterate;
+  MallocMallocDisable malloc_disable;
+  MallocMallocEnable malloc_enable;
 } __attribute__((aligned(32)));
 
 #endif

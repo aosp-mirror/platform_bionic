@@ -40,6 +40,8 @@
 //   free_malloc_leak_info: Frees the data allocated by the call to
 //                          get_malloc_leak_info.
 
+#include <pthread.h>
+
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -63,6 +65,9 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
     Malloc(valloc),
 #endif
+    Malloc(iterate),
+    Malloc(malloc_disable),
+    Malloc(malloc_enable),
   };
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
@@ -159,7 +164,6 @@ extern "C" void* valloc(size_t bytes) {
 #if !defined(LIBC_STATIC)
 
 #include <dlfcn.h>
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -215,6 +219,7 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
   }
   g_debug_free_malloc_leak_info_func(info);
 }
+
 // =============================================================================
 
 template<typename FunctionType>
@@ -260,6 +265,18 @@ static bool InitMalloc(void* malloc_impl_handler, MallocDispatch* table, const c
   }
   if (!InitMallocFunction<MallocRealloc>(malloc_impl_handler, &table->realloc,
                                          prefix, "realloc")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocIterate>(malloc_impl_handler, &table->iterate,
+                                         prefix, "iterate")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMallocDisable>(malloc_impl_handler, &table->malloc_disable,
+                                         prefix, "malloc_disable")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMallocEnable>(malloc_impl_handler, &table->malloc_enable,
+                                         prefix, "malloc_enable")) {
     return false;
   }
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
@@ -385,3 +402,37 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
 #endif  // !LIBC_STATIC
+
+// =============================================================================
+// Exported for use by libmemunreachable.
+// =============================================================================
+
+// Calls callback for every allocation in the anonymous heap mapping
+// [base, base+size).  Must be called between malloc_disable and malloc_enable.
+extern "C" int malloc_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  auto _iterate = __libc_globals->malloc_dispatch.iterate;
+  if (__predict_false(_iterate != nullptr)) {
+    return _iterate(base, size, callback, arg);
+  }
+  return Malloc(iterate)(base, size, callback, arg);
+}
+
+// Disable calls to malloc so malloc_iterate gets a consistent view of
+// allocated memory.
+extern "C" void malloc_disable() {
+  auto _malloc_disable = __libc_globals->malloc_dispatch.malloc_disable;
+  if (__predict_false(_malloc_disable != nullptr)) {
+    return _malloc_disable();
+  }
+  return Malloc(malloc_disable)();
+}
+
+// Re-enable calls to malloc after a previous call to malloc_disable.
+extern "C" void malloc_enable() {
+  auto _malloc_enable = __libc_globals->malloc_dispatch.malloc_enable;
+  if (__predict_false(_malloc_enable != nullptr)) {
+    return _malloc_enable();
+  }
+  return Malloc(malloc_enable)();
+}
