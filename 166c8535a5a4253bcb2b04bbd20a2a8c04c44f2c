@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "14950abd_7e9ead25",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-29T00:54:54Z",
+      "side": 1,
+      "message": "True, but I want to have some limit. If we changed the code to use strtoll, then this would still work.",
+      "parentUuid": "f465d6c4_bac4d16b",
+      "range": {
+        "startLine": 268,
+        "startChar": 33,
+        "endLine": 268,
+        "endChar": 41
+      },
+      "revId": "166c8535a5a4253bcb2b04bbd20a2a8c04c44f2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d468d2a0_39aa8f91",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-01-28T21:51:22Z",
       "side": 1,
       "message": "Doesn\u0027t this mean you can only set this to 0?",
+      "range": {
+        "startLine": 291,
+        "startChar": 29,
+        "endLine": 291,
+        "endChar": 33
+      },
+      "revId": "166c8535a5a4253bcb2b04bbd20a2a8c04c44f2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "349a0eef_82e6beff",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-29T00:54:54Z",
+      "side": 1,
+      "message": "This actually needs to be refactored slightly. This means that leak_track doesn\u0027t take an argument.\n\nThe better way to handle this would be to create a Feature class, and derived classes to handle the different kinds. There are really about three to four different types of config options.\n\nBut that\u0027s for a follow-on CL.",
+      "parentUuid": "d468d2a0_39aa8f91",
       "range": {
         "startLine": 291,
         "startChar": 29,
