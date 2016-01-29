@@ -127,7 +127,8 @@ TEST_F(MallocDebugConfigTest, illegal_value_zero) {
   ASSERT_FALSE(InitConfig("backtrace=0"));
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  std::string log_msg("6 malloc_debug malloc_testing: bad value for option 'backtrace', value must be > 0: 0\n");
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace', value must be >= 1: 0\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
@@ -145,7 +146,9 @@ TEST_F(MallocDebugConfigTest, illegal_value_negative) {
   ASSERT_FALSE(InitConfig("backtrace=-1"));
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  std::string log_msg("6 malloc_debug malloc_testing: bad value for option 'backtrace', value must be > 0: -1\n");
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace', "
+      "value cannot be negative: -1\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
@@ -376,5 +379,174 @@ TEST_F(MallocDebugConfigTest, leak_track_fail) {
   std::string log_msg(
       "6 malloc_debug malloc_testing: value set for option 'leak_track' "
       "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, guard_min_error) {
+  ASSERT_FALSE(InitConfig("guard=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'guard', value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, guard_max_error) {
+  ASSERT_FALSE(InitConfig("guard=20000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'guard', "
+      "value must be <= 16384: 20000\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, front_guard_min_error) {
+  ASSERT_FALSE(InitConfig("front_guard=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'front_guard', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, front_guard_max_error) {
+  ASSERT_FALSE(InitConfig("front_guard=20000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'front_guard', "
+      "value must be <= 16384: 20000\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, rear_guard_min_error) {
+  ASSERT_FALSE(InitConfig("rear_guard=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'rear_guard', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, rear_guard_max_error) {
+  ASSERT_FALSE(InitConfig("rear_guard=20000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'rear_guard', "
+      "value must be <= 16384: 20000\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, fill_min_error) {
+  ASSERT_FALSE(InitConfig("fill=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'fill', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, fill_on_alloc_min_error) {
+  ASSERT_FALSE(InitConfig("fill_on_alloc=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'fill_on_alloc', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, fill_on_free_min_error) {
+  ASSERT_FALSE(InitConfig("fill_on_free=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'fill_on_free', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_min_error) {
+  ASSERT_FALSE(InitConfig("backtrace=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_max_error) {
+  ASSERT_FALSE(InitConfig("backtrace=300"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace', "
+      "value must be <= 256: 300\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_enable_on_signal_min_error) {
+  ASSERT_FALSE(InitConfig("backtrace_enable_on_signal=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace_enable_on_signal', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_enable_on_signal_max_error) {
+  ASSERT_FALSE(InitConfig("backtrace_enable_on_signal=300"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'backtrace_enable_on_signal', "
+      "value must be <= 256: 300\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, expand_alloc_min_error) {
+  ASSERT_FALSE(InitConfig("expand_alloc=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'expand_alloc', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, expand_alloc_max_error) {
+  ASSERT_FALSE(InitConfig("expand_alloc=21000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'expand_alloc', "
+      "value must be <= 16384: 21000\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_min_error) {
+  ASSERT_FALSE(InitConfig("free_track=0"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'free_track', "
+      "value must be >= 1: 0\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_max_error) {
+  ASSERT_FALSE(InitConfig("free_track=21000"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'free_track', "
+      "value must be <= 16384: 21000\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
