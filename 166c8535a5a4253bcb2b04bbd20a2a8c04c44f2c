@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "349a0eef_c2fc4660",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-01-29T01:07:27Z",
+      "side": 1,
+      "message": "Sure, but couldn\u0027t you just change the parsing code to use strtoul? It\u0027s strange to have a default value that isn\u0027t actually a valid option to pass in.",
+      "parentUuid": "14950abd_7e9ead25",
+      "range": {
+        "startLine": 268,
+        "startChar": 33,
+        "endLine": 268,
+        "endChar": 41
+      },
+      "revId": "166c8535a5a4253bcb2b04bbd20a2a8c04c44f2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d468d2a0_39aa8f91",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 1
