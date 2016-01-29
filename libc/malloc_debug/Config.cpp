@@ -45,12 +45,14 @@
 #include "debug_log.h"
 
 struct Feature {
-  Feature(std::string name, size_t default_value, uint64_t option, size_t* value,
-          bool* config, bool combo_option)
-      : name(name), default_value(default_value), option(option), value(value),
-        config(config), combo_option(combo_option) {}
+  Feature(std::string name, size_t default_value, size_t min_value, size_t max_value,
+          uint64_t option, size_t* value, bool* config, bool combo_option)
+      : name(name), default_value(default_value), min_value(min_value), max_value(max_value),
+        option(option), value(value), config(config), combo_option(combo_option) {}
   std::string name;
   size_t default_value = 0;
+  size_t min_value = 0;
+  size_t max_value = 0;
 
   uint64_t option = 0;
   size_t* value = nullptr;
@@ -123,8 +125,8 @@ bool PropertyParser::Get(std::string* property, size_t* value, bool* value_set) 
                   getprogname(), property->c_str(), end);
       }
       return false;
-    } else if (read_value <= 0) {
-      error_log("%s: bad value for option '%s', value must be > 0: %ld",
+    } else if (read_value < 0) {
+      error_log("%s: bad value for option '%s', value cannot be negative: %ld",
                 getprogname(), property->c_str(), read_value);
       return false;
     }
@@ -200,19 +202,29 @@ void PropertyParser::LogUsage() {
   error_log("    Enable the leak tracking of memory allocations.");
 }
 
-static bool SetFeature(const Feature& feature, size_t value, bool value_set) {
+static bool SetFeature(
+    const std::string name, const Feature& feature, size_t value, bool value_set) {
   if (feature.config) {
     *feature.config = true;
   }
   if (feature.value != nullptr) {
     if (value_set) {
+      if (value < feature.min_value) {
+        error_log("%s: bad value for option '%s', value must be >= %zu: %zu",
+                  getprogname(), name.c_str(), feature.min_value, value);
+        return false;
+      } else if (value > feature.max_value) {
+        error_log("%s: bad value for option '%s', value must be <= %zu: %zu",
+                  getprogname(), name.c_str(), feature.max_value, value);
+        return false;
+      }
       *feature.value = value;
     } else {
       *feature.value = feature.default_value;
     }
   } else if (value_set) {
      error_log("%s: value set for option '%s' which does not take a value",
-               getprogname(), feature.name.c_str());
+               getprogname(), name.c_str());
      return false;
   }
   return true;
@@ -239,43 +251,44 @@ bool Config::SetFromProperties() {
 
   // Supported features:
   const Feature features[] = {
-    Feature("guard", 32, 0, nullptr, nullptr, true),
+    Feature("guard", 32, 1, 16384, 0, nullptr, nullptr, true),
     // Enable front guard. Value is the size of the guard.
-    Feature("front_guard", 32, FRONT_GUARD, &this->front_guard_bytes, nullptr, true),
+    Feature("front_guard", 32, 1, 16384, FRONT_GUARD, &this->front_guard_bytes, nullptr, true),
     // Enable end guard. Value is the size of the guard.
-    Feature("rear_guard", 32, REAR_GUARD, &this->rear_guard_bytes, nullptr, true),
+    Feature("rear_guard", 32, 1, 16384, REAR_GUARD, &this->rear_guard_bytes, nullptr, true),
 
     // Enable logging the backtrace on allocation. Value is the total
     // number of frames to log.
-    Feature("backtrace", 16, BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames,
+    Feature("backtrace", 16, 1, 256, BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames,
             &this->backtrace_enabled, false),
     // Enable gathering backtrace values on a signal.
-    Feature("backtrace_enable_on_signal", 16, BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames,
-            &this->backtrace_enable_on_signal, false),
+    Feature("backtrace_enable_on_signal", 16, 1, 256, BACKTRACE | TRACK_ALLOCS,
+            &this->backtrace_frames, &this->backtrace_enable_on_signal, false),
 
-    Feature("fill", SIZE_MAX, 0, nullptr, nullptr, true),
+    Feature("fill", SIZE_MAX, 1, SIZE_MAX, 0, nullptr, nullptr, true),
     // Fill the allocation with an arbitrary pattern on allocation.
     // Value is the number of bytes of the allocation to fill
     // (default entire allocation).
-    Feature("fill_on_alloc", SIZE_MAX, FILL_ON_ALLOC, &this->fill_on_alloc_bytes,
+    Feature("fill_on_alloc", SIZE_MAX, 1, SIZE_MAX, FILL_ON_ALLOC, &this->fill_on_alloc_bytes,
             nullptr, true),
     // Fill the allocation with an arbitrary pattern on free.
     // Value is the number of bytes of the allocation to fill
     // (default entire allocation).
-    Feature("fill_on_free", SIZE_MAX, FILL_ON_FREE, &this->fill_on_free_bytes, nullptr, true),
+    Feature("fill_on_free", SIZE_MAX, 1, SIZE_MAX, FILL_ON_FREE, &this->fill_on_free_bytes, nullptr, true),
 
     // Expand the size of every alloc by this number bytes. Value is
     // the total number of bytes to expand every allocation by.
-    Feature ("expand_alloc", 16, EXPAND_ALLOC, &this->expand_alloc_bytes, nullptr, false),
+    Feature ("expand_alloc", 16, 1, 16384, EXPAND_ALLOC, &this->expand_alloc_bytes,
+             nullptr, false),
 
     // Keep track of the freed allocations and verify at a later date
     // that they have not been used. Turning this on, also turns on
     // fill on free.
-    Feature("free_track", 100, FREE_TRACK | FILL_ON_FREE, &this->free_track_allocations,
+    Feature("free_track", 100, 1, 16384, FREE_TRACK | FILL_ON_FREE, &this->free_track_allocations,
             nullptr, false),
 
     // Enable printing leaked allocations.
-    Feature("leak_track", 0, LEAK_TRACK | TRACK_ALLOCS, nullptr, nullptr, false),
+    Feature("leak_track", 0, 0, 0, LEAK_TRACK | TRACK_ALLOCS, nullptr, nullptr, false),
   };
 
   // Process each property name we can find.
@@ -291,7 +304,7 @@ bool Config::SetFromProperties() {
         if (features[i].option == 0 && features[i].combo_option) {
           i++;
           for (; i < sizeof(features)/sizeof(Feature) && features[i].combo_option; i++) {
-            if (!SetFeature(features[i], value, value_set)) {
+            if (!SetFeature(property, features[i], value, value_set)) {
               valid = false;
               break;
             }
@@ -301,7 +314,7 @@ bool Config::SetFromProperties() {
             break;
           }
         } else {
-          if (!SetFeature(features[i], value, value_set)) {
+          if (!SetFeature(property, features[i], value, value_set)) {
             valid = false;
             break;
           }
