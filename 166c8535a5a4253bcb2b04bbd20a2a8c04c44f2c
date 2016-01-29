@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "349a0eef_c23286e1",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-01-29T01:21:02Z",
+      "side": 1,
+      "message": "I used strtol because strtoul allows you to enter a negative value, it just converts it to a really large positive value. Since I couldn\u0027t think of any reason to allow anyone to need to set a large value, it seemed fine to use a signed value and convert it.\n\nI could use strtoul, and look for \"-\", but again neither seemed better than the other.",
+      "parentUuid": "349a0eef_c2fc4660",
+      "range": {
+        "startLine": 268,
+        "startChar": 33,
+        "endLine": 268,
+        "endChar": 41
+      },
+      "revId": "166c8535a5a4253bcb2b04bbd20a2a8c04c44f2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d468d2a0_39aa8f91",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 1
