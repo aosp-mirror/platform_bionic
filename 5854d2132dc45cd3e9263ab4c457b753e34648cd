@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "749006cb_52fac427",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-01-29T20:14:07Z",
+      "side": 1,
+      "message": "is it not better to just \"mov [%esp], %eax\" rather than call + pop?",
+      "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
