@@ -40,7 +40,7 @@ $(GEN): $(LOCAL_PATH)/arch-common/bionic/crtbrand.S
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # crtbegin_so.c -> crtbegin_so1.o
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so1.o
@@ -51,7 +51,7 @@ $(GEN): $(my_libc_crt_target_crtbegin_so_file)
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # crtbegin_so1.o + crtbrand.o -> crtbegin_so.o
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_so.o
@@ -71,7 +71,7 @@ $(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend_so.S
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # crtbegin_so.o and crtend_so.o are installed to device
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_SHARED_LIBRARIES)/crtbegin_so.o
@@ -93,7 +93,7 @@ $(GEN): $(my_libc_crt_target_crtbegin_file)
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # crtbegin_static1.o + crtbrand.o -> crtbegin_static.o
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_static.o
@@ -113,7 +113,7 @@ $(GEN): $(my_libc_crt_target_crtbegin_file)
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # crtbegin_dynamic1.o + crtbrand.o -> crtbegin_dynamic.o
 GEN := $($(my_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/crtbegin_dynamic.o
@@ -135,7 +135,7 @@ $(GEN): $(LOCAL_PATH)/arch-common/bionic/crtend.S
 	$(hide) $(PRIVATE_CC) $(PRIVATE_CFLAGS) \
 		-MD -MF $(@:%.o=%.d) -o $@ -c $<
 	$(transform-d-to-p)
--include $(GEN:%.o=%.P)
+$(call include-depfile,$(GEN:%.o=%.P),$(GEN))
 
 # Clear temp vars
 my_libc_crt_target_ldflags :=
