@@ -33,6 +33,7 @@
 #include <pthread.h>
 
 #include <deque>
+#include <unordered_map>
 #include <vector>
 
 #include <private/bionic_macros.h>
@@ -41,6 +42,7 @@
 struct Header;
 class DebugData;
 struct Config;
+struct BacktraceHeader;
 
 class FreeTrackData {
  public:
@@ -51,6 +53,8 @@ class FreeTrackData {
 
   void VerifyAll(DebugData& debug);
 
+  void LogBacktrace(const Header* header);
+
  private:
   void LogFreeError(DebugData& debug, const Header* header, const uint8_t* pointer);
   void VerifyAndFree(DebugData& debug, const Header* header, const void* pointer);
@@ -58,6 +62,8 @@ class FreeTrackData {
   pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
   std::deque<const Header*> list_;
   std::vector<uint8_t> cmp_mem_;
+  std::unordered_map<const Header*, BacktraceHeader*> backtraces_;
+  size_t backtrace_num_frames_;
 
   DISALLOW_COPY_AND_ASSIGN(FreeTrackData);
 };

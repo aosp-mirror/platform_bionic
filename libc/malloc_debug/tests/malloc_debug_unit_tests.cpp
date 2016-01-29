@@ -76,8 +76,7 @@ static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
     offset += BIONIC_ALIGN(sizeof(TrackHeader), sizeof(uintptr_t));
   }
   if (flags & BACKTRACE_HEADER) {
-    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames - 1, sizeof(uintptr_t));
-    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames - 1, sizeof(uintptr_t));
+    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames, sizeof(uintptr_t));
   }
   return offset;
 }
@@ -209,7 +208,7 @@ TEST_F(MallocDebugTest, fill_on_alloc_partial) {
 }
 
 TEST_F(MallocDebugTest, fill_on_free) {
-  Init("fill_on_free free_track");
+  Init("fill_on_free free_track free_track_backtrace_num_frames=0");
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
@@ -226,7 +225,7 @@ TEST_F(MallocDebugTest, fill_on_free) {
 }
 
 TEST_F(MallocDebugTest, fill_on_free_partial) {
-  Init("fill_on_free=30 free_track");
+  Init("fill_on_free=30 free_track free_track_backtrace_num_frames=0");
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
@@ -246,7 +245,7 @@ TEST_F(MallocDebugTest, fill_on_free_partial) {
 }
 
 TEST_F(MallocDebugTest, free_track_partial) {
-  Init("fill_on_free=30 free_track");
+  Init("fill_on_free=30 free_track free_track_backtrace_num_frames=0");
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
@@ -688,7 +687,7 @@ TEST_F(MallocDebugTest, leak_track_frees) {
 }
 
 TEST_F(MallocDebugTest, free_track) {
-  Init("free_track=5");
+  Init("free_track=5 free_track_backtrace_num_frames=0");
 
   void* pointers[10];
   for (size_t i = 0; i < sizeof(pointers) / sizeof(void*); i++) {
@@ -714,7 +713,7 @@ TEST_F(MallocDebugTest, free_track) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free) {
-  Init("free_track=5");
+  Init("free_track=5 free_track_backtrace_num_frames=0");
 
   uint8_t* pointers[5];
   for (size_t i = 0; i < sizeof(pointers) / sizeof(void*); i++) {
@@ -779,7 +778,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free_finalize) {
-  Init("free_track=100");
+  Init("free_track=100 free_track_backtrace_num_frames=0");
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
@@ -803,10 +802,8 @@ TEST_F(MallocDebugTest, free_track_use_after_free_finalize) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free_with_backtrace) {
-  Init("free_track=100 backtrace");
+  Init("free_track=100");
 
-  // Alloc backtrace.
-  backtrace_fake_add(std::vector<uintptr_t> {0xf0, 0xe, 0xd});
   // Free backtrace.
   backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
 
@@ -831,6 +828,72 @@ TEST_F(MallocDebugTest, free_track_use_after_free_with_backtrace) {
   expected_log += "6 malloc_debug   #00 pc 0xfa\n";
   expected_log += "6 malloc_debug   #01 pc 0xeb\n";
   expected_log += "6 malloc_debug   #02 pc 0xdc\n";
+  expected_log += DIVIDER;
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, free_track_use_after_free_call_realloc) {
+  Init("free_track=100");
+
+  // Free backtrace.
+  backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
+  // Backtrace at realloc.
+  backtrace_fake_add(std::vector<uintptr_t> {0x12, 0x22, 0x32, 0x42});
+
+  void* pointer = debug_malloc(200);
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 200);
+  debug_free(pointer);
+
+  // Choose a size that should not trigger a realloc to verify tag is
+  // verified early.
+  ASSERT_TRUE(debug_realloc(pointer, 200) == nullptr);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log(DIVIDER);
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ ALLOCATION %p USED AFTER FREE (realloc)\n", pointer);
+  expected_log += "6 malloc_debug Backtrace of original free:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xfa\n";
+  expected_log += "6 malloc_debug   #01 pc 0xeb\n";
+  expected_log += "6 malloc_debug   #02 pc 0xdc\n";
+  expected_log += "6 malloc_debug Backtrace at time of failure:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x12\n";
+  expected_log += "6 malloc_debug   #01 pc 0x22\n";
+  expected_log += "6 malloc_debug   #02 pc 0x32\n";
+  expected_log += "6 malloc_debug   #03 pc 0x42\n";
+  expected_log += DIVIDER;
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, free_track_use_after_free_call_free) {
+  Init("free_track=100");
+
+  // Free backtrace.
+  backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
+  // Backtrace at second free.
+  backtrace_fake_add(std::vector<uintptr_t> {0x12, 0x22, 0x32, 0x42});
+
+  void* pointer = debug_malloc(200);
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 200);
+  debug_free(pointer);
+
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log(DIVIDER);
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ ALLOCATION %p USED AFTER FREE (free)\n", pointer);
+  expected_log += "6 malloc_debug Backtrace of original free:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xfa\n";
+  expected_log += "6 malloc_debug   #01 pc 0xeb\n";
+  expected_log += "6 malloc_debug   #02 pc 0xdc\n";
+  expected_log += "6 malloc_debug Backtrace at time of failure:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x12\n";
+  expected_log += "6 malloc_debug   #01 pc 0x22\n";
+  expected_log += "6 malloc_debug   #02 pc 0x32\n";
+  expected_log += "6 malloc_debug   #03 pc 0x42\n";
   expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }

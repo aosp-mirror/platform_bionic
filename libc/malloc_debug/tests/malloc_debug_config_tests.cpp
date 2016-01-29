@@ -99,8 +99,16 @@ std::string usage_string(
   "6 malloc_debug     Instead, keep XX of these allocations around and then verify\n"
   "6 malloc_debug     that they have not been modified when the total number of freed\n"
   "6 malloc_debug     allocations exceeds the XX amount. When the program terminates,\n"
-  "6 malloc_debug     the rest of these allocations are verified.\n"
+  "6 malloc_debug     the rest of these allocations are verified. When this option is\n"
+  "6 malloc_debug     enabled, it automatically records the backtrace at the time of the free.\n"
   "6 malloc_debug     The default is to record 100 allocations.\n"
+  "6 malloc_debug \n"
+  "6 malloc_debug   free_track_backtrace_num_frames[=XX]\n"
+  "6 malloc_debug     This option only has meaning if free_track is set. This indicates\n"
+  "6 malloc_debug     how many backtrace frames to capture when an allocation is freed.\n"
+  "6 malloc_debug     If XX is set, that is the number of frames to capture. If XX\n"
+  "6 malloc_debug     is set to zero, then no backtrace will be captured.\n"
+  "6 malloc_debug     The default is to record 16 frames.\n"
   "6 malloc_debug \n"
   "6 malloc_debug   leak_track\n"
   "6 malloc_debug     Enable the leak tracking of memory allocations.\n"
@@ -339,11 +347,13 @@ TEST_F(MallocDebugConfigTest, free_track) {
   ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
   ASSERT_EQ(1234U, config->free_track_allocations);
   ASSERT_EQ(SIZE_MAX, config->fill_on_free_bytes);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
 
   ASSERT_TRUE(InitConfig("free_track"));
   ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
   ASSERT_EQ(100U, config->free_track_allocations);
   ASSERT_EQ(SIZE_MAX, config->fill_on_free_bytes);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
@@ -354,11 +364,50 @@ TEST_F(MallocDebugConfigTest, free_track_and_fill_on_free) {
   ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
   ASSERT_EQ(1234U, config->free_track_allocations);
   ASSERT_EQ(32U, config->fill_on_free_bytes);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
 
   ASSERT_TRUE(InitConfig("free_track fill_on_free=60"));
   ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
   ASSERT_EQ(100U, config->free_track_allocations);
   ASSERT_EQ(60U, config->fill_on_free_bytes);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_backtrace_num_frames) {
+  ASSERT_TRUE(InitConfig("free_track_backtrace_num_frames=123"));
+
+  ASSERT_EQ(0U, config->options);
+  ASSERT_EQ(123U, config->free_track_backtrace_num_frames);
+
+  ASSERT_TRUE(InitConfig("free_track_backtrace_num_frames"));
+  ASSERT_EQ(0U, config->options);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_backtrace_num_frames_zero) {
+  ASSERT_TRUE(InitConfig("free_track_backtrace_num_frames=0"));
+
+  ASSERT_EQ(0U, config->options);
+  ASSERT_EQ(0U, config->free_track_backtrace_num_frames);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_backtrace_num_frames_and_free_track) {
+  ASSERT_TRUE(InitConfig("free_track free_track_backtrace_num_frames=123"));
+  ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
+  ASSERT_EQ(123U, config->free_track_backtrace_num_frames);
+
+  ASSERT_TRUE(InitConfig("free_track free_track_backtrace_num_frames"));
+  ASSERT_EQ(FREE_TRACK | FILL_ON_FREE, config->options);
+  ASSERT_EQ(16U, config->free_track_backtrace_num_frames);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
@@ -548,5 +597,15 @@ TEST_F(MallocDebugConfigTest, free_track_max_error) {
   std::string log_msg(
       "6 malloc_debug malloc_testing: bad value for option 'free_track', "
       "value must be <= 16384: 21000\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, free_track_backtrace_num_frames_max_error) {
+  ASSERT_FALSE(InitConfig("free_track_backtrace_num_frames=400"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: bad value for option 'free_track_backtrace_num_frames', "
+      "value must be <= 256: 400\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
