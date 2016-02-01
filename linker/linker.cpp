@@ -1788,9 +1788,13 @@ static bool load_library(android_namespace_t* ns,
     if (is_greylisted(name, needed_by)) {
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
-        DL_WARN("library \"%s\" (\"%s\") needed by \"%s\" is not accessible for the namespace \"%s\""
+        const soinfo* needed_or_dlopened_by = task->get_needed_by();
+        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
                 " - the access is temporarily granted as a workaround for http://b/26394120",
-                name, realpath.c_str(), needed_by->get_realpath(), ns->get_name());
+                name, realpath.c_str(),
+                needed_or_dlopened_by == nullptr ? "(unknown)" :
+                                         needed_or_dlopened_by->get_realpath(),
+                ns->get_name());
       }
     } else {
       // do not load libraries if they are not accessible for the specified namespace.
