@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "548b02a3_ff1392e6",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "Its surprising the x86 version of this code is \u003e2x the x86-64 version",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 11
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "749006cb_bb984090",
+        "filename": "libm/x86/lrintf.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "why not just ret?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5422228b_3a944504",
+        "filename": "libm/x86/lrintf.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "I\u0027m guessing the pain of PIC on x86-32 is why this isn\u0027t just:\n\ncomiss xmm0,[ address of 0xcf0000000 at a memory location]",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "349a0eef_6d599add",
+        "filename": "libm/x86/lrintf.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "as these cases will return MIN_INT from cvtss2si why not just handle more in the cvtss2si case?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 35
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5422228b_1a51495e",
+        "filename": "libm/x86/lrintf.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "why jmp to the next instruction rather than just falling through?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 9
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "349a0eef_8df186fa",
+        "filename": "libm/x86/rint.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "can\u0027t 16 byte stack alignment be assumed?",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 24
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f465d6c4_f741f7ea",
+        "filename": "libm/x86/rint.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-02-01T22:19:44Z",
+      "side": 1,
+      "message": "would a signal between movlpd and fldl destroy the value on the stack?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 18
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
