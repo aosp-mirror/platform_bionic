@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14950abd_a4a823f7",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-02T00:00:54Z",
+      "side": 1,
+      "message": "It looks like this line got accidentally duplicated.",
+      "range": {
+        "startLine": 212,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 21
+      },
+      "revId": "5c3117cba1525e047d331dc5b7dad7fcf3a0bb67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
