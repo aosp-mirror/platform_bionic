@@ -183,6 +183,7 @@ static void* libc_malloc_impl_handle = nullptr;
 static void (*g_debug_finalize_func)();
 static void (*g_debug_get_malloc_leak_info_func)(uint8_t**, size_t*, size_t*, size_t*, size_t*);
 static void (*g_debug_free_malloc_leak_info_func)(uint8_t*);
+static ssize_t (*g_debug_malloc_backtrace_func)(void*, uintptr_t*, size_t);
 
 // =============================================================================
 // Log functions
@@ -369,6 +370,15 @@ static void malloc_init_impl(libc_globals* globals) {
   }
   g_debug_free_malloc_leak_info_func = reinterpret_cast<void (*)(uint8_t*)>(sym);
 
+  sym = dlsym(malloc_impl_handle, "debug_malloc_backtrace");
+  if (sym == nullptr) {
+    error_log("%s: debug_malloc_backtrace routine not found in %s", getprogname(),
+              DEBUG_SHARED_LIB);
+    dlclose(malloc_impl_handle);
+    return;
+  }
+  g_debug_malloc_backtrace_func = reinterpret_cast<ssize_t (*)(void*, uintptr_t*, size_t)>(sym);
+
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild)) {
     dlclose(malloc_impl_handle);
     return;
@@ -436,3 +446,16 @@ extern "C" void malloc_enable() {
   }
   return Malloc(malloc_enable)();
 }
+
+#ifndef LIBC_STATIC
+extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
+  if (g_debug_malloc_backtrace_func == nullptr) {
+    return 0;
+  }
+  return g_debug_malloc_backtrace_func(pointer, frames, frame_count);
+}
+#else
+extern "C" ssize_t malloc_backtrace(void*, uintptr_t*, size_t) {
+  return 0;
+}
+#endif
