@@ -35,6 +35,6 @@
 void backtrace_startup();
 void backtrace_shutdown();
 size_t backtrace_get(uintptr_t* frames, size_t frame_count);
-void backtrace_log(uintptr_t* frames, size_t frame_count);
+void backtrace_log(const uintptr_t* frames, size_t frame_count);
 
 #endif // MALLOC_DEBUG_BACKTRACE_H

@@ -36,7 +36,8 @@
 #include "FreeTrackData.h"
 #include "malloc_debug.h"
 
-FreeTrackData::FreeTrackData(const Config& config) {
+FreeTrackData::FreeTrackData(const Config& config)
+    : backtrace_num_frames_(config.free_track_backtrace_num_frames) {
   cmp_mem_.resize(4096);
   memset(cmp_mem_.data(), config.fill_free_value, cmp_mem_.size());
 }
@@ -53,18 +54,19 @@ void FreeTrackData::LogFreeError(DebugData& debug, const Header* header,
       error_log("  pointer[%zu] = 0x%02x (expected 0x%02x)", i, pointer[i], fill_free_value);
     }
   }
-  if (debug.config().options & BACKTRACE) {
-    BacktraceHeader* back_header = debug.GetFreeBacktrace(header);
-    if (back_header->num_frames > 0) {
-      error_log("Backtrace at time of free:");
-      backtrace_log(&back_header->frames[0], back_header->num_frames);
-    }
+  auto back_iter = backtraces_.find(header);
+  if (back_iter != backtraces_.end()) {
+    const BacktraceHeader* back_header = back_iter->second;
+    error_log("Backtrace at time of free:");
+    backtrace_log(&back_header->frames[0], back_header->num_frames);
   }
   error_log(LOG_DIVIDER);
 }
 
 void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
                                   const void* pointer) {
+  ScopedDisableDebugCalls disable;
+
   const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
   size_t bytes = header->usable_size;
   bytes = (bytes < debug.config().fill_on_free_bytes) ? bytes : debug.config().fill_on_free_bytes;
@@ -77,6 +79,11 @@ void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
     bytes -= bytes_to_cmp;
     memory = &memory[bytes_to_cmp];
   }
+  auto back_iter = backtraces_.find(header);
+  if (back_iter != backtraces_.end()) {
+    g_dispatch->free(reinterpret_cast<void*>(back_iter->second));
+    backtraces_.erase(header);
+  }
   g_dispatch->free(header->orig_pointer);
 }
 
@@ -86,10 +93,20 @@ void FreeTrackData::Add(DebugData& debug, const Header* header) {
 
   pthread_mutex_lock(&mutex_);
   if (list_.size() == debug.config().free_track_allocations) {
-    VerifyAndFree(debug, list_.back(), debug.GetPointer(list_.back()));
+    const Header* old_header = list_.back();
+    VerifyAndFree(debug, old_header, debug.GetPointer(old_header));
     list_.pop_back();
   }
 
+  // Only log the free backtrace if we are using the free track feature.
+  if (backtrace_num_frames_ > 0) {
+    BacktraceHeader* back_header = reinterpret_cast<BacktraceHeader*>(
+      g_dispatch->malloc(sizeof(BacktraceHeader) + backtrace_num_frames_ * sizeof(uintptr_t)));
+    if (back_header) {
+      back_header->num_frames = backtrace_get(&back_header->frames[0], backtrace_num_frames_);
+      backtraces_[header] = back_header;
+    }
+  }
   list_.push_front(header);
 
   pthread_mutex_unlock(&mutex_);
@@ -103,4 +120,16 @@ void FreeTrackData::VerifyAll(DebugData& debug) {
     VerifyAndFree(debug, header, debug.GetPointer(header));
   }
   list_.clear();
+}
+
+void FreeTrackData::LogBacktrace(const Header* header) {
+  ScopedDisableDebugCalls disable;
+
+  auto back_iter = backtraces_.find(header);
+  if (back_iter == backtraces_.end()) {
+    return;
+  }
+
+  error_log("Backtrace of original free:");
+  backtrace_log(&back_iter->second->frames[0], back_iter->second->num_frames);
 }

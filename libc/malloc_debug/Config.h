@@ -61,6 +61,7 @@ struct Config {
   size_t expand_alloc_bytes = 0;
 
   size_t free_track_allocations = 0;
+  size_t free_track_backtrace_num_frames = 0;
 
   uint64_t options = 0;
   uint8_t fill_alloc_value;

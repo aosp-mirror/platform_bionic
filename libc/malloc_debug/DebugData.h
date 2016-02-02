@@ -67,11 +67,6 @@ class DebugData {
     return reinterpret_cast<BacktraceHeader*>(value + backtrace->alloc_offset());
   }
 
-  BacktraceHeader* GetFreeBacktrace(const Header* header) {
-    uintptr_t value = reinterpret_cast<uintptr_t>(header);
-    return reinterpret_cast<BacktraceHeader*>(value + backtrace->free_offset());
-  }
-
   uint8_t* GetFrontGuard(const Header* header) {
     uintptr_t value = reinterpret_cast<uintptr_t>(header);
     return reinterpret_cast<uint8_t*>(value + front_guard->offset());

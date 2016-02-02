@@ -52,7 +52,7 @@ size_t backtrace_get(uintptr_t* frames, size_t frame_num) {
   return total_frames;
 }
 
-void backtrace_log(uintptr_t* frames, size_t frame_count) {
+void backtrace_log(const uintptr_t* frames, size_t frame_count) {
   for (size_t i = 0; i < frame_count; i++) {
     error_log("  #%02zd pc %p", i, reinterpret_cast<void*>(frames[i]));
   }
