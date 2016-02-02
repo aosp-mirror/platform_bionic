@@ -143,7 +143,7 @@ size_t backtrace_get(uintptr_t* frames, size_t frame_count) {
   return state.cur_frame;
 }
 
-void backtrace_log(uintptr_t* frames, size_t frame_count) {
+void backtrace_log(const uintptr_t* frames, size_t frame_count) {
   ScopedDisableDebugCalls disable;
 
   for (size_t frame_num = 0; frame_num < frame_count; frame_num++) {

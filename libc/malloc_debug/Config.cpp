@@ -195,8 +195,16 @@ void PropertyParser::LogUsage() {
   error_log("    Instead, keep XX of these allocations around and then verify");
   error_log("    that they have not been modified when the total number of freed");
   error_log("    allocations exceeds the XX amount. When the program terminates,");
-  error_log("    the rest of these allocations are verified.");
+  error_log("    the rest of these allocations are verified. When this option is");
+  error_log("    enabled, it automatically records the backtrace at the time of the free.");
   error_log("    The default is to record 100 allocations.");
+  error_log("");
+  error_log("  free_track_backtrace_num_frames[=XX]");
+  error_log("    This option only has meaning if free_track is set. This indicates");
+  error_log("    how many backtrace frames to capture when an allocation is freed.");
+  error_log("    If XX is set, that is the number of frames to capture. If XX");
+  error_log("    is set to zero, then no backtrace will be captured.");
+  error_log("    The default is to record 16 frames.");
   error_log("");
   error_log("  leak_track");
   error_log("    Enable the leak tracking of memory allocations.");
@@ -245,6 +253,7 @@ bool Config::SetFromProperties() {
   front_guard_value = PropertyParser::DEFAULT_FRONT_GUARD_VALUE;
   rear_guard_value = PropertyParser::DEFAULT_REAR_GUARD_VALUE;
   backtrace_signal = SIGRTMIN + 10;
+  free_track_backtrace_num_frames = 16;
 
   // Parse the options are of the format:
   //   option_name or option_name=XX
@@ -286,6 +295,10 @@ bool Config::SetFromProperties() {
     // fill on free.
     Feature("free_track", 100, 1, 16384, FREE_TRACK | FILL_ON_FREE, &this->free_track_allocations,
             nullptr, false),
+    // Number of backtrace frames to keep when free_track is enabled. If this
+    // value is set to zero, no backtrace will be kept.
+    Feature("free_track_backtrace_num_frames", 16, 0, 256, 0,
+            &this->free_track_backtrace_num_frames, nullptr, false),
 
     // Enable printing leaked allocations.
     Feature("leak_track", 0, 0, 0, LEAK_TRACK | TRACK_ALLOCS, nullptr, nullptr, false),

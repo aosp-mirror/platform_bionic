@@ -88,7 +88,14 @@ static void LogTagError(const Header* header, const void* pointer, const char* n
   ScopedDisableDebugCalls disable;
 
   error_log(LOG_DIVIDER);
-  error_log("+++ ALLOCATION %p HAS INVALID TAG %" PRIx32 " (%s)", pointer, header->tag, name);
+  if (header->tag == DEBUG_FREE_TAG) {
+    error_log("+++ ALLOCATION %p USED AFTER FREE (%s)", pointer, name);
+    if (g_debug->config().options & FREE_TRACK) {
+      g_debug->free_track->LogBacktrace(header);
+    }
+  } else {
+    error_log("+++ ALLOCATION %p HAS INVALID TAG %" PRIx32 " (%s)", pointer, header->tag, name);
+  }
   error_log("Backtrace at time of failure:");
   std::vector<uintptr_t> frames(64);
   size_t frame_num = backtrace_get(frames.data(), frames.size());
@@ -129,14 +136,12 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   if (g_debug->config().options & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
     if (g_debug->backtrace->enabled()) {
-      back_header->num_frames = backtrace_get(&back_header->frames[0],
-                                              g_debug->config().backtrace_frames);
+      back_header->num_frames = backtrace_get(
+          &back_header->frames[0], g_debug->config().backtrace_frames);
       backtrace_found = back_header->num_frames > 0;
     } else {
       back_header->num_frames = 0;
     }
-    back_header = g_debug->GetFreeBacktrace(header);
-    back_header->num_frames = 0;
   }
 
   if (g_debug->config().options & TRACK_ALLOCS) {
@@ -313,18 +318,12 @@ void debug_free(void* pointer) {
     }
 
     if (g_debug->config().options & FREE_TRACK) {
-      // Only log the free backtrace if we are using the free track feature.
-      if ((g_debug->config().options & BACKTRACE) && g_debug->backtrace->enabled()) {
-        BacktraceHeader* back_header = g_debug->GetFreeBacktrace(header);
-        back_header->num_frames = backtrace_get(&back_header->frames[0],
-                                                g_debug->config().backtrace_frames);
-      }
-
       g_debug->free_track->Add(*g_debug, header);
 
       // Do not free this pointer just yet.
       free_pointer = nullptr;
     }
+    header->tag = DEBUG_FREE_TAG;
 
     bytes = header->usable_size;
   } else {
