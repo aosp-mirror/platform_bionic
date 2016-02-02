@@ -9,6 +9,7 @@ LIBC_MALLOC_DEBUG {
     debug_iterate;
     debug_mallinfo;
     debug_malloc;
+    debug_malloc_backtrace;
     debug_malloc_disable;
     debug_malloc_enable;
     debug_malloc_usable_size;

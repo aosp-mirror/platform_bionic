@@ -67,6 +67,7 @@ void debug_finalize();
 void debug_get_malloc_leak_info(
     uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
     size_t* backtrace_size);
+ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
 void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
 void* debug_malloc(size_t size);
@@ -163,6 +164,7 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   if (g_debug->config().options & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
     if (g_debug->backtrace->enabled()) {
+      ScopedDisableDebugCalls disable;
       back_header->num_frames = backtrace_get(
           &back_header->frames[0], g_debug->config().backtrace_frames);
       backtrace_found = back_header->num_frames > 0;
@@ -614,6 +616,39 @@ void debug_malloc_enable() {
     g_debug->track->PostForkParent();
   }
   g_dispatch->malloc_enable();
+}
+
+ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
+  if (DebugCallsDisabled() || pointer == nullptr) {
+    return 0;
+  }
+
+  if (g_debug->need_header()) {
+    Header* header;
+    if (g_debug->config().options & TRACK_ALLOCS) {
+      header = g_debug->GetHeader(pointer);
+      if (!g_debug->track->Contains(header)) {
+        return 0;
+      }
+    } else {
+      header = reinterpret_cast<Header*>(pointer);
+    }
+    if (header->tag != DEBUG_TAG) {
+      return 0;
+    }
+    if (g_debug->config().options & BACKTRACE) {
+      BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
+      if (back_header->num_frames > 0) {
+        if (frame_count > back_header->num_frames) {
+          frame_count = back_header->num_frames;
+        }
+        memcpy(frames, &back_header->frames[0], frame_count * sizeof(uintptr_t));
+        return frame_count;
+      }
+    }
+  }
+
+  return 0;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
