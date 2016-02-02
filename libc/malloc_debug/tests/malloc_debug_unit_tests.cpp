@@ -67,14 +67,10 @@ __END_DECLS
 constexpr char DIVIDER[] =
     "6 malloc_debug *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n";
 
-constexpr uint32_t TRACK_HEADER = 0x2;
-constexpr uint32_t BACKTRACE_HEADER = 0x4;
+constexpr uint32_t BACKTRACE_HEADER = 0x1;
 
 static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
   size_t offset = BIONIC_ALIGN(sizeof(Header), sizeof(uintptr_t));
-  if (flags & TRACK_HEADER) {
-    offset += BIONIC_ALIGN(sizeof(TrackHeader), sizeof(uintptr_t));
-  }
   if (flags & BACKTRACE_HEADER) {
     offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames, sizeof(uintptr_t));
   }
