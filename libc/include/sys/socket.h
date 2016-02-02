@@ -164,7 +164,9 @@ struct ucred {
 #define AF_IEEE802154 36
 #define AF_CAIF 37
 #define AF_ALG 38
-#define AF_MAX 39
+#define AF_NFC 39
+#define AF_VSOCK 40
+#define AF_MAX 41
 
 #define PF_UNSPEC AF_UNSPEC
 #define PF_UNIX AF_UNIX
@@ -205,6 +207,8 @@ struct ucred {
 #define PF_IEEE802154 AF_IEEE802154
 #define PF_CAIF AF_CAIF
 #define PF_ALG AF_ALG
+#define PF_NFC AF_NFC
+#define PF_VSOCK AF_VSOCK
 #define PF_MAX AF_MAX
 
 #define SOMAXCONN 128
