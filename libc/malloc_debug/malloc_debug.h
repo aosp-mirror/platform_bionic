@@ -39,7 +39,6 @@
 // will still be in this order.
 //   Header          (Required)
 //   BacktraceHeader (Optional: For the allocation backtrace)
-//   BacktraceHeader (Optional: For the free backtrace)
 //   uint8_t data    (Optional: Front guard, will be a multiple of sizeof(uintptr_t))
 //   allocation data
 //   uint8_t data    (Optional: End guard)
@@ -70,6 +69,7 @@ struct BacktraceHeader {
 } __attribute__((packed));
 
 constexpr uint32_t DEBUG_TAG = 0x1ee7d00d;
+constexpr uint32_t DEBUG_FREE_TAG = 0x1cc7dccd;
 constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***";
 constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
 
