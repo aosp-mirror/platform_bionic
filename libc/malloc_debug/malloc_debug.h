@@ -58,11 +58,6 @@ struct Header {
   static size_t max_size() { return (1U << 31) - 1; }
 } __attribute__((packed));
 
-struct TrackHeader {
-  Header* prev = nullptr;
-  Header* next = nullptr;
-} __attribute__((packed));
-
 struct BacktraceHeader {
   size_t num_frames;
   uintptr_t frames[0];
