@@ -109,14 +109,11 @@ int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
 char	*fgets(char * __restrict, int, FILE * __restrict);
-FILE	*fopen(const char * __restrict , const char * __restrict);
 int	 fprintf(FILE * __restrict , const char * __restrict, ...)
 		__printflike(2, 3);
 int	 fputc(int, FILE *);
 int	 fputs(const char * __restrict, FILE * __restrict);
 size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict);
-FILE	*freopen(const char * __restrict, const char * __restrict,
-	    FILE * __restrict);
 int	 fscanf(FILE * __restrict, const char * __restrict, ...)
 		__scanflike(2, 3);
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
@@ -140,7 +137,6 @@ void	 setbuf(FILE * __restrict, char * __restrict);
 int	 setvbuf(FILE * __restrict, char * __restrict, int, size_t);
 int	 sscanf(const char * __restrict, const char * __restrict, ...)
 		__scanflike(2, 3);
-FILE	*tmpfile(void);
 int	 ungetc(int, FILE *);
 int	 vfprintf(FILE * __restrict, const char * __restrict, __va_list)
 		__printflike(2, 0);
@@ -207,6 +203,13 @@ FILE* funopen64(const void*,
                 fpos64_t (*)(void*, fpos64_t, int),
                 int (*)(void*));
 #endif
+
+FILE* fopen(const char* __restrict, const char* __restrict);
+FILE* fopen64(const char* __restrict, const char* __restrict);
+FILE* freopen(const char* __restrict, const char* __restrict, FILE* __restrict);
+FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict);
+FILE* tmpfile(void);
+FILE* tmpfile64(void);
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)

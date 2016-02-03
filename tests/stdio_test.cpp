@@ -79,6 +79,12 @@ TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
   fclose(fp);
 }
 
+TEST(STDIO_TEST, tmpfile64) {
+  FILE* fp = tmpfile64();
+  ASSERT_TRUE(fp != nullptr);
+  fclose(fp);
+}
+
 TEST(STDIO_TEST, dprintf) {
   TemporaryFile tf;
 
@@ -872,6 +878,14 @@ TEST(STDIO_TEST, freopen_CLOEXEC) {
   ASSERT_TRUE(flags != -1);
   ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
 
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, fopen64_freopen64) {
+  FILE* fp = fopen64("/proc/version", "r");
+  ASSERT_TRUE(fp != nullptr);
+  fp = freopen64("/proc/version", "re", fp);
+  ASSERT_TRUE(fp != nullptr);
   fclose(fp);
 }
 

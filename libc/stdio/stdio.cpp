@@ -222,6 +222,7 @@ FILE* fopen(const char* file, const char* mode) {
 
   return fp;
 }
+__strong_alias(fopen64, fopen);
 
 FILE* fdopen(int fd, const char* mode) {
   int oflags;
@@ -358,6 +359,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
+__strong_alias(freopen64, freopen);
 
 int fclose(FILE* fp) {
   if (fp->_flags == 0) {
