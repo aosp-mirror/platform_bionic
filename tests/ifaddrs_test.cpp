@@ -109,55 +109,55 @@ TEST(ifaddrs, getifaddrs_interfaces) {
 }
 
 TEST(ifaddrs, getifaddrs_INET) {
-  std::multimap<std::string,in_addr_t> inetaddrs;
-  std::multimap<std::string,in_addr_t> broadinetaddrs;
+  std::multimap<std::string, in_addr_t> inetaddrs;
+  std::multimap<std::string, in_addr_t> broadinetaddrs;
 
-  {
-    ifaddrs* addrs;
-    ASSERT_EQ(0, getifaddrs(&addrs));
-    for (ifaddrs* addr = addrs; addr != nullptr; addr = addr->ifa_next) {
-      if (addr->ifa_name && addr->ifa_addr && addr->ifa_addr->sa_family == AF_INET) {
-        auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_addr);
-        inetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
-      }
-      if (addr->ifa_name && addr->ifa_broadaddr && addr->ifa_broadaddr->sa_family == AF_INET) {
-        auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_broadaddr);
-        broadinetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
-      }
+  // Collect the IPv4 addresses for each interface.
+  ifaddrs* addrs;
+  ASSERT_EQ(0, getifaddrs(&addrs));
+  for (ifaddrs* addr = addrs; addr != nullptr; addr = addr->ifa_next) {
+    if (addr->ifa_name && addr->ifa_addr && addr->ifa_addr->sa_family == AF_INET) {
+      auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_addr);
+      inetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
     }
-    freeifaddrs(addrs);
+    if (addr->ifa_name && addr->ifa_broadaddr && addr->ifa_broadaddr->sa_family == AF_INET) {
+      auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_broadaddr);
+      broadinetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
+    }
   }
+  freeifaddrs(addrs);
 
-  {
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
-    ASSERT_TRUE(fd != -1);
+  // Check that the addresses returned by the SIOCGIFADDR and SIOCGIFBRDADDR ioctls
+  // are in our collections.
+  auto check_inet_agrees = [&](std::multimap<std::string, in_addr_t> addrs, int request)->void {
+    for (auto it = addrs.begin(); it != addrs.end(); ) {
+      std::string if_name(it->first);
 
-    auto check_inet_agrees = [&](std::multimap<std::string, in_addr_t> addrs, int request)->bool {
-      for (auto it = addrs.begin(); it != addrs.end(); ) {
-        ifreq ifr;
-        ifr.ifr_addr.sa_family = AF_INET;
-        it->first.copy(ifr.ifr_name, IFNAMSIZ - 1);
-        ioctl(fd, request, &ifr);
+      ifreq ifr;
+      memset(&ifr, 0, sizeof(ifr));
+      ifr.ifr_addr.sa_family = AF_INET;
+      if_name.copy(ifr.ifr_name, IFNAMSIZ - 1);
 
-        sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
-        in_addr_t addr = sock->sin_addr.s_addr;
+      int fd = socket(AF_INET, SOCK_DGRAM, 0);
+      ASSERT_TRUE(fd != -1);
+      ASSERT_EQ(0, ioctl(fd, request, &ifr)) << if_name << ' ' << strerror(errno);
+      close(fd);
 
-        bool found = false;
-        for (auto ub = addrs.upper_bound(it->first); it != ub; ++it) {
-          if (it->second == addr) {
-            found = true;
-          }
+      sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
+      in_addr_t addr = sock->sin_addr.s_addr;
+
+      bool found = false;
+      for (auto ub = addrs.upper_bound(it->first); it != ub; ++it) {
+        if (it->second == addr) {
+          found = true;
         }
-        if (!found) return false;
       }
-      return true;
-    };
+      EXPECT_TRUE(found) << if_name;
+    }
+  };
 
-    ASSERT_TRUE(check_inet_agrees(inetaddrs, SIOCGIFADDR));
-    ASSERT_TRUE(check_inet_agrees(broadinetaddrs, SIOCGIFBRDADDR));
-
-    close(fd);
-  }
+  check_inet_agrees(inetaddrs, SIOCGIFADDR);
+  check_inet_agrees(broadinetaddrs, SIOCGIFBRDADDR);
 }
 
 static void print_sockaddr_ll(const char* what, const sockaddr* p) {
