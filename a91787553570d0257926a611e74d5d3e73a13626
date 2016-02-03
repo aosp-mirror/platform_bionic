@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "14950abd_c4ab6fb0",
+        "filename": "libm/x86/lrintf.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2016-02-03T00:02:24Z",
+      "side": 1,
+      "message": "the original code has a common interface to handle final return. may not be needed here",
+      "parentUuid": "749006cb_bb984090",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 26
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5422228b_3a944504",
         "filename": "libm/x86/lrintf.S",
         "patchSetId": 6
@@ -140,6 +164,30 @@
     },
     {
       "key": {
+        "uuid": "31c3005d_3a20392b",
+        "filename": "libm/x86/rint.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2016-02-03T00:02:24Z",
+      "side": 1,
+      "message": "it\u0027s safe to assume only 4 byte alignment.",
+      "parentUuid": "349a0eef_8df186fa",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 24
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f465d6c4_f741f7ea",
         "filename": "libm/x86/rint.S",
         "patchSetId": 6
@@ -151,6 +199,30 @@
       "writtenOn": "2016-02-01T22:19:44Z",
       "side": 1,
       "message": "would a signal between movlpd and fldl destroy the value on the stack?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 18
+      },
+      "revId": "a91787553570d0257926a611e74d5d3e73a13626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f127a8f2_10b26c22",
+        "filename": "libm/x86/rint.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2016-02-03T00:02:24Z",
+      "side": 1,
+      "message": "you are right, we should be more careful with the stack pointer",
+      "parentUuid": "f465d6c4_f741f7ea",
       "range": {
         "startLine": 31,
         "startChar": 0,
