@@ -1224,6 +1224,8 @@ LIBC_N {
     getifaddrs;
     if_freenameindex;
     if_nameindex;
+    in6addr_any;
+    in6addr_loopback;
     lockf;
     lockf64;
     preadv;

@@ -39,7 +39,6 @@ endif
 # Define the common source files for all the libc instances
 # =========================================================
 libc_common_src_files := \
-    bionic/bindresvport.c \
     bionic/ether_aton.c \
     bionic/ether_ntoa.c \
     bionic/fts.c \
@@ -173,6 +172,7 @@ libc_bionic_ndk_src_files := \
     bionic/mremap.cpp \
     bionic/NetdClientDispatch.cpp \
     bionic/net_if.cpp \
+    bionic/netinet_in.cpp \
     bionic/open.cpp \
     bionic/pathconf.cpp \
     bionic/pause.cpp \
