@@ -224,6 +224,7 @@ int           timerfd_create(clockid_t, int)   all
 int           timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
 int           timerfd_gettime(int, struct itimerspec*)   all
 int           adjtimex(struct timex*)   all
+int           clock_adjtime(clockid_t, struct timex*)   all
 
 # signals
 int     __sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  arm,mips,x86

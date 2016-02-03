@@ -106,6 +106,7 @@ libBionicStandardTests_src_files := \
     sys_sysinfo_test.cpp \
     sys_sysmacros_test.cpp \
     sys_time_test.cpp \
+    sys_timex_test.cpp \
     sys_types_test.cpp \
     sys_uio_test.cpp \
     sys_vfs_test.cpp \
