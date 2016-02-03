@@ -5,7 +5,7 @@ PREFIX=$3
 shift 3
 SOURCE=$(echo "$@" | grep -oP '\S+\.cpp\b')
 OBJ=$(echo "$@" | grep -oP '\S+\.o\b')
-$CXX "$@" 2>&1 | $FILECHECK -check-prefix=$PREFIX $SOURCE
+$CXX "$@" -Wno-error 2>&1 | $FILECHECK -check-prefix=$PREFIX $SOURCE
 if [ "$?" -eq 0 ]; then
   touch $OBJ
 else
