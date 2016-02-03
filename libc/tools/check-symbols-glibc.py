@@ -79,6 +79,7 @@ bsd_stuff = set([
   'fgetln',
   'fpurge',
   'funopen',
+  'funopen64',
   'gamma_r',
   'gammaf_r',
   'getprogname',
