@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "711bb8b8_802a8a20",
+        "filename": "libc/tools/check-symbols-glibc.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-03T19:28:25Z",
+      "side": 1,
+      "message": "(this removes a false positive when using this script to ask \"did we miss anything?\".)",
+      "revId": "f226ee59e0effedeabed09e2d65be7fa7499cc25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
