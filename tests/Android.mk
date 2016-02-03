@@ -162,7 +162,7 @@ $(foreach compiler,gcc clang, \
       -D_FORTIFY_SOURCE=$(test) \
       -DTEST_NAME=Fortify$(test)_$(compiler)); \
     $(eval fortify$(test)-tests-$(compiler)_src_files := \
-      fortify_test.cpp); \
+      fortify_test_main.cpp); \
     $(eval fortify_libs += fortify$(test)-tests-$(compiler)); \
   ) \
 )
