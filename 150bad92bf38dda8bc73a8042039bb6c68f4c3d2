@@ -22,6 +22,30 @@
       "revId": "150bad92bf38dda8bc73a8042039bb6c68f4c3d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31fce07c_1bfe0756",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-03T02:38:28Z",
+      "side": 1,
+      "message": "Whoops, it used to.  Fixed.",
+      "parentUuid": "11cb5c3e_34ca5626",
+      "range": {
+        "startLine": 404,
+        "startChar": 22,
+        "endLine": 405,
+        "endChar": 20
+      },
+      "revId": "150bad92bf38dda8bc73a8042039bb6c68f4c3d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
