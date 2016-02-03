@@ -112,3 +112,4 @@ FILE* tmpfile() {
   }
   return fp;
 }
+__strong_alias(tmpfile64, tmpfile);
