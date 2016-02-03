@@ -34,6 +34,42 @@
       "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5422228b_eea753c7",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2016-02-03T00:02:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "749006cb_52fac427",
+      "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9462dabe_00238ce6",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1046860
+      },
+      "writtenOn": "2016-02-03T00:02:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d468d2a0_88617f13",
+      "revId": "5854d2132dc45cd3e9263ab4c457b753e34648cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
