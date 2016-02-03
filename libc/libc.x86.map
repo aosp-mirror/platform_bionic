@@ -1209,7 +1209,9 @@ LIBC_N {
     __write_chk;
     fgetpos64;
     fileno_unlocked;
+    fopen64;
     freeifaddrs;
+    freopen64;
     fseeko64;
     fsetpos64;
     ftello64;
@@ -1241,6 +1243,7 @@ LIBC_N {
     scandirat;
     scandirat64;
     strchrnul;
+    tmpfile64;
 } LIBC;
 
 LIBC_PRIVATE {
