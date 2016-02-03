@@ -1165,6 +1165,7 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
 static void AssertFileOffsetAt(FILE* fp, off64_t offset) {
   EXPECT_EQ(offset, ftell(fp));
   EXPECT_EQ(offset, ftello(fp));
+  EXPECT_EQ(offset, ftello64(fp));
   fpos_t pos;
   fpos64_t pos64;
   EXPECT_EQ(0, fgetpos(fp, &pos));
