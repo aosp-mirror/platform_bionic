@@ -27,8 +27,8 @@
 #define MSM_PIPE_3D0 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_msm_timespec {
-  int64_t tv_sec;
-  int64_t tv_nsec;
+  __s64 tv_sec;
+  __s64 tv_nsec;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSM_PARAM_GPU_ID 0x01
@@ -36,9 +36,9 @@ struct drm_msm_timespec {
 #define MSM_PARAM_CHIP_ID 0x03
 struct drm_msm_param {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t pipe;
-  uint32_t param;
-  uint64_t value;
+  __u32 pipe;
+  __u32 param;
+  __u64 value;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSM_BO_SCANOUT 0x00000001
@@ -51,15 +51,15 @@ struct drm_msm_param {
 #define MSM_BO_FLAGS (MSM_BO_SCANOUT | MSM_BO_GPU_READONLY | MSM_BO_CACHED | MSM_BO_WC | MSM_BO_UNCACHED)
 struct drm_msm_gem_new {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint64_t size;
-  uint32_t flags;
-  uint32_t handle;
+  __u64 size;
+  __u32 flags;
+  __u32 handle;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_msm_gem_info {
-  uint32_t handle;
-  uint32_t pad;
-  uint64_t offset;
+  __u32 handle;
+  __u32 pad;
+  __u64 offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define MSM_PREP_READ 0x01
@@ -68,22 +68,22 @@ struct drm_msm_gem_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC)
 struct drm_msm_gem_cpu_prep {
-  uint32_t handle;
-  uint32_t op;
+  __u32 handle;
+  __u32 op;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct drm_msm_timespec timeout;
 };
 struct drm_msm_gem_cpu_fini {
-  uint32_t handle;
+  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_msm_gem_submit_reloc {
-  uint32_t submit_offset;
-  uint32_t or;
+  __u32 submit_offset;
+  __u32 or;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  int32_t shift;
-  uint32_t reloc_idx;
-  uint64_t reloc_offset;
+  __s32 shift;
+  __u32 reloc_idx;
+  __u64 reloc_offset;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSM_SUBMIT_CMD_BUF 0x0001
@@ -91,14 +91,14 @@ struct drm_msm_gem_submit_reloc {
 #define MSM_SUBMIT_CMD_CTX_RESTORE_BUF 0x0003
 struct drm_msm_gem_submit_cmd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t type;
-  uint32_t submit_idx;
-  uint32_t submit_offset;
-  uint32_t size;
+  __u32 type;
+  __u32 submit_idx;
+  __u32 submit_offset;
+  __u32 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t pad;
-  uint32_t nr_relocs;
-  uint64_t __user relocs;
+  __u32 pad;
+  __u32 nr_relocs;
+  __u64 __user relocs;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSM_SUBMIT_BO_READ 0x0001
@@ -106,24 +106,24 @@ struct drm_msm_gem_submit_cmd {
 #define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE)
 struct drm_msm_gem_submit_bo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t flags;
-  uint32_t handle;
-  uint64_t presumed;
+  __u32 flags;
+  __u32 handle;
+  __u64 presumed;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_msm_gem_submit {
-  uint32_t pipe;
-  uint32_t fence;
-  uint32_t nr_bos;
+  __u32 pipe;
+  __u32 fence;
+  __u32 nr_bos;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t nr_cmds;
-  uint64_t __user bos;
-  uint64_t __user cmds;
+  __u32 nr_cmds;
+  __u64 __user bos;
+  __u64 __user cmds;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_msm_wait_fence {
-  uint32_t fence;
-  uint32_t pad;
+  __u32 fence;
+  __u32 pad;
   struct drm_msm_timespec timeout;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };

@@ -28,14 +28,6 @@
 
 #if !defined(__LP64__) && __mips_isa_rev >= 5
 #include <sys/prctl.h>
-#if defined(PR_SET_FP_MODE)
-#error "remove following defs when avail in Android's kernel headers"
-#else
-#define PR_SET_FP_MODE 45
-#define PR_GET_FP_MODE 46
-#define PR_FP_MODE_FR  (1 << 0)
-#define PR_FP_MODE_FRE (1 << 1)
-#endif
 #endif
 
 #include "linker.h"

@@ -49,10 +49,11 @@ enum tcp_conntrack {
 #define IP_CT_TCP_FLAG_BE_LIBERAL 0x08
 #define IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED 0x10
 #define IP_CT_TCP_FLAG_MAXACK_SET 0x20
-struct nf_ct_tcp_flags {
+#define IP_CT_EXP_CHALLENGE_ACK 0x40
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nf_ct_tcp_flags {
   __u8 flags;
   __u8 mask;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

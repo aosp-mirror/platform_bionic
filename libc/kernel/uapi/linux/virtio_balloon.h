@@ -18,29 +18,33 @@
  ****************************************************************************/
 #ifndef _LINUX_VIRTIO_BALLOON_H
 #define _LINUX_VIRTIO_BALLOON_H
+#include <linux/types.h>
+#include <linux/virtio_types.h>
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/virtio_ids.h>
 #include <linux/virtio_config.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_BALLOON_F_MUST_TELL_HOST 0
 #define VIRTIO_BALLOON_F_STATS_VQ 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VIRTIO_BALLOON_F_DEFLATE_ON_OOM 2
 #define VIRTIO_BALLOON_PFN_SHIFT 12
 struct virtio_balloon_config {
+  __u32 num_pages;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __le32 num_pages;
-  __le32 actual;
+  __u32 actual;
 };
 #define VIRTIO_BALLOON_S_SWAP_IN 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_BALLOON_S_SWAP_OUT 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_BALLOON_S_MAJFLT 2
 #define VIRTIO_BALLOON_S_MINFLT 3
 #define VIRTIO_BALLOON_S_MEMFREE 4
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_BALLOON_S_MEMTOT 5
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VIRTIO_BALLOON_S_NR 6
 struct virtio_balloon_stat {
-  __u16 tag;
+  __virtio16 tag;
+  __virtio64 val;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u64 val;
 } __attribute__((packed));
 #endif

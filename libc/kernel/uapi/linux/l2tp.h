@@ -154,5 +154,6 @@ enum l2tp_seqmode {
 };
 #define L2TP_GENL_NAME "l2tp"
 #define L2TP_GENL_VERSION 0x1
-#endif
+#define L2TP_GENL_MCGROUP "l2tp"
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

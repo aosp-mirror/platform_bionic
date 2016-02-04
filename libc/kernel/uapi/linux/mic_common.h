@@ -46,69 +46,70 @@ struct mic_device_ctrl {
 struct mic_bootparam {
   __le32 magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __s8 c2h_shutdown_db;
-  __s8 h2c_shutdown_db;
   __s8 h2c_config_db;
-  __u8 shutdown_status;
+  __u8 node_id;
+  __u8 h2c_scif_db;
+  __u8 c2h_scif_db;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u8 shutdown_card;
+  __u64 scif_host_dma_addr;
+  __u64 scif_card_dma_addr;
 } __attribute__((aligned(8)));
 struct mic_device_page {
-  struct mic_bootparam bootparam;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct mic_bootparam bootparam;
   struct mic_device_desc desc[0];
 };
 struct mic_vqconfig {
-  __le64 address;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le64 address;
   __le64 used_address;
   __le16 num;
 } __attribute__((aligned(8)));
-#define MIC_VIRTIO_RING_ALIGN 4096
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MIC_VIRTIO_RING_ALIGN 4096
 #define MIC_MAX_VRINGS 4
 #define MIC_VRING_ENTRIES 128
 #define MIC_MAX_VRING_ENTRIES 128
-#define MIC_MAX_DESC_BLK_SIZE 256
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MIC_MAX_DESC_BLK_SIZE 256
 struct _mic_vring_info {
   __u16 avail_idx;
   __le32 magic;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct mic_vring {
   struct vring vr;
   struct _mic_vring_info * info;
-  void * va;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  void * va;
   int len;
 };
 #define mic_aligned_desc_size(d) __mic_align(mic_desc_size(d), 8)
-#ifndef INTEL_MIC_CARD
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifndef INTEL_MIC_CARD
 #endif
 #define MIC_DP_SIZE 4096
 #define MIC_MAGIC 0xc0ffee00
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum mic_states {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  MIC_OFFLINE = 0,
+  MIC_READY = 0,
+  MIC_BOOTING,
   MIC_ONLINE,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   MIC_SHUTTING_DOWN,
+  MIC_RESETTING,
   MIC_RESET_FAILED,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  MIC_SUSPENDING,
-  MIC_SUSPENDED,
   MIC_LAST
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 enum mic_status {
   MIC_NOP = 0,
   MIC_CRASHED,
-  MIC_HALTED,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  MIC_HALTED,
   MIC_POWER_OFF,
   MIC_RESTART,
   MIC_STATUS_LAST
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif

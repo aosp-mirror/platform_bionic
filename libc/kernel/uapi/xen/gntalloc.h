@@ -18,32 +18,33 @@
  ****************************************************************************/
 #ifndef __LINUX_PUBLIC_GNTALLOC_H__
 #define __LINUX_PUBLIC_GNTALLOC_H__
+#include <linux/types.h>
 #define IOCTL_GNTALLOC_ALLOC_GREF _IOC(_IOC_NONE, 'G', 5, sizeof(struct ioctl_gntalloc_alloc_gref))
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ioctl_gntalloc_alloc_gref {
+  __u16 domid;
+  __u16 flags;
+  __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint16_t domid;
-  uint16_t flags;
-  uint32_t count;
-  uint64_t index;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t gref_ids[1];
+  __u64 index;
+  __u32 gref_ids[1];
 };
 #define GNTALLOC_FLAG_WRITABLE 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IOCTL_GNTALLOC_DEALLOC_GREF _IOC(_IOC_NONE, 'G', 6, sizeof(struct ioctl_gntalloc_dealloc_gref))
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ioctl_gntalloc_dealloc_gref {
-  uint64_t index;
-  uint32_t count;
-};
+  __u64 index;
+  __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define IOCTL_GNTALLOC_SET_UNMAP_NOTIFY _IOC(_IOC_NONE, 'G', 7, sizeof(struct ioctl_gntalloc_unmap_notify))
 struct ioctl_gntalloc_unmap_notify {
-  uint64_t index;
-  uint32_t action;
+  __u64 index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint32_t event_channel_port;
+  __u32 action;
+  __u32 event_channel_port;
 };
 #define UNMAP_NOTIFY_CLEAR_BYTE 0x1
-#define UNMAP_NOTIFY_SEND_EVENT 0x2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define UNMAP_NOTIFY_SEND_EVENT 0x2
 #endif

@@ -73,47 +73,52 @@ struct nlmsghdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NLM_F_ECHO 8
 #define NLM_F_DUMP_INTR 16
+#define NLM_F_DUMP_FILTERED 32
 #define NLM_F_ROOT 0x100
-#define NLM_F_MATCH 0x200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLM_F_MATCH 0x200
 #define NLM_F_ATOMIC 0x400
 #define NLM_F_DUMP (NLM_F_ROOT | NLM_F_MATCH)
 #define NLM_F_REPLACE 0x100
-#define NLM_F_EXCL 0x200
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLM_F_EXCL 0x200
 #define NLM_F_CREATE 0x400
 #define NLM_F_APPEND 0x800
 #define NLMSG_ALIGNTO 4U
-#define NLMSG_ALIGN(len) (((len) + NLMSG_ALIGNTO - 1) & ~(NLMSG_ALIGNTO - 1))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLMSG_ALIGN(len) (((len) + NLMSG_ALIGNTO - 1) & ~(NLMSG_ALIGNTO - 1))
 #define NLMSG_HDRLEN ((int) NLMSG_ALIGN(sizeof(struct nlmsghdr)))
 #define NLMSG_LENGTH(len) ((len) + NLMSG_HDRLEN)
 #define NLMSG_SPACE(len) NLMSG_ALIGN(NLMSG_LENGTH(len))
-#define NLMSG_DATA(nlh) ((void *) (((char *) nlh) + NLMSG_LENGTH(0)))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLMSG_DATA(nlh) ((void *) (((char *) nlh) + NLMSG_LENGTH(0)))
 #define NLMSG_NEXT(nlh,len) ((len) -= NLMSG_ALIGN((nlh)->nlmsg_len), (struct nlmsghdr *) (((char *) (nlh)) + NLMSG_ALIGN((nlh)->nlmsg_len)))
 #define NLMSG_OK(nlh,len) ((len) >= (int) sizeof(struct nlmsghdr) && (nlh)->nlmsg_len >= sizeof(struct nlmsghdr) && (nlh)->nlmsg_len <= (len))
 #define NLMSG_PAYLOAD(nlh,len) ((nlh)->nlmsg_len - NLMSG_SPACE((len)))
-#define NLMSG_NOOP 0x1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLMSG_NOOP 0x1
 #define NLMSG_ERROR 0x2
 #define NLMSG_DONE 0x3
 #define NLMSG_OVERRUN 0x4
-#define NLMSG_MIN_TYPE 0x10
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NLMSG_MIN_TYPE 0x10
 struct nlmsgerr {
   int error;
   struct nlmsghdr msg;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define NETLINK_ADD_MEMBERSHIP 1
 #define NETLINK_DROP_MEMBERSHIP 2
 #define NETLINK_PKTINFO 3
-#define NETLINK_BROADCAST_ERROR 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NETLINK_BROADCAST_ERROR 4
 #define NETLINK_NO_ENOBUFS 5
 #define NETLINK_RX_RING 6
 #define NETLINK_TX_RING 7
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NETLINK_LISTEN_ALL_NSID 8
+#define NETLINK_LIST_MEMBERSHIPS 9
+#define NETLINK_CAP_ACK 10
 struct nl_pktinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 group;
