@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31fce07c_de1f4348",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T16:50:18Z",
+      "side": 1,
+      "message": "i thought you were going to patch external/kernel-headers?",
+      "revId": "365163619d25101fbdaffc749e2e28afa50eae68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b121b0e4_de873acc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T16:50:18Z",
+      "side": 1,
+      "message": "i was going to say that there are a handful of places that #include \u003clinux/in.h\u003e directly (https://cs.corp.google.com/#search/\u0026q\u003dinclude.*%3Clinux/in%5C.h%3E%20-file:kernel%20-file:/ndk/%20-file:/gcc/\u0026m\u003d100\u0026sort\u003d1\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs) and ask \"should we hard-code these to 1 in the scrubbing script instead?\" but i see that libc-compat.h turns (everything?) on in the non-__GLIBC__ case anyway.",
+      "revId": "365163619d25101fbdaffc749e2e28afa50eae68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
