@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b121b0e4_83128da2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T00:42:39Z",
+      "side": 1,
+      "message": "s/This also lets linker/The main reason for doing this is not performance but to allow the linker/",
+      "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11f7dc9a_fd220590",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T00:42:39Z",
+      "side": 1,
+      "message": "pthread",
+      "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b121b0e4_c3d12527",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T00:42:39Z",
+      "side": 1,
+      "message": "the linker\u0027s",
+      "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31c3005d_51f793f2",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T00:42:39Z",
+      "side": 1,
+      "message": "pthread_equals",
+      "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
