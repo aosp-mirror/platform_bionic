@@ -67,6 +67,24 @@
       "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31fce07c_3d849033",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-05T00:47:49Z",
+      "side": 1,
+      "message": "i was assuming\n\n  if (pthread_equal(thread_id, pthread_self())\n\nbut i guess since you have to return a pthread_internal_t anyway, what you have already makes more sense.",
+      "parentUuid": "31c3005d_51f793f2",
+      "revId": "bb5cef06dc372f556c733e3b1d714fbf8f3141e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
