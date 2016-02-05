@@ -534,6 +534,25 @@ TEST(STDIO_TEST, snprintf_utf8_15439554) {
   freelocale(cloc);
 }
 
+static void* snprintf_small_stack_fn(void*) {
+  // Make life (realistically) hard for ourselves by allocating our own buffer for the result.
+  char buf[PATH_MAX];
+  snprintf(buf, sizeof(buf), "/proc/%d", getpid());
+  return nullptr;
+}
+
+TEST(STDIO_TEST, snprintf_small_stack) {
+  // Is it safe to call snprintf on a thread with a small stack?
+  // (The snprintf implementation puts some pretty large buffers on the stack.)
+  pthread_attr_t a;
+  ASSERT_EQ(0, pthread_attr_init(&a));
+  ASSERT_EQ(0, pthread_attr_setstacksize(&a, PTHREAD_STACK_MIN));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &a, snprintf_small_stack_fn, nullptr));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
   FILE* fp;

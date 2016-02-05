@@ -59,19 +59,13 @@ TEST(time, gmtime_no_stack_overflow_14313703) {
   // Is it safe to call tzload on a thread with a small stack?
   // http://b/14313703
   // https://code.google.com/p/android/issues/detail?id=61130
-  pthread_attr_t attributes;
-  ASSERT_EQ(0, pthread_attr_init(&attributes));
-#if defined(__BIONIC__)
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, PTHREAD_STACK_MIN));
-#else
-  // PTHREAD_STACK_MIN not currently in the host GCC sysroot.
-  ASSERT_EQ(0, pthread_attr_setstacksize(&attributes, 4 * getpagesize()));
-#endif
+  pthread_attr_t a;
+  ASSERT_EQ(0, pthread_attr_init(&a));
+  ASSERT_EQ(0, pthread_attr_setstacksize(&a, PTHREAD_STACK_MIN));
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, &attributes, gmtime_no_stack_overflow_14313703_fn, NULL));
-  void* result;
-  ASSERT_EQ(0, pthread_join(t, &result));
+  ASSERT_EQ(0, pthread_create(&t, &a, gmtime_no_stack_overflow_14313703_fn, NULL));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
 TEST(time, mktime_empty_TZ) {
