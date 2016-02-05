@@ -81,6 +81,12 @@ void __pthread_internal_remove_and_free(pthread_internal_t* thread) {
 
 pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(thread_id);
+
+  // check if thread is pthread_self() before acquiring the lock
+  if (thread == __get_thread()) {
+    return thread;
+  }
+
   ScopedPthreadMutexLocker locker(&g_thread_list_lock);
 
   for (pthread_internal_t* t = g_thread_list; t != NULL; t = t->next) {
