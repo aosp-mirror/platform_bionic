@@ -553,6 +553,21 @@ TEST(STDIO_TEST, snprintf_small_stack) {
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
+TEST(STDIO_TEST, snprintf_asterisk_overflow) {
+  char buf[128];
+  ASSERT_EQ(5, snprintf(buf, sizeof(buf), "%.*s%c", 4, "hello world", '!'));
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", INT_MAX/2, "hello world", '!'));
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", INT_MAX-1, "hello world", '!'));
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", INT_MAX, "hello world", '!'));
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.*s%c", -1, "hello world", '!'));
+
+  // INT_MAX-1, INT_MAX, INT_MAX+1.
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.2147483646s%c", "hello world", '!'));
+  ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.2147483647s%c", "hello world", '!'));
+  ASSERT_EQ(-1, snprintf(buf, sizeof(buf), "%.2147483648s%c", "hello world", '!'));
+  ASSERT_EQ(ENOMEM, errno);
+}
+
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
   FILE* fp;
