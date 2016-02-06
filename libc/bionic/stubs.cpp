@@ -116,6 +116,7 @@ static int do_getpw_r(int by_name, const char* name, uid_t uid,
   snprintf(buf, byte_count, "%s%c%s%c%s", src->pw_name, 0, src->pw_dir, 0, src->pw_shell);
 
   // pw_passwd and pw_gecos are non-POSIX and unused (always NULL) in bionic.
+  // Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL.
   dst->pw_passwd = NULL;
 #if defined(__LP64__)
   dst->pw_gecos = NULL;
