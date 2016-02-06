@@ -36,7 +36,6 @@
 
 #include <vector>
 
-#include "debug_disable.h"
 #include "MapData.h"
 
 // Format of /proc/<PID>/maps:
@@ -112,8 +111,6 @@ static void read_loadbase(MapEntry* entry) {
 }
 
 bool MapData::Initialize() {
-  ScopedDisableDebugCalls disable;
-
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
     return false;
@@ -141,8 +138,6 @@ MapData* MapData::Create() {
 }
 
 MapData::~MapData() {
-  ScopedDisableDebugCalls disable;
-
   for (auto* entry : entries_) {
     delete entry;
   }

@@ -223,9 +223,9 @@ void debug_finalize() {
     g_debug->track->DisplayLeaks(*g_debug);
   }
 
-  backtrace_shutdown();
-
   DebugDisableSet(true);
+
+  backtrace_shutdown();
 
   delete g_debug;
   g_debug = nullptr;
