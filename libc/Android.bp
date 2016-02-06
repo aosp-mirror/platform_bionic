@@ -1,7 +1,6 @@
 // Define the common source files for all the libc instances
 // =========================================================
 libc_common_src_files = [
-    "bionic/bindresvport.c",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/fts.c",
@@ -16,12 +15,11 @@ libc_common_src_files = [
     "bionic/siginterrupt.c",
     "bionic/sigsetmask.c",
     "bionic/system_properties_compat.c",
-    "stdio/findfp.c",
     "stdio/fread.c",
     "stdio/refill.c",
     "stdio/snprintf.c",
     "stdio/sprintf.c",
-    "stdio/stdio.c",
+    "stdio/stdio.cpp",
     "stdio/stdio_ext.cpp",
     "stdlib/atexit.c",
     "stdlib/exit.c",
@@ -101,16 +99,8 @@ cc_defaults {
     ],
     conlyflags: ["-std=gnu99"],
     cppflags: [],
+    include_dirs: ["external/jemalloc/include"],
 
-    product_variables: {
-        device_uses_jemalloc: {
-            cflags: ["-DUSE_JEMALLOC"],
-            include_dirs: ["external/jemalloc/include"],
-        },
-        device_uses_dlmalloc: {
-            cflags: ["-DUSE_DLMALLOC"],
-        },
-    },
     arch: {
         // Clang/llvm has incompatible long double (fp128) for x86_64.
         // https://llvm.org/bugs/show_bug.cgi?id=23897
@@ -473,31 +463,23 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/asprintf.c",
         "upstream-openbsd/lib/libc/stdio/clrerr.c",
         "upstream-openbsd/lib/libc/stdio/dprintf.c",
-        "upstream-openbsd/lib/libc/stdio/fdopen.c",
         "upstream-openbsd/lib/libc/stdio/feof.c",
         "upstream-openbsd/lib/libc/stdio/ferror.c",
         "upstream-openbsd/lib/libc/stdio/fflush.c",
         "upstream-openbsd/lib/libc/stdio/fgetc.c",
         "upstream-openbsd/lib/libc/stdio/fgetln.c",
-        "upstream-openbsd/lib/libc/stdio/fgetpos.c",
         "upstream-openbsd/lib/libc/stdio/fgets.c",
         "upstream-openbsd/lib/libc/stdio/fgetwc.c",
         "upstream-openbsd/lib/libc/stdio/fgetws.c",
         "upstream-openbsd/lib/libc/stdio/flags.c",
         "upstream-openbsd/lib/libc/stdio/fmemopen.c",
-        "upstream-openbsd/lib/libc/stdio/fopen.c",
         "upstream-openbsd/lib/libc/stdio/fprintf.c",
         "upstream-openbsd/lib/libc/stdio/fpurge.c",
         "upstream-openbsd/lib/libc/stdio/fputc.c",
         "upstream-openbsd/lib/libc/stdio/fputs.c",
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
-        "upstream-openbsd/lib/libc/stdio/freopen.c",
         "upstream-openbsd/lib/libc/stdio/fscanf.c",
-        "upstream-openbsd/lib/libc/stdio/fseek.c",
-        "upstream-openbsd/lib/libc/stdio/fsetpos.c",
-        "upstream-openbsd/lib/libc/stdio/ftell.c",
-        "upstream-openbsd/lib/libc/stdio/funopen.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
         "upstream-openbsd/lib/libc/stdio/fwalk.c",
         "upstream-openbsd/lib/libc/stdio/fwide.c",
@@ -859,6 +841,13 @@ cc_library_static {
     arch: {
         arm: {
             srcs: [
+                "arch-arm/generic/bionic/memcmp.S",
+                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+
                 "arch-arm/bionic/abort_arm.S",
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
@@ -869,13 +858,6 @@ cc_library_static {
                 "arch-arm/bionic/setjmp.S",
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
-
-                "arch-arm/generic/bionic/memcmp.S",
-                "arch-arm/generic/bionic/memcpy.S",
-                "arch-arm/generic/bionic/memset.S",
-                "arch-arm/generic/bionic/strcmp.S",
-                "arch-arm/generic/bionic/strcpy.S",
-                "arch-arm/generic/bionic/strlen.c",
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
@@ -1083,12 +1065,6 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/bionic/__bionic_clone.S",
-                "arch-arm64/bionic/_exit_with_stack_teardown.S",
-                "arch-arm64/bionic/setjmp.S",
-                "arch-arm64/bionic/syscall.S",
-                "arch-arm64/bionic/vfork.S",
-
                 "arch-arm64/generic/bionic/memchr.S",
                 "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
@@ -1102,6 +1078,12 @@ cc_library_static {
                 "arch-arm64/generic/bionic/strncmp.S",
                 "arch-arm64/generic/bionic/strnlen.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
+
+                "arch-arm64/bionic/__bionic_clone.S",
+                "arch-arm64/bionic/_exit_with_stack_teardown.S",
+                "arch-arm64/bionic/setjmp.S",
+                "arch-arm64/bionic/syscall.S",
+                "arch-arm64/bionic/vfork.S",
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
@@ -1122,6 +1104,12 @@ cc_library_static {
 
         mips: {
             srcs: [
+                "arch-mips/string/memcmp.c",
+                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memset.S",
+                "arch-mips/string/strcmp.S",
+                "arch-mips/string/strlen.c",
+
                 "arch-mips/bionic/__bionic_clone.S",
                 "arch-mips/bionic/bzero.S",
                 "arch-mips/bionic/cacheflush.cpp",
@@ -1129,12 +1117,6 @@ cc_library_static {
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
-
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.S",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strlen.c",
             ],
             rev6: {
                 srcs: [
@@ -1147,31 +1129,23 @@ cc_library_static {
         },
         mips64: {
             srcs: [
+                "arch-mips/string/memcmp.c",
+                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memset.S",
+                "arch-mips/string/strcmp.S",
+                "arch-mips/string/strlen.c",
+
                 "arch-mips64/bionic/__bionic_clone.S",
                 "arch-mips64/bionic/_exit_with_stack_teardown.S",
                 "arch-mips64/bionic/setjmp.S",
                 "arch-mips64/bionic/syscall.S",
                 "arch-mips64/bionic/vfork.S",
                 "arch-mips64/bionic/stat.cpp",
-
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.S",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strlen.c",
             ],
         },
 
         x86: {
             srcs: [
-                "arch-x86/bionic/__bionic_clone.S",
-                "arch-x86/bionic/_exit_with_stack_teardown.S",
-                "arch-x86/bionic/libgcc_compat.c",
-                "arch-x86/bionic/__restore.S",
-                "arch-x86/bionic/setjmp.S",
-                "arch-x86/bionic/syscall.S",
-                "arch-x86/bionic/vfork.S",
-
                 "arch-x86/generic/string/memcmp.S",
                 "arch-x86/generic/string/strcmp.S",
                 "arch-x86/generic/string/strncmp.S",
@@ -1195,6 +1169,14 @@ cc_library_static {
                 "arch-x86/silvermont/string/sse2-strcpy-slm.S",
                 "arch-x86/silvermont/string/sse2-strlen-slm.S",
                 "arch-x86/silvermont/string/sse2-strncpy-slm.S",
+
+                "arch-x86/bionic/__bionic_clone.S",
+                "arch-x86/bionic/_exit_with_stack_teardown.S",
+                "arch-x86/bionic/libgcc_compat.c",
+                "arch-x86/bionic/__restore.S",
+                "arch-x86/bionic/setjmp.S",
+                "arch-x86/bionic/syscall.S",
+                "arch-x86/bionic/vfork.S",
             ],
 
             exclude_srcs: [
@@ -1256,13 +1238,6 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "arch-x86_64/bionic/__bionic_clone.S",
-                "arch-x86_64/bionic/_exit_with_stack_teardown.S",
-                "arch-x86_64/bionic/__restore_rt.S",
-                "arch-x86_64/bionic/setjmp.S",
-                "arch-x86_64/bionic/syscall.S",
-                "arch-x86_64/bionic/vfork.S",
-
                 "arch-x86_64/string/sse2-memcpy-slm.S",
                 "arch-x86_64/string/sse2-memmove-slm.S",
                 "arch-x86_64/string/sse2-memset-slm.S",
@@ -1278,6 +1253,13 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
+
+                "arch-x86_64/bionic/__bionic_clone.S",
+                "arch-x86_64/bionic/_exit_with_stack_teardown.S",
+                "arch-x86_64/bionic/__restore_rt.S",
+                "arch-x86_64/bionic/setjmp.S",
+                "arch-x86_64/bionic/syscall.S",
+                "arch-x86_64/bionic/vfork.S",
             ],
         },
     },
@@ -1357,6 +1339,7 @@ cc_library_static {
         "bionic/libgen.cpp",
         "bionic/link.cpp",
         "bionic/locale.cpp",
+        "bionic/lockf.cpp",
         "bionic/lstat.cpp",
         "bionic/malloc_info.cpp",
         "bionic/mbrtoc16.cpp",
@@ -1370,6 +1353,7 @@ cc_library_static {
         "bionic/mremap.cpp",
         "bionic/NetdClientDispatch.cpp",
         "bionic/net_if.cpp",
+        "bionic/netinet_in.cpp",
         "bionic/open.cpp",
         "bionic/pathconf.cpp",
         "bionic/pause.cpp",
@@ -1583,7 +1567,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_ndk",
     defaults: ["libc_defaults"],
-    srcs: libc_common_src_files + ["bionic/malloc_debug_common.cpp"],
+    srcs: libc_common_src_files + ["bionic/malloc_common.cpp"],
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
@@ -1618,6 +1602,7 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
+        "libjemalloc",
     ],
 }
 
@@ -1696,15 +1681,7 @@ cc_library_static {
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
-    product_variables: {
-        device_uses_jemalloc: {
-            srcs: ["bionic/jemalloc_wrapper.cpp"],
-            whole_static_libs: ["libjemalloc"],
-        },
-        device_uses_dlmalloc: {
-            srcs: ["bionic/dlmalloc.c"],
-        },
-    },
+    srcs: ["bionic/jemalloc_wrapper.cpp"],
     cflags: ["-fvisibility=hidden"],
 
     name: "libc_malloc",
@@ -1721,10 +1698,11 @@ cc_library {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
         },
     },
-    srcs: ["bionic/malloc_debug_common.cpp"],
+    srcs: ["bionic/malloc_common.cpp"],
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
+            "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: ["libc_init_static"],
@@ -1754,7 +1732,7 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common"],
+    whole_static_libs: ["libc_common", "libjemalloc"],
 
     // We'd really like to do this for all architectures, but since this wasn't done
     // before, these symbols must continue to be exported on LP32 for binary
@@ -1829,89 +1807,18 @@ cc_library {
     },
 }
 
-// For all builds, except for the -user build we will enable memory
-// allocation checking (including memory leaks, buffer overwrites, etc.)
-// Note that all these checks are also controlled by env. settings
-// that can enable, or disable specific checks. Note also that some of
-// the checks are available only in emulator and are implemeted in
-// libc_malloc_qemu_instrumented.so.
-// ANDROIDMK TRANSLATION ERROR: unsupported directive
-// ifneq ($(TARGET_BUILD_VARIANT),user)
 // ========================================================
-// libc_malloc_debug_leak.so
+// libc_logging.a
 // ========================================================
-cc_library_shared {
+cc_library_static {
     defaults: ["libc_defaults"],
 
     srcs: [
-        "bionic/debug_backtrace.cpp",
-        "bionic/debug_mapinfo.cpp",
         "bionic/libc_logging.cpp",
-        "bionic/malloc_debug_leak.cpp",
-        "bionic/malloc_debug_check.cpp",
     ],
 
-    name: "libc_malloc_debug_leak",
-
-    shared_libs: [
-        "libc",
-        "libdl",
-    ],
-    // Only need this for arm since libc++ uses its own unwind code that
-    // doesn't mix with the other default unwind code.
-    arch: {
-        arm: {
-            static_libs: [
-                "libunwind_llvm",
-                "libc++abi",
-            ],
-            ldflags: ["-Wl,--exclude-libs,libunwind_llvm.a"],
-        },
-    },
-    allow_undefined_symbols: true,
-
-    // Don't re-export new/delete and friends, even if the compiler really wants to.
-    version_script: "version_script.txt",
-
-    // Don't install on release build
-    tags: [
-        "eng",
-        "debug",
-    ],
+    name: "libc_logging",
 }
-
-// ========================================================
-// libc_malloc_debug_qemu.so
-// ========================================================
-cc_library_shared {
-    defaults: ["libc_defaults"],
-    cflags: ["-DMALLOC_QEMU_INSTRUMENT"],
-
-    srcs: [
-        "bionic/libc_logging.cpp",
-        "bionic/malloc_debug_qemu.cpp",
-    ],
-
-    name: "libc_malloc_debug_qemu",
-
-    shared_libs: [
-        "libc",
-        "libdl",
-    ],
-
-    // Don't re-export new/delete and friends, even if the compiler really wants to.
-    version_script: "version_script.txt",
-
-    // Don't install on release build
-    tags: [
-        "eng",
-        "debug",
-    ],
-}
-
-// ANDROIDMK TRANSLATION ERROR: unsupported directive
-// endif
-//!user
 
 // ========================================================
 // libstdc++.so + libstdc++.a
@@ -1923,10 +1830,12 @@ cc_library {
         "bionic/__cxa_guard.cpp",
         "bionic/__cxa_pure_virtual.cpp",
         "bionic/new.cpp",
-        "bionic/libc_logging.cpp",
     ],
     name: "libstdc++",
     system_shared_libs: ["libc"],
+    shared: {
+        static_libs: ["libc_logging"],
+    },
 
     //TODO: This is to work around b/24465209. Remove after root cause is fixed
     arch: {
