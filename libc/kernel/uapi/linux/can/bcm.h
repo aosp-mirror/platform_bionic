@@ -21,12 +21,17 @@
 #include <linux/types.h>
 #include <linux/can.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct bcm_timeval {
+  long tv_sec;
+  long tv_usec;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct bcm_msg_head {
   __u32 opcode;
   __u32 flags;
   __u32 count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  struct timeval ival1, ival2;
+  struct bcm_timeval ival1, ival2;
   canid_t can_id;
   __u32 nframes;
   struct can_frame frames[0];

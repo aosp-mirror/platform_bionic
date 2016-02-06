@@ -21,8 +21,8 @@
 #include <linux/types.h>
 #define IPSET_PROTOCOL 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define IPSET_MAX_COMMENT_SIZE 255
 #define IPSET_MAXNAMELEN 32
+#define IPSET_MAX_COMMENT_SIZE 255
 enum ipset_cmd {
   IPSET_CMD_NONE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -261,9 +261,14 @@ enum {
   IPSET_COUNTER_GT,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct ip_set_counter_match {
+struct ip_set_counter_match0 {
   __u8 op;
   __u64 value;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ip_set_counter_match {
+  __aligned_u64 value;
+  __u8 op;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SO_IP_SET 83

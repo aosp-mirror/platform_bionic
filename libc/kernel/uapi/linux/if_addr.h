@@ -59,15 +59,17 @@ enum {
 #define IFA_F_PERMANENT 0x80
 #define IFA_F_MANAGETEMPADDR 0x100
 #define IFA_F_NOPREFIXROUTE 0x200
-struct ifa_cacheinfo {
+#define IFA_F_MCAUTOJOIN 0x400
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IFA_F_STABLE_PRIVACY 0x800
+struct ifa_cacheinfo {
   __u32 ifa_prefered;
   __u32 ifa_valid;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 cstamp;
   __u32 tstamp;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define IFA_RTA(r) ((struct rtattr *) (((char *) (r)) + NLMSG_ALIGN(sizeof(struct ifaddrmsg))))
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IFA_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct ifaddrmsg))
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

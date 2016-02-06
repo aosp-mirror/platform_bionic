@@ -18,13 +18,12 @@
  ****************************************************************************/
 #ifndef __MTD_USER_H__
 #define __MTD_USER_H__
-#include <stdint.h>
 #include <mtd/mtd-abi.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct mtd_info_user mtd_info_t;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct erase_info_user erase_info_t;
 typedef struct region_info_user region_info_t;
 typedef struct nand_oobinfo nand_oobinfo_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct nand_ecclayout_user nand_ecclayout_t;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

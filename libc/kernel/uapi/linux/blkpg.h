@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_BLKPG_H
-#define _LINUX_BLKPG_H
+#ifndef _UAPI__LINUX_BLKPG_H
+#define _UAPI__LINUX_BLKPG_H
 #include <linux/compiler.h>
 #include <linux/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

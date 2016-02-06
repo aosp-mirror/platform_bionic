@@ -41,6 +41,7 @@
 #define SYS_eventfd __NR_eventfd
 #define SYS_eventfd2 __NR_eventfd2
 #define SYS_execve __NR_execve
+#define SYS_execveat __NR_execveat
 #define SYS_exit __NR_exit
 #define SYS_exit_group __NR_exit_group
 #define SYS_faccessat __NR_faccessat
@@ -136,6 +137,7 @@
 #define SYS_lstat64 __NR_lstat64
 #define SYS_madvise __NR_madvise
 #define SYS_mbind __NR_mbind
+#define SYS_membarrier __NR_membarrier
 #define SYS_memfd_create __NR_memfd_create
 #define SYS_migrate_pages __NR_migrate_pages
 #define SYS_mincore __NR_mincore
@@ -144,6 +146,7 @@
 #define SYS_mknod __NR_mknod
 #define SYS_mknodat __NR_mknodat
 #define SYS_mlock __NR_mlock
+#define SYS_mlock2 __NR_mlock2
 #define SYS_mlockall __NR_mlockall
 #define SYS_mmap __NR_mmap
 #define SYS_mmap2 __NR_mmap2
@@ -314,6 +317,7 @@
 #define SYS_unlinkat __NR_unlinkat
 #define SYS_unshare __NR_unshare
 #define SYS_uselib __NR_uselib
+#define SYS_userfaultfd __NR_userfaultfd
 #define SYS_ustat __NR_ustat
 #define SYS_utime __NR_utime
 #define SYS_utimensat __NR_utimensat
@@ -367,6 +371,7 @@
 #define SYS_eventfd __NR_eventfd
 #define SYS_eventfd2 __NR_eventfd2
 #define SYS_execve __NR_execve
+#define SYS_execveat __NR_execveat
 #define SYS_exit __NR_exit
 #define SYS_exit_group __NR_exit_group
 #define SYS_faccessat __NR_faccessat
@@ -469,6 +474,7 @@
 #define SYS_lstat64 __NR_lstat64
 #define SYS_madvise __NR_madvise
 #define SYS_mbind __NR_mbind
+#define SYS_membarrier __NR_membarrier
 #define SYS_memfd_create __NR_memfd_create
 #define SYS_mincore __NR_mincore
 #define SYS_mkdir __NR_mkdir
@@ -476,6 +482,7 @@
 #define SYS_mknod __NR_mknod
 #define SYS_mknodat __NR_mknodat
 #define SYS_mlock __NR_mlock
+#define SYS_mlock2 __NR_mlock2
 #define SYS_mlockall __NR_mlockall
 #define SYS_mmap __NR_mmap
 #define SYS_mmap2 __NR_mmap2
@@ -666,6 +673,7 @@
 #define SYS_unlinkat __NR_unlinkat
 #define SYS_unshare __NR_unshare
 #define SYS_uselib __NR_uselib
+#define SYS_userfaultfd __NR_userfaultfd
 #define SYS_ustat __NR_ustat
 #define SYS_utime __NR_utime
 #define SYS_utimensat __NR_utimensat
@@ -722,6 +730,7 @@
 #define SYS_eventfd __NR_eventfd
 #define SYS_eventfd2 __NR_eventfd2
 #define SYS_execve __NR_execve
+#define SYS_execveat __NR_execveat
 #define SYS_exit __NR_exit
 #define SYS_exit_group __NR_exit_group
 #define SYS_faccessat __NR_faccessat
@@ -824,6 +833,7 @@
 #define SYS_lstat64 __NR_lstat64
 #define SYS_madvise __NR_madvise
 #define SYS_mbind __NR_mbind
+#define SYS_membarrier __NR_membarrier
 #define SYS_memfd_create __NR_memfd_create
 #define SYS_migrate_pages __NR_migrate_pages
 #define SYS_mincore __NR_mincore
@@ -832,6 +842,7 @@
 #define SYS_mknod __NR_mknod
 #define SYS_mknodat __NR_mknodat
 #define SYS_mlock __NR_mlock
+#define SYS_mlock2 __NR_mlock2
 #define SYS_mlockall __NR_mlockall
 #define SYS_mmap __NR_mmap
 #define SYS_mmap2 __NR_mmap2
@@ -1033,6 +1044,7 @@
 #define SYS_unused59 __NR_unused59
 #define SYS_unused84 __NR_unused84
 #define SYS_uselib __NR_uselib
+#define SYS_userfaultfd __NR_userfaultfd
 #define SYS_ustat __NR_ustat
 #define SYS_utime __NR_utime
 #define SYS_utimensat __NR_utimensat
@@ -1047,6 +1059,7 @@
 #define SYS_write __NR_write
 #define SYS_writev __NR_writev
 #elif defined(__i386__)
+#define SYS_accept4 __NR_accept4
 #define SYS_access __NR_access
 #define SYS_acct __NR_acct
 #define SYS_add_key __NR_add_key
@@ -1054,6 +1067,7 @@
 #define SYS_afs_syscall __NR_afs_syscall
 #define SYS_alarm __NR_alarm
 #define SYS_bdflush __NR_bdflush
+#define SYS_bind __NR_bind
 #define SYS_bpf __NR_bpf
 #define SYS_break __NR_break
 #define SYS_brk __NR_brk
@@ -1071,6 +1085,7 @@
 #define SYS_clock_settime __NR_clock_settime
 #define SYS_clone __NR_clone
 #define SYS_close __NR_close
+#define SYS_connect __NR_connect
 #define SYS_creat __NR_creat
 #define SYS_create_module __NR_create_module
 #define SYS_delete_module __NR_delete_module
@@ -1085,6 +1100,7 @@
 #define SYS_eventfd __NR_eventfd
 #define SYS_eventfd2 __NR_eventfd2
 #define SYS_execve __NR_execve
+#define SYS_execveat __NR_execveat
 #define SYS_exit __NR_exit
 #define SYS_exit_group __NR_exit_group
 #define SYS_faccessat __NR_faccessat
@@ -1137,6 +1153,7 @@
 #define SYS_getgroups __NR_getgroups
 #define SYS_getgroups32 __NR_getgroups32
 #define SYS_getitimer __NR_getitimer
+#define SYS_getpeername __NR_getpeername
 #define SYS_getpgid __NR_getpgid
 #define SYS_getpgrp __NR_getpgrp
 #define SYS_getpid __NR_getpid
@@ -1151,6 +1168,8 @@
 #define SYS_getrlimit __NR_getrlimit
 #define SYS_getrusage __NR_getrusage
 #define SYS_getsid __NR_getsid
+#define SYS_getsockname __NR_getsockname
+#define SYS_getsockopt __NR_getsockopt
 #define SYS_gettid __NR_gettid
 #define SYS_gettimeofday __NR_gettimeofday
 #define SYS_getuid __NR_getuid
@@ -1183,6 +1202,7 @@
 #define SYS_lgetxattr __NR_lgetxattr
 #define SYS_link __NR_link
 #define SYS_linkat __NR_linkat
+#define SYS_listen __NR_listen
 #define SYS_listxattr __NR_listxattr
 #define SYS_llistxattr __NR_llistxattr
 #define SYS_lock __NR_lock
@@ -1194,6 +1214,7 @@
 #define SYS_lstat64 __NR_lstat64
 #define SYS_madvise __NR_madvise
 #define SYS_mbind __NR_mbind
+#define SYS_membarrier __NR_membarrier
 #define SYS_memfd_create __NR_memfd_create
 #define SYS_migrate_pages __NR_migrate_pages
 #define SYS_mincore __NR_mincore
@@ -1202,6 +1223,7 @@
 #define SYS_mknod __NR_mknod
 #define SYS_mknodat __NR_mknodat
 #define SYS_mlock __NR_mlock
+#define SYS_mlock2 __NR_mlock2
 #define SYS_mlockall __NR_mlockall
 #define SYS_mmap __NR_mmap
 #define SYS_mmap2 __NR_mmap2
@@ -1263,7 +1285,9 @@
 #define SYS_readlinkat __NR_readlinkat
 #define SYS_readv __NR_readv
 #define SYS_reboot __NR_reboot
+#define SYS_recvfrom __NR_recvfrom
 #define SYS_recvmmsg __NR_recvmmsg
+#define SYS_recvmsg __NR_recvmsg
 #define SYS_remap_file_pages __NR_remap_file_pages
 #define SYS_removexattr __NR_removexattr
 #define SYS_rename __NR_rename
@@ -1297,6 +1321,8 @@
 #define SYS_sendfile __NR_sendfile
 #define SYS_sendfile64 __NR_sendfile64
 #define SYS_sendmmsg __NR_sendmmsg
+#define SYS_sendmsg __NR_sendmsg
+#define SYS_sendto __NR_sendto
 #define SYS_set_mempolicy __NR_set_mempolicy
 #define SYS_set_robust_list __NR_set_robust_list
 #define SYS_set_thread_area __NR_set_thread_area
@@ -1325,11 +1351,13 @@
 #define SYS_setreuid32 __NR_setreuid32
 #define SYS_setrlimit __NR_setrlimit
 #define SYS_setsid __NR_setsid
+#define SYS_setsockopt __NR_setsockopt
 #define SYS_settimeofday __NR_settimeofday
 #define SYS_setuid __NR_setuid
 #define SYS_setuid32 __NR_setuid32
 #define SYS_setxattr __NR_setxattr
 #define SYS_sgetmask __NR_sgetmask
+#define SYS_shutdown __NR_shutdown
 #define SYS_sigaction __NR_sigaction
 #define SYS_sigaltstack __NR_sigaltstack
 #define SYS_signal __NR_signal
@@ -1339,7 +1367,9 @@
 #define SYS_sigprocmask __NR_sigprocmask
 #define SYS_sigreturn __NR_sigreturn
 #define SYS_sigsuspend __NR_sigsuspend
+#define SYS_socket __NR_socket
 #define SYS_socketcall __NR_socketcall
+#define SYS_socketpair __NR_socketpair
 #define SYS_splice __NR_splice
 #define SYS_ssetmask __NR_ssetmask
 #define SYS_stat __NR_stat
@@ -1383,6 +1413,7 @@
 #define SYS_unlinkat __NR_unlinkat
 #define SYS_unshare __NR_unshare
 #define SYS_uselib __NR_uselib
+#define SYS_userfaultfd __NR_userfaultfd
 #define SYS_ustat __NR_ustat
 #define SYS_utime __NR_utime
 #define SYS_utimensat __NR_utimensat
@@ -1441,6 +1472,7 @@
 #define SYS_eventfd __NR_eventfd
 #define SYS_eventfd2 __NR_eventfd2
 #define SYS_execve __NR_execve
+#define SYS_execveat __NR_execveat
 #define SYS_exit __NR_exit
 #define SYS_exit_group __NR_exit_group
 #define SYS_faccessat __NR_faccessat
@@ -1534,6 +1566,7 @@
 #define SYS_lstat __NR_lstat
 #define SYS_madvise __NR_madvise
 #define SYS_mbind __NR_mbind
+#define SYS_membarrier __NR_membarrier
 #define SYS_memfd_create __NR_memfd_create
 #define SYS_migrate_pages __NR_migrate_pages
 #define SYS_mincore __NR_mincore
@@ -1542,6 +1575,7 @@
 #define SYS_mknod __NR_mknod
 #define SYS_mknodat __NR_mknodat
 #define SYS_mlock __NR_mlock
+#define SYS_mlock2 __NR_mlock2
 #define SYS_mlockall __NR_mlockall
 #define SYS_mmap __NR_mmap
 #define SYS_modify_ldt __NR_modify_ldt
@@ -1708,6 +1742,7 @@
 #define SYS_unlinkat __NR_unlinkat
 #define SYS_unshare __NR_unshare
 #define SYS_uselib __NR_uselib
+#define SYS_userfaultfd __NR_userfaultfd
 #define SYS_ustat __NR_ustat
 #define SYS_utime __NR_utime
 #define SYS_utimensat __NR_utimensat

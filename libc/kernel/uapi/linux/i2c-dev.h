@@ -44,6 +44,7 @@ struct i2c_rdwr_ioctl_data {
   struct i2c_msg __user * msgs;
   __u32 nmsgs;
 };
-#define I2C_RDRW_IOCTL_MAX_MSGS 42
+#define I2C_RDWR_IOCTL_MAX_MSGS 42
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define I2C_RDRW_IOCTL_MAX_MSGS I2C_RDWR_IOCTL_MAX_MSGS
 #endif

@@ -464,6 +464,11 @@
 #define __NR_getrandom (__NR_SYSCALL_BASE + 384)
 #define __NR_memfd_create (__NR_SYSCALL_BASE + 385)
 #define __NR_bpf (__NR_SYSCALL_BASE + 386)
+#define __NR_execveat (__NR_SYSCALL_BASE + 387)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_userfaultfd (__NR_SYSCALL_BASE + 388)
+#define __NR_membarrier (__NR_SYSCALL_BASE + 389)
+#define __NR_mlock2 (__NR_SYSCALL_BASE + 390)
 #define __ARM_NR_BASE (__NR_SYSCALL_BASE + 0x0f0000)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __ARM_NR_breakpoint (__ARM_NR_BASE + 1)

@@ -71,61 +71,64 @@ enum nfqnl_attr_type {
   NFQA_UID,
   NFQA_GID,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  NFQA_SECCTX,
   __NFQA_MAX
 };
 #define NFQA_MAX (__NFQA_MAX - 1)
-struct nfqnl_msg_verdict_hdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nfqnl_msg_verdict_hdr {
   __be32 verdict;
   __be32 id;
 };
-enum nfqnl_msg_config_cmds {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum nfqnl_msg_config_cmds {
   NFQNL_CFG_CMD_NONE,
   NFQNL_CFG_CMD_BIND,
   NFQNL_CFG_CMD_UNBIND,
-  NFQNL_CFG_CMD_PF_BIND,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  NFQNL_CFG_CMD_PF_BIND,
   NFQNL_CFG_CMD_PF_UNBIND,
 };
 struct nfqnl_msg_config_cmd {
-  __u8 command;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 command;
   __u8 _pad;
   __be16 pf;
 };
-enum nfqnl_config_mode {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum nfqnl_config_mode {
   NFQNL_COPY_NONE,
   NFQNL_COPY_META,
   NFQNL_COPY_PACKET,
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct nfqnl_msg_config_params {
   __be32 copy_range;
   __u8 copy_mode;
-} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} __attribute__((packed));
 enum nfqnl_attr_config {
   NFQA_CFG_UNSPEC,
   NFQA_CFG_CMD,
-  NFQA_CFG_PARAMS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  NFQA_CFG_PARAMS,
   NFQA_CFG_QUEUE_MAXLEN,
   NFQA_CFG_MASK,
   NFQA_CFG_FLAGS,
-  __NFQA_CFG_MAX
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __NFQA_CFG_MAX
 };
 #define NFQA_CFG_MAX (__NFQA_CFG_MAX - 1)
 #define NFQA_CFG_F_FAIL_OPEN (1 << 0)
-#define NFQA_CFG_F_CONNTRACK (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NFQA_CFG_F_CONNTRACK (1 << 1)
 #define NFQA_CFG_F_GSO (1 << 2)
 #define NFQA_CFG_F_UID_GID (1 << 3)
-#define NFQA_CFG_F_MAX (1 << 4)
-#define NFQA_SKB_CSUMNOTREADY (1 << 0)
+#define NFQA_CFG_F_SECCTX (1 << 4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NFQA_CFG_F_MAX (1 << 5)
+#define NFQA_SKB_CSUMNOTREADY (1 << 0)
 #define NFQA_SKB_GSO (1 << 1)
 #define NFQA_SKB_CSUM_NOTVERIFIED (1 << 2)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
