@@ -548,7 +548,7 @@ struct log_time { // Wire format
   uint32_t tv_nsec;
 };
 
-static int __libc_write_log(int priority, const char* tag, const char* msg) {
+int __libc_write_log(int priority, const char* tag, const char* msg) {
   int main_log_fd = __libc_open_log_socket();
   if (main_log_fd == -1) {
     // Try stderr instead.

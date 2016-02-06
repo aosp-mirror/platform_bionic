@@ -37,7 +37,6 @@
 #include <unwind.h>
 
 #include "backtrace.h"
-#include "debug_disable.h"
 #include "debug_log.h"
 #include "MapData.h"
 
@@ -65,8 +64,6 @@ static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
 }
 
 void backtrace_startup() {
-  ScopedDisableDebugCalls disable;
-
   g_map_data = MapData::Create();
   if (g_map_data) {
     _Unwind_Backtrace(find_current_map, nullptr);
@@ -74,8 +71,6 @@ void backtrace_startup() {
 }
 
 void backtrace_shutdown() {
-  ScopedDisableDebugCalls disable;
-
   delete g_map_data;
   g_map_data = nullptr;
 }
@@ -136,15 +131,13 @@ static _Unwind_Reason_Code trace_function(__unwind_context* context, void* arg) 
 }
 
 size_t backtrace_get(uintptr_t* frames, size_t frame_count) {
-  ScopedDisableDebugCalls disable;
-
   stack_crawl_state_t state(frames, frame_count);
   _Unwind_Backtrace(trace_function, &state);
   return state.cur_frame;
 }
 
-void backtrace_log(const uintptr_t* frames, size_t frame_count) {
-  ScopedDisableDebugCalls disable;
+std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
+  std::string str;
 
   for (size_t frame_num = 0; frame_num < frame_count; frame_num++) {
     uintptr_t offset = 0;
@@ -165,15 +158,25 @@ void backtrace_log(const uintptr_t* frames, size_t frame_count) {
     if (soname == nullptr) {
       soname = "<unknown>";
     }
+    char buf[1024];
     if (symbol != nullptr) {
       char* demangled_symbol = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
       const char* best_name = (demangled_symbol != nullptr) ? demangled_symbol : symbol;
 
-      error_log("          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")",
-                frame_num, rel_pc, soname, best_name, frames[frame_num] - offset);
+      __libc_format_buffer(buf, sizeof(buf),
+          "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")\n", frame_num,
+          rel_pc, soname, best_name, frames[frame_num] - offset);
       free(demangled_symbol);
     } else {
-      error_log("          #%02zd  pc %" PAD_PTR "  %s", frame_num, rel_pc, soname);
+      __libc_format_buffer(buf, sizeof(buf),
+          "          #%02zd  pc %" PAD_PTR "  %s\n", frame_num, rel_pc, soname);
     }
+    str += buf;
   }
+
+  return str;
+}
+
+void backtrace_log(const uintptr_t* frames, size_t frame_count) {
+  error_log_string(backtrace_string(frames, frame_count).c_str());
 }
