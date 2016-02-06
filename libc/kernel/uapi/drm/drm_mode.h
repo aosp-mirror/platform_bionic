@@ -87,8 +87,18 @@
 struct drm_mode_modeinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 clock;
-  __u16 hdisplay, hsync_start, hsync_end, htotal, hskew;
-  __u16 vdisplay, vsync_start, vsync_end, vtotal, vscan;
+  __u16 hdisplay;
+  __u16 hsync_start;
+  __u16 hsync_end;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 htotal;
+  __u16 hskew;
+  __u16 vdisplay;
+  __u16 vsync_start;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 vsync_end;
+  __u16 vtotal;
+  __u16 vscan;
   __u32 vrefresh;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 flags;
@@ -107,121 +117,131 @@ struct drm_mode_card_res {
   __u32 count_connectors;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_encoders;
-  __u32 min_width, max_width;
-  __u32 min_height, max_height;
-};
+  __u32 min_width;
+  __u32 max_width;
+  __u32 min_height;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 max_height;
+};
 struct drm_mode_crtc {
   __u64 set_connectors_ptr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_connectors;
   __u32 crtc_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 fb_id;
-  __u32 x, y;
+  __u32 x;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 y;
   __u32 gamma_size;
   __u32 mode_valid;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct drm_mode_modeinfo mode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define DRM_MODE_PRESENT_TOP_FIELD (1 << 0)
 #define DRM_MODE_PRESENT_BOTTOM_FIELD (1 << 1)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_mode_set_plane {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 plane_id;
   __u32 crtc_id;
   __u32 fb_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 flags;
-  __s32 crtc_x, crtc_y;
-  __u32 crtc_w, crtc_h;
-  __u32 src_x, src_y;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u32 src_h, src_w;
+  __s32 crtc_x;
+  __s32 crtc_y;
+  __u32 crtc_w;
+  __u32 crtc_h;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 src_x;
+  __u32 src_y;
+  __u32 src_h;
+  __u32 src_w;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_mode_get_plane {
   __u32 plane_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 crtc_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 fb_id;
   __u32 possible_crtcs;
   __u32 gamma_size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_format_types;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 format_type_ptr;
 };
 struct drm_mode_get_plane_res {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 plane_id_ptr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_planes;
 };
 #define DRM_MODE_ENCODER_NONE 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_ENCODER_DAC 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_ENCODER_TMDS 2
 #define DRM_MODE_ENCODER_LVDS 3
 #define DRM_MODE_ENCODER_TVDAC 4
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_ENCODER_VIRTUAL 5
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_ENCODER_DSI 6
 #define DRM_MODE_ENCODER_DPMST 7
 struct drm_mode_get_encoder {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 encoder_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 encoder_type;
   __u32 crtc_id;
   __u32 possible_crtcs;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 possible_clones;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define DRM_MODE_SUBCONNECTOR_Automatic 0
 #define DRM_MODE_SUBCONNECTOR_Unknown 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_SUBCONNECTOR_DVID 3
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_SUBCONNECTOR_DVIA 4
 #define DRM_MODE_SUBCONNECTOR_Composite 5
 #define DRM_MODE_SUBCONNECTOR_SVIDEO 6
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_SUBCONNECTOR_Component 8
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_SUBCONNECTOR_SCART 9
 #define DRM_MODE_CONNECTOR_Unknown 0
 #define DRM_MODE_CONNECTOR_VGA 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_DVII 2
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_DVID 3
 #define DRM_MODE_CONNECTOR_DVIA 4
 #define DRM_MODE_CONNECTOR_Composite 5
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_SVIDEO 6
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_LVDS 7
 #define DRM_MODE_CONNECTOR_Component 8
 #define DRM_MODE_CONNECTOR_9PinDIN 9
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_DisplayPort 10
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_HDMIA 11
 #define DRM_MODE_CONNECTOR_HDMIB 12
 #define DRM_MODE_CONNECTOR_TV 13
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_eDP 14
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_MODE_CONNECTOR_VIRTUAL 15
 #define DRM_MODE_CONNECTOR_DSI 16
 struct drm_mode_get_connector {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 encoders_ptr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 modes_ptr;
   __u64 props_ptr;
   __u64 prop_values_ptr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_modes;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 count_props;
   __u32 count_encoders;
   __u32 encoder_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 connector_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 connector_type;
   __u32 connector_type_id;
   __u32 connection;
+  __u32 mm_width;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u32 mm_width, mm_height;
+  __u32 mm_height;
   __u32 subpixel;
   __u32 pad;
 };
@@ -239,66 +259,71 @@ struct drm_mode_get_connector {
 #define DRM_MODE_PROP_TYPE(n) ((n) << 6)
 #define DRM_MODE_PROP_OBJECT DRM_MODE_PROP_TYPE(1)
 #define DRM_MODE_PROP_SIGNED_RANGE DRM_MODE_PROP_TYPE(2)
-struct drm_mode_property_enum {
+#define DRM_MODE_PROP_ATOMIC 0x80000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_property_enum {
   __u64 value;
   char name[DRM_PROP_NAME_LEN];
 };
-struct drm_mode_get_property {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_get_property {
   __u64 values_ptr;
   __u64 enum_blob_ptr;
   __u32 prop_id;
-  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
   char name[DRM_PROP_NAME_LEN];
   __u32 count_values;
   __u32 count_enum_blobs;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_mode_connector_set_property {
   __u64 value;
   __u32 prop_id;
-  __u32 connector_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 connector_id;
 };
 struct drm_mode_obj_get_properties {
   __u64 props_ptr;
-  __u64 prop_values_ptr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 prop_values_ptr;
   __u32 count_props;
   __u32 obj_id;
   __u32 obj_type;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_mode_obj_set_property {
   __u64 value;
   __u32 prop_id;
-  __u32 obj_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 obj_id;
   __u32 obj_type;
 };
 struct drm_mode_get_blob {
-  __u32 blob_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 blob_id;
   __u32 length;
   __u64 data;
 };
-struct drm_mode_fb_cmd {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_fb_cmd {
   __u32 fb_id;
-  __u32 width, height;
+  __u32 width;
+  __u32 height;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 pitch;
   __u32 bpp;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 depth;
   __u32 handle;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define DRM_MODE_FB_INTERLACED (1 << 0)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DRM_MODE_FB_MODIFIERS (1 << 1)
 struct drm_mode_fb_cmd2 {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 fb_id;
-  __u32 width, height;
+  __u32 width;
+  __u32 height;
   __u32 pixel_format;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 flags;
@@ -306,95 +331,124 @@ struct drm_mode_fb_cmd2 {
   __u32 pitches[4];
   __u32 offsets[4];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 modifier[4];
 };
 #define DRM_MODE_FB_DIRTY_ANNOTATE_COPY 0x01
 #define DRM_MODE_FB_DIRTY_ANNOTATE_FILL 0x02
-#define DRM_MODE_FB_DIRTY_FLAGS 0x03
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DRM_MODE_FB_DIRTY_FLAGS 0x03
 #define DRM_MODE_FB_DIRTY_MAX_CLIPS 256
 struct drm_mode_fb_dirty_cmd {
   __u32 fb_id;
-  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
   __u32 color;
   __u32 num_clips;
   __u64 clips_ptr;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_mode_mode_cmd {
   __u32 connector_id;
   struct drm_mode_modeinfo mode;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define DRM_MODE_CURSOR_BO 0x01
 #define DRM_MODE_CURSOR_MOVE 0x02
 #define DRM_MODE_CURSOR_FLAGS 0x03
-struct drm_mode_cursor {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_cursor {
   __u32 flags;
   __u32 crtc_id;
   __s32 x;
-  __s32 y;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 y;
   __u32 width;
   __u32 height;
   __u32 handle;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_mode_cursor2 {
   __u32 flags;
   __u32 crtc_id;
-  __s32 x;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s32 x;
   __s32 y;
   __u32 width;
   __u32 height;
-  __u32 handle;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 handle;
   __s32 hot_x;
   __s32 hot_y;
 };
-struct drm_mode_crtc_lut {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_crtc_lut {
   __u32 crtc_id;
   __u32 gamma_size;
   __u64 red;
-  __u64 green;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 green;
   __u64 blue;
 };
 #define DRM_MODE_PAGE_FLIP_EVENT 0x01
-#define DRM_MODE_PAGE_FLIP_ASYNC 0x02
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DRM_MODE_PAGE_FLIP_ASYNC 0x02
 #define DRM_MODE_PAGE_FLIP_FLAGS (DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_PAGE_FLIP_ASYNC)
 struct drm_mode_crtc_page_flip {
   __u32 crtc_id;
-  __u32 fb_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 fb_id;
   __u32 flags;
   __u32 reserved;
   __u64 user_data;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_mode_create_dumb {
   uint32_t height;
   uint32_t width;
-  uint32_t bpp;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  uint32_t bpp;
   uint32_t flags;
   uint32_t handle;
   uint32_t pitch;
-  uint64_t size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  uint64_t size;
 };
 struct drm_mode_map_dumb {
   __u32 handle;
-  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pad;
   __u64 offset;
 };
 struct drm_mode_destroy_dumb {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   uint32_t handle;
+};
+#define DRM_MODE_ATOMIC_TEST_ONLY 0x0100
+#define DRM_MODE_ATOMIC_NONBLOCK 0x0200
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DRM_MODE_ATOMIC_ALLOW_MODESET 0x0400
+#define DRM_MODE_ATOMIC_FLAGS (DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_PAGE_FLIP_ASYNC | DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_ATOMIC_ALLOW_MODESET)
+struct drm_mode_atomic {
+  __u32 flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 count_objs;
+  __u64 objs_ptr;
+  __u64 count_props_ptr;
+  __u64 props_ptr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 prop_values_ptr;
+  __u64 reserved;
+  __u64 user_data;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_mode_create_blob {
+  __u64 data;
+  __u32 length;
+  __u32 blob_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct drm_mode_destroy_blob {
+  __u32 blob_id;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

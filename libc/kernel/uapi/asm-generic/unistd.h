@@ -377,8 +377,13 @@
 #define __NR_memfd_create 279
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_bpf 280
+#define __NR_execveat 281
+#define __NR_userfaultfd 282
+#define __NR_membarrier 283
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_mlock2 284
 #undef __NR_syscalls
-#define __NR_syscalls 281
+#define __NR_syscalls 285
 #ifdef __ARCH_WANT_SYSCALL_NO_AT
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_open 1024

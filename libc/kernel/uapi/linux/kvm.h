@@ -141,212 +141,257 @@ struct kvm_pit_config {
 };
 #define KVM_PIT_SPEAKER_DUMMY 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_s390_skeys {
+  __u64 start_gfn;
+  __u64 count;
+  __u64 skeydata_addr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
+  __u32 reserved[9];
+};
+#define KVM_S390_GET_SKEYS_NONE 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_S390_SKEYS_MAX 1048576
 #define KVM_EXIT_UNKNOWN 0
 #define KVM_EXIT_EXCEPTION 1
 #define KVM_EXIT_IO 2
-#define KVM_EXIT_HYPERCALL 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_HYPERCALL 3
 #define KVM_EXIT_DEBUG 4
 #define KVM_EXIT_HLT 5
 #define KVM_EXIT_MMIO 6
-#define KVM_EXIT_IRQ_WINDOW_OPEN 7
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_IRQ_WINDOW_OPEN 7
 #define KVM_EXIT_SHUTDOWN 8
 #define KVM_EXIT_FAIL_ENTRY 9
 #define KVM_EXIT_INTR 10
-#define KVM_EXIT_SET_TPR 11
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_SET_TPR 11
 #define KVM_EXIT_TPR_ACCESS 12
 #define KVM_EXIT_S390_SIEIC 13
 #define KVM_EXIT_S390_RESET 14
-#define KVM_EXIT_DCR 15
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_DCR 15
 #define KVM_EXIT_NMI 16
 #define KVM_EXIT_INTERNAL_ERROR 17
 #define KVM_EXIT_OSI 18
-#define KVM_EXIT_PAPR_HCALL 19
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_PAPR_HCALL 19
 #define KVM_EXIT_S390_UCONTROL 20
 #define KVM_EXIT_WATCHDOG 21
 #define KVM_EXIT_S390_TSCH 22
-#define KVM_EXIT_EPR 23
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_EXIT_EPR 23
 #define KVM_EXIT_SYSTEM_EVENT 24
+#define KVM_EXIT_S390_STSI 25
+#define KVM_EXIT_IOAPIC_EOI 26
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_INTERNAL_ERROR_EMULATION 1
 #define KVM_INTERNAL_ERROR_SIMUL_EX 2
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kvm_run {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 request_interrupt_window;
   __u8 padding1[7];
   __u32 exit_reason;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 ready_for_interrupt_injection;
-  __u8 if_flag;
-  __u8 padding2[2];
-  __u64 cr8;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 if_flag;
+  __u16 flags;
+  __u64 cr8;
   __u64 apic_base;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __KVM_S390
   __u64 psw_mask;
   __u64 psw_addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union {
     struct {
       __u64 hardware_exit_reason;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } hw;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u64 hardware_entry_failure_reason;
     } fail_entry;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 exception;
       __u32 error_code;
     } ex;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_EXIT_IO_IN 0
 #define KVM_EXIT_IO_OUT 1
       __u8 direction;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u8 size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u16 port;
       __u32 count;
       __u64 data_offset;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } io;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       struct kvm_debug_exit_arch arch;
     } debug;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 phys_addr;
       __u8 data[8];
       __u32 len;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u8 is_write;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } mmio;
     struct {
       __u64 nr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 args[6];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 ret;
       __u32 longmode;
       __u32 pad;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } hypercall;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u64 rip;
       __u32 is_write;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 pad;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } tpr_access;
     struct {
       __u8 icptcode;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u16 ipa;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 ipb;
     } s390_sieic;
 #define KVM_S390_RESET_POR 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_RESET_CLEAR 2
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_RESET_SUBSYSTEM 4
 #define KVM_S390_RESET_CPU_INIT 8
 #define KVM_S390_RESET_IPL 16
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u64 s390_reset_flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u64 trans_exc_code;
       __u32 pgm_code;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } s390_ucontrol;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u32 dcrn;
       __u32 data;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u8 is_write;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } dcr;
     struct {
       __u32 suberror;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 ndata;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 data[16];
     } internal;
     struct {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 gprs[32];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } osi;
     struct {
       __u64 nr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 ret;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u64 args[9];
     } papr_hcall;
     struct {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u16 subchannel_id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u16 subchannel_nr;
       __u32 io_int_parm;
       __u32 io_int_word;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 ipb;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u8 dequeued;
     } s390_tsch;
     struct {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 epr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } epr;
     struct {
 #define KVM_SYSTEM_EVENT_SHUTDOWN 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SYSTEM_EVENT_RESET 2
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_SYSTEM_EVENT_CRASH 3
       __u32 type;
       __u64 flags;
     } system_event;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct {
+      __u64 addr;
+      __u8 ar;
+      __u8 reserved;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+      __u8 fc;
+      __u8 sel1;
+      __u16 sel2;
+    } s390_stsi;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct {
+      __u8 vector;
+    } eoi;
     char padding[256];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
   __u64 kvm_valid_regs;
   __u64 kvm_dirty_regs;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union {
-    struct kvm_sync_regs regs;
-    char padding[1024];
-  } s;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct kvm_sync_regs regs;
+    char padding[2048];
+  } s;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kvm_coalesced_mmio_zone {
   __u64 addr;
   __u32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 pad;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct kvm_coalesced_mmio {
   __u64 phys_addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 len;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 pad;
   __u8 data[8];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kvm_coalesced_mmio_ring {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 first, last;
   struct kvm_coalesced_mmio coalesced_mmio[0];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_COALESCED_MMIO_MAX ((PAGE_SIZE - sizeof(struct kvm_coalesced_mmio_ring)) / sizeof(struct kvm_coalesced_mmio))
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct kvm_translation {
   __u64 linear_address;
   __u64 physical_address;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 valid;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 writeable;
   __u8 usermode;
   __u8 pad[5];
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_s390_mem_op {
+  __u64 gaddr;
+  __u64 flags;
+  __u32 size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 op;
+  __u64 buf;
+  __u8 ar;
+  __u8 reserved[31];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+#define KVM_S390_MEMOP_LOGICAL_READ 0
+#define KVM_S390_MEMOP_LOGICAL_WRITE 1
+#define KVM_S390_MEMOP_F_CHECK_ONLY (1ULL << 0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_S390_MEMOP_F_INJECT_EXCEPTION (1ULL << 1)
 struct kvm_interrupt {
   __u32 irq;
 };
@@ -416,79 +461,94 @@ struct kvm_s390_psw {
 #define KVM_S390_INT_IO_MIN 0x00000000u
 #define KVM_S390_INT_IO_MAX 0xfffdffffu
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_S390_INT_IO_AI_MASK 0x04000000u
 struct kvm_s390_interrupt {
   __u32 type;
   __u32 parm;
-  __u64 parm64;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 parm64;
 };
 struct kvm_s390_io_info {
   __u16 subchannel_id;
-  __u16 subchannel_nr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 subchannel_nr;
   __u32 io_int_parm;
   __u32 io_int_word;
 };
-struct kvm_s390_ext_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_s390_ext_info {
   __u32 ext_params;
   __u32 pad;
   __u64 ext_params2;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct kvm_s390_pgm_info {
   __u64 trans_exc_code;
   __u64 mon_code;
-  __u64 per_address;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 per_address;
   __u32 data_exc_code;
   __u16 code;
   __u16 mon_class_nr;
-  __u8 per_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 per_code;
   __u8 per_atmid;
   __u8 exc_access_id;
   __u8 per_access_id;
-  __u8 op_access_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 op_access_id;
   __u8 pad[3];
 };
 struct kvm_s390_prefix_info {
-  __u32 address;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 address;
 };
 struct kvm_s390_extcall_info {
   __u16 code;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct kvm_s390_emerg_info {
   __u16 code;
 };
-struct kvm_s390_mchk_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_S390_STOP_FLAG_STORE_STATUS 0x01
+struct kvm_s390_stop_info {
+  __u32 flags;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_s390_mchk_info {
   __u64 cr14;
   __u64 mcic;
   __u64 failing_storage_address;
-  __u32 ext_damage_code;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 ext_damage_code;
   __u32 pad;
   __u8 fixed_logout[16];
 };
-struct kvm_s390_irq {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_s390_irq {
   __u64 type;
   union {
     struct kvm_s390_io_info io;
-    struct kvm_s390_ext_info ext;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct kvm_s390_ext_info ext;
     struct kvm_s390_pgm_info pgm;
     struct kvm_s390_emerg_info emerg;
     struct kvm_s390_extcall_info extcall;
-    struct kvm_s390_prefix_info prefix;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct kvm_s390_prefix_info prefix;
+    struct kvm_s390_stop_info stop;
     struct kvm_s390_mchk_info mchk;
     char reserved[64];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   } u;
+};
+struct kvm_s390_irq_state {
+  __u64 buf;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
+  __u32 len;
+  __u32 reserved[4];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GUESTDBG_ENABLE 0x00000001
@@ -603,12 +663,7 @@ struct kvm_ppc_smmu_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_CAP_COALESCED_MMIO 15
 #define KVM_CAP_SYNC_MMU 16
-#define KVM_CAP_DEVICE_ASSIGNMENT 17
 #define KVM_CAP_IOMMU 18
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#ifdef __KVM_HAVE_MSI
-#define KVM_CAP_DEVICE_MSI 20
-#endif
 #define KVM_CAP_DESTROY_MEMORY_REGION_WORKS 21
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_CAP_USER_NMI 22
@@ -622,11 +677,6 @@ struct kvm_ppc_smmu_info {
 #define KVM_CAP_IRQ_ROUTING 25
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_CAP_IRQ_INJECT_STATUS 26
-#define KVM_CAP_DEVICE_DEASSIGNMENT 27
-#ifdef __KVM_HAVE_MSIX
-#define KVM_CAP_DEVICE_MSIX 28
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
 #define KVM_CAP_ASSIGN_DEV_IRQ 29
 #define KVM_CAP_JOIN_MEMORY_REGIONS_WORKS 30
 #ifdef __KVM_HAVE_MCE
@@ -743,340 +793,370 @@ struct kvm_ppc_smmu_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_CAP_PPC_ENABLE_HCALL 104
 #define KVM_CAP_CHECK_EXTENSION_VM 105
-#ifdef KVM_CAP_IRQ_ROUTING
-struct kvm_irq_routing_irqchip {
+#define KVM_CAP_S390_USER_SIGP 106
+#define KVM_CAP_S390_VECTOR_REGISTERS 107
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_CAP_S390_MEM_OP 108
+#define KVM_CAP_S390_USER_STSI 109
+#define KVM_CAP_S390_SKEYS 110
+#define KVM_CAP_MIPS_FPU 111
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_CAP_MIPS_MSA 112
+#define KVM_CAP_S390_INJECT_IRQ 113
+#define KVM_CAP_S390_IRQ_STATE 114
+#define KVM_CAP_PPC_HWRNG 115
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_CAP_DISABLE_QUIRKS 116
+#define KVM_CAP_X86_SMM 117
+#define KVM_CAP_MULTI_ADDRESS_SPACE 118
+#define KVM_CAP_GUEST_DEBUG_HW_BPS 119
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_CAP_GUEST_DEBUG_HW_WPS 120
+#define KVM_CAP_SPLIT_IRQCHIP 121
+#define KVM_CAP_IOEVENTFD_ANY_LENGTH 122
+#ifdef KVM_CAP_IRQ_ROUTING
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_irq_routing_irqchip {
   __u32 irqchip;
   __u32 pin;
 };
-struct kvm_irq_routing_msi {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_irq_routing_msi {
   __u32 address_lo;
   __u32 address_hi;
   __u32 data;
-  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pad;
 };
 struct kvm_irq_routing_s390_adapter {
   __u64 ind_addr;
-  __u64 summary_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 summary_addr;
   __u64 ind_offset;
   __u32 summary_offset;
   __u32 adapter_id;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define KVM_IRQ_ROUTING_IRQCHIP 1
 #define KVM_IRQ_ROUTING_MSI 2
 #define KVM_IRQ_ROUTING_S390_ADAPTER 3
-struct kvm_irq_routing_entry {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_irq_routing_entry {
   __u32 gsi;
   __u32 type;
   __u32 flags;
-  __u32 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pad;
   union {
     struct kvm_irq_routing_irqchip irqchip;
     struct kvm_irq_routing_msi msi;
-    struct kvm_irq_routing_s390_adapter adapter;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct kvm_irq_routing_s390_adapter adapter;
     __u32 pad[8];
   } u;
 };
-struct kvm_irq_routing {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_irq_routing {
   __u32 nr;
   __u32 flags;
   struct kvm_irq_routing_entry entries[0];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
 #ifdef KVM_CAP_MCE
 struct kvm_x86_mce {
-  __u64 status;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 status;
   __u64 addr;
   __u64 misc;
   __u64 mcg_status;
-  __u8 bank;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 bank;
   __u8 pad1[7];
   __u64 pad2[3];
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
 #ifdef KVM_CAP_XEN_HVM
 struct kvm_xen_hvm_config {
   __u32 flags;
-  __u32 msr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 msr;
   __u64 blob_addr_32;
   __u64 blob_addr_64;
   __u8 blob_size_32;
-  __u8 blob_size_64;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 blob_size_64;
   __u8 pad2[30];
 };
 #endif
-#define KVM_IRQFD_FLAG_DEASSIGN (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_IRQFD_FLAG_DEASSIGN (1 << 0)
 #define KVM_IRQFD_FLAG_RESAMPLE (1 << 1)
 struct kvm_irqfd {
   __u32 fd;
-  __u32 gsi;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 gsi;
   __u32 flags;
   __u32 resamplefd;
   __u8 pad[16];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct kvm_clock_data {
   __u64 clock;
   __u32 flags;
-  __u32 pad[9];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pad[9];
 };
 #define KVM_MMU_FSL_BOOKE_NOHV 0
 #define KVM_MMU_FSL_BOOKE_HV 1
-struct kvm_config_tlb {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_config_tlb {
   __u64 params;
   __u64 array;
   __u32 mmu_type;
-  __u32 array_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 array_len;
 };
 struct kvm_dirty_tlb {
   __u64 bitmap;
-  __u32 num_dirty;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 num_dirty;
 };
 #define KVM_REG_ARCH_MASK 0xff00000000000000ULL
 #define KVM_REG_GENERIC 0x0000000000000000ULL
-#define KVM_REG_PPC 0x1000000000000000ULL
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_REG_PPC 0x1000000000000000ULL
 #define KVM_REG_X86 0x2000000000000000ULL
 #define KVM_REG_IA64 0x3000000000000000ULL
 #define KVM_REG_ARM 0x4000000000000000ULL
-#define KVM_REG_S390 0x5000000000000000ULL
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_REG_S390 0x5000000000000000ULL
 #define KVM_REG_ARM64 0x6000000000000000ULL
 #define KVM_REG_MIPS 0x7000000000000000ULL
 #define KVM_REG_SIZE_SHIFT 52
-#define KVM_REG_SIZE_MASK 0x00f0000000000000ULL
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_REG_SIZE_MASK 0x00f0000000000000ULL
 #define KVM_REG_SIZE_U8 0x0000000000000000ULL
 #define KVM_REG_SIZE_U16 0x0010000000000000ULL
 #define KVM_REG_SIZE_U32 0x0020000000000000ULL
-#define KVM_REG_SIZE_U64 0x0030000000000000ULL
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_REG_SIZE_U64 0x0030000000000000ULL
 #define KVM_REG_SIZE_U128 0x0040000000000000ULL
 #define KVM_REG_SIZE_U256 0x0050000000000000ULL
 #define KVM_REG_SIZE_U512 0x0060000000000000ULL
-#define KVM_REG_SIZE_U1024 0x0070000000000000ULL
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_REG_SIZE_U1024 0x0070000000000000ULL
 struct kvm_reg_list {
   __u64 n;
   __u64 reg[0];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct kvm_one_reg {
   __u64 id;
   __u64 addr;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct kvm_msi {
   __u32 address_lo;
   __u32 address_hi;
-  __u32 data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 data;
   __u32 flags;
   __u8 pad[16];
 };
-struct kvm_arm_device_addr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct kvm_arm_device_addr {
   __u64 id;
   __u64 addr;
 };
-#define KVM_CREATE_DEVICE_TEST 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_CREATE_DEVICE_TEST 1
 struct kvm_create_device {
   __u32 type;
   __u32 fd;
-  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
 };
 struct kvm_device_attr {
   __u32 flags;
-  __u32 group;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 group;
   __u64 attr;
   __u64 addr;
 };
-#define KVM_DEV_VFIO_GROUP 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_DEV_VFIO_GROUP 1
 #define KVM_DEV_VFIO_GROUP_ADD 1
 #define KVM_DEV_VFIO_GROUP_DEL 2
 enum kvm_device_type {
-  KVM_DEV_TYPE_FSL_MPIC_20 = 1,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  KVM_DEV_TYPE_FSL_MPIC_20 = 1,
 #define KVM_DEV_TYPE_FSL_MPIC_20 KVM_DEV_TYPE_FSL_MPIC_20
   KVM_DEV_TYPE_FSL_MPIC_42,
 #define KVM_DEV_TYPE_FSL_MPIC_42 KVM_DEV_TYPE_FSL_MPIC_42
-  KVM_DEV_TYPE_XICS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  KVM_DEV_TYPE_XICS,
 #define KVM_DEV_TYPE_XICS KVM_DEV_TYPE_XICS
   KVM_DEV_TYPE_VFIO,
 #define KVM_DEV_TYPE_VFIO KVM_DEV_TYPE_VFIO
-  KVM_DEV_TYPE_ARM_VGIC_V2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  KVM_DEV_TYPE_ARM_VGIC_V2,
 #define KVM_DEV_TYPE_ARM_VGIC_V2 KVM_DEV_TYPE_ARM_VGIC_V2
   KVM_DEV_TYPE_FLIC,
 #define KVM_DEV_TYPE_FLIC KVM_DEV_TYPE_FLIC
-  KVM_DEV_TYPE_MAX,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  KVM_DEV_TYPE_ARM_VGIC_V3,
+#define KVM_DEV_TYPE_ARM_VGIC_V3 KVM_DEV_TYPE_ARM_VGIC_V3
+  KVM_DEV_TYPE_MAX,
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_MEMORY_REGION _IOW(KVMIO, 0x40, struct kvm_memory_region)
 #define KVM_CREATE_VCPU _IO(KVMIO, 0x41)
 #define KVM_GET_DIRTY_LOG _IOW(KVMIO, 0x42, struct kvm_dirty_log)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_MEMORY_ALIAS _IOW(KVMIO, 0x43, struct kvm_memory_alias)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_NR_MMU_PAGES _IO(KVMIO, 0x44)
 #define KVM_GET_NR_MMU_PAGES _IO(KVMIO, 0x45)
 #define KVM_SET_USER_MEMORY_REGION _IOW(KVMIO, 0x46, struct kvm_userspace_memory_region)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_TSS_ADDR _IO(KVMIO, 0x47)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_IDENTITY_MAP_ADDR _IOW(KVMIO, 0x48, __u64)
 struct kvm_s390_ucas_mapping {
   __u64 user_addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 vcpu_addr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 length;
 };
 #define KVM_S390_UCAS_MAP _IOW(KVMIO, 0x50, struct kvm_s390_ucas_mapping)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_UCAS_UNMAP _IOW(KVMIO, 0x51, struct kvm_s390_ucas_mapping)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_VCPU_FAULT _IOW(KVMIO, 0x52, unsigned long)
 #define KVM_CREATE_IRQCHIP _IO(KVMIO, 0x60)
 #define KVM_IRQ_LINE _IOW(KVMIO, 0x61, struct kvm_irq_level)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_IRQCHIP _IOWR(KVMIO, 0x62, struct kvm_irqchip)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_IRQCHIP _IOR(KVMIO, 0x63, struct kvm_irqchip)
 #define KVM_CREATE_PIT _IO(KVMIO, 0x64)
 #define KVM_GET_PIT _IOWR(KVMIO, 0x65, struct kvm_pit_state)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_PIT _IOR(KVMIO, 0x66, struct kvm_pit_state)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_IRQ_LINE_STATUS _IOWR(KVMIO, 0x67, struct kvm_irq_level)
 #define KVM_REGISTER_COALESCED_MMIO _IOW(KVMIO, 0x67, struct kvm_coalesced_mmio_zone)
 #define KVM_UNREGISTER_COALESCED_MMIO _IOW(KVMIO, 0x68, struct kvm_coalesced_mmio_zone)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_ASSIGN_PCI_DEVICE _IOR(KVMIO, 0x69, struct kvm_assigned_pci_dev)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_GSI_ROUTING _IOW(KVMIO, 0x6a, struct kvm_irq_routing)
 #define KVM_ASSIGN_IRQ __KVM_DEPRECATED_VM_R_0x70
 #define KVM_ASSIGN_DEV_IRQ _IOW(KVMIO, 0x70, struct kvm_assigned_irq)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_REINJECT_CONTROL _IO(KVMIO, 0x71)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_DEASSIGN_PCI_DEVICE _IOW(KVMIO, 0x72, struct kvm_assigned_pci_dev)
 #define KVM_ASSIGN_SET_MSIX_NR _IOW(KVMIO, 0x73, struct kvm_assigned_msix_nr)
 #define KVM_ASSIGN_SET_MSIX_ENTRY _IOW(KVMIO, 0x74, struct kvm_assigned_msix_entry)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_DEASSIGN_DEV_IRQ _IOW(KVMIO, 0x75, struct kvm_assigned_irq)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_IRQFD _IOW(KVMIO, 0x76, struct kvm_irqfd)
 #define KVM_CREATE_PIT2 _IOW(KVMIO, 0x77, struct kvm_pit_config)
 #define KVM_SET_BOOT_CPU_ID _IO(KVMIO, 0x78)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_IOEVENTFD _IOW(KVMIO, 0x79, struct kvm_ioeventfd)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_XEN_HVM_CONFIG _IOW(KVMIO, 0x7a, struct kvm_xen_hvm_config)
 #define KVM_SET_CLOCK _IOW(KVMIO, 0x7b, struct kvm_clock_data)
 #define KVM_GET_CLOCK _IOR(KVMIO, 0x7c, struct kvm_clock_data)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_PIT2 _IOR(KVMIO, 0x9f, struct kvm_pit_state2)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_PIT2 _IOW(KVMIO, 0xa0, struct kvm_pit_state2)
 #define KVM_PPC_GET_PVINFO _IOW(KVMIO, 0xa1, struct kvm_ppc_pvinfo)
 #define KVM_SET_TSC_KHZ _IO(KVMIO, 0xa2)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_TSC_KHZ _IO(KVMIO, 0xa3)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_ASSIGN_SET_INTX_MASK _IOW(KVMIO, 0xa4, struct kvm_assigned_pci_dev)
 #define KVM_SIGNAL_MSI _IOW(KVMIO, 0xa5, struct kvm_msi)
 #define KVM_PPC_GET_SMMU_INFO _IOR(KVMIO, 0xa6, struct kvm_ppc_smmu_info)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_PPC_ALLOCATE_HTAB _IOWR(KVMIO, 0xa7, __u32)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_CREATE_SPAPR_TCE _IOW(KVMIO, 0xa8, struct kvm_create_spapr_tce)
 #define KVM_ALLOCATE_RMA _IOR(KVMIO, 0xa9, struct kvm_allocate_rma)
 #define KVM_PPC_GET_HTAB_FD _IOW(KVMIO, 0xaa, struct kvm_get_htab_fd)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_ARM_SET_DEVICE_ADDR _IOW(KVMIO, 0xab, struct kvm_arm_device_addr)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_PPC_RTAS_DEFINE_TOKEN _IOW(KVMIO, 0xac, struct kvm_rtas_token_args)
 #define KVM_CREATE_DEVICE _IOWR(KVMIO, 0xe0, struct kvm_create_device)
 #define KVM_SET_DEVICE_ATTR _IOW(KVMIO, 0xe1, struct kvm_device_attr)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_DEVICE_ATTR _IOW(KVMIO, 0xe2, struct kvm_device_attr)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_HAS_DEVICE_ATTR _IOW(KVMIO, 0xe3, struct kvm_device_attr)
 #define KVM_RUN _IO(KVMIO, 0x80)
 #define KVM_GET_REGS _IOR(KVMIO, 0x81, struct kvm_regs)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_REGS _IOW(KVMIO, 0x82, struct kvm_regs)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_SREGS _IOR(KVMIO, 0x83, struct kvm_sregs)
 #define KVM_SET_SREGS _IOW(KVMIO, 0x84, struct kvm_sregs)
 #define KVM_TRANSLATE _IOWR(KVMIO, 0x85, struct kvm_translation)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_INTERRUPT _IOW(KVMIO, 0x86, struct kvm_interrupt)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_DEBUG_GUEST __KVM_DEPRECATED_VCPU_W_0x87
 #define KVM_GET_MSRS _IOWR(KVMIO, 0x88, struct kvm_msrs)
 #define KVM_SET_MSRS _IOW(KVMIO, 0x89, struct kvm_msrs)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_CPUID _IOW(KVMIO, 0x8a, struct kvm_cpuid)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_SIGNAL_MASK _IOW(KVMIO, 0x8b, struct kvm_signal_mask)
 #define KVM_GET_FPU _IOR(KVMIO, 0x8c, struct kvm_fpu)
 #define KVM_SET_FPU _IOW(KVMIO, 0x8d, struct kvm_fpu)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_LAPIC _IOR(KVMIO, 0x8e, struct kvm_lapic_state)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_LAPIC _IOW(KVMIO, 0x8f, struct kvm_lapic_state)
 #define KVM_SET_CPUID2 _IOW(KVMIO, 0x90, struct kvm_cpuid2)
 #define KVM_GET_CPUID2 _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_TPR_ACCESS_REPORTING _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_VAPIC_ADDR _IOW(KVMIO, 0x93, struct kvm_vapic_addr)
 #define KVM_S390_INTERRUPT _IOW(KVMIO, 0x94, struct kvm_s390_interrupt)
 #define KVM_S390_STORE_STATUS_NOADDR (- 1ul)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_STORE_STATUS_PREFIXED (- 2ul)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_S390_STORE_STATUS _IOW(KVMIO, 0x95, unsigned long)
 #define KVM_S390_SET_INITIAL_PSW _IOW(KVMIO, 0x96, struct kvm_s390_psw)
 #define KVM_S390_INITIAL_RESET _IO(KVMIO, 0x97)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_GET_MP_STATE _IOR(KVMIO, 0x98, struct kvm_mp_state)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_SET_MP_STATE _IOW(KVMIO, 0x99, struct kvm_mp_state)
 #define KVM_NMI _IO(KVMIO, 0x9a)
 #define KVM_SET_GUEST_DEBUG _IOW(KVMIO, 0x9b, struct kvm_guest_debug)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_X86_SETUP_MCE _IOW(KVMIO, 0x9c, __u64)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_X86_GET_MCE_CAP_SUPPORTED _IOR(KVMIO, 0x9d, __u64)
 #define KVM_X86_SET_MCE _IOW(KVMIO, 0x9e, struct kvm_x86_mce)
-#define KVM_IA64_VCPU_GET_STACK _IOR(KVMIO, 0x9a, void *)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define KVM_IA64_VCPU_SET_STACK _IOW(KVMIO, 0x9b, void *)
 #define KVM_GET_VCPU_EVENTS _IOR(KVMIO, 0x9f, struct kvm_vcpu_events)
 #define KVM_SET_VCPU_EVENTS _IOW(KVMIO, 0xa0, struct kvm_vcpu_events)
-#define KVM_GET_DEBUGREGS _IOR(KVMIO, 0xa1, struct kvm_debugregs)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_GET_DEBUGREGS _IOR(KVMIO, 0xa1, struct kvm_debugregs)
 #define KVM_SET_DEBUGREGS _IOW(KVMIO, 0xa2, struct kvm_debugregs)
 #define KVM_ENABLE_CAP _IOW(KVMIO, 0xa3, struct kvm_enable_cap)
 #define KVM_GET_XSAVE _IOR(KVMIO, 0xa4, struct kvm_xsave)
-#define KVM_SET_XSAVE _IOW(KVMIO, 0xa5, struct kvm_xsave)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_SET_XSAVE _IOW(KVMIO, 0xa5, struct kvm_xsave)
 #define KVM_GET_XCRS _IOR(KVMIO, 0xa6, struct kvm_xcrs)
 #define KVM_SET_XCRS _IOW(KVMIO, 0xa7, struct kvm_xcrs)
 #define KVM_DIRTY_TLB _IOW(KVMIO, 0xaa, struct kvm_dirty_tlb)
-#define KVM_GET_ONE_REG _IOW(KVMIO, 0xab, struct kvm_one_reg)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_GET_ONE_REG _IOW(KVMIO, 0xab, struct kvm_one_reg)
 #define KVM_SET_ONE_REG _IOW(KVMIO, 0xac, struct kvm_one_reg)
 #define KVM_KVMCLOCK_CTRL _IO(KVMIO, 0xad)
 #define KVM_ARM_VCPU_INIT _IOW(KVMIO, 0xae, struct kvm_vcpu_init)
-#define KVM_ARM_PREFERRED_TARGET _IOR(KVMIO, 0xaf, struct kvm_vcpu_init)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_ARM_PREFERRED_TARGET _IOR(KVMIO, 0xaf, struct kvm_vcpu_init)
 #define KVM_GET_REG_LIST _IOWR(KVMIO, 0xb0, struct kvm_reg_list)
+#define KVM_S390_MEM_OP _IOW(KVMIO, 0xb1, struct kvm_s390_mem_op)
+#define KVM_S390_GET_SKEYS _IOW(KVMIO, 0xb2, struct kvm_s390_skeys)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_S390_SET_SKEYS _IOW(KVMIO, 0xb3, struct kvm_s390_skeys)
+#define KVM_S390_IRQ _IOW(KVMIO, 0xb4, struct kvm_s390_irq)
+#define KVM_S390_SET_IRQ_STATE _IOW(KVMIO, 0xb5, struct kvm_s390_irq_state)
+#define KVM_S390_GET_IRQ_STATE _IOW(KVMIO, 0xb6, struct kvm_s390_irq_state)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_SMI _IO(KVMIO, 0xb7)
 #define KVM_DEV_ASSIGN_ENABLE_IOMMU (1 << 0)
 #define KVM_DEV_ASSIGN_PCI_2_3 (1 << 1)
 #define KVM_DEV_ASSIGN_MASK_INTX (1 << 2)

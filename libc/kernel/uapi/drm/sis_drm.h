@@ -51,8 +51,4 @@ typedef struct {
   unsigned long offset, size;
 } drm_sis_fb_t;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct sis_file_private {
-  struct list_head obj_list;
-};
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

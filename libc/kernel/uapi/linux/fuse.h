@@ -587,4 +587,5 @@ struct fuse_notify_retrieve_in {
   uint64_t dummy4;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+#define FUSE_DEV_IOC_CLONE _IOR(229, 0, uint32_t)
 #endif

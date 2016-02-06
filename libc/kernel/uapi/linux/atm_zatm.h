@@ -38,11 +38,6 @@ struct zatm_pool_req {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct zatm_pool_info info;
 };
-struct zatm_t_hist {
-  struct timeval real;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  struct timeval expected;
-};
 #define ZATM_OAM_POOL 0
 #define ZATM_AAL0_POOL 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
