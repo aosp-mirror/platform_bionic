@@ -21,6 +21,11 @@
 #include <linux/types.h>
 #include <asm/sgidefs.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define USED_FP (1 << 0)
+#define USED_FR1 (1 << 1)
+#define USED_HYBRID_FPRS (1 << 2)
+#define USED_EXTCONTEXT (1 << 3)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 struct sigcontext {
   unsigned int sc_regmask;

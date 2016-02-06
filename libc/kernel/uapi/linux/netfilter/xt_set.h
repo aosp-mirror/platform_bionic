@@ -72,8 +72,8 @@ struct xt_set_info_target_v2 {
 struct xt_set_info_match_v3 {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct xt_set_info match_set;
-  struct ip_set_counter_match packets;
-  struct ip_set_counter_match bytes;
+  struct ip_set_counter_match0 packets;
+  struct ip_set_counter_match0 bytes;
   __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
@@ -86,4 +86,11 @@ struct xt_set_info_target_v3 {
   __u32 timeout;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xt_set_info_match_v4 {
+  struct xt_set_info match_set;
+  struct ip_set_counter_match packets;
+  struct ip_set_counter_match bytes;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
+};
 #endif

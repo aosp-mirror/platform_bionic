@@ -72,7 +72,7 @@ struct snd_compr_codec_caps {
   struct snd_codec_desc descriptor[MAX_NUM_CODEC_DESCRIPTORS];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed, aligned(4)));
-enum {
+enum sndrv_compress_encoder {
   SNDRV_COMPRESS_ENCODER_PADDING = 1,
   SNDRV_COMPRESS_ENCODER_DELAY = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

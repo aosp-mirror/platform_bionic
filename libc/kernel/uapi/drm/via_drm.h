@@ -238,8 +238,4 @@ typedef struct drm_via_dmablit {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   drm_via_blitsync_t sync;
 } drm_via_dmablit_t;
-struct via_file_private {
-  struct list_head obj_list;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
 #endif

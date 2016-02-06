@@ -412,20 +412,22 @@ typedef struct elf64_shdr {
 #define NT_ARM_HW_BREAK 0x402
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NT_ARM_HW_WATCH 0x403
+#define NT_ARM_SYSTEM_CALL 0x404
 #define NT_METAG_CBUF 0x500
 #define NT_METAG_RPIPE 0x501
-#define NT_METAG_TLS 0x502
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NT_METAG_TLS 0x502
 typedef struct elf32_note {
   Elf32_Word n_namesz;
   Elf32_Word n_descsz;
-  Elf32_Word n_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  Elf32_Word n_type;
 } Elf32_Nhdr;
 typedef struct elf64_note {
   Elf64_Word n_namesz;
-  Elf64_Word n_descsz;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  Elf64_Word n_descsz;
   Elf64_Word n_type;
 } Elf64_Nhdr;
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -34,5 +34,7 @@ struct mei_connect_client_data {
     struct mei_client out_client_properties;
   };
 };
-#endif
+#define IOCTL_MEI_NOTIFY_SET _IOW('H', 0x02, __u32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IOCTL_MEI_NOTIFY_GET _IOR('H', 0x03, __u32)
+#endif

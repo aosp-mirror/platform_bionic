@@ -38,59 +38,81 @@ struct cxl_ioctl_start_work {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CXL_START_WORK_AMR 0x0000000000000001ULL
 #define CXL_START_WORK_NUM_IRQS 0x0000000000000002ULL
-#define CXL_START_WORK_ALL (CXL_START_WORK_AMR | CXL_START_WORK_NUM_IRQS)
+#define CXL_START_WORK_ERR_FF 0x0000000000000004ULL
+#define CXL_START_WORK_ALL (CXL_START_WORK_AMR | CXL_START_WORK_NUM_IRQS | CXL_START_WORK_ERR_FF)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define CXL_MODE_DEDICATED 0x1
+#define CXL_MODE_DIRECTED 0x2
+#define CXL_AFUID_FLAG_SLAVE 0x1
+struct cxl_afu_id {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 flags;
+  __u32 card_id;
+  __u32 afu_offset;
+  __u32 afu_mode;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 reserved1;
+  __u64 reserved2;
+  __u64 reserved3;
+  __u64 reserved4;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 reserved5;
+  __u64 reserved6;
+};
 #define CXL_MAGIC 0xCA
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CXL_IOCTL_START_WORK _IOW(CXL_MAGIC, 0x00, struct cxl_ioctl_start_work)
 #define CXL_IOCTL_GET_PROCESS_ELEMENT _IOR(CXL_MAGIC, 0x01, __u32)
+#define CXL_IOCTL_GET_AFU_ID _IOR(CXL_MAGIC, 0x02, struct cxl_afu_id)
 #define CXL_READ_MIN_SIZE 0x1000
-enum cxl_event_type {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum cxl_event_type {
   CXL_EVENT_RESERVED = 0,
   CXL_EVENT_AFU_INTERRUPT = 1,
   CXL_EVENT_DATA_STORAGE = 2,
-  CXL_EVENT_AFU_ERROR = 3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  CXL_EVENT_AFU_ERROR = 3,
 };
 struct cxl_event_header {
   __u16 type;
-  __u16 size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 size;
   __u16 process_element;
   __u16 reserved1;
 };
-struct cxl_event_afu_interrupt {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct cxl_event_afu_interrupt {
   __u16 flags;
   __u16 irq;
   __u32 reserved1;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct cxl_event_data_storage {
   __u16 flags;
   __u16 reserved1;
-  __u32 reserved2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 reserved2;
   __u64 addr;
   __u64 dsisr;
   __u64 reserved3;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct cxl_event_afu_error {
   __u16 flags;
   __u16 reserved1;
-  __u32 reserved2;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 reserved2;
   __u64 error;
 };
 struct cxl_event {
-  struct cxl_event_header header;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct cxl_event_header header;
   union {
     struct cxl_event_afu_interrupt irq;
     struct cxl_event_data_storage fault;
-    struct cxl_event_afu_error afu_error;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct cxl_event_afu_error afu_error;
   };
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
