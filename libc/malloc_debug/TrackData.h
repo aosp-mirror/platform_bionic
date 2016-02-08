@@ -58,6 +58,10 @@ class TrackData {
 
   void DisplayLeaks(DebugData& debug);
 
+  void PrepareFork() { pthread_mutex_lock(&mutex_); }
+  void PostForkParent() { pthread_mutex_unlock(&mutex_); }
+  void PostForkChild() { pthread_mutex_init(&mutex_, NULL); }
+
  private:
   pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
   std::unordered_set<Header*> headers_;

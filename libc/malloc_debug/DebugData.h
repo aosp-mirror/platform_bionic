@@ -82,6 +82,10 @@ class DebugData {
   bool need_header() { return need_header_; }
   size_t extra_bytes() { return extra_bytes_; }
 
+  void PrepareFork();
+  void PostForkParent();
+  void PostForkChild();
+
   std::unique_ptr<BacktraceData> backtrace;
   std::unique_ptr<TrackData> track;
   std::unique_ptr<FrontGuardData> front_guard;

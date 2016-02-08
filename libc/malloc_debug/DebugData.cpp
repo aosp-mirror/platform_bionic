@@ -82,3 +82,21 @@ bool DebugData::Initialize() {
   }
   return true;
 }
+
+void DebugData::PrepareFork() {
+  if (track != nullptr) {
+    track->PrepareFork();
+  }
+}
+
+void DebugData::PostForkParent() {
+  if (track != nullptr) {
+    track->PostForkParent();
+  }
+}
+
+void DebugData::PostForkChild() {
+  if (track != nullptr) {
+    track->PostForkChild();
+  }
+}

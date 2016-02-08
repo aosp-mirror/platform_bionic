@@ -84,6 +84,28 @@ void* debug_valloc(size_t size);
 __END_DECLS
 // ------------------------------------------------------------------------
 
+static void InitAtfork() {
+  static pthread_once_t atfork_init = PTHREAD_ONCE_INIT;
+  pthread_once(&atfork_init, [](){
+    pthread_atfork(
+        [](){
+          if (g_debug != nullptr) {
+            g_debug->PrepareFork();
+          }
+        },
+        [](){
+          if (g_debug != nullptr) {
+            g_debug->PostForkParent();
+          }
+        },
+        [](){
+          if (g_debug != nullptr) {
+            g_debug->PostForkChild();
+          }
+        }
+    );
+  });
+}
 static void LogTagError(const Header* header, const void* pointer, const char* name) {
   ScopedDisableDebugCalls disable;
 
@@ -155,6 +177,9 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
   if (malloc_zygote_child == nullptr) {
     return false;
   }
+
+  InitAtfork();
+
   g_malloc_zygote_child = malloc_zygote_child;
 
   g_dispatch = malloc_dispatch;
