@@ -110,7 +110,7 @@ static void read_loadbase(MapEntry* entry) {
   }
 }
 
-bool MapData::Initialize() {
+bool MapData::ReadMaps() {
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
     return false;
@@ -120,21 +120,19 @@ bool MapData::Initialize() {
   while (fgets(buffer.data(), buffer.size(), fp) != nullptr) {
     MapEntry* entry = parse_line(buffer.data());
     if (entry == nullptr) {
+      fclose(fp);
       return false;
     }
-    entries_.push_back(entry);
+
+    auto it = entries_.find(entry);
+    if (it == entries_.end()) {
+      entries_.insert(entry);
+    } else {
+      delete entry;
+    }
   }
   fclose(fp);
   return true;
-}
-
-MapData* MapData::Create() {
-  MapData* maps = new MapData();
-  if (!maps->Initialize()) {
-    delete maps;
-    return nullptr;
-  }
-  return maps;
 }
 
 MapData::~MapData() {
@@ -146,19 +144,25 @@ MapData::~MapData() {
 
 // Find the containing map info for the PC.
 const MapEntry* MapData::find(uintptr_t pc, uintptr_t* rel_pc) {
-  for (auto* entry : entries_) {
-    if ((pc >= entry->start) && (pc < entry->end)) {
-      if (!entry->load_base_read) {
-        read_loadbase(entry);
-      }
-      if (rel_pc) {
-        *rel_pc = pc - entry->start + entry->load_base;
-      }
-      return entry;
-    }
+  MapEntry pc_entry(pc);
+
+  std::lock_guard<std::mutex> lock(m_);
+
+  auto it = entries_.find(&pc_entry);
+  if (it == entries_.end()) {
+    ReadMaps();
+  }
+  it = entries_.find(&pc_entry);
+  if (it == entries_.end()) {
+    return nullptr;
+  }
+
+  MapEntry *entry = *it;
+  if (!entry->load_base_read) {
+    read_loadbase(entry);
   }
   if (rel_pc) {
-    *rel_pc = pc;
+    *rel_pc = pc - entry->start + entry->load_base;
   }
-  return nullptr;
+  return entry;
 }

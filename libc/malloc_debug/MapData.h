@@ -31,14 +31,17 @@
 
 #include <sys/cdefs.h>
 
+#include <mutex>
 #include <string>
-#include <vector>
+#include <set>
 
 #include <private/bionic_macros.h>
 
 struct MapEntry {
   MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len)
       : start(start), end(end), offset(offset), name(name, name_len) {}
+
+  MapEntry(uintptr_t pc) : start(pc), end(pc) {}
 
   uintptr_t start;
   uintptr_t end;
@@ -48,18 +51,26 @@ struct MapEntry {
   std::string name;
 };
 
+
+// Ordering comparator that returns equivalence for overlapping entries
+struct compare_entries {
+  bool operator()(const MapEntry* a, const MapEntry* b) const {
+    return a->end <= b->start;
+  }
+};
+
 class MapData {
  public:
-  static MapData* Create();
+  MapData() = default;
   ~MapData();
 
   const MapEntry* find(uintptr_t pc, uintptr_t* rel_pc = nullptr);
 
  private:
-  MapData() = default;
-  bool Initialize();
+  bool ReadMaps();
 
-  std::vector<MapEntry*> entries_;
+  std::mutex m_;
+  std::set<MapEntry*, compare_entries> entries_;
 
   DISALLOW_COPY_AND_ASSIGN(MapData);
 };

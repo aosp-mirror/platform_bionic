@@ -50,7 +50,7 @@ typedef struct _Unwind_Context __unwind_context;
 
 extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
-static MapData* g_map_data = nullptr;
+static MapData g_map_data;
 static const MapEntry* g_current_code_map = nullptr;
 
 static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
@@ -59,20 +59,15 @@ static _Unwind_Reason_Code find_current_map(__unwind_context* context, void*) {
   if (ip == 0) {
     return _URC_END_OF_STACK;
   }
-  g_current_code_map = g_map_data->find(ip);
+  g_current_code_map = g_map_data.find(ip);
   return _URC_END_OF_STACK;
 }
 
 void backtrace_startup() {
-  g_map_data = MapData::Create();
-  if (g_map_data) {
-    _Unwind_Backtrace(find_current_map, nullptr);
-  }
+  _Unwind_Backtrace(find_current_map, nullptr);
 }
 
 void backtrace_shutdown() {
-  delete g_map_data;
-  g_map_data = nullptr;
 }
 
 struct stack_crawl_state_t {
@@ -150,10 +145,8 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
     }
 
     uintptr_t rel_pc = offset;
-    const MapEntry* entry = nullptr;
-    if (g_map_data) {
-      entry = g_map_data->find(frames[frame_num], &rel_pc);
-    }
+    const MapEntry* entry = g_map_data.find(frames[frame_num], &rel_pc);
+
     const char* soname = (entry != nullptr) ? entry->name.c_str() : info.dli_fname;
     if (soname == nullptr) {
       soname = "<unknown>";
