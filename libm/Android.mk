@@ -3,12 +3,6 @@ LOCAL_PATH:= $(call my-dir)
 
 bionic_coverage := false
 
-# Clang/llvm has incompatible long double (fp128) for x86_64.
-# https://llvm.org/bugs/show_bug.cgi?id=23897
-ifeq ($(TARGET_ARCH),x86_64)
-libm_clang := false
-endif
-
 # -----------------------------------------------------------------------------
 # libm.a
 # -----------------------------------------------------------------------------

@@ -610,12 +610,6 @@ libc_common_cflags := \
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
-# Clang/llvm has incompatible long double (fp128) for x86_64.
-# https://llvm.org/bugs/show_bug.cgi?id=23897
-ifeq ($(TARGET_ARCH),x86_64)
-  use_clang := false
-endif
-
 # b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
   use_clang := false
