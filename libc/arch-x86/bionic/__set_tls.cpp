@@ -32,7 +32,7 @@
 
 #include <asm/ldt.h>
 
-extern int __set_thread_area(struct user_desc*);
+extern "C" int __set_thread_area(struct user_desc*);
 
 __LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, void* base_addr) {
   if (allocate) {
@@ -45,9 +45,9 @@ __LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, v
     result->entry_number = (gs & 0xffff) >> 3;
   }
 
-  result->base_addr = (uintptr_t) base_addr;
+  result->base_addr = reinterpret_cast<uintptr_t>(base_addr);
 
-  result->limit = PAGE_SIZE;
+  result->limit = 0xfffff;
 
   result->seg_32bit = 1;
   result->contents = MODIFY_LDT_CONTENTS_DATA;
@@ -57,7 +57,7 @@ __LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, v
   result->useable = 1;
 }
 
-__LIBC_HIDDEN__ int __set_tls(void* ptr) {
+extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr) {
   struct user_desc tls_descriptor;
   __init_user_desc(&tls_descriptor, true, ptr);
 

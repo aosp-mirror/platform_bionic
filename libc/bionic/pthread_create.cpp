@@ -46,7 +46,7 @@
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if __i386__
 #include <asm/ldt.h>
-extern "C" __LIBC_HIDDEN__ void __init_user_desc(struct user_desc*, int, void*);
+void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
 extern "C" int __isthreaded;
