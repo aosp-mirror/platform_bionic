@@ -675,7 +675,7 @@ LOCAL_SRC_FILES := \
     bionic/__stack_chk_fail.cpp \
 
 LOCAL_SRC_FILES_arm64 := arch-arm64/bionic/__set_tls.c
-LOCAL_SRC_FILES_x86 := arch-x86/bionic/__set_tls.c
+LOCAL_SRC_FILES_x86 := arch-x86/bionic/__set_tls.cpp
 LOCAL_SRC_FILES_x86_64 := arch-x86_64/bionic/__set_tls.c
 
 LOCAL_CFLAGS := $(libc_common_cflags) -fno-stack-protector
