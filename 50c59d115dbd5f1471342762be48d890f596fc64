@@ -34,6 +34,24 @@
       "revId": "50c59d115dbd5f1471342762be48d890f596fc64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fde3fc1c_4028dec8",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-02-11T06:48:13Z",
+      "side": 1,
+      "message": "Right, but then the realloc_0 test below makes things look really ugly. It frees p, but then doesn\u0027t do a malloc(0). That seems inconsistent to me, especially since realloc\u0027s of size 0 are implementation-defined behavior in any case.",
+      "parentUuid": "fde3fc1c_e0e90ad3",
+      "revId": "50c59d115dbd5f1471342762be48d890f596fc64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
