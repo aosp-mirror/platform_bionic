@@ -16,6 +16,24 @@
       "revId": "a80564318a87c1efe76224b8591c707c54d51d2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde6e426_995cfc55",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-11T23:02:11Z",
+      "side": 1,
+      "message": "yes:\nbionic_prctl.h\nlibc_logging.h\n\n(The plan is to move libdl.a out of linker to libdl and leave only \"linker-support\" libraries here)",
+      "parentUuid": "7d09ccae_3da1831c",
+      "revId": "a80564318a87c1efe76224b8591c707c54d51d2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
