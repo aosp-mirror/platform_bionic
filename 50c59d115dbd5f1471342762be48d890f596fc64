@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fde3fc1c_950cc61c",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-02-11T05:00:50Z",
+      "side": 1,
+      "message": "Is this true? I don\u0027t understand why realloc(nullptr, 0) is different from realloc(p, 0) in your case below.",
+      "revId": "50c59d115dbd5f1471342762be48d890f596fc64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
