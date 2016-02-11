@@ -347,10 +347,10 @@ bool Config::SetFromProperties() {
   valid = valid && parser.Done();
 
   if (valid) {
-    // It's necessary to align the front guard to sizeof(uintptr_t) to
+    // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
     // make sure that the header is aligned properly.
     if (options & FRONT_GUARD) {
-      front_guard_bytes = BIONIC_ALIGN(front_guard_bytes, sizeof(uintptr_t));
+      front_guard_bytes = BIONIC_ALIGN(front_guard_bytes, MINIMUM_ALIGNMENT_BYTES);
     }
 
     // This situation can occur if the free_track option is specified and

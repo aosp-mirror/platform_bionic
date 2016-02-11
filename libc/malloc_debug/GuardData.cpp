@@ -75,7 +75,7 @@ FrontGuardData::FrontGuardData(const Config& config, size_t* offset)
   // Create a buffer for fast comparisons of the front guard.
   cmp_mem_.resize(config.front_guard_bytes);
   memset(cmp_mem_.data(), config.front_guard_value, cmp_mem_.size());
-  // Assumes that front_bytes is a multiple of sizeof(uintptr_t).
+  // Assumes that front_bytes is a multiple of MINIMUM_ALIGNMENT_BYTES.
   offset_ = *offset;
   *offset += config.front_guard_bytes;
 }

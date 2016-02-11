@@ -39,6 +39,7 @@
 #include <private/bionic_malloc_dispatch.h>
 
 #include "backtrace.h"
+#include "Config.h"
 #include "DebugData.h"
 #include "debug_disable.h"
 #include "debug_log.h"
@@ -264,7 +265,8 @@ void* debug_malloc(size_t size) {
       return nullptr;
     }
 
-    Header* header = reinterpret_cast<Header*>(g_dispatch->memalign(sizeof(uintptr_t), real_size));
+    Header* header = reinterpret_cast<Header*>(
+        g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
     if (header == nullptr) {
       return nullptr;
     }
@@ -355,10 +357,10 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     if (!powerof2(alignment)) {
       alignment = BIONIC_ROUND_UP_POWER_OF_2(alignment);
     }
-    // Force the alignment to at least sizeof(uintptr_t) to guarantee
+    // Force the alignment to at least MINIMUM_ALIGNMENT_BYTES to guarantee
     // that the header is aligned properly.
-    if (alignment < sizeof(uintptr_t)) {
-      alignment = sizeof(uintptr_t);
+    if (alignment < MINIMUM_ALIGNMENT_BYTES) {
+      alignment = MINIMUM_ALIGNMENT_BYTES;
     }
 
     // We don't have any idea what the natural alignment of
@@ -512,7 +514,8 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     }
 
     // Need to guarantee the alignment of the header.
-    Header* header = reinterpret_cast<Header*>(g_dispatch->memalign(sizeof(uintptr_t), real_size));
+    Header* header = reinterpret_cast<Header*>(
+        g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
     if (header == nullptr) {
       return nullptr;
     }

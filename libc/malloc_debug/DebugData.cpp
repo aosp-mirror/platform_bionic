@@ -47,7 +47,7 @@ bool DebugData::Initialize() {
     need_header_ = true;
 
     // Initialize all of the static header offsets.
-    pointer_offset_ = BIONIC_ALIGN(sizeof(Header), sizeof(uintptr_t));
+    pointer_offset_ = BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 
     if (config_.options & BACKTRACE) {
       backtrace.reset(new BacktraceData(config_, &pointer_offset_));
