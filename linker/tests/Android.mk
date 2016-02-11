@@ -32,11 +32,12 @@ LOCAL_SRC_FILES := \
   linker_block_allocator_test.cpp \
   ../linker_block_allocator.cpp \
   linker_memory_allocator_test.cpp \
-  ../linker_allocator.cpp \
   linker_utils_test.cpp \
   ../linker_utils.cpp
 
 # for __libc_fatal
 LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
+
+LOCAL_STATIC_LIBRARIES := liblinker_malloc
 
 include $(BUILD_NATIVE_TEST)
