@@ -41,6 +41,14 @@ constexpr uint64_t FREE_TRACK = 0x40;
 constexpr uint64_t TRACK_ALLOCS = 0x80;
 constexpr uint64_t LEAK_TRACK = 0x100;
 
+// In order to guarantee posix compliance, set the minimum alignment
+// to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
+#if defined(__LP64__)
+constexpr size_t MINIMUM_ALIGNMENT_BYTES = 16;
+#else
+constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
+#endif
+
 // If only one or more of these options is set, then no special header is needed.
 constexpr uint64_t NO_HEADER_OPTIONS = FILL_ON_ALLOC | FILL_ON_FREE | EXPAND_ALLOC;
 

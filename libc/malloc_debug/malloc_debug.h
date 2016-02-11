@@ -39,7 +39,7 @@
 // will still be in this order.
 //   Header          (Required)
 //   BacktraceHeader (Optional: For the allocation backtrace)
-//   uint8_t data    (Optional: Front guard, will be a multiple of sizeof(uintptr_t))
+//   uint8_t data    (Optional: Front guard, will be a multiple of MINIMUM_ALIGNMENT_BYTES)
 //   allocation data
 //   uint8_t data    (Optional: End guard)
 //

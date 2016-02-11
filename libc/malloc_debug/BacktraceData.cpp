@@ -44,7 +44,7 @@
 BacktraceData::BacktraceData(const Config& config, size_t* offset) {
   size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames;
   alloc_offset_ = *offset;
-  *offset += BIONIC_ALIGN(hdr_len, sizeof(uintptr_t));
+  *offset += BIONIC_ALIGN(hdr_len, MINIMUM_ALIGNMENT_BYTES);
 }
 
 static BacktraceData* g_backtrace_data = nullptr;
