@@ -391,3 +391,42 @@ TEST(malloc, calloc_usable_size) {
     free(zero_mem);
   }
 }
+
+TEST(malloc, malloc_0) {
+  void* p = malloc(0);
+  ASSERT_TRUE(p != nullptr);
+  free(p);
+}
+
+TEST(malloc, calloc_0_0) {
+  void* p = calloc(0, 0);
+  ASSERT_TRUE(p != nullptr);
+  free(p);
+}
+
+TEST(malloc, calloc_0_1) {
+  void* p = calloc(0, 1);
+  ASSERT_TRUE(p != nullptr);
+  free(p);
+}
+
+TEST(malloc, calloc_1_0) {
+  void* p = calloc(1, 0);
+  ASSERT_TRUE(p != nullptr);
+  free(p);
+}
+
+TEST(malloc, realloc_nullptr_0) {
+  // realloc(nullptr, size) is actually malloc(size).
+  void* p = realloc(nullptr, 0);
+  ASSERT_TRUE(p != nullptr);
+  free(p);
+}
+
+TEST(malloc, realloc_0) {
+  void* p = malloc(1024);
+  ASSERT_TRUE(p != nullptr);
+  // realloc(p, 0) is actually free(p).
+  void* p2 = realloc(p, 0);
+  ASSERT_TRUE(p2 == nullptr);
+}
