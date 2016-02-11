@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d09ccae_3da1831c",
+        "filename": "linker/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-11T22:59:06Z",
+      "side": 1,
+      "message": "in the allocator too?\n\n(if we really do, and we\u0027re breaking this out of the linker anyway, maybe we should just build this library in libc/Android.mk?)",
+      "revId": "a80564318a87c1efe76224b8591c707c54d51d2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
