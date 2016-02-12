@@ -163,6 +163,14 @@ static bool is_system_library(const std::string& realpath) {
 }
 
 // TODO(dimitry): This is workaround for http://b/26394120 - it will be removed before the release
+#if defined(__LP64__)
+static const char* const kSystemLibDir = "/system/lib64";
+#else
+static const char* const kSystemLibDir = "/system/lib";
+#endif
+
+static std::string dirname(const char *path);
+
 static bool is_greylisted(const char* name, const soinfo* needed_by) {
   static const char* const kLibraryGreyList[] = {
     "libandroid_runtime.so",
@@ -189,6 +197,12 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
 
   if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
     return true;
+  }
+
+  // if this is an absolute path - make sure it points to /system/lib(64)
+  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
+    // and reduce the path to basename
+    name = basename(name);
   }
 
   for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
