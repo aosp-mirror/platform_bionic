@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bde6e426_79eef817",
+        "filename": "libc/malloc_debug/Config.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-02-12T00:17:01Z",
+      "side": 1,
+      "message": "Isn\u0027t that a fair assumption? The standard guarantees that malloc will return a pointer aligned for any built in type, doesn\u0027t it?",
+      "revId": "d2d24a8cb21ddfe0c4197f117d2ca7b3e339e053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
