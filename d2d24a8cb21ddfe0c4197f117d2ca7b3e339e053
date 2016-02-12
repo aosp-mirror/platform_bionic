@@ -16,6 +16,24 @@
       "revId": "d2d24a8cb21ddfe0c4197f117d2ca7b3e339e053",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d09ccae_ef845236",
+        "filename": "libc/malloc_debug/Config.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-12T00:19:26Z",
+      "side": 1,
+      "message": "POSIX says yes:\n\n\"The pointer returned if the allocation succeeds shall be suitably aligned so that it may be assigned to a pointer to any type of object and then used to access such an object in the space allocated (until the space is explicitly freed or reallocated).\"\n\nso probably this should be sizeof(long double)?",
+      "parentUuid": "bde6e426_79eef817",
+      "revId": "d2d24a8cb21ddfe0c4197f117d2ca7b3e339e053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
