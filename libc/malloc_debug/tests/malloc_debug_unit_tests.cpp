@@ -34,6 +34,7 @@
 #include <private/bionic_macros.h>
 #include <private/bionic_malloc_dispatch.h>
 
+#include "Config.h"
 #include "malloc_debug.h"
 
 #include "log_fake.h"
@@ -70,9 +71,9 @@ constexpr char DIVIDER[] =
 constexpr uint32_t BACKTRACE_HEADER = 0x1;
 
 static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
-  size_t offset = BIONIC_ALIGN(sizeof(Header), sizeof(uintptr_t));
+  size_t offset = BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
   if (flags & BACKTRACE_HEADER) {
-    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames, sizeof(uintptr_t));
+    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames, MINIMUM_ALIGNMENT_BYTES);
   }
   return offset;
 }
