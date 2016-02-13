@@ -34,6 +34,24 @@
       "revId": "d2d24a8cb21ddfe0c4197f117d2ca7b3e339e053",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ddaf464_e2010e9e",
+        "filename": "libc/malloc_debug/Config.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-13T00:33:26Z",
+      "side": 1,
+      "message": "I tried to write a test that would crash using this, and it did get bad alignments but no crashes when accessing the memory. I\u0027ll modify that test to verify alignments.\n\nHowever, my experimental data shows that it looks like 8 bytes is the alignment for 32 bit in glibc, and 16 bytes for 64 bit. I could use sizeof(long double) since that works on android, but I think it would be better to hardcode the values to make it explicit.\n\nI also looked at jemalloc, and, technically, it doesn\u0027t follow the above for 64 bit systems. Instead it uses a trick to make sure that any allocation larger than 8 bytes is always aligned to 16 bytes. It has an 8 byte bin, but the next largest bin is 16 bytes, and each bin above that is incremented by 16 bytes in size.",
+      "parentUuid": "7d09ccae_ef845236",
+      "revId": "d2d24a8cb21ddfe0c4197f117d2ca7b3e339e053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
