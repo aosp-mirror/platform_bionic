@@ -850,7 +850,9 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(libc_upstream_netbsd_src_files)
 LOCAL_CFLAGS := \
     $(libc_common_cflags) \
-    -Wno-sign-compare -Wno-uninitialized \
+    -Wno-sign-compare \
+    -Wno-uninitialized \
+    -Wno-unused-parameter \
     -DPOSIX_MISTAKE \
     -include netbsd-compat.h \
 

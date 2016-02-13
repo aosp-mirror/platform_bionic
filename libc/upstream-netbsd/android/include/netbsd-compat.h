@@ -20,17 +20,16 @@
 #define _BSD_SOURCE
 #define _GNU_SOURCE
 
-// NetBSD uses _DIAGASSERT to null-check arguments and the like.
-#include <assert.h>
-#define _DIAGASSERT(e) ((e) ? (void) 0 : __assert2(__FILE__, __LINE__, __func__, #e))
-
-// TODO: update our <sys/cdefs.h> to support this properly.
-#define __type_fit(t, a) (0 == 0)
+// NetBSD uses _DIAGASSERT to null-check arguments and the like,
+// but it's clear from the number of mistakes in their assertions
+// that they don't actually test or ship with this.
+#define _DIAGASSERT(e) /* nothing */
 
 // TODO: we don't yet have thread-safe environment variables.
 #define __readlockenv() 0
 #define __unlockenv() 0
 
+#include <sys/cdefs.h>
 #include <stddef.h>
 __LIBC_HIDDEN__ int reallocarr(void*, size_t, size_t);
 
