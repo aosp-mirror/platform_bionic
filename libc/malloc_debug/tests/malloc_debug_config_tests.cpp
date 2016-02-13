@@ -230,6 +230,10 @@ TEST_F(MallocDebugConfigTest, front_guard) {
   ASSERT_EQ(FRONT_GUARD, config->options);
   ASSERT_EQ(40U, config->front_guard_bytes);
 
+  ASSERT_TRUE(InitConfig("front_guard=41"));
+  ASSERT_EQ(FRONT_GUARD, config->options);
+  ASSERT_EQ(48U, config->front_guard_bytes);
+
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
