@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bdc1846e_a95789f8",
+        "filename": "libc/malloc_debug/Config.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-13T01:31:18Z",
+      "side": 1,
+      "message": "Well, if ever get this running on host, sizeof(long double) on 32 bit is actually 12.\n\nThat\u0027s why I like to be explicit.",
+      "parentUuid": "fdce9ca2_943df9c6",
+      "revId": "c81454f290ad6ccd29b76cf9dc510f198f55c7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ddc9d89d_50b2cd12",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "fdce9ca2_94297969",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-13T01:31:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ddc9d89d_50b2cd12",
+      "revId": "c81454f290ad6ccd29b76cf9dc510f198f55c7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9dc4c07e_42a3230c",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2016-02-13T00:59:02Z",
       "side": 1,
       "message": "confusing comment because a long double on LP32 is 8 bytes anyway.",
+      "revId": "c81454f290ad6ccd29b76cf9dc510f198f55c7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bde6e426_e0bb40a1",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-13T01:31:18Z",
+      "side": 1,
+      "message": "Oops, this comment is really wrong. I did this because glibc was causing me problems. I modified to make this explicit and still allow glibc to pass.",
+      "parentUuid": "9dc4c07e_42a3230c",
       "revId": "c81454f290ad6ccd29b76cf9dc510f198f55c7ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
