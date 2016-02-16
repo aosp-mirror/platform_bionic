@@ -173,7 +173,9 @@ struct soinfo {
  public:
   const ElfW(Phdr)* phdr;
   size_t phnum;
-  ElfW(Addr) entry;
+#if defined(__work_around_b_24465209__)
+  ElfW(Addr) unused0; // DO NOT USE, maintained for compatibility.
+#endif
   ElfW(Addr) base;
   size_t size;
 
