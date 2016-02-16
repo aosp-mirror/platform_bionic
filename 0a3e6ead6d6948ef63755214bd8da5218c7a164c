@@ -22,6 +22,30 @@
       "revId": "0a3e6ead6d6948ef63755214bd8da5218c7a164c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd7ab832_ffc2e750",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3899,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-16T22:27:14Z",
+      "side": 1,
+      "message": "iirc the initialization is different when it is moved inside the function (it starts involving elf c-tors) - but I will try;\n\nnot constexpr because we need an actual (and non-const) buffer to point map-\u003el_name to.",
+      "parentUuid": "fd2a1c13_dd961f68",
+      "range": {
+        "startLine": 3895,
+        "startChar": 0,
+        "endLine": 3899,
+        "endChar": 6
+      },
+      "revId": "0a3e6ead6d6948ef63755214bd8da5218c7a164c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
