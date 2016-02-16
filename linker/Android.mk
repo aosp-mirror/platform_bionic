@@ -1,6 +1,20 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
+LOCAL_CLANG := true
+
+LOCAL_MODULE := liblinker_malloc
+
+LOCAL_SRC_FILES := \
+    linker_allocator.cpp \
+    linker_memory.cpp
+
+# We need to access Bionic private headers in the linker.
+LOCAL_CFLAGS += -I$(LOCAL_PATH)/../libc/
+
+include $(BUILD_STATIC_LIBRARY)
+
+include $(CLEAR_VARS)
 
 LOCAL_CLANG := true
 
@@ -8,11 +22,9 @@ LOCAL_SRC_FILES := \
     debugger.cpp \
     dlfcn.cpp \
     linker.cpp \
-    linker_allocator.cpp \
     linker_block_allocator.cpp \
     linker_libc_support.c \
     linker_mapped_file_fragment.cpp \
-    linker_memory.cpp \
     linker_phdr.cpp \
     linker_sdk_versions.cpp \
     linker_utils.cpp \
@@ -64,6 +76,10 @@ LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 LOCAL_STATIC_LIBRARIES := libc_nomalloc libziparchive libutils libbase libz liblog
+
+# Important: The liblinker_malloc should be the last library in the list
+# to overwrite any other malloc implementations by other static libraries.
+LOCAL_STATIC_LIBRARIES += liblinker_malloc
 
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 
