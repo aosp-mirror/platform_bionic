@@ -22,6 +22,30 @@
       "revId": "c2ee8ff85db237ac9a065450d46bd2adc45bcad7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd2a1c13_fd0afb41",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-16T22:42:42Z",
+      "side": 1,
+      "message": "right... done",
+      "parentUuid": "9d20402f_7cf03583",
+      "range": {
+        "startLine": 78,
+        "startChar": 83,
+        "endLine": 78,
+        "endChar": 99
+      },
+      "revId": "c2ee8ff85db237ac9a065450d46bd2adc45bcad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
