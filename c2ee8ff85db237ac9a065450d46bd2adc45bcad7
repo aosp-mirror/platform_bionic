@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d20402f_7cf03583",
+        "filename": "linker/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1004882
+      },
+      "writtenOn": "2016-02-16T22:40:24Z",
+      "side": 1,
+      "message": "Remove?",
+      "range": {
+        "startLine": 78,
+        "startChar": 83,
+        "endLine": 78,
+        "endChar": 99
+      },
+      "revId": "c2ee8ff85db237ac9a065450d46bd2adc45bcad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
