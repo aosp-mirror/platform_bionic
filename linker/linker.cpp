@@ -216,14 +216,7 @@ static r_debug _r_debug =
 
 static link_map* r_debug_tail = 0;
 
-static void insert_soinfo_into_debug_map(soinfo* info) {
-  // Copy the necessary fields into the debug structure.
-  link_map* map = &(info->link_map_head);
-  map->l_addr = info->load_bias;
-  // link_map l_name field is not const.
-  map->l_name = const_cast<char*>(info->get_realpath());
-  map->l_ld = info->dynamic;
-
+static void insert_link_map_into_debug_map(link_map* map) {
   // Stick the new library at the end of the list.
   // gdb tends to care more about libc than it does
   // about leaf libraries, and ordering it this way
@@ -238,6 +231,17 @@ static void insert_soinfo_into_debug_map(soinfo* info) {
     map->l_next = 0;
   }
   r_debug_tail = map;
+}
+
+static void insert_soinfo_into_debug_map(soinfo* info) {
+  // Copy the necessary fields into the debug structure.
+  link_map* map = &(info->link_map_head);
+  map->l_addr = info->load_bias;
+  // link_map l_name field is not const.
+  map->l_name = const_cast<char*>(info->get_realpath());
+  map->l_ld = info->dynamic;
+
+  insert_link_map_into_debug_map(map);
 }
 
 static void remove_soinfo_from_debug_map(soinfo* info) {
@@ -3885,21 +3889,6 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 #endif
 }
 
-/*
- * This is linker soinfo for GDB. See details below.
- */
-#if defined(__LP64__)
-#define LINKER_PATH "/system/bin/linker64"
-#else
-#define LINKER_PATH "/system/bin/linker"
-#endif
-
-// This is done to avoid calling c-tor prematurely
-// because soinfo c-tor needs memory allocator
-// which might be initialized after global variables.
-static uint8_t linker_soinfo_for_gdb_buf[sizeof(soinfo)] __attribute__((aligned(8)));
-static soinfo* linker_soinfo_for_gdb = nullptr;
-
 /* gdb expects the linker to be in the debug shared object list.
  * Without this, gdb has trouble locating the linker's ".text"
  * and ".plt" sections. Gdb could also potentially use this to
@@ -3908,10 +3897,15 @@ static soinfo* linker_soinfo_for_gdb = nullptr;
  * be on the soinfo list.
  */
 static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
-  linker_soinfo_for_gdb = new (linker_soinfo_for_gdb_buf) soinfo(nullptr, LINKER_PATH,
-                                                                 nullptr, 0, 0);
+  static link_map linker_link_map_for_gdb;
+#if defined(__LP64__)
+  static char kLinkerPath[] = "/system/bin/linker64";
+#else
+  static char kLinkerPath[] = "/system/bin/linker";
+#endif
 
-  linker_soinfo_for_gdb->load_bias = linker_base;
+  linker_link_map_for_gdb.l_addr = linker_base;
+  linker_link_map_for_gdb.l_name = kLinkerPath;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
@@ -3922,8 +3916,9 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_soinfo_for_gdb->dynamic, nullptr);
-  insert_soinfo_into_debug_map(linker_soinfo_for_gdb);
+                                 &linker_link_map_for_gdb.l_ld, nullptr);
+
+  insert_link_map_into_debug_map(&linker_link_map_for_gdb);
 }
 
 static void init_default_namespace() {
