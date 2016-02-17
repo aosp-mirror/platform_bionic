@@ -214,21 +214,21 @@ static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
 static r_debug _r_debug =
     {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
 
-static link_map* r_debug_tail = 0;
+static link_map* r_debug_tail = nullptr;
 
 static void insert_link_map_into_debug_map(link_map* map) {
   // Stick the new library at the end of the list.
   // gdb tends to care more about libc than it does
   // about leaf libraries, and ordering it this way
   // reduces the back-and-forth over the wire.
-  if (r_debug_tail) {
+  if (r_debug_tail != nullptr) {
     r_debug_tail->l_next = map;
     map->l_prev = r_debug_tail;
-    map->l_next = 0;
+    map->l_next = nullptr;
   } else {
     _r_debug.r_map = map;
-    map->l_prev = 0;
-    map->l_next = 0;
+    map->l_prev = nullptr;
+    map->l_next = nullptr;
   }
   r_debug_tail = map;
 }
@@ -4000,11 +4000,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   map->l_addr = 0;
   map->l_name = args.argv[0];
-  map->l_prev = nullptr;
-  map->l_next = nullptr;
-
-  _r_debug.r_map = map;
-  r_debug_tail = map;
+  insert_link_map_into_debug_map(map);
 
   init_linker_info_for_gdb(linker_base);
 
