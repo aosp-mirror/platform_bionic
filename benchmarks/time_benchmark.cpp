@@ -19,63 +19,43 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <benchmark/Benchmark.h>
+#include <benchmark/benchmark.h>
 
-BENCHMARK_NO_ARG(BM_time_clock_gettime);
-void BM_time_clock_gettime::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_time_clock_gettime(benchmark::State& state) {
   timespec t;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     clock_gettime(CLOCK_MONOTONIC, &t);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_time_clock_gettime);
 
-BENCHMARK_NO_ARG(BM_time_clock_gettime_syscall);
-void BM_time_clock_gettime_syscall::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_time_clock_gettime_syscall(benchmark::State& state) {
   timespec t;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_time_clock_gettime_syscall);
 
-BENCHMARK_NO_ARG(BM_time_gettimeofday);
-void BM_time_gettimeofday::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     gettimeofday(&tv, NULL);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_time_gettimeofday);
 
-BENCHMARK_NO_ARG(BM_time_gettimeofday_syscall);
-void BM_time_gettimeofday_syscall::Run(int iters) {
-  StartBenchmarkTiming();
-
+void BM_time_gettimeofday_syscall(benchmark::State& state) {
   timeval tv;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     syscall(__NR_gettimeofday, &tv, NULL);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_time_gettimeofday_syscall);
 
-BENCHMARK_NO_ARG(BM_time_time);
-void BM_time_time::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+void BM_time_time(benchmark::State& state) {
+  while (state.KeepRunning()) {
     time(NULL);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_time_time);
