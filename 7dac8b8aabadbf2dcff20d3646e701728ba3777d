@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd7f7c1f_87a82e51",
+        "filename": "libc/include/netinet/in6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-17T22:47:08Z",
+      "side": 1,
+      "message": "you removed -\u003es6_addr; is this intentional?",
+      "revId": "7dac8b8aabadbf2dcff20d3646e701728ba3777d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
