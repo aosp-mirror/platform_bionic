@@ -67,20 +67,12 @@ struct ifaddrs_storage {
     *list = reinterpret_cast<ifaddrs*>(this);
   }
 
-  // Netlink gives us the address family in the header, and the
-  // sockaddr_in or sockaddr_in6 bytes as the payload. We need to
-  // stitch the two bits together into the sockaddr that's part of
-  // our portable interface.
   void SetAddress(int family, const void* data, size_t byteCount) {
-      addr.ss_family = family;
-      memcpy(SockaddrBytes(family, &addr), data, byteCount);
-      ifa.ifa_addr = reinterpret_cast<sockaddr*>(&addr);
+      ifa.ifa_addr = CopyAddress(family, data, byteCount, &addr);
   }
 
   void SetBroadcastAddress(int family, const void* data, size_t byteCount) {
-      ifa_ifu.ss_family = family;
-      memcpy(SockaddrBytes(family, &ifa_ifu), data, byteCount);
-      ifa.ifa_dstaddr = reinterpret_cast<sockaddr*>(&ifa_ifu);
+      ifa.ifa_dstaddr = CopyAddress(family, data, byteCount, &ifa_ifu);
   }
 
   // Netlink gives us the prefix length as a bit count. We need to turn
@@ -104,6 +96,22 @@ struct ifaddrs_storage {
   }
 
  private:
+  sockaddr* CopyAddress(int family, const void* data, size_t byteCount, sockaddr_storage* ss) {
+      // Netlink gives us the address family in the header, and the
+      // sockaddr_in or sockaddr_in6 bytes as the payload. We need to
+      // stitch the two bits together into the sockaddr that's part of
+      // our portable interface.
+      ss->ss_family = family;
+      memcpy(SockaddrBytes(family, ss), data, byteCount);
+
+      // For IPv6 we might also have to set the scope id.
+      if (family == AF_INET6 && (IN6_IS_ADDR_LINKLOCAL(data) || IN6_IS_ADDR_MC_LINKLOCAL(data))) {
+          reinterpret_cast<sockaddr_in6*>(ss)->sin6_scope_id = interface_index;
+      }
+
+      return reinterpret_cast<sockaddr*>(ss);
+  }
+
   // Returns a pointer to the first byte in the address data (which is
   // stored in network byte order).
   uint8_t* SockaddrBytes(int family, sockaddr_storage* ss) {
