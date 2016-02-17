@@ -3904,8 +3904,7 @@ static soinfo* linker_soinfo_for_gdb = nullptr;
  * Without this, gdb has trouble locating the linker's ".text"
  * and ".plt" sections. Gdb could also potentially use this to
  * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
- * Don't use soinfo_alloc(), because the linker shouldn't
- * be on the soinfo list.
+ * Note that the linker shouldn't be on the soinfo list.
  */
 static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   linker_soinfo_for_gdb = new (linker_soinfo_for_gdb_buf) soinfo(nullptr, LINKER_PATH,
