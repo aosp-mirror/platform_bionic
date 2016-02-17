@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d85a05b_662434a6",
+        "filename": "libc/include/netinet/in6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-17T22:42:49Z",
+      "side": 0,
+      "message": "a bunch of these were missing casts. personally i\u0027d rather have gone in the other direction (to at least have *some* type checking from these damned macros), but that would mean that source that builds fine for glibc and the BSDs wouldn\u0027t build on Android. (including much of our own stuff.)",
+      "range": {
+        "startLine": 58,
+        "startChar": 1,
+        "endLine": 58,
+        "endChar": 7
+      },
+      "revId": "2de48bc809bba48a7f209e209b3822bad010166f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
