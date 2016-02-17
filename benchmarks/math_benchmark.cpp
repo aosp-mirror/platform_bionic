@@ -17,270 +17,213 @@
 #include <fenv.h>
 #include <math.h>
 
-#include <benchmark/Benchmark.h>
+#include <benchmark/benchmark.h>
 
-#define AT_COMMON_VALS \
-    Arg(1234.0)->Arg(nan(""))->Arg(HUGE_VAL)->Arg(0.0)
+static const double values[] = { 1234.0, nan(""), HUGE_VAL, 0.0 };
+static const char* names[] = { "1234.0", "nan", "HUGE_VAL", "0.0" };
+
+#define BENCHMARK_COMMON_VALS(name) BENCHMARK(name)->Arg(0)->Arg(1)->Arg(2)->Arg(3)
+
+static void SetLabel(benchmark::State& state) {
+  state.SetLabel(names[state.range_x()]);
+}
 
 // Avoid optimization.
 volatile double d;
 volatile double v;
 
-BENCHMARK_NO_ARG(BM_math_sqrt);
-void BM_math_sqrt::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_sqrt(benchmark::State& state) {
   d = 0.0;
   v = 2.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     d += sqrt(v);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_sqrt);
 
-BENCHMARK_NO_ARG(BM_math_log10);
-void BM_math_log10::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_log10(benchmark::State& state) {
   d = 0.0;
   v = 1234.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     d += log10(v);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_log10);
 
-BENCHMARK_NO_ARG(BM_math_logb);
-void BM_math_logb::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_logb(benchmark::State& state) {
   d = 0.0;
   v = 1234.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     d += logb(v);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_logb);
 
-BENCHMARK_WITH_ARG(BM_math_isfinite_macro, double)->AT_COMMON_VALS;
-void BM_math_isfinite_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isfinite_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += isfinite(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isfinite_macro);
 
 #if defined(__BIONIC__)
 #define test_isfinite __isfinite
 #else
 #define test_isfinite __finite
 #endif
-BENCHMARK_WITH_ARG(BM_math_isfinite, double)->AT_COMMON_VALS;
-void BM_math_isfinite::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isfinite(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += test_isfinite(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isfinite);
 
-BENCHMARK_WITH_ARG(BM_math_isinf_macro, double)->AT_COMMON_VALS;
-void BM_math_isinf_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isinf_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += isinf(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isinf_macro);
 
-BENCHMARK_WITH_ARG(BM_math_isinf, double)->AT_COMMON_VALS;
-void BM_math_isinf::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isinf(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += (isinf)(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isinf);
 
-BENCHMARK_WITH_ARG(BM_math_isnan_macro, double)->AT_COMMON_VALS;
-void BM_math_isnan_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isnan_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += isnan(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isnan_macro);
 
-BENCHMARK_WITH_ARG(BM_math_isnan, double)->AT_COMMON_VALS;
-void BM_math_isnan::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isnan(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += (isnan)(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isnan);
 
-BENCHMARK_WITH_ARG(BM_math_isnormal_macro, double)->AT_COMMON_VALS;
-void BM_math_isnormal_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isnormal_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += isnormal(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isnormal_macro);
 
 #if defined(__BIONIC__)
-BENCHMARK_WITH_ARG(BM_math_isnormal, double)->AT_COMMON_VALS;
-void BM_math_isnormal::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_isnormal(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += (__isnormal)(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_isnormal);
 #endif
 
-BENCHMARK_NO_ARG(BM_math_sin_fast);
-void BM_math_sin_fast::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_sin_fast(benchmark::State& state) {
   d = 1.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     d += sin(d);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_sin_fast);
 
-BENCHMARK_NO_ARG(BM_math_sin_feupdateenv);
-void BM_math_sin_feupdateenv::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_sin_feupdateenv(benchmark::State& state) {
   d = 1.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     fenv_t __libc_save_rm;
     feholdexcept(&__libc_save_rm);
     fesetround(FE_TONEAREST);
     d += sin(d);
     feupdateenv(&__libc_save_rm);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_sin_feupdateenv);
 
-BENCHMARK_NO_ARG(BM_math_sin_fesetenv);
-void BM_math_sin_fesetenv::Run(int iters) {
-  StartBenchmarkTiming();
-
+static void BM_math_sin_fesetenv(benchmark::State& state) {
   d = 1.0;
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     fenv_t __libc_save_rm;
     feholdexcept(&__libc_save_rm);
     fesetround(FE_TONEAREST);
     d += sin(d);
     fesetenv(&__libc_save_rm);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_math_sin_fesetenv);
 
-BENCHMARK_WITH_ARG(BM_math_fpclassify, double)->AT_COMMON_VALS;
-void BM_math_fpclassify::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_fpclassify(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += fpclassify(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_fpclassify);
 
-BENCHMARK_WITH_ARG(BM_math_signbit_macro, double)->AT_COMMON_VALS;
-void BM_math_signbit_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_signbit_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += signbit(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_signbit_macro);
 
-BENCHMARK_WITH_ARG(BM_math_signbit, double)->AT_COMMON_VALS;
-void BM_math_signbit::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_signbit(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += (__signbit)(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_signbit);
 
-BENCHMARK_WITH_ARG(BM_math_fabs_macro, double)->AT_COMMON_VALS;
-void BM_math_fabs_macro::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_fabs_macro(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += fabs(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_fabs_macro);
 
-BENCHMARK_WITH_ARG(BM_math_fabs, double)->AT_COMMON_VALS;
-void BM_math_fabs::Run(int iters, double value) {
-  StartBenchmarkTiming();
-
+static void BM_math_fabs(benchmark::State& state) {
   d = 0.0;
-  v = value;
-  for (int i = 0; i < iters; ++i) {
+  v = values[state.range_x()];
+  while (state.KeepRunning()) {
     d += (fabs)(v);
   }
-
-  StopBenchmarkTiming();
+  SetLabel(state);
 }
+BENCHMARK_COMMON_VALS(BM_math_fabs);

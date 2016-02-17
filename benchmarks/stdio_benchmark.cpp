@@ -18,7 +18,7 @@
 #include <stdio_ext.h>
 #include <stdlib.h>
 
-#include <benchmark/Benchmark.h>
+#include <benchmark/benchmark.h>
 
 #define KB 1024
 #define MB 1024*KB
@@ -28,50 +28,49 @@
     Arg(1*KB)->Arg(4*KB)->Arg(8*KB)->Arg(16*KB)->Arg(64*KB)
 
 template <typename Fn>
-void ReadWriteTest(::testing::Benchmark* benchmark, int iters, int chunk_size, Fn f, bool buffered) {
-  benchmark->StopBenchmarkTiming();
+void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
+  size_t chunk_size = state.range_x();
+
   FILE* fp = fopen("/dev/zero", "rw");
   __fsetlocking(fp, FSETLOCKING_BYCALLER);
   char* buf = new char[chunk_size];
-  benchmark->StartBenchmarkTiming();
 
   if (!buffered) {
     setvbuf(fp, 0, _IONBF, 0);
   }
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     f(buf, chunk_size, 1, fp);
   }
 
-  benchmark->StopBenchmarkTiming();
-  benchmark->SetBenchmarkBytesProcessed(int64_t(iters) * int64_t(chunk_size));
+  state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(chunk_size));
   delete[] buf;
   fclose(fp);
 }
 
-BENCHMARK_WITH_ARG(BM_stdio_fread, int)->AT_COMMON_SIZES;
-void BM_stdio_fread::Run(int iters, int chunk_size) {
-  ReadWriteTest(this, iters, chunk_size, fread, true);
+void BM_stdio_fread(benchmark::State& state) {
+  ReadWriteTest(state, fread, true);
 }
+BENCHMARK(BM_stdio_fread)->AT_COMMON_SIZES;
 
-BENCHMARK_WITH_ARG(BM_stdio_fwrite, int)->AT_COMMON_SIZES;
-void BM_stdio_fwrite::Run(int iters, int chunk_size) {
-  ReadWriteTest(this, iters, chunk_size, fwrite, true);
+void BM_stdio_fwrite(benchmark::State& state) {
+  ReadWriteTest(state, fwrite, true);
 }
+BENCHMARK(BM_stdio_fwrite)->AT_COMMON_SIZES;
 
-BENCHMARK_WITH_ARG(BM_stdio_fread_unbuffered, int)->AT_COMMON_SIZES;
-void BM_stdio_fread_unbuffered::Run(int iters, int chunk_size) {
-  ReadWriteTest(this, iters, chunk_size, fread, false);
+void BM_stdio_fread_unbuffered(benchmark::State& state) {
+  ReadWriteTest(state, fread, false);
 }
+BENCHMARK(BM_stdio_fread_unbuffered)->AT_COMMON_SIZES;
 
-BENCHMARK_WITH_ARG(BM_stdio_fwrite_unbuffered, int)->AT_COMMON_SIZES;
-void BM_stdio_fwrite_unbuffered::Run(int iters, int chunk_size) {
-  ReadWriteTest(this, iters, chunk_size, fwrite, false);
+void BM_stdio_fwrite_unbuffered(benchmark::State& state) {
+  ReadWriteTest(state, fwrite, false);
 }
+BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
 
-static void FopenFgetsFclose(int iters, bool no_locking) {
+static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
   char buf[1024];
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     FILE* fp = fopen("/proc/version", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
     if (fgets(buf, sizeof(buf), fp) == nullptr) abort();
@@ -79,16 +78,12 @@ static void FopenFgetsFclose(int iters, bool no_locking) {
   }
 }
 
-BENCHMARK_NO_ARG(BM_stdio_fopen_fgets_fclose_locking);
-void BM_stdio_fopen_fgets_fclose_locking::Run(int iters) {
-  StartBenchmarkTiming();
-  FopenFgetsFclose(iters, false);
-  StopBenchmarkTiming();
+static void BM_stdio_fopen_fgets_fclose_locking(benchmark::State& state) {
+  FopenFgetsFclose(state, false);
 }
+BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
 
-BENCHMARK_NO_ARG(BM_stdio_fopen_fgets_fclose_no_locking);
-void BM_stdio_fopen_fgets_fclose_no_locking::Run(int iters) {
-  StartBenchmarkTiming();
-  FopenFgetsFclose(iters, true);
-  StopBenchmarkTiming();
+void BM_stdio_fopen_fgets_fclose_no_locking(benchmark::State& state) {
+  FopenFgetsFclose(state, true);
 }
+BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
