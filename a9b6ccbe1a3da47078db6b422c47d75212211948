@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0206ad0a_425df620",
+        "filename": "libc/malloc_debug/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T20:42:42Z",
+      "side": 1,
+      "message": "This code already uses __libc_format_log through error_log, and returning a std::string wouldn\u0027t be any more helpful or efficient since it eventually gets appended to another std::string, doesn\u0027t seem worth adding a dependency to me.",
+      "parentUuid": "c23655de_55b13ec2",
+      "range": {
+        "startLine": 166,
+        "startChar": 6,
+        "endLine": 166,
+        "endChar": 26
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0206ad0a_5fb82f0e",
         "filename": "libc/malloc_debug/backtrace.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-18T19:34:51Z",
       "side": 1,
       "message": "Isn\u0027t there a chance this line will be too long and the backtrace will be truncated?\n\nMaybe backtrace_string could return a vector of strings (one for each line).",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 64
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2199973_b6cc0681",
+        "filename": "libc/malloc_debug/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T20:42:42Z",
+      "side": 1,
+      "message": "Logging as one string is better, I think it will avoid the log being split up by lines from other processes, but calling __libc_format_log through error_log here will introduce a 1024 byte limit.  Calling __libc_write_log would avoid the limit.",
+      "parentUuid": "0206ad0a_5fb82f0e",
       "range": {
         "startLine": 181,
         "startChar": 2,
