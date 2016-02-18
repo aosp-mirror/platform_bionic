@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6243e950_d52becc3",
+        "filename": "libc/bionic/jemalloc.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T20:45:05Z",
+      "side": 1,
+      "message": "We use a 100 column limit in bionic, so one line should be fine.",
+      "parentUuid": "e2199973_56c4925d",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 60
+      },
+      "revId": "5329370afc2b40959043d643b5cefc835f36bf8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "820b7d17_3b38e384",
         "filename": "libc/malloc_debug/malloc_debug.cpp",
         "patchSetId": 6
