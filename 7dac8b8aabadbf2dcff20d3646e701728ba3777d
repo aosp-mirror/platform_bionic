@@ -16,6 +16,24 @@
       "revId": "7dac8b8aabadbf2dcff20d3646e701728ba3777d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd6504c6_bdcf6ba1",
+        "filename": "libc/include/netinet/in6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-18T01:44:00Z",
+      "side": 1,
+      "message": "yeah, odd though it may seem, that was actually the motivation for changing this file. i find myself in the strange situation of envying Windows. they seem to have implemented these as actual inline functions using the correct types. but Unixes have apparently just accepted any old bytes. as i said in my earlier review comment we _could_ try to be stricter but (a) it won\u0027t have any effect for C anyway and (b) it will mean that you can write C++ that works for glibc but not for us. (as in the netlink code here.)",
+      "parentUuid": "fd7f7c1f_87a82e51",
+      "revId": "7dac8b8aabadbf2dcff20d3646e701728ba3777d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
