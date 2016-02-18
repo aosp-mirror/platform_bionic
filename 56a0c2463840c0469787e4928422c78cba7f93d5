@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "021f8d56_9775865c",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T20:26:55Z",
+      "side": 1,
+      "message": "This name doesn\u0027t feel right now. I think maybe ReadMaps might be better to indicate what\u0027s going on.",
+      "range": {
+        "startLine": 113,
+        "startChar": 14,
+        "endLine": 113,
+        "endChar": 24
+      },
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8240dd43_930fbebb",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T20:26:55Z",
+      "side": 1,
+      "message": "I think the old code that did this was a mistake. I think the one caller actually assumes this doesn\u0027t happen.",
+      "range": {
+        "startLine": 157,
+        "startChar": 4,
+        "endLine": 157,
+        "endChar": 16
+      },
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "620e892a_bda6271c",
+        "filename": "libc/malloc_debug/MapData.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T20:26:55Z",
+      "side": 1,
+      "message": "How is this constructor used? I didn\u0027t see anything obvious, but I may have missed it.",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 48
+      },
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
