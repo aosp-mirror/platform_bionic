@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8240dd43_763448c5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-18T21:31:34Z",
+      "side": 1,
+      "message": "lost this part while moving code around...",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 28
+      },
+      "revId": "6b788eeff2ea0019849517e796b762ae790ca142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
