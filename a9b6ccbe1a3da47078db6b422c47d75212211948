@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c23655de_55b13ec2",
+        "filename": "libc/malloc_debug/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T19:34:51Z",
+      "side": 1,
+      "message": "Should we use libbase and do a StringPrintf instead?",
+      "range": {
+        "startLine": 166,
+        "startChar": 6,
+        "endLine": 166,
+        "endChar": 26
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0206ad0a_5fb82f0e",
+        "filename": "libc/malloc_debug/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T19:34:51Z",
+      "side": 1,
+      "message": "Isn\u0027t there a chance this line will be too long and the backtrace will be truncated?\n\nMaybe backtrace_string could return a vector of strings (one for each line).",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 64
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6243e950_527f1288",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-18T19:34:51Z",
+      "side": 1,
+      "message": "I think you need to add a:\n\n  ScopedDisableDebugCalls disable;\n\nHere just in case backtrace_get does an allocation. Since we have no control over what the _Unwind_Backtrace call might do.",
+      "range": {
+        "startLine": 166,
+        "startChar": 32,
+        "endLine": 166,
+        "endChar": 45
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
