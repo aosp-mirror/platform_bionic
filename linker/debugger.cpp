@@ -27,6 +27,7 @@
  */
 
 #include "linker.h"
+#include "linker_gdb_support.h"
 
 #include <errno.h>
 #include <inttypes.h>

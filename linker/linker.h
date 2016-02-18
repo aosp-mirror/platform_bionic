@@ -440,7 +440,6 @@ int do_dladdr(const void* addr, Dl_info* info);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;
-extern "C" void notify_gdb_of_libraries();
 
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
