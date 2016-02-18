@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "021f8d56_bab3c916",
+        "filename": "libc/malloc_debug/backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T20:59:44Z",
+      "side": 1,
+      "message": "Done, but I had to export __libc_write_log to do it.  Let me know if you\u0027d prefer it as separate strings instead.",
+      "parentUuid": "e2199973_b6cc0681",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 64
+      },
+      "revId": "a9b6ccbe1a3da47078db6b422c47d75212211948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6243e950_527f1288",
         "filename": "libc/malloc_debug/malloc_debug.cpp",
         "patchSetId": 2
