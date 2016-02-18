@@ -327,6 +327,9 @@ L(mm_len_9_16_bytes_forward):
 	movq	%xmm1, -8(%edx, %ecx)
 	jmp	L(mm_return)
 
+	CFI_POP (%edi)
+	CFI_POP (%esi)
+
 L(mm_recalc_len):
 /* Compute in %ecx how many bytes are left to copy after
 	the main loop stops.  */
