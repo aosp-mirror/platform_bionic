@@ -4042,7 +4042,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   soinfo* si = soinfo_alloc(&g_default_namespace, args.argv[0], nullptr, 0, RTLD_GLOBAL);
   if (si == nullptr) {
-    exit(EXIT_FAILURE);
+    __libc_fatal("Couldn't allocate soinfo: out of memory?");
   }
 
   /* bootstrap the link map, the main exe always needs to be first */
@@ -4078,8 +4078,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
-    __libc_format_fd(2, "error: only position independent executables (PIE) are supported.\n");
-    exit(EXIT_FAILURE);
+    __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
+                 args.argv[0]);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -4091,7 +4091,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   init_default_namespace();
 
   if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   }
 
   // add somain to global group
@@ -4122,10 +4122,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       !find_libraries(&g_default_namespace, si, needed_library_names, needed_libraries_count,
                       nullptr, &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
                       /* add_as_children */ true)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
     }
     si->increment_ref_count();
   }
@@ -4247,7 +4247,10 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    __libc_fatal("This is %s, the helper program for shared library executables.", args.argv[0]);
+    __libc_format_fd(STDOUT_FILENO,
+                     "This is %s, the helper program for shared library executables.\n",
+                     args.argv[0]);
+    exit(0);
   }
 
   linker_so.base = linker_addr;
@@ -4265,7 +4268,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
   if (!(linker_so.prelink_image() && linker_so.link_image(g_empty_list, g_empty_list, nullptr))) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   }
 
   __libc_init_main_thread(args);
