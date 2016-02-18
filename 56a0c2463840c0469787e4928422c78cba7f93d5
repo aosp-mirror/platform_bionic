@@ -25,6 +25,47 @@
     },
     {
       "key": {
+        "uuid": "620e892a_1d80731e",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T21:06:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "021f8d56_9775865c",
+      "range": {
+        "startLine": 113,
+        "startChar": 14,
+        "endLine": 113,
+        "endChar": 24
+      },
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6243e950_95bfa481",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T21:06:08Z",
+      "side": 1,
+      "message": "The single-argument constructor is used here",
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8240dd43_930fbebb",
         "filename": "libc/malloc_debug/MapData.cpp",
         "patchSetId": 2
@@ -36,6 +77,30 @@
       "writtenOn": "2016-02-18T20:26:55Z",
       "side": 1,
       "message": "I think the old code that did this was a mistake. I think the one caller actually assumes this doesn\u0027t happen.",
+      "range": {
+        "startLine": 157,
+        "startChar": 4,
+        "endLine": 157,
+        "endChar": 16
+      },
+      "revId": "56a0c2463840c0469787e4928422c78cba7f93d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8240dd43_b6fbd065",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-02-18T21:06:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8240dd43_930fbebb",
       "range": {
         "startLine": 157,
         "startChar": 4,
