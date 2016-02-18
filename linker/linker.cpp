@@ -51,6 +51,7 @@
 
 #include "linker.h"
 #include "linker_block_allocator.h"
+#include "linker_gdb_support.h"
 #include "linker_debug.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
@@ -205,75 +206,13 @@ size_t linker_get_error_buffer_size() {
   return sizeof(__linker_dl_err_buf);
 }
 
-// This function is an empty stub where GDB locates a breakpoint to get notified
-// about linker activity.
-extern "C"
-void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
-
-static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
-static r_debug _r_debug =
-    {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
-
-static link_map* r_debug_tail = 0;
-
-static void insert_link_map_into_debug_map(link_map* map) {
-  // Stick the new library at the end of the list.
-  // gdb tends to care more about libc than it does
-  // about leaf libraries, and ordering it this way
-  // reduces the back-and-forth over the wire.
-  if (r_debug_tail) {
-    r_debug_tail->l_next = map;
-    map->l_prev = r_debug_tail;
-    map->l_next = 0;
-  } else {
-    _r_debug.r_map = map;
-    map->l_prev = 0;
-    map->l_next = 0;
-  }
-  r_debug_tail = map;
-}
-
-static void insert_soinfo_into_debug_map(soinfo* info) {
-  // Copy the necessary fields into the debug structure.
-  link_map* map = &(info->link_map_head);
-  map->l_addr = info->load_bias;
-  // link_map l_name field is not const.
-  map->l_name = const_cast<char*>(info->get_realpath());
-  map->l_ld = info->dynamic;
-
-  insert_link_map_into_debug_map(map);
-}
-
-static void remove_soinfo_from_debug_map(soinfo* info) {
-  link_map* map = &(info->link_map_head);
-
-  if (r_debug_tail == map) {
-    r_debug_tail = map->l_prev;
-  }
-
-  if (map->l_prev) {
-    map->l_prev->l_next = map->l_next;
-  }
-  if (map->l_next) {
-    map->l_next->l_prev = map->l_prev;
-  }
-}
-
 static void notify_gdb_of_load(soinfo* info) {
   if (info->is_main_executable()) {
     // GDB already knows about the main executable
     return;
   }
 
-  ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
-
-  _r_debug.r_state = r_debug::RT_ADD;
-  rtld_db_dlactivity();
-
-  insert_soinfo_into_debug_map(info);
-
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
+  notify_gdb_of_load(&(info->link_map_head));
 }
 
 static void notify_gdb_of_unload(soinfo* info) {
@@ -282,22 +221,7 @@ static void notify_gdb_of_unload(soinfo* info) {
     return;
   }
 
-  ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
-
-  _r_debug.r_state = r_debug::RT_DELETE;
-  rtld_db_dlactivity();
-
-  remove_soinfo_from_debug_map(info);
-
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
-}
-
-void notify_gdb_of_libraries() {
-  _r_debug.r_state = r_debug::RT_ADD;
-  rtld_db_dlactivity();
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
+  notify_gdb_of_unload(&(info->link_map_head));
 }
 
 bool android_namespace_t::is_accessible(const std::string& file) {
@@ -4000,11 +3924,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   map->l_addr = 0;
   map->l_name = args.argv[0];
-  map->l_prev = nullptr;
-  map->l_next = nullptr;
-
-  _r_debug.r_map = map;
-  r_debug_tail = map;
+  insert_link_map_into_debug_map(map);
 
   init_linker_info_for_gdb(linker_base);
 
