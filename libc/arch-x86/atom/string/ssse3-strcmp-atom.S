@@ -115,6 +115,7 @@ name:					\
 ENTRY (STRCMP)
 #ifdef USE_AS_STRNCMP
 	PUSH	(%ebp)
+	cfi_remember_state
 #endif
 	movl	STR1(%esp), %edx
 	movl	STR2(%esp), %eax
@@ -213,9 +214,6 @@ L(crosspage):
 	PUSH	(%ebx)
 	PUSH	(%edi)
 	PUSH	(%esi)
-#ifdef USE_AS_STRNCMP
-	cfi_remember_state
-#endif
 
 	movl	%edx, %edi
 	movl	%eax, %ecx
@@ -2103,7 +2101,6 @@ L(neq_bigger):
 	RETURN
 
 #ifdef USE_AS_STRNCMP
-	cfi_restore_state
 	.p2align 4
 L(more8byteseq):
 	POP	(%esi)
@@ -2120,7 +2117,7 @@ L(eq):
 	ret
 
 #ifdef USE_AS_STRNCMP
-	CFI_PUSH (%ebp)
+	cfi_restore_state
 
 	.p2align 4
 L(less16bytes_sncmp):
