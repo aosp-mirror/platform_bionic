@@ -3147,7 +3147,7 @@ L(ExitTail16):
 #endif
 
 #ifdef USE_AS_STRNCPY
-# ifndef USE_AS_STRCAT
+# if !defined(USE_AS_STRCAT) && !defined(USE_AS_STRLCPY)
 	CFI_PUSH (%esi)
 	CFI_PUSH (%edi)
 # endif
