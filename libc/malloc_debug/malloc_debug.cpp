@@ -67,6 +67,7 @@ void debug_finalize();
 void debug_get_malloc_leak_info(
     uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
     size_t* backtrace_size);
+ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
 void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
 void* debug_malloc(size_t size);
@@ -76,6 +77,10 @@ void* debug_realloc(void* pointer, size_t bytes);
 void* debug_calloc(size_t nmemb, size_t bytes);
 struct mallinfo debug_mallinfo();
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
+int debug_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
+void debug_malloc_disable();
+void debug_malloc_enable();
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* debug_pvalloc(size_t bytes);
@@ -159,6 +164,7 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   if (g_debug->config().options & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
     if (g_debug->backtrace->enabled()) {
+      ScopedDisableDebugCalls disable;
       back_header->num_frames = backtrace_get(
           &back_header->frames[0], g_debug->config().backtrace_frames);
       backtrace_found = back_header->num_frames > 0;
@@ -217,9 +223,9 @@ void debug_finalize() {
     g_debug->track->DisplayLeaks(*g_debug);
   }
 
-  backtrace_shutdown();
-
   DebugDisableSet(true);
+
+  backtrace_shutdown();
 
   delete g_debug;
   g_debug = nullptr;
@@ -567,6 +573,82 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
   *memptr = debug_memalign(alignment, size);
   errno = saved_errno;
   return (*memptr != nullptr) ? 0 : ENOMEM;
+}
+
+int debug_iterate(uintptr_t base, size_t size,
+    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
+  // Can't allocate, malloc is disabled
+  // Manual capture of the arguments to pass to the lambda below as void* arg
+  struct iterate_ctx {
+    decltype(callback) callback;
+    decltype(arg) arg;
+  } ctx = { callback, arg };
+
+  return g_dispatch->iterate(base, size,
+      [](uintptr_t base, size_t size, void* arg) {
+        const iterate_ctx* ctx = reinterpret_cast<iterate_ctx*>(arg);
+        const void* pointer = reinterpret_cast<void*>(base);
+        if (g_debug->need_header()) {
+          const Header* header = reinterpret_cast<const Header*>(pointer);
+          if (g_debug->config().options & TRACK_ALLOCS) {
+            if (g_debug->track->Contains(header)) {
+              // Return just the body of the allocation if we're sure the header exists
+              ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
+                  header->real_size(), ctx->arg);
+              return;
+            }
+          }
+        }
+        // Fall back to returning the whole allocation
+        ctx->callback(base, size, ctx->arg);
+      }, &ctx);
+}
+
+void debug_malloc_disable() {
+  g_dispatch->malloc_disable();
+  if (g_debug->track) {
+    g_debug->track->PrepareFork();
+  }
+}
+
+void debug_malloc_enable() {
+  if (g_debug->track) {
+    g_debug->track->PostForkParent();
+  }
+  g_dispatch->malloc_enable();
+}
+
+ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
+  if (DebugCallsDisabled() || pointer == nullptr) {
+    return 0;
+  }
+
+  if (g_debug->need_header()) {
+    Header* header;
+    if (g_debug->config().options & TRACK_ALLOCS) {
+      header = g_debug->GetHeader(pointer);
+      if (!g_debug->track->Contains(header)) {
+        return 0;
+      }
+    } else {
+      header = reinterpret_cast<Header*>(pointer);
+    }
+    if (header->tag != DEBUG_TAG) {
+      return 0;
+    }
+    if (g_debug->config().options & BACKTRACE) {
+      BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
+      if (back_header->num_frames > 0) {
+        if (frame_count > back_header->num_frames) {
+          frame_count = back_header->num_frames;
+        }
+        memcpy(frames, &back_header->frames[0], frame_count * sizeof(uintptr_t));
+        return frame_count;
+      }
+    }
+  }
+
+  return 0;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)

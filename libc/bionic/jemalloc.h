@@ -26,6 +26,10 @@
 __BEGIN_DECLS
 
 struct mallinfo je_mallinfo();
+int je_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
+void je_malloc_disable();
+void je_malloc_enable();
+int je_mallctl(const char *name, void *oldp, size_t *oldlenp, void *newp, size_t newlen);
 void* je_memalign_round_up_boundary(size_t, size_t);
 void* je_pvalloc(size_t);
 
