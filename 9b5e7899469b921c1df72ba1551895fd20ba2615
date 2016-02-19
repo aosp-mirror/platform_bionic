@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02a94d5f_67126cae",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4130,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-19T02:08:16Z",
+      "side": 1,
+      "message": "One last nit, this goes over the 100 column limit.",
+      "range": {
+        "startLine": 4130,
+        "startChar": 0,
+        "endLine": 4130,
+        "endChar": 118
+      },
+      "revId": "9b5e7899469b921c1df72ba1551895fd20ba2615",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
