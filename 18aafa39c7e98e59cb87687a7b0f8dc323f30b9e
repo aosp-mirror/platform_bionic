@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a2d5e1d0_f4d4d605",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3219,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-19T02:05:52Z",
+      "side": 1,
+      "message": "got mixed up with CL from the future... removed.",
+      "parentUuid": "02a94d5f_47bf30d9",
+      "range": {
+        "startLine": 3217,
+        "startChar": 0,
+        "endLine": 3219,
+        "endChar": 1
+      },
+      "revId": "18aafa39c7e98e59cb87687a7b0f8dc323f30b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02a94d5f_e7a65cd6",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-19T01:57:42Z",
       "side": 1,
       "message": "I think this would be better as STDOUT_FILENO so it\u0027s clear where the message is going.",
+      "range": {
+        "startLine": 4134,
+        "startChar": 21,
+        "endLine": 4134,
+        "endChar": 22
+      },
+      "revId": "18aafa39c7e98e59cb87687a7b0f8dc323f30b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2301515_e26ba629",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4134,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-19T02:05:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02a94d5f_e7a65cd6",
       "range": {
         "startLine": 4134,
         "startChar": 21,
