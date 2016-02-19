@@ -47,11 +47,13 @@ class TrackData {
   TrackData() = default;
   virtual ~TrackData() = default;
 
-  void GetList(std::vector<Header*>* list);
+  void GetList(std::vector<const Header*>* list);
 
-  void Add(Header* header, bool backtrace_found);
+  void Add(const Header* header, bool backtrace_found);
 
-  void Remove(Header* header, bool backtrace_found);
+  void Remove(const Header* header, bool backtrace_found);
+
+  bool Contains(const Header *header);
 
   void GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
                size_t* info_size, size_t* total_memory, size_t* backtrace_size);
@@ -64,7 +66,7 @@ class TrackData {
 
  private:
   pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
-  std::unordered_set<Header*> headers_;
+  std::unordered_set<const Header*> headers_;
   size_t total_backtrace_allocs_ = 0;
 
   DISALLOW_COPY_AND_ASSIGN(TrackData);
