@@ -101,6 +101,8 @@ __LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char*
 __LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
                                               va_list ap);
 
+__LIBC_HIDDEN__ int __libc_write_log(int priority, const char* tag, const char* msg);
+
 //
 // Event logging.
 //
