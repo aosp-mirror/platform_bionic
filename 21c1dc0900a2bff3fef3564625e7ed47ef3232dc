@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2ca7938_4eb99342",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-19T01:18:27Z",
+      "side": 1,
+      "message": "to *dynamic linker* ...",
+      "range": {
+        "startLine": 7,
+        "startChar": 13,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "21c1dc0900a2bff3fef3564625e7ed47ef3232dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2301515_e2a3a60a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3960,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-19T01:18:27Z",
+      "side": 1,
+      "message": "kill the \\n while you\u0027re here?",
+      "revId": "21c1dc0900a2bff3fef3564625e7ed47ef3232dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
