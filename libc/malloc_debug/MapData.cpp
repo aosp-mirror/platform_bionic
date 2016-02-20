@@ -44,7 +44,7 @@ static MapEntry* parse_line(char* line) {
   uintptr_t start;
   uintptr_t end;
   uintptr_t offset;
-  char permissions[4];
+  char permissions[5];
   int name_pos;
   if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start,
              &end, permissions, &offset, &name_pos) < 2) {

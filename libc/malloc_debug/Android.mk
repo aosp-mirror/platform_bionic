@@ -37,7 +37,6 @@ LOCAL_NATIVE_COVERAGE := false
 LOCAL_CFLAGS := \
     -Wall \
     -Werror \
-    -fno-stack-protector \
     -Wno-error=format-zero-length \
 
 include $(BUILD_STATIC_LIBRARY)
