@@ -216,6 +216,30 @@
     },
     {
       "key": {
+        "uuid": "42034591_66aace9c",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-02-21T13:44:21Z",
+      "side": 1,
+      "message": "Sorry for the delay. Here\u0027s how to create an interface where the local address is in IFA_LOCAL and not IFA_ADDRESS:\n\n\nShell #1 (do not close it until you\u0027ve finished or tun0 will disappear):\n\n\u003d\u003d\u003d\u003d\nsudo python\n\n\nimport struct\nimport fcntl\n\nIFF_TUN \u003d 1\nIFF_NO_PI \u003d 0x1000\nTUNSETIFF \u003d 0x400454ca\n\nf \u003d open(\"/dev/net/tun\", \"r+b\")\nifr \u003d struct.pack(\"16sH\", \"tun0\", IFF_TUN | IFF_NO_PI)\nifr +\u003d \"\\x00\" * (40 - len(ifr))\nfcntl.ioctl(f, TUNSETIFF, ifr)\n\u003d\u003d\u003d\u003d\n\nShell #2:\n\n\n\u003d\u003d\u003d\u003d\n$ sudo ip addr add dev tun0 10.0.0.1/32 peer 192.0.2.1\n$ ifconfig tun0\ntun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  \n          inet addr:10.0.0.1  P-t-P:192.0.2.1  Mask:255.255.255.255\n          POINTOPOINT NOARP MULTICAST  MTU:1500  Metric:1\n          RX packets:0 errors:0 dropped:0 overruns:0 frame:0\n          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0\n          collisions:0 txqueuelen:500 \n          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)\n\u003d\u003d\u003d\u003d\n\nSo ifconfig reports the address as 10.0.0.1. But if you dump the IPv4 addresses using netlink you\u0027ll see this:\n\n[(IfAddrMsg(family\u003d2, prefixlen\u003d32, flags\u003d128, scope\u003d0, index\u003d5), {\u0027IFA_CACHEINFO\u0027: IFACacheinfo(prefered\u003d4294967295, valid\u003d4294967295, cstamp\u003d226329284, tstamp\u003d226329284), \u0027IFA_LABEL\u0027: \u0027tun0\u0027, \u0027IFA_LOCAL\u0027: \u002710.0.0.1\u0027, \u0027IFA_ADDRESS\u0027: \u0027192.0.2.1\u0027})]",
+      "parentUuid": "31c3005d_487c4fbd",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 38
+      },
+      "revId": "9cddb482b498abd134f7ccfc9933747e8bcb9cc7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a899739_ed3365c7",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 2
