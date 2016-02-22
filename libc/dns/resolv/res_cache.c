@@ -1234,6 +1234,9 @@ struct resolv_cache_info {
     struct resolv_cache_info*   next;
     char*                       nameservers[MAXNS +1];
     struct addrinfo*            nsaddrinfo[MAXNS + 1];
+    int                         revision_id; // # times the nameservers have been replaced
+    struct __res_params         params;
+    struct __res_stats          nsstats[MAXNS];
     char                        defdname[256];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
@@ -1360,6 +1363,8 @@ _resolv_cache_query_failed( unsigned    netid,
 
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
+
+static struct resolv_cache_info* _find_cache_info_locked(unsigned netid);
 
 static void
 _cache_flush_locked( Cache*  cache )
@@ -1801,6 +1806,8 @@ static void _free_nameservers_locked(struct resolv_cache_info* cache_info);
  * currently attached to the provided cache_info */
 static int _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
         const char** servers, int numservers);
+/* clears the stats samples contained withing the given cache_info */
+static void _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info);
 
 static void
 _res_cache_init(void)
@@ -1854,6 +1861,10 @@ _flush_cache_for_net_locked(unsigned netid)
     if (cache) {
         _cache_flush_locked(cache);
     }
+
+    // Also clear the NS statistics.
+    struct resolv_cache_info* cache_info = _find_cache_info_locked(netid);
+    _res_cache_clear_stats_locked(cache_info);
 }
 
 void _resolv_delete_cache_for_net(unsigned netid)
@@ -1928,8 +1939,16 @@ _find_cache_info_locked(unsigned netid)
 }
 
 void
+_resolv_set_default_params(struct __res_params* params) {
+    params->sample_validity = NSSAMPLE_VALIDITY;
+    params->success_threshold = SUCCESS_THRESHOLD;
+    params->min_samples = 0;
+    params->max_samples = 0;
+}
+
+void
 _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numservers,
-        const char *domains)
+        const char *domains, const struct __res_params* params)
 {
     int i, rt, index;
     struct addrinfo hints;
@@ -1945,54 +1964,76 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numser
 
     struct resolv_cache_info* cache_info = _find_cache_info_locked(netid);
 
-    if (cache_info != NULL &&
-            !_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
-        // free current before adding new
-        _free_nameservers_locked(cache_info);
-
-        memset(&hints, 0, sizeof(hints));
-        hints.ai_family = PF_UNSPEC;
-        hints.ai_socktype = SOCK_DGRAM; /*dummy*/
-        hints.ai_flags = AI_NUMERICHOST;
-        snprintf(sbuf, sizeof(sbuf), "%u", NAMESERVER_PORT);
-
-        index = 0;
-        for (i = 0; i < numservers && i < MAXNS; i++) {
-            rt = getaddrinfo(servers[i], sbuf, &hints, &cache_info->nsaddrinfo[index]);
-            if (rt == 0) {
-                cache_info->nameservers[index] = strdup(servers[i]);
-                index++;
-                XLOG("%s: netid = %u, addr = %s\n", __FUNCTION__, netid, servers[i]);
-            } else {
-                cache_info->nsaddrinfo[index] = NULL;
-            }
+    if (cache_info != NULL) {
+        uint8_t old_max_samples = cache_info->params.max_samples;
+        if (params != NULL) {
+            cache_info->params = *params;
+        } else {
+            _resolv_set_default_params(&cache_info->params);
         }
 
-        // code moved from res_init.c, load_domain_search_list
-        strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
-        if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
-            *cp = '\0';
-        cp = cache_info->defdname;
-        offset = cache_info->dnsrch_offset;
-        while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
-            while (*cp == ' ' || *cp == '\t') /* skip leading white space */
-                cp++;
-            if (*cp == '\0') /* stop if nothing more to do */
-                break;
-            *offset++ = cp - cache_info->defdname; /* record this search domain */
-            while (*cp) { /* zero-terminate it */
-                if (*cp == ' '|| *cp == '\t') {
-                    *cp++ = '\0';
-                    break;
+        if (!_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
+            // free current before adding new
+            _free_nameservers_locked(cache_info);
+
+            memset(&hints, 0, sizeof(hints));
+            hints.ai_family = PF_UNSPEC;
+            hints.ai_socktype = SOCK_DGRAM; /*dummy*/
+            hints.ai_flags = AI_NUMERICHOST;
+            snprintf(sbuf, sizeof(sbuf), "%u", NAMESERVER_PORT);
+
+            index = 0;
+            for (i = 0; i < numservers && i < MAXNS; i++) {
+                rt = getaddrinfo(servers[i], sbuf, &hints, &cache_info->nsaddrinfo[index]);
+                if (rt == 0) {
+                    cache_info->nameservers[index] = strdup(servers[i]);
+                    index++;
+                    XLOG("%s: netid = %u, addr = %s\n", __FUNCTION__, netid, servers[i]);
+                } else {
+                    cache_info->nsaddrinfo[index] = NULL;
                 }
-                cp++;
             }
-        }
-        *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
 
-        // flush cache since new settings
-        _flush_cache_for_net_locked(netid);
+            // code moved from res_init.c, load_domain_search_list
+            strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
+            if ((cp = strchr(cache_info->defdname, '\n')) != NULL)
+                *cp = '\0';
 
+            cp = cache_info->defdname;
+            offset = cache_info->dnsrch_offset;
+            while (offset < cache_info->dnsrch_offset + MAXDNSRCH) {
+                while (*cp == ' ' || *cp == '\t') /* skip leading white space */
+                    cp++;
+                if (*cp == '\0') /* stop if nothing more to do */
+                    break;
+                *offset++ = cp - cache_info->defdname; /* record this search domain */
+                while (*cp) { /* zero-terminate it */
+                    if (*cp == ' '|| *cp == '\t') {
+                        *cp++ = '\0';
+                        break;
+                    }
+                    cp++;
+                }
+            }
+            *offset = -1; /* cache_info->dnsrch_offset has MAXDNSRCH+1 items */
+
+            // Flush the cache and reset the stats.
+            _flush_cache_for_net_locked(netid);
+
+            // increment the revision id to ensure that sample state is not written back if the
+            // servers change; in theory it would suffice to do so only if the servers or
+            // max_samples actually change, in practice the overhead of checking is higher than the
+            // cost, and overflows are unlikely
+            ++cache_info->revision_id;
+       } else if (cache_info->params.max_samples != old_max_samples) {
+           // If the maximum number of samples changes, the overhead of keeping the most recent
+           // samples around is not considered worth the effort, so they are cleared instead. All
+           // other parameters do not affect shared state: Changing these parameters does not
+           // invalidate the samples, as they only affect aggregation and the conditions under which
+           // servers are considered usable.
+           _res_cache_clear_stats_locked(cache_info);
+           ++cache_info->revision_id;
+       }
     }
 
     pthread_mutex_unlock(&_res_cache_list_lock);
@@ -2049,7 +2090,11 @@ _free_nameservers_locked(struct resolv_cache_info* cache_info)
             freeaddrinfo(cache_info->nsaddrinfo[i]);
             cache_info->nsaddrinfo[i] = NULL;
         }
+        cache_info->nsstats[i].sample_count =
+            cache_info->nsstats[i].sample_next = 0;
     }
+    _res_cache_clear_stats_locked(cache_info);
+    ++cache_info->revision_id;
 }
 
 void
@@ -2103,3 +2148,65 @@ _resolv_populate_res_for_net(res_state statp)
     }
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
+
+/* Resolver reachability statistics. */
+
+static void
+_res_cache_add_stats_sample_locked(struct __res_stats* stats, const struct __res_sample* sample,
+        int max_samples) {
+    // Note: This function expects max_samples > 0, otherwise a (harmless) modification of the
+    // allocated but supposedly unused memory for samples[0] will happen
+    XLOG("%s: adding sample to stats, next = %d, count = %d", __FUNCTION__,
+            stats->sample_next, stats->sample_count);
+    stats->samples[stats->sample_next] = *sample;
+    if (stats->sample_count < max_samples) {
+        ++stats->sample_count;
+    }
+    if (++stats->sample_next >= max_samples) {
+        stats->sample_next = 0;
+    }
+}
+
+static void
+_res_cache_clear_stats_locked(struct resolv_cache_info* cache_info) {
+    if (cache_info) {
+        for (int i = 0 ; i < MAXNS ; ++i) {
+            cache_info->nsstats->sample_count = cache_info->nsstats->sample_next = 0;
+        }
+    }
+}
+
+int
+_resolv_cache_get_resolver_stats( unsigned netid, struct __res_params* params,
+        struct __res_stats stats[MAXNS]) {
+
+    int revision_id = -1;
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+    if (info) {
+        memcpy(stats, info->nsstats, sizeof(info->nsstats));
+        *params = info->params;
+        revision_id = info->revision_id;
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    return revision_id;
+}
+
+void
+_resolv_cache_add_resolver_stats_sample( unsigned netid, int revision_id, int ns,
+       const struct __res_sample* sample, int max_samples) {
+    if (max_samples <= 0) return;
+
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+
+    if (info && info->revision_id == revision_id) {
+        _res_cache_add_stats_sample_locked(&info->nsstats[ns], sample, max_samples);
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+}
+
