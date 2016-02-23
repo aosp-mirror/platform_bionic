@@ -208,19 +208,19 @@ TEST_F(MallocDebugConfigTest, extra_space) {
 }
 
 TEST_F(MallocDebugConfigTest, multiple_options) {
-  ASSERT_TRUE(InitConfig("  backtrace=64   front_guard=24"));
+  ASSERT_TRUE(InitConfig("  backtrace=64   front_guard=48"));
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS | FRONT_GUARD, config->options);
   ASSERT_EQ(64U, config->backtrace_frames);
-  ASSERT_EQ(24U, config->front_guard_bytes);
+  ASSERT_EQ(48U, config->front_guard_bytes);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugConfigTest, front_guard) {
-  ASSERT_TRUE(InitConfig("front_guard=24"));
+  ASSERT_TRUE(InitConfig("front_guard=48"));
   ASSERT_EQ(FRONT_GUARD, config->options);
-  ASSERT_EQ(24U, config->front_guard_bytes);
+  ASSERT_EQ(48U, config->front_guard_bytes);
 
   ASSERT_TRUE(InitConfig("front_guard"));
   ASSERT_EQ(FRONT_GUARD, config->options);
@@ -228,7 +228,11 @@ TEST_F(MallocDebugConfigTest, front_guard) {
 
   ASSERT_TRUE(InitConfig("front_guard=39"));
   ASSERT_EQ(FRONT_GUARD, config->options);
+#if defined(__LP64__)
+  ASSERT_EQ(48U, config->front_guard_bytes);
+#else
   ASSERT_EQ(40U, config->front_guard_bytes);
+#endif
 
   ASSERT_TRUE(InitConfig("front_guard=41"));
   ASSERT_EQ(FRONT_GUARD, config->options);
