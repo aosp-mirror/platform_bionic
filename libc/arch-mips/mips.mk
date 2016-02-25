@@ -15,6 +15,7 @@ libc_bionic_src_files_mips += \
     arch-mips/bionic/bzero.S \
     arch-mips/bionic/cacheflush.cpp \
     arch-mips/bionic/_exit_with_stack_teardown.S \
+    arch-mips/bionic/libgcc_compat.c \
     arch-mips/bionic/setjmp.S \
     arch-mips/bionic/syscall.S \
     arch-mips/bionic/vfork.S \
