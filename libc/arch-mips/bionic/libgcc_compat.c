@@ -26,16 +26,8 @@
  * SUCH DAMAGE.
  */
 
-extern char __divdi3;
-extern char __moddi3;
 extern char __popcountsi2;
-extern char __udivdi3;
-extern char __umoddi3;
 
 void* __bionic_libgcc_compat_symbols[] = {
-    &__divdi3,
-    &__moddi3,
     &__popcountsi2,
-    &__udivdi3,
-    &__umoddi3,
 };
