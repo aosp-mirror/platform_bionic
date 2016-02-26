@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2981592_a522f298",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "nope, just me stupid.",
+      "parentUuid": "82bb7df1_b157cb2e",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 19
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_3b396ebb",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-26T19:27:25Z",
       "side": 1,
       "message": "Do you need to pass the name in? You use this in poll and ppoll.",
+      "range": {
+        "startLine": 101,
+        "startChar": 24,
+        "endLine": 101,
+        "endChar": 29
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_5f969bc6",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02e4ed24_3b396ebb",
       "range": {
         "startLine": 101,
         "startChar": 24,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "62be89e4_37da99ec",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "yeah, i\u0027ll look at that in a later \u003cpatchset/change --- haven\u0027t decided yet\u003e.",
+      "parentUuid": "62be89e4_811a474c",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 1
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02714d1c_2181f926",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "e27a7932_9f1e43f5",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "actually, most of these are unneeded, and in the past we\u0027ve found that relying on the header forward declaration is less error-prone.\n\ni\u0027ve flipped the file around so only those functions that aren\u0027t declared in headers get extern \"C\". it turns out that that actually exactly matches the \"// Runtime implementation of ...\" comments, which is nice. (though i\u0027ve expanded the comments a bit to point out this link.)",
+      "parentUuid": "02714d1c_2181f926",
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c29ad577_92b8313e",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -99,6 +189,24 @@
       "writtenOn": "2016-02-26T19:39:56Z",
       "side": 1,
       "message": "extern \"C\"?",
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_bf23ff3f",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "(as above)",
+      "parentUuid": "c29ad577_92b8313e",
       "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "e2b0b90b_33018e9e",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "in this patchset i\u0027ve added TODOs. i\u0027ll look at another patchset that tries your extra-header idea above, and maybe just resolve this now.",
+      "parentUuid": "e27a7932_b1d338d6",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 6
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a237a16a_b42c91dd",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -139,6 +271,24 @@
       "writtenOn": "2016-02-26T19:39:56Z",
       "side": 1,
       "message": "extern \"C\"?",
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02e4ed24_14b67fbb",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "(as above)",
+      "parentUuid": "a237a16a_b42c91dd",
       "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -168,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "c26bb568_f3b7821e",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "done here and in __strncpy_chk2.\n\nalso corrected their messages to \"detected\", since we report this after we already did the bad thing.",
+      "parentUuid": "62be89e4_e1fa2324",
+      "range": {
+        "startLine": 313,
+        "startChar": 35,
+        "endLine": 313,
+        "endChar": 68
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62be89e4_61829385",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -185,6 +359,24 @@
     },
     {
       "key": {
+        "uuid": "4276e54b_e8e30ff2",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "added bigger TODO.",
+      "parentUuid": "62be89e4_61829385",
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2271f153_f631b145",
         "filename": "libc/bionic/fortify.cpp",
         "patchSetId": 1
@@ -196,6 +388,30 @@
       "writtenOn": "2016-02-26T19:39:56Z",
       "side": 1,
       "message": "Maybe \"detected\" would be better?",
+      "range": {
+        "startLine": 387,
+        "startChar": 32,
+        "endLine": 387,
+        "endChar": 41
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82bb7df1_ca3288d3",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "done (plus a couple of other misleading cases, mentioned above)",
+      "parentUuid": "2271f153_f631b145",
       "range": {
         "startLine": 387,
         "startChar": 32,
@@ -243,6 +459,30 @@
       "side": 1,
       "message": "yes, please remove it. Nobody uses it.",
       "parentUuid": "82bb7df1_7b48f459",
+      "range": {
+        "startLine": 686,
+        "startChar": 2,
+        "endLine": 686,
+        "endChar": 50
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62be89e4_17daf592",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T23:45:34Z",
+      "side": 1,
+      "message": "excellent! done.",
+      "parentUuid": "4276e54b_8274aaa0",
       "range": {
         "startLine": 686,
         "startChar": 2,
