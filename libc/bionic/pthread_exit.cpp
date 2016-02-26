@@ -81,7 +81,8 @@ void pthread_exit(void* return_value) {
 
   if (thread->alternate_signal_stack != NULL) {
     // Tell the kernel to stop using the alternate signal stack.
-    stack_t ss = {};
+    stack_t ss;
+    memset(&ss, 0, sizeof(ss));
     ss.ss_flags = SS_DISABLE;
     sigaltstack(&ss, NULL);
 
