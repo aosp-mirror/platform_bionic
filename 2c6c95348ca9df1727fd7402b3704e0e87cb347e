@@ -22,6 +22,30 @@
       "revId": "2c6c95348ca9df1727fd7402b3704e0e87cb347e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2b0b90b_0d51d3ae",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T17:10:18Z",
+      "side": 1,
+      "message": "i hadn\u0027t, but it turns out GCC hates that too:\n\n  bionic/libc/bionic/pthread_exit.cpp:85:16: error: missing initializer for member \u0027sigaltstack::ss_sp\u0027 [-Werror\u003dmissing-field-initializers]\n     stack_t ss{};\n                ^\n  bionic/libc/bionic/pthread_exit.cpp:85:16: error: missing initializer for member \u0027sigaltstack::ss_flags\u0027 [-Werror\u003dmissing-field-initializers]\n  bionic/libc/bionic/pthread_exit.cpp:85:16: error: missing initializer for member \u0027sigaltstack::ss_size\u0027 [-Werror\u003dmissing-field-initializers]\n\n\nhopefully not too long until we can build libc with clang for mips too and this can all be forgotten...",
+      "parentUuid": "02c30d5c_bd88c34d",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 15
+      },
+      "revId": "2c6c95348ca9df1727fd7402b3704e0e87cb347e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
