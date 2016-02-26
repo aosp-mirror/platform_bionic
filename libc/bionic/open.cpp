@@ -64,7 +64,7 @@ __strong_alias(open64, open);
 
 int __open_2(const char* pathname, int flags) {
   if (__predict_false((flags & O_CREAT) != 0)) {
-    __fortify_chk_fail("open(O_CREAT): called without specifying a mode", 0);
+    __fortify_fatal("open(O_CREAT): called without specifying a mode");
   }
 
   return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0);
@@ -86,7 +86,7 @@ __strong_alias(openat64, openat);
 
 int __openat_2(int fd, const char* pathname, int flags) {
   if ((flags & O_CREAT) != 0) {
-    __fortify_chk_fail("openat(O_CREAT): called without specifying a mode", 0);
+    __fortify_fatal("openat(O_CREAT): called without specifying a mode");
   }
 
   return __openat(fd, pathname, force_O_LARGEFILE(flags), 0);
