@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02c30d5c_bd88c34d",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2016-02-26T10:54:15Z",
+      "side": 1,
+      "message": "Have you tried the C++11 syntax?\n\n    stack_t ss{};  // NOLINT",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 15
+      },
+      "revId": "2c6c95348ca9df1727fd7402b3704e0e87cb347e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
