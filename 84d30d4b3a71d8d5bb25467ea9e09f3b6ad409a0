@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82bb7df1_7b48f459",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-26T04:46:05Z",
+      "side": 1,
+      "message": "nnk: is the logging of events for FORTIFY failures actually used by anyone? if not i\u0027d prefer to just remove it.",
+      "range": {
+        "startLine": 686,
+        "startChar": 2,
+        "endLine": 686,
+        "endChar": 50
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
