@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "82bb7df1_b157cb2e",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-26T19:27:25Z",
+      "side": 1,
+      "message": "Is this intentionally out of alpha order?",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 19
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02e4ed24_3b396ebb",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-26T19:27:25Z",
+      "side": 1,
+      "message": "Do you need to pass the name in? You use this in poll and ppoll.",
+      "range": {
+        "startLine": 101,
+        "startChar": 24,
+        "endLine": 101,
+        "endChar": 29
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62be89e4_811a474c",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-26T19:27:25Z",
+      "side": 1,
+      "message": "You could put this in a separate header file and create the __XX functions for those that are #if 0 in the code right now.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 1
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_b1d338d6",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-26T19:27:25Z",
+      "side": 1,
+      "message": "Should there be a comment here about why you are leaving this in?\n\nSame for the other #if 0 code.",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 6
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62be89e4_e1fa2324",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-26T19:27:25Z",
+      "side": 1,
+      "message": "Do you want to change the message here? It doesn\u0027t really match the messages that you display elsewhere.",
+      "range": {
+        "startLine": 313,
+        "startChar": 35,
+        "endLine": 313,
+        "endChar": 68
+      },
+      "revId": "84d30d4b3a71d8d5bb25467ea9e09f3b6ad409a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82bb7df1_7b48f459",
         "filename": "libc/bionic/libc_logging.cpp",
         "patchSetId": 1
