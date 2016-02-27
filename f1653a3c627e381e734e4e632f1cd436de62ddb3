@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62be89e4_536520ab",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2016-02-27T03:05:15Z",
+      "side": 1,
+      "message": "this can be deleted if you don\u0027t like it. __fortify_chk_fail isn\u0027t a public API. It\u0027s marked as __LIBC_HIDDEN__ in libc_logging.h. It shouldn\u0027t be exposed to apps at all.",
+      "range": {
+        "startLine": 639,
+        "startChar": 0,
+        "endLine": 642,
+        "endChar": 1
+      },
+      "revId": "f1653a3c627e381e734e4e632f1cd436de62ddb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
