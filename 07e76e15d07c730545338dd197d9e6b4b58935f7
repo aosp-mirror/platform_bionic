@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82bb7df1_aaf754e9",
+        "filename": "libc/private/libc_events.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-02-27T00:01:13Z",
+      "side": 1,
+      "message": "nnk: i kept the DNS events because i\u0027d forgotten about them so i didn\u0027t ask you whether they\u0027re also now unused. i\u0027m assuming they are, though, and i can remove these too?",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 34,
+        "endChar": 41
+      },
+      "revId": "07e76e15d07c730545338dd197d9e6b4b58935f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
