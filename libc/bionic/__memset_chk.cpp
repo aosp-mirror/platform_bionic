@@ -29,25 +29,12 @@
 #undef _FORTIFY_SOURCE
 
 #include <string.h>
-#include <stdlib.h>
-#include "private/libc_logging.h"
 
-/*
- * Runtime implementation of __builtin____memset_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This memset check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" void* __memset_chk (void* dest, int c, size_t n, size_t dest_len) {
-  if (__predict_false(n > dest_len)) {
-    __fortify_chk_fail("memset: prevented write past end of buffer",
-                       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW);
-  }
+#include "private/bionic_fortify.h"
 
-  return memset(dest, c, n);
+// Runtime implementation of __builtin___memset_chk (used directly by compiler, not in headers).
+extern "C" void* __memset_chk(void* dst, int byte, size_t count, size_t dst_len) {
+  __check_count("memset", "count", count);
+  __check_buffer_access("memset", "write into", count, dst_len);
+  return memset(dst, byte, count);
 }

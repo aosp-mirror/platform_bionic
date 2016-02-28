@@ -27,33 +27,22 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
-#include "private/libc_logging.h"
 
-/*
- * Runtime implementation of __builtin____strcat_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This strcat check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" char* __strcat_chk(char* __restrict dest, const char* __restrict src,
-                              size_t dest_buf_size) {
-  char* save = dest;
-  size_t dest_len = __strlen_chk(dest, dest_buf_size);
+#include "private/bionic_fortify.h"
 
-  dest += dest_len;
-  dest_buf_size -= dest_len;
+// Runtime implementation of __builtin____strcat_chk (used directly by compiler, not in headers).
+extern "C" char* __strcat_chk(char* __restrict dst, const char* __restrict src,
+                              size_t dst_buf_size) {
+  char* save = dst;
+  size_t dst_len = __strlen_chk(dst, dst_buf_size);
 
-  while ((*dest++ = *src++) != '\0') {
-    dest_buf_size--;
-    if (__predict_false(dest_buf_size == 0)) {
-      __fortify_chk_fail("strcat: prevented write past end of buffer",
-                         BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW);
+  dst += dst_len;
+  dst_buf_size -= dst_len;
+
+  while ((*dst++ = *src++) != '\0') {
+    dst_buf_size--;
+    if (__predict_false(dst_buf_size == 0)) {
+      __fortify_fatal("strcat: prevented write past end of %zu-byte buffer", dst_buf_size);
     }
   }
 

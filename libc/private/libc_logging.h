@@ -36,8 +36,6 @@
 
 __BEGIN_DECLS
 
-#include "libc_events.h"
-
 enum {
   ANDROID_LOG_UNKNOWN = 0,
   ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
@@ -69,20 +67,11 @@ struct abort_msg_t {
   char msg[0];
 };
 
-//
 // Formats a message to the log (priority 'fatal'), then aborts.
-//
+__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* fmt, ...) __printflike(1, 2);
 
-__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* format, ...) __printflike(1, 2);
-
-//
-// Formats a message to the log (priority 'fatal'), but doesn't abort.
-// Used by the malloc implementation to ensure that debuggerd dumps memory
-// around the bad address.
-//
-
-__LIBC_HIDDEN__ void __libc_fatal_no_abort(const char* format, ...)
-    __printflike(1, 2);
+// Formats a message to the log (priority 'fatal'), prefixed by "FORTIFY: ", then aborts.
+__LIBC_HIDDEN__ __noreturn void __fortify_fatal(const char* fmt, ...) __printflike(1, 2);
 
 //
 // Formatting routines for the C library's internal debugging.
@@ -102,15 +91,6 @@ __LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, con
                                               va_list ap);
 
 __LIBC_HIDDEN__ int __libc_write_log(int priority, const char* tag, const char* msg);
-
-//
-// Event logging.
-//
-
-__LIBC_HIDDEN__ void __libc_android_log_event_int(int32_t tag, int value);
-__LIBC_HIDDEN__ void __libc_android_log_event_uid(int32_t tag);
-
-__LIBC_HIDDEN__ __noreturn void __fortify_chk_fail(const char* msg, uint32_t event_tag);
 
 __END_DECLS
 

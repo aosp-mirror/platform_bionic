@@ -29,7 +29,6 @@
 // Prototype: void *memcpy (void *dst, const void *src, size_t count).
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
 ENTRY(__memcpy_chk)
   cmp   x2, x3
@@ -51,10 +50,7 @@ ENTRY_PRIVATE(__memcpy_chk_fail)
 
   adrp  x0, error_string
   add   x0, x0, :lo12:error_string
-  ldr   x1, error_code
-  bl    __fortify_chk_fail
-error_code:
-  .word   BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW
+  bl    __fortify_fatal
 END(__memcpy_chk_fail)
 
   .data
