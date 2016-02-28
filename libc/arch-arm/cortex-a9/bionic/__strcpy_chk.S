@@ -27,7 +27,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
     .syntax unified
     .fpu    neon
@@ -169,13 +168,10 @@ ENTRY_PRIVATE(__strcpy_chk_fail)
     .cfi_rel_offset lr, 4
 
     ldr     r0, error_message
-    ldr     r1, error_code
 1:
     add     r0, pc
-    bl      __fortify_chk_fail
+    bl      __fortify_fatal
 
-error_code:
-    .word   BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW
 error_message:
     .word   error_string-(1b+4)
 END(__strcpy_chk_fail)

@@ -27,7 +27,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
     .syntax unified
 
@@ -201,12 +200,9 @@ ENTRY_PRIVATE(__strcat_chk_failed)
     .cfi_rel_offset r5, 4
 
     ldr     r0, error_message
-    ldr     r1, error_code
 1:
     add     r0, pc
-    bl      __fortify_chk_fail
-error_code:
-    .word   BIONIC_EVENT_STRCAT_BUFFER_OVERFLOW
+    bl      __fortify_fatal
 error_message:
     .word   error_string-(1b+4)
 END(__strcat_chk_failed)

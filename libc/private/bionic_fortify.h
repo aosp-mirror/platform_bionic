@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,45 +26,44 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
-#include <sys/select.h>
 #include "private/libc_logging.h"
 
-extern "C" int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
+#include <poll.h> // For struct pollfd.
+#include <sys/select.h> // For struct fd_set.
+
+//
+// Common helpers.
+//
+
+static inline void __check_fd_set(const char* fn, int fd, size_t set_size) {
   if (__predict_false(fd < 0)) {
-    __fortify_chk_fail("FD_ISSET: file descriptor < 0", 0);
+    __fortify_fatal("%s: file descriptor %d < 0", fn, fd);
   }
   if (__predict_false(fd >= FD_SETSIZE)) {
-    __fortify_chk_fail("FD_ISSET: file descriptor >= FD_SETSIZE", 0);
+    __fortify_fatal("%s: file descriptor %d >= FD_SETSIZE %zu", fn, fd, set_size);
   }
   if (__predict_false(set_size < sizeof(fd_set))) {
-    __fortify_chk_fail("FD_ISSET: set is too small", 0);
+    __fortify_fatal("%s: set size %zu is too small to be an fd_set", fn, set_size);
   }
-  return FD_ISSET(fd, set);
 }
 
-extern "C" void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
-  if (__predict_false(fd < 0)) {
-    __fortify_chk_fail("FD_CLR: file descriptor < 0", 0);
+static inline void __check_pollfd_array(const char* fn, size_t fds_size, nfds_t fd_count) {
+  size_t pollfd_array_length = fds_size / sizeof(pollfd);
+  if (__predict_false(pollfd_array_length < fd_count)) {
+    __fortify_fatal("%s: %zu-element pollfd array too small for %u fds",
+                    fn, pollfd_array_length, fd_count);
   }
-  if (__predict_false(fd >= FD_SETSIZE)) {
-    __fortify_chk_fail("FD_CLR: file descriptor >= FD_SETSIZE", 0);
-  }
-  if (__predict_false(set_size < sizeof(fd_set))) {
-    __fortify_chk_fail("FD_CLR: set is too small", 0);
-  }
-  FD_CLR(fd, set);
 }
 
-extern "C" void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
-  if (__predict_false(fd < 0)) {
-    __fortify_chk_fail("FD_SET: file descriptor < 0", 0);
+static inline void __check_count(const char* fn, const char* identifier, size_t value) {
+  if (__predict_false(value > SSIZE_MAX)) {
+    __fortify_fatal("%s: %s %zu > SSIZE_MAX", fn, identifier, value);
   }
-  if (__predict_false(fd >= FD_SETSIZE)) {
-    __fortify_chk_fail("FD_SET: file descriptor >= FD_SETSIZE", 0);
+}
+
+static inline void __check_buffer_access(const char* fn, const char* action,
+                                         size_t claim, size_t actual) {
+  if (__predict_false(claim > actual)) {
+    __fortify_fatal("%s: prevented %zu-byte %s %zu-byte buffer", fn, claim, action, actual);
   }
-  if (__predict_false(set_size < sizeof(fd_set))) {
-    __fortify_chk_fail("FD_SET: set is too small", 0);
-  }
-  FD_SET(fd, set);
 }

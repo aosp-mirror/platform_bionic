@@ -27,27 +27,14 @@
  */
 
 #undef _FORTIFY_SOURCE
+
 #include <string.h>
-#include <stdlib.h>
-#include "private/libc_logging.h"
 
-/*
- * Runtime implementation of __memcpy_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This memcpy check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" void* __memcpy_chk(void* dest, const void* src,
-                              size_t copy_amount, size_t dest_len) {
-  if (__predict_false(copy_amount > dest_len)) {
-    __fortify_chk_fail("memcpy: prevented write past end of buffer",
-                       BIONIC_EVENT_MEMCPY_BUFFER_OVERFLOW);
-  }
+#include "private/bionic_fortify.h"
 
-  return memcpy(dest, src, copy_amount);
+// Runtime implementation of __memcpy_chk (used directly by compiler, not in headers).
+extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
+  __check_count("memcpy", "count", count);
+  __check_buffer_access("memcpy", "write into", count, dst_len);
+  return memcpy(dst, src, count);
 }
