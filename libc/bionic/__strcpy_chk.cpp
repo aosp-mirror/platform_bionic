@@ -29,27 +29,13 @@
 #undef _FORTIFY_SOURCE
 
 #include <string.h>
-#include <stdlib.h>
-#include "private/libc_logging.h"
 
-/*
- * Runtime implementation of __builtin____strcpy_chk.
- *
- * See
- *   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
- *   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
- * for details.
- *
- * This strcpy check is called if _FORTIFY_SOURCE is defined and
- * greater than 0.
- */
-extern "C" char* __strcpy_chk(char* dest, const char* src, size_t dest_len) {
+#include "private/bionic_fortify.h"
+
+// Runtime implementation of __builtin____strcpy_chk (used directly by compiler, not in headers).
+extern "C" char* __strcpy_chk(char* dst, const char* src, size_t dst_len) {
   // TODO: optimize so we don't scan src twice.
   size_t src_len = strlen(src) + 1;
-  if (__predict_false(src_len > dest_len)) {
-    __fortify_chk_fail("strcpy: prevented write past end of buffer",
-                       BIONIC_EVENT_STRCPY_BUFFER_OVERFLOW);
-  }
-
-  return strcpy(dest, src);
+  __check_buffer_access("strcpy", "write into", src_len, dst_len);
+  return strcpy(dst, src);
 }

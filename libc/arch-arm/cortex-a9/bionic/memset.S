@@ -27,7 +27,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
 /*
  * This code assumes it is running on a processor that supports all arm v7
@@ -47,12 +46,9 @@ ENTRY(__memset_chk)
         .cfi_rel_offset lr, 0
 
         ldr         r0, error_message
-        ldr         r1, error_code
 1:
         add         r0, pc
-        bl          __fortify_chk_fail
-error_code:
-        .word       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW
+        bl          __fortify_fatal
 error_message:
         .word       error_string-(1b+8)
 END(__memset_chk)

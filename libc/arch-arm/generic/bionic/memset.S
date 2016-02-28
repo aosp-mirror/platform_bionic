@@ -27,7 +27,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
         /*
          * Optimized memset() for ARM.
@@ -42,12 +41,9 @@ ENTRY(__memset_chk)
         bls         done
 
         ldr         r0, error_message
-        ldr         r1, error_code
 1:
         add         r0, pc
-        bl          __fortify_chk_fail
-error_code:
-        .word       BIONIC_EVENT_MEMSET_BUFFER_OVERFLOW
+        bl          __fortify_fatal
 error_message:
         .word       error_string-(1b+8)
 
