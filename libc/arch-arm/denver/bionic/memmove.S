@@ -28,7 +28,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <private/libc_events.h>
 
         .text
         .syntax unified
