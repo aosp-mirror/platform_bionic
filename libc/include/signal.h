@@ -64,6 +64,11 @@ typedef int sig_atomic_t;
 #define _NSIG (_KERNEL__NSIG + 1)
 #define NSIG _NSIG
 
+/* The kernel headers define SIG_DFL (0) and SIG_IGN (1) but not SIG_HOLD, since
+ * SIG_HOLD is only used by the deprecated SysV signal API.
+ */
+#define SIG_HOLD ((sighandler_t)(uintptr_t)2)
+
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
@@ -119,6 +124,12 @@ extern int sigpending(sigset_t*) __nonnull((1));
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
 extern int sigsuspend(const sigset_t*) __nonnull((1));
 extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
+
+extern int sighold(int) __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")));
+extern int sigignore(int) __attribute__((deprecated("use sigaction() instead")));
+extern int sigpause(int) __attribute__((deprecated("use sigsuspend() instead")));
+extern int sigrelse(int) __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")));
+extern sighandler_t sigset(int, sighandler_t) __attribute__((deprecated("use sigaction() instead")));
 
 extern int raise(int);
 extern int kill(pid_t, int);
