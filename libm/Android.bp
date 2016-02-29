@@ -437,8 +437,6 @@ cc_library {
                 ],
             },
             local_include_dirs: ["i387"],
-            // Clang has wrong long double sizes for x86.
-            clang: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: "libm.x86.map",
         },
@@ -507,8 +505,6 @@ cc_library {
                     "upstream-freebsd/lib/msun/src/s_truncf.c",
                 ],
             },
-            // Clang has wrong long double sizes for x86.
-            clang: false,
             version_script: "libm.x86_64.map",
         },
     },
