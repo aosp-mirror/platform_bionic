@@ -16,6 +16,24 @@
       "revId": "549e52200b6af3c33cba7ef759ea98b49fa40082",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e32149_c724324d",
+        "filename": "libc/malloc_debug/tests/malloc_debug_config_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-02-29T19:22:57Z",
+      "side": 1,
+      "message": "I could, but I do like to make sure that when I change things here it fails without a corresponding change to the test. It usually makes me read the text again to make sure I really am saying what I want to say. The only downside is that our version of gtest does not indicate what\u0027s different for strings, so when I typo something it is a bit difficult to figure out what\u0027s wrong.",
+      "parentUuid": "4277c50e_c6c59707",
+      "revId": "549e52200b6af3c33cba7ef759ea98b49fa40082",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
