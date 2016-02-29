@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_a4676cf5",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1972,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-02-29T17:20:21Z",
+      "side": 1,
+      "message": "Should this one be replaced as well?",
+      "revId": "0967fc7e59cda0ea2561b0eaa58ed842da7c0eb9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
