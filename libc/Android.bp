@@ -23,38 +23,6 @@ libc_common_src_files = [
     "stdio/stdio_ext.cpp",
     "stdlib/atexit.c",
     "stdlib/exit.c",
-
-    // Fortify implementations of libc functions.
-    "bionic/__FD_chk.cpp",
-    "bionic/__fgets_chk.cpp",
-    "bionic/__fread_chk.cpp",
-    "bionic/__fwrite_chk.cpp",
-    "bionic/__getcwd_chk.cpp",
-    "bionic/__memchr_chk.cpp",
-    "bionic/__memmove_chk.cpp",
-    "bionic/__memrchr_chk.cpp",
-    "bionic/__poll_chk.cpp",
-    "bionic/__pread64_chk.cpp",
-    "bionic/__pread_chk.cpp",
-    "bionic/__pwrite64_chk.cpp",
-    "bionic/__pwrite_chk.cpp",
-    "bionic/__read_chk.cpp",
-    "bionic/__readlink_chk.cpp",
-    "bionic/__readlinkat_chk.cpp",
-    "bionic/__recvfrom_chk.cpp",
-    "bionic/__stpcpy_chk.cpp",
-    "bionic/__stpncpy_chk.cpp",
-    "bionic/__strchr_chk.cpp",
-    "bionic/__strlcat_chk.cpp",
-    "bionic/__strlcpy_chk.cpp",
-    "bionic/__strlen_chk.cpp",
-    "bionic/__strncat_chk.cpp",
-    "bionic/__strncpy_chk.cpp",
-    "bionic/__strrchr_chk.cpp",
-    "bionic/__umask_chk.cpp",
-    "bionic/__vsnprintf_chk.cpp",
-    "bionic/__vsprintf_chk.cpp",
-    "bionic/__write_chk.cpp",
 ]
 
 // Various kinds of cruft.
@@ -102,11 +70,6 @@ cc_defaults {
     include_dirs: ["external/jemalloc/include"],
 
     arch: {
-        // Clang/llvm has incompatible long double (fp128) for x86_64.
-        // https://llvm.org/bugs/show_bug.cgi?id=23897
-        x86_64: {
-            clang: false,
-        },
         // b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
         mips: {
             clang: false,
@@ -148,7 +111,7 @@ cc_library_static {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
         },
         x86: {
-            srcs: ["arch-x86/bionic/__set_tls.c"],
+            srcs: ["arch-x86/bionic/__set_tls.cpp"],
         },
         x86_64: {
             srcs: ["arch-x86_64/bionic/__set_tls.c"],
@@ -385,6 +348,7 @@ cc_library_static {
     cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
+        "-Wno-unused-parameter",
         "-DPOSIX_MISTAKE",
         "-include netbsd-compat.h",
     ],
@@ -1114,6 +1078,7 @@ cc_library_static {
                 "arch-mips/bionic/bzero.S",
                 "arch-mips/bionic/cacheflush.cpp",
                 "arch-mips/bionic/_exit_with_stack_teardown.S",
+                "arch-mips/bionic/libgcc_compat.c",
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
@@ -1317,6 +1282,7 @@ cc_library_static {
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
         "bionic/flockfile.cpp",
+        "bionic/fortify.cpp",
         "bionic/fpclassify.cpp",
         "bionic/fsetxattr.cpp",
         "bionic/ftruncate.cpp",
