@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ea9d1e_e05677a8",
+        "filename": "libc/arch-arm/cortex-a15/bionic/memcpy_common.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-01T22:49:43Z",
+      "side": 0,
+      "message": "falling through is less code, but -- assuming you\u0027re expecting to see __memcpy_chk in the backtrace -- the pattern that was already in use for memset (and some of the memcpys) does give us a better backtrace.\n\npersonally i don\u0027t think i\u0027d be too bothered by backtraces that appeared to show my code jumping straight to __memcpy_chk_fail, so maybe we want to save the branch in the non-failure case?\n\nfor now i\u0027m just going to make them all consistent and we can worry about that later. it\u0027s certainly easier to go in the direction of removal :-)",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 36
+      },
+      "revId": "c199690b5ffda0f4df50d1121f7ab577af1fe468",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
