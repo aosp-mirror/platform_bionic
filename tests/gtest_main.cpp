@@ -46,6 +46,12 @@
 
 #endif
 
+static std::string g_executable_name;
+
+const std::string& get_executable_name() {
+  return g_executable_name;
+}
+
 namespace testing {
 namespace internal {
 
@@ -1113,6 +1119,7 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
 }
 
 int main(int argc, char** argv) {
+  g_executable_name = argv[0];
   std::vector<char*> arg_list;
   for (int i = 0; i < argc; ++i) {
     arg_list.push_back(argv[i]);
