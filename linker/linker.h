@@ -312,6 +312,7 @@ struct soinfo {
   }
 
   bool is_linked() const;
+  bool is_linker() const;
   bool is_main_executable() const;
 
   void set_linked();
