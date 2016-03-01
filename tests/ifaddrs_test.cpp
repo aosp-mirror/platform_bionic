@@ -107,9 +107,35 @@ TEST(ifaddrs, getifaddrs_interfaces) {
                                   sys_class_net.begin()));
 }
 
+static void CheckAddressIsInSet(const std::string& if_name, bool unicast,
+                                const std::set<in_addr_t>& addrs) {
+  ifreq ifr;
+  memset(&ifr, 0, sizeof(ifr));
+  ifr.ifr_addr.sa_family = AF_INET;
+  if_name.copy(ifr.ifr_name, IFNAMSIZ - 1);
+
+  int fd = socket(AF_INET, SOCK_DGRAM, 0);
+  ASSERT_TRUE(fd != -1);
+
+  int request = SIOCGIFADDR;
+  if (!unicast) {
+    // For non-unicast, the specific ioctl to use depends on whether the IFF_BROADCAST flag is set.
+    ASSERT_EQ(0, ioctl(fd, SIOCGIFFLAGS, &ifr)) << if_name << ' ' << strerror(errno);
+    request = ((ifr.ifr_flags & IFF_BROADCAST) != 0) ? SIOCGIFBRDADDR : SIOCGIFDSTADDR;
+  }
+
+  ASSERT_EQ(0, ioctl(fd, request, &ifr)) << if_name << ' ' << strerror(errno);
+  close(fd);
+
+  sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
+  in_addr_t addr = sock->sin_addr.s_addr;
+
+  EXPECT_TRUE(addrs.find(addr) != addrs.end()) << if_name << ' ' << std::hex << ntohl(addr);
+}
+
 TEST(ifaddrs, getifaddrs_INET) {
-  std::multimap<std::string, in_addr_t> inetaddrs;
-  std::multimap<std::string, in_addr_t> broadinetaddrs;
+  std::map<std::string, std::set<in_addr_t>> inet_addrs;
+  std::map<std::string, std::set<in_addr_t>> broad_addrs;
 
   // Collect the IPv4 addresses for each interface.
   ifaddrs* addrs;
@@ -117,47 +143,19 @@ TEST(ifaddrs, getifaddrs_INET) {
   for (ifaddrs* addr = addrs; addr != nullptr; addr = addr->ifa_next) {
     if (addr->ifa_name && addr->ifa_addr && addr->ifa_addr->sa_family == AF_INET) {
       auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_addr);
-      inetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
+      inet_addrs[addr->ifa_name].insert(sock->sin_addr.s_addr);
     }
     if (addr->ifa_name && addr->ifa_broadaddr && addr->ifa_broadaddr->sa_family == AF_INET) {
       auto sock = reinterpret_cast<sockaddr_in*>(addr->ifa_broadaddr);
-      broadinetaddrs.emplace(std::string(addr->ifa_name), sock->sin_addr.s_addr);
+      broad_addrs[addr->ifa_name].insert(sock->sin_addr.s_addr);
     }
   }
   freeifaddrs(addrs);
 
-  // Check that the addresses returned by the SIOCGIFADDR and SIOCGIFBRDADDR ioctls
+  // Check that the addresses returned by the SIOCGIFADDR and SIOCGIFBRDADDR/SIOCGIFDSTADDR ioctls
   // are in our collections.
-  auto check_inet_agrees = [&](std::multimap<std::string, in_addr_t> addrs, int request)->void {
-    for (auto it = addrs.begin(); it != addrs.end(); ) {
-      std::string if_name(it->first);
-
-      ifreq ifr;
-      memset(&ifr, 0, sizeof(ifr));
-      ifr.ifr_addr.sa_family = AF_INET;
-      if_name.copy(ifr.ifr_name, IFNAMSIZ - 1);
-
-      int fd = socket(AF_INET, SOCK_DGRAM, 0);
-      ASSERT_TRUE(fd != -1);
-      ASSERT_EQ(0, ioctl(fd, request, &ifr)) << if_name << ' ' << strerror(errno);
-      close(fd);
-
-      sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
-      in_addr_t addr = sock->sin_addr.s_addr;
-
-      bool found = false;
-      for (auto ub = addrs.upper_bound(it->first); it != ub; ++it) {
-        if (it->second == addr) {
-          found = true;
-          break;
-        }
-      }
-      EXPECT_TRUE(found) << if_name;
-    }
-  };
-
-  check_inet_agrees(inetaddrs, SIOCGIFADDR);
-  check_inet_agrees(broadinetaddrs, SIOCGIFBRDADDR);
+  for (const auto& it : inet_addrs) CheckAddressIsInSet(it.first, true, it.second);
+  for (const auto& it : broad_addrs) CheckAddressIsInSet(it.first, false, it.second);
 }
 
 static void print_sockaddr_ll(const char* what, const sockaddr* p) {
@@ -183,12 +181,42 @@ static void print_sockaddr_inet(const char* what, const sockaddr* addr) {
   printf("\t\t%s: <%s>\n", what, host);
 }
 
-static const char* family_to_name(int family) {
+static const char* FamilyToName(int family) {
   if (family == AF_INET) return "AF_INET";
   if (family == AF_INET6) return "AF_INET6";
   if (family == AF_PACKET) return "AF_PACKET";
   if (family == AF_UNSPEC) return "AF_UNSPEC";
   return "?";
+}
+
+static std::string FlagsToString(short flags) {
+  std::string result;
+  if ((flags & IFF_UP) != 0) result += " UP";
+  if ((flags & IFF_BROADCAST) != 0) result += " BROADCAST";
+  if ((flags & IFF_DEBUG) != 0) result += " DEBUG";
+  if ((flags & IFF_LOOPBACK) != 0) result += " LOOPBACK";
+  if ((flags & IFF_POINTOPOINT) != 0) result += " POINTOPOINT";
+  if ((flags & IFF_NOTRAILERS) != 0) result += " NOTRAILERS";
+  if ((flags & IFF_RUNNING) != 0) result += " RUNNING";
+  if ((flags & IFF_NOARP) != 0) result += " NOARP";
+  if ((flags & IFF_PROMISC) != 0) result += " PROMISC";
+  if ((flags & IFF_ALLMULTI) != 0) result += " ALLMULTI";
+  if ((flags & IFF_MASTER) != 0) result += " MASTER";
+  if ((flags & IFF_SLAVE) != 0) result += " SLAVE";
+  if ((flags & IFF_MULTICAST) != 0) result += " MULTICAST";
+  if ((flags & IFF_PORTSEL) != 0) result += " PORTSEL";
+  if ((flags & IFF_AUTOMEDIA) != 0) result += " AUTOMEDIA";
+  if ((flags & IFF_DYNAMIC) != 0) result += " DYNAMIC";
+#if defined(IFF_LOWER_UP)
+  if ((flags & IFF_LOWER_UP) != 0) result += " LOWER_UP";
+#endif
+#if defined(IFF_DORMANT)
+  if ((flags & IFF_DORMANT) != 0) result += " DORMANT";
+#endif
+#if defined(IFF_ECHO)
+  if ((flags & IFF_ECHO) != 0) result += " ECHO";
+#endif
+  return result;
 }
 
 // Not really a test, but a useful debugging tool.
@@ -201,8 +229,9 @@ TEST(ifaddrs, dump) {
                                  ifa->ifa_broadaddr ? ifa->ifa_broadaddr->sa_family : AF_UNSPEC;
 
     printf("\t%s\n"
-           "\t\t%s (%d) flags=%#x\n",
-           ifa->ifa_name, family_to_name(family), family, ifa->ifa_flags);
+           "\t\t%s (%d) flags=%#x%s\n",
+           ifa->ifa_name, FamilyToName(family), family,
+           ifa->ifa_flags, FlagsToString(ifa->ifa_flags).c_str());
 
     if (family == AF_PACKET) {
       if (ifa->ifa_addr) print_sockaddr_ll("hwaddr", ifa->ifa_addr);
