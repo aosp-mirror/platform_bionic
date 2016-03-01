@@ -93,6 +93,9 @@ struct android_namespace_t {
     default_library_paths_ = library_paths;
   }
 
+  const std::vector<std::string>& get_permitted_paths() const {
+    return permitted_paths_;
+  }
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
     permitted_paths_ = permitted_paths;
   }
@@ -1651,8 +1654,23 @@ static bool load_library(android_namespace_t* ns,
 
   if (!ns->is_accessible(realpath)) {
     // do not load libraries if they are not accessible for the specified namespace.
-    DL_ERR("library \"%s\" is not accessible for the namespace \"%s\"",
-           name, ns->get_name());
+    const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
+                                        "(unknown)" :
+                                        task->get_needed_by()->get_realpath();
+
+    DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
+           name, needed_or_dlopened_by, ns->get_name());
+
+    PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+          " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+          " permitted_paths=\"%s\"]",
+          name, realpath.c_str(),
+          needed_or_dlopened_by,
+          ns->get_name(),
+          android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+          android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+          android::base::Join(ns->get_permitted_paths(), ':').c_str());
+
     return false;
   }
 

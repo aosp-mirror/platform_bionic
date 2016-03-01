@@ -119,4 +119,6 @@ static inline void AssertChildExited(int pid, int expected_exit_status) {
   ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
 }
 
+const std::string& get_executable_name();
+
 #endif
