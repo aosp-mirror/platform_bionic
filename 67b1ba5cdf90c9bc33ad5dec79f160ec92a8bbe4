@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62be89e4_fc287c63",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-01T20:07:22Z",
+      "side": 1,
+      "message": "Did you mean to leave this in?",
+      "range": {
+        "startLine": 565,
+        "startChar": 0,
+        "endLine": 565,
+        "endChar": 30
+      },
+      "revId": "67b1ba5cdf90c9bc33ad5dec79f160ec92a8bbe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
