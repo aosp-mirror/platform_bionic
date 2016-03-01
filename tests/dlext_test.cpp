@@ -799,7 +799,9 @@ TEST(dlext, ns_isolated) {
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" is not accessible for the namespace \"private_isolated1\"", dlerror());
+  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" needed"
+            " or dlopened by \"" + get_executable_name() +  "\" is not accessible"
+            " for the namespace \"private_isolated1\"", dlerror());
 
   extinfo.library_namespace = ns_isolated2;
 
@@ -899,7 +901,9 @@ TEST(dlext, ns_shared) {
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" is not accessible for the namespace \"private_isolated_shared\"", dlerror());
+  ASSERT_EQ("dlopen failed: library \"" + lib_private_external_path + "\" needed"
+            " or dlopened by \"" + get_executable_name() + "\" is not accessible"
+            " for the namespace \"private_isolated_shared\"", dlerror());
 
   // load libnstest_root.so to shared namespace in order to check that everything is different
   // except shared libnstest_dlopened.so
