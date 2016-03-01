@@ -16,6 +16,24 @@
       "revId": "0967fc7e59cda0ea2561b0eaa58ed842da7c0eb9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a26ec178_d519ffbd",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1972,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-01T01:07:38Z",
+      "side": 1,
+      "message": "imaipi writes:\n\nNo, that line Dimitry mentioned is fine, the code immediately after it replaces white space with zeros, which is introducing the problem. Sorry for not replying directly to the comment, this doesn\u0027t seem to work from the phone.",
+      "parentUuid": "a2e32149_a4676cf5",
+      "revId": "0967fc7e59cda0ea2561b0eaa58ed842da7c0eb9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
