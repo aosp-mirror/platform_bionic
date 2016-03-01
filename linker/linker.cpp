@@ -53,6 +53,7 @@
 #include "linker_block_allocator.h"
 #include "linker_gdb_support.h"
 #include "linker_debug.h"
+#include "linker_dlwarning.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
@@ -1642,6 +1643,7 @@ static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unu
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
       DL_WARN("'%s' library has invalid DT_NEEDED entry '%s'", sopath, dt_needed);
+      add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
     }
 
     return bname;
@@ -1738,12 +1740,12 @@ static bool load_library(android_namespace_t* ns,
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
+        const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
+                                                      needed_or_dlopened_by->get_realpath();
         DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
                 " - the access is temporarily granted as a workaround for http://b/26394120",
-                name, realpath.c_str(),
-                needed_or_dlopened_by == nullptr ? "(unknown)" :
-                                         needed_or_dlopened_by->get_realpath(),
-                ns->get_name());
+                name, realpath.c_str(), sopath, ns->get_name());
+        add_dlwarning(sopath, "unauthorized access to",  name);
       }
     } else {
       // do not load libraries if they are not accessible for the specified namespace.
@@ -3744,6 +3746,7 @@ bool soinfo::prelink_image() {
     soname_ = basename(realpath_.c_str());
     DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
         get_realpath(), soname_);
+    add_dlwarning(get_realpath(), "missing DT_SONAME");
   }
   return true;
 }
@@ -3778,6 +3781,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     // phdr_table_protect_segments() after all of them are applied.
     DL_WARN("%s has text relocations. This is wasting memory and prevents "
             "security hardening. Please fix.", get_realpath());
+    add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s",
              get_realpath(), strerror(errno));
