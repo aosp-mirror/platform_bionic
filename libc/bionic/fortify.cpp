@@ -145,6 +145,14 @@ void* __memrchr_chk(const void* s, int c, size_t n, size_t actual_size) {
   return memrchr(s, c, n);
 }
 
+// memset is performance-critical enough that we have assembler __memset_chk implementations.
+// This function is used to give better diagnostics than we can easily do from assembler.
+extern "C" void* __memset_chk_fail(void* /*dst*/, int /*byte*/, size_t count, size_t dst_len) {
+  __check_count("memset", "count", count);
+  __check_buffer_access("memset", "write into", count, dst_len);
+  abort(); // One of the above is supposed to have failed, otherwise we shouldn't have been called.
+}
+
 int __poll_chk(pollfd* fds, nfds_t fd_count, int timeout, size_t fds_size) {
   __check_pollfd_array("poll", fds_size, fd_count);
   return poll(fds, fd_count, timeout);

@@ -40,13 +40,7 @@ ENTRY(__memset_chk)
         cmp         r2, r3
         bls         done
 
-        ldr         r0, error_message
-1:
-        add         r0, pc
-        bl          __fortify_fatal
-error_message:
-        .word       error_string-(1b+8)
-
+        bl          __memset_chk_fail
 END(__memset_chk)
 
 ENTRY(bzero)
@@ -123,7 +117,3 @@ ENTRY(memset)
         strbcs      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, pc}
 END(memset)
-
-        .data
-error_string:
-        .string     "memset: prevented write past end of buffer"
