@@ -22,6 +22,29 @@
       "revId": "cffe4d33518ddfbe3e0e5b7b87137955b5dcfc53",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42034591_8c55eb9b",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T03:36:52Z",
+      "side": 1,
+      "message": "Nit: we probably don\u0027t need to set ifa_dstaddr on AF_PACKET addresses. Does that make sense? Maybe qualify it?\n\n    if (ifa.ifa_addr \u003d\u003d nullptr || family \u003d\u003d AF_PACKET) {\n\nBut \"garbage in, garbage out\" is fine here too.",
+      "range": {
+        "startLine": 73,
+        "startChar": 21,
+        "endLine": 73,
+        "endChar": 31
+      },
+      "revId": "cffe4d33518ddfbe3e0e5b7b87137955b5dcfc53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
