@@ -273,8 +273,8 @@ size_t linker_get_error_buffer_size() {
 }
 
 static void notify_gdb_of_load(soinfo* info) {
-  if (info->is_main_executable()) {
-    // GDB already knows about the main executable
+  if (info->is_linker() || info->is_main_executable()) {
+    // gdb already knows about the linker and the main executable.
     return;
   }
 
@@ -285,15 +285,13 @@ static void notify_gdb_of_load(soinfo* info) {
   map->l_name = const_cast<char*>(info->get_realpath());
   map->l_ld = info->dynamic;
 
+  CHECK(map->l_name != nullptr);
+  CHECK(map->l_name[0] != '\0');
+
   notify_gdb_of_load(map);
 }
 
 static void notify_gdb_of_unload(soinfo* info) {
-  if (info->is_main_executable()) {
-    // GDB already knows about the main executable
-    return;
-  }
-
   notify_gdb_of_unload(&(info->link_map_head));
 }
 
@@ -3283,6 +3281,10 @@ bool soinfo::is_main_executable() const {
   return (flags_ & FLAG_EXE) != 0;
 }
 
+bool soinfo::is_linker() const {
+  return (flags_ & FLAG_LINKER) != 0;
+}
+
 void soinfo::set_linked() {
   flags_ |= FLAG_LINKED;
 }
@@ -4048,10 +4050,12 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   si->set_main_executable();
   link_map* map = &(si->link_map_head);
 
+  // Register the main executable and the linker upfront to have
+  // gdb aware of them before loading the rest of the dependency
+  // tree.
   map->l_addr = 0;
   map->l_name = args.argv[0];
   insert_link_map_into_debug_map(map);
-
   init_linker_info_for_gdb(linker_base);
 
   // Extract information passed from the kernel.
