@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "a26ec178_fa6187e0",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-02T03:59:10Z",
+      "side": 1,
+      "message": "ah, i did the new \"sudo ip\" on top of the old one. yes, this succeeds for me too, and shows that glibc 2.19 at least behaves the same as this code. i\u0027ll add a comment.\n\n(we could potentially remove the union [though we\u0027d have to do that before N ships!]. but then i worry about glibc code that assumes they overlap and has been lazy and accesses the same field regardless of whether IFF_POINTOPOINT or IFF_BROADCAST is set. i guess it comes down to which we think we\u0027re more likely to see: sloppy code or interfaces with both broadcast and destination addresses...)",
+      "parentUuid": "8209bdb1_5c89dd4f",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2e65528_9b8877e0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
