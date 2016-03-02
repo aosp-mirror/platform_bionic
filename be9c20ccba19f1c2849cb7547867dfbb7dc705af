@@ -16,6 +16,24 @@
       "revId": "be9c20ccba19f1c2849cb7547867dfbb7dc705af",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_f23c4a7a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3817,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-02T19:11:14Z",
+      "side": 1,
+      "message": "moved this check into notify_gdb_of_load",
+      "parentUuid": "e2b0b90b_4c68f4c4",
+      "revId": "be9c20ccba19f1c2849cb7547867dfbb7dc705af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
