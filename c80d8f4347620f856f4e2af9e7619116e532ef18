@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "8209bdb1_5c89dd4f",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T03:36:52Z",
+      "side": 1,
+      "message": "My workstation is able to do (see below), but I agree it\u0027s a corner case and I think what you have is fine. \n\nshell 1 (as before):\n\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\nsudo python\n\nimport struct\nimport fcntl\n\nIFF_TUN \u003d 1\nIFF_NO_PI \u003d 0x1000\nTUNSETIFF \u003d 0x400454ca\n\nf \u003d open(\"/dev/net/tun\", \"r+b\")\nifr \u003d struct.pack(\"16sH\", \"tun0\", IFF_TUN | IFF_NO_PI)\nifr +\u003d \"\\x00\" * (40 - len(ifr))\nfcntl.ioctl(f, TUNSETIFF, ifr)\n\u0027tun0\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x01\\x10\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\u0027\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\nshell 2:\n\n$ sudo ip -4 addr add dev tun0 10.0.0.1 peer 192.0.2.1 brd 10.255.255.255\n$ ip -4 a l dev tun0\n5: tun0: \u003cPOINTOPOINT,MULTICAST,NOARP\u003e mtu 1500 qdisc noop state DOWN group default qlen 500\n    inet 10.0.0.1 peer 192.0.2.1/32 brd 10.255.255.255 scope global tun0\n       valid_lft forever preferred_lft forever",
+      "parentUuid": "02594de9_8ec61c11",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2e65528_9b8877e0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
