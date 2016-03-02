@@ -21,7 +21,7 @@ LIBC_N {
     dlvsym;
 } LIBC;
 
-LIBC_PRIVATE {
+LIBC_PLATFORM {
   global:
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
