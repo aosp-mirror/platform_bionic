@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02feade5_37153f83",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-02T03:04:55Z",
+      "side": 1,
+      "message": "actually, despite my dislike of untested speculative code, this seems less bad than any comment i managed to come up with...",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 76
+      },
+      "revId": "cffe4d33518ddfbe3e0e5b7b87137955b5dcfc53",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
