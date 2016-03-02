@@ -68,24 +68,52 @@ struct ifaddrs_storage {
   }
 
   void SetAddress(int family, const void* data, size_t byteCount) {
+    // The kernel currently uses the order IFA_ADDRESS, IFA_LOCAL, IFA_BROADCAST
+    // in inet_fill_ifaddr, but let's not assume that will always be true...
+    if (ifa.ifa_addr == nullptr) {
+      // This is an IFA_ADDRESS and haven't seen an IFA_LOCAL yet, so assume this is the
+      // local address. SetLocalAddress will fix things if we later see an IFA_LOCAL.
       ifa.ifa_addr = CopyAddress(family, data, byteCount, &addr);
+    } else {
+      // We already saw an IFA_LOCAL, which implies this is a destination address.
+      ifa.ifa_dstaddr = CopyAddress(family, data, byteCount, &ifa_ifu);
+    }
   }
 
   void SetBroadcastAddress(int family, const void* data, size_t byteCount) {
-      ifa.ifa_dstaddr = CopyAddress(family, data, byteCount, &ifa_ifu);
+    // ifa_broadaddr and ifa_dstaddr overlap in a union. Unfortunately, it's possible
+    // to have an interface with both. Keeping the last thing the kernel gives us seems
+    // to be glibc 2.19's behavior too, so our choice is being source compatible with
+    // badly-written code that assumes ifa_broadaddr and ifa_dstaddr are interchangeable
+    // or supporting interfaces with both addresses configured. My assumption is that
+    // bad code is more common than weird network interfaces...
+    ifa.ifa_broadaddr = CopyAddress(family, data, byteCount, &ifa_ifu);
+  }
+
+  void SetLocalAddress(int family, const void* data, size_t byteCount) {
+    // The kernel source says "for point-to-point IFA_ADDRESS is DESTINATION address,
+    // local address is supplied in IFA_LOCAL attribute".
+    //   -- http://lxr.free-electrons.com/source/include/uapi/linux/if_addr.h#L17
+
+    // So copy any existing IFA_ADDRESS into ifa_dstaddr...
+    if (ifa.ifa_addr != nullptr) {
+      ifa.ifa_dstaddr = reinterpret_cast<sockaddr*>(memcpy(&ifa_ifu, &addr, sizeof(addr)));
+    }
+    // ...and then put this IFA_LOCAL into ifa_addr.
+    ifa.ifa_addr = CopyAddress(family, data, byteCount, &addr);
   }
 
   // Netlink gives us the prefix length as a bit count. We need to turn
   // that into a BSD-compatible netmask represented by a sockaddr*.
   void SetNetmask(int family, size_t prefix_length) {
-      // ...and work out the netmask from the prefix length.
-      netmask.ss_family = family;
-      uint8_t* dst = SockaddrBytes(family, &netmask);
-      memset(dst, 0xff, prefix_length / 8);
-      if ((prefix_length % 8) != 0) {
-        dst[prefix_length/8] = (0xff << (8 - (prefix_length % 8)));
-      }
-      ifa.ifa_netmask = reinterpret_cast<sockaddr*>(&netmask);
+    // ...and work out the netmask from the prefix length.
+    netmask.ss_family = family;
+    uint8_t* dst = SockaddrBytes(family, &netmask);
+    memset(dst, 0xff, prefix_length / 8);
+    if ((prefix_length % 8) != 0) {
+      dst[prefix_length/8] = (0xff << (8 - (prefix_length % 8)));
+    }
+    ifa.ifa_netmask = reinterpret_cast<sockaddr*>(&netmask);
   }
 
   void SetPacketAttributes(int ifindex, unsigned short hatype, unsigned char halen) {
@@ -97,19 +125,19 @@ struct ifaddrs_storage {
 
  private:
   sockaddr* CopyAddress(int family, const void* data, size_t byteCount, sockaddr_storage* ss) {
-      // Netlink gives us the address family in the header, and the
-      // sockaddr_in or sockaddr_in6 bytes as the payload. We need to
-      // stitch the two bits together into the sockaddr that's part of
-      // our portable interface.
-      ss->ss_family = family;
-      memcpy(SockaddrBytes(family, ss), data, byteCount);
+    // Netlink gives us the address family in the header, and the
+    // sockaddr_in or sockaddr_in6 bytes as the payload. We need to
+    // stitch the two bits together into the sockaddr that's part of
+    // our portable interface.
+    ss->ss_family = family;
+    memcpy(SockaddrBytes(family, ss), data, byteCount);
 
-      // For IPv6 we might also have to set the scope id.
-      if (family == AF_INET6 && (IN6_IS_ADDR_LINKLOCAL(data) || IN6_IS_ADDR_MC_LINKLOCAL(data))) {
-          reinterpret_cast<sockaddr_in6*>(ss)->sin6_scope_id = interface_index;
-      }
+    // For IPv6 we might also have to set the scope id.
+    if (family == AF_INET6 && (IN6_IS_ADDR_LINKLOCAL(data) || IN6_IS_ADDR_MC_LINKLOCAL(data))) {
+      reinterpret_cast<sockaddr_in6*>(ss)->sin6_scope_id = interface_index;
+    }
 
-      return reinterpret_cast<sockaddr*>(ss);
+    return reinterpret_cast<sockaddr*>(ss);
   }
 
   // Returns a pointer to the first byte in the address data (which is
@@ -192,8 +220,12 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
           new_addr->SetNetmask(msg->ifa_family, msg->ifa_prefixlen);
         }
       } else if (rta->rta_type == IFA_BROADCAST) {
-        if (msg->ifa_family == AF_INET || msg->ifa_family == AF_INET6) {
+        if (msg->ifa_family == AF_INET) {
           new_addr->SetBroadcastAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
+        }
+      } else if (rta->rta_type == IFA_LOCAL) {
+        if (msg->ifa_family == AF_INET || msg->ifa_family == AF_INET6) {
+          new_addr->SetLocalAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
         }
       }
       rta = RTA_NEXT(rta, rta_len);
