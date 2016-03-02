@@ -70,4 +70,4 @@ struct android_namespace_t* android_create_namespace(const char* name __unused,
   return 0;
 }
 
-const char* android_dlwarning(void) { return 0; }
+void android_dlwarning(void* obj, void (*f)(void*, const char*)) { f(obj, 0); }

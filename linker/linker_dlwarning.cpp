@@ -21,7 +21,6 @@
 #include <string>
 
 static std::string current_msg;
-static std::string old_msg;
 
 void add_dlwarning(const char* sopath, const char* message, const char* value) {
   if (!current_msg.empty()) {
@@ -38,13 +37,12 @@ void add_dlwarning(const char* sopath, const char* message, const char* value) {
 
 // Resets the current one (like dlerror but instead of
 // being thread-local it is process-local).
-const char* get_dlwarning() {
+void get_dlwarning(void* obj, void (*f)(void*, const char*)) {
   if (current_msg.empty()) {
-    return nullptr;
+    f(obj, nullptr);
+  } else {
+    std::string msg = current_msg;
+    current_msg.clear();
+    f(obj, msg.c_str());
   }
-
-  old_msg = current_msg;
-  current_msg.clear();
-
-  return old_msg.c_str();
 }
