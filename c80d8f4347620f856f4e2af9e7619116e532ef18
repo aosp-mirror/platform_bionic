@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "c2e65528_7b25d3a1",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T04:10:54Z",
+      "side": 1,
+      "message": "I think it makes more sense to accommodate sloppy callers and be consistent with glibc instead of attempting to accommodate dubious network configurations that netd and our various RILs might well never create.",
+      "parentUuid": "a26ec178_fa6187e0",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2e65528_9b8877e0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
