@@ -140,6 +140,14 @@ extern "C" void* __memmove_chk(void* dst, const void* src, size_t len, size_t ds
   return memmove(dst, src, len);
 }
 
+// memcpy is performance-critical enough that we have assembler __memcpy_chk implementations.
+// This function is used to give better diagnostics than we can easily do from assembler.
+extern "C" void* __memcpy_chk_fail(void* /*dst*/, const void* /*src*/, size_t count, size_t dst_len) {
+  __check_count("memcpy", "count", count);
+  __check_buffer_access("memcpy", "write into", count, dst_len);
+  abort(); // One of the above is supposed to have failed, otherwise we shouldn't have been called.
+}
+
 void* __memrchr_chk(const void* s, int c, size_t n, size_t actual_size) {
   __check_buffer_access("memrchr", "read from", n, actual_size);
   return memrchr(s, c, n);

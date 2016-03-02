@@ -60,10 +60,14 @@
         .fpu    neon
 
 ENTRY(__memcpy_chk)
-        cmp     r2, r3
-        bhi     .L_memcpy_chk_fail
+        cmp r2, r3
+        bls memcpy
 
-        // Fall through to memcpy...
+        // Preserve lr for backtrace.
+        push        {lr}
+        .cfi_def_cfa_offset 4
+        .cfi_rel_offset lr, 0
+        bl          __memcpy_chk_fail
 END(__memcpy_chk)
 
 // Prototype: void *memcpy (void *dst, const void *src, size_t count).
@@ -75,25 +79,4 @@ ENTRY(memcpy)
         .cfi_rel_offset lr, 4
 
 #include MEMCPY_BASE
-
-        // Undo the cfi instructions from above.
-        .cfi_def_cfa_offset 0
-        .cfi_restore r0
-        .cfi_restore lr
-.L_memcpy_chk_fail:
-        // Preserve lr for backtrace.
-        push    {lr}
-        .cfi_adjust_cfa_offset 4
-        .cfi_rel_offset lr, 0
-
-        ldr     r0, error_message
-1:
-        add     r0, pc
-        bl      __fortify_fatal
-error_message:
-        .word   error_string-(1b+8)
 END(memcpy)
-
-        .data
-error_string:
-        .string "memcpy: prevented write past end of buffer"
