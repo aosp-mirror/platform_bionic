@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22fe51bd_8b56f1fc",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T02:27:07Z",
+      "side": 1,
+      "message": "What if IFA_LOCAL appears before IFA_ADDRESS in the netlink message? Do we set ifa_addr when we see IFA_LOCAL, and then overwrite it when we see ifa_address? If so, then we should either a) not do that or b) document that are relying on the order in which the kernel puts these attributes in the message.",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 30
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42034591_4c3ff36b",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T02:27:07Z",
+      "side": 1,
+      "message": "Nit: it\u0027s possible to have an interface that has local, peer, *and* broadcast addresses, e.g., by running this:\n\nsudo ip addr add dev tun0 10.0.0.1/32 peer 192.0.2.1 brd 10.255.255.255\n\nGiven that this seems a fairly unlikely / meaningless configuration, this CL\u0027s \"overwrite ifu_dstaddr with whatever attribute appears last in the netlink messsage\" behaviour is fine by me, but we might want to add a comment to that effect.\n\nIf we were so inclined, we could also do something else, such as always prefer the peer address over the broadcast address, but I\u0027m not sure if it\u0027s worth complicating the code for this.",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2e65528_9b8877e0",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-02T02:27:07Z",
+      "side": 1,
+      "message": "Nit: suggest:\n\n    else if (rta-\u003erta_type \u003d\u003d IFA_BROADCAST \u0026\u0026 msg-\u003eifa_family \u003d\u003d AF_INET) {",
+      "range": {
+        "startLine": 207,
+        "startChar": 49,
+        "endLine": 208,
+        "endChar": 41
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
