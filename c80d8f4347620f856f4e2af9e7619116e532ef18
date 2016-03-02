@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c26bb568_4c29fdca",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-02T02:45:27Z",
+      "side": 1,
+      "message": "yeah, i\u0027m relying on no-one reordering the code in the kernel. we could add the condition here, but since we can\u0027t test it without a modified kernel, i think i\u0027ll just add the comment.",
+      "parentUuid": "22fe51bd_8b56f1fc",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 30
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "42034591_4c3ff36b",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "02594de9_8ec61c11",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-02T02:45:27Z",
+      "side": 1,
+      "message": "i don\u0027t think it is. at least for me, the kernel says \"fuck off\" if i try to do that. well, EEXIST.\n\n(which makes sense since there\u0027s no way to represent this configuration.)",
+      "parentUuid": "42034591_4c3ff36b",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 35
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2e65528_9b8877e0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-03-02T02:27:07Z",
       "side": 1,
       "message": "Nit: suggest:\n\n    else if (rta-\u003erta_type \u003d\u003d IFA_BROADCAST \u0026\u0026 msg-\u003eifa_family \u003d\u003d AF_INET) {",
+      "range": {
+        "startLine": 207,
+        "startChar": 49,
+        "endLine": 208,
+        "endChar": 41
+      },
+      "revId": "c80d8f4347620f856f4e2af9e7619116e532ef18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_f11ac7b3",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-02T02:45:27Z",
+      "side": 1,
+      "message": "yeah, i was tempted but since the other two can\u0027t fit on their lines, i wanted to stay consistent with them.\n\nif only we had _one_ space indents...",
+      "parentUuid": "c2e65528_9b8877e0",
       "range": {
         "startLine": 207,
         "startChar": 49,
