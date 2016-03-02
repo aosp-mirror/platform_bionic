@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2b0b90b_4c68f4c4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3817,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-02T00:02:10Z",
+      "side": 1,
+      "message": "maybe I should just remove the \"exceptional\" status of the linker and main executable... This fixed the problem with empty link_map, I will take another look at this before submitting.",
+      "revId": "be9c20ccba19f1c2849cb7547867dfbb7dc705af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
