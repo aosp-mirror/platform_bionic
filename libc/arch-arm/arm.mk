@@ -10,7 +10,6 @@ libc_bionic_src_files_arm += \
 
 libc_bionic_src_files_exclude_arm += \
     bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
 
 libc_openbsd_src_files_exclude_arm += \
     upstream-openbsd/lib/libc/string/strcpy.c \

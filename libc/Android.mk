@@ -232,7 +232,6 @@ libc_bionic_src_files += bionic/setjmp_cookie.cpp
 
 libc_bionic_src_files += \
     bionic/__memcpy_chk.cpp \
-    bionic/__memset_chk.cpp \
     bionic/__strcat_chk.cpp \
     bionic/__strcpy_chk.cpp \
     bionic/strchr.cpp \
