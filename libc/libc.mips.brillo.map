@@ -1257,7 +1257,9 @@ LIBC_N {
 
 LIBC_O {
   global:
+    getdomainname;
     pthread_getname_np;
+    setdomainname;
 } LIBC_N;
 
 LIBC_PRIVATE {
