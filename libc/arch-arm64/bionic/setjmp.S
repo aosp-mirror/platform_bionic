@@ -37,6 +37,18 @@
 // NOTE: All the registers saved here will have 64 bit vales.
 //       AAPCS mandates that the higher part of q registers do not need to
 //       be saved by the callee.
+//
+// The internal structure of a jmp_buf is totally private.
+// Current layout (changes from release to release):
+//
+// word   name            description
+// 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 1      sigmask         signal mask (not used with _setjmp / _longjmp)
+// 2      core_base       base of core registers (x19-x30, sp)
+// 15     float_base      base of float registers (d8-d15)
+// 23     checksum        checksum of core registers
+// 24     reserved        reserved entries (room to grow)
+// 32
 
 #define _JB_SIGFLAG     0
 #define _JB_SIGMASK     (_JB_SIGFLAG + 1)
@@ -51,8 +63,11 @@
 #define _JB_D12_D13     (_JB_D14_D15 + 2)
 #define _JB_D10_D11     (_JB_D12_D13 + 2)
 #define _JB_D8_D9       (_JB_D10_D11 + 2)
+#define _JB_CHECKSUM    (_JB_D8_D9 + 2)
 
 #define MANGLE_REGISTERS 1
+#define USE_CHECKSUM 1
+
 .macro m_mangle_registers reg, sp_reg
 #if MANGLE_REGISTERS
   eor x19, x19, \reg
@@ -69,6 +84,14 @@
   eor x30, x30, \reg
   eor \sp_reg, \sp_reg, \reg
 #endif
+.endm
+
+.macro m_calculate_checksum dst, src, scratch
+  mov \dst, #0
+  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+    ldr \scratch, [\src, #(\i * 8)]
+    eor \dst, \dst, \scratch
+  .endr
 .endm
 
 .macro m_unmangle_registers reg, sp_reg
@@ -143,12 +166,27 @@ ENTRY(sigsetjmp)
   stp d10, d11, [x0, #(_JB_D10_D11 * 8)]
   stp d8,  d9,  [x0, #(_JB_D8_D9   * 8)]
 
+#if USE_CHECKSUM
+  // Calculate the checksum.
+  m_calculate_checksum x12, x0, x2
+  str x12, [x0, #(_JB_CHECKSUM * 8)]
+#endif
+
   mov w0, #0
   ret
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+#if USE_CHECKSUM
+  // Check the checksum before doing anything.
+  m_calculate_checksum x12, x0, x2
+  ldr x2, [x0, #(_JB_CHECKSUM * 8)]
+
+  cmp x2, x12
+  bne __bionic_setjmp_checksum_mismatch
+#endif
+
   // Do we need to restore the signal mask?
   ldr x2, [x0, #(_JB_SIGFLAG * 8)]
   tbz w2, #0, 1f
