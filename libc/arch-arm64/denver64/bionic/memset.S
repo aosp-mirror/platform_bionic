@@ -48,6 +48,7 @@
 #define dstin		x0
 #define val		w1
 #define count		x2
+#define dst_count x3 /* for __memset_chk */
 #define tmp1		x3
 #define tmp1w		w3
 #define tmp2		x4
@@ -62,6 +63,19 @@
 #define tmp3w		w9
 
 #define QA_l		q0
+
+ENTRY(__memset_chk)
+  cmp count, dst_count
+  bls memset
+
+  // Preserve for accurate backtrace.
+  stp x29, x30, [sp, -16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
+
+  bl __memset_chk_fail
+END(__memset_chk)
 
 ENTRY(memset)
 
