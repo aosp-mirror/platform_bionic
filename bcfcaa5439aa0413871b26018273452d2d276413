@@ -81,6 +81,30 @@
       "revId": "bcfcaa5439aa0413871b26018273452d2d276413",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_641ded44",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-03T21:44:59Z",
+      "side": 1,
+      "message": "is that because you used EXPECT_DEATH rather than using BionicDeathTest.h?",
+      "parentUuid": "82ea9d1e_79a056bd",
+      "range": {
+        "startLine": 253,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 19
+      },
+      "revId": "bcfcaa5439aa0413871b26018273452d2d276413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
