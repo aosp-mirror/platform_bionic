@@ -22,6 +22,30 @@
       "revId": "61c95fe52d1b729e643303182c720f6b45eb81ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_4c65d5ab",
+        "filename": "libc/arch-x86_64/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-03T18:05:45Z",
+      "side": 1,
+      "message": "I think this is fine. As long as we know what\u0027s going on, nobody else really pays much attention to the real backtrace.",
+      "parentUuid": "e27a7932_091c418a",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 53
+      },
+      "revId": "61c95fe52d1b729e643303182c720f6b45eb81ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
