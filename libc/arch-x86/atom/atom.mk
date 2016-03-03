@@ -1,5 +1,4 @@
 libc_bionic_src_files_x86 += \
-    arch-x86/atom/string/sse2-bzero-atom.S \
     arch-x86/atom/string/sse2-memset-atom.S \
     arch-x86/atom/string/sse2-strlen-atom.S \
     arch-x86/atom/string/ssse3-bcopy-atom.S \
@@ -15,7 +14,6 @@ libc_bionic_src_files_exclude_x86 += \
 
 libc_bionic_src_files_exclude_x86 += \
     arch-x86/silvermont/string/sse2-bcopy-slm.S \
-    arch-x86/silvermont/string/sse2-bzero-slm.S \
     arch-x86/silvermont/string/sse2-memcpy-slm.S \
     arch-x86/silvermont/string/sse2-memmove-slm.S \
     arch-x86/silvermont/string/sse2-memset-slm.S \
