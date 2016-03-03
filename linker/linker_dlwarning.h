@@ -20,7 +20,9 @@
 void add_dlwarning(const char* sopath, const char* message, const char* value = nullptr);
 
 // Resets the current one (like dlerror but instead of
-// being thread-local it is process-local).
-const char* get_dlwarning();
+// being thread-local it is process-local). The user_data
+// is used to avoid forcing user into saving the message
+// to a global variable.
+void get_dlwarning(void* user_data, void (*f)(void*, const char*));
 
 #endif  /* __LINKER_DLWARNING_H */

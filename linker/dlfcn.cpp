@@ -137,9 +137,9 @@ uint32_t android_get_application_target_sdk_version() {
   return get_application_target_sdk_version();
 }
 
-const char* android_dlwarning() {
+void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  return get_dlwarning();
+  get_dlwarning(obj, f);
 }
 
 bool android_init_namespaces(const char* public_ns_sonames,

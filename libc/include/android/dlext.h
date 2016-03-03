@@ -194,8 +194,6 @@ extern struct android_namespace_t* android_create_namespace(const char* name,
                                                             uint64_t type,
                                                             const char* permitted_when_isolated_path);
 
-const char* android_dlwarning();
-
 __END_DECLS
 
 #endif /* __ANDROID_DLEXT_H__ */
