@@ -63,3 +63,7 @@ extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_check(long cookie) {
 
   return cookie & 1;
 }
+
+extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_checksum_mismatch() {
+  __libc_fatal("setjmp checksum mismatch");
+}
