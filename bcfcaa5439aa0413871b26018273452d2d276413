@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e27a7932_07ee6515",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-03-03T20:51:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4277c50e_dadd6759",
+      "revId": "bcfcaa5439aa0413871b26018273452d2d276413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62d4c97d_474dceb1",
         "filename": "tests/setjmp_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2016-03-03T17:28:26Z",
       "side": 1,
       "message": "ASSERT_EQ(0, setjmp(jb)) ?",
+      "range": {
+        "startLine": 253,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 19
+      },
+      "revId": "bcfcaa5439aa0413871b26018273452d2d276413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_79a056bd",
+        "filename": "tests/setjmp_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-03-03T20:51:12Z",
+      "side": 1,
+      "message": "This seems to result in bad error messages if the longjmp  succeeds when it should die, the death test reports that there was no output.\n\nWithout the assert:\n[  FAILED  ] setjmp.setjmp_cookie_checksum (18 ms)\nbionic/tests/setjmp_test.cpp:(259) Failure in test setjmp.setjmp_cookie_checksum\nDeath test: longjmp(jb, 1)\n    Result: died but not with expected exit code:\n            Exited with exit status 0\nActual msg:\n[  DEATH   ] setjmp_cookie_checksum: longjmp succeeded?\n\n\nWith the assert:\n[  FAILED  ] setjmp.setjmp_cookie_checksum (21 ms)\nbionic/tests/setjmp_test.cpp:(260) Failure in test setjmp.setjmp_cookie_checksum\nDeath test: longjmp(jb, 1)\n    Result: died but not with expected error.\n  Expected: checksum mismatch\nActual msg:\n[  DEATH   ] \nsetjmp.setjmp_cookie_checksum exited with exitcode 1.",
+      "parentUuid": "62d4c97d_474dceb1",
       "range": {
         "startLine": 253,
         "startChar": 2,
