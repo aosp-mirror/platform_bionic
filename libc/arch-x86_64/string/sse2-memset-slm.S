@@ -28,11 +28,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "cache.h"
+#include <private/bionic_asm.h>
 
-#ifndef MEMSET
-# define MEMSET		memset
-#endif
+#include "cache.h"
 
 #ifndef L
 # define L(label)	.L##label
@@ -42,30 +40,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # define ALIGN(n)	.p2align n
 #endif
 
-#ifndef cfi_startproc
-# define cfi_startproc			.cfi_startproc
-#endif
 
-#ifndef cfi_endproc
-# define cfi_endproc			.cfi_endproc
-#endif
+ENTRY(__memset_chk)
+  # %rdi = dst, %rsi = byte, %rdx = n, %rcx = dst_len
+  cmp %rdx, %rcx
+  jl memset
 
-#ifndef ENTRY
-# define ENTRY(name)			\
-	.type name,  @function;	\
-	.globl name;			\
-name:					\
-	cfi_startproc
-#endif
+  # TODO: include __memset_chk_fail in the backtrace?
+  call PIC_PLT(__memset_chk_fail)
+END(__memset_chk)
 
-#ifndef END
-# define END(name)			\
-	cfi_endproc;			\
-	.size name, .-name
-#endif
 
 	.section .text.sse2,"ax",@progbits
-ENTRY (MEMSET)
+ENTRY(memset)
 	movq	%rdi, %rax
 	and	$0xff, %rsi
 	mov	$0x0101010101010101, %rcx
@@ -161,4 +148,4 @@ L(128bytesmore_nt):
 	sfence
 	ret
 
-END (MEMSET)
+END(memset)
