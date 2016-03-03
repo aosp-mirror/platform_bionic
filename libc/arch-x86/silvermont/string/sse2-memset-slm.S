@@ -88,16 +88,10 @@ name:					\
 #define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 #define POP(REG)	popl REG; CFI_POP (REG)
 
-#ifdef USE_AS_BZERO
-# define DEST		PARMS
-# define LEN		DEST+4
-# define SETRTNVAL
-#else
-# define DEST		PARMS
-# define CHR		DEST+4
-# define LEN		CHR+4
-# define SETRTNVAL	movl DEST(%esp), %eax
-#endif
+#define DEST		PARMS
+#define CHR		DEST+4
+#define LEN		CHR+4
+#define SETRTNVAL	movl DEST(%esp), %eax
 
 #if (defined SHARED || defined __PIC__)
 # define ENTRANCE	PUSH (%ebx);
@@ -154,16 +148,12 @@ ENTRY (MEMSET)
 	RETURN
 
 L(1byteormore):
-#ifdef USE_AS_BZERO
-	xor	%eax, %eax
-#else
 	movzbl	CHR(%esp), %eax
 	movb	%al, %ah
 	/* Fill the whole EAX with pattern.  */
 	movl	%eax, %edx
 	shl	 $16, %eax
 	or	%edx, %eax
-#endif
 	movl	DEST(%esp), %edx
 	cmp	$1, %ecx
 	je	L(1byte)
@@ -195,12 +185,8 @@ L(1byte):
 
 	ALIGN (4)
 L(16bytesormore):
-#ifdef USE_AS_BZERO
-	pxor	%xmm0, %xmm0
-#else
 	movd	%eax, %xmm0
 	pshufd	$0, %xmm0, %xmm0
-#endif
 
 	cmp	$64, %ecx
 	ja	L(64bytesmore)

@@ -12,7 +12,6 @@ libc_bionic_src_files_mips += \
 
 libc_bionic_src_files_mips += \
     arch-mips/bionic/__bionic_clone.S \
-    arch-mips/bionic/bzero.S \
     arch-mips/bionic/cacheflush.cpp \
     arch-mips/bionic/_exit_with_stack_teardown.S \
     arch-mips/bionic/libgcc_compat.c \
