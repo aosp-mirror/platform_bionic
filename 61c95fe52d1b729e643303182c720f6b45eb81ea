@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e27a7932_091c418a",
+        "filename": "libc/arch-x86_64/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-03T00:45:57Z",
+      "side": 1,
+      "message": "do we care? right now you\u0027ll see:\n\n     #03 pc 0001fac6  /system/lib/libc.so (abort+86)\n     #04 pc 00025cd2  /system/lib/libc.so (__fortify_fatal+50)\n     #05 pc 000227e3  /system/lib/libc.so (__memset_chk+147)\n\nwhereas on arm/arm64 you\u0027ll see:\n\n     #04 pc 00016e3c  /system/lib/libc.so (abort+4)\n     #05 pc 0001bec3  /system/lib/libc.so (__fortify_fatal+26)\n     #06 pc 0001a5fb  /system/lib/libc.so (__memset_chk_fail+50)\n     #07 pc 0001753c  /system/lib/libc.so (__memset_chk+12)\n\nand if we do care... does anyone know how to do that on x86-64?",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 53
+      },
+      "revId": "61c95fe52d1b729e643303182c720f6b45eb81ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
