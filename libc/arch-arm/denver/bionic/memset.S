@@ -42,7 +42,7 @@
 
 ENTRY(__memset_chk)
         cmp         r2, r3
-        bls         .L_done
+        bls         memset
 
         // Preserve lr for backtrace.
         push        {lr}
@@ -51,13 +51,6 @@ ENTRY(__memset_chk)
 
         bl          __memset_chk_fail
 END(__memset_chk)
-
-ENTRY(bzero)
-        mov         r2, r1
-        mov         r1, #0
-.L_done:
-        // Fall through to memset...
-END(bzero)
 
 ENTRY(memset)
         pldw        [r0]
