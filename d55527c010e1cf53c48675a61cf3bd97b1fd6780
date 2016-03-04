@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02feade5_cb1c2c5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-04T20:00:31Z",
+      "side": 1,
+      "message": "doesn\u0027t this part need additional modifications to the linker?",
+      "range": {
+        "startLine": 22,
+        "startChar": 54,
+        "endLine": 25,
+        "endChar": 49
+      },
+      "revId": "d55527c010e1cf53c48675a61cf3bd97b1fd6780",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
