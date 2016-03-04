@@ -27,108 +27,83 @@
 #include <unistd.h>
 #include <set>
 
-extern "C" pid_t gettid();
+#include "private/bionic_tls.h"
 
-// For x86, bionic and glibc have per-thread stack guard values (all identical).
-#if defined(__i386__)
-static uint32_t GetGuardFromTls() {
-  uint32_t guard;
-  asm ("mov %%gs:0x14, %0": "=d" (guard));
-  return guard;
-}
+extern "C" pid_t gettid(); // glibc defines this but doesn't declare it anywhere.
+
+#if defined(__BIONIC__)
+extern uintptr_t __stack_chk_guard;
+#endif
 
 struct stack_protector_checker {
   std::set<pid_t> tids;
-  std::set<uint32_t> guards;
+  std::set<void*> guards;
 
   void Check() {
     pid_t tid = gettid();
-    uint32_t guard = GetGuardFromTls();
+    void* guard = __get_tls()[TLS_SLOT_STACK_GUARD];
 
-    printf("[thread %d] %%gs:0x14 = 0x%08x\n", tid, guard);
+    printf("[thread %d] TLS stack guard = %p\n", tid, guard);
 
     // Duplicate tid. gettid(2) bug? Seeing this would be very upsetting.
     ASSERT_TRUE(tids.find(tid) == tids.end());
 
-    // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_ get
-    // four random zero bytes, but it should be vanishingly unlikely.
-    ASSERT_NE(guard, 0U);
+    // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_
+    // get four random zero bytes, but it should be vanishingly unlikely.
+    ASSERT_NE(guard, nullptr);
+
+#if defined(__BIONIC__)
+    // bionic always has the global too.
+    ASSERT_EQ(__stack_chk_guard, reinterpret_cast<uintptr_t>(guard));
+#endif
 
     tids.insert(tid);
     guards.insert(guard);
   }
 };
 
-static void* ThreadGuardHelper(void* arg) {
-  stack_protector_checker* checker = reinterpret_cast<stack_protector_checker*>(arg);
-  checker->Check();
-  return NULL;
-}
-#endif // __i386__
-
 TEST(stack_protector, same_guard_per_thread) {
-#if defined(__i386__)
+  // Everyone has the TLS slot set, even if their stack protector
+  // implementation doesn't yet use it.
   stack_protector_checker checker;
-  size_t thread_count = 10;
-  for (size_t i = 0; i < thread_count; ++i) {
+
+  // Check the main thread.
+  ASSERT_EQ(getpid(), gettid()); // We are the main thread, right?
+  checker.Check();
+
+  size_t thread_count = 9;
+  for (size_t i = 1; i < thread_count; ++i) {
     pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, NULL, ThreadGuardHelper, &checker));
+    ASSERT_EQ(0, pthread_create(&t, NULL, [](void* arg) -> void* {
+      stack_protector_checker* checker = reinterpret_cast<stack_protector_checker*>(arg);
+      checker->Check();
+      return nullptr;
+    }, &checker));
     void* result;
     ASSERT_EQ(0, pthread_join(t, &result));
     ASSERT_EQ(NULL, result);
   }
   ASSERT_EQ(thread_count, checker.tids.size());
 
-  // bionic and glibc use the same guard for every thread.
+  // Both bionic and glibc use the same guard for every thread.
   ASSERT_EQ(1U, checker.guards.size());
-#else // __i386__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // __i386__
 }
-
-// For ARM and MIPS, glibc has a global stack check guard value.
-#if defined(__BIONIC__) || defined(__arm__) || defined(__mips__)
-#define TEST_STACK_CHK_GUARD
-
-// Bionic has the global for x86 too, to support binaries that can run on
-// Android releases that didn't implement the TLS guard value.
-extern "C" uintptr_t __stack_chk_guard;
-
-/*
- * When this function returns, the stack canary will be inconsistent
- * with the previous value, which will generate a call to __stack_chk_fail(),
- * eventually resulting in a SIGABRT.
- *
- * This must be marked with "__attribute__ ((noinline))", to ensure the
- * compiler generates the proper stack guards around this function.
- */
-static char* dummy_buf;
-
-__attribute__ ((noinline))
-static void do_modify_stack_chk_guard() {
-  char buf[128];
-  // Store local array's address to global variable to force compiler to generate stack guards.
-  dummy_buf = buf;
-  __stack_chk_guard = 0x12345678;
-}
-
-#endif
 
 TEST(stack_protector, global_guard) {
-#if defined(TEST_STACK_CHK_GUARD)
+#if defined(__BIONIC__)
+  // Bionic always has a global, even if it's using TLS.
   ASSERT_NE(0, gettid());
   ASSERT_NE(0U, __stack_chk_guard);
-#else // TEST_STACK_CHK_GUARD
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // TEST_STACK_CHK_GUARD
+#else
+  GTEST_LOG_(INFO) << "glibc doesn't have a global __stack_chk_guard.\n";
+#endif
 }
 
 class stack_protector_DeathTest : public BionicDeathTest {};
 
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
-#if defined(TEST_STACK_CHK_GUARD)
-  ASSERT_EXIT(do_modify_stack_chk_guard(), testing::KilledBySignal(SIGABRT), "");
-#else // TEST_STACK_CHK_GUARD
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
-#endif // TEST_STACK_CHK_GUARD
+  // In another file to prevent inlining, which removes stack protection.
+  extern void modify_stack_protector_test();
+  ASSERT_EXIT(modify_stack_protector_test(),
+              testing::KilledBySignal(SIGABRT), "stack corruption detected");
 }
