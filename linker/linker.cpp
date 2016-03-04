@@ -186,6 +186,7 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     "libskia.so",
     "libssl.so",
     "libstagefright.so",
+    "libsqlite.so",
     "libui.so",
     "libutils.so",
     nullptr
