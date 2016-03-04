@@ -73,15 +73,9 @@ name:		\
 	.size name, .-name
 #endif
 
-#ifdef USE_AS_BCOPY
-# define SRC		PARMS
-# define DEST		SRC+4
-# define LEN		DEST+4
-#else
-# define DEST		PARMS
-# define SRC		DEST+4
-# define LEN		SRC+4
-#endif
+#define DEST		PARMS
+#define SRC		DEST+4
+#define LEN		SRC+4
 
 #define CFI_PUSH(REG)		\
   cfi_adjust_cfa_offset (4);		\
