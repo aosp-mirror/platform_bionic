@@ -28,6 +28,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <private/bionic_asm.h>
+
 #include "cache.h"
 
 #ifndef L
@@ -36,14 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef ALIGN
 # define ALIGN(n)	.p2align n
-#endif
-
-#ifndef cfi_startproc
-# define cfi_startproc			.cfi_startproc
-#endif
-
-#ifndef cfi_endproc
-# define cfi_endproc			.cfi_endproc
 #endif
 
 #ifndef cfi_rel_offset
@@ -58,21 +52,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
 #endif
 
-#ifndef ENTRY
-# define ENTRY(name)			\
-	.type name,  @function; 	\
-	.globl name;			\
-	.p2align 4;			\
-name:					\
-	cfi_startproc
-#endif
-
-#ifndef END
-# define END(name)			\
-	cfi_endproc;			\
-	.size name, .-name
-#endif
-
 #define CFI_PUSH(REG)						\
   cfi_adjust_cfa_offset (4);					\
   cfi_rel_offset (REG, 0)
@@ -84,10 +63,11 @@ name:					\
 #define PUSH(REG)	pushl REG; CFI_PUSH (REG)
 #define POP(REG)	popl REG; CFI_POP (REG)
 
-#define DEST		PARMS
-#define CHR		DEST+4
+#define DST		PARMS
+#define CHR		DST+4
 #define LEN		CHR+4
-#define SETRTNVAL	movl DEST(%esp), %eax
+#define CHK_DST_LEN (LEN+4)
+#define SETRTNVAL	movl DST(%esp), %eax
 
 #if (defined SHARED || defined __PIC__)
 # define ENTRANCE	PUSH (%ebx);
@@ -132,13 +112,17 @@ __x86.get_pc_thunk.bx:
     jmp		*TABLE(,%ecx,4)
 #endif
 
-#ifndef MEMSET
-# define MEMSET memset
-#endif
+ENTRY(__memset_chk)
+  movl LEN(%esp), %ecx
+  cmpl %ecx, CHK_DST_LEN(%esp)
+  jbe memset
+
+  jmp __memset_chk_fail
+END(__memset_chk)
 
 	.section .text.sse2,"ax",@progbits
 	ALIGN (4)
-ENTRY (MEMSET)
+ENTRY (memset)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
@@ -148,7 +132,7 @@ ENTRY (MEMSET)
 	movl	%eax, %edx
 	shl	$16, %eax
 	or	%edx, %eax
-	movl	DEST(%esp), %edx
+	movl	DST(%esp), %edx
 	cmp	$32, %ecx
 	jae	L(32bytesormore)
 
@@ -903,4 +887,4 @@ L(aligned_16_15bytes):
 	SETRTNVAL
 	RETURN_END
 
-END (MEMSET)
+END (memset)

@@ -153,7 +153,7 @@ void* __memrchr_chk(const void* s, int c, size_t n, size_t actual_size) {
   return memrchr(s, c, n);
 }
 
-#if !defined(__aarch64__) && !defined(__arm__) && !defined(__x86_64__) // TODO: add optimized assembler for the others too.
+#if defined(__mips__) // TODO: add optimized assembler for mips too, and remove this.
 // Runtime implementation of __builtin___memset_chk (used directly by compiler, not in headers).
 extern "C" void* __memset_chk(void* dst, int byte, size_t count, size_t dst_len) {
   __check_count("memset", "count", count);
