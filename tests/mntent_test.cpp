@@ -38,3 +38,20 @@ TEST(mntent, mntent_smoke) {
 
   ASSERT_EQ(1, endmntent(fp));
 }
+
+TEST(mntent, hasmntopt) {
+  // indices                  1  1
+  // of keys:      0    5   9 1  4
+  char mnt_opts[]{"aa=b,a=b,b,bb,c=d"};
+  struct mntent ent;
+  memset(&ent, 0, sizeof(ent));
+  ent.mnt_opts = mnt_opts;
+
+  EXPECT_EQ(mnt_opts, hasmntopt(&ent, "aa"));
+  EXPECT_EQ(mnt_opts + 5, hasmntopt(&ent, "a"));
+  EXPECT_EQ(mnt_opts + 9, hasmntopt(&ent, "b"));
+  EXPECT_EQ(mnt_opts + 11, hasmntopt(&ent, "bb"));
+  EXPECT_EQ(mnt_opts + 14, hasmntopt(&ent, "c"));
+  EXPECT_EQ(nullptr, hasmntopt(&ent, "d"));
+  EXPECT_EQ(nullptr, hasmntopt(&ent, "e"));
+}
