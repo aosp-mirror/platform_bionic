@@ -43,11 +43,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ENTRY(__memset_chk)
   # %rdi = dst, %rsi = byte, %rdx = n, %rcx = dst_len
-  cmp %rdx, %rcx
-  jl memset
-
-  # TODO: include __memset_chk_fail in the backtrace?
-  call PIC_PLT(__memset_chk_fail)
+  cmp %rcx, %rdx
+  ja __memset_chk_fail
+  // Fall through to memset...
 END(__memset_chk)
 
 
