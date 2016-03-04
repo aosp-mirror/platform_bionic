@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_7abe74da",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-04T19:58:05Z",
+      "side": 1,
+      "message": "so this is a more interesting test than the old one, which just fucked with the TLS slot value. this is actually testing what we\u0027re looking for. unfortunately, it doesn\u0027t fix the bug that got me looking at this code in the first place, which is that this test fails on x86-64.\n\nideas?",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
