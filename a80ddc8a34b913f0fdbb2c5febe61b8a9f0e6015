@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e27a7932_c4acd66b",
+        "filename": "libc/arch-x86_64/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-04T00:52:16Z",
+      "side": 1,
+      "message": "i hate the backwards syntax...",
+      "range": {
+        "startLine": 46,
+        "startChar": 2,
+        "endLine": 46,
+        "endChar": 16
+      },
+      "revId": "a80ddc8a34b913f0fdbb2c5febe61b8a9f0e6015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_2ca03bbc",
+        "filename": "libc/arch-x86_64/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-04T00:52:16Z",
+      "side": 1,
+      "message": "...and i hate the mess they made of the condition names.\n\nthis may be the shortest, but it\u0027s also the least readable __memset_chk.",
+      "range": {
+        "startLine": 47,
+        "startChar": 2,
+        "endLine": 47,
+        "endChar": 22
+      },
+      "revId": "a80ddc8a34b913f0fdbb2c5febe61b8a9f0e6015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
