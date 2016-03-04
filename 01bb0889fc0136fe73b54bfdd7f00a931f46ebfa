@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e211990a_052e1442",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-04T16:21:50Z",
+      "side": 1,
+      "message": "this fits on 100 columns, which is what we use in bionic.",
+      "range": {
+        "startLine": 1794,
+        "startChar": 1,
+        "endLine": 1795,
+        "endChar": 70
+      },
+      "revId": "01bb0889fc0136fe73b54bfdd7f00a931f46ebfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
