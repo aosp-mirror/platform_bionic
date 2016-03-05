@@ -16,6 +16,24 @@
       "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e21b5959_83d4fec1",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-05T00:20:01Z",
+      "side": 1,
+      "message": "Is it possible that x86_64 is optimizing away this code? Maybe it can tell that buf is never used, and only on the stack.",
+      "parentUuid": "a2e32149_7abe74da",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
