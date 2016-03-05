@@ -41,16 +41,6 @@
 
 #include "private/bionic_tls.h"
 
-static int __sysconf_monotonic_clock() {
-  timespec t;
-  int rc = clock_getres(CLOCK_MONOTONIC, &t);
-  return (rc == -1) ? -1 : _POSIX_VERSION;
-}
-
-static bool __sysconf_has_clock(clockid_t clock_id) {
-  return clock_getres(clock_id, NULL) == 0;
-}
-
 static long __sysconf_rlimit(int resource) {
   rlimit rl;
   getrlimit(resource, &rl);
@@ -147,7 +137,7 @@ long sysconf(int name) {
     case _SC_NPROCESSORS_ONLN:  return get_nprocs();
     case _SC_PHYS_PAGES:        return get_phys_pages();
     case _SC_AVPHYS_PAGES:      return get_avphys_pages();
-    case _SC_MONOTONIC_CLOCK:   return __sysconf_monotonic_clock();
+    case _SC_MONOTONIC_CLOCK:   return _POSIX_VERSION;
 
     case _SC_2_PBS:             return -1;     // Obsolescent in POSIX.1-2008.
     case _SC_2_PBS_ACCOUNTING:  return -1;     // Obsolescent in POSIX.1-2008.
@@ -158,8 +148,7 @@ long sysconf(int name) {
     case _SC_ADVISORY_INFO:     return _POSIX_ADVISORY_INFO;
     case _SC_BARRIERS:          return _POSIX_BARRIERS;
     case _SC_CLOCK_SELECTION:   return _POSIX_CLOCK_SELECTION;
-    case _SC_CPUTIME:
-      return __sysconf_has_clock(CLOCK_PROCESS_CPUTIME_ID) ?_POSIX_VERSION : -1;
+    case _SC_CPUTIME:           return _POSIX_VERSION;
 
     case _SC_HOST_NAME_MAX:     return _POSIX_HOST_NAME_MAX;    // Minimum requirement.
     case _SC_IPV6:              return _POSIX_IPV6;
@@ -172,8 +161,7 @@ long sysconf(int name) {
     case _SC_SPORADIC_SERVER:   return _POSIX_SPORADIC_SERVER;
     case _SC_SS_REPL_MAX:       return -1;
     case _SC_SYMLOOP_MAX:       return _POSIX_SYMLOOP_MAX;      // Minimum requirement.
-    case _SC_THREAD_CPUTIME:
-      return __sysconf_has_clock(CLOCK_THREAD_CPUTIME_ID) ? _POSIX_VERSION : -1;
+    case _SC_THREAD_CPUTIME:    return _POSIX_VERSION;
 
     case _SC_THREAD_PROCESS_SHARED: return _POSIX_THREAD_PROCESS_SHARED;
     case _SC_THREAD_ROBUST_PRIO_INHERIT:  return _POSIX_THREAD_ROBUST_PRIO_INHERIT;
