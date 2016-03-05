@@ -34,6 +34,24 @@
       "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f705ddfe_fc25c9a4",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2016-03-05T00:24:22Z",
+      "side": 1,
+      "message": "Nope, disassembly shows the loop for this.",
+      "parentUuid": "e21b5959_83d4fec1",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
