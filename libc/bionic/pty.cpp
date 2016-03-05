@@ -151,22 +151,24 @@ int openpty(int* master, int* slave, char* name, const termios* t, const winsize
   return 0;
 }
 
-int forkpty(int* master, char* name, const termios* t, const winsize* ws) {
+int forkpty(int* amaster, char* name, const termios* t, const winsize* ws) {
+  int master;
   int slave;
-  if (openpty(master, &slave, name, t, ws) == -1) {
+  if (openpty(&master, &slave, name, t, ws) == -1) {
     return -1;
   }
 
   pid_t pid = fork();
   if (pid == -1) {
-    close(*master);
+    close(master);
     close(slave);
     return -1;
   }
 
   if (pid == 0) {
     // Child.
-    close(*master);
+    *amaster = -1;
+    close(master);
     if (login_tty(slave) == -1) {
       _exit(1);
     }
@@ -174,6 +176,7 @@ int forkpty(int* master, char* name, const termios* t, const winsize* ws) {
   }
 
   // Parent.
+  *amaster = master;
   close(slave);
   return pid;
 }
