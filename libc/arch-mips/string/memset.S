@@ -170,11 +170,6 @@
 # define R6_CODE
 #endif
 
-/* Allow the routine to be named something else if desired.  */
-#ifndef MEMSET_NAME
-# define MEMSET_NAME memset
-#endif
-
 /* We load/store 64 bits at a time when USE_DOUBLE is true.
    The C_ prefix stands for CHUNK and is used to avoid macro name
    conflicts with system header files.  */
@@ -209,9 +204,19 @@
 #define UNITM1(unit) (((unit)*NSIZE)-1)
 
 #ifdef __ANDROID__
-LEAF(MEMSET_NAME,0)
+LEAF(__memset_chk,0)
 #else
-LEAF(MEMSET_NAME)
+LEAF(__memset_chk)
+#endif
+  bgtu   a2, a3, __memset_chk_fail
+
+  // Fall through to memset...
+END(__memset_chk)
+
+#ifdef __ANDROID__
+LEAF(memset,0)
+#else
+LEAF(memset)
 #endif
 
 	.set	nomips16
@@ -428,9 +433,10 @@ L(leave):
 
 	.set	at
 	.set	reorder
-END(MEMSET_NAME)
+END(memset)
 #ifndef __ANDROID__
 # ifdef _LIBC
-libc_hidden_builtin_def (MEMSET_NAME)
+libc_hidden_builtin_def (memset)
+libc_hidden_builtin_def (__memset_chk)
 # endif
 #endif
