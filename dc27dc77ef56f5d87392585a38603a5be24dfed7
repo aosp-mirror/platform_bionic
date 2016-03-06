@@ -52,6 +52,24 @@
       "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02214d86_4d15d15d",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1079129
+      },
+      "writtenOn": "2016-03-06T05:00:55Z",
+      "side": 1,
+      "message": "This function invokes undefined behavior, so its not particularly surprising that the test case does funny things when compiled for different archs.\n\nAt optimization levels O1 and O2 GCC essentially turned this into a loop that doesn\u0027t store anything:\n\n 4005d0:       48 83 c0 01             add    $0x1,%rax\n  4005d4:       48 89 c2                mov    %rax,%rdx\n  4005d7:       48 29 ca                sub    %rcx,%rdx\n  4005da:       48 81 fa 87 00 00 00    cmp    $0x87,%rdx\n  4005e1:       7e ed                   jle    4005d0 \u003c_Z27modify_stack_protector_testv+0x20\u003e\n\nnotice there\u0027s no actual movb $0x0, buf\n\nFor whatever reason at no optimization (-O0) gcc is aligning the buffer or something so there is 8 bytes of padding between the end of the buffer and the start of the cookie so at -O0 this code just writes 0\u0027s to that padding location, leaving the cookie in its original state.\n\nThe following works on -m32 and x86_64 at all optimization levels:\ngcc version 4.9.3 (Ubuntu 4.9.3-8ubuntu2~14.04) \n\n        volatile char* p \u003d buf;\n        while ((p - buf) \u003c static_cast\u003cint\u003e(sizeof(buf) + sizeof(void*) * 2))\n                *p++ \u003d \u0027\\0\u0027;\n\nIt\u0027s possible that this clobbers a saved base pointer when cross compiled to arm and aarch64, but since we will should call __stack_chk_fail and abort() it shouldn\u0027t matter.",
+      "parentUuid": "e21b5959_83d4fec1",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
