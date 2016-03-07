@@ -88,6 +88,24 @@
       "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37af7563_a9a91957",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2016-03-07T22:12:56Z",
+      "side": 1,
+      "message": "Here\u0027s mine:\n\n 00000000002ad8e0 \u003c_Z27modify_stack_protector_testv\u003e:\n  2ad8e0:       48 81 ec 88 00 00 00    sub    $0x88,%rsp\n  2ad8e7:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax\n  2ad8ee:       00 00 \n  2ad8f0:       48 89 84 24 80 00 00    mov    %rax,0x80(%rsp)\n  2ad8f7:       00 \n  2ad8f8:       48 8d 44 24 01          lea    0x1(%rsp),%rax\n  2ad8fd:       48 8d 0c 24             lea    (%rsp),%rcx\n  2ad901:       66 66 66 66 66 66 2e    data32 data32 data32 data32 data32 nopw %cs:0x0(%rax,%rax,1)\n  2ad908:       0f 1f 84 00 00 00 00 \n  2ad90f:       00 \n  2ad910:       c6 40 ff 00             movb   $0x0,-0x1(%rax)\n  2ad914:       48 89 c2                mov    %rax,%rdx\n  2ad917:       48 29 ca                sub    %rcx,%rdx\n  2ad91a:       48 ff c0                inc    %rax\n  2ad91d:       48 81 fa 88 00 00 00    cmp    $0x88,%rdx\n  2ad924:       7c ea                   jl     2ad910 \u003c_Z27modify_stack_protector_testv+0x30\u003e\n  2ad926:       64 48 8b 04 25 28 00    mov    %fs:0x28,%rax\n  2ad92d:       00 00 \n  2ad92f:       48 3b 84 24 80 00 00    cmp    0x80(%rsp),%rax\n  2ad936:       00 \n  2ad937:       75 08                   jne    2ad941 \u003c_Z27modify_stack_protector_testv+0x61\u003e\n  2ad939:       48 81 c4 88 00 00 00    add    $0x88,%rsp\n  2ad940:       c3                      retq   \n  2ad941:       e8 ea c6 ef ff          callq  1aa030 \u003c__stack_chk_fail@plt\u003e\n  2ad946:       66 2e 0f 1f 84 00 00    nopw   %cs:0x0(%rax,%rax,1)\n  2ad94d:       00 00 00 \n\nI simplified the driver to be able to run this under gdb on device. For me, after pulling the canary value from the thread:\n\n (gdb) p $rax \n $2 \u003d 0\n\nSo as previously discussed with enh, this seems to fail because of unexpected zero value of the canary...",
+      "parentUuid": "778e4df1_c0723e6f",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
