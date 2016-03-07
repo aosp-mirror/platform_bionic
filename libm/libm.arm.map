@@ -272,7 +272,7 @@ LIBC {
     *;
 };
 
-LIBC_DEPRECATED { # arm mips
+LIBC_PRIVATE { # arm mips
   global: # arm mips
     ___Unwind_Backtrace; # arm
     ___Unwind_ForcedUnwind; # arm
