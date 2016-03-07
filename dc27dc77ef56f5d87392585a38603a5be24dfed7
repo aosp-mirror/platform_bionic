@@ -70,6 +70,24 @@
       "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "778e4df1_c0723e6f",
+        "filename": "tests/stack_protector_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-07T20:07:46Z",
+      "side": 1,
+      "message": "that doesn\u0027t work for me (with GCC or clang). and i do get the movb:\n\n  322860:       c6 40 ff 00             movb   $0x0,-0x1(%rax)\n  322864:       48 89 c2                mov    %rax,%rdx\n  322867:       48 29 ca                sub    %rcx,%rdx\n  32286a:       48 ff c0                inc    %rax\n  32286d:       48 81 fa 90 00 00 00    cmp    $0x90,%rdx\n  322874:       7c ea                   jl     322860 \u003cmodify_stack_protector_test()+0x30\u003e",
+      "parentUuid": "02214d86_4d15d15d",
+      "revId": "dc27dc77ef56f5d87392585a38603a5be24dfed7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
