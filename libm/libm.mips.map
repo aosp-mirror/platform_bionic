@@ -272,7 +272,7 @@ LIBC {
     *;
 };
 
-LIBC_PRIVATE { # arm mips
+LIBC_DEPRECATED { # arm mips
   global: # arm mips
     __fixdfdi; # arm mips
     __fixsfdi; # arm mips
