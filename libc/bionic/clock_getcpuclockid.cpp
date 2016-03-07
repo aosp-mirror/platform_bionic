@@ -40,8 +40,7 @@ int clock_getcpuclockid(pid_t pid, clockid_t* clockid) {
   result |= 2;
   // Bit 2: thread (set) or process (clear). Bit 2 already 0.
 
-  timespec ts;
-  if (clock_getres(result, &ts) == -1) {
+  if (clock_getres(result, nullptr) == -1) {
     return ESRCH;
   }
 
