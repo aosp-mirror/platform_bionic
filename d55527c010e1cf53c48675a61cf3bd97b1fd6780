@@ -22,6 +22,30 @@
       "revId": "d55527c010e1cf53c48675a61cf3bd97b1fd6780",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "570ea929_57112c33",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1087715
+      },
+      "writtenOn": "2016-03-08T10:25:50Z",
+      "side": 1,
+      "message": "No this is sufficient, we use this patch when we want to build a whole root for a non-standard location (custom ANDROID_ROOT), and setting LD_LIBRARY_PATH to both the 32 and 64 custom lib paths allows us to run dalvikvm64, which invokes the 32b dex2oat. dex2oat is still run using the 32b linker, so there is no problem on this side.",
+      "parentUuid": "02feade5_cb1c2c5b",
+      "range": {
+        "startLine": 22,
+        "startChar": 54,
+        "endLine": 25,
+        "endChar": 49
+      },
+      "revId": "d55527c010e1cf53c48675a61cf3bd97b1fd6780",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
