@@ -30,6 +30,18 @@ struct data_int_1_t {
   T1 input;
 };
 
+template <typename T1>
+struct data_long_1_t {
+  long expected;
+  T1 input;
+};
+
+template <typename T1>
+struct data_llong_1_t {
+  long long expected;
+  T1 input;
+};
+
 template <typename RT, typename T1, typename T2>
 struct data_1_2_t {
   RT expected;
@@ -151,6 +163,28 @@ void DoMathDataTest(data_1_1_t<RT, T> (&data)[N], RT f(T)) {
 // For testing a (double) -> int function like ilogb(3).
 template <size_t ULP, typename T, size_t N>
 void DoMathDataTest(data_int_1_t<T> (&data)[N], int f(T)) {
+  fesetenv(FE_DFL_ENV);
+  for (size_t i = 0; i < N; ++i) {
+    EXPECT_EQ(data[i].expected, f(data[i].input)) << "Failed on element " << i;
+  }
+}
+
+// Runs through the array 'data' applying 'f' to each of the input values
+// and asserting that the result is within ULP ulps of the expected value.
+// For testing a (double) -> long int function like lrint(3).
+template <size_t ULP, typename T, size_t N>
+void DoMathDataTest(data_long_1_t<T> (&data)[N], long f(T)) {
+  fesetenv(FE_DFL_ENV);
+  for (size_t i = 0; i < N; ++i) {
+    EXPECT_EQ(data[i].expected, f(data[i].input)) << "Failed on element " << i;
+  }
+}
+
+// Runs through the array 'data' applying 'f' to each of the input values
+// and asserting that the result is within ULP ulps of the expected value.
+// For testing a (double) -> long long int function like llrint(3).
+template <size_t ULP, typename T, size_t N>
+void DoMathDataTest(data_llong_1_t<T> (&data)[N], long long f(T)) {
   fesetenv(FE_DFL_ENV);
   for (size_t i = 0; i < N; ++i) {
     EXPECT_EQ(data[i].expected, f(data[i].input)) << "Failed on element " << i;
