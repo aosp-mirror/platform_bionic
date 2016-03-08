@@ -1347,6 +1347,9 @@ static void getstack_signal_handler(int sig) {
 // the wrong map with [stack]. This test verifies that when the above situation happens, the main
 // thread's stack is found correctly.
 TEST(pthread, pthread_attr_getstack_in_signal_handler) {
+  // This test is only meaningful for the main thread, so make sure we're running on it!
+  ASSERT_EQ(getpid(), syscall(__NR_gettid));
+
   const size_t sig_stack_size = 16 * 1024;
   void* sig_stack = mmap(NULL, sig_stack_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
                          -1, 0);
@@ -1357,6 +1360,12 @@ TEST(pthread, pthread_attr_getstack_in_signal_handler) {
   ss.ss_flags = 0;
   stack_t oss;
   ASSERT_EQ(0, sigaltstack(&ss, &oss));
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_getattr_np(pthread_self(), &attr));
+  void* main_stack_base;
+  size_t main_stack_size;
+  ASSERT_EQ(0, pthread_attr_getstack(&attr, &main_stack_base, &main_stack_size));
 
   ScopedSignalHandler handler(SIGUSR1, getstack_signal_handler, SA_ONSTACK);
   getstack_signal_handler_arg.done = false;
@@ -1369,9 +1378,8 @@ TEST(pthread, pthread_attr_getstack_in_signal_handler) {
             getstack_signal_handler_arg.signal_handler_sp);
 
   // Verify if the main thread's stack got in the signal handler is correct.
-  ASSERT_LE(getstack_signal_handler_arg.main_stack_base, &ss);
-  ASSERT_GE(reinterpret_cast<char*>(getstack_signal_handler_arg.main_stack_base) +
-            getstack_signal_handler_arg.main_stack_size, reinterpret_cast<void*>(&ss));
+  ASSERT_EQ(main_stack_base, getstack_signal_handler_arg.main_stack_base);
+  ASSERT_LE(main_stack_size, getstack_signal_handler_arg.main_stack_size);
 
   ASSERT_EQ(0, sigaltstack(&oss, nullptr));
   ASSERT_EQ(0, munmap(sig_stack, sig_stack_size));
