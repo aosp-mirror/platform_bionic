@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "773acdf7_266f6202",
+        "filename": "libm/x86/lrint.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-08T02:29:25Z",
+      "side": 1,
+      "message": "i\u0027ll fix this...",
+      "revId": "d747ff5836a57d832ef16e1973368d677766fea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773acdf7_86646e23",
+        "filename": "libm/x86/rintf.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-08T02:29:25Z",
+      "side": 1,
+      "message": "this doesn\u0027t compile.",
+      "revId": "d747ff5836a57d832ef16e1973368d677766fea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
