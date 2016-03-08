@@ -1639,6 +1639,16 @@ TEST(math, ldexpf_intel) {
   DoMathDataTest<1>(g_ldexpf_intel_data, ldexpf);
 }
 
+#include "math_data/llrint_intel_data.h"
+TEST(math, llrint_intel) {
+  DoMathDataTest<1>(g_llrint_intel_data, llrint);
+}
+
+#include "math_data/llrintf_intel_data.h"
+TEST(math, llrintf_intel) {
+  DoMathDataTest<1>(g_llrintf_intel_data, llrintf);
+}
+
 #include "math_data/log_intel_data.h"
 TEST(math, log_intel) {
   DoMathDataTest<1>(g_log_intel_data, log);
@@ -1687,6 +1697,16 @@ TEST(math, logb_intel) {
 #include "math_data/logbf_intel_data.h"
 TEST(math, logbf_intel) {
   DoMathDataTest<1>(g_logbf_intel_data, logbf);
+}
+
+#include "math_data/lrint_intel_data.h"
+TEST(math, lrint_intel) {
+  DoMathDataTest<1>(g_lrint_intel_data, lrint);
+}
+
+#include "math_data/lrintf_intel_data.h"
+TEST(math, lrintf_intel) {
+  DoMathDataTest<1>(g_lrintf_intel_data, lrintf);
 }
 
 #include "math_data/modf_intel_data.h"
