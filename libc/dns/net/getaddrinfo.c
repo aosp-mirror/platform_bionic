@@ -1791,10 +1791,14 @@ _find_src_addr(const struct sockaddr *addr, struct sockaddr *src_addr, unsigned 
 			return -1;
 		}
 	}
-	if (mark != MARK_UNSET && setsockopt(sock, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0)
+	if (mark != MARK_UNSET && setsockopt(sock, SOL_SOCKET, SO_MARK, &mark, sizeof(mark)) < 0) {
+		close(sock);
 		return 0;
-	if (uid > 0 && uid != NET_CONTEXT_INVALID_UID && fchown(sock, uid, (gid_t)-1) < 0)
+	}
+	if (uid > 0 && uid != NET_CONTEXT_INVALID_UID && fchown(sock, uid, (gid_t)-1) < 0) {
+		close(sock);
 		return 0;
+	}
 	do {
 		ret = __connect(sock, addr, len);
 	} while (ret == -1 && errno == EINTR);
