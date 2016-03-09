@@ -16,10 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-# -----------------------------------------------------------------------------
-# Benchmarks library, usable by projects outside this directory.
-# -----------------------------------------------------------------------------
-
 benchmark_cflags := \
     -O2 \
     -fno-builtin \
@@ -30,38 +26,6 @@ benchmark_cflags := \
 
 benchmark_cppflags := \
 
-benchmarklib_src_files := \
-    Benchmark.cpp \
-    utils.cpp \
-    main.cpp \
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := libbenchmark
-LOCAL_CFLAGS := $(benchmark_cflags)
-LOCAL_CPPFLAGS := $(benchmark_cppflags)
-LOCAL_SRC_FILES := $(benchmarklib_src_files)
-LOCAL_C_INCLUDES := $(benchmark_c_includes)
-LOCAL_STATIC_LIBRARIES := libbase
-include $(BUILD_STATIC_LIBRARY)
-
-# Only supported on linux systems.
-ifeq ($(HOST_OS),linux)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := libbenchmark
-LOCAL_CFLAGS := $(benchmark_cflags)
-LOCAL_CPPFLAGS := $(benchmark_cppflags)
-LOCAL_SRC_FILES := $(benchmarklib_src_files)
-LOCAL_C_INCLUDES := $(benchmark_c_includes)
-LOCAL_MULTILIB := both
-LOCAL_STATIC_LIBRARIES := libbase
-include $(BUILD_HOST_STATIC_LIBRARY)
-
-endif
-
-# -----------------------------------------------------------------------------
-# Benchmarks.
-# -----------------------------------------------------------------------------
 benchmark_src_files := \
     math_benchmark.cpp \
     property_benchmark.cpp \
@@ -83,8 +47,7 @@ LOCAL_MULTILIB := both
 LOCAL_CFLAGS := $(benchmark_cflags)
 LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_SRC_FILES := $(benchmark_src_files)
-LOCAL_STATIC_LIBRARIES := libbenchmark libbase
-include $(BUILD_EXECUTABLE)
+include $(BUILD_NATIVE_BENCHMARK)
 
 # We don't build a static benchmark executable because it's not usually
 # useful. If you're trying to run the current benchmarks on an older
@@ -105,7 +68,8 @@ LOCAL_CFLAGS := $(benchmark_cflags)
 LOCAL_CPPFLAGS := $(benchmark_cppflags)
 LOCAL_LDFLAGS := -lrt
 LOCAL_SRC_FILES := $(benchmark_src_files)
-LOCAL_STATIC_LIBRARIES := libbenchmark libbase
+LOCAL_STATIC_LIBRARIES := libgoogle-benchmark
+# TODO: BUILD_HOST_NATIVE_BENCHMARK
 include $(BUILD_HOST_EXECUTABLE)
 
 endif
