@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "3703f592_9a163d8a",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-09T22:48:47Z",
+      "side": 1,
+      "message": "\u003e It feels a little weird to add a test to debuggerd testing for a feature used by bionic.\n\nwell, by the dynamic linker. (which is another bug for another day.)\n\n\u003e Do people run the debuggerd unit tests?\n\nof course they don\u0027t :-)\n\n\u003e A failure in this test causing a CTS failure seemed better than no one actually seeing it.\n\nyeah, i think the only real counter-argument is that it wouldn\u0027t be unreasonable to not want to ship debuggerd, and that CTS perhaps shouldn\u0027t insist that you have kernel fixes only needed for debuggerd support. but since this still wouldn\u0027t require that you actually ship debuggerd, i don\u0027t think the burden is too onerous. if we get a constant stream of requests for CTS waivers we can always rethink our position.",
+      "parentUuid": "3703f592_da35d52d",
+      "range": {
+        "startLine": 382,
+        "startChar": 13,
+        "endLine": 382,
+        "endChar": 30
+      },
+      "revId": "82f240cf8591c4a6a0c66406f13bdfb310405047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3703f592_898f1daa",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 1
