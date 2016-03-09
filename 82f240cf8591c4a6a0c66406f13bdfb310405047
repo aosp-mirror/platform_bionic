@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3703f592_8fa39dc9",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-09T19:25:57Z",
+      "side": 1,
+      "message": "we already have similar tests for things like the /proc/self/fd kernel patch we require.\n\ni think the only weird thing here is that only debuggerd cares whether this test passes, and debuggerd isn\u0027t mandated.\n\n_but_ this does seem helpful to OEMs. doesn\u0027t debuggerd have its own unit tests? maybe just stick that in there?",
+      "parentUuid": "3703f592_4cc1336a",
+      "range": {
+        "startLine": 382,
+        "startChar": 13,
+        "endLine": 382,
+        "endChar": 30
+      },
+      "revId": "82f240cf8591c4a6a0c66406f13bdfb310405047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3703f592_898f1daa",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 1
