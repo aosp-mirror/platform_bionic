@@ -17,55 +17,41 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#include <benchmark/Benchmark.h>
+#include <benchmark/benchmark.h>
 
-BENCHMARK_NO_ARG(BM_unistd_getpid);
-void BM_unistd_getpid::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+static void BM_unistd_getpid(benchmark::State& state) {
+  while (state.KeepRunning()) {
     getpid();
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_unistd_getpid);
 
-BENCHMARK_NO_ARG(BM_unistd_getpid_syscall);
-void BM_unistd_getpid_syscall::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+static void BM_unistd_getpid_syscall(benchmark::State& state) {
+  while (state.KeepRunning()) {
     syscall(__NR_getpid);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_unistd_getpid_syscall);
 
 #if defined(__BIONIC__)
 
 // Stop GCC optimizing out our pure function.
 /* Must not be static! */ pid_t (*gettid_fp)() = gettid;
 
-BENCHMARK_NO_ARG(BM_unistd_gettid);
-void BM_unistd_gettid::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+static void BM_unistd_gettid(benchmark::State& state) {
+  while (state.KeepRunning()) {
     gettid_fp();
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_unistd_gettid);
 
 #endif
 
-BENCHMARK_NO_ARG(BM_unistd_gettid_syscall);
-void BM_unistd_gettid_syscall::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+void BM_unistd_gettid_syscall(benchmark::State& state) {
+  while (state.KeepRunning()) {
     syscall(__NR_gettid);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_unistd_gettid_syscall);
+
+BENCHMARK_MAIN()

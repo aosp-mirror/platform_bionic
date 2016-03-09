@@ -16,218 +16,178 @@
 
 #include <pthread.h>
 
-#include <benchmark/Benchmark.h>
+#include <benchmark/benchmark.h>
 
 // Stop GCC optimizing out our pure function.
 /* Must not be static! */ pthread_t (*pthread_self_fp)() = pthread_self;
 
-BENCHMARK_NO_ARG(BM_pthread_self);
-void BM_pthread_self::Run(int iters) {
-  StartBenchmarkTiming();
-
-  for (int i = 0; i < iters; ++i) {
+static void BM_pthread_self(benchmark::State& state) {
+  while (state.KeepRunning()) {
     pthread_self_fp();
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_pthread_self);
 
-BENCHMARK_NO_ARG(BM_pthread_getspecific);
-void BM_pthread_getspecific::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_getspecific(benchmark::State& state) {
   pthread_key_t key;
   pthread_key_create(&key, NULL);
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_getspecific(key);
   }
 
-  StopBenchmarkTiming();
   pthread_key_delete(key);
 }
+BENCHMARK(BM_pthread_getspecific);
 
-BENCHMARK_NO_ARG(BM_pthread_setspecific);
-void BM_pthread_setspecific::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_setspecific(benchmark::State& state) {
   pthread_key_t key;
   pthread_key_create(&key, NULL);
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_setspecific(key, NULL);
   }
 
-  StopBenchmarkTiming();
   pthread_key_delete(key);
 }
+BENCHMARK(BM_pthread_setspecific);
 
 static void DummyPthreadOnceInitFunction() {
 }
 
-BENCHMARK_NO_ARG(BM_pthread_once);
-void BM_pthread_once::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_once(benchmark::State& state) {
   pthread_once_t once = PTHREAD_ONCE_INIT;
   pthread_once(&once, DummyPthreadOnceInitFunction);
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_once(&once, DummyPthreadOnceInitFunction);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_pthread_once);
 
-BENCHMARK_NO_ARG(BM_pthread_mutex_lock);
-void BM_pthread_mutex_lock::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_mutex_lock(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_pthread_mutex_lock);
 
-BENCHMARK_NO_ARG(BM_pthread_mutex_lock_ERRORCHECK);
-void BM_pthread_mutex_lock_ERRORCHECK::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
 
-BENCHMARK_NO_ARG(BM_pthread_mutex_lock_RECURSIVE);
-void BM_pthread_mutex_lock_RECURSIVE::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
   }
-
-  StopBenchmarkTiming();
 }
+BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
-BENCHMARK_NO_ARG(BM_pthread_rwlock_read);
-void BM_pthread_rwlock_read::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
   pthread_rwlock_init(&lock, NULL);
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_rwlock_rdlock(&lock);
     pthread_rwlock_unlock(&lock);
   }
 
-  StopBenchmarkTiming();
   pthread_rwlock_destroy(&lock);
 }
+BENCHMARK(BM_pthread_rwlock_read);
 
-BENCHMARK_NO_ARG(BM_pthread_rwlock_write);
-void BM_pthread_rwlock_write::Run(int iters) {
-  StopBenchmarkTiming();
+static void BM_pthread_rwlock_write(benchmark::State& state) {
   pthread_rwlock_t lock;
   pthread_rwlock_init(&lock, NULL);
-  StartBenchmarkTiming();
 
-  for (int i = 0; i < iters; ++i) {
+  while (state.KeepRunning()) {
     pthread_rwlock_wrlock(&lock);
     pthread_rwlock_unlock(&lock);
   }
 
-  StopBenchmarkTiming();
   pthread_rwlock_destroy(&lock);
 }
+BENCHMARK(BM_pthread_rwlock_write);
 
 static void* IdleThread(void*) {
   return NULL;
 }
 
-BENCHMARK_NO_ARG(BM_pthread_create);
-void BM_pthread_create::Run(int iters) {
-  StopBenchmarkTiming();
-  pthread_t thread;
-
-  for (int i = 0; i < iters; ++i) {
-    StartBenchmarkTiming();
+static void BM_pthread_create(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    pthread_t thread;
     pthread_create(&thread, NULL, IdleThread, NULL);
-    StopBenchmarkTiming();
+    state.PauseTiming();
     pthread_join(thread, NULL);
+    state.ResumeTiming();
   }
 }
+BENCHMARK(BM_pthread_create);
 
 static void* RunThread(void* arg) {
-  ::testing::Benchmark* benchmark = reinterpret_cast<::testing::Benchmark*>(arg);
-  benchmark->StopBenchmarkTiming();
+  benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
+  state.PauseTiming();
   return NULL;
 }
 
-BENCHMARK_NO_ARG(BM_pthread_create_and_run);
-void BM_pthread_create_and_run::Run(int iters) {
-  StopBenchmarkTiming();
-  pthread_t thread;
-
-  for (int i = 0; i < iters; ++i) {
-    StartBenchmarkTiming();
-    pthread_create(&thread, NULL, RunThread, this);
+static void BM_pthread_create_and_run(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    pthread_t thread;
+    pthread_create(&thread, NULL, RunThread, &state);
     pthread_join(thread, NULL);
+    state.ResumeTiming();
   }
 }
+BENCHMARK(BM_pthread_create_and_run);
 
 static void* ExitThread(void* arg) {
-  ::testing::Benchmark* benchmark = reinterpret_cast<::testing::Benchmark*>(arg);
-  benchmark->StartBenchmarkTiming();
+  benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
+  state.ResumeTiming();
   pthread_exit(NULL);
 }
 
-BENCHMARK_NO_ARG(BM_pthread_exit_and_join);
-void BM_pthread_exit_and_join::Run(int iters) {
-  StopBenchmarkTiming();
-  pthread_t thread;
-
-  for (int i = 0; i < iters; ++i) {
-    pthread_create(&thread, NULL, ExitThread, this);
+static void BM_pthread_exit_and_join(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    state.PauseTiming();
+    pthread_t thread;
+    pthread_create(&thread, NULL, ExitThread, &state);
     pthread_join(thread, NULL);
-    StopBenchmarkTiming();
   }
 }
+BENCHMARK(BM_pthread_exit_and_join);
 
-BENCHMARK_NO_ARG(BM_pthread_key_create);
-void BM_pthread_key_create::Run(int iters) {
-  StopBenchmarkTiming();
-  pthread_key_t key;
-
-  for (int i = 0; i < iters; ++i) {
-    StartBenchmarkTiming();
+static void BM_pthread_key_create(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    pthread_key_t key;
     pthread_key_create(&key, NULL);
-    StopBenchmarkTiming();
+
+    state.PauseTiming();
+    pthread_key_delete(key);
+    state.ResumeTiming();
+  }
+}
+BENCHMARK(BM_pthread_key_create);
+
+static void BM_pthread_key_delete(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    state.PauseTiming();
+    pthread_key_t key;
+    pthread_key_create(&key, NULL);
+    state.ResumeTiming();
+
     pthread_key_delete(key);
   }
 }
-
-BENCHMARK_NO_ARG(BM_pthread_key_delete);
-void BM_pthread_key_delete::Run(int iters) {
-  StopBenchmarkTiming();
-  pthread_key_t key;
-
-  for (int i = 0; i < iters; ++i) {
-    pthread_key_create(&key, NULL);
-    StartBenchmarkTiming();
-    pthread_key_delete(key);
-    StopBenchmarkTiming();
-  }
-}
+BENCHMARK(BM_pthread_key_delete);
