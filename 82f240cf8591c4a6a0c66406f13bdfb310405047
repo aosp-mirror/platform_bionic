@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3703f592_4cc1336a",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-09T19:16:57Z",
+      "side": 1,
+      "message": "This feels a bit more like a kernel test not a bionic test. I don\u0027t know if we have any other tests like this in bionic.\n\nAlso, we fail CTS if this fails. I\u0027m not sure that is a good idea.",
+      "range": {
+        "startLine": 382,
+        "startChar": 13,
+        "endLine": 382,
+        "endChar": 30
+      },
+      "revId": "82f240cf8591c4a6a0c66406f13bdfb310405047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3703f592_898f1daa",
         "filename": "tests/signal_test.cpp",
         "patchSetId": 1
