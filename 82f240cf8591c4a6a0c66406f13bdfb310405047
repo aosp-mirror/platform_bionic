@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3703f592_898f1daa",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-09T06:43:21Z",
+      "side": 1,
+      "message": "put this in the test failure message?",
+      "range": {
+        "startLine": 384,
+        "startChar": 0,
+        "endLine": 384,
+        "endChar": 70
+      },
+      "revId": "82f240cf8591c4a6a0c66406f13bdfb310405047",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
