@@ -30,7 +30,7 @@
 #define __BIONIC_PRIVATE_BIONIC_TLS_H_
 
 #include <sys/cdefs.h>
-#include <sys/limits.h>
+
 #include "bionic_macros.h"
 #include "__get_tls.h"
 
@@ -117,7 +117,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 class KernelArgumentBlock;
-extern __LIBC_HIDDEN__ void __libc_init_main_thread(KernelArgumentBlock&);
+extern void __libc_init_main_thread(KernelArgumentBlock&);
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */
