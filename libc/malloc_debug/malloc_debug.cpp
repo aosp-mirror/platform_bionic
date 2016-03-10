@@ -282,6 +282,10 @@ void* debug_malloc(size_t size) {
     return g_dispatch->malloc(size);
   }
 
+  if (size == 0) {
+    size = 1;
+  }
+
   size_t real_size = size + g_debug->extra_bytes();
   if (real_size < size) {
     // Overflow.
@@ -375,6 +379,10 @@ void debug_free(void* pointer) {
 void* debug_memalign(size_t alignment, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->memalign(alignment, bytes);
+  }
+
+  if (bytes == 0) {
+    bytes = 1;
   }
 
   void* pointer;
@@ -530,7 +538,12 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return g_dispatch->calloc(nmemb, bytes);
   }
 
-  size_t real_size = nmemb * bytes + g_debug->extra_bytes();
+  size_t size = nmemb * bytes;
+  if (size == 0) {
+    size = 1;
+  }
+
+  size_t real_size = size + g_debug->extra_bytes();
   if (real_size < bytes || real_size < nmemb) {
     // Overflow.
     errno = ENOMEM;
@@ -539,7 +552,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
 
   if (g_debug->need_header()) {
     // The above check will guarantee the multiply will not overflow.
-    if (bytes * nmemb > Header::max_size()) {
+    if (size > Header::max_size()) {
       errno = ENOMEM;
       return nullptr;
     }
@@ -551,7 +564,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
       return nullptr;
     }
     memset(header, 0, g_dispatch->malloc_usable_size(header));
-    return InitHeader(header, header, nmemb * bytes);
+    return InitHeader(header, header, size);
   } else {
     return g_dispatch->calloc(1, real_size);
   }
