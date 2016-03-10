@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f72a3d13_f7ebfaca",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-10T02:39:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f72a3d13_b424a049",
+      "range": {
+        "startLine": 6,
+        "startChar": 94,
+        "endLine": 6,
+        "endChar": 104
+      },
+      "revId": "41ed8aaeff5fdc1cd273cbf89f3b39eda5630319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f72a3d13_541aec00",
         "filename": "libc/dns/include/resolv_params.h",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f72a3d13_97f086b5",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-10T02:39:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f72a3d13_541aec00",
+      "range": {
+        "startLine": 7,
+        "startChar": 52,
+        "endLine": 7,
+        "endChar": 84
+      },
+      "revId": "41ed8aaeff5fdc1cd273cbf89f3b39eda5630319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f72a3d13_141474ce",
         "filename": "libc/dns/include/resolv_params.h",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2016-03-09T09:54:43Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 8,
+        "startChar": 37,
+        "endLine": 8,
+        "endChar": 38
+      },
+      "revId": "41ed8aaeff5fdc1cd273cbf89f3b39eda5630319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f72a3d13_b7f582a4",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-10T02:39:14Z",
+      "side": 1,
+      "message": "Oops, fixed, I hope.",
+      "parentUuid": "f72a3d13_141474ce",
       "range": {
         "startLine": 8,
         "startChar": 37,
