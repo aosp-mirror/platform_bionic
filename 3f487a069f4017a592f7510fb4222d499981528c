@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7d7e57d_8a4fcb63",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1360,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-10T22:07:37Z",
+      "side": 1,
+      "message": "Should you add a ASSERT_EQ(getpid(), gettid()) to make sure that this is the main thread.",
+      "revId": "3f487a069f4017a592f7510fb4222d499981528c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
