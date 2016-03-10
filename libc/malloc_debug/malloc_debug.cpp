@@ -594,7 +594,7 @@ int debug_iterate(uintptr_t base, size_t size,
             if (g_debug->track->Contains(header)) {
               // Return just the body of the allocation if we're sure the header exists
               ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
-                  header->real_size(), ctx->arg);
+                  header->usable_size, ctx->arg);
               return;
             }
           }
