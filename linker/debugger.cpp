@@ -39,6 +39,7 @@
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <sys/socket.h>
+#include <sys/syscall.h>
 #include <sys/un.h>
 #include <unistd.h>
 
@@ -61,7 +62,9 @@ enum debugger_action_t {
   DEBUGGER_ACTION_DUMP_BACKTRACE,
 };
 
-/* message sent over the socket */
+// Message sent over the socket.
+// NOTE: Any changes to this structure must also be reflected in
+//       system/core/include/cutils/debugger.h.
 struct __attribute__((packed)) debugger_msg_t {
   int32_t action;
   pid_t tid;
@@ -267,26 +270,32 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void*) 
 
   send_debuggerd_packet(info);
 
-  // Remove our net so we fault for real when we return.
+  // We need to return from the signal handler so that debuggerd can dump the
+  // thread that crashed, but returning here does not guarantee that the signal
+  // will be thrown again, even for SIGSEGV and friends, since the signal could
+  // have been sent manually. Resend the signal with rt_tgsigqueueinfo(2) to
+  // preserve the SA_SIGINFO contents.
   signal(signal_number, SIG_DFL);
 
-  // These signals are not re-thrown when we resume.  This means that
-  // crashing due to (say) SIGABRT doesn't work the way you'd expect it
-  // to.  We work around this by throwing them manually.  We don't want
-  // to do this for *all* signals because it'll screw up the si_addr for
-  // faults like SIGSEGV. It does screw up the si_code, which is why we
-  // passed that to debuggerd above.
-  switch (signal_number) {
-    case SIGABRT:
-    case SIGFPE:
-#if defined(SIGSTKFLT)
-    case SIGSTKFLT:
-#endif
-    case SIGTRAP:
-      tgkill(getpid(), gettid(), signal_number);
-      break;
-    default:    // SIGILL, SIGBUS, SIGSEGV
-      break;
+  struct siginfo si;
+  if (!info) {
+    memset(&si, 0, sizeof(si));
+    si.si_code = SI_USER;
+    si.si_pid = getpid();
+    si.si_uid = getuid();
+    info = &si;
+  } else if (info->si_code >= 0 || info->si_code == SI_TKILL) {
+    // rt_tgsigqueueinfo(2)'s documentation appears to be incorrect on kernels
+    // that contain commit 66dd34a (3.9+). The manpage claims to only allow
+    // negative si_code values that are not SI_TKILL, but 66dd34a changed the
+    // check to allow all si_code values in calls coming from inside the house.
+  }
+
+  int rc = syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), signal_number, info);
+  if (rc != 0) {
+    __libc_format_log(ANDROID_LOG_FATAL, "libc", "failed to resend signal during crash: %s",
+                      strerror(errno));
+    _exit(0);
   }
 }
 

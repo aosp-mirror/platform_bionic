@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <signal.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <gtest/gtest.h>
-
-#include <errno.h>
 
 #include "ScopedSignalHandler.h"
 
@@ -375,3 +377,36 @@ TEST(signal, sigtimedwait_timeout) {
 
   ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
 }
+
+#if defined(__BIONIC__)
+TEST(signal, rt_tgsigqueueinfo) {
+  // Test whether rt_tgsigqueueinfo allows sending arbitrary si_code values to self.
+  // If this fails, your kernel needs commit 66dd34a to be backported.
+  static constexpr char error_msg[] =
+    "\nPlease ensure that the following kernel patch has been applied:\n"
+    "* https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=66dd34ad31e5963d72a700ec3f2449291d322921\n";
+  static siginfo received;
+
+  struct sigaction handler = {};
+  handler.sa_sigaction = [](int, siginfo_t* siginfo, void*) { received = *siginfo; };
+  handler.sa_flags = SA_SIGINFO;
+
+  ASSERT_EQ(0, sigaction(SIGUSR1, &handler, nullptr));
+
+  siginfo sent = {};
+
+  sent.si_code = SI_TKILL;
+  ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
+    << "rt_tgsigqueueinfo failed: " << strerror(errno) << error_msg;
+  ASSERT_EQ(sent.si_code, received.si_code) << "rt_tgsigqueueinfo modified si_code, expected "
+                                            << sent.si_code << ", received " << received.si_code
+                                            << error_msg;
+
+  sent.si_code = SI_USER;
+  ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
+    << "rt_tgsigqueueinfo failed: " << strerror(errno) << error_msg;
+  ASSERT_EQ(sent.si_code, received.si_code) << "rt_tgsigqueueinfo modified si_code, expected "
+                                            << sent.si_code << ", received " << received.si_code
+                                            << error_msg;
+}
+#endif
