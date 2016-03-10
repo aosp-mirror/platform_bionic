@@ -1171,6 +1171,30 @@
       "revId": "88426a902eb21b0d541380305549840783badacd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f72a3d13_77ee0aaa",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-10T05:35:59Z",
+      "side": 1,
+      "message": "Done, both ifdefs are history now (wrt this file).",
+      "parentUuid": "3703f592_5523f69f",
+      "range": {
+        "startLine": 663,
+        "startChar": 0,
+        "endLine": 663,
+        "endChar": 20
+      },
+      "revId": "88426a902eb21b0d541380305549840783badacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
