@@ -78,6 +78,7 @@ libBionicStandardTests_src_files := \
     setjmp_test.cpp \
     signal_test.cpp \
     stack_protector_test.cpp \
+    stack_protector_test_helper.cpp \
     stack_unwinding_test.cpp \
     stdatomic_test.cpp \
     stdint_test.cpp \
