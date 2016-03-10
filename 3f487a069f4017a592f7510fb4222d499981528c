@@ -16,6 +16,29 @@
       "revId": "3f487a069f4017a592f7510fb4222d499981528c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d7e57d_aa31efeb",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-10T22:13:48Z",
+      "side": 1,
+      "message": "i\u0027m not sure this change actually helps houdini, because i thought it was these asserts they were failing, but i do like this change --- it\u0027s what we should have written in the first place :-)",
+      "range": {
+        "startLine": 1372,
+        "startChar": 0,
+        "endLine": 1375,
+        "endChar": 59
+      },
+      "revId": "3f487a069f4017a592f7510fb4222d499981528c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
