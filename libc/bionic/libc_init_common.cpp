@@ -64,10 +64,17 @@ char** environ;
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
+void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
+  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
+  // Take the first 4/8 for the -fstack-protector implementation.
+  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+}
+
 void __libc_init_globals(KernelArgumentBlock& args) {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
+  __libc_init_global_stack_chk_guard(args);
   __libc_auxv = args.auxv;
   __libc_globals.initialize();
   __libc_globals.mutate([&args](libc_globals* globals) {
@@ -82,9 +89,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
   errno = 0;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
   __abort_message_ptr = args.abort_message_ptr;
-
-  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
-  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(getauxval(AT_RANDOM));
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
