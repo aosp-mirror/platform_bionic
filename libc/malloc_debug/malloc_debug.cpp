@@ -538,13 +538,19 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return g_dispatch->calloc(nmemb, bytes);
   }
 
-  size_t size = nmemb * bytes;
+  size_t size;
+  if (__builtin_mul_overflow(nmemb, bytes, &size)) {
+    // Overflow
+    errno = ENOMEM;
+    return nullptr;
+  }
+
   if (size == 0) {
     size = 1;
   }
 
-  size_t real_size = size + g_debug->extra_bytes();
-  if (real_size < bytes || real_size < nmemb) {
+  size_t real_size;
+  if (__builtin_add_overflow(size, g_debug->extra_bytes(), &real_size)) {
     // Overflow.
     errno = ENOMEM;
     return nullptr;
