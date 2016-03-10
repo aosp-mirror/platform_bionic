@@ -1147,6 +1147,30 @@
       "revId": "88426a902eb21b0d541380305549840783badacd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3703f592_5523f69f",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-10T03:17:29Z",
+      "side": 1,
+      "message": "i _think_ the idea was to mark the difference between upstream code and Android-modified code, to make syncing with upstream easier. but the more code you add without that, the less useful it becomes, so maybe it\u0027s not worth keeping.\n\n(and if it is, a name like ANDROID_CHANGES is perhaps clearer.)",
+      "parentUuid": "f72a3d13_345f30b6",
+      "range": {
+        "startLine": 663,
+        "startChar": 0,
+        "endLine": 663,
+        "endChar": 20
+      },
+      "revId": "88426a902eb21b0d541380305549840783badacd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
