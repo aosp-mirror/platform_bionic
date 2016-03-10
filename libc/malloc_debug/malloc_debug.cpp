@@ -282,6 +282,10 @@ void* debug_malloc(size_t size) {
     return g_dispatch->malloc(size);
   }
 
+  if (size == 0) {
+    size = 1;
+  }
+
   size_t real_size = size + g_debug->extra_bytes();
   if (real_size < size) {
     // Overflow.
@@ -375,6 +379,10 @@ void debug_free(void* pointer) {
 void* debug_memalign(size_t alignment, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->memalign(alignment, bytes);
+  }
+
+  if (bytes == 0) {
+    bytes = 1;
   }
 
   void* pointer;
@@ -530,8 +538,19 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return g_dispatch->calloc(nmemb, bytes);
   }
 
-  size_t real_size = nmemb * bytes + g_debug->extra_bytes();
-  if (real_size < bytes || real_size < nmemb) {
+  size_t size;
+  if (__builtin_mul_overflow(nmemb, bytes, &size)) {
+    // Overflow
+    errno = ENOMEM;
+    return nullptr;
+  }
+
+  if (size == 0) {
+    size = 1;
+  }
+
+  size_t real_size;
+  if (__builtin_add_overflow(size, g_debug->extra_bytes(), &real_size)) {
     // Overflow.
     errno = ENOMEM;
     return nullptr;
@@ -539,7 +558,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
 
   if (g_debug->need_header()) {
     // The above check will guarantee the multiply will not overflow.
-    if (bytes * nmemb > Header::max_size()) {
+    if (size > Header::max_size()) {
       errno = ENOMEM;
       return nullptr;
     }
@@ -551,7 +570,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
       return nullptr;
     }
     memset(header, 0, g_dispatch->malloc_usable_size(header));
-    return InitHeader(header, header, nmemb * bytes);
+    return InitHeader(header, header, size);
   } else {
     return g_dispatch->calloc(1, real_size);
   }
@@ -594,7 +613,7 @@ int debug_iterate(uintptr_t base, size_t size,
             if (g_debug->track->Contains(header)) {
               // Return just the body of the allocation if we're sure the header exists
               ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
-                  header->real_size(), ctx->arg);
+                  header->usable_size, ctx->arg);
               return;
             }
           }
