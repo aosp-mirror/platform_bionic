@@ -180,6 +180,31 @@ LOCAL_SRC_FILES := \
     upstream-freebsd/lib/msun/src/w_drem.c \
     upstream-freebsd/lib/msun/src/w_dremf.c \
 
+# The FreeBSD complex functions appear to be better, but they're incomplete.
+# We take the FreeBSD implementations when they exist, but fill out the rest
+# of <complex.h> from NetBSD...
+LOCAL_SRC_FILES += \
+    upstream-netbsd/lib/libm/complex/cacoshl.c \
+    upstream-netbsd/lib/libm/complex/cacosl.c \
+    upstream-netbsd/lib/libm/complex/casinhl.c \
+    upstream-netbsd/lib/libm/complex/casinl.c \
+    upstream-netbsd/lib/libm/complex/catanhl.c \
+    upstream-netbsd/lib/libm/complex/catanl.c \
+    upstream-netbsd/lib/libm/complex/ccoshl.c \
+    upstream-netbsd/lib/libm/complex/ccosl.c \
+    upstream-netbsd/lib/libm/complex/cephes_subrl.c \
+    upstream-netbsd/lib/libm/complex/cexpl.c \
+    upstream-netbsd/lib/libm/complex/clog.c \
+    upstream-netbsd/lib/libm/complex/clogf.c \
+    upstream-netbsd/lib/libm/complex/clogl.c \
+    upstream-netbsd/lib/libm/complex/cpow.c \
+    upstream-netbsd/lib/libm/complex/cpowf.c \
+    upstream-netbsd/lib/libm/complex/cpowl.c \
+    upstream-netbsd/lib/libm/complex/csinhl.c \
+    upstream-netbsd/lib/libm/complex/csinl.c \
+    upstream-netbsd/lib/libm/complex/ctanhl.c \
+    upstream-netbsd/lib/libm/complex/ctanl.c \
+
 LOCAL_SRC_FILES_32 += \
     fake_long_double.c \
 
@@ -497,6 +522,9 @@ LOCAL_CFLAGS := \
     -Wno-uninitialized \
     -Wno-unknown-pragmas \
     -fvisibility=hidden \
+
+LOCAL_CONLYFLAGS := \
+    -std=gnu11 \
 
 LOCAL_ASFLAGS := \
     -Ibionic/libc \
