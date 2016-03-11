@@ -1290,6 +1290,12 @@ TEST_F(MallocDebugTest, overflow) {
   ASSERT_TRUE(pointer == nullptr);
   ASSERT_EQ(ENOMEM, errno);
 
+  const size_t size_t_bits = sizeof(size_t) * 8;
+  const size_t sqrt_size_t = 1ULL << (size_t_bits/2);
+  pointer = debug_calloc(sqrt_size_t + 1, sqrt_size_t);
+  ASSERT_TRUE(pointer == nullptr);
+  ASSERT_EQ(ENOMEM, errno);
+
   pointer = debug_realloc(nullptr, SIZE_MAX);
   ASSERT_TRUE(pointer == nullptr);
   ASSERT_EQ(ENOMEM, errno);
