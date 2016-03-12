@@ -334,8 +334,8 @@ static void malloc_init_impl(libc_globals* globals) {
   }
 
   // Initialize malloc debugging in the loaded module.
-  void* sym = dlsym(malloc_impl_handle, "debug_initialize");
-  auto init_func = reinterpret_cast<bool (*)(const MallocDispatch*, int*)>(sym);
+  auto init_func = reinterpret_cast<bool (*)(const MallocDispatch*, int*)>(
+      dlsym(malloc_impl_handle, "debug_initialize"));
   if (init_func == nullptr) {
     error_log("%s: debug_initialize routine not found in %s", getprogname(), DEBUG_SHARED_LIB);
     dlclose(malloc_impl_handle);
@@ -343,41 +343,36 @@ static void malloc_init_impl(libc_globals* globals) {
   }
 
   // Get the syms for the external functions.
-  sym = dlsym(malloc_impl_handle, "debug_finalize");
-  if (sym == nullptr) {
+  void* finalize_sym = dlsym(malloc_impl_handle, "debug_finalize");
+  if (finalize_sym == nullptr) {
     error_log("%s: debug_finalize routine not found in %s", getprogname(), DEBUG_SHARED_LIB);
     dlclose(malloc_impl_handle);
     return;
   }
-  g_debug_finalize_func = reinterpret_cast<void (*)()>(sym);
 
-  sym = dlsym(malloc_impl_handle, "debug_get_malloc_leak_info");
-  if (sym == nullptr) {
+  void* get_leak_info_sym = dlsym(malloc_impl_handle, "debug_get_malloc_leak_info");
+  if (get_leak_info_sym == nullptr) {
     error_log("%s: debug_get_malloc_leak_info routine not found in %s", getprogname(),
               DEBUG_SHARED_LIB);
     dlclose(malloc_impl_handle);
     return;
   }
-  g_debug_get_malloc_leak_info_func = reinterpret_cast<void (*)(uint8_t**, size_t*, size_t*,
-                                                                size_t*, size_t*)>(sym);
 
-  sym = dlsym(malloc_impl_handle, "debug_free_malloc_leak_info");
-  if (sym == nullptr) {
+  void* free_leak_info_sym = dlsym(malloc_impl_handle, "debug_free_malloc_leak_info");
+  if (free_leak_info_sym == nullptr) {
     error_log("%s: debug_free_malloc_leak_info routine not found in %s", getprogname(),
               DEBUG_SHARED_LIB);
     dlclose(malloc_impl_handle);
     return;
   }
-  g_debug_free_malloc_leak_info_func = reinterpret_cast<void (*)(uint8_t*)>(sym);
 
-  sym = dlsym(malloc_impl_handle, "debug_malloc_backtrace");
-  if (sym == nullptr) {
+  void* malloc_backtrace_sym = dlsym(malloc_impl_handle, "debug_malloc_backtrace");
+  if (malloc_backtrace_sym == nullptr) {
     error_log("%s: debug_malloc_backtrace routine not found in %s", getprogname(),
               DEBUG_SHARED_LIB);
     dlclose(malloc_impl_handle);
     return;
   }
-  g_debug_malloc_backtrace_func = reinterpret_cast<ssize_t (*)(void*, uintptr_t*, size_t)>(sym);
 
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild)) {
     dlclose(malloc_impl_handle);
@@ -386,10 +381,18 @@ static void malloc_init_impl(libc_globals* globals) {
 
   MallocDispatch malloc_dispatch_table;
   if (!InitMalloc(malloc_impl_handle, &malloc_dispatch_table, "debug")) {
-    g_debug_finalize_func();
+    auto finalize_func = reinterpret_cast<void (*)()>(finalize_sym);
+    finalize_func();
     dlclose(malloc_impl_handle);
     return;
   }
+
+  g_debug_finalize_func = reinterpret_cast<void (*)()>(finalize_sym);
+  g_debug_get_malloc_leak_info_func = reinterpret_cast<void (*)(
+      uint8_t**, size_t*, size_t*, size_t*, size_t*)>(get_leak_info_sym);
+  g_debug_free_malloc_leak_info_func = reinterpret_cast<void (*)(uint8_t*)>(free_leak_info_sym);
+  g_debug_malloc_backtrace_func = reinterpret_cast<ssize_t (*)(
+      void*, uintptr_t*, size_t)>(malloc_backtrace_sym);
 
   globals->malloc_dispatch = malloc_dispatch_table;
   libc_malloc_impl_handle = malloc_impl_handle;
