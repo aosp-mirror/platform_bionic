@@ -124,6 +124,14 @@ TEST_F(MallocDebugConfigTest, unknown_option) {
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugConfigTest, good_option_and_bad_option) {
+  ASSERT_FALSE(InitConfig("backtrace unknown_option"));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg("6 malloc_debug malloc_testing: unknown option unknown_option\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugConfigTest, unparseable_number) {
   ASSERT_FALSE(InitConfig("backtrace=XXX"));
 
