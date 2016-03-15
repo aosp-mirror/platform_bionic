@@ -387,13 +387,15 @@ TEST(signal, rt_tgsigqueueinfo) {
     "* https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=66dd34ad31e5963d72a700ec3f2449291d322921\n";
   static siginfo received;
 
-  struct sigaction handler = {};
+  struct sigaction handler;
+  memset(&handler, 0, sizeof(handler));
   handler.sa_sigaction = [](int, siginfo_t* siginfo, void*) { received = *siginfo; };
   handler.sa_flags = SA_SIGINFO;
 
   ASSERT_EQ(0, sigaction(SIGUSR1, &handler, nullptr));
 
-  siginfo sent = {};
+  siginfo sent;
+  memset(&sent, 0, sizeof(sent));
 
   sent.si_code = SI_TKILL;
   ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
