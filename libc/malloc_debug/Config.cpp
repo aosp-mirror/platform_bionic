@@ -333,9 +333,9 @@ bool Config::SetFromProperties() {
   size_t value;
   bool value_set;
   PropertyParser parser(property_str);
-  bool found = false;
   bool valid = true;
   while (valid && parser.Get(&property, &value, &value_set)) {
+    bool found = false;
     for (size_t i = 0; i < sizeof(features)/sizeof(Feature); i++) {
       if (property == features[i].name) {
         if (features[i].option == 0 && features[i].combo_option) {
