@@ -3829,7 +3829,7 @@ bool soinfo::prelink_image() {
     soname_ = basename(realpath_.c_str());
     DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
         get_realpath(), soname_);
-    add_dlwarning(get_realpath(), "missing DT_SONAME");
+    // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
   return true;
 }
