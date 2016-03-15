@@ -16,6 +16,24 @@
       "revId": "a8e1e618ad85a82ed859e5f13305067541ea1f1b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d7e57d_2a733427",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-03-15T01:28:56Z",
+      "side": 1,
+      "message": "I stupidly thought that I\u0027d get a warning if I failed to initialize everything in the struct...",
+      "parentUuid": "3cfcba2a_9ef6bd7b",
+      "revId": "a8e1e618ad85a82ed859e5f13305067541ea1f1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
