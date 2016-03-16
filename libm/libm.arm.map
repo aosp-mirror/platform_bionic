@@ -272,6 +272,29 @@ LIBC {
     *;
 };
 
+LIBC_O {
+  global:
+    cacoshl;
+    cacosl;
+    casinhl;
+    casinl;
+    catanhl;
+    catanl;
+    ccoshl;
+    ccosl;
+    cexpl;
+    clog;
+    clogf;
+    clogl;
+    cpow;
+    cpowf;
+    cpowl;
+    csinhl;
+    csinl;
+    ctanhl;
+    ctanl;
+} LIBC;
+
 LIBC_DEPRECATED { # arm mips
   global: # arm mips
     ___Unwind_Backtrace; # arm
@@ -375,4 +398,4 @@ LIBC_DEPRECATED { # arm mips
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
     restore_core_regs; # arm
-} LIBC; # arm mips
+} LIBC_O; # arm mips
