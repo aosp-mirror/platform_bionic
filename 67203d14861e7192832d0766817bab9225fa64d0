@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "977f414c_15bbc4e9",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Why double? This could be an int, or even a uint8_t if if was an integer percentage.",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 10
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_95c7d45c",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "In what units? does this need to be a long?",
+      "range": {
+        "startLine": 9,
+        "startChar": 29,
+        "endLine": 9,
+        "endChar": 44
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_35028859",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Can we add other parameters of interest here, such as the time between retransmits (and perhaps the number of retransmits, if that\u0027s easy to implement)? That would both make it easier to test this code and allow better configuration at runtime.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 2
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_75fc1085",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Put all of this inside () for safety?",
+      "range": {
+        "startLine": 359,
+        "startChar": 23,
+        "endLine": 359,
+        "endChar": 38
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_95f99496",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Typo, considers.",
+      "range": {
+        "startLine": 365,
+        "startChar": 68,
+        "endLine": 365,
+        "endChar": 78
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_b530583f",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Please limit lines to 100 characters.",
+      "range": {
+        "startLine": 366,
+        "startChar": 88,
+        "endLine": 366,
+        "endChar": 96
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_7526d0ff",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "and are thus not an error.",
+      "range": {
+        "startLine": 367,
+        "startChar": 26,
+        "endLine": 367,
+        "endChar": 27
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_952354ed",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "Two Rs in FORMERR?",
+      "range": {
+        "startLine": 369,
+        "startChar": 21,
+        "endLine": 369,
+        "endChar": 27
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_5529ccce",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "How can this happen? It seems like something we\u0027d really want to track. Can we treat it as its own error code, SAMPLE_STATE_INTERNAL_ERROR?",
+      "range": {
+        "startLine": 373,
+        "startChar": 19,
+        "endLine": 373,
+        "endChar": 47
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_75fb3066",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "This one is tricky. What if we have a resolver that responds with NOTIMP to all AAAA queries? (Yes, that\u0027s stupid, but...)\n\nI wonder if, for metrics purposes, it\u0027s useful to pass back all the return codes separately (plus add -1 and -2 for timeout and internal error)? Then for the purpose of resolver blacklisting, we can just define functions that decide whether a given code is an error or not.",
+      "range": {
+        "startLine": 385,
+        "startChar": 6,
+        "endLine": 385,
+        "endChar": 12
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_1503c42e",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-16T07:36:09Z",
+      "side": 1,
+      "message": "And if all of them are invalid? Do we give up? That seems bad.",
+      "range": {
+        "startLine": 655,
+        "startChar": 81,
+        "endLine": 655,
+        "endChar": 89
+      },
+      "revId": "67203d14861e7192832d0766817bab9225fa64d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
