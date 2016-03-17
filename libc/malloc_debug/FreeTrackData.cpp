@@ -67,18 +67,25 @@ void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
                                   const void* pointer) {
   ScopedDisableDebugCalls disable;
 
-  const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
-  size_t bytes = header->usable_size;
-  bytes = (bytes < debug.config().fill_on_free_bytes) ? bytes : debug.config().fill_on_free_bytes;
-  while (bytes > 0) {
-    size_t bytes_to_cmp = (bytes < cmp_mem_.size()) ? bytes : cmp_mem_.size();
-    if (memcmp(memory, cmp_mem_.data(), bytes_to_cmp) != 0) {
-      LogFreeError(debug, header, reinterpret_cast<const uint8_t*>(pointer));
-      break;
+  if (header->tag != DEBUG_FREE_TAG) {
+    error_log(LOG_DIVIDER);
+    error_log("+++ ALLOCATION %p HAS CORRUPTED HEADER TAG 0x%x AFTER FREE", pointer, header->tag);
+    error_log(LOG_DIVIDER);
+  } else {
+    const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
+    size_t bytes = header->usable_size;
+    bytes = (bytes < debug.config().fill_on_free_bytes) ? bytes : debug.config().fill_on_free_bytes;
+    while (bytes > 0) {
+      size_t bytes_to_cmp = (bytes < cmp_mem_.size()) ? bytes : cmp_mem_.size();
+      if (memcmp(memory, cmp_mem_.data(), bytes_to_cmp) != 0) {
+        LogFreeError(debug, header, reinterpret_cast<const uint8_t*>(pointer));
+        break;
+      }
+      bytes -= bytes_to_cmp;
+      memory = &memory[bytes_to_cmp];
     }
-    bytes -= bytes_to_cmp;
-    memory = &memory[bytes_to_cmp];
   }
+
   auto back_iter = backtraces_.find(header);
   if (back_iter != backtraces_.end()) {
     g_dispatch->free(reinterpret_cast<void*>(back_iter->second));
@@ -98,7 +105,6 @@ void FreeTrackData::Add(DebugData& debug, const Header* header) {
     list_.pop_back();
   }
 
-  // Only log the free backtrace if we are using the free track feature.
   if (backtrace_num_frames_ > 0) {
     BacktraceHeader* back_header = reinterpret_cast<BacktraceHeader*>(
       g_dispatch->malloc(sizeof(BacktraceHeader) + backtrace_num_frames_ * sizeof(uintptr_t)));
