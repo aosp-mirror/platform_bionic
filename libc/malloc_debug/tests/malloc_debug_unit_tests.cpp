@@ -24,6 +24,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <thread>
 #include <vector>
 #include <utility>
 
@@ -896,6 +897,53 @@ TEST_F(MallocDebugTest, free_track_use_after_free_call_free) {
   expected_log += "6 malloc_debug   #03 pc 0x42\n";
   expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, free_track_header_tag_corrupted) {
+  Init("free_track=100 free_track_backtrace_num_frames=0");
+
+  uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 100);
+  debug_free(pointer);
+
+  pointer[-get_tag_offset()] = 0x00;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log(DIVIDER);
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ ALLOCATION %p HAS CORRUPTED HEADER TAG 0x1cc7dc00 AFTER FREE\n",
+      pointer);
+  expected_log += DIVIDER;
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, free_track_multiple_thread) {
+  Init("free_track=10 free_track_backtrace_num_frames=0");
+
+  std::vector<std::thread*> threads(1000);
+  for (size_t i = 0; i < threads.size(); i++) {
+    threads[i] = new std::thread([](){
+      for (size_t j = 0; j < 100; j++) {
+        void* mem = debug_malloc(100);
+        write(0, mem, 0);
+        debug_free(mem);
+      }
+    });
+  }
+  for (size_t i = 0; i < threads.size(); i++) {
+    threads[i]->join();
+    delete threads[i];
+  }
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, get_malloc_leak_info_invalid) {

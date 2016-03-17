@@ -112,6 +112,7 @@ static void InitAtfork() {
     );
   });
 }
+
 static void LogTagError(const Header* header, const void* pointer, const char* name) {
   ScopedDisableDebugCalls disable;
 
@@ -145,7 +146,7 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
     return nullptr;
   }
   header->usable_size -= g_debug->pointer_offset() +
-      reinterpret_cast<uintptr_t>(orig_pointer) - reinterpret_cast<uintptr_t>(header);
+      reinterpret_cast<uintptr_t>(header) - reinterpret_cast<uintptr_t>(orig_pointer);
 
   if (g_debug->config().options & FRONT_GUARD) {
     uint8_t* guard = g_debug->GetFrontGuard(header);
@@ -326,8 +327,9 @@ void debug_free(void* pointer) {
 
   void* free_pointer = pointer;
   size_t bytes;
+  Header* header;
   if (g_debug->need_header()) {
-    Header* header = g_debug->GetHeader(pointer);
+    header = g_debug->GetHeader(pointer);
     if (header->tag != DEBUG_TAG) {
       LogTagError(header, pointer, "free");
       return;
@@ -353,13 +355,6 @@ void debug_free(void* pointer) {
       }
       g_debug->track->Remove(header, backtrace_found);
     }
-
-    if (g_debug->config().options & FREE_TRACK) {
-      g_debug->free_track->Add(*g_debug, header);
-
-      // Do not free this pointer just yet.
-      free_pointer = nullptr;
-    }
     header->tag = DEBUG_FREE_TAG;
 
     bytes = header->usable_size;
@@ -373,7 +368,16 @@ void debug_free(void* pointer) {
     memset(pointer, g_debug->config().fill_free_value, bytes);
   }
 
-  g_dispatch->free(free_pointer);
+  if (g_debug->config().options & FREE_TRACK) {
+    // Do not add the allocation until we are done modifying the pointer
+    // itself. This avoids a race if a lot of threads are all doing
+    // frees at the same time and we wind up trying to really free this
+    // pointer from another thread, while still trying to free it in
+    // this function.
+    g_debug->free_track->Add(*g_debug, header);
+  } else {
+    g_dispatch->free(free_pointer);
+  }
 }
 
 void* debug_memalign(size_t alignment, size_t bytes) {
