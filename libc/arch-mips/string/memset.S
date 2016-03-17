@@ -208,7 +208,10 @@ LEAF(__memset_chk,0)
 #else
 LEAF(__memset_chk)
 #endif
+	.set	noreorder
   bgtu   a2, a3, __memset_chk_fail
+  la     t9, __memset_chk_fail
+	.set	reorder
 
   // Fall through to memset...
 END(__memset_chk)
