@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "977f414c_040b9807",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_e4b5d4f4",
+      "range": {
+        "startLine": 1943,
+        "startChar": 4,
+        "endLine": 1943,
+        "endChar": 5
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "977f414c_c4c0d04d",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-03-11T08:55:55Z",
       "side": 1,
       "message": "extra whitespace?",
+      "range": {
+        "startLine": 1974,
+        "startChar": 0,
+        "endLine": 1974,
+        "endChar": 11
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_24209c83",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1974,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_c4c0d04d",
       "range": {
         "startLine": 1974,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "977f414c_441da044",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_a4bbccea",
+      "range": {
+        "startLine": 2164,
+        "startChar": 33,
+        "endLine": 2164,
+        "endChar": 34
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "977f414c_84b08808",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2016-03-11T08:55:55Z",
       "side": 1,
       "message": "Join with the previous line?",
+      "range": {
+        "startLine": 2171,
+        "startChar": 4,
+        "endLine": 2171,
+        "endChar": 5
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_641aa44f",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2171,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_84b08808",
       "range": {
         "startLine": 2171,
         "startChar": 4,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "977f414c_a40bcc08",
+        "filename": "libc/dns/resolv/res_query.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Probably a left-over, odd.",
+      "parentUuid": "977f414c_04bb98e9",
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "977f414c_24d09c15",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 5
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "977f414c_e405d4f2",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_24d09c15",
+      "range": {
+        "startLine": 418,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 4
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "977f414c_44cda07e",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 5
@@ -145,6 +283,30 @@
       "writtenOn": "2016-03-11T08:55:55Z",
       "side": 1,
       "message": "line length",
+      "range": {
+        "startLine": 673,
+        "startChar": 100,
+        "endLine": 673,
+        "endChar": 105
+      },
+      "revId": "fb828f16b0ee2c2c426757bee0325a2102b792ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "977f414c_8417a822",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-03-18T08:27:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977f414c_44cda07e",
       "range": {
         "startLine": 673,
         "startChar": 100,
