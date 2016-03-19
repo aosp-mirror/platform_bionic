@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "dc0f1e77_acece2af",
+        "filename": "tests/getauxval_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-03-19T04:52:04Z",
+      "side": 1,
+      "message": "Should there be a test of AT_HWCAP too? In ART there is:\nhttps://android.googlesource.com/platform/art/+/master/runtime/arch/arm/instruction_set_features_arm.cc#170\nthis test will try to ensure that AT_HWCAP is in sync with /proc/cpuinfo:\nhttps://android.googlesource.com/platform/art/+/master/runtime/arch/instruction_set_features_test.cc\nhttps://android.googlesource.com/platform/art/+/master/runtime/arch/arm/instruction_set_features_arm.cc#125\nand the C++ compiler\u0027s #defines:\nhttps://android.googlesource.com/platform/art/+/master/runtime/arch/arm/instruction_set_features_arm.cc#110\nIt is very common on ARM for these 3 to drift apart and performance suffer. The ART test would be better in CTS.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 36
+      },
+      "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_0cfa5660",
+        "filename": "tests/getauxval_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1010118
+      },
+      "writtenOn": "2016-03-19T04:52:04Z",
+      "side": 1,
+      "message": "Fwiw, if the crypto library is part of the system image it should really be using the compiler\u0027s __ARM_FEATURE_CRYPTO\t #define.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 37
+      },
+      "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc0f1e77_4c6baef4",
         "filename": "tests/getauxval_test.cpp",
         "patchSetId": 2
