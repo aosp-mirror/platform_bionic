@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1cc45660_7559e829",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-19T00:53:37Z",
+      "side": 1,
+      "message": "enabled",
+      "range": {
+        "startLine": 27,
+        "startChar": 69,
+        "endLine": 27,
+        "endChar": 75
+      },
+      "revId": "eede63a2c2a9e25aa9fe4f4b28545dae85cc8ec1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc45660_b53aa0c7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-19T00:53:37Z",
+      "side": 1,
+      "message": "it\u0027s probably obvious to anyone who has any reason to be reading this, but maybe we should have an introductory section explaining guards? (especially because nothing here mentions when they\u0027re checked.)",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 11
+      },
+      "revId": "eede63a2c2a9e25aa9fe4f4b28545dae85cc8ec1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc45660_953da4c4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-19T00:53:37Z",
+      "side": 1,
+      "message": "and\n\nthis whole sentence might be less awkward as just:\n\n  On allocation fill with 0xeb, and on free fill with 0xef.",
+      "range": {
+        "startLine": 71,
+        "startChar": 26,
+        "endLine": 71,
+        "endChar": 27
+      },
+      "revId": "eede63a2c2a9e25aa9fe4f4b28545dae85cc8ec1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cc45660_153354f4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-19T00:53:37Z",
+      "side": 1,
+      "message": "a few missing backslashes in this section...",
+      "range": {
+        "startLine": 130,
+        "startChar": 21,
+        "endLine": 130,
+        "endChar": 22
+      },
+      "revId": "eede63a2c2a9e25aa9fe4f4b28545dae85cc8ec1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
