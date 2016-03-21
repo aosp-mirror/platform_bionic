@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dc0f1e77_2f3104a2",
+        "filename": "tests/getauxval_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-21T18:13:27Z",
+      "side": 1,
+      "message": "i think there already is a CTS test for the cpuinfo guarantees we do/don\u0027t make.",
+      "parentUuid": "dc0f1e77_acece2af",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 36
+      },
+      "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc0f1e77_0cfa5660",
         "filename": "tests/getauxval_test.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "dc0f1e77_afab34e6",
+        "filename": "tests/getauxval_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-21T18:13:27Z",
+      "side": 1,
+      "message": "no, this is for third-party code, but i\u0027ll fix the comments to make that clearer.",
+      "parentUuid": "dc0f1e77_0cfa5660",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 37
+      },
+      "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc0f1e77_4c6baef4",
         "filename": "tests/getauxval_test.cpp",
         "patchSetId": 2
@@ -59,6 +107,24 @@
       "writtenOn": "2016-03-19T03:52:05Z",
       "side": 1,
       "message": "add #else message? \"This test does nothing...\"",
+      "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_cfae70f8",
+        "filename": "tests/getauxval_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-21T18:13:27Z",
+      "side": 1,
+      "message": "yeah, i felt that the \"arm_\" in the name was sufficient -- and \"i\u0027m not ARM\" is effectively \"success\" anyway, but i guess i should do what all the others do. (i\u0027ll fix the \"does nothing\"s in this file too, since that\u0027s a useless and mislead thing to say.)",
+      "parentUuid": "dc0f1e77_4c6baef4",
       "revId": "8549ee06b2cd3a48cf0262858fcfc7b017ce7ebd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
