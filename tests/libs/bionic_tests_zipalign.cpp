@@ -138,6 +138,7 @@ int main(int argc, char* argv[]) {
 
   int32_t return_value = OpenArchive(argv[2], &handle);
   if (return_value != 0) {
+    CloseArchive(handle);
     fprintf(stderr, "Unable to open '%s': %s\n", argv[2], ErrorCodeString(return_value));
     return false;
   }
