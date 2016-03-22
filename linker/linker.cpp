@@ -462,13 +462,21 @@ static void resolve_paths(std::vector<std::string>& paths,
         }
 
         ZipArchiveHandle handle = nullptr;
+        void* cookie = nullptr;
+        auto zip_guard = make_scope_guard([&]() {
+          if (cookie != nullptr) {
+            EndIteration(cookie);
+          }
+          if (handle != nullptr) {
+            CloseArchive(handle);
+          }
+        });
         if (OpenArchive(resolved_path, &handle) != 0) {
           DL_WARN("Warning: unable to open zip archive: %s", resolved_path);
           continue;
         }
 
         // Check if zip-file has a dir with entry_path name
-        void* cookie = nullptr;
         std::string prefix_str = entry_path + "/";
         ZipString prefix(prefix_str.c_str());
 
@@ -488,13 +496,6 @@ static void resolve_paths(std::vector<std::string>& paths,
                   prefix_str.c_str(), zip_path.c_str());
           continue;
         }
-
-        auto zip_guard = make_scope_guard([&]() {
-          if (cookie != nullptr) {
-            EndIteration(cookie);
-          }
-          CloseArchive(handle);
-        });
 
         resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
       }
@@ -1481,6 +1482,7 @@ bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle
 
   if (OpenArchiveFd(fd, "", handle) != 0) {
     // invalid zip-file (?)
+    CloseArchive(handle);
     close(fd);
     return false;
   }
