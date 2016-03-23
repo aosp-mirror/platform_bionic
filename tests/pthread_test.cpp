@@ -260,10 +260,10 @@ TEST(pthread, pthread_create_EAGAIN) {
 }
 
 TEST(pthread, pthread_no_join_after_detach) {
-  SpinFunctionHelper spinhelper;
+  SpinFunctionHelper spin_helper;
 
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spin_helper.GetFunction(), NULL));
 
   // After a pthread_detach...
   ASSERT_EQ(0, pthread_detach(t1));
@@ -274,10 +274,10 @@ TEST(pthread, pthread_no_join_after_detach) {
 }
 
 TEST(pthread, pthread_no_op_detach_after_join) {
-  SpinFunctionHelper spinhelper;
+  SpinFunctionHelper spin_helper;
 
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spin_helper.GetFunction(), NULL));
 
   // If thread 2 is already waiting to join thread 1...
   pthread_t t2;
@@ -292,7 +292,7 @@ TEST(pthread, pthread_no_op_detach_after_join) {
 #endif
   AssertDetached(t1, false);
 
-  spinhelper.UnSpin();
+  spin_helper.UnSpin();
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
@@ -396,32 +396,46 @@ TEST(pthread, pthread_sigmask) {
   ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
 }
 
-TEST(pthread, pthread_setname_np__too_long) {
+static void test_pthread_setname_np__pthread_getname_np(pthread_t t) {
+  ASSERT_EQ(0, pthread_setname_np(t, "short"));
+  char name[32];
+  ASSERT_EQ(0, pthread_getname_np(t, name, sizeof(name)));
+  ASSERT_STREQ("short", name);
+
   // The limit is 15 characters --- the kernel's buffer is 16, but includes a NUL.
-  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "123456789012345"));
-  ASSERT_EQ(ERANGE, pthread_setname_np(pthread_self(), "1234567890123456"));
+  ASSERT_EQ(0, pthread_setname_np(t, "123456789012345"));
+  ASSERT_EQ(0, pthread_getname_np(t, name, sizeof(name)));
+  ASSERT_STREQ("123456789012345", name);
+
+  ASSERT_EQ(ERANGE, pthread_setname_np(t, "1234567890123456"));
+
+  // The passed-in buffer should be at least 16 bytes.
+  ASSERT_EQ(0, pthread_getname_np(t, name, 16));
+  ASSERT_EQ(ERANGE, pthread_getname_np(t, name, 15));
 }
 
-TEST(pthread, pthread_setname_np__self) {
-  ASSERT_EQ(0, pthread_setname_np(pthread_self(), "short 1"));
+TEST(pthread, pthread_setname_np__pthread_getname_np__self) {
+  test_pthread_setname_np__pthread_getname_np(pthread_self());
 }
 
-TEST(pthread, pthread_setname_np__other) {
-  SpinFunctionHelper spinhelper;
+TEST(pthread, pthread_setname_np__pthread_getname_np__other) {
+  SpinFunctionHelper spin_helper;
 
-  pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
-  ASSERT_EQ(0, pthread_setname_np(t1, "short 2"));
-  spinhelper.UnSpin();
-  ASSERT_EQ(0, pthread_join(t1, nullptr));
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, spin_helper.GetFunction(), NULL));
+  test_pthread_setname_np__pthread_getname_np(t);
+  spin_helper.UnSpin();
+  ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
-TEST(pthread, pthread_setname_np__no_such_thread) {
+TEST(pthread, pthread_setname_np__pthread_getname_np__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  // Call pthread_setname_np after thread has already exited.
+  // Call pthread_getname_np and pthread_setname_np after the thread has already exited.
   ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
+  char name[64];
+  ASSERT_EQ(ENOENT, pthread_getname_np(dead_thread, name, sizeof(name)));
 }
 
 TEST(pthread, pthread_kill__0) {
@@ -455,16 +469,16 @@ TEST(pthread, pthread_detach__no_such_thread) {
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
-  SpinFunctionHelper spinhelper;
+  SpinFunctionHelper spin_helper;
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, spinhelper.GetFunction(), NULL));
+  ASSERT_EQ(0, pthread_create(&t, NULL, spin_helper.GetFunction(), NULL));
 
   clockid_t c;
   ASSERT_EQ(0, pthread_getcpuclockid(t, &c));
   timespec ts;
   ASSERT_EQ(0, clock_gettime(c, &ts));
-  spinhelper.UnSpin();
+  spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
@@ -509,10 +523,10 @@ TEST(pthread, pthread_kill__no_such_thread) {
 }
 
 TEST(pthread, pthread_join__multijoin) {
-  SpinFunctionHelper spinhelper;
+  SpinFunctionHelper spin_helper;
 
   pthread_t t1;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, spinhelper.GetFunction(), NULL));
+  ASSERT_EQ(0, pthread_create(&t1, NULL, spin_helper.GetFunction(), NULL));
 
   pthread_t t2;
   ASSERT_EQ(0, pthread_create(&t2, NULL, JoinFn, reinterpret_cast<void*>(t1)));
@@ -522,7 +536,7 @@ TEST(pthread, pthread_join__multijoin) {
   // Multiple joins to the same thread should fail.
   ASSERT_EQ(EINVAL, pthread_join(t1, NULL));
 
-  spinhelper.UnSpin();
+  spin_helper.UnSpin();
 
   // ...but t2's join on t1 still goes ahead (which we can tell because our join on t2 finishes).
   void* join_result;
