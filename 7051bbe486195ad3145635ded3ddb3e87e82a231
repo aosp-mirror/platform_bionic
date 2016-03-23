@@ -1,0 +1,1079 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcf71ee0_8386ded4",
+        "filename": "libc/dns/include/resolv_netid.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Any reason you\u0027re pulling this in instead of using a forward declaration of struct __res_params ?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 26
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_638c02f4",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "\"static\" is a overloaded term. Perhaps say \"the following parameters are hardcoded\"?",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 35
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_2334cabb",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "If this can\u0027t be changed, I think we need more than 8 here. Per in-person chat: since we don\u0027t know how many we need here, perhaps be generous? If we assume 5 networks with 3 resolvers each, and 4 bytes per sample, 64 samples would still be less than 4k. 50? 60? 64?",
+      "range": {
+        "startLine": 6,
+        "startChar": 22,
+        "endLine": 6,
+        "endChar": 23
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_438906e2",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Typo, overridden. Or, better, s/overriden/set/",
+      "range": {
+        "startLine": 8,
+        "startChar": 32,
+        "endLine": 8,
+        "endChar": 41
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e35eb2ed",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "If this is going into a struct that contains an integer between 0 and 255 (or 100 or whatever), it should be an integer between 0 and 255 and not a float.",
+      "range": {
+        "startLine": 9,
+        "startChar": 32,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_23960a02",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Don\u0027t mix tabs and spaces.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 43
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_03930e12",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Why 255 and not 100, which is going to be easier for humans to understand? Do we really need the extra granularity that we can get by going from 100 to 255?",
+      "range": {
+        "startLine": 20,
+        "startChar": 60,
+        "endLine": 20,
+        "endChar": 63
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e360f2e2",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of calling integers \"char\". Can you make these chars uint8_t or int8_t instead?",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 17
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_034aee25",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Per in-person discussion, it would be good to have a max_samples here too. That will allow us to store a large number of samples (e.g., 64) if needed, but no require us to use that many samples (which could result in us only determining very slowly that a nameserver is not working).",
+      "range": {
+        "startLine": 21,
+        "startChar": 18,
+        "endLine": 21,
+        "endChar": 29
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_c365f6f0",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Do we need this? Can we just let the compiler do what it wants with it?",
+      "range": {
+        "startLine": 23,
+        "startChar": 2,
+        "endLine": 23,
+        "endChar": 30
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_036c2ed3",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Do you still use this?",
+      "range": {
+        "startLine": 213,
+        "startChar": 13,
+        "endLine": 213,
+        "endChar": 31
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_437226b4",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Can you use time_t instead?",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 225,
+        "endChar": 8
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e3491261",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Update comment? 1 is FORMERR and 2 is NXDOMAIN; you\u0027re not using those for timeout and internal error, right? Perhaps you meant to use RCODE_TIMEOUT and RCODE_INTERNAL_ERROR?",
+      "range": {
+        "startLine": 226,
+        "startChar": 44,
+        "endLine": 226,
+        "endChar": 79
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_0331cecb",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Long line. Also elsewhere.",
+      "range": {
+        "startLine": 244,
+        "startChar": 98,
+        "endLine": 244,
+        "endChar": 103
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_632ac25e",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1945,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "EMAGICNUMBER. Also, please add spaces around \u0027*\u0027.",
+      "range": {
+        "startLine": 1945,
+        "startChar": 49,
+        "endLine": 1945,
+        "endChar": 54
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_4327c694",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1946,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be 0, for compatibility with existing code?",
+      "range": {
+        "startLine": 1946,
+        "startChar": 26,
+        "endLine": 1946,
+        "endChar": 38
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_03bc2ef9",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1970,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Why not just \"\u003d\"?\n\n    cache_info-\u003eparams \u003d *params;",
+      "range": {
+        "startLine": 1970,
+        "startChar": 12,
+        "endLine": 1970,
+        "endChar": 76
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e39912a7",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2023,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Long line.",
+      "range": {
+        "startLine": 2023,
+        "startChar": 96,
+        "endLine": 2023,
+        "endChar": 103
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_83a81eb6",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Do we need to do this even if all we do is change the parameters? I think we don\u0027t, because all the state that we keep is in the samples, and we never keep state that is derived in any way from the parameters. But please add a comment here explaining that.",
+      "range": {
+        "startLine": 2024,
+        "startChar": 15,
+        "endLine": 2024,
+        "endChar": 21
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e382322d",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2154,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Is it possible to avoid a macro that will likely be unfamiliar to anyone reading the code? How is this different from just \"sizeof(info-\u003ensstats)\"?",
+      "range": {
+        "startLine": 2154,
+        "startChar": 37,
+        "endLine": 2154,
+        "endChar": 84
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_26cbb86c",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2167,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "This lock does not protect against two concurrent DNS lookups attempting to update the stats at the same time. Suppose I start DNS lookup A, then DNS lookup B. A gets the stats, and then B writes the stats. Then B succeeds, and writes back the stats, and after a while A succeeds, and writes back the stats. As a result, B\u0027s stats are lost.",
+      "range": {
+        "startLine": 2167,
+        "startChar": 4,
+        "endLine": 2167,
+        "endChar": 46
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_c34e1667",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Why are these here instead of in resolv_private.h, which defines the data structure that these values are part of?",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 360,
+        "endChar": 25
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_835ffe16",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Please give this a more descriptive name.",
+      "range": {
+        "startLine": 361,
+        "startChar": 8,
+        "endLine": 361,
+        "endChar": 15
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_a35afa26",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "If you don\u0027t use this, you should probably delete it instead of leaving it commented out.",
+      "range": {
+        "startLine": 362,
+        "startChar": 0,
+        "endLine": 362,
+        "endChar": 37
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_6375229a",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "TIMESPEC_TO_MS",
+      "range": {
+        "startLine": 363,
+        "startChar": 8,
+        "endLine": 363,
+        "endChar": 19
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_06c8bc6b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Can you move all the stats management code to a new file (perhaps res_stats.c?)? That would have the advantages of a) not futher cluttering this file, which is now 1500 lines, and b) clearly indicating that the whole file is Android-specific and separate from upstream. It might also help untangle the code.",
+      "range": {
+        "startLine": 366,
+        "startChar": 0,
+        "endLine": 366,
+        "endChar": 21
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_239e0ad9",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "time_t?",
+      "range": {
+        "startLine": 393,
+        "startChar": 24,
+        "endLine": 393,
+        "endChar": 28
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_439106c9",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Can we use an integer number of milliseconds instead of a double in seconds, like we do elsewhere?",
+      "range": {
+        "startLine": 393,
+        "startChar": 7,
+        "endLine": 393,
+        "endChar": 22
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_a3531a0d",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 402,
+        "startChar": 69,
+        "endLine": 402,
+        "endChar": 79
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_83581e28",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "send_dg",
+      "range": {
+        "startLine": 405,
+        "startChar": 53,
+        "endLine": 405,
+        "endChar": 60
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_633e42c0",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 406,
+        "startChar": 72,
+        "endLine": 406,
+        "endChar": 78
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_433b46ce",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 407,
+        "startChar": 58,
+        "endLine": 407,
+        "endChar": 66
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_639402bb",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we do something with this?",
+      "range": {
+        "startLine": 421,
+        "startChar": 7,
+        "endLine": 421,
+        "endChar": 27
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_a3b43a49",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "#include \u003cstdbool.h\u003e and use bool?",
+      "range": {
+        "startLine": 452,
+        "startChar": 7,
+        "endLine": 452,
+        "endChar": 20
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_637d2241",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "This is an IP address, right? If so, its length should be INET6_ADDRSTRLEN, not NI_MAXHOST. Might want to rename it to \"addr\" instead of \"host\".",
+      "range": {
+        "startLine": 463,
+        "startChar": 2,
+        "endLine": 463,
+        "endChar": 23
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_8367feb5",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "You only use this if (DBG), right? Can you put it in an if (DBG) stanza? Or will the compiler come out with spurious \"might be used uninitialized\" warnings?",
+      "range": {
+        "startLine": 464,
+        "startChar": 2,
+        "endLine": 464,
+        "endChar": 13
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_437a264b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Put this all on one line?",
+      "range": {
+        "startLine": 464,
+        "startChar": 2,
+        "endLine": 465,
+        "endChar": 19
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_c3bf3624",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "How does this work? By default params-\u003esuccess_threshold is 63 (0.25 * 255). But success_rate can be at most 1 because by definition success \u003c\u003d total. So this statement will always be true?",
+      "range": {
+        "startLine": 480,
+        "startChar": 3,
+        "endLine": 480,
+        "endChar": 48
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_23e60a30",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Extra blank line.",
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_03e30e20",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "bool?",
+      "range": {
+        "startLine": 638,
+        "startChar": 5,
+        "endLine": 638,
+        "endChar": 18
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e6e5a0f9",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Can you factor out the \"find out which servers are valid\" code out to its own function? This function is already very long and hard to understand. The function could populate a passed-in MAXNS-sized array of bools, perhaps.",
+      "range": {
+        "startLine": 645,
+        "startChar": 0,
+        "endLine": 649,
+        "endChar": 6
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_e3b0f228",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "\u0026\u0026 valid_servers (ns);",
+      "range": {
+        "startLine": 655,
+        "startChar": 37,
+        "endLine": 655,
+        "endChar": 38
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_c6eaa4c7",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Do we want to record stats in this state? We haven\u0027t actually done a DNS lookup. This is sort of moot though, since we don\u0027t use hooks. Perhaps add a comment that this is only here for completeness, but we don\u0027t currently use hooks.",
+      "range": {
+        "startLine": 683,
+        "startChar": 40,
+        "endLine": 684,
+        "endChar": 13
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_46411483",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1103,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "If we can get here on fatal error, we should probably not set rcode. How do we know if there was an error? Can we just set rcode if (resplen \u003e 0) ?",
+      "range": {
+        "startLine": 1103,
+        "startChar": 17,
+        "endLine": 1103,
+        "endChar": 38
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_26fdf87f",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Move this up before the comment about delay?",
+      "range": {
+        "startLine": 1222,
+        "startChar": 8,
+        "endLine": 1222,
+        "endChar": 38
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_06fafc87",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "How is done different from finish?",
+      "range": {
+        "startLine": 1336,
+        "startChar": 8,
+        "endLine": 1336,
+        "endChar": 27
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf71ee0_264e18b3",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-03-23T07:15:22Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 1435,
+        "startChar": 17,
+        "endLine": 1435,
+        "endChar": 38
+      },
+      "revId": "7051bbe486195ad3145635ded3ddb3e87e82a231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
