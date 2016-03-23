@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc0f1e77_7e272352",
+        "filename": "libc/bionic/pthread_setname_np.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-23T20:28:29Z",
+      "side": 1,
+      "message": "Should this check for zero too? It seems unlikely, but maybe not as unlikely as we would like.",
+      "range": {
+        "startLine": 74,
+        "startChar": 6,
+        "endLine": 74,
+        "endChar": 13
+      },
+      "revId": "f8e521206a052b2ff750ecbbf02bb76aefe2d8c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_a9e687d1",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-23T20:28:29Z",
+      "side": 1,
+      "message": "Any chance of a race where this gets called before the thread is fully up?",
+      "range": {
+        "startLine": 422,
+        "startChar": 2,
+        "endLine": 422,
+        "endChar": 49
+      },
+      "revId": "f8e521206a052b2ff750ecbbf02bb76aefe2d8c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
