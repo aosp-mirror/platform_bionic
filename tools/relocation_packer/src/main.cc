@@ -25,7 +25,7 @@
 #include "elf_traits.h"
 #include "libelf.h"
 
-#include "nativehelper/ScopedFd.h"
+#include <android-base/unique_fd.h>
 
 static void PrintUsage(const char* argv0) {
   std::string temporary = argv0;
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
   }
 
   const char* file = argv[argc - 1];
-  ScopedFd fd(open(file, O_RDWR));
+  android::base::unique_fd fd(open(file, O_RDWR));
   if (fd.get() == -1) {
     LOG(ERROR) << file << ": " << strerror(errno);
     return 1;
