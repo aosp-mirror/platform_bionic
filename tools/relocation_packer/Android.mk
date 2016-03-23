@@ -31,12 +31,9 @@ LOCAL_SRC_FILES := \
   src/sleb128.cc \
 
 LOCAL_STATIC_LIBRARIES := libelf libz
-LOCAL_C_INCLUDES := external/elfutils/src/libelf
 LOCAL_MODULE := lib_relocation_packer
 
 LOCAL_CPPFLAGS := $(common_cppflags)
-
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -45,17 +42,14 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 
 LOCAL_SRC_FILES := src/main.cc
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
+LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz libbase
 
 # Statically linking libc++ to make it work from prebuilts
 LOCAL_CXX_STL := libc++_static
-LOCAL_C_INCLUDES := external/elfutils/src/libelf libnativehelper/include
 
 LOCAL_MODULE := relocation_packer
 
 LOCAL_CPPFLAGS := $(common_cppflags)
-
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
 include $(BUILD_HOST_EXECUTABLE)
 
@@ -71,7 +65,6 @@ LOCAL_SRC_FILES := \
   src/packer_unittest.cc \
 
 LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
-LOCAL_C_INCLUDES := external/elfutils/src/libelf
 
 LOCAL_CPPFLAGS := $(common_cppflags)
 
