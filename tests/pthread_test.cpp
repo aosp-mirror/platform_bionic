@@ -1818,55 +1818,82 @@ TEST(pthread, pthread_barrierattr_smoke) {
   ASSERT_EQ(0, pthread_barrierattr_destroy(&attr));
 }
 
-struct BarrierTestHelperArg {
-  std::atomic<pid_t> tid;
-  pthread_barrier_t* barrier;
+struct BarrierTestHelperData {
+  size_t thread_count;
+  pthread_barrier_t barrier;
+  std::atomic<int> finished_mask;
+  std::atomic<int> serial_thread_count;
   size_t iteration_count;
+  std::atomic<size_t> finished_iteration_count;
+
+  BarrierTestHelperData(size_t thread_count, size_t iteration_count)
+      : thread_count(thread_count), finished_mask(0), serial_thread_count(0),
+        iteration_count(iteration_count), finished_iteration_count(0) {
+  }
+};
+
+struct BarrierTestHelperArg {
+  int id;
+  BarrierTestHelperData* data;
 };
 
 static void BarrierTestHelper(BarrierTestHelperArg* arg) {
-  arg->tid = gettid();
-  for (size_t i = 0; i < arg->iteration_count; ++i) {
-    ASSERT_EQ(0, pthread_barrier_wait(arg->barrier));
+  for (size_t i = 0; i < arg->data->iteration_count; ++i) {
+    int result = pthread_barrier_wait(&arg->data->barrier);
+    if (result == PTHREAD_BARRIER_SERIAL_THREAD) {
+      arg->data->serial_thread_count++;
+    } else {
+      ASSERT_EQ(0, result);
+    }
+    arg->data->finished_mask |= (1 << arg->id);
+    if (arg->data->finished_mask == ((1 << arg->data->thread_count) - 1)) {
+      ASSERT_EQ(1, arg->data->serial_thread_count);
+      arg->data->finished_iteration_count++;
+      arg->data->finished_mask = 0;
+      arg->data->serial_thread_count = 0;
+    }
   }
 }
 
 TEST(pthread, pthread_barrier_smoke) {
   const size_t BARRIER_ITERATION_COUNT = 10;
   const size_t BARRIER_THREAD_COUNT = 10;
-  pthread_barrier_t barrier;
-  ASSERT_EQ(0, pthread_barrier_init(&barrier, nullptr, BARRIER_THREAD_COUNT + 1));
-  std::vector<pthread_t> threads(BARRIER_THREAD_COUNT);
+  BarrierTestHelperData data(BARRIER_THREAD_COUNT, BARRIER_ITERATION_COUNT);
+  ASSERT_EQ(0, pthread_barrier_init(&data.barrier, nullptr, data.thread_count));
+  std::vector<pthread_t> threads(data.thread_count);
   std::vector<BarrierTestHelperArg> args(threads.size());
   for (size_t i = 0; i < threads.size(); ++i) {
-    args[i].tid = 0;
-    args[i].barrier = &barrier;
-    args[i].iteration_count = BARRIER_ITERATION_COUNT;
+    args[i].id = i;
+    args[i].data = &data;
     ASSERT_EQ(0, pthread_create(&threads[i], nullptr,
                                 reinterpret_cast<void* (*)(void*)>(BarrierTestHelper), &args[i]));
-  }
-  for (size_t iteration = 0; iteration < BARRIER_ITERATION_COUNT; ++iteration) {
-    for (size_t i = 0; i < threads.size(); ++i) {
-      WaitUntilThreadSleep(args[i].tid);
-    }
-    ASSERT_EQ(PTHREAD_BARRIER_SERIAL_THREAD, pthread_barrier_wait(&barrier));
   }
   for (size_t i = 0; i < threads.size(); ++i) {
     ASSERT_EQ(0, pthread_join(threads[i], nullptr));
   }
-  ASSERT_EQ(0, pthread_barrier_destroy(&barrier));
+  ASSERT_EQ(data.iteration_count, data.finished_iteration_count);
+  ASSERT_EQ(0, pthread_barrier_destroy(&data.barrier));
+}
+
+struct BarrierDestroyTestArg {
+  std::atomic<int> tid;
+  pthread_barrier_t* barrier;
+};
+
+static void BarrierDestroyTestHelper(BarrierDestroyTestArg* arg) {
+  arg->tid = gettid();
+  ASSERT_EQ(0, pthread_barrier_wait(arg->barrier));
 }
 
 TEST(pthread, pthread_barrier_destroy) {
   pthread_barrier_t barrier;
   ASSERT_EQ(0, pthread_barrier_init(&barrier, nullptr, 2));
   pthread_t thread;
-  BarrierTestHelperArg arg;
+  BarrierDestroyTestArg arg;
   arg.tid = 0;
   arg.barrier = &barrier;
-  arg.iteration_count = 1;
   ASSERT_EQ(0, pthread_create(&thread, nullptr,
-                              reinterpret_cast<void* (*)(void*)>(BarrierTestHelper), &arg));
+                              reinterpret_cast<void* (*)(void*)>(BarrierDestroyTestHelper), &arg));
   WaitUntilThreadSleep(arg.tid);
   ASSERT_EQ(EBUSY, pthread_barrier_destroy(&barrier));
   ASSERT_EQ(PTHREAD_BARRIER_SERIAL_THREAD, pthread_barrier_wait(&barrier));
