@@ -47,6 +47,11 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   void* new_tls = NULL;
   int* child_tid = NULL;
 
+  if (!child_stack) {
+    errno = EINVAL;
+    return -1;
+  }
+
   // Extract any optional parameters required by the flags.
   va_list args;
   va_start(args, arg);
