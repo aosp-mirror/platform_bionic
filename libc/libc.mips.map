@@ -1255,6 +1255,11 @@ LIBC_N {
     tmpfile64;
 } LIBC;
 
+LIBC_O {
+  global:
+    pthread_getname_np;
+} LIBC_N;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86 mips
@@ -1328,4 +1333,4 @@ LIBC_PRIVATE {
     vfdprintf; # arm x86 mips nobrillo
     wait3; # arm x86 mips nobrillo
     wcswcs; # arm x86 mips nobrillo
-} LIBC_N;
+} LIBC_O;
