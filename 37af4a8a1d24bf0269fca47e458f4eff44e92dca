@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcd7ca7d_b06040e2",
+        "filename": "libc/bionic/mntent.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T22:21:30Z",
+      "side": 1,
+      "message": "braces or all on one line.",
+      "revId": "37af4a8a1d24bf0269fca47e458f4eff44e92dca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcd7ca7d_90653cf2",
+        "filename": "libc/include/mntent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T22:21:30Z",
+      "side": 1,
+      "message": "type*",
+      "revId": "37af4a8a1d24bf0269fca47e458f4eff44e92dca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcd7ca7d_d05fb415",
+        "filename": "tests/mntent_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T22:21:30Z",
+      "side": 1,
+      "message": "iirc this breaks mips. we need to use memset for now in our tests, sadly :-(",
+      "revId": "37af4a8a1d24bf0269fca47e458f4eff44e92dca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
