@@ -103,7 +103,23 @@ struct android_namespace_t {
     permitted_paths_ = permitted_paths;
   }
 
-  soinfo::soinfo_list_t& soinfo_list() { return soinfo_list_; }
+  void add_soinfo(soinfo* si) {
+    soinfo_list_.push_back(si);
+  }
+
+  void add_soinfos(const soinfo::soinfo_list_t& soinfos) {
+    for (auto si : soinfos) {
+      add_soinfo(si);
+    }
+  }
+
+  void remove_soinfo(soinfo* si) {
+    soinfo_list_.remove_if([&](soinfo* candidate) {
+      return si == candidate;
+    });
+  }
+
+  const soinfo::soinfo_list_t& soinfo_list() const { return soinfo_list_; }
 
   // For isolated namespaces - checks if the file is on the search path;
   // always returns true for not isolated namespace.
@@ -121,7 +137,8 @@ struct android_namespace_t {
 };
 
 android_namespace_t g_default_namespace;
-android_namespace_t* g_anonymous_namespace = &g_default_namespace;
+static std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
+static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
@@ -283,7 +300,8 @@ static soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
   sonext->next = si;
   sonext = si;
 
-  ns->soinfo_list().push_back(si);
+  si->generate_handle();
+  ns->add_soinfo(si);
 
   TRACE("name %s: allocated soinfo @ %p", name, si);
   return si;
@@ -332,9 +350,7 @@ static void soinfo_free(soinfo* si) {
   }
 
   // remove from the namespace
-  si->get_namespace()->soinfo_list().remove_if([&](soinfo* candidate) {
-    return si == candidate;
-  });
+  si->get_namespace()->remove_soinfo(si);
 
   si->~soinfo();
   g_soinfo_allocator.free(si);
@@ -830,6 +846,10 @@ soinfo::soinfo(android_namespace_t* ns, const char* realpath,
   this->namespace_ = ns;
 }
 
+soinfo::~soinfo() {
+  g_soinfo_handles_map.erase(handle_);
+}
+
 static uint32_t calculate_elf_hash(const char* name) {
   const uint8_t* name_bytes = reinterpret_cast<const uint8_t*>(name);
   uint32_t h = 0, g;
@@ -1252,21 +1272,21 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
                                             void* handle) {
   SymbolName symbol_name(name);
 
-  soinfo::soinfo_list_t& soinfo_list = ns->soinfo_list();
-  soinfo::soinfo_list_t::iterator start = soinfo_list.begin();
+  auto& soinfo_list = ns->soinfo_list();
+  auto start = soinfo_list.begin();
 
   if (handle == RTLD_NEXT) {
     if (caller == nullptr) {
       return nullptr;
     } else {
-      soinfo::soinfo_list_t::iterator it = soinfo_list.find(caller);
+      auto it = soinfo_list.find(caller);
       CHECK (it != soinfo_list.end());
       start = ++it;
     }
   }
 
   const ElfW(Sym)* s = nullptr;
-  for (soinfo::soinfo_list_t::iterator it = start, end = soinfo_list.end(); it != end; ++it) {
+  for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
     // if the library is opened by application with target api level <= 22
@@ -1638,7 +1658,7 @@ static bool load_library(android_namespace_t* ns,
     if (si == nullptr) {
       si = g_public_namespace.find_if(predicate);
       if (si != nullptr) {
-        ns->soinfo_list().push_back(si);
+        ns->add_soinfo(si);
       }
     }
 
@@ -1812,7 +1832,7 @@ static bool find_library_internal(android_namespace_t* ns,
     });
 
     if (candidate != nullptr) {
-      ns->soinfo_list().push_back(candidate);
+      ns->add_soinfo(candidate);
       task->set_soinfo(candidate);
       return true;
     }
@@ -2179,7 +2199,7 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   parse_LD_LIBRARY_PATH(ld_library_path);
 }
 
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
+void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
                   void* caller_addr) {
   soinfo* const caller = find_containing_library(caller_addr);
 
@@ -2223,9 +2243,10 @@ soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   soinfo* si = find_library(ns, name, flags, extinfo, caller);
   if (si != nullptr) {
     si->call_constructors();
+    return si->to_handle();
   }
 
-  return si;
+  return nullptr;
 }
 
 int do_dladdr(const void* addr, Dl_info* info) {
@@ -2249,6 +2270,19 @@ int do_dladdr(const void* addr, Dl_info* info) {
   }
 
   return 1;
+}
+
+static soinfo* soinfo_from_handle(void* handle) {
+  if ((reinterpret_cast<uintptr_t>(handle) & 1) != 0) {
+    auto it = g_soinfo_handles_map.find(reinterpret_cast<uintptr_t>(handle));
+    if (it == g_soinfo_handles_map.end()) {
+      return nullptr;
+    } else {
+      return it->second;
+    }
+  }
+
+  return static_cast<soinfo*>(handle);
 }
 
 bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
@@ -2282,7 +2316,12 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
   if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
     sym = dlsym_linear_lookup(ns, sym_name, vi, &found, caller, handle);
   } else {
-    sym = dlsym_handle_lookup(reinterpret_cast<soinfo*>(handle), &found, sym_name, vi);
+    soinfo* si = soinfo_from_handle(handle);
+    if (si == nullptr) {
+      DL_ERR("dlsym failed: invalid handle: %p", handle);
+      return false;
+    }
+    sym = dlsym_handle_lookup(si, &found, sym_name, vi);
   }
 
   if (sym != nullptr) {
@@ -2301,9 +2340,16 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
   return false;
 }
 
-void do_dlclose(soinfo* si) {
+int do_dlclose(void* handle) {
   ProtectedDataGuard guard;
+  soinfo* si = soinfo_from_handle(handle);
+  if (si == nullptr) {
+    DL_ERR("invalid handle: %p", handle);
+    return -1;
+  }
+
   soinfo_unload(si);
+  return 0;
 }
 
 bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path) {
@@ -2390,12 +2436,10 @@ android_namespace_t* create_namespace(const void* caller_addr,
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
     // If shared - clone the caller namespace
-    auto& soinfo_list = caller_ns->soinfo_list();
-    std::copy(soinfo_list.begin(), soinfo_list.end(), std::back_inserter(ns->soinfo_list()));
+    ns->add_soinfos(caller_ns->soinfo_list());
   } else {
     // If not shared - copy only the global group
-    auto global_group = make_global_group(caller_ns);
-    std::copy(global_group.begin(), global_group.end(), std::back_inserter(ns->soinfo_list()));
+    ns->add_soinfos(make_global_group(caller_ns));
   }
 
   return ns;
@@ -3237,6 +3281,39 @@ uint32_t soinfo::get_target_sdk_version() const {
   }
 
   return local_group_root_->target_sdk_version_;
+}
+
+uintptr_t soinfo::get_handle() const {
+  CHECK(has_min_version(3));
+  CHECK(handle_ != 0);
+  return handle_;
+}
+
+void* soinfo::to_handle() {
+  if (get_application_target_sdk_version() <= 23 || !has_min_version(3)) {
+    return this;
+  }
+
+  return reinterpret_cast<void*>(get_handle());
+}
+
+void soinfo::generate_handle() {
+  CHECK(has_min_version(3));
+  CHECK(handle_ == 0); // Make sure this is the first call
+
+  // Make sure the handle is unique and does not collide
+  // with special values which are RTLD_DEFAULT and RTLD_NEXT.
+  do {
+    arc4random_buf(&handle_, sizeof(handle_));
+    // the least significant bit for the handle is always 1
+    // making it easy to test the type of handle passed to
+    // dl* functions.
+    handle_ = handle_ | 1;
+  } while (handle_ == reinterpret_cast<uintptr_t>(RTLD_DEFAULT) ||
+           handle_ == reinterpret_cast<uintptr_t>(RTLD_NEXT) ||
+           g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
+
+  g_soinfo_handles_map[handle_] = this;
 }
 
 bool soinfo::prelink_image() {
@@ -4212,7 +4289,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // before get_libdl_info().
   solist = get_libdl_info();
   sonext = get_libdl_info();
-  g_default_namespace.soinfo_list().push_back(get_libdl_info());
+  g_default_namespace.add_soinfo(get_libdl_info());
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.

@@ -1050,3 +1050,19 @@ TEST(dlext, ns_anonymous) {
 
   ASSERT_TRUE(ns_get_dlopened_string_anon() != ns_get_dlopened_string_private());
 }
+
+TEST(dlext, dlopen_handle_value_platform) {
+  void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE((reinterpret_cast<uintptr_t>(handle) & 1) != 0)
+          << "dlopen should return odd value for the handle";
+  dlclose(handle);
+}
+
+TEST(dlext, dlopen_handle_value_app_compat) {
+  android_set_application_target_sdk_version(23);
+  void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
+  ASSERT_TRUE(reinterpret_cast<uintptr_t>(handle) % sizeof(uintptr_t) == 0)
+          << "dlopen should return valid pointer";
+  dlclose(handle);
+}
+
