@@ -168,6 +168,24 @@
     },
     {
       "key": {
+        "uuid": "dc0f1e77_cfc7830f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:43:50Z",
+      "side": 1,
+      "message": "(if you rebase, the LIBC_O section will spring into existence :-) )",
+      "parentUuid": "dc0f1e77_44e1baba",
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc0f1e77_afe687d1",
         "filename": "tests/Android.mk",
         "patchSetId": 1
