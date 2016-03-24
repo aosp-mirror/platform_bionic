@@ -385,6 +385,7 @@ cc_library_static {
     cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
+        "-Wno-unused-parameter",
         "-DPOSIX_MISTAKE",
         "-include netbsd-compat.h",
     ],
