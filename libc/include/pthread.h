@@ -247,8 +247,9 @@ pthread_t pthread_self(void) __pure2;
 
 #if defined(__USE_GNU)
 int pthread_getname_np(pthread_t, char*, size_t) __nonnull((2));
-int pthread_setname_np(pthread_t, const char*) __nonnull((2));
 #endif
+/* TODO: this should be __USE_GNU too. */
+int pthread_setname_np(pthread_t, const char*) __nonnull((2));
 
 int pthread_setschedparam(pthread_t, int, const struct sched_param*) __nonnull((3));
 
