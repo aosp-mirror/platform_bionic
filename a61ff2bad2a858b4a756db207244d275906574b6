@@ -2,6 +2,155 @@
   "comments": [
     {
       "key": {
+        "uuid": "dc0f1e77_6f05af34",
+        "filename": "libc/bionic/sigrelse.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "no error checking here?",
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_cf15c35f",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "s/disp/handler/?",
+      "range": {
+        "startLine": 32,
+        "startChar": 42,
+        "endLine": 32,
+        "endChar": 46
+      },
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_8f046b37",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "struct sigaction new_sa;\n  struct sigaction* new_sa_ptr \u003d nullptr;\n  int proc_mask_how \u003d SIG_BLOCK;\n\n(one per line, don\u0027t define until you can assign.)",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 20
+      },
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_ef187f97",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "if (disp !\u003d SIG_HOLD) {",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 8
+      },
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_2f13b77a",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "if (sigaction(...) \u003d\u003d -1) return SIG_ERR;\n\nor\n\n  if (sigaction(...) \u003d\u003d -1) {\n    return SIG_ERR;\n  }\n\n(braces or all on one line, compare against -1.)",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 51,
+        "endChar": 19
+      },
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_0f107b6a",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "check?",
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_6fae4f66",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "or just\n\n  return sigismember(...) ? SIG_HOLD : ...;",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 27
+      },
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc0f1e77_44e1baba",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
@@ -13,6 +162,46 @@
       "writtenOn": "2016-03-23T23:34:35Z",
       "side": 1,
       "message": "these should go to LIBC_O section of the script",
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_afe687d1",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "\\",
+      "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc0f1e77_8febcb98",
+        "filename": "tests/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-24T03:23:43Z",
+      "side": 1,
+      "message": "i thought we already had this? ah, there\u0027s a special case in tmpfile.cpp.",
+      "range": {
+        "startLine": 56,
+        "startChar": 6,
+        "endLine": 56,
+        "endChar": 22
+      },
       "revId": "a61ff2bad2a858b4a756db207244d275906574b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
