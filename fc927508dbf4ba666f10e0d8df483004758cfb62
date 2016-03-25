@@ -16,6 +16,24 @@
       "revId": "fc927508dbf4ba666f10e0d8df483004758cfb62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c39b6b4_8d2fc1df",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4194,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-25T00:29:04Z",
+      "side": 1,
+      "message": "actually not even mprotect syscall itself, but the errno requiring tls...",
+      "parentUuid": "1c39b6b4_ed0da589",
+      "revId": "fc927508dbf4ba666f10e0d8df483004758cfb62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
