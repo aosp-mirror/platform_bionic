@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <stdint.h>
+#include <sys/capability.h>
 #include <sys/param.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
@@ -985,4 +986,47 @@ TEST(UNISTD_TEST, lockf_partial_with_child) {
   // when the process exited, so check it can be locked now.
   ASSERT_EQ(file_size/2, lseek64(tf.fd, file_size/2, SEEK_SET));
   ASSERT_EQ(0, lockf64(tf.fd, F_TLOCK, file_size/2));
+}
+
+TEST(UNISTD_TEST, getdomainname) {
+  struct utsname u;
+  ASSERT_EQ(0, uname(&u));
+
+  char buf[sizeof(u.domainname)];
+  ASSERT_EQ(0, getdomainname(buf, sizeof(buf)));
+  EXPECT_STREQ(u.domainname, buf);
+
+#if defined(__BIONIC__)
+  // bionic and glibc have different behaviors when len is too small
+  ASSERT_EQ(-1, getdomainname(buf, strlen(u.domainname)));
+  EXPECT_EQ(EINVAL, errno);
+#endif
+}
+
+TEST(UNISTD_TEST, setdomainname) {
+  __user_cap_header_struct header;
+  memset(&header, 0, sizeof(header));
+  header.version = _LINUX_CAPABILITY_VERSION_3;
+
+  __user_cap_data_struct old_caps[_LINUX_CAPABILITY_U32S_3];
+  ASSERT_EQ(0, capget(&header, &old_caps[0]));
+
+  auto admin_idx = CAP_TO_INDEX(CAP_SYS_ADMIN);
+  auto admin_mask = CAP_TO_MASK(CAP_SYS_ADMIN);
+  bool has_admin = old_caps[admin_idx].effective & admin_mask;
+  if (has_admin) {
+    __user_cap_data_struct new_caps[_LINUX_CAPABILITY_U32S_3];
+    memcpy(new_caps, old_caps, sizeof(new_caps));
+    new_caps[admin_idx].effective &= ~admin_mask;
+
+    ASSERT_EQ(0, capset(&header, &new_caps[0])) << "failed to drop admin privileges";
+  }
+
+  const char* name = "newdomainname";
+  ASSERT_EQ(-1, setdomainname(name, strlen(name)));
+  ASSERT_EQ(EPERM, errno);
+
+  if (has_admin) {
+    ASSERT_EQ(0, capset(&header, &old_caps[0])) << "failed to restore admin privileges";
+  }
 }
