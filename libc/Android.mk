@@ -109,6 +109,7 @@ libc_bionic_ndk_src_files := \
     bionic/ftruncate.cpp \
     bionic/futimens.cpp \
     bionic/getcwd.cpp \
+    bionic/getdomainname.cpp \
     bionic/gethostname.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
