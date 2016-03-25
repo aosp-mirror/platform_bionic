@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c39b6b4_ed0da589",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4194,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-25T00:25:31Z",
+      "side": 1,
+      "message": "+ add a comment about why we need this here (mprotect syscall).",
+      "revId": "fc927508dbf4ba666f10e0d8df483004758cfb62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
