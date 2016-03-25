@@ -50,6 +50,7 @@ int endmntent(FILE*);
 struct mntent* getmntent(FILE*);
 struct mntent* getmntent_r(FILE*, struct mntent*, char*, int);
 FILE* setmntent(const char*, const char*);
+char* hasmntopt(const struct mntent*, const char*);
 
 __END_DECLS
 
