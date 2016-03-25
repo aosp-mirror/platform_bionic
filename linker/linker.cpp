@@ -44,6 +44,7 @@
 #include <vector>
 
 // Private C library headers.
+#include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -65,6 +66,8 @@
 
 extern void __libc_init_globals(KernelArgumentBlock&);
 extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
+
+extern "C" void _start();
 
 // Override macros to use C++ style casts.
 #undef ELF_ST_TYPE
@@ -3891,10 +3894,9 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #endif
 
-  /* We can also turn on GNU RELRO protection */
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
-           get_realpath(), strerror(errno));
+  // We can also turn on GNU RELRO protection if we're not linking the dynamic linker
+  // itself --- it can't make system calls yet, and will have to call protect_relro later.
+  if (!is_linker() && !protect_relro()) {
     return false;
   }
 
@@ -3916,6 +3918,15 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 
   notify_gdb_of_load(this);
+  return true;
+}
+
+bool soinfo::protect_relro() {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
+    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
+           get_realpath(), strerror(errno));
+    return false;
+  }
   return true;
 }
 
@@ -4221,8 +4232,9 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
-extern "C" int __set_tls(void*);
-extern "C" void _start();
+static void __linker_cannot_link(KernelArgumentBlock& args) {
+  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+}
 
 /*
  * This is the entry point for the linker, called from begin.S. This
@@ -4235,9 +4247,6 @@ extern "C" void _start();
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
-
-  void* tls[BIONIC_TLS_SLOTS];
-  __set_tls(tls);
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
@@ -4267,17 +4276,32 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.phnum = elf_hdr->e_phnum;
   linker_so.set_linker_flag();
 
+  // Prelink the linker so we can access linker globals.
+  if (!linker_so.prelink_image()) __linker_cannot_link(args);
+
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because
   // linker is built with DT_SYMBOLIC and therefore relocates its symbols against
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!(linker_so.prelink_image() && linker_so.link_image(g_empty_list, g_empty_list, nullptr))) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
-  }
+  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args);
 
+#if defined(__i386__)
+  // On x86, we can't make system calls before this point.
+  // We can't move this up because this needs to assign to a global.
+  // Note that until we call __libc_init_main_thread below we have
+  // no TLS, so you shouldn't make a system call that can fail, because
+  // it will SEGV when it tries to set errno.
+  __libc_init_sysinfo(args);
+#endif
+
+  // Initialize the main thread (including TLS, so system calls really work).
   __libc_init_main_thread(args);
+
+  // We didn't protect the linker's RELRO pages in link_image because we
+  // couldn't make system calls on x86 at that point, but we can now...
+  if (!linker_so.protect_relro()) __linker_cannot_link(args);
 
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
