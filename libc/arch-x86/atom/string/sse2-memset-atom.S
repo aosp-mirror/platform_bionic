@@ -113,11 +113,12 @@ __x86.get_pc_thunk.bx:
 #endif
 
 ENTRY(__memset_chk)
-  movl LEN(%esp), %ecx
-  cmpl %ecx, CHK_DST_LEN(%esp)
-  jbe memset
+  ENTRANCE
 
-  jmp __memset_chk_fail
+  movl LEN(%esp), %ecx
+  cmpl CHK_DST_LEN(%esp), %ecx
+  ja __memset_chk_fail
+  jmp L(memset_length_loaded)
 END(__memset_chk)
 
 	.section .text.sse2,"ax",@progbits
@@ -126,6 +127,7 @@ ENTRY (memset)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
+L(memset_length_loaded):
 	movzbl	CHR(%esp), %eax
 	movb	%al, %ah
 	/* Fill the whole EAX with pattern.  */
