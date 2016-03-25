@@ -67,7 +67,11 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
   // If this test fails, apps that use getauxval to decide at runtime whether crypto hardware is
   // available will incorrectly assume that it isn't, and will have really bad performance.
   // If this test fails, ensure that you've enabled COMPAT_BINFMT_ELF in your kernel configuration.
-  ASSERT_NE(0UL, getauxval(AT_HWCAP2)) << "kernel not reporting AT_HWCAP2 to 32-bit ARM process";
+  // Note that 0 ("I don't support any of these things") is a legitimate response --- we need
+  // to check errno to see whether we got a "true" 0 or a "not found" 0.
+  errno = 0;
+  getauxval(AT_HWCAP2);
+  ASSERT_EQ(0, errno) << "kernel not reporting AT_HWCAP2 to 32-bit ARM process";
 #else
   GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code.\n";
 #endif
