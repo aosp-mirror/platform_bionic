@@ -292,6 +292,9 @@ __errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger th
 __errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
 extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat);
 
+extern int getdomainname(char*, size_t);
+extern int setdomainname(const char*, size_t);
+
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
