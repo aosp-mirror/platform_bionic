@@ -26,8 +26,13 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <sys/epoll.h>
 
-int epoll_create(int /*obsolete_size*/) {
+int epoll_create(int size) {
+  if (size <= 0) {
+    errno = EINVAL;
+    return -1;
+  }
   return epoll_create1(0);
 }

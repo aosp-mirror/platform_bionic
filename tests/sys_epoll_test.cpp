@@ -40,6 +40,12 @@ TEST(sys_epoll, smoke) {
   ASSERT_EQ(0, epoll_pwait(epoll_fd, events, 1, 1, &ss));
 }
 
+TEST(sys_epoll, epoll_create_invalid_size) {
+  errno = 0;
+  ASSERT_EQ(-1, epoll_create(0));
+  ASSERT_EQ(EINVAL, errno);
+}
+
 TEST(sys_epoll, epoll_event_data) {
   int epoll_fd = epoll_create(1);
   ASSERT_NE(-1, epoll_fd) << strerror(errno);
