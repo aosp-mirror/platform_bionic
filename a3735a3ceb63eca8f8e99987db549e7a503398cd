@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "313f85ea_bdc37f05",
+        "filename": "libc/bionic/getdomainname.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-25T21:14:14Z",
+      "side": 1,
+      "message": "same comment as before",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 15
+      },
+      "revId": "a3735a3ceb63eca8f8e99987db549e7a503398cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "313f85ea_fdbd0788",
+        "filename": "libc/include/unistd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-25T21:14:14Z",
+      "side": 1,
+      "message": "same comment as before",
+      "range": {
+        "startLine": 295,
+        "startChar": 25,
+        "endLine": 295,
+        "endChar": 31
+      },
+      "revId": "a3735a3ceb63eca8f8e99987db549e7a503398cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "313f85ea_ddbacb8d",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-25T21:14:14Z",
+      "side": 1,
+      "message": "this should fit in our 100-column margin?",
+      "range": {
+        "startLine": 1022,
+        "startChar": 4,
+        "endLine": 1023,
+        "endChar": 46
+      },
+      "revId": "a3735a3ceb63eca8f8e99987db549e7a503398cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "313f85ea_3d7f6f87",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-25T21:14:14Z",
+      "side": 1,
+      "message": "type*",
+      "range": {
+        "startLine": 1026,
+        "startChar": 8,
+        "endLine": 1026,
+        "endChar": 14
+      },
+      "revId": "a3735a3ceb63eca8f8e99987db549e7a503398cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
