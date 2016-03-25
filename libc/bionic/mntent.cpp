@@ -77,3 +77,24 @@ int endmntent(FILE* fp) {
   }
   return 1;
 }
+
+char* hasmntopt(const struct mntent* mnt, const char* opt) {
+  char* token = mnt->mnt_opts;
+  char* const end = mnt->mnt_opts + strlen(mnt->mnt_opts);
+  const size_t optLen = strlen(opt);
+
+  while (token) {
+    char* const tokenEnd = token + optLen;
+    if (tokenEnd > end) break;
+
+    if (memcmp(token, opt, optLen) == 0 &&
+        (*tokenEnd == '\0' || *tokenEnd == ',' || *tokenEnd == '=')) {
+      return token;
+    }
+
+    token = strchr(token, ',');
+    if (token) token++;
+  }
+
+  return nullptr;
+}

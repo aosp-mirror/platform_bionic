@@ -1274,6 +1274,7 @@ LIBC_N {
 LIBC_O {
   global:
     getdomainname;
+    hasmntopt;
     pthread_getname_np;
     setdomainname;
 } LIBC_N;
