@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c39b6b4_4d4eb9b3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3795,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-25T00:32:39Z",
+      "side": 1,
+      "message": "after the rebase - there is soinfo::is_linker() that can be used for this.",
+      "range": {
+        "startLine": 3795,
+        "startChar": 6,
+        "endLine": 3795,
+        "endChar": 33
+      },
+      "revId": "fc927508dbf4ba666f10e0d8df483004758cfb62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c39b6b4_ed0da589",
         "filename": "linker/linker.cpp",
         "patchSetId": 11
