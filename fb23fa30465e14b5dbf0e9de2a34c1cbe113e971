@@ -22,6 +22,30 @@
       "revId": "fb23fa30465e14b5dbf0e9de2a34c1cbe113e971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c39b6b4_cd9d4981",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1015340
+      },
+      "writtenOn": "2016-03-25T00:10:33Z",
+      "side": 1,
+      "message": "It shouldn\u0027t matter in practice (if the clone() actually goes through and child_fn() runs, something has gone horribly wrong).  But I wanted the call to be 100% identical to a known-working case, except for the stack being NULL -- that way it\u0027s obvious clone() isn\u0027t rejecting the inputs for some other reason.",
+      "parentUuid": "bcd7ca7d_9398a692",
+      "range": {
+        "startLine": 65,
+        "startChar": 51,
+        "endLine": 65,
+        "endChar": 53
+      },
+      "revId": "fb23fa30465e14b5dbf0e9de2a34c1cbe113e971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
