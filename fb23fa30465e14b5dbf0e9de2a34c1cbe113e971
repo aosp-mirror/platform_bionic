@@ -46,6 +46,30 @@
       "revId": "fb23fa30465e14b5dbf0e9de2a34c1cbe113e971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c39b6b4_6daff5a9",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-25T00:13:37Z",
+      "side": 1,
+      "message": "okay. i see i did the same in the first test, so maybe clone_errno led me astray.",
+      "parentUuid": "1c39b6b4_cd9d4981",
+      "range": {
+        "startLine": 65,
+        "startChar": 51,
+        "endLine": 65,
+        "endChar": 53
+      },
+      "revId": "fb23fa30465e14b5dbf0e9de2a34c1cbe113e971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
