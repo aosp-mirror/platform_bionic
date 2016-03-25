@@ -21,12 +21,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#if defined(__BIONIC__)
 static int child_fn(void* i_ptr) {
   *reinterpret_cast<int*>(i_ptr) = 42;
   return 123;
 }
 
+#if defined(__BIONIC__)
 TEST(sched, clone) {
   void* child_stack[1024];
 
@@ -56,6 +56,13 @@ TEST(sched, clone_errno) {
   uintptr_t fake_child_stack[16];
   errno = 0;
   ASSERT_EQ(-1, clone(NULL, &fake_child_stack[16], CLONE_THREAD, NULL));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sched, clone_null_child_stack) {
+  int i = 0;
+  errno = 0;
+  ASSERT_EQ(-1, clone(child_fn, nullptr, CLONE_VM, &i));
   ASSERT_EQ(EINVAL, errno);
 }
 
