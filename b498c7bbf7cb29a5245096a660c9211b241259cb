@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51e079e0_e7171029",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-28T19:21:50Z",
+      "side": 1,
+      "message": "removed this.",
+      "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51e079e0_c71a1454",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3315,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-03-28T19:21:50Z",
+      "side": 1,
+      "message": "this part is wrong.. fixed",
+      "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
