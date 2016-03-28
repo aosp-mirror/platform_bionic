@@ -43,7 +43,7 @@ class LinkedListIterator {
     return *this;
   }
 
-  T* operator*() {
+  T* const operator*() {
     return entry_->element;
   }
 
@@ -190,15 +190,15 @@ class LinkedList {
     return nullptr;
   }
 
-  iterator begin() {
+  iterator begin() const {
     return iterator(head_);
   }
 
-  iterator end() {
+  iterator end() const {
     return iterator(nullptr);
   }
 
-  iterator find(T* value) {
+  iterator find(T* value) const {
     for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
       if (e->element == value) {
         return iterator(e);
