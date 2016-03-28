@@ -69,7 +69,7 @@ void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
 static void* dlopen_ext(const char* filename, int flags,
                         const android_dlextinfo* extinfo, void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  soinfo* result = do_dlopen(filename, flags, extinfo, caller_addr);
+  void* result = do_dlopen(filename, flags, extinfo, caller_addr);
   if (result == nullptr) {
     __bionic_format_dlerror("dlopen failed", linker_get_error_buffer());
     return nullptr;
@@ -86,8 +86,6 @@ void* dlopen(const char* filename, int flags) {
   void* caller_addr = __builtin_return_address(0);
   return dlopen_ext(filename, flags, nullptr, caller_addr);
 }
-
-extern android_namespace_t* g_anonymous_namespace;
 
 void* dlsym_impl(void* handle, const char* symbol, const char* version, void* caller_addr) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
@@ -117,9 +115,11 @@ int dladdr(const void* addr, Dl_info* info) {
 
 int dlclose(void* handle) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  do_dlclose(reinterpret_cast<soinfo*>(handle));
-  // dlclose has no defined errors.
-  return 0;
+  int result = do_dlclose(handle);
+  if (result != 0) {
+    __bionic_format_dlerror("dlclose failed", linker_get_error_buffer());
+  }
+  return result;
 }
 
 int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
@@ -270,6 +270,7 @@ soinfo* get_libdl_info() {
     __libdl_info->local_group_root_ = __libdl_info;
     __libdl_info->soname_ = "libdl.so";
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
+    __libdl_info->generate_handle();
 #if defined(__work_around_b_24465209__)
     strlcpy(__libdl_info->old_name_, __libdl_info->soname_, sizeof(__libdl_info->old_name_));
 #endif

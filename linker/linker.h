@@ -266,6 +266,7 @@ struct soinfo {
  public:
   soinfo(android_namespace_t* ns, const char* name, const struct stat* file_stat,
          off64_t file_offset, int rtld_flags);
+  ~soinfo();
 
   void call_constructors();
   void call_destructors();
@@ -343,6 +344,10 @@ struct soinfo {
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;
 
+  uintptr_t get_handle() const;
+  void generate_handle();
+  void* to_handle();
+
  private:
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
@@ -407,6 +412,7 @@ struct soinfo {
   // version >= 3
   std::vector<std::string> dt_runpath_;
   android_namespace_t* namespace_;
+  uintptr_t handle_;
 
   friend soinfo* get_libdl_info();
 };
@@ -429,8 +435,8 @@ soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
-soinfo* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, void* caller_addr);
-void do_dlclose(soinfo* si);
+void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, void* caller_addr);
+int do_dlclose(void* handle);
 
 int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data);
 
