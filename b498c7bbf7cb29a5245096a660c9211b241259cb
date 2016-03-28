@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "51e079e0_2731f8cf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-28T19:26:52Z",
+      "side": 1,
+      "message": "pointer",
+      "range": {
+        "startLine": 9,
+        "startChar": 22,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51e079e0_e7171029",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -13,6 +36,52 @@
       "writtenOn": "2016-03-28T19:21:50Z",
       "side": 1,
       "message": "removed this.",
+      "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51e079e0_87400c14",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2348,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-28T19:26:52Z",
+      "side": 1,
+      "message": "did you want to move the \"dlsym failed: \" up into dlsym (like you\u0027ve done here for dlclose)?",
+      "range": {
+        "startLine": 2348,
+        "startChar": 12,
+        "endLine": 2348,
+        "endChar": 19
+      },
+      "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51e079e0_c721347a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-28T19:26:52Z",
+      "side": 1,
+      "message": "Make",
+      "range": {
+        "startLine": 3305,
+        "startChar": 5,
+        "endLine": 3305,
+        "endChar": 11
+      },
       "revId": "b498c7bbf7cb29a5245096a660c9211b241259cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
