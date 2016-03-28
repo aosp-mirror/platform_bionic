@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <sys/cdefs.h>
+#include <sys/utsname.h>
 #include <gtest/gtest.h>
 
 // getauxval() was only added as of glibc version 2.16.
@@ -64,6 +65,16 @@ TEST(getauxval, unexpected_values) {
 
 TEST(getauxval, arm_has_AT_HWCAP2) {
 #if defined(__arm__)
+  // There are no known 32-bit processors that implement any of these instructions, so rather
+  // than require that OEMs backport kernel patches, let's just ignore old hardware. Strictly
+  // speaking this would be fooled by someone choosing to ship a 32-bit kernel on 64-bit hardware,
+  // but that doesn't seem very likely in 2016.
+  utsname u;
+  ASSERT_EQ(0, uname(&u));
+  if (strcmp("aarch64", u.machine) == 0) {
+    GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
+    return;
+  }
   // If this test fails, apps that use getauxval to decide at runtime whether crypto hardware is
   // available will incorrectly assume that it isn't, and will have really bad performance.
   // If this test fails, ensure that you've enabled COMPAT_BINFMT_ELF in your kernel configuration.
@@ -71,8 +82,8 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
   // to check errno to see whether we got a "true" 0 or a "not found" 0.
   errno = 0;
   getauxval(AT_HWCAP2);
-  ASSERT_EQ(0, errno) << "kernel not reporting AT_HWCAP2 to 32-bit ARM process";
+  ASSERT_EQ(0, errno) << "64-bit kernel not reporting AT_HWCAP2 to 32-bit ARM process";
 #else
-  GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code.\n";
+  GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
 #endif
 }
