@@ -573,3 +573,10 @@ TEST(time, clock_nanosleep) {
   timespec out;
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
 }
+
+TEST(time, clock_nanosleep_thread_cputime_id) {
+  timespec in;
+  in.tv_sec = 1;
+  in.tv_nsec = 0;
+  ASSERT_EQ(EINVAL, clock_nanosleep(CLOCK_THREAD_CPUTIME_ID, 0, &in, nullptr));
+}
