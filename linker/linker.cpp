@@ -51,6 +51,7 @@
 
 #include "linker.h"
 #include "linker_block_allocator.h"
+#include "linker_gdb_support.h"
 #include "linker_debug.h"
 #include "linker_dlwarning.h"
 #include "linker_sleb128.h"
@@ -272,95 +273,27 @@ size_t linker_get_error_buffer_size() {
   return sizeof(__linker_dl_err_buf);
 }
 
-// This function is an empty stub where GDB locates a breakpoint to get notified
-// about linker activity.
-extern "C"
-void __attribute__((noinline)) __attribute__((visibility("default"))) rtld_db_dlactivity();
+static void notify_gdb_of_load(soinfo* info) {
+  if (info->is_linker() || info->is_main_executable()) {
+    // gdb already knows about the linker and the main executable.
+    return;
+  }
 
-static pthread_mutex_t g__r_debug_mutex = PTHREAD_MUTEX_INITIALIZER;
-static r_debug _r_debug =
-    {1, nullptr, reinterpret_cast<uintptr_t>(&rtld_db_dlactivity), r_debug::RT_CONSISTENT, 0};
-
-static link_map* r_debug_tail = 0;
-
-static void insert_soinfo_into_debug_map(soinfo* info) {
-  // Copy the necessary fields into the debug structure.
   link_map* map = &(info->link_map_head);
+
   map->l_addr = info->load_bias;
   // link_map l_name field is not const.
   map->l_name = const_cast<char*>(info->get_realpath());
   map->l_ld = info->dynamic;
 
-  // Stick the new library at the end of the list.
-  // gdb tends to care more about libc than it does
-  // about leaf libraries, and ordering it this way
-  // reduces the back-and-forth over the wire.
-  if (r_debug_tail) {
-    r_debug_tail->l_next = map;
-    map->l_prev = r_debug_tail;
-    map->l_next = 0;
-  } else {
-    _r_debug.r_map = map;
-    map->l_prev = 0;
-    map->l_next = 0;
-  }
-  r_debug_tail = map;
-}
+  CHECK(map->l_name != nullptr);
+  CHECK(map->l_name[0] != '\0');
 
-static void remove_soinfo_from_debug_map(soinfo* info) {
-  link_map* map = &(info->link_map_head);
-
-  if (r_debug_tail == map) {
-    r_debug_tail = map->l_prev;
-  }
-
-  if (map->l_prev) {
-    map->l_prev->l_next = map->l_next;
-  }
-  if (map->l_next) {
-    map->l_next->l_prev = map->l_prev;
-  }
-}
-
-static void notify_gdb_of_load(soinfo* info) {
-  if (info->is_main_executable()) {
-    // GDB already knows about the main executable
-    return;
-  }
-
-  ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
-
-  _r_debug.r_state = r_debug::RT_ADD;
-  rtld_db_dlactivity();
-
-  insert_soinfo_into_debug_map(info);
-
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
+  notify_gdb_of_load(map);
 }
 
 static void notify_gdb_of_unload(soinfo* info) {
-  if (info->is_main_executable()) {
-    // GDB already knows about the main executable
-    return;
-  }
-
-  ScopedPthreadMutexLocker locker(&g__r_debug_mutex);
-
-  _r_debug.r_state = r_debug::RT_DELETE;
-  rtld_db_dlactivity();
-
-  remove_soinfo_from_debug_map(info);
-
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
-}
-
-void notify_gdb_of_libraries() {
-  _r_debug.r_state = r_debug::RT_ADD;
-  rtld_db_dlactivity();
-  _r_debug.r_state = r_debug::RT_CONSISTENT;
-  rtld_db_dlactivity();
+  notify_gdb_of_unload(&(info->link_map_head));
 }
 
 bool android_namespace_t::is_accessible(const std::string& file) {
@@ -3349,6 +3282,10 @@ bool soinfo::is_main_executable() const {
   return (flags_ & FLAG_EXE) != 0;
 }
 
+bool soinfo::is_linker() const {
+  return (flags_ & FLAG_LINKER) != 0;
+}
+
 void soinfo::set_linked() {
   flags_ |= FLAG_LINKED;
 }
@@ -4005,33 +3942,22 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 #endif
 }
 
-/*
- * This is linker soinfo for GDB. See details below.
- */
-#if defined(__LP64__)
-#define LINKER_PATH "/system/bin/linker64"
-#else
-#define LINKER_PATH "/system/bin/linker"
-#endif
-
-// This is done to avoid calling c-tor prematurely
-// because soinfo c-tor needs memory allocator
-// which might be initialized after global variables.
-static uint8_t linker_soinfo_for_gdb_buf[sizeof(soinfo)] __attribute__((aligned(8)));
-static soinfo* linker_soinfo_for_gdb = nullptr;
-
 /* gdb expects the linker to be in the debug shared object list.
  * Without this, gdb has trouble locating the linker's ".text"
  * and ".plt" sections. Gdb could also potentially use this to
  * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
- * Don't use soinfo_alloc(), because the linker shouldn't
- * be on the soinfo list.
+ * Note that the linker shouldn't be on the soinfo list.
  */
 static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
-  linker_soinfo_for_gdb = new (linker_soinfo_for_gdb_buf) soinfo(nullptr, LINKER_PATH,
-                                                                 nullptr, 0, 0);
+  static link_map linker_link_map_for_gdb;
+#if defined(__LP64__)
+  static char kLinkerPath[] = "/system/bin/linker64";
+#else
+  static char kLinkerPath[] = "/system/bin/linker";
+#endif
 
-  linker_soinfo_for_gdb->load_bias = linker_base;
+  linker_link_map_for_gdb.l_addr = linker_base;
+  linker_link_map_for_gdb.l_name = kLinkerPath;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
@@ -4042,8 +3968,9 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_soinfo_for_gdb->dynamic, nullptr);
-  insert_soinfo_into_debug_map(linker_soinfo_for_gdb);
+                                 &linker_link_map_for_gdb.l_ld, nullptr);
+
+  insert_link_map_into_debug_map(&linker_link_map_for_gdb);
 }
 
 static void init_default_namespace() {
@@ -4117,21 +4044,19 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   soinfo* si = soinfo_alloc(&g_default_namespace, args.argv[0], nullptr, 0, RTLD_GLOBAL);
   if (si == nullptr) {
-    exit(EXIT_FAILURE);
+    __libc_fatal("Couldn't allocate soinfo: out of memory?");
   }
 
   /* bootstrap the link map, the main exe always needs to be first */
   si->set_main_executable();
   link_map* map = &(si->link_map_head);
 
+  // Register the main executable and the linker upfront to have
+  // gdb aware of them before loading the rest of the dependency
+  // tree.
   map->l_addr = 0;
   map->l_name = args.argv[0];
-  map->l_prev = nullptr;
-  map->l_next = nullptr;
-
-  _r_debug.r_map = map;
-  r_debug_tail = map;
-
+  insert_link_map_into_debug_map(map);
   init_linker_info_for_gdb(linker_base);
 
   // Extract information passed from the kernel.
@@ -4157,8 +4082,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
-    __libc_format_fd(2, "error: only position independent executables (PIE) are supported.\n");
-    exit(EXIT_FAILURE);
+    __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
+                 args.argv[0]);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -4170,7 +4095,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   init_default_namespace();
 
   if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   }
 
   // add somain to global group
@@ -4201,10 +4126,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       !find_libraries(&g_default_namespace, si, needed_library_names, needed_libraries_count,
                       nullptr, &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
                       /* add_as_children */ true)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
     }
     si->increment_ref_count();
   }
@@ -4326,7 +4251,10 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    __libc_fatal("This is %s, the helper program for shared library executables.", args.argv[0]);
+    __libc_format_fd(STDOUT_FILENO,
+                     "This is %s, the helper program for shared library executables.\n",
+                     args.argv[0]);
+    exit(0);
   }
 
   linker_so.base = linker_addr;
@@ -4344,7 +4272,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
   if (!(linker_so.prelink_image() && linker_so.link_image(g_empty_list, g_empty_list, nullptr))) {
-    __libc_fatal("CANNOT LINK EXECUTABLE: %s", linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
   }
 
   __libc_init_main_thread(args);

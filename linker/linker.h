@@ -310,6 +310,7 @@ struct soinfo {
   }
 
   bool is_linked() const;
+  bool is_linker() const;
   bool is_main_executable() const;
 
   void set_linked();
@@ -440,7 +441,6 @@ int do_dladdr(const void* addr, Dl_info* info);
 
 void debuggerd_init();
 extern "C" abort_msg_t* g_abort_message;
-extern "C" void notify_gdb_of_libraries();
 
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
