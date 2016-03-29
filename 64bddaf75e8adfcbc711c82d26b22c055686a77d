@@ -70,6 +70,30 @@
       "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "514879fd_64f73e39",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-03-29T22:29:04Z",
+      "side": 1,
+      "message": "put this in the test runner doesn\u0027t work. because the futex hang happens very early in the linker. I can improve this by moving the check into __libc_init_main_thread(), and test if main_thread.tid \u003e 65535 on 32 bit build. So it costs only one or two nanoseconds, does it look good to you?",
+      "parentUuid": "514879fd_04bf5ad5",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 1
+      },
+      "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
