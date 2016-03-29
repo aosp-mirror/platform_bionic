@@ -46,6 +46,30 @@
       "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "514879fd_04bf5ad5",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-03-29T21:38:28Z",
+      "side": 1,
+      "message": "maybe put this in the test runner instead? i\u0027m uncomfortable with adding run-time cost for something we know ahead of time isn\u0027t true for any real device (because you will have failed CTS).",
+      "parentUuid": "514879fd_44aec2a9",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 1
+      },
+      "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
