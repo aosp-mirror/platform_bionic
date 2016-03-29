@@ -71,19 +71,17 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
   // but that doesn't seem very likely in 2016.
   utsname u;
   ASSERT_EQ(0, uname(&u));
-  if (strcmp("aarch64", u.machine) == 0) {
-    GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
+  if (strcmp(u.machine, "aarch64") == 0) {
+    // If this test fails, apps that use getauxval to decide at runtime whether crypto hardware is
+    // available will incorrectly assume that it isn't, and will have really bad performance.
+    // If this test fails, ensure that you've enabled COMPAT_BINFMT_ELF in your kernel configuration.
+    // Note that 0 ("I don't support any of these things") is a legitimate response --- we need
+    // to check errno to see whether we got a "true" 0 or a "not found" 0.
+    errno = 0;
+    getauxval(AT_HWCAP2);
+    ASSERT_EQ(0, errno) << "64-bit kernel not reporting AT_HWCAP2 to 32-bit ARM process";
     return;
   }
-  // If this test fails, apps that use getauxval to decide at runtime whether crypto hardware is
-  // available will incorrectly assume that it isn't, and will have really bad performance.
-  // If this test fails, ensure that you've enabled COMPAT_BINFMT_ELF in your kernel configuration.
-  // Note that 0 ("I don't support any of these things") is a legitimate response --- we need
-  // to check errno to see whether we got a "true" 0 or a "not found" 0.
-  errno = 0;
-  getauxval(AT_HWCAP2);
-  ASSERT_EQ(0, errno) << "64-bit kernel not reporting AT_HWCAP2 to 32-bit ARM process";
-#else
-  GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
 #endif
+  GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
 }
