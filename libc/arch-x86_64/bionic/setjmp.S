@@ -35,8 +35,22 @@
 
 #include <private/bionic_asm.h>
 
-// These are only the callee-saved registers. Code calling setjmp
-// will expect the rest to be clobbered anyway.
+
+// The internal structure of a jmp_buf is totally private.
+// Current layout (changes from release to release):
+//
+// word   name            description
+// 0      rbx             registers
+// 1      rbp
+// 2      r12
+// 3      r13
+// 4      r14
+// 5      r15
+// 6      rsp
+// 7      pc
+// 8      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 9      sigmask         signal mask (includes rt signals as well)
+// 10     reserved
 
 #define _JB_RBX 0
 #define _JB_RBP 1
@@ -48,7 +62,6 @@
 #define _JB_PC 7
 #define _JB_SIGFLAG 8
 #define _JB_SIGMASK 9
-#define _JB_SIGMASK_RT 10 // sigprocmask will write here too.
 
 #define MANGLE_REGISTERS 1
 .macro m_mangle_registers reg
