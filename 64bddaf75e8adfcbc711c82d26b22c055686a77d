@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "514879fd_0498ba96",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-03-29T21:33:55Z",
+      "side": 1,
+      "message": "I think it would be better to make this a unit test. By adding it as a test, we can guarantee that this doesn\u0027t happen on real devices, but not add any init cost.",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 1
+      },
+      "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
