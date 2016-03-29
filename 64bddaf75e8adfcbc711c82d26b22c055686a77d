@@ -22,6 +22,30 @@
       "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "514879fd_44aec2a9",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-03-29T21:37:06Z",
+      "side": 1,
+      "message": "As in commit lines, there is already a test pthread.pthread_mutex_owner_tid_limit in pthread_test.cpp. I just want to make it easier to debug.",
+      "parentUuid": "514879fd_0498ba96",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 1
+      },
+      "revId": "64bddaf75e8adfcbc711c82d26b22c055686a77d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
