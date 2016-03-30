@@ -2093,7 +2093,8 @@ _resolv_populate_res_for_net(res_state statp)
         statp->nscount = nserv;
         // now do search domains.  Note that we cache the offsets as this code runs alot
         // but the setting/offset-computer only runs when set/changed
-        strlcpy(statp->defdname, info->defdname, sizeof(statp->defdname));
+        // WARNING: Don't use str*cpy() here, this string contains zeroes.
+        memcpy(statp->defdname, info->defdname, sizeof(statp->defdname));
         register char **pp = statp->dnsrch;
         register int *p = info->dnsrch_offset;
         while (pp < statp->dnsrch + MAXDNSRCH && *p != -1) {
