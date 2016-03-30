@@ -136,7 +136,7 @@
 /* following fields are 8-byte aligned */
 #define	SC_FLAG_OFFSET	(2*4)		/* 8 bytes, cookie and savesigs flag, first actual field  */
 #define	SC_MASK_OFFSET	(4*4)		/* 16 bytes, mips32/mips64 version of sigset_t */
-#define	SC_SPARE_OFFSET	(8*4)		/* 8 bytes, reserved for future uses */
+#define	SC_CKSUM_OFFSET	(8*4)		/* 8 bytes, used for checksum */
 
 /* Registers that are 4-byte on mips32 o32, and 8-byte on mips64 n64 abi */
 #define	SC_REGS_OFFSET	(10*4)		/* SC_REGS_BYTES */
@@ -165,6 +165,8 @@
 #error _JBLEN is too small
 #endif
 
+#define USE_CHECKSUM 1
+
 .macro m_mangle_reg_and_store reg, cookie, temp, offset
 	xor	\temp, \reg, \cookie
 	REG_S	\temp, \offset
@@ -173,6 +175,20 @@
 .macro m_unmangle_reg_and_load reg, cookie, temp, offset
 	REG_L	\temp, \offset
 	xor	\reg, \temp, \cookie
+.endm
+
+.macro m_calculate_checksum dst, src, scratch
+	REG_L \dst, REGSZ(\src)
+#ifdef __LP64__
+	/* 64 bit: checksum offset is 4 (actual _JBLEN is 25) */
+	.irp i,2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+#else
+	/* 32 bit: checksum offset is 8 (actual _JBLEN is 34) */
+	.irp i,2,3,4,5,6,7,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33
+#endif
+		REG_L \scratch, \i*REGSZ(\src)
+		xor \dst, \dst, \scratch
+	.endr
 .endm
 
 /*
@@ -263,6 +279,10 @@ setjmp_common:
 	s.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
 #endif
 	sw	v0, SC_FPSR_OFFSET(a0)
+#if USE_CHECKSUM
+	m_calculate_checksum t0, a0, t1
+	REG_S t0, SC_CKSUM_OFFSET(a0)
+#endif
 	move	v0, zero
 	RESTORE_GP64
 	PTR_ADDU sp, FRAMESZ
@@ -310,6 +330,16 @@ NON_LEAF(siglongjmp, FRAMESZ, ra)
 
 	move	s1, a1				# temp spill
 	move	s0, a0
+
+#if USE_CHECKSUM
+	m_calculate_checksum t0, s0, s2
+	REG_L	s2, SC_CKSUM_OFFSET(s0)
+	beq	t0, s2, 0f
+	nop
+	jal	__bionic_setjmp_checksum_mismatch
+	nop
+0:
+#endif
 
 	# extract savesigs flag
 	REG_L	s2, SC_FLAG_OFFSET(s0)
