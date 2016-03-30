@@ -35,8 +35,22 @@
 
 #include <private/bionic_asm.h>
 
-// These are only the callee-saved registers. Code calling setjmp
-// will expect the rest to be clobbered anyway.
+
+// The internal structure of a jmp_buf is totally private.
+// Current layout (changes from release to release):
+//
+// word   name            description
+// 0      rbx             registers
+// 1      rbp
+// 2      r12
+// 3      r13
+// 4      r14
+// 5      r15
+// 6      rsp
+// 7      pc
+// 8      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 9      sigmask         signal mask (includes rt signals as well)
+// 10     checksum        checksum of the core registers, to give better error messages.
 
 #define _JB_RBX 0
 #define _JB_RBP 1
@@ -48,9 +62,10 @@
 #define _JB_PC 7
 #define _JB_SIGFLAG 8
 #define _JB_SIGMASK 9
-#define _JB_SIGMASK_RT 10 // sigprocmask will write here too.
+#define _JB_CHECKSUM 10
 
 #define MANGLE_REGISTERS 1
+
 .macro m_mangle_registers reg
 #if MANGLE_REGISTERS
   xorq \reg,%rbx
@@ -68,6 +83,12 @@
   m_mangle_registers \reg
 .endm
 
+.macro m_calculate_checksum dst, src
+  movq $0, \dst
+  .irp i,0,1,2,3,4,5,6,7
+    xorq (\i*8)(\src), \dst
+  .endr
+.endm
 
 ENTRY(setjmp)
   movl $1,%esi
@@ -118,6 +139,9 @@ ENTRY(sigsetjmp)
   movq %r11,(_JB_PC  * 8)(%rdi)
   m_unmangle_registers %rax
 
+  m_calculate_checksum %rax, %rdi
+  movq %rax, (_JB_CHECKSUM * 8)(%rdi)
+
   xorl %eax,%eax
   ret
 END(sigsetjmp)
@@ -126,6 +150,10 @@ END(sigsetjmp)
 ENTRY(siglongjmp)
   movq %rdi,%r12
   pushq %rsi // Push 'value'.
+
+  m_calculate_checksum %rax, %rdi
+  xorq (_JB_CHECKSUM * 8)(%rdi), %rax
+  jnz 3f
 
   // Do we need to restore the signal mask?
   movq (_JB_SIGFLAG * 8)(%rdi), %rdi
@@ -172,6 +200,9 @@ ENTRY(siglongjmp)
 1:
   movq %r11,0(%rsp)
   ret
+
+3:
+  call PIC_PLT(__bionic_setjmp_checksum_mismatch)
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
