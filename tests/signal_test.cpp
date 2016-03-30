@@ -411,4 +411,14 @@ TEST(signal, rt_tgsigqueueinfo) {
                                             << sent.si_code << ", received " << received.si_code
                                             << error_msg;
 }
+
+#if defined(__arm__) || defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+TEST(signal, sigset_size) {
+  // The setjmp implementations for ARM, AArch64, x86, and x86_64 assume that sigset_t can fit in a
+  // long. This is true because ARM and x86 have broken rt signal support, and AArch64 and x86_64
+  // both have a SIGRTMAX defined as 64.
+  static_assert(sizeof(sigset_t) <= sizeof(long), "sigset_t doesn't fit in a long");
+}
+
+#endif
 #endif

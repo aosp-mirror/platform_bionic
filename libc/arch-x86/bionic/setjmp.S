@@ -32,6 +32,21 @@
 
 #include <private/bionic_asm.h>
 
+// The internal structure of a jmp_buf is totally private.
+// Current layout (changes from release to release):
+//
+// word   name            description
+// 0      edx             registers
+// 1      ebx
+// 2      esp
+// 3      ebp
+// 4      esi
+// 5      edi
+// 6      sigmask         signal mask (not used with _setjmp / _longjmp)
+// 7      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 8      checksum        checksum of the core registers, to give better error messages.
+// 9      reserved
+
 #define _JB_EDX 0
 #define _JB_EBX 1
 #define _JB_ESP 2
@@ -40,6 +55,7 @@
 #define _JB_EDI 5
 #define _JB_SIGMASK 6
 #define _JB_SIGFLAG 7
+#define _JB_CHECKSUM 8
 
 .macro m_mangle_registers reg
   xorl \reg,%edx
@@ -52,6 +68,13 @@
 
 .macro m_unmangle_registers reg
   m_mangle_registers \reg
+.endm
+
+.macro m_calculate_checksum dst, src
+  movl $0, \dst
+  .irp i,0,1,2,3,4,5
+    xorl (\i*4)(\src), \dst
+  .endr
 .endm
 
 ENTRY(setjmp)
@@ -111,13 +134,22 @@ ENTRY(sigsetjmp)
   movl %edi,(_JB_EDI * 4)(%ecx)
   m_unmangle_registers %eax
 
+  m_calculate_checksum %eax, %ecx
+  movl %eax, (_JB_CHECKSUM * 4)(%ecx)
+
   xorl %eax,%eax
   ret
 END(sigsetjmp)
 
 ENTRY(siglongjmp)
-  // Do we have a signal mask to restore?
   movl 4(%esp),%edx
+
+  // Check the checksum before doing anything.
+  m_calculate_checksum %eax, %edx
+  xorl (_JB_CHECKSUM * 4)(%edx), %eax
+  jnz 3f
+
+  // Do we have a signal mask to restore?
   movl (_JB_SIGFLAG * 4)(%edx), %eax
   testl $1,%eax
   jz 1f
@@ -165,6 +197,11 @@ ENTRY(siglongjmp)
 2:
   movl %ecx,0(%esp)
   ret
+
+3:
+  PIC_PROLOGUE
+  pushl (_JB_SIGMASK * 4)(%edx)
+  call PIC_PLT(__bionic_setjmp_checksum_mismatch)
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
