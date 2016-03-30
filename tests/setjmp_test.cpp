@@ -254,7 +254,7 @@ TEST(setjmp, setjmp_cookie_checksum) {
 
   if (value == 0) {
     // Flip a bit.
-    reinterpret_cast<long*>(jb)[0] ^= 1;
+    reinterpret_cast<long*>(jb)[1] ^= 1;
 
     EXPECT_DEATH(longjmp(jb, 1), "checksum mismatch");
   } else {
