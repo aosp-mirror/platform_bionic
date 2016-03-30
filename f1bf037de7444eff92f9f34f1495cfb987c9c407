@@ -22,6 +22,30 @@
       "revId": "f1bf037de7444eff92f9f34f1495cfb987c9c407",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "514879fd_0752fc0f",
+        "filename": "libc/arch-x86/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-03-30T00:27:57Z",
+      "side": 1,
+      "message": "Mostly for parity with ARM/AArch64. I\u0027m ambivalent on the usefulness of this. Turning off the mangling was useful for debugging when apps were changing the values in jmp_buf, but with the checksum added that might not be as useful anymore?\n\nMaybe in the distant future, we could turn the checksumming off, since all apps we care about will presumably have been fixed, but the performance cost of this is meaningless.\n\nI think that writing this has convinced me to remove it.",
+      "parentUuid": "514879fd_64789e01",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 22
+      },
+      "revId": "f1bf037de7444eff92f9f34f1495cfb987c9c407",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
