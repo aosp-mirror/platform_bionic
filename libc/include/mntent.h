@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _MNTENT_H_
 #define _MNTENT_H_
 
@@ -33,7 +34,16 @@
 #include <paths.h>  /* for _PATH_MOUNTED */
 
 #define MOUNTED _PATH_MOUNTED
+
+#define MNTTYPE_DEFAULTS "defaults"
 #define MNTTYPE_IGNORE "ignore"
+#define MNTTYPE_NFS "nfs"
+#define MNTTYPE_NOAUTO "noauto"
+#define MNTTYPE_NOSUID "nosuid"
+#define MNTTYPE_RO "ro"
+#define MNTTYPE_RW "rw"
+#define MNTTYPE_SUID "suid"
+#define MNTTYPE_SWAP "swap"
 
 struct mntent {
   char* mnt_fsname;
