@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11736196_9e529a58",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-01T01:25:48Z",
+      "side": 1,
+      "message": "(for future reference, __BEGIN_DECLS/__END_DECLS.)",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 6
+      },
+      "revId": "cf106ea34ac77c4b6ae165d1658f71887dc2324f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
