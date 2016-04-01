@@ -20,7 +20,7 @@
 bool normalize_path(const char* path, std::string* normalized_path) {
   // Input should be an absolute path
   if (path[0] != '/') {
-    PRINT("normalize_path - invalid input: '%s', the input path should be absolute", path);
+    PRINT("normalize_path - invalid input: \"%s\", the input path should be absolute", path);
     return false;
   }
 
@@ -89,7 +89,7 @@ bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* 
   }
 
   const char* const path = normalized_path.c_str();
-  TRACE("Trying zip file open from path '%s' -> normalized '%s'", input_path, path);
+  TRACE("Trying zip file open from path \"%s\" -> normalized \"%s\"", input_path, path);
 
   // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.

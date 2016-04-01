@@ -30,9 +30,8 @@ void add_dlwarning(const char* sopath, const char* message, const char* value) {
   current_msg = current_msg + basename(sopath) + ": " + message;
 
   if (value != nullptr) {
-    current_msg = current_msg + " \'" + value + "\'";
+    current_msg = current_msg + " \"" + value + "\"";
   }
-
 }
 
 // Resets the current one (like dlerror but instead of
