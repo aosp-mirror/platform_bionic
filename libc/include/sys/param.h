@@ -31,6 +31,8 @@
 #include <limits.h>
 #include <linux/param.h>
 
+#define DEV_BSIZE 512
+
 #define MAXPATHLEN  PATH_MAX
 #define MAXSYMLINKS 8
 
