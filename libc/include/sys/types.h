@@ -66,6 +66,8 @@ typedef __key_t key_t;
 typedef __kernel_ino_t __ino_t;
 typedef __ino_t ino_t;
 
+typedef uint64_t ino64_t;
+
 typedef uint32_t __nlink_t;
 typedef __nlink_t nlink_t;
 
