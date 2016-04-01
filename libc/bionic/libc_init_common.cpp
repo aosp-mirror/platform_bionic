@@ -99,12 +99,25 @@ void __libc_init_globals(KernelArgumentBlock& args) {
   });
 }
 
+#if !defined(__LP64__)
+static void __check_max_thread_id() {
+  if (gettid() > 65535) {
+    __libc_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
+                 "pid <= 65535, but current pid is %d", gettid());
+  }
+}
+#endif
+
 void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
   environ = args.envp;
   errno = 0;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
   __abort_message_ptr = args.abort_message_ptr;
+
+#if !defined(__LP64__)
+  __check_max_thread_id();
+#endif
 
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
