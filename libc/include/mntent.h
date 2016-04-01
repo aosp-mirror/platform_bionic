@@ -35,15 +35,16 @@
 
 #define MOUNTED _PATH_MOUNTED
 
-#define MNTTYPE_DEFAULTS "defaults"
 #define MNTTYPE_IGNORE "ignore"
 #define MNTTYPE_NFS "nfs"
-#define MNTTYPE_NOAUTO "noauto"
-#define MNTTYPE_NOSUID "nosuid"
-#define MNTTYPE_RO "ro"
-#define MNTTYPE_RW "rw"
-#define MNTTYPE_SUID "suid"
 #define MNTTYPE_SWAP "swap"
+
+#define MNTOPT_DEFAULTS "defaults"
+#define MNTOPT_NOAUTO "noauto"
+#define MNTOPT_NOSUID "nosuid"
+#define MNTOPT_RO "ro"
+#define MNTOPT_RW "rw"
+#define MNTOPT_SUID "suid"
 
 struct mntent {
   char* mnt_fsname;
