@@ -574,7 +574,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
-    PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
   }
 
@@ -755,8 +755,8 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
       ELF_ST_BIND(s->st_info) == STB_WEAK) {
     return s->st_shndx != SHN_UNDEF;
   } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("unexpected ST_BIND value: %d for '%s' in '%s'",
-        ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
+    DL_WARN("unexpected ST_BIND value: %d for \"%s\" in \"%s\"",
+            ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
   }
 
   return false;
@@ -1506,7 +1506,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   const char* const path = normalized_path.c_str();
-  TRACE("Trying zip file open from path '%s' -> normalized '%s'", input_path, path);
+  TRACE("Trying zip file open from path \"%s\" -> normalized \"%s\"", input_path, path);
 
   // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.
@@ -1669,7 +1669,7 @@ static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unu
   if (get_application_target_sdk_version() <= 22) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN("'%s' library has invalid DT_NEEDED entry '%s'", sopath, dt_needed);
+      DL_WARN("library \"%s\" has invalid DT_NEEDED entry \"%s\"", sopath, dt_needed);
       add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
     }
 
@@ -1939,7 +1939,7 @@ static bool find_library_internal(android_namespace_t* ns,
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
-  TRACE("[ '%s' find_loaded_library_by_soname returned false (*candidate=%s@%p). Trying harder...]",
+  TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
       task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags)) {
@@ -2179,7 +2179,7 @@ static void soinfo_unload(soinfo* root) {
   }
 
   if (!root->can_unload()) {
-    TRACE("not unloading '%s' - the binary is flagged with NODELETE", root->get_realpath());
+    TRACE("not unloading \"%s\" - the binary is flagged with NODELETE", root->get_realpath());
     return;
   }
 
@@ -2259,8 +2259,8 @@ static void soinfo_unload(soinfo* root) {
       soinfo_unload(si);
     }
   } else {
-    TRACE("not unloading '%s' group, decrementing ref_count to %zd",
-        root->get_realpath(), ref_count);
+    TRACE("not unloading \"%s\" group, decrementing ref_count to %zd",
+          root->get_realpath(), ref_count);
   }
 }
 
@@ -2695,7 +2695,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     const char* sym_name = nullptr;
     ElfW(Addr) addend = get_addend(rel, reloc);
 
-    DEBUG("Processing '%s' relocation at index %zd", get_realpath(), idx);
+    DEBUG("Processing \"%s\" relocation at index %zd", get_realpath(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }
@@ -3048,7 +3048,7 @@ void soinfo::call_array(const char* array_name __unused, linker_function_t* func
     return;
   }
 
-  TRACE("[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, get_realpath());
+  TRACE("[ Calling %s (size %zd) @ %p for \"%s\" ]", array_name, count, functions, get_realpath());
 
   int begin = reverse ? (count - 1) : 0;
   int end = reverse ? -1 : count;
@@ -3059,7 +3059,7 @@ void soinfo::call_array(const char* array_name __unused, linker_function_t* func
     call_function("function", functions[i]);
   }
 
-  TRACE("[ Done calling %s for '%s' ]", array_name, get_realpath());
+  TRACE("[ Done calling %s for \"%s\" ]", array_name, get_realpath());
 }
 
 void soinfo::call_function(const char* function_name __unused, linker_function_t function) {
@@ -3067,9 +3067,9 @@ void soinfo::call_function(const char* function_name __unused, linker_function_t
     return;
   }
 
-  TRACE("[ Calling %s @ %p for '%s' ]", function_name, function, get_realpath());
+  TRACE("[ Calling %s @ %p for \"%s\" ]", function_name, function, get_realpath());
   function();
-  TRACE("[ Done calling %s @ %p for '%s' ]", function_name, function, get_realpath());
+  TRACE("[ Done calling %s @ %p for \"%s\" ]", function_name, function, get_realpath());
 }
 
 void soinfo::call_pre_init_constructors() {
@@ -3424,7 +3424,7 @@ bool soinfo::prelink_image() {
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
-    INFO("[ Linking '%s' ]", get_realpath());
+    INFO("[ Linking \"%s\" ]", get_realpath());
     DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
@@ -4124,11 +4124,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
-      INFO("[ LD_LIBRARY_PATH set to '%s' ]", ldpath_env);
+      INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
     if (ldpreload_env != nullptr) {
-      INFO("[ LD_PRELOAD set to '%s' ]", ldpreload_env);
+      INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
     }
   }
 
@@ -4281,7 +4281,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 #endif
 
   ElfW(Addr) entry = args.getauxval(AT_ENTRY);
-  TRACE("[ Ready to execute '%s' @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;
 }
 
