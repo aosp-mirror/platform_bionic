@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae7070c4_b9989f31",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-01T15:23:03Z",
+      "side": 1,
+      "message": "fabs is done in fabs.cpp now, and that\u0027s the way we want to go for all this stuff --- fix clang so __builtin_whatever generates good code, and then trivially wrap that in the C library. then there\u0027s only one place to maintain, and that place already has perfect information about what architecture and variant we\u0027re targeting.\n\nalso, you might want to fix clang\u0027s __builtin_fabs for 32-bit arm. (see fabs.cpp.)",
+      "parentUuid": "0e06dc0a_024dae41",
+      "revId": "6938af3151c0e1eac4379d66b6fb632b242da12f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e06dc0a_e249a235",
         "filename": "libm/arm64/fmax.S",
         "patchSetId": 1
@@ -53,6 +71,30 @@
       "writtenOn": "2016-04-01T10:08:24Z",
       "side": 1,
       "message": "I wonder if the tests in bionic/tests/math_data also test the corner cases mentioned in the man pages. Just to be on the safe side, I would add explicit tests for all the functions added, testing the result values described in the man pages:\n\nE.g: $man fmax\nRETURN VALUE\n       These functions return the maximum of x and y.\n\n       If one argument is a NaN, the other argument is returned.\n\n       If both arguments are NaN, a NaN is returned.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 10
+      },
+      "revId": "6938af3151c0e1eac4379d66b6fb632b242da12f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae7070c4_596703f4",
+        "filename": "libm/arm64/fmax.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-01T15:23:03Z",
+      "side": 1,
+      "message": "yes please!",
+      "parentUuid": "0e06dc0a_826f7e8a",
       "range": {
         "startLine": 19,
         "startChar": 0,
@@ -168,6 +210,30 @@
       "writtenOn": "2016-04-01T10:08:24Z",
       "side": 1,
       "message": "I am not entirely sure what is the policy for the files in upstream-freebsd. Chris or Elliott will have a better opinion on this.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 19
+      },
+      "revId": "6938af3151c0e1eac4379d66b6fb632b242da12f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae7070c4_d97a3388",
+        "filename": "libm/upstream-freebsd/lib/msun/src/s_nearbyint.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-01T15:23:03Z",
+      "side": 1,
+      "message": "yeah, we don\u0027t touch these files.\n\nyet another advantage of the fabs.cpp style --- we can just delete this stuff then.",
+      "parentUuid": "0e06dc0a_22954abe",
       "range": {
         "startLine": 57,
         "startChar": 0,
