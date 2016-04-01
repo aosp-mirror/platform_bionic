@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11736196_fe9c6e8c",
+        "filename": "libc/include/mntent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-01T01:13:35Z",
+      "side": 1,
+      "message": "Are all of these supposed to be MNTTYPE? It looks like there should be two sets, one MNTTYPE and one MNTOPT. For example, ef2sprogs uses MNTOPT_RO, which it defines itself if it can\u0027t find one.",
+      "range": {
+        "startLine": 38,
+        "startChar": 7,
+        "endLine": 38,
+        "endChar": 15
+      },
+      "revId": "1f1a51aecd7c825418bfedcb66772e92de790149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
