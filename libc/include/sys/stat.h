@@ -135,6 +135,12 @@ struct stat64 { __STAT64_BODY };
 #define DEFFILEMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) /* 0666 */
 #endif
 
+#if defined(__USE_BSD) || defined(__USE_GNU)
+#define S_IREAD S_IRUSR
+#define S_IWRITE S_IWUSR
+#define S_IEXEC S_IXUSR
+#endif
+
 extern int chmod(const char*, mode_t);
 extern int fchmod(int, mode_t);
 extern int mkdir(const char*, mode_t);
