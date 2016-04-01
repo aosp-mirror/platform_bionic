@@ -285,14 +285,8 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
 #if !defined(__LP64__)
 
 // Bionic additions that are deprecated even in the 32-bit ABI.
-//
-// TODO: Remove them once chromium_org / NFC have switched over.
-int pthread_cond_timedwait_monotonic_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
-int pthread_cond_timedwait_monotonic(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
-
-int pthread_cond_timedwait_relative_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*) /* TODO: __attribute__((deprecated("use pthread_cond_timedwait instead")))*/;
-#define HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE 1 /* TODO: stop defining this to push LP32 off this API sooner. */
-int pthread_cond_timeout_np(pthread_cond_t*, pthread_mutex_t*, unsigned) /* TODO: __attribute__((deprecated("use pthread_cond_timedwait instead")))*/;
+int pthread_cond_timedwait_relative_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*) __attribute__((deprecated("use pthread_cond_timedwait instead")));
+int pthread_cond_timeout_np(pthread_cond_t*, pthread_mutex_t*, unsigned) __attribute__((deprecated("use pthread_cond_timedwait instead")));
 
 int pthread_mutex_lock_timeout_np(pthread_mutex_t*, unsigned) __attribute__((deprecated("use pthread_mutex_timedlock instead")));
 
