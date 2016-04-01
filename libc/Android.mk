@@ -575,6 +575,7 @@ libc_openbsd_src_files_32 += \
 libc_common_cflags := \
     -D_LIBC=1 \
     -Wall -Wextra -Wunused \
+    -Wno-deprecated-declarations \
 
 use_clang := $(USE_CLANG_PLATFORM_BUILD)
 
