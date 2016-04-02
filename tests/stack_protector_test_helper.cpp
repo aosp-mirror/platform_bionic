@@ -19,6 +19,13 @@ __attribute__((noinline)) void modify_stack_protector_test() {
   char buf[128];
   // We can't use memset here because it's fortified, and we want to test
   // the line of defense *after* that.
-  char* p = buf;
-  while ((p - buf) < static_cast<int>(sizeof(buf) + sizeof(void*))) *p++ = '\0';
+  // Without volatile, the generic x86/x86-64 targets don't write to the stack.
+  volatile char* p = buf;
+  int size = static_cast<int>(sizeof(buf) + 1);
+#if __x86_64__
+  // The generic x86-64 target leaves an 8-byte gap between `buf` and the stack guard.
+  // We only need to corrupt one byte though.
+  size += 8;
+#endif
+  while ((p - buf) < size) *p++ = '\0';
 }
