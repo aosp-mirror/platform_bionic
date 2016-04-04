@@ -211,8 +211,6 @@ TEST(dlfcn, dlopen_by_soname) {
   dlclose(handle);
 }
 
-// ifuncs are only supported on intel and arm64 for now
-#if defined (__aarch64__) || defined(__i386__) || defined(__x86_64__)
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
@@ -256,7 +254,6 @@ TEST(dlfcn, ifunc_ctor_call) {
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
-#endif
 
 TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // This is the structure of the test library and

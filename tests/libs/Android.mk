@@ -346,25 +346,14 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 libtest_ifunc_src_files := \
     dlopen_testlib_ifunc.c
 
+# TODO(dimitry): clang does not support ifunc attribute
 libtest_ifunc_clang_host := false
+libtest_ifunc_clang_target := false
+
 module := libtest_ifunc
 build_target := SHARED_LIBRARY
 
-build_type := host
-include $(TEST_PATH)/Android.build.mk
-
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm64 x86 x86_64))
-    ifeq ($(TARGET_ARCH),arm64)
-      libtest_ifunc_multilib := 64
-      # TODO: This is a workaround - remove it once gcc
-      # removes its Android ifunc checks
-      libtest_ifunc_cflags := -mglibc
-    endif
-
-    build_type := target
-    libtest_ifunc_clang_target := false
-    include $(TEST_PATH)/Android.build.mk
-endif
+include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
 # Library used by atexit tests
