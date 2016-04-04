@@ -45,6 +45,7 @@ cc_defaults {
         "-Wall",
         "-Wextra",
         "-Wunused",
+        "-Wno-deprecated-declarations",
 
         // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
         "-Werror=pointer-to-int-cast",
