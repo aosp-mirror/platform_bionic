@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2ec48060_d5dd5c2b",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1072549
+      },
+      "writtenOn": "2016-04-04T08:42:17Z",
+      "side": 1,
+      "message": "Oh, yes - that seems like the best way to do this. \n\nThanks for updating me on this, I will flag it with our clang team. Please let me know if you are aware of any other issues that are not part tracked part of: https://llvm.org/bugs/show_bug.cgi?id\u003d21420 .",
+      "parentUuid": "ae7070c4_b9989f31",
+      "revId": "6938af3151c0e1eac4379d66b6fb632b242da12f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e06dc0a_e249a235",
         "filename": "libm/arm64/fmax.S",
         "patchSetId": 1
