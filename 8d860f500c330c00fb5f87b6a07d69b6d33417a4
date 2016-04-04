@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8eb56cae_0f8dc660",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-04-04T22:58:58Z",
+      "side": 1,
+      "message": "Jiqun.Li@spreadtrum.com sent me an email to complain it. no bug for it. As I haven\u0027t seen any name on commit messages, I think it is a convention to not do that.",
+      "parentUuid": "8eb56cae_11de4e8b",
+      "revId": "8d860f500c330c00fb5f87b6a07d69b6d33417a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11736196_5d0e4fc6",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 1
@@ -78,6 +96,30 @@
       "side": 1,
       "message": "it\u0027s fine to link to public bugs, and like jmgao says, it\u0027s more useful for non-google developers.\n\ni think if we were to improve the text, it would be to talk about a specific bug --- it would be more useful to talk about how much stack is actually available for use on each architecture (something i don\u0027t think anyone actually knows), and that we have functions -- the printf family being the most obvious -- that require more than that.",
       "parentUuid": "11736196_c870dfdd",
+      "range": {
+        "startLine": 132,
+        "startChar": 51,
+        "endLine": 132,
+        "endChar": 68
+      },
+      "revId": "8d860f500c330c00fb5f87b6a07d69b6d33417a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eb56cae_f2d3751f",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-04-04T22:58:58Z",
+      "side": 1,
+      "message": "Done. Replaced the internal bug to external bug, as they are actually the same bug.",
+      "parentUuid": "8eb56cae_71d9caa1",
       "range": {
         "startLine": 132,
         "startChar": 51,
