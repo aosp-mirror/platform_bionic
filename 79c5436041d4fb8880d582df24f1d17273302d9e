@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_7d8d57f2",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T06:42:26Z",
+      "side": 1,
+      "message": "\"Done\" - you keep using that word... :-)",
+      "parentUuid": "2edba03a_1d845302",
+      "range": {
+        "startLine": 216,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d183891b_7007486c",
         "filename": "libc/dns/include/resolv_private.h",
         "patchSetId": 10
@@ -754,6 +778,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_1d67f3f4",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2086,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T06:42:26Z",
+      "side": 1,
+      "message": "... and delete these lines?",
+      "parentUuid": "2edba03a_ddf74b76",
+      "range": {
+        "startLine": 2086,
+        "startChar": 8,
+        "endLine": 2086,
+        "endChar": 45
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_bdf99f94",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 10
@@ -977,6 +1025,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "2edba03a_bd46ff9c",
+      "range": {
+        "startLine": 913,
+        "startChar": 0,
+        "endLine": 915,
+        "endChar": 48
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3d6cafd4",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T06:42:26Z",
+      "side": 1,
+      "message": "Can you move the other lines as well?",
+      "parentUuid": "2edba03a_5db25bc4",
       "range": {
         "startLine": 913,
         "startChar": 0,
