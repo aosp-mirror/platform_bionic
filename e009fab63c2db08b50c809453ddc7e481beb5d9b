@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_fd15e722",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T08:54:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_dd74ab9d",
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_bd8effeb",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 11
@@ -30,6 +48,30 @@
       "writtenOn": "2016-04-04T06:42:26Z",
       "side": 1,
       "message": "\"not enough\"",
+      "range": {
+        "startLine": 62,
+        "startChar": 57,
+        "endLine": 62,
+        "endChar": 63
+      },
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_9d3f83b8",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T08:54:55Z",
+      "side": 1,
+      "message": "Done differently.",
+      "parentUuid": "2edba03a_bd8effeb",
       "range": {
         "startLine": 62,
         "startChar": 57,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_bd3c3fc4",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2020,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T08:54:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_dd9bcb2c",
+      "range": {
+        "startLine": 2020,
+        "startChar": 37,
+        "endLine": 2020,
+        "endChar": 45
+      },
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_fd988732",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 11
@@ -76,6 +142,30 @@
       "writtenOn": "2016-04-04T06:42:26Z",
       "side": 1,
       "message": "Also say that currently, max_samples is the only element of __res_params that influences the validity of the samples. The others only determine sample aggregation and server usability, not the samples themselves.",
+      "range": {
+        "startLine": 2030,
+        "startChar": 85,
+        "endLine": 2030,
+        "endChar": 92
+      },
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_7d0ab704",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2030,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T08:54:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_fd988732",
       "range": {
         "startLine": 2030,
         "startChar": 85,
@@ -122,6 +212,30 @@
       "writtenOn": "2016-04-04T06:42:26Z",
       "side": 1,
       "message": "usable?",
+      "range": {
+        "startLine": 171,
+        "startChar": 13,
+        "endLine": 171,
+        "endChar": 18
+      },
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bd1b5f56",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T08:54:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_7d6637f6",
       "range": {
         "startLine": 171,
         "startChar": 13,
