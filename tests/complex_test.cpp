@@ -18,7 +18,7 @@
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
 // have to be naughty.
-#include <../libm/include/complex.h>
+#include <../libc/include/complex.h>
 
 // (libc++ also seems to have really bad implementations of its own that ignore
 // the intricacies of floating point math.)
