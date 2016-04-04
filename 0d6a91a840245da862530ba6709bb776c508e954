@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2edba03a_ddebcbee",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 2032,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T15:17:16Z",
+      "side": 1,
+      "message": "duplicate word",
+      "range": {
+        "startLine": 2032,
+        "startChar": 29,
+        "endLine": 2032,
+        "endChar": 44
+      },
+      "revId": "0d6a91a840245da862530ba6709bb776c508e954",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
