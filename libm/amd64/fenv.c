@@ -28,7 +28,14 @@
  */
 
 #include <fenv.h>
-#include <machine/fpu.h>
+
+/*
+ * The i387 defaults to Intel extended precision mode and round to nearest,
+ * with all exceptions masked.
+ */
+#define	__INITIAL_NPXCW__	0x037f
+#define __INITIAL_MXCSR__ 	0x1f80
+#define __INITIAL_MXCSR_MASK__	0xffbf
 
 #define SSE_MASK_SHIFT 7
 

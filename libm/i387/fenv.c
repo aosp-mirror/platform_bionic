@@ -28,10 +28,29 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include "npx.h"
 #include "fenv.h"
 
 #define ROUND_MASK   (FE_TONEAREST | FE_DOWNWARD | FE_UPWARD | FE_TOWARDZERO)
+
+/*
+ * The hardware default control word for i387's and later coprocessors is
+ * 0x37F, giving:
+ *
+ *	round to nearest
+ *	64-bit precision
+ *	all exceptions masked.
+ *
+ * We modify the affine mode bit and precision bits in this to give:
+ *
+ *	affine mode for 287's (if they work at all) (1 in bitfield 1<<12)
+ *	53-bit precision (2 in bitfield 3<<8)
+ *
+ * 64-bit precision often gives bad results with high level languages
+ * because it makes the results of calculations depend on whether
+ * intermediate values are stored in memory or in FPU registers.
+ */
+#define	__INITIAL_NPXCW__	0x127F
+#define	__INITIAL_MXCSR__	0x1F80
 
 /*
  * As compared to the x87 control word, the SSE unit's control word
