@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_bd2fdfcc",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_1008cc7d",
+      "range": {
+        "startLine": 27,
+        "startChar": 71,
+        "endLine": 27,
+        "endChar": 72
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d183891b_300dd08e",
         "filename": "libc/dns/include/resolv_params.h",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "This applies to success_threshold, not to sample_validity, right?",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 85
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_fd2967c7",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_300dd08e",
       "range": {
         "startLine": 37,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_1d845302",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_5002445d",
+      "range": {
+        "startLine": 216,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d183891b_7007486c",
         "filename": "libc/dns/include/resolv_private.h",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Tab?",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3d890f19",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_7007486c",
       "range": {
         "startLine": 224,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_5d8edb21",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_50416486",
+      "range": {
+        "startLine": 36,
+        "startChar": 32,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d183891b_f0f258ac",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 10
@@ -128,6 +248,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "This can be uint8_t if you want (only for consistency; I don\u0027t see a need to save space).",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_1d6d3302",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_f0f258ac",
       "range": {
         "startLine": 43,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_3d72efe4",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_d0f55497",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_ddc82b72",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 10
@@ -174,6 +342,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Is there no library function that does this already?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 79
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bd743fd5",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "None that I am aware of, as mostly conversions to ms are done inline for display purposes only. At least I didn\u0027t find such a function on a casual search.",
+      "parentUuid": "2edba03a_ddc82b72",
       "range": {
         "startLine": 50,
         "startChar": 0,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_5d67bb21",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Initialize?",
+      "parentUuid": "2edba03a_fdc5e758",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 9
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d183891b_1037ec35",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 10
@@ -220,6 +436,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Lack of samples means that a server is valid, right? If so, reword this to:\n\n    (or there are not enough stored samples).",
+      "range": {
+        "startLine": 62,
+        "startChar": 43,
+        "endLine": 62,
+        "endChar": 80
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_7d6c7703",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_1037ec35",
       "range": {
         "startLine": 62,
         "startChar": 43,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_bd5d1f55",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "\"usable\" maybe? \"working\" for me implies that the server itself is fine, whereas \"usable\" also includes problems with the routing, etc. that don\u0027t necessarily are due to the server itself being broken.",
+      "parentUuid": "2edba03a_1de0d3e1",
+      "range": {
+        "startLine": 65,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 16
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_3de58ff2",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 10
@@ -266,6 +530,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Nit: s/valid/working/ ?",
+      "range": {
+        "startLine": 70,
+        "startChar": 15,
+        "endLine": 70,
+        "endChar": 20
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_dd5aeb59",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "2edba03a_3de58ff2",
       "range": {
         "startLine": 70,
         "startChar": 15,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_7de9d799",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done, but I kept the revision increment in here to keep the logic easier to comprehend.",
+      "parentUuid": "2edba03a_1d36133a",
+      "range": {
+        "startLine": 1863,
+        "startChar": 4,
+        "endLine": 1863,
+        "endChar": 36
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_3d3bcf20",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 10
@@ -312,6 +624,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Remember to clear the parameters if appropriate/necessary.",
+      "range": {
+        "startLine": 1970,
+        "startChar": 8,
+        "endLine": 1970,
+        "endChar": 29
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_9dedc3a8",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1970,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_3d3bcf20",
       "range": {
         "startLine": 1970,
         "startChar": 8,
@@ -347,6 +683,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_bdea7f8b",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2026,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d183891b_704668a1",
+      "range": {
+        "startLine": 2026,
+        "startChar": 47,
+        "endLine": 2026,
+        "endChar": 55
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_5d409b84",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 10
@@ -358,6 +718,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Perhaps call the new _resolv_cache_clear_resolver_stats function here.",
+      "range": {
+        "startLine": 2086,
+        "startChar": 8,
+        "endLine": 2086,
+        "endChar": 45
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_ddf74b76",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2086,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_5d409b84",
       "range": {
         "startLine": 2086,
         "startChar": 8,
@@ -393,6 +777,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_1d037334",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2151,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Handled in the non-\"_locked\" version below.",
+      "parentUuid": "2edba03a_bdf99f94",
+      "range": {
+        "startLine": 2151,
+        "startChar": 4,
+        "endLine": 2151,
+        "endChar": 49
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_ddf66ba3",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 10
@@ -404,6 +812,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Since _res_cache_add_stats_sample_locked does not do the right thing if max_samples \u003d 0, consider adding this to the if:\n\n \u0026\u0026 max_samples \u003e 0",
+      "range": {
+        "startLine": 2186,
+        "startChar": 48,
+        "endLine": 2186,
+        "endChar": 51
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3d082f4c",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2186,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done before the lock is actually taken.",
+      "parentUuid": "2edba03a_ddf66ba3",
       "range": {
         "startLine": 2186,
         "startChar": 48,
@@ -439,6 +871,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_7d02b72d",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "I would like to keep similar names for both send_{dg,vc}.",
+      "parentUuid": "2edba03a_9d4943b0",
+      "range": {
+        "startLine": 767,
+        "startChar": 17,
+        "endLine": 767,
+        "endChar": 20
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_7d455793",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 10
@@ -450,6 +906,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Add a comment that this is not necessarily correct. Suggest:\n\n    /*\n     * TODO: this might not be a timeout, it could be something else, such as\n     * ECONNREFUSED. Getting the real error would require changes to\n     * connect_with_timeout and retrying_select, and it doesn\u0027t really matter\n     * anyway since we don\u0027t currently handle errors and timeouts differently.\n     */",
+      "range": {
+        "startLine": 831,
+        "startChar": 3,
+        "endLine": 831,
+        "endChar": 26
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_fd0de757",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done, however slightly differently formulated, as I currently do not see a need to reliably distinguish these cases, thus no need for an actual \"TODO\". I will change the code if I ever have to, though.",
+      "parentUuid": "2edba03a_7d455793",
       "range": {
         "startLine": 831,
         "startChar": 3,
@@ -485,6 +965,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_5db25bc4",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_bd46ff9c",
+      "range": {
+        "startLine": 913,
+        "startChar": 0,
+        "endLine": 915,
+        "endChar": 48
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_1d1ff3a9",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 10
@@ -496,6 +1000,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Maybe move this down to just above line 1258? There are lots of \"goto retry\" statements around this code that it would be nice to reduce.",
+      "range": {
+        "startLine": 1182,
+        "startChar": 0,
+        "endLine": 1184,
+        "endChar": 48
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_7db717b3",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1184,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_1d1ff3a9",
       "range": {
         "startLine": 1182,
         "startChar": 0,
@@ -531,6 +1059,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_9d9b0340",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_bdd0bf14",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 15
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_fdda4730",
         "filename": "libc/dns/resolv/res_stats.c",
         "patchSetId": 10
@@ -542,6 +1094,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "I would remove this part of the comment since NOERROR with an empty answer section is very clearly a response (it means \"this name does not have this type of record but it has other types of records\").",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 77
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bd98bf43",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_fdda4730",
       "range": {
         "startLine": 71,
         "startChar": 19,
@@ -577,6 +1153,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_dda58b76",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_dddd8b2b",
+      "range": {
+        "startLine": 72,
+        "startChar": 36,
+        "endLine": 72,
+        "endChar": 76
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_3d0e6f8a",
         "filename": "libc/dns/resolv/res_stats.c",
         "patchSetId": 10
@@ -588,6 +1188,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "Is the reason you use evNowTime().tv_sec instead of just:\n\n    time(\u0026now);\n\nbecause the rest of the code uses evNowTime() and you want to be consistent? If so, might be worth a comment to that effect.",
+      "range": {
+        "startLine": 142,
+        "startChar": 29,
+        "endLine": 142,
+        "endChar": 38
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_1dd1b3d4",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_3d0e6f8a",
       "range": {
         "startLine": 142,
         "startChar": 29,
@@ -623,6 +1247,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_9dc4e310",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "I added a comment explaining why that is not that easy: The first element of a circular buffer does not have to be at position 0, but for a non-full buffer this is expected. Iow, we would have to move stuff around, which is a bit more complex than is warranted here, IMHO.",
+      "parentUuid": "2edba03a_5d033b61",
+      "range": {
+        "startLine": 143,
+        "startChar": 20,
+        "endLine": 143,
+        "endChar": 68
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_7d08f77a",
         "filename": "libc/dns/resolv/res_stats.c",
         "patchSetId": 10
@@ -646,6 +1294,30 @@
     },
     {
       "key": {
+        "uuid": "2edba03a_bdc19fff",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_7d08f77a",
+      "range": {
+        "startLine": 171,
+        "startChar": 47,
+        "endLine": 171,
+        "endChar": 64
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_9dfce385",
         "filename": "libc/dns/resolv/res_stats.c",
         "patchSetId": 10
@@ -657,6 +1329,30 @@
       "writtenOn": "2016-04-04T04:16:42Z",
       "side": 1,
       "message": "bool is not guaranteed to be one byte. Use a loop?",
+      "range": {
+        "startLine": 173,
+        "startChar": 8,
+        "endLine": 173,
+        "endChar": 14
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_ddbe6b82",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-04T06:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2edba03a_9dfce385",
       "range": {
         "startLine": 173,
         "startChar": 8,
