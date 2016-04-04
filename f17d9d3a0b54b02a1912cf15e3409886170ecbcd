@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8eb56cae_f75daa53",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-04T18:16:21Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t quite make sense now.",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 55
+      },
+      "revId": "f17d9d3a0b54b02a1912cf15e3409886170ecbcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
