@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0e67bc33_54084c7a",
+        "filename": "libm/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-04T17:06:02Z",
+      "side": 1,
+      "message": "thanks. that\u0027s the only one i know of so far, but as i\u0027ve implied, at some point i\u0027m hoping i\u0027ll get the time to do a similar job for more of these functions. i\u0027ll try to be more conscientious about reporting any weaknesses i find when i get there!",
+      "parentUuid": "2ec48060_d5dd5c2b",
+      "revId": "6938af3151c0e1eac4379d66b6fb632b242da12f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e06dc0a_e249a235",
         "filename": "libm/arm64/fmax.S",
         "patchSetId": 1
