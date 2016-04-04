@@ -1,0 +1,671 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d183891b_1008cc7d",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "* 100",
+      "range": {
+        "startLine": 27,
+        "startChar": 71,
+        "endLine": 27,
+        "endChar": 72
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_300dd08e",
+        "filename": "libc/dns/include/resolv_params.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "This applies to success_threshold, not to sample_validity, right?",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 85
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_5002445d",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Tab?",
+      "range": {
+        "startLine": 216,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_7007486c",
+        "filename": "libc/dns/include/resolv_private.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Tab?",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_50416486",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": ", or RCODE_{INTERNAL_ERROR,TIMEOUT}.",
+      "range": {
+        "startLine": 36,
+        "startChar": 32,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_f0f258ac",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "This can be uint8_t if you want (only for consistency; I don\u0027t see a need to save space).",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_d0f55497",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 7
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_ddc82b72",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Is there no library function that does this already?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 79
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_fdc5e758",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Nit: this doesn\u0027t actually create a sample, right? If so, s/Create/Populate/",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 9
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_1037ec35",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Lack of samples means that a server is valid, right? If so, reword this to:\n\n    (or there are not enough stored samples).",
+      "range": {
+        "startLine": 62,
+        "startChar": 43,
+        "endLine": 62,
+        "endChar": 80
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_1de0d3e1",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Nit: s/valid/working/ , perhaps?",
+      "range": {
+        "startLine": 65,
+        "startChar": 11,
+        "endLine": 65,
+        "endChar": 16
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3de58ff2",
+        "filename": "libc/dns/include/resolv_stats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Nit: s/valid/working/ ?",
+      "range": {
+        "startLine": 70,
+        "startChar": 15,
+        "endLine": 70,
+        "endChar": 20
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_1d36133a",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "I think we need to clear these when we change the parameters, too. For example, if we increase max_samples, a future call to aggregate statistics might end up using garbage. Factor this out to a _resolv_cache_clear_resolver_stats function and call it when appropriate? That function could also increment the revision ID.",
+      "range": {
+        "startLine": 1863,
+        "startChar": 4,
+        "endLine": 1863,
+        "endChar": 36
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3d3bcf20",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1970,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Remember to clear the parameters if appropriate/necessary.",
+      "range": {
+        "startLine": 1970,
+        "startChar": 8,
+        "endLine": 1970,
+        "endChar": 29
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d183891b_704668a1",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2026,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "s/practise/practice? (\"practise\" is a verb, \"practice\" is a noun)",
+      "range": {
+        "startLine": 2026,
+        "startChar": 47,
+        "endLine": 2026,
+        "endChar": 55
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_5d409b84",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2086,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Perhaps call the new _resolv_cache_clear_resolver_stats function here.",
+      "range": {
+        "startLine": 2086,
+        "startChar": 8,
+        "endLine": 2086,
+        "endChar": 45
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bdf99f94",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2151,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Do we want to return without doing anything if max_samples \u003d\u003d 0?",
+      "range": {
+        "startLine": 2151,
+        "startChar": 4,
+        "endLine": 2151,
+        "endChar": 49
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_ddf66ba3",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2186,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Since _res_cache_add_stats_sample_locked does not do the right thing if max_samples \u003d 0, consider adding this to the if:\n\n \u0026\u0026 max_samples \u003e 0",
+      "range": {
+        "startLine": 2186,
+        "startChar": 48,
+        "endLine": 2186,
+        "endChar": 51
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_9d4943b0",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Nit: rename to start, since that\u0027s what it is? I see that that would not be consistent with send_dg, though. Up to you.",
+      "range": {
+        "startLine": 767,
+        "startChar": 17,
+        "endLine": 767,
+        "endChar": 20
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_7d455793",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Add a comment that this is not necessarily correct. Suggest:\n\n    /*\n     * TODO: this might not be a timeout, it could be something else, such as\n     * ECONNREFUSED. Getting the real error would require changes to\n     * connect_with_timeout and retrying_select, and it doesn\u0027t really matter\n     * anyway since we don\u0027t currently handle errors and timeouts differently.\n     */",
+      "range": {
+        "startLine": 831,
+        "startChar": 3,
+        "endLine": 831,
+        "endChar": 26
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bd46ff9c",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "There are lots of codepaths and lots of gotos here and I can\u0027t easily tell when this code might be run. I assume we only really care about how long a query takes if it\u0027s successful, right? If so, why not calculate the time only just before setting *rcode, in the only place where we return success?",
+      "range": {
+        "startLine": 913,
+        "startChar": 0,
+        "endLine": 915,
+        "endChar": 48
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_1d1ff3a9",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1184,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Maybe move this down to just above line 1258? There are lots of \"goto retry\" statements around this code that it would be nice to reduce.",
+      "range": {
+        "startLine": 1182,
+        "startChar": 0,
+        "endLine": 1184,
+        "endChar": 48
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_bdd0bf14",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Because these one-letter variables are not descriptive, I\u0027d suggest adding comments:\n\n    int s \u003d 0;   /* successes */\n    int e \u003d 0;   /* errors */\n    int t \u003d 0;   /* timeouts */\n    int ie \u003d 0;  /* internal errors */",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 15
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_fdda4730",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "I would remove this part of the comment since NOERROR with an empty answer section is very clearly a response (it means \"this name does not have this type of record but it has other types of records\").",
+      "range": {
+        "startLine": 71,
+        "startChar": 19,
+        "endLine": 71,
+        "endChar": 77
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_dddd8b2b",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Remove?",
+      "range": {
+        "startLine": 72,
+        "startChar": 36,
+        "endLine": 72,
+        "endChar": 76
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_3d0e6f8a",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Is the reason you use evNowTime().tv_sec instead of just:\n\n    time(\u0026now);\n\nbecause the rest of the code uses evNowTime() and you want to be consistent? If so, might be worth a comment to that effect.",
+      "range": {
+        "startLine": 142,
+        "startChar": 29,
+        "endLine": 142,
+        "endChar": 38
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_5d033b61",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Nit: might be worth adding a TODO to consider aging out samples as time passes, rather than suddenly declaring a server healthy when all the samples have expired.",
+      "range": {
+        "startLine": 143,
+        "startChar": 20,
+        "endLine": 143,
+        "endChar": 68
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_7d08f77a",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "Might want to add a TODO to choose the least bad.",
+      "range": {
+        "startLine": 171,
+        "startChar": 47,
+        "endLine": 171,
+        "endChar": 64
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2edba03a_9dfce385",
+        "filename": "libc/dns/resolv/res_stats.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T04:16:42Z",
+      "side": 1,
+      "message": "bool is not guaranteed to be one byte. Use a loop?",
+      "range": {
+        "startLine": 173,
+        "startChar": 8,
+        "endLine": 173,
+        "endChar": 14
+      },
+      "revId": "79c5436041d4fb8880d582df24f1d17273302d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
