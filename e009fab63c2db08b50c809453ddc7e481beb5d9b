@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "2edba03a_dd74ab9d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-04T06:45:16Z",
+      "side": 1,
+      "message": "Bug: 25731675",
+      "revId": "e009fab63c2db08b50c809453ddc7e481beb5d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2edba03a_bd8effeb",
         "filename": "libc/dns/include/resolv_stats.h",
         "patchSetId": 11
