@@ -199,6 +199,7 @@ libc_bionic_ndk_src_files := \
     bionic/strtold.cpp \
     bionic/stubs.cpp \
     bionic/symlink.cpp \
+    bionic/sync_file_range.cpp \
     bionic/sysinfo.cpp \
     bionic/syslog.cpp \
     bionic/sys_siglist.c \
