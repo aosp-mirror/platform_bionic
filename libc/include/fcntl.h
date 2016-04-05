@@ -88,6 +88,7 @@ extern int posix_fallocate64(int, off64_t, off64_t);
 
 #if defined(__USE_GNU)
 ssize_t readahead(int, off64_t, size_t);
+int sync_file_range(int, off64_t, off64_t, unsigned int);
 #endif
 
 extern int __open_2(const char*, int);
