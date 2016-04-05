@@ -514,3 +514,26 @@ TEST(stdlib, strtoull_EINVAL) {
   strtoull("123", NULL, 37);
   ASSERT_EQ(EINVAL, errno);
 }
+
+TEST(stdlib, getsubopt) {
+  char* const tokens[] = {
+    const_cast<char*>("a"),
+    const_cast<char*>("b"),
+    const_cast<char*>("foo"),
+    nullptr
+  };
+  std::string input = "a,b,foo=bar,a,unknown";
+  char* subopts = &input[0];
+  char* value = nullptr;
+
+  ASSERT_EQ(0, getsubopt(&subopts, tokens, &value));
+  ASSERT_EQ(nullptr, value);
+  ASSERT_EQ(1, getsubopt(&subopts, tokens, &value));
+  ASSERT_EQ(nullptr, value);
+  ASSERT_EQ(2, getsubopt(&subopts, tokens, &value));
+  ASSERT_STREQ("bar", value);
+  ASSERT_EQ(0, getsubopt(&subopts, tokens, &value));
+  ASSERT_EQ(nullptr, value);
+
+  ASSERT_EQ(-1, getsubopt(&subopts, tokens, &value));
+}

@@ -491,6 +491,7 @@ libc_upstream_openbsd_ndk_src_files := \
     upstream-openbsd/lib/libc/stdlib/atol.c \
     upstream-openbsd/lib/libc/stdlib/atoll.c \
     upstream-openbsd/lib/libc/stdlib/getenv.c \
+    upstream-openbsd/lib/libc/stdlib/getsubopt.c \
     upstream-openbsd/lib/libc/stdlib/insque.c \
     upstream-openbsd/lib/libc/stdlib/imaxabs.c \
     upstream-openbsd/lib/libc/stdlib/imaxdiv.c \
