@@ -67,7 +67,7 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
 
 /* Returns an array of bools indicating which servers are considered good */
 extern void
-_res_stats_get_usable_servers(const struct __res_params* params, struct __res_stats stats[MAXNS],
-        int nscount, bool valid_servers[MAXNS]);
+_res_stats_get_usable_servers(const struct __res_params* params, struct __res_stats stats[],
+        int nscount, bool valid_servers[]);
 
 #endif  // _RES_STATS_H

@@ -1228,15 +1228,18 @@ typedef struct resolv_cache {
     PendingReqInfo   pending_requests;
 } Cache;
 
+// The nameservers[], nsaddrinfo[] and nsstats[] are containing MAXNS + 1 elements, because the
+// number of nameservers is not known and the code relies on the n+1-st entry to be null to
+// recognize the end.
 struct resolv_cache_info {
     unsigned                    netid;
     Cache*                      cache;
     struct resolv_cache_info*   next;
-    char*                       nameservers[MAXNS +1];
+    char*                       nameservers[MAXNS + 1];
     struct addrinfo*            nsaddrinfo[MAXNS + 1];
     int                         revision_id; // # times the nameservers have been replaced
     struct __res_params         params;
-    struct __res_stats          nsstats[MAXNS];
+    struct __res_stats          nsstats[MAXNS + 1];
     char                        defdname[256];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
