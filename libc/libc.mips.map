@@ -1267,6 +1267,7 @@ LIBC_O {
     sigpause;
     sigrelse;
     sigset;
+    sync_file_range;
 } LIBC_N;
 
 LIBC_PRIVATE {
