@@ -86,6 +86,10 @@ extern int fallocate64(int, int, off64_t, off64_t);
 extern int posix_fadvise64(int, off64_t, off64_t, int);
 extern int posix_fallocate64(int, off64_t, off64_t);
 
+#if defined(__USE_GNU)
+ssize_t readahead(int, off64_t, size_t);
+#endif
+
 extern int __open_2(const char*, int);
 extern int __open_real(const char*, int, ...) __RENAME(open);
 extern int __openat_2(int, const char*, int);

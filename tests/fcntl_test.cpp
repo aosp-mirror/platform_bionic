@@ -237,3 +237,10 @@ TEST(fcntl, tee) {
   ASSERT_STREQ(expected, buf1);
   ASSERT_STREQ(expected, buf2);
 }
+
+TEST(fcntl, readahead) {
+  // Just check that the function is available.
+  errno = 0;
+  ASSERT_EQ(-1, readahead(-1, 0, 123));
+  ASSERT_EQ(EBADF, errno);
+}
