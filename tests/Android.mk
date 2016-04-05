@@ -38,6 +38,10 @@ test_cflags = \
     -Werror \
     -fno-builtin \
 
+# We want to test deprecated API too.
+test_cflags += \
+    -Wno-deprecated-declarations \
+
 test_cflags += -D__STDC_LIMIT_MACROS  # For glibc.
 
 test_cppflags := \

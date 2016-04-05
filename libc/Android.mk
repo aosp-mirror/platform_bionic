@@ -174,12 +174,17 @@ libc_bionic_ndk_src_files := \
     bionic/sigdelset.cpp \
     bionic/sigemptyset.cpp \
     bionic/sigfillset.cpp \
+    bionic/sighold.cpp \
+    bionic/sigignore.cpp \
     bionic/sigismember.cpp \
     bionic/signal.cpp \
     bionic/signalfd.cpp \
+    bionic/sigpause.cpp \
     bionic/sigpending.cpp \
     bionic/sigprocmask.cpp \
     bionic/sigqueue.cpp \
+    bionic/sigrelse.cpp \
+    bionic/sigset.cpp \
     bionic/sigsuspend.cpp \
     bionic/sigtimedwait.cpp \
     bionic/sigwait.cpp \

@@ -422,3 +422,108 @@ TEST(signal, sigset_size) {
 
 #endif
 #endif
+
+TEST(signal, sigignore_EINVAL) {
+  errno = 0;
+  ASSERT_EQ(-1, sigignore(99999));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(signal, sigignore) {
+  errno = 0;
+  EXPECT_EQ(-1, sigignore(SIGKILL));
+  EXPECT_EQ(errno, EINVAL);
+
+  errno = 0;
+  EXPECT_EQ(-1, sigignore(SIGSTOP));
+  EXPECT_EQ(errno, EINVAL);
+
+  ScopedSignalHandler sigalrm{SIGALRM};
+  ASSERT_EQ(0, sigignore(SIGALRM));
+
+  struct sigaction sa;
+  ASSERT_EQ(0, sigaction(SIGALRM, nullptr, &sa));
+  EXPECT_EQ(SIG_IGN, sa.sa_handler);
+}
+
+TEST(signal, sighold_EINVAL) {
+  errno = 0;
+  ASSERT_EQ(-1, sighold(99999));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(signal, sigpause_EINVAL) {
+  errno = 0;
+  ASSERT_EQ(-1, sigpause(99999));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(signal, sigrelse_EINVAL) {
+  errno = 0;
+  ASSERT_EQ(-1, sigpause(99999));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(signal, sighold_sigpause_sigrelse) {
+  static int sigalrm_handler_call_count;
+  auto sigalrm_handler = [](int) { sigalrm_handler_call_count++; };
+  ScopedSignalHandler sigalrm{SIGALRM, sigalrm_handler};
+  ScopedSignalMask mask;
+  sigset_t set;
+
+  // sighold(SIGALRM) should add SIGALRM to the signal mask ...
+  ASSERT_EQ(0, sighold(SIGALRM));
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+  EXPECT_TRUE(sigismember(&set, SIGALRM));
+
+  // ... preventing our SIGALRM handler from running ...
+  raise(SIGALRM);
+  ASSERT_EQ(0, sigalrm_handler_call_count);
+  // ... until sigpause(SIGALRM) temporarily unblocks it.
+  ASSERT_EQ(-1, sigpause(SIGALRM));
+  ASSERT_EQ(EINTR, errno);
+  ASSERT_EQ(1, sigalrm_handler_call_count);
+
+  // But sigpause(SIGALRM) shouldn't permanently unblock SIGALRM.
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+  EXPECT_TRUE(sigismember(&set, SIGALRM));
+
+  ASSERT_EQ(0, sigrelse(SIGALRM));
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+  EXPECT_FALSE(sigismember(&set, SIGALRM));
+}
+
+TEST(signal, sigset_EINVAL) {
+  errno = 0;
+  ASSERT_EQ(SIG_ERR, sigset(99999, SIG_DFL));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(signal, sigset) {
+  auto sigalrm_handler = [](int) { };
+  ScopedSignalHandler sigalrm{SIGALRM, sigalrm_handler};
+  ScopedSignalMask mask;
+
+  // block SIGALRM so the next sigset(SIGARLM) call will return SIG_HOLD
+  sigset_t sigalrm_set;
+  sigemptyset(&sigalrm_set);
+  sigaddset(&sigalrm_set, SIGALRM);
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &sigalrm_set, nullptr));
+
+  sigset_t set;
+  ASSERT_EQ(SIG_HOLD, sigset(SIGALRM, sigalrm_handler));
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
+  EXPECT_FALSE(sigismember(&set, SIGALRM));
+
+  ASSERT_EQ(sigalrm_handler, sigset(SIGALRM, SIG_IGN));
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
+  EXPECT_FALSE(sigismember(&set, SIGALRM));
+
+  ASSERT_EQ(SIG_IGN, sigset(SIGALRM, SIG_DFL));
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
+  EXPECT_FALSE(sigismember(&set, SIGALRM));
+
+  ASSERT_EQ(SIG_DFL, sigset(SIGALRM, SIG_HOLD));
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
+  EXPECT_TRUE(sigismember(&set, SIGALRM));
+}
