@@ -1261,6 +1261,11 @@ LIBC_O {
     hasmntopt;
     pthread_getname_np;
     setdomainname;
+    sighold;
+    sigignore;
+    sigpause;
+    sigrelse;
+    sigset;
 } LIBC_N;
 
 LIBC_PRIVATE {

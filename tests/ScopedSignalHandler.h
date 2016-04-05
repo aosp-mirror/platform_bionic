@@ -39,6 +39,10 @@ class ScopedSignalHandler {
     sigaction(signal_number_, &action_, &old_action_);
   }
 
+  ScopedSignalHandler(int signal_number) : signal_number_(signal_number) {
+    sigaction(signal_number, nullptr, &old_action_);
+  }
+
   ~ScopedSignalHandler() {
     sigaction(signal_number_, &old_action_, NULL);
   }
@@ -47,6 +51,20 @@ class ScopedSignalHandler {
   struct sigaction action_;
   struct sigaction old_action_;
   const int signal_number_;
+};
+
+class ScopedSignalMask {
+ public:
+  ScopedSignalMask() {
+    sigprocmask(SIG_SETMASK, nullptr, &old_mask_);
+  }
+
+  ~ScopedSignalMask() {
+    sigprocmask(SIG_SETMASK, &old_mask_, nullptr);
+  }
+
+ private:
+  sigset_t old_mask_;
 };
 
 #endif // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H
