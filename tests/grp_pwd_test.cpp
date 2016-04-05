@@ -122,12 +122,20 @@ TEST(getpwnam, app_id_radio) {
   check_get_passwd("radio", 1001, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_0) {
-  check_get_passwd("oem_0", 5000, TYPE_SYSTEM);
+TEST(getpwnam, oem_id_5000) {
+  check_get_passwd("oem_5000", 5000, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_999) {
-  check_get_passwd("oem_999", 5999, TYPE_SYSTEM);
+TEST(getpwnam, oem_id_5999) {
+  check_get_passwd("oem_5999", 5999, TYPE_SYSTEM);
+}
+
+TEST(getpwnam, oem_id_2900) {
+  check_get_passwd("oem_2900", 2900, TYPE_SYSTEM);
+}
+
+TEST(getpwnam, oem_id_2999) {
+  check_get_passwd("oem_2999", 2999, TYPE_SYSTEM);
 }
 
 TEST(getpwnam, app_id_nobody) {
@@ -255,12 +263,20 @@ TEST(getgrnam, app_id_radio) {
   check_get_group("radio", 1001);
 }
 
-TEST(getgrnam, oem_id_0) {
-  check_get_group("oem_0", 5000);
+TEST(getgrnam, oem_id_5000) {
+  check_get_group("oem_5000", 5000);
 }
 
-TEST(getgrnam, oem_id_999) {
-  check_get_group("oem_999", 5999);
+TEST(getgrnam, oem_id_5999) {
+  check_get_group("oem_5999", 5999);
+}
+
+TEST(getgrnam, oem_id_2900) {
+  check_get_group("oem_2900", 2900);
+}
+
+TEST(getgrnam, oem_id_2999) {
+  check_get_group("oem_2999", 2999);
 }
 
 TEST(getgrnam, app_id_nobody) {
