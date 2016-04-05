@@ -164,8 +164,8 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
 }
 
 void
-_res_stats_get_usable_servers(const struct __res_params* params, struct __res_stats stats[MAXNS],
-        int nscount, bool usable_servers[MAXNS]) {
+_res_stats_get_usable_servers(const struct __res_params* params, struct __res_stats stats[],
+        int nscount, bool usable_servers[]) {
     unsigned usable_servers_found = 0;
     for (int ns = 0; ns < nscount; ns++) {
         bool usable = _res_stats_usable_server(params, &stats[ns]);
