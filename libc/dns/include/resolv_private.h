@@ -58,7 +58,10 @@
 
 #include <resolv.h>
 #include "resolv_static.h"
+#include "resolv_params.h"
+#include "resolv_stats.h"
 #include <net/if.h>
+#include <time.h>
 
 /* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
 #pragma GCC visibility push(default)
@@ -136,7 +139,6 @@ struct res_sym {
 /*
  * Global defines and variables for resolver stub.
  */
-#define	MAXNS			3	/* max # name servers we'll track */
 #define	MAXDFLSRCH		3	/* # default domain levels to try */
 #define	MAXDNSRCH		6	/* max # domains in search path */
 #define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
@@ -204,6 +206,24 @@ struct __res_state {
 };
 
 typedef struct __res_state *res_state;
+
+/* Retrieve a local copy of the stats for the given netid. The buffer must have space for
+ * MAXNS __resolver_stats. Returns the revision id of the resolvers used.
+ */
+__LIBC_HIDDEN__
+extern int
+_resolv_cache_get_resolver_stats( unsigned netid, struct __res_params* params,
+        struct __res_stats stats[MAXNS]);
+
+/* Add a sample to the shared struct for the given netid and server, provided that the
+ * revision_id of the stored servers has not changed.
+ */
+__LIBC_HIDDEN__
+extern void
+_resolv_cache_add_resolver_stats_sample( unsigned netid, int revision_id, int ns,
+        const struct __res_sample* sample, int max_samples);
+
+/* End of stats related definitions */
 
 union res_sockaddr_union {
 	struct sockaddr_in	sin;
