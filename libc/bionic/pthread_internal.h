@@ -128,6 +128,14 @@ static inline __always_inline pthread_internal_t* __get_thread() {
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
+#if defined(__LP64__)
+// SIGSTKSZ is not big enough for 64-bit arch.
+// See https://code.google.com/p/android/issues/detail?id=187064.
+#define SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE (16 * 1024)
+#else
+#define SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE SIGSTKSZ
+#endif
+
 /*
  * Traditionally we gave threads a 1MiB stack. When we started
  * allocating per-thread alternate signal stacks to ease debugging of
@@ -135,15 +143,10 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
  * from the default thread stack size. This should keep memory usage
  * roughly constant.
  */
-#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGSTKSZ)
+#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE)
 
 // Leave room for a guard page in the internally created signal stacks.
-#if defined(__LP64__)
-// SIGSTKSZ is not big enough for 64-bit arch. See http://b/23041777.
-#define SIGNAL_STACK_SIZE (16 * 1024 + PAGE_SIZE)
-#else
-#define SIGNAL_STACK_SIZE (SIGSTKSZ + PAGE_SIZE)
-#endif
+#define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE + PAGE_SIZE)
 
 /* Needed by fork. */
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
