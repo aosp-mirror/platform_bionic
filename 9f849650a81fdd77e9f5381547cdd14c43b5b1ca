@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb6dc04_26039735",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-06T16:59:13Z",
+      "side": 1,
+      "message": "static_assert?",
+      "revId": "9f849650a81fdd77e9f5381547cdd14c43b5b1ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_46a34371",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-06T16:59:13Z",
+      "side": 1,
+      "message": "just add the static_assert and then use a literal 1000 here and below. this is unreadable.",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 331,
+        "endChar": 5
+      },
+      "revId": "9f849650a81fdd77e9f5381547cdd14c43b5b1ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_e687efd3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-06T16:59:13Z",
+      "side": 1,
+      "message": "factor out this whole section? when it was only two lines the copy \u0026 paste wasn\u0027t too bad, but it\u0027s over the limit now.",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 25
+      },
+      "revId": "9f849650a81fdd77e9f5381547cdd14c43b5b1ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
