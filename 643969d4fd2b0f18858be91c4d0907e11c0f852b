@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb6dc04_16bb2cea",
+        "filename": "tests/sys_quota_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-06T06:09:33Z",
+      "side": 1,
+      "message": "when we do get kernels with quotas enabled, this will fail with ENOTBLK as a reminder we need to revisit.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 29
+      },
+      "revId": "643969d4fd2b0f18858be91c4d0907e11c0f852b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
