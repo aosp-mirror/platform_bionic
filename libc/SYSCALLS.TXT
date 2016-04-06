@@ -322,6 +322,8 @@ int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset_t*, size_t)  al
 ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
 ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
 
+int quotactl(int, const char*, int, char*)  all
+
 int __set_tid_address:set_tid_address(int*)  all
 
 int setfsgid(gid_t)  all
