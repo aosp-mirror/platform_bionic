@@ -1303,6 +1303,7 @@ LIBC_O {
     getsubopt;
     hasmntopt;
     pthread_getname_np;
+    quotactl;
     setdomainname;
     sighold;
     sigignore;
