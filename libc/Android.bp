@@ -414,6 +414,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/locale/wcsxfrm.c",
         "upstream-openbsd/lib/libc/locale/wctob.c",
         "upstream-openbsd/lib/libc/locale/wctomb.c",
+        "upstream-openbsd/lib/libc/net/base64.c",
         "upstream-openbsd/lib/libc/net/htonl.c",
         "upstream-openbsd/lib/libc/net/htons.c",
         "upstream-openbsd/lib/libc/net/inet_lnaof.c",
