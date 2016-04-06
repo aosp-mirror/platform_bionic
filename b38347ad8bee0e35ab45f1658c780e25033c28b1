@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb6dc04_635bd15f",
+        "filename": "libc/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-06T14:44:19Z",
+      "side": 1,
+      "message": "deconfuse me about the term \u0027alphabetic order\u0027 :-)",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 24
+      },
+      "revId": "b38347ad8bee0e35ab45f1658c780e25033c28b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
