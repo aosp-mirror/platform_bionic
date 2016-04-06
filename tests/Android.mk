@@ -77,6 +77,7 @@ libBionicStandardTests_src_files := \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
+    resolv_test.cpp \
     sched_test.cpp \
     search_test.cpp \
     semaphore_test.cpp \
@@ -414,7 +415,7 @@ bionic-unit-tests-glibc_static_libraries := \
     libcutils \
 
 bionic-unit-tests-glibc_ldlibs := \
-    -lrt -ldl -lutil \
+    -lresolv -lrt -ldl -lutil \
 
 bionic-unit-tests-glibc_c_includes := \
     bionic/libc \
