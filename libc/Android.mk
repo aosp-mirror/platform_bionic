@@ -111,6 +111,7 @@ libc_bionic_ndk_src_files := \
     bionic/getcwd.cpp \
     bionic/getdomainname.cpp \
     bionic/gethostname.cpp \
+    bionic/getpagesize.cpp \
     bionic/getpgrp.cpp \
     bionic/getpid.cpp \
     bionic/gettid.cpp \
@@ -140,6 +141,7 @@ libc_bionic_ndk_src_files := \
     bionic/mknod.cpp \
     bionic/mntent.cpp \
     bionic/mremap.cpp \
+    bionic/netdb.cpp \
     bionic/NetdClientDispatch.cpp \
     bionic/net_if.cpp \
     bionic/netinet_in.cpp \
@@ -198,7 +200,6 @@ libc_bionic_ndk_src_files := \
     bionic/strerror_r.cpp \
     bionic/strsignal.cpp \
     bionic/strtold.cpp \
-    bionic/stubs.cpp \
     bionic/symlink.cpp \
     bionic/sync_file_range.cpp \
     bionic/sysinfo.cpp \

@@ -26,28 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <netdb.h>
 #include <unistd.h>
-
-// We don't have an /etc/networks, so all inputs return NULL.
-netent* getnetbyname(const char* /*name*/) {
-  return NULL;
-}
-
-// We don't have an /etc/networks, so all inputs return NULL.
-netent* getnetbyaddr(uint32_t /*net*/, int /*type*/) {
-  return NULL;
-}
-
-// We don't have an /etc/protocols, so all inputs return NULL.
-protoent* getprotobyname(const char* /*name*/) {
-  return NULL;
-}
-
-// We don't have an /etc/protocols, so all inputs return NULL.
-protoent* getprotobynumber(int /*proto*/) {
-  return NULL;
-}
 
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
