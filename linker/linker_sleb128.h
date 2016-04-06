@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+#include "linker_debug.h"
+
 // Helper classes for decoding LEB128, used in packed relocation data.
 // http://en.wikipedia.org/wiki/LEB128
 
