@@ -312,27 +312,34 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+// oem_XXXX -> uid
+//  Supported ranges:
+//   AID_OEM_RESERVED_START to AID_OEM_RESERVED_END (2900-2999)
+//   AID_OEM_RESERVED_2_START to AID_OEM_RESERVED_2_END (5000-5999)
+// Check OEM id is within range.
+static bool is_oem_id(id_t id) {
+  return (((id >= AID_OEM_RESERVED_START) && (id <= AID_OEM_RESERVED_END)) ||
+      ((id >= AID_OEM_RESERVED_2_START) && (id <= AID_OEM_RESERVED_2_END)));
+}
+
 // Translate an OEM name to the corresponding user/group id.
-// oem_XXX -> AID_OEM_RESERVED_2_START + XXX, iff XXX is within range.
 static id_t oem_id_from_name(const char* name) {
   unsigned int id;
   if (sscanf(name, "oem_%u", &id) != 1) {
     return 0;
   }
-  // Check OEM id is within range.
-  if (id > (AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START)) {
+  if (!is_oem_id(id)) {
     return 0;
   }
-  return AID_OEM_RESERVED_2_START + static_cast<id_t>(id);
+  return static_cast<id_t>(id);
 }
 
 static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_OEM_RESERVED_2_START || uid > AID_OEM_RESERVED_2_END) {
+  if (!is_oem_id(uid)) {
     return NULL;
   }
 
-  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u",
-           uid - AID_OEM_RESERVED_2_START);
+  snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
@@ -346,12 +353,12 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
 }
 
 static group* oem_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_OEM_RESERVED_2_START || gid > AID_OEM_RESERVED_2_END) {
+  if (!is_oem_id(gid)) {
     return NULL;
   }
 
   snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
-           "oem_%u", gid - AID_OEM_RESERVED_2_START);
+           "oem_%u", gid);
 
   group* gr = &state->group_;
   gr->gr_name   = state->group_name_buffer_;
