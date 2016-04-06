@@ -22,7 +22,7 @@
 #include "private/libc_logging.h"
 #include "isc/eventlib.h"
 
-#define DBG 1
+#define DBG 0
 
 /* Calculate the round-trip-time from start time t0 and end time t1. */
 int
