@@ -102,6 +102,7 @@ libBionicStandardTests_src_files := \
     sys_personality_test.cpp \
     sys_prctl_test.cpp \
     sys_procfs_test.cpp \
+    sys_quota_test.cpp \
     sys_resource_test.cpp \
     sys_select_test.cpp \
     sys_sendfile_test.cpp \
