@@ -60,6 +60,7 @@ libBionicStandardTests_src_files := \
     ftw_test.cpp \
     getauxval_test.cpp \
     getcwd_test.cpp \
+    grp_pwd_test.cpp \
     ifaddrs_test.cpp \
     inttypes_test.cpp \
     libc_logging_test.cpp \
@@ -95,7 +96,6 @@ libBionicStandardTests_src_files := \
     string_posix_strerror_r_test.cpp \
     strings_nofortify_test.cpp \
     strings_test.cpp \
-    stubs_test.cpp \
     sstream_test.cpp \
     sys_epoll_test.cpp \
     sys_mman_test.cpp \
