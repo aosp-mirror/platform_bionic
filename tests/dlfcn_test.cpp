@@ -211,6 +211,8 @@ TEST(dlfcn, dlopen_by_soname) {
   dlclose(handle);
 }
 
+// mips doesn't support ifuncs
+#if !defined(__mips__)
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
@@ -254,6 +256,7 @@ TEST(dlfcn, ifunc_ctor_call) {
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
+#endif
 
 TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // This is the structure of the test library and

@@ -348,12 +348,19 @@ libtest_ifunc_src_files := \
 
 # TODO(dimitry): clang does not support ifunc attribute
 libtest_ifunc_clang_host := false
-libtest_ifunc_clang_target := false
 
 module := libtest_ifunc
 build_target := SHARED_LIBRARY
 
-include $(LOCAL_PATH)/Android.build.testlib.mk
+build_type := host
+include $(TEST_PATH)/Android.build.mk
+
+ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),arm arm64 x86 x86_64))
+    build_type := target
+    libtest_ifunc_clang_target := false
+    include $(TEST_PATH)/Android.build.mk
+endif
+
 
 # -----------------------------------------------------------------------------
 # Library used by atexit tests
