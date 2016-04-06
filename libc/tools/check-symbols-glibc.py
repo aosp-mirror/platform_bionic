@@ -178,6 +178,23 @@ known = set([
   '_ctype_',
   '__libc_init',
 ])
+# POSIX has some stuff that's too stupid for words (a64l) or not actually
+# implemented in glibc unless you count always failing with ENOSYS as
+# being implemented (fattach).
+in_posix_and_glibc_but_actually_dead = set([
+  'a64l',
+  'fattach',
+  'fdetach',
+  'getmsg',
+  'getpmsg',
+  'isastream',
+  'l64a',
+  'putmsg',
+  'putpmsg',
+])
+
+posix = posix - in_posix_and_glibc_but_actually_dead
+glibc = glibc - in_posix_and_glibc_but_actually_dead
 
 if not only_unwanted:
   #print 'glibc:'
