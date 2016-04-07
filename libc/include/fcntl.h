@@ -71,7 +71,6 @@ extern int open(const char*, int, ...);
 extern int open64(const char*, int, ...);
 extern ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int);
 extern ssize_t tee(int, int, size_t, unsigned int);
-extern int unlinkat(int, const char*, int);
 extern ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int);
 
 #if defined(__USE_FILE_OFFSET64)
