@@ -527,6 +527,8 @@ bool ElfReader::LoadSegments() {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
       }
+
+      madvise(seg_addr, file_length, MADV_RANDOM);
     }
 
     // if the segment is writable, and does not end on a page boundary,
