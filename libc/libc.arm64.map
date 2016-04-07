@@ -1195,6 +1195,9 @@ LIBC_N {
 
 LIBC_O {
   global:
+    catclose;
+    catgets;
+    catopen;
     getdomainname;
     getsubopt;
     hasmntopt;

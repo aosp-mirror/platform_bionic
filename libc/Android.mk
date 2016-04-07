@@ -145,6 +145,7 @@ libc_bionic_ndk_src_files := \
     bionic/NetdClientDispatch.cpp \
     bionic/net_if.cpp \
     bionic/netinet_in.cpp \
+    bionic/nl_types.cpp \
     bionic/open.cpp \
     bionic/pathconf.cpp \
     bionic/pause.cpp \
