@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb6dc04_370e188a",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-07T21:57:24Z",
+      "side": 1,
+      "message": "Hmmm, tabs or spaces?",
+      "range": {
+        "startLine": 58,
+        "startChar": 5,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_5709a480",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-07T21:57:24Z",
+      "side": 1,
+      "message": "What comes next, I have no idea ...",
+      "range": {
+        "startLine": 123,
+        "startChar": 45,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
