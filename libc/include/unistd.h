@@ -36,6 +36,7 @@
 #include <sys/sysconf.h>
 
 #include <bits/fcntl.h>
+#include <bits/getopt.h>
 #include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
@@ -206,10 +207,6 @@ int sethostname(const char* __name, size_t __len);
 extern void* __brk(void* __addr);
 extern int brk(void* __addr);
 extern void* sbrk(ptrdiff_t __increment);
-
-extern int getopt(int __argc, char* const* __argv, const char* __argstring);
-extern char* optarg;
-extern int optind, opterr, optopt;
 
 extern int isatty(int __fd);
 extern char* ttyname(int __fd);

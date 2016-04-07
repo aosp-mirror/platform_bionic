@@ -35,9 +35,10 @@
 
 #include <sys/cdefs.h>
 
+#include <bits/getopt.h>
+
 /*
  * GNU-like getopt_long()/getopt_long_only() with 4.4BSD optreset extension.
- * getopt() is declared here too for GNU programs.
  */
 #define no_argument        0
 #define required_argument  1
@@ -62,13 +63,7 @@ int	getopt_long(int, char * const *, const char *,
 	const struct option *, int *);
 int	getopt_long_only(int, char * const *, const char *,
 	const struct option *, int *);
-#ifndef _GETOPT_DECLARED
-#define	_GETOPT_DECLARED
-int	 getopt(int, char * const [], const char *);
 
-extern char *optarg;			/* getopt(3) external variables */
-extern int optind, opterr, optopt;
-#endif
 #ifndef _OPTRESET_DECLARED
 #define	_OPTRESET_DECLARED
 extern int optreset;			/* getopt(3) external variable */
