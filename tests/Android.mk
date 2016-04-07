@@ -74,6 +74,7 @@ libBionicStandardTests_src_files := \
     net_if_test.cpp \
     netinet_in_test.cpp \
     netinet_udp_test.cpp \
+    nl_types_test.cpp \
     pthread_test.cpp \
     pty_test.cpp \
     regex_test.cpp \
