@@ -35,6 +35,7 @@
 #include <sys/select.h>
 #include <sys/sysconf.h>
 
+#include <bits/fcntl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
 
@@ -161,7 +162,6 @@ extern ssize_t write(int __fd, const void* __buf, size_t __count);
 extern int dup(int __oldfd);
 extern int dup2(int __oldfd, int __newfd);
 extern int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
-extern int fcntl(int __fd, int __cmd, ...);
 extern int ioctl(int __fd, int __request, ...);
 extern int fsync(int __fd);
 extern int fdatasync(int __fd) __INTRODUCED_IN(9);

@@ -36,6 +36,8 @@
 #include <linux/stat.h>
 #include <linux/uio.h>
 
+#include <bits/fcntl.h>
+
 #if defined(__USE_GNU) || defined(__USE_BSD)
 #include <bits/lockf.h>
 #endif
@@ -63,7 +65,6 @@ __BEGIN_DECLS
 
 extern int creat(const char*, mode_t);
 extern int creat64(const char*, mode_t);
-extern int fcntl(int, int, ...);
 extern int openat(int, const char*, int, ...);
 extern int openat64(int, const char*, int, ...);
 extern int open(const char*, int, ...);
