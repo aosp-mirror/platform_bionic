@@ -56,5 +56,7 @@ cc_library {
     allow_undefined_symbols: true,
     system_shared_libs: [],
 
-    sanitize: ["never"],
+    sanitize: {
+        never: true,
+    },
 }
