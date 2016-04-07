@@ -33,13 +33,13 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/select.h>
-#include <sys/sysconf.h>
 
 #include <bits/fcntl.h>
 #include <bits/getopt.h>
 #include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
+#include <bits/sysconf.h>
 
 __BEGIN_DECLS
 
@@ -213,8 +213,6 @@ extern char* ttyname(int __fd);
 extern int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
 
 extern int acct(const char* __filepath);
-
-long sysconf(int __name);
 
 #if __ANDROID_API__ >= 21
 int getpagesize(void);
