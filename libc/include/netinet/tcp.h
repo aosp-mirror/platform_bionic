@@ -29,6 +29,8 @@
 #ifndef _NETINET_TCP_H
 #define _NETINET_TCP_H
 
+#include <sys/cdefs.h>
+
 #include <linux/tcp.h>
 
 __BEGIN_DECLS
