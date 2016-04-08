@@ -16,6 +16,24 @@
       "revId": "a16a173752bcb54c16c75346cb4444b7059f9a4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_2251380c",
+        "filename": "libc/include/getopt.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-08T00:17:47Z",
+      "side": 0,
+      "message": "Oops, yes.",
+      "parentUuid": "0eb6dc04_82f80c67",
+      "revId": "a16a173752bcb54c16c75346cb4444b7059f9a4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
