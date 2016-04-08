@@ -32,7 +32,6 @@
 #include "debug_disable.h"
 #include "debug_log.h"
 
-extern DebugData* g_debug;
 pthread_key_t g_disable_key;
 
 bool DebugCallsDisabled() {

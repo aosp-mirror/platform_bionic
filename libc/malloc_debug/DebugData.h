@@ -103,4 +103,6 @@ class DebugData {
   DISALLOW_COPY_AND_ASSIGN(DebugData);
 };
 
+extern DebugData* g_debug;
+
 #endif // MALLOC_DEBUG_DEBUGDATA_H

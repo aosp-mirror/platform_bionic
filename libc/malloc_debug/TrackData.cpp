@@ -44,9 +44,10 @@
 #include "malloc_debug.h"
 #include "TrackData.h"
 
-void TrackData::GetList(std::vector<const Header*>* list) {
-  ScopedDisableDebugCalls disable;
+TrackData::TrackData(DebugData* debug_data) : OptionData(debug_data) {
+}
 
+void TrackData::GetList(std::vector<const Header*>* list) {
   for (const auto& header : headers_) {
     list->push_back(header);
   }
@@ -59,8 +60,6 @@ void TrackData::GetList(std::vector<const Header*>* list) {
 }
 
 void TrackData::Add(const Header* header, bool backtrace_found) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   if (backtrace_found) {
     total_backtrace_allocs_++;
@@ -70,8 +69,6 @@ void TrackData::Add(const Header* header, bool backtrace_found) {
 }
 
 void TrackData::Remove(const Header* header, bool backtrace_found) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   headers_.erase(header);
   if (backtrace_found) {
@@ -81,26 +78,22 @@ void TrackData::Remove(const Header* header, bool backtrace_found) {
 }
 
 bool TrackData::Contains(const Header* header) {
-  ScopedDisableDebugCalls disable;
-
   pthread_mutex_lock(&mutex_);
   bool found = headers_.count(header);
   pthread_mutex_unlock(&mutex_);
   return found;
 }
 
-void TrackData::DisplayLeaks(DebugData& debug) {
-  ScopedDisableDebugCalls disable;
-
+void TrackData::DisplayLeaks() {
   std::vector<const Header*> list;
   GetList(&list);
 
   size_t track_count = 0;
   for (const auto& header : list) {
     error_log("+++ %s leaked block of size %zu at %p (leak %zu of %zu)", getprogname(),
-              header->real_size(), debug.GetPointer(header), ++track_count, list.size());
-    if (debug.config().options & BACKTRACE) {
-      BacktraceHeader* back_header = debug.GetAllocBacktrace(header);
+              header->real_size(), debug_->GetPointer(header), ++track_count, list.size());
+    if (debug_->config().options & BACKTRACE) {
+      BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
       if (back_header->num_frames > 0) {
         error_log("Backtrace at time of allocation:");
         backtrace_log(&back_header->frames[0], back_header->num_frames);
@@ -110,15 +103,15 @@ void TrackData::DisplayLeaks(DebugData& debug) {
   }
 }
 
-void TrackData::GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
-                        size_t* info_size, size_t* total_memory, size_t* backtrace_size) {
+void TrackData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
+                        size_t* total_memory, size_t* backtrace_size) {
   ScopedPthreadMutexLocker scoped(&mutex_);
 
   if (headers_.size() == 0 || total_backtrace_allocs_ == 0) {
     return;
   }
 
-  *backtrace_size = debug.config().backtrace_frames;
+  *backtrace_size = debug_->config().backtrace_frames;
   *info_size = sizeof(size_t) * 2 + sizeof(uintptr_t) * *backtrace_size;
   *info = reinterpret_cast<uint8_t*>(g_dispatch->calloc(*info_size, total_backtrace_allocs_));
   if (*info == nullptr) {
@@ -131,7 +124,7 @@ void TrackData::GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
 
   uint8_t* data = *info;
   for (const auto& header : list) {
-    BacktraceHeader* back_header = debug.GetAllocBacktrace(header);
+    BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
     if (back_header->num_frames > 0) {
       memcpy(data, &header->size, sizeof(size_t));
       memcpy(&data[sizeof(size_t)], &back_header->num_frames, sizeof(size_t));
