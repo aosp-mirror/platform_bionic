@@ -86,6 +86,30 @@
       "revId": "1074cb2fb398f58669dd07091512e87cf92dcf2a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e217c86_e765bce8",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T18:03:58Z",
+      "side": 1,
+      "message": "it\u0027s not really that --- i think this implementation is fine for now. but your comment is verbose without being helpful. it still doesn\u0027t adequately explain _why_ you chose to do this.\n\nbut now you\u0027re making me think about it, even long term we probably do just want the quick scan through the array directly. POSIX says nothing about what \"next\" means, so it\u0027s fine for us to do the non-array cases before or after.",
+      "parentUuid": "0e217c86_87a7a882",
+      "range": {
+        "startLine": 498,
+        "startChar": 19,
+        "endLine": 498,
+        "endChar": 27
+      },
+      "revId": "1074cb2fb398f58669dd07091512e87cf92dcf2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
