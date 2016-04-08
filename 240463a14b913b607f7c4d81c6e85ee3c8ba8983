@@ -2,6 +2,86 @@
   "comments": [
     {
       "key": {
+        "uuid": "0eb6dc04_6272a0b0",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "say why?",
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_a2f3084c",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "say why: that you\u0027re doing a linear search. and why this is simpler: on the future assumption that getpwuid does more than simply check the array. because otherwise right now the code would be shorter and faster if you just looped through android_ids. the comment would be more useful down by the code it corresponds to, too.",
+      "range": {
+        "startLine": 487,
+        "startChar": 0,
+        "endLine": 490,
+        "endChar": 44
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_62474049",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "type* here and elsewhere.",
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_423564d3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "\u003d\u003d NULL",
+      "range": {
+        "startLine": 501,
+        "startChar": 9,
+        "endLine": 501,
+        "endChar": 10
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0eb6dc04_370e188a",
         "filename": "libc/include/grp.h",
         "patchSetId": 1
@@ -13,6 +93,30 @@
       "writtenOn": "2016-04-07T21:57:24Z",
       "side": 1,
       "message": "Hmmm, tabs or spaces?",
+      "range": {
+        "startLine": 58,
+        "startChar": 5,
+        "endLine": 58,
+        "endChar": 17
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_e2091010",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "personally i\u0027d use a single space and fix the type*, but it doesn\u0027t really matter in a file that\u0027s in this bad a state.\n\nwe might want to choose a better word than \"meaningless\" since you\u0027re now giving meaning to these (questionable though they still are)? or remove the deprecated attribute entirely?",
+      "parentUuid": "0eb6dc04_370e188a",
       "range": {
         "startLine": 58,
         "startChar": 5,
@@ -41,6 +145,87 @@
         "startChar": 45,
         "endLine": 123,
         "endChar": 47
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_4230c4cc",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "jmgao is going to [mechanically] come through and annotate each (post-gingerbread) function with the release it appeared in, so no need to comment.\n\nsame comments about deprecation here too. we haven\u0027t deprecated getpwnam, so it seems odd to deprecate these?",
+      "parentUuid": "0eb6dc04_5709a480",
+      "range": {
+        "startLine": 123,
+        "startChar": 45,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_023abcaa",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "no need for struct. type*.",
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_e23eb09c",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "std::bitset?",
+      "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0eb6dc04_c224d48c",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-08T00:31:53Z",
+      "side": 1,
+      "message": "!\u003d nullptr\n\n(pretend we\u0027re java programmers :-) )",
+      "range": {
+        "startLine": 192,
+        "startChar": 26,
+        "endLine": 192,
+        "endChar": 27
       },
       "revId": "240463a14b913b607f7c4d81c6e85ee3c8ba8983",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
