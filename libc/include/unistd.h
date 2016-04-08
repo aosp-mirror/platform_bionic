@@ -33,10 +33,13 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/select.h>
-#include <sys/sysconf.h>
 
+#include <bits/fcntl.h>
+#include <bits/getopt.h>
+#include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
+#include <bits/sysconf.h>
 
 __BEGIN_DECLS
 
@@ -161,8 +164,6 @@ extern ssize_t write(int __fd, const void* __buf, size_t __count);
 extern int dup(int __oldfd);
 extern int dup2(int __oldfd, int __newfd);
 extern int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
-extern int fcntl(int __fd, int __cmd, ...);
-extern int ioctl(int __fd, int __request, ...);
 extern int fsync(int __fd);
 extern int fdatasync(int __fd) __INTRODUCED_IN(9);
 
@@ -207,17 +208,11 @@ extern void* __brk(void* __addr);
 extern int brk(void* __addr);
 extern void* sbrk(ptrdiff_t __increment);
 
-extern int getopt(int __argc, char* const* __argv, const char* __argstring);
-extern char* optarg;
-extern int optind, opterr, optopt;
-
 extern int isatty(int __fd);
 extern char* ttyname(int __fd);
 extern int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
 
 extern int acct(const char* __filepath);
-
-long sysconf(int __name);
 
 #if __ANDROID_API__ >= 21
 int getpagesize(void);
