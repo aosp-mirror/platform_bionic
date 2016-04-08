@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb6dc04_a28f88e8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-04-08T00:13:34Z",
+      "side": 1,
+      "message": "This should just be using the defaults module -- it needs the clang vs gcc choice at least. Most of the rest of the things in the Android.mk shouldn\u0027t affect a static library built only with assembly files.",
+      "range": {
+        "startLine": 1502,
+        "startChar": 0,
+        "endLine": 1505,
+        "endChar": 16
+      },
+      "revId": "e668c9803b207369b54488c37c2405678b42bb38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
