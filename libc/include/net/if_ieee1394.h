@@ -39,6 +39,8 @@
 #ifndef _NET_IF_IEEE1394_H_
 #define _NET_IF_IEEE1394_H_
 
+#include <sys/types.h>
+
 /* hardware address information for arp / nd */
 struct ieee1394_hwaddr {
 	u_int8_t	iha_uid[8];		/* node unique ID */

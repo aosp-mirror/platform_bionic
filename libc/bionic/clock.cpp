@@ -26,9 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#include <time.h>
-#include <sys/sysconf.h>
 #include <sys/times.h>
+#include <time.h>
+#include <unistd.h>
 
 #include "private/bionic_constants.h"
 

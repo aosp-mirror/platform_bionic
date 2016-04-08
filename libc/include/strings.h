@@ -43,6 +43,8 @@
 #include <sys/cdefs.h>
 #include <xlocale.h>
 
+#include <bits/strcasecmp.h>
+
 __BEGIN_DECLS
 #if defined(__BIONIC_FORTIFY)
 #define bcopy(b1, b2, len) (void)(__builtin___memmove_chk((b2), (b1), (len), __bos0(b2)))
@@ -53,11 +55,6 @@ __BEGIN_DECLS
 #endif
 
 int ffs(int);
-
-int strcasecmp(const char*, const char*) __purefunc;
-int strcasecmp_l(const char*, const char*, locale_t) __purefunc;
-int strncasecmp(const char*, const char*, size_t) __purefunc;
-int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc;
 
 __END_DECLS
 
