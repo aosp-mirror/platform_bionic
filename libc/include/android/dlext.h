@@ -17,6 +17,7 @@
 #ifndef __ANDROID_DLEXT_H__
 #define __ANDROID_DLEXT_H__
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>

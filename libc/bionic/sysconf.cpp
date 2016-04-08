@@ -34,7 +34,6 @@
 #include <stdio.h>  // For FOPEN_MAX.
 #include <sys/auxv.h>
 #include <sys/resource.h>
-#include <sys/sysconf.h>
 #include <sys/sysinfo.h>
 #include <time.h>
 #include <unistd.h>

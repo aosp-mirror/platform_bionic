@@ -33,6 +33,8 @@
 #include <stddef.h>
 #include <xlocale.h>
 
+#include <bits/strcasecmp.h>
+
 __BEGIN_DECLS
 
 #if defined(__USE_BSD)
@@ -71,11 +73,6 @@ extern int    strcmp(const char *, const char *) __purefunc;
 extern char*  stpcpy(char* __restrict, const char* __restrict);
 extern char*  strcpy(char* __restrict, const char* __restrict);
 extern char*  strcat(char* __restrict, const char* __restrict);
-
-int strcasecmp(const char*, const char*) __purefunc;
-int strcasecmp_l(const char*, const char*, locale_t) __purefunc;
-int strncasecmp(const char*, const char*, size_t) __purefunc;
-int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc;
 
 extern char*  strdup(const char *);
 
