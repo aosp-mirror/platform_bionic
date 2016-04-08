@@ -22,6 +22,23 @@
       "revId": "9ee72d1612077d18e29f9a9ff53eae9fe699e3c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e217c86_24c8b290",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-08T17:19:04Z",
+      "side": 1,
+      "message": "move them (all of them) to LIBC_O section below. LIBC \u003d M",
+      "revId": "9ee72d1612077d18e29f9a9ff53eae9fe699e3c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
