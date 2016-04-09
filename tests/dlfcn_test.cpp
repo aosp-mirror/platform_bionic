@@ -256,6 +256,21 @@ TEST(dlfcn, ifunc_ctor_call) {
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
+
+TEST(dlfcn, ifunc_ctor_call_rtld_lazy) {
+  typedef const char* (*fn_ptr)();
+
+  void* handle = dlopen("libtest_ifunc.so", RTLD_LAZY);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  fn_ptr is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_irelative"));
+  ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
+  ASSERT_STREQ("false", is_ctor_called());
+
+  is_ctor_called =  reinterpret_cast<fn_ptr>(dlsym(handle, "is_ctor_called_jump_slot"));
+  ASSERT_TRUE(is_ctor_called != nullptr) << dlerror();
+  ASSERT_STREQ("true", is_ctor_called());
+  dlclose(handle);
+}
 #endif
 
 TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
