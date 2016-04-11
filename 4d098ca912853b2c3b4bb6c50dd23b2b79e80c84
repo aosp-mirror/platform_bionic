@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e217c86_8ef33cfa",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2016-04-11T19:47:51Z",
+      "side": 1,
+      "message": "Reset dumpable to it\u0027s initial state at the end of the test? That way, this test doesn\u0027t affect future tests.",
+      "revId": "4d098ca912853b2c3b4bb6c50dd23b2b79e80c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
