@@ -111,6 +111,7 @@ struct android_namespace_t {
   void add_soinfos(const soinfo::soinfo_list_t& soinfos) {
     for (auto si : soinfos) {
       add_soinfo(si);
+      si->add_secondary_namespace(this);
     }
   }
 
@@ -147,6 +148,7 @@ static LinkerTypeAllocator<soinfo> g_soinfo_allocator;
 static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 
 static LinkerTypeAllocator<android_namespace_t> g_namespace_allocator;
+static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_list_allocator;
 
 static soinfo* solist;
 static soinfo* sonext;
@@ -352,6 +354,14 @@ void SoinfoListAllocator::free(LinkedListEntry<soinfo>* entry) {
   g_soinfo_links_allocator.free(entry);
 }
 
+LinkedListEntry<android_namespace_t>* NamespaceListAllocator::alloc() {
+  return g_namespace_list_allocator.alloc();
+}
+
+void NamespaceListAllocator::free(LinkedListEntry<android_namespace_t>* entry) {
+  g_namespace_list_allocator.free(entry);
+}
+
 static soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
                             struct stat* file_stat, off64_t file_offset,
                             uint32_t rtld_flags) {
@@ -414,9 +424,6 @@ static void soinfo_free(soinfo* si) {
   if (si == sonext) {
     sonext = prev;
   }
-
-  // remove from the namespace
-  si->get_namespace()->remove_soinfo(si);
 
   si->~soinfo();
   g_soinfo_allocator.free(si);
@@ -909,7 +916,7 @@ soinfo::soinfo(android_namespace_t* ns, const char* realpath,
   }
 
   this->rtld_flags_ = rtld_flags;
-  this->namespace_ = ns;
+  this->primary_namespace_ = ns;
 }
 
 soinfo::~soinfo() {
@@ -1069,6 +1076,7 @@ class ProtectedDataGuard {
     g_soinfo_allocator.protect_all(protection);
     g_soinfo_links_allocator.protect_all(protection);
     g_namespace_allocator.protect_all(protection);
+    g_namespace_list_allocator.protect_all(protection);
   }
 
   static size_t ref_count_;
@@ -2224,7 +2232,7 @@ static void soinfo_unload(soinfo* root) {
           TRACE("deprecated (old format of soinfo): %s needs to unload %s",
               si->get_realpath(), library_name);
 
-          soinfo* needed = find_library(si->get_namespace(),
+          soinfo* needed = find_library(si->get_primary_namespace(),
                                         library_name, RTLD_NOLOAD, nullptr, nullptr);
 
           if (needed != nullptr) {
@@ -2274,6 +2282,10 @@ static std::string symbol_display_name(const char* sym_name, const char* sym_ver
   return std::string(sym_name) + ", version " + sym_ver;
 }
 
+static android_namespace_t* get_caller_namespace(soinfo* caller) {
+  return caller != nullptr ? caller->get_primary_namespace() : g_anonymous_namespace;
+}
+
 void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // Use basic string manipulation calls to avoid snprintf.
   // snprintf indirectly calls pthread_getspecific to get the size of a buffer.
@@ -2310,7 +2322,7 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
     return nullptr;
   }
 
-  android_namespace_t* ns = caller != nullptr ? caller->get_namespace() : g_anonymous_namespace;
+  android_namespace_t* ns = get_caller_namespace(caller);
 
   if (extinfo != nullptr) {
     if ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0) {
@@ -2404,7 +2416,7 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
   soinfo* found = nullptr;
   const ElfW(Sym)* sym = nullptr;
   soinfo* caller = find_containing_library(caller_addr);
-  android_namespace_t* ns = caller != nullptr ? caller->get_namespace() : g_anonymous_namespace;
+  android_namespace_t* ns = get_caller_namespace(caller);
 
   version_info vi_instance;
   version_info* vi = nullptr;
@@ -2517,7 +2529,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   soinfo* caller_soinfo = find_containing_library(caller_addr);
 
   android_namespace_t* caller_ns = caller_soinfo != nullptr ?
-                                   caller_soinfo->get_namespace() :
+                                   caller_soinfo->get_primary_namespace() :
                                    g_anonymous_namespace;
 
   ProtectedDataGuard guard;
@@ -3156,9 +3168,20 @@ void soinfo::remove_all_links() {
     });
   });
 
-  // 2. Once everything untied - clear local lists.
+  // 2. Remove from the primary namespace
+  primary_namespace_->remove_soinfo(this);
+  primary_namespace_ = nullptr;
+
+  // 3. Remove from secondary namespaces
+  secondary_namespaces_.for_each([&](android_namespace_t* ns) {
+    ns->remove_soinfo(this);
+  });
+
+
+  // 4. Once everything untied - clear local lists.
   parents_.clear();
   children_.clear();
+  secondary_namespaces_.clear();
 }
 
 dev_t soinfo::get_st_dev() const {
@@ -3292,12 +3315,17 @@ const std::vector<std::string>& soinfo::get_dt_runpath() const {
   return g_empty_runpath;
 }
 
-android_namespace_t* soinfo::get_namespace() {
+android_namespace_t* soinfo::get_primary_namespace() {
   if (has_min_version(3)) {
-    return namespace_;
+    return primary_namespace_;
   }
 
   return &g_default_namespace;
+}
+
+void soinfo::add_secondary_namespace(android_namespace_t* secondary_ns) {
+  CHECK(has_min_version(3));
+  secondary_namespaces_.push_back(secondary_ns);
 }
 
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {

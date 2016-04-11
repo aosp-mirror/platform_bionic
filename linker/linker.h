@@ -114,6 +114,16 @@ class SoinfoListAllocator {
   DISALLOW_IMPLICIT_CONSTRUCTORS(SoinfoListAllocator);
 };
 
+class NamespaceListAllocator {
+ public:
+  static LinkedListEntry<android_namespace_t>* alloc();
+  static void free(LinkedListEntry<android_namespace_t>* entry);
+
+ private:
+  // unconstructable
+  DISALLOW_IMPLICIT_CONSTRUCTORS(NamespaceListAllocator);
+};
+
 class SymbolName {
  public:
   explicit SymbolName(const char* name)
@@ -166,6 +176,7 @@ class VersionTracker {
 struct soinfo {
  public:
   typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
+  typedef LinkedList<android_namespace_t, NamespaceListAllocator> android_namespace_list_t;
 #if defined(__work_around_b_24465209__)
  private:
   char old_name_[SOINFO_NAME_LEN];
@@ -340,7 +351,8 @@ struct soinfo {
 
   void set_dt_runpath(const char *);
   const std::vector<std::string>& get_dt_runpath() const;
-  android_namespace_t* get_namespace();
+  android_namespace_t* get_primary_namespace();
+  void add_secondary_namespace(android_namespace_t* secondary_ns);
 
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;
@@ -412,7 +424,8 @@ struct soinfo {
 
   // version >= 3
   std::vector<std::string> dt_runpath_;
-  android_namespace_t* namespace_;
+  android_namespace_t* primary_namespace_;
+  android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
   friend soinfo* get_libdl_info();
