@@ -1375,6 +1375,7 @@ cc_library_static {
         "bionic/strsignal.cpp",
         "bionic/strtold.cpp",
         "bionic/symlink.cpp",
+        "bionic/sync_file_range.cpp",
         "bionic/sysinfo.cpp",
         "bionic/syslog.cpp",
         "bionic/sys_siglist.c",
