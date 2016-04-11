@@ -24,6 +24,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
@@ -422,7 +423,21 @@ TEST(pthread, pthread_setname_np__pthread_getname_np__other) {
   SpinFunctionHelper spin_helper;
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, spin_helper.GetFunction(), NULL));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, spin_helper.GetFunction(), nullptr));
+  test_pthread_setname_np__pthread_getname_np(t);
+  spin_helper.UnSpin();
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+// http://b/28051133: a kernel misfeature means that you can't change the
+// name of another thread if you've set PR_SET_DUMPABLE to 0.
+TEST(pthread, pthread_setname_np__pthread_getname_np__other_PR_SET_DUMPABLE) {
+  ASSERT_EQ(0, prctl(PR_SET_DUMPABLE, 0)) << strerror(errno);
+
+  SpinFunctionHelper spin_helper;
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, spin_helper.GetFunction(), nullptr));
   test_pthread_setname_np__pthread_getname_np(t);
   spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
