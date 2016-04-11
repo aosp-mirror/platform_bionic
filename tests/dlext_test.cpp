@@ -959,6 +959,70 @@ TEST(dlext, ns_shared) {
   dlclose(handle2);
 }
 
+TEST(dlext, ns_shared_dlclose) {
+  std::string path = "libc.so:libc++.so:libdl.so:libm.so";
+
+  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
+
+  android_set_application_target_sdk_version(42U); // something > 23
+
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
+
+  // preload this library to the default namespace to check if it
+  // is shared later on.
+  void* handle_dlopened =
+          dlopen((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
+
+  android_namespace_t* ns_isolated_shared =
+          android_create_namespace("private_isolated_shared", nullptr,
+                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
+                                   nullptr);
+  ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
+
+  // Check if "libnstest_dlopened.so" is loaded (and the same)
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_isolated_shared;
+
+  void* handle = android_dlopen_ext("libnstest_dlopened.so", RTLD_NOW | RTLD_NOLOAD, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  ASSERT_TRUE(handle == handle_dlopened);
+  dlclose(handle);
+  dlclose(handle_dlopened);
+
+  // And now check that the library cannot be found by soname (and is no longer loaded)
+  handle = android_dlopen_ext("libnstest_dlopened.so", RTLD_NOW | RTLD_NOLOAD, &extinfo);
+  ASSERT_TRUE(handle == nullptr)
+      << "Error: libnstest_dlopened.so is still accessible in shared namespace";
+
+  handle = android_dlopen_ext((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
+                              RTLD_NOW | RTLD_NOLOAD, &extinfo);
+  ASSERT_TRUE(handle == nullptr)
+      << "Error: libnstest_dlopened.so is still accessible in shared namespace";
+
+  handle = dlopen("libnstest_dlopened.so", RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr)
+      << "Error: libnstest_dlopened.so is still accessible in default namespace";
+
+  handle = dlopen((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
+                  RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr)
+      << "Error: libnstest_dlopened.so is still accessible in default namespace";
+
+  // Now lets see if the soinfo area gets reused in the wrong way:
+  // load a library to default namespace.
+  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle_public != nullptr) << dlerror();
+
+  // try to find it in shared namespace
+  handle = android_dlopen_ext(g_public_lib, RTLD_NOW | RTLD_NOLOAD, &extinfo);
+  ASSERT_TRUE(handle == nullptr)
+      << "Error: " << g_public_lib << " is accessible in shared namespace";
+}
+
 TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
