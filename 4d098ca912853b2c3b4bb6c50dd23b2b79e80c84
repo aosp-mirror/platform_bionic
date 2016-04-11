@@ -16,6 +16,24 @@
       "revId": "4d098ca912853b2c3b4bb6c50dd23b2b79e80c84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e217c86_8e0c1ccc",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-11T19:49:20Z",
+      "side": 1,
+      "message": "because pretty much every test we have fucks up global state one way or another, we have a custom gtest runner yabinc wrote that isolates every test automatically.",
+      "parentUuid": "0e217c86_8ef33cfa",
+      "revId": "4d098ca912853b2c3b4bb6c50dd23b2b79e80c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
