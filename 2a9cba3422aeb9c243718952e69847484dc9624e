@@ -22,6 +22,30 @@
       "revId": "2a9cba3422aeb9c243718952e69847484dc9624e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ba47ebb_73383a80",
+        "filename": "libc/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-12T20:09:28Z",
+      "side": 1,
+      "message": "Done, likely go back and fix build/tools/fs_config then since this is superfluous.",
+      "parentUuid": "8ba47ebb_73bd9a27",
+      "range": {
+        "startLine": 1030,
+        "startChar": 0,
+        "endLine": 1030,
+        "endChar": 33
+      },
+      "revId": "2a9cba3422aeb9c243718952e69847484dc9624e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
