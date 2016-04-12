@@ -41,27 +41,24 @@
 #include "debug_log.h"
 #include "malloc_debug.h"
 
-BacktraceData::BacktraceData(const Config& config, size_t* offset) {
+static void EnableToggle(int, siginfo_t*, void*) {
+  if (g_debug->backtrace->enabled()) {
+    g_debug->backtrace->set_enabled(false);
+  } else {
+    g_debug->backtrace->set_enabled(true);
+  }
+}
+
+BacktraceData::BacktraceData(DebugData* debug_data, const Config& config, size_t* offset)
+    : OptionData(debug_data) {
   size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames;
   alloc_offset_ = *offset;
   *offset += BIONIC_ALIGN(hdr_len, MINIMUM_ALIGNMENT_BYTES);
 }
 
-static BacktraceData* g_backtrace_data = nullptr;
-
-static void EnableToggle(int, siginfo_t*, void*) {
-  if (g_backtrace_data->enabled()) {
-    g_backtrace_data->set_enabled(false);
-  } else {
-    g_backtrace_data->set_enabled(true);
-  }
-}
-
 bool BacktraceData::Initialize(const Config& config) {
   enabled_ = config.backtrace_enabled;
   if (config.backtrace_enable_on_signal) {
-    g_backtrace_data = this;
-
     struct sigaction enable_act;
     memset(&enable_act, 0, sizeof(enable_act));
 

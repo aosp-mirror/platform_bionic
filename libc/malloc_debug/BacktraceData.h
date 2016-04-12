@@ -33,12 +33,14 @@
 
 #include <private/bionic_macros.h>
 
+#include "OptionData.h"
+
 // Forward declarations.
 struct Config;
 
-class BacktraceData {
+class BacktraceData : public OptionData {
  public:
-  BacktraceData(const Config& config, size_t* offset);
+  BacktraceData(DebugData* debug_data, const Config& config, size_t* offset);
   virtual ~BacktraceData() = default;
 
   bool Initialize(const Config& config);

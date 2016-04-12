@@ -36,14 +36,16 @@
 
 #include <private/bionic_macros.h>
 
+#include "OptionData.h"
+
 // Forward declarations.
 class DebugData;
 struct Header;
 struct Config;
 
-class GuardData {
+class GuardData : public OptionData {
  public:
-  GuardData(int init_value, size_t num_bytes);
+  GuardData(DebugData* debug_data, int init_value, size_t num_bytes);
   virtual ~GuardData() = default;
 
   bool Valid(void* data) { return memcmp(data, cmp_mem_.data(), cmp_mem_.size()) == 0; }
@@ -60,12 +62,12 @@ class GuardData {
 
 class FrontGuardData : public GuardData {
  public:
-  FrontGuardData(const Config& config, size_t* offset);
+  FrontGuardData(DebugData* debug_data, const Config& config, size_t* offset);
   virtual ~FrontGuardData() = default;
 
-  bool Valid(DebugData& debug, const Header* header);
+  bool Valid(const Header* header);
 
-  void LogFailure(DebugData& debug, const Header* header);
+  void LogFailure(const Header* header);
 
   size_t offset() { return offset_; }
 
@@ -79,12 +81,12 @@ class FrontGuardData : public GuardData {
 
 class RearGuardData : public GuardData {
  public:
-  RearGuardData(const Config& config);
+  RearGuardData(DebugData* debug_data, const Config& config);
   virtual ~RearGuardData() = default;
 
-  bool Valid(DebugData& debug, const Header* header);
+  bool Valid(const Header* header);
 
-  void LogFailure(DebugData& debug, const Header* header);
+  void LogFailure(const Header* header);
 
  private:
   const char* GetTypeName() override { return "REAR"; }
