@@ -39,15 +39,14 @@
 #include "malloc_debug.h"
 #include "GuardData.h"
 
-GuardData::GuardData(int init_value, size_t num_bytes) {
+GuardData::GuardData(DebugData* debug_data, int init_value, size_t num_bytes)
+    : OptionData(debug_data) {
   // Create a buffer for fast comparisons of the front guard.
   cmp_mem_.resize(num_bytes);
   memset(cmp_mem_.data(), init_value, cmp_mem_.size());
 }
 
 void GuardData::LogFailure(const Header* header, const void* pointer, const void* data) {
-  ScopedDisableDebugCalls disable;
-
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p SIZE %zu HAS A CORRUPTED %s GUARD", pointer,
             header->real_size(), GetTypeName());
@@ -70,8 +69,8 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
   error_log(LOG_DIVIDER);
 }
 
-FrontGuardData::FrontGuardData(const Config& config, size_t* offset)
-   : GuardData(config.front_guard_value, config.front_guard_bytes) {
+FrontGuardData::FrontGuardData(DebugData* debug_data, const Config& config, size_t* offset)
+   : GuardData(debug_data, config.front_guard_value, config.front_guard_bytes) {
   // Create a buffer for fast comparisons of the front guard.
   cmp_mem_.resize(config.front_guard_bytes);
   memset(cmp_mem_.data(), config.front_guard_value, cmp_mem_.size());
@@ -80,22 +79,22 @@ FrontGuardData::FrontGuardData(const Config& config, size_t* offset)
   *offset += config.front_guard_bytes;
 }
 
-bool FrontGuardData::Valid(DebugData& debug, const Header* header) {
-  return GuardData::Valid(debug.GetFrontGuard(header));
+bool FrontGuardData::Valid(const Header* header) {
+  return GuardData::Valid(debug_->GetFrontGuard(header));
 }
 
-void FrontGuardData::LogFailure(DebugData& debug, const Header* header) {
-  GuardData::LogFailure(header, debug.GetPointer(header), debug.GetFrontGuard(header));
+void FrontGuardData::LogFailure(const Header* header) {
+  GuardData::LogFailure(header, debug_->GetPointer(header), debug_->GetFrontGuard(header));
 }
 
-RearGuardData::RearGuardData(const Config& config)
-    : GuardData(config.rear_guard_value, config.rear_guard_bytes) {
+RearGuardData::RearGuardData(DebugData* debug_data, const Config& config)
+    : GuardData(debug_data, config.rear_guard_value, config.rear_guard_bytes) {
 }
 
-bool RearGuardData::Valid(DebugData& debug, const Header* header) {
-  return GuardData::Valid(debug.GetRearGuard(header));
+bool RearGuardData::Valid(const Header* header) {
+  return GuardData::Valid(debug_->GetRearGuard(header));
 }
 
-void RearGuardData::LogFailure(DebugData& debug, const Header* header) {
-  GuardData::LogFailure(header, debug.GetPointer(header), debug.GetRearGuard(header));
+void RearGuardData::LogFailure(const Header* header) {
+  GuardData::LogFailure(header, debug_->GetPointer(header), debug_->GetRearGuard(header));
 }

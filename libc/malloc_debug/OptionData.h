@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,48 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_FREETRACKDATA_H
-#define DEBUG_MALLOC_FREETRACKDATA_H
+#ifndef DEBUG_MALLOC_OPTIONDATA_H
+#define DEBUG_MALLOC_OPTIONDATA_H
 
-#include <stdint.h>
-#include <pthread.h>
-
-#include <deque>
-#include <unordered_map>
-#include <vector>
-
-#include <private/bionic_macros.h>
-
-#include "OptionData.h"
-
-// Forward declarations.
-struct BacktraceHeader;
-struct Config;
+// Forward Declarations
 class DebugData;
-struct Header;
 
-class FreeTrackData : public OptionData {
+class OptionData {
  public:
-  FreeTrackData(DebugData* debug_data, const Config& config);
-  virtual ~FreeTrackData() = default;
+  OptionData(DebugData* debug) : debug_(debug) {}
+  ~OptionData() = default;
 
-  void Add(const Header* header);
+ protected:
+  DebugData* debug_;
 
-  void VerifyAll();
-
-  void LogBacktrace(const Header* header);
-
- private:
-  void LogFreeError(const Header* header, const uint8_t* pointer);
-  void VerifyAndFree(const Header* header);
-
-  pthread_mutex_t mutex_ = PTHREAD_MUTEX_INITIALIZER;
-  std::deque<const Header*> list_;
-  std::vector<uint8_t> cmp_mem_;
-  std::unordered_map<const Header*, BacktraceHeader*> backtraces_;
-  size_t backtrace_num_frames_;
-
-  DISALLOW_COPY_AND_ASSIGN(FreeTrackData);
+  DISALLOW_COPY_AND_ASSIGN(OptionData);
 };
 
-#endif // DEBUG_MALLOC_FREETRACKDATA_H
+#endif // MALLOC_DEBUG_OPTIONDATA_H
