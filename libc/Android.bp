@@ -1921,7 +1921,7 @@ cc_object {
         "crt_defaults",
         "crt_so_defaults",
     ],
-    deps: [
+    objs: [
         "crtbegin_so1",
         "crtbrand",
     ],
@@ -1979,7 +1979,7 @@ cc_object {
 cc_object {
     name: "crtbegin_static",
 
-    deps: [
+    objs: [
         "crtbegin_static1",
         "crtbrand",
     ],
@@ -2025,7 +2025,7 @@ cc_object {
 cc_object {
     name: "crtbegin_dynamic",
 
-    deps: [
+    objs: [
         "crtbegin_dynamic1",
         "crtbrand",
     ],
