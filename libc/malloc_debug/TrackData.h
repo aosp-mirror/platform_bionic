@@ -37,14 +37,16 @@
 
 #include <private/bionic_macros.h>
 
+#include "OptionData.h"
+
 // Forward declarations.
 struct Header;
 struct Config;
 class DebugData;
 
-class TrackData {
+class TrackData : public OptionData {
  public:
-  TrackData() = default;
+  TrackData(DebugData* debug_data);
   virtual ~TrackData() = default;
 
   void GetList(std::vector<const Header*>* list);
@@ -55,10 +57,10 @@ class TrackData {
 
   bool Contains(const Header *header);
 
-  void GetInfo(DebugData& debug, uint8_t** info, size_t* overall_size,
-               size_t* info_size, size_t* total_memory, size_t* backtrace_size);
+  void GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
+               size_t* total_memory, size_t* backtrace_size);
 
-  void DisplayLeaks(DebugData& debug);
+  void DisplayLeaks();
 
   void PrepareFork() { pthread_mutex_lock(&mutex_); }
   void PostForkParent() { pthread_mutex_unlock(&mutex_); }

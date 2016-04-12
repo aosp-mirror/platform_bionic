@@ -36,19 +36,16 @@
 #include "FreeTrackData.h"
 #include "malloc_debug.h"
 
-FreeTrackData::FreeTrackData(const Config& config)
-    : backtrace_num_frames_(config.free_track_backtrace_num_frames) {
+FreeTrackData::FreeTrackData(DebugData* debug, const Config& config)
+    : OptionData(debug), backtrace_num_frames_(config.free_track_backtrace_num_frames) {
   cmp_mem_.resize(4096);
   memset(cmp_mem_.data(), config.fill_free_value, cmp_mem_.size());
 }
 
-void FreeTrackData::LogFreeError(DebugData& debug, const Header* header,
-                                 const uint8_t* pointer) {
-  ScopedDisableDebugCalls disable;
-
+void FreeTrackData::LogFreeError(const Header* header, const uint8_t* pointer) {
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p USED AFTER FREE", pointer);
-  uint8_t fill_free_value = debug.config().fill_free_value;
+  uint8_t fill_free_value = debug_->config().fill_free_value;
   for (size_t i = 0; i < header->usable_size; i++) {
     if (pointer[i] != fill_free_value) {
       error_log("  pointer[%zu] = 0x%02x (expected 0x%02x)", i, pointer[i], fill_free_value);
@@ -63,10 +60,8 @@ void FreeTrackData::LogFreeError(DebugData& debug, const Header* header,
   error_log(LOG_DIVIDER);
 }
 
-void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
-                                  const void* pointer) {
-  ScopedDisableDebugCalls disable;
-
+void FreeTrackData::VerifyAndFree(const Header* header) {
+  const void* pointer = debug_->GetPointer(header);
   if (header->tag != DEBUG_FREE_TAG) {
     error_log(LOG_DIVIDER);
     error_log("+++ ALLOCATION %p HAS CORRUPTED HEADER TAG 0x%x AFTER FREE", pointer, header->tag);
@@ -74,11 +69,12 @@ void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
   } else {
     const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
     size_t bytes = header->usable_size;
-    bytes = (bytes < debug.config().fill_on_free_bytes) ? bytes : debug.config().fill_on_free_bytes;
+    bytes = (bytes < debug_->config().fill_on_free_bytes) ? bytes
+        : debug_->config().fill_on_free_bytes;
     while (bytes > 0) {
       size_t bytes_to_cmp = (bytes < cmp_mem_.size()) ? bytes : cmp_mem_.size();
       if (memcmp(memory, cmp_mem_.data(), bytes_to_cmp) != 0) {
-        LogFreeError(debug, header, reinterpret_cast<const uint8_t*>(pointer));
+        LogFreeError(header, reinterpret_cast<const uint8_t*>(pointer));
         break;
       }
       bytes -= bytes_to_cmp;
@@ -94,14 +90,11 @@ void FreeTrackData::VerifyAndFree(DebugData& debug, const Header* header,
   g_dispatch->free(header->orig_pointer);
 }
 
-void FreeTrackData::Add(DebugData& debug, const Header* header) {
-  // Make sure the stl calls below don't call the debug_XXX functions.
-  ScopedDisableDebugCalls disable;
-
+void FreeTrackData::Add(const Header* header) {
   pthread_mutex_lock(&mutex_);
-  if (list_.size() == debug.config().free_track_allocations) {
+  if (list_.size() == debug_->config().free_track_allocations) {
     const Header* old_header = list_.back();
-    VerifyAndFree(debug, old_header, debug.GetPointer(old_header));
+    VerifyAndFree(old_header);
     list_.pop_back();
   }
 
@@ -118,19 +111,14 @@ void FreeTrackData::Add(DebugData& debug, const Header* header) {
   pthread_mutex_unlock(&mutex_);
 }
 
-void FreeTrackData::VerifyAll(DebugData& debug) {
-  // Make sure the stl calls below don't call the debug_XXX functions.
-  ScopedDisableDebugCalls disable;
-
+void FreeTrackData::VerifyAll() {
   for (const auto& header : list_) {
-    VerifyAndFree(debug, header, debug.GetPointer(header));
+    VerifyAndFree(header);
   }
   list_.clear();
 }
 
 void FreeTrackData::LogBacktrace(const Header* header) {
-  ScopedDisableDebugCalls disable;
-
   auto back_iter = backtraces_.find(header);
   if (back_iter == backtraces_.end()) {
     return;
