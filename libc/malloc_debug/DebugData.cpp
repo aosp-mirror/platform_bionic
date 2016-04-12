@@ -43,37 +43,37 @@ bool DebugData::Initialize() {
   }
 
   // Check to see if the options that require a header are enabled.
-  if ((config_.options & ~(NO_HEADER_OPTIONS)) != 0) {
+  if (config_.options & HEADER_OPTIONS) {
     need_header_ = true;
 
     // Initialize all of the static header offsets.
     pointer_offset_ = BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 
     if (config_.options & BACKTRACE) {
-      backtrace.reset(new BacktraceData(config_, &pointer_offset_));
+      backtrace.reset(new BacktraceData(this, config_, &pointer_offset_));
       if (!backtrace->Initialize(config_)) {
         return false;
       }
     }
 
     if (config_.options & FRONT_GUARD) {
-      front_guard.reset(new FrontGuardData(config_, &pointer_offset_));
+      front_guard.reset(new FrontGuardData(this, config_, &pointer_offset_));
     }
 
     extra_bytes_ = pointer_offset_;
 
     // Initialize all of the non-header data.
     if (config_.options & REAR_GUARD) {
-      rear_guard.reset(new RearGuardData(config_));
+      rear_guard.reset(new RearGuardData(this, config_));
       extra_bytes_ += config_.rear_guard_bytes;
     }
 
     if (config_.options & FREE_TRACK) {
-      free_track.reset(new FreeTrackData(config_));
+      free_track.reset(new FreeTrackData(this, config_));
     }
 
     if (config_.options & TRACK_ALLOCS) {
-      track.reset(new TrackData());
+      track.reset(new TrackData(this));
     }
   }
 
