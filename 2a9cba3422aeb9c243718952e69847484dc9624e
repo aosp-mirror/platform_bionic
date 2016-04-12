@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ba47ebb_73bd9a27",
+        "filename": "libc/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-04-12T20:07:39Z",
+      "side": 1,
+      "message": "this isn\u0027t required, the build system will add this for you",
+      "range": {
+        "startLine": 1030,
+        "startChar": 0,
+        "endLine": 1030,
+        "endChar": 33
+      },
+      "revId": "2a9cba3422aeb9c243718952e69847484dc9624e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
