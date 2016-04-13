@@ -203,6 +203,7 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     "libcrypto.so",
     "libcutils.so",
     "libexpat.so",
+    "libgui.so",
     "libmedia.so",
     "libnativehelper.so",
     "libskia.so",
