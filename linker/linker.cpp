@@ -3322,7 +3322,7 @@ bool soinfo::is_gnu_hash() const {
 }
 
 bool soinfo::can_unload() const {
-  return (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0;
+  return !is_linked() || ((get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0);
 }
 
 bool soinfo::is_linked() const {
