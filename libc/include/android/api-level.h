@@ -33,6 +33,8 @@
  * Magic version number for a current development build, which has
  * not yet turned into an official release.
  */
+#ifndef __ANDROID_API__
 #define __ANDROID_API__ 10000
+#endif
 
 #endif /* ANDROID_API_LEVEL_H */
