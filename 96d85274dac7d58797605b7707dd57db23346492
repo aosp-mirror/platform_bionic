@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bc5eecd_fe5d6125",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T02:06:06Z",
+      "side": 1,
+      "message": "that\u0027s a convincing argument that this is worthwhile even for the legacy headers :-)",
+      "revId": "96d85274dac7d58797605b7707dd57db23346492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_7e4df169",
+        "filename": "libc/include/termios.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T02:06:06Z",
+      "side": 1,
+      "message": "did you want to move this out of __BEGIN_DECLS/__END_DECLS like you did the others?",
+      "revId": "96d85274dac7d58797605b7707dd57db23346492",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
