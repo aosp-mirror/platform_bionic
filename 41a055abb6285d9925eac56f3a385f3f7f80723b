@@ -1,0 +1,504 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bc5eecd_33629211",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "site?",
+      "range": {
+        "startLine": 47,
+        "startChar": 32,
+        "endLine": 47,
+        "endChar": 40
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_135f964b",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "s/XX/SIZE/ (to make it obvious at a glance that you\u0027re setting the size rather than the bytes [or some other random thing the don\u0027t even support])",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 5
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_73f7ea74",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "(should we change this and the code so that we output allocation[-32] instead?",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 9
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_f3f91a66",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "rear guard",
+      "range": {
+        "startLine": 68,
+        "startChar": 29,
+        "endLine": 68,
+        "endChar": 35
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_b3aa024c",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "MAX_FRAMES",
+      "range": {
+        "startLine": 91,
+        "startChar": 15,
+        "endLine": 91,
+        "endChar": 17
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_339f322d",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "of each allocation site",
+      "range": {
+        "startLine": 92,
+        "startChar": 31,
+        "endLine": 92,
+        "endChar": 66
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_53a62e82",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "what signal? is XX actually SIGNAL_NUMBER here? (despite the claim below that it\u0027s MAX_FRAMES.)",
+      "range": {
+        "startLine": 109,
+        "startChar": 67,
+        "endLine": 109,
+        "endChar": 78
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_93d6e6c7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "MAX_FILLED_BYTES",
+      "range": {
+        "startLine": 119,
+        "startChar": 21,
+        "endLine": 119,
+        "endChar": 23
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_73c08afa",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "EXTRA_BYTES\n\nsay where the extra goes? i assume at the end. explain why you\u0027d use this rather than rear_guard?",
+      "range": {
+        "startLine": 138,
+        "startChar": 19,
+        "endLine": 138,
+        "endChar": 21
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_b37cc28f",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "ALLOCATION_COUNT",
+      "range": {
+        "startLine": 144,
+        "startChar": 17,
+        "endLine": 144,
+        "endChar": 19
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_3391f20e",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "(i kind of think we free_track is the wrong name for this. i\u0027m not sure what it should be called, but each time i read the description i feel like free_track undersells it.)",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 15
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_d35dfe1c",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "how many frames? affected by backtrace? can i set the number of frames without turning on all backtracing?",
+      "range": {
+        "startLine": 147,
+        "startChar": 49,
+        "endLine": 148,
+        "endChar": 26
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_5398ee2f",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "maximum",
+      "range": {
+        "startLine": 155,
+        "startChar": 35,
+        "endLine": 155,
+        "endChar": 40
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_f35d9a25",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "freed allocations",
+      "range": {
+        "startLine": 156,
+        "startChar": 29,
+        "endLine": 156,
+        "endChar": 40
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_534aae53",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "before\n\n(i know what you mean, but we\u0027ll have non-native speakers reading this too.)",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 4
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_d334ded4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "ah. maybe we should merge these two sections for clarity?",
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_332a9272",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "option",
+      "range": {
+        "startLine": 196,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 7
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_132796a8",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "is not useful globally because\n\nor\n\nis only useful for programs that try to clean up all allocations on exit",
+      "range": {
+        "startLine": 196,
+        "startChar": 8,
+        "endLine": 196,
+        "endChar": 32
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_930c2625",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "which function found the problem",
+      "range": {
+        "startLine": 234,
+        "startChar": 24,
+        "endLine": 235,
+        "endChar": 5
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_1319565e",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "should this be a separate document? seems like this is more for tool authors?",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 22
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_5313ce3b",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "if not, we should move the examples up before it.",
+      "range": {
+        "startLine": 326,
+        "startChar": 0,
+        "endLine": 326,
+        "endChar": 8
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bc5eecd_f33c7aa6",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-14T00:31:45Z",
+      "side": 1,
+      "message": "does this work, or do you need double quoting?",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 64
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
