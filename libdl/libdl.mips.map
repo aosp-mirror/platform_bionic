@@ -15,8 +15,6 @@ LIBC {
 
 LIBC_N {
   global:
-    android_init_namespaces;
-    android_create_namespace;
     dlvsym;
 } LIBC;
 
@@ -27,4 +25,6 @@ LIBC_PLATFORM {
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;
+    android_init_namespaces;
+    android_create_namespace;
 } LIBC_N;
