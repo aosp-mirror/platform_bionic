@@ -3023,10 +3023,6 @@ void soinfo::call_destructors() {
 
   // DT_FINI should be called after DT_FINI_ARRAY if both are present.
   call_function("DT_FINI", fini_func_);
-
-  // This is needed on second call to dlopen
-  // after library has been unloaded with RTLD_NODELETE
-  constructors_called = false;
 }
 
 void soinfo::add_child(soinfo* child) {
