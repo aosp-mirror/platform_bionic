@@ -46,10 +46,8 @@ extern volatile int* __errno(void) __pure2;
 /* a macro expanding to the errno l-value */
 #define  errno   (*__errno())
 
-#if __ANDROID_API__ < 21
-#include <android/legacy_errno_inlines.h>
-#endif
-
 __END_DECLS
+
+#include <android/legacy_errno_inlines.h>
 
 #endif /* _ERRNO_H */
