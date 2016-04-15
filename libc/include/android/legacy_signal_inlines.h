@@ -29,14 +29,18 @@
 #ifndef _ANDROID_LEGACY_SIGNAL_INLINES_H_
 #define _ANDROID_LEGACY_SIGNAL_INLINES_H_
 
+#include <errno.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/cdefs.h>
+
+#if __ANDROID_API__ < 21
 
 __BEGIN_DECLS
 
 extern sighandler_t bsd_signal(int signum, sighandler_t handler);
 
-static __inline int sigismember(sigset_t *set, int signum) {
+static __inline int sigismember(const sigset_t *set, int signum) {
   /* Signal numbers start at 1, but bit positions start at 0. */
   int bit = signum - 1;
   const unsigned long *local_set = (const unsigned long *)set;
@@ -95,4 +99,5 @@ static __inline sighandler_t signal(int s, sighandler_t f) {
 
 __END_DECLS
 
+#endif
 #endif /* _ANDROID_LEGACY_SIGNAL_INLINES_H_ */

@@ -34,6 +34,8 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 
+#if __ANDROID_API__ < 21
+
 __BEGIN_DECLS
 
 static __inline int tcgetattr(int fd, struct termios *s) {
@@ -90,4 +92,5 @@ static __inline void cfmakeraw(struct termios *s) {
 
 __END_DECLS
 
+#endif
 #endif /* _ANDROID_LEGACY_TERMIOS_INLINES_H_ */

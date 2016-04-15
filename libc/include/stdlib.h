@@ -76,10 +76,10 @@ extern unsigned long long strtoull(const char *, char **, int);
 
 extern int posix_memalign(void **memptr, size_t alignment, size_t size);
 
-extern double atof(const char*) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE double atof(const char*);
 
 extern double strtod(const char*, char**) __LIBC_ABI_PUBLIC__;
-extern float strtof(const char*, char**) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE float strtof(const char*, char**) __LIBC_ABI_PUBLIC__;
 extern long double strtold(const char*, char**) __LIBC_ABI_PUBLIC__;
 
 extern long double strtold_l(const char *, char **, locale_t) __LIBC_ABI_PUBLIC__;
@@ -90,9 +90,9 @@ extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;
 extern long long atoll(const char*) __purefunc;
 
-extern int abs(int) __pure2 __INTRODUCED_IN(21);
-extern long labs(long) __pure2 __INTRODUCED_IN(21);
-extern long long llabs(long long) __pure2 __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE int abs(int) __pure2;
+__BIONIC_LEGACY_INLINE long labs(long) __pure2;
+__BIONIC_LEGACY_INLINE long long llabs(long long) __pure2;
 
 extern char * realpath(const char *path, char *resolved);
 extern int system(const char *string);
@@ -109,9 +109,9 @@ void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
 
-int rand(void) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE int rand(void);
 int rand_r(unsigned int*);
-void srand(unsigned int) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE void srand(unsigned int);
 
 double drand48(void);
 double erand48(unsigned short[3]);
@@ -124,12 +124,12 @@ unsigned short* seed48(unsigned short[3]);
 void srand48(long);
 
 char* initstate(unsigned int, char*, size_t);
-long random(void) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE long random(void);
 char* setstate(char*);
-void srandom(unsigned int) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE void srandom(unsigned int);
 
 int getpt(void);
-int grantpt(int) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE int grantpt(int);
 int posix_openpt(int);
 char* ptsname(int);
 int ptsname_r(int, char*, size_t);
@@ -174,10 +174,6 @@ extern size_t	wcstombs(char *, const wchar_t *, size_t);
 extern size_t __ctype_get_mb_cur_max(void);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 
-#if __ANDROID_API__ < 21
-#include <android/legacy_stdlib_inlines.h>
-#endif
-
 #if defined(__BIONIC_FORTIFY)
 
 extern char* __realpath_real(const char*, char*) __RENAME(realpath);
@@ -200,5 +196,7 @@ char* realpath(const char* path, char* resolved) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS
+
+#include <android/legacy_stdlib_inlines.h>
 
 #endif /* _STDLIB_H */

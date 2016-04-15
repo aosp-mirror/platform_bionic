@@ -30,6 +30,9 @@
 #define _ANDROID_LEGACY_SYS_STAT_INLINES_H_
 
 #include <sys/cdefs.h>
+#include <sys/stat.h>
+
+#if __ANDROID_API__ < 21
 
 __BEGIN_DECLS
 
@@ -39,4 +42,5 @@ static __inline int mkfifo(const char *__p, mode_t __m) {
 
 __END_DECLS
 
+#endif
 #endif /* _ANDROID_LEGACY_SYS_STAT_INLINES_H_ */
