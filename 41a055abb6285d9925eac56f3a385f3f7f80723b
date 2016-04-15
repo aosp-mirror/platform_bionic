@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0bc5eecd_1f5e7421",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_33629211",
+      "range": {
+        "startLine": 47,
+        "startChar": 32,
+        "endLine": 47,
+        "endChar": 40
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_135f964b",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "s/XX/SIZE/ (to make it obvious at a glance that you\u0027re setting the size rather than the bytes [or some other random thing the don\u0027t even support])",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 5
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_ad2d6945",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I modified this to be SIZE_BYTES to hopefully convey what it means.",
+      "parentUuid": "0bc5eecd_135f964b",
       "range": {
         "startLine": 49,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_e403f660",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "We probably should, but I need to talk to you offline about this one.",
+      "parentUuid": "0bc5eecd_73f7ea74",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 9
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_f3f91a66",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "rear guard",
+      "range": {
+        "startLine": 68,
+        "startChar": 29,
+        "endLine": 68,
+        "endChar": 35
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_ad26494d",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_f3f91a66",
       "range": {
         "startLine": 68,
         "startChar": 29,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_cdd61d40",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_b3aa024c",
+      "range": {
+        "startLine": 91,
+        "startChar": 15,
+        "endLine": 91,
+        "endChar": 17
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_339f322d",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "of each allocation site",
+      "range": {
+        "startLine": 92,
+        "startChar": 31,
+        "endLine": 92,
+        "endChar": 66
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_0d7af5f7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_339f322d",
       "range": {
         "startLine": 92,
         "startChar": 31,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_f9fe434b",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I added a more explicit description.",
+      "parentUuid": "0bc5eecd_53a62e82",
+      "range": {
+        "startLine": 109,
+        "startChar": 67,
+        "endLine": 109,
+        "endChar": 78
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_93d6e6c7",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -174,6 +342,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "MAX_FILLED_BYTES",
+      "range": {
+        "startLine": 119,
+        "startChar": 21,
+        "endLine": 119,
+        "endChar": 23
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_1914f764",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_93d6e6c7",
       "range": {
         "startLine": 119,
         "startChar": 21,
@@ -255,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_d9b41fae",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Unfortunately, I don\u0027t have a better name. I\u0027m trying to keep the names relatively short so that you can include as many as possible.\n\nI\u0027m also not sure if I should not modify this further. The problem is that this causes everything to run really slowly when verifying large allocations since I check that the whole allocation is still at the same value. I was thinking about not validating the whole allocation.",
+      "parentUuid": "0bc5eecd_3391f20e",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 15
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_d35dfe1c",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -266,6 +482,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "how many frames? affected by backtrace? can i set the number of frames without turning on all backtracing?",
+      "range": {
+        "startLine": 147,
+        "startChar": 49,
+        "endLine": 148,
+        "endChar": 26
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_b93a0bc1",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I added clarifying information.",
+      "parentUuid": "0bc5eecd_d35dfe1c",
       "range": {
         "startLine": 147,
         "startChar": 49,
@@ -324,6 +564,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_f93483d4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_f35d9a25",
+      "range": {
+        "startLine": 156,
+        "startChar": 29,
+        "endLine": 156,
+        "endChar": 40
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_534aae53",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -347,6 +611,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_d92fbf81",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_534aae53",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 4
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_d334ded4",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -358,6 +646,24 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "ah. maybe we should merge these two sections for clarity?",
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_7913333c",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I put a pointer, I\u0027m not sure exactly how to combine the options in a way that doesn\u0027t lose information. I repeated a bit of information too, but this allows you to figure out what this option does on its own.",
+      "parentUuid": "0bc5eecd_d334ded4",
       "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -410,6 +716,54 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_f9e56351",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc5eecd_332a9272",
+      "range": {
+        "startLine": 196,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 7
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_b9dbeb99",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I used the first one.",
+      "parentUuid": "0bc5eecd_132796a8",
+      "range": {
+        "startLine": 196,
+        "startChar": 8,
+        "endLine": 196,
+        "endChar": 32
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_930c2625",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -421,6 +775,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "which function found the problem",
+      "range": {
+        "startLine": 234,
+        "startChar": 24,
+        "endLine": 235,
+        "endChar": 5
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_19c87794",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "I changed the wording a bit differently. See if it makes sense.",
+      "parentUuid": "0bc5eecd_930c2625",
       "range": {
         "startLine": 234,
         "startChar": 24,
@@ -456,6 +834,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_59c2ef73",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Good point, I\u0027ll move this a separate README since this will be confusing if you just want to use the thing.",
+      "parentUuid": "0bc5eecd_1319565e",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 22
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_5313ce3b",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -479,6 +881,30 @@
     },
     {
       "key": {
+        "uuid": "cb33d6d5_64c62668",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Moved.",
+      "parentUuid": "0bc5eecd_5313ce3b",
+      "range": {
+        "startLine": 326,
+        "startChar": 0,
+        "endLine": 326,
+        "endChar": 8
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc5eecd_f33c7aa6",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -490,6 +916,30 @@
       "writtenOn": "2016-04-14T00:31:45Z",
       "side": 1,
       "message": "does this work, or do you need double quoting?",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 64
+      },
+      "revId": "41a055abb6285d9925eac56f3a385f3f7f80723b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_c495125e",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-15T02:26:01Z",
+      "side": 1,
+      "message": "Oops, yes it does. Too used to doing this through the shell.",
+      "parentUuid": "0bc5eecd_f33c7aa6",
       "range": {
         "startLine": 357,
         "startChar": 0,
