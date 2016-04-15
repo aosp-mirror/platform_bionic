@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8859e447_0ee72fcc",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-15T22:04:29Z",
+      "side": 1,
+      "message": "Can we just increment SIGRTMIN to reserve an additional signal for ourselves?",
+      "range": {
+        "startLine": 276,
+        "startChar": 21,
+        "endLine": 276,
+        "endChar": 34
+      },
+      "revId": "ea26b33248663a836d2f0719cb4e46967b648fe2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
