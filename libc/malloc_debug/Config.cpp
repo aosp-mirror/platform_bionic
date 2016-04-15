@@ -273,7 +273,7 @@ bool Config::SetFromProperties() {
   fill_free_value = DEFAULT_FILL_FREE_VALUE;
   front_guard_value = DEFAULT_FRONT_GUARD_VALUE;
   rear_guard_value = DEFAULT_REAR_GUARD_VALUE;
-  backtrace_signal = SIGRTMIN + 10;
+  backtrace_signal = SIGRTMAX - 19;
   free_track_backtrace_num_frames = 16;
 
   // Parse the options are of the format:
