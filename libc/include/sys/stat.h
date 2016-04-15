@@ -177,7 +177,7 @@ mode_t umask(mode_t mode) {
 }
 #endif /* defined(__BIONIC_FORTIFY) */
 
-extern int mkfifo(const char*, mode_t) __INTRODUCED_IN(21);
+__BIONIC_LEGACY_INLINE int mkfifo(const char*, mode_t);
 extern int mkfifoat(int, const char*, mode_t);
 
 extern int fchmodat(int, const char*, mode_t, int);
@@ -189,10 +189,8 @@ extern int mknodat(int, const char*, mode_t, dev_t);
 extern int utimensat(int fd, const char *path, const struct timespec times[2], int flags);
 extern int futimens(int fd, const struct timespec times[2]);
 
-#if __ANDROID_API__ < 21
-#include <android/legacy_sys_stat_inlines.h>
-#endif
-
 __END_DECLS
+
+#include <android/legacy_sys_stat_inlines.h>
 
 #endif /* _SYS_STAT_H_ */

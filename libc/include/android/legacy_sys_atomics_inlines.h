@@ -31,6 +31,8 @@
 
 #include <sys/cdefs.h>
 
+#if __ANDROID_API__ < 21
+
 __BEGIN_DECLS
 
 /* Note: atomic operations that were exported by the C library didn't
@@ -69,4 +71,5 @@ __ATOMIC_INLINE__ int __atomic_inc(volatile int *ptr) {
 
 __END_DECLS
 
+#endif
 #endif /* _ANDROID_LEGACY_SYS_ATOMICS_INLINES_H_ */
