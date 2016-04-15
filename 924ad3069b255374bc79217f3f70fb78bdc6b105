@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb33d6d5_bfe74bfa",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-15T03:35:25Z",
+      "side": 1,
+      "message": "oh, that\u0027s awkward. is this a reason to use SIGRTMAX-x instead? SIGRTMIN increases as we steal signals for internal use. SIGRTMAX doesn\u0027t.",
+      "range": {
+        "startLine": 113,
+        "startChar": 15,
+        "endLine": 113,
+        "endChar": 50
+      },
+      "revId": "924ad3069b255374bc79217f3f70fb78bdc6b105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_df031f61",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-15T03:35:25Z",
+      "side": 1,
+      "message": "but \"free function\" means something too :-)\n\nhow about `free` or free(3) (or `free(3)`)?",
+      "range": {
+        "startLine": 246,
+        "startChar": 39,
+        "endLine": 246,
+        "endChar": 52
+      },
+      "revId": "924ad3069b255374bc79217f3f70fb78bdc6b105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb33d6d5_5ff80f8d",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-15T03:35:25Z",
+      "side": 1,
+      "message": "btw, why not realistic-looking backtraces?",
+      "range": {
+        "startLine": 261,
+        "startChar": 9,
+        "endLine": 261,
+        "endChar": 12
+      },
+      "revId": "924ad3069b255374bc79217f3f70fb78bdc6b105",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
