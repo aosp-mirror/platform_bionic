@@ -22,6 +22,30 @@
       "revId": "ea26b33248663a836d2f0719cb4e46967b648fe2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8859e447_4ec407b4",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-15T22:43:38Z",
+      "side": 1,
+      "message": "if we use SIGRTMIN+3, yes.\n\nhttps://cs.corp.google.com/android/bionic/libc/bionic/__libc_current_sigrtmin.cpp?q\u003dsigrtmin\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d32",
+      "parentUuid": "8859e447_0ee72fcc",
+      "range": {
+        "startLine": 276,
+        "startChar": 21,
+        "endLine": 276,
+        "endChar": 34
+      },
+      "revId": "ea26b33248663a836d2f0719cb4e46967b648fe2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
