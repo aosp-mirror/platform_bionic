@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8859e447_1db4ff12",
+        "filename": "libc/bionic/ftw.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-18T19:05:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8859e447_9dbd8f85",
+      "range": {
+        "startLine": 40,
+        "startChar": 10,
+        "endLine": 40,
+        "endChar": 15
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8859e447_1d5d1f1b",
         "filename": "libc/bionic/ftw.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8859e447_8f1d56b0",
+        "filename": "libc/bionic/ftw.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-18T19:05:07Z",
+      "side": 1,
+      "message": "the \"\u0026\u0026 error \u003d\u003d 0\" part gives the read errors precedence over close errors.\n\n\n\nnetbsd goes even further for nftw (but not ftw):\n\n        sverrno \u003d errno;\n        (void) fts_close(ftsp);\n        errno \u003d sverrno;\n\nalthough afaict the only way fts_close fails is if nftw has the FTW_CHDIR flag set (and the fchdir to put things back how they were fails), so effectively netbsd always ignores fts_close errors.\n\nhmm. looks like they copied OpenBSD before OpenBSD added this extra code:\n\n  date: 2004/07/07 16:05:23;  author: millert;  state: Exp;  lines: +6 -4;\n  If fts_close() fails and we have not yet seen an error, return -1.\n\nso it wasn\u0027t a deliberate decision on their part. given that, i think i\u0027ll leave this as it is for now.",
+      "parentUuid": "8859e447_1d5d1f1b",
+      "range": {
+        "startLine": 110,
+        "startChar": 4,
+        "endLine": 110,
+        "endChar": 15
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8859e447_fd1c8b4f",
         "filename": "tests/ftw_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-04-18T18:11:33Z",
       "side": 1,
       "message": "Would it be better to do std::string StringPrintf(...) to avoid having to declare the buffer size?",
+      "range": {
+        "startLine": 147,
+        "startChar": 1,
+        "endLine": 148,
+        "endChar": 72
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8859e447_4f907e3c",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-18T19:05:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8859e447_fd1c8b4f",
       "range": {
         "startLine": 147,
         "startChar": 1,
