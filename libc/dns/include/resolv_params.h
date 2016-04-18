@@ -20,8 +20,10 @@
 #include <stdint.h>
 
 /* Hard-coded defines */
-#define	MAXNS			4	/* max # name servers we'll track */
-#define	MAXNSSAMPLES		64	/* max # samples to store per server */
+#define MAXNS			4	/* max # name servers we'll track */
+#define MAXDNSRCH		6	/* max # domains in search path */
+#define MAXDNSRCHPATH		256	/* max length of domain search paths */
+#define MAXNSSAMPLES		64	/* max # samples to store per server */
 
 /* Defaults used for initializing __res_params */
 #define SUCCESS_THRESHOLD	75	/* if successes * 100 / total_samples is less than

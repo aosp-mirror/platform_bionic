@@ -1329,3 +1329,10 @@ LIBC_PRIVATE {
     wait3; # arm x86 mips nobrillo
     wcswcs; # arm x86 mips nobrillo
 } LIBC_N;
+
+LIBC_PLATFORM {
+  global:
+    android_net_res_stats_get_info_for_net;
+    android_net_res_stats_aggregate;
+    android_net_res_stats_get_usable_servers;
+} LIBC_N;

@@ -1290,3 +1290,10 @@ LIBC_PRIVATE {
     SHA1Transform; # arm x86 mips
     SHA1Update; # arm x86 mips
 } LIBC_N;
+
+LIBC_PLATFORM {
+  global:
+    android_net_res_stats_get_info_for_net;
+    android_net_res_stats_aggregate;
+    android_net_res_stats_get_usable_servers;
+} LIBC_N;
