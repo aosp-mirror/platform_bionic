@@ -96,6 +96,52 @@
     },
     {
       "key": {
+        "uuid": "8859e447_912c5e72",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-04-18T19:35:39Z",
+      "side": 1,
+      "message": "FTW_SL is returned only when FTW_PHYS?",
+      "range": {
+        "startLine": 71,
+        "startChar": 14,
+        "endLine": 71,
+        "endChar": 20
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8859e447_91133e3c",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-04-18T19:35:39Z",
+      "side": 1,
+      "message": "I guess TemporaryDir can only remove empty directory, no?",
+      "range": {
+        "startLine": 145,
+        "startChar": 2,
+        "endLine": 145,
+        "endChar": 14
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8859e447_fd1c8b4f",
         "filename": "tests/ftw_test.cpp",
         "patchSetId": 1
