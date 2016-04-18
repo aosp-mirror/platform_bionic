@@ -1228,18 +1228,17 @@ typedef struct resolv_cache {
     PendingReqInfo   pending_requests;
 } Cache;
 
-// The nameservers[], nsaddrinfo[] and nsstats[] are containing MAXNS + 1 elements, because the
-// number of nameservers is not known and the code relies on the n+1-st entry to be null to
-// recognize the end.
 struct resolv_cache_info {
     unsigned                    netid;
     Cache*                      cache;
     struct resolv_cache_info*   next;
-    char*                       nameservers[MAXNS + 1];
-    struct addrinfo*            nsaddrinfo[MAXNS + 1];
+    int                         nscount;
+    char*                       nameservers[MAXNS];
+    struct addrinfo*            nsaddrinfo[MAXNS];
     int                         revision_id; // # times the nameservers have been replaced
     struct __res_params         params;
-    struct __res_stats          nsstats[MAXNS + 1];
+    struct __res_stats          nsstats[MAXNS];
+    // TODO: replace with char* defdname[MAXDNSRCH]
     char                        defdname[256];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
@@ -1949,15 +1948,40 @@ _resolv_set_default_params(struct __res_params* params) {
     params->max_samples = 0;
 }
 
-void
-_resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numservers,
+int
+_resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned numservers,
         const char *domains, const struct __res_params* params)
 {
-    int i, rt, index;
-    struct addrinfo hints;
     char sbuf[NI_MAXSERV];
     register char *cp;
     int *offset;
+    struct addrinfo* nsaddrinfo[MAXNS];
+
+    if (numservers > MAXNS) {
+        XLOG("%s: numservers=%u, MAXNS=%u", __FUNCTION__, numservers, MAXNS);
+        return E2BIG;
+    }
+
+    // Parse the addresses before actually locking or changing any state, in case there is an error.
+    // As a side effect this also reduces the time the lock is kept.
+    struct addrinfo hints = {
+        .ai_family = AF_UNSPEC,
+        .ai_socktype = SOCK_DGRAM,
+        .ai_flags = AI_NUMERICHOST
+    };
+    snprintf(sbuf, sizeof(sbuf), "%u", NAMESERVER_PORT);
+    for (unsigned i = 0; i < numservers; i++) {
+        // The addrinfo structures allocated here are freed in _free_nameservers_locked().
+        int rt = getaddrinfo(servers[i], sbuf, &hints, &nsaddrinfo[i]);
+        if (rt != 0) {
+            for (unsigned j = 0 ; j < i ; j++) {
+                freeaddrinfo(nsaddrinfo[j]);
+                nsaddrinfo[j] = NULL;
+            }
+            XLOG("%s: getaddrinfo(%s)=%s", __FUNCTION__, servers[i], gai_strerror(rt));
+            return EINVAL;
+        }
+    }
 
     pthread_once(&_res_cache_once, _res_cache_init);
     pthread_mutex_lock(&_res_cache_list_lock);
@@ -1978,24 +2002,13 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numser
         if (!_resolv_is_nameservers_equal_locked(cache_info, servers, numservers)) {
             // free current before adding new
             _free_nameservers_locked(cache_info);
-
-            memset(&hints, 0, sizeof(hints));
-            hints.ai_family = PF_UNSPEC;
-            hints.ai_socktype = SOCK_DGRAM; /*dummy*/
-            hints.ai_flags = AI_NUMERICHOST;
-            snprintf(sbuf, sizeof(sbuf), "%u", NAMESERVER_PORT);
-
-            index = 0;
-            for (i = 0; i < numservers && i < MAXNS; i++) {
-                rt = getaddrinfo(servers[i], sbuf, &hints, &cache_info->nsaddrinfo[index]);
-                if (rt == 0) {
-                    cache_info->nameservers[index] = strdup(servers[i]);
-                    index++;
-                    XLOG("%s: netid = %u, addr = %s\n", __FUNCTION__, netid, servers[i]);
-                } else {
-                    cache_info->nsaddrinfo[index] = NULL;
-                }
+            unsigned i;
+            for (i = 0; i < numservers; i++) {
+                cache_info->nsaddrinfo[i] = nsaddrinfo[i];
+                cache_info->nameservers[i] = strdup(servers[i]);
+                XLOG("%s: netid = %u, addr = %s\n", __FUNCTION__, netid, servers[i]);
             }
+            cache_info->nscount = numservers;
 
             // code moved from res_init.c, load_domain_search_list
             strlcpy(cache_info->defdname, domains, sizeof(cache_info->defdname));
@@ -2040,26 +2053,16 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, int numser
     }
 
     pthread_mutex_unlock(&_res_cache_list_lock);
+    return 0;
 }
 
 static int
 _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
         const char** servers, int numservers)
 {
-    int i;
-    char** ns;
-    int currentservers;
-    int equal = 1;
-
-    if (numservers > MAXNS) numservers = MAXNS;
-
-    // Find out how many nameservers we had before.
-    currentservers = 0;
-    for (ns = cache_info->nameservers; *ns; ns++)
-        currentservers++;
-
-    if (currentservers != numservers)
+    if (cache_info->nscount != numservers) {
         return 0;
+    }
 
     // Compare each name server against current name servers.
     // TODO: this is incorrect if the list of current or previous nameservers
@@ -2067,26 +2070,25 @@ _resolv_is_nameservers_equal_locked(struct resolv_cache_info* cache_info,
     // filters out duplicates, but we should probably fix it. It's also
     // insensitive to the order of the nameservers; we should probably fix that
     // too.
-    for (i = 0; i < numservers && equal; i++) {
-        ns = cache_info->nameservers;
-        equal = 0;
-        while(*ns) {
-            if (strcmp(*ns, servers[i]) == 0) {
-                equal = 1;
+    for (int i = 0; i < numservers; i++) {
+        for (int j = 0 ; ; j++) {
+            if (j >= numservers) {
+                return 0;
+            }
+            if (strcmp(cache_info->nameservers[i], servers[j]) == 0) {
                 break;
             }
-            ns++;
         }
     }
 
-    return equal;
+    return 1;
 }
 
 static void
 _free_nameservers_locked(struct resolv_cache_info* cache_info)
 {
     int i;
-    for (i = 0; i <= MAXNS; i++) {
+    for (i = 0; i < cache_info->nscount; i++) {
         free(cache_info->nameservers[i]);
         cache_info->nameservers[i] = NULL;
         if (cache_info->nsaddrinfo[i] != NULL) {
@@ -2096,6 +2098,7 @@ _free_nameservers_locked(struct resolv_cache_info* cache_info)
         cache_info->nsstats[i].sample_count =
             cache_info->nsstats[i].sample_next = 0;
     }
+    cache_info->nscount = 0;
     _res_cache_clear_stats_locked(cache_info);
     ++cache_info->revision_id;
 }
@@ -2182,7 +2185,6 @@ _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info) {
 int
 _resolv_cache_get_resolver_stats( unsigned netid, struct __res_params* params,
         struct __res_stats stats[MAXNS]) {
-
     int revision_id = -1;
     pthread_mutex_lock(&_res_cache_list_lock);
 
