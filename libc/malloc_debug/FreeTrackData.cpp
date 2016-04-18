@@ -48,7 +48,7 @@ void FreeTrackData::LogFreeError(const Header* header, const uint8_t* pointer) {
   uint8_t fill_free_value = debug_->config().fill_free_value;
   for (size_t i = 0; i < header->usable_size; i++) {
     if (pointer[i] != fill_free_value) {
-      error_log("  pointer[%zu] = 0x%02x (expected 0x%02x)", i, pointer[i], fill_free_value);
+      error_log("  allocation[%zu] = 0x%02x (expected 0x%02x)", i, pointer[i], fill_free_value);
     }
   }
   auto back_iter = backtraces_.find(header);
