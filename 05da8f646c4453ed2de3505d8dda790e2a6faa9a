@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8859e447_9dbd8f85",
+        "filename": "libc/bionic/ftw.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-18T18:11:33Z",
+      "side": 1,
+      "message": "Minor nit, but these are called options in fts_open. I don\u0027t think it maters enough to change since nftw uses flags.",
+      "range": {
+        "startLine": 40,
+        "startChar": 10,
+        "endLine": 40,
+        "endChar": 15
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8859e447_1d5d1f1b",
+        "filename": "libc/bionic/ftw.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-18T18:11:33Z",
+      "side": 1,
+      "message": "It seems like errno should be reset to saved_errno if it\u0027s non-zero. At least some of the documentation seems to imply that an errno as a result of a read problem should be higher precedence than a close error. I might be reading it incorrectly though, and it\u0027s an edge case that might not be worth considering.",
+      "range": {
+        "startLine": 110,
+        "startChar": 4,
+        "endLine": 110,
+        "endChar": 15
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8859e447_fd1c8b4f",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-18T18:11:33Z",
+      "side": 1,
+      "message": "Would it be better to do std::string StringPrintf(...) to avoid having to declare the buffer size?",
+      "range": {
+        "startLine": 147,
+        "startChar": 1,
+        "endLine": 148,
+        "endChar": 72
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
