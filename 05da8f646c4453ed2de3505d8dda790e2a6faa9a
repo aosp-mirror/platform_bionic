@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8859e447_d251b155",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-04-18T20:41:08Z",
+      "side": 1,
+      "message": "please omit this comment. symbol links will not be returned if FTW_PHYS is not set.",
+      "parentUuid": "8859e447_912c5e72",
+      "range": {
+        "startLine": 71,
+        "startChar": 14,
+        "endLine": 71,
+        "endChar": 20
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8859e447_91133e3c",
         "filename": "tests/ftw_test.cpp",
         "patchSetId": 1
