@@ -107,6 +107,7 @@ libc_bionic_ndk_src_files := \
     bionic/fpclassify.cpp \
     bionic/fsetxattr.cpp \
     bionic/ftruncate.cpp \
+    bionic/ftw.cpp \
     bionic/futimens.cpp \
     bionic/getcwd.cpp \
     bionic/getdomainname.cpp \
@@ -288,8 +289,6 @@ libc_upstream_freebsd_src_files := \
 
 libc_upstream_netbsd_src_files := \
     upstream-netbsd/common/lib/libc/stdlib/random.c \
-    upstream-netbsd/lib/libc/gen/ftw.c \
-    upstream-netbsd/lib/libc/gen/nftw.c \
     upstream-netbsd/lib/libc/gen/nice.c \
     upstream-netbsd/lib/libc/gen/popen.c \
     upstream-netbsd/lib/libc/gen/psignal.c \
