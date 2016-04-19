@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "8859e447_affa5a19",
+        "filename": "tests/ftw_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-19T16:14:20Z",
+      "side": 1,
+      "message": "yeah. really we should make the test runner smarter here. vogar would create a top-level temporary directory and remove everything under it when the tests finish, and there was a command-line option to keep them around for debugging. (it may also have automatically kept them around for failed tests.)",
+      "parentUuid": "8859e447_91133e3c",
+      "range": {
+        "startLine": 145,
+        "startChar": 2,
+        "endLine": 145,
+        "endChar": 14
+      },
+      "revId": "05da8f646c4453ed2de3505d8dda790e2a6faa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8859e447_fd1c8b4f",
         "filename": "tests/ftw_test.cpp",
         "patchSetId": 1
