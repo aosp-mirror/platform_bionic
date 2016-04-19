@@ -82,7 +82,9 @@ cc_defaults {
 
     stl: "none",
     system_shared_libs: [],
-    sanitize: ["never"],
+    sanitize: {
+        never: true,
+    },
     native_coverage: false,
 }
 
@@ -1480,6 +1482,7 @@ cc_library_static {
 // ========================================================
 
 cc_library_static {
+    defaults: ["libc_defaults"],
     arch: {
         arm: {
             srcs: ["arch-arm/syscalls/**/*.S"],

@@ -314,7 +314,9 @@ cc_library {
     system_shared_libs: ["libc"],
 
     native_coverage: bionic_coverage,
-    sanitize: ["never"],
+    sanitize: {
+        never: true,
+    },
 
     multilib: {
         lib32: {
