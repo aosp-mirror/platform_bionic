@@ -307,8 +307,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
-        "upstream-netbsd/lib/libc/gen/ftw.c",
-        "upstream-netbsd/lib/libc/gen/nftw.c",
         "upstream-netbsd/lib/libc/gen/nice.c",
         "upstream-netbsd/lib/libc/gen/popen.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
@@ -1280,6 +1278,7 @@ cc_library_static {
         "bionic/fpclassify.cpp",
         "bionic/fsetxattr.cpp",
         "bionic/ftruncate.cpp",
+        "bionic/ftw.cpp",
         "bionic/futimens.cpp",
         "bionic/getcwd.cpp",
         "bionic/getdomainname.cpp",
