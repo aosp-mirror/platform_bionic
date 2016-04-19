@@ -58,7 +58,7 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
   const uint8_t* real = reinterpret_cast<const uint8_t*>(data);
   for (size_t i = 0; i < cmp_mem_.size(); i++, pointer_idx++) {
     if (real[i] != expected[i]) {
-      error_log("  pointer[%d] = 0x%02x (expected 0x%02x)", pointer_idx, real[i], expected[i]);
+      error_log("  allocation[%d] = 0x%02x (expected 0x%02x)", pointer_idx, real[i], expected[i]);
     }
   }
 
