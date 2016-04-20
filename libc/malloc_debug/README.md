@@ -224,6 +224,108 @@ Example leak error found in the log:
     04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
     04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
+### record\_allocs[=TOTAL\_ENTRIES]
+Keep track of every allocation/free made on every thread and dump them
+to a file when the signal SIGRTMAX - 18 (which is 46 on most Android devices)
+is received.
+
+If TOTAL\_ENTRIES is set, then it indicates the total number of
+allocation/free records that can be retained. If the number of records
+reaches the TOTAL\_ENTRIES value, then any further allocations/frees are
+not recorded. The default value is 8,000,000 and the maximum value this
+can be set to is 50,000,000.
+
+Once the signal is received, and the current records are written to the
+file, all current records are deleted. Any allocations/frees occuring while
+the data is being dumped to the file are ignored.
+
+**NOTE**: This option is not available until the O release of Android.
+
+The allocation data is written in a human readable format. Every line begins
+with the THREAD\_ID returned by gettid(), which is the thread that is making
+the allocation/free. If a new thread is created, no special line is added
+to the file. However, when a thread completes, a special entry is added to
+the file indicating this.
+
+The thread complete line is:
+
+**THREAD\_ID**: thread\_done 0x0
+
+Example:
+
+    187: thread_done 0x0
+
+Below is how each type of allocation/free call ends up in the file dump.
+
+pointer = malloc(size)
+
+**THREAD\_ID**: malloc pointer size
+
+Example:
+
+    186: malloc 0xb6038060 20
+
+free(pointer)
+
+**THREAD\_ID**: free pointer
+
+Example:
+
+    186: free 0xb6038060
+
+pointer = calloc(nmemb, size)
+
+**THREAD\_ID**: calloc pointer nmemb size
+
+Example:
+
+    186: calloc 0xb609f080 32 4
+
+new\_pointer = realloc(old\_pointer, size)
+
+**THREAD\_ID**: realloc new\_pointer old\_pointer size
+
+Example:
+
+    186: realloc 0xb609f080 0xb603e9a0 12
+
+pointer = memalign(alignment, size)
+
+**THREAD\_ID**: memalign pointer alignment size
+
+posix\_memalign(&pointer, alignment, size)
+
+**THREAD\_ID**: memalign pointer alignment size
+
+Example:
+
+    186: memalign 0x85423660 16 104
+
+pointer = valloc(size)
+
+**THREAD\_ID**: memalign pointer 4096 size
+
+Example:
+
+    186: memalign 0x85423660 4096 112
+
+pointer = pvalloc(size)
+
+**THREAD\_ID**: memalign pointer 4096 <b>SIZE\_ROUNDED\_UP\_TO\_4096</b>
+
+Example:
+
+    186: memalign 0x85423660 4096 8192
+
+### record\_allocs\_file[=FILE\_NAME]
+This option only has meaning if record\_allocs is set. It indicates the
+file where the recorded allocations will be found.
+
+If FILE\_NAME is set, then it indicates where the record allocation data
+will be placed.
+
+**NOTE**: This option is not available until the O release of Android.
+
 Additional Errors
 -----------------
 There are a few other error messages that might appear in the log.

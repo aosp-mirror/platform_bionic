@@ -77,6 +77,13 @@ bool DebugData::Initialize() {
     }
   }
 
+  if (config_.options & RECORD_ALLOCS) {
+    record.reset(new RecordData());
+    if (!record->Initialize(config_)) {
+      return false;
+    }
+  }
+
   if (config_.options & EXPAND_ALLOC) {
     extra_bytes_ += config_.expand_alloc_bytes;
   }
