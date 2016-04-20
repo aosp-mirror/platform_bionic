@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_25607807",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2190,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-20T11:41:52Z",
+      "side": 1,
+      "message": "Lose this space.",
+      "range": {
+        "startLine": 2190,
+        "startChar": 39,
+        "endLine": 2190,
+        "endChar": 40
+      },
+      "revId": "e3d6dbe665576a2d93239e7a5bea24fd623df3e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
