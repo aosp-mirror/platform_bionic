@@ -22,6 +22,69 @@
       "revId": "e3d6dbe665576a2d93239e7a5bea24fd623df3e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_b1a20ad3",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-20T23:54:21Z",
+      "side": 1,
+      "message": "it is not aborting - just returning an error, no?",
+      "range": {
+        "startLine": 2208,
+        "startChar": 59,
+        "endLine": 2208,
+        "endChar": 67
+      },
+      "revId": "e3d6dbe665576a2d93239e7a5bea24fd623df3e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_3139da81",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2220,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-20T23:54:21Z",
+      "side": 1,
+      "message": "nit: move it one line up.. like in other checks",
+      "revId": "e3d6dbe665576a2d93239e7a5bea24fd623df3e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_1cecaddc",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2226,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-20T23:54:21Z",
+      "side": 1,
+      "message": "is it safe to assume that nscount is always \u003c\u003d MAXNS? should there be a check for it?",
+      "range": {
+        "startLine": 2226,
+        "startChar": 30,
+        "endLine": 2226,
+        "endChar": 37
+      },
+      "revId": "e3d6dbe665576a2d93239e7a5bea24fd623df3e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
