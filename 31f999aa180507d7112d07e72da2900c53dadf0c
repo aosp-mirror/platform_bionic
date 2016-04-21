@@ -45,6 +45,30 @@
       "revId": "31f999aa180507d7112d07e72da2900c53dadf0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_f850eeb0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2377,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-21T22:29:18Z",
+      "side": 1,
+      "message": "yes it is... Split(\"\", \":\") returns { \"\" }",
+      "parentUuid": "c8e03c3f_98460225",
+      "range": {
+        "startLine": 2377,
+        "startChar": 25,
+        "endLine": 2377,
+        "endChar": 43
+      },
+      "revId": "31f999aa180507d7112d07e72da2900c53dadf0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
