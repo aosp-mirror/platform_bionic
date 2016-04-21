@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0817b4fd_34a430cc",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1964,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2872b820_a5133eed",
+      "range": {
+        "startLine": 1964,
+        "startChar": 21,
+        "endLine": 1964,
+        "endChar": 30
+      },
+      "revId": "04ab9bccafe454076e4cdd3cf88d73c37d0a1398",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8821e4e4_9caf95ef",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "0817b4fd_d49e9c7e",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8821e4e4_9caf95ef",
+      "range": {
+        "startLine": 1969,
+        "startChar": 34,
+        "endLine": 1969,
+        "endChar": 43
+      },
+      "revId": "04ab9bccafe454076e4cdd3cf88d73c37d0a1398",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f28ca8_b7642a8e",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-04-19T15:27:39Z",
       "side": 1,
       "message": "I think you don\u0027t need this code, because:\n\n- cache_info is allocated using calloc and thus is zeroed out on init\n- Any time we set the resolvers, we call _free_nameservers_locked, which\n  zeroes out any resolvers that were set.\n\nGiven that _free_nameservers_locked is just a few dozen lines down from here, I would just remove this code altogether and replace it with a comment that cache_info is zeroed out when created and _free_nameservers_locked zeroes out any servers that are changed/deleted.",
+      "range": {
+        "startLine": 2007,
+        "startChar": 0,
+        "endLine": 2009,
+        "endChar": 50
+      },
+      "revId": "04ab9bccafe454076e4cdd3cf88d73c37d0a1398",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0817b4fd_f4991899",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2009,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f28ca8_b7642a8e",
       "range": {
         "startLine": 2007,
         "startChar": 0,
