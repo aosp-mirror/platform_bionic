@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8e03c3f_f8f90edf",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2376,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-21T22:33:11Z",
+      "side": 1,
+      "message": "Done - I moved this check before the Split call to make things clearer.",
+      "parentUuid": "c8e03c3f_d8888aa9",
+      "range": {
+        "startLine": 2376,
+        "startChar": 5,
+        "endLine": 2376,
+        "endChar": 63
+      },
+      "revId": "31f999aa180507d7112d07e72da2900c53dadf0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8e03c3f_98460225",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
