@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "c8e03c3f_57a44ecc",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8e03c3f_45481cac",
+      "range": {
+        "startLine": 1981,
+        "startChar": 33,
+        "endLine": 1981,
+        "endChar": 35
+      },
+      "revId": "2df98d08ea1c6e21a9fff728adccbae20b7834b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_37a1cabc",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8e03c3f_654f20b2",
+      "range": {
+        "startLine": 1981,
+        "startChar": 53,
+        "endLine": 1981,
+        "endChar": 54
+      },
+      "revId": "2df98d08ea1c6e21a9fff728adccbae20b7834b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8e03c3f_e51b30b6",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 4
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c8e03c3f_7c72191e",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "I agree.",
+      "parentUuid": "c8e03c3f_e51b30b6",
+      "range": {
+        "startLine": 2011,
+        "startChar": 34,
+        "endLine": 2011,
+        "endChar": 35
+      },
+      "revId": "2df98d08ea1c6e21a9fff728adccbae20b7834b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8e03c3f_c5854c02",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2016-04-20T11:12:26Z",
       "side": 1,
       "message": "I don\u0027t see much value in this code. It has no effect because its only caller already has an equivalent if statement, so if numservers \u003e MAXNS, this code will never get called. Also, even if it did get called, cache_info-\u003enscount can never be \u003e numservers, so we\u0027d immediately return 0. I\u0027d remove it.",
+      "range": {
+        "startLine": 2063,
+        "startChar": 0,
+        "endLine": 2065,
+        "endChar": 5
+      },
+      "revId": "2df98d08ea1c6e21a9fff728adccbae20b7834b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_179ac68c",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-21T01:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8e03c3f_c5854c02",
       "range": {
         "startLine": 2063,
         "startChar": 0,
