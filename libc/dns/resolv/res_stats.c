@@ -54,8 +54,8 @@ _res_stats_clear_samples(struct __res_stats* stats)
 
 /* Aggregates the reachability statistics for the given server based on on the stored samples. */
 void
-_res_stats_aggregate(struct __res_stats* stats, int* successes, int* errors, int* timeouts,
-             int* internal_errors, int* rtt_avg, time_t* last_sample_time)
+android_net_res_stats_aggregate(struct __res_stats* stats, int* successes, int* errors,
+        int* timeouts, int* internal_errors, int* rtt_avg, time_t* last_sample_time)
 {
     int s = 0;   // successes
     int e = 0;   // errors
@@ -123,8 +123,8 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
     int internal_errors = -1;
     int rtt_avg = -1;
     time_t last_sample_time = 0;
-    _res_stats_aggregate(stats, &successes, &errors, &timeouts, &internal_errors, &rtt_avg,
-            &last_sample_time);
+    android_net_res_stats_aggregate(stats, &successes, &errors, &timeouts, &internal_errors,
+            &rtt_avg, &last_sample_time);
     if (successes >= 0 && errors >= 0 && timeouts >= 0) {
         int total = successes + errors + timeouts;
         if (DBG) {
@@ -164,8 +164,8 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
 }
 
 void
-_res_stats_get_usable_servers(const struct __res_params* params, struct __res_stats stats[],
-        int nscount, bool usable_servers[]) {
+android_net_res_stats_get_usable_servers(const struct __res_params* params,
+        struct __res_stats stats[], int nscount, bool usable_servers[]) {
     unsigned usable_servers_found = 0;
     for (int ns = 0; ns < nscount; ns++) {
         bool usable = _res_stats_usable_server(params, &stats[ns]);
