@@ -382,8 +382,8 @@ TEST_F(MallocDebugTest, front_guard_corrupted) {
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf(
       "6 malloc_debug +++ ALLOCATION %p SIZE 100 HAS A CORRUPTED FRONT GUARD\n", pointer);
-  expected_log += "6 malloc_debug   pointer[-32] = 0x00 (expected 0xaa)\n";
-  expected_log += "6 malloc_debug   pointer[-15] = 0x02 (expected 0xaa)\n";
+  expected_log += "6 malloc_debug   allocation[-32] = 0x00 (expected 0xaa)\n";
+  expected_log += "6 malloc_debug   allocation[-15] = 0x02 (expected 0xaa)\n";
   expected_log += "6 malloc_debug Backtrace at time of failure:\n";
   expected_log += "6 malloc_debug   #00 pc 0x1\n";
   expected_log += "6 malloc_debug   #01 pc 0x2\n";
@@ -463,8 +463,8 @@ TEST_F(MallocDebugTest, rear_guard_corrupted) {
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf(
       "6 malloc_debug +++ ALLOCATION %p SIZE 100 HAS A CORRUPTED REAR GUARD\n", pointer);
-  expected_log += "6 malloc_debug   pointer[130] = 0xbf (expected 0xbb)\n";
-  expected_log += "6 malloc_debug   pointer[131] = 0x00 (expected 0xbb)\n";
+  expected_log += "6 malloc_debug   allocation[130] = 0xbf (expected 0xbb)\n";
+  expected_log += "6 malloc_debug   allocation[131] = 0x00 (expected 0xbb)\n";
   expected_log += "6 malloc_debug Backtrace at time of failure:\n";
   expected_log += "6 malloc_debug   #00 pc 0x100\n";
   expected_log += "6 malloc_debug   #01 pc 0x200\n";
@@ -495,8 +495,8 @@ TEST_F(MallocDebugTest, rear_guard_corrupted_after_realloc_shrink) {
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf(
       "6 malloc_debug +++ ALLOCATION %p SIZE 100 HAS A CORRUPTED REAR GUARD\n", pointer);
-  expected_log += "6 malloc_debug   pointer[130] = 0xbf (expected 0xbb)\n";
-  expected_log += "6 malloc_debug   pointer[131] = 0x00 (expected 0xbb)\n";
+  expected_log += "6 malloc_debug   allocation[130] = 0xbf (expected 0xbb)\n";
+  expected_log += "6 malloc_debug   allocation[131] = 0x00 (expected 0xbb)\n";
   expected_log += "6 malloc_debug Backtrace at time of failure:\n";
   expected_log += "6 malloc_debug   #00 pc 0x100\n";
   expected_log += "6 malloc_debug   #01 pc 0x200\n";
@@ -758,22 +758,22 @@ TEST_F(MallocDebugTest, free_track_use_after_free) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointers[0]);
-  expected_log += "6 malloc_debug   pointer[20] = 0xaf (expected 0xef)\n";
-  expected_log += "6 malloc_debug   pointer[99] = 0x12 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[20] = 0xaf (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[99] = 0x12 (expected 0xef)\n";
   expected_log += DIVIDER;
   expected_log += DIVIDER;
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointers[3]);
-  expected_log += "6 malloc_debug   pointer[3] = 0x34 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[3] = 0x34 (expected 0xef)\n";
   expected_log += DIVIDER;
   expected_log += DIVIDER;
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointer1_large);
-  expected_log += "6 malloc_debug   pointer[4095] = 0x90 (expected 0xef)\n";
-  expected_log += "6 malloc_debug   pointer[4100] = 0x56 (expected 0xef)\n";
-  expected_log += "6 malloc_debug   pointer[8191] = 0x89 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[4095] = 0x90 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[4100] = 0x56 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[8191] = 0x89 (expected 0xef)\n";
   expected_log += DIVIDER;
   expected_log += DIVIDER;
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointer2_large);
-  expected_log += "6 malloc_debug   pointer[8200] = 0x78 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[8200] = 0x78 (expected 0xef)\n";
   expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
@@ -797,7 +797,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_finalize) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointer);
-  expected_log += "6 malloc_debug   pointer[56] = 0x91 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[56] = 0x91 (expected 0xef)\n";
   expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
@@ -824,7 +824,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_with_backtrace) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log(DIVIDER);
   expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n", pointer);
-  expected_log += "6 malloc_debug   pointer[101] = 0xab (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[101] = 0xab (expected 0xef)\n";
   expected_log += "6 malloc_debug Backtrace at time of free:\n";
   expected_log += "6 malloc_debug   #00 pc 0xfa\n";
   expected_log += "6 malloc_debug   #01 pc 0xeb\n";
