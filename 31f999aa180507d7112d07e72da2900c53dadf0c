@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_d8888aa9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2376,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-21T22:20:50Z",
+      "side": 1,
+      "message": "This comment is a bit confusing. I figured out that you mean that it\u0027s possible for sonames to contain a single element that is empty, and that means that the list is empty. I\u0027m not sure if there is a way to reword this though.",
+      "range": {
+        "startLine": 2376,
+        "startChar": 5,
+        "endLine": 2376,
+        "endChar": 63
+      },
+      "revId": "31f999aa180507d7112d07e72da2900c53dadf0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_98460225",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2377,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-21T22:20:50Z",
+      "side": 1,
+      "message": "Is it ever possible to have the first soname as an empty value, but that there are other non-empty entries?",
+      "range": {
+        "startLine": 2377,
+        "startChar": 25,
+        "endLine": 2377,
+        "endChar": 43
+      },
+      "revId": "31f999aa180507d7112d07e72da2900c53dadf0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
