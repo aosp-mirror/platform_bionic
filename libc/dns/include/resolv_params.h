@@ -20,11 +20,11 @@
 #include <stdint.h>
 
 /* Hard-coded defines */
-#define	MAXNS			3	/* max # name servers we'll track */
+#define	MAXNS			4	/* max # name servers we'll track */
 #define	MAXNSSAMPLES		64	/* max # samples to store per server */
 
 /* Defaults used for initializing __res_params */
-#define SUCCESS_THRESHOLD       75      /* if successes * 100 / total_samples is less than
+#define SUCCESS_THRESHOLD	75	/* if successes * 100 / total_samples is less than
 					 * this value, the server is considered failing
 					 */
 #define NSSAMPLE_VALIDITY	1800	/* Sample validity in seconds.
