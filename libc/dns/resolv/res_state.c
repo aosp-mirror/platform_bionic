@@ -128,7 +128,7 @@ _res_thread_get(void)
             rt->_pi = (struct prop_info*) __system_property_find("net.change");
             if (rt->_pi == NULL) {
                 /* Still nothing, return current state */
-                D("%s: exiting for tid=%d rt=%d since system property not found",
+                D("%s: exiting for tid=%d rt=%p since system property not found",
                   __FUNCTION__, gettid(), rt);
                 return rt;
             }

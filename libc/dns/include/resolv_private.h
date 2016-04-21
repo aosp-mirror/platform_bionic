@@ -140,7 +140,6 @@ struct res_sym {
  * Global defines and variables for resolver stub.
  */
 #define	MAXDFLSRCH		3	/* # default domain levels to try */
-#define	MAXDNSRCH		6	/* max # domains in search path */
 #define	LOCALDOMAINPARTS	2	/* min levels in name that is "local" */
 
 #define	RES_TIMEOUT		5	/* min. seconds between retries */
