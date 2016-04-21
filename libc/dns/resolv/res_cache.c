@@ -27,6 +27,7 @@
  */
 
 #include "resolv_cache.h"
+
 #include <resolv.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -1238,8 +1239,7 @@ struct resolv_cache_info {
     int                         revision_id; // # times the nameservers have been replaced
     struct __res_params         params;
     struct __res_stats          nsstats[MAXNS];
-    // TODO: replace with char* defdname[MAXDNSRCH]
-    char                        defdname[256];
+    char                        defdname[MAXDNSRCHPATH];
     int                         dnsrch_offset[MAXDNSRCH+1];  // offsets into defdname
 };
 
@@ -2180,6 +2180,68 @@ _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info) {
             cache_info->nsstats->sample_count = cache_info->nsstats->sample_next = 0;
         }
     }
+}
+
+int
+android_net_res_stats_get_info_for_net(unsigned netid, int* nscount,
+        struct sockaddr_storage servers[MAXNS], int* dcount, char domains[MAXDNSRCH][MAXDNSRCHPATH],
+        struct __res_params* params, struct __res_stats stats[MAXNS]) {
+    int revision_id = -1;
+    pthread_mutex_lock(&_res_cache_list_lock);
+
+    struct resolv_cache_info* info = _find_cache_info_locked(netid);
+    if (info) {
+        if (info->nscount > MAXNS) {
+            pthread_mutex_unlock(&_res_cache_list_lock);
+            XLOG("%s: nscount %d > MAXNS %d", __FUNCTION__, info->nscount, MAXNS);
+            errno = EFAULT;
+            return -1;
+        }
+        int i;
+        for (i = 0; i < info->nscount; i++) {
+            // Verify that the following assumptions are held, failure indicates corruption:
+            //  - getaddrinfo() may never return a sockaddr > sockaddr_storage
+            //  - all addresses are valid
+            //  - there is only one address per addrinfo thanks to numeric resolution
+            int addrlen = info->nsaddrinfo[i]->ai_addrlen;
+            if (addrlen < (int) sizeof(struct sockaddr) ||
+                    addrlen > (int) sizeof(servers[0])) {
+                pthread_mutex_unlock(&_res_cache_list_lock);
+                XLOG("%s: nsaddrinfo[%d].ai_addrlen == %d", __FUNCTION__, i, addrlen);
+                errno = EMSGSIZE;
+                return -1;
+            }
+            if (info->nsaddrinfo[i]->ai_addr == NULL) {
+                pthread_mutex_unlock(&_res_cache_list_lock);
+                XLOG("%s: nsaddrinfo[%d].ai_addr == NULL", __FUNCTION__, i);
+                errno = ENOENT;
+                return -1;
+            }
+            if (info->nsaddrinfo[i]->ai_next != NULL) {
+                pthread_mutex_unlock(&_res_cache_list_lock);
+                XLOG("%s: nsaddrinfo[%d].ai_next != NULL", __FUNCTION__, i);
+                errno = ENOTUNIQ;
+                return -1;
+            }
+        }
+        *nscount = info->nscount;
+        for (i = 0; i < info->nscount; i++) {
+            memcpy(&servers[i], info->nsaddrinfo[i]->ai_addr, info->nsaddrinfo[i]->ai_addrlen);
+            stats[i] = info->nsstats[i];
+        }
+        for (i = 0; i < MAXDNSRCH; i++) {
+            if (info->dnsrch_offset[i] == -1) {
+                break;
+            }
+            strlcpy(domains[i], info->defdname + info->dnsrch_offset[i], MAXDNSRCHPATH);
+        }
+        *dcount = i;
+        *params = info->params;
+        revision_id = info->revision_id;
+    }
+
+    pthread_mutex_unlock(&_res_cache_list_lock);
+    return revision_id;
 }
 
 int
