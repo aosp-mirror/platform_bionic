@@ -2467,9 +2467,13 @@ int do_dlclose(void* handle) {
 }
 
 bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path) {
-  CHECK(public_ns_sonames != nullptr);
   if (g_public_namespace_initialized) {
     DL_ERR("public namespace has already been initialized.");
+    return false;
+  }
+
+  if (public_ns_sonames == nullptr || public_ns_sonames[0] == '\0') {
+    DL_ERR("error initializing public namespace: the list of public libraries is empty.");
     return false;
   }
 
