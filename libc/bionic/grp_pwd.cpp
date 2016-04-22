@@ -54,6 +54,8 @@ struct group_state_t {
   group group_;
   char* group_members_[2];
   char group_name_buffer_[32];
+  // Must be last so init_group_state can run a simple memset for the above
+  ssize_t getgrent_idx;
 };
 
 struct passwd_state_t {
@@ -61,13 +63,14 @@ struct passwd_state_t {
   char name_buffer_[32];
   char dir_buffer_[32];
   char sh_buffer_[32];
+  ssize_t getpwent_idx;
 };
 
 static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
 static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
 
 static void init_group_state(group_state_t* state) {
-  memset(state, 0, sizeof(group_state_t));
+  memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_idx));
   state->group_.gr_mem = state->group_members_;
 }
 
@@ -467,6 +470,60 @@ char* getlogin() { // NOLINT: implementing bad function.
   return (pw != NULL) ? pw->pw_name : NULL;
 }
 
+void setpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state) {
+    state->getpwent_idx = 0;
+  }
+}
+
+void endpwent() {
+  setpwent();
+}
+
+passwd* getpwent() {
+  passwd_state_t* state = g_passwd_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if (state->getpwent_idx < 0) {
+    return NULL;
+  }
+
+  size_t start = 0;
+  ssize_t end = android_id_count;
+  if (state->getpwent_idx < end) {
+    return android_iinfo_to_passwd(state, android_ids + state->getpwent_idx++);
+  }
+
+  start = end;
+  end += AID_OEM_RESERVED_END - AID_OEM_RESERVED_START + 1;
+
+  if (state->getpwent_idx < end) {
+    return oem_id_to_passwd(
+        state->getpwent_idx++ - start + AID_OEM_RESERVED_START, state);
+  }
+
+  start = end;
+  end += AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1;
+
+  if (state->getpwent_idx < end) {
+    return oem_id_to_passwd(
+        state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
+  }
+
+  start = end;
+  end += AID_USER - AID_APP; // Do not expose higher users
+
+  if (state->getpwent_idx < end) {
+    return app_id_to_passwd(state->getpwent_idx++ - start + AID_APP, state);
+  }
+
+  // We are not reporting u1_a* and higher or we will be here forever
+  state->getpwent_idx = -1;
+  return NULL;
+}
+
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   group* grp = android_id_to_group(state, gid);
   if (grp != NULL) {
@@ -536,4 +593,62 @@ int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct gr
 int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
                struct group **result) {
   return getgroup_r(true, name, 0, grp, buf, buflen, result);
+}
+
+void setgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state) {
+    state->getgrent_idx = 0;
+  }
+}
+
+void endgrent() {
+  setgrent();
+}
+
+group* getgrent() {
+  group_state_t* state = g_group_tls_buffer.get();
+  if (state == NULL) {
+    return NULL;
+  }
+  if (state->getgrent_idx < 0) {
+    return NULL;
+  }
+
+  size_t start = 0;
+  ssize_t end = android_id_count;
+  if (state->getgrent_idx < end) {
+    init_group_state(state);
+    return android_iinfo_to_group(state, android_ids + state->getgrent_idx++);
+  }
+
+  start = end;
+  end += AID_OEM_RESERVED_END - AID_OEM_RESERVED_START + 1;
+
+  if (state->getgrent_idx < end) {
+    init_group_state(state);
+    return oem_id_to_group(
+        state->getgrent_idx++ - start + AID_OEM_RESERVED_START, state);
+  }
+
+  start = end;
+  end += AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1;
+
+  if (state->getgrent_idx < end) {
+    init_group_state(state);
+    return oem_id_to_group(
+        state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, state);
+  }
+
+  start = end;
+  end += AID_USER - AID_APP; // Do not expose higher groups
+
+  if (state->getgrent_idx < end) {
+    init_group_state(state);
+    return app_id_to_group(state->getgrent_idx++ - start + AID_APP, state);
+  }
+
+  // We are not reporting u1_a* and higher or we will be here forever
+  state->getgrent_idx = -1;
+  return NULL;
 }

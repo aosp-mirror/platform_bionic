@@ -26,6 +26,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <bitset>
+
+#include <private/android_filesystem_config.h>
+
 enum uid_type_t {
   TYPE_SYSTEM,
   TYPE_APP
@@ -177,6 +181,46 @@ TEST(getpwnam, app_id_u1_a40000) {
 
 TEST(getpwnam, app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
+}
+
+TEST(getpwent, iterate) {
+  passwd* pwd;
+  std::bitset<10000> exist;
+  bool application = false;
+
+  exist.reset();
+
+  setpwent();
+  while ((pwd = getpwent()) != NULL) {
+    ASSERT_TRUE(NULL != pwd->pw_name);
+    ASSERT_EQ(pwd->pw_gid, pwd->pw_uid);
+    ASSERT_EQ(NULL, pwd->pw_passwd);
+#ifdef __LP64__
+    ASSERT_TRUE(NULL == pwd->pw_gecos);
+#endif
+    ASSERT_TRUE(NULL != pwd->pw_shell);
+    if (pwd->pw_uid >= exist.size()) {
+      ASSERT_STREQ("/data", pwd->pw_dir);
+      application = true;
+    } else {
+      ASSERT_STREQ("/", pwd->pw_dir);
+      ASSERT_FALSE(exist[pwd->pw_uid]);
+      exist[pwd->pw_uid] = true;
+    }
+  }
+  endpwent();
+
+  // Required content
+  for (size_t n = 0; n < android_id_count; ++n) {
+    ASSERT_TRUE(exist[android_ids[n].aid]);
+  }
+  for (size_t n = 2900; n < 2999; ++n) {
+    ASSERT_TRUE(exist[n]);
+  }
+  for (size_t n = 5000; n < 5999; ++n) {
+    ASSERT_TRUE(exist[n]);
+  }
+  ASSERT_TRUE(application);
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
@@ -372,4 +416,39 @@ TEST(getgrnam_r, large_enough_suggested_buffer_size) {
   group* grp;
   ASSERT_EQ(0, getgrnam_r("root", &grp_storage, buf, size, &grp));
   check_group(grp, "root", 0);
+}
+
+TEST(getgrent, iterate) {
+  group* grp;
+  std::bitset<10000> exist;
+  bool application = false;
+
+  exist.reset();
+
+  setgrent();
+  while ((grp = getgrent()) != NULL) {
+    ASSERT_TRUE(grp->gr_name != NULL);
+    ASSERT_TRUE(grp->gr_mem != NULL);
+    ASSERT_STREQ(grp->gr_name, grp->gr_mem[0]);
+    ASSERT_TRUE(grp->gr_mem[1] == NULL);
+    if (grp->gr_gid >= exist.size()) {
+      application = true;
+    } else {
+      ASSERT_FALSE(exist[grp->gr_gid]);
+      exist[grp->gr_gid] = true;
+    }
+  }
+  endgrent();
+
+  // Required content
+  for (size_t n = 0; n < android_id_count; ++n) {
+    ASSERT_TRUE(exist[android_ids[n].aid]);
+  }
+  for (size_t n = 2900; n < 2999; ++n) {
+    ASSERT_TRUE(exist[n]);
+  }
+  for (size_t n = 5000; n < 5999; ++n) {
+    ASSERT_TRUE(exist[n]);
+  }
+  ASSERT_TRUE(application);
 }

@@ -1,6 +1,6 @@
 /*-
  * Copyright (c) 1989, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *    The Regents of the University of California.  All rights reserved.
  * (c) UNIX System Laboratories, Inc.
  * All or some portions of this file are derived from material licensed
  * to the University of California by American Telephone and Telegraph
@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)pwd.h	8.2 (Berkeley) 1/21/94
+ *    @(#)pwd.h  8.2 (Berkeley) 1/21/94
  */
 
 /*-
@@ -118,6 +118,10 @@ __BEGIN_DECLS
 
 struct passwd* getpwnam(const char*);
 struct passwd* getpwuid(uid_t);
+/* Android has thousands and thousands of ids to iterate through */
+struct passwd* getpwent(void) __attribute__((warning("getpwent is inefficient on Android")));
+void setpwent(void);
+void endpwent(void);
 
 int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**);
 int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**);

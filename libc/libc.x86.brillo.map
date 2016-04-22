@@ -1258,12 +1258,18 @@ LIBC_O {
     catclose;
     catgets;
     catopen;
+    endgrent;
+    endpwent;
     getdomainname;
+    getgrent;
+    getpwent;
     getsubopt;
     hasmntopt;
     pthread_getname_np;
     quotactl;
     setdomainname;
+    setgrent;
+    setpwent;
     sighold;
     sigignore;
     sigpause;
