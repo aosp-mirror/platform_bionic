@@ -1,9 +1,9 @@
-/*	$OpenBSD: grp.h,v 1.8 2005/12/13 00:35:22 millert Exp $	*/
-/*	$NetBSD: grp.h,v 1.7 1995/04/29 05:30:40 cgd Exp $	*/
+/* $OpenBSD: grp.h,v 1.8 2005/12/13 00:35:22 millert Exp $ */
+/* $NetBSD: grp.h,v 1.7 1995/04/29 05:30:40 cgd Exp $ */
 
 /*-
  * Copyright (c) 1989, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *    The Regents of the University of California.  All rights reserved.
  * (c) UNIX System Laboratories, Inc.
  * All or some portions of this file are derived from material licensed
  * to the University of California by American Telephone and Telegraph
@@ -34,39 +34,37 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)grp.h	8.2 (Berkeley) 1/21/94
+ *    @(#)grp.h  8.2 (Berkeley) 1/21/94
  */
 
 #ifndef _GRP_H_
-#define	_GRP_H_
+#define _GRP_H_
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
 struct group {
-	char	*gr_name;		/* group name */
-	char	*gr_passwd;		/* group password */
-	gid_t	gr_gid;			/* group id */
-	char	**gr_mem;		/* group members */
+    char* gr_name; /* group name */
+    char* gr_passwd; /* group password */
+    gid_t gr_gid; /* group id */
+    char** gr_mem; /* group members */
 };
 
 __BEGIN_DECLS
-struct group	*getgrgid(gid_t);
-struct group	*getgrnam(const char *);
+struct group* getgrgid(gid_t);
+struct group* getgrnam(const char *);
 #if __POSIX_VISIBLE >= 200112 || __XPG_VISIBLE
-struct group	*getgrent(void)  __attribute__((deprecated("getgrent is meaningless on Android")));
-void setgrent(void) __attribute__((deprecated("setgrent is meaningless on Android")));
-void endgrent(void) __attribute__((deprecated("endgrent is meaningless on Android")));
-int		 getgrgid_r(gid_t, struct group *, char *,
-		    size_t, struct group **);
-int		 getgrnam_r(const char *, struct group *, char *,
-		    size_t, struct group **);
+/* Android has thousands and thousands of ids to iterate through */
+struct group* getgrent(void) __attribute__((warning("getgrent is inefficient on Android")));
+void setgrent(void);
+void endgrent(void);
+int getgrgid_r(gid_t, struct group *, char *, size_t, struct group **);
+int getgrnam_r(const char *, struct group *, char *, size_t, struct group **);
 #endif
 
-int   getgrouplist (const char *user, gid_t group,
-                  gid_t *groups, int *ngroups);
+int getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups);
 
-int   initgroups (const char *user, gid_t group);
+int initgroups (const char *user, gid_t group);
 
 __END_DECLS
 

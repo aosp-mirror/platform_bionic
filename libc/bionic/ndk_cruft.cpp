@@ -366,10 +366,6 @@ long __set_errno(int n) {
   return __set_errno_internal(n);
 }
 
-// This was never implemented in bionic, only needed for ABI compatibility with the NDK.
-// In the M time frame, over 1000 apps have a reference to this!
-void endpwent() { }
-
 // Since dlmalloc_inspect_all and dlmalloc_trim are exported for systems
 // that use dlmalloc, be consistent and export them everywhere.
 void dlmalloc_inspect_all(void (*)(void*, void*, size_t, void*), void*) {
