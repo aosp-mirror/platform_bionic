@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_9981e17b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-22T17:57:01Z",
+      "side": 1,
+      "message": "Normally I do local dummy functions, but I like this approach.",
+      "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_598e39b3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-22T17:57:01Z",
+      "side": 1,
+      "message": "What if calloc fails? NULL dref on next-\u003e?",
+      "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_b99f85d6",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-22T17:57:01Z",
+      "side": 1,
+      "message": "I see these blocks copied and pasted, wouldn\u0027t it be best to refactor to a common function? or is their some subtle difference between the blocks I am not picking up.",
+      "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
