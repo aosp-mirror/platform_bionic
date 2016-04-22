@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "c8e03c3f_f9c3cdaa",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T18:09:42Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "c8e03c3f_598e39b3",
+      "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8e03c3f_b99f85d6",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2016-04-22T17:57:01Z",
       "side": 1,
       "message": "I see these blocks copied and pasted, wouldn\u0027t it be best to refactor to a common function? or is their some subtle difference between the blocks I am not picking up.",
+      "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_195151b3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T18:09:42Z",
+      "side": 1,
+      "message": "The subtlety is state in one case references group*, and in the other passwd* and the call to packagelist_parser_to_group.\n\nA common function would inline, but it started looking ugly that I had to pass state (as a void*, with all the ugly C++ casts), \u0026state-\u003ehead, and a function (also function type cast to handle the state argument differences).\n\nI guess I could take:\n\nif (packagelistparser_prep(\u0026state-\u003ehead, gid, NULL)) {\n    if (packagelist_parse(aid_callback_aid, \u0026state-\u003ehead)) {\n\nand free_packagelistparser_state cleanup and merge those pieces into packagelistparser_prep",
+      "parentUuid": "c8e03c3f_b99f85d6",
       "revId": "faa53cc45464155c69b2ed35a914680b8ad83988",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
