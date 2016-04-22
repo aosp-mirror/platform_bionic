@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_3650a2ab",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "why do these need to be different?",
+      "range": {
+        "startLine": 473,
+        "startChar": 0,
+        "endLine": 485,
+        "endChar": 1
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_d65fb6b6",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "is this what glibc does? i don\u0027t think it\u0027s what POSIX intended. i think setpwent \u003d\u003d endpwent, and getpwent \"opens\" if necessary, regardless of whether you\u0027ve already cycled through or not.",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 494,
+        "endChar": 3
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_76eb4a04",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "is this still true?",
+      "range": {
+        "startLine": 57,
+        "startChar": 29,
+        "endLine": 57,
+        "endChar": 91
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_b65cb2c3",
+        "filename": "libc/include/grp.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "if you\u0027re going to remove tabs, remove all the ascii art. otherwise leave the tabs alone.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 14
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_96eece12",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "is this still true?",
+      "range": {
+        "startLine": 121,
+        "startChar": 30,
+        "endLine": 121,
+        "endChar": 92
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_560446b2",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "who is this comment useful for?",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 64
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_b6f5d2dd",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "you just asserted this.",
+      "range": {
+        "startLine": 42,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 3
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_561d66fa",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "fails on glibc.",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 50
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_f6275a4a",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "// ... .",
+      "range": {
+        "startLine": 216,
+        "startChar": 2,
+        "endLine": 216,
+        "endChar": 4
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_3622623b",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T16:37:43Z",
+      "side": 1,
+      "message": "you just asserted this.",
+      "range": {
+        "startLine": 231,
+        "startChar": 2,
+        "endLine": 233,
+        "endChar": 3
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
