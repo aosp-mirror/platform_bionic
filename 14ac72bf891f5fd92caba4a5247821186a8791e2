@@ -307,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "c8e03c3f_79eb3d04",
+        "filename": "libc/include/pwd.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-22T18:14:05Z",
+      "side": 1,
+      "message": "yeah, since you\u0027re replacing the dummy implementation with a real one, i think the only potentially useful part is the note that it used to be a dummy. but since the other functions were missing, i don\u0027t think that matters much anyway --- how would you be able to tell it was a no-op?",
+      "parentUuid": "c8e03c3f_76786afd",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 64
+      },
+      "revId": "14ac72bf891f5fd92caba4a5247821186a8791e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8e03c3f_b6f5d2dd",
         "filename": "tests/grp_pwd_test.cpp",
         "patchSetId": 5
