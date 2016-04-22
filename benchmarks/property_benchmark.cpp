@@ -36,7 +36,7 @@ extern void* __system_property_area__;
     Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)
 
 struct LocalPropertyTestState {
-  LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
+  explicit LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
     static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.";
 
     const char* android_data = getenv("ANDROID_DATA");
