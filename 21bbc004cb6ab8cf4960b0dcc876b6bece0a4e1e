@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_7f483dac",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T20:32:36Z",
+      "side": 1,
+      "message": "return NULL",
+      "range": {
+        "startLine": 557,
+        "startChar": 11,
+        "endLine": 557,
+        "endChar": 15
+      },
+      "revId": "21bbc004cb6ab8cf4960b0dcc876b6bece0a4e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_9f4f01b1",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T20:32:36Z",
+      "side": 1,
+      "message": "backwards after rewrite :-(",
+      "range": {
+        "startLine": 560,
+        "startChar": 6,
+        "endLine": 560,
+        "endChar": 54
+      },
+      "revId": "21bbc004cb6ab8cf4960b0dcc876b6bece0a4e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_3f17d58e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T20:32:36Z",
+      "side": 1,
+      "message": "we should do app_id_from_name first before hitting packagelistparser for efficiency.",
+      "range": {
+        "startLine": 637,
+        "startChar": 26,
+        "endLine": 637,
+        "endChar": 56
+      },
+      "revId": "21bbc004cb6ab8cf4960b0dcc876b6bece0a4e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e03c3f_7f315d32",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-22T20:32:36Z",
+      "side": 1,
+      "message": "should call this first for match before falling into packagelistparser; we could search for by aid from packagelistparser to pull in details and get long name? (no, name in, name out equal?)",
+      "range": {
+        "startLine": 826,
+        "startChar": 25,
+        "endLine": 826,
+        "endChar": 53
+      },
+      "revId": "21bbc004cb6ab8cf4960b0dcc876b6bece0a4e1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
