@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <stddef.h> /* For size_t. */
+#include <stdint.h>
 
 __BEGIN_DECLS
 
