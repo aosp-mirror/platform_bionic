@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08933519_1122bca9",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-04-26T23:16:44Z",
+      "side": 1,
+      "message": "I think a blank line is needed between a header any code blocks (or lists, basically anything but plain text).",
+      "revId": "b212e8577b2d2e988e3ebe2e072653c6f2b5652e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08933519_911d6c66",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-04-26T23:16:44Z",
+      "side": 1,
+      "message": "Can also do (unindented):\n\n```bash\nadb shell stop\n...\n```\n\nand you\u0027ll get syntax highlighting. gitiles uses github flavored markdown: https://guides.github.com/features/mastering-markdown/",
+      "revId": "b212e8577b2d2e988e3ebe2e072653c6f2b5652e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
