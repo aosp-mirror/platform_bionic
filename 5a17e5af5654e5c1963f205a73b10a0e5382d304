@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_a26c2028",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2235,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-27T02:54:10Z",
+      "side": 1,
+      "message": "So is this code trying to be defensive in the face of an incorrect caller/setter? If that\u0027s the case, shouldn\u0027t it also check that the offset isn\u0027t too large?",
+      "range": {
+        "startLine": 2235,
+        "startChar": 86,
+        "endLine": 2235,
+        "endChar": 91
+      },
+      "revId": "5a17e5af5654e5c1963f205a73b10a0e5382d304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
