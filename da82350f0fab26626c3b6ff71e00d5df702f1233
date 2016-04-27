@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_1390bcfb",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "Optimization to keep from multiple writes to the same location(s).\n\nI expect ease of maintenance trumps complicated optimization.",
+      "parentUuid": "48d9ad3d_73e8288d",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_b3dab0f7",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-04-27T16:26:01Z",
       "side": 1,
       "message": "Would\u0027;t you want to run get_tokens() on this case?",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_73b6689c",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "We do, we fall through in these cases to line 425",
+      "parentUuid": "48d9ad3d_b3dab0f7",
       "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_b3af103b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "first two if\u0027s fall through to here.\n\nIn first case we fall through with a valid uid (which means state-\u003ename_buffer_ is a do not care) or we fall through with uid \u003d\u003d 0, and pass in a name to search for.\n\nGiven that this fragment confuses _anyone_ I either have to comment, or restructure so that it is intuitively obvious ...",
+      "parentUuid": "48d9ad3d_f34d18b6",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_53cc0446",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2016-04-27T16:26:01Z",
       "side": 1,
       "message": "I don\u0027t get the logic above, wouldn;t you only run get_tokens() if it is_oem_id()?",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_d3ac9448",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "we run get_tokens if uid is oem_id, or if uid \u003d\u003d 0 and we have a name to search for.\n\nget_tokens is common code that searches either for a matching uid, or a matching name.",
+      "parentUuid": "48d9ad3d_53cc0446",
       "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_d373b4d5",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "We have no intention of matching to these in get_token, so they need not be set prior. We set them to default values in 436+437, and here we override them _if_ get_tokens (I hate this name :-( ) finds a match.",
+      "parentUuid": "48d9ad3d_53f32483",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_f3fb5855",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_334a2074",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "get_tokens _sets_ gid if it finds a name match (it is passed by reference to get_tokens). This check is to ensure that get_tokens gave us something.",
+      "parentUuid": "48d9ad3d_f3fb5855",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_13f99c5d",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -115,6 +223,24 @@
       "writtenOn": "2016-04-27T16:26:01Z",
       "side": 1,
       "message": "unrelated whitespace change (nit). But does make its same as passwd version.",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_13551c0d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T16:46:08Z",
+      "side": 1,
+      "message": "Code clarity, breaking \u0027thought chunks\u0027 since these functions are now more complex. Not worthy of a comment, but worthy of isolation.",
+      "parentUuid": "48d9ad3d_13f99c5d",
       "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
