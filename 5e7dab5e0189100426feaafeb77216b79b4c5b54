@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_8e03c362",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-27T18:27:03Z",
+      "side": 1,
+      "message": "It\u0027s not acceptable to make libc depend on system core in this way.",
+      "range": {
+        "startLine": 612,
+        "startChar": 25,
+        "endLine": 612,
+        "endChar": 66
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_ce694b17",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-27T18:27:03Z",
+      "side": 1,
+      "message": "I think this is a really bad idea, we shouldn\u0027t have libc essentially allowing undefined reference to a couple of functions which might be present. I think it would be much better to simply implement all of this code in a separate file.\n\nIn fact, this feels like a possible security bug.",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
