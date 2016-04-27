@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_2e2c773a",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-27T19:29:39Z",
+      "side": 1,
+      "message": "The entirety of jemalloc is included in libc. It\u0027s only in a separate place because it is an external project. In fact, we could have moved this piece into external/jemalloc or created a small static library that only had this extra thing added but it\u0027s probably not worth the effort.\n\nIn the case below, you are taking part of the functionality of another library. The only real external library that is in libc is libjemalloc, and again that entire library is in libc.",
+      "parentUuid": "48d9ad3d_ae2407b7",
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_8e03c362",
         "filename": "libc/Android.mk",
         "patchSetId": 6
@@ -101,6 +119,30 @@
       "side": 1,
       "message": "Although that would be a cyclic dependency, perhaps dlopen and call it that way...",
       "parentUuid": "48d9ad3d_8e25839d",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_0eeed3fc",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-04-27T19:29:39Z",
+      "side": 1,
+      "message": "Under no circumstances will that be acceptable. If you need this functionality in libc (and I don\u0027t think anyone is against doing something like this in libc) you really need to have it implemented here.\n\nIf at all possible, do not copy paste it either, or pull in the whole library. Please try and do the minimum to implement the needed functionality. I would still recommend putting all of this in a different file since it seems logically different than the functionality in this file.",
+      "parentUuid": "48d9ad3d_2e5e37da",
       "range": {
         "startLine": 437,
         "startChar": 0,
