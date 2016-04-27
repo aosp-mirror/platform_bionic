@@ -218,6 +218,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_99a4eb68",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T20:05:47Z",
+      "side": 1,
+      "message": "I thought about that as well, perhaps abusing some of the passwd fields to get all the information present in packages.lst file. Although, we should likely build a cache for things like sdcardd.\n\nTo actually deprecate we would have to map all of these fields into the other structs:\n\nstruct pkg_info \nchar *name;\nuid_t uid;\nbool debuggable;\nchar *data_dir;\nchar *seinfo;\ngid_list gids;\n\nPossible Map:\n\nstruct passwd          struct pkg_info   \nchar   *pw_name;       char *name\nchar   *pw_passwd;     \nuid_t   pw_uid;        uid_t uid\ngid_t   pw_gid;        \nchar   *pw_gecos;      bool debuggable\nchar   *pw_dir;        data_dir\nchar   *pw_shell;      char *seinfo\n\nstruct group {\nchar   *gr_name;       char *name\nchar   *gr_passwd;     \ngid_t   gr_gid;        uid_t uid\nchar  **gr_mem;        gid_list\n\n\nThis approach also has the obvious drawbacks..",
+      "parentUuid": "48d9ad3d_b9f7ef9b",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
