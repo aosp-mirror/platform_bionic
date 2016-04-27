@@ -45,6 +45,54 @@
       "revId": "4d073c01ade0c59178d2a7580a4773dcd2ced702",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_c23be426",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-27T02:52:45Z",
+      "side": 1,
+      "message": "Done by adding a comment, as I am paranoid.",
+      "parentUuid": "48d9ad3d_82039c62",
+      "range": {
+        "startLine": 2234,
+        "startChar": 39,
+        "endLine": 2234,
+        "endChar": 42
+      },
+      "revId": "4d073c01ade0c59178d2a7580a4773dcd2ced702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_c22204f1",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-27T02:52:45Z",
+      "side": 1,
+      "message": "_resolv_set_nameservers_for_net() does use one const char* for all search domains concatenated together. So this can actually not happen, since white space is skipped.",
+      "parentUuid": "48d9ad3d_e2f1c8a6",
+      "range": {
+        "startLine": 2234,
+        "startChar": 46,
+        "endLine": 2234,
+        "endChar": 60
+      },
+      "revId": "4d073c01ade0c59178d2a7580a4773dcd2ced702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
