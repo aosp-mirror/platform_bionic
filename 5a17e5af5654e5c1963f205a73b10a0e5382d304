@@ -22,6 +22,30 @@
       "revId": "5a17e5af5654e5c1963f205a73b10a0e5382d304",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_82bb9c81",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2235,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-04-27T04:29:18Z",
+      "side": 1,
+      "message": "I am all for that, since we get it for free thanks to compiler-optimizations.",
+      "parentUuid": "48d9ad3d_a26c2028",
+      "range": {
+        "startLine": 2235,
+        "startChar": 86,
+        "endLine": 2235,
+        "endChar": 91
+      },
+      "revId": "5a17e5af5654e5c1963f205a73b10a0e5382d304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
