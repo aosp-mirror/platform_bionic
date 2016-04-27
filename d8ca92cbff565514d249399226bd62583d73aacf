@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_332b00dd",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-27T15:54:43Z",
+      "side": 0,
+      "message": "lol. these are already in resolv_private.h where they should be!",
+      "revId": "d8ca92cbff565514d249399226bd62583d73aacf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
