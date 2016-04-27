@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "48d9ad3d_ae2407b7",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T18:53:24Z",
+      "side": 1,
+      "message": "@Christopher Ferris can you elaborate why this is ok?",
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_8e03c362",
         "filename": "libc/Android.mk",
         "patchSetId": 6
@@ -36,6 +53,30 @@
       "writtenOn": "2016-04-27T18:27:03Z",
       "side": 1,
       "message": "I think this is a really bad idea, we shouldn\u0027t have libc essentially allowing undefined reference to a couple of functions which might be present. I think it would be much better to simply implement all of this code in a separate file.\n\nIn fact, this feels like a possible security bug.",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_8e25839d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T18:53:24Z",
+      "side": 1,
+      "message": "That\u0027s a very valid point. I initially was more inclined to statically build libpackageparser and link it via LOCAL_WHOLE_STATIC_LIBRARIES similar to jemalloc.",
+      "parentUuid": "48d9ad3d_ce694b17",
       "range": {
         "startLine": 437,
         "startChar": 0,
