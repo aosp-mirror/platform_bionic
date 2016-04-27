@@ -86,6 +86,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_2e5e37da",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T19:12:29Z",
+      "side": 1,
+      "message": "Although that would be a cyclic dependency, perhaps dlopen and call it that way...",
+      "parentUuid": "48d9ad3d_8e25839d",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
