@@ -152,6 +152,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_b9f7ef9b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-27T19:51:17Z",
+      "side": 1,
+      "message": "Will do, will regroup on this (this would be the fifth in a series of prototypes to try to accomplish this).\n\nMy expectation is once implemented here (in grp_pwd.cpp or companion elsewhere), we may consider deprecating libpackagelistparser.",
+      "parentUuid": "48d9ad3d_0eeed3fc",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
