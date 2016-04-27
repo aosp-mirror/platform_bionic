@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_73e8288d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "Why not just memset the whole array on entry into the routine and drop it from the error paths. You have ssize_t indicating error.",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_b3dab0f7",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "Would\u0027;t you want to run get_tokens() on this case?",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_f34d18b6",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "Isn\u0027t this just dead code below, how will it get past the else?",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_53cc0446",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "I don\u0027t get the logic above, wouldn;t you only run get_tokens() if it is_oem_id()?",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_53f32483",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "Its weird that name state-\u003ename_buffer_ goes to get_token() but these don\u0027t. Why not just pass state and have it fill in everything, or copy in everything outside of get_tokens() since the name applies retrieving not setting.",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_f3fb5855",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "Same things as above.",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_13f99c5d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T16:26:01Z",
+      "side": 1,
+      "message": "unrelated whitespace change (nit). But does make its same as passwd version.",
+      "revId": "da82350f0fab26626c3b6ff71e00d5df702f1233",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
