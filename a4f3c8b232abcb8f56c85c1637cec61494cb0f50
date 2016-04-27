@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_3304e06d",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-27T15:52:10Z",
+      "side": 1,
+      "message": "i actually have a patch for this somewhere. i\u0027ll bump this to the top of my list. (i got bogged down when i noticed that we still have mistakes about which wchar functions should be here and which should be in wchar.h and which should be in wctype.h.)",
+      "revId": "a4f3c8b232abcb8f56c85c1637cec61494cb0f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_9303ec62",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-27T15:52:10Z",
+      "side": 1,
+      "message": "(these, for example, should be in wctype.h iirc.)",
+      "revId": "a4f3c8b232abcb8f56c85c1637cec61494cb0f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
