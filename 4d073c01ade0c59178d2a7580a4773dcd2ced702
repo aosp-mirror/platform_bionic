@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d9ad3d_82039c62",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-27T02:41:44Z",
+      "side": 1,
+      "message": "Should this be \"\u003d\u003d -1\" instead of \"\u003c 0\"? Obviously \"\u003c 0\" is safer, but then someone looking at this code might think that \u003c 0 is a possible/expected value, when actually this value is already checked and sanitized and can only either be -1 or a value less than the maximum search path length.",
+      "range": {
+        "startLine": 2234,
+        "startChar": 39,
+        "endLine": 2234,
+        "endChar": 42
+      },
+      "revId": "4d073c01ade0c59178d2a7580a4773dcd2ced702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_e2f1c8a6",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-04-27T02:41:44Z",
+      "side": 1,
+      "message": "Does the code that sets the domains also stop at empty domains? In other words, if someone tries to set a search path of { \"example.com\", \"\", \"subdomain.example.com\" }, what happens?\n\nIdeally this code, which gets the domain search path, would match the behaviour of the code that sets the domain path.",
+      "range": {
+        "startLine": 2234,
+        "startChar": 46,
+        "endLine": 2234,
+        "endChar": 60
+      },
+      "revId": "4d073c01ade0c59178d2a7580a4773dcd2ced702",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
