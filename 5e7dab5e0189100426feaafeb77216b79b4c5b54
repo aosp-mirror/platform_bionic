@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "48d9ad3d_39791fed",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T19:57:48Z",
+      "side": 1,
+      "message": "We actually use everything in libpackageparser. I would really like to avoid a copy + paste approach.\n\nPerhaps building out the .o file separately for libpackageparser and adding it into the recipe for this, this way theirs no possibility of a circular dependency.\n\nI was under the assumption that all built things implicitly get linked against Bionic libc and thus have a build dependency on bionic. Although, I looked at the recipe for jemalloc and I don\u0027t see it explicitly saying no libc. I guess I am unsure if Make would actually report a circular dependency there or not. \n\nI know ELF supports resolution of circular deps on symbols at link... At a glance, i didn\u0027t see any symbols used in jemalloc that are in bionic offhand. But I\u0027m still building so I only glanced at the source.",
+      "parentUuid": "48d9ad3d_2e2c773a",
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_8e03c362",
         "filename": "libc/Android.mk",
         "patchSetId": 6
@@ -166,6 +184,30 @@
       "writtenOn": "2016-04-27T19:51:17Z",
       "side": 1,
       "message": "Will do, will regroup on this (this would be the fifth in a series of prototypes to try to accomplish this).\n\nMy expectation is once implemented here (in grp_pwd.cpp or companion elsewhere), we may consider deprecating libpackagelistparser.",
+      "parentUuid": "48d9ad3d_0eeed3fc",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_3904bf6d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-27T19:57:48Z",
+      "side": 1,
+      "message": "The other lib is pretty small, we actual use it all.",
       "parentUuid": "48d9ad3d_0eeed3fc",
       "range": {
         "startLine": 437,
