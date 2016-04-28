@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08689501_cdf4c499",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-28T06:28:36Z",
+      "side": 1,
+      "message": "This broke mips builds.. I do not know why mips chose to hide this one",
+      "revId": "c194fd30c6fa3537d918939dd0a762786f21d764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08689501_0defdcc1",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-28T06:28:36Z",
+      "side": 1,
+      "message": "... but not this one for example",
+      "revId": "c194fd30c6fa3537d918939dd0a762786f21d764",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
