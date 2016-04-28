@@ -39,8 +39,6 @@
 __BEGIN_DECLS
 
 size_t __fbufsize(FILE*);
-int __freading(FILE*);
-int __fwriting(FILE*);
 int __freadable(FILE*);
 int __fwritable(FILE*);
 int __flbf(FILE*);

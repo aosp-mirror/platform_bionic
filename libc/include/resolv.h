@@ -39,11 +39,6 @@
 __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
-struct res_state;
-
-extern struct __res_state *__res_state(void);
-#define _res (*__res_state())
-
 #define b64_ntop __b64_ntop
 #define b64_pton __b64_pton
 extern int b64_ntop(u_char const*, size_t, char*, size_t);
