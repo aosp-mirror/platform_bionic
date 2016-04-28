@@ -214,6 +214,7 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     "libsqlite.so",
     "libui.so",
     "libutils.so",
+    "libvorbisidec.so",
     nullptr
   };
 
