@@ -195,7 +195,6 @@ cc_library_static {
     cflags: [
         "-DANDROID_CHANGES",
         "-DINET6",
-        "-fvisibility=hidden",
         "-Wno-unused-parameter",
         "-include netbsd-compat.h",
     ],
