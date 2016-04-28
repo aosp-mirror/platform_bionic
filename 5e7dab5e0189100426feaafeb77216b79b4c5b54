@@ -284,6 +284,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08d5f532_4d48191e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-04-28T20:15:53Z",
+      "side": 1,
+      "message": "\u003e - Probably best to _move_ libpackagelistparser into bionic, and\n \u003e bionicize it, opting to make it a private entity though.\n\nSo its ok to have an exported private api out of bionic?\n\n \u003e - gid_list is an issue since it is a series of names, not numbers,\n \u003e so we are then saddled with a series of getgrgid calls while inside\n \u003e getgrgid ... not a fan of recursion within libc (even though most\n \u003e are guaranteed to hit the traditional android_ids[] list). \n\nYep, it is not ideal.\n\nWe\n \u003e probably can do this, restricting the supplemental gids we pick up\n \u003e to \u003cAID_APP. First entry of group list is the aid, followed by the\n \u003e gid_list.\n \u003e - pw-\u003egid \u003d uid\n \u003e - seinfo is not a shell, not touching that.\n \u003e - gecos field human readable name if !\u003d name. If we use debuggable\n \u003e that is a stretch too.\n\nOh yeah I know this is a nasty stretch, I wasn\u0027t aware it was ok to export a private api out of bionic, seems strange to me.\n\n\u003csnip\u003e\n\n \u003e 5) transition existing private users of libpackagelistparser to\n \u003e getpr*/getgr*\n\nMost folks wont be able to switch, they would need access to seinfo and debuggable. sdcardd iirc is an example of one that could switch, but libselinux, run-as def cannot. \n\n\u003csnip\u003e\nNow is a good time to go on vacation ;-}\nWhat beach are we heading to?",
+      "parentUuid": "48d9ad3d_940e7223",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
