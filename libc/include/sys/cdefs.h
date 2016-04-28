@@ -454,11 +454,13 @@
 #define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
 #define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
 #define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
+#define __UNAVAILABLE __attribute__((unavailable))
 #else
 #define __AVAILABILITY(...)
 #define __INTRODUCED_IN(api_level)
 #define __DEPRECATED_IN(api_level)
 #define __REMOVED_IN(api_level)
+#define __UNAVAILABLE __attribute__((__error__("unavailable")))
 #endif // __clang__
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5

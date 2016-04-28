@@ -163,7 +163,7 @@ extern const char* getprogname(void);
 extern void setprogname(const char*);
 
 /* make STLPort happy */
-extern int      mblen(const char *, size_t);
+extern int      mblen(const char *, size_t) __UNAVAILABLE;
 extern size_t   mbstowcs(wchar_t *, const char *, size_t);
 extern int      mbtowc(wchar_t *, const char *, size_t);
 
