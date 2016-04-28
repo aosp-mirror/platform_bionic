@@ -169,8 +169,8 @@ extern size_t wcslcat(wchar_t*, const wchar_t*, size_t);
 extern size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
 
 typedef void *wctrans_t;
-extern wint_t towctrans(wint_t, wctrans_t);
-extern wctrans_t wctrans(const char*);
+extern wint_t towctrans(wint_t, wctrans_t) __UNAVAILABLE;
+extern wctrans_t wctrans(const char*) __UNAVAILABLE;
 
 #if __POSIX_VISIBLE >= 200809
 FILE* open_wmemstream(wchar_t**, size_t*);
