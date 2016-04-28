@@ -589,11 +589,6 @@ libc_common_cflags := \
 
 use_clang := true
 
-# b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
-ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),mips mips64))
-  use_clang := false
-endif
-
 # Try to catch typical 32-bit assumptions that break with 64-bit pointers.
 libc_common_cflags += \
     -Werror=pointer-to-int-cast \
