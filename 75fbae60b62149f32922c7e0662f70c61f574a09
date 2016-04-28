@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08d5f532_b00eb6d3",
+        "filename": "libc/bionic/mblen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-28T21:57:33Z",
+      "side": 1,
+      "message": "(adios, gcc!)",
+      "revId": "75fbae60b62149f32922c7e0662f70c61f574a09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
