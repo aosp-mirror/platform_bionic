@@ -260,6 +260,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d9ad3d_940e7223",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-28T16:36:15Z",
+      "side": 1,
+      "message": "- Probably best to _move_ libpackagelistparser into bionic, and bionicize it, opting to make it a private entity though.\n- cache should be lockless and have a per-thread structure; can not share the cache between threads :-(. A cache may simplify rather than complicate though.\n- gid_list is an issue since it is a series of names, not numbers, so we are then saddled with a series of getgrgid calls while inside getgrgid ... not a fan of recursion within libc (even though most are guaranteed to hit the traditional android_ids[] list). We probably can do this, restricting the supplemental gids we pick up to \u003cAID_APP. First entry of group list is the aid, followed by the gid_list.\n- pw-\u003egid \u003d uid\n- seinfo is not a shell, not touching that.\n- gecos field human readable name if !\u003d name. If we use debuggable that is a stretch too.\n\nCL series will likely look like:\n1) bionicize(tm) libpackagelistparser into bionic\n2) transition existing users of the library to private bionic interface\n3) deprecate libpackagelistparser in system/core\n4) grp_pwd.cpp use libpackagelistparser as KISS as possible.\n5) transition existing private users of libpackagelistparser to getpr*/getgr*\n6) enhance grp_pwd.cpp to use a cache, deal with detected hotspots, and _maybe_ add multiple gr_mem support to be pedantically correct. (assumes no one is using gid_list)\n\nNow is a good time to go on vacation ;-}",
+      "parentUuid": "48d9ad3d_99a4eb68",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
