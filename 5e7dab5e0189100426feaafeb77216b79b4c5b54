@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "08689501_461d3256",
+        "filename": "libc/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-28T14:59:58Z",
+      "side": 1,
+      "message": "a *static* library has no dependencies in the ELF DT_NEEDED sense, just unresolved references. which, if you\u0027re linking into libc, will be resolved by it.",
+      "parentUuid": "48d9ad3d_39791fed",
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d9ad3d_8e03c362",
         "filename": "libc/Android.mk",
         "patchSetId": 6
