@@ -209,11 +209,14 @@ LEAF(__memset_chk,0)
 LEAF(__memset_chk)
 #endif
 	.set	noreorder
-  bgtu   a2, a3, __memset_chk_fail
-  la     t9, __memset_chk_fail
-	.set	reorder
-
-  // Fall through to memset...
+        sltu    t2, a3, a2
+        beq     t2, zero, memset
+        nop
+        .cpsetup t9, t8, __memset_chk
+        LA      t9, __memset_chk_fail
+        jr      t9
+        nop
+        .set	reorder
 END(__memset_chk)
 
 #ifdef __ANDROID__
