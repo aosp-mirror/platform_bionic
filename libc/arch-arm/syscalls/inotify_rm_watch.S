@@ -4,9 +4,11 @@
 
 ENTRY(inotify_rm_watch)
     mov     ip, r7
+    .cfi_register r7, ip
     ldr     r7, =__NR_inotify_rm_watch
     swi     #0
     mov     r7, ip
+    .cfi_restore r7
     cmn     r0, #(MAX_ERRNO + 1)
     bxls    lr
     neg     r0, r0
