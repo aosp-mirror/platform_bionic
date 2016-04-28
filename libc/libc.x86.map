@@ -623,10 +623,6 @@ LIBC {
     madvise;
     mallinfo;
     malloc;
-    malloc_backtrace;
-    malloc_disable;
-    malloc_enable;
-    malloc_iterate;
     malloc_info;
     malloc_usable_size;
     mbrlen;
@@ -1334,4 +1330,8 @@ LIBC_PLATFORM {
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
+    malloc_backtrace;
+    malloc_disable;
+    malloc_enable;
+    malloc_iterate;
 } LIBC_N;
