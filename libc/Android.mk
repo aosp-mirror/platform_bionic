@@ -750,7 +750,6 @@ LOCAL_CFLAGS += \
     $(libc_common_cflags) \
     -DANDROID_CHANGES \
     -DINET6 \
-    -fvisibility=hidden \
     -Wno-unused-parameter \
     -include netbsd-compat.h \
 
