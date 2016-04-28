@@ -133,6 +133,7 @@ libc_bionic_ndk_src_files := \
     bionic/lockf.cpp \
     bionic/lstat.cpp \
     bionic/malloc_info.cpp \
+    bionic/mblen.cpp \
     bionic/mbrtoc16.cpp \
     bionic/mbrtoc32.cpp \
     bionic/mbstate.cpp \

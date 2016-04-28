@@ -537,3 +537,26 @@ TEST(stdlib, getsubopt) {
 
   ASSERT_EQ(-1, getsubopt(&subopts, tokens, &value));
 }
+
+TEST(stdlib, mblen) {
+  // "If s is a null pointer, mblen() shall return a non-zero or 0 value, if character encodings,
+  // respectively, do or do not have state-dependent encodings." We're always UTF-8.
+  EXPECT_EQ(0, mblen(nullptr, 1));
+
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_ALL, "C.UTF-8"));
+
+  // 1-byte UTF-8.
+  EXPECT_EQ(1, mblen("abcdef", 6));
+  // 2-byte UTF-8.
+  EXPECT_EQ(2, mblen("\xc2\xa2" "cdef", 6));
+  // 3-byte UTF-8.
+  EXPECT_EQ(3, mblen("\xe2\x82\xac" "def", 6));
+  // 4-byte UTF-8.
+  EXPECT_EQ(4, mblen("\xf0\xa4\xad\xa2" "ef", 6));
+
+  // Illegal over-long sequence.
+  ASSERT_EQ(-1, mblen("\xf0\x82\x82\xac" "ef", 6));
+
+  // "mblen() shall ... return 0 (if s points to the null byte)".
+  EXPECT_EQ(0, mblen("", 1));
+}
