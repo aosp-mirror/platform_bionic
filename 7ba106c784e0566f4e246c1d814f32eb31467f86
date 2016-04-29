@@ -22,6 +22,30 @@
       "revId": "7ba106c784e0566f4e246c1d814f32eb31467f86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08d5f532_a110a699",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-29T04:50:24Z",
+      "side": 1,
+      "message": "not particularly. we\u0027d still need to check validity, so i don\u0027t think it helps towctrans. years of dealing with third-party apps makes me prefer opaque values.\n\n(these are possibly the most useless functions in POSIX\u0027s big bag of useless.)",
+      "parentUuid": "08d5f532_1600e299",
+      "range": {
+        "startLine": 115,
+        "startChar": 7,
+        "endLine": 115,
+        "endChar": 16
+      },
+      "revId": "7ba106c784e0566f4e246c1d814f32eb31467f86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
