@@ -35,27 +35,27 @@
 
 __BEGIN_DECLS
 
-int iswalnum_l(wint_t, locale_t);
-int iswalpha_l(wint_t, locale_t);
-int iswblank_l(wint_t, locale_t);
-int iswcntrl_l(wint_t, locale_t);
-int iswdigit_l(wint_t, locale_t);
-int iswgraph_l(wint_t, locale_t);
-int iswlower_l(wint_t, locale_t);
-int iswprint_l(wint_t, locale_t);
-int iswpunct_l(wint_t, locale_t);
-int iswspace_l(wint_t, locale_t);
-int iswupper_l(wint_t, locale_t);
-int iswxdigit_l(wint_t, locale_t);
+int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswcntrl_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswgraph_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswprint_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswpunct_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
+int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
 
-wint_t towlower_l(int, locale_t);
-wint_t towupper_l(int, locale_t);
+wint_t towlower_l(int, locale_t) __INTRODUCED_IN(21);
+wint_t towupper_l(int, locale_t) __INTRODUCED_IN(21);
 
-wint_t towctrans_l(wint_t, wctrans_t, locale_t);
-wctrans_t wctrans_l(const char*, locale_t);
+wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN(25);
+wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN(25);
 
-wctype_t wctype_l(const char*, locale_t);
-int iswctype_l(wint_t, wctype_t, locale_t);
+wctype_t wctype_l(const char*, locale_t) __INTRODUCED_IN(21);
+int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
 
 __END_DECLS
 

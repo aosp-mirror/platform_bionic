@@ -47,30 +47,30 @@ extern void*  memrchr(const void *, int, size_t) __purefunc;
 extern int    memcmp(const void *, const void *, size_t) __purefunc;
 extern void*  memcpy(void* __restrict, const void* __restrict, size_t);
 #if defined(__USE_GNU)
-extern void*  mempcpy(void* __restrict, const void* __restrict, size_t);
+extern void* mempcpy(void* __restrict, const void* __restrict, size_t) __INTRODUCED_IN(23);
 #endif
 extern void*  memmove(void *, const void *, size_t);
 extern void*  memset(void *, int, size_t);
 extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
 
 extern char*  strchr(const char *, int) __purefunc;
-extern char* __strchr_chk(const char *, int, size_t);
+extern char* __strchr_chk(const char*, int, size_t) __INTRODUCED_IN(21);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
 extern "C++" char* strchrnul(char*, int) __RENAME(strchrnul) __purefunc;
 extern "C++" const char* strchrnul(const char*, int) __RENAME(strchrnul) __purefunc;
 #else
-char* strchrnul(const char*, int) __purefunc;
+char* strchrnul(const char*, int) __purefunc __INTRODUCED_IN(24);
 #endif
 #endif
 
 extern char*  strrchr(const char *, int) __purefunc;
-extern char* __strrchr_chk(const char *, int, size_t);
+extern char* __strrchr_chk(const char*, int, size_t) __INTRODUCED_IN(21);
 
 extern size_t strlen(const char *) __purefunc;
-extern size_t __strlen_chk(const char *, size_t);
+extern size_t __strlen_chk(const char*, size_t) __INTRODUCED_IN(21);
 extern int    strcmp(const char *, const char *) __purefunc;
-extern char*  stpcpy(char* __restrict, const char* __restrict);
+extern char* stpcpy(char* __restrict, const char* __restrict) __INTRODUCED_IN(21);
 extern char*  strcpy(char* __restrict, const char* __restrict);
 extern char*  strcat(char* __restrict, const char* __restrict);
 
@@ -82,9 +82,9 @@ extern char*  strtok(char* __restrict, const char* __restrict);
 extern char*  strtok_r(char* __restrict, const char* __restrict, char** __restrict);
 
 extern char* strerror(int);
-extern char* strerror_l(int, locale_t);
+extern char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
 #if defined(__USE_GNU)
-extern char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r);
+extern char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
 extern int strerror_r(int, char*, size_t);
 #endif
@@ -93,7 +93,7 @@ extern size_t strnlen(const char *, size_t) __purefunc;
 extern char*  strncat(char* __restrict, const char* __restrict, size_t);
 extern char*  strndup(const char *, size_t);
 extern int    strncmp(const char *, const char *, size_t) __purefunc;
-extern char*  stpncpy(char* __restrict, const char* __restrict, size_t);
+extern char* stpncpy(char* __restrict, const char* __restrict, size_t) __INTRODUCED_IN(21);
 extern char*  strncpy(char* __restrict, const char* __restrict, size_t);
 
 extern size_t strlcat(char* __restrict, const char* __restrict, size_t);
@@ -109,8 +109,9 @@ extern char*  strsignal(int  sig);
 extern int    strcoll(const char *, const char *) __purefunc;
 extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
 
-extern int    strcoll_l(const char *, const char *, locale_t) __purefunc;
-extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale_t);
+extern int strcoll_l(const char*, const char*, locale_t) __purefunc __INTRODUCED_IN(21);
+extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale_t)
+  __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU) && !defined(basename)
 /*
@@ -122,23 +123,26 @@ extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale
 extern "C++" char* basename(char*) __RENAME(__gnu_basename) __nonnull((1));
 extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
 #else
-extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1)) __INTRODUCED_IN(23);
 #endif
 #endif
 
-extern void* __memchr_chk(const void*, int, size_t, size_t);
+extern void* __memchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__memchr_buf_size_error, "memchr called with size bigger than buffer");
 
-extern void* __memrchr_chk(const void*, int, size_t, size_t);
+extern void* __memrchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__memrchr_buf_size_error, "memrchr called with size bigger than buffer");
 extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 
-extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
-extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t);
+extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t)
+  __INTRODUCED_IN(21);
+extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t)
+  __INTRODUCED_IN(21);
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
-extern size_t __strlcpy_chk(char *, const char *, size_t, size_t);
+extern size_t __strlcpy_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(21);
 extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcat);
-extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t);
+extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t)
+  __INTRODUCED_IN(21);
 
 #if defined(__BIONIC_FORTIFY)
 

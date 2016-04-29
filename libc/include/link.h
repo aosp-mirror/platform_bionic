@@ -46,7 +46,7 @@ struct dl_phdr_info {
   ElfW(Half) dlpi_phnum;
 };
 
-int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*);
+int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*) __INTRODUCED_IN(21);
 
 #ifdef __arm__
 typedef long unsigned int* _Unwind_Ptr;

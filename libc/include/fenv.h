@@ -36,23 +36,23 @@
 __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
-int feclearexcept(int);
-int fegetexceptflag(fexcept_t *, int);
-int feraiseexcept(int);
-int fesetexceptflag(const fexcept_t *, int);
-int fetestexcept(int);
+int feclearexcept(int) __INTRODUCED_IN(21);
+int fegetexceptflag(fexcept_t*, int) __INTRODUCED_IN(21);
+int feraiseexcept(int) __INTRODUCED_IN(21);
+int fesetexceptflag(const fexcept_t*, int) __INTRODUCED_IN(21);
+int fetestexcept(int) __INTRODUCED_IN(21);
 
-int fegetround(void);
-int fesetround(int);
+int fegetround(void) __INTRODUCED_IN(21);
+int fesetround(int) __INTRODUCED_IN(21);
 
-int fegetenv(fenv_t *);
-int feholdexcept(fenv_t *);
-int fesetenv(const fenv_t *);
-int feupdateenv(const fenv_t *);
+int fegetenv(fenv_t*) __INTRODUCED_IN(21);
+int feholdexcept(fenv_t*) __INTRODUCED_IN(21);
+int fesetenv(const fenv_t*) __INTRODUCED_IN(21);
+int feupdateenv(const fenv_t*) __INTRODUCED_IN(21);
 
-int feenableexcept(int);
-int fedisableexcept(int);
-int fegetexcept(void);
+int feenableexcept(int) __INTRODUCED_IN(21);
+int fedisableexcept(int) __INTRODUCED_IN(21);
+int fegetexcept(void) __INTRODUCED_IN(21);
 
 /*
  * The following constant represents the default floating-point environment
