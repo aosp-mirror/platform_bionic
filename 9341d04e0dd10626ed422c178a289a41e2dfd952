@@ -94,6 +94,30 @@
       "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_a3f21e15",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-04-29T21:32:35Z",
+      "side": 1,
+      "message": "It would be every in-progress release rather than every release, but fair enough.",
+      "parentUuid": "084335e3_03799283",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
