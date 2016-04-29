@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_832362f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-04-29T20:51:19Z",
+      "side": 1,
+      "message": "__INTRODUCED_IN_O, __INTRODUCED_IN_P, etc would probably be better. There is a brief window where we don\u0027t have a number for the upcoming release (I don\u0027t think we actually have an official one for N, for that matter), and have added APIs to that and the following release.",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
