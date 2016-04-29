@@ -127,6 +127,13 @@ extern int signgam;
 #endif
 #endif /* __BSD_VISIBLE */
 
+/* scalbln, scalbnf, and scalblnl were unavailable on x86 until API level 18 */
+#if defined(__i386__)
+#define __INTRODUCED_IN_X86 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_X86(x)
+#endif
+
 /*
  * Most of these functions depend on the rounding mode and have the side
  * effect of raising floating-point exceptions, so they are not declared
@@ -237,7 +244,7 @@ double	fmin(double, double) __pure2;
 double	nearbyint(double);
 double	round(double);
 double	scalbln(double, long);
-double	scalbn(double, int);
+double scalbn(double, int) __INTRODUCED_IN_X86(18);
 double	tgamma(double);
 double	trunc(double);
 #endif
@@ -322,7 +329,7 @@ float	remainderf(float, float);
 float	remquof(float, float, int *);
 float	rintf(float);
 float	scalblnf(float, long);
-float	scalbnf(float, int);
+float scalbnf(float, int) __INTRODUCED_IN_X86(18);
 float	truncf(float);
 
 float	fdimf(float, float);
@@ -415,7 +422,7 @@ long double remquol(long double, long double, int*) __INTRODUCED_IN(21);
 long double rintl(long double) __INTRODUCED_IN(21);
 long double	roundl(long double);
 long double	scalblnl(long double, long);
-long double	scalbnl(long double, int);
+long double scalbnl(long double, int) __INTRODUCED_IN_X86(18);
 long double sinhl(long double) __INTRODUCED_IN(21);
 long double sinl(long double) __INTRODUCED_IN(21);
 long double sqrtl(long double) __INTRODUCED_IN(21);
