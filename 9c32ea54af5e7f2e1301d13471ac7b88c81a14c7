@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "084335e3_86513055",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-29T23:42:01Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "084335e3_23904ea5",
+      "revId": "9c32ea54af5e7f2e1301d13471ac7b88c81a14c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "084335e3_438d5a8a",
         "filename": "libc/include/android/dlext.h",
         "patchSetId": 6
