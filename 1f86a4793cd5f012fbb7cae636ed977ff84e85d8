@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e03c3f_0e374891",
+        "filename": "libc/include/link.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-29T21:29:30Z",
+      "side": 1,
+      "message": "This is true for arm (surprisingly) but this was available for x86 and mips before 21",
+      "revId": "1f86a4793cd5f012fbb7cae636ed977ff84e85d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
