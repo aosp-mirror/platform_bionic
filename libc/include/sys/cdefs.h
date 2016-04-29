@@ -459,6 +459,8 @@
 #define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
 #define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
 
+#define __INTRODUCED_IN_FUTURE __INTRODUCED_IN(10000)
+
 #if __LP64__
 #define __INTRODUCED_IN_32(api_level)
 #define __INTRODUCED_IN_64 __INTRODUCED_IN

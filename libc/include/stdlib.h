@@ -137,7 +137,7 @@ char* ptsname(int);
 int ptsname_r(int, char*, size_t);
 int unlockpt(int);
 
-int getsubopt(char**, char* const*, char**) __INTRODUCED_IN(25);
+int getsubopt(char**, char* const*, char**) __INTRODUCED_IN_FUTURE;
 
 typedef struct {
     int  quot;
@@ -164,7 +164,7 @@ extern lldiv_t   lldiv(long long, long long) __pure2;
 extern const char* getprogname(void) __INTRODUCED_IN(21);
 extern void setprogname(const char*) __INTRODUCED_IN(21);
 
-int mblen(const char*, size_t) __INTRODUCED_IN(25);
+int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE;
 size_t mbstowcs(wchar_t*, const char*, size_t);
 int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21);
 int wctomb(char*, wchar_t) __INTRODUCED_IN(21);

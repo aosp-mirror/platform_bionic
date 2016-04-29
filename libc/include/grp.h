@@ -55,10 +55,10 @@ struct group* getgrgid(gid_t);
 struct group* getgrnam(const char *);
 #if __POSIX_VISIBLE >= 200112 || __XPG_VISIBLE
 /* Android has thousands and thousands of ids to iterate through */
-struct group* getgrent(void) __attribute__((warning("getgrent is inefficient on Android")))
-__INTRODUCED_IN(25);
-void setgrent(void) __INTRODUCED_IN(25);
-void endgrent(void) __INTRODUCED_IN(25);
+struct group* getgrent(void)
+  __attribute__((warning("getgrent is inefficient on Android"))) __INTRODUCED_IN_FUTURE;
+void setgrent(void) __INTRODUCED_IN_FUTURE;
+void endgrent(void) __INTRODUCED_IN_FUTURE;
 int getgrgid_r(gid_t, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
 int getgrnam_r(const char*, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
 #endif

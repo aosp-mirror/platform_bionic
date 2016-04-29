@@ -126,13 +126,17 @@ extern int sigsuspend(const sigset_t*) __nonnull((1));
 extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
 
 extern int sighold(int)
-  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead"))) __INTRODUCED_IN(25);
-extern int sigignore(int) __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(25);
-extern int sigpause(int) __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN(25);
+  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
+  __INTRODUCED_IN_FUTURE;
+extern int sigignore(int)
+  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
+extern int sigpause(int)
+  __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN_FUTURE;
 extern int sigrelse(int)
-  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead"))) __INTRODUCED_IN(25);
-extern sighandler_t sigset(int, sighandler_t) __attribute__((deprecated("use sigaction() instead")))
-__INTRODUCED_IN(25);
+  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
+  __INTRODUCED_IN_FUTURE;
+extern sighandler_t sigset(int, sighandler_t)
+  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
 
 extern int raise(int);
 extern int kill(pid_t, int);
