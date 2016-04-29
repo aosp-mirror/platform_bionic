@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_c3b88af8",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-29T21:58:15Z",
+      "side": 1,
+      "message": "This was from the libpackagelistparser (which is no longer a dependent), will merge over.",
+      "range": {
+        "startLine": 383,
+        "startChar": 21,
+        "endLine": 383,
+        "endChar": 35
+      },
+      "revId": "5a1395739d2fd1a20e27394afeea5776f5537c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
