@@ -308,6 +308,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08d5f532_c18292d8",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-29T05:07:04Z",
+      "side": 1,
+      "message": "there are some existing platform-only APIs in bionic, but i still haven\u0027t understood why we can\u0027t just have a static library...",
+      "parentUuid": "08d5f532_4d48191e",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
