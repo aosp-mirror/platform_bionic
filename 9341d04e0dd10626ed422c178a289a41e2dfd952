@@ -70,6 +70,30 @@
       "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_03799283",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-29T21:22:24Z",
+      "side": 1,
+      "message": "sed can still fix it for you, you can run it in the internal branch and cherry-pick the change out to AOSP. The main reason I don\u0027t want to do this is that 4 macros defined at the top of complex_test.cpp is bad enough, and this would probably make us have to add a new one in every single release.",
+      "parentUuid": "084335e3_031d1263",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
