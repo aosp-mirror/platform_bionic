@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_034f5283",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-04-29T21:12:08Z",
+      "side": 1,
+      "message": "since they are defined in terms of __AVAILABILITY I think you can move these out of ifdef..",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 456,
+        "endChar": 67
+      },
+      "revId": "84d1320410ab3de9f724c7b40903b19a4e4c3b61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
