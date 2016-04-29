@@ -1304,6 +1304,7 @@ LIBC_O {
     getpwent;
     getsubopt;
     hasmntopt;
+    mblen;
     pthread_getname_np;
     quotactl;
     setdomainname;
