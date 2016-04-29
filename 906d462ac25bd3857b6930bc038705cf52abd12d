@@ -16,6 +16,24 @@
       "revId": "906d462ac25bd3857b6930bc038705cf52abd12d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_03a0b203",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-29T21:24:39Z",
+      "side": 1,
+      "message": "Seems like a clang-format bug. This gets magically fixed in a the __INTRODUCED_IN_FUTURE patch, though. (because INTRODUED_IN_FUTURE is long enough to spill the __attribute__((deprecated(...))) over to the next line as well, which gets properly indented.)",
+      "parentUuid": "084335e3_03651234",
+      "revId": "906d462ac25bd3857b6930bc038705cf52abd12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
