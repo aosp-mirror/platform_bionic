@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08d5f532_1600e299",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-29T02:02:48Z",
+      "side": 1,
+      "message": "Any reason to not make wctrans_t a function pointer?",
+      "range": {
+        "startLine": 115,
+        "startChar": 7,
+        "endLine": 115,
+        "endChar": 16
+      },
+      "revId": "7ba106c784e0566f4e246c1d814f32eb31467f86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
