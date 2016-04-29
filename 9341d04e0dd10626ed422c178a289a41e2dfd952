@@ -22,6 +22,30 @@
       "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_c3716ad2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-29T21:08:26Z",
+      "side": 1,
+      "message": "Presumably this shouldn\u0027t be happening in the same branch, though?",
+      "parentUuid": "084335e3_832362f5",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "9341d04e0dd10626ed422c178a289a41e2dfd952",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
