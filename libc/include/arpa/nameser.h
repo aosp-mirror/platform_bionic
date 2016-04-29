@@ -141,10 +141,6 @@ struct ns_newmsg {
 };
 typedef struct ns_newmsg ns_newmsg;
 
-/* Private data structure - do not use from outside library. */
-struct _ns_flagdata {  int mask, shift;  };
-extern const struct _ns_flagdata _ns_flagdata[];
-
 /* Accessor macros - this is part of the public interface. */
 
 #define ns_msg_id(handle) ((handle)._id + 0)

@@ -52,6 +52,8 @@ static void	setsection(ns_msg *msg, ns_sect sect);
 
 /* Public. */
 
+struct _ns_flagdata {  int mask, shift;  };
+
 /* These need to be in the same order as the nres.h:ns_flag enum. */
 const struct _ns_flagdata _ns_flagdata[16] = {
 	{ 0x8000, 15 },		/* qr. */
