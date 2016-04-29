@@ -332,6 +332,30 @@
       "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08d5f532_3c817da0",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-04-29T15:02:44Z",
+      "side": 1,
+      "message": "Static library is no problem except it has a circular dependency to bionic and can be part of the API. Only Android system applications can read packages.list, so it looks private from that standpoint. Most native code (not all, libselinux) can use the getpw* APIs instead to gain access to the information once integrated here; allowing for a single access point.\n\nI saw it as simpler to integrate it literally as-is (but bionicized into C++) into bionic as a private interface for system applications.",
+      "parentUuid": "08d5f532_c18292d8",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 38
+      },
+      "revId": "5e7dab5e0189100426feaafeb77216b79b4c5b54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
