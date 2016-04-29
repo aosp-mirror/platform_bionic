@@ -21,6 +21,8 @@
 #include <sys/cdefs.h>
 #if !defined(__INTRODUCED_IN)
 #define __INTRODUCED_IN(x)
+#define __INTRODUCED_IN_32(x)
+#define __INTRODUCED_IN_64(x)
 #endif
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
