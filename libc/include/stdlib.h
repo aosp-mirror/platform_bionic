@@ -162,14 +162,11 @@ extern lldiv_t   lldiv(long long, long long) __pure2;
 extern const char* getprogname(void);
 extern void setprogname(const char*);
 
-/* make STLPort happy */
-extern int      mblen(const char *, size_t) __UNAVAILABLE;
-extern size_t   mbstowcs(wchar_t *, const char *, size_t);
-extern int      mbtowc(wchar_t *, const char *, size_t);
-
-/* Likewise, make libstdc++-v3 happy.  */
-extern int	wctomb(char *, wchar_t);
-extern size_t	wcstombs(char *, const wchar_t *, size_t);
+int mblen(const char*, size_t);
+size_t mbstowcs(wchar_t*, const char*, size_t);
+int mbtowc(wchar_t*, const char*, size_t);
+int wctomb(char*, wchar_t);
+size_t wcstombs(char*, const wchar_t*, size_t);
 
 extern size_t __ctype_get_mb_cur_max(void);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
