@@ -1213,6 +1213,10 @@ LIBC_O {
     sigrelse;
     sigset;
     sync_file_range;
+    towctrans;
+    towctrans_l;
+    wctrans;
+    wctrans_l;
 } LIBC_N;
 
 LIBC_PRIVATE {

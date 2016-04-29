@@ -26,11 +26,13 @@
  * SUCH DAMAGE.
  */
 
+#include <wctype.h>
+
 #include <ctype.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <wctype.h>
 
 // TODO: these only work for the ASCII range; rewrite to dlsym icu4c? http://b/14499654
 
@@ -85,8 +87,8 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
 wint_t towlower(wint_t wc) { return tolower(wc); }
 wint_t towupper(wint_t wc) { return toupper(wc); }
 
-int towupper_l(int c, locale_t) { return towupper(c); }
-int towlower_l(int c, locale_t) { return towlower(c); }
+wint_t towupper_l(int c, locale_t) { return towupper(c); }
+wint_t towlower_l(int c, locale_t) { return towlower(c); }
 
 wctype_t wctype(const char* property) {
   static const char* const  properties[WC_TYPE_MAX] = {
@@ -108,4 +110,28 @@ wctype_t wctype_l(const char* property, locale_t) {
 
 int wcwidth(wchar_t wc) {
   return (wc > 0);
+}
+
+static wctrans_t wctrans_tolower = wctrans_t(1);
+static wctrans_t wctrans_toupper = wctrans_t(2);
+
+wctrans_t wctrans(const char* name) {
+  if (strcmp(name, "tolower") == 0) return wctrans_tolower;
+  if (strcmp(name, "toupper") == 0) return wctrans_toupper;
+  return 0;
+}
+
+wctrans_t wctrans_l(const char* name, locale_t) {
+  return wctrans(name);
+}
+
+wint_t towctrans(wint_t c, wctrans_t t) {
+  if (t == wctrans_tolower) return towlower(c);
+  if (t == wctrans_toupper) return towupper(c);
+  errno = EINVAL;
+  return 0;
+}
+
+wint_t towctrans_l(wint_t c, wctrans_t t, locale_t) {
+  return towctrans(c, t);
 }
