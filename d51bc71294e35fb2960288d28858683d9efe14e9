@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_0631a092",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-04-29T23:43:37Z",
+      "side": 0,
+      "message": "Or do. I\u0027m a comment, not a cop.",
+      "revId": "d51bc71294e35fb2960288d28858683d9efe14e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
