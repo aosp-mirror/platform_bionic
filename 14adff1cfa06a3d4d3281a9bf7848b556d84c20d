@@ -16,6 +16,24 @@
       "revId": "14adff1cfa06a3d4d3281a9bf7848b556d84c20d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_cc9d176b",
+        "filename": "libc/include/link.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-04-30T07:17:49Z",
+      "side": 1,
+      "message": "Fixed in a follow up commit: https://android-review.googlesource.com/#/c/221379/1/libc/include/link.h",
+      "parentUuid": "084335e3_5100c49a",
+      "revId": "14adff1cfa06a3d4d3281a9bf7848b556d84c20d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
