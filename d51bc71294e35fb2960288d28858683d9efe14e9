@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_f1feb014",
+        "filename": "libc/include/sys/resource.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-04-30T01:51:18Z",
+      "side": 1,
+      "message": "(i have to take the blame for this one. i didn\u0027t have the time to write the LP32 version in the mad rush for L, and genuinely thought it would be irrelevant by 2016 anyway...)",
+      "revId": "d51bc71294e35fb2960288d28858683d9efe14e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
