@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_575f54fe",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-02T08:36:32Z",
+      "side": 1,
+      "message": "Can you add a comment? Suggestion:\n\n\t\t\t/*\n\t\t\t * Only record stats the first time we try a query. This ensures that\n\t\t\t * queries that deterministically fail (e.g., a name that always returns\n\t\t\t * SERVFAIL or times out) do not unduly affect the stats.\n\t\t\t */",
+      "range": {
+        "startLine": 555,
+        "startChar": 3,
+        "endLine": 555,
+        "endChar": 18
+      },
+      "revId": "6e8ade39bc81729805ce1d7b53c2e8ef0e0f4179",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_f79a20d5",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-02T08:36:32Z",
+      "side": 1,
+      "message": "Here too, either copy the comment or:\n\n    /* Only record stats the first time we try a query. See above. */",
+      "range": {
+        "startLine": 581,
+        "startChar": 3,
+        "endLine": 581,
+        "endChar": 18
+      },
+      "revId": "6e8ade39bc81729805ce1d7b53c2e8ef0e0f4179",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "084335e3_17a0ec03",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-02T08:36:32Z",
+      "side": 1,
+      "message": "I think these should be tabs.",
+      "range": {
+        "startLine": 583,
+        "startChar": 3,
+        "endLine": 583,
+        "endChar": 7
+      },
+      "revId": "6e8ade39bc81729805ce1d7b53c2e8ef0e0f4179",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
