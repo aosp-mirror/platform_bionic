@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "089df5d3_f0591e80",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-02T18:06:41Z",
+      "side": 1,
+      "message": "remove this?",
+      "revId": "15bfe7549bf2d3bbce286d9bec3d8062a2cd6fca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
