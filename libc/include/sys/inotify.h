@@ -41,7 +41,7 @@ __BEGIN_DECLS
 #define IN_NONBLOCK O_NONBLOCK
 
 extern int inotify_init(void);
-extern int inotify_init1(int);
+extern int inotify_init1(int) __INTRODUCED_IN(21);
 extern int inotify_add_watch(int, const char*, uint32_t);
 extern int inotify_rm_watch(int, uint32_t);
 

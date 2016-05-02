@@ -146,18 +146,18 @@ extern int fchmod(int, mode_t);
 extern int mkdir(const char*, mode_t);
 
 extern int fstat(int, struct stat*);
-extern int fstat64(int, struct stat64*);
+extern int fstat64(int, struct stat64*) __INTRODUCED_IN(21);
 extern int fstatat(int, const char*, struct stat*, int);
-extern int fstatat64(int, const char*, struct stat64*, int);
+extern int fstatat64(int, const char*, struct stat64*, int) __INTRODUCED_IN(21);
 extern int lstat(const char*, struct stat*);
-extern int lstat64(const char*, struct stat64*);
+extern int lstat64(const char*, struct stat64*) __INTRODUCED_IN(21);
 extern int stat(const char*, struct stat*);
-extern int stat64(const char*, struct stat64*);
+extern int stat64(const char*, struct stat64*) __INTRODUCED_IN(21);
 
 extern int mknod(const char*, mode_t, dev_t);
 extern mode_t umask(mode_t);
 
-extern mode_t __umask_chk(mode_t);
+extern mode_t __umask_chk(mode_t) __INTRODUCED_IN(21);
 extern mode_t __umask_real(mode_t) __RENAME(umask);
 __errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
@@ -178,16 +178,17 @@ mode_t umask(mode_t mode) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 __BIONIC_LEGACY_INLINE int mkfifo(const char*, mode_t);
-extern int mkfifoat(int, const char*, mode_t);
+extern int mkfifoat(int, const char*, mode_t) __INTRODUCED_IN(23);
 
 extern int fchmodat(int, const char*, mode_t, int);
 extern int mkdirat(int, const char*, mode_t);
-extern int mknodat(int, const char*, mode_t, dev_t);
+extern int mknodat(int, const char*, mode_t, dev_t) __INTRODUCED_IN(21);
 
 #define UTIME_NOW  ((1L << 30) - 1L)
 #define UTIME_OMIT ((1L << 30) - 2L)
-extern int utimensat(int fd, const char *path, const struct timespec times[2], int flags);
-extern int futimens(int fd, const struct timespec times[2]);
+extern int utimensat(int fd, const char* path, const struct timespec times[2], int flags)
+  __INTRODUCED_IN(12);
+extern int futimens(int fd, const struct timespec times[2]) __INTRODUCED_IN(19);
 
 __END_DECLS
 

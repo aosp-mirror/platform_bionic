@@ -57,9 +57,9 @@ typedef struct {
     } \
   } while (0)
 
-extern void __FD_CLR_chk(int, fd_set*, size_t);
-extern void __FD_SET_chk(int, fd_set*, size_t);
-extern int  __FD_ISSET_chk(int, fd_set*, size_t);
+extern void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+extern void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+extern int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 
 #if defined(__BIONIC_FORTIFY)
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))

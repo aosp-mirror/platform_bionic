@@ -71,22 +71,25 @@ typedef struct DIR DIR;
 extern DIR* opendir(const char*);
 extern DIR* fdopendir(int);
 extern struct dirent* readdir(DIR*);
-extern struct dirent64* readdir64(DIR*);
+extern struct dirent64* readdir64(DIR*) __INTRODUCED_IN(21);
 extern int readdir_r(DIR*, struct dirent*, struct dirent**);
-extern int readdir64_r(DIR*, struct dirent64*, struct dirent64**);
+extern int readdir64_r(DIR*, struct dirent64*, struct dirent64**) __INTRODUCED_IN(21);
 extern int closedir(DIR*);
 extern void rewinddir(DIR*);
-extern void seekdir(DIR*, long);
-extern long telldir(DIR*);
+extern void seekdir(DIR*, long) __INTRODUCED_IN(23);
+extern long telldir(DIR*) __INTRODUCED_IN(23);
 extern int dirfd(DIR*);
 extern int alphasort(const struct dirent**, const struct dirent**);
-extern int alphasort64(const struct dirent64**, const struct dirent64**);
-extern int scandir64(const char*, struct dirent64***, int (*)(const struct dirent64*), int (*)(const struct dirent64**, const struct dirent64**));
+extern int alphasort64(const struct dirent64**, const struct dirent64**) __INTRODUCED_IN(21);
+extern int scandir64(const char*, struct dirent64***, int (*)(const struct dirent64*),
+                     int (*)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(21);
 extern int scandir(const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
 
 #if defined(__USE_GNU)
-int scandirat64(int, const char*, struct dirent64***, int (*)(const struct dirent64*), int (*)(const struct dirent64**, const struct dirent64**));
-int scandirat(int, const char*, struct dirent***, int (*)(const struct dirent*), int (*)(const struct dirent**, const struct dirent**));
+int scandirat64(int, const char*, struct dirent64***, int (*)(const struct dirent64*),
+                int (*)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(24);
+int scandirat(int, const char*, struct dirent***, int (*)(const struct dirent*),
+              int (*)(const struct dirent**, const struct dirent**)) __INTRODUCED_IN(24);
 #endif
 
 __END_DECLS
