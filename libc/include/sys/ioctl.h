@@ -37,7 +37,6 @@
 #include <linux/termios.h>
 #include <asm/ioctls.h>
 #include <asm/termbits.h>
-#include <sys/ioctl_compat.h>
 #include <linux/tty.h>
 
 #include <bits/ioctl.h>
