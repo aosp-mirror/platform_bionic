@@ -205,8 +205,8 @@ int	ether_nonstatic_aton(u_char *, char *);
  */
 #include <sys/cdefs.h>
 __BEGIN_DECLS
-char* ether_ntoa __P((const struct ether_addr*));
-struct ether_addr* ether_aton __P((const char*));
+char* ether_ntoa __P((const struct ether_addr*)) __INTRODUCED_IN(21);
+struct ether_addr* ether_aton __P((const char*)) __INTRODUCED_IN(21);
 __END_DECLS
 #endif
 

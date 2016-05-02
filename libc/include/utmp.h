@@ -101,7 +101,7 @@ void setutent(void);
 struct utmp* getutent(void);
 void endutent(void);
 
-int login_tty(int);
+int login_tty(int) __INTRODUCED_IN(23);
 
 __END_DECLS
 

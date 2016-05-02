@@ -76,7 +76,8 @@ extern struct tm* gmtime_r(const time_t*, struct tm*) __LIBC_ABI_PUBLIC__;
 
 extern char* strptime(const char*, const char*, struct tm*) __LIBC_ABI_PUBLIC__;
 extern size_t strftime(char*, size_t, const char*, const struct tm*) __LIBC_ABI_PUBLIC__;
-extern size_t strftime_l(char *, size_t, const char *, const struct tm *, locale_t) __LIBC_ABI_PUBLIC__;
+extern size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __LIBC_ABI_PUBLIC__
+  __INTRODUCED_IN(21);
 
 extern char* ctime(const time_t*) __LIBC_ABI_PUBLIC__;
 extern char* ctime_r(const time_t*, char*) __LIBC_ABI_PUBLIC__;
@@ -85,7 +86,7 @@ extern void tzset(void) __LIBC_ABI_PUBLIC__;
 
 extern clock_t clock(void) __LIBC_ABI_PUBLIC__;
 
-extern int clock_getcpuclockid(pid_t, clockid_t*) __LIBC_ABI_PUBLIC__;
+extern int clock_getcpuclockid(pid_t, clockid_t*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(23);
 
 extern int clock_getres(clockid_t, struct timespec*) __LIBC_ABI_PUBLIC__;
 extern int clock_gettime(clockid_t, struct timespec*) __LIBC_ABI_PUBLIC__;
@@ -99,8 +100,8 @@ extern int timer_gettime(timer_t, struct itimerspec*) __LIBC_ABI_PUBLIC__;
 extern int timer_getoverrun(timer_t) __LIBC_ABI_PUBLIC__;
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-extern time_t timelocal(struct tm*) __LIBC_ABI_PUBLIC__;
-extern time_t timegm(struct tm*) __LIBC_ABI_PUBLIC__;
+extern time_t timelocal(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
+extern time_t timegm(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
 
 __END_DECLS
 

@@ -129,7 +129,8 @@ typedef struct {
   struct android_namespace_t* library_namespace;
 } android_dlextinfo;
 
-extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo);
+extern void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo)
+  __INTRODUCED_IN(21);
 
 /*
  * Initializes public and anonymous namespaces. The public_ns_sonames is the list of sonames
