@@ -51,8 +51,8 @@ struct ifaddrs {
 #define ifa_broadaddr ifa_ifu.ifu_broadaddr
 #define ifa_dstaddr ifa_ifu.ifu_dstaddr
 
-void freeifaddrs(struct ifaddrs*);
-int getifaddrs(struct ifaddrs**);
+void freeifaddrs(struct ifaddrs*) __INTRODUCED_IN(24);
+int getifaddrs(struct ifaddrs**) __INTRODUCED_IN(24);
 
 __END_DECLS
 

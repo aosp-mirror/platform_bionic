@@ -35,8 +35,8 @@
 
 __BEGIN_DECLS
 
-int adjtimex(struct timex*);
-int clock_adjtime(clockid_t, struct timex*);
+int adjtimex(struct timex*) __INTRODUCED_IN(24);
+int clock_adjtime(clockid_t, struct timex*) __INTRODUCED_IN(24);
 
 __END_DECLS
 

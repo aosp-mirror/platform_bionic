@@ -127,6 +127,13 @@ extern int signgam;
 #endif
 #endif /* __BSD_VISIBLE */
 
+/* scalbln, scalbnf, and scalblnl were unavailable on x86 until API level 18 */
+#if defined(__i386__)
+#define __INTRODUCED_IN_X86 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_X86(x)
+#endif
+
 /*
  * Most of these functions depend on the rounding mode and have the side
  * effect of raising floating-point exceptions, so they are not declared
@@ -144,7 +151,7 @@ int	__isfinite(double) __pure2;
 int	__isfinitel(long double) __pure2;
 int	__isinff(float) __pure2;
 int	__isinfl(long double) __pure2;
-int	__isnanf(float) __pure2;
+int __isnanf(float) __pure2 __INTRODUCED_IN(21);
 int	__isnanl(long double) __pure2;
 int	__isnormalf(float) __pure2;
 int	__isnormal(double) __pure2;
@@ -195,17 +202,17 @@ double	expm1(double);
 double	fma(double, double, double);
 double	hypot(double, double);
 int	ilogb(double) __pure2;
-int	(isinf)(double) __pure2;
+int(isinf)(double) __pure2 __INTRODUCED_IN(21);
 int	(isnan)(double) __pure2;
 double	lgamma(double);
 long long llrint(double);
 long long llround(double);
 double	log1p(double);
-double	log2(double);
+double log2(double) __INTRODUCED_IN(18);
 double	logb(double);
 long	lrint(double);
 long	lround(double);
-double	nan(const char *) __pure2;
+double nan(const char*) __pure2 __INTRODUCED_IN(13);
 double	nextafter(double, double);
 double	remainder(double, double);
 double	remquo(double, double, int *);
@@ -237,7 +244,7 @@ double	fmin(double, double) __pure2;
 double	nearbyint(double);
 double	round(double);
 double	scalbln(double, long);
-double	scalbn(double, int);
+double scalbn(double, int) __INTRODUCED_IN_X86(18);
 double	tgamma(double);
 double	trunc(double);
 #endif
@@ -249,7 +256,7 @@ double	trunc(double);
 double	drem(double, double);
 int	finite(double) __pure2;
 int	isnanf(float) __pure2;
-long double significandl(long double);
+long double significandl(long double) __INTRODUCED_IN(21);
 
 /*
  * Reentrant version of gamma & lgamma; passes signgam back by reference
@@ -286,7 +293,7 @@ int	ilogbf(float) __pure2;
 float	ldexpf(float, int);
 float	log10f(float);
 float	log1pf(float);
-float	log2f(float);
+float log2f(float) __INTRODUCED_IN(18);
 float	logf(float);
 float	modff(float, float *);	/* fundamentally !__pure2 */
 
@@ -303,7 +310,7 @@ float	erff(float);
 float	erfcf(float);
 float	hypotf(float, float);
 float	lgammaf(float);
-float	tgammaf(float);
+float tgammaf(float) __INTRODUCED_IN(13);
 
 float	acoshf(float);
 float	asinhf(float);
@@ -315,14 +322,14 @@ long long llrintf(float);
 long long llroundf(float);
 long	lrintf(float);
 long	lroundf(float);
-float	nanf(const char *) __pure2;
+float nanf(const char*) __pure2 __INTRODUCED_IN(13);
 float	nearbyintf(float);
 float	nextafterf(float, float);
 float	remainderf(float, float);
 float	remquof(float, float, int *);
 float	rintf(float);
 float	scalblnf(float, long);
-float	scalbnf(float, int);
+float scalbnf(float, int) __INTRODUCED_IN_X86(18);
 float	truncf(float);
 
 float	fdimf(float, float);
@@ -364,69 +371,69 @@ float	significandf(float);
  * long double versions of ISO/POSIX math functions
  */
 #if __ISO_C_VISIBLE >= 1999
-long double	acoshl(long double);
-long double	acosl(long double);
-long double	asinhl(long double);
-long double	asinl(long double);
-long double	atan2l(long double, long double);
-long double	atanhl(long double);
-long double	atanl(long double);
-long double	cbrtl(long double);
+long double acoshl(long double) __INTRODUCED_IN(21);
+long double acosl(long double) __INTRODUCED_IN(21);
+long double asinhl(long double) __INTRODUCED_IN(21);
+long double asinl(long double) __INTRODUCED_IN(21);
+long double atan2l(long double, long double) __INTRODUCED_IN(21);
+long double atanhl(long double) __INTRODUCED_IN(21);
+long double atanl(long double) __INTRODUCED_IN(21);
+long double cbrtl(long double) __INTRODUCED_IN(21);
 long double	ceill(long double);
 long double	copysignl(long double, long double) __pure2;
-long double	coshl(long double);
-long double	cosl(long double);
-long double	erfcl(long double);
-long double	erfl(long double);
-long double	exp2l(long double);
-long double	expl(long double);
-long double	expm1l(long double);
+long double coshl(long double) __INTRODUCED_IN(21);
+long double cosl(long double) __INTRODUCED_IN(21);
+long double erfcl(long double) __INTRODUCED_IN(21);
+long double erfl(long double) __INTRODUCED_IN(21);
+long double exp2l(long double) __INTRODUCED_IN(21);
+long double expl(long double) __INTRODUCED_IN(21);
+long double expm1l(long double) __INTRODUCED_IN(21);
 long double	fabsl(long double) __pure2;
 long double	fdiml(long double, long double);
 long double	floorl(long double);
-long double	fmal(long double, long double, long double);
+long double fmal(long double, long double, long double) __INTRODUCED_IN(21);
 long double	fmaxl(long double, long double) __pure2;
 long double	fminl(long double, long double) __pure2;
-long double	fmodl(long double, long double);
-long double	frexpl(long double value, int *); /* fundamentally !__pure2 */
-long double	hypotl(long double, long double);
+long double fmodl(long double, long double) __INTRODUCED_IN(21);
+long double frexpl(long double value, int*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
+long double hypotl(long double, long double) __INTRODUCED_IN(21);
 int		ilogbl(long double) __pure2;
 long double	ldexpl(long double, int);
-long double	lgammal(long double);
-long long	llrintl(long double);
+long double lgammal(long double) __INTRODUCED_IN(21);
+long long llrintl(long double) __INTRODUCED_IN(21);
 long long	llroundl(long double);
-long double	log10l(long double);
-long double	log1pl(long double);
-long double	log2l(long double);
-long double	logbl(long double);
-long double	logl(long double);
-long		lrintl(long double);
+long double log10l(long double) __INTRODUCED_IN(21);
+long double log1pl(long double) __INTRODUCED_IN(21);
+long double log2l(long double) __INTRODUCED_IN(18);
+long double logbl(long double) __INTRODUCED_IN(18);
+long double logl(long double) __INTRODUCED_IN(21);
+long lrintl(long double) __INTRODUCED_IN(21);
 long		lroundl(long double);
-long double	modfl(long double, long double *); /* fundamentally !__pure2 */
-long double	nanl(const char *) __pure2;
-long double	nearbyintl(long double);
-long double	nextafterl(long double, long double);
-double		nexttoward(double, long double);
+long double modfl(long double, long double*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
+long double nanl(const char*) __pure2 __INTRODUCED_IN(13);
+long double nearbyintl(long double) __INTRODUCED_IN(21);
+long double nextafterl(long double, long double) __INTRODUCED_IN(21);
+double nexttoward(double, long double) __INTRODUCED_IN(18);
 float		nexttowardf(float, long double);
-long double	nexttowardl(long double, long double);
-long double	powl(long double, long double);
-long double	remainderl(long double, long double);
-long double	remquol(long double, long double, int *);
-long double	rintl(long double);
+long double nexttowardl(long double, long double) __INTRODUCED_IN(18);
+long double powl(long double, long double) __INTRODUCED_IN(21);
+long double remainderl(long double, long double) __INTRODUCED_IN(21);
+long double remquol(long double, long double, int*) __INTRODUCED_IN(21);
+long double rintl(long double) __INTRODUCED_IN(21);
 long double	roundl(long double);
 long double	scalblnl(long double, long);
-long double	scalbnl(long double, int);
-long double	sinhl(long double);
-long double	sinl(long double);
-long double	sqrtl(long double);
-long double	tanhl(long double);
-long double	tanl(long double);
-long double	tgammal(long double);
+long double scalbnl(long double, int) __INTRODUCED_IN_X86(18);
+long double sinhl(long double) __INTRODUCED_IN(21);
+long double sinl(long double) __INTRODUCED_IN(21);
+long double sqrtl(long double) __INTRODUCED_IN(21);
+long double tanhl(long double) __INTRODUCED_IN(21);
+long double tanl(long double) __INTRODUCED_IN(21);
+long double tgammal(long double) __INTRODUCED_IN(21);
 long double	truncl(long double);
 #endif /* __ISO_C_VISIBLE >= 1999 */
 
 #if __BSD_VISIBLE
-long double	lgammal_r(long double, int *);
+long double lgammal_r(long double, int*) __INTRODUCED_IN(23);
 #endif
 
 #if defined(__USE_GNU)

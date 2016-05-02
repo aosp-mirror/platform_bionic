@@ -46,8 +46,8 @@ struct if_nameindex {
 
 char* if_indextoname(unsigned, char*);
 unsigned if_nametoindex(const char*);
-struct if_nameindex* if_nameindex(void);
-void if_freenameindex(struct if_nameindex*);
+struct if_nameindex* if_nameindex(void) __INTRODUCED_IN(24);
+void if_freenameindex(struct if_nameindex*) __INTRODUCED_IN(24);
 
 __END_DECLS
 

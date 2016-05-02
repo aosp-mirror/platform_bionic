@@ -42,16 +42,12 @@ typedef __CHAR32_TYPE__ char32_t;
 #define __STD_UTF_16__ 1
 #define __STD_UTF_32__ 1
 
-size_t c16rtomb(char* __restrict, char16_t, mbstate_t* __restrict);
-size_t c32rtomb(char* __restrict, char32_t, mbstate_t* __restrict);
-size_t mbrtoc16(char16_t* __restrict,
-                const char* __restrict,
-                size_t,
-                mbstate_t* __restrict);
-size_t mbrtoc32(char32_t* __restrict,
-                const char* __restrict,
-                size_t,
-                mbstate_t* __restrict);
+size_t c16rtomb(char* __restrict, char16_t, mbstate_t* __restrict) __INTRODUCED_IN(21);
+size_t c32rtomb(char* __restrict, char32_t, mbstate_t* __restrict) __INTRODUCED_IN(21);
+size_t mbrtoc16(char16_t* __restrict, const char* __restrict, size_t, mbstate_t* __restrict)
+  __INTRODUCED_IN(21);
+size_t mbrtoc32(char32_t* __restrict, const char* __restrict, size_t, mbstate_t* __restrict)
+  __INTRODUCED_IN(21);
 
 __END_DECLS
 

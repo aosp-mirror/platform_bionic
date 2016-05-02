@@ -55,9 +55,9 @@ typedef off64_t fpos64_t;
 struct __sFILE;
 typedef struct __sFILE FILE;
 
-extern FILE* stdin;
-extern FILE* stdout;
-extern FILE* stderr;
+extern FILE* stdin __INTRODUCED_IN(23);
+extern FILE* stdout __INTRODUCED_IN(23);
+extern FILE* stderr __INTRODUCED_IN(23);
 /* C99 and earlier plus current C++ standards say these must be macros. */
 #define stdin stdin
 #define stdout stdout
@@ -119,9 +119,8 @@ int	 fscanf(FILE * __restrict, const char * __restrict, ...)
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
-ssize_t	 getdelim(char ** __restrict, size_t * __restrict, int,
-	    FILE * __restrict);
-ssize_t	 getline(char ** __restrict, size_t * __restrict, FILE * __restrict);
+ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(21);
+ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(21);
 
 void	 perror(const char *);
 int	 printf(const char * __restrict, ...)
@@ -143,8 +142,8 @@ int	 vfprintf(FILE * __restrict, const char * __restrict, __va_list)
 int	 vprintf(const char * __restrict, __va_list)
 		__printflike(1, 0);
 
-int dprintf(int, const char * __restrict, ...) __printflike(2, 3);
-int vdprintf(int, const char * __restrict, __va_list) __printflike(2, 0);
+int dprintf(int, const char* __restrict, ...) __printflike(2, 3) __INTRODUCED_IN(21);
+int vdprintf(int, const char* __restrict, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 
 #ifndef __AUDIT__
 #if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112L
@@ -192,24 +191,22 @@ FILE* funopen(const void*,
               int (*)(void*));
 #  endif
 #endif
-int fgetpos64(FILE*, fpos64_t*);
-int fsetpos64(FILE*, const fpos64_t*);
-int fseeko64(FILE*, off64_t, int);
-off64_t ftello64(FILE*);
+int fgetpos64(FILE*, fpos64_t*) __INTRODUCED_IN(24);
+int fsetpos64(FILE*, const fpos64_t*) __INTRODUCED_IN(24);
+int fseeko64(FILE*, off64_t, int) __INTRODUCED_IN(24);
+off64_t ftello64(FILE*) __INTRODUCED_IN(24);
 #if defined(__USE_BSD)
-FILE* funopen64(const void*,
-                int (*)(void*, char*, int),
-                int (*)(void*, const char*, int),
-                fpos64_t (*)(void*, fpos64_t, int),
-                int (*)(void*));
+FILE* funopen64(const void*, int (*)(void*, char*, int), int (*)(void*, const char*, int),
+                fpos64_t (*)(void*, fpos64_t, int), int (*)(void*)) __INTRODUCED_IN(24);
 #endif
 
 FILE* fopen(const char* __restrict, const char* __restrict);
-FILE* fopen64(const char* __restrict, const char* __restrict);
+FILE* fopen64(const char* __restrict, const char* __restrict) __INTRODUCED_IN(24);
 FILE* freopen(const char* __restrict, const char* __restrict, FILE* __restrict);
-FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict);
+FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict)
+  __INTRODUCED_IN(24);
 FILE* tmpfile(void);
-FILE* tmpfile64(void);
+FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
 #if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
 int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
@@ -254,8 +251,8 @@ int	 putchar_unlocked(int);
 #endif /* __POSIX_VISIBLE >= 199506 */
 
 #if __POSIX_VISIBLE >= 200809
-FILE* fmemopen(void*, size_t, const char*);
-FILE* open_memstream(char**, size_t*);
+FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
+FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
 #endif /* __POSIX_VISIBLE >= 200809 */
 
 #endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
@@ -274,26 +271,28 @@ int	 vasprintf(char ** __restrict, const char * __restrict,
     __va_list)
 		__printflike(2, 0);
 
-void clearerr_unlocked(FILE*);
-int feof_unlocked(FILE*);
-int ferror_unlocked(FILE*);
-int fileno_unlocked(FILE*);
+void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
+int feof_unlocked(FILE*) __INTRODUCED_IN(23);
+int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
+int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
 
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __BSD_VISIBLE */
 
-extern char* __fgets_chk(char*, int, FILE*, size_t);
+extern char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(21);
 extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
-extern size_t __fread_chk(void * __restrict, size_t, size_t, FILE * __restrict, size_t);
+extern size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
+  __INTRODUCED_IN(24);
 extern size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
 __errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
 __errordecl(__fread_overflow, "fread called with overflowing size * count");
 
-extern size_t __fwrite_chk(const void * __restrict, size_t, size_t, FILE * __restrict, size_t);
+extern size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
+  __INTRODUCED_IN(24);
 extern size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
 __errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
 __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");

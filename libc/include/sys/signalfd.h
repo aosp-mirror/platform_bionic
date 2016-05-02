@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-extern int signalfd(int fd, const sigset_t* mask, int flags) __nonnull((2));
+extern int signalfd(int fd, const sigset_t* mask, int flags) __nonnull((2)) __INTRODUCED_IN(21);
 
 __END_DECLS
 

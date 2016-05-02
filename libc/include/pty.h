@@ -36,8 +36,8 @@
 
 __BEGIN_DECLS
 
-int openpty(int*, int*, char*, const struct termios*, const struct winsize*);
-int forkpty(int*, char*, const struct termios*, const struct winsize*);
+int openpty(int*, int*, char*, const struct termios*, const struct winsize*) __INTRODUCED_IN(23);
+int forkpty(int*, char*, const struct termios*, const struct winsize*) __INTRODUCED_IN(23);
 
 __END_DECLS
 
