@@ -16,6 +16,24 @@
       "revId": "15bfe7549bf2d3bbce286d9bec3d8062a2cd6fca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "089df5d3_30b0c69b",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-05-02T18:11:11Z",
+      "side": 1,
+      "message": "It\u0027s still used by `__printflike`. `_Nonnull` can\u0027t be used there because it has to be applied directly to the argument, not as `_Nonnull(arg pos)` in the attributes.",
+      "parentUuid": "089df5d3_f0591e80",
+      "revId": "15bfe7549bf2d3bbce286d9bec3d8062a2cd6fca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
