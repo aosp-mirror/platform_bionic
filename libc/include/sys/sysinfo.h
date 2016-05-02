@@ -35,13 +35,13 @@ __BEGIN_DECLS
 
 int sysinfo(struct sysinfo* info);
 
-int get_nprocs_conf(void);
+int get_nprocs_conf(void) __INTRODUCED_IN(23);
 
-int get_nprocs(void);
+int get_nprocs(void) __INTRODUCED_IN(23);
 
-long get_phys_pages(void);
+long get_phys_pages(void) __INTRODUCED_IN(23);
 
-long get_avphys_pages(void);
+long get_avphys_pages(void) __INTRODUCED_IN(23);
 
 __END_DECLS
 

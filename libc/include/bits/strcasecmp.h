@@ -36,9 +36,9 @@
 __BEGIN_DECLS
 
 int strcasecmp(const char*, const char*) __purefunc;
-int strcasecmp_l(const char*, const char*, locale_t) __purefunc;
+int strcasecmp_l(const char*, const char*, locale_t) __purefunc __INTRODUCED_IN(23);
 int strncasecmp(const char*, const char*, size_t) __purefunc;
-int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc;
+int strncasecmp_l(const char*, const char*, size_t, locale_t) __purefunc __INTRODUCED_IN(23);
 
 __END_DECLS
 

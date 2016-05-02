@@ -37,7 +37,7 @@ typedef __WINT_TYPE__ wint_t;
 
 int iswalnum(wint_t);
 int iswalpha(wint_t);
-int iswblank(wint_t);
+int iswblank(wint_t) __INTRODUCED_IN(21);
 int iswcntrl(wint_t);
 int iswdigit(wint_t);
 int iswgraph(wint_t);
@@ -56,8 +56,8 @@ wctype_t wctype(const char*);
 int iswctype(wint_t, wctype_t);
 
 typedef const void* wctrans_t;
-wint_t towctrans(wint_t, wctrans_t);
-wctrans_t wctrans(const char*);
+wint_t towctrans(wint_t, wctrans_t) __INTRODUCED_IN_FUTURE;
+wctrans_t wctrans(const char*) __INTRODUCED_IN_FUTURE;
 
 __END_DECLS
 

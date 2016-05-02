@@ -38,8 +38,8 @@ __BEGIN_DECLS
 #define SWAP_FLAG_PRIO_MASK 0x7fff
 #define SWAP_FLAG_PRIO_SHIFT 0
 
-extern int swapon(const char*, int) __nonnull((1));
-extern int swapoff(const char*) __nonnull((1));
+extern int swapon(const char*, int) __nonnull((1)) __INTRODUCED_IN(21);
+extern int swapoff(const char*) __nonnull((1)) __INTRODUCED_IN(21);
 
 __END_DECLS
 

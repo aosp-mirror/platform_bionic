@@ -39,14 +39,16 @@ __BEGIN_DECLS
 typedef unsigned int nfds_t;
 
 int poll(struct pollfd*, nfds_t, int);
-int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*);
+int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __INTRODUCED_IN(21);
 
-int __poll_chk(struct pollfd*, nfds_t, int, size_t);
+int __poll_chk(struct pollfd*, nfds_t, int, size_t) __INTRODUCED_IN(23);
 int __poll_real(struct pollfd*, nfds_t, int) __RENAME(poll);
 __errordecl(__poll_too_small_error, "poll: pollfd array smaller than fd count");
 
-int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*, size_t);
-int __ppoll_real(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __RENAME(ppoll);
+int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*, size_t)
+  __INTRODUCED_IN(23);
+int __ppoll_real(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __RENAME(ppoll)
+  __INTRODUCED_IN(21);
 __errordecl(__ppoll_too_small_error, "ppoll: pollfd array smaller than fd count");
 
 #if defined(__BIONIC_FORTIFY)

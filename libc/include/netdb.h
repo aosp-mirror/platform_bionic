@@ -202,11 +202,12 @@ int*  __get_h_errno(void);
 void endservent(void);
 struct hostent* gethostbyaddr(const void*, socklen_t, int);
 int gethostbyaddr_r(const void*, socklen_t, int, struct hostent*, char*, size_t, struct hostent**,
-                    int*);
+                    int*) __INTRODUCED_IN(23);
 struct hostent* gethostbyname(const char*);
 int gethostbyname_r(const char*, struct hostent*, char*, size_t, struct hostent**, int*);
 struct hostent* gethostbyname2(const char*, int);
-int gethostbyname2_r(const char*, int, struct hostent*, char*, size_t, struct hostent**, int*);
+int gethostbyname2_r(const char*, int, struct hostent*, char*, size_t, struct hostent**, int*)
+  __INTRODUCED_IN(23);
 struct hostent* gethostent(void);
 struct netent* getnetbyaddr(uint32_t, int);
 struct netent* getnetbyname(const char*);
