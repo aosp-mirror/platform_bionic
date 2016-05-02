@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "084335e3_b7e7b8bb",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-02T02:41:23Z",
+      "side": 1,
+      "message": "If what we want here is the start time, shouldn\u0027t we set at before the same_ns label?",
+      "range": {
+        "startLine": 769,
+        "startChar": 1,
+        "endLine": 769,
+        "endChar": 18
+      },
+      "revId": "de208134887a0c915189fd9b8ff1dae961fd64c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
