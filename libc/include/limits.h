@@ -52,10 +52,6 @@
 
 #include <sys/limits.h>
 
-#if __POSIX_VISIBLE
-#include <sys/syslimits.h>
-#endif
-
 /* GLibc compatibility definitions.
    Note that these are defined by GCC's <limits.h>
    only when __GNU_LIBRARY__ is defined, i.e. when
