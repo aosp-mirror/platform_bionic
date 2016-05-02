@@ -29,7 +29,8 @@
 #include <sys/types.h>
 
 #include <math.h>
-#include <machine/ieee.h>
+
+#include "private/bionic_ieee.h"
 
 // These aren't declared in our <math.h>.
 extern "C" int __isinf(double);
