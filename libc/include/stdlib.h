@@ -43,7 +43,7 @@ __BEGIN_DECLS
 
 extern __noreturn void abort(void);
 extern __noreturn void exit(int);
-extern __noreturn void _Exit(int);
+extern __noreturn void _Exit(int) __INTRODUCED_IN(21);
 extern int atexit(void (*)(void));
 
 #if __ISO_C_VISIBLE >= 2011 || __cplusplus >= 201103L
@@ -60,13 +60,13 @@ extern int clearenv(void);
 extern char* mkdtemp(char*);
 extern char* mktemp(char*) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
-extern int mkostemp64(char*, int);
-extern int mkostemp(char*, int);
-extern int mkostemps64(char*, int, int);
-extern int mkostemps(char*, int, int);
-extern int mkstemp64(char*);
+extern int mkostemp64(char*, int) __INTRODUCED_IN(23);
+extern int mkostemp(char*, int) __INTRODUCED_IN(23);
+extern int mkostemps64(char*, int, int) __INTRODUCED_IN(23);
+extern int mkostemps(char*, int, int) __INTRODUCED_IN(23);
+extern int mkstemp64(char*) __INTRODUCED_IN(21);
 extern int mkstemp(char*);
-extern int mkstemps64(char*, int);
+extern int mkstemps64(char*, int) __INTRODUCED_IN(23);
 extern int mkstemps(char*, int);
 
 extern long strtol(const char *, char **, int);
@@ -74,17 +74,19 @@ extern long long strtoll(const char *, char **, int);
 extern unsigned long strtoul(const char *, char **, int);
 extern unsigned long long strtoull(const char *, char **, int);
 
-extern int posix_memalign(void **memptr, size_t alignment, size_t size);
+extern int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN(16);
 
 __BIONIC_LEGACY_INLINE double atof(const char*);
 
 extern double strtod(const char*, char**) __LIBC_ABI_PUBLIC__;
 __BIONIC_LEGACY_INLINE float strtof(const char*, char**) __LIBC_ABI_PUBLIC__;
-extern long double strtold(const char*, char**) __LIBC_ABI_PUBLIC__;
+extern long double strtold(const char*, char**) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
 
-extern long double strtold_l(const char *, char **, locale_t) __LIBC_ABI_PUBLIC__;
-extern long long strtoll_l(const char *, char **, int, locale_t) __LIBC_ABI_PUBLIC__;
-extern unsigned long long strtoull_l(const char *, char **, int, locale_t) __LIBC_ABI_PUBLIC__;
+extern long double strtold_l(const char*, char**, locale_t) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
+extern long long strtoll_l(const char*, char**, int, locale_t) __LIBC_ABI_PUBLIC__
+  __INTRODUCED_IN(21);
+extern unsigned long long strtoull_l(const char*, char**, int, locale_t) __LIBC_ABI_PUBLIC__
+  __INTRODUCED_IN(21);
 
 extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;
@@ -110,32 +112,32 @@ void arc4random_buf(void*, size_t);
 #define RAND_MAX 0x7fffffff
 
 __BIONIC_LEGACY_INLINE int rand(void);
-int rand_r(unsigned int*);
+int rand_r(unsigned int*) __INTRODUCED_IN(21);
 __BIONIC_LEGACY_INLINE void srand(unsigned int);
 
 double drand48(void);
 double erand48(unsigned short[3]);
 long jrand48(unsigned short[3]);
-void lcong48(unsigned short[7]);
+void lcong48(unsigned short[7]) __INTRODUCED_IN(23);
 long lrand48(void);
 long mrand48(void);
 long nrand48(unsigned short[3]);
 unsigned short* seed48(unsigned short[3]);
 void srand48(long);
 
-char* initstate(unsigned int, char*, size_t);
+char* initstate(unsigned int, char*, size_t) __INTRODUCED_IN(21);
 __BIONIC_LEGACY_INLINE long random(void);
-char* setstate(char*);
+char* setstate(char*) __INTRODUCED_IN(21);
 __BIONIC_LEGACY_INLINE void srandom(unsigned int);
 
 int getpt(void);
 __BIONIC_LEGACY_INLINE int grantpt(int);
-int posix_openpt(int);
+int posix_openpt(int) __INTRODUCED_IN(21);
 char* ptsname(int);
 int ptsname_r(int, char*, size_t);
 int unlockpt(int);
 
-int getsubopt(char**, char* const*, char**);
+int getsubopt(char**, char* const*, char**) __INTRODUCED_IN_FUTURE;
 
 typedef struct {
     int  quot;
@@ -159,16 +161,16 @@ typedef struct {
 extern lldiv_t   lldiv(long long, long long) __pure2;
 
 /* BSD compatibility. */
-extern const char* getprogname(void);
-extern void setprogname(const char*);
+extern const char* getprogname(void) __INTRODUCED_IN(21);
+extern void setprogname(const char*) __INTRODUCED_IN(21);
 
-int mblen(const char*, size_t);
+int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE;
 size_t mbstowcs(wchar_t*, const char*, size_t);
-int mbtowc(wchar_t*, const char*, size_t);
-int wctomb(char*, wchar_t);
+int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21);
+int wctomb(char*, wchar_t) __INTRODUCED_IN(21);
 size_t wcstombs(char*, const wchar_t*, size_t);
 
-extern size_t __ctype_get_mb_cur_max(void);
+extern size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 
 #if defined(__BIONIC_FORTIFY)

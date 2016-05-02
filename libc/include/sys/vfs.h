@@ -138,9 +138,9 @@ struct statfs64 { __STATFS64_BODY };
 #define XFS_SUPER_MAGIC       0x58465342
 
 extern int statfs(const char*, struct statfs*) __nonnull((1, 2));
-extern int statfs64(const char*, struct statfs64*) __nonnull((1, 2));
+extern int statfs64(const char*, struct statfs64*) __nonnull((1, 2)) __INTRODUCED_IN(21);
 extern int fstatfs(int, struct statfs*) __nonnull((2));
-extern int fstatfs64(int, struct statfs64*) __nonnull((2));
+extern int fstatfs64(int, struct statfs64*) __nonnull((2)) __INTRODUCED_IN(21);
 
 __END_DECLS
 

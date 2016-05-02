@@ -113,7 +113,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-struct cmsghdr* __cmsg_nxthdr(struct msghdr*, struct cmsghdr*);
+struct cmsghdr* __cmsg_nxthdr(struct msghdr*, struct cmsghdr*) __INTRODUCED_IN(21);
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
@@ -269,16 +269,17 @@ struct ucred {
 #endif
 
 __socketcall int accept(int, struct sockaddr*, socklen_t*);
-__socketcall int accept4(int, struct sockaddr*, socklen_t*, int);
+__socketcall int accept4(int, struct sockaddr*, socklen_t*, int) __INTRODUCED_IN(21);
 __socketcall int bind(int, const struct sockaddr*, int);
 __socketcall int connect(int, const struct sockaddr*, socklen_t);
 __socketcall int getpeername(int, struct sockaddr*, socklen_t*);
 __socketcall int getsockname(int, struct sockaddr*, socklen_t*);
 __socketcall int getsockopt(int, int, int, void*, socklen_t*);
 __socketcall int listen(int, int);
-__socketcall int recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*);
+__socketcall int recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)
+  __INTRODUCED_IN(21);
 __socketcall int recvmsg(int, struct msghdr*, int);
-__socketcall int sendmmsg(int, const struct mmsghdr*, unsigned int, int);
+__socketcall int sendmmsg(int, const struct mmsghdr*, unsigned int, int) __INTRODUCED_IN(21);
 __socketcall int sendmsg(int, const struct msghdr*, int);
 __socketcall int setsockopt(int, int, int, const void*, socklen_t);
 __socketcall int shutdown(int, int);
@@ -292,7 +293,8 @@ __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr
 __socketcall ssize_t recvfrom(int, void*, size_t, int, const struct sockaddr*, socklen_t*);
 
 __errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*);
+extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*)
+  __INTRODUCED_IN(21);
 extern ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*) __RENAME(recvfrom);
 
 #if defined(__BIONIC_FORTIFY)
