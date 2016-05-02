@@ -70,16 +70,6 @@ cc_defaults {
     cppflags: [],
     include_dirs: ["external/jemalloc/include"],
 
-    arch: {
-        // b/25291096, Clang/llvm compiled libc.so for mips/mips64 failed to boot.
-        mips: {
-            clang: false,
-        },
-        mips64: {
-            clang: false,
-        },
-    },
-
     stl: "none",
     system_shared_libs: [],
     sanitize: {
@@ -1305,6 +1295,7 @@ cc_library_static {
         "bionic/lockf.cpp",
         "bionic/lstat.cpp",
         "bionic/malloc_info.cpp",
+        "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
         "bionic/mbstate.cpp",
