@@ -1683,7 +1683,9 @@ cc_library {
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.
-    strip: "keep_symbols",
+    strip: {
+        keep_symbols: true,
+    },
 
     // WARNING: The only library libc.so should depend on is libdl.so!  If you add other libraries,
     // make sure to add -Wl,--exclude-libs=libgcc.a to the LOCAL_LDFLAGS for those libraries.  This
