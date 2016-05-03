@@ -507,7 +507,10 @@ endif
 
 LOCAL_C_INCLUDES_x86 += $(LOCAL_PATH)/i387
 
-LOCAL_C_INCLUDES += $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/upstream-freebsd/android/include/ \
+    $(LOCAL_PATH)/upstream-freebsd/lib/msun/src/ \
+
 LOCAL_C_INCLUDES_64 += $(LOCAL_PATH)/upstream-freebsd/lib/msun/ld128/
 
 LOCAL_ARM_MODE := arm
