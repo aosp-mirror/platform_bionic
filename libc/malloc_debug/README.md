@@ -8,22 +8,18 @@ Currently, malloc debug requires root to enable. When it is enabled, it works
 by adding a shim layer that replaces the normal allocation calls. The replaced
 calls are:
 
-<pre>
-malloc
-free
-calloc
-realloc
-posix_memalign
-memalign
-malloc_usable_size
-</pre>
+* `malloc`
+* `free`
+* `calloc`
+* `realloc`
+* `posix_memalign`
+* `memalign`
+* `malloc_usable_size`
 
 On 32 bit systems, these two deprecated functions are also replaced:
 
-<pre>
-pvalloc
-valloc
-</pre>
+* `pvalloc`
+* `valloc`
 
 Any errors detected by the library are reported in the log.
 
@@ -57,11 +53,9 @@ and information about the original allocation.
 
 Example error:
 
-<pre>
-04-10 12:00:45.621  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 SIZE 100 HAS A CORRUPTED FRONT GUARD
-04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[-32] = 0x00 (expected 0xaa)
-04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[-15] = 0x02 (expected 0xaa)
-</pre>
+    04-10 12:00:45.621  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 SIZE 100 HAS A CORRUPTED FRONT GUARD
+    04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[-32] = 0x00 (expected 0xaa)
+    04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[-15] = 0x02 (expected 0xaa)
 
 ### rear\_guard[=SIZE\_BYTES]
 Enables a small buffer placed after the allocated data. This is an attempt
@@ -79,11 +73,9 @@ information about the original allocation.
 
 Example error:
 
-<pre>
-04-10 12:00:45.621  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 SIZE 100 HAS A CORRUPTED REAR GUARD
-04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[130] = 0xbf (expected 0xbb)
-04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[131] = 0x00 (expected 0xbb)
-</pre>
+    04-10 12:00:45.621  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 SIZE 100 HAS A CORRUPTED REAR GUARD
+    04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[130] = 0xbf (expected 0xbb)
+    04-10 12:00:45.622  7412  7412 E malloc_debug:   allocation[131] = 0x00 (expected 0xbb)
 
 ### guard[=SIZE\_BYTES]
 Enables both a front guard and a rear guard on all allocations.
@@ -173,25 +165,21 @@ information about the original allocation.
 
 Example error:
 
-<pre>
-04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE
-04-15 12:00:31.305  7412  7412 E malloc_debug:   allocation[20] = 0xaf (expected 0xef)
-04-15 12:00:31.305  7412  7412 E malloc_debug:   allocation[99] = 0x12 (expected 0xef)
-04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of free:
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-</pre>
+    04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE
+    04-15 12:00:31.305  7412  7412 E malloc_debug:   allocation[20] = 0xaf (expected 0xef)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:   allocation[99] = 0x12 (expected 0xef)
+    04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of free:
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
 In addition, there is another type of error message that can occur if
 an allocation has a special header applied, and the header is corrupted
 before the verification occurs. This is the error message that will be found
 in the log:
 
-<pre>
-+++ ALLOCATION 0x12345678 HAS CORRUPTED HEADER TAG 0x1cc7dc00 AFTER FREE
-</pre>
+    04-15 12:00:31.604  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 HAS CORRUPTED HEADER TAG 0x1cc7dc00 AFTER FREE
 
 ### free\_track\_backtrace\_num\_frames[=MAX\_FRAMES]
 This option only has meaning if free\_track is set. It indicates how many
@@ -214,62 +202,54 @@ information about the original allocation.
 
 Example leak error found in the log:
 
-<pre>
-04-15 12:35:33.304  7412  7412 E malloc_debug: +++ APP leaked block of size 100 at 0x2be3b0b0 (leak 1 of 2)
-04-15 12:35:33.304  7412  7412 E malloc_debug: Backtrace at time of allocation:
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-04-15 12:35:33.305  7412  7412 E malloc_debug: +++ APP leaked block of size 24 at 0x7be32380 (leak 2 of 2)
-04-15 12:35:33.305  7412  7412 E malloc_debug: Backtrace at time of allocation:
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-</pre>
+    04-15 12:35:33.304  7412  7412 E malloc_debug: +++ APP leaked block of size 100 at 0x2be3b0b0 (leak 1 of 2)
+    04-15 12:35:33.304  7412  7412 E malloc_debug: Backtrace at time of allocation:
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
+    04-15 12:35:33.305  7412  7412 E malloc_debug: +++ APP leaked block of size 24 at 0x7be32380 (leak 2 of 2)
+    04-15 12:35:33.305  7412  7412 E malloc_debug: Backtrace at time of allocation:
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
 Additional Errors
 -----------------
 There are a few other error messages that might appear in the log.
 
 ### Use After Free
-<pre>
-04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE (free)
-04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace of original free:
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of failure:
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-</pre>
+    04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE (free)
+    04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace of original free:
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of failure:
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
 This indicates that code is attempting to free an already freed pointer. The
 name in parenthesis indicates that the application called the function
-<i>free</i> with the bad pointer.
+*free* with the bad pointer.
 
 For example, this message:
 
-<pre>
-04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE (realloc)
-</pre>
+    04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 USED AFTER FREE (realloc)
 
-Would indicate that the application called the <i>realloc</i> function
+Would indicate that the application called the *realloc* function
 with an already freed pointer.
 
 ### Invalid Tag
-<pre>
-04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 HAS INVALID TAG 1ee7d000 (malloc_usable_size)
-04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of failure:
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
-04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
-</pre>
+    04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 HAS INVALID TAG 1ee7d000 (malloc_usable_size)
+    04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of failure:
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
 This indicates that a function (malloc\_usable\_size) was called with
 a pointer that is either not allocated memory, or that the memory of
@@ -282,36 +262,28 @@ Examples
 ========
 Enable backtrace tracking of all allocation for all processes:
 
-<pre>
-  adb shell stop
-  adb shell setprop libc.debug.malloc.options backtrace
-  adb shell start
-</pre>
+    adb shell stop
+    adb shell setprop libc.debug.malloc.options backtrace
+    adb shell start
 
 Enable backtrace tracking for a specific process (ls):
 
-<pre>
-  adb shell setprop libc.debug.malloc.options backtrace
-  adb shell setprop libc.debug.malloc.program ls
-  adb shell ls
-</pre>
+    adb shell setprop libc.debug.malloc.options backtrace
+    adb shell setprop libc.debug.malloc.program ls
+    adb shell ls
 
 Enable backtrace tracking for the zygote and zygote based processes:
 
-<pre>
-  adb shell stop
-  adb shell setprop libc.debug.malloc.program app_process
-  adb shell setprop libc.debug.malloc.options backtrace
-  adb shell start
-</pre>
+    adb shell stop
+    adb shell setprop libc.debug.malloc.program app_process
+    adb shell setprop libc.debug.malloc.options backtrace
+    adb shell start
 
 Enable multiple options (backtrace and guards):
 
-<pre>
-  adb shell stop
-  adb shell setprop libc.debug.malloc.options "\"backtrace guards\""
-  adb shell start
-</pre>
+    adb shell stop
+    adb shell setprop libc.debug.malloc.options "\"backtrace guards\""
+    adb shell start
 
 Enable malloc debug when multiple processes have the same name. This method
 can be used to enable malloc debug for only a very specific process if
@@ -321,10 +293,8 @@ Note: The double quotes in the adb shell command are necessary. Otherwise,
 the setprop command will fail since the backtrace guards options will look
 like two arguments instead of one.
 
-<pre>
-  adb shell
-  # setprop libc.debug.malloc.env_enabled
-  # setprop libc.debug.malloc.options backtrace
-  # export LIBC_DEBUG_MALLOC_ENABLE 1
-  # ls
-</pre>
+    adb shell
+    # setprop libc.debug.malloc.env_enabled
+    # setprop libc.debug.malloc.options backtrace
+    # export LIBC_DEBUG_MALLOC_ENABLE 1
+    # ls
