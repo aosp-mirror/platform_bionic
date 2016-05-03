@@ -59,7 +59,7 @@ static void __attribute__((noreturn)) fork_child(unsigned cpu, T &data) {
 
 class ChildGuard {
  public:
-  ChildGuard(pid_t pid) : pid(pid) {}
+  explicit ChildGuard(pid_t pid) : pid(pid) {}
 
   ~ChildGuard() {
     kill(pid, SIGKILL);
