@@ -90,7 +90,7 @@ static struct glue* lastglue = &__sglue;
 
 class ScopedFileLock {
  public:
-  ScopedFileLock(FILE* fp) : fp_(fp) {
+  explicit ScopedFileLock(FILE* fp) : fp_(fp) {
     FLOCKFILE(fp_);
   }
   ~ScopedFileLock() {

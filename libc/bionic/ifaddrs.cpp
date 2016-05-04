@@ -59,7 +59,7 @@ struct ifaddrs_storage {
   sockaddr_storage ifa_ifu;
   char name[IFNAMSIZ + 1];
 
-  ifaddrs_storage(ifaddrs** list) {
+  explicit ifaddrs_storage(ifaddrs** list) {
     memset(this, 0, sizeof(*this));
 
     // push_front onto `list`.

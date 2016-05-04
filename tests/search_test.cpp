@@ -49,7 +49,7 @@ TEST(search, lfind_lsearch) {
 }
 
 struct node {
-  node(const char* s) : s(strdup(s)) {}
+  explicit node(const char* s) : s(strdup(s)) {}
 
   char* s;
 };
@@ -115,7 +115,7 @@ TEST(search, tfind_tsearch_twalk_tdestroy) {
 }
 
 struct pod_node {
-  pod_node(int i) : i(i) {}
+  explicit pod_node(int i) : i(i) {}
   int i;
 };
 
@@ -136,7 +136,7 @@ TEST(search, tdelete) {
 }
 
 struct q_node {
-  q_node(int i) : i(i) {}
+  explicit q_node(int i) : i(i) {}
 
   q_node* next;
   q_node* prev;

@@ -192,7 +192,7 @@ struct find_nth_cookie {
     const uint32_t n;
     const prop_info *pi;
 
-    find_nth_cookie(uint32_t n) : count(0), n(n), pi(NULL) {
+    explicit find_nth_cookie(uint32_t n) : count(0), n(n), pi(NULL) {
     }
 };
 
