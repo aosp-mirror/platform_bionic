@@ -163,7 +163,7 @@ TEST(STRING_TEST, strsignal_concurrent) {
 template<class Character>
 class StringTestState {
  public:
-  StringTestState(size_t MAX_LEN) : MAX_LEN(MAX_LEN), align1_index_(0), align2_index_(0) {
+  explicit StringTestState(size_t MAX_LEN) : MAX_LEN(MAX_LEN), align1_index_(0), align2_index_(0) {
     int max_alignment = 64;
 
     // TODO: fix the tests to not sometimes use twice their specified "MAX_LEN".
