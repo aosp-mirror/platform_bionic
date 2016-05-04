@@ -84,7 +84,7 @@ struct Feature {
 
 class PropertyParser {
  public:
-  PropertyParser(const char* property) : cur_(property) {}
+  explicit PropertyParser(const char* property) : cur_(property) {}
 
   bool Get(std::string* property, size_t* value, bool* value_set);
 

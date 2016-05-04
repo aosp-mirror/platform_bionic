@@ -44,10 +44,10 @@ static bool __bionic_current_locale_is_utf8 = true;
 struct __locale_t {
   size_t mb_cur_max;
 
-  __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
+  explicit __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
   }
 
-  __locale_t(const __locale_t* other) {
+  explicit __locale_t(const __locale_t* other) {
     if (other == LC_GLOBAL_LOCALE) {
       mb_cur_max = __bionic_current_locale_is_utf8 ? 4 : 1;
     } else {

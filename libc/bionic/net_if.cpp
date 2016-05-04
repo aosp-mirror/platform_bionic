@@ -77,7 +77,7 @@ struct if_list {
   if_list* next;
   struct if_nameindex data;
 
-  if_list(if_list** list) {
+  explicit if_list(if_list** list) {
     // push_front onto `list`.
     next = *list;
     *list = this;
