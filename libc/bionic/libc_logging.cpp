@@ -107,7 +107,7 @@ struct BufferOutputStream {
 
 struct FdOutputStream {
  public:
-  FdOutputStream(int fd) : total(0), fd_(fd) {
+  explicit FdOutputStream(int fd) : total(0), fd_(fd) {
   }
 
   void Send(const char* data, int len) {

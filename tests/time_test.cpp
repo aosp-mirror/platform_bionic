@@ -273,7 +273,7 @@ struct Counter {
   }
 
  public:
-  Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
+  explicit Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
     memset(&se, 0, sizeof(se));
     se.sigev_notify = SIGEV_THREAD;
     se.sigev_notify_function = fn;
