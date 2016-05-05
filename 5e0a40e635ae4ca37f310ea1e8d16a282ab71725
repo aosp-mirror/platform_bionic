@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed70b31a_ebfc2250",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-05T14:56:30Z",
+      "side": 1,
+      "message": "can you explain more why that helps?",
+      "revId": "5e0a40e635ae4ca37f310ea1e8d16a282ab71725",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
