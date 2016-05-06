@@ -159,6 +159,38 @@
 
 #define __nonnull(args) __attribute__((__nonnull__ args))
 
+/*
+ * _Nonnull is similar to the nonnull attribute in that it will instruct
+ * compilers to warn the user if it can prove that a null argument is being
+ * passed. Unlike the nonnull attribute, this annotation indicated that a value
+ * *should not* be null, not that it *cannot* be null, or even that the behavior
+ * is undefined. The important distinction is that the optimizer will perform
+ * surprising optimizations like the following:
+ *
+ *     void foo(void*) __attribute__(nonnull, 1);
+ *
+ *     int bar(int* p) {
+ *       foo(p);
+ *
+ *       // The following null check will be elided because nonnull attribute
+ *       // means that, since we call foo with p, p can be assumed to not be
+ *       // null. Thus this will crash if we are called with a null pointer.
+ *       if (src != NULL) {
+ *         return *p;
+ *       }
+ *       return 0;
+ *     }
+ *
+ *     int main() {
+ *       return bar(NULL);
+ *     }
+ *
+ * http://clang.llvm.org/docs/AttributeReference.html#nonnull
+ */
+#if !(defined(__clang__) && __has_feature(nullability))
+#define _Nonnull
+#endif
+
 #define __printflike(x, y) __attribute__((__format__(printf, x, y))) __nonnull((x))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
 
