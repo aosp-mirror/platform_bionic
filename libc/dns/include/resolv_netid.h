@@ -101,9 +101,6 @@ struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int ,
 int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t, int, unsigned, unsigned) __LIBC_HIDDEN__;
 FILE* android_open_proxy(void) __LIBC_HIDDEN__;
 
-/* delete the cache associated with a certain network */
-extern void _resolv_delete_cache_for_net(unsigned netid);
-
 __END_DECLS
 
 #endif /* _RESOLV_NETID_H */
