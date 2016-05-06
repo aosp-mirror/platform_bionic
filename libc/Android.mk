@@ -1390,11 +1390,6 @@ LOCAL_LDFLAGS_arm64  += -Wl,--version-script,$(LOCAL_PATH)/libc.arm64.map
 LOCAL_LDFLAGS_mips64 += -Wl,--version-script,$(LOCAL_PATH)/libc.mips64.map
 LOCAL_LDFLAGS_x86_64 += -Wl,--version-script,$(LOCAL_PATH)/libc.x86_64.map
 
-# We'd really like to do this for all architectures, but since this wasn't done
-# before, these symbols must continue to be exported on LP32 for binary
-# compatibility.
-LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
-
 # Unfortunately --exclude-libs clobbers our version script, so we have to
 # prevent the build system from using this flag.
 LOCAL_NO_EXCLUDE_LIBS := true
