@@ -22,6 +22,30 @@
       "revId": "c24c8938b0fd58fa1cce07345594159735f8e240",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d1a9f04_f1eea899",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2031,
+      "author": {
+        "id": 1093208
+      },
+      "writtenOn": "2016-05-06T09:10:54Z",
+      "side": 1,
+      "message": "Ok, that makes it a lot simpler. My reasoning for clearing the paths was that we were keeping possibly unnecessary information around, but that was a premature optimization.",
+      "parentUuid": "4d1a9f04_511e74aa",
+      "range": {
+        "startLine": 2019,
+        "startChar": 0,
+        "endLine": 2031,
+        "endChar": 9
+      },
+      "revId": "c24c8938b0fd58fa1cce07345594159735f8e240",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
