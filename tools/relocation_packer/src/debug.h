@@ -81,26 +81,29 @@ class Logger {
 
 // Make logging severities visible globally.
 typedef relocation_packer::Logger::Severity LogSeverity;
-using LogSeverity::INFO;
-using LogSeverity::WARNING;
-using LogSeverity::ERROR;
-using LogSeverity::FATAL;
 
 // LOG(severity) prints a message with the given severity, and aborts if
 // severity is FATAL.  LOG_IF(severity, predicate) does the same but only if
 // predicate is true.  INT_MIN is guaranteed to be less than or equal to
 // any verbosity level.
-#define LOG(severity) \
-    (relocation_packer::Logger(severity, INT_MIN, true).GetStream())
-#define LOG_IF(severity, predicate) \
-    (relocation_packer::Logger(severity, INT_MIN, (predicate)).GetStream())
+#define LOG(severity)                                                      \
+  (relocation_packer::Logger(relocation_packer::Logger::severity, INT_MIN, \
+                             true)                                         \
+       .GetStream())
+#define LOG_IF(severity, predicate)                                        \
+  (relocation_packer::Logger(relocation_packer::Logger::severity, INT_MIN, \
+                             (predicate))                                  \
+       .GetStream())
 
 // VLOG(level) prints its message as INFO if level is less than or equal to
 // the current verbosity level.
-#define VLOG(level) \
-    (relocation_packer::Logger(INFO, (level), true).GetStream())
-#define VLOG_IF(level, predicate) \
-    (relocation_packer::Logger(INFO, (level), (predicate)).GetStream())
+#define VLOG(level)                                                          \
+  (relocation_packer::Logger(relocation_packer::Logger::INFO, (level), true) \
+       .GetStream())
+#define VLOG_IF(level, predicate)                                      \
+  (relocation_packer::Logger(relocation_packer::Logger::INFO, (level), \
+                             (predicate))                              \
+       .GetStream())
 
 // CHECK(predicate) fails with a FATAL log message if predicate is false.
 #define CHECK(predicate) (LOG_IF(FATAL, !(predicate)) \
