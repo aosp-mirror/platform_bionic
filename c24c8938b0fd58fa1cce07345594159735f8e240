@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d1a9f04_511e74aa",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 2031,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-06T08:11:23Z",
+      "side": 1,
+      "message": "Is this code needed only so that we can flush the cache if the domain search path has changed?\n\nI don\u0027t think we should do that in this change. I think we can just live with saying that only new queries will use the new search patch, but any existing cached entries are not invalidated. I don\u0027t think it\u0027s worth the complexity.\n\nAnd actually, I\u0027m not sure clearing the cache is correct. IIRC the cache maps complete DNS query packets to complete dns reply packets, and both of those contain the domain as well. So, for example, if we lookup \"foo\" with search path \"bar.com\" we\u0027ll cache \"foo.bar.com\". If we then change the search path to \"baz.com\" and lookup \"foo\" again, we\u0027ll look up \"foo.baz.com\" and not use the cached \"foo.bar.com\".",
+      "range": {
+        "startLine": 2019,
+        "startChar": 0,
+        "endLine": 2031,
+        "endChar": 9
+      },
+      "revId": "c24c8938b0fd58fa1cce07345594159735f8e240",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
