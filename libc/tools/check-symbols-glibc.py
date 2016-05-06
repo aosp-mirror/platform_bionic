@@ -88,7 +88,7 @@ bsd_stuff = set([
   'strlcpy',
   'sys_signame',
   'wcslcat',
-  'wcslcpy'
+  'wcslcpy',
 ])
 # Some symbols are part of the FORTIFY implementation.
 FORTIFY_stuff = set([
