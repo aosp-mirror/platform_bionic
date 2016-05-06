@@ -120,10 +120,10 @@ __BIONIC_LEGACY_INLINE int sigemptyset(sigset_t*);
 __BIONIC_LEGACY_INLINE int sigfillset(sigset_t*);
 __BIONIC_LEGACY_INLINE int sigismember(const sigset_t*, int);
 
-extern int sigpending(sigset_t*) __nonnull((1));
+extern int sigpending(sigset_t* _Nonnull);
 extern int sigprocmask(int, const sigset_t*, sigset_t*);
-extern int sigsuspend(const sigset_t*) __nonnull((1));
-extern int sigwait(const sigset_t*, int*) __nonnull((1, 2));
+extern int sigsuspend(const sigset_t* _Nonnull);
+extern int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
 extern int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
