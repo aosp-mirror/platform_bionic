@@ -578,10 +578,5 @@ LOCAL_SANITIZE := never
 
 LOCAL_CXX_STL := none
 
-# We'd really like to do this for all architectures, but since this wasn't done
-# before, these symbols must continue to be exported on LP32 for binary
-# compatibility.
-LOCAL_LDFLAGS_64 := -Wl,--exclude-libs,libgcc.a
-
 include $(BUILD_SHARED_LIBRARY)
 endif
