@@ -135,49 +135,51 @@ __BEGIN_DECLS
 
 int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(21);
 
-int pthread_attr_destroy(pthread_attr_t*) __nonnull((1));
-int pthread_attr_getdetachstate(const pthread_attr_t*, int*) __nonnull((1, 2));
-int pthread_attr_getguardsize(const pthread_attr_t*, size_t*) __nonnull((1, 2));
-int pthread_attr_getschedparam(const pthread_attr_t*, struct sched_param*) __nonnull((1, 2));
-int pthread_attr_getschedpolicy(const pthread_attr_t*, int*) __nonnull((1, 2));
-int pthread_attr_getscope(const pthread_attr_t*, int*) __nonnull((1, 2));
-int pthread_attr_getstack(const pthread_attr_t*, void**, size_t*) __nonnull((1, 2, 3));
-int pthread_attr_getstacksize(const pthread_attr_t*, size_t*) __nonnull((1, 2));
-int pthread_attr_init(pthread_attr_t*) __nonnull((1));
-int pthread_attr_setdetachstate(pthread_attr_t*, int) __nonnull((1));
-int pthread_attr_setguardsize(pthread_attr_t*, size_t) __nonnull((1));
-int pthread_attr_setschedparam(pthread_attr_t*, const struct sched_param*) __nonnull((1, 2));
-int pthread_attr_setschedpolicy(pthread_attr_t*, int) __nonnull((1));
-int pthread_attr_setscope(pthread_attr_t*, int) __nonnull((1));
-int pthread_attr_setstack(pthread_attr_t*, void*, size_t) __nonnull((1));
-int pthread_attr_setstacksize(pthread_attr_t*, size_t) __nonnull((1));
+int pthread_attr_destroy(pthread_attr_t* _Nonnull);
+int pthread_attr_getdetachstate(const pthread_attr_t* _Nonnull, int* _Nonnull);
+int pthread_attr_getguardsize(const pthread_attr_t* _Nonnull, size_t* _Nonnull);
+int pthread_attr_getschedparam(const pthread_attr_t* _Nonnull, struct sched_param* _Nonnull);
+int pthread_attr_getschedpolicy(const pthread_attr_t* _Nonnull, int* _Nonnull);
+int pthread_attr_getscope(const pthread_attr_t* _Nonnull, int* _Nonnull);
+int pthread_attr_getstack(const pthread_attr_t* _Nonnull, void** _Nonnull, size_t* _Nonnull);
+int pthread_attr_getstacksize(const pthread_attr_t* _Nonnull, size_t* _Nonnull);
+int pthread_attr_init(pthread_attr_t* _Nonnull);
+int pthread_attr_setdetachstate(pthread_attr_t* _Nonnull, int);
+int pthread_attr_setguardsize(pthread_attr_t* _Nonnull, size_t);
+int pthread_attr_setschedparam(pthread_attr_t* _Nonnull, const struct sched_param* _Nonnull);
+int pthread_attr_setschedpolicy(pthread_attr_t* _Nonnull, int);
+int pthread_attr_setscope(pthread_attr_t* _Nonnull, int);
+int pthread_attr_setstack(pthread_attr_t* _Nonnull, void*, size_t);
+int pthread_attr_setstacksize(pthread_attr_t* _Nonnull, size_t);
 
-int pthread_condattr_destroy(pthread_condattr_t*) __nonnull((1));
-int pthread_condattr_getclock(const pthread_condattr_t*, clockid_t*) __nonnull((1, 2))
+int pthread_condattr_destroy(pthread_condattr_t* _Nonnull);
+int pthread_condattr_getclock(const pthread_condattr_t* _Nonnull, clockid_t* _Nonnull)
   __INTRODUCED_IN(21);
-int pthread_condattr_getpshared(const pthread_condattr_t*, int*) __nonnull((1, 2));
-int pthread_condattr_init(pthread_condattr_t*) __nonnull((1));
-int pthread_condattr_setclock(pthread_condattr_t*, clockid_t) __nonnull((1)) __INTRODUCED_IN(21);
-int pthread_condattr_setpshared(pthread_condattr_t*, int) __nonnull((1));
+int pthread_condattr_getpshared(const pthread_condattr_t* _Nonnull, int* _Nonnull);
+int pthread_condattr_init(pthread_condattr_t* _Nonnull);
+int pthread_condattr_setclock(pthread_condattr_t* _Nonnull, clockid_t) __INTRODUCED_IN(21);
+int pthread_condattr_setpshared(pthread_condattr_t* _Nonnull, int);
 
-int pthread_cond_broadcast(pthread_cond_t*) __nonnull((1));
-int pthread_cond_destroy(pthread_cond_t*) __nonnull((1));
-int pthread_cond_init(pthread_cond_t*, const pthread_condattr_t*) __nonnull((1));
-int pthread_cond_signal(pthread_cond_t*) __nonnull((1));
-int pthread_cond_timedwait(pthread_cond_t*, pthread_mutex_t*, const struct timespec*) __nonnull((1, 2, 3));
-int pthread_cond_wait(pthread_cond_t*, pthread_mutex_t*) __nonnull((1, 2));
+int pthread_cond_broadcast(pthread_cond_t* _Nonnull);
+int pthread_cond_destroy(pthread_cond_t* _Nonnull);
+int pthread_cond_init(pthread_cond_t* _Nonnull, const pthread_condattr_t*);
+int pthread_cond_signal(pthread_cond_t* _Nonnull);
+int pthread_cond_timedwait(pthread_cond_t* _Nonnull, pthread_mutex_t* _Nonnull,
+                           const struct timespec* _Nonnull);
+int pthread_cond_wait(pthread_cond_t* _Nonnull, pthread_mutex_t* _Nonnull);
 
-int pthread_create(pthread_t*, pthread_attr_t const*, void *(*)(void*), void*) __nonnull((1, 3));
+int pthread_create(pthread_t* _Nonnull, pthread_attr_t const*,
+                   void* (* _Nonnull start_routine)(void*), void*);
 int pthread_detach(pthread_t);
 void pthread_exit(void*) __noreturn;
 
 int pthread_equal(pthread_t, pthread_t);
 
-int pthread_getattr_np(pthread_t, pthread_attr_t*) __nonnull((2));
+int pthread_getattr_np(pthread_t, pthread_attr_t* _Nonnull);
 
-int pthread_getcpuclockid(pthread_t, clockid_t*) __nonnull((2));
+int pthread_getcpuclockid(pthread_t, clockid_t* _Nonnull);
 
-int pthread_getschedparam(pthread_t, int*, struct sched_param*) __nonnull((2, 3));
+int pthread_getschedparam(pthread_t, int* _Nonnull, struct sched_param* _Nonnull);
 
 void* pthread_getspecific(pthread_key_t);
 
@@ -185,79 +187,71 @@ pid_t pthread_gettid_np(pthread_t) __INTRODUCED_IN(21);
 
 int pthread_join(pthread_t, void**);
 
-int pthread_key_create(pthread_key_t*, void (*)(void*)) __nonnull((1));
+int pthread_key_create(pthread_key_t* _Nonnull, void (*)(void*));
 int pthread_key_delete(pthread_key_t);
 
-int pthread_mutexattr_destroy(pthread_mutexattr_t*) __nonnull((1));
-int pthread_mutexattr_getpshared(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
-int pthread_mutexattr_gettype(const pthread_mutexattr_t*, int*) __nonnull((1, 2));
-int pthread_mutexattr_init(pthread_mutexattr_t*) __nonnull((1));
-int pthread_mutexattr_setpshared(pthread_mutexattr_t*, int) __nonnull((1));
-int pthread_mutexattr_settype(pthread_mutexattr_t*, int) __nonnull((1));
+int pthread_mutexattr_destroy(pthread_mutexattr_t* _Nonnull);
+int pthread_mutexattr_getpshared(const pthread_mutexattr_t* _Nonnull, int* _Nonnull);
+int pthread_mutexattr_gettype(const pthread_mutexattr_t* _Nonnull, int* _Nonnull);
+int pthread_mutexattr_init(pthread_mutexattr_t* _Nonnull);
+int pthread_mutexattr_setpshared(pthread_mutexattr_t* _Nonnull, int);
+int pthread_mutexattr_settype(pthread_mutexattr_t* _Nonnull, int);
 
-int pthread_mutex_destroy(pthread_mutex_t*) __nonnull((1));
-int pthread_mutex_init(pthread_mutex_t*, const pthread_mutexattr_t*) __nonnull((1));
-#if !defined(__LP64__)
-int pthread_mutex_lock(pthread_mutex_t*) /* __nonnull((1)) */;
-#else
-int pthread_mutex_lock(pthread_mutex_t*) __nonnull((1));
-#endif
-int pthread_mutex_timedlock(pthread_mutex_t*, const struct timespec*) __nonnull((1, 2))
+int pthread_mutex_destroy(pthread_mutex_t* _Nonnull);
+int pthread_mutex_init(pthread_mutex_t* _Nonnull, const pthread_mutexattr_t*);
+int pthread_mutex_lock(pthread_mutex_t* _Nonnull);
+int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull, const struct timespec* _Nonnull)
   __INTRODUCED_IN(21);
-int pthread_mutex_trylock(pthread_mutex_t*) __nonnull((1));
-#if !defined(__LP4__)
-int pthread_mutex_unlock(pthread_mutex_t*) /* __nonnull((1)) */;
-#else
-int pthread_mutex_unlock(pthread_mutex_t*) __nonnull((1));
-#endif
+int pthread_mutex_trylock(pthread_mutex_t* _Nonnull);
+int pthread_mutex_unlock(pthread_mutex_t* _Nonnull);
 
-int pthread_once(pthread_once_t*, void (*)(void)) __nonnull((1, 2));
+int pthread_once(pthread_once_t* _Nonnull, void (* _Nonnull init_routine)(void));
 
-int pthread_rwlockattr_init(pthread_rwlockattr_t*) __nonnull((1));
-int pthread_rwlockattr_destroy(pthread_rwlockattr_t*) __nonnull((1));
-int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t*, int*) __nonnull((1, 2));
-int pthread_rwlockattr_setpshared(pthread_rwlockattr_t*, int) __nonnull((1));
-int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t*, int*) __nonnull((1, 2))
+int pthread_rwlockattr_init(pthread_rwlockattr_t* _Nonnull);
+int pthread_rwlockattr_destroy(pthread_rwlockattr_t* _Nonnull);
+int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t* _Nonnull, int* _Nonnull);
+int pthread_rwlockattr_setpshared(pthread_rwlockattr_t* _Nonnull, int);
+int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t* _Nonnull, int* _Nonnull)
   __INTRODUCED_IN(23);
-int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t*, int) __nonnull((1)) __INTRODUCED_IN(23);
+int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t* _Nonnull, int) __INTRODUCED_IN(23);
 
-int pthread_rwlock_destroy(pthread_rwlock_t*) __nonnull((1));
-int pthread_rwlock_init(pthread_rwlock_t*, const pthread_rwlockattr_t*) __nonnull((1));
-int pthread_rwlock_rdlock(pthread_rwlock_t*) __nonnull((1));
-int pthread_rwlock_timedrdlock(pthread_rwlock_t*, const struct timespec*) __nonnull((1, 2));
-int pthread_rwlock_timedwrlock(pthread_rwlock_t*, const struct timespec*) __nonnull((1, 2));
-int pthread_rwlock_tryrdlock(pthread_rwlock_t*) __nonnull((1));
-int pthread_rwlock_trywrlock(pthread_rwlock_t*) __nonnull((1));
-int pthread_rwlock_unlock(pthread_rwlock_t *) __nonnull((1));
-int pthread_rwlock_wrlock(pthread_rwlock_t*) __nonnull((1));
+int pthread_rwlock_destroy(pthread_rwlock_t* _Nonnull);
+int pthread_rwlock_init(pthread_rwlock_t* _Nonnull, const pthread_rwlockattr_t*);
+int pthread_rwlock_rdlock(pthread_rwlock_t* _Nonnull);
+int pthread_rwlock_timedrdlock(pthread_rwlock_t* _Nonnull, const struct timespec* _Nonnull);
+int pthread_rwlock_timedwrlock(pthread_rwlock_t* _Nonnull, const struct timespec* _Nonnull);
+int pthread_rwlock_tryrdlock(pthread_rwlock_t* _Nonnull);
+int pthread_rwlock_trywrlock(pthread_rwlock_t* _Nonnull);
+int pthread_rwlock_unlock(pthread_rwlock_t* _Nonnull);
+int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull);
 
-int pthread_barrierattr_init(pthread_barrierattr_t* attr) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_barrierattr_destroy(pthread_barrierattr_t* attr) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_barrierattr_getpshared(pthread_barrierattr_t* attr, int* pshared) __nonnull((1, 2))
+int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
+int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
+int pthread_barrierattr_getpshared(pthread_barrierattr_t* _Nonnull attr, int* _Nonnull pshared)
   __INTRODUCED_IN(24);
-int pthread_barrierattr_setpshared(pthread_barrierattr_t* attr, int pshared) __nonnull((1))
+int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull attr, int pshared)
   __INTRODUCED_IN(24);
 
-int pthread_barrier_init(pthread_barrier_t*, const pthread_barrierattr_t*, unsigned) __nonnull((1))
+int pthread_barrier_init(pthread_barrier_t* _Nonnull, const pthread_barrierattr_t*, unsigned)
   __INTRODUCED_IN(24);
-int pthread_barrier_destroy(pthread_barrier_t*) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_barrier_wait(pthread_barrier_t*) __nonnull((1)) __INTRODUCED_IN(24);
+int pthread_barrier_destroy(pthread_barrier_t* _Nonnull) __INTRODUCED_IN(24);
+int pthread_barrier_wait(pthread_barrier_t* _Nonnull) __INTRODUCED_IN(24);
 
-int pthread_spin_destroy(pthread_spinlock_t*) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_spin_init(pthread_spinlock_t*, int) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_spin_lock(pthread_spinlock_t*) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_spin_trylock(pthread_spinlock_t*) __nonnull((1)) __INTRODUCED_IN(24);
-int pthread_spin_unlock(pthread_spinlock_t*) __nonnull((1)) __INTRODUCED_IN(24);
+int pthread_spin_destroy(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
+int pthread_spin_init(pthread_spinlock_t* _Nonnull, int) __INTRODUCED_IN(24);
+int pthread_spin_lock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
+int pthread_spin_trylock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
+int pthread_spin_unlock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
 
 pthread_t pthread_self(void) __pure2;
 
 #if defined(__USE_GNU)
-int pthread_getname_np(pthread_t, char*, size_t) __nonnull((2)) __INTRODUCED_IN_FUTURE;
+int pthread_getname_np(pthread_t, char* _Nonnull, size_t) __INTRODUCED_IN_FUTURE;
 #endif
 /* TODO: this should be __USE_GNU too. */
-int pthread_setname_np(pthread_t, const char*) __nonnull((2));
+int pthread_setname_np(pthread_t, const char* _Nonnull);
 
-int pthread_setschedparam(pthread_t, int, const struct sched_param*) __nonnull((3));
+int pthread_setschedparam(pthread_t, int, const struct sched_param* _Nonnull);
 
 int pthread_setspecific(pthread_key_t, const void*);
 

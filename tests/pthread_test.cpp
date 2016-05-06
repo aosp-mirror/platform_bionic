@@ -1780,7 +1780,14 @@ TEST(pthread, pthread_types_allow_four_bytes_alignment) {
 
 TEST(pthread, pthread_mutex_lock_null_32) {
 #if defined(__BIONIC__) && !defined(__LP64__)
-  ASSERT_EQ(EINVAL, pthread_mutex_lock(NULL));
+  // For LP32, the pthread lock/unlock functions allow a NULL mutex and return
+  // EINVAL in that case: http://b/19995172.
+  //
+  // We decorate the public defintion with _Nonnull so that people recompiling
+  // their code with get a warning and might fix their bug, but need to pass
+  // NULL here to test that we remain compatible.
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EQ(EINVAL, pthread_mutex_lock(null_value));
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
 #endif
@@ -1788,7 +1795,14 @@ TEST(pthread, pthread_mutex_lock_null_32) {
 
 TEST(pthread, pthread_mutex_unlock_null_32) {
 #if defined(__BIONIC__) && !defined(__LP64__)
-  ASSERT_EQ(EINVAL, pthread_mutex_unlock(NULL));
+  // For LP32, the pthread lock/unlock functions allow a NULL mutex and return
+  // EINVAL in that case: http://b/19995172.
+  //
+  // We decorate the public defintion with _Nonnull so that people recompiling
+  // their code with get a warning and might fix their bug, but need to pass
+  // NULL here to test that we remain compatible.
+  pthread_mutex_t* null_value = nullptr;
+  ASSERT_EQ(EINVAL, pthread_mutex_unlock(null_value));
 #else
   GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
 #endif
