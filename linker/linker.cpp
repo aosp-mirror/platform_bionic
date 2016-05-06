@@ -1867,6 +1867,7 @@ static bool find_library_internal(android_namespace_t* ns,
 }
 
 static void soinfo_unload(soinfo* si);
+static void soinfo_unload(soinfo* soinfos[], size_t count);
 
 // TODO: this is slightly unusual way to construct
 // the global group for relocation. Not every RTLD_GLOBAL
@@ -1942,9 +1943,7 @@ static bool find_libraries(android_namespace_t* ns,
 
   auto failure_guard = make_scope_guard([&]() {
     // Housekeeping
-    for (size_t i = 0; i<soinfos_count; ++i) {
-      soinfo_unload(soinfos[i]);
-    }
+    soinfo_unload(soinfos, soinfos_count);
   });
 
   ZipArchiveCache zip_archive_cache;
@@ -2042,13 +2041,18 @@ static bool find_libraries(android_namespace_t* ns,
       if (!si->link_image(global_group, local_group, extinfo)) {
         return false;
       }
-      si->set_linked();
     }
 
     return true;
   });
 
   if (linked) {
+    local_group.for_each([](soinfo* si) {
+      if (!si->is_linked()) {
+        si->set_linked();
+      }
+    });
+
     failure_guard.disable();
   }
 
@@ -2076,12 +2080,6 @@ static soinfo* find_library(android_namespace_t* ns,
 }
 
 static void soinfo_unload(soinfo* root) {
-  // Note that the library can be loaded but not linked;
-  // in which case there is no root but we still need
-  // to walk the tree and unload soinfos involved.
-  //
-  // This happens on unsuccessful dlopen, when one of
-  // the DT_NEEDED libraries could not be linked/found.
   if (root->is_linked()) {
     root = root->get_local_group_root();
   }
@@ -2091,84 +2089,112 @@ static void soinfo_unload(soinfo* root) {
     return;
   }
 
-  size_t ref_count = root->is_linked() ? root->decrement_ref_count() : 0;
+  soinfo_unload(&root, 1);
+}
 
-  if (ref_count == 0) {
-    soinfo::soinfo_list_t local_unload_list;
-    soinfo::soinfo_list_t external_unload_list;
-    soinfo::soinfo_list_t depth_first_list;
-    depth_first_list.push_back(root);
-    soinfo* si = nullptr;
+static void soinfo_unload(soinfo* soinfos[], size_t count) {
+  // Note that the library can be loaded but not linked;
+  // in which case there is no root but we still need
+  // to walk the tree and unload soinfos involved.
+  //
+  // This happens on unsuccessful dlopen, when one of
+  // the DT_NEEDED libraries could not be linked/found.
+  if (count == 0) {
+    return;
+  }
 
-    while ((si = depth_first_list.pop_front()) != nullptr) {
-      if (local_unload_list.contains(si)) {
-        continue;
-      }
+  soinfo::soinfo_list_t unload_list;
+  for (size_t i = 0; i < count; ++i) {
+    soinfo* si = soinfos[i];
 
-      local_unload_list.push_back(si);
-
-      if (si->has_min_version(0)) {
-        soinfo* child = nullptr;
-        while ((child = si->get_children().pop_front()) != nullptr) {
-          TRACE("%s@%p needs to unload %s@%p", si->get_realpath(), si,
-              child->get_realpath(), child);
-
-          if (local_unload_list.contains(child)) {
-            continue;
-          } else if (child->is_linked() && child->get_local_group_root() != root) {
-            external_unload_list.push_back(child);
-          } else {
-            depth_first_list.push_front(child);
-          }
-        }
+    if (si->can_unload()) {
+      size_t ref_count = si->is_linked() ? si->decrement_ref_count() : 0;
+      if (ref_count == 0) {
+        unload_list.push_back(si);
       } else {
-#if !defined(__work_around_b_24465209__)
-        __libc_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
-#else
-        PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
-        for_each_dt_needed(si, [&] (const char* library_name) {
-          TRACE("deprecated (old format of soinfo): %s needs to unload %s",
-              si->get_realpath(), library_name);
-
-          soinfo* needed = find_library(si->get_primary_namespace(),
-                                        library_name, RTLD_NOLOAD, nullptr, nullptr);
-
-          if (needed != nullptr) {
-            // Not found: for example if symlink was deleted between dlopen and dlclose
-            // Since we cannot really handle errors at this point - print and continue.
-            PRINT("warning: couldn't find %s needed by %s on unload.",
-                library_name, si->get_realpath());
-            return;
-          } else if (local_unload_list.contains(needed)) {
-            // already visited
-            return;
-          } else if (needed->is_linked() && needed->get_local_group_root() != root) {
-            // external group
-            external_unload_list.push_back(needed);
-          } else {
-            // local group
-            depth_first_list.push_front(needed);
-          }
-        });
-#endif
+        TRACE("not unloading '%s' group, decrementing ref_count to %zd",
+            si->get_realpath(), ref_count);
       }
+    } else {
+      TRACE("not unloading '%s' - the binary is flagged with NODELETE", si->get_realpath());
+      return;
+    }
+  }
+
+  // This is used to identify soinfos outside of the load-group
+  // note that we cannot have > 1 in the array and have any of them
+  // linked. This is why we can safely use the first one.
+  soinfo* root = soinfos[0];
+
+  soinfo::soinfo_list_t local_unload_list;
+  soinfo::soinfo_list_t external_unload_list;
+  soinfo* si = nullptr;
+
+  while ((si = unload_list.pop_front()) != nullptr) {
+    if (local_unload_list.contains(si)) {
+      continue;
     }
 
-    local_unload_list.for_each([](soinfo* si) {
-      si->call_destructors();
-    });
+    local_unload_list.push_back(si);
 
-    while ((si = local_unload_list.pop_front()) != nullptr) {
-      notify_gdb_of_unload(si);
-      soinfo_free(si);
-    }
+    if (si->has_min_version(0)) {
+      soinfo* child = nullptr;
+      while ((child = si->get_children().pop_front()) != nullptr) {
+        TRACE("%s@%p needs to unload %s@%p", si->get_realpath(), si,
+            child->get_realpath(), child);
 
-    while ((si = external_unload_list.pop_front()) != nullptr) {
-      soinfo_unload(si);
+        if (local_unload_list.contains(child)) {
+          continue;
+        } else if (child->is_linked() && child->get_local_group_root() != root) {
+          external_unload_list.push_back(child);
+        } else {
+          unload_list.push_front(child);
+        }
+      }
+    } else {
+#if !defined(__work_around_b_24465209__)
+      __libc_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
+#else
+      PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
+      for_each_dt_needed(si, [&] (const char* library_name) {
+        TRACE("deprecated (old format of soinfo): %s needs to unload %s",
+            si->get_realpath(), library_name);
+
+        soinfo* needed = find_library(si->get_primary_namespace(),
+                                      library_name, RTLD_NOLOAD, nullptr, nullptr);
+
+        if (needed != nullptr) {
+          // Not found: for example if symlink was deleted between dlopen and dlclose
+          // Since we cannot really handle errors at this point - print and continue.
+          PRINT("warning: couldn't find %s needed by %s on unload.",
+              library_name, si->get_realpath());
+          return;
+        } else if (local_unload_list.contains(needed)) {
+          // already visited
+          return;
+        } else if (needed->is_linked() && needed->get_local_group_root() != root) {
+          // external group
+          external_unload_list.push_back(needed);
+        } else {
+          // local group
+          unload_list.push_front(needed);
+        }
+      });
+#endif
     }
-  } else {
-    TRACE("not unloading '%s' group, decrementing ref_count to %zd",
-        root->get_realpath(), ref_count);
+  }
+
+  local_unload_list.for_each([](soinfo* si) {
+    si->call_destructors();
+  });
+
+  while ((si = local_unload_list.pop_front()) != nullptr) {
+    notify_gdb_of_unload(si);
+    soinfo_free(si);
+  }
+
+  while ((si = external_unload_list.pop_front()) != nullptr) {
+    soinfo_unload(si);
   }
 }
 
@@ -3013,8 +3039,7 @@ void soinfo::call_constructors() {
 
   if (!is_main_executable() && preinit_array_ != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
-    PRINT("\"%s\": ignoring %zd-entry DT_PREINIT_ARRAY in shared library!",
-          get_realpath(), preinit_array_count_);
+    PRINT("\"%s\": ignoring DT_PREINIT_ARRAY in shared library!", get_realpath());
   }
 
   get_children().for_each([] (soinfo* si) {
