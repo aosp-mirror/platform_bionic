@@ -120,10 +120,10 @@ extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale
  */
 
 #if defined(__cplusplus)
-extern "C++" char* basename(char*) __RENAME(__gnu_basename) __nonnull((1));
-extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1));
+extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename);
+extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename);
 #else
-extern char* basename(const char*) __RENAME(__gnu_basename) __nonnull((1)) __INTRODUCED_IN(23);
+extern char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 #endif
 
