@@ -47,7 +47,7 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   void* new_tls = NULL;
   int* child_tid = NULL;
 
-  if (!child_stack) {
+  if (fn != nullptr && child_stack == nullptr) {
     errno = EINVAL;
     return -1;
   }
@@ -76,7 +76,16 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   pid_t parent_pid = self->invalidate_cached_pid();
 
   // Actually do the clone.
-  int clone_result = __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
+  int clone_result;
+  if (fn != nullptr) {
+    clone_result = __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
+  } else {
+#if defined(__x86_64__) // sys_clone's last two arguments are flipped on x86-64.
+    clone_result = syscall(__NR_clone, flags, child_stack, parent_tid, child_tid, new_tls);
+#else
+    clone_result = syscall(__NR_clone, flags, child_stack, parent_tid, new_tls, child_tid);
+#endif
+  }
 
   // We're the parent, so put our known pid back in place.
   // We leave the child without a cached pid, but:
