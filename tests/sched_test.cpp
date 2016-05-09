@@ -55,7 +55,8 @@ TEST(sched, clone_errno) {
   // Check that our hand-written clone assembler sets errno correctly on failure.
   uintptr_t fake_child_stack[16];
   errno = 0;
-  ASSERT_EQ(-1, clone(NULL, &fake_child_stack[16], CLONE_THREAD, NULL));
+  // If CLONE_THREAD is set, CLONE_SIGHAND must be set too.
+  ASSERT_EQ(-1, clone(child_fn, &fake_child_stack[16], CLONE_THREAD, NULL));
   ASSERT_EQ(EINVAL, errno);
 }
 
