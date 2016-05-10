@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72a2e4c0_15be7e73",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2031,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-10T07:57:49Z",
+      "side": 1,
+      "message": "Long line.",
+      "range": {
+        "startLine": 2031,
+        "startChar": 94,
+        "endLine": 2031,
+        "endChar": 101
+      },
+      "revId": "7c050db1f0e42c55e7941c82f0a46073b174001c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72a2e4c0_3592a204",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2034,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2016-05-10T07:57:49Z",
+      "side": 1,
+      "message": "Lose this blank line?",
+      "revId": "7c050db1f0e42c55e7941c82f0a46073b174001c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
