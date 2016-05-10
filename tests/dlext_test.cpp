@@ -34,6 +34,7 @@
 
 #include "TemporaryFile.h"
 #include "utils.h"
+#include "dlext_private.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE(ptr != nullptr) << "dlerror: " << dlerror()
@@ -738,8 +739,6 @@ TEST(dlext, ns_smoke) {
 
   dlclose(handle2);
 }
-
-extern "C" void android_set_application_target_sdk_version(uint32_t target);
 
 TEST(dlext, ns_isolated) {
   static const char* root_lib = "libnstest_root_not_isolated.so";
