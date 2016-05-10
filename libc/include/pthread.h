@@ -281,14 +281,6 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
         __pthread_cleanup_pop( &__cleanup, (execute)); \
     } while (0);                                       \
 
-
-#if !defined(__LP64__)
-
-// Bionic additions that are deprecated even in the 32-bit ABI.
-int pthread_cond_timedwait_relative_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*) __attribute__((deprecated("use pthread_cond_timedwait instead")));
-
-#endif /* !defined(__LP64__) */
-
 __END_DECLS
 
 #endif /* _PTHREAD_H_ */
