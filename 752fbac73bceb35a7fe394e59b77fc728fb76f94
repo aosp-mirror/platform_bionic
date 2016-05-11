@@ -16,6 +16,24 @@
       "revId": "752fbac73bceb35a7fe394e59b77fc728fb76f94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_ebeaf185",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 4345,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-11T20:54:31Z",
+      "side": 1,
+      "message": "But we only enable safestack on 64 bit targets.",
+      "parentUuid": "b2e0dc3d_bc914157",
+      "revId": "752fbac73bceb35a7fe394e59b77fc728fb76f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
