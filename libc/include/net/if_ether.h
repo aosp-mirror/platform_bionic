@@ -34,14 +34,8 @@
 #ifndef _NET_IF_ETHER_H_
 #define _NET_IF_ETHER_H_
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
-
-#ifdef _KERNEL
-#ifdef _KERNEL_OPT
-#include "opt_mbuftrace.h"
-#endif
-#include <sys/mbuf.h>
-#endif
 
 /*
  * Some basic Ethernet constants.
@@ -53,11 +47,6 @@
 #define	ETHER_MIN_LEN	64	/* minimum frame length, including CRC */
 #define	ETHER_MAX_LEN	1518	/* maximum frame length, including CRC */
 #define	ETHER_MAX_LEN_JUMBO 9018 /* maximum jumbo frame len, including CRC */
-
-/*
- * Some Ethernet extensions.
- */
-#define	ETHER_VLAN_ENCAP_LEN 4	/* length of 802.1Q VLAN encapsulation */
 
 /*
  * Ethernet address - 6 octets
@@ -78,36 +67,10 @@ struct	ether_header {
 
 #include <net/ethertypes.h>
 
-#define	ETHER_IS_MULTICAST(addr) (*(addr) & 0x01) /* is address mcast/bcast? */
-
 #define	ETHERMTU_JUMBO	(ETHER_MAX_LEN_JUMBO - ETHER_HDR_LEN - ETHER_CRC_LEN)
 #define	ETHERMTU	(ETHER_MAX_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
 #define	ETHERMIN	(ETHER_MIN_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
 
-/*
- * Compute the maximum frame size based on ethertype (i.e. possible
- * encapsulation) and whether or not an FCS is present.
- */
-#define	ETHER_MAX_FRAME(ifp, etype, hasfcs)				\
-	((ifp)->if_mtu + ETHER_HDR_LEN +				\
-	 ((hasfcs) ? ETHER_CRC_LEN : 0) +				\
-	 (((etype) == ETHERTYPE_VLAN) ? ETHER_VLAN_ENCAP_LEN : 0))
-
-/*
- * Ethernet CRC32 polynomials (big- and little-endian verions).
- */
-#define	ETHER_CRC_POLY_LE	0xedb88320
-#define	ETHER_CRC_POLY_BE	0x04c11db6
-
-#ifndef _STANDALONE
-
-/*
- * Ethernet-specific mbuf flags.
- */
-#define	M_HASFCS	M_LINK0	/* FCS included at end of frame */
-#define	M_PROMISC	M_LINK1	/* this packet is not for us */
-
-#ifdef _KERNEL
 /*
  * Macro to map an IP multicast address to an Ethernet multicast address.
  * The high-order 25 bits of the Ethernet address are statically assigned,
@@ -140,76 +103,12 @@ struct	ether_header {
 	(enaddr)[4] = ((u_int8_t *)ip6addr)[14];			\
 	(enaddr)[5] = ((u_int8_t *)ip6addr)[15];			\
 }
-#endif
 
-#define	ETHERCAP_VLAN_MTU	0x00000001	/* VLAN-compatible MTU */
-#define	ETHERCAP_VLAN_HWTAGGING	0x00000002	/* hardware VLAN tag support */
-#define	ETHERCAP_JUMBO_MTU	0x00000004	/* 9000 byte MTU supported */
-
-#ifdef	_KERNEL
-extern const uint8_t etherbroadcastaddr[ETHER_ADDR_LEN];
-extern const uint8_t ethermulticastaddr_slowprotocols[ETHER_ADDR_LEN];
-extern const uint8_t ether_ipmulticast_min[ETHER_ADDR_LEN];
-extern const uint8_t ether_ipmulticast_max[ETHER_ADDR_LEN];
-
-int	ether_ioctl(struct ifnet *, u_long, caddr_t);
-int	ether_addmulti (struct ifreq *, struct ethercom *);
-int	ether_delmulti (struct ifreq *, struct ethercom *);
-int	ether_changeaddr (struct ifreq *, struct ethercom *);
-int	ether_multiaddr(struct sockaddr *, u_int8_t[], u_int8_t[]);
-
-/*
- * Ethernet 802.1Q VLAN structures.
- */
-
-/* add VLAN tag to input/received packet */
-#define	VLAN_INPUT_TAG(ifp, m, vlanid, _errcase)	\
-	do {								\
-                struct m_tag *mtag =					\
-                    m_tag_get(PACKET_TAG_VLAN, sizeof(u_int), M_NOWAIT);\
-                if (mtag == NULL) {					\
-			ifp->if_ierrors++;				\
-                        printf("%s: unable to allocate VLAN tag\n",	\
-                            ifp->if_xname);				\
-                        m_freem(m);					\
-                        _errcase;					\
-                }							\
-                *(u_int *)(mtag + 1) = vlanid;				\
-                m_tag_prepend(m, mtag);					\
-	} while(0)
-
-/* extract VLAN tag from output/trasmit packet */
-#define VLAN_OUTPUT_TAG(ec, m0)			\
-	VLAN_ATTACHED(ec) ? m_tag_find((m0), PACKET_TAG_VLAN, NULL) : NULL
-
-/* extract VLAN ID value from a VLAN tag */
-#define VLAN_TAG_VALUE(mtag)	\
-	((*(u_int *)(mtag + 1)) & 4095)
-
-/* test if any VLAN is configured for this interface */
-#define VLAN_ATTACHED(ec)	((ec)->ec_nvlans > 0)
-
-void	ether_ifattach(struct ifnet *, const u_int8_t *);
-void	ether_ifdetach(struct ifnet *);
-
-char	*ether_sprintf(const u_int8_t *);
-char	*ether_snprintf(char *, size_t, const u_int8_t *);
-
-u_int32_t ether_crc32_le(const u_int8_t *, size_t);
-u_int32_t ether_crc32_be(const u_int8_t *, size_t);
-
-int	ether_nonstatic_aton(u_char *, char *);
-#else
-/*
- * Prototype ethers(3) functions.
- */
-#include <sys/cdefs.h>
 __BEGIN_DECLS
-char* ether_ntoa __P((const struct ether_addr*)) __INTRODUCED_IN(21);
-struct ether_addr* ether_aton __P((const char*)) __INTRODUCED_IN(21);
-__END_DECLS
-#endif
 
-#endif /* _STANDALONE */
+char* ether_ntoa(const struct ether_addr*) __INTRODUCED_IN(21);
+struct ether_addr* ether_aton(const char*) __INTRODUCED_IN(21);
+
+__END_DECLS
 
 #endif /* !_NET_IF_ETHER_H_ */
