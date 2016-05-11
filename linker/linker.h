@@ -470,6 +470,32 @@ size_t linker_get_error_buffer_size();
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
 
+enum {
+  /* A regular namespace is the namespace with a custom search path that does
+   * not impose any restrictions on the location of native libraries.
+   */
+  ANDROID_NAMESPACE_TYPE_REGULAR = 0,
+
+  /* An isolated namespace requires all the libraries to be on the search path
+   * or under permitted_when_isolated_path. The search path is the union of
+   * ld_library_path and default_library_path.
+   */
+  ANDROID_NAMESPACE_TYPE_ISOLATED = 1,
+
+  /* The shared namespace clones the list of libraries of the caller namespace upon creation
+   * which means that they are shared between namespaces - the caller namespace and the new one
+   * will use the same copy of a library if it was loaded prior to android_create_namespace call.
+   *
+   * Note that libraries loaded after the namespace is created will not be shared.
+   *
+   * Shared namespaces can be isolated or regular. Note that they do not inherit the search path nor
+   * permitted_path from the caller's namespace.
+   */
+  ANDROID_NAMESPACE_TYPE_SHARED = 2,
+  ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
+                                           ANDROID_NAMESPACE_TYPE_ISOLATED,
+};
+
 bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);
 android_namespace_t* create_namespace(const void* caller_addr, const char* name,
                                       const char* ld_library_path, const char* default_library_path,
