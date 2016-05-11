@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2e0dc3d_bc914157",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 4345,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-11T00:31:11Z",
+      "side": 1,
+      "message": "you can\u0027t make system calls on x86 at this point. see L4300. our inability to come up with a fully working version of this trick is why we currently build the linker without fstack-protect too.",
+      "revId": "752fbac73bceb35a7fe394e59b77fc728fb76f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
