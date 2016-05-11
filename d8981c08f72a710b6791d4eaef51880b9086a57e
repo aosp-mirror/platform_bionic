@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32794c74_b6c9483a",
+        "filename": "libc/upstream-openbsd/android/include/arc4random.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1101148
+      },
+      "writtenOn": "2016-05-11T03:38:00Z",
+      "side": 1,
+      "message": "could you state the reason ? \n\n- I do understand it might gets called from getentropy function which is system call and should not abort. Instead it should return error code on fail\n\n- Instead remove this function and change at (arc4random.c) - Do not call this function at all.\n\n- Also, it is always good to remove the line, instead of commenting using \"//\" - which quite not a good practice for a code without having notes on top of that.",
+      "revId": "d8981c08f72a710b6791d4eaef51880b9086a57e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
