@@ -139,6 +139,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_54947d50",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-12T20:56:07Z",
+      "side": 1,
+      "message": "because we don\u0027t have a class that represents the global thread list :-)\n\n(personally, i\u0027d like to lose the global list altogether, but backwards compatibility with badly-written code has kept us from finishing that job...)",
+      "parentUuid": "d242b02f_f4cba9b5",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_0367d0dc",
         "filename": "libc/libc.map.txt",
         "patchSetId": 17
