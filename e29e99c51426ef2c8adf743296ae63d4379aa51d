@@ -16,6 +16,24 @@
       "revId": "e29e99c51426ef2c8adf743296ae63d4379aa51d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_94b42544",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-05-12T20:30:59Z",
+      "side": 1,
+      "message": "Oh, good catch. aiui we\u0027re still covered in this case because this flag was being overridden by the version script anyway. Thanks for keeping an eye out though :)",
+      "parentUuid": "d242b02f_54671ddb",
+      "revId": "e29e99c51426ef2c8adf743296ae63d4379aa51d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
