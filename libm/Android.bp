@@ -280,10 +280,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/ld128/s_nanl.c",
             ],
             local_include_dirs: ["upstream-freebsd/lib/msun/ld128/"],
-            // We'd really like to do this for all architectures, but since this wasn't done
-            // before, these symbols must continue to be exported on LP32 for binary
-            // compatibility.
-            ldflags: ["-Wl,--exclude-libs,libgcc.a"],
         },
     },
 
