@@ -1062,7 +1062,6 @@ cc_library_static {
                 "arch-mips/string/memcpy.S",
                 "arch-mips/string/memset.S",
                 "arch-mips/string/strcmp.S",
-                "arch-mips/string/strlen.c",
 
                 "arch-mips/bionic/__bionic_clone.S",
                 "arch-mips/bionic/cacheflush.cpp",
@@ -1071,13 +1070,15 @@ cc_library_static {
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
+
+                "arch-mips/string/mips_strlen.c",
             ],
             rev6: {
                 srcs: [
-                    "arch-mips/string/mips_strlen.c",
+                    "arch-mips/string/strlen.c",
                 ],
                 exclude_srcs: [
-                    "arch-mips/string/strlen.c",
+                    "arch-mips/string/mips_strlen.c",
                 ],
             },
         },
@@ -1660,23 +1661,25 @@ cc_library {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
         },
     },
-    srcs: ["bionic/malloc_common.cpp"],
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
+            "bionic/malloc_common.cpp",
             "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
-        whole_static_libs: ["libc_init_static"],
+        whole_static_libs: ["libc_init_static", "libjemalloc"],
     },
     shared: {
         srcs: [
             "arch-common/bionic/crtbegin_so.c",
             "arch-common/bionic/crtbrand.S",
+            "bionic/malloc_common.cpp",
             "bionic/libc_init_dynamic.cpp",
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
+        whole_static_libs: ["libjemalloc"],
     },
 
     required: ["tzdata"],
@@ -1696,16 +1699,7 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common", "libjemalloc"],
-
-    // We'd really like to do this for all architectures, but since this wasn't done
-    // before, these symbols must continue to be exported on LP32 for binary
-    // compatibility.
-    multilib: {
-        lib64: {
-            ldflags: ["-Wl,--exclude-libs,libgcc.a"],
-        },
-    },
+    whole_static_libs: ["libc_common"],
 
     nocrt: true,
 
@@ -1723,17 +1717,18 @@ cc_library {
             },
 
             shared: {
-                srcs: ["arch-arm/bionic/exidx_dynamic.c"],
+                srcs: [
+                    "arch-arm/bionic/exidx_dynamic.c",
+
+                    // special for arm
+                    "arch-arm/bionic/atexit_legacy.c",
+                ],
+                // special for arm
+                cflags: ["-DCRT_LEGACY_WORKAROUND"],
             },
             static: {
                 srcs: ["arch-arm/bionic/exidx_static.c"],
             },
-
-            // special for arm
-            cflags: ["-DCRT_LEGACY_WORKAROUND"],
-            srcs: [
-                "arch-arm/bionic/atexit_legacy.c",
-            ],
         },
         arm64: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
