@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d242b02f_54671ddb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-05-12T20:24:40Z",
+      "side": 1,
+      "message": "Is it? last I saw it was reverted: https://android-review.googlesource.com/172721",
+      "revId": "e29e99c51426ef2c8adf743296ae63d4379aa51d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
