@@ -52,6 +52,24 @@
       "revId": "752fbac73bceb35a7fe394e59b77fc728fb76f94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_d4ef8d2e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 4345,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-12T20:54:20Z",
+      "side": 1,
+      "message": "And, in fact, we can use syscalls here if we really want to. Sysinfo is available from the kernel argument block, and a special implementation of __set_tls can find it there.\n\nThat\u0027s not enough to do the full safestack initialization, but at least this code could run on i386 with minimal change, if we decide that we want that.",
+      "parentUuid": "52d4007d_907a5a75",
+      "revId": "752fbac73bceb35a7fe394e59b77fc728fb76f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
