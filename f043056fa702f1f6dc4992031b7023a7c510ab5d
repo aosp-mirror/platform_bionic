@@ -121,6 +121,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_f4cba9b5",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-12T20:54:20Z",
+      "side": 1,
+      "message": "Why are __pthread_internal_* not members? Do we want to be consistent and make them members, too?",
+      "parentUuid": "728e64f1_e30d0c32",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_0367d0dc",
         "filename": "libc/libc.map.txt",
         "patchSetId": 17
