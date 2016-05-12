@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d242b02f_b4604101",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "remove this comment and make the code resilient to future adjustments or additional search directories.",
+      "range": {
+        "startLine": 401,
+        "startChar": 51,
+        "endLine": 401,
+        "endChar": 66
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_b49681fc",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "max(sizeof(system_path), sizeof(vendor_path))",
+      "range": {
+        "startLine": 402,
+        "startChar": 16,
+        "endLine": 402,
+        "endChar": 35
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_7495f9ea",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "swap to match order with case where sizeof(system_path) !\u003d sizeof(vendor_path) below.",
+      "range": {
+        "startLine": 405,
+        "startChar": 0,
+        "endLine": 407,
+        "endChar": 57
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_f4b72992",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "memcpy(filename, vendor_path, sizeof(vendor_path) - 1);\nif (sizeof(system_path) !\u003d sizeof(vendor_path)) {\n  strcpy(filename + sizeof(vendor_path) - 1, basename);\n}",
+      "range": {
+        "startLine": 413,
+        "startChar": 0,
+        "endLine": 413,
+        "endChar": 57
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_5459dd48",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "swap order, optimizer might not recognize commutation or unreachable _if_ inlined, do not make it work harder?",
+      "range": {
+        "startLine": 422,
+        "startChar": 13,
+        "endLine": 422,
+        "endChar": 25
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_7456d919",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "ditto?",
+      "range": {
+        "startLine": 477,
+        "startChar": 13,
+        "endLine": 477,
+        "endChar": 25
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_340e112e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-12T20:12:50Z",
+      "side": 1,
+      "message": "... group names from groups file?",
+      "range": {
+        "startLine": 499,
+        "startChar": 40,
+        "endLine": 499,
+        "endChar": 50
+      },
+      "revId": "f514904620863523624e465165e31a4a2d79e79c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
