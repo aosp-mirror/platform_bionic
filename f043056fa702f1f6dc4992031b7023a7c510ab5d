@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_f7e56bb6",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_63481c7d",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_a355c40d",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2016-05-11T00:31:11Z",
       "side": 1,
       "message": "doesn\u0027t this fit in 100 columns?",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_97f7c766",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_a355c40d",
       "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_57af1f3c",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_e3266cc0",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_233d34cd",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 17
@@ -64,6 +118,24 @@
       "writtenOn": "2016-05-11T00:31:11Z",
       "side": 1,
       "message": "do these need to be public?",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_7795fbea",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_233d34cd",
       "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_b7bda378",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_63333c03",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_a33064f0",
         "filename": "libc/bionic/safestack.cpp",
         "patchSetId": 17
@@ -98,6 +188,24 @@
       "writtenOn": "2016-05-11T00:31:11Z",
       "side": 1,
       "message": "40*1024*1024?",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_974d07b8",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_a33064f0",
       "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -157,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_b7c4c320",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d242b02f_54947d50",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_0367d0dc",
         "filename": "libc/libc.map.txt",
         "patchSetId": 17
@@ -174,6 +300,24 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_17bd9773",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 17
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_0367d0dc",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e64f1_2314543b",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 17
@@ -185,6 +329,24 @@
       "writtenOn": "2016-05-11T00:31:11Z",
       "side": 1,
       "message": "isn\u0027t that true for TLS_SLOT_TSAN too? we should probably have a similar comment there, and maybe the explicit \u003d 8.",
+      "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_f7b72b92",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-05-13T21:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728e64f1_2314543b",
       "revId": "f043056fa702f1f6dc4992031b7023a7c510ab5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
