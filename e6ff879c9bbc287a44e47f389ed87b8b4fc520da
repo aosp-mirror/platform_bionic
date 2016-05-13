@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d242b02f_20f5e6fb",
+        "filename": "libc/bionic/packagelistparser.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-13T21:11:38Z",
+      "side": 1,
+      "message": "probably should be something like \u003csys/_packagelistparser.h\u003e?",
+      "range": {
+        "startLine": 29,
+        "startChar": 11,
+        "endLine": 29,
+        "endChar": 37
+      },
+      "revId": "e6ff879c9bbc287a44e47f389ed87b8b4fc520da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
