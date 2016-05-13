@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d242b02f_636ff81d",
+        "filename": "libc/bionic/packagelistparser.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-05-13T21:41:36Z",
+      "side": 1,
+      "message": "take a look at \u003csys/_system_properties.h\u003e, you _really_ need to want to use it.\n\nWhat bothers me is that I am not sure I am comfortable putting _packagelistparser.h into bionic/include/sys/ (or bionic/include/android/ the next one in line).\n\nI will need to gaze into my crystal ball; will make a decision when I adjust the first \u0027private\u0027 user of these functions.",
+      "parentUuid": "d242b02f_c0198211",
+      "range": {
+        "startLine": 29,
+        "startChar": 11,
+        "endLine": 29,
+        "endChar": 37
+      },
+      "revId": "e6ff879c9bbc287a44e47f389ed87b8b4fc520da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d242b02f_80c93a8e",
         "filename": "libc/private/packagelistparser.h",
         "patchSetId": 1
