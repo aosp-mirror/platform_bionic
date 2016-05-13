@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d242b02f_5e0bb41c",
+        "filename": "libc/include/netinet/if_ether.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-13T17:04:48Z",
+      "side": 1,
+      "message": "i have two changes out that i think let us turn this on... will see what treehugger says.",
+      "revId": "2cdb219a355d3cef0a47150dc3a55d6c705d4852",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
