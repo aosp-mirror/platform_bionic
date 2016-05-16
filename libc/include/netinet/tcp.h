@@ -30,10 +30,55 @@
 #define _NETINET_TCP_H
 
 #include <sys/cdefs.h>
+#include <stdint.h>
 
+#define tcphdr __kernel_tcphdr
 #include <linux/tcp.h>
+#undef tcphdr
 
 __BEGIN_DECLS
+
+struct tcphdr {
+  __extension__ union {
+    struct {
+      uint16_t th_sport;
+      uint16_t th_dport;
+      uint32_t th_seq;
+      uint32_t th_ack;
+      uint8_t th_x2:4;
+      uint8_t th_off:4;
+      uint8_t th_flags;
+      uint16_t th_win;
+      uint16_t th_sum;
+      uint16_t th_urp;
+    };
+    struct {
+      uint16_t source;
+      uint16_t dest;
+      uint32_t seq;
+      uint32_t ack_seq;
+      uint16_t res1:4;
+      uint16_t doff:4;
+      uint16_t fin:1;
+      uint16_t syn:1;
+      uint16_t rst:1;
+      uint16_t psh:1;
+      uint16_t ack:1;
+      uint16_t urg:1;
+      uint16_t res2:2;
+      uint16_t window;
+      uint16_t check;
+      uint16_t urg_ptr;
+    };
+  };
+};
+
+#define TH_FIN 0x01
+#define TH_SYN 0x02
+#define TH_RST 0x04
+#define TH_PUSH 0x08
+#define TH_ACK 0x10
+#define TH_URG 0x20
 
 enum {
   TCP_ESTABLISHED = 1,
