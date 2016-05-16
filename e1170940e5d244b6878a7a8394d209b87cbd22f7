@@ -22,6 +22,30 @@
       "revId": "e1170940e5d244b6878a7a8394d209b87cbd22f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_89979e55",
+        "filename": "libc/include/resolv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-16T21:03:31Z",
+      "side": 1,
+      "message": "done. rearranged a bit too, to make it clearer that the missing #defines are intentional.",
+      "parentUuid": "d242b02f_e9bd8210",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 12
+      },
+      "revId": "e1170940e5d244b6878a7a8394d209b87cbd22f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
