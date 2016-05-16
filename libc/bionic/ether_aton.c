@@ -26,11 +26,11 @@
  * SUCH DAMAGE.
  */
 
+#include <net/ethernet.h>
+
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <net/if_ether.h>
-#include <ctype.h>
 
 static inline int
 xdigit (char c) {
