@@ -46,6 +46,30 @@
       "revId": "cc28add240520868c8c4ce86a0ddb7db05cbd3d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d242b02f_dce6c254",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-05-16T21:50:05Z",
+      "side": 1,
+      "message": "Huh, that didn\u0027t show up in my grep for some reason.",
+      "parentUuid": "d242b02f_dcb40245",
+      "range": {
+        "startLine": 2004,
+        "startChar": 0,
+        "endLine": 2004,
+        "endChar": 65
+      },
+      "revId": "cc28add240520868c8c4ce86a0ddb7db05cbd3d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
