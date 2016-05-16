@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <net/if_ether.h>
+#include <net/ethernet.h>
 
 /*
  * Convert Ethernet address to standard hex-digits-and-colons printable form.
