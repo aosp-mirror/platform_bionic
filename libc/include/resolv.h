@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _RESOLV_H_
 #define _RESOLV_H_
 
@@ -40,13 +41,24 @@ __BEGIN_DECLS
 #pragma GCC visibility push(default)
 
 #define b64_ntop __b64_ntop
+int b64_ntop(u_char const*, size_t, char*, size_t);
 #define b64_pton __b64_pton
-extern int b64_ntop(u_char const*, size_t, char*, size_t);
-extern int b64_pton(char const*, u_char*, size_t);
+int b64_pton(char const*, u_char*, size_t);
 
 #define dn_comp __dn_comp
-extern int dn_comp(const char*, u_char*, int, u_char**, u_char**);
-extern int dn_expand(const u_char*, const u_char*, const u_char*, char*, int);
+int dn_comp(const char*, u_char*, int, u_char**, u_char**);
+
+int dn_expand(const u_char*, const u_char*, const u_char*, char*, int);
+
+#define p_class __p_class
+const char* p_class(int);
+#define p_type __p_type
+const char* p_type(int);
+
+int res_init(void);
+int res_mkquery(int, const char*, int, int, const u_char*, int, const u_char*, u_char*, int);
+int res_query(const char*, int, int, u_char*, int);
+int res_search(const char*, int, int, u_char*, int);
 
 #pragma GCC visibility pop
 __END_DECLS
