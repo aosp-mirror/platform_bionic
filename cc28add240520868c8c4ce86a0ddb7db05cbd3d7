@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d242b02f_5ca812ee",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-05-16T21:43:58Z",
+      "side": 1,
+      "message": "this comment seems unrelated, add comment like adbd jdwp process needs 16 bits pids for both 32-bit and 64-bit devices? (Although I hope that could be fixed)",
+      "range": {
+        "startLine": 2004,
+        "startChar": 0,
+        "endLine": 2004,
+        "endChar": 65
+      },
+      "revId": "cc28add240520868c8c4ce86a0ddb7db05cbd3d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
