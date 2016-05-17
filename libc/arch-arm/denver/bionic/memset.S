@@ -27,7 +27,6 @@
  * SUCH DAMAGE.
  */
 
-#include <machine/cpu-features.h>
 #include <private/bionic_asm.h>
 
         /*

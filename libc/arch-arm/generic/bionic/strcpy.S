@@ -29,7 +29,6 @@
  * Android adaptation and tweak by Jim Huang <jserv@0xlab.org>.
  */
 
-#include <machine/cpu-features.h>
 #include <private/bionic_asm.h>
 
 .syntax unified
