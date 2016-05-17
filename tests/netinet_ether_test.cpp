@@ -19,7 +19,8 @@
 #include <netinet/ether.h>
 
 TEST(netinet_ether, ether_aton__ether_ntoa) {
-  ether_addr* a = ether_aton("12-34-56-78-9A-BC");
+  ether_addr* a = ether_aton("12:34:56:78:9a:bc");
+  ASSERT_NE(nullptr, a);
   ASSERT_EQ(0x12, a->ether_addr_octet[0]);
   ASSERT_EQ(0x34, a->ether_addr_octet[1]);
   ASSERT_EQ(0x56, a->ether_addr_octet[2]);
@@ -27,13 +28,13 @@ TEST(netinet_ether, ether_aton__ether_ntoa) {
   ASSERT_EQ(0x9a, a->ether_addr_octet[4]);
   ASSERT_EQ(0xbc, a->ether_addr_octet[5]);
 
-  ASSERT_STREQ("12-34-56-78-9A-BC", ether_ntoa(a));
+  ASSERT_STREQ("12:34:56:78:9a:bc", ether_ntoa(a));
 }
 
 TEST(netinet_ether, ether_aton_r__ether_ntoa_r) {
   ether_addr addr;
   memset(&addr, 0, sizeof(addr));
-  ether_addr* a = ether_aton_r("12-34-56-78-9A-BC", &addr);
+  ether_addr* a = ether_aton_r("12:34:56:78:9a:bc", &addr);
   ASSERT_EQ(&addr, a);
   ASSERT_EQ(0x12, addr.ether_addr_octet[0]);
   ASSERT_EQ(0x34, addr.ether_addr_octet[1]);
@@ -46,5 +47,5 @@ TEST(netinet_ether, ether_aton_r__ether_ntoa_r) {
   memset(buf, 0, sizeof(buf));
   char* p = ether_ntoa_r(&addr, buf);
   ASSERT_EQ(buf, p);
-  ASSERT_STREQ("12-34-56-78-9A-BC", buf);
+  ASSERT_STREQ("12:34:56:78:9a:bc", buf);
 }
