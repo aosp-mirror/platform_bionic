@@ -805,15 +805,12 @@ TEST(dlfcn, dladdr_executable) {
   ASSERT_NE(rc, 0); // Zero on error, non-zero on success.
 
   // Get the name of this executable.
-  char executable_path[PATH_MAX];
-  rc = readlink("/proc/self/exe", executable_path, sizeof(executable_path));
-  ASSERT_NE(rc, -1);
-  executable_path[rc] = '\0';
+  const std::string& executable_path = get_executable_path();
 
   // The filename should be that of this executable.
   char dli_realpath[PATH_MAX];
   ASSERT_TRUE(realpath(info.dli_fname, dli_realpath) != nullptr);
-  ASSERT_STREQ(executable_path, dli_realpath);
+  ASSERT_STREQ(executable_path.c_str(), dli_realpath);
 
   // The symbol name should be the symbol we looked up.
   ASSERT_STREQ(info.dli_sname, "DlSymTestFunction");
@@ -836,6 +833,22 @@ TEST(dlfcn, dladdr_executable) {
   ASSERT_EQ(info.dli_fbase, base_address);
 
   ASSERT_EQ(0, dlclose(self));
+}
+
+TEST(dlfcn, dlopen_executable_by_absolute_path) {
+  void* handle1 = dlopen(nullptr, RTLD_NOW);
+  ASSERT_TRUE(handle1 != nullptr) << dlerror();
+
+  void* handle2 = dlopen(get_executable_path().c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle2 != nullptr) << dlerror();
+
+#if defined(__BIONIC__)
+  ASSERT_EQ(handle1, handle2);
+#else
+  GTEST_LOG_(INFO) << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
+                      "it loads a separate copy of the main executable "
+                      "on dlopen by absolute path.";
+#endif
 }
 
 #if defined(__LP64__)
