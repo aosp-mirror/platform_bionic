@@ -1,6 +1,3 @@
-/* $OpenBSD: grp.h,v 1.8 2005/12/13 00:35:22 millert Exp $ */
-/* $NetBSD: grp.h,v 1.7 1995/04/29 05:30:40 cgd Exp $ */
-
 /*-
  * Copyright (c) 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
@@ -33,8 +30,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *    @(#)grp.h  8.2 (Berkeley) 1/21/94
  */
 
 #ifndef _GRP_H_
