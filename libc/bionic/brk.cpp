@@ -59,19 +59,19 @@ void* sbrk(ptrdiff_t increment) {
   }
 
   // Avoid overflow.
-  intptr_t old_brk = reinterpret_cast<intptr_t>(__bionic_brk);
-  if ((increment > 0 && INTPTR_MAX - increment > old_brk) ||
-      (increment < 0 && (increment == PTRDIFF_MIN || old_brk < -increment))) {
+  uintptr_t old_brk = reinterpret_cast<uintptr_t>(__bionic_brk);
+  if ((increment > 0 && static_cast<uintptr_t>(increment) > (UINTPTR_MAX - old_brk)) ||
+      (increment < 0 && static_cast<uintptr_t>(-increment) > old_brk)) {
     errno = ENOMEM;
     return reinterpret_cast<void*>(-1);
   }
 
   void* desired_brk = reinterpret_cast<void*>(old_brk + increment);
   __bionic_brk = __brk(desired_brk);
-
   if (__bionic_brk < desired_brk) {
     errno = ENOMEM;
     return reinterpret_cast<void*>(-1);
   }
+
   return reinterpret_cast<void*>(old_brk);
 }
