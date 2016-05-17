@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32278c9a_c60197f8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4043,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-17T20:49:13Z",
+      "side": 1,
+      "message": "on-stack buffer (like in the other copy) to save your allocator some work? (since you\u0027re not actually trying again with a larger buffer if this is too small.)",
+      "revId": "fc4d5cc7a3bb926f55a260926f31205d108f25e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
