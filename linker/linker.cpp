@@ -4037,6 +4037,20 @@ static void init_default_namespace() {
 
 extern "C" int __system_properties_init(void);
 
+static const char* get_executable_path() {
+  static std::string executable_path;
+  if (executable_path.empty()) {
+    char path[PATH_MAX];
+    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+      __libc_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+    }
+    executable_path = std::string(path, path_len);
+  }
+
+  return executable_path.c_str();
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -4083,7 +4097,13 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     }
   }
 
-  soinfo* si = soinfo_alloc(&g_default_namespace, args.argv[0], nullptr, 0, RTLD_GLOBAL);
+  const char* executable_path = get_executable_path();
+  struct stat file_stat;
+  if (TEMP_FAILURE_RETRY(stat(executable_path, &file_stat)) != 0) {
+    __libc_fatal("unable to stat file for the executable \"%s\": %s", executable_path, strerror(errno));
+  }
+
+  soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
   if (si == nullptr) {
     __libc_fatal("Couldn't allocate soinfo: out of memory?");
   }
@@ -4096,7 +4116,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // gdb aware of them before loading the rest of the dependency
   // tree.
   map->l_addr = 0;
-  map->l_name = args.argv[0];
+  map->l_name = const_cast<char*>(executable_path);
   insert_link_map_into_debug_map(map);
   init_linker_info_for_gdb(linker_base);
 
