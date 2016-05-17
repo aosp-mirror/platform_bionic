@@ -26,16 +26,52 @@
  * SUCH DAMAGE.
  */
 
+#define __STDINT_LIMITS
+
+#include <errno.h>
+#include <stdint.h>
 #include <unistd.h>
 
-/* Shared with sbrk.c. */
-extern "C" void* __bionic_brk; // TODO: should be __LIBC_HIDDEN__ but accidentally exported by NDK :-(
+#if __LP64__
+static void* __bionic_brk;
+#else
+void* __bionic_brk; // Accidentally exported by the NDK.
+#endif
 
 int brk(void* end_data) {
-  void* new_brk = __brk(end_data);
-  if (new_brk != end_data) {
+  __bionic_brk = __brk(end_data);
+  if (__bionic_brk < end_data) {
+    errno = ENOMEM;
     return -1;
   }
-  __bionic_brk = new_brk;
   return 0;
+}
+
+void* sbrk(ptrdiff_t increment) {
+  // Initialize __bionic_brk if necessary.
+  if (__bionic_brk == NULL) {
+    __bionic_brk = __brk(NULL);
+  }
+
+  // Don't ask the kernel if we already know the answer.
+  if (increment == 0) {
+    return __bionic_brk;
+  }
+
+  // Avoid overflow.
+  intptr_t old_brk = reinterpret_cast<intptr_t>(__bionic_brk);
+  if ((increment > 0 && INTPTR_MAX - increment > old_brk) ||
+      (increment < 0 && (increment == PTRDIFF_MIN || old_brk < -increment))) {
+    errno = ENOMEM;
+    return reinterpret_cast<void*>(-1);
+  }
+
+  void* desired_brk = reinterpret_cast<void*>(old_brk + increment);
+  __bionic_brk = __brk(desired_brk);
+
+  if (__bionic_brk < desired_brk) {
+    errno = ENOMEM;
+    return reinterpret_cast<void*>(-1);
+  }
+  return reinterpret_cast<void*>(old_brk);
 }
