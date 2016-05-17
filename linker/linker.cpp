@@ -138,6 +138,7 @@ struct android_namespace_t {
 };
 
 android_namespace_t g_default_namespace;
+
 static std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 
@@ -1887,6 +1888,26 @@ static soinfo::soinfo_list_t make_global_group(android_namespace_t* ns) {
   return global_group;
 }
 
+// This function provides a list of libraries to be shared
+// by the namespace. For the default namespace this is the global
+// group (see make_global_group). For all others this is a group
+// of RTLD_GLOBAL libraries (which includes the global group from
+// the default namespace).
+static soinfo::soinfo_list_t get_shared_group(android_namespace_t* ns) {
+  if (ns == &g_default_namespace) {
+    return make_global_group(ns);
+  }
+
+  soinfo::soinfo_list_t shared_group;
+  ns->soinfo_list().for_each([&](soinfo* si) {
+    if ((si->get_rtld_flags() & RTLD_GLOBAL) != 0) {
+      shared_group.push_back(si);
+    }
+  });
+
+  return shared_group;
+}
+
 static void shuffle(std::vector<LoadTask*>* v) {
   for (size_t i = 0, size = v->size(); i < size; ++i) {
     size_t n = size - i;
@@ -2432,7 +2453,7 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
   // is still pointing to the default one.
   android_namespace_t* anon_ns =
       create_namespace(nullptr, "(anonymous)", nullptr, anon_ns_library_path,
-                       ANDROID_NAMESPACE_TYPE_REGULAR, nullptr);
+                       ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
 
   if (anon_ns == nullptr) {
     g_public_namespace_initialized = false;
@@ -2448,7 +2469,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* ld_library_path,
                                       const char* default_library_path,
                                       uint64_t type,
-                                      const char* permitted_when_isolated_path) {
+                                      const char* permitted_when_isolated_path,
+                                      android_namespace_t* parent_namespace) {
   if (!g_public_namespace_initialized) {
     DL_ERR("cannot create namespace: public namespace is not initialized.");
     return nullptr;
@@ -2459,6 +2481,11 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* caller_ns = caller_soinfo != nullptr ?
                                    caller_soinfo->get_primary_namespace() :
                                    g_anonymous_namespace;
+
+  // if parent_namespace is nullptr -> set it to the caller namespace
+  if (parent_namespace == nullptr) {
+    parent_namespace = caller_ns;
+  }
 
   ProtectedDataGuard guard;
   std::vector<std::string> ld_library_paths;
@@ -2477,11 +2504,11 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_permitted_paths(std::move(permitted_paths));
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
-    // If shared - clone the caller namespace
-    ns->add_soinfos(caller_ns->soinfo_list());
+    // If shared - clone the parent namespace
+    ns->add_soinfos(parent_namespace->soinfo_list());
   } else {
-    // If not shared - copy only the global group
-    ns->add_soinfos(make_global_group(caller_ns));
+    // If not shared - copy only the shared group
+    ns->add_soinfos(get_shared_group(parent_namespace));
   }
 
   return ns;
