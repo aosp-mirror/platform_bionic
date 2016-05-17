@@ -27,7 +27,6 @@
 
 /* Assumes neon instructions and a cache line size of 64 bytes. */
 
-#include <machine/cpu-features.h>
 #include <machine/asm.h>
 
 #define PLDOFFS	(10)
