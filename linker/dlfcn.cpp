@@ -153,15 +153,22 @@ bool android_init_namespaces(const char* public_ns_sonames,
   return success;
 }
 
-android_namespace_t* android_create_namespace(const char* name, const char* ld_library_path,
-                                              const char* default_library_path, uint64_t type,
-                                              const char* permitted_when_isolated_path) {
+android_namespace_t* android_create_namespace(const char* name,
+                                              const char* ld_library_path,
+                                              const char* default_library_path,
+                                              uint64_t type,
+                                              const char* permitted_when_isolated_path,
+                                              android_namespace_t* parent_namespace) {
   void* caller_addr = __builtin_return_address(0);
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
-  android_namespace_t* result = create_namespace(caller_addr, name, ld_library_path,
-                                                 default_library_path, type,
-                                                 permitted_when_isolated_path);
+  android_namespace_t* result = create_namespace(caller_addr,
+                                                 name,
+                                                 ld_library_path,
+                                                 default_library_path,
+                                                 type,
+                                                 permitted_when_isolated_path,
+                                                 parent_namespace);
 
   if (result == nullptr) {
     __bionic_format_dlerror("android_create_namespace failed", linker_get_error_buffer());
