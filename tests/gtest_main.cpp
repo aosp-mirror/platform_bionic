@@ -46,10 +46,10 @@
 
 #endif
 
-static std::string g_executable_name;
+static std::string g_executable_path;
 
-const std::string& get_executable_name() {
-  return g_executable_name;
+const std::string& get_executable_path() {
+  return g_executable_path;
 }
 
 namespace testing {
@@ -923,15 +923,8 @@ static void AddPathSeparatorInTestProgramPath(std::vector<char*>& args) {
   // The reason is that gtest uses clone() + execve() to run DeathTest in threadsafe mode,
   // and execve() doesn't read environment variable PATH, so execve() will not success
   // until we specify the absolute path or relative path of the test program directly.
-  if (strchr(args[0], '/') == NULL) {
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len <= 0 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      perror("readlink");
-      exit(1);
-    }
-    path[path_len] = '\0';
-    args[0] = strdup(path);
+  if (strchr(args[0], '/') == nullptr) {
+    args[0] = strdup(g_executable_path.c_str());
   }
 }
 
@@ -1118,8 +1111,19 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
   return true;
 }
 
+static std::string get_proc_self_exe() {
+  char path[PATH_MAX];
+  ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+  if (path_len <= 0 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+    perror("readlink");
+    exit(1);
+  }
+
+  return std::string(path, path_len);
+}
+
 int main(int argc, char** argv) {
-  g_executable_name = argv[0];
+  g_executable_path = get_proc_self_exe();
   std::vector<char*> arg_list;
   for (int i = 0; i < argc; ++i) {
     arg_list.push_back(argv[i]);
