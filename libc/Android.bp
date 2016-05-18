@@ -76,6 +76,7 @@ cc_defaults {
         never: true,
     },
     native_coverage: false,
+    clang: true,
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
