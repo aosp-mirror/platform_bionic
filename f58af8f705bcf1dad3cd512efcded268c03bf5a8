@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97daeaa7_32fbb688",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-05-20T17:17:05Z",
+      "side": 1,
+      "message": "array",
+      "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97daeaa7_52f2aaa9",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-05-20T17:17:05Z",
+      "side": 1,
+      "message": "loop? Granted you just have it unrolled.",
+      "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
