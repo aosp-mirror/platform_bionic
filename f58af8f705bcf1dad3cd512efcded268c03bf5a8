@@ -51,6 +51,41 @@
       "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97daeaa7_12db128b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-05-20T18:00:20Z",
+      "side": 1,
+      "message": "Its not a guarantee that it would actually be another layer of indirection in the generated machine code, and the optimizer might unroll the loop as well. I also don\u0027t subscribe to premature optimizations at the level. Especially considering the branch at 414 is  never used, but if it was, one would need to alloc space for filename based on the larger of the two paths. With that said, if someone made vendor larger than system path here, the strcpy would result in an overflow.\n\nin CPP land don\u0027t you have a static assert? You may wish to add one to ensure that case doesn\u0027t happen.",
+      "parentUuid": "97daeaa7_b2ecc6a4",
+      "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97daeaa7_b23326b3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-05-20T18:00:20Z",
+      "side": 1,
+      "message": "this overflows when sizeof(vendor_path) \u003e sizeof(system_path)",
+      "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
