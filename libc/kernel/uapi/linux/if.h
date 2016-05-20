@@ -18,63 +18,58 @@
  ****************************************************************************/
 #ifndef _LINUX_IF_H
 #define _LINUX_IF_H
+#include <linux/libc-compat.h>
 #include <linux/types.h>
-#include <linux/socket.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#include <linux/socket.h>
 #include <linux/compiler.h>
+#if __UAPI_DEF_IF_IFNAMSIZ
 #define IFNAMSIZ 16
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
 #define IFALIASZ 256
 #include <linux/hdlc/ioctl.h>
+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO != 0 && __UAPI_DEF_IF_NET_DEVICE_FLAGS != 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum net_device_flags {
-  IFF_UP = 1 << 0,
-  IFF_BROADCAST = 1 << 1,
-  IFF_DEBUG = 1 << 2,
+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS
+  IFF_UP = 1 << 0, IFF_BROADCAST = 1 << 1, IFF_DEBUG = 1 << 2, IFF_LOOPBACK = 1 << 3, IFF_POINTOPOINT = 1 << 4, IFF_NOTRAILERS = 1 << 5, IFF_RUNNING = 1 << 6, IFF_NOARP = 1 << 7, IFF_PROMISC = 1 << 8, IFF_ALLMULTI = 1 << 9, IFF_MASTER = 1 << 10, IFF_SLAVE = 1 << 11, IFF_MULTICAST = 1 << 12, IFF_PORTSEL = 1 << 13, IFF_AUTOMEDIA = 1 << 14, IFF_DYNAMIC = 1 << 15,
+#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  IFF_LOOPBACK = 1 << 3,
-  IFF_POINTOPOINT = 1 << 4,
-  IFF_NOTRAILERS = 1 << 5,
-  IFF_RUNNING = 1 << 6,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  IFF_NOARP = 1 << 7,
-  IFF_PROMISC = 1 << 8,
-  IFF_ALLMULTI = 1 << 9,
-  IFF_MASTER = 1 << 10,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  IFF_SLAVE = 1 << 11,
-  IFF_MULTICAST = 1 << 12,
-  IFF_PORTSEL = 1 << 13,
-  IFF_AUTOMEDIA = 1 << 14,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  IFF_DYNAMIC = 1 << 15,
-  IFF_LOWER_UP = 1 << 16,
-  IFF_DORMANT = 1 << 17,
-  IFF_ECHO = 1 << 18,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO
+  IFF_LOWER_UP = 1 << 16, IFF_DORMANT = 1 << 17, IFF_ECHO = 1 << 18,
+#endif
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS
 #define IFF_UP IFF_UP
 #define IFF_BROADCAST IFF_BROADCAST
-#define IFF_DEBUG IFF_DEBUG
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IFF_DEBUG IFF_DEBUG
 #define IFF_LOOPBACK IFF_LOOPBACK
 #define IFF_POINTOPOINT IFF_POINTOPOINT
 #define IFF_NOTRAILERS IFF_NOTRAILERS
-#define IFF_RUNNING IFF_RUNNING
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IFF_RUNNING IFF_RUNNING
 #define IFF_NOARP IFF_NOARP
 #define IFF_PROMISC IFF_PROMISC
 #define IFF_ALLMULTI IFF_ALLMULTI
-#define IFF_MASTER IFF_MASTER
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IFF_MASTER IFF_MASTER
 #define IFF_SLAVE IFF_SLAVE
 #define IFF_MULTICAST IFF_MULTICAST
 #define IFF_PORTSEL IFF_PORTSEL
-#define IFF_AUTOMEDIA IFF_AUTOMEDIA
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define IFF_AUTOMEDIA IFF_AUTOMEDIA
 #define IFF_DYNAMIC IFF_DYNAMIC
+#endif
+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IFF_LOWER_UP IFF_LOWER_UP
 #define IFF_DORMANT IFF_DORMANT
 #define IFF_ECHO IFF_ECHO
+#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IFF_VOLATILE (IFF_LOOPBACK | IFF_POINTOPOINT | IFF_BROADCAST | IFF_ECHO | IFF_MASTER | IFF_SLAVE | IFF_RUNNING | IFF_LOWER_UP | IFF_DORMANT)
 #define IF_GET_IFACE 0x0001
@@ -121,58 +116,63 @@ enum {
   IF_LINK_MODE_DORMANT,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#if __UAPI_DEF_IF_IFMAP
 struct ifmap {
   unsigned long mem_start;
   unsigned long mem_end;
-  unsigned short base_addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned short base_addr;
   unsigned char irq;
   unsigned char dma;
   unsigned char port;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+#endif
 struct if_settings {
   unsigned int type;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned int size;
   union {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     raw_hdlc_proto __user * raw_hdlc;
     cisco_proto __user * cisco;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     fr_proto __user * fr;
     fr_proto_pvc __user * fr_pvc;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     fr_proto_pvc_info __user * fr_pvc_info;
     sync_serial_settings __user * sync;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     te1_settings __user * te1;
   } ifs_ifsu;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+#if __UAPI_DEF_IF_IFREQ
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ifreq {
 #define IFHWADDRLEN 6
   union {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     char ifrn_name[IFNAMSIZ];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   } ifr_ifrn;
   union {
     struct sockaddr ifru_addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct sockaddr ifru_dstaddr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct sockaddr ifru_broadaddr;
     struct sockaddr ifru_netmask;
     struct sockaddr ifru_hwaddr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     short ifru_flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     int ifru_ivalue;
     int ifru_mtu;
     struct ifmap ifru_map;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     char ifru_slave[IFNAMSIZ];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     char ifru_newname[IFNAMSIZ];
     void __user * ifru_data;
     struct if_settings ifru_settings;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   } ifr_ifru;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+#endif
 #define ifr_name ifr_ifrn.ifrn_name
 #define ifr_hwaddr ifr_ifru.ifru_hwaddr
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -194,16 +194,18 @@ struct ifreq {
 #define ifr_qlen ifr_ifru.ifru_ivalue
 #define ifr_newname ifr_ifru.ifru_newname
 #define ifr_settings ifr_ifru.ifru_settings
-struct ifconf {
+#if __UAPI_DEF_IF_IFCONF
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ifconf {
   int ifc_len;
   union {
     char __user * ifcu_buf;
-    struct ifreq __user * ifcu_req;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct ifreq __user * ifcu_req;
   } ifc_ifcu;
 };
+#endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ifc_buf ifc_ifcu.ifcu_buf
 #define ifc_req ifc_ifcu.ifcu_req
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
