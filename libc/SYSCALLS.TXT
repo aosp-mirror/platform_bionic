@@ -232,7 +232,7 @@ int     __rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigacti
 int     __rt_sigpending:rt_sigpending(sigset_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset_t*, sigset_t*, size_t)  all
 int     __rt_sigsuspend:rt_sigsuspend(const sigset_t*, size_t)  all
-int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, struct siginfo_t*, struct timespec_t*, size_t)  all
+int     __rt_sigtimedwait:rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t)  all
 int     ___rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
 int     __signalfd4:signalfd4(int, const sigset_t*, size_t, int)  all
 
