@@ -2516,7 +2516,7 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
   // is still pointing to the default one.
   android_namespace_t* anon_ns =
       create_namespace(nullptr, "(anonymous)", nullptr, anon_ns_library_path,
-                       ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
+                       ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, &g_default_namespace);
 
   if (anon_ns == nullptr) {
     g_public_namespace_initialized = false;
@@ -2539,15 +2539,13 @@ android_namespace_t* create_namespace(const void* caller_addr,
     return nullptr;
   }
 
-  soinfo* caller_soinfo = find_containing_library(caller_addr);
-
-  android_namespace_t* caller_ns = caller_soinfo != nullptr ?
-                                   caller_soinfo->get_primary_namespace() :
-                                   g_anonymous_namespace;
-
-  // if parent_namespace is nullptr -> set it to the caller namespace
   if (parent_namespace == nullptr) {
-    parent_namespace = caller_ns;
+    // if parent_namespace is nullptr -> set it to the caller namespace
+    soinfo* caller_soinfo = find_containing_library(caller_addr);
+
+    parent_namespace = caller_soinfo != nullptr ?
+                       caller_soinfo->get_primary_namespace() :
+                       g_anonymous_namespace;
   }
 
   ProtectedDataGuard guard;
