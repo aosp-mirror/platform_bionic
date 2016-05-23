@@ -37,7 +37,7 @@
 #include <time.h>
 
 // System calls.
-extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*, size_t);
+extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t);
 extern "C" int __timer_create(clockid_t, sigevent*, __kernel_timer_t*);
 extern "C" int __timer_delete(__kernel_timer_t);
 extern "C" int __timer_getoverrun(__kernel_timer_t);
