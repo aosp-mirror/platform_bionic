@@ -33,7 +33,7 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigtimedwait(const sigset_t* uthese, siginfo_t* uinfo, const struct timespec* uts, size_t sigsetsize);
+extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t);
 
 int sigwait(const sigset_t* set, int* sig) {
   kernel_sigset_t sigset(set);
