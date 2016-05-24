@@ -543,6 +543,9 @@ static void parse_LD_PRELOAD(const char* path) {
   if (path != nullptr) {
     // We have historically supported ':' as well as ' ' in LD_PRELOAD.
     g_ld_preload_names = android::base::Split(path, " :");
+    std::remove_if(g_ld_preload_names.begin(),
+                   g_ld_preload_names.end(),
+                   [] (const std::string& s) { return s.empty(); });
   }
 }
 
