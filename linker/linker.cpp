@@ -190,7 +190,6 @@ static bool is_system_library(const std::string& realpath) {
   return false;
 }
 
-// TODO(dimitry): This is workaround for http://b/26394120 - it will be removed before the release
 #if defined(__LP64__)
 static const char* const kSystemLibDir = "/system/lib64";
 #else
@@ -199,6 +198,8 @@ static const char* const kSystemLibDir = "/system/lib";
 
 static std::string dirname(const char *path);
 
+// TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
+// gradually remove libraries from this list until it is gone.
 static bool is_greylisted(const char* name, const soinfo* needed_by) {
   static const char* const kLibraryGreyList[] = {
     "libandroid_runtime.so",
@@ -1203,7 +1204,7 @@ class LoadTask {
   bool close_fd_;
   off64_t file_offset_;
   std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
-  // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
+  // TODO(dimitry): needed by workaround for http://b/26394120 (the grey-list)
   bool is_dt_needed_;
   // END OF WORKAROUND
 
@@ -1628,7 +1629,7 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
+  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
   if (fd == -1 && ns != &g_default_namespace && is_greylisted(name, needed_by)) {
     // try searching for it on default_namespace default_library_path
     fd = open_library_on_paths(zip_archive_cache, name, file_offset,
@@ -1737,7 +1738,7 @@ static bool load_library(android_namespace_t* ns,
   }
 
   if (!ns->is_accessible(realpath)) {
-    // TODO(dimitry): workaround for http://b/26394120 - will be removed before the release
+    // TODO(dimitry): workaround for http://b/26394120 - the grey-list
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_greylisted(name, needed_by)) {
       // print warning only if needed by non-system library
@@ -1746,7 +1747,8 @@ static bool load_library(android_namespace_t* ns,
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
         DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
-                " - the access is temporarily granted as a workaround for http://b/26394120",
+                " - the access is temporarily granted as a workaround for http://b/26394120, note that the access"
+                " will be removed in future releases of Android.",
                 name, realpath.c_str(), sopath, ns->get_name());
         add_dlwarning(sopath, "unauthorized access to",  name);
       }
