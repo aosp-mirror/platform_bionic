@@ -16,6 +16,24 @@
       "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc51e7a9_5c2d327a",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk_common.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-05-26T17:26:58Z",
+      "side": 1,
+      "message": "I don\u0027t see denver using this instruction, or is it when you added it here in this change that it compiles for denver and not here?\n\nI see a similar instruction in cortex-a9, but I don\u0027t think we compile that by default, so it might be broken. I kind of remember that using that instruction this way used to give out a warning so we removed it everywhere we could. My memory is the warning was coming from clang not gcc, so maybe we are accidentally compiling the denver code with gcc.\n\nI\u0027ll dig into this.",
+      "parentUuid": "dc51e7a9_c315e53e",
+      "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
