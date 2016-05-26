@@ -109,13 +109,13 @@ struct user_fpregs_struct {
   unsigned short swd;
   unsigned short ftw;
   unsigned short fop;
-  __u64 rip;
-  __u64 rdp;
-  __u32 mxcsr;
-  __u32 mxcr_mask;
-  __u32 st_space[32];
-  __u32 xmm_space[64];
-  __u32 padding[24];
+  unsigned long rip;
+  unsigned long rdp;
+  unsigned int mxcsr;
+  unsigned int mxcr_mask;
+  unsigned int st_space[32];
+  unsigned int xmm_space[64];
+  unsigned int padding[24];
 };
 struct user_regs_struct {
   unsigned long r15;
