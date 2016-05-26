@@ -179,6 +179,8 @@ ENTRY(__strcat_chk)
 .L_strlen_done:
     add     r2, r3, r4
     cmp     r2, lr
+    itt     hi
+    movhi   r0, lr
     bhi     __strcat_chk_fail
 
     // Set up the registers for the memcpy code.
@@ -194,23 +196,3 @@ END(__strcat_chk)
 #define MEMCPY_BASE         __strcat_chk_memcpy_base
 #define MEMCPY_BASE_ALIGNED __strcat_chk_memcpy_base_aligned
 #include "memcpy_base.S"
-
-ENTRY_PRIVATE(__strcat_chk_fail)
-    .cfi_def_cfa_offset 8
-    .cfi_rel_offset r0, 0
-    .cfi_rel_offset lr, 4
-    .cfi_adjust_cfa_offset 8
-    .cfi_rel_offset r4, 0
-    .cfi_rel_offset r5, 4
-
-    ldr     r0, error_message
-1:
-    add     r0, pc
-    bl      __fortify_fatal
-error_message:
-    .word   error_string-(1b+4)
-END(__strcat_chk_fail)
-
-    .data
-error_string:
-    .string "strcat: prevented write past end of buffer"

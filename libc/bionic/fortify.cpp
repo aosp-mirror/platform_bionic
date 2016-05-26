@@ -268,6 +268,12 @@ char* __stpncpy_chk2(char* __restrict dst, const char* __restrict src,
   return dst;
 }
 
+// strcat is performance-critical enough that we have assembler __strcat_chk implementations.
+// This function is used to give better diagnostics than we can easily do from assembler.
+extern "C" void __strcat_chk_fail(size_t dst_buf_size) {
+  __fortify_fatal("strcat: prevented write past end of %zu-byte buffer", dst_buf_size);
+}
+
 char* __strchr_chk(const char* p, int ch, size_t s_len) {
   for (;; ++p, s_len--) {
     if (__predict_false(s_len == 0)) {
