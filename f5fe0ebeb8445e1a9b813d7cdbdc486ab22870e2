@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc51e7a9_c315e53e",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk_common.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-26T01:28:07Z",
+      "side": 1,
+      "message": "this is the treehugger failure:\n\n  bionic/libc/arch-arm/cortex-a15/bionic/__strcat_chk_common.S:179:5: error: predicated instructions must be in IT block\n    movhi r0, lr\n\nwhy does the denver file compile just fine? other than the cfi information and the way they #include the base memcpy implementation, they\u0027re copy \u0026 pastes (which is a bug, but one for another day).\n\nobviously i can either add \".arm\" or use \"itt hi\", but given the fact that the denver copy \u0026 paste is fine, i\u0027m wondering whether we\u0027ve screwed up some compiler flag?",
+      "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
