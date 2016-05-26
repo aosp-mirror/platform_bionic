@@ -34,6 +34,24 @@
       "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc51e7a9_3c470642",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk_common.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-26T17:36:52Z",
+      "side": 1,
+      "message": "yes, i mean the denver code in this change, not the existing denver code. i built and tested on N9, so that\u0027s the copy that actually got built. /me can\u0027t wait for soong...\n\n(i did check that there\u0027s no -fno-integrated-as confusing things, because \"we\u0027re using a different assembler\" seemed like the most likely explanation.)",
+      "parentUuid": "dc51e7a9_5c2d327a",
+      "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
