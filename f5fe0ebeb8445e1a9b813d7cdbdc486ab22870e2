@@ -52,6 +52,24 @@
       "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc51e7a9_9cc5faa2",
+        "filename": "libc/arch-arm/cortex-a15/bionic/__strcat_chk_common.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-05-26T17:53:31Z",
+      "side": 1,
+      "message": "Okay, the denver code doesn\u0027t compile either (at least for me). The cortex-a9 code works because it\u0027s the .thumb directive that makes that illegal, and it\u0027s missing that directive so using it is just fine in that file.\n\nAn it will fix this, but there might be a better way. It might not be worth trying to find a better way though.",
+      "parentUuid": "dc51e7a9_3c470642",
+      "revId": "f5fe0ebeb8445e1a9b813d7cdbdc486ab22870e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
