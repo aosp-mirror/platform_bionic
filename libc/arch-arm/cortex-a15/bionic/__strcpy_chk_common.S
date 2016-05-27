@@ -147,23 +147,15 @@ ENTRY(__strcpy_chk)
     pld     [r1, #0]
     pld     [r1, #64]
     ldr     r0, [sp]
-    cmp     r3, lr
-    bhs     .L_strcpy_chk_failed
 
     // Add 1 for copy length to get the string terminator.
     add     r2, r3, #1
 
+    cmp     r2, lr
+    itt     hi
+    movhi   r0, r2
+    bhi     __strcpy_chk_fail
+
 #include MEMCPY_BASE
 
-.L_strcpy_chk_failed:
-    ldr     r0, error_message
-1:
-    add     r0, pc
-    bl      __fortify_fatal
-error_message:
-    .word   error_string-(1b+4)
 END(__strcpy_chk)
-
-    .data
-error_string:
-    .string "strcpy: prevented write past end of buffer"

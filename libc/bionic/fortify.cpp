@@ -288,6 +288,12 @@ char* __strchr_chk(const char* p, int ch, size_t s_len) {
   }
 }
 
+// strcpy is performance-critical enough that we have assembler __strcpy_chk implementations.
+// This function is used to give better diagnostics than we can easily do from assembler.
+extern "C" void __strcpy_chk_fail(size_t dst_buf_size) {
+  __fortify_fatal("strcpy: prevented write past end of %zu-byte buffer", dst_buf_size);
+}
+
 size_t __strlcat_chk(char* dst, const char* src,
                      size_t supplied_size, size_t dst_len_from_compiler) {
   __check_buffer_access("strlcat", "write into", supplied_size, dst_len_from_compiler);
