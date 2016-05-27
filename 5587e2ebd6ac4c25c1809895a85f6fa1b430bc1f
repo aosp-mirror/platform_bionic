@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9cd76f7e_aa90cf08",
+        "filename": "libc/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:12:30Z",
+      "side": 1,
+      "message": "where\u0027s the line saying when this was introduced for x86?",
+      "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc51e7a9_c296345f",
         "filename": "libc/include/sched.h",
         "patchSetId": 1
@@ -30,6 +47,23 @@
       "writtenOn": "2016-05-27T19:00:55Z",
       "side": 1,
       "message": "__INTRODUCED_IN_X86?",
+      "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_0a82bbb9",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:12:30Z",
+      "side": 1,
+      "message": "do we care about pre-ICS? (or is this comment wrong?)",
       "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
