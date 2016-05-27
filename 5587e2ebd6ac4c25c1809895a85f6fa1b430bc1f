@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc51e7a9_c296345f",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-05-27T19:00:55Z",
+      "side": 1,
+      "message": "clone was missing for x86 until 17",
+      "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc51e7a9_42c30472",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-05-27T19:00:55Z",
+      "side": 1,
+      "message": "__INTRODUCED_IN_X86?",
+      "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
