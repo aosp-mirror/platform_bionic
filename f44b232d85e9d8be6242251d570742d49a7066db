@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cd76f7e_502d847a",
+        "filename": "libstdc++/include/new",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T22:56:42Z",
+      "side": 1,
+      "message": "ps2 points out the missing C++14 entries...",
+      "revId": "f44b232d85e9d8be6242251d570742d49a7066db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_b0484058",
+        "filename": "libstdc++/include/new",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T22:56:42Z",
+      "side": 1,
+      "message": "...and explains why these are inlined.",
+      "revId": "f44b232d85e9d8be6242251d570742d49a7066db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
