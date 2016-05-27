@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cd76f7e_10c30c4f",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-05-27T23:04:36Z",
+      "side": 1,
+      "message": "!\u003d nullptr?",
+      "revId": "63ec58e3da5ed2540f4f206f279e5f292774ea2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
