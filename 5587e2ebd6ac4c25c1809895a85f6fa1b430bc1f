@@ -121,6 +121,24 @@
       "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_6a94179e",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-05-27T20:44:24Z",
+      "side": 1,
+      "message": "We have pre-ICS NDK platforms, but I guess we don\u0027t actually need to justify the existence of these macros (especially since I need to add one for mips, too.) Deleted the comment.",
+      "parentUuid": "9cd76f7e_0a82bbb9",
+      "revId": "5587e2ebd6ac4c25c1809895a85f6fa1b430bc1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
