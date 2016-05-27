@@ -35,6 +35,8 @@ static void* __bionic_brk;
 void* __bionic_brk; // Accidentally exported by the NDK.
 #endif
 
+extern "C" void* __brk(void* __addr);
+
 int brk(void* end_data) {
   __bionic_brk = __brk(end_data);
   if (__bionic_brk < end_data) {
