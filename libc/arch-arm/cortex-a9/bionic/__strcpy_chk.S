@@ -149,11 +149,14 @@ ENTRY(__strcpy_chk)
     pld     [r1, #0]
     pld     [r1, #64]
     ldr     r0, [sp]
-    cmp     r3, lr
-    bhs     __strcpy_chk_fail
 
     // Add 1 for copy length to get the string terminator.
     add     r2, r3, #1
+
+    cmp     r2, lr
+    itt     hi
+    movhi   r0, r2
+    bhi     __strcpy_chk_fail
 
     // Fall through into the memcpy_base function.
 END(__strcpy_chk)
@@ -161,21 +164,3 @@ END(__strcpy_chk)
 #define MEMCPY_BASE         __strcpy_chk_memcpy_base
 #define MEMCPY_BASE_ALIGNED __strcpy_chk_memcpy_base_aligned
 #include "memcpy_base.S"
-
-ENTRY_PRIVATE(__strcpy_chk_fail)
-    .cfi_def_cfa_offset 8
-    .cfi_rel_offset r0, 0
-    .cfi_rel_offset lr, 4
-
-    ldr     r0, error_message
-1:
-    add     r0, pc
-    bl      __fortify_fatal
-
-error_message:
-    .word   error_string-(1b+4)
-END(__strcpy_chk_fail)
-
-    .data
-error_string:
-    .string "strcpy: prevented write past end of buffer"
