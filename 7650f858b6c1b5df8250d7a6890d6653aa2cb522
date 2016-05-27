@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cd76f7e_0a78fbae",
+        "filename": "tools/versioner/src/SymbolDatabase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:28:34Z",
+      "side": 1,
+      "message": "why is this an abort?",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_aafa8f1b",
+        "filename": "tools/versioner/src/SymbolDatabase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:28:34Z",
+      "side": 1,
+      "message": "doesn\u0027t seem like you actually need the FILE*? return a std::string with all the content, and then for ( : Split()) to simplify the code below?",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_8affcb0b",
+        "filename": "tools/versioner/src/Utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:28:34Z",
+      "side": 1,
+      "message": "why aren\u0027t you using libbase for this stuff?",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_8a26aba3",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:28:34Z",
+      "side": 1,
+      "message": "confusing indentation.",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_ca20a389",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-05-27T20:28:34Z",
+      "side": 1,
+      "message": "here too",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
