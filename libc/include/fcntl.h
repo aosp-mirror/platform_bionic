@@ -87,13 +87,13 @@ extern int posix_fadvise64(int, off64_t, off64_t, int) __INTRODUCED_IN(21);
 extern int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU)
-ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(21);
+ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(16);
 int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN_FUTURE;
 #endif
 
-extern int __open_2(const char*, int) __INTRODUCED_IN(21);
+extern int __open_2(const char*, int) __INTRODUCED_IN(17);
 extern int __open_real(const char*, int, ...) __RENAME(open);
-extern int __openat_2(int, const char*, int) __INTRODUCED_IN(21);
+extern int __openat_2(int, const char*, int) __INTRODUCED_IN(17);
 extern int __openat_real(int, const char*, int, ...) __RENAME(openat);
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");

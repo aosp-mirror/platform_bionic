@@ -119,8 +119,8 @@ int	 fscanf(FILE * __restrict, const char * __restrict, ...)
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
-ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(21);
-ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(21);
+ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(18);
+ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(18);
 
 void	 perror(const char *);
 int	 printf(const char * __restrict, ...)
@@ -280,7 +280,7 @@ int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __BSD_VISIBLE */
 
-extern char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(21);
+extern char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
 extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");

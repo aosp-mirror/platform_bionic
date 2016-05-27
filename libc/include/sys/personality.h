@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-extern int personality(unsigned int persona) __INTRODUCED_IN(21);
+extern int personality(unsigned int persona) __INTRODUCED_IN(15);
 
 __END_DECLS
 

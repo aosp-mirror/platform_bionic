@@ -54,11 +54,7 @@ __BEGIN_DECLS
 #define bzero(b, len) (void)(__builtin_memset((b), '\0', (len)))
 #endif
 
-#if defined(__i386__)
-int ffs(int) __INTRODUCED_IN(21);
-#else
-int ffs(int);
-#endif
+int ffs(int) __INTRODUCED_IN_X86(18);
 
 __END_DECLS
 

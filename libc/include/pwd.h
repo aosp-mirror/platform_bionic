@@ -122,8 +122,8 @@ struct passwd* getpwent(void)
 void setpwent(void) __INTRODUCED_IN_FUTURE;
 void endpwent(void) __INTRODUCED_IN_FUTURE;
 
-int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(21);
-int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(21);
+int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
+int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
 
 __END_DECLS
 
