@@ -52,6 +52,24 @@
       "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_04e46ab2",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2016-05-31T04:31:00Z",
+      "side": 1,
+      "message": "why you think \"if we reflect calls to nb implementation it should be able to do everything without access to host system default/anonymous namespace\". Can a ABI matched app runs without the default/anonymous namespace in linker? Obviously not. So native bridge needs default/anonymous and they must be peered with dynamic linker\u0027s.\n\n\u003e\u003e\u003e Note that since NB application does not really have any of host arch libraries there is no need to create namespaces with host linker\n1. Apps could packed cross ABI libs, it will check ABI and load libs of matched ABI.\n2. We are trying to make you guys notice this - native bridge really loads libs of different ABIs, one is by itself and another is by dynamic linker. This is a generic fact, no matter what the apps running in subsystem does. This \"assumption\" is hidden since before namespace introduced, dlopen is enough for us.",
+      "parentUuid": "9cd76f7e_e4d156e2",
+      "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
