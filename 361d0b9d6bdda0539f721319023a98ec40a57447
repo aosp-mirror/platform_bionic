@@ -34,6 +34,24 @@
       "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_e4d156e2",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-05-31T04:15:34Z",
+      "side": 1,
+      "message": "I do not think it does... if we reflect calls to nb implementation it should be able to do everything without access to host system default/anonymous namespace: \n\nNote that since NB application does not really have any of host arch libraries there is no need to create namespaces with host linker and therefore there is no anonymous namespace for such apps.",
+      "parentUuid": "9cd76f7e_84a97a8b",
+      "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
