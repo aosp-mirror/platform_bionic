@@ -70,6 +70,24 @@
       "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59598944_c89a2f73",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2016-05-31T16:26:12Z",
+      "side": 1,
+      "message": "Zhenhua, as we discussed in the email, please provide test cases that fail and are addressed by this solution. It seems that you are aware of corner cases that we could have missed. If so, it should be easy for you to expose those in tests. After that, we can then consider what\u0027s the best solution.\n\nAt this point we are just re-iterating what we already discuss. So let\u0027s focus on having tests first.",
+      "parentUuid": "9cd76f7e_04e46ab2",
+      "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
