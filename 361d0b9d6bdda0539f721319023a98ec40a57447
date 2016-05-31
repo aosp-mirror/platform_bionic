@@ -16,6 +16,24 @@
       "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd76f7e_84a97a8b",
+        "filename": "libdl/libdl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2016-05-31T01:18:03Z",
+      "side": 1,
+      "message": "the emulated subsystem needs access to all native libraries. With namespace introduced, the subsystem needs access to libraries in every namespaces, that\u0027s why we need the key of default and anonymous namespace. And we have no other better solution.\n\nHere are the two possible solutions we have evaluated:\n1. current design - expose the key of default and anonymous. native bridge doesn\u0027t need the pointer necessarily, but a key is needed.\n2. expose the structure android_namespace_t - if you are insisted on hiding these two namespaces, we can play tricks. The disadvantage is that, the callback in native loader, which is responsible for loading library for native bridge, will be deprecated. In this way, android_namespace_t will be exposed.\n\nSo, basically, as far as we can understand, the problem is exposing either android_namespace_t or default/anonymous namespace. You guys are the expert, can you give us a hint of another better solution?",
+      "parentUuid": "9cd76f7e_1944d70b",
+      "revId": "361d0b9d6bdda0539f721319023a98ec40a57447",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
