@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19af1163_ec55df44",
+        "filename": "tools/versioner/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-01T02:00:46Z",
+      "side": 1,
+      "message": "Tabs! Really? ;)",
+      "revId": "b9f22ae55ebe6aeb38e608f095430253fa7812eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19af1163_6cc7af27",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-01T02:00:46Z",
+      "side": 1,
+      "message": "You really should have comments here to explain this (i.e. \"Skip declarations inside of functions\"). Visitors are hard to debug/modify later on without some stepping stones.",
+      "revId": "b9f22ae55ebe6aeb38e608f095430253fa7812eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19af1163_0cccfb46",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-01T02:00:46Z",
+      "side": 1,
+      "message": "It would probably be better (and slightly more efficient) to just stash these in your class itself, especially since you have this info available to the constructor.",
+      "revId": "b9f22ae55ebe6aeb38e608f095430253fa7812eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19af1163_2cd1b7e1",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-01T02:00:46Z",
+      "side": 1,
+      "message": "LLVM-style would say to fold the declaration into the if statement (and the else if below). Also, you can then use auto in these cases because the RHS has dyn_cast\u003c\u003e.",
+      "revId": "b9f22ae55ebe6aeb38e608f095430253fa7812eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19af1163_acdcc7f5",
+        "filename": "tools/versioner/src/DeclarationDatabase.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-01T02:00:46Z",
+      "side": 1,
+      "message": "Yeah, I was wondering why you were implementing your own versions when I was certain LLVM already had these.",
+      "revId": "b9f22ae55ebe6aeb38e608f095430253fa7812eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
