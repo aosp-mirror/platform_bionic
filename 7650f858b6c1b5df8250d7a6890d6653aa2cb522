@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "79700dc4_19550bb7",
+        "filename": "tools/versioner/src/DeclarationDatabase.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-01T01:24:34Z",
+      "side": 1,
+      "message": "Oops.",
+      "parentUuid": "9cd76f7e_8d2c0537",
+      "range": {
+        "startLine": 62,
+        "startChar": 16,
+        "endLine": 62,
+        "endChar": 26
+      },
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9cd76f7e_0a78fbae",
         "filename": "tools/versioner/src/SymbolDatabase.cpp",
         "patchSetId": 1
@@ -82,6 +106,24 @@
       "writtenOn": "2016-05-27T20:28:34Z",
       "side": 1,
       "message": "why is this an abort?",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79700dc4_e2f41c97",
+        "filename": "tools/versioner/src/SymbolDatabase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-01T01:24:34Z",
+      "side": 1,
+      "message": "If you mean \"why abort after errx\", fixed.",
+      "parentUuid": "9cd76f7e_0a78fbae",
       "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -122,6 +164,24 @@
     },
     {
       "key": {
+        "uuid": "79700dc4_994fdb28",
+        "filename": "tools/versioner/src/Utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-01T01:24:34Z",
+      "side": 1,
+      "message": "Removed in favor of LLVM\u0027s implementations.",
+      "parentUuid": "9cd76f7e_8affcb0b",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9cd76f7e_8a26aba3",
         "filename": "tools/versioner/src/versioner.cpp",
         "patchSetId": 1
@@ -133,6 +193,24 @@
       "writtenOn": "2016-05-27T20:28:34Z",
       "side": 1,
       "message": "confusing indentation.",
+      "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79700dc4_7960c791",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-01T01:24:34Z",
+      "side": 1,
+      "message": "Bug in our .clang-format, fixed.",
+      "parentUuid": "9cd76f7e_8a26aba3",
       "revId": "7650f858b6c1b5df8250d7a6890d6653aa2cb522",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
