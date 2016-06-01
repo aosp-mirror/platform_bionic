@@ -16,6 +16,24 @@
       "revId": "63ec58e3da5ed2540f4f206f279e5f292774ea2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19af1163_89a1bdb2",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-01T01:24:34Z",
+      "side": 1,
+      "message": "Do we prefer that? This is LLVM\u0027s style (and better, IMO)",
+      "parentUuid": "9cd76f7e_10c30c4f",
+      "revId": "63ec58e3da5ed2540f4f206f279e5f292774ea2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
