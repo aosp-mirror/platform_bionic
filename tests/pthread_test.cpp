@@ -1347,7 +1347,8 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
 
 struct GetStackSignalHandlerArg {
   volatile bool done;
-  void* signal_handler_sp;
+  void* signal_stack_base;
+  size_t signal_stack_size;
   void* main_stack_base;
   size_t main_stack_size;
 };
@@ -1363,9 +1364,17 @@ static void getstack_signal_handler(int sig) {
   void* stack_base;
   size_t stack_size;
   ASSERT_EQ(0, pthread_attr_getstack(&attr, &stack_base, &stack_size));
-  getstack_signal_handler_arg.signal_handler_sp = &attr;
-  getstack_signal_handler_arg.main_stack_base = stack_base;
-  getstack_signal_handler_arg.main_stack_size = stack_size;
+
+  // Verify if the stack used by the signal handler is the alternate stack just registered.
+  ASSERT_LE(getstack_signal_handler_arg.signal_stack_base, &attr);
+  ASSERT_LT(static_cast<void*>(&attr),
+            static_cast<char*>(getstack_signal_handler_arg.signal_stack_base) +
+            getstack_signal_handler_arg.signal_stack_size);
+
+  // Verify if the main thread's stack got in the signal handler is correct.
+  ASSERT_EQ(getstack_signal_handler_arg.main_stack_base, stack_base);
+  ASSERT_LE(getstack_signal_handler_arg.main_stack_size, stack_size);
+
   getstack_signal_handler_arg.done = true;
 }
 
@@ -1398,17 +1407,12 @@ TEST(pthread, pthread_attr_getstack_in_signal_handler) {
 
   ScopedSignalHandler handler(SIGUSR1, getstack_signal_handler, SA_ONSTACK);
   getstack_signal_handler_arg.done = false;
+  getstack_signal_handler_arg.signal_stack_base = sig_stack;
+  getstack_signal_handler_arg.signal_stack_size = sig_stack_size;
+  getstack_signal_handler_arg.main_stack_base = main_stack_base;
+  getstack_signal_handler_arg.main_stack_size = main_stack_size;
   kill(getpid(), SIGUSR1);
   ASSERT_EQ(true, getstack_signal_handler_arg.done);
-
-  // Verify if the stack used by the signal handler is the alternate stack just registered.
-  ASSERT_LE(sig_stack, getstack_signal_handler_arg.signal_handler_sp);
-  ASSERT_GE(reinterpret_cast<char*>(sig_stack) + sig_stack_size,
-            getstack_signal_handler_arg.signal_handler_sp);
-
-  // Verify if the main thread's stack got in the signal handler is correct.
-  ASSERT_EQ(main_stack_base, getstack_signal_handler_arg.main_stack_base);
-  ASSERT_LE(main_stack_size, getstack_signal_handler_arg.main_stack_size);
 
   ASSERT_EQ(0, sigaltstack(&oss, nullptr));
   ASSERT_EQ(0, munmap(sig_stack, sig_stack_size));
