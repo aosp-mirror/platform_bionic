@@ -52,6 +52,24 @@
       "revId": "63ec58e3da5ed2540f4f206f279e5f292774ea2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a269c0_63aabc27",
+        "filename": "tools/versioner/src/DeclarationDatabase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-02T01:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19af1163_4cc2f318",
+      "revId": "63ec58e3da5ed2540f4f206f279e5f292774ea2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
