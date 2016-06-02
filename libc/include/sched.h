@@ -52,9 +52,10 @@ extern int sched_rr_get_interval(pid_t, struct timespec*);
 
 #if defined(__USE_GNU)
 
-extern int clone(int (*)(void*), void*, int, void*, ...);
-extern int unshare(int) __INTRODUCED_IN(21);
-extern int sched_getcpu(void) __INTRODUCED_IN(21);
+extern int clone(int (*)(void*), void*, int, void*, ...) __INTRODUCED_IN_ARM(9)
+    __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
+extern int unshare(int) __INTRODUCED_IN(17);
+extern int sched_getcpu(void) __INTRODUCED_IN(12);
 extern int setns(int, int) __INTRODUCED_IN(21);
 
 #ifdef __LP64__
@@ -72,9 +73,8 @@ typedef struct {
   __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
 } cpu_set_t;
 
-extern int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) __INTRODUCED_IN(21);
-
-extern int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN(21);
+extern int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) __INTRODUCED_IN(12);
+extern int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
 
 #define CPU_ZERO(set)          CPU_ZERO_S(sizeof(cpu_set_t), set)
 #define CPU_SET(cpu, set)      CPU_SET_S(cpu, sizeof(cpu_set_t), set)
@@ -97,8 +97,8 @@ extern int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTROD
 #define CPU_ALLOC(count)  __sched_cpualloc((count))
 #define CPU_FREE(set)     __sched_cpufree((set))
 
-extern cpu_set_t* __sched_cpualloc(size_t count) __INTRODUCED_IN(21);
-extern void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(21);
+extern cpu_set_t* __sched_cpualloc(size_t count) __INTRODUCED_IN(12);
+extern void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(12);
 
 #define CPU_ZERO_S(setsize, set)  __builtin_memset(set, 0, setsize)
 
@@ -142,7 +142,7 @@ extern void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(21);
 
 #define CPU_COUNT_S(setsize, set)  __sched_cpucount((setsize), (set))
 
-extern int __sched_cpucount(size_t setsize, cpu_set_t* set) __INTRODUCED_IN(21);
+extern int __sched_cpucount(size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
 
 #endif /* __USE_GNU */
 

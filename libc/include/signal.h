@@ -144,8 +144,8 @@ extern int killpg(int, int);
 
 extern int sigaltstack(const stack_t*, stack_t*);
 
-extern void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(21);
-extern void psignal(int, const char*) __INTRODUCED_IN(21);
+extern void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
+extern void psignal(int, const char*) __INTRODUCED_IN(17);
 
 extern int pthread_kill(pthread_t, int);
 extern int pthread_sigmask(int, const sigset_t*, sigset_t*);

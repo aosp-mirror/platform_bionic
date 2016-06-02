@@ -61,8 +61,8 @@ extern int msync(const void*, size_t, int);
 extern int mprotect(const void*, size_t, int);
 extern void* mremap(void*, size_t, size_t, int, ...);
 
-extern int mlockall(int) __INTRODUCED_IN(21);
-extern int munlockall(void) __INTRODUCED_IN(21);
+extern int mlockall(int) __INTRODUCED_IN(17);
+extern int munlockall(void) __INTRODUCED_IN(17);
 extern int mlock(const void*, size_t);
 extern int munlock(const void*, size_t);
 
