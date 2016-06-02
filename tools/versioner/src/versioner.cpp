@@ -341,17 +341,15 @@ static bool checkVersions(const std::set<CompilationType>& types,
     arch_types[type.arch].insert(type);
   }
 
+  std::set<std::string> completely_unavailable;
+
   for (const auto& outer : declaration_database) {
     const std::string& symbol_name = outer.first;
     const auto& compilations = outer.second;
 
     auto platform_availability_it = symbol_database.find(symbol_name);
     if (platform_availability_it == symbol_database.end()) {
-      // This currently has lots of false positives (__INTRODUCED_IN_FUTURE, __errordecl, functions
-      // that come from crtbegin, etc.). Only print them with verbose, because of this.
-      if (verbose) {
-        printf("%s: not available in any platform\n", symbol_name.c_str());
-      }
+      completely_unavailable.insert(symbol_name);
       continue;
     }
 
@@ -465,6 +463,25 @@ static bool checkVersions(const std::set<CompilationType>& types,
              types_to_string(missing_symbol).c_str());
       failed = true;
     }
+  }
+
+  for (const std::string& symbol_name : completely_unavailable) {
+    // This currently has some false positives (mostly functions that come from crtbegin).
+    // Therefore, only report these declarations when running with verbose for now.
+    if (!verbose) {
+      break;
+    }
+
+    // Check to see if the symbol is tagged with __INTRODUCED_IN_FUTURE.
+    auto symbol_it = declaration_database.find(symbol_name);
+    const Declaration& declaration = symbol_it->second.begin()->second;
+    DeclarationAvailability availability = declaration.locations.begin()->availability;
+    if (availability.introduced >= 10000) {
+      continue;
+    }
+
+    printf("%s: not available in any platform\n", symbol_name.c_str());
+    failed = true;
   }
 
   return !failed;
