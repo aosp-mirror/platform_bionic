@@ -22,6 +22,30 @@
       "revId": "48e79c22c0fc8200029b6730809d7bea9905006c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79364dc9_2f56cd50",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2016-06-02T22:03:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79364dc9_2f3fad10",
+      "range": {
+        "startLine": 1350,
+        "startChar": 0,
+        "endLine": 1351,
+        "endChar": 20
+      },
+      "revId": "48e79c22c0fc8200029b6730809d7bea9905006c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
