@@ -38,10 +38,10 @@ void* lsearch(const void*, void*, size_t*, size_t, int (*)(const void*, const vo
   __INTRODUCED_IN(21);
 
 void* tdelete(const void* __restrict, void** __restrict, int (*)(const void*, const void*))
-  __INTRODUCED_IN(21);
-void tdestroy(void*, void (*)(void*)) __INTRODUCED_IN(21);
-void* tfind(const void*, void* const*, int (*)(const void*, const void*)) __INTRODUCED_IN(21);
-void* tsearch(const void*, void**, int (*)(const void*, const void*)) __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
+void tdestroy(void*, void (*)(void*)) __INTRODUCED_IN(16);
+void* tfind(const void*, void* const*, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
+void* tsearch(const void*, void**, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
 void twalk(const void*, void (*)(const void*, VISIT, int)) __INTRODUCED_IN(21);
 
 __END_DECLS

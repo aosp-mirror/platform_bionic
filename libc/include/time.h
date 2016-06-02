@@ -100,8 +100,8 @@ extern int timer_gettime(timer_t, struct itimerspec*) __LIBC_ABI_PUBLIC__;
 extern int timer_getoverrun(timer_t) __LIBC_ABI_PUBLIC__;
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-extern time_t timelocal(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
-extern time_t timegm(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
+extern time_t timelocal(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(12);
+extern time_t timegm(struct tm*) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(12);
 
 __END_DECLS
 

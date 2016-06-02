@@ -90,7 +90,7 @@ extern int    setpgid(pid_t __pid, pid_t __pgid);
 extern pid_t  getppid(void);
 extern pid_t  getpgrp(void);
 extern int    setpgrp(void);
-extern pid_t  getsid(pid_t __pid) __INTRODUCED_IN(21);
+extern pid_t  getsid(pid_t __pid) __INTRODUCED_IN(17);
 extern pid_t  setsid(void);
 
 extern int execv(const char* __path, char* const* __argv);
@@ -127,7 +127,7 @@ extern long pathconf(const char* __path, int __name);
 
 extern int access(const char* __path, int __mode);
 extern int faccessat(int __dirfd, const char* __path, int __mode, int __flags)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 extern int link(const char* __oldpath, const char* __newpath);
 extern int linkat(int __olddirfd, const char* __oldpath, int __newdirfd,
                   const char* __newpath, int __flags) __INTRODUCED_IN(21);
@@ -285,7 +285,7 @@ extern ssize_t __readlink_real(const char*, char*, size_t) __RENAME(readlink);
 extern ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger than destination");
 __errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
-extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat);
+extern ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat) __INTRODUCED_IN(21);
 
 extern int getdomainname(char*, size_t) __INTRODUCED_IN_FUTURE;
 extern int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;

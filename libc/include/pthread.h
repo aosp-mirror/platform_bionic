@@ -133,7 +133,7 @@ typedef struct {
 
 __BEGIN_DECLS
 
-int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(21);
+int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(12);
 
 int pthread_attr_destroy(pthread_attr_t* _Nonnull);
 int pthread_attr_getdetachstate(const pthread_attr_t* _Nonnull, int* _Nonnull);

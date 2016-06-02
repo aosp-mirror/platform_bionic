@@ -51,7 +51,7 @@ __BEGIN_DECLS
 
 extern pid_t  wait(int *);
 extern pid_t  waitpid(pid_t, int *, int);
-extern pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(19);
+extern pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(18);
 
 /* Posix states that idtype_t should be an enumeration type, but
  * the kernel headers define P_ALL, P_PID and P_PGID as constant macros

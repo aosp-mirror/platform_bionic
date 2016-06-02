@@ -127,13 +127,6 @@ extern int signgam;
 #endif
 #endif /* __BSD_VISIBLE */
 
-/* scalbln, scalbnf, and scalblnl were unavailable on x86 until API level 18 */
-#if defined(__i386__)
-#define __INTRODUCED_IN_X86 __INTRODUCED_IN
-#else
-#define __INTRODUCED_IN_X86(x)
-#endif
-
 /*
  * Most of these functions depend on the rounding mode and have the side
  * effect of raising floating-point exceptions, so they are not declared
@@ -212,7 +205,10 @@ double log2(double) __INTRODUCED_IN(18);
 double	logb(double);
 long	lrint(double);
 long	lround(double);
-double nan(const char*) __pure2 __INTRODUCED_IN(13);
+
+double nan(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
+    __INTRODUCED_IN_X86(9);
+
 double	nextafter(double, double);
 double	remainder(double, double);
 double	remquo(double, double, int *);
@@ -243,8 +239,8 @@ double	fmax(double, double) __pure2;
 double	fmin(double, double) __pure2;
 double	nearbyint(double);
 double	round(double);
-double	scalbln(double, long);
-double scalbn(double, int) __INTRODUCED_IN_X86(18);
+double scalbln(double, long) __INTRODUCED_IN_X86(18);
+double scalbn(double, int);
 double	tgamma(double);
 double	trunc(double);
 #endif
@@ -310,7 +306,7 @@ float	erff(float);
 float	erfcf(float);
 float	hypotf(float, float);
 float	lgammaf(float);
-float tgammaf(float) __INTRODUCED_IN(13);
+float tgammaf(float) __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13) __INTRODUCED_IN_X86(9);
 
 float	acoshf(float);
 float	asinhf(float);
@@ -322,14 +318,15 @@ long long llrintf(float);
 long long llroundf(float);
 long	lrintf(float);
 long	lroundf(float);
-float nanf(const char*) __pure2 __INTRODUCED_IN(13);
+float nanf(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
+    __INTRODUCED_IN_X86(9);
 float	nearbyintf(float);
 float	nextafterf(float, float);
 float	remainderf(float, float);
 float	remquof(float, float, int *);
 float	rintf(float);
-float	scalblnf(float, long);
-float scalbnf(float, int) __INTRODUCED_IN_X86(18);
+float	scalblnf(float, long) __INTRODUCED_IN_X86(18);
+float scalbnf(float, int);
 float	truncf(float);
 
 float	fdimf(float, float);
@@ -421,8 +418,8 @@ long double remainderl(long double, long double) __INTRODUCED_IN(21);
 long double remquol(long double, long double, int*) __INTRODUCED_IN(21);
 long double rintl(long double) __INTRODUCED_IN(21);
 long double	roundl(long double);
-long double	scalblnl(long double, long);
-long double scalbnl(long double, int) __INTRODUCED_IN_X86(18);
+long double scalblnl(long double, long) __INTRODUCED_IN_X86(18);
+long double scalbnl(long double, int);
 long double sinhl(long double) __INTRODUCED_IN(21);
 long double sinl(long double) __INTRODUCED_IN(21);
 long double sqrtl(long double) __INTRODUCED_IN(21);
