@@ -204,7 +204,6 @@ extern int usleep(useconds_t __usec);
 int gethostname(char* __name, size_t __len);
 int sethostname(const char* __name, size_t __len) __INTRODUCED_IN(23);
 
-extern void* __brk(void* __addr);
 extern int brk(void* __addr);
 extern void* sbrk(ptrdiff_t __increment);
 
