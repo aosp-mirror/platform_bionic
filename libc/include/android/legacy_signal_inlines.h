@@ -34,11 +34,12 @@
 #include <string.h>
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < 21
 
 __BEGIN_DECLS
 
-extern sighandler_t bsd_signal(int signum, sighandler_t handler);
+extern sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
+
+#if __ANDROID_API__ < 21
 
 static __inline int sigismember(const sigset_t *set, int signum) {
   /* Signal numbers start at 1, but bit positions start at 0. */
@@ -97,7 +98,8 @@ static __inline sighandler_t signal(int s, sighandler_t f) {
   return bsd_signal(s, f);
 }
 
+#endif /* __ANDROID_API__ < 21 */
+
 __END_DECLS
 
-#endif
 #endif /* _ANDROID_LEGACY_SIGNAL_INLINES_H_ */

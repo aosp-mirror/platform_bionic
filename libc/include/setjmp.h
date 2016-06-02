@@ -54,8 +54,10 @@ void    _longjmp(jmp_buf, int);
 int     setjmp(jmp_buf);
 void    longjmp(jmp_buf, int);
 
-int     sigsetjmp(sigjmp_buf, int);
-void    siglongjmp(sigjmp_buf, int);
+int sigsetjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
+    __INTRODUCED_IN_X86(12);
+void siglongjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
+    __INTRODUCED_IN_X86(12);
 
 __END_DECLS
 
