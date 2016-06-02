@@ -36,25 +36,25 @@ __BEGIN_DECLS
 #define XATTR_REPLACE 2
 
 extern int fsetxattr(int fd, const char* name, const void* value, size_t size, int flags)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 extern int setxattr(const char* path, const char* name, const void* value, size_t size, int flags)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 extern int lsetxattr(const char* path, const char* name, const void* value, size_t size, int flags)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 
-extern ssize_t fgetxattr(int fd, const char* name, void* value, size_t size) __INTRODUCED_IN(21);
+extern ssize_t fgetxattr(int fd, const char* name, void* value, size_t size) __INTRODUCED_IN(16);
 extern ssize_t getxattr(const char* path, const char* name, void* value, size_t size)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 extern ssize_t lgetxattr(const char* path, const char* name, void* value, size_t size)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(16);
 
-extern ssize_t listxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(21);
-extern ssize_t llistxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(21);
-extern ssize_t flistxattr(int fd, char* list, size_t size) __INTRODUCED_IN(21);
+extern ssize_t listxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(16);
+extern ssize_t llistxattr(const char* path, char* list, size_t size) __INTRODUCED_IN(16);
+extern ssize_t flistxattr(int fd, char* list, size_t size) __INTRODUCED_IN(16);
 
-extern int removexattr(const char* path, const char* name) __INTRODUCED_IN(21);
-extern int lremovexattr(const char* path, const char* name) __INTRODUCED_IN(21);
-extern int fremovexattr(int fd, const char* name) __INTRODUCED_IN(21);
+extern int removexattr(const char* path, const char* name) __INTRODUCED_IN(16);
+extern int lremovexattr(const char* path, const char* name) __INTRODUCED_IN(16);
+extern int fremovexattr(int fd, const char* name) __INTRODUCED_IN(16);
 
 __END_DECLS
 

@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-unsigned long int getauxval(unsigned long int type) __INTRODUCED_IN(21);
+unsigned long int getauxval(unsigned long int type) __INTRODUCED_IN(18);
 
 __END_DECLS
 

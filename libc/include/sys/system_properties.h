@@ -48,7 +48,7 @@ int __system_property_get(const char *name, char *value);
 
 /* Set a system property by name.
 **/
-int __system_property_set(const char* key, const char* value) __INTRODUCED_IN(21);
+int __system_property_set(const char* key, const char* value) __INTRODUCED_IN(12);
 
 /* Return a pointer to the system property named name, if it
 ** exists, or NULL if there is no such property.  Use 
@@ -94,7 +94,7 @@ const prop_info *__system_property_find_nth(unsigned n);
 ** not a bug.
 */
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
-  __INTRODUCED_IN(21);
+  __INTRODUCED_IN(19);
 
 __END_DECLS
 

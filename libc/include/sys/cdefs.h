@@ -501,6 +501,24 @@
 #define __INTRODUCED_IN_64(api_level)
 #endif
 
+#if defined(__arm__)
+#define __INTRODUCED_IN_ARM __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_ARM(x)
+#endif
+
+#if defined(__i386__)
+#define __INTRODUCED_IN_X86 __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_X86(x)
+#endif
+
+#if defined(__mips__)
+#define __INTRODUCED_IN_MIPS __INTRODUCED_IN
+#else
+#define __INTRODUCED_IN_MIPS(x)
+#endif
+
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__
 #define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
