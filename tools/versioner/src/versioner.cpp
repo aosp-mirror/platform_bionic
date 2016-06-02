@@ -477,6 +477,7 @@ static void usage(bool help = false) {
     exit(1);
   } else {
     fprintf(stderr, "Version headers at HEADER_PATH, with DEPS_PATH/ARCH/* on the include path\n");
+    fprintf(stderr, "Autodetects paths if HEADER_PATH and DEPS_PATH are not specified\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Target specification (defaults to all):\n");
     fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
@@ -559,8 +560,33 @@ int main(int argc, char** argv) {
     }
   }
 
-  if (argc - optind > 2 || optind >= argc) {
+  if (argc - optind > 2 || optind > argc) {
     usage();
+  }
+
+  std::string header_dir;
+  std::string dependency_dir;
+
+  if (optind == argc) {
+    // Neither HEADER_PATH nor DEPS_PATH were specified, so try to figure them out.
+    const char* top = getenv("ANDROID_BUILD_TOP");
+    if (!top) {
+      fprintf(stderr, "versioner: failed to autodetect bionic paths. Is ANDROID_BUILD_TOP set?\n");
+      usage();
+    }
+
+    std::string versioner_dir = std::to_string(top) + "/bionic/tools/versioner";
+    header_dir = versioner_dir + "/current";
+    dependency_dir = versioner_dir + "/dependencies";
+    if (platform_dir.empty()) {
+      platform_dir = versioner_dir + "/platforms";
+    }
+  } else {
+    header_dir = argv[optind];
+
+    if (argc - optind == 2) {
+      dependency_dir = argv[optind + 1];
+    }
   }
 
   if (selected_levels.empty()) {
@@ -571,14 +597,12 @@ int main(int argc, char** argv) {
     selected_architectures = supported_archs;
   }
 
-  std::string dependencies = (argc - optind == 2) ? argv[optind + 1] : "";
-  const char* header_dir = argv[optind];
 
   struct stat st;
-  if (stat(header_dir, &st) != 0) {
-    err(1, "failed to stat '%s'", header_dir);
+  if (stat(header_dir.c_str(), &st) != 0) {
+    err(1, "failed to stat '%s'", header_dir.c_str());
   } else if (!S_ISDIR(st.st_mode)) {
-    errx(1, "'%s' is not a directory", header_dir);
+    errx(1, "'%s' is not a directory", header_dir.c_str());
   }
 
   std::set<CompilationType> compilation_types;
@@ -594,7 +618,7 @@ int main(int argc, char** argv) {
   }
 
   bool failed = false;
-  declaration_database = compileHeaders(compilation_types, header_dir, dependencies, &failed);
+  declaration_database = compileHeaders(compilation_types, header_dir, dependency_dir, &failed);
 
   if (!sanityCheck(compilation_types, declaration_database)) {
     printf("versioner: sanity check failed\n");
