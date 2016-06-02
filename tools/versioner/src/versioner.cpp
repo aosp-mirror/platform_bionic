@@ -470,21 +470,28 @@ static bool checkVersions(const std::set<CompilationType>& types,
   return !failed;
 }
 
-static void usage() {
-  fprintf(stderr, "Usage: versioner [OPTION]... HEADER_PATH [DEPS_PATH]\n");
-  fprintf(stderr, "Version headers at HEADER_PATH, with DEPS_PATH/ARCH/* on the include path\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Target specification (defaults to all):\n");
-  fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
-  fprintf(stderr, "    \t\tvalid levels are %s\n", Join(supported_levels).c_str());
-  fprintf(stderr, "  -r ARCH\tbuild with specified architecture (can be repeated)\n");
-  fprintf(stderr, "    \t\tvalid architectures are %s\n", Join(supported_archs).c_str());
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Validation:\n");
-  fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
-  fprintf(stderr, "  -d\t\tdump symbol availability in libraries\n");
-  fprintf(stderr, "  -v\t\tenable verbose warnings\n");
-  exit(1);
+static void usage(bool help = false) {
+  fprintf(stderr, "Usage: versioner [OPTION]... [HEADER_PATH] [DEPS_PATH]\n");
+  if (!help) {
+    printf("Try 'versioner -h' for more information.\n");
+    exit(1);
+  } else {
+    fprintf(stderr, "Version headers at HEADER_PATH, with DEPS_PATH/ARCH/* on the include path\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Target specification (defaults to all):\n");
+    fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
+    fprintf(stderr, "    \t\tvalid levels are %s\n", Join(supported_levels).c_str());
+    fprintf(stderr, "  -r ARCH\tbuild with specified architecture (can be repeated)\n");
+    fprintf(stderr, "    \t\tvalid architectures are %s\n", Join(supported_archs).c_str());
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Validation:\n");
+    fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
+    fprintf(stderr, "  -v\t\tenable verbose warnings\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Miscellaneous:\n");
+    fprintf(stderr, "  -h\t\tdisplay this message\n");
+    exit(0);
+  }
 }
 
 int main(int argc, char** argv) {
@@ -495,7 +502,7 @@ int main(int argc, char** argv) {
   std::set<int> selected_levels;
 
   int c;
-  while ((c = getopt(argc, argv, "a:r:p:n:duv")) != -1) {
+  while ((c = getopt(argc, argv, "a:r:p:vh")) != -1) {
     default_args = false;
     switch (c) {
       case 'a': {
@@ -540,6 +547,10 @@ int main(int argc, char** argv) {
 
       case 'v':
         verbose = true;
+        break;
+
+      case 'h':
+        usage(true);
         break;
 
       default:
