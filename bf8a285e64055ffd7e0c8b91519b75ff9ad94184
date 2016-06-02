@@ -16,6 +16,24 @@
       "revId": "bf8a285e64055ffd7e0c8b91519b75ff9ad94184",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79364dc9_4cea2f16",
+        "filename": "tools/versioner/src/Utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-06-02T21:32:37Z",
+      "side": 1,
+      "message": "Ah, there is one in StringExtras.h that uses two iterators. Maybe Josh didn\u0027t notice that (I certainly haven\u0027t used it).",
+      "parentUuid": "79364dc9_cc6a9fa0",
+      "revId": "bf8a285e64055ffd7e0c8b91519b75ff9ad94184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
