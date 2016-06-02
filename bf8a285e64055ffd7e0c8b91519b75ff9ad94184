@@ -34,6 +34,24 @@
       "revId": "bf8a285e64055ffd7e0c8b91519b75ff9ad94184",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79364dc9_2cddfb82",
+        "filename": "tools/versioner/src/Utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-02T21:32:49Z",
+      "side": 1,
+      "message": "It does, but AFAICT, it only works with StringRefs, so using it would need an additional step to convert a collection of ints to a collection of strings, for example.",
+      "parentUuid": "79364dc9_cc6a9fa0",
+      "revId": "bf8a285e64055ffd7e0c8b91519b75ff9ad94184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
