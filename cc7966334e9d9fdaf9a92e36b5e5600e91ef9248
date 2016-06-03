@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2644b287_047cda07",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-03T16:15:05Z",
+      "side": 1,
+      "message": "should we just replace the two uses of __warnattr with attribute deprecated? (their neighbor is already using it.)",
+      "revId": "cc7966334e9d9fdaf9a92e36b5e5600e91ef9248",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
