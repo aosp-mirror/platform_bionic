@@ -16,6 +16,24 @@
       "revId": "939353d399a8abbd48270c16f6d900b63e6a3fc1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66030ac0_3ef6d19a",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-03T21:59:32Z",
+      "side": 1,
+      "message": "This gets removed in one of the follow up patches.",
+      "parentUuid": "66030ac0_5bf0f7d2",
+      "revId": "939353d399a8abbd48270c16f6d900b63e6a3fc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
