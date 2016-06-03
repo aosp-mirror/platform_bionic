@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#define NUM_WCHARS(num_bytes) (num_bytes/sizeof(wchar_t))
+#define NUM_WCHARS(num_bytes) ((num_bytes)/sizeof(wchar_t))
 
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));

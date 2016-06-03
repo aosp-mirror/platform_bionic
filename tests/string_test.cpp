@@ -40,10 +40,10 @@
 #define STRLCAT_SUPPORTED
 #endif
 
-#define KB 1024
-#define SMALL 1*KB
-#define MEDIUM 4*KB
-#define LARGE 64*KB
+constexpr auto KB = 1024;
+constexpr auto SMALL = 1 * KB;
+constexpr auto MEDIUM = 4 * KB;
+constexpr auto LARGE = 64 * KB;
 
 static int signum(int i) {
   if (i < 0) {
