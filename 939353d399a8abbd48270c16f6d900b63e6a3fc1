@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66030ac0_5bf0f7d2",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-06-03T21:49:42Z",
+      "side": 1,
+      "message": "Failing or not failing based on verbosity is a little weird... Maybe \"strict\" is a better name? Don\u0027t know much about how this is used, but this strikes me as odd.",
+      "revId": "939353d399a8abbd48270c16f6d900b63e6a3fc1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
