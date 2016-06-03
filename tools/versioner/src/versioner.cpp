@@ -318,7 +318,7 @@ static bool sanityCheck(const std::set<CompilationType>& types,
       // Make sure that availability declarations are consistent across API levels for a given arch.
       if (last_availability != current_availability) {
         error = true;
-        printf("%s: availability mismatch between %s and %s: %s before, %s after\n",
+        printf("%s: availability mismatch between %s and %s: [%s] before, [%s] after\n",
                symbol_name.c_str(), last_type.describe().c_str(), type.describe().c_str(),
                last_availability.describe().c_str(), current_availability.describe().c_str());
       }
