@@ -485,12 +485,6 @@ static bool checkVersions(const std::set<CompilationType>& types,
   }
 
   for (const std::string& symbol_name : completely_unavailable) {
-    // This currently has some false positives (mostly functions that come from crtbegin).
-    // Therefore, only report these declarations when running with verbose for now.
-    if (!verbose) {
-      break;
-    }
-
     bool found_inline_definition = false;
     bool future = false;
 
@@ -512,6 +506,10 @@ static bool checkVersions(const std::set<CompilationType>& types,
     }
 
     if (future || found_inline_definition) {
+      continue;
+    }
+
+    if (missing_symbol_whitelist.count(symbol_name) != 0) {
       continue;
     }
 
