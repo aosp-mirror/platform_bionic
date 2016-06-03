@@ -37,7 +37,7 @@
 #include "dlext_private.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
-    ASSERT_TRUE(ptr != nullptr) << "dlerror: " << dlerror()
+    ASSERT_TRUE((ptr) != nullptr) << "dlerror: " << dlerror()
 
 #define ASSERT_DL_ZERO(i) \
     ASSERT_EQ(0, i) << "dlerror: " << dlerror()
@@ -52,7 +52,7 @@
 typedef int (*fn)(void);
 #define LIBNAME "libdlext_test.so"
 #define LIBNAME_NORELRO "libdlext_test_norelro.so"
-#define LIBSIZE 1024*1024 // how much address space to reserve for it
+constexpr auto LIBSIZE = 1024 * 1024; // how much address space to reserve for it
 
 #if defined(__LP64__)
 #define NATIVE_TESTS_PATH "/nativetest64"
