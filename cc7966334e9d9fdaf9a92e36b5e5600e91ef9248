@@ -16,6 +16,24 @@
       "revId": "cc7966334e9d9fdaf9a92e36b5e5600e91ef9248",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2644b287_2de0d9d9",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-03T18:07:36Z",
+      "side": 1,
+      "message": "Probably, but doing so breaks the build (the same way this patch does), because of a use of sprintf in LLVM\u0027s windows COFF writing code that gets compiled into the on-device binaries for some reason, and doesn\u0027t seem to be easily removed.\n\nUploaded a patch that just changes __errorattr, to avoid dealing with this for now.",
+      "parentUuid": "2644b287_047cda07",
+      "revId": "cc7966334e9d9fdaf9a92e36b5e5600e91ef9248",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
