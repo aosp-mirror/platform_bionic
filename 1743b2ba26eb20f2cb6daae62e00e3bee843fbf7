@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66030ac0_fbcf4bc5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-06-03T21:46:30Z",
+      "side": 1,
+      "message": "not",
+      "range": {
+        "startLine": 7,
+        "startChar": 33,
+        "endLine": 7,
+        "endChar": 35
+      },
+      "revId": "1743b2ba26eb20f2cb6daae62e00e3bee843fbf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66030ac0_7b4fbb2b",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-06-03T21:46:30Z",
+      "side": 1,
+      "message": "No, it isn\u0027t. \"ANDROID_BUILD_TOP is not set.\"",
+      "range": {
+        "startLine": 575,
+        "startChar": 69,
+        "endLine": 575,
+        "endChar": 93
+      },
+      "revId": "1743b2ba26eb20f2cb6daae62e00e3bee843fbf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
