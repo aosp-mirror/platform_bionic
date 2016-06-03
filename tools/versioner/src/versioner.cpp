@@ -272,6 +272,8 @@ static DeclarationDatabase compileHeaders(const std::set<CompilationType>& types
 static bool sanityCheck(const std::set<CompilationType>& types,
                         const DeclarationDatabase& database) {
   bool error = false;
+  std::string cwd = getWorkingDir() + "/";
+
   for (auto outer : database) {
     const std::string& symbol_name = outer.first;
     CompilationType last_type;
@@ -290,7 +292,7 @@ static bool sanityCheck(const std::set<CompilationType>& types,
       bool availability_mismatch = false;
       DeclarationAvailability current_availability;
 
-      // Make sure that all of the availability declarations for this symbol match.
+      // Ensure that all of the availability declarations for this symbol match.
       for (const DeclarationLocation& location : declaration.locations) {
         if (!found_availability) {
           found_availability = true;
@@ -306,7 +308,7 @@ static bool sanityCheck(const std::set<CompilationType>& types,
 
       if (availability_mismatch) {
         printf("%s: availability mismatch for %s\n", symbol_name.c_str(), type.describe().c_str());
-        declaration.dump(getWorkingDir() + "/");
+        declaration.dump(cwd);
       }
 
       if (type.arch != last_type.arch) {
@@ -315,12 +317,29 @@ static bool sanityCheck(const std::set<CompilationType>& types,
         continue;
       }
 
-      // Make sure that availability declarations are consistent across API levels for a given arch.
+      // Ensure that availability declarations are consistent across API levels for a given arch.
       if (last_availability != current_availability) {
         error = true;
         printf("%s: availability mismatch between %s and %s: [%s] before, [%s] after\n",
                symbol_name.c_str(), last_type.describe().c_str(), type.describe().c_str(),
                last_availability.describe().c_str(), current_availability.describe().c_str());
+      }
+
+      // Ensure that at most one inline definition of a function exists.
+      std::set<DeclarationLocation> inline_definitions;
+
+      for (const DeclarationLocation& location : declaration.locations) {
+        if (location.is_definition) {
+          inline_definitions.insert(location);
+        }
+      }
+
+      if (inline_definitions.size() > 1) {
+        error = true;
+        printf("%s: multiple inline definitions found:\n", symbol_name.c_str());
+        for (const DeclarationLocation& location : declaration.locations) {
+          location.dump(cwd);
+        }
       }
 
       last_type = type;
@@ -378,13 +397,13 @@ static bool checkVersions(const std::set<CompilationType>& types,
       bool symbol_available = symbol_availability_it != platform_availability.end();
       if (decl_available) {
         if (!symbol_available) {
-          // Make sure that either it exists in the platform, or an inline definition is visible.
+          // Ensure that either it exists in the platform, or an inline definition is visible.
           if (!declaration.hasDefinition()) {
             missing_symbol.insert(type);
             continue;
           }
         } else {
-          // Make sure that symbols declared as functions/variables actually are.
+          // Ensure that symbols declared as functions/variables actually are.
           switch (declaration.type()) {
             case DeclarationType::inconsistent:
               printf("%s: inconsistent declaration type\n", symbol_name.c_str());
@@ -409,7 +428,7 @@ static bool checkVersions(const std::set<CompilationType>& types,
           }
         }
       } else {
-        // Make sure it's not available in the platform.
+        // Ensure that it's not available in the platform.
         if (symbol_availability_it != platform_availability.end()) {
           printf("%s: symbol should be unavailable in %s (declared with availability %s)\n",
                  symbol_name.c_str(), type.describe().c_str(), availability.describe().c_str());
@@ -472,11 +491,27 @@ static bool checkVersions(const std::set<CompilationType>& types,
       break;
     }
 
-    // Check to see if the symbol is tagged with __INTRODUCED_IN_FUTURE.
+    bool found_inline_definition = false;
+    bool future = false;
+
     auto symbol_it = declaration_database.find(symbol_name);
-    const Declaration& declaration = symbol_it->second.begin()->second;
-    DeclarationAvailability availability = declaration.locations.begin()->availability;
-    if (availability.introduced >= 10000) {
+
+    // Ignore inline functions and functions that are tagged as __INTRODUCED_IN_FUTURE.
+    // Ensure that all of the declarations of that function satisfy that.
+    for (const auto& declaration_pair : symbol_it->second) {
+      const Declaration& declaration = declaration_pair.second;
+      DeclarationAvailability availability = declaration.locations.begin()->availability;
+
+      if (availability.introduced >= 10000) {
+        future = true;
+      }
+
+      if (declaration.hasDefinition()) {
+        found_inline_definition = true;
+      }
+    }
+
+    if (future || found_inline_definition) {
       continue;
     }
 
