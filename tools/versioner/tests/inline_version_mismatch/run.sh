@@ -1,1 +1,1 @@
-versioner headers dependencies -p platforms -r arm -a 9 -a 12
+versioner headers -p platforms -r arm -a 9 -a 12
