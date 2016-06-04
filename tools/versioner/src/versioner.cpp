@@ -272,6 +272,8 @@ static DeclarationDatabase compileHeaders(const std::set<CompilationType>& types
 static bool sanityCheck(const std::set<CompilationType>& types,
                         const DeclarationDatabase& database) {
   bool error = false;
+  std::string cwd = getWorkingDir() + "/";
+
   for (auto outer : database) {
     const std::string& symbol_name = outer.first;
     CompilationType last_type;
@@ -290,7 +292,7 @@ static bool sanityCheck(const std::set<CompilationType>& types,
       bool availability_mismatch = false;
       DeclarationAvailability current_availability;
 
-      // Make sure that all of the availability declarations for this symbol match.
+      // Ensure that all of the availability declarations for this symbol match.
       for (const DeclarationLocation& location : declaration.locations) {
         if (!found_availability) {
           found_availability = true;
@@ -306,7 +308,7 @@ static bool sanityCheck(const std::set<CompilationType>& types,
 
       if (availability_mismatch) {
         printf("%s: availability mismatch for %s\n", symbol_name.c_str(), type.describe().c_str());
-        declaration.dump(getWorkingDir() + "/");
+        declaration.dump(cwd);
       }
 
       if (type.arch != last_type.arch) {
@@ -315,12 +317,29 @@ static bool sanityCheck(const std::set<CompilationType>& types,
         continue;
       }
 
-      // Make sure that availability declarations are consistent across API levels for a given arch.
+      // Ensure that availability declarations are consistent across API levels for a given arch.
       if (last_availability != current_availability) {
         error = true;
-        printf("%s: availability mismatch between %s and %s: %s before, %s after\n",
+        printf("%s: availability mismatch between %s and %s: [%s] before, [%s] after\n",
                symbol_name.c_str(), last_type.describe().c_str(), type.describe().c_str(),
                last_availability.describe().c_str(), current_availability.describe().c_str());
+      }
+
+      // Ensure that at most one inline definition of a function exists.
+      std::set<DeclarationLocation> inline_definitions;
+
+      for (const DeclarationLocation& location : declaration.locations) {
+        if (location.is_definition) {
+          inline_definitions.insert(location);
+        }
+      }
+
+      if (inline_definitions.size() > 1) {
+        error = true;
+        printf("%s: multiple inline definitions found:\n", symbol_name.c_str());
+        for (const DeclarationLocation& location : declaration.locations) {
+          location.dump(cwd);
+        }
       }
 
       last_type = type;
@@ -341,17 +360,15 @@ static bool checkVersions(const std::set<CompilationType>& types,
     arch_types[type.arch].insert(type);
   }
 
+  std::set<std::string> completely_unavailable;
+
   for (const auto& outer : declaration_database) {
     const std::string& symbol_name = outer.first;
     const auto& compilations = outer.second;
 
     auto platform_availability_it = symbol_database.find(symbol_name);
     if (platform_availability_it == symbol_database.end()) {
-      // This currently has lots of false positives (__INTRODUCED_IN_FUTURE, __errordecl, functions
-      // that come from crtbegin, etc.). Only print them with verbose, because of this.
-      if (verbose) {
-        printf("%s: not available in any platform\n", symbol_name.c_str());
-      }
+      completely_unavailable.insert(symbol_name);
       continue;
     }
 
@@ -380,13 +397,13 @@ static bool checkVersions(const std::set<CompilationType>& types,
       bool symbol_available = symbol_availability_it != platform_availability.end();
       if (decl_available) {
         if (!symbol_available) {
-          // Make sure that either it exists in the platform, or an inline definition is visible.
+          // Ensure that either it exists in the platform, or an inline definition is visible.
           if (!declaration.hasDefinition()) {
             missing_symbol.insert(type);
             continue;
           }
         } else {
-          // Make sure that symbols declared as functions/variables actually are.
+          // Ensure that symbols declared as functions/variables actually are.
           switch (declaration.type()) {
             case DeclarationType::inconsistent:
               printf("%s: inconsistent declaration type\n", symbol_name.c_str());
@@ -411,7 +428,7 @@ static bool checkVersions(const std::set<CompilationType>& types,
           }
         }
       } else {
-        // Make sure it's not available in the platform.
+        // Ensure that it's not available in the platform.
         if (symbol_availability_it != platform_availability.end()) {
           printf("%s: symbol should be unavailable in %s (declared with availability %s)\n",
                  symbol_name.c_str(), type.describe().c_str(), availability.describe().c_str());
@@ -467,24 +484,65 @@ static bool checkVersions(const std::set<CompilationType>& types,
     }
   }
 
+  for (const std::string& symbol_name : completely_unavailable) {
+    bool found_inline_definition = false;
+    bool future = false;
+
+    auto symbol_it = declaration_database.find(symbol_name);
+
+    // Ignore inline functions and functions that are tagged as __INTRODUCED_IN_FUTURE.
+    // Ensure that all of the declarations of that function satisfy that.
+    for (const auto& declaration_pair : symbol_it->second) {
+      const Declaration& declaration = declaration_pair.second;
+      DeclarationAvailability availability = declaration.locations.begin()->availability;
+
+      if (availability.introduced >= 10000) {
+        future = true;
+      }
+
+      if (declaration.hasDefinition()) {
+        found_inline_definition = true;
+      }
+    }
+
+    if (future || found_inline_definition) {
+      continue;
+    }
+
+    if (missing_symbol_whitelist.count(symbol_name) != 0) {
+      continue;
+    }
+
+    printf("%s: not available in any platform\n", symbol_name.c_str());
+    failed = true;
+  }
+
   return !failed;
 }
 
-static void usage() {
-  fprintf(stderr, "Usage: versioner [OPTION]... HEADER_PATH [DEPS_PATH]\n");
-  fprintf(stderr, "Version headers at HEADER_PATH, with DEPS_PATH/ARCH/* on the include path\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Target specification (defaults to all):\n");
-  fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
-  fprintf(stderr, "    \t\tvalid levels are %s\n", Join(supported_levels).c_str());
-  fprintf(stderr, "  -r ARCH\tbuild with specified architecture (can be repeated)\n");
-  fprintf(stderr, "    \t\tvalid architectures are %s\n", Join(supported_archs).c_str());
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Validation:\n");
-  fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
-  fprintf(stderr, "  -d\t\tdump symbol availability in libraries\n");
-  fprintf(stderr, "  -v\t\tenable verbose warnings\n");
-  exit(1);
+static void usage(bool help = false) {
+  fprintf(stderr, "Usage: versioner [OPTION]... [HEADER_PATH] [DEPS_PATH]\n");
+  if (!help) {
+    printf("Try 'versioner -h' for more information.\n");
+    exit(1);
+  } else {
+    fprintf(stderr, "Version headers at HEADER_PATH, with DEPS_PATH/ARCH/* on the include path\n");
+    fprintf(stderr, "Autodetects paths if HEADER_PATH and DEPS_PATH are not specified\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Target specification (defaults to all):\n");
+    fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
+    fprintf(stderr, "    \t\tvalid levels are %s\n", Join(supported_levels).c_str());
+    fprintf(stderr, "  -r ARCH\tbuild with specified architecture (can be repeated)\n");
+    fprintf(stderr, "    \t\tvalid architectures are %s\n", Join(supported_archs).c_str());
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Validation:\n");
+    fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
+    fprintf(stderr, "  -v\t\tenable verbose warnings\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "Miscellaneous:\n");
+    fprintf(stderr, "  -h\t\tdisplay this message\n");
+    exit(0);
+  }
 }
 
 int main(int argc, char** argv) {
@@ -495,7 +553,7 @@ int main(int argc, char** argv) {
   std::set<int> selected_levels;
 
   int c;
-  while ((c = getopt(argc, argv, "a:r:p:n:duv")) != -1) {
+  while ((c = getopt(argc, argv, "a:r:p:vh")) != -1) {
     default_args = false;
     switch (c) {
       case 'a': {
@@ -542,14 +600,43 @@ int main(int argc, char** argv) {
         verbose = true;
         break;
 
+      case 'h':
+        usage(true);
+        break;
+
       default:
         usage();
         break;
     }
   }
 
-  if (argc - optind > 2 || optind >= argc) {
+  if (argc - optind > 2 || optind > argc) {
     usage();
+  }
+
+  std::string header_dir;
+  std::string dependency_dir;
+
+  if (optind == argc) {
+    // Neither HEADER_PATH nor DEPS_PATH were specified, so try to figure them out.
+    const char* top = getenv("ANDROID_BUILD_TOP");
+    if (!top) {
+      fprintf(stderr, "versioner: failed to autodetect bionic paths. Is ANDROID_BUILD_TOP set?\n");
+      usage();
+    }
+
+    std::string versioner_dir = std::to_string(top) + "/bionic/tools/versioner";
+    header_dir = versioner_dir + "/current";
+    dependency_dir = versioner_dir + "/dependencies";
+    if (platform_dir.empty()) {
+      platform_dir = versioner_dir + "/platforms";
+    }
+  } else {
+    header_dir = argv[optind];
+
+    if (argc - optind == 2) {
+      dependency_dir = argv[optind + 1];
+    }
   }
 
   if (selected_levels.empty()) {
@@ -560,14 +647,12 @@ int main(int argc, char** argv) {
     selected_architectures = supported_archs;
   }
 
-  std::string dependencies = (argc - optind == 2) ? argv[optind + 1] : "";
-  const char* header_dir = argv[optind];
 
   struct stat st;
-  if (stat(header_dir, &st) != 0) {
-    err(1, "failed to stat '%s'", header_dir);
+  if (stat(header_dir.c_str(), &st) != 0) {
+    err(1, "failed to stat '%s'", header_dir.c_str());
   } else if (!S_ISDIR(st.st_mode)) {
-    errx(1, "'%s' is not a directory", header_dir);
+    errx(1, "'%s' is not a directory", header_dir.c_str());
   }
 
   std::set<CompilationType> compilation_types;
@@ -583,7 +668,7 @@ int main(int argc, char** argv) {
   }
 
   bool failed = false;
-  declaration_database = compileHeaders(compilation_types, header_dir, dependencies, &failed);
+  declaration_database = compileHeaders(compilation_types, header_dir, dependency_dir, &failed);
 
   if (!sanityCheck(compilation_types, declaration_database)) {
     printf("versioner: sanity check failed\n");
