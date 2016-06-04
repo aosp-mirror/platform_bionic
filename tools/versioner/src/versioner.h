@@ -20,6 +20,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 extern bool verbose;
 
@@ -54,4 +55,9 @@ static const std::unordered_map<std::string, std::set<std::string>> header_black
 
   // time64.h #errors when included on LP64 archs.
   { "time64.h", { "arm64", "mips64", "x86_64" } },
+};
+
+static const std::unordered_set<std::string> missing_symbol_whitelist = {
+  // atexit comes from crtbegin.
+  "atexit",
 };

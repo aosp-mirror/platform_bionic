@@ -19,6 +19,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -72,6 +73,31 @@ struct DeclarationAvailability {
   int obsoleted = 0;
 
   void dump(std::ostream& out = std::cout) const {
+    out << describe();
+  }
+
+  bool empty() const {
+    return !(introduced || deprecated || obsoleted);
+  }
+
+  auto tie() const {
+    return std::tie(introduced, deprecated, obsoleted);
+  }
+
+  bool operator==(const DeclarationAvailability& rhs) const {
+    return this->tie() == rhs.tie();
+  }
+
+  bool operator!=(const DeclarationAvailability& rhs) const {
+    return !(*this == rhs);
+  }
+
+  std::string describe() const {
+    if (!(introduced || deprecated || obsoleted)) {
+      return "no availability";
+    }
+
+    std::stringstream out;
     bool need_comma = false;
     auto comma = [&out, &need_comma]() {
       if (!need_comma) {
@@ -93,27 +119,8 @@ struct DeclarationAvailability {
       comma();
       out << "obsoleted = " << obsoleted;
     }
-  }
 
-  bool empty() const {
-    return !(introduced || deprecated || obsoleted);
-  }
-
-  auto tie() const {
-    return std::tie(introduced, deprecated, obsoleted);
-  }
-
-  bool operator==(const DeclarationAvailability& rhs) const {
-    return this->tie() == rhs.tie();
-  }
-
-  bool operator!=(const DeclarationAvailability& rhs) const {
-    return !(*this == rhs);
-  }
-
-  std::string describe() const {
-    return std::string("[") + std::to_string(introduced) + "," + std::to_string(deprecated) + "," +
-           std::to_string(obsoleted) + "]";
+    return out.str();
   }
 };
 
@@ -136,6 +143,26 @@ struct DeclarationLocation {
 
   bool operator==(const DeclarationLocation& other) const {
     return tie() == other.tie();
+  }
+
+  void dump(const std::string& base_path = "", std::ostream& out = std::cout) const {
+    const char* var_type = declarationTypeName(type);
+    const char* declaration_type = is_definition ? "definition" : "declaration";
+    const char* linkage = is_extern ? "extern" : "static";
+
+    std::string stripped_path;
+    if (llvm::StringRef(filename).startswith(base_path)) {
+      stripped_path = filename.substr(base_path.size());
+    } else {
+      stripped_path = filename;
+    }
+
+    out << "        " << linkage << " " << var_type << " " << declaration_type << " @ "
+        << stripped_path << ":" << line_number << ":" << column;
+
+    out << "\t[";
+    availability.dump(out);
+    out << "]\n";
   }
 };
 
@@ -165,29 +192,7 @@ struct Declaration {
   void dump(const std::string& base_path = "", std::ostream& out = std::cout) const {
     out << "    " << name << " declared in " << locations.size() << " locations:\n";
     for (const DeclarationLocation& location : locations) {
-      const char* var_type = declarationTypeName(location.type);
-      const char* declaration_type = location.is_definition ? "definition" : "declaration";
-      const char* linkage = location.is_extern ? "extern" : "static";
-
-      std::string filename;
-      if (llvm::StringRef(location.filename).startswith(base_path)) {
-        filename = location.filename.substr(base_path.size());
-      } else {
-        filename = location.filename;
-      }
-
-      out << "        " << linkage << " " << var_type << " " << declaration_type << " @ "
-          << filename << ":" << location.line_number << ":" << location.column;
-
-      if (!location.availability.empty()) {
-        out << "\t[";
-        location.availability.dump(out);
-        out << "]";
-      } else {
-        out << "\t[no availability]";
-      }
-
-      out << "\n";
+      location.dump(base_path, out);
     }
   }
 };
