@@ -20,13 +20,13 @@ def indent(text, spaces=4):
 def run_test(test_name, path):
     os.chdir(path)
     process = subprocess.Popen(
-        ["/bin/sh", "run.sh"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    (output, error) = process.communicate()
+        ["/bin/sh", "run.sh"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    (output, _) = process.communicate()
 
     if os.path.exists("expected_fail"):
         with open("expected_fail") as f:
             expected_output = f.read()
-            if output != expected_output:
+            if not output.endswith(expected_output):
                 print("{} {}: expected output mismatch".format(
                     prefix_fail, test_name))
                 print("")
