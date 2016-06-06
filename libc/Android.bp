@@ -1444,32 +1444,6 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_cxa.a - Things traditionally in libstdc++
-// ========================================================
-
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/__cxa_guard.cpp",
-        "bionic/__cxa_pure_virtual.cpp",
-        "bionic/new.cpp",
-    ],
-    cflags: ["-fvisibility=hidden"],
-    include_dirs: ["bionic/libstdc++/include"],
-    name: "libc_cxa",
-    clang: true, // GCC refuses to hide new/delete
-
-    // b/17574078: Need to disable coverage until we have a prebuilt libprofile_rt.
-    // Since this is a static library built with clang, it needs to link
-    // libprofile_rt when it is linked into the final binary. Since the final binary
-    // is built with GCC, it won't link libprofile_rt. We can't very easily just add
-    // libprofile_rt to all link lines the way we've done for libgcov because
-    // libprofile_rt isn't prebuilt, and it would be tricky to write a rule that
-    // would make sure libprofile_rt is built.
-    native_coverage: false,
-}
-
-// ========================================================
 // libc_syscalls.a
 // ========================================================
 
@@ -1556,7 +1530,6 @@ cc_library_static {
 
     whole_static_libs: [
         "libc_bionic_ndk",
-        "libc_cxa",
         "libc_freebsd",
         "libc_gdtoa",
         "libc_malloc",
@@ -1567,6 +1540,7 @@ cc_library_static {
         "libc_tzcode",
         "libm",
         "libjemalloc",
+        "libstdc++",
     ],
 }
 
@@ -1587,7 +1561,6 @@ cc_library_static {
     whole_static_libs: [
         "libc_bionic",
         "libc_bionic_ndk",
-        "libc_cxa",
         "libc_dns",
         "libc_freebsd",
         "libc_gdtoa",
@@ -1599,6 +1572,7 @@ cc_library_static {
         "libc_stack_protector",
         "libc_syscalls",
         "libc_tzcode",
+        "libstdc++",
     ],
 
     arch: {
