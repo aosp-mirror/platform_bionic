@@ -96,22 +96,27 @@ class SemaphoreFixture : public benchmark::Fixture {
     sched_setscheduler(0, SCHED_IDLE, &param);
 
     BM_semaphore_sem_post_running = 1;
+    setup = true;
   }
 
   ~SemaphoreFixture() {
-    sched_setscheduler(0, SCHED_OTHER, &param);
+    if (setup) {
+      // Only do this if the test was actually run.
+      sched_setscheduler(0, SCHED_OTHER, &param);
 
-    if (BM_semaphore_sem_post_running > 0) {
-      BM_semaphore_sem_post_running = 0;
+      if (BM_semaphore_sem_post_running > 0) {
+        BM_semaphore_sem_post_running = 0;
+      }
+      do {
+        sem_post(&semaphore);
+        sched_yield();
+      } while (BM_semaphore_sem_post_running != -1);
     }
-    do {
-      sem_post(&semaphore);
-      sched_yield();
-    } while (BM_semaphore_sem_post_running != -1);
   }
 
   sem_t semaphore;
   sched_param param;
+  bool setup = false;
 };
 
 BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
