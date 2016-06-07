@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83c4707e_dc960102",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-06-07T19:23:01Z",
+      "side": 0,
+      "message": "Is this going to cause any problems for unified headers?",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 7
+      },
+      "revId": "901cc14822e431185fbe5075ef4f06aa4fba58cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
