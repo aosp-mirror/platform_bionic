@@ -58,25 +58,6 @@
 #endif
 
 
-/*
- * Macro to test if we're using a GNU C compiler of a specific vintage
- * or later, for e.g. features that appeared in a particular version
- * of GNU C.  Usage:
- *
- *	#if __GNUC_PREREQ(major, minor)
- *	...cool feature...
- *	#else
- *	...delete feature...
- *	#endif
- */
-#ifdef __GNUC__
-#define	__GNUC_PREREQ(x, y)						\
-	((__GNUC__ == (x) && __GNUC_MINOR__ >= (y)) ||			\
-	 (__GNUC__ > (x)))
-#else
-#define	__GNUC_PREREQ(x, y)	0
-#endif
-
 #define __strong_alias(alias, sym) \
     __asm__(".global " #alias "\n" \
             #alias " = " #sym);
@@ -112,23 +93,12 @@
 #define	__volatile	volatile
 #if defined(__cplusplus)
 #define	__inline	inline		/* convert to C++ keyword */
-#else
-#if !defined(__GNUC__) && !defined(__lint__)
-#define	__inline			/* delete GCC keyword */
-#endif /* !__GNUC__  && !__lint__ */
 #endif /* !__cplusplus */
 
 #else	/* !(__STDC__ || __cplusplus) */
 #define	__P(protos)	()		/* traditional C preprocessor */
 #define	__CONCAT(x,y)	x/**/y
 #define	__STRING(x)	"x"
-
-#ifndef __GNUC__
-#define	__const				/* delete pseudo-ANSI C keywords */
-#define	__inline
-#define	__signed
-#define	__volatile
-#endif	/* !__GNUC__ */
 
 #endif	/* !(__STDC__ || __cplusplus) */
 
@@ -143,21 +113,16 @@
  */
 #define __UNCONST(a)	((void *)(unsigned long)(const void *)(a))
 
+#define __always_inline __attribute__((__always_inline__))
 #define __dead __attribute__((__noreturn__))
+#define __noreturn __attribute__((__noreturn__))
+#define __mallocfunc  __attribute__((malloc))
+#define __packed __attribute__((__packed__))
 #define __pure __attribute__((__const__))
 #define __pure2 __attribute__((__const__)) /* Android-added: used by FreeBSD libm */
-
-#define	__unused	__attribute__((__unused__))
-
-#define	__used		__attribute__((__used__))
-
-#define	__packed	__attribute__((__packed__))
-#define	__aligned(x)	__attribute__((__aligned__(x)))
-#define	__section(x)	__attribute__((__section__(x)))
-
-#define __statement(x)	__extension__(x)
-
-#define __nonnull(args) __attribute__((__nonnull__ args))
+#define __purefunc    __attribute__((pure))
+#define __unused __attribute__((__unused__))
+#define __used __attribute__((__used__))
 
 /*
  * _Nonnull is similar to the nonnull attribute in that it will instruct
@@ -191,25 +156,27 @@
 #define _Nonnull
 #endif
 
+#define __nonnull(args) __attribute__((__nonnull__ args))
+
 #define __printflike(x, y) __attribute__((__format__(printf, x, y))) __nonnull((x))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
 
 /*
  * C99 defines the restrict type qualifier keyword.
  */
-#if defined(__STDC__VERSION__) && __STDC_VERSION__ >= 199901L
-#define	__restrict	restrict
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define __restrict restrict
 #endif
 
 /*
- * C99 defines __func__ predefined identifier.
+ * C99 defines the __func__ predefined identifier.
  */
 #if !defined(__STDC_VERSION__) || !(__STDC_VERSION__ >= 199901L)
-#define	__func__	__PRETTY_FUNCTION__
-#endif /* !(__STDC_VERSION__ >= 199901L) */
+#define __func__ __PRETTY_FUNCTION__
+#endif
 
 /*
- * GNU C version 2.96 adds explicit branch prediction so that
+ * GNU C version 2.96 added explicit branch prediction so that
  * the CPU back-end can hint the processor and also so that
  * code blocks can be reordered such that the predicted path
  * sees a more linear flow, thus improving cache behavior, etc.
@@ -238,12 +205,6 @@
  */
 #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
 #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
-
-#define __noreturn    __attribute__((__noreturn__))
-#define __mallocfunc  __attribute__((malloc))
-#define __purefunc    __attribute__((pure))
-
-#define __always_inline __attribute__((__always_inline__))
 
 #define __wur __attribute__((__warn_unused_result__))
 
@@ -382,35 +343,11 @@
 #define	__POSIX_VISIBLE		198808
 #define	__ISO_C_VISIBLE		0
 #endif /* _POSIX_C_SOURCE */
-#else
-/*-
- * Deal with _ANSI_SOURCE:
- * If it is defined, and no other compilation environment is explicitly
- * requested, then define our internal feature-test macros to zero.  This
- * makes no difference to the preprocessor (undefined symbols in preprocessing
- * expressions are defined to have value zero), but makes it more convenient for
- * a test program to print out the values.
- *
- * If a program mistakenly defines _ANSI_SOURCE and some other macro such as
- * _POSIX_C_SOURCE, we will assume that it wants the broader compilation
- * environment (and in fact we will never get here).
- */
-#if defined(_ANSI_SOURCE)	/* Hide almost everything. */
-#define	__POSIX_VISIBLE		0
-#define	__XSI_VISIBLE		0
-#define	__BSD_VISIBLE		0
-#define	__ISO_C_VISIBLE		1990
-#elif defined(_C99_SOURCE)	/* Localism to specify strict C99 env. */
-#define	__POSIX_VISIBLE		0
-#define	__XSI_VISIBLE		0
-#define	__BSD_VISIBLE		0
-#define	__ISO_C_VISIBLE		1999
 #else				/* Default environment: show everything. */
 #define	__POSIX_VISIBLE		200809
 #define	__XSI_VISIBLE		700
 #define	__BSD_VISIBLE		1
 #define	__ISO_C_VISIBLE		1999
-#endif
 #endif
 
 /*
