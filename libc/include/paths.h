@@ -34,7 +34,7 @@
 
 #define	_PATH_BSHELL	"/system/bin/sh"
 #define	_PATH_CONSOLE	"/dev/console"
-#define	_PATH_DEFPATH	"/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin"
+#define	_PATH_DEFPATH	"/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin:/vendor/xbin"
 #define	_PATH_DEV	"/dev/"
 #define	_PATH_DEVNULL	"/dev/null"
 #define	_PATH_KLOG	"/proc/kmsg"
