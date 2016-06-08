@@ -59,7 +59,11 @@
 # endif
 #endif
 
+#if !defined(__cplusplus) && __STDC_VERSION__ >= 201112L
+#define static_assert _Static_assert
+#endif
+
 __BEGIN_DECLS
-__dead void __assert(const char *, int, const char *) __noreturn;
-__dead void __assert2(const char *, int, const char *, const char *) __noreturn;
+void __assert(const char*, int, const char*) __noreturn;
+void __assert2(const char*, int, const char*, const char*) __noreturn;
 __END_DECLS
