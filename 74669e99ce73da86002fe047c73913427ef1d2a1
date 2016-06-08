@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f0b7c18_585ddd62",
+        "filename": "libc/include/uchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-06-08T22:39:06Z",
+      "side": 0,
+      "message": "Shouldn\u0027t this stay?\n\nActually, the whole file should be wrapped in this, I think.",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 31
+      },
+      "revId": "74669e99ce73da86002fe047c73913427ef1d2a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
