@@ -38,13 +38,22 @@
 
 __BEGIN_DECLS
 
-extern int gettimeofday(struct timeval *, struct timezone *);
-extern int settimeofday(const struct timeval *, const struct timezone *);
+int gettimeofday(struct timeval*, struct timezone*);
+int settimeofday(const struct timeval*, const struct timezone*);
 
-extern int getitimer(int, struct itimerval *);
-extern int setitimer(int, const struct itimerval *, struct itimerval *);
+int getitimer(int, struct itimerval*);
+int setitimer(int, const struct itimerval*, struct itimerval*);
 
-extern int utimes(const char *, const struct timeval *);
+int utimes(const char*, const struct timeval*);
+
+#if defined(__USE_BSD)
+int futimes(int, const struct timeval[2]);
+int lutimes(const char*, const struct timeval[2]);
+#endif
+
+#if defined(__USE_GNU)
+int futimesat(int, const char*, const struct timeval[2]);
+#endif
 
 #define timerclear(a)   \
         ((a)->tv_sec = (a)->tv_usec = 0)
