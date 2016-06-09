@@ -1297,3 +1297,11 @@ TEST(STDIO_TEST, fseek_fseeko_EINVAL) {
 
   fclose(fp);
 }
+
+TEST(STDIO_TEST, ctermid) {
+  ASSERT_STREQ("/dev/tty", ctermid(nullptr));
+
+  char buf[L_ctermid] = {};
+  ASSERT_EQ(buf, ctermid(buf));
+  ASSERT_STREQ("/dev/tty", buf);
+}
