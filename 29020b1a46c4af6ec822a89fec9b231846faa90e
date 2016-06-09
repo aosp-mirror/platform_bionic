@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4f0b7c18_8d58d175",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T21:28:33Z",
+      "side": 1,
+      "message": "it would be more useful if we said what you should use :-)\n\ni felt that moving the constant with the [actually] deprecated function it corresponds to was clear, but i can add a /* deprecated */ too.",
+      "parentUuid": "4f0b7c18_adb835da",
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f0b7c18_8dd571f6",
         "filename": "libc/include/stdio.h",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2016-06-09T21:06:39Z",
       "side": 1,
       "message": "This isn\u0027t PATH_MAX.",
+      "range": {
+        "startLine": 212,
+        "startChar": 46,
+        "endLine": 212,
+        "endChar": 54
+      },
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0b7c18_6dd45dc7",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T21:28:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f0b7c18_8dd571f6",
       "range": {
         "startLine": 212,
         "startChar": 46,
@@ -70,6 +112,30 @@
       "writtenOn": "2016-06-09T21:06:39Z",
       "side": 1,
       "message": "Shouldn\u0027t this be \u003c?",
+      "range": {
+        "startLine": 256,
+        "startChar": 21,
+        "endLine": 256,
+        "endChar": 23
+      },
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0b7c18_8df6916b",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T21:28:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f0b7c18_adcf155c",
       "range": {
         "startLine": 256,
         "startChar": 21,
