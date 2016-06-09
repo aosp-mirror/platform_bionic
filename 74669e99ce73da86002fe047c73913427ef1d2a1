@@ -22,6 +22,30 @@
       "revId": "74669e99ce73da86002fe047c73913427ef1d2a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0b7c18_fba6eb25",
+        "filename": "libc/include/uchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T00:52:33Z",
+      "side": 0,
+      "message": "depends on the policy we intend. we could say that headers added in C11 aren\u0027t available for earlier -std\u003d choices, but that isn\u0027t what we did with \u003cstdatomic.h\u003e, and it doesn\u0027t generalize to cases like the new C11 stuff added to \u003cassert.h\u003e.\n\nas long as it works, i don\u0027t see any benefit to saying denying access to things that work (even if it does imply that the caller is a little confused).\n\n(glibc seems to agree about this specific case.)\n\ni\u0027m not sure whether you were there when we talked about it, but i\u0027m currently investigating applying this theory to all the headers. amongst other things, it would make the FP_NAN problem go away. (at the moment, we\u0027re somewhere in the middle --- we don\u0027t have a complete and correct set of \"this was introduced by standard X\", but we do have _some_. surprisingly few, actually. and that\u0027s ignoring the fact that _BSD_SOURCE was always on and _GNU_SOURCE was always on for all C++ and so on...",
+      "parentUuid": "4f0b7c18_585ddd62",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 31
+      },
+      "revId": "74669e99ce73da86002fe047c73913427ef1d2a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
