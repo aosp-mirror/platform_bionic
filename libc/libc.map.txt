@@ -1298,11 +1298,14 @@ LIBC_O {
     catopen;
     endgrent;
     endpwent;
+    futimes;
+    futimesat;
     getdomainname;
     getgrent;
     getpwent;
     getsubopt;
     hasmntopt;
+    lutimes;
     mblen;
     pthread_getname_np;
     quotactl;

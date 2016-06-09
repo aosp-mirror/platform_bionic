@@ -26,22 +26,40 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/time.h>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 
 #include "private/bionic_time_conversions.h"
 
-int utimes(const char* path, const timeval tv[2]) {
+static int futimesat(int fd, const char* path, const timeval tv[2], int flags) {
   timespec ts[2];
-  timespec* ts_ptr = NULL;
-  if (tv != NULL) {
-    if (!timespec_from_timeval(ts[0], tv[0]) || !timespec_from_timeval(ts[1], tv[1])) {
-      errno = EINVAL;
-      return -1;
-    }
-    ts_ptr = ts;
+  if (tv && (!timespec_from_timeval(ts[0], tv[0]) || !timespec_from_timeval(ts[1], tv[1]))) {
+    errno = EINVAL;
+    return -1;
   }
-  return utimensat(AT_FDCWD, path, ts_ptr, 0);
+  return utimensat(fd, path, tv ? ts : nullptr, flags);
+}
+
+int utimes(const char* path, const timeval tv[2]) {
+  return futimesat(AT_FDCWD, path, tv, 0);
+}
+
+int lutimes(const char* path, const timeval tv[2]) {
+  return futimesat(AT_FDCWD, path, tv, AT_SYMLINK_NOFOLLOW);
+}
+
+int futimesat(int fd, const char* path, const timeval tv[2]) {
+  return futimesat(fd, path, tv, 0);
+}
+
+int futimes(int fd, const timeval tv[2]) {
+  timespec ts[2];
+  if (tv && (!timespec_from_timeval(ts[0], tv[0]) || !timespec_from_timeval(ts[1], tv[1]))) {
+    errno = EINVAL;
+    return -1;
+  }
+  return futimens(fd, tv ? ts : nullptr);
 }
