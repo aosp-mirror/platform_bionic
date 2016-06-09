@@ -37,4 +37,4 @@ void android_set_abort_message(const char* msg) __INTRODUCED_IN(21);
 
 __END_DECLS
 
-#endif // _SET_ABORT_MESSAGE_H
+#endif

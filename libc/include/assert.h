@@ -52,7 +52,7 @@
 # define	_assert(e)	((void)0)
 #else
 # define	_assert(e)	assert(e)
-# if __ISO_C_VISIBLE >= 1999
+# if __STDC_VERSION__ >= 199901L
 #  define	assert(e)	((e) ? (void)0 : __assert2(__FILE__, __LINE__, __func__, #e))
 # else
 #  define	assert(e)	((e) ? (void)0 : __assert(__FILE__, __LINE__, #e))

@@ -128,7 +128,7 @@ struct stat64 { __STAT64_BODY };
 #define st_mtimensec st_mtim.tv_nsec
 #define st_ctimensec st_ctim.tv_nsec
 
-#ifdef __USE_BSD
+#if defined(__USE_BSD)
 /* Permission macros provided by glibc for compatibility with BSDs. */
 #define ACCESSPERMS (S_IRWXU | S_IRWXG | S_IRWXO) /* 0777 */
 #define ALLPERMS    (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO) /* 07777 */
