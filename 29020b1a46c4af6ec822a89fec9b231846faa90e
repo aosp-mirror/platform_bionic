@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f0b7c18_d25c24dd",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T20:46:11Z",
+      "side": 1,
+      "message": "see L365 on the red side for the source of this claim.",
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

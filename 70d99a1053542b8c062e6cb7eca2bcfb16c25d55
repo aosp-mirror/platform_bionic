@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f0b7c18_f24f281d",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-09T20:46:11Z",
+      "side": 0,
+      "message": "(a very rare case where we actually took the C++ standard version into account too...)",
+      "range": {
+        "startLine": 49,
+        "startChar": 31,
+        "endLine": 49,
+        "endChar": 42
+      },
+      "revId": "70d99a1053542b8c062e6cb7eca2bcfb16c25d55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
