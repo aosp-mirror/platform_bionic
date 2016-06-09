@@ -1,6 +1,3 @@
-// ANDROIDMK TRANSLATION ERROR: unsupported conditional
-// ifneq ($(TARGET_USE_PRIVATE_LIBM),true)
-
 bionic_coverage = false
 
 //
@@ -522,13 +519,6 @@ cc_library {
         "-Wno-uninitialized",
         "-Wno-unknown-pragmas",
         "-fvisibility=hidden",
-
-        // Workaround the GCC "(long)fn -> lfn" optimization bug which will result in
-        // self recursions for lrint, lrintf, and lrintl.
-        // BUG: 14225968
-        "-fno-builtin-rint",
-        "-fno-builtin-rintf",
-        "-fno-builtin-rintl",
     ],
     conlyflags: ["-std=gnu11"],
 
@@ -541,6 +531,3 @@ cc_library {
     },
     stl: "none",
 }
-
-// ANDROIDMK TRANSLATION ERROR: endif from unsupported contitional
-// endif
