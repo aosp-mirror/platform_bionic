@@ -70,10 +70,18 @@
 
 /* BSD compatibility definitions. */
 #if __BSD_VISIBLE
+#if defined(__LP64__)
 #define SIZE_T_MAX ULONG_MAX
+#else
+#define SIZE_T_MAX UINT_MAX
+#endif
 #endif /* __BSD_VISIBLE */
 
+#if defined(__LP64__)
 #define SSIZE_MAX LONG_MAX
+#else
+#define SSIZE_MAX INT_MAX
+#endif
 
 #define MB_LEN_MAX 4
 
