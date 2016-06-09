@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <paths.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
@@ -597,4 +598,8 @@ FILE* funopen64(const void* cookie,
     _EXT(fp)->_seek64 = seek_fn;
   }
   return fp;
+}
+
+char* ctermid(char* s) {
+  return s ? strcpy(s, _PATH_TTY) : const_cast<char*>(_PATH_TTY);
 }

@@ -226,6 +226,7 @@ int	 vsscanf(const char * __restrict, const char * __restrict, __va_list)
  */
 #if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
 #define	L_ctermid	1024	/* size for ctermid(); PATH_MAX */
+char* ctermid(char*);
 
 FILE	*fdopen(int, const char *);
 int	 fileno(FILE *);
