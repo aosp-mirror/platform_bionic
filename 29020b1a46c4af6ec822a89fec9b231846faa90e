@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "4f0b7c18_adb835da",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-09T21:06:39Z",
+      "side": 1,
+      "message": "Should we keep the \"don\u0027t use this\" comment?",
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0b7c18_8dd571f6",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-09T21:06:39Z",
+      "side": 1,
+      "message": "This isn\u0027t PATH_MAX.",
+      "range": {
+        "startLine": 212,
+        "startChar": 46,
+        "endLine": 212,
+        "endChar": 54
+      },
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f0b7c18_d25c24dd",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 3
@@ -13,6 +53,29 @@
       "writtenOn": "2016-06-09T20:46:11Z",
       "side": 1,
       "message": "see L365 on the red side for the source of this claim.",
+      "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0b7c18_adcf155c",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-09T21:06:39Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be \u003c?",
+      "range": {
+        "startLine": 256,
+        "startChar": 21,
+        "endLine": 256,
+        "endChar": 23
+      },
       "revId": "29020b1a46c4af6ec822a89fec9b231846faa90e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
