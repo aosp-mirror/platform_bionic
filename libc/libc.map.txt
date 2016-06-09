@@ -1296,6 +1296,7 @@ LIBC_O {
     catclose;
     catgets;
     catopen;
+    ctermid;
     endgrent;
     endpwent;
     futimes;
