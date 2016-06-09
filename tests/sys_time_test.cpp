@@ -22,30 +22,113 @@
 
 #include "TemporaryFile.h"
 
-TEST(sys_time, utimes) {
-  timeval tv[2];
-  memset(&tv, 0, sizeof(tv));
+// http://b/11383777
+TEST(sys_time, utimes_nullptr) {
+  TemporaryFile tf;
+  ASSERT_EQ(0, utimes(tf.filename, nullptr));
+}
+
+TEST(sys_time, utimes_EINVAL) {
+  TemporaryFile tf;
+
+  timeval tv[2] = {};
 
   tv[0].tv_usec = -123;
-  ASSERT_EQ(-1, utimes("/", tv));
+  ASSERT_EQ(-1, utimes(tf.filename, tv));
   ASSERT_EQ(EINVAL, errno);
   tv[0].tv_usec = 1234567;
-  ASSERT_EQ(-1, utimes("/", tv));
+  ASSERT_EQ(-1, utimes(tf.filename, tv));
   ASSERT_EQ(EINVAL, errno);
+
   tv[0].tv_usec = 0;
 
   tv[1].tv_usec = -123;
-  ASSERT_EQ(-1, utimes("/", tv));
+  ASSERT_EQ(-1, utimes(tf.filename, tv));
   ASSERT_EQ(EINVAL, errno);
   tv[1].tv_usec = 1234567;
-  ASSERT_EQ(-1, utimes("/", tv));
+  ASSERT_EQ(-1, utimes(tf.filename, tv));
   ASSERT_EQ(EINVAL, errno);
 }
 
-// http://b/11383777
-TEST(sys_time, utimes_NULL) {
+TEST(sys_time, futimes_nullptr) {
   TemporaryFile tf;
-  ASSERT_EQ(0, utimes(tf.filename, NULL));
+  ASSERT_EQ(0, futimes(tf.fd, nullptr));
+}
+
+TEST(sys_time, futimes_EINVAL) {
+  TemporaryFile tf;
+
+  timeval tv[2] = {};
+
+  tv[0].tv_usec = -123;
+  ASSERT_EQ(-1, futimes(tf.fd, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[0].tv_usec = 1234567;
+  ASSERT_EQ(-1, futimes(tf.fd, tv));
+  ASSERT_EQ(EINVAL, errno);
+
+  tv[0].tv_usec = 0;
+
+  tv[1].tv_usec = -123;
+  ASSERT_EQ(-1, futimes(tf.fd, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[1].tv_usec = 1234567;
+  ASSERT_EQ(-1, futimes(tf.fd, tv));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sys_time, futimesat_nullptr) {
+  TemporaryFile tf;
+  ASSERT_EQ(0, futimesat(AT_FDCWD, tf.filename, nullptr));
+}
+
+TEST(sys_time, futimesat_EINVAL) {
+  TemporaryFile tf;
+
+  timeval tv[2] = {};
+
+  tv[0].tv_usec = -123;
+  ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[0].tv_usec = 1234567;
+  ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+
+  tv[0].tv_usec = 0;
+
+  tv[1].tv_usec = -123;
+  ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[1].tv_usec = 1234567;
+  ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(sys_time, lutimes_nullptr) {
+  TemporaryFile tf;
+  ASSERT_EQ(0, lutimes(tf.filename, nullptr));
+}
+
+TEST(sys_time, lutimes_EINVAL) {
+  TemporaryFile tf;
+
+  timeval tv[2] = {};
+
+  tv[0].tv_usec = -123;
+  ASSERT_EQ(-1, lutimes(tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[0].tv_usec = 1234567;
+  ASSERT_EQ(-1, lutimes(tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+
+  tv[0].tv_usec = 0;
+
+  tv[1].tv_usec = -123;
+  ASSERT_EQ(-1, lutimes(tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
+  tv[1].tv_usec = 1234567;
+  ASSERT_EQ(-1, lutimes(tf.filename, tv));
+  ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(sys_time, gettimeofday) {
