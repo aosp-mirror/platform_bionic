@@ -22,6 +22,30 @@
       "revId": "3ba55f8022f3d5c5ca94a3df46fa658eda791987",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f21bce1_4b8f1941",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-10T20:39:55Z",
+      "side": 1,
+      "message": "i commented on an earlier patch: see L365 on the red side.\n\nthe tricky bit (which i only learned later) is that until we submit this patch we actually have *two* knobs that control BSD visibility (__BSD_VISIBLE and __USE_BSD), and they\u0027re not the same: some stuff was guarded by one, other stuff by the other.\n\nit might be an interesting experiment to try to remove this, but that\u0027s _more_ likely to break things than this. plus if you\u0027re building C++ you get _GNU_SOURCE for free, which already turned on both GNU and BSD stuff. so even if we did remove this, it would \"only\" affect C.",
+      "parentUuid": "4f21bce1_2b0d85e3",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 6
+      },
+      "revId": "3ba55f8022f3d5c5ca94a3df46fa658eda791987",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
