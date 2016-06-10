@@ -50,10 +50,4 @@ class NetlinkConnection {
   size_t size_;
 };
 
-#if !defined(__clang__)
-// GCC gets confused by NLMSG_DATA and doesn't realize that the old-style
-// cast is from a system header and should be ignored.
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
-
 #endif
