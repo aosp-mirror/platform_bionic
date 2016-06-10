@@ -88,10 +88,6 @@ extern FILE* stderr __INTRODUCED_IN(23);
 #define	FOPEN_MAX	20	/* must be <= OPEN_MAX <sys/syslimits.h> */
 #define	FILENAME_MAX	1024	/* must be <= PATH_MAX <sys/syslimits.h> */
 
-/* System V/ANSI C; this is the wrong way to do this, do *not* use these. */
-#if __BSD_VISIBLE || __XPG_VISIBLE
-#define	P_tmpdir	"/tmp/"
-#endif
 #define	L_tmpnam	1024	/* XXX must be == PATH_MAX */
 #define	TMP_MAX		308915776
 
@@ -145,8 +141,7 @@ int	 vprintf(const char * __restrict, __va_list)
 int dprintf(int, const char* __restrict, ...) __printflike(2, 3) __INTRODUCED_IN(21);
 int vdprintf(int, const char* __restrict, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 
-#ifndef __AUDIT__
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112L
+#if __STDC_VERSION__ < 201112L
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
 int sprintf(char* __restrict, const char* __restrict, ...)
@@ -154,10 +149,10 @@ int sprintf(char* __restrict, const char* __restrict, ...)
 int vsprintf(char* __restrict, const char* __restrict, __va_list)
     __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
-#if __XPG_VISIBLE
+#if defined(__USE_BSD) || defined(__USE_GNU)
+#define P_tmpdir "/tmp/" /* deprecated */
 char* tempnam(const char*, const char*)
     __attribute__((deprecated("tempnam is unsafe, use mkstemp or tmpfile instead")));
-#endif
 #endif
 
 int rename(const char*, const char*);
@@ -208,78 +203,47 @@ FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict
 FILE* tmpfile(void);
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
-#if __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE
-int	 snprintf(char * __restrict, size_t, const char * __restrict, ...)
-		__printflike(3, 4);
-int	 vfscanf(FILE * __restrict, const char * __restrict, __va_list)
-		__scanflike(2, 0);
-int	 vscanf(const char *, __va_list)
-		__scanflike(1, 0);
-int	 vsnprintf(char * __restrict, size_t, const char * __restrict, __va_list)
-		__printflike(3, 0);
-int	 vsscanf(const char * __restrict, const char * __restrict, __va_list)
-		__scanflike(2, 0);
-#endif /* __ISO_C_VISIBLE >= 1999 || __BSD_VISIBLE */
+int snprintf(char* __restrict, size_t, const char* __restrict, ...) __printflike(3, 4);
+int vfscanf(FILE* __restrict, const char* __restrict, __va_list) __scanflike(2, 0);
+int vscanf(const char*, __va_list) __scanflike(1, 0);
+int vsnprintf(char* __restrict, size_t, const char* __restrict, __va_list) __printflike(3, 0);
+int vsscanf(const char* __restrict, const char* __restrict, __va_list) __scanflike(2, 0);
 
-/*
- * Functions defined in POSIX 1003.1.
- */
-#if __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE
-#define	L_ctermid	1024	/* size for ctermid(); PATH_MAX */
+#define L_ctermid 1024 /* size for ctermid() */
 char* ctermid(char*);
 
-FILE	*fdopen(int, const char *);
-int	 fileno(FILE *);
+FILE* fdopen(int, const char*);
+int fileno(FILE*);
+int pclose(FILE*);
+FILE* popen(const char*, const char*);
+void flockfile(FILE*);
+int ftrylockfile(FILE*);
+void funlockfile(FILE*);
+int getc_unlocked(FILE*);
+int getchar_unlocked(void);
+int putc_unlocked(int, FILE*);
+int putchar_unlocked(int);
 
-#if (__POSIX_VISIBLE >= 199209)
-int	 pclose(FILE *);
-FILE	*popen(const char *, const char *);
-#endif
-
-#if __POSIX_VISIBLE >= 199506
-void	 flockfile(FILE *);
-int	 ftrylockfile(FILE *);
-void	 funlockfile(FILE *);
-
-/*
- * These are normally used through macros as defined below, but POSIX
- * requires functions as well.
- */
-int	 getc_unlocked(FILE *);
-int	 getchar_unlocked(void);
-int	 putc_unlocked(int, FILE *);
-int	 putchar_unlocked(int);
-#endif /* __POSIX_VISIBLE >= 199506 */
-
-#if __POSIX_VISIBLE >= 200809
 FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
 FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
-#endif /* __POSIX_VISIBLE >= 200809 */
-
-#endif /* __BSD_VISIBLE || __POSIX_VISIBLE || __XPG_VISIBLE */
 
 /*
  * Routines that are purely local.
  */
-#if __BSD_VISIBLE
-int	 asprintf(char ** __restrict, const char * __restrict, ...)
-		__printflike(2, 3);
-char	*fgetln(FILE * __restrict, size_t * __restrict);
-int	 fpurge(FILE *);
-void	 setbuffer(FILE *, char *, int);
-int	 setlinebuf(FILE *);
-int	 vasprintf(char ** __restrict, const char * __restrict,
-    __va_list)
-		__printflike(2, 0);
-
+#if defined(__USE_BSD)
+int  asprintf(char** __restrict, const char* __restrict, ...) __printflike(2, 3);
+char* fgetln(FILE* __restrict, size_t* __restrict);
+int fpurge(FILE*);
+void setbuffer(FILE*, char*, int);
+int setlinebuf(FILE*);
+int vasprintf(char** __restrict, const char* __restrict, __va_list) __printflike(2, 0);
 void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
 int feof_unlocked(FILE*) __INTRODUCED_IN(23);
 int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
 int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
-
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
-#endif /* __BSD_VISIBLE */
+#endif /* __USE_BSD */
 
 extern char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
 extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);

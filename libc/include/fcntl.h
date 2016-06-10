@@ -106,12 +106,12 @@ __BIONIC_FORTIFY_INLINE
 int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
-            __creat_missing_mode();  // compile time error
+            __creat_missing_mode();  /* Compile time error. */
         }
     }
 
     if (__builtin_va_arg_pack_len() > 1) {
-        __creat_too_many_args();  // compile time error
+        __creat_too_many_args();  /* Compile time error. */
     }
 
     if ((__builtin_va_arg_pack_len() == 0) && !__builtin_constant_p(flags)) {
@@ -125,12 +125,12 @@ __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
-            __creat_missing_mode();  // compile time error
+            __creat_missing_mode();  /* Compile time error. */
         }
     }
 
     if (__builtin_va_arg_pack_len() > 1) {
-        __creat_too_many_args();  // compile time error
+        __creat_too_many_args();  /* Compile time error. */
     }
 
     if ((__builtin_va_arg_pack_len() == 0) && !__builtin_constant_p(flags)) {
