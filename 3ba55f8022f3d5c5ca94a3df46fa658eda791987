@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f21bce1_2b0d85e3",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-06-10T20:24:25Z",
+      "side": 1,
+      "message": "It\u0027s not immediately clear how the old stuff always leads to __USE_BSD being defined.\n\nWill this hurt our unified header work?",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 6
+      },
+      "revId": "3ba55f8022f3d5c5ca94a3df46fa658eda791987",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
