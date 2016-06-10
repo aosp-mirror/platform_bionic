@@ -150,11 +150,9 @@ extern size_t wcsxfrm_l(wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED
 extern size_t wcslcat(wchar_t*, const wchar_t*, size_t);
 extern size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
 
-#if __POSIX_VISIBLE >= 200809
 FILE* open_wmemstream(wchar_t**, size_t*) __INTRODUCED_IN(23);
 wchar_t* wcsdup(const wchar_t*);
 size_t wcsnlen(const wchar_t*, size_t);
-#endif
 
 __END_DECLS
 

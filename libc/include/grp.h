@@ -47,20 +47,18 @@ struct group {
 
 __BEGIN_DECLS
 struct group* getgrgid(gid_t);
-struct group* getgrnam(const char *);
-#if __POSIX_VISIBLE >= 200112 || __XPG_VISIBLE
-/* Android has thousands and thousands of ids to iterate through */
+struct group* getgrnam(const char*);
+
+/* Android has thousands and thousands of ids to iterate through. */
 struct group* getgrent(void)
   __attribute__((warning("getgrent is inefficient on Android"))) __INTRODUCED_IN_FUTURE;
+
 void setgrent(void) __INTRODUCED_IN_FUTURE;
 void endgrent(void) __INTRODUCED_IN_FUTURE;
 int getgrgid_r(gid_t, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
 int getgrnam_r(const char*, struct group*, char*, size_t, struct group**) __INTRODUCED_IN(24);
-#endif
-
-int getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups);
-
-int initgroups (const char *user, gid_t group);
+int getgrouplist (const char*, gid_t, gid_t*, int*);
+int initgroups (const char*, gid_t);
 
 __END_DECLS
 

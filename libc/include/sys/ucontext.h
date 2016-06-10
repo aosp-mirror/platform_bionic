@@ -70,9 +70,9 @@ typedef struct ucontext {
   stack_t uc_stack;
   mcontext_t uc_mcontext;
   sigset_t uc_sigmask;
-  // Android has a wrong (smaller) sigset_t on ARM.
+  /* Android has a wrong (smaller) sigset_t on ARM. */
   uint32_t __padding_rt_sigset;
-  // The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM.
+  /* The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM. */
   char __padding[120];
   unsigned long uc_regspace[128] __attribute__((__aligned__(8)));
 } ucontext_t;
@@ -92,7 +92,7 @@ typedef struct ucontext {
   struct ucontext *uc_link;
   stack_t uc_stack;
   sigset_t uc_sigmask;
-  // The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM64.
+  /* The kernel adds extra padding after uc_sigmask to match glibc sigset_t on ARM64. */
   char __padding[128 - sizeof(sigset_t)];
   mcontext_t uc_mcontext;
 } ucontext_t;
@@ -157,7 +157,7 @@ typedef struct ucontext {
   stack_t uc_stack;
   mcontext_t uc_mcontext;
   sigset_t uc_sigmask;
-  // Android has a wrong (smaller) sigset_t on x86.
+  /* Android has a wrong (smaller) sigset_t on x86. */
   uint32_t __padding_rt_sigset;
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
