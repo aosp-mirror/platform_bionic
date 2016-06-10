@@ -56,11 +56,11 @@
 
 __BEGIN_DECLS
 
-extern const char	*_ctype_;
+extern const char* _ctype_;
 
-#if defined(__GNUC__) || defined(_ANSI_LIBRARY) || defined(lint)
 int isalnum(int);
 int isalpha(int);
+int isblank(int);
 int iscntrl(int);
 int isdigit(int);
 int isgraph(int);
@@ -87,20 +87,10 @@ int isupper_l(int, locale_t) __INTRODUCED_IN(21);
 int isxdigit_l(int, locale_t) __INTRODUCED_IN(21);
 int tolower_l(int, locale_t) __INTRODUCED_IN(21);
 int toupper_l(int, locale_t) __INTRODUCED_IN(21);
-
-#if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __POSIX_VISIBLE > 200112 \
-    || __XPG_VISIBLE > 600
-int isblank(int);
-#endif
-
-#if __BSD_VISIBLE || __XPG_VISIBLE
 int isascii(int);
 int toascii(int);
 int _tolower(int) __INTRODUCED_IN(21);
 int _toupper(int) __INTRODUCED_IN(21);
-#endif /* __BSD_VISIBLE || __XPG_VISIBLE */
-
-#endif /* __GNUC__ || _ANSI_LIBRARY || lint */
 
 __END_DECLS
 

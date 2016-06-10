@@ -66,16 +66,14 @@
 # define LONG_MIN	(-0x7fffffffL-1)/* min value for a long */
 #endif
 
-#if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999
 # define ULLONG_MAX	0xffffffffffffffffULL
 					/* max value for unsigned long long */
 # define LLONG_MAX	0x7fffffffffffffffLL
 					/* max value for a signed long long */
 # define LLONG_MIN	(-0x7fffffffffffffffLL-1)
 					/* min value for a signed long long */
-#endif
 
-#if __BSD_VISIBLE
+#if defined(__USE_BSD)
 # define UID_MAX	UINT_MAX	/* max value for a uid_t */
 # define GID_MAX	UINT_MAX	/* max value for a gid_t */
 #endif
