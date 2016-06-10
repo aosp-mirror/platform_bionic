@@ -518,7 +518,6 @@ cc_library {
         "-Wno-sign-compare",
         "-Wno-uninitialized",
         "-Wno-unknown-pragmas",
-        "-fvisibility=hidden",
     ],
     conlyflags: ["-std=gnu11"],
 

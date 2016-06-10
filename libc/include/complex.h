@@ -43,7 +43,7 @@ _Static_assert(__generic(_Complex_I, float _Complex, 1, 0),
 #define	complex		_Complex
 #define	I		_Complex_I
 
-#if __ISO_C_VISIBLE >= 2011
+#if __STDC_VERSION__ >= 201112L
 #ifdef __clang__
 #define	CMPLX(x, y)	((double complex){ x, y })
 #define	CMPLXF(x, y)	((float complex){ x, y })
@@ -53,7 +53,7 @@ _Static_assert(__generic(_Complex_I, float _Complex, 1, 0),
 #define	CMPLXF(x, y)	__builtin_complex((float)(x), (float)(y))
 #define	CMPLXL(x, y)	__builtin_complex((long double)(x), (long double)(y))
 #endif
-#endif /* __ISO_C_VISIBLE >= 2011 */
+#endif
 
 __BEGIN_DECLS
 #pragma GCC visibility push(default)

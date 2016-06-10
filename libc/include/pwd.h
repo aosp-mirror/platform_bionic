@@ -105,7 +105,7 @@ struct passwd
 #ifdef __LP64__
   char* pw_gecos;
 #else
-  // Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL.
+  /* Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL. */
 # define pw_gecos pw_passwd
 #endif
   char* pw_dir;

@@ -64,7 +64,7 @@ __END_DECLS
 #define htonq(x) __swap64(x)
 #define ntohq(x) __swap64(x)
 
-#if __BSD_VISIBLE
+#if defined(__USE_BSD)
 #define LITTLE_ENDIAN _LITTLE_ENDIAN
 #define BIG_ENDIAN _BIG_ENDIAN
 #define PDP_ENDIAN _PDP_ENDIAN
@@ -101,6 +101,6 @@ __END_DECLS
 #define le16toh(x) htole16(x)
 #define le32toh(x) htole32(x)
 #define le64toh(x) htole64(x)
-#endif /* __BSD_VISIBLE */
+#endif /* __USE_BSD */
 
 #endif /* _SYS_ENDIAN_H_ */

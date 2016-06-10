@@ -162,20 +162,6 @@
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
 
 /*
- * C99 defines the restrict type qualifier keyword.
- */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#define __restrict restrict
-#endif
-
-/*
- * C99 defines the __func__ predefined identifier.
- */
-#if !defined(__STDC_VERSION__) || !(__STDC_VERSION__ >= 199901L)
-#define __func__ __PRETTY_FUNCTION__
-#endif
-
-/*
  * GNU C version 2.96 added explicit branch prediction so that
  * the CPU back-end can hint the processor and also so that
  * code blocks can be reordered such that the predicted path
@@ -230,151 +216,49 @@
 #define __SCCSID(_s) /* nothing */
 
 /*
- * _BSD_SOURCE and _GNU_SOURCE are expected to be defined by callers before
- * any standard header file is included. In those header files we test
- * against __USE_BSD and __USE_GNU. glibc does this in <features.h> but we
- * do it in <sys/cdefs.h> instead because that's where our existing
- * _POSIX_C_SOURCE tests were, and we're already confident that <sys/cdefs.h>
- * is included everywhere it should be.
+ * With bionic, you always get all C and POSIX API.
  *
- * The _GNU_SOURCE test needs to come before any _BSD_SOURCE or _POSIX* tests
- * because _GNU_SOURCE implies everything else.
+ * If you want BSD and/or GNU extensions, _BSD_SOURCE and/or _GNU_SOURCE are
+ * expected to be defined by callers before *any* standard header file is
+ * included.
+ *
+ * In our header files we test against __USE_BSD and __USE_GNU.
  */
 #if defined(_GNU_SOURCE)
+# define __USE_BSD 1
 # define __USE_GNU 1
-# undef _POSIX_SOURCE
-# define _POSIX_SOURCE 1
-# undef _POSIX_C_SOURCE
-# define _POSIX_C_SOURCE 200809L
-# undef _BSD_SOURCE
-# define _BSD_SOURCE 1
 #endif
 
 #if defined(_BSD_SOURCE)
 # define __USE_BSD 1
 #endif
 
-/*
- * _FILE_OFFSET_BITS 64 support.
- */
+/* Historically there was no way to turn off the BSD stuff, so we're probably stuck with that. */
+#if !defined(__USE_BSD)
+# define __USE_BSD 1
+#endif
+
+/* _FILE_OFFSET_BITS 64 support. */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
 #if _FILE_OFFSET_BITS == 64
 #define __USE_FILE_OFFSET64 1
 #endif
 #endif
 
-/*-
- * POSIX.1 requires that the macros we test be defined before any standard
- * header file is included.
- *
- * Here's a quick run-down of the versions:
- *  defined(_POSIX_SOURCE)		1003.1-1988
- *  _POSIX_C_SOURCE == 1		1003.1-1990
- *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option
- *  _POSIX_C_SOURCE == 199309		1003.1b-1993
- *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,
- *					and the omnibus ISO/IEC 9945-1: 1996
- *  _POSIX_C_SOURCE == 200112		1003.1-2001
- *  _POSIX_C_SOURCE == 200809		1003.1-2008
- *
- * In addition, the X/Open Portability Guide, which is now the Single UNIX
- * Specification, defines a feature-test macro which indicates the version of
- * that specification, and which subsumes _POSIX_C_SOURCE.
- *
- * Our macros begin with two underscores to avoid namespace screwage.
- */
-
-/* Deal with IEEE Std. 1003.1-1990, in which _POSIX_C_SOURCE == 1. */
-#if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE == 1
-#undef _POSIX_C_SOURCE		/* Probably illegal, but beyond caring now. */
-#define	_POSIX_C_SOURCE		199009
+/* C99 added the `restrict` type qualifier keyword. Before then, `__restrict` is a GNU extension. */
+#if __STDC_VERSION__ >= 199901L
+#define __restrict restrict
 #endif
 
-/* Deal with IEEE Std. 1003.2-1992, in which _POSIX_C_SOURCE == 2. */
-#if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE == 2
-#undef _POSIX_C_SOURCE
-#define	_POSIX_C_SOURCE		199209
-#endif
-
-/* Deal with various X/Open Portability Guides and Single UNIX Spec. */
-#ifdef _XOPEN_SOURCE
-#if _XOPEN_SOURCE - 0 >= 700
-#define	__XSI_VISIBLE		700
-#undef _POSIX_C_SOURCE
-#define	_POSIX_C_SOURCE		200809
-#elif _XOPEN_SOURCE - 0 >= 600
-#define	__XSI_VISIBLE		600
-#undef _POSIX_C_SOURCE
-#define	_POSIX_C_SOURCE		200112
-#elif _XOPEN_SOURCE - 0 >= 500
-#define	__XSI_VISIBLE		500
-#undef _POSIX_C_SOURCE
-#define	_POSIX_C_SOURCE		199506
-#endif
-#endif
-
-/*
- * Deal with all versions of POSIX.  The ordering relative to the tests above is
- * important.
- */
-#if defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
-#define	_POSIX_C_SOURCE		198808
-#endif
-#ifdef _POSIX_C_SOURCE
-#if _POSIX_C_SOURCE >= 200809
-#define	__POSIX_VISIBLE		200809
-#define	__ISO_C_VISIBLE		1999
-#elif _POSIX_C_SOURCE >= 200112
-#define	__POSIX_VISIBLE		200112
-#define	__ISO_C_VISIBLE		1999
-#elif _POSIX_C_SOURCE >= 199506
-#define	__POSIX_VISIBLE		199506
-#define	__ISO_C_VISIBLE		1990
-#elif _POSIX_C_SOURCE >= 199309
-#define	__POSIX_VISIBLE		199309
-#define	__ISO_C_VISIBLE		1990
-#elif _POSIX_C_SOURCE >= 199209
-#define	__POSIX_VISIBLE		199209
-#define	__ISO_C_VISIBLE		1990
-#elif _POSIX_C_SOURCE >= 199009
-#define	__POSIX_VISIBLE		199009
-#define	__ISO_C_VISIBLE		1990
-#else
-#define	__POSIX_VISIBLE		198808
-#define	__ISO_C_VISIBLE		0
-#endif /* _POSIX_C_SOURCE */
-#else				/* Default environment: show everything. */
-#define	__POSIX_VISIBLE		200809
-#define	__XSI_VISIBLE		700
-#define	__BSD_VISIBLE		1
-#define	__ISO_C_VISIBLE		1999
-#endif
-
-/*
- * Default values.
- */
-#ifndef __XPG_VISIBLE
-# define __XPG_VISIBLE          700
-#endif
-#ifndef __POSIX_VISIBLE
-# define __POSIX_VISIBLE        200809
-#endif
-#ifndef __ISO_C_VISIBLE
-# define __ISO_C_VISIBLE        1999
-#endif
-#ifndef __BSD_VISIBLE
-# define __BSD_VISIBLE          1
+/* C99 added the `__func__` predefined identifier. */
+#if __STDC_VERSION__ < 199901L
+#define __func__ __PRETTY_FUNCTION__
 #endif
 
 #define  __BIONIC__   1
 #include <android/api-level.h>
 
 /* glibc compatibility. */
-#if __POSIX_VISIBLE >= 200809
-#define __USE_ISOC99 1
-#define __USE_XOPEN2K 1
-#define __USE_XOPEN2K8 1
-#endif
 #if __LP64__
 #define __WORDSIZE 64
 #else
@@ -427,7 +311,7 @@
 #define __AVAILABILITY(...) __attribute__((availability(android,__VA_ARGS__)))
 #else
 #define __AVAILABILITY(...)
-#endif // __clang__
+#endif
 
 #define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
 #define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)

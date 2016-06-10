@@ -20,7 +20,7 @@
 #if defined(__GLIBC__)
 
 // At the time of writing, libcxx -- which is dragged in by gtest -- assumes
-// declarations from glibc of things that aren't available without __USE_GNU.
+// declarations from glibc of things that aren't available without _GNU_SOURCE.
 // This means we can't even build this test (which is a problem because that
 // means it doesn't get included in CTS).
 // For glibc 2.15, the symbols in question are:

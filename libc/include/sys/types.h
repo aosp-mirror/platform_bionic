@@ -141,7 +141,7 @@ typedef __kernel_ssize_t ssize_t;
 typedef unsigned int        uint_t;
 typedef unsigned int        uint;
 
-#ifdef __BSD_VISIBLE
+#if defined(__USE_BSD)
 #include <sys/sysmacros.h>
 
 typedef unsigned char  u_char;
