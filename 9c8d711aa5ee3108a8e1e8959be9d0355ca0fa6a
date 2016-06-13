@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "748739d2_07ba7a23",
+        "filename": "libc/include/limits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-13T23:56:42Z",
+      "side": 1,
+      "message": "this we probably don\u0027t need (and glibc doesn\u0027t have it), but in this patch i just want to put the BSD leakage back how it was.\n\ncurrent users: https://cs.corp.google.com/search/?q\u003d(?-i)%5CbSIZE_T_MAX%5Cb+-file:/limits.h+pcre:yes\u0026m\u003d100\u0026sort\u003d1\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs",
+      "revId": "9c8d711aa5ee3108a8e1e8959be9d0355ca0fa6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "748739d2_47a1620e",
+        "filename": "libc/include/sys/limits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-13T23:56:42Z",
+      "side": 1,
+      "message": "we can probably remove these (or at least put them back behind __USE_BSD, but glibc doesn\u0027t have them at all).\n\ncurrent users: https://cs.corp.google.com/search/?q\u003d(?-i)%5Cb(UID%7CGID)_MAX%5Cb+-file:/limits.h+pcre:yes\u0026m\u003d100\u0026sort\u003d1\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs",
+      "revId": "9c8d711aa5ee3108a8e1e8959be9d0355ca0fa6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "748739d2_e7a5161c",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-13T23:56:42Z",
+      "side": 1,
+      "message": "this we might be able to clean up...",
+      "revId": "9c8d711aa5ee3108a8e1e8959be9d0355ca0fa6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "748739d2_a7af0ef8",
+        "filename": "libc/include/sys/types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-13T23:56:42Z",
+      "side": 1,
+      "message": "...but these are used horrifyingly often.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 27
+      },
+      "revId": "9c8d711aa5ee3108a8e1e8959be9d0355ca0fa6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
