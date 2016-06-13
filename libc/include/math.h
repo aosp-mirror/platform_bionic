@@ -297,7 +297,6 @@ long double tanl(long double) __INTRODUCED_IN(21);
 long double tgammal(long double) __INTRODUCED_IN(21);
 long double truncl(long double);
 
-#if defined(__USE_BSD) || defined(__USE_GNU)
 #define M_E		2.7182818284590452354	/* e */
 #define M_LOG2E		1.4426950408889634074	/* log 2e */
 #define M_LOG10E	0.43429448190325182765	/* log 10e */
@@ -311,7 +310,10 @@ long double truncl(long double);
 #define M_2_SQRTPI	1.12837916709551257390	/* 2/sqrt(pi) */
 #define M_SQRT2		1.41421356237309504880	/* sqrt(2) */
 #define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
+
 #define MAXFLOAT	((float)3.40282346638528860e+38)
+
+#if defined(__USE_BSD) || defined(__USE_GNU)
 extern int signgam;
 double j0(double);
 double j1(double);
