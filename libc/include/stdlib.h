@@ -46,8 +46,8 @@ extern __noreturn void exit(int);
 extern __noreturn void _Exit(int) __INTRODUCED_IN(21);
 extern int atexit(void (*)(void));
 
-int at_quick_exit(void (*)(void));
-void quick_exit(int) __noreturn;
+int at_quick_exit(void (*)(void)) __INTRODUCED_IN(21);
+void quick_exit(int) __noreturn __INTRODUCED_IN(21);
 
 extern char* getenv(const char*);
 extern int putenv(char*);
