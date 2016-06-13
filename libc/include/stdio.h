@@ -227,10 +227,7 @@ int putchar_unlocked(int);
 FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
 FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
 
-/*
- * Routines that are purely local.
- */
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 int  asprintf(char** __restrict, const char* __restrict, ...) __printflike(2, 3);
 char* fgetln(FILE* __restrict, size_t* __restrict);
 int fpurge(FILE*);
