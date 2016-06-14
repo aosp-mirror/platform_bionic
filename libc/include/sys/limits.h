@@ -73,7 +73,7 @@
 # define LLONG_MIN	(-0x7fffffffffffffffLL-1)
 					/* min value for a signed long long */
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 # define UID_MAX	UINT_MAX	/* max value for a uid_t */
 # define GID_MAX	UINT_MAX	/* max value for a gid_t */
 #endif
