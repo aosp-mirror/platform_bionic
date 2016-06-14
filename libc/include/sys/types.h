@@ -141,7 +141,7 @@ typedef __kernel_ssize_t ssize_t;
 typedef unsigned int        uint_t;
 typedef unsigned int        uint;
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 #include <sys/sysmacros.h>
 
 typedef unsigned char  u_char;
