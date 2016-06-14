@@ -64,7 +64,7 @@ __END_DECLS
 #define htonq(x) __swap64(x)
 #define ntohq(x) __swap64(x)
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 #define LITTLE_ENDIAN _LITTLE_ENDIAN
 #define BIG_ENDIAN _BIG_ENDIAN
 #define PDP_ENDIAN _PDP_ENDIAN

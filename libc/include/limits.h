@@ -66,7 +66,7 @@
 #define ULONG_LONG_MAX  ULLONG_MAX
 #endif
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
 #if defined(__LP64__)
 #define SIZE_T_MAX ULONG_MAX
 #else
