@@ -233,11 +233,6 @@
 # define __USE_BSD 1
 #endif
 
-/* Historically there was no way to turn off the BSD stuff, so we're probably stuck with that. */
-#if !defined(__USE_BSD)
-# define __USE_BSD 1
-#endif
-
 /* _FILE_OFFSET_BITS 64 support. */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
 #if _FILE_OFFSET_BITS == 64
