@@ -2508,8 +2508,8 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
     find_loaded_library_by_soname(&g_default_namespace, soname.c_str(), &candidate);
 
     if (candidate == nullptr) {
-      DL_ERR("error initializing public namespace: \"%s\" was not found"
-             " in the default namespace", soname.c_str());
+      DL_ERR("error initializing public namespace: a library with soname \"%s\""
+             " was not found in the default namespace", soname.c_str());
       return false;
     }
 
