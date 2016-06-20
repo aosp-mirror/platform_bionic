@@ -62,6 +62,7 @@
 #include "linker_utils.h"
 
 #include "android-base/strings.h"
+#include "debuggerd/client.h"
 #include "ziparchive/zip_archive.h"
 
 extern void __libc_init_globals(KernelArgumentBlock&);
@@ -4167,7 +4168,14 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
 
-  debuggerd_init();
+  // Register the debuggerd signal handler.
+  debuggerd_callbacks_t callbacks = {
+    .get_abort_message = []() {
+      return g_abort_message;
+    },
+    .post_dump = &notify_gdb_of_libraries,
+  };
+  debuggerd_init(&callbacks);
 
   // Get a few environment variables.
   const char* LD_DEBUG = getenv("LD_DEBUG");
