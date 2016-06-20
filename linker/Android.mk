@@ -19,7 +19,6 @@ include $(CLEAR_VARS)
 LOCAL_CLANG := true
 
 LOCAL_SRC_FILES := \
-    debugger.cpp \
     dlfcn.cpp \
     linker.cpp \
     linker_block_allocator.cpp \
@@ -77,7 +76,14 @@ LOCAL_ASFLAGS := $(LOCAL_CFLAGS)
 
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 
-LOCAL_STATIC_LIBRARIES := libc_nomalloc libziparchive libutils libbase libz liblog
+LOCAL_STATIC_LIBRARIES := \
+    libc_nomalloc \
+    libziparchive \
+    libutils \
+    libbase \
+    libz \
+    liblog \
+    libdebuggerd_client
 
 # Important: The liblinker_malloc should be the last library in the list
 # to overwrite any other malloc implementations by other static libraries.
