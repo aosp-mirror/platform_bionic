@@ -461,9 +461,6 @@ bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
 
 int do_dladdr(const void* addr, Dl_info* info);
 
-void debuggerd_init();
-extern "C" abort_msg_t* g_abort_message;
-
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
 
