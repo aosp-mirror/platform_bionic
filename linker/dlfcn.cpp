@@ -176,14 +176,14 @@ android_namespace_t* android_create_namespace(const char* name,
     { name_offset, \
       reinterpret_cast<Elf32_Addr>(value), \
       /* st_size */ 0, \
-      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
+      ((shndx) == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
       shndx, \
     }
 
 #define ELF64_SYM_INITIALIZER(name_offset, value, shndx) \
     { name_offset, \
-      (shndx == 0) ? 0 : (STB_GLOBAL << 4), \
+      ((shndx) == 0) ? 0 : (STB_GLOBAL << 4), \
       /* st_other */ 0, \
       shndx, \
       reinterpret_cast<Elf64_Addr>(value), \

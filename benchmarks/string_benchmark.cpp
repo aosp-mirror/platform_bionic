@@ -19,8 +19,7 @@
 
 #include <benchmark/benchmark.h>
 
-#define KB 1024
-#define MB 1024*KB
+constexpr auto KB = 1024;
 
 #define AT_COMMON_SIZES \
     Arg(8)->Arg(64)->Arg(512)->Arg(1*KB)->Arg(8*KB)->Arg(16*KB)->Arg(32*KB)->Arg(64*KB)
