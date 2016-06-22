@@ -374,7 +374,7 @@ static void TestFsyncFunction(int (*fn)(int)) {
   close(fd);
 
   // The fd can even be a directory.
-  ASSERT_NE(-1, fd = open("/data", O_RDONLY));
+  ASSERT_NE(-1, fd = open("/data/local/tmp", O_RDONLY));
   EXPECT_EQ(0, fn(fd));
   close(fd);
 
