@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "637f814d_e1f1469f",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-06-24T18:24:43Z",
+      "side": 0,
+      "message": "re: why I made it public:\nI was flailing around trying to fix link errors in the test caused by this. (I added a test for getentropy instead of getrandom so that I could stick a hack in to lie about success so that init will work before backporting getrandom)",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 15
+      },
+      "revId": "36ad0207d67ef395b003dbf75d2c0193d3b8e093",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
