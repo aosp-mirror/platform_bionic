@@ -109,6 +109,11 @@ static void __check_max_thread_id() {
 }
 #endif
 
+static void arc4random_fork_handler() {
+  _rs_forked = 1;
+  _thread_arc4_lock();
+}
+
 void __libc_init_common(KernelArgumentBlock& args) {
   // Initialize various globals.
   environ = args.envp;
@@ -125,7 +130,7 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __pthread_internal_add(main_thread);
 
   // Register atfork handlers to take and release the arc4random lock.
-  pthread_atfork(_thread_arc4_lock, _thread_arc4_unlock, _thread_arc4_unlock);
+  pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
 
   __system_properties_init(); // Requires 'environ'.
 }
