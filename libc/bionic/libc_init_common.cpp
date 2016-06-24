@@ -41,13 +41,14 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "private/KernelArgumentBlock.h"
+#include "private/WriteProtected.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
 #include "private/libc_logging.h"
-#include "private/WriteProtected.h"
+#include "private/thread_private.h"
 #include "pthread_internal.h"
 
 extern "C" abort_msg_t** __abort_message_ptr;
@@ -122,6 +123,9 @@ void __libc_init_common(KernelArgumentBlock& args) {
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
   __pthread_internal_add(main_thread);
+
+  // Register atfork handlers to take and release the arc4random lock.
+  pthread_atfork(_thread_arc4_lock, _thread_arc4_unlock, _thread_arc4_unlock);
 
   __system_properties_init(); // Requires 'environ'.
 }
