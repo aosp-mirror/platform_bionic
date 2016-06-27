@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "637f814d_b0f14672",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-27T15:43:47Z",
+      "side": 1,
+      "message": "case-sensitive sorting seems like it slightly defeats the purpose of sorting at all...",
+      "revId": "444170358f95e7b60edfc2df92ef4446b97c5f6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
