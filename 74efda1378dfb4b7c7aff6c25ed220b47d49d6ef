@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "637f814d_50dc7aef",
+        "filename": "libc/bionic/getpid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-27T15:41:12Z",
+      "side": 1,
+      "message": "__predict_true here too?",
+      "revId": "74efda1378dfb4b7c7aff6c25ed220b47d49d6ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
