@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c07f4320_6f93ad69",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-06-29T23:56:27Z",
+      "side": 1,
+      "message": "remove?",
+      "range": {
+        "startLine": 217,
+        "startChar": 24,
+        "endLine": 217,
+        "endChar": 56
+      },
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c07f4320_8fa4d9b5",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-06-29T23:56:27Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 224,
+        "startChar": 29,
+        "endLine": 224,
+        "endChar": 42
+      },
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0bfaf31_83afbe90",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-06-29T23:56:27Z",
+      "side": 1,
+      "message": "why not std::mutex?",
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
