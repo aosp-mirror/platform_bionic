@@ -123,7 +123,13 @@ __LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_i
 
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {
-  return reinterpret_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
+  void** tls = __get_tls();
+  if (__predict_true(tls)) {
+    return reinterpret_cast<pthread_internal_t*>(tls[TLS_SLOT_THREAD_ID]);
+  }
+
+  // This happens when called during libc initialization before TLS has been initialized.
+  return nullptr;
 }
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
