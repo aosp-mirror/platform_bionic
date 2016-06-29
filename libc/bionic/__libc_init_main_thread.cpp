@@ -28,13 +28,23 @@
 
 #include "libc_init_common.h"
 
+#include "private/KernelArgumentBlock.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
-#include "private/KernelArgumentBlock.h"
+#include "private/bionic_ssp.h"
 #include "pthread_internal.h"
 
 extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
+
+// Declared in "private/bionic_ssp.h".
+uintptr_t __stack_chk_guard = 0;
+
+void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
+  // AT_RANDOM is a pointer to 16 bytes of randomness on the stack.
+  // Take the first 4/8 for the -fstack-protector implementation.
+  __stack_chk_guard = *reinterpret_cast<uintptr_t*>(args.getauxval(AT_RANDOM));
+}
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
@@ -78,7 +88,8 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // TODO: the main thread's sched_policy and sched_priority need to be queried.
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
-  // before we initialize the TLS.
+  // before we initialize the TLS. Dynamic executables will initialize their copy of the global
+  // stack protector from the one in the main thread's TLS.
   __libc_init_global_stack_chk_guard(args);
 
   __init_thread(&main_thread);

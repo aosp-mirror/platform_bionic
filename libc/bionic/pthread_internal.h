@@ -114,6 +114,7 @@ class pthread_internal_t {
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
