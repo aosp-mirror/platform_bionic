@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9dca1638_8bfd2d3f",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-06-30T04:01:17Z",
+      "side": 1,
+      "message": "add a comment explaining this rare case?",
+      "revId": "1c64876cec3ad6b37ad6aa246acdbeb4232594e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
