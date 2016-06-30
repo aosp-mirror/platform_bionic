@@ -68,29 +68,21 @@ struct abort_msg_t {
 };
 
 // Formats a message to the log (priority 'fatal'), then aborts.
-__LIBC_HIDDEN__ __noreturn void __libc_fatal(const char* fmt, ...) __printflike(1, 2);
+__noreturn void __libc_fatal(const char* _Nonnull, ...) __printflike(1, 2);
 
 // Formats a message to the log (priority 'fatal'), prefixed by "FORTIFY: ", then aborts.
-__LIBC_HIDDEN__ __noreturn void __fortify_fatal(const char* fmt, ...) __printflike(1, 2);
+__noreturn void __fortify_fatal(const char* _Nonnull, ...) __printflike(1, 2);
 
 //
 // Formatting routines for the C library's internal debugging.
 // Unlike the usual alternatives, these don't allocate, and they don't drag in all of stdio.
 //
 
-__LIBC_HIDDEN__ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, ...)
-    __printflike(3, 4);
-
-__LIBC_HIDDEN__ int __libc_format_fd(int fd, const char* format, ...)
-    __printflike(2, 3);
-
-__LIBC_HIDDEN__ int __libc_format_log(int priority, const char* tag, const char* format, ...)
-    __printflike(3, 4);
-
-__LIBC_HIDDEN__ int __libc_format_log_va_list(int priority, const char* tag, const char* format,
-                                              va_list ap);
-
-__LIBC_HIDDEN__ int __libc_write_log(int priority, const char* tag, const char* msg);
+int __libc_format_buffer(char* _Nonnull buf, size_t size, const char* _Nonnull fmt, ...) __printflike(3, 4);
+int __libc_format_fd(int fd, const char* _Nonnull format , ...) __printflike(2, 3);
+int __libc_format_log(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, ...) __printflike(3, 4);
+int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, va_list ap);
+int __libc_write_log(int pri, const char* _Nonnull tag, const char* _Nonnull msg);
 
 __END_DECLS
 

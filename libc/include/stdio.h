@@ -105,13 +105,11 @@ int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
 char	*fgets(char * __restrict, int, FILE * __restrict);
-int	 fprintf(FILE * __restrict , const char * __restrict, ...)
-		__printflike(2, 3);
+int	 fprintf(FILE * __restrict , const char * __restrict _Nonnull, ...) __printflike(2, 3);
 int	 fputc(int, FILE *);
 int	 fputs(const char * __restrict, FILE * __restrict);
 size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict);
-int	 fscanf(FILE * __restrict, const char * __restrict, ...)
-		__scanflike(2, 3);
+int	 fscanf(FILE * __restrict, const char * __restrict _Nonnull, ...) __scanflike(2, 3);
 size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
 int	 getc(FILE *);
 int	 getchar(void);
@@ -119,35 +117,28 @@ ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) _
 ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(18);
 
 void	 perror(const char *);
-int	 printf(const char * __restrict, ...)
-		__printflike(1, 2);
+int	 printf(const char * __restrict _Nonnull, ...) __printflike(1, 2);
 int	 putc(int, FILE *);
 int	 putchar(int);
 int	 puts(const char *);
 int	 remove(const char *);
 void	 rewind(FILE *);
-int	 scanf(const char * __restrict, ...)
-		__scanflike(1, 2);
+int	 scanf(const char * __restrict _Nonnull, ...) __scanflike(1, 2);
 void	 setbuf(FILE * __restrict, char * __restrict);
 int	 setvbuf(FILE * __restrict, char * __restrict, int, size_t);
-int	 sscanf(const char * __restrict, const char * __restrict, ...)
-		__scanflike(2, 3);
+int	 sscanf(const char * __restrict, const char * __restrict _Nonnull, ...) __scanflike(2, 3);
 int	 ungetc(int, FILE *);
-int	 vfprintf(FILE * __restrict, const char * __restrict, __va_list)
-		__printflike(2, 0);
-int	 vprintf(const char * __restrict, __va_list)
-		__printflike(1, 0);
+int	 vfprintf(FILE * __restrict, const char * __restrict _Nonnull, __va_list) __printflike(2, 0);
+int	 vprintf(const char * __restrict _Nonnull, __va_list) __printflike(1, 0);
 
-int dprintf(int, const char* __restrict, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int, const char* __restrict, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
+int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 
 #if __STDC_VERSION__ < 201112L
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* __restrict, const char* __restrict, ...)
-    __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
-int vsprintf(char* __restrict, const char* __restrict, __va_list)
-    __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
+int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
+int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
 #if defined(__USE_BSD) || defined(__USE_GNU)
 #define P_tmpdir "/tmp/" /* deprecated */
@@ -203,11 +194,11 @@ FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict
 FILE* tmpfile(void);
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* __restrict, size_t, const char* __restrict, ...) __printflike(3, 4);
-int vfscanf(FILE* __restrict, const char* __restrict, __va_list) __scanflike(2, 0);
-int vscanf(const char*, __va_list) __scanflike(1, 0);
-int vsnprintf(char* __restrict, size_t, const char* __restrict, __va_list) __printflike(3, 0);
-int vsscanf(const char* __restrict, const char* __restrict, __va_list) __scanflike(2, 0);
+int snprintf(char* __restrict, size_t, const char* __restrict _Nonnull, ...) __printflike(3, 4);
+int vfscanf(FILE* __restrict, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
+int vscanf(const char* _Nonnull , __va_list) __scanflike(1, 0);
+int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_list) __printflike(3, 0);
+int vsscanf(const char* __restrict _Nonnull, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
 char* ctermid(char*) __INTRODUCED_IN_FUTURE;
@@ -228,12 +219,12 @@ FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
 FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
-int  asprintf(char** __restrict, const char* __restrict, ...) __printflike(2, 3);
+int  asprintf(char** __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
 char* fgetln(FILE* __restrict, size_t* __restrict);
 int fpurge(FILE*);
 void setbuffer(FILE*, char*, int);
 int setlinebuf(FILE*);
-int vasprintf(char** __restrict, const char* __restrict, __va_list) __printflike(2, 0);
+int vasprintf(char** __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0);
 void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
 int feof_unlocked(FILE*) __INTRODUCED_IN(23);
 int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
@@ -262,16 +253,12 @@ __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
-__printflike(3, 0)
-int vsnprintf(char *dest, size_t size, const char *format, __va_list ap)
-{
+__printflike(3, 0) int vsnprintf(char* dest, size_t size, const char* _Nonnull format, __va_list ap) {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE
-__printflike(2, 0)
-int vsprintf(char *dest, const char *format, __va_list ap)
-{
+__printflike(2, 0) int vsprintf(char* dest, const char* _Nonnull format, __va_list ap) {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 
@@ -282,11 +269,8 @@ int vsprintf(char *dest, const char *format, __va_list ap)
   #endif
 #else
 __BIONIC_FORTIFY_INLINE
-__printflike(3, 4)
-int snprintf(char *dest, size_t size, const char *format, ...)
-{
-    return __builtin___snprintf_chk(dest, size, 0,
-        __bos(dest), format, __builtin_va_arg_pack());
+__printflike(3, 4) int snprintf(char* dest, size_t size, const char* _Nonnull format, ...) {
+    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 #endif
 
@@ -297,11 +281,8 @@ int snprintf(char *dest, size_t size, const char *format, ...)
   #endif
 #else
 __BIONIC_FORTIFY_INLINE
-__printflike(2, 3)
-int sprintf(char *dest, const char *format, ...)
-{
-    return __builtin___sprintf_chk(dest, 0,
-        __bos(dest), format, __builtin_va_arg_pack());
+__printflike(2, 3) int sprintf(char* dest, const char* _Nonnull format, ...) {
+    return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 #endif
 
