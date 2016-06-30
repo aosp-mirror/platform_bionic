@@ -140,7 +140,7 @@
  *       // The following null check will be elided because nonnull attribute
  *       // means that, since we call foo with p, p can be assumed to not be
  *       // null. Thus this will crash if we are called with a null pointer.
- *       if (src != NULL) {
+ *       if (p != NULL) {
  *         return *p;
  *       }
  *       return 0;
@@ -156,10 +156,8 @@
 #define _Nonnull
 #endif
 
-#define __nonnull(args) __attribute__((__nonnull__ args))
-
-#define __printflike(x, y) __attribute__((__format__(printf, x, y))) __nonnull((x))
-#define __scanflike(x, y) __attribute__((__format__(scanf, x, y))) __nonnull((x))
+#define __printflike(x, y) __attribute__((__format__(printf, x, y)))
+#define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
 
 /*
  * GNU C version 2.96 added explicit branch prediction so that
