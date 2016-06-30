@@ -81,9 +81,9 @@ __noreturn void __fortify_fatal(const char* _Nonnull, ...) __printflike(1, 2);
 int __libc_format_buffer(char* _Nonnull buf, size_t size, const char* _Nonnull fmt, ...) __printflike(3, 4);
 int __libc_format_fd(int fd, const char* _Nonnull format , ...) __printflike(2, 3);
 int __libc_format_log(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, ...) __printflike(3, 4);
-#if defined(__arm__) || defined(__aarch64__)
+#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
 int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, va_list ap);
-#else
+#else // defined(__mips__) || defined(__i386__)
 int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _Nonnull fmt, va_list _Nonnull ap);
 #endif
 int __libc_write_log(int pri, const char* _Nonnull tag, const char* _Nonnull msg);
