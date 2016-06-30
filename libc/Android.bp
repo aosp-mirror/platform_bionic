@@ -1082,8 +1082,6 @@ cc_library_static {
                     "arch-mips/string/mips_strlen.c",
                 ],
             },
-            // http://b/29771478 - disable integrated-as for Mips
-            asflags: ["-fno-integrated-as"],
         },
         mips64: {
             srcs: [
@@ -1460,8 +1458,6 @@ cc_library_static {
         },
         mips: {
             srcs: ["arch-mips/syscalls/**/*.S"],
-            // http://b/29771478 - disable integrated-as for Mips
-            asflags: ["-fno-integrated-as"],
         },
         mips64: {
             srcs: ["arch-mips64/syscalls/**/*.S"],
