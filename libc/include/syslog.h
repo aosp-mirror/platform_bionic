@@ -88,8 +88,8 @@ __BEGIN_DECLS
 void closelog(void);
 void openlog(const char*, int, int);
 int setlogmask(int);
-void syslog(int, const char*, ...) __printflike(2, 3);
-void vsyslog(int, const char*, va_list) __printflike(2, 0);
+void syslog(int, const char* _Nonnull, ...) __printflike(2, 3);
+void vsyslog(int, const char* _Nonnull, va_list) __printflike(2, 0);
 
 __END_DECLS
 
