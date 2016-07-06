@@ -24,7 +24,8 @@ cc_defaults {
     relative_install_path: "bionic-loader-test-libs",
     gtest: false,
     sanitize: {
-        never: true,
+        address: false,
+        coverage: false,
     },
     target: {
         darwin: {
@@ -473,4 +474,22 @@ cc_binary_host {
         "libz",
         "libutils",
     ],
+}
+
+cc_test_library {
+    name: "libcfi-test",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_lib.cpp"],
+    sanitize: {
+        cfi: false,
+    },
+}
+
+cc_test_library {
+    name: "libcfi-test-bad",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_bad_lib.cpp"],
+    sanitize: {
+        cfi: false,
+    },
 }

@@ -295,6 +295,7 @@ cc_test_library {
     target: {
         android: {
             srcs: [
+                "cfi_test.cpp",
                 "dlext_test.cpp",
                 "libdl_test.cpp",
             ],

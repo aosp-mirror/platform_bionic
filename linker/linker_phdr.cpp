@@ -42,6 +42,7 @@
 #include "linker_utils.h"
 
 #include "private/bionic_prctl.h"
+#include "private/CFIShadow.h" // For kLibraryAlignment
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)

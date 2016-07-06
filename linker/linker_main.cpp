@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include "linker_debug.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -367,6 +368,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   }
 
   add_vdso(args);
+
+  if (!get_cfi_shadow()->InitialLinkDone(solist)) {
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+  }
 
   {
     ProtectedDataGuard guard;
