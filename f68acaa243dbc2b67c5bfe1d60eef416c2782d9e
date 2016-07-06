@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd68a0d_aa90705b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1226,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-06T19:30:31Z",
+      "side": 1,
+      "message": "This won\u0027t regenerate the rule if system/core/include/private/android_filesystem_config.h changes. It looks like using the srcs property, and \u0027$in\u0027 in \u0027cmd\u0027 would fix that, but \u0027srcs\u0027 is also currently restricted to the current directory.",
+      "revId": "f68acaa243dbc2b67c5bfe1d60eef416c2782d9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
