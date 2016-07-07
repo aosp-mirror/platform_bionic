@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd8f92ab_8155dcd8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 21
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-07T17:19:42Z",
+      "side": 1,
+      "message": "New syntax for no_sanitize in soong, landed in a separate change.",
+      "revId": "20c53dc747ca678a5fce0685109a53af0dc26619",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
