@@ -1,3 +1,6 @@
+Bionic Kernel Header Files
+==========================
+
 Bionic comes with a processed set of all of the uapi Linux kernel headers that
 can safely be included by userland applications and libraries.
 
@@ -43,19 +46,34 @@ The tools to get/parse the headers:
     Automatically update all clean headers from the content of
     'external/kernel-headers/original'.
 
-
-HOW TO UPDATE THE HEADERS WHEN NEEDED:
-======================================
+How To Update The Headers
+=========================
 
 IMPORTANT IMPORTANT:
 
-  WHEN UPDATING THE HEADERS, ALWAYS CHECK THAT THE NEW CLEAN HEADERS DO
-  NOT BREAK THE KERNEL <-> USER ABI, FOR EXAMPLE BY CHANGING THE SIZE
-  OF A GIVEN TYPE. THIS TASK CANNOT BE EASILY AUTOMATED AT THE MOMENT
+WHEN UPDATING THE HEADERS, ALWAYS CHECK THAT THE NEW CLEAN HEADERS DO
+NOT BREAK THE KERNEL <-> USER ABI, FOR EXAMPLE BY CHANGING THE SIZE
+OF A GIVEN TYPE. THIS TASK CANNOT BE EASILY AUTOMATED AT THE MOMENT.
 
-Grab the latest headers from the android kernel by running this command:
+Download the Linux kernel source code:
 
-  bionic/libc/kernel/tools/generate_uapi_headers.sh --download-kernel
+  > mkdir kernel_src
+  > cd kernel_src
+  kernel_src> git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+
+Then checkout the stable tag for the new kernel headers to import:
+
+  kernel_src> cd linux-stable
+  kernel_src/linux-stable> git checkout tags/vXXX
+
+Before running the command to import the headers, make sure that you have
+done a lunch TARGET. The script uses a variable set by the lunch command
+to determine which directory to use as the destination directory.
+
+After running lunch, run this command to import the headers into the android
+source tree:
+
+  bionic/libc/kernel/tools/generate_uapi_headers.sh --use-kernel-dir kernel_src
 
 Next, run this command to copy the parsed files to bionic/libc/kernel/uapi:
 
