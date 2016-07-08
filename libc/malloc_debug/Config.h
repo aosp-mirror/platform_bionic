@@ -31,6 +31,8 @@
 
 #include <stdint.h>
 
+#include <string>
+
 constexpr uint64_t FRONT_GUARD = 0x1;
 constexpr uint64_t REAR_GUARD = 0x2;
 constexpr uint64_t BACKTRACE = 0x4;
@@ -40,6 +42,7 @@ constexpr uint64_t EXPAND_ALLOC = 0x20;
 constexpr uint64_t FREE_TRACK = 0x40;
 constexpr uint64_t TRACK_ALLOCS = 0x80;
 constexpr uint64_t LEAK_TRACK = 0x100;
+constexpr uint64_t RECORD_ALLOCS = 0x200;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
@@ -70,6 +73,10 @@ struct Config {
 
   size_t free_track_allocations = 0;
   size_t free_track_backtrace_num_frames = 0;
+
+  int record_allocs_signal = 0;
+  size_t record_allocs_num_entries = 0;
+  std::string record_allocs_file;
 
   uint64_t options = 0;
   uint8_t fill_alloc_value;

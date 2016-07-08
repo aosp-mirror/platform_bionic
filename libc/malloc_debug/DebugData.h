@@ -41,6 +41,7 @@
 #include "FreeTrackData.h"
 #include "GuardData.h"
 #include "malloc_debug.h"
+#include "RecordData.h"
 #include "TrackData.h"
 
 class DebugData {
@@ -91,6 +92,7 @@ class DebugData {
   std::unique_ptr<FrontGuardData> front_guard;
   std::unique_ptr<RearGuardData> rear_guard;
   std::unique_ptr<FreeTrackData> free_track;
+  std::unique_ptr<RecordData> record;
 
  private:
   size_t extra_bytes_ = 0;
