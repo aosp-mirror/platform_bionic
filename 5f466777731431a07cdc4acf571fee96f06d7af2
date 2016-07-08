@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a142433_e8a4db1d",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-08T19:32:08Z",
+      "side": 1,
+      "message": "Since this is user input, I wanted to allow for spaces in string. Something like:\n\noption \u003d  10\n\nWould still work.",
+      "parentUuid": "c07f4320_6f93ad69",
+      "range": {
+        "startLine": 217,
+        "startChar": 24,
+        "endLine": 217,
+        "endChar": 56
+      },
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c07f4320_8fa4d9b5",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5a142433_c8b1175a",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-08T19:32:08Z",
+      "side": 1,
+      "message": "Same as above.",
+      "parentUuid": "c07f4320_8fa4d9b5",
+      "range": {
+        "startLine": 224,
+        "startChar": 29,
+        "endLine": 224,
+        "endChar": 42
+      },
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0bfaf31_83afbe90",
         "filename": "libc/malloc_debug/RecordData.h",
         "patchSetId": 7
@@ -59,6 +107,24 @@
       "writtenOn": "2016-06-29T23:56:27Z",
       "side": 1,
       "message": "why not std::mutex?",
+      "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a142433_6899ebe7",
+        "filename": "libc/malloc_debug/RecordData.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-08T19:32:08Z",
+      "side": 1,
+      "message": "Switched.",
+      "parentUuid": "a0bfaf31_83afbe90",
       "revId": "5f466777731431a07cdc4acf571fee96f06d7af2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
