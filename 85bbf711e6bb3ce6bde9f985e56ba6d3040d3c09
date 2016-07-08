@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a142433_ce4c7fb8",
+        "filename": "libc/kernel/README.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-08T22:27:00Z",
+      "side": 1,
+      "message": "T",
+      "range": {
+        "startLine": 56,
+        "startChar": 17,
+        "endLine": 56,
+        "endChar": 18
+      },
+      "revId": "85bbf711e6bb3ce6bde9f985e56ba6d3040d3c09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
