@@ -1,0 +1,443 @@
+//
+// Copyright (C) 2012 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+cc_defaults {
+    name: "bionic_testlib_defaults",
+    host_supported: true,
+    sanitize: {
+        never: true,
+    },
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library to test gnu-styled hash
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libgnu-hash-table-library",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,--hash-style=gnu"],
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library to test sysv-styled hash
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libsysv-hash-table-library",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,--hash-style=sysv"],
+}
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - with GNU RELRO program header
+// -----------------------------------------------------------------------------
+// In Android.mk to support creating symlinks
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - without GNU RELRO program header
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libdlext_test_norelro",
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,-z,norelro"],
+    shared_libs = ["libtest_simple"],
+}
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - different name non-default location
+// -----------------------------------------------------------------------------
+// In Android.mk to support installing to /data
+
+// -----------------------------------------------------------------------------
+// Libraries used by dlext tests for open from a zip-file
+// -----------------------------------------------------------------------------
+// In Android.mk to support installing to /data
+
+// ----------------------------------------------------------------------------
+// Library with soname which does not match filename
+// ----------------------------------------------------------------------------
+// In Android.mk to support zipped and aligned tests
+
+// -----------------------------------------------------------------------------
+// Library used by dlext tests - zipped and aligned
+// -----------------------------------------------------------------------------
+// In Android.mk to support zipped and aligned tests
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn tests
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_simple",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_simple.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_nodelete_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_nodelete_1.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_nodelete_2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_nodelete_2.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library used by dlfcn nodelete tests
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_nodelete_dt_flags_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_nodelete_dt_flags_1.cpp"],
+    ldflags: ["-Wl,-z,nodelete"],
+}
+
+// -----------------------------------------------------------------------------
+// Build test helper libraries for linker namespaces
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.linker_namespaces.mk
+
+// -----------------------------------------------------------------------------
+// Build DT_RUNPATH test helper libraries
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.dt_runpath.mk
+
+// -----------------------------------------------------------------------------
+// Build library with two parents
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_dlsym.so with its dependencies.
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_siblings.so with its dependencies.
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_check_order_root.so with its dependencies.
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
+
+// -----------------------------------------------------------------------------
+// Build libtest_versioned_lib.so with its dependencies.
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.versioned_lib.mk
+
+// -----------------------------------------------------------------------------
+// Build libraries needed by pthread_atfork tests
+// -----------------------------------------------------------------------------
+// include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
+
+// -----------------------------------------------------------------------------
+// Library with dependency loop used by dlfcn tests
+//
+// libtest_with_dependency_loop -> a -> b -> c -> a
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_with_dependency_loop",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_loopy_root.cpp"],
+    shared_libs: ["libtest_with_dependency_loop_a"],
+}
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_a.so
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_with_dependency_loop_a",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_loopy_a.cpp"],
+    shared_libs: ["libtest_with_dependency_loop_b_tmp"],
+}
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_b.so
+//
+// this is temporary placeholder - will be removed
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_with_dependency_loop_b_tmp",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_loopy_invalid.cpp"],
+    ldflags: ["-Wl,-soname=libtest_with_dependency_loop_b.so"],
+}
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_b.so
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_with_dependency_loop_b",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_loopy_b.cpp"],
+    shared_libs: ["libtest_with_dependency_loop_c"],
+}
+
+// -----------------------------------------------------------------------------
+// libtest_with_dependency_loop_c.so
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_with_dependency_loop_c",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_loopy_c.cpp"],
+    shared_libs: ["libtest_with_dependency_loop_a"],
+}
+
+// -----------------------------------------------------------------------------
+// libtest_relo_check_dt_needed_order.so
+// |
+// +-> libtest_relo_check_dt_needed_order_1.so
+// |
+// +-> libtest_relo_check_dt_needed_order_2.so
+// -----------------------------------------------------------------------------
+
+
+cc_library {
+    name: "libtest_relo_check_dt_needed_order",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_relo_check_dt_needed_order.cpp"],
+    shared_libs: [
+        "libtest_relo_check_dt_needed_order_1",
+        "libtest_relo_check_dt_needed_order_2",
+    ],
+}
+
+cc_library {
+    name: "libtest_relo_check_dt_needed_order_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_relo_check_dt_needed_order_1.cpp"],
+}
+
+cc_library {
+    name: "libtest_relo_check_dt_needed_order_2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_relo_check_dt_needed_order_2.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with dependency used by dlfcn tests
+// -----------------------------------------------------------------------------
+// In Android.mk to support dependency on libdlext_test
+
+// -----------------------------------------------------------------------------
+// Library used by ifunc tests
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_ifunc",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_ifunc.c"],
+
+    // TODO(dimitry): clang does not support ifunc attribute
+    clang: false,
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library used by atexit tests
+// -----------------------------------------------------------------------------
+
+cc_library {
+    name: "libtest_atexit",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["atexit_testlib.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// This library is used by dl_load test to check symbol preempting
+// by main executable
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libdl_preempt_test_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_preempt_library_1.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// This library is used by dl_load test to check symbol preempting
+// by libdl_preempt_test_1.so
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libdl_preempt_test_2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_preempt_library_2.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with DF_1_GLOBAL
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libdl_test_df_1_global",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_df_1_global.cpp"],
+    ldflags: ["-Wl,-z,global"],
+
+    target: {
+        host: {
+            // TODO (dimitry): host ld.gold does not yet support -z global
+            // remove this line once it is updated.
+            ldflags: ["-fuse-ld=bfd"],
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library using symbol from libdl_test_df_1_global
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlsym_df_1_global",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_df_1_use_global.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with weak function
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlsym_weak_func",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlsym_weak_function.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library to check RTLD_LOCAL with dlsym in 'this'
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlsym_from_this",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlsym_from_this_symbol.cpp"],
+    shared_libs: ["libtest_dlsym_from_this_child"],
+
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlsym_from_this_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlsym_from_this_functions.cpp"],
+    shared_libs: ["libtest_dlsym_from_this_grandchild"],
+}
+
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlsym_from_this_grandchild",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlsym_from_this_symbol2.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Empty library
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_empty",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with weak undefined function
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlopen_weak_undefined_func",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_weak_undefined.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with constructor that calls dlopen() b/7941716
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlopen_from_ctor",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_dlopen_from_ctor.cpp"],
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library that depends on the library with constructor that calls dlopen() b/7941716
+// -----------------------------------------------------------------------------
+cc_library {
+    name: "libtest_dlopen_from_ctor_main",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    shared_libs: ["libtest_dlopen_from_ctor"],
+}
+
+// -----------------------------------------------------------------------------
+// Tool to use to align the shared libraries in a zip file.
+// -----------------------------------------------------------------------------
+cc_binary_host {
+    name: "bionic_tests_zipalign",
+    srcs: ["bionic_tests_zipalign.cpp"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+
+    static_libs: [
+        "libziparchive",
+        "liblog",
+        "libbase",
+        "libz",
+        "libutils",
+    ],
+
+    target: {
+        windows: {
+            enabled: true,
+        },
+    },
+}
