@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_35ae82b1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2270,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-12T19:56:57Z",
+      "side": 1,
+      "message": "Nope this is going to be a separate line:\n\nExample:\n07-12 18:21:53.913   423   469 D linker  : dlopen(name\u003d\"liblbs_core.so\", flags\u003d2, extinfo\u003d(null), caller\u003d\"/system/lib64/libloc_core.so\", caller_ns\u003d(default)@0x7fb0334228) ...\n07-12 18:21:53.913   423   469 D linker  : ... dlopen failed: library \"liblbs_core.so\" not found",
+      "parentUuid": "3ad6900d_95474e0e",
+      "range": {
+        "startLine": 2270,
+        "startChar": 24,
+        "endLine": 2270,
+        "endChar": 27
+      },
+      "revId": "1734d6ee35afd7f919c1dce49266b3e8cff6f15e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_b54b7217",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
