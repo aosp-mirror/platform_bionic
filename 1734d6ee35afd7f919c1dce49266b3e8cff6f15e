@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3ad6900d_e7bf110c",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-07-12T21:13:44Z",
+      "side": 1,
+      "message": "It seems ResetState() is called for every dlopen, dlsym and at linker_init(). why not have a flag in g_linker_logger to init flag_ only once? Is there any special consideration?",
+      "range": {
+        "startLine": 71,
+        "startChar": 2,
+        "endLine": 71,
+        "endChar": 31
+      },
+      "revId": "1734d6ee35afd7f919c1dce49266b3e8cff6f15e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_95474e0e",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
