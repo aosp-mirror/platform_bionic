@@ -61,6 +61,7 @@
 #include "linker_utils.h"
 
 #include "android-base/strings.h"
+#include "android-base/stringprintf.h"
 #include "debuggerd/client.h"
 #include "ziparchive/zip_archive.h"
 
@@ -192,9 +193,9 @@ static std::vector<soinfo*> g_ld_preloads;
 static bool g_public_namespace_initialized;
 static soinfo::soinfo_list_t g_public_namespace;
 
-__LIBC_HIDDEN__ int g_ld_debug_verbosity;
-
-__LIBC_HIDDEN__ abort_msg_t* g_abort_message = nullptr; // For debuggerd.
+int g_ld_debug_verbosity;
+abort_msg_t* g_abort_message = nullptr; // For debuggerd.
+const char* g_argv0 = nullptr;
 
 static std::string dirname(const char *path) {
   const char* last_slash = strrchr(path, '/');
@@ -2226,16 +2227,53 @@ void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   parse_LD_LIBRARY_PATH(ld_library_path);
 }
 
+static std::string android_dlextinfo_to_string(const android_dlextinfo* info) {
+  if (info == nullptr) {
+    return "(null)";
+  }
+
+  return android::base::StringPrintf("[flags=0x%" PRIx64 ","
+                                     " reserved_addr=%p,"
+                                     " reserved_size=0x%zx,"
+                                     " relro_fd=%d,"
+                                     " library_fd=%d,"
+                                     " library_fd_offset=0x%" PRIx64 ","
+                                     " library_namespace=%s@%p]",
+                                     info->flags,
+                                     info->reserved_addr,
+                                     info->reserved_size,
+                                     info->relro_fd,
+                                     info->library_fd,
+                                     info->library_fd_offset,
+                                     (info->flags & ANDROID_DLEXT_USE_NAMESPACE) != 0 ?
+                                        (info->library_namespace != nullptr ?
+                                          info->library_namespace->get_name() : "(null)") : "(n/a)",
+                                     (info->flags & ANDROID_DLEXT_USE_NAMESPACE) != 0 ?
+                                        info->library_namespace : nullptr);
+}
+
 void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
                   void* caller_addr) {
   soinfo* const caller = find_containing_library(caller_addr);
+  android_namespace_t* ns = get_caller_namespace(caller);
+
+  LD_LOG(kLogDlopen,
+         "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p) ...",
+         name,
+         flags,
+         android_dlextinfo_to_string(extinfo).c_str(),
+         caller == nullptr ? "(null)" : caller->get_realpath(),
+         ns == nullptr ? "(null)" : ns->get_name(),
+         ns);
+
+  auto failure_guard = make_scope_guard([&]() {
+    LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer());
+  });
 
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
     return nullptr;
   }
-
-  android_namespace_t* ns = get_caller_namespace(caller);
 
   if (extinfo != nullptr) {
     if ((extinfo->flags & ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0) {
@@ -2269,8 +2307,13 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, name, flags, extinfo, caller);
   if (si != nullptr) {
+    failure_guard.disable();
     si->call_constructors();
-    return si->to_handle();
+    void* handle = si->to_handle();
+    LD_LOG(kLogDlopen,
+           "... dlopen successful: realpath=\"%s\", soname=\"%s\", handle=%p",
+           si->get_realpath(), si->get_soname(), handle);
+    return handle;
   }
 
   return nullptr;
@@ -4070,6 +4113,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   };
   debuggerd_init(&callbacks);
 
+  g_linker_logger.ResetState();
+
   // Get a few environment variables.
   const char* LD_DEBUG = getenv("LD_DEBUG");
   if (LD_DEBUG != nullptr) {
@@ -4143,7 +4188,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
     __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
-                 args.argv[0]);
+                 g_argv0);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -4155,7 +4200,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   init_default_namespace();
 
   if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
   }
 
   // add somain to global group
@@ -4186,10 +4231,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       !find_libraries(&g_default_namespace, si, needed_library_names, needed_libraries_count,
                       nullptr, &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
                       /* add_as_children */ true)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
     }
     si->increment_ref_count();
   }
@@ -4212,12 +4257,12 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
 #if TIMING
   gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", args.argv[0], (int) (
+  PRINT("LINKER TIME: %s: %d microseconds", g_argv0, (int) (
            (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
            (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", args.argv[0],
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv0,
          linker_stats.count[kRelocAbsolute],
          linker_stats.count[kRelocRelative],
          linker_stats.count[kRelocCopy],
@@ -4243,7 +4288,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
         }
       }
     }
-    PRINT("PAGES MODIFIED: %s: %d (%dKB)", args.argv[0], count, count * 4);
+    PRINT("PAGES MODIFIED: %s: %d (%dKB)", g_argv0, count, count * 4);
   }
 #endif
 
@@ -4280,8 +4325,8 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
-static void __linker_cannot_link(KernelArgumentBlock& args) {
-  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", args.argv[0], linker_get_error_buffer());
+static void __linker_cannot_link() {
+  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
 }
 
 /*
@@ -4295,6 +4340,8 @@ static void __linker_cannot_link(KernelArgumentBlock& args) {
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
+
+  g_argv0 = args.argv[0];
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
@@ -4312,7 +4359,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
     __libc_format_fd(STDOUT_FILENO,
                      "This is %s, the helper program for shared library executables.\n",
-                     args.argv[0]);
+                     g_argv0);
     exit(0);
   }
 
@@ -4325,7 +4372,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_so.set_linker_flag();
 
   // Prelink the linker so we can access linker globals.
-  if (!linker_so.prelink_image()) __linker_cannot_link(args);
+  if (!linker_so.prelink_image()) __linker_cannot_link();
 
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because
@@ -4333,7 +4380,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args);
+  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link();
 
 #if defined(__i386__)
   // On x86, we can't make system calls before this point.
@@ -4349,7 +4396,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // We didn't protect the linker's RELRO pages in link_image because we
   // couldn't make system calls on x86 at that point, but we can now...
-  if (!linker_so.protect_relro()) __linker_cannot_link(args);
+  if (!linker_so.protect_relro()) __linker_cannot_link();
 
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
