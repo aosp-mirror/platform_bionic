@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad6900d_270bb91e",
+        "filename": "linker/linker_logger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-07-12T21:13:44Z",
+      "side": 1,
+      "message": "as in http://en.cppreference.com/w/cpp/language/value_initialization, just {} is enough.",
+      "range": {
+        "startLine": 50,
+        "startChar": 32,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "066158fc5092e202d8eb619b241bb3d2f851a101",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
