@@ -40,6 +40,7 @@
 #include "private/bionic_page.h"
 #include "private/libc_logging.h"
 #include "linked_list.h"
+#include "linker_logger.h"
 
 #include <string>
 #include <vector>
@@ -48,7 +49,7 @@
     do { \
       __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
       /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
-      DEBUG("%s\n", linker_get_error_buffer()); \
+      LD_LOG(kLogErrors, "%s\n", linker_get_error_buffer()); \
     } while (false)
 
 #define DL_WARN(fmt, x...) \
