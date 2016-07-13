@@ -41,7 +41,7 @@
 LinkerLogger g_linker_logger;
 
 static const char* kSystemLdDebugProperty = "debug.ld.all";
-static const std::string kLdDebugPropertyPrefix = "debug.ld.app.";
+static const char* kLdDebugPropertyPrefix = "debug.ld.app.";
 
 static const char* kOptionErrors = "dlerror";
 static const char* kOptionDlopen = "dlopen";
