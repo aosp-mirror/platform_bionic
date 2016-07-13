@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad6900d_db5e64fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-13T04:56:56Z",
+      "side": 1,
+      "message": "i think this is one reason why we *don\u0027t* want to do anything like this. code that isn\u0027t on the system image shouldn\u0027t hard-code details about how our TLS works.",
+      "revId": "e1f3473c28e48f555d5312fdcf2e8c585244239f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
