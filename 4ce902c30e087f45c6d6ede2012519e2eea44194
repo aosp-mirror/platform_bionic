@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad6900d_e732b1dd",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-13T23:11:56Z",
+      "side": 1,
+      "message": "Do you know if this will trigger a redefinition warning? I can\u0027t remember if you get the warning if you redefine something exactly the same way.",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "4ce902c30e087f45c6d6ede2012519e2eea44194",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
