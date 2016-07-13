@@ -15,6 +15,7 @@
  */
 
 #include "linker_allocator.h"
+#include "linker_debug.h"
 #include "linker.h"
 
 #include <algorithm>
@@ -73,6 +74,8 @@ LinkerSmallObjectAllocator::LinkerSmallObjectAllocator()
     : type_(0), block_size_(0), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
 
 void* LinkerSmallObjectAllocator::alloc() {
+  CHECK(block_size_ != 0);
+
   if (free_blocks_list_ == nullptr) {
     alloc_page();
   }
