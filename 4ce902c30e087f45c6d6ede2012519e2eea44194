@@ -22,6 +22,30 @@
       "revId": "4ce902c30e087f45c6d6ede2012519e2eea44194",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_d551ccf8",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-13T23:13:05Z",
+      "side": 1,
+      "message": "no, as long as it\u0027s the same you\u0027re fine. (which is why this doesn\u0027t break the other three builds --- i made it unconditional specifically to check that.)",
+      "parentUuid": "3ad6900d_e732b1dd",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "4ce902c30e087f45c6d6ede2012519e2eea44194",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
