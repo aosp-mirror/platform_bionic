@@ -252,7 +252,12 @@ bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size) {
   off64_t range_start;
   off64_t range_end;
 
-  return safe_add(&range_start, file_offset_, offset) &&
+  // Only header can be located at the 0 offset... This function called to
+  // check DYNSYM and DYNAMIC sections and phdr/shdr - none of them can be
+  // and 0 offset.
+
+  return offset > 0 &&
+         safe_add(&range_start, file_offset_, offset) &&
          safe_add(&range_end, range_start, size) &&
          range_start < file_size_ &&
          range_end <= file_size_;
@@ -321,6 +326,35 @@ bool ElfReader::ReadDynamicSection() {
 
   if (dynamic_shdr == nullptr) {
     DL_ERR("\"%s\" .dynamic section header was not found", name_.c_str());
+    return false;
+  }
+
+  // Make sure dynamic_shdr offset and size matches PT_DYNAMIC phdr
+  size_t pt_dynamic_offset = 0;
+  size_t pt_dynamic_filesz = 0;
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
+    if (phdr->p_type == PT_DYNAMIC) {
+      pt_dynamic_offset = phdr->p_offset;
+      pt_dynamic_filesz = phdr->p_filesz;
+    }
+  }
+
+  if (pt_dynamic_offset != dynamic_shdr->sh_offset) {
+    DL_ERR("\"%s\" .dynamic section has invalid offset: 0x%zx, "
+           "expected to match PT_DYNAMIC offset: 0x%zx",
+           name_.c_str(),
+           static_cast<size_t>(dynamic_shdr->sh_offset),
+           pt_dynamic_offset);
+    return false;
+  }
+
+  if (pt_dynamic_filesz != dynamic_shdr->sh_size) {
+    DL_ERR("\"%s\" .dynamic section has invalid size: 0x%zx, "
+           "expected to match PT_DYNAMIC filesz: 0x%zx",
+           name_.c_str(),
+           static_cast<size_t>(dynamic_shdr->sh_size),
+           pt_dynamic_filesz);
     return false;
   }
 
