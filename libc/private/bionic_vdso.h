@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _PRIVATE_BIONIC_VDSO_H
 #define _PRIVATE_BIONIC_VDSO_H
 
@@ -33,7 +34,7 @@
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
-#elif defined(__x86_64__) || defined(__i386__)
+#elif defined(__arm__) || defined(__i386__) || defined(__x86_64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
 #endif
