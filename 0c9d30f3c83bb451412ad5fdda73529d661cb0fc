@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad6900d_fb9081b4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-14T01:15:22Z",
+      "side": 1,
+      "message": "\"at offset 0\"?",
+      "revId": "0c9d30f3c83bb451412ad5fdda73529d661cb0fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
