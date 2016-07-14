@@ -15,63 +15,6 @@
 #
 
 ifeq ($(HOST_OS),linux)
-common_cppflags := -Wall -Wextra -Wunused -Werror -Wold-style-cast
-
-LOCAL_PATH := $(call my-dir)
-
-include $(CLEAR_VARS)
-
-LOCAL_CPP_EXTENSION := .cc
-
-LOCAL_SRC_FILES := \
-  src/debug.cc \
-  src/delta_encoder.cc \
-  src/elf_file.cc \
-  src/packer.cc \
-  src/sleb128.cc \
-
-LOCAL_STATIC_LIBRARIES := libelf libz
-LOCAL_MODULE := lib_relocation_packer
-
-LOCAL_CPPFLAGS := $(common_cppflags)
-
-include $(BUILD_HOST_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-
-LOCAL_CPP_EXTENSION := .cc
-
-LOCAL_SRC_FILES := src/main.cc
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz libbase
-
-# Statically linking libc++ to make it work from prebuilts
-LOCAL_CXX_STL := libc++_static
-
-LOCAL_MODULE := relocation_packer
-
-LOCAL_CPPFLAGS := $(common_cppflags)
-
-include $(BUILD_HOST_EXECUTABLE)
-
-include $(CLEAR_VARS)
-
-LOCAL_CPP_EXTENSION := .cc
-
-LOCAL_SRC_FILES := \
-  src/debug_unittest.cc \
-  src/delta_encoder_unittest.cc \
-  src/elf_file_unittest.cc \
-  src/sleb128_unittest.cc \
-  src/packer_unittest.cc \
-
-LOCAL_STATIC_LIBRARIES := lib_relocation_packer libelf libz
-
-LOCAL_CPPFLAGS := $(common_cppflags)
-
-LOCAL_MODULE := relocation_packer_unit_tests
-LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
-
-include $(BUILD_HOST_NATIVE_TEST)
 
 # $(1) library name
 define copy-test-library
