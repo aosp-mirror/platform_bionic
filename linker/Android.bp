@@ -1,0 +1,144 @@
+cc_library_static {
+    name: "liblinker_malloc",
+    clang: true,
+
+    srcs: [
+        "linker_allocator.cpp",
+        "linker_memory.cpp",
+    ],
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+}
+
+cc_binary {
+    clang: true,
+
+    srcs: [
+        "dlfcn.cpp",
+        "linker.cpp",
+        "linker_block_allocator.cpp",
+        "linker_gdb_support.cpp",
+        "linker_libc_support.c",
+        "linker_logger.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_utils.cpp",
+        "rt.cpp",
+    ],
+
+    arch: {
+        arm: {
+            srcs: ["arch/arm/begin.S"],
+
+            cflags: ["-D__work_around_b_24465209__"],
+        },
+        arm64: {
+            srcs: ["arch/arm64/begin.S"],
+        },
+        x86: {
+            srcs: ["arch/x86/begin.c"],
+
+            cflags: ["-D__work_around_b_24465209__"],
+        },
+        x86_64: {
+            srcs: ["arch/x86_64/begin.S"],
+        },
+        mips: {
+            srcs: [
+                "arch/mips/begin.S",
+                "linker_mips.cpp",
+            ],
+        },
+        mips64: {
+            srcs: [
+                "arch/mips64/begin.S",
+                "linker_mips.cpp",
+            ],
+        },
+    },
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
+    // -shared is used to overwrite the -Bstatic and -static
+    // flags triggered by LOCAL_FORCE_STATIC_EXECUTABLE.
+    // This dynamic linker is actually a shared object linked with static libraries.
+    ldflags: [
+        "-shared",
+        "-Wl,-Bsymbolic",
+        "-Wl,--exclude-libs,ALL",
+    ],
+
+    cflags: [
+        "-fno-stack-protector",
+        "-Wstrict-overflow=5",
+        "-fvisibility=hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // TODO: split out the asflags.
+    asflags: [
+        "-fno-stack-protector",
+        "-Wstrict-overflow=5",
+        "-fvisibility=hidden",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    conlyflags: ["-std=gnu99"],
+
+    cppflags: ["-Wold-style-cast"],
+
+    // we don't want crtbegin.o (because we have begin.o), so unset it
+    // just for this module
+    nocrt: true,
+
+    static_libs: [
+        "libc_nomalloc",
+        "libziparchive",
+        "libutils",
+        "libbase",
+        "libz",
+        "liblog",
+        "libdebuggerd_client",
+
+        // Important: The liblinker_malloc should be the last library in the list
+        // to overwrite any other malloc implementations by other static libraries.
+        "liblinker_malloc"
+    ],
+    static_executable: true,
+
+    name: "linker",
+    multilib: {
+        lib32: {
+            symlinks: ["linker_asan"],
+        },
+        lib64: {
+            suffix: "64",
+            symlinks: ["linker_asan64"],
+       },
+    },
+    target: {
+        android64: {
+            cflags: ["-DTARGET_IS_64_BIT"],
+        },
+    },
+    compile_multilib: "both",
+
+    // Leave the symbols in the shared library so that stack unwinders can produce
+    // meaningful name resolution.
+    strip: {
+        keep_symbols: true,
+    },
+
+    // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
+    // looking up symbols in the linker by mistake.
+    prefix_symbols: "__dl_",
+}
