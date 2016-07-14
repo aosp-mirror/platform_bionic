@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_2c6391f4",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_81f62665",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_a1eb2a7d",
         "filename": "benchmarks/Android.bp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "just remove?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_4c60d5e5",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_a1eb2a7d",
       "range": {
         "startLine": 26,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_6c3e79d0",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Removed, it is no longer necessary now that we install in nativetests[64]",
+      "parentUuid": "3ad6900d_c1f02e6a",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 17
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_e104524b",
         "filename": "benchmarks/Android.bp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "This would be better applied around line 84",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 35
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_8c43bd53",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_e104524b",
       "range": {
         "startLine": 64,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_cc4dc57e",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "3ad6900d_0102163c",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 71,
+        "endChar": 16
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_61f1226e",
         "filename": "benchmarks/Android.bp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "this should move to line 67, and change to cc_benchmark_host",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 40
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_0c2fad98",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "cc_benchmark_host is supported, switched to using it.",
+      "parentUuid": "3ad6900d_61f1226e",
       "range": {
         "startLine": 83,
         "startChar": 4,
@@ -157,6 +301,24 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_2c3c71cf",
+        "filename": "benchmarks/run-on-host.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_815aa63b",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_619a0230",
         "filename": "tests/Android.bp",
         "patchSetId": 3
@@ -168,6 +330,30 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "This header doesn\u0027t really apply anymore (not that it really did before)",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 80
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_4c39b5dd",
+        "filename": "tests/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_619a0230",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -197,6 +383,24 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_8c5add3b",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_21b1daa0",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_41aede42",
         "filename": "tests/libs/Android.bp",
         "patchSetId": 3
@@ -214,6 +418,24 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_ac4fa17d",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "This one builds for mips, but fixed the sanitize: never",
+      "parentUuid": "3ad6900d_41aede42",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_e17ff28c",
         "filename": "tests/libs/Android.bp",
         "patchSetId": 3
@@ -225,6 +447,30 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "this only applied to the host version",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 17
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_cc54e512",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "It had a separate line for disabling clang on the device too",
+      "parentUuid": "3ad6900d_e17ff28c",
       "range": {
         "startLine": 248,
         "startChar": 4,
@@ -260,6 +506,30 @@
     },
     {
       "key": {
+        "uuid": "3ad6900d_0c66cd04",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "It was commented out in the Android.bp file due to the libziparchive dependency, but that is fixed now.",
+      "parentUuid": "3ad6900d_017db694",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 32
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ad6900d_4187bec2",
         "filename": "tests/run-on-host.sh",
         "patchSetId": 3
@@ -271,6 +541,24 @@
       "writtenOn": "2016-07-14T06:24:05Z",
       "side": 1,
       "message": "bash -e?",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_6c2759be",
+        "filename": "tests/run-on-host.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-07-14T17:32:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ad6900d_4187bec2",
       "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
