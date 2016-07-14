@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+LOCAL_PATH := $(call my-dir)
+
 ifeq ($(HOST_OS),linux)
 
 # $(1) library name
