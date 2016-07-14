@@ -1,0 +1,279 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad6900d_81f62665",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "cc_defaults for these?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_a1eb2a7d",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "just remove?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_c1f02e6a",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "suffix?",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 17
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_e104524b",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "This would be better applied around line 84",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 35
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_0102163c",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "suffix",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 71,
+        "endChar": 16
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_61f1226e",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "this should move to line 67, and change to cc_benchmark_host",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 40
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_815aa63b",
+        "filename": "benchmarks/run-on-host.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "bash -e?",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_619a0230",
+        "filename": "tests/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "This header doesn\u0027t really apply anymore (not that it really did before)",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 80
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_21b1daa0",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "This library is disabled for mips/mips64 in the make version\n\nAnd it uses Android.build.mk, which I think at least implies sanitize: never",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_41aede42",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "Same as above",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_e17ff28c",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "this only applied to the host version",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 17
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_017db694",
+        "filename": "tests/libs/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "This is in the Android.bp file",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 32
+      },
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ad6900d_4187bec2",
+        "filename": "tests/run-on-host.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-07-14T06:24:05Z",
+      "side": 1,
+      "message": "bash -e?",
+      "revId": "b50f9b2214150fd981c478403961ca5edf7adb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
