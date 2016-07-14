@@ -254,7 +254,7 @@ bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size) {
 
   // Only header can be located at the 0 offset... This function called to
   // check DYNSYM and DYNAMIC sections and phdr/shdr - none of them can be
-  // and 0 offset.
+  // at offset 0.
 
   return offset > 0 &&
          safe_add(&range_start, file_offset_, offset) &&
