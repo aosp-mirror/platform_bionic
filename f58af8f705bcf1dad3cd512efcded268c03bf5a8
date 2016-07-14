@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a8f0c7e_8f7ff5bf",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-14T20:24:46Z",
+      "side": 1,
+      "message": "Newbie mistake. We must not use strtok because of the empty fields issue :-( add a local tokenizer.",
+      "range": {
+        "startLine": 361,
+        "startChar": 33,
+        "endLine": 361,
+        "endChar": 41
+      },
+      "revId": "f58af8f705bcf1dad3cd512efcded268c03bf5a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97daeaa7_32fbb688",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 4
