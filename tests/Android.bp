@@ -1,0 +1,411 @@
+//
+// Copyright (C) 2012 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+cc_defaults {
+    name: "bionic_tests_defaults",
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
+    cflags: [
+        "-fstack-protector-all",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+        "-fno-builtin",
+
+        // We want to test deprecated API too.
+        "-Wno-deprecated-declarations",
+
+        // For glibc.
+        "-D__STDC_LIMIT_MACROS",
+    ],
+    stl: "libc++",
+    sanitize: {
+        never: true,
+    },
+}
+
+// -----------------------------------------------------------------------------
+// All standard tests.
+// -----------------------------------------------------------------------------
+
+cc_test_library {
+    name: "libBionicStandardTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "arpa_inet_test.cpp",
+        "buffer_tests.cpp",
+        "bug_26110743_test.cpp",
+        "complex_test.cpp",
+        "ctype_test.cpp",
+        "dirent_test.cpp",
+        "error_test.cpp",
+        "eventfd_test.cpp",
+        "fcntl_test.cpp",
+        "fenv_test.cpp",
+        "ftw_test.cpp",
+        "getauxval_test.cpp",
+        "getcwd_test.cpp",
+        "grp_pwd_test.cpp",
+        "ifaddrs_test.cpp",
+        "inttypes_test.cpp",
+        "libc_logging_test.cpp",
+        "libgen_basename_test.cpp",
+        "libgen_test.cpp",
+        "locale_test.cpp",
+        "malloc_test.cpp",
+        "math_test.cpp",
+        "mntent_test.cpp",
+        "netdb_test.cpp",
+        "net_if_test.cpp",
+        "netinet_ether_test.cpp",
+        "netinet_in_test.cpp",
+        "netinet_udp_test.cpp",
+        "nl_types_test.cpp",
+        "pthread_test.cpp",
+        "pty_test.cpp",
+        "regex_test.cpp",
+        "resolv_test.cpp",
+        "sched_test.cpp",
+        "search_test.cpp",
+        "semaphore_test.cpp",
+        "setjmp_test.cpp",
+        "signal_test.cpp",
+        "stack_protector_test.cpp",
+        "stack_protector_test_helper.cpp",
+        "stack_unwinding_test.cpp",
+        "stdatomic_test.cpp",
+        "stdint_test.cpp",
+        "stdio_nofortify_test.cpp",
+        "stdio_test.cpp",
+        "stdio_ext_test.cpp",
+        "stdlib_test.cpp",
+        "string_nofortify_test.cpp",
+        "string_test.cpp",
+        "string_posix_strerror_r_test.cpp",
+        "strings_nofortify_test.cpp",
+        "strings_test.cpp",
+        "sstream_test.cpp",
+        "sys_epoll_test.cpp",
+        "sys_mman_test.cpp",
+        "sys_personality_test.cpp",
+        "sys_prctl_test.cpp",
+        "sys_procfs_test.cpp",
+        "sys_ptrace_test.cpp",
+        "sys_quota_test.cpp",
+        "sys_resource_test.cpp",
+        "sys_select_test.cpp",
+        "sys_sendfile_test.cpp",
+        "sys_socket_test.cpp",
+        "sys_stat_test.cpp",
+        "sys_statvfs_test.cpp",
+        "sys_syscall_test.cpp",
+        "sys_sysinfo_test.cpp",
+        "sys_sysmacros_test.cpp",
+        "sys_time_test.cpp",
+        "sys_timex_test.cpp",
+        "sys_types_test.cpp",
+        "sys_uio_test.cpp",
+        "sys_vfs_test.cpp",
+        "sys_xattr_test.cpp",
+        "system_properties_test.cpp",
+        "time_test.cpp",
+        "uchar_test.cpp",
+        "uniqueptr_test.cpp",
+        "unistd_nofortify_test.cpp",
+        "unistd_test.cpp",
+        "utmp_test.cpp",
+        "wchar_test.cpp",
+        "wctype_test.cpp",
+    ],
+
+    include_dirs: [
+        "bionic/libc",
+        "external/tinyxml2",
+    ],
+
+    static_libs: ["libbase"],
+    host_ldlibs: ["-lrt"],
+}
+
+// -----------------------------------------------------------------------------
+// Fortify tests.
+// -----------------------------------------------------------------------------
+
+cc_defaults {
+    name: "bionic_fortify_tests_defaults",
+    cflags: [
+        "-Wno-error",
+        "-U_FORTIFY_SOURCE",
+    ],
+    srcs: ["fortify_test_main.cpp"],
+    target: {
+        host: {
+            clang_cflags: ["-D__clang__"],
+        },
+    },
+}
+
+cc_test_library {
+    name: "libfortify1-tests-gcc",
+    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    clang: false,
+    cflags: [
+        "-D_FORTIFY_SOURCE=1",
+        "-DTEST_NAME=Fortify1_gcc"
+    ],
+}
+
+cc_test_library {
+    name: "libfortify2-tests-gcc",
+    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    clang: false,
+    cflags: [
+        "-D_FORTIFY_SOURCE=2",
+        "-DTEST_NAME=Fortify2_gcc"
+    ],
+}
+
+cc_test_library {
+    name: "libfortify1-tests-clang",
+    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    clang: true,
+    cflags: [
+        "-D_FORTIFY_SOURCE=1",
+        "-DTEST_NAME=Fortify1_clang"
+    ],
+}
+
+cc_test_library {
+    name: "libfortify2-tests-clang",
+    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    clang: true,
+    cflags: [
+        "-D_FORTIFY_SOURCE=2",
+        "-DTEST_NAME=Fortify2_clang"
+    ],
+}
+
+// -----------------------------------------------------------------------------
+// Library of all tests (excluding the dynamic linker tests).
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libBionicTests",
+    defaults: ["bionic_tests_defaults"],
+    whole_static_libs: [
+        "libBionicStandardTests",
+        "libfortify1-tests-gcc",
+        "libfortify2-tests-gcc",
+        "libfortify1-tests-clang",
+        "libfortify2-tests-clang",
+    ],
+}
+
+// -----------------------------------------------------------------------------
+// Library of bionic customized gtest main function, with simplified output format.
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libBionicGtestMain",
+    defaults: ["bionic_tests_defaults"],
+    srcs: ["gtest_main.cpp"],
+    target: {
+        darwin: {
+            enabled: true,
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
+// Library of bionic customized gtest main function, with normal gtest output format,
+// which is needed by bionic cts test.
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libBionicCtsGtestMain",
+    defaults: ["bionic_tests_defaults"],
+    srcs: ["gtest_main.cpp"],
+    cppflags: ["-DUSING_GTEST_OUTPUT_FORMAT"],
+}
+
+// -----------------------------------------------------------------------------
+// Tests for the device using bionic's .so. Run with:
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc32
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc64
+// -----------------------------------------------------------------------------
+cc_defaults {
+    name: "bionic_unit_tests_defaults",
+    host_supported: false,
+
+    whole_static_libs: [
+        "libBionicTests",
+        "libBionicGtestMain",
+    ],
+
+    static_libs: [
+        "libtinyxml2",
+        "liblog",
+        "libbase",
+    ],
+
+    srcs: [
+        // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
+        "atexit_test.cpp",
+        "dl_test.cpp",
+        "dlext_test.cpp",
+        "__cxa_thread_atexit_test.cpp",
+        "dlfcn_test.cpp",
+        "libdl_test.cpp",
+        "pthread_dlfcn_test.cpp",
+        "thread_local_test.cpp",
+    ],
+
+    conlyflags: [
+        "-fexceptions",
+        "-fnon-call-exceptions",
+    ],
+
+    ldflags: ["-Wl,--export-dynamic"],
+
+    include_dirs: ["bionic/libc"],
+
+    target: {
+        android: {
+            shared_libs: [
+                "libdl",
+                "libpagemap",
+                "libdl_preempt_test_1",
+                "libdl_preempt_test_2",
+                "libdl_test_df_1_global",
+            ],
+            static_libs: [
+                // The order of these libraries matters, do not shuffle them.
+                "libbase",
+                "libziparchive",
+                "libz",
+                "libutils",
+            ],
+        },
+    }
+}
+
+cc_test {
+    name: "bionic-unit-tests",
+    defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
+    clang: true,
+}
+
+cc_test {
+    name: "bionic-unit-tests-gcc",
+    defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
+    clang: false,
+}
+
+// -----------------------------------------------------------------------------
+// Tests for the device linked against bionic's static library. Run with:
+//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
+//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static64
+// -----------------------------------------------------------------------------
+cc_test {
+    name: "bionic-unit-tests-static",
+    defaults: ["bionic_tests_defaults"],
+    host_supported: false,
+
+    whole_static_libs: [
+        "libBionicTests",
+        "libBionicGtestMain",
+    ],
+
+    static_libs: [
+        "libm",
+        "libc",
+        "libc++_static",
+        "libdl",
+        "libtinyxml2",
+        "liblog",
+        "libbase",
+    ],
+
+    static_executable: true,
+    stl: "libc++_static",
+
+    // libc and libc++ both define std::nothrow. libc's is a private symbol, but this
+    // still causes issues when linking libc.a and libc++.a, since private isn't
+    // effective until it has been linked. To fix this, just allow multiple symbol
+    // definitions for the static tests.
+    ldflags: ["-Wl,--allow-multiple-definition"],
+}
+
+// -----------------------------------------------------------------------------
+// Tests to run on the host and linked against glibc. Run with:
+//   cd bionic/tests; mm bionic-unit-tests-glibc-run
+// -----------------------------------------------------------------------------
+
+cc_test_host {
+    name: "bionic-unit-tests-glibc",
+    defaults: ["bionic_tests_defaults"],
+
+    srcs: [
+        "atexit_test.cpp",
+        "dlfcn_test.cpp",
+        "dl_test.cpp",
+        "pthread_dlfcn_test.cpp",
+    ],
+
+    shared_libs: [
+        "libdl_preempt_test_1",
+        "libdl_preempt_test_2",
+
+        "libdl_test_df_1_global",
+    ],
+
+    whole_static_libs: [
+        "libBionicStandardTests",
+        "libBionicGtestMain",
+        "libfortify1-tests-gcc",
+        "libfortify2-tests-gcc",
+        "libfortify1-tests-clang",
+        "libfortify2-tests-clang",
+    ],
+
+    static_libs: [
+        "libbase",
+        "liblog",
+        "libcutils",
+    ],
+
+    host_ldlibs: [
+        "-lresolv",
+        "-lrt",
+        "-ldl",
+        "-lutil",
+    ],
+
+    include_dirs: ["bionic/libc"],
+
+    ldflags: ["-Wl,--export-dynamic"],
+
+    sanitize: {
+        never: false,
+    },
+}
+
+subdirs = ["libs"]
