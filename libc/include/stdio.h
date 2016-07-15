@@ -55,13 +55,23 @@ typedef off64_t fpos64_t;
 struct __sFILE;
 typedef struct __sFILE FILE;
 
+#if __ANDROID_API__ >= 23
 extern FILE* stdin __INTRODUCED_IN(23);
 extern FILE* stdout __INTRODUCED_IN(23);
 extern FILE* stderr __INTRODUCED_IN(23);
+
 /* C99 and earlier plus current C++ standards say these must be macros. */
 #define stdin stdin
 #define stdout stdout
 #define stderr stderr
+#else
+/* Before M the actual symbols for stdin and friends had different names. */
+extern FILE* __sF[] __REMOVED_IN(23);
+
+#define stdin __sF[0]
+#define stdout __sF[1]
+#define stderr __sF[2]
+#endif
 
 /*
  * The following three definitions are for ANSI C, which took them
