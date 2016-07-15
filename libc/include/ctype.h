@@ -54,6 +54,9 @@
 #define _CTYPE_R (_CTYPE_P|_CTYPE_U|_CTYPE_L|_CTYPE_D|_CTYPE_B)
 #define _CTYPE_A (_CTYPE_L|_CTYPE_U)
 
+/* _CTYPE_N was added to NDK r10 and is expected by gnu-libstdc++ */
+#define _CTYPE_N _CTYPE_D
+
 __BEGIN_DECLS
 
 extern const char* _ctype_;
