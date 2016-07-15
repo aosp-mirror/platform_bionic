@@ -221,14 +221,21 @@ TEST(sys_mman, mremap) {
   ASSERT_EQ(MAP_FAILED, mremap(nullptr, 0, 0, 0));
 }
 
-const size_t huge = size_t(PTRDIFF_MAX) + 1;
+constexpr size_t kHuge = size_t(PTRDIFF_MAX) + 1;
 
 TEST(sys_mman, mmap_PTRDIFF_MAX) {
-  ASSERT_EQ(MAP_FAILED, mmap(nullptr, huge, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+  ASSERT_EQ(MAP_FAILED, mmap(nullptr, kHuge, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
 }
 
 TEST(sys_mman, mremap_PTRDIFF_MAX) {
   void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
-  ASSERT_EQ(MAP_FAILED, mremap(map, PAGE_SIZE, huge, MREMAP_MAYMOVE));
+  ASSERT_EQ(MAP_FAILED, mremap(map, PAGE_SIZE, kHuge, MREMAP_MAYMOVE));
+}
+
+TEST(sys_mman, mmap_bug_27265969) {
+  char* base = reinterpret_cast<char*>(mmap(nullptr, PAGE_SIZE * 2, PROT_EXEC | PROT_READ,
+                                            MAP_ANONYMOUS | MAP_PRIVATE, 0, 0));
+  // Some kernels had bugs that would cause segfaults here...
+  __builtin___clear_cache(base, base + (PAGE_SIZE * 2));
 }
