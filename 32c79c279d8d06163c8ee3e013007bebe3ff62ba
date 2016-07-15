@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faca38dd_9be0bf05",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-15T21:32:50Z",
+      "side": 1,
+      "message": "it\u0027s not _actually_ removed. is there any advantage to saying __REMOVED_IN anyway, or should we just leave this bare?",
+      "revId": "32c79c279d8d06163c8ee3e013007bebe3ff62ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
