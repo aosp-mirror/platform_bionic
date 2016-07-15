@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "faca38dd_49d04528",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-15T00:23:08Z",
+      "side": 1,
+      "message": "this can be bool, I didn\u0027t see #include for stdbool.h, but ill bring that in, considering bool is already being used elsewhere.",
+      "revId": "bdb3c81b2b8ca4513ae716a9413e494ea50b22ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_4912055a",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 5
