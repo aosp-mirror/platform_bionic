@@ -22,6 +22,30 @@
       "revId": "bdb3c81b2b8ca4513ae716a9413e494ea50b22ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_495685e5",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-15T00:12:45Z",
+      "side": 1,
+      "message": "This code seems to have bleed across function boundaries which I am not particularly keen on. For instance, parse tokens copies some information into variables, but leaves some things to be copied by token index else where.\n\nI can go through and improve these interfaces a bit, I think we should delineate between parsing and providing the data and the routine copying it in-place.\n\nI think we can refactor these interfaces so we don\u0027t have arbitrary requirements on length of the the token array.\n\nFor now, ill just restore the 3.",
+      "parentUuid": "faca38dd_4912055a",
+      "range": {
+        "startLine": 367,
+        "startChar": 6,
+        "endLine": 367,
+        "endChar": 18
+      },
+      "revId": "bdb3c81b2b8ca4513ae716a9413e494ea50b22ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
