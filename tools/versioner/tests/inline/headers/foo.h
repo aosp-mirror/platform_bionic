@@ -1,7 +1,7 @@
-#if __ANDROID_API__ <= 9
-static int foo() __attribute__((availability(android, introduced = 9))) {
+#if __ANDROID_API__ < 12
+static int foo() {
   return 0;
 }
 #else
-int foo() __attribute__((availability(android, introduced = 9)));
+int foo() __INTRODUCED_IN(12);
 #endif

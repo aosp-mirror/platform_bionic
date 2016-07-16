@@ -14,6 +14,7 @@ LOCAL_CPPFLAGS := $(LOCAL_CFLAGS) -std=c++14 -fno-rtti
 
 LOCAL_SRC_FILES := \
   src/versioner.cpp \
+  src/Arch.cpp \
   src/DeclarationDatabase.cpp \
   src/SymbolDatabase.cpp \
   src/Utils.cpp
