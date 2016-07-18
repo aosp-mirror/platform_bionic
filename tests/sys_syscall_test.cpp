@@ -21,3 +21,10 @@
 TEST(unistd, syscall) {
   ASSERT_EQ(getpid(), syscall(SYS_getpid));
 }
+
+// https://code.google.com/p/android/issues/detail?id=215853
+#if defined(__LP64__)
+  #if defined(SYS_mmap2)
+    #error SYS_mmap2 should not be defined for LP64
+  #endif
+#endif
