@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "faca38dd_1cc962ba",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T19:02:15Z",
+      "side": 1,
+      "message": "Art actuall requests two mappings with hints that are close enough to fail unless we unmap the gaps...\nThis can be fixed on the Art side I guess.",
+      "revId": "6d583eac1483e79dfd5146b7691e55a2d820734a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_dcf06a6d",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
