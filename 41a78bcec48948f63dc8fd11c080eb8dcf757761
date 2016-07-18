@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_3c025e3d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:39:00Z",
+      "side": 1,
+      "message": "sgtm, is this case maybe just delegate it to uintptr_t version after the cast?",
+      "parentUuid": "faca38dd_81f7a9c3",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_017c5951",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -458,6 +476,24 @@
       "side": 1,
       "message": "Done.\nI\u0027m not sure if there is any benefit from this at all. Would it make sense to unmap up to alignment?",
       "parentUuid": "faca38dd_21423500",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_3c8b7ee1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:39:00Z",
+      "side": 1,
+      "message": "I am not sure about this as well (nnk?)",
+      "parentUuid": "faca38dd_9ce9d2b4",
       "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
