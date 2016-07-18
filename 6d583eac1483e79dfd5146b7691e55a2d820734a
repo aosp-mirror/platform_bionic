@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_12f5c988",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T20:56:57Z",
+      "side": 1,
+      "message": "Yes, I\u0027ve also discovered that ART asks us for addresses that do not satisfy the 2**N property (the one in the CL description). As the result, all but the first one are relocated, even if the gaps are unmapped. For some reason, this is fatal when the gaps are not unmapped.\n\nWhen the gaps are unmapped, I see no change in user-visible behavior, but it is still not ideal.",
+      "parentUuid": "faca38dd_d2d1710c",
+      "revId": "6d583eac1483e79dfd5146b7691e55a2d820734a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_dcf06a6d",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
