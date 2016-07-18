@@ -1,0 +1,221 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faca38dd_6136edd4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "explicitly use uint8_t* here (and for align_up)?\n\n+ make them static.",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_017c5951",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "does anyone call these?",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_01ff3900",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "void* hint",
+      "range": {
+        "startLine": 440,
+        "startChar": 28,
+        "endLine": 440,
+        "endChar": 34
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_e1ef7d52",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "uint8_t* addr...",
+      "range": {
+        "startLine": 450,
+        "startChar": 2,
+        "endLine": 450,
+        "endChar": 8
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_c1f40128",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "no space.",
+      "range": {
+        "startLine": 450,
+        "startChar": 41,
+        "endLine": 450,
+        "endChar": 42
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_810b291d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_6191cdb6",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "I am missing something here.. why - PAGE_SIZE?",
+      "range": {
+        "startLine": 457,
+        "startChar": 48,
+        "endLine": 457,
+        "endChar": 57
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_415c9104",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "size + (addr_hint - mmap_hint)?",
+      "range": {
+        "startLine": 460,
+        "startChar": 25,
+        "endLine": 460,
+        "endChar": 53
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_412ad170",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "I think this is unnecessary here.",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_41249153",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "should we randomize in the case when hint is not strict? (L533)",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_21423500",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:08:12Z",
+      "side": 1,
+      "message": "PROT_NONE for lp64 instead of unmapping?",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
