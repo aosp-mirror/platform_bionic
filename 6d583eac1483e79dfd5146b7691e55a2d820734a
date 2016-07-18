@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faca38dd_dcf06a6d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-18T18:39:00Z",
+      "side": 1,
+      "message": "this is the case where strict_hint is not true.\n\nThe user of this flag is art when mapping boot.oat if I am not mistaken.. and yes - adding randomization will break this feature so we should probably leave the code as-is.",
+      "revId": "6d583eac1483e79dfd5146b7691e55a2d820734a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
