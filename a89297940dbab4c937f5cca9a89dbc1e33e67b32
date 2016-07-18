@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_9cac32b3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "Yeah artifact from me moving the static array into the subroutine.",
+      "parentUuid": "faca38dd_26ec0bc2",
+      "range": {
+        "startLine": 348,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 24
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dac574ce_8bd3516a",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-18T16:41:09Z",
       "side": 1,
       "message": "LEN is kind of generic and likely to have a namespace issue. And I thought we had ARRAY_SIZE or equivalent defined in bionic ... we do not ... the MO in bionic appears to always open-code this it appears at each usage site ...",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 39
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_dc96aa62",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "Its dead now...",
+      "parentUuid": "dac574ce_8bd3516a",
       "range": {
         "startLine": 350,
         "startChar": 0,
@@ -163,6 +211,30 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_17ebfb7f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "Leaving this as a flexible array member has the side-affect of not being able to statically initialize the fields variables on the stack, I threw a memset into the search_passwd|group() routines.",
+      "parentUuid": "dac574ce_0bc0018b",
+      "range": {
+        "startLine": 368,
+        "startChar": 15,
+        "endLine": 368,
+        "endChar": 30
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_a642bb4e",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -266,6 +338,30 @@
       "writtenOn": "2016-07-18T16:41:09Z",
       "side": 1,
       "message": "Risk of this being NULL (and thus bionic contributing to a crash) if files array mis-filled now, check for filename \u003d\u003d NULL and error out.",
+      "range": {
+        "startLine": 415,
+        "startChar": 19,
+        "endLine": 415,
+        "endChar": 27
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_5c759a45",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "Someone would have to modify that though, theirs currently no risk in the code, checking static internal data structures seems superfluous.",
+      "parentUuid": "faca38dd_06762fbd",
       "range": {
         "startLine": 415,
         "startChar": 19,
@@ -531,6 +627,30 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_3702773d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_06d2afdd",
+      "range": {
+        "startLine": 515,
+        "startChar": 19,
+        "endLine": 515,
+        "endChar": 39
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_e6d673cf",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -565,6 +685,30 @@
       "writtenOn": "2016-07-18T16:41:09Z",
       "side": 1,
       "message": "indent",
+      "range": {
+        "startLine": 538,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 2
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_97ffeb33",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-07-18T20:14:13Z",
+      "side": 1,
+      "message": "goes away",
+      "parentUuid": "faca38dd_468e67f1",
       "range": {
         "startLine": 538,
         "startChar": 0,
