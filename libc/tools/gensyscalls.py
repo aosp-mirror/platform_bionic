@@ -555,41 +555,43 @@ class State:
             if syscall.has_key("x86_64"):
                 syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)
 
-    # Scan a Linux kernel asm/unistd.h file containing __NR_* constants
+
+    # Scan Linux kernel asm/unistd.h files containing __NR_* constants
     # and write out equivalent SYS_* constants for glibc source compatibility.
-    def scan_linux_unistd_h(self, fp, path):
-        pattern = re.compile(r'^#define __NR_([a-z]\S+) .*')
-        syscalls = set() # MIPS defines everything three times; work around that.
-        for line in open(path):
-            m = re.search(pattern, line)
-            if m:
-                syscalls.add(m.group(1))
-        for syscall in sorted(syscalls):
-            fp.write("#define SYS_%s %s\n" % (syscall, make__NR_name(syscall)))
-
-
     def gen_glibc_syscalls_h(self):
-        # TODO: generate a separate file for each architecture, like glibc's bits/syscall.h.
         glibc_syscalls_h_path = "include/bits/glibc-syscalls.h"
         logging.info("generating " + glibc_syscalls_h_path)
         glibc_fp = create_file(glibc_syscalls_h_path)
         glibc_fp.write("/* %s */\n" % warning)
-        glibc_fp.write("#ifndef _BIONIC_GLIBC_SYSCALLS_H_\n")
-        glibc_fp.write("#define _BIONIC_GLIBC_SYSCALLS_H_\n")
+        glibc_fp.write("#ifndef _BIONIC_BITS_GLIBC_SYSCALLS_H_\n")
+        glibc_fp.write("#define _BIONIC_BITS_GLIBC_SYSCALLS_H_\n")
 
-        glibc_fp.write("#if defined(__aarch64__)\n")
-        self.scan_linux_unistd_h(glibc_fp, os.path.join(bionic_libc_root, "kernel/uapi/asm-generic/unistd.h"))
-        glibc_fp.write("#elif defined(__arm__)\n")
-        self.scan_linux_unistd_h(glibc_fp, os.path.join(bionic_libc_root, "kernel/uapi/asm-arm/asm/unistd.h"))
-        glibc_fp.write("#elif defined(__mips__)\n")
-        self.scan_linux_unistd_h(glibc_fp, os.path.join(bionic_libc_root, "kernel/uapi/asm-mips/asm/unistd.h"))
-        glibc_fp.write("#elif defined(__i386__)\n")
-        self.scan_linux_unistd_h(glibc_fp, os.path.join(bionic_libc_root, "kernel/uapi/asm-x86/asm/unistd_32.h"))
-        glibc_fp.write("#elif defined(__x86_64__)\n")
-        self.scan_linux_unistd_h(glibc_fp, os.path.join(bionic_libc_root, "kernel/uapi/asm-x86/asm/unistd_64.h"))
-        glibc_fp.write("#endif\n")
+        # Collect the set of all syscalls for all architectures.
+        syscalls = set()
+        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z]\S+)')
+        for unistd_h in ["kernel/uapi/asm-generic/unistd.h",
+                         "kernel/uapi/asm-arm/asm/unistd.h",
+                         "kernel/uapi/asm-mips/asm/unistd.h",
+                         "kernel/uapi/asm-x86/asm/unistd_32.h",
+                         "kernel/uapi/asm-x86/asm/unistd_64.h"]:
+          for line in open(os.path.join(bionic_libc_root, unistd_h)):
+            m = re.search(pattern, line)
+            if m:
+              nr_name = m.group(1)
+              if 'reserved' not in nr_name and 'unused' not in nr_name:
+                syscalls.add(nr_name)
 
-        glibc_fp.write("#endif /* _BIONIC_GLIBC_SYSCALLS_H_ */\n")
+        # Write out a single file listing them all. Note that the input
+        # files include #if trickery, so even for a single architecture
+        # we don't know exactly which ones are available.
+        # https://code.google.com/p/android/issues/detail?id=215853
+        for syscall in sorted(syscalls):
+          nr_name = make__NR_name(syscall)
+          glibc_fp.write("#if defined(%s)\n" % nr_name)
+          glibc_fp.write("  #define SYS_%s %s\n" % (syscall, nr_name))
+          glibc_fp.write("#endif\n")
+
+        glibc_fp.write("#endif /* _BIONIC_BITS_GLIBC_SYSCALLS_H_ */\n")
         glibc_fp.close()
         self.other_files.append(glibc_syscalls_h_path)
 
