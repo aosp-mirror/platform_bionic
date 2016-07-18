@@ -1,0 +1,579 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faca38dd_26ec0bc2",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "not sure if we care to have this defined at the top, let the subroutine deal with this?",
+      "range": {
+        "startLine": 348,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 24
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac574ce_8bd3516a",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "LEN is kind of generic and likely to have a namespace issue. And I thought we had ARRAY_SIZE or equivalent defined in bionic ... we do not ... the MO in bionic appears to always open-code this it appears at each usage site ...",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 39
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_2601ab00",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "Move this closer to the pair of unions?\n\nDefine it as offsetof() math? then maybe create a build error if offsetof(gid) !\u003d offsetof(uid)?",
+      "range": {
+        "startLine": 352,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 25
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_4604a710",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "SOURCE_MAX ?",
+      "range": {
+        "startLine": 357,
+        "startChar": 2,
+        "endLine": 357,
+        "endChar": 15
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac574ce_4bbaf91c",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "probably a bad idea to hard-code this, better to let nature provide.",
+      "range": {
+        "startLine": 362,
+        "startChar": 0,
+        "endLine": 362,
+        "endChar": 25
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac574ce_ebc805b8",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "indent",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 363,
+        "endChar": 2
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac574ce_0bc0018b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "You can leave this empty.\n\nsizeof(group_fields) / sizeof(tokens[0]) will give you the needed value.",
+      "range": {
+        "startLine": 368,
+        "startChar": 15,
+        "endLine": 368,
+        "endChar": 30
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_a642bb4e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 19
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_46530758",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "We are not using the error-propagation, maybe return bool? \u003cflipping coin\u003e",
+      "range": {
+        "startLine": 409,
+        "startChar": 7,
+        "endLine": 409,
+        "endChar": 14
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_06ebcf7f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "I am hating the decision to use underline prefix\u0027. In this case maybe drop the prefix.",
+      "range": {
+        "startLine": 409,
+        "startChar": 15,
+        "endLine": 409,
+        "endChar": 16
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_4632e700",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "if (ntokens \u003c\u003d TOKEN_AID_INDEX) {",
+      "range": {
+        "startLine": 411,
+        "startChar": 3,
+        "endLine": 411,
+        "endChar": 20
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_06762fbd",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "Risk of this being NULL (and thus bionic contributing to a crash) if files array mis-filled now, check for filename \u003d\u003d NULL and error out.",
+      "range": {
+        "startLine": 415,
+        "startChar": 19,
+        "endLine": 415,
+        "endChar": 27
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_6671e3ef",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "return a bool?",
+      "range": {
+        "startLine": 469,
+        "startChar": 7,
+        "endLine": 469,
+        "endChar": 14
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_46dca7ed",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "I am hating _ prefix the more I see it ... ;-/ field_search?",
+      "range": {
+        "startLine": 469,
+        "startChar": 15,
+        "endLine": 469,
+        "endChar": 16
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_06590f78",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "can drop if bool return?",
+      "range": {
+        "startLine": 471,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 14
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_e632f34f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "I can accept hard-coded value to 2 since this is the only place it really needs to be defined (subsequent use could utilize LEN(x) macro).",
+      "range": {
+        "startLine": 472,
+        "startChar": 29,
+        "endLine": 472,
+        "endChar": 43
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_c6f0976d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "sizeof(files[0]) / sizeof(files[0][0]);",
+      "range": {
+        "startLine": 477,
+        "startChar": 24,
+        "endLine": 477,
+        "endChar": 38
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_26352b36",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "I never trust an enum value if I can prevent it, convert enum to index? Maybe add a SOURCE_MAX to capture enum of 2 to match to the first array size bounds so we need not worry too much?",
+      "range": {
+        "startLine": 478,
+        "startChar": 30,
+        "endLine": 478,
+        "endChar": 36
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_c65ed761",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "return true;",
+      "range": {
+        "startLine": 480,
+        "startChar": 6,
+        "endLine": 480,
+        "endChar": 12
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_864dffb3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "if (__parse_tokens(...) \u003e 0) {\n  return true;\n}",
+      "range": {
+        "startLine": 477,
+        "startChar": 4,
+        "endLine": 481,
+        "endChar": 5
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_a663db27",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "return false;",
+      "range": {
+        "startLine": 484,
+        "startChar": 3,
+        "endLine": 484,
+        "endChar": 13
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_86421f9a",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "indent",
+      "range": {
+        "startLine": 496,
+        "startChar": 0,
+        "endLine": 496,
+        "endChar": 4
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_06d2afdd",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "sizeof(*fields) / sizeof(fields-\u003etokens[0]) ?",
+      "range": {
+        "startLine": 515,
+        "startChar": 19,
+        "endLine": 515,
+        "endChar": 39
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_e6d673cf",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "if _search returns bool\n\n{\n  return _search(SOURCE_PASSWD, uid, fields-\u003etokens, sizeof(*fields) / sizeof(fields-\u003etokens[0]), name);\n}",
+      "range": {
+        "startLine": 514,
+        "startChar": 0,
+        "endLine": 516,
+        "endChar": 64
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_468e67f1",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T16:41:09Z",
+      "side": 1,
+      "message": "indent",
+      "range": {
+        "startLine": 538,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 2
+      },
+      "revId": "a89297940dbab4c937f5cca9a89dbc1e33e67b32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
