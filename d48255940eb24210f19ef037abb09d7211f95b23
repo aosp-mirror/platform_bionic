@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faca38dd_17c93bba",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "why the leading underscore (_) ?",
+      "range": {
+        "startLine": 352,
+        "startChar": 2,
+        "endLine": 352,
+        "endChar": 3
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_77886f89",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "false",
+      "range": {
+        "startLine": 413,
+        "startChar": 11,
+        "endLine": 413,
+        "endChar": 18
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_978b6b86",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "Additional paranoia that the optimizer will hopefully optimize out if all is well.\n\nif (filename \u003d\u003d NULL) {\n  return false;\n}",
+      "range": {
+        "startLine": 414,
+        "startChar": 2,
+        "endLine": 414,
+        "endChar": 3
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_37d7175c",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "return false;",
+      "range": {
+        "startLine": 418,
+        "startChar": 1,
+        "endLine": 420,
+        "endChar": 15
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_97bd2b16",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "[_SOURCE_LEN]",
+      "range": {
+        "startLine": 472,
+        "startChar": 26,
+        "endLine": 472,
+        "endChar": 28
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_b781476e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-07-18T20:31:05Z",
+      "side": 1,
+      "message": "(sizeof(files[0]) / sizeof(files[0][0]))",
+      "range": {
+        "startLine": 483,
+        "startChar": 25,
+        "endLine": 483,
+        "endChar": 26
+      },
+      "revId": "d48255940eb24210f19ef037abb09d7211f95b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
