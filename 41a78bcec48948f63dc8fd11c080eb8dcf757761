@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "faca38dd_61d9cd55",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "I\u0027ve moved this to linker.h because we eventually want to use this constant in the CFI code.",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_6136edd4",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -13,6 +30,24 @@
       "writtenOn": "2016-07-18T18:08:12Z",
       "side": 1,
       "message": "explicitly use uint8_t* here (and for align_up)?\n\n+ make them static.",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_81f7a9c3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "How about moving them to libc/private/bionic_macros.h and keeping the templates?",
+      "parentUuid": "faca38dd_6136edd4",
       "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -36,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_5c38fa2d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "align_up(uintptr_t) is used, align_down is not.",
+      "parentUuid": "faca38dd_017c5951",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_01ff3900",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -47,6 +100,30 @@
       "writtenOn": "2016-07-18T18:08:12Z",
       "side": 1,
       "message": "void* hint",
+      "range": {
+        "startLine": 440,
+        "startChar": 28,
+        "endLine": 440,
+        "endChar": 34
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_81a969a3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_01ff3900",
       "range": {
         "startLine": 440,
         "startChar": 28,
@@ -105,6 +182,54 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_dc7fcaf0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_e1ef7d52",
+      "range": {
+        "startLine": 450,
+        "startChar": 2,
+        "endLine": 450,
+        "endChar": 8
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_81820919",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_c1f40128",
+      "range": {
+        "startLine": 450,
+        "startChar": 41,
+        "endLine": 450,
+        "endChar": 42
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_810b291d",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -122,6 +247,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_bc848e24",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_810b291d",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_6191cdb6",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -133,6 +276,30 @@
       "writtenOn": "2016-07-18T18:08:12Z",
       "side": 1,
       "message": "I am missing something here.. why - PAGE_SIZE?",
+      "range": {
+        "startLine": 457,
+        "startChar": 48,
+        "endLine": 457,
+        "endChar": 57
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_bcadae9c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Because mmap is PAGE_SIZE-aligned, so in the worst case we get a mapping that is (align - PAGE_SIZE) away from the next aligned address.",
+      "parentUuid": "faca38dd_6191cdb6",
       "range": {
         "startLine": 457,
         "startChar": 48,
@@ -168,6 +335,30 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_dc234a08",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_415c9104",
+      "range": {
+        "startLine": 460,
+        "startChar": 25,
+        "endLine": 460,
+        "endChar": 53
+      },
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_412ad170",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -179,6 +370,24 @@
       "writtenOn": "2016-07-18T18:08:12Z",
       "side": 1,
       "message": "I think this is unnecessary here.",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_7ce696e3",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faca38dd_412ad170",
       "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -202,6 +411,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_1c2e82ee",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "I\u0027m not sure. What is non-strict hint used in practice for? Is it an approximate thing, or something where we lose all benefits if we fail to map at the exact address requested?",
+      "parentUuid": "faca38dd_41249153",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_21423500",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -213,6 +440,24 @@
       "writtenOn": "2016-07-18T18:08:12Z",
       "side": 1,
       "message": "PROT_NONE for lp64 instead of unmapping?",
+      "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faca38dd_9ce9d2b4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T18:29:25Z",
+      "side": 1,
+      "message": "Done.\nI\u0027m not sure if there is any benefit from this at all. Would it make sense to unmap up to alignment?",
+      "parentUuid": "faca38dd_21423500",
       "revId": "41a78bcec48948f63dc8fd11c080eb8dcf757761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
