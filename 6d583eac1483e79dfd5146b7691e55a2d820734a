@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "faca38dd_d47afed0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-18T22:25:36Z",
+      "side": 1,
+      "message": "This ART problem sounds bad. I\u0027ve disabled the new logic for any library with non-null address hint. This is not a problem for CFI because ART libraries are in a completely different part of the address space, and we do not plan to implement CFI there at least at first (and maybe never).",
+      "parentUuid": "faca38dd_12f5c988",
+      "revId": "6d583eac1483e79dfd5146b7691e55a2d820734a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faca38dd_dcf06a6d",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
