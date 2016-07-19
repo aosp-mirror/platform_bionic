@@ -281,15 +281,15 @@
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
 
-/* Like __LIBC_HIDDEN__, but preserves binary compatibility for LP32. */
+/*
+ * Used to tag symbols that should be hidden for 64-bit,
+ * but visible to preserve binary compatibility for LP32.
+ */
 #ifdef __LP64__
-#define __LIBC32_LEGACY_PUBLIC__ __LIBC_HIDDEN__
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("hidden")))
 #else
-#define __LIBC32_LEGACY_PUBLIC__ __LIBC_ABI_PUBLIC__
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("default")))
 #endif
-
-/* Used to tag non-static symbols that are public and exposed by the shared library. */
-#define __LIBC_ABI_PUBLIC__ __attribute__((visibility ("default")))
 
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
