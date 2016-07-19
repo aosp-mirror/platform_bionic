@@ -104,7 +104,7 @@ extern int               wcscmp(const wchar_t *, const wchar_t *);
 extern int               wcscoll(const wchar_t *, const wchar_t *);
 extern wchar_t          *wcscpy(wchar_t *, const wchar_t *);
 extern size_t            wcscspn(const wchar_t *, const wchar_t *);
-extern size_t            wcsftime(wchar_t *, size_t, const wchar_t *, const struct tm *) __LIBC_ABI_PUBLIC__;
+extern size_t            wcsftime(wchar_t *, size_t, const wchar_t *, const struct tm *);
 extern size_t            wcslen(const wchar_t *);
 extern int               wcsncasecmp(const wchar_t *, const wchar_t *, size_t);
 extern int wcsncasecmp_l(const wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(23);
