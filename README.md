@@ -211,6 +211,11 @@ The tests are all built from the tests/ directory.
     $ adb shell \
         /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static64
 
+Note that we use our own custom gtest runner that offers a superset of the
+options documented at
+<https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options>,
+in particular for test isolation and parallelism (both on by default).
+
 ### Host tests
 
 The host tests require that you have `lunch`ed either an x86 or x86_64 target.
