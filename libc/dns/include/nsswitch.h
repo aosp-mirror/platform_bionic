@@ -202,7 +202,7 @@ typedef struct {
 
 __BEGIN_DECLS
 int	nsdispatch(void *, const ns_dtab [], const char *,
-			const char *, const ns_src [], ...) __LIBC_ABI_PUBLIC__;
+			const char *, const ns_src [], ...);
 
 #ifdef _NS_PRIVATE
 int		 _nsdbtaddsrc(ns_dbt *, const ns_src *);
