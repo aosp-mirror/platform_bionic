@@ -76,15 +76,13 @@ extern int posix_memalign(void** memptr, size_t alignment, size_t size) __INTROD
 
 __BIONIC_LEGACY_INLINE double atof(const char*);
 
-extern double strtod(const char*, char**) __LIBC_ABI_PUBLIC__;
-__BIONIC_LEGACY_INLINE float strtof(const char*, char**) __LIBC_ABI_PUBLIC__;
-extern long double strtold(const char*, char**) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
+extern double strtod(const char*, char**);
+__BIONIC_LEGACY_INLINE float strtof(const char*, char**);
+extern long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
-extern long double strtold_l(const char*, char**, locale_t) __LIBC_ABI_PUBLIC__ __INTRODUCED_IN(21);
-extern long long strtoll_l(const char*, char**, int, locale_t) __LIBC_ABI_PUBLIC__
-  __INTRODUCED_IN(21);
-extern unsigned long long strtoull_l(const char*, char**, int, locale_t) __LIBC_ABI_PUBLIC__
-  __INTRODUCED_IN(21);
+extern long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
+extern long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+extern unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 
 extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;
