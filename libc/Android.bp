@@ -143,7 +143,6 @@ cc_library_static {
     ],
 
     cflags: [
-        "-fvisibility=hidden",
         "-Wno-unused-parameter",
         // Don't use ridiculous amounts of stack.
         "-DALL_STATE",
@@ -747,7 +746,6 @@ cc_library_static {
     cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
-        "-fvisibility=hidden",
         "-include openbsd-compat.h",
     ],
 
