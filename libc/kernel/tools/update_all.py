@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-import sys, cpp, kernel, glob, os, re, getopt, clean_header, subprocess
+import sys, cpp, kernel, glob, os, re, getopt, clean_header, subprocess, shutil
 from defaults import *
 from utils import *
 
@@ -20,7 +20,7 @@ def usage():
         android tree
 
       - the clean headers will be placed in 'bionic/libc/kernel/arch-<arch>/asm',
-        'bionic/libc/kernel/common', etc..
+        'bionic/libc/kernel/android', etc..
 """ % { "progname" : os.path.basename(sys.argv[0]) }
     sys.exit(0)
 
@@ -75,7 +75,13 @@ kernel_dir = get_kernel_dir()
 for arch in kernel_archs:
     b.readDir(os.path.join(kernel_dir, "arch-%s" % arch))
 
-b.readDir(os.path.join(kernel_dir, "common"))
+b.readDir(os.path.join(kernel_dir, "android"))
+
+# Delete the old uapi headers before updating to handle headers that
+# get moved/deleted.
+uapi_dir = os.path.join(get_kernel_dir(), "uapi")
+shutil.rmtree(uapi_dir)
+os.mkdir(uapi_dir, 0755)
 
 oldlen = 120
 android_root_len = len(get_android_root()) + 1
