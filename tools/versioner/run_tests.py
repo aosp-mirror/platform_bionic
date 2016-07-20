@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import os
 import subprocess
@@ -13,6 +13,7 @@ prefix_fail = bold + "[" + red + "FAIL" + reset + bold + "]" + reset
 
 
 def indent(text, spaces=4):
+    text = text.decode("utf-8")
     prefix = "    "
     return "\n".join([prefix + line for line in text.split("\n")])
 
@@ -24,9 +25,17 @@ def run_test(test_name, path):
     (output, _) = process.communicate()
 
     if os.path.exists("expected_fail"):
-        with open("expected_fail") as f:
+        with open("expected_fail", "rb") as f:
             expected_output = f.read()
-            if not output.endswith(expected_output):
+            if process.returncode == 0:
+                print("{} {}: unexpected success:".format(prefix_fail, test_name))
+                print("")
+                print("  Expected:")
+                print(indent(expected_output))
+                print("  Actual:")
+                print(indent(output))
+                return False
+            elif not output.endswith(expected_output):
                 print("{} {}: expected output mismatch".format(
                     prefix_fail, test_name))
                 print("")
