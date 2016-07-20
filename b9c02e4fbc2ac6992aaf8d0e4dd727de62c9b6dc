@@ -135,6 +135,24 @@
       "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_5a535548",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:33:05Z",
+      "side": 1,
+      "message": "actually it is off - 12 is an address not a size.",
+      "parentUuid": "2a371f0e_7a4f39c1",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
