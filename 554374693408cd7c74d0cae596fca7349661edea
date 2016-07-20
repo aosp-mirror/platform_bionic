@@ -16,6 +16,24 @@
       "revId": "554374693408cd7c74d0cae596fca7349661edea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a7abff6_08cd0763",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3047,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T23:32:09Z",
+      "side": 1,
+      "message": "log messages are a bit different between this functions. It is not only the function() call. I can extract 3 lines around this but not sure if it worth it.",
+      "parentUuid": "4a2d33d5_3247b624",
+      "revId": "554374693408cd7c74d0cae596fca7349661edea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
