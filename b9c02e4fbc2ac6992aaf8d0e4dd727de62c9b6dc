@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a371f0e_e9fd4da3",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "why?",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_fa350942",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "lets suppose that:\nPAGE_SIZE\u003d1;\nsize \u003d 5;\nalign \u003d 4;",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_5a023563",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "map_size \u003d 8 + 4 - 1 \u003d 11;",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_3a077173",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "suppose now that mmap_ptr \u003d 1; (or some n where n % 4 \u003d 1)",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_da15a599",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "first \u003d 4;",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_ba1261ad",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "last \u003d 12 - 5 \u003d 7;",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_1a10ada4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "lets say n \u003d 3 here. rand of (3 + 1)",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a371f0e_7a4f39c1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-20T00:27:24Z",
+      "side": 1,
+      "message": "-\u003e start \u003d 7\n\nbut we have allocated only 11 units (see line 436), the library size is 5 and 7+5 \u003d 12, looks like this run out of bounds? (remove + 1 in L445?)\n\nThis might not result in immediate failure because with high probability consequent mmap call will succeed. (it might result in some overlapping though)\n\n(or my math is off somewhere...)",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
