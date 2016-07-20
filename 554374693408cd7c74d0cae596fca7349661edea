@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a2d33d5_3247b624",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3047,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-20T23:16:33Z",
+      "side": 1,
+      "message": "you can pass unused arguments to a function if you wanted to remove the duplication...",
+      "revId": "554374693408cd7c74d0cae596fca7349661edea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
