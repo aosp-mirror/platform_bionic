@@ -122,4 +122,9 @@ static inline void AssertChildExited(int pid, int expected_exit_status) {
 // The absolute path to the executable
 const std::string& get_executable_path();
 
+// Access to argc/argv/envp
+int get_argc();
+char** get_argv();
+char** get_envp();
+
 #endif
