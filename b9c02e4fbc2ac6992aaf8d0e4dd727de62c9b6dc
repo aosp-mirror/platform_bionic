@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2a371f0e_1af70df4",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-07-20T01:10:41Z",
+      "side": 1,
+      "message": "Because otherwise it will be recursively included through  pthread_internal.h below under extern \"C\", and all the templates will fail.",
+      "parentUuid": "2a371f0e_e9fd4da3",
+      "revId": "b9c02e4fbc2ac6992aaf8d0e4dd727de62c9b6dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a371f0e_fa350942",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 4
