@@ -22,6 +22,30 @@
       "revId": "8a4da550525eaeb675d424258ca470cdb64d01a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a7fbbe7_61c4da64",
+        "filename": "linker/linker_dlwarning.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-21T21:57:58Z",
+      "side": 1,
+      "message": "the linker is single threaded at the moment. We might change it in the future.",
+      "parentUuid": "0a7fbbe7_c1e4a6d7",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "8a4da550525eaeb675d424258ca470cdb64d01a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
