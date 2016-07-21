@@ -87,7 +87,7 @@ void LinkerLogger::ResetState() {
   flags_ |= ParseProperty(value);
 
   // get process basename
-  std::string process_name = basename(g_argv0);
+  std::string process_name = basename(g_argv[0]);
 
   std::string property_name = std::string(kLdDebugPropertyPrefix) + process_name;
 
