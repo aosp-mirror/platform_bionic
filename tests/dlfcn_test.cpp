@@ -38,15 +38,24 @@ extern "C" void DlSymTestFunction() {
 }
 
 static int g_ctor_function_called = 0;
+static int g_ctor_argc = 0;
+static char** g_ctor_argv = reinterpret_cast<char**>(0xDEADBEEF);
+static char** g_ctor_envp = g_ctor_envp;
 
-extern "C" void ctor_function() __attribute__ ((constructor));
+extern "C" void ctor_function(int argc, char** argv, char** envp) __attribute__ ((constructor));
 
-extern "C" void ctor_function() {
+extern "C" void ctor_function(int argc, char** argv, char** envp) {
   g_ctor_function_called = 17;
+  g_ctor_argc = argc;
+  g_ctor_argv = argv;
+  g_ctor_envp = envp;
 }
 
 TEST(dlfcn, ctor_function_call) {
   ASSERT_EQ(17, g_ctor_function_called);
+  ASSERT_TRUE(g_ctor_argc = get_argc());
+  ASSERT_TRUE(g_ctor_argv = get_argv());
+  ASSERT_TRUE(g_ctor_envp = get_envp());
 }
 
 TEST(dlfcn, dlsym_in_executable) {
