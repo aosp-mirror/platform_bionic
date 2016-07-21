@@ -96,7 +96,8 @@
 #define SOINFO_NAME_LEN 128
 #endif
 
-typedef void (*linker_function_t)();
+typedef void (*linker_dtor_function_t)();
+typedef void (*linker_ctor_function_t)(int, char**, char**);
 
 // Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
 #if defined(__aarch64__) || defined(__x86_64__)
@@ -234,16 +235,16 @@ struct soinfo {
   size_t rel_count_;
 #endif
 
-  linker_function_t* preinit_array_;
+  linker_ctor_function_t* preinit_array_;
   size_t preinit_array_count_;
 
-  linker_function_t* init_array_;
+  linker_ctor_function_t* init_array_;
   size_t init_array_count_;
-  linker_function_t* fini_array_;
+  linker_dtor_function_t* fini_array_;
   size_t fini_array_count_;
 
-  linker_function_t init_func_;
-  linker_function_t fini_func_;
+  linker_ctor_function_t init_func_;
+  linker_dtor_function_t fini_func_;
 
 #if defined(__arm__)
  public:
@@ -373,8 +374,6 @@ struct soinfo {
   bool lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
                            const char* sym_name, const version_info** vi);
 
-  void call_array(const char* array_name, linker_function_t* functions, size_t count, bool reverse);
-  void call_function(const char* function_name, linker_function_t function);
   template<typename ElfRelIteratorT>
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                 const soinfo_list_t& global_group, const soinfo_list_t& local_group);

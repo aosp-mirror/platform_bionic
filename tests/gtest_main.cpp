@@ -47,9 +47,24 @@
 #endif
 
 static std::string g_executable_path;
+static int g_argc;
+static char** g_argv;
+static char** g_envp;
 
 const std::string& get_executable_path() {
   return g_executable_path;
+}
+
+int get_argc() {
+  return g_argc;
+}
+
+char** get_argv() {
+  return g_argv;
+}
+
+char** get_envp() {
+  return g_envp;
 }
 
 namespace testing {
@@ -1122,8 +1137,11 @@ static std::string get_proc_self_exe() {
   return std::string(path, path_len);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** envp) {
   g_executable_path = get_proc_self_exe();
+  g_argc = argc;
+  g_argv = argv;
+  g_envp = envp;
   std::vector<char*> arg_list;
   for (int i = 0; i < argc; ++i) {
     arg_list.push_back(argv[i]);
