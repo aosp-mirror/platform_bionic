@@ -69,3 +69,5 @@ struct android_namespace_t* android_create_namespace(const char* name __unused,
                                                      const char* permitted_when_isolated_path __unused) {
   return 0;
 }
+
+void android_dlwarning(void* obj, void (*f)(void*, const char*)) { f(obj, 0); }
