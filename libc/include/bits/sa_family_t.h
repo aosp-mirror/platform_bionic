@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,10 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_UN_H_
-#define _SYS_UN_H_
+#ifndef _BITS_SA_FAMILY_T_H_
+#define _BITS_SA_FAMILY_T_H_
 
-#include <bits/sa_family_t.h>
-#include <linux/un.h>
+typedef unsigned short sa_family_t;
 
 #endif
