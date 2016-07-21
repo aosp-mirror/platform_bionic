@@ -263,7 +263,11 @@ static soinfo::soinfo_list_t g_public_namespace;
 
 int g_ld_debug_verbosity;
 abort_msg_t* g_abort_message = nullptr; // For debuggerd.
-const char* g_argv0 = nullptr;
+
+// These values are used to call constructors for .init_array && .preinit_array
+int g_argc = 0;
+char** g_argv = nullptr;
+char** g_envp = nullptr;
 
 static std::string dirname(const char *path) {
   const char* last_slash = strrchr(path, '/');
@@ -3125,13 +3129,41 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 }
 #endif  // !defined(__mips__)
 
-void soinfo::call_array(const char* array_name __unused, linker_function_t* functions,
-                        size_t count, bool reverse) {
+static void call_function(const char* function_name __unused,
+                          linker_ctor_function_t function,
+                          const char* realpath __unused) {
+  if (function == nullptr || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
+    return;
+  }
+
+  TRACE("[ Calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  function(g_argc, g_argv, g_envp);
+  TRACE("[ Done calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
+}
+
+static void call_function(const char* function_name __unused,
+                          linker_dtor_function_t function,
+                          const char* realpath __unused) {
+  if (function == nullptr || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
+    return;
+  }
+
+  TRACE("[ Calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  function();
+  TRACE("[ Done calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
+}
+
+template <typename F>
+static void call_array(const char* array_name __unused,
+                       F* functions,
+                       size_t count,
+                       bool reverse,
+                       const char* realpath) {
   if (functions == nullptr) {
     return;
   }
 
-  TRACE("[ Calling %s (size %zd) @ %p for \"%s\" ]", array_name, count, functions, get_realpath());
+  TRACE("[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, realpath);
 
   int begin = reverse ? (count - 1) : 0;
   int end = reverse ? -1 : count;
@@ -3139,26 +3171,16 @@ void soinfo::call_array(const char* array_name __unused, linker_function_t* func
 
   for (int i = begin; i != end; i += step) {
     TRACE("[ %s[%d] == %p ]", array_name, i, functions[i]);
-    call_function("function", functions[i]);
+    call_function("function", functions[i], realpath);
   }
 
-  TRACE("[ Done calling %s for \"%s\" ]", array_name, get_realpath());
-}
-
-void soinfo::call_function(const char* function_name __unused, linker_function_t function) {
-  if (function == nullptr || reinterpret_cast<uintptr_t>(function) == static_cast<uintptr_t>(-1)) {
-    return;
-  }
-
-  TRACE("[ Calling %s @ %p for \"%s\" ]", function_name, function, get_realpath());
-  function();
-  TRACE("[ Done calling %s @ %p for \"%s\" ]", function_name, function, get_realpath());
+  TRACE("[ Done calling %s for '%s' ]", array_name, realpath);
 }
 
 void soinfo::call_pre_init_constructors() {
   // DT_PREINIT_ARRAY functions are called before any other constructors for executables,
   // but ignored in a shared library.
-  call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false);
+  call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false, get_realpath());
 }
 
 void soinfo::call_constructors() {
@@ -3190,8 +3212,8 @@ void soinfo::call_constructors() {
   TRACE("\"%s\": calling constructors", get_realpath());
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
-  call_function("DT_INIT", init_func_);
-  call_array("DT_INIT_ARRAY", init_array_, init_array_count_, false);
+  call_function("DT_INIT", init_func_, get_realpath());
+  call_array("DT_INIT_ARRAY", init_array_, init_array_count_, false, get_realpath());
 }
 
 void soinfo::call_destructors() {
@@ -3201,10 +3223,10 @@ void soinfo::call_destructors() {
   TRACE("\"%s\": calling destructors", get_realpath());
 
   // DT_FINI_ARRAY must be parsed in reverse order.
-  call_array("DT_FINI_ARRAY", fini_array_, fini_array_count_, true);
+  call_array("DT_FINI_ARRAY", fini_array_, fini_array_count_, true, get_realpath());
 
   // DT_FINI should be called after DT_FINI_ARRAY if both are present.
-  call_function("DT_FINI", fini_func_);
+  call_function("DT_FINI", fini_func_, get_realpath());
 }
 
 void soinfo::add_child(soinfo* child) {
@@ -3746,17 +3768,17 @@ bool soinfo::prelink_image() {
 
 #endif
       case DT_INIT:
-        init_func_ = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+        init_func_ = reinterpret_cast<linker_ctor_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT) found at %p", get_realpath(), init_func_);
         break;
 
       case DT_FINI:
-        fini_func_ = reinterpret_cast<linker_function_t>(load_bias + d->d_un.d_ptr);
+        fini_func_ = reinterpret_cast<linker_dtor_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s destructors (DT_FINI) found at %p", get_realpath(), fini_func_);
         break;
 
       case DT_INIT_ARRAY:
-        init_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        init_array_ = reinterpret_cast<linker_ctor_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", get_realpath(), init_array_);
         break;
 
@@ -3765,7 +3787,7 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_FINI_ARRAY:
-        fini_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        fini_array_ = reinterpret_cast<linker_dtor_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", get_realpath(), fini_array_);
         break;
 
@@ -3774,7 +3796,7 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_PREINIT_ARRAY:
-        preinit_array_ = reinterpret_cast<linker_function_t*>(load_bias + d->d_un.d_ptr);
+        preinit_array_ = reinterpret_cast<linker_ctor_function_t*>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", get_realpath(), preinit_array_);
         break;
 
@@ -4295,7 +4317,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
   if (elf_hdr->e_type != ET_DYN) {
     __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
-                 g_argv0);
+                 g_argv[0]);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -4307,7 +4329,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   init_default_namespace();
 
   if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   }
 
   // add somain to global group
@@ -4338,10 +4360,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       !find_libraries(&g_default_namespace, si, needed_library_names, needed_libraries_count,
                       nullptr, &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
                       /* add_as_children */ true)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
+    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
+      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
     }
     si->increment_ref_count();
   }
@@ -4364,12 +4386,12 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
 #if TIMING
   gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv0, (int) (
+  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0], (int) (
            (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
            (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv0,
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
          linker_stats.count[kRelocAbsolute],
          linker_stats.count[kRelocRelative],
          linker_stats.count[kRelocCopy],
@@ -4395,7 +4417,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
         }
       }
     }
-    PRINT("PAGES MODIFIED: %s: %d (%dKB)", g_argv0, count, count * 4);
+    PRINT("PAGES MODIFIED: %s: %d (%dKB)", g_argv[0], count, count * 4);
   }
 #endif
 
@@ -4433,7 +4455,7 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
 }
 
 static void __linker_cannot_link() {
-  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv0, linker_get_error_buffer());
+  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
 }
 
 /*
@@ -4448,7 +4470,9 @@ static void __linker_cannot_link() {
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
-  g_argv0 = args.argv[0];
+  g_argc = args.argc;
+  g_argv = args.argv;
+  g_envp = args.envp;
 
   ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
@@ -4466,7 +4490,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
     __libc_format_fd(STDOUT_FILENO,
                      "This is %s, the helper program for shared library executables.\n",
-                     g_argv0);
+                     g_argv[0]);
     exit(0);
   }
 

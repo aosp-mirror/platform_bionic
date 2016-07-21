@@ -54,6 +54,6 @@ class LinkerLogger {
 };
 
 extern LinkerLogger g_linker_logger;
-extern const char* g_argv0;
+extern char** g_argv;
 
 #endif /* _LINKER_LOGGER_H_ */
