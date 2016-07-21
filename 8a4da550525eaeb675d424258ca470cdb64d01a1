@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a7fbbe7_c1e4a6d7",
+        "filename": "linker/linker_dlwarning.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-21T20:29:48Z",
+      "side": 1,
+      "message": "Is this ever expected to run in a threaded environment? I think you single thread calls but I might not be looking properly.",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "8a4da550525eaeb675d424258ca470cdb64d01a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
