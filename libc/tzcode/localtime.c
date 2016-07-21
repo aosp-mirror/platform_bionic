@@ -1317,11 +1317,11 @@ tzset_unlocked(void)
 {
 #if defined(__ANDROID__)
   // The TZ environment variable is meant to override the system-wide setting.
-  const char * name = getenv("TZ");
+  const char* name = getenv("TZ");
 
   // If that's not set, look at the "persist.sys.timezone" system property.
   if (name == NULL) {
-    static const prop_info *pi;
+    static const prop_info* pi;
 
     if (!pi) {
       pi = __system_property_find("persist.sys.timezone");
@@ -1336,12 +1336,21 @@ tzset_unlocked(void)
         s = serial;
       }
       if (ok) {
+        // POSIX and Java disagree about the sign in a timezone string. For POSIX, "GMT+3" means
+        // "3 hours west/behind", but for Java it means "3 hours east/ahead". Since (a) Java is
+        // the one that matches human expectations and (b) this system property is used directly
+        // by Java, we flip the sign here to translate from Java to POSIX. http://b/25463955.
+        if (buf[3] == '-') {
+          buf[3] = '+';
+        } else if (buf[3] == '+') {
+          buf[3] = '-';
+        }
         name = buf;
       }
     }
   }
 
-  // If that's not available (because you're running AOSP on a WiFi-only
+  // If the system property is also not available (because you're running AOSP on a WiFi-only
   // device, say), fall back to GMT.
   if (name == NULL) name = gmt;
 
