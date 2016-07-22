@@ -29,6 +29,8 @@
 #ifndef ANDROID_API_LEVEL_H
 #define ANDROID_API_LEVEL_H
 
+#include <sys/cdefs.h>
+
 /*
  * Magic version number for a current development build, which has
  * not yet turned into an official release.

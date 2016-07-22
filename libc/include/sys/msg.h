@@ -29,6 +29,7 @@
 #ifndef _SYS_MSG_H_
 #define _SYS_MSG_H_
 
+#include <sys/cdefs.h>
 #include <linux/msg.h>
 
 #endif /* _SYS_MSG_H_ */

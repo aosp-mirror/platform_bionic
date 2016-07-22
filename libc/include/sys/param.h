@@ -25,11 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_PARAM_H_
 #define _SYS_PARAM_H_
 
 #include <limits.h>
 #include <linux/param.h>
+#include <sys/cdefs.h>
 
 #define DEV_BSIZE 512
 
