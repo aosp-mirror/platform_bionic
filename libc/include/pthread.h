@@ -36,6 +36,13 @@
 #include <sys/types.h>
 #include <time.h>
 
+__BEGIN_DECLS
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+#endif
+
 typedef struct {
 #if defined(__LP64__)
   int32_t __private[10];
@@ -130,8 +137,6 @@ typedef struct {
 
 #define PTHREAD_SCOPE_SYSTEM     0
 #define PTHREAD_SCOPE_PROCESS    1
-
-__BEGIN_DECLS
 
 int pthread_atfork(void (*)(void), void (*)(void), void (*)(void)) __INTRODUCED_IN(12);
 
@@ -263,8 +268,8 @@ typedef struct __pthread_cleanup_t {
   void*                         __cleanup_arg;
 } __pthread_cleanup_t;
 
-extern void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t, void*);
-extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
+void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t, void*);
+void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
 
 /* Believe or not, the definitions of pthread_cleanup_push and
  * pthread_cleanup_pop below are correct. Posix states that these
@@ -280,6 +285,10 @@ extern void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
 #define  pthread_cleanup_pop(execute)                  \
         __pthread_cleanup_pop( &__cleanup, (execute)); \
     } while (0);                                       \
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 __END_DECLS
 

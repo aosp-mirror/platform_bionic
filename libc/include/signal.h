@@ -53,6 +53,11 @@
 
 __BEGIN_DECLS
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+#endif
+
 typedef int sig_atomic_t;
 
 /* The arm and x86 kernel header files don't define _NSIG. */
@@ -67,16 +72,16 @@ typedef int sig_atomic_t;
 /* The kernel headers define SIG_DFL (0) and SIG_IGN (1) but not SIG_HOLD, since
  * SIG_HOLD is only used by the deprecated SysV signal API.
  */
-#define SIG_HOLD ((sighandler_t)(uintptr_t)2)
+#define SIG_HOLD __BIONIC_CAST(reinterpret_cast, sighandler_t, 2)
 
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
-extern int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
-extern int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
+int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
+int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 
-extern const char* const sys_siglist[];
-extern const char* const sys_signame[]; /* BSD compatibility. */
+extern const char* const sys_siglist[_NSIG];
+extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
 
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
@@ -108,51 +113,55 @@ struct sigaction {
 
 #endif
 
-extern int sigaction(int, const struct sigaction*, struct sigaction*);
+int sigaction(int, const struct sigaction*, struct sigaction*);
 
 __BIONIC_LEGACY_INLINE sighandler_t signal(int, sighandler_t);
 
-extern int siginterrupt(int, int);
+int siginterrupt(int, int);
 
-__BIONIC_LEGACY_INLINE int sigaddset(sigset_t*, int);
-__BIONIC_LEGACY_INLINE int sigdelset(sigset_t*, int);
-__BIONIC_LEGACY_INLINE int sigemptyset(sigset_t*);
-__BIONIC_LEGACY_INLINE int sigfillset(sigset_t*);
-__BIONIC_LEGACY_INLINE int sigismember(const sigset_t*, int);
+__BIONIC_LEGACY_INLINE int sigaddset(sigset_t* _Nonnull, int);
+__BIONIC_LEGACY_INLINE int sigdelset(sigset_t* _Nonnull, int);
+__BIONIC_LEGACY_INLINE int sigemptyset(sigset_t* _Nonnull);
+__BIONIC_LEGACY_INLINE int sigfillset(sigset_t* _Nonnull);
+__BIONIC_LEGACY_INLINE int sigismember(const sigset_t* _Nonnull, int);
 
-extern int sigpending(sigset_t* _Nonnull);
-extern int sigprocmask(int, const sigset_t*, sigset_t*);
-extern int sigsuspend(const sigset_t* _Nonnull);
-extern int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
+int sigpending(sigset_t* _Nonnull);
+int sigprocmask(int, const sigset_t*, sigset_t*);
+int sigsuspend(const sigset_t* _Nonnull);
+int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
-extern int sighold(int)
+int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN_FUTURE;
-extern int sigignore(int)
+int sigignore(int)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
-extern int sigpause(int)
+int sigpause(int)
   __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN_FUTURE;
-extern int sigrelse(int)
+int sigrelse(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN_FUTURE;
-extern sighandler_t sigset(int, sighandler_t)
+sighandler_t sigset(int, sighandler_t)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
 
-extern int raise(int);
-extern int kill(pid_t, int);
-extern int killpg(int, int);
+int raise(int);
+int kill(pid_t, int);
+int killpg(int, int);
 
-extern int sigaltstack(const stack_t*, stack_t*);
+int sigaltstack(const stack_t*, stack_t*);
 
-extern void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
-extern void psignal(int, const char*) __INTRODUCED_IN(17);
+void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
+void psignal(int, const char*) __INTRODUCED_IN(17);
 
-extern int pthread_kill(pthread_t, int);
-extern int pthread_sigmask(int, const sigset_t*, sigset_t*);
+int pthread_kill(pthread_t, int);
+int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
-extern int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
-extern int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
-extern int sigwaitinfo(const sigset_t*, siginfo_t*) __INTRODUCED_IN(23);
+int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
+int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 __END_DECLS
 

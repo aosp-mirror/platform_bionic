@@ -49,6 +49,11 @@
 
 __BEGIN_DECLS
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+#endif
+
 typedef off_t fpos_t;
 typedef off64_t fpos64_t;
 
@@ -147,8 +152,8 @@ int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0)
 #if __STDC_VERSION__ < 201112L
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
-int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
+int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
+int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0);
 char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
 #if defined(__USE_BSD) || defined(__USE_GNU)
 #define P_tmpdir "/tmp/" /* deprecated */
@@ -243,20 +248,20 @@ int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __USE_BSD */
 
-extern char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
-extern char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
+char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
+char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
-extern size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
+size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
   __INTRODUCED_IN(24);
-extern size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
+size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
 __errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
 __errordecl(__fread_overflow, "fread called with overflowing size * count");
 
-extern size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
+size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
   __INTRODUCED_IN(24);
-extern size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
+size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
 __errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
 __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
@@ -383,6 +388,10 @@ char *fgets(char* dest, int size, FILE* stream) {
 #endif /* !defined(__clang__) */
 
 #endif /* defined(__BIONIC_FORTIFY) */
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 __END_DECLS
 
