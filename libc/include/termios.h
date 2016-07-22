@@ -35,19 +35,23 @@
 
 __BEGIN_DECLS
 
-__BIONIC_LEGACY_INLINE speed_t cfgetispeed(const struct termios*);
-__BIONIC_LEGACY_INLINE speed_t cfgetospeed(const struct termios*);
-__BIONIC_LEGACY_INLINE void cfmakeraw(struct termios*);
-__BIONIC_LEGACY_INLINE int cfsetispeed(struct termios*, speed_t);
-__BIONIC_LEGACY_INLINE int cfsetospeed(struct termios*, speed_t);
-__BIONIC_LEGACY_INLINE int cfsetspeed(struct termios*, speed_t) __INTRODUCED_IN(21);
-__BIONIC_LEGACY_INLINE int tcdrain(int) __INTRODUCED_IN(21);
-__BIONIC_LEGACY_INLINE int tcflow(int, int);
-__BIONIC_LEGACY_INLINE int tcflush(int, int);
-__BIONIC_LEGACY_INLINE int tcgetattr(int, struct termios*);
-__BIONIC_LEGACY_INLINE pid_t tcgetsid(int);
-__BIONIC_LEGACY_INLINE int tcsendbreak(int, int);
-__BIONIC_LEGACY_INLINE int tcsetattr(int, int, const struct termios*);
+#if __ANDROID_API__ >= 21
+// Implemented as static inlines before 21.
+speed_t cfgetispeed(const struct termios*);
+speed_t cfgetospeed(const struct termios*);
+void cfmakeraw(struct termios*);
+int cfsetispeed(struct termios*, speed_t);
+int cfsetospeed(struct termios*, speed_t);
+int tcflow(int, int);
+int tcflush(int, int);
+int tcgetattr(int, struct termios*);
+pid_t tcgetsid(int);
+int tcsendbreak(int, int);
+int tcsetattr(int, int, const struct termios*);
+#endif
+
+int cfsetspeed(struct termios*, speed_t) __INTRODUCED_IN(21);
+int tcdrain(int) __INTRODUCED_IN(21);
 
 __END_DECLS
 
