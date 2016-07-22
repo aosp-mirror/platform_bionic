@@ -72,6 +72,12 @@
 #define	__static_cast(x,y)	(x)y
 #endif
 
+#if defined(__cplusplus)
+#define __BIONIC_CAST(_k,_t,_v) (_k<_t>(_v))
+#else
+#define __BIONIC_CAST(_k,_t,_v) ((_t) (_v))
+#endif
+
 /*
  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.
  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.
@@ -88,9 +94,6 @@
 #define	__CONCAT(x,y)	x ## y
 #define	__STRING(x)	#x
 
-#define	__const		const		/* define reserved names to standard */
-#define	__signed	signed
-#define	__volatile	volatile
 #if defined(__cplusplus)
 #define	__inline	inline		/* convert to C++ keyword */
 #endif /* !__cplusplus */
@@ -101,17 +104,6 @@
 #define	__STRING(x)	"x"
 
 #endif	/* !(__STDC__ || __cplusplus) */
-
-/*
- * The following macro is used to remove const cast-away warnings
- * from gcc -Wcast-qual; it should be used with caution because it
- * can hide valid errors; in particular most valid uses are in
- * situations where the API requires it, not to cast away string
- * constants. We don't use *intptr_t on purpose here and we are
- * explicit about unsigned long so that we don't have additional
- * dependencies.
- */
-#define __UNCONST(a)	((void *)(unsigned long)(const void *)(a))
 
 #define __always_inline __attribute__((__always_inline__))
 #define __dead __attribute__((__noreturn__))
@@ -154,6 +146,7 @@
  */
 #if !(defined(__clang__) && __has_feature(nullability))
 #define _Nonnull
+#define _Nullable
 #endif
 
 #define __printflike(x, y) __attribute__((__format__(printf, x, y)))
@@ -197,8 +190,6 @@
 #else
 #define __errorattr(msg) __attribute__((__error__(msg)))
 #endif
-
-#define __warnattr(msg) __attribute__((__warning__(msg)))
 
 #define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 
@@ -274,9 +265,13 @@
 #    define __bos(s) __builtin_object_size((s), 0)
 #  endif
 #  define __bos0(s) __builtin_object_size((s), 0)
-#  define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+#  if defined(__clang__)
+#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
+#  else
+#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+#  endif
 #endif
-#define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
+#define __BIONIC_FORTIFY_UNKNOWN_SIZE __BIONIC_CAST(static_cast, size_t, -1)
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
