@@ -86,7 +86,7 @@ __BEGIN_DECLS
 #define LOG_PERROR 0x20
 
 void closelog(void);
-void openlog(const char*, int, int);
+void openlog(const char* _Nullable, int, int);
 int setlogmask(int);
 void syslog(int, const char* _Nonnull, ...) __printflike(2, 3);
 void vsyslog(int, const char* _Nonnull, va_list) __printflike(2, 0);

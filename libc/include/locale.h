@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _LOCALE_H_
 #define _LOCALE_H_
 
@@ -66,30 +67,30 @@ __BEGIN_DECLS
                      LC_IDENTIFICATION_MASK)
 
 struct lconv {
-    char* decimal_point;
-    char* thousands_sep;
-    char* grouping;
-    char* int_curr_symbol;
-    char* currency_symbol;
-    char* mon_decimal_point;
-    char* mon_thousands_sep;
-    char* mon_grouping;
-    char* positive_sign;
-    char* negative_sign;
-    char  int_frac_digits;
-    char  frac_digits;
-    char  p_cs_precedes;
-    char  p_sep_by_space;
-    char  n_cs_precedes;
-    char  n_sep_by_space;
-    char  p_sign_posn;
-    char  n_sign_posn;
-    char  int_p_cs_precedes;
-    char  int_p_sep_by_space;
-    char  int_n_cs_precedes;
-    char  int_n_sep_by_space;
-    char  int_p_sign_posn;
-    char  int_n_sign_posn;
+  char* decimal_point;
+  char* thousands_sep;
+  char* grouping;
+  char* int_curr_symbol;
+  char* currency_symbol;
+  char* mon_decimal_point;
+  char* mon_thousands_sep;
+  char* mon_grouping;
+  char* positive_sign;
+  char* negative_sign;
+  char int_frac_digits;
+  char frac_digits;
+  char p_cs_precedes;
+  char p_sep_by_space;
+  char n_cs_precedes;
+  char n_sep_by_space;
+  char p_sign_posn;
+  char n_sign_posn;
+  char int_p_cs_precedes;
+  char int_p_sep_by_space;
+  char int_n_cs_precedes;
+  char int_n_sep_by_space;
+  char int_p_sign_posn;
+  char int_n_sign_posn;
 };
 
 struct lconv* localeconv(void) __INTRODUCED_IN(21);
@@ -100,7 +101,7 @@ locale_t newlocale(int, const char*, locale_t) __INTRODUCED_IN(21);
 char* setlocale(int, const char*);
 locale_t uselocale(locale_t) __INTRODUCED_IN(21);
 
-#define LC_GLOBAL_LOCALE ((locale_t) -1L)
+#define LC_GLOBAL_LOCALE __BIONIC_CAST(reinterpret_cast, locale_t, -1L)
 
 __END_DECLS
 
