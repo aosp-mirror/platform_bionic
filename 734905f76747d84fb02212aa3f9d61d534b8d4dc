@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a147fd3_be77a104",
+        "filename": "libc/include/netinet/in6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-07-22T20:09:17Z",
+      "side": 1,
+      "message": "Do you want an explicit include of cdefs.h for this macro? I assume it gets included anyway, but having it here seems like a good idea.",
+      "range": {
+        "startLine": 57,
+        "startChar": 28,
+        "endLine": 57,
+        "endChar": 41
+      },
+      "revId": "734905f76747d84fb02212aa3f9d61d534b8d4dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
