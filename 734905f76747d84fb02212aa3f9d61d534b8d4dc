@@ -22,6 +22,30 @@
       "revId": "734905f76747d84fb02212aa3f9d61d534b8d4dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a147fd3_7e410990",
+        "filename": "libc/include/netinet/in6.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-22T20:12:43Z",
+      "side": 1,
+      "message": "no, you\u0027re right --- this file _wouldn\u0027t_ get it for free. added.",
+      "parentUuid": "2a147fd3_be77a104",
+      "range": {
+        "startLine": 57,
+        "startChar": 28,
+        "endLine": 57,
+        "endChar": 41
+      },
+      "revId": "734905f76747d84fb02212aa3f9d61d534b8d4dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
