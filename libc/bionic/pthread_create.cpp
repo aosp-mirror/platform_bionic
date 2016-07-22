@@ -56,6 +56,10 @@ void __init_tls(pthread_internal_t* thread) {
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
+  __init_thread_stack_guard(thread);
+}
+
+void __init_thread_stack_guard(pthread_internal_t* thread) {
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
 }

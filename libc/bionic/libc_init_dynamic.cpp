@@ -52,6 +52,7 @@
 #include "libc_init_common.h"
 
 #include "private/bionic_globals.h"
+#include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
@@ -73,6 +74,10 @@ __attribute__((constructor)) static void __libc_preinit() {
   // Clear the slot so no other initializer sees its value.
   // __libc_init_common() will change the TLS area so the old one won't be accessible anyway.
   *args_slot = NULL;
+
+  // The linker has initialized its copy of the global stack_chk_guard, and filled in the main
+  // thread's TLS slot with that value. Initialize the local global stack guard with its value.
+  __stack_chk_guard = reinterpret_cast<uintptr_t>(tls[TLS_SLOT_STACK_GUARD]);
 
   __libc_init_globals(*args);
   __libc_init_common(*args);
