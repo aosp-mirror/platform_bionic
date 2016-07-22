@@ -39,19 +39,19 @@
 #include <sys/types.h>
 
 struct group {
-    char* gr_name; /* group name */
-    char* gr_passwd; /* group password */
-    gid_t gr_gid; /* group id */
-    char** gr_mem; /* group members */
+  char* gr_name; /* group name */
+  char* gr_passwd; /* group password */
+  gid_t gr_gid; /* group id */
+  char** gr_mem; /* group members */
 };
 
 __BEGIN_DECLS
+
 struct group* getgrgid(gid_t);
 struct group* getgrnam(const char*);
 
-/* Android has thousands and thousands of ids to iterate through. */
-struct group* getgrent(void)
-  __attribute__((warning("getgrent is inefficient on Android"))) __INTRODUCED_IN_FUTURE;
+/* Note: Android has thousands and thousands of ids to iterate through. */
+struct group* getgrent(void) __INTRODUCED_IN_FUTURE;
 
 void setgrent(void) __INTRODUCED_IN_FUTURE;
 void endgrent(void) __INTRODUCED_IN_FUTURE;

@@ -37,117 +37,119 @@
 
 __BEGIN_DECLS
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+#endif
+
 #if defined(__USE_BSD)
 #include <strings.h>
 #endif
 
-extern void*  memccpy(void* __restrict, const void* __restrict, int, size_t);
-extern void*  memchr(const void *, int, size_t) __purefunc;
-extern void*  memrchr(const void *, int, size_t) __purefunc;
-extern int    memcmp(const void *, const void *, size_t) __purefunc;
-extern void*  memcpy(void* __restrict, const void* __restrict, size_t);
+void* memccpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, int, size_t);
+void* memchr(const void* _Nonnull, int, size_t) __purefunc;
+void* memrchr(const void* _Nonnull, int, size_t) __purefunc;
+int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __purefunc;
+void* memcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t);
 #if defined(__USE_GNU)
-extern void* mempcpy(void* __restrict, const void* __restrict, size_t) __INTRODUCED_IN(23);
+void* mempcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t) __INTRODUCED_IN(23);
 #endif
-extern void*  memmove(void *, const void *, size_t);
-extern void*  memset(void *, int, size_t);
-extern void*  memmem(const void *, size_t, const void *, size_t) __purefunc;
+void* memmove(void* _Nonnull, const void* _Nonnull, size_t);
+void* memset(void* _Nonnull, int, size_t);
+void* memmem(const void* _Nonnull, size_t, const void* _Nonnull, size_t) __purefunc;
 
-extern char*  strchr(const char *, int) __purefunc;
-extern char* __strchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
+char* strchr(const char* _Nonnull, int) __purefunc;
+char* __strchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char*, int) __RENAME(strchrnul) __purefunc;
-extern "C++" const char* strchrnul(const char*, int) __RENAME(strchrnul) __purefunc;
+extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
+extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
 #else
-char* strchrnul(const char*, int) __purefunc __INTRODUCED_IN(24);
+char* strchrnul(const char* _Nonnull, int) __purefunc __INTRODUCED_IN(24);
 #endif
 #endif
 
-extern char*  strrchr(const char *, int) __purefunc;
-extern char* __strrchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
+char* strrchr(const char* _Nonnull, int) __purefunc;
+char* __strrchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
 
-extern size_t strlen(const char *) __purefunc;
-extern size_t __strlen_chk(const char*, size_t) __INTRODUCED_IN(17);
-extern int    strcmp(const char *, const char *) __purefunc;
-extern char* stpcpy(char* __restrict, const char* __restrict) __INTRODUCED_IN(21);
-extern char*  strcpy(char* __restrict, const char* __restrict);
-extern char*  strcat(char* __restrict, const char* __restrict);
+size_t strlen(const char* _Nonnull) __purefunc;
+size_t __strlen_chk(const char* _Nonnull, size_t) __INTRODUCED_IN(17);
+int strcmp(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* stpcpy(char* _Nonnull __restrict, const char* _Nonnull__restrict) __INTRODUCED_IN(21);
+char* strcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict);
+char* strcat(char* _Nonnull __restrict, const char* _Nonnull __restrict);
 
-extern char*  strdup(const char *);
+char* strdup(const char* _Nonnull);
 
-extern char*  strstr(const char *, const char *) __purefunc;
-extern char*  strcasestr(const char *haystack, const char *needle) __purefunc;
-extern char*  strtok(char* __restrict, const char* __restrict);
-extern char*  strtok_r(char* __restrict, const char* __restrict, char** __restrict);
+char* strstr(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* strcasestr(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* strtok(char* __restrict, const char* _Nonnull __restrict);
+char* strtok_r(char* __restrict, const char* _Nonnull __restrict, char** _Nonnull __restrict);
 
-extern char* strerror(int);
-extern char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
+char* strerror(int);
+char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
 #if defined(__USE_GNU)
-extern char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
+char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
-extern int strerror_r(int, char*, size_t);
+int strerror_r(int, char*, size_t);
 #endif
 
-extern size_t strnlen(const char *, size_t) __purefunc;
-extern char*  strncat(char* __restrict, const char* __restrict, size_t);
-extern char*  strndup(const char *, size_t);
-extern int    strncmp(const char *, const char *, size_t) __purefunc;
-extern char* stpncpy(char* __restrict, const char* __restrict, size_t) __INTRODUCED_IN(21);
-extern char*  strncpy(char* __restrict, const char* __restrict, size_t);
+size_t strnlen(const char* _Nonnull, size_t) __purefunc;
+char* strncat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
+char* strndup(const char* _Nonnull, size_t);
+int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __purefunc;
+char* stpncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __INTRODUCED_IN(21);
+char* strncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 
-extern size_t strlcat(char* __restrict, const char* __restrict, size_t);
-extern size_t strlcpy(char* __restrict, const char* __restrict, size_t);
+size_t strlcat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
+size_t strlcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 
-extern size_t strcspn(const char *, const char *) __purefunc;
-extern char*  strpbrk(const char *, const char *) __purefunc;
-extern char*  strsep(char** __restrict, const char* __restrict);
-extern size_t strspn(const char *, const char *);
+size_t strcspn(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* strpbrk(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* strsep(char** _Nonnull __restrict, const char* _Nonnull __restrict);
+size_t strspn(const char* _Nonnull, const char* _Nonnull);
 
-extern char*  strsignal(int  sig);
+char* strsignal(int);
 
-extern int    strcoll(const char *, const char *) __purefunc;
-extern size_t strxfrm(char* __restrict, const char* __restrict, size_t);
+int strcoll(const char* _Nonnull, const char* _Nonnull) __purefunc;
+size_t strxfrm(char* __restrict, const char* _Nonnull __restrict, size_t);
 
-extern int strcoll_l(const char*, const char*, locale_t) __purefunc __INTRODUCED_IN(21);
-extern size_t strxfrm_l(char* __restrict, const char* __restrict, size_t, locale_t)
-  __INTRODUCED_IN(21);
+int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __purefunc __INTRODUCED_IN(21);
+size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, locale_t) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU) && !defined(basename)
 /*
  * glibc has a basename in <string.h> that's different to the POSIX one in <libgen.h>.
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
-
 #if defined(__cplusplus)
 extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename);
 extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename);
 #else
-extern char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 #endif
 
-extern void* __memchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
+void* __memchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__memchr_buf_size_error, "memchr called with size bigger than buffer");
 
-extern void* __memrchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
+void* __memrchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
 __errordecl(__memrchr_buf_size_error, "memrchr called with size bigger than buffer");
-extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
+void* __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
 
-extern char* __stpncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t)
+char* __stpncpy_chk2(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t, size_t)
   __INTRODUCED_IN(21);
-extern char* __strncpy_chk2(char* __restrict, const char* __restrict, size_t, size_t, size_t)
+char* __strncpy_chk2(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t, size_t)
   __INTRODUCED_IN(21);
-extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcpy);
-extern size_t __strlcpy_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
-extern size_t __strlcat_real(char* __restrict, const char* __restrict, size_t) __RENAME(strlcat);
-extern size_t __strlcat_chk(char* __restrict, const char* __restrict, size_t, size_t)
-  __INTRODUCED_IN(17);
+size_t __strlcpy_real(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __RENAME(strlcpy);
+size_t __strlcpy_chk(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t) __INTRODUCED_IN(17);
+size_t __strlcat_real(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __RENAME(strlcat);
+size_t __strlcat_chk(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t, size_t) __INTRODUCED_IN(17);
 
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
-void* memchr(const void *s, int c, size_t n) {
+void* memchr(const void* s, int c, size_t n) {
     size_t bos = __bos(s);
 
 #if !defined(__clang__)
@@ -168,7 +170,7 @@ void* memchr(const void *s, int c, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memrchr(const void *s, int c, size_t n) {
+void* memrchr(const void* s, int c, size_t n) {
     size_t bos = __bos(s);
 
 #if !defined(__clang__)
@@ -189,125 +191,125 @@ void* memrchr(const void *s, int c, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memcpy(void* __restrict dest, const void* __restrict src, size_t copy_amount) {
-    return __builtin___memcpy_chk(dest, src, copy_amount, __bos0(dest));
+void* memcpy(void* _Nonnull __restrict dst, const void* _Nonnull __restrict src, size_t copy_amount) {
+    return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memmove(void *dest, const void *src, size_t len) {
-    return __builtin___memmove_chk(dest, src, len, __bos0(dest));
+void* memmove(void* _Nonnull dst, const void* _Nonnull src, size_t len) {
+    return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* stpcpy(char* __restrict dest, const char* __restrict src) {
-    return __builtin___stpcpy_chk(dest, src, __bos(dest));
+char* stpcpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
+    return __builtin___stpcpy_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strcpy(char* __restrict dest, const char* __restrict src) {
-    return __builtin___strcpy_chk(dest, src, __bos(dest));
+char* strcpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
+    return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* stpncpy(char* __restrict dest, const char* __restrict src, size_t n) {
-    size_t bos_dest = __bos(dest);
+char* stpncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
+    size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
     if (bos_src == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+        return __builtin___stpncpy_chk(dst, src, n, bos_dst);
     }
 
     if (__builtin_constant_p(n) && (n <= bos_src)) {
-        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+        return __builtin___stpncpy_chk(dst, src, n, bos_dst);
     }
 
     size_t slen = __builtin_strlen(src);
     if (__builtin_constant_p(slen)) {
-        return __builtin___stpncpy_chk(dest, src, n, bos_dest);
+        return __builtin___stpncpy_chk(dst, src, n, bos_dst);
     }
 
-    return __stpncpy_chk2(dest, src, n, bos_dest, bos_src);
+    return __stpncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strncpy(char* __restrict dest, const char* __restrict src, size_t n) {
-    size_t bos_dest = __bos(dest);
+char* strncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
+    size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
     if (bos_src == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+        return __builtin___strncpy_chk(dst, src, n, bos_dst);
     }
 
     if (__builtin_constant_p(n) && (n <= bos_src)) {
-        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+        return __builtin___strncpy_chk(dst, src, n, bos_dst);
     }
 
     size_t slen = __builtin_strlen(src);
     if (__builtin_constant_p(slen)) {
-        return __builtin___strncpy_chk(dest, src, n, bos_dest);
+        return __builtin___strncpy_chk(dst, src, n, bos_dst);
     }
 
-    return __strncpy_chk2(dest, src, n, bos_dest, bos_src);
+    return __strncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strcat(char* __restrict dest, const char* __restrict src) {
-    return __builtin___strcat_chk(dest, src, __bos(dest));
+char* strcat(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
+    return __builtin___strcat_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char *strncat(char* __restrict dest, const char* __restrict src, size_t n) {
-    return __builtin___strncat_chk(dest, src, n, __bos(dest));
+char *strncat(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
+    return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void *s, int c, size_t n) {
+void* memset(void* _Nonnull s, int c, size_t n) {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char* __restrict dest, const char* __restrict src, size_t size) {
-    size_t bos = __bos(dest);
+size_t strlcpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t size) {
+    size_t bos = __bos(dst);
 
 #if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __strlcpy_real(dest, src, size);
+        return __strlcpy_real(dst, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
     // is always <= the actual object size. Don't call __strlcpy_chk
     if (__builtin_constant_p(size) && (size <= bos)) {
-        return __strlcpy_real(dest, src, size);
+        return __strlcpy_real(dst, src, size);
     }
 #endif /* !defined(__clang__) */
 
-    return __strlcpy_chk(dest, src, size, bos);
+    return __strlcpy_chk(dst, src, size, bos);
 }
 
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char* __restrict dest, const char* __restrict src, size_t size) {
-    size_t bos = __bos(dest);
+size_t strlcat(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t size) {
+    size_t bos = __bos(dst);
 
 #if !defined(__clang__)
     // Compiler doesn't know destination size. Don't call __strlcat_chk
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __strlcat_real(dest, src, size);
+        return __strlcat_real(dst, src, size);
     }
 
     // Compiler can prove, at compile time, that the passed in size
     // is always <= the actual object size. Don't call __strlcat_chk
     if (__builtin_constant_p(size) && (size <= bos)) {
-        return __strlcat_real(dest, src, size);
+        return __strlcat_real(dst, src, size);
     }
 #endif /* !defined(__clang__) */
 
-    return __strlcat_chk(dest, src, size, bos);
+    return __strlcat_chk(dst, src, size, bos);
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char *s) {
+size_t strlen(const char* _Nonnull s) {
     size_t bos = __bos(s);
 
 #if !defined(__clang__)
@@ -326,7 +328,7 @@ size_t strlen(const char *s) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strchr(const char *s, int c) {
+char* strchr(const char* _Nonnull s, int c) {
     size_t bos = __bos(s);
 
 #if !defined(__clang__)
@@ -345,7 +347,7 @@ char* strchr(const char *s, int c) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strrchr(const char *s, int c) {
+char* strrchr(const char* _Nonnull s, int c) {
     size_t bos = __bos(s);
 
 #if !defined(__clang__)
@@ -365,6 +367,10 @@ char* strrchr(const char *s, int c) {
 
 
 #endif /* defined(__BIONIC_FORTIFY) */
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 __END_DECLS
 
