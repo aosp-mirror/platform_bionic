@@ -63,6 +63,8 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+__BEGIN_DECLS
+
 #define _PATH_PASSWD        "/etc/passwd"
 #define _PATH_MASTERPASSWD  "/etc/master.passwd"
 #define _PATH_MASTERPASSWD_LOCK "/etc/ptmp"
@@ -96,8 +98,7 @@
 #define _PASSWORD_WARNDAYS  14  /* days to warn about expiry */
 #define _PASSWORD_CHGNOW    -1  /* special day to force password change at next login */
 
-struct passwd
-{
+struct passwd {
   char* pw_name;
   char* pw_passwd;
   uid_t pw_uid;
@@ -112,13 +113,12 @@ struct passwd
   char* pw_shell;
 };
 
-__BEGIN_DECLS
-
 struct passwd* getpwnam(const char*);
 struct passwd* getpwuid(uid_t);
-/* Android has thousands and thousands of ids to iterate through */
-struct passwd* getpwent(void)
-  __attribute__((warning("getpwent is inefficient on Android"))) __INTRODUCED_IN_FUTURE;
+
+/* Note: Android has thousands and thousands of ids to iterate through */
+struct passwd* getpwent(void) __INTRODUCED_IN_FUTURE;
+
 void setpwent(void) __INTRODUCED_IN_FUTURE;
 void endpwent(void) __INTRODUCED_IN_FUTURE;
 
