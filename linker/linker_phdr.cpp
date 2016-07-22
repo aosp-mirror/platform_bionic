@@ -245,6 +245,17 @@ bool ElfReader::VerifyElfHeader() {
     return false;
   }
 
+  if (header_.e_shentsize != sizeof(ElfW(Shdr))) {
+    DL_ERR("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
+           name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
+    return false;
+  }
+
+  if (header_.e_shstrndx == 0) {
+    DL_ERR("\"%s\" has invalid e_shstrndx", name_.c_str());
+    return false;
+  }
+
   return true;
 }
 
