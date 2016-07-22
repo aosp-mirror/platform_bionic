@@ -46,7 +46,7 @@ typedef struct {
 
 #define __FDELT(fd) ((fd) / NFDBITS)
 #define __FDMASK(fd) (1UL << ((fd) % NFDBITS))
-#define __FDS_BITS(set) (((fd_set*)(set))->fds_bits)
+#define __FDS_BITS(set) (__BIONIC_CAST(static_cast, fd_set*, set)->fds_bits)
 
 /* Inline loop so we don't have to declare memset. */
 #define FD_ZERO(set) \
