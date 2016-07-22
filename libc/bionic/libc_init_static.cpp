@@ -39,6 +39,7 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "private/bionic_globals.h"
 #include "private/bionic_page.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -85,6 +86,7 @@ __noreturn void __libc_init(void* raw_args,
   __libc_init_main_thread(args);
 
   // Initializing the globals requires TLS to be available for errno.
+  __init_thread_stack_guard(__get_thread());
   __libc_init_globals(args);
 
   __libc_init_AT_SECURE(args);
