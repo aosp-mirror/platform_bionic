@@ -40,10 +40,11 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 
+#include <bits/sa_family_t.h>
+
 __BEGIN_DECLS
 
 #define sockaddr_storage __kernel_sockaddr_storage
-typedef unsigned short sa_family_t;
 
 struct timespec;
 
