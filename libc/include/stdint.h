@@ -31,6 +31,7 @@
 
 #include <bits/wchar_limits.h>
 #include <stddef.h>
+#include <sys/cdefs.h>
 
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;

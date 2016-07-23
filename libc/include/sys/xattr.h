@@ -30,6 +30,7 @@
 #define _SYS_XATTR_H_
 
 #include <linux/xattr.h>
+#include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

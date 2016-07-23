@@ -64,6 +64,7 @@
 #ifndef _NETINET_IP6_H_
 #define _NETINET_IP6_H_
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
 
 #include <linux/in6.h>

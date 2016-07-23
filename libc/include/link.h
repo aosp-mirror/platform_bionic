@@ -28,8 +28,9 @@
 #ifndef _LINK_H_
 #define _LINK_H_
 
-#include <sys/types.h>
 #include <elf.h>
+#include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
