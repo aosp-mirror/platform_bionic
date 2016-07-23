@@ -31,5 +31,6 @@
 
 #include <bits/sa_family_t.h>
 #include <linux/un.h>
+#include <sys/cdefs.h>
 
 #endif

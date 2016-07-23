@@ -35,6 +35,8 @@
 #ifndef	_SYSEXITS_H_
 #define	_SYSEXITS_H_
 
+#include <sys/cdefs.h>
+
 /*
  *  SYSEXITS.H -- Exit status codes for system programs.
  *

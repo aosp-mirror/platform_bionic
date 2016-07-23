@@ -25,8 +25,9 @@
 #ifndef	_FTW_H
 #define	_FTW_H
 
-#include <sys/types.h>
+#include <sys/cdefs.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 /*
  * Valid flags for the 3rd argument to the function that is passed as the
