@@ -32,6 +32,8 @@
 #ifndef	_SYS_QUEUE_H_
 #define	_SYS_QUEUE_H_
 
+#include <sys/cdefs.h>
+
 /*
  * This file defines five types of data structures: singly-linked lists,
  * lists, simple queues, tail queues, and circular queues.

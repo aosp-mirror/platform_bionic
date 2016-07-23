@@ -32,6 +32,8 @@
 #ifndef _PATHS_H_
 #define	_PATHS_H_
 
+#include <sys/cdefs.h>
+
 #define	_PATH_BSHELL	"/system/bin/sh"
 #define	_PATH_CONSOLE	"/dev/console"
 #define	_PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/vendor/bin:/vendor/xbin"

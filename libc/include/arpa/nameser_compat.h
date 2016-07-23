@@ -40,9 +40,10 @@
 #ifndef _ARPA_NAMESER_COMPAT_
 #define	_ARPA_NAMESER_COMPAT_
 
-#define	__BIND		19950621	/* (DEAD) interface version stamp. */
-
 #include <endian.h>
+#include <sys/cdefs.h>
+
+#define	__BIND		19950621	/* (DEAD) interface version stamp. */
 
 /*
  * Structure for query header.  The order of the fields is machine- and

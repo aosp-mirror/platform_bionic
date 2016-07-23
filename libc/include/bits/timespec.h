@@ -29,6 +29,7 @@
 #ifndef _BITS_TIMESPEC_H_
 #define _BITS_TIMESPEC_H_
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
 
 /*

@@ -42,6 +42,8 @@
 #ifndef _SYS_TTYDEFAULTS_H_
 #define	_SYS_TTYDEFAULTS_H_
 
+#include <sys/cdefs.h>
+
 /*
  * Defaults on "first" open.
  */
