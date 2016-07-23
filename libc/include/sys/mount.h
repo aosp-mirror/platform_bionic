@@ -41,9 +41,9 @@ __BEGIN_DECLS
 #define MNT_EXPIRE 4
 #define UMOUNT_NOFOLLOW 8
 
-extern int mount(const char*, const char*, const char*, unsigned long, const void*);
-extern int umount(const char*);
-extern int umount2(const char*, int);
+int mount(const char*, const char*, const char*, unsigned long, const void*);
+int umount(const char*);
+int umount2(const char*, int);
 
 __END_DECLS
 

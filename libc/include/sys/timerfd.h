@@ -42,10 +42,9 @@ __BEGIN_DECLS
 #define TFD_CLOEXEC O_CLOEXEC
 #define TFD_NONBLOCK O_NONBLOCK
 
-extern int timerfd_create(clockid_t, int) __INTRODUCED_IN(19);
-extern int timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)
-  __INTRODUCED_IN(19);
-extern int timerfd_gettime(int, struct itimerspec*) __INTRODUCED_IN(19);
+int timerfd_create(clockid_t, int) __INTRODUCED_IN(19);
+int timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*) __INTRODUCED_IN(19);
+int timerfd_gettime(int, struct itimerspec*) __INTRODUCED_IN(19);
 
 __END_DECLS
 

@@ -23,13 +23,13 @@
 
 __BEGIN_DECLS
 
-extern void* malloc(size_t byte_count) __mallocfunc __wur;
-extern void* calloc(size_t item_count, size_t item_size) __mallocfunc __wur;
-extern void* realloc(void* p, size_t byte_count) __wur;
-extern void free(void* p);
+void* malloc(size_t byte_count) __mallocfunc __wur;
+void* calloc(size_t item_count, size_t item_size) __mallocfunc __wur;
+void* realloc(void* p, size_t byte_count) __wur;
+void free(void* p);
 
-extern void* memalign(size_t alignment, size_t byte_count) __mallocfunc __wur;
-extern size_t malloc_usable_size(const void* p) __INTRODUCED_IN(17);
+void* memalign(size_t alignment, size_t byte_count) __mallocfunc __wur;
+size_t malloc_usable_size(const void* p) __INTRODUCED_IN(17);
 
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
@@ -47,7 +47,7 @@ struct mallinfo {
 };
 #endif  /* STRUCT_MALLINFO_DECLARED */
 
-extern struct mallinfo mallinfo(void);
+struct mallinfo mallinfo(void);
 
 /*
  * XML structure for malloc_info(3) is in the following format:
@@ -68,7 +68,7 @@ extern struct mallinfo mallinfo(void);
  *   <!-- more heaps -->
  * </malloc>
  */
-extern int malloc_info(int, FILE*) __INTRODUCED_IN(23);
+int malloc_info(int, FILE*) __INTRODUCED_IN(23);
 
 __END_DECLS
 

@@ -40,10 +40,10 @@ __BEGIN_DECLS
 /* type of event counter */
 typedef uint64_t eventfd_t;
 
-extern int eventfd(unsigned int initial_value, int flags);
+int eventfd(unsigned int initial_value, int flags);
 
-extern int eventfd_read(int fd, eventfd_t* value);
-extern int eventfd_write(int fd, eventfd_t value);
+int eventfd_read(int fd, eventfd_t* value);
+int eventfd_write(int fd, eventfd_t value);
 
 __END_DECLS
 

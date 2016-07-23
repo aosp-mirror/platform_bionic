@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-extern int utime(const char*, const struct utimbuf*);
+int utime(const char*, const struct utimbuf*);
 
 __END_DECLS
 

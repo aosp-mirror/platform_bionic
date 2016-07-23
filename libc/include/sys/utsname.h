@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_UTSNAME_H_
 #define _SYS_UTSNAME_H_
 
@@ -43,7 +44,7 @@ struct utsname {
     char  domainname[SYS_NMLN];
 };
 
-extern int uname(struct utsname *);
+int uname(struct utsname*);
 
 __END_DECLS
 

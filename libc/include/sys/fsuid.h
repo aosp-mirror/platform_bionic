@@ -34,8 +34,8 @@
 
 __BEGIN_DECLS
 
-extern int setfsuid(uid_t) __INTRODUCED_IN(21);
-extern int setfsgid(gid_t) __INTRODUCED_IN(21);
+int setfsuid(uid_t) __INTRODUCED_IN(21);
+int setfsgid(gid_t) __INTRODUCED_IN(21);
 
 __END_DECLS
 
