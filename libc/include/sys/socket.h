@@ -287,16 +287,16 @@ __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
 
-extern ssize_t send(int, const void*, size_t, int);
-extern ssize_t recv(int, void*, size_t, int);
+ssize_t send(int, const void*, size_t, int);
+ssize_t recv(int, void*, size_t, int);
 
 __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
 __socketcall ssize_t recvfrom(int, void*, size_t, int, const struct sockaddr*, socklen_t*);
 
 __errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-extern ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*)
+ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*)
   __INTRODUCED_IN(21);
-extern ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*) __RENAME(recvfrom);
+ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*) __RENAME(recvfrom);
 
 #if defined(__BIONIC_FORTIFY)
 

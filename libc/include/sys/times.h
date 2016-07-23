@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-extern clock_t times(struct tms*);
+clock_t times(struct tms*);
 
 __END_DECLS
 

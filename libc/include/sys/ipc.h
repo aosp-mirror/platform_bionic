@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_IPC_H
 #define _SYS_IPC_H
 
@@ -34,7 +35,7 @@
 
 __BEGIN_DECLS
 
-extern key_t  ftok(const char*  path, int  id);
+key_t ftok(const char* path, int id);
 
 __END_DECLS
 

@@ -59,48 +59,48 @@ struct tm {
 
 #define TM_ZONE tm_zone
 
-extern time_t time(time_t*);
-extern int nanosleep(const struct timespec*, struct timespec*);
+time_t time(time_t*);
+int nanosleep(const struct timespec*, struct timespec*);
 
-extern char* asctime(const struct tm*);
-extern char* asctime_r(const struct tm*, char*);
+char* asctime(const struct tm*);
+char* asctime_r(const struct tm*, char*);
 
-extern double difftime(time_t, time_t);
-extern time_t mktime(struct tm*);
+double difftime(time_t, time_t);
+time_t mktime(struct tm*);
 
-extern struct tm* localtime(const time_t*);
-extern struct tm* localtime_r(const time_t*, struct tm*);
+struct tm* localtime(const time_t*);
+struct tm* localtime_r(const time_t*, struct tm*);
 
-extern struct tm* gmtime(const time_t*);
-extern struct tm* gmtime_r(const time_t*, struct tm*);
+struct tm* gmtime(const time_t*);
+struct tm* gmtime_r(const time_t*, struct tm*);
 
-extern char* strptime(const char*, const char*, struct tm*);
-extern size_t strftime(char*, size_t, const char*, const struct tm*);
-extern size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __INTRODUCED_IN(21);
+char* strptime(const char*, const char*, struct tm*);
+size_t strftime(char*, size_t, const char*, const struct tm*);
+size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __INTRODUCED_IN(21);
 
-extern char* ctime(const time_t*);
-extern char* ctime_r(const time_t*, char*);
+char* ctime(const time_t*);
+char* ctime_r(const time_t*, char*);
 
-extern void tzset(void);
+void tzset(void);
 
-extern clock_t clock(void);
+clock_t clock(void);
 
-extern int clock_getcpuclockid(pid_t, clockid_t*) __INTRODUCED_IN(23);
+int clock_getcpuclockid(pid_t, clockid_t*) __INTRODUCED_IN(23);
 
-extern int clock_getres(clockid_t, struct timespec*);
-extern int clock_gettime(clockid_t, struct timespec*);
-extern int clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*);
-extern int clock_settime(clockid_t, const struct timespec*);
+int clock_getres(clockid_t, struct timespec*);
+int clock_gettime(clockid_t, struct timespec*);
+int clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*);
+int clock_settime(clockid_t, const struct timespec*);
 
-extern int timer_create(int, struct sigevent*, timer_t*);
-extern int timer_delete(timer_t);
-extern int timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*);
-extern int timer_gettime(timer_t, struct itimerspec*);
-extern int timer_getoverrun(timer_t);
+int timer_create(int, struct sigevent*, timer_t*);
+int timer_delete(timer_t);
+int timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*);
+int timer_gettime(timer_t, struct itimerspec*);
+int timer_getoverrun(timer_t);
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-extern time_t timelocal(struct tm*) __INTRODUCED_IN(12);
-extern time_t timegm(struct tm*) __INTRODUCED_IN(12);
+time_t timelocal(struct tm*) __INTRODUCED_IN(12);
+time_t timegm(struct tm*) __INTRODUCED_IN(12);
 
 __END_DECLS
 
