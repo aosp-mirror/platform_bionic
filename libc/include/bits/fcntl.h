@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-extern int fcntl(int, int, ...);
+int fcntl(int, int, ...);
 
 __END_DECLS
 

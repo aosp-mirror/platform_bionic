@@ -41,58 +41,57 @@ __BEGIN_DECLS
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
-extern __noreturn void abort(void);
-extern __noreturn void exit(int);
-extern __noreturn void _Exit(int) __INTRODUCED_IN(21);
-extern int atexit(void (*)(void));
+__noreturn void abort(void);
+__noreturn void exit(int);
+__noreturn void _Exit(int) __INTRODUCED_IN(21);
+int atexit(void (*)(void));
 
 int at_quick_exit(void (*)(void)) __INTRODUCED_IN(21);
 void quick_exit(int) __noreturn __INTRODUCED_IN(21);
 
-extern char* getenv(const char*);
-extern int putenv(char*);
-extern int setenv(const char*, const char*, int);
-extern int unsetenv(const char*);
-extern int clearenv(void);
+char* getenv(const char*);
+int putenv(char*);
+int setenv(const char*, const char*, int);
+int unsetenv(const char*);
+int clearenv(void);
 
-extern char* mkdtemp(char*);
-extern char* mktemp(char*) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
+char* mkdtemp(char*);
+char* mktemp(char*) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
-extern int mkostemp64(char*, int) __INTRODUCED_IN(23);
-extern int mkostemp(char*, int) __INTRODUCED_IN(23);
-extern int mkostemps64(char*, int, int) __INTRODUCED_IN(23);
-extern int mkostemps(char*, int, int) __INTRODUCED_IN(23);
-extern int mkstemp64(char*) __INTRODUCED_IN(21);
-extern int mkstemp(char*);
-extern int mkstemps64(char*, int) __INTRODUCED_IN(23);
-extern int mkstemps(char*, int);
+int mkostemp64(char*, int) __INTRODUCED_IN(23);
+int mkostemp(char*, int) __INTRODUCED_IN(23);
+int mkostemps64(char*, int, int) __INTRODUCED_IN(23);
+int mkostemps(char*, int, int) __INTRODUCED_IN(23);
+int mkstemp64(char*) __INTRODUCED_IN(21);
+int mkstemp(char*);
+int mkstemps64(char*, int) __INTRODUCED_IN(23);
+int mkstemps(char*, int);
 
-extern long strtol(const char *, char **, int);
-extern long long strtoll(const char *, char **, int);
-extern unsigned long strtoul(const char *, char **, int);
-extern unsigned long long strtoull(const char *, char **, int);
+long strtol(const char *, char **, int);
+long long strtoll(const char *, char **, int);
+unsigned long strtoul(const char *, char **, int);
+unsigned long long strtoull(const char *, char **, int);
 
-extern int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN(16);
+int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN(16);
 
-extern double strtod(const char*, char**);
-extern long double strtold(const char*, char**) __INTRODUCED_IN(21);
+double strtod(const char*, char**);
+long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
-extern long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
-extern long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
-extern unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
+long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 
-extern int atoi(const char*) __purefunc;
-extern long atol(const char*) __purefunc;
-extern long long atoll(const char*) __purefunc;
+int atoi(const char*) __purefunc;
+long atol(const char*) __purefunc;
+long long atoll(const char*) __purefunc;
 
-extern char * realpath(const char *path, char *resolved);
-extern int system(const char *string);
+char* realpath(const char* path, char* resolved);
+int system(const char* string);
 
-extern void * bsearch(const void *key, const void *base0,
-	size_t nmemb, size_t size,
-	int (*compar)(const void *, const void *));
+void* bsearch(const void* key, const void* base0, size_t nmemb, size_t size,
+              int (*compar)(const void*, const void*));
 
-extern void qsort(void *, size_t, size_t, int (*)(const void *, const void *));
+void qsort(void*, size_t, size_t, int (*)(const void*, const void*));
 
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t);
@@ -128,25 +127,25 @@ typedef struct {
     int  rem;
 } div_t;
 
-extern div_t   div(int, int) __pure2;
+div_t div(int, int) __pure2;
 
 typedef struct {
     long int  quot;
     long int  rem;
 } ldiv_t;
 
-extern ldiv_t   ldiv(long, long) __pure2;
+ldiv_t ldiv(long, long) __pure2;
 
 typedef struct {
     long long int  quot;
     long long int  rem;
 } lldiv_t;
 
-extern lldiv_t   lldiv(long long, long long) __pure2;
+lldiv_t lldiv(long long, long long) __pure2;
 
 /* BSD compatibility. */
-extern const char* getprogname(void) __INTRODUCED_IN(21);
-extern void setprogname(const char*) __INTRODUCED_IN(21);
+const char* getprogname(void) __INTRODUCED_IN(21);
+void setprogname(const char*) __INTRODUCED_IN(21);
 
 int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE;
 size_t mbstowcs(wchar_t*, const char*, size_t);
@@ -154,12 +153,12 @@ int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21);
 int wctomb(char*, wchar_t) __INTRODUCED_IN(21);
 size_t wcstombs(char*, const wchar_t*, size_t);
 
-extern size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
+size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 
 #if defined(__BIONIC_FORTIFY)
 
-extern char* __realpath_real(const char*, char*) __RENAME(realpath);
+char* __realpath_real(const char*, char*) __RENAME(realpath);
 __errordecl(__realpath_size_error, "realpath output parameter must be NULL or a >= PATH_MAX bytes buffer");
 
 #if !defined(__clang__)

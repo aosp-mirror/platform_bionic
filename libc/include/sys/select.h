@@ -57,9 +57,9 @@ typedef struct {
     } \
   } while (0)
 
-extern void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
-extern void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
-extern int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 
 #if defined(__BIONIC_FORTIFY)
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
@@ -71,8 +71,8 @@ extern int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 #define FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 #endif /* defined(__BIONIC_FORTIFY) */
 
-extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-extern int pselect(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
+int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
+int pselect(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
 
 __END_DECLS
 

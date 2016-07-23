@@ -42,20 +42,20 @@ __BEGIN_DECLS
 
 typedef unsigned long rlim_t;
 
-extern int getrlimit(int, struct rlimit*);
-extern int setrlimit(int, const struct rlimit*);
+int getrlimit(int, struct rlimit*);
+int setrlimit(int, const struct rlimit*);
 
-extern int getrlimit64(int, struct rlimit64*) __INTRODUCED_IN(21);
-extern int setrlimit64(int, const struct rlimit64*) __INTRODUCED_IN(21);
+int getrlimit64(int, struct rlimit64*) __INTRODUCED_IN(21);
+int setrlimit64(int, const struct rlimit64*) __INTRODUCED_IN(21);
 
-extern int getpriority(int, int);
-extern int setpriority(int, int, int);
+int getpriority(int, int);
+int setpriority(int, int, int);
 
-extern int getrusage(int, struct rusage*);
+int getrusage(int, struct rusage*);
 
-extern int prlimit(pid_t, int, const struct rlimit*, struct rlimit*) __INTRODUCED_IN_32(24)
+int prlimit(pid_t, int, const struct rlimit*, struct rlimit*) __INTRODUCED_IN_32(24)
   __INTRODUCED_IN_64(21);
-extern int prlimit64(pid_t, int, const struct rlimit64*, struct rlimit64*) __INTRODUCED_IN(21);
+int prlimit64(pid_t, int, const struct rlimit64*, struct rlimit64*) __INTRODUCED_IN(21);
 
 __END_DECLS
 
