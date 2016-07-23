@@ -74,10 +74,7 @@ extern unsigned long long strtoull(const char *, char **, int);
 
 extern int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN(16);
 
-__BIONIC_LEGACY_INLINE double atof(const char*);
-
 extern double strtod(const char*, char**);
-__BIONIC_LEGACY_INLINE float strtof(const char*, char**);
 extern long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
 extern long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
@@ -87,10 +84,6 @@ extern unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRO
 extern int atoi(const char*) __purefunc;
 extern long atol(const char*) __purefunc;
 extern long long atoll(const char*) __purefunc;
-
-__BIONIC_LEGACY_INLINE int abs(int) __pure2;
-__BIONIC_LEGACY_INLINE long labs(long) __pure2;
-__BIONIC_LEGACY_INLINE long long llabs(long long) __pure2;
 
 extern char * realpath(const char *path, char *resolved);
 extern int system(const char *string);
@@ -107,9 +100,7 @@ void arc4random_buf(void*, size_t);
 
 #define RAND_MAX 0x7fffffff
 
-__BIONIC_LEGACY_INLINE int rand(void);
 int rand_r(unsigned int*) __INTRODUCED_IN(21);
-__BIONIC_LEGACY_INLINE void srand(unsigned int);
 
 double drand48(void);
 double erand48(unsigned short[3]);
@@ -122,12 +113,9 @@ unsigned short* seed48(unsigned short[3]);
 void srand48(long);
 
 char* initstate(unsigned int, char*, size_t) __INTRODUCED_IN(21);
-__BIONIC_LEGACY_INLINE long random(void);
 char* setstate(char*) __INTRODUCED_IN(21);
-__BIONIC_LEGACY_INLINE void srandom(unsigned int);
 
 int getpt(void);
-__BIONIC_LEGACY_INLINE int grantpt(int);
 int posix_openpt(int) __INTRODUCED_IN(21);
 char* ptsname(int);
 int ptsname_r(int, char*, size_t);
@@ -189,6 +177,21 @@ char* realpath(const char* path, char* resolved) {
 #endif
 
 #endif /* defined(__BIONIC_FORTIFY) */
+
+#if __ANDROID_API__ >= 21
+float strtof(const char*, char**);
+double atof(const char*);
+int abs(int) __pure2;
+long labs(long) __pure2;
+long long llabs(long long) __pure2;
+int rand(void);
+void srand(unsigned int);
+long random(void);
+void srandom(unsigned int);
+int grantpt(int);
+#else
+// Implemented as static inlines before 21.
+#endif
 
 __END_DECLS
 
