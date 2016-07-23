@@ -29,6 +29,7 @@
 #ifndef _NETINET_UDP_H
 #define _NETINET_UDP_H
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
 
 #include <linux/udp.h>

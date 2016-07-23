@@ -29,6 +29,8 @@
 #ifndef _SYS_REG_H_
 #define _SYS_REG_H_
 
+#include <sys/cdefs.h>
+
 #if defined(__i386__)
 
 #define EBX 0

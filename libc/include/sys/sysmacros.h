@@ -29,6 +29,8 @@
 #ifndef _SYS_SYSMACROS_H_
 #define _SYS_SYSMACROS_H_
 
+#include <sys/cdefs.h>
+
 #define makedev(__major, __minor) \
   ( \
     (((__major) & 0xfffff000ULL) << 32) | (((__major) & 0xfffULL) << 8) | \

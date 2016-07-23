@@ -31,6 +31,7 @@
 
 #include <fcntl.h> /* For O_CLOEXEC and O_NONBLOCK. */
 #include <time.h>
+#include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
