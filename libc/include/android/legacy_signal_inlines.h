@@ -37,7 +37,7 @@
 
 __BEGIN_DECLS
 
-extern sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
+sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
 
 #if __ANDROID_API__ < 21
 

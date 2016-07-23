@@ -46,7 +46,7 @@ __BEGIN_DECLS
 #define KLOG_SIZE_UNREAD   9
 #define KLOG_SIZE_BUFFER   10
 
-extern int klogctl(int, char *, int);
+int klogctl(int, char *, int);
 
 __END_DECLS
 

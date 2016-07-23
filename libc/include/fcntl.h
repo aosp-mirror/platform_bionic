@@ -63,38 +63,38 @@ __BEGIN_DECLS
 #define SYNC_FILE_RANGE_WRITE 2
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
 
-extern int creat(const char*, mode_t);
-extern int creat64(const char*, mode_t) __INTRODUCED_IN(21);
-extern int openat(int, const char*, int, ...);
-extern int openat64(int, const char*, int, ...) __INTRODUCED_IN(21);
-extern int open(const char*, int, ...);
-extern int open64(const char*, int, ...) __INTRODUCED_IN(21);
-extern ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int) __INTRODUCED_IN(21);
-extern ssize_t tee(int, int, size_t, unsigned int) __INTRODUCED_IN(21);
-extern ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) __INTRODUCED_IN(21);
+int creat(const char*, mode_t);
+int creat64(const char*, mode_t) __INTRODUCED_IN(21);
+int openat(int, const char*, int, ...);
+int openat64(int, const char*, int, ...) __INTRODUCED_IN(21);
+int open(const char*, int, ...);
+int open64(const char*, int, ...) __INTRODUCED_IN(21);
+ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int) __INTRODUCED_IN(21);
+ssize_t tee(int, int, size_t, unsigned int) __INTRODUCED_IN(21);
+ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) __INTRODUCED_IN(21);
 
 #if defined(__USE_FILE_OFFSET64)
-extern int fallocate(int, int, off_t, off_t) __RENAME(fallocate64) __INTRODUCED_IN(21);
-extern int posix_fadvise(int, off_t, off_t, int) __RENAME(posix_fadvise64) __INTRODUCED_IN(21);
-extern int posix_fallocate(int, off_t, off_t) __RENAME(posix_fallocate) __INTRODUCED_IN(21);
+int fallocate(int, int, off_t, off_t) __RENAME(fallocate64) __INTRODUCED_IN(21);
+int posix_fadvise(int, off_t, off_t, int) __RENAME(posix_fadvise64) __INTRODUCED_IN(21);
+int posix_fallocate(int, off_t, off_t) __RENAME(posix_fallocate) __INTRODUCED_IN(21);
 #else
-extern int fallocate(int, int, off_t, off_t) __INTRODUCED_IN(21);
-extern int posix_fadvise(int, off_t, off_t, int) __INTRODUCED_IN(21);
-extern int posix_fallocate(int, off_t, off_t) __INTRODUCED_IN(21);
+int fallocate(int, int, off_t, off_t) __INTRODUCED_IN(21);
+int posix_fadvise(int, off_t, off_t, int) __INTRODUCED_IN(21);
+int posix_fallocate(int, off_t, off_t) __INTRODUCED_IN(21);
 #endif
-extern int fallocate64(int, int, off64_t, off64_t) __INTRODUCED_IN(21);
-extern int posix_fadvise64(int, off64_t, off64_t, int) __INTRODUCED_IN(21);
-extern int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
+int fallocate64(int, int, off64_t, off64_t) __INTRODUCED_IN(21);
+int posix_fadvise64(int, off64_t, off64_t, int) __INTRODUCED_IN(21);
+int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU)
 ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(16);
 int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN_FUTURE;
 #endif
 
-extern int __open_2(const char*, int) __INTRODUCED_IN(17);
-extern int __open_real(const char*, int, ...) __RENAME(open);
-extern int __openat_2(int, const char*, int) __INTRODUCED_IN(17);
-extern int __openat_real(int, const char*, int, ...) __RENAME(openat);
+int __open_2(const char*, int) __INTRODUCED_IN(17);
+int __open_real(const char*, int, ...) __RENAME(open);
+int __openat_2(int, const char*, int) __INTRODUCED_IN(17);
+int __openat_real(int, const char*, int, ...) __RENAME(openat);
 __errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
 __errordecl(__creat_too_many_args, "too many arguments");
 

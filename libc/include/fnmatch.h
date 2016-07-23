@@ -44,9 +44,8 @@ __BEGIN_DECLS
 #define FNM_IGNORECASE   FNM_CASEFOLD
 #define FNM_FILE_NAME    FNM_PATHNAME
 
-extern int  fnmatch(const char *pattern, const char *string, int flags);
+int fnmatch(const char* pattern, const char* string, int flags);
 
 __END_DECLS
 
 #endif /* _FNMATCH_H */
-
