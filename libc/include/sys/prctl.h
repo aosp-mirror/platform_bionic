@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-extern int prctl(int option, ...);
+int prctl(int option, ...);
 
 __END_DECLS
 

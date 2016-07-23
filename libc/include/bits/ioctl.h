@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-extern int ioctl(int, int, ...);
+int ioctl(int, int, ...);
 
 __END_DECLS
 

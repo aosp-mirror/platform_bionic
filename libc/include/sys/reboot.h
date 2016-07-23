@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_REBOOT_H_
 #define _SYS_REBOOT_H_
 
@@ -41,7 +42,7 @@ __BEGIN_DECLS
 #define RB_DISABLE_CAD  LINUX_REBOOT_CMD_CAD_OFF
 #define RB_POWER_OFF    LINUX_REBOOT_CMD_POWER_OFF
 
-extern int reboot(int  reboot_type);
+int reboot(int reboot_type);
 
 __END_DECLS
 
