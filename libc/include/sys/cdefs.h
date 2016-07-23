@@ -289,12 +289,6 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#if __ANDROID_API__ < 21
-#define __BIONIC_LEGACY_INLINE static __inline
-#else
-#define __BIONIC_LEGACY_INLINE extern
-#endif
-
 #ifdef __clang__
 #define __AVAILABILITY(...) __attribute__((availability(android,__VA_ARGS__)))
 #else
