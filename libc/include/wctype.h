@@ -29,9 +29,9 @@
 #ifndef _WCTYPE_H_
 #define _WCTYPE_H_
 
-#include <wchar.h>
-
 #include <bits/wctype.h>
+#include <wchar.h>
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 

@@ -25,8 +25,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _ALLOCA_H
 #define _ALLOCA_H
+
+#include <sys/cdefs.h>
 
 #define alloca(size)   __builtin_alloca(size)
 

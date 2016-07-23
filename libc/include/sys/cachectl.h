@@ -25,10 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_CACHECTL_H
 #define _SYS_CACHECTL_H 1
 
+#include <sys/cdefs.h>
 #ifdef __mips__
 #include <asm/cachectl.h>
 #endif
+
 #endif /* sys/cachectl.h */
