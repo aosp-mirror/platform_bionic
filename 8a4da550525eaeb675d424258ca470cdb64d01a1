@@ -46,6 +46,30 @@
       "revId": "8a4da550525eaeb675d424258ca470cdb64d01a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a147fd3_323e6010",
+        "filename": "linker/linker_dlwarning.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-07-23T04:22:01Z",
+      "side": 1,
+      "message": "It seems add_dlwarning() are only used in linker.cpp, which contains functions running at the start of the linker, or protected by mutex lock in dlfcn.cpp. So it is safe here.",
+      "parentUuid": "0a7fbbe7_61c4da64",
+      "range": {
+        "startLine": 25,
+        "startChar": 5,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "8a4da550525eaeb675d424258ca470cdb64d01a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
