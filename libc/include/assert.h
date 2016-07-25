@@ -1,6 +1,3 @@
-/*	$OpenBSD: assert.h,v 1.12 2006/01/31 10:53:51 hshoexer Exp $	*/
-/*	$NetBSD: assert.h,v 1.6 1994/10/26 00:55:44 cgd Exp $	*/
-
 /*-
  * Copyright (c) 1992, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -33,34 +30,33 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *	@(#)assert.h	8.2 (Berkeley) 1/21/94
  */
 
 /*
- * Unlike other ANSI header files, <assert.h> may usefully be included
- * multiple times, with and without NDEBUG defined.
+ * There's no include guard in this file because <assert.h> may usefully be
+ * included multiple times, with and without NDEBUG defined.
  */
 
 #include <sys/cdefs.h>
 
 #undef assert
-#undef _assert
+#undef __assert_no_op
+
+#define __assert_no_op __BIONIC_CAST(static_cast, void, 0)
 
 #ifdef NDEBUG
-# define	assert(e)	((void)0)
-# define	_assert(e)	((void)0)
+# define assert(e) __assert_no_op
 #else
-# define	_assert(e)	assert(e)
-# if __STDC_VERSION__ >= 199901L
-#  define	assert(e)	((e) ? (void)0 : __assert2(__FILE__, __LINE__, __func__, #e))
+# if defined(__cplusplus) || __STDC_VERSION__ >= 199901L
+#  define assert(e) ((e) ? __assert_no_op : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
 # else
-#  define	assert(e)	((e) ? (void)0 : __assert(__FILE__, __LINE__, #e))
+#  define assert(e) ((e) ? __assert_no_op : __assert(__FILE__, __LINE__, #e))
 # endif
 #endif
 
 #if !defined(__cplusplus) && __STDC_VERSION__ >= 201112L
-#define static_assert _Static_assert
+# undef static_assert
+# define static_assert _Static_assert
 #endif
 
 __BEGIN_DECLS
