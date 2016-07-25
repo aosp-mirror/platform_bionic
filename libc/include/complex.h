@@ -56,7 +56,6 @@ _Static_assert(__generic(_Complex_I, float _Complex, 1, 0),
 #endif
 
 __BEGIN_DECLS
-#pragma GCC visibility push(default)
 
 /* 7.3.5 Trigonometric functions */
 /* 7.3.5.1 The cacos functions */
@@ -156,7 +155,6 @@ double creal(double complex) __INTRODUCED_IN(23);
 float crealf(float complex) __INTRODUCED_IN(23);
 long double creall(long double complex) __INTRODUCED_IN(23);
 
-#pragma GCC visibility pop
 __END_DECLS
 
 #endif /* _COMPLEX_H */
