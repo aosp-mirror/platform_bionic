@@ -200,8 +200,6 @@ __LIBC32_LEGACY_PUBLIC__ fpos_t __sseek(void *, fpos_t, int);
 __LIBC32_LEGACY_PUBLIC__ int __sclose(void *);
 __LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE *));
 
-#pragma GCC visibility push(hidden)
-
 off64_t __sseek64(void*, off64_t, int);
 int	__sflush_locked(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
@@ -270,8 +268,6 @@ wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
 /* Remove the if (!__sdidinit) __sinit() idiom from untouched upstream stdio code. */
 extern void __sinit(void); // Not actually implemented.
 #define __sdidinit 1
-
-#pragma GCC visibility pop
 
 __END_DECLS
 
