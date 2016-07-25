@@ -149,7 +149,8 @@ int	 vprintf(const char * __restrict _Nonnull, __va_list) __printflike(1, 0);
 int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
 int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 
-#if __STDC_VERSION__ < 201112L
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
+    (defined(__cplusplus) && __cplusplus <= 201103L)
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
 int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
