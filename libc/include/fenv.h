@@ -34,7 +34,6 @@
 #include <machine/fenv.h>
 
 __BEGIN_DECLS
-#pragma GCC visibility push(default)
 
 // fenv was always available on x86.
 int feclearexcept(int) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODUCED_IN_X86(9);
@@ -69,7 +68,6 @@ int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODU
 extern const fenv_t __fe_dfl_env;
 #define FE_DFL_ENV  (&__fe_dfl_env)
 
-#pragma GCC visibility pop
 __END_DECLS
 
 #endif  /* ! _FENV_H_ */
