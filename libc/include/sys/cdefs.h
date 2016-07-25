@@ -229,16 +229,6 @@
 #endif
 #endif
 
-/* C99 added the `restrict` type qualifier keyword. Before then, `__restrict` is a GNU extension. */
-#if __STDC_VERSION__ >= 199901L
-#define __restrict restrict
-#endif
-
-/* C99 added the `__func__` predefined identifier. */
-#if __STDC_VERSION__ < 199901L
-#define __func__ __PRETTY_FUNCTION__
-#endif
-
 #define  __BIONIC__   1
 #include <android/api-level.h>
 

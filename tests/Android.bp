@@ -52,6 +52,7 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     srcs: [
         "arpa_inet_test.cpp",
+        "assert_test.cpp",
         "buffer_tests.cpp",
         "bug_26110743_test.cpp",
         "complex_test.cpp",
