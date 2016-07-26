@@ -150,11 +150,9 @@ char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")
 int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3) __warnattr("sprintf is often misused; please use snprintf");
 int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __warnattr("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
-#if defined(__USE_BSD) || defined(__USE_GNU)
 #define P_tmpdir "/tmp/" /* deprecated */
 char* tempnam(const char*, const char*)
     __attribute__((deprecated("tempnam is unsafe, use mkstemp or tmpfile instead")));
-#endif
 
 int rename(const char*, const char*);
 int renameat(int, const char*, int, const char*);
