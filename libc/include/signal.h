@@ -118,12 +118,12 @@ int sigaction(int, const struct sigaction*, struct sigaction*);
 int siginterrupt(int, int);
 
 #if __ANDROID_API__ >= 21
-sighandler_t signal(int, sighandler_t);
-int sigaddset(sigset_t*, int);
-int sigdelset(sigset_t*, int);
-int sigemptyset(sigset_t*);
-int sigfillset(sigset_t*);
-int sigismember(const sigset_t*, int);
+sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
+int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
+int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
+int sigemptyset(sigset_t*) __INTRODUCED_IN(21);
+int sigfillset(sigset_t*) __INTRODUCED_IN(21);
+int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
