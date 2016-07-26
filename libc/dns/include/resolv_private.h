@@ -63,9 +63,6 @@
 #include <net/if.h>
 #include <time.h>
 
-/* Despite this file's name, it's part of libresolv. On Android, that means it's part of libc :-( */
-#pragma GCC visibility push(default)
-
 // Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
 // RFC 1034 and RFC 1035 is 255 octets.
 #ifdef MAXHOSTNAMELEN
@@ -546,7 +543,5 @@ int ns_name_map(ns_nname_ct, size_t, ns_namemap_t, int);
 int ns_name_labels(ns_nname_ct, size_t);
 
 __END_DECLS
-
-#pragma GCC visibility pop
 
 #endif /* !_RESOLV_PRIVATE_H_ */

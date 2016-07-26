@@ -38,7 +38,6 @@
 #include <netinet/in.h>
 
 __BEGIN_DECLS
-#pragma GCC visibility push(default)
 
 #define b64_ntop __b64_ntop
 int b64_ntop(u_char const*, size_t, char*, size_t);
@@ -60,7 +59,6 @@ int res_mkquery(int, const char*, int, int, const u_char*, int, const u_char*, u
 int res_query(const char*, int, int, u_char*, int);
 int res_search(const char*, int, int, u_char*, int);
 
-#pragma GCC visibility pop
 __END_DECLS
 
 #endif /* _RESOLV_H_ */
