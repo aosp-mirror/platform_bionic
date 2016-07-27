@@ -127,53 +127,54 @@ typedef struct sg_req_info {
 #define SG_SCSI_RESET_HOST 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SG_SCSI_RESET_TARGET 4
+#define SG_SCSI_RESET_NO_ESCALATE 0x100
 #define SG_IO 0x2285
 #define SG_GET_REQUEST_TABLE 0x2286
-#define SG_SET_KEEP_ORPHAN 0x2287
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_SET_KEEP_ORPHAN 0x2287
 #define SG_GET_KEEP_ORPHAN 0x2288
 #define SG_GET_ACCESS_COUNT 0x2289
 #define SG_SCATTER_SZ (8 * 4096)
-#define SG_DEFAULT_RETRIES 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_DEFAULT_RETRIES 0
 #define SG_DEF_FORCE_LOW_DMA 0
 #define SG_DEF_FORCE_PACK_ID 0
 #define SG_DEF_KEEP_ORPHAN 0
-#define SG_DEF_RESERVED_SIZE SG_SCATTER_SZ
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_DEF_RESERVED_SIZE SG_SCATTER_SZ
 #define SG_MAX_QUEUE 16
 #define SG_BIG_BUFF SG_DEF_RESERVED_SIZE
 typedef struct sg_io_hdr Sg_io_hdr;
-typedef struct sg_io_vec Sg_io_vec;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+typedef struct sg_io_vec Sg_io_vec;
 typedef struct sg_scsi_id Sg_scsi_id;
 typedef struct sg_req_info Sg_req_info;
 #define SG_MAX_SENSE 16
-struct sg_header {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct sg_header {
   int pack_len;
   int reply_len;
   int pack_id;
-  int result;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  int result;
   unsigned int twelve_byte : 1;
   unsigned int target_status : 5;
   unsigned int host_status : 8;
-  unsigned int driver_status : 8;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int driver_status : 8;
   unsigned int other_flags : 10;
   unsigned char sense_buffer[SG_MAX_SENSE];
 };
-#define SG_SET_TIMEOUT 0x2201
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_SET_TIMEOUT 0x2201
 #define SG_GET_TIMEOUT 0x2202
 #define SG_GET_COMMAND_Q 0x2270
 #define SG_SET_COMMAND_Q 0x2271
-#define SG_SET_DEBUG 0x227e
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_SET_DEBUG 0x227e
 #define SG_NEXT_CMD_LEN 0x2283
 #define SG_DEFAULT_TIMEOUT (60 * HZ)
 #define SG_DEF_COMMAND_Q 0
-#define SG_DEF_UNDERRUN_FLAG 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SG_DEF_UNDERRUN_FLAG 0
 #endif
