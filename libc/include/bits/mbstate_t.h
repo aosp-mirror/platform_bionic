@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#ifndef _BITS_MBSTATE_T_H_
+#define _BITS_MBSTATE_T_H_
 
-#include <bits/wctype.h>
 #include <sys/cdefs.h>
-#include <xlocale.h>
 
-__BEGIN_DECLS
+typedef struct {
+  unsigned char __seq[4];
+#ifdef __LP64__
+  unsigned char __reserved[4];
+#endif
+} mbstate_t;
 
-int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswcntrl_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswgraph_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswprint_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswpunct_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
-int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
-
-wint_t towlower_l(int, locale_t) __INTRODUCED_IN(21);
-wint_t towupper_l(int, locale_t) __INTRODUCED_IN(21);
-
-wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN_FUTURE;
-wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN_FUTURE;
-
-wctype_t wctype_l(const char*, locale_t) __INTRODUCED_IN(21);
-int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
-
-__END_DECLS
-
-#endif /* _WCTYPE_H_ */
+#endif

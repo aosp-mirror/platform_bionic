@@ -141,11 +141,9 @@ using std::atomic_uintmax_t;
  * bits as a T.
  */
 
-#include <stddef.h>  /* For ptrdiff_t.                          */
-#include <stdint.h>  /* TODO: Should pollute namespace less.    */
-#if __STDC_VERSION__ >= 201112L
-# include <uchar.h>  /* For char16_t and char32_t.              */
-#endif
+#include <stddef.h>  /* For ptrdiff_t. */
+#include <stdint.h>  /* TODO: don't drag in all the macros, just the types. */
+#include <uchar.h>   /* For char16_t and char32_t. */
 
 #ifdef __clang__
 # if __has_extension(c_atomic) || __has_extension(cxx_atomic)

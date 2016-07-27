@@ -35,6 +35,8 @@ __BEGIN_DECLS
 
 typedef __WINT_TYPE__ wint_t;
 
+#define WEOF __BIONIC_CAST(static_cast, wint_t, -1)
+
 int iswalnum(wint_t);
 int iswalpha(wint_t);
 int iswblank(wint_t) __INTRODUCED_IN(21);
