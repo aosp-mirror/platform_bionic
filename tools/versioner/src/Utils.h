@@ -36,7 +36,7 @@ template <typename Collection>
 static std::string Join(Collection c, const std::string& delimiter = ", ") {
   std::string result;
   for (const auto& item : c) {
-    using std::to_string;
+    using namespace std;
     result.append(to_string(item));
     result.append(delimiter);
   }

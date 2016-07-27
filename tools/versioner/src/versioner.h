@@ -24,6 +24,13 @@
 
 extern bool verbose;
 
+#define D(...)             \
+  do {                     \
+    if (verbose) {         \
+      printf(__VA_ARGS__); \
+    }                      \
+  } while (0)
+
 static const std::unordered_map<std::string, std::set<Arch>> header_blacklist = {
   // Internal header.
   { "sys/_system_properties.h", supported_archs },

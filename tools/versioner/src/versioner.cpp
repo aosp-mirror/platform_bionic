@@ -39,6 +39,7 @@
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
+#include "Preprocessor.h"
 #include "SymbolDatabase.h"
 #include "Utils.h"
 #include "versioner.h"
@@ -451,6 +452,10 @@ static void usage(bool help = false) {
     fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
     fprintf(stderr, "  -v\t\tenable verbose warnings\n");
     fprintf(stderr, "\n");
+    fprintf(stderr, "Preprocessing:\n");
+    fprintf(stderr, "  -o PATH\tpreprocess header files and emit them at PATH\n");
+    fprintf(stderr, "  -f\tpreprocess header files even if validation fails\n");
+    fprintf(stderr, "\n");
     fprintf(stderr, "Miscellaneous:\n");
     fprintf(stderr, "  -d\t\tdump function availability\n");
     fprintf(stderr, "  -h\t\tdisplay this message\n");
@@ -465,9 +470,11 @@ int main(int argc, char** argv) {
   std::set<Arch> selected_architectures;
   std::set<int> selected_levels;
   bool dump = false;
+  std::string preprocessor_output_path;
+  bool force = false;
 
   int c;
-  while ((c = getopt(argc, argv, "a:r:p:vdhi")) != -1) {
+  while ((c = getopt(argc, argv, "a:r:p:vo:fdhi")) != -1) {
     default_args = false;
     switch (c) {
       case 'a': {
@@ -498,6 +505,10 @@ int main(int argc, char** argv) {
 
         platform_dir = optarg;
 
+        if (platform_dir.empty()) {
+          usage();
+        }
+
         struct stat st;
         if (stat(platform_dir.c_str(), &st) != 0) {
           err(1, "failed to stat platform directory '%s'", platform_dir.c_str());
@@ -510,6 +521,20 @@ int main(int argc, char** argv) {
 
       case 'v':
         verbose = true;
+        break;
+
+      case 'o':
+        if (!preprocessor_output_path.empty()) {
+          usage();
+        }
+        preprocessor_output_path = optarg;
+        if (preprocessor_output_path.empty()) {
+          usage();
+        }
+        break;
+
+      case 'f':
+        force = true;
         break;
 
       case 'd':
@@ -553,7 +578,8 @@ int main(int argc, char** argv) {
       platform_dir = versioner_dir + "/platforms";
     }
   } else {
-    header_dir = argv[optind];
+    // Intentional leak.
+    header_dir = realpath(argv[optind], nullptr);
 
     if (argc - optind == 2) {
       dependency_dir = argv[optind + 1];
@@ -605,6 +631,10 @@ int main(int argc, char** argv) {
         failed = true;
       }
     }
+  }
+
+  if (!preprocessor_output_path.empty() && (force || !failed)) {
+    failed = !preprocessHeaders(preprocessor_output_path, header_dir, declaration_database.get());
   }
   return failed;
 }

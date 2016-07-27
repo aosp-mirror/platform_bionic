@@ -24,6 +24,7 @@ LOCAL_SRC_FILES := \
   versioner.cpp \
   Arch.cpp \
   DeclarationDatabase.cpp \
+  Preprocessor.cpp \
   SymbolDatabase.cpp \
   Utils.cpp
 
