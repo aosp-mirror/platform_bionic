@@ -117,7 +117,7 @@ def cleanupFile(dst_dir, src_dir, rel_path, no_update = True):
                 statics = statics.union(kernel_known_statics.get(arch, set()))
         # common headers (ie non-asm and non-uapi)
         else:
-            dst_path = os.path.join("common", rel_path)
+            dst_path = os.path.join("android", rel_path)
 
     dst_path = os.path.join(dst_dir, dst_path)
 
