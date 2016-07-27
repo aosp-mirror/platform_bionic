@@ -95,8 +95,8 @@
 #define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
 #define _POSIX_THREAD_KEYS_MAX      128
 #define _POSIX_THREAD_PRIORITY_SCHEDULING 200809L
-#define _POSIX_THREAD_PRIO_INHERIT  200809L  /* linux feature */
-#define _POSIX_THREAD_PRIO_PROTECT  200809L  /* linux feature */
+#define _POSIX_THREAD_PRIO_INHERIT -1  /* not implemented */
+#define _POSIX_THREAD_PRIO_PROTECT -1  /* not implemented */
 #define _POSIX_THREAD_PROCESS_SHARED  -1  /* not implemented */
 #define _POSIX_THREAD_ROBUST_PRIO_INHERIT -1  /* not implemented */
 #define _POSIX_THREAD_ROBUST_PRIO_PROTECT -1  /* not implemented */
