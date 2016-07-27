@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eff279a6_e897efdc",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-07-27T04:52:30Z",
+      "side": 1,
+      "message": "isn\u0027t this wrong? don\u0027t all these need the leading _?\n\nand don\u0027t you need the #defines for the implementations too?",
+      "range": {
+        "startLine": 521,
+        "startChar": 4,
+        "endLine": 521,
+        "endChar": 18
+      },
+      "revId": "3b1c88ca9b88e48ba34ba64b19a50f8abe4b107b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
