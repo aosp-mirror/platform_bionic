@@ -36,17 +36,11 @@
 #include <time.h>
 #include <xlocale.h>
 
+#include <bits/mbstate_t.h>
 #include <bits/wchar_limits.h>
 #include <bits/wctype.h>
 
 __BEGIN_DECLS
-
-typedef struct {
-  uint8_t __seq[4];
-#ifdef __LP64__
-  char __reserved[4];
-#endif
-} mbstate_t;
 
 enum {
     WC_TYPE_INVALID = 0,
@@ -64,8 +58,6 @@ enum {
     WC_TYPE_XDIGIT,
     WC_TYPE_MAX
 };
-
-#define  WEOF        ((wint_t)(-1))
 
 wint_t            btowc(int);
 int               fwprintf(FILE *, const wchar_t *, ...);

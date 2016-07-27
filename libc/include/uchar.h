@@ -29,8 +29,9 @@
 #ifndef _UCHAR_H_
 #define _UCHAR_H_
 
+#include <stddef.h>
 #include <sys/cdefs.h>
-#include <wchar.h>
+#include <bits/mbstate_t.h>
 
 __BEGIN_DECLS
 
