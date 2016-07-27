@@ -30,6 +30,9 @@
 ###   --use-kernel-dir <DIR>
 ###     Do not check out the kernel source, use the kernel directory
 ###     pointed to by <DIR>.
+###   --verify-modified-headers-only <DIR>
+###     Do not build anything, simply verify that the set of modified
+###     kernel headers have not changed.
 
 # Terminate the script if any command fails.
 set -eE
@@ -42,6 +45,7 @@ KERNEL_DOWNLOAD=0
 ARCH_LIST=("arm" "arm64" "mips" "x86")
 ANDROID_KERNEL_DIR="external/kernel-headers/original"
 SKIP_GENERATION=0
+VERIFY_HEADERS_ONLY=0
 
 function cleanup () {
   if [[ "${TMPDIR}" =~ /tmp ]] && [[ -d "${TMPDIR}" ]]; then
@@ -99,7 +103,7 @@ function copy_if_exists () {
   done
 }
 
-function check_hdrs () {
+function verify_modified_hdrs () {
   local src_dir=$1
   local tgt_dir=$2
   local kernel_dir=$3
@@ -124,7 +128,7 @@ function check_hdrs () {
   done
 
   for dir in "${search_dirs[@]}"; do
-    check_hdrs "${dir}" ${tgt_dir}/$(basename ${dir}) "${kernel_dir}"
+    verify_modified_hdrs "${dir}" ${tgt_dir}/$(basename ${dir}) "${kernel_dir}"
   done
 }
 
@@ -148,6 +152,16 @@ while [ $# -gt 0 ]; do
       shift
       KERNEL_DIR="$1"
       KERNEL_DOWNLOAD=0
+      ;;
+    "--verify-modified-headers-only")
+      if [[ $# -lt 2 ]]; then
+        echo "--verify-modified-headers-only requires an argument."
+        exit 1
+      fi
+      shift
+      KERNEL_DIR="$1"
+      KERNEL_DOWNLOAD=0
+      VERIFY_HEADERS_ONLY=1
       ;;
     "-h" | "--help")
       usage
@@ -183,6 +197,14 @@ else
   src_dir="common"
 fi
 
+if [[ ${VERIFY_HEADERS_ONLY} -eq 1 ]]; then
+  # Verify if modified headers have changed.
+  verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+                       "${ANDROID_KERNEL_DIR}/scsi" \
+                       "${KERNEL_DIR}/${src_dir}"
+  exit 0
+fi
+
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
   cd "${TMPDIR}"
@@ -202,12 +224,20 @@ else
 fi
 
 if [[ ${SKIP_GENERATION} -eq 0 ]]; then
+  # Clean up any leftover headers.
+  make distclean
+
   # Build all of the generated headers.
   for arch in "${ARCH_LIST[@]}"; do
     echo "Generating headers for arch ${arch}"
     make ARCH=${arch} headers_install
   done
 fi
+
+# Completely delete the old original headers so that any deleted/moved
+# headers are also removed.
+rm -rf "${ANDROID_KERNEL_DIR}/uapi"
+mkdir -p "${ANDROID_KERNEL_DIR}/uapi"
 
 cd ${ANDROID_BUILD_TOP}
 
@@ -237,7 +267,12 @@ for arch in "${ARCH_LIST[@]}"; do
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
 
+# The arm types.h uapi header is not properly being generated, so copy it
+# directly.
+cp "${KERNEL_DIR}/${src_dir}/include/uapi/asm-generic/types.h" \
+   "${ANDROID_KERNEL_DIR}/uapi/asm-arm/asm"
+
 # Verify if modified headers have changed.
-check_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
-           "${ANDROID_KERNEL_DIR}/scsi" \
-           "${KERNEL_DIR}/${src_dir}"
+verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+                     "${ANDROID_KERNEL_DIR}/scsi" \
+                     "${KERNEL_DIR}/${src_dir}"
