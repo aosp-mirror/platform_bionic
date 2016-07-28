@@ -22,6 +22,30 @@
       "revId": "3b1c88ca9b88e48ba34ba64b19a50f8abe4b107b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fdd7d60_34d4f6b9",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-07-28T00:11:02Z",
+      "side": 1,
+      "message": "Yeah, this was dumb. Kept the macros and just copy/pasted the decls.",
+      "parentUuid": "eff279a6_e897efdc",
+      "range": {
+        "startLine": 521,
+        "startChar": 4,
+        "endLine": 521,
+        "endChar": 18
+      },
+      "revId": "3b1c88ca9b88e48ba34ba64b19a50f8abe4b107b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
