@@ -22,6 +22,30 @@
       "revId": "a2bc3d8a3229a890e6fb4e80b2ff4703383ea75b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fdd7d60_df126b5c",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-07-28T01:27:58Z",
+      "side": 1,
+      "message": "oops",
+      "parentUuid": "8fdd7d60_3f1e0f73",
+      "range": {
+        "startLine": 587,
+        "startChar": 4,
+        "endLine": 587,
+        "endChar": 18
+      },
+      "revId": "a2bc3d8a3229a890e6fb4e80b2ff4703383ea75b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
