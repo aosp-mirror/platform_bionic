@@ -82,6 +82,7 @@
 
 #define MB_LEN_MAX 4
 
+#define IOV_MAX 1024
 #define SEM_VALUE_MAX 0x3fffffff
 
 /* POSIX says these belong in <unistd.h> but BSD has some in <limits.h>. */
