@@ -176,6 +176,27 @@ TEST(time, strftime_null_tm_zone) {
 #endif
 }
 
+TEST(time, strftime_l) {
+  locale_t cloc = newlocale(LC_ALL, "C.UTF-8", 0);
+  locale_t old_locale = uselocale(cloc);
+
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 200;
+  t.tm_mon = 2;
+  t.tm_mday = 10;
+
+  // Date and time as text.
+  char buf[64];
+  EXPECT_EQ(24U, strftime_l(buf, sizeof(buf), "%c", &t, cloc));
+  EXPECT_STREQ("Sun Mar 10 00:00:00 2100", buf);
+
+  uselocale(old_locale);
+  freelocale(cloc);
+}
+
 TEST(time, strptime) {
   setenv("TZ", "UTC", 1);
 

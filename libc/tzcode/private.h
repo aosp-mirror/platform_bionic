@@ -22,6 +22,10 @@
 ** You can override these in your C compiler options, e.g. '-DHAVE_GETTEXT=1'.
 */
 
+#ifndef HAVE_DECL_ASCTIME_R
+#define HAVE_DECL_ASCTIME_R 1
+#endif
+
 #ifndef HAVE_GETTEXT
 #define HAVE_GETTEXT		0
 #endif /* !defined HAVE_GETTEXT */
@@ -33,6 +37,10 @@
 #ifndef HAVE_LINK
 #define HAVE_LINK		1
 #endif /* !defined HAVE_LINK */
+
+#ifndef HAVE_POSIX_DECLS
+#define HAVE_POSIX_DECLS 1
+#endif
 
 #ifndef HAVE_STRDUP
 #define HAVE_STRDUP 1
@@ -105,6 +113,9 @@
 
 #ifndef ENAMETOOLONG
 # define ENAMETOOLONG EINVAL
+#endif
+#ifndef ENOTSUP
+# define ENOTSUP EINVAL
 #endif
 #ifndef EOVERFLOW
 # define EOVERFLOW EINVAL
@@ -379,25 +390,21 @@ time_t time(time_t *);
 void tzset(void);
 #endif
 
-/*
-** Some time.h implementations don't declare asctime_r.
-** Others might define it as a macro.
-** Fix the former without affecting the latter.
-** Similarly for timezone, daylight, and altzone.
-*/
-
-#ifndef asctime_r
-extern char *	asctime_r(struct tm const *restrict, char *restrict);
+#if !HAVE_DECL_ASCTIME_R && !defined asctime_r
+extern char *asctime_r(struct tm const *restrict, char *restrict);
 #endif
 
-#ifdef USG_COMPAT
-# ifndef timezone
+#if !HAVE_POSIX_DECLS
+# ifdef USG_COMPAT
+#  ifndef timezone
 extern long timezone;
-# endif
-# ifndef daylight
+#  endif
+#  ifndef daylight
 extern int daylight;
+#  endif
 # endif
 #endif
+
 #if defined ALTZONE && !defined altzone
 extern long altzone;
 #endif
