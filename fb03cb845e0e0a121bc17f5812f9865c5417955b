@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f39c5b7_98caa171",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-07-29T20:31:18Z",
+      "side": 1,
+      "message": "for what? Did you mean to %s the name of the decl here? If not, just remove the \"for\". Also, why fprintf instead of std::cerr (which is then used on the next line)?",
+      "range": {
+        "startLine": 66,
+        "startChar": 65,
+        "endLine": 66,
+        "endChar": 68
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f39c5b7_78840d08",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-07-29T20:31:18Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the expression here be wrapped in parentheses? It looks like line 217 properly wraps the expressions, but I wanted to be certain.",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 63
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f39c5b7_8399526b",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-07-29T20:31:18Z",
+      "side": 1,
+      "message": "Fancy C++14. :)",
+      "range": {
+        "startLine": 217,
+        "startChar": 9,
+        "endLine": 217,
+        "endChar": 13
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f39c5b7_03a642a8",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-07-29T20:31:18Z",
+      "side": 1,
+      "message": "std::cout?",
+      "range": {
+        "startLine": 268,
+        "startChar": 2,
+        "endLine": 268,
+        "endChar": 8
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
