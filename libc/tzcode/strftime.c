@@ -1,28 +1,39 @@
+/* Convert a broken-down time stamp to a string.  */
+
+/* Copyright 1989 The Regents of the University of California.
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS "AS IS" AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.  */
+
 /*
-** Based on the UCB version with the copyright notice and sccsid
-** appearing below.
+** Based on the UCB version with the copyright notice appearing above.
 **
 ** This is ANSIish only when "multibyte character == plain character".
 */
 
 #include "private.h"
-
-/*
-** Copyright (c) 1989 The Regents of the University of California.
-** All rights reserved.
-**
-** Redistribution and use in source and binary forms are permitted
-** provided that the above copyright notice and this paragraph are
-** duplicated in all such forms and that any documentation,
-** advertising materials, and other materials related to such
-** distribution and use acknowledge that the software was developed
-** by the University of California, Berkeley. The name of the
-** University may not be used to endorse or promote products derived
-** from this software without specific prior written permission.
-** THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
-** IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-*/
 
 #include "tzfile.h"
 #include "fcntl.h"
@@ -108,9 +119,10 @@ static char *   _conv(int, const char *, char *, const char *);
 static char *   _fmt(const char *, const struct tm *, char *, const char *,
             int *);
 static char *   _yconv(int, int, bool, bool, char *, const char *, int);
-static char *   getformat(int, char *, char *, char *, char *);
 
+#if !HAVE_POSIX_DECLS
 extern char *   tzname[];
+#endif
 
 #ifndef YEAR_2000_NAME
 #define YEAR_2000_NAME  "CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
@@ -121,7 +133,17 @@ extern char *   tzname[];
 #define IN_THIS 2
 #define IN_ALL  3
 
-#define FORCE_LOWER_CASE 0x100
+#if HAVE_STRFTIME_L
+size_t
+strftime_l(char *s, size_t maxsize, char const *format, struct tm const *t,
+	   locale_t locale)
+{
+  /* Just call strftime, as only the C locale is supported.  */
+  return strftime(s, maxsize, format, t);
+}
+#endif
+
+#define FORCE_LOWER_CASE 0x100 /* Android extension. */
 
 size_t
 strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
