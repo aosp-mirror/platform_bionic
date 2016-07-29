@@ -1226,7 +1226,7 @@ LIBC {
     *;
 };
 
-LIBC_N {
+LIBC_N { # introduced=24
   global:
     __aeabi_atexit; # arm
     __aeabi_memclr; # arm
