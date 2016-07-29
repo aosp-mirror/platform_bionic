@@ -70,8 +70,8 @@ static inline uint16_t log2(size_t number) {
   return result;
 }
 
-LinkerSmallObjectAllocator::LinkerSmallObjectAllocator()
-    : type_(0), block_size_(0), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
+LinkerSmallObjectAllocator::LinkerSmallObjectAllocator(uint32_t type, size_t block_size)
+    : type_(type), block_size_(block_size), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
 
 void* LinkerSmallObjectAllocator::alloc() {
   CHECK(block_size_ != 0);
@@ -159,11 +159,6 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
   }
 }
 
-void LinkerSmallObjectAllocator::init(uint32_t type, size_t block_size) {
-  type_ = type;
-  block_size_ = block_size;
-}
-
 linker_vector_t::iterator LinkerSmallObjectAllocator::find_page_record(void* ptr) {
   void* addr = reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
   small_object_page_record boundary;
@@ -221,11 +216,20 @@ void LinkerSmallObjectAllocator::alloc_page() {
 }
 
 
-LinkerMemoryAllocator::LinkerMemoryAllocator() {
+void LinkerMemoryAllocator::initialize_allocators() {
+  if (allocators_ != nullptr) {
+    return;
+  }
+
+  LinkerSmallObjectAllocator* allocators =
+      reinterpret_cast<LinkerSmallObjectAllocator*>(allocators_buf_);
+
   for (size_t i = 0; i < kSmallObjectAllocatorsCount; ++i) {
     uint32_t type = i + kSmallObjectMinSizeLog2;
-    allocators_[i].init(type, 1 << type);
+    new (allocators + i) LinkerSmallObjectAllocator(type, 1 << type);
   }
+
+  allocators_ = allocators;
 }
 
 void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
@@ -336,5 +340,6 @@ LinkerSmallObjectAllocator* LinkerMemoryAllocator::get_small_object_allocator(ui
     __libc_fatal("invalid type: %u", type);
   }
 
+  initialize_allocators();
   return &allocators_[type - kSmallObjectMinSizeLog2];
 }
