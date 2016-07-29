@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f39c5b7_e3292ea1",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-07-29T21:08:07Z",
+      "side": 1,
+      "message": "Should be safe to remove this... maybe.",
+      "revId": "65707b696a59f28b3980c78bdb4b049231610e64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
