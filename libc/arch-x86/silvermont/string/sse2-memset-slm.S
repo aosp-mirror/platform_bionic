@@ -117,8 +117,10 @@ ENTRY(__memset_chk)
 
   movl LEN(%esp), %ecx
   cmpl CHK_DST_LEN(%esp), %ecx
-  ja __memset_chk_fail
-  jmp L(memset_length_loaded)
+  jna L(memset_length_loaded)
+
+  POP (%ebx) // Undo ENTRANCE without returning.
+  jmp __memset_chk_fail
 END(__memset_chk)
 
 	.section .text.sse2,"ax",@progbits
