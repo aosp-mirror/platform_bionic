@@ -100,8 +100,7 @@ typedef
 
 class LinkerSmallObjectAllocator {
  public:
-  LinkerSmallObjectAllocator();
-  void init(uint32_t type, size_t block_size);
+  LinkerSmallObjectAllocator(uint32_t type, size_t block_size);
   void* alloc();
   void free(void* ptr);
 
@@ -124,7 +123,7 @@ class LinkerSmallObjectAllocator {
 
 class LinkerMemoryAllocator {
  public:
-  LinkerMemoryAllocator();
+  constexpr LinkerMemoryAllocator() : allocators_(nullptr), allocators_buf_() {}
   void* alloc(size_t size);
 
   // Note that this implementation of realloc never shrinks allocation
@@ -134,8 +133,10 @@ class LinkerMemoryAllocator {
   void* alloc_mmap(size_t size);
   page_info* get_page_info(void* ptr);
   LinkerSmallObjectAllocator* get_small_object_allocator(uint32_t type);
+  void initialize_allocators();
 
-  LinkerSmallObjectAllocator allocators_[kSmallObjectAllocatorsCount];
+  LinkerSmallObjectAllocator* allocators_;
+  uint8_t allocators_buf_[sizeof(LinkerSmallObjectAllocator)*kSmallObjectAllocatorsCount];
 };
 
 
