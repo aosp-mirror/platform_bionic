@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f39c5b7_12dbed1e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-07-30T00:52:27Z",
+      "side": 1,
+      "message": "Just checked all the other API levels (about to check other architectures) and they\u0027re also all correct :)",
+      "revId": "dd7f5194ae896682df09a7d18883ffcb36942370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
