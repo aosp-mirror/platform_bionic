@@ -192,10 +192,6 @@ char* strerror_l(int error, locale_t) {
   return strerror(error);
 }
 
-size_t strftime_l(char* s, size_t max, const char* format, const struct tm* tm, locale_t) {
-  return strftime(s, max, format, tm);
-}
-
 int strncasecmp_l(const char* s1, const char* s2, size_t n, locale_t) {
   return strncasecmp(s1, s2, n);
 }
