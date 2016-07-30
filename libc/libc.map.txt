@@ -8,45 +8,45 @@ LIBC {
     __atomic_swap; # arm
     __b64_ntop;
     __b64_pton;
-    __cmsg_nxthdr;
-    __connect; # arm x86 mips
-    __ctype_get_mb_cur_max;
+    __cmsg_nxthdr; # introduced=21
+    __connect; # arm x86 mips introduced=21
+    __ctype_get_mb_cur_max; # introduced=21
     __cxa_atexit;
     __cxa_finalize;
-    __cxa_thread_atexit_impl;
+    __cxa_thread_atexit_impl; # introduced=23
     __dn_comp;
     __dn_count_labels;
     __dn_skipname;
-    __epoll_pwait; # arm x86 mips
+    __epoll_pwait; # arm x86 mips introduced=21
     __errno;
-    __exit; # arm x86 mips
-    __fadvise64; # x86 mips
-    __fbufsize;
+    __exit; # arm x86 mips introduced=21
+    __fadvise64; # x86 mips introduced=21
+    __fbufsize; # introduced=23
     __fcntl64; # arm x86 mips
-    __FD_CLR_chk;
-    __FD_ISSET_chk;
-    __FD_SET_chk;
-    __fgets_chk;
-    __flbf;
+    __FD_CLR_chk; # introduced=21
+    __FD_ISSET_chk; # introduced=21
+    __FD_SET_chk; # introduced=21
+    __fgets_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __flbf; # introduced=23
     __fp_nquery;
     __fp_query;
-    __fpclassify;
+    __fpclassify; # introduced=21
     __fpclassifyd;
     __fpclassifyf;
     __fpclassifyl;
-    __fpending;
-    __fpurge;
-    __freadable;
-    __fsetlocking;
+    __fpending; # introduced=23
+    __fpurge; # introduced=23
+    __freadable; # introduced=23
+    __fsetlocking; # introduced=23
     __fstatfs64; # arm x86 mips
-    __fwritable;
+    __fwritable; # introduced=23
     __get_h_errno;
-    __getcpu; # arm x86 mips
+    __getcpu; # arm x86 mips introduced-arm=12 introduced-mips=16 introduced-x86=12
     __getcwd; # arm x86 mips
-    __getpid; # arm x86 mips
+    __getpid; # arm x86 mips introduced=21
     __getpriority; # arm x86 mips
-    __gnu_basename;
-    __gnu_strerror_r;
+    __gnu_basename; # introduced=23
+    __gnu_strerror_r; # introduced=23
     __hostalias;
     __ioctl; # arm x86 mips
     __isfinite;
@@ -55,24 +55,24 @@ LIBC {
     __isinf;
     __isinff;
     __isinfl;
-    __isnan;
-    __isnanf;
+    __isnan; # introduced=21
+    __isnanf; # introduced=21
     __isnanl;
     __isnormal;
     __isnormalf;
     __isnormall;
-    __isthreaded; # arm x86 mips
-    __libc_current_sigrtmax;
-    __libc_current_sigrtmin;
+    __isthreaded; # arm x86 mips var
+    __libc_current_sigrtmax; # introduced=21
+    __libc_current_sigrtmin; # introduced=21
     __libc_init;
     __llseek; # arm x86 mips
     __loc_aton;
     __loc_ntoa;
-    __memchr_chk;
-    __memcpy_chk;
-    __memmove_chk;
-    __memrchr_chk;
-    __memset_chk;
+    __memchr_chk; # introduced=23
+    __memcpy_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __memmove_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __memrchr_chk; # introduced=23
+    __memset_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __mmap2; # arm x86 mips
     __ns_format_ttl; # arm x86 mips
     __ns_get16; # arm x86 mips
@@ -96,13 +96,13 @@ LIBC {
     __ns_skiprr; # arm x86 mips
     __ns_sprintrr; # arm x86 mips
     __ns_sprintrrf; # arm x86 mips
-    __open_2;
+    __open_2; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __openat; # arm x86 mips
-    __openat_2;
+    __openat_2; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __p_cdname;
     __p_cdnname;
     __p_class;
-    __p_class_syms;
+    __p_class_syms; # var
     __p_fqname;
     __p_fqnname;
     __p_option;
@@ -111,25 +111,25 @@ LIBC {
     __p_secstodate;
     __p_time;
     __p_type;
-    __p_type_syms;
-    __poll_chk;
-    __ppoll; # arm x86 mips
-    __ppoll_chk;
-    __pread64_chk;
-    __pread_chk;
-    __progname;
-    __pselect6; # arm x86 mips
+    __p_type_syms; # var
+    __poll_chk; # introduced=23
+    __ppoll; # arm x86 mips introduced=21
+    __ppoll_chk; # introduced=23
+    __pread64_chk; # introduced=23
+    __pread_chk; # introduced=23
+    __progname; # var
+    __pselect6; # arm x86 mips introduced=21
     __pthread_cleanup_pop;
     __pthread_cleanup_push;
     __ptrace; # arm x86 mips
     __putlong;
     __putshort;
-    __read_chk;
-    __readlink_chk;
-    __readlinkat_chk;
+    __read_chk; # introduced=21
+    __readlink_chk; # introduced=23
+    __readlinkat_chk; # introduced=23
     __reboot; # arm x86 mips
-    __recvfrom_chk;
-    __register_atfork;
+    __recvfrom_chk; # introduced=21
+    __register_atfork; # introduced=23
     __res_close;
     __res_dnok;
     __res_hnok;
@@ -151,91 +151,91 @@ LIBC {
     __res_send_setqhook;
     __res_send_setrhook;
     __rt_sigaction; # arm x86 mips
-    __rt_sigpending; # arm x86 mips
+    __rt_sigpending; # arm x86 mips introduced=21
     __rt_sigprocmask; # arm x86 mips
-    __rt_sigsuspend; # arm x86 mips
+    __rt_sigsuspend; # arm x86 mips introduced=21
     __rt_sigtimedwait; # arm x86 mips
-    __sched_cpualloc;
-    __sched_cpucount;
-    __sched_cpufree;
-    __sched_getaffinity; # arm x86 mips
+    __sched_cpualloc; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    __sched_cpucount; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    __sched_cpufree; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    __sched_getaffinity; # arm x86 mips introduced=12
     __set_thread_area; # x86
-    __set_tid_address; # arm x86 mips
+    __set_tid_address; # arm x86 mips introduced=21
     __set_tls; # arm mips
-    __sF;
-    __sigaction; # arm x86 mips
-    __snprintf_chk;
-    __socket; # arm x86 mips
-    __sprintf_chk;
+    __sF; # var
+    __sigaction; # arm x86 mips introduced=21
+    __snprintf_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __socket; # arm x86 mips introduced=21
+    __sprintf_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __stack_chk_fail;
-    __stack_chk_guard;
+    __stack_chk_guard; # var
     __statfs64; # arm x86 mips
-    __stpcpy_chk;
-    __stpncpy_chk;
-    __stpncpy_chk2;
-    __strcat_chk;
-    __strchr_chk;
-    __strcpy_chk;
-    __strlcat_chk;
-    __strlcpy_chk;
-    __strlen_chk;
-    __strncat_chk;
-    __strncpy_chk;
-    __strncpy_chk2;
-    __strrchr_chk;
+    __stpcpy_chk; # introduced=21
+    __stpncpy_chk; # introduced=21
+    __stpncpy_chk2; # introduced=21
+    __strcat_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strchr_chk; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
+    __strcpy_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strlcat_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strlcpy_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strlen_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strncat_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strncpy_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __strncpy_chk2; # introduced=21
+    __strrchr_chk; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
     __system_properties_init;
-    __system_property_add;
-    __system_property_area__;
-    __system_property_area_init;
-    __system_property_area_serial;
+    __system_property_add; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    __system_property_area__; # var
+    __system_property_area_init; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    __system_property_area_serial; # introduced=23
     __system_property_find;
     __system_property_find_nth;
-    __system_property_foreach;
+    __system_property_foreach; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_get;
     __system_property_read;
-    __system_property_serial;
-    __system_property_set;
-    __system_property_set_filename;
-    __system_property_update;
-    __system_property_wait_any;
+    __system_property_serial; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    __system_property_set; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    __system_property_set_filename; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    __system_property_update; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    __system_property_wait_any; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __timer_create; # arm x86 mips
     __timer_delete; # arm x86 mips
     __timer_getoverrun; # arm x86 mips
     __timer_gettime; # arm x86 mips
     __timer_settime; # arm x86 mips
-    __umask_chk;
-    __vsnprintf_chk;
-    __vsprintf_chk;
+    __umask_chk; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
+    __vsnprintf_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    __vsprintf_chk; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __waitid; # arm x86 mips
-    _ctype_;
-    _Exit;
+    _ctype_; # var
+    _Exit; # introduced=21
     _exit;
     _flush_cache; # mips
-    _flushlbf;
+    _flushlbf; # introduced=23
     _getlong;
     _getshort;
     _longjmp;
-    _resolv_delete_cache_for_net;
-    _resolv_flush_cache_for_net;
-    _resolv_set_nameservers_for_net;
+    _resolv_delete_cache_for_net; # introduced=21
+    _resolv_flush_cache_for_net; # introduced=21
+    _resolv_set_nameservers_for_net; # introduced=21
     _setjmp;
-    _tolower;
-    _tolower_tab_; # arm x86 mips
-    _toupper;
-    _toupper_tab_; # arm x86 mips
+    _tolower; # introduced=21
+    _tolower_tab_; # arm x86 mips var
+    _toupper; # introduced=21
+    _toupper_tab_; # arm x86 mips var
     abort;
-    abs;
+    abs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     accept;
-    accept4;
+    accept4; # introduced=21
     access;
     acct;
     alarm;
     alphasort;
-    alphasort64;
-    android_set_abort_message;
+    alphasort64; # introduced=21
+    android_set_abort_message; # introduced=21
     arc4random;
     arc4random_buf;
     arc4random_uniform;
@@ -244,8 +244,8 @@ LIBC {
     asctime64_r; # arm x86 mips
     asctime_r;
     asprintf;
-    at_quick_exit;
-    atof;
+    at_quick_exit; # introduced=21
+    atof; # introduced=21
     atoi;
     atol;
     atoll;
@@ -256,44 +256,44 @@ LIBC {
     brk;
     bsearch;
     btowc;
-    c16rtomb;
-    c32rtomb;
+    c16rtomb; # introduced=21
+    c32rtomb; # introduced=21
     cacheflush; # arm mips
     calloc;
     capget;
     capset;
-    cfgetispeed;
-    cfgetospeed;
-    cfmakeraw;
-    cfsetispeed;
-    cfsetospeed;
-    cfsetspeed;
+    cfgetispeed; # introduced=21
+    cfgetospeed; # introduced=21
+    cfmakeraw; # introduced=21
+    cfsetispeed; # introduced=21
+    cfsetospeed; # introduced=21
+    cfsetspeed; # introduced=21
     chdir;
     chmod;
     chown;
     chroot;
     clearenv;
     clearerr;
-    clearerr_unlocked;
+    clearerr_unlocked; # introduced=23
     clock;
-    clock_getcpuclockid;
+    clock_getcpuclockid; # introduced=23
     clock_getres;
     clock_gettime;
     clock_nanosleep;
     clock_settime;
-    clone;
+    clone; # introduced-arm=9 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     close;
     closedir;
     closelog;
     connect;
     creat;
-    creat64;
+    creat64; # introduced=21
     ctime;
     ctime64; # arm x86 mips
     ctime64_r; # arm x86 mips
     ctime_r;
     daemon;
-    daylight;
+    daylight; # var
     delete_module;
     difftime;
     dirfd;
@@ -301,33 +301,33 @@ LIBC {
     dirname_r; # arm x86 mips
     div;
     dn_expand;
-    dprintf;
+    dprintf; # introduced=21
     drand48;
     dup;
     dup2;
-    dup3;
-    duplocale;
-    endmntent;
+    dup3; # introduced=21
+    duplocale; # introduced=21
+    endmntent; # introduced=21
     endservent;
     endutent;
-    environ;
+    environ; # var
     epoll_create;
-    epoll_create1;
+    epoll_create1; # introduced=21
     epoll_ctl;
-    epoll_pwait;
+    epoll_pwait; # introduced=21
     epoll_wait;
     erand48;
     err;
-    error;
-    error_at_line;
-    error_message_count;
-    error_one_per_line;
-    error_print_progname;
+    error; # introduced=23
+    error_at_line; # introduced=23
+    error_message_count; # var introduced=23
+    error_one_per_line; # var introduced=23
+    error_print_progname; # var introduced=23
     errx;
-    ether_aton;
-    ether_aton_r;
-    ether_ntoa;
-    ether_ntoa_r;
+    ether_aton; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    ether_aton_r; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    ether_ntoa; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    ether_ntoa_r; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     eventfd;
     eventfd_read;
     eventfd_write;
@@ -337,11 +337,11 @@ LIBC {
     execv;
     execve;
     execvp;
-    execvpe;
+    execvpe; # introduced=21
     exit;
-    faccessat;
-    fallocate;
-    fallocate64;
+    faccessat; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fallocate; # introduced=21
+    fallocate64; # introduced=21
     fchdir;
     fchmod;
     fchmodat;
@@ -353,27 +353,27 @@ LIBC {
     fdopen;
     fdopendir;
     feof;
-    feof_unlocked;
+    feof_unlocked; # introduced=23
     ferror;
-    ferror_unlocked;
+    ferror_unlocked; # introduced=23
     fflush;
-    ffs;
+    ffs; # introduced-arm=9 introduced-arm64=21 introduced-mips=9 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     fgetc;
     fgetln;
     fgetpos;
     fgets;
     fgetwc;
     fgetws;
-    fgetxattr;
+    fgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     fileno;
-    flistxattr;
+    flistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     flock;
     flockfile;
-    fmemopen;
+    fmemopen; # introduced=23
     fnmatch;
     fopen;
     fork;
-    forkpty;
+    forkpty; # introduced=23
     fpathconf;
     fprintf;
     fpurge;
@@ -384,56 +384,56 @@ LIBC {
     fread;
     free;
     freeaddrinfo;
-    freelocale;
-    fremovexattr;
+    freelocale; # introduced=21
+    fremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     freopen;
     fscanf;
     fseek;
     fseeko;
     fsetpos;
-    fsetxattr;
+    fsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     fstat;
-    fstat64;
+    fstat64; # introduced=21
     fstatat;
-    fstatat64;
+    fstatat64; # introduced=21
     fstatfs;
-    fstatfs64;
-    fstatvfs;
-    fstatvfs64;
+    fstatfs64; # introduced=21
+    fstatvfs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    fstatvfs64; # introduced=21
     fsync;
     ftell;
     ftello;
     ftok;
     ftruncate;
-    ftruncate64;
+    ftruncate64; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     ftrylockfile;
     fts_children;
     fts_close;
     fts_open;
     fts_read;
     fts_set;
-    ftw;
-    ftw64;
+    ftw; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    ftw64; # introduced=21
     funlockfile;
     funopen;
-    futimens;
+    futimens; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     fwide;
     fwprintf;
     fwrite;
     fwscanf;
     gai_strerror;
-    get_avphys_pages;
-    get_nprocs;
-    get_nprocs_conf;
-    get_phys_pages;
+    get_avphys_pages; # introduced=23
+    get_nprocs; # introduced=23
+    get_nprocs_conf; # introduced=23
+    get_phys_pages; # introduced=23
     getaddrinfo;
-    getauxval;
+    getauxval; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     getc;
     getc_unlocked;
     getchar;
     getchar_unlocked;
     getcwd;
-    getdelim;
+    getdelim; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     getegid;
     getenv;
     geteuid;
@@ -443,49 +443,49 @@ LIBC {
     getgrouplist;
     getgroups;
     gethostbyaddr;
-    gethostbyaddr_r;
+    gethostbyaddr_r; # introduced=23
     gethostbyname;
     gethostbyname2;
-    gethostbyname2_r;
+    gethostbyname2_r; # introduced=23
     gethostbyname_r;
     gethostent;
     gethostname;
     getitimer;
-    getline;
+    getline; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     getlogin;
     getmntent;
-    getmntent_r;
+    getmntent_r; # introduced=21
     getnameinfo;
     getnetbyaddr;
     getnetbyname;
     getopt;
     getopt_long;
     getopt_long_only;
-    getpagesize;
+    getpagesize; # introduced=21
     getpeername;
     getpgid;
     getpgrp;
     getpid;
     getppid;
     getpriority;
-    getprogname;
+    getprogname; # introduced=21
     getprotobyname;
     getprotobynumber;
     getpt;
     getpwnam;
-    getpwnam_r;
+    getpwnam_r; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     getpwuid;
-    getpwuid_r;
+    getpwuid_r; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     getresgid;
     getresuid;
     getrlimit;
-    getrlimit64;
+    getrlimit64; # introduced=21
     getrusage;
     gets;
     getservbyname;
     getservbyport;
     getservent;
-    getsid;
+    getsid; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     getsockname;
     getsockopt;
     gettid;
@@ -494,26 +494,26 @@ LIBC {
     getutent;
     getwc;
     getwchar;
-    getxattr;
+    getxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     gmtime;
     gmtime64; # arm x86 mips
     gmtime64_r; # arm x86 mips
     gmtime_r;
-    grantpt;
+    grantpt; # introduced=21
     herror;
     hstrerror;
-    htonl;
-    htons;
+    htonl; # introduced=21
+    htons; # introduced=21
     if_indextoname;
     if_nametoindex;
-    imaxabs;
-    imaxdiv;
+    imaxabs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    imaxdiv; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     inet_addr;
     inet_aton;
-    inet_lnaof;
-    inet_makeaddr;
-    inet_netof;
-    inet_network;
+    inet_lnaof; # introduced=21
+    inet_makeaddr; # introduced=21
+    inet_netof; # introduced=21
+    inet_network; # introduced=21
     inet_nsap_addr;
     inet_nsap_ntoa;
     inet_ntoa;
@@ -521,124 +521,124 @@ LIBC {
     inet_pton;
     init_module;
     initgroups;
-    initstate;
+    initstate; # introduced=21
     inotify_add_watch;
     inotify_init;
-    inotify_init1;
+    inotify_init1; # introduced=21
     inotify_rm_watch;
-    insque;
+    insque; # introduced=21
     ioctl;
     isalnum;
-    isalnum_l;
+    isalnum_l; # introduced=21
     isalpha;
-    isalpha_l;
+    isalpha_l; # introduced=21
     isascii;
     isatty;
     isblank;
-    isblank_l;
+    isblank_l; # introduced=21
     iscntrl;
-    iscntrl_l;
+    iscntrl_l; # introduced=21
     isdigit;
-    isdigit_l;
-    isfinite;
-    isfinitef;
-    isfinitel;
+    isdigit_l; # introduced=21
+    isfinite; # introduced=21
+    isfinitef; # introduced=21
+    isfinitel; # introduced=21
     isgraph;
-    isgraph_l;
-    isinf;
-    isinff;
-    isinfl;
+    isgraph_l; # introduced=21
+    isinf; # introduced=21
+    isinff; # introduced=21
+    isinfl; # introduced=21
     islower;
-    islower_l;
+    islower_l; # introduced=21
     isnan;
     isnanf;
-    isnanl;
-    isnormal;
-    isnormalf;
-    isnormall;
+    isnanl; # introduced=21
+    isnormal; # introduced=21
+    isnormalf; # introduced=21
+    isnormall; # introduced=21
     isprint;
-    isprint_l;
+    isprint_l; # introduced=21
     ispunct;
-    ispunct_l;
+    ispunct_l; # introduced=21
     isspace;
-    isspace_l;
+    isspace_l; # introduced=21
     isupper;
-    isupper_l;
+    isupper_l; # introduced=21
     iswalnum;
-    iswalnum_l;
+    iswalnum_l; # introduced=21
     iswalpha;
-    iswalpha_l;
-    iswblank;
-    iswblank_l;
+    iswalpha_l; # introduced=21
+    iswblank; # introduced=21
+    iswblank_l; # introduced=21
     iswcntrl;
-    iswcntrl_l;
+    iswcntrl_l; # introduced=21
     iswctype;
-    iswctype_l;
+    iswctype_l; # introduced=21
     iswdigit;
-    iswdigit_l;
+    iswdigit_l; # introduced=21
     iswgraph;
-    iswgraph_l;
+    iswgraph_l; # introduced=21
     iswlower;
-    iswlower_l;
+    iswlower_l; # introduced=21
     iswprint;
-    iswprint_l;
+    iswprint_l; # introduced=21
     iswpunct;
-    iswpunct_l;
+    iswpunct_l; # introduced=21
     iswspace;
-    iswspace_l;
+    iswspace_l; # introduced=21
     iswupper;
-    iswupper_l;
+    iswupper_l; # introduced=21
     iswxdigit;
-    iswxdigit_l;
+    iswxdigit_l; # introduced=21
     isxdigit;
-    isxdigit_l;
+    isxdigit_l; # introduced=21
     jrand48;
     kill;
     killpg;
     klogctl;
-    labs;
+    labs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     lchown;
-    lcong48;
+    lcong48; # introduced=23
     ldexp;
     ldiv;
-    lfind;
-    lgetxattr;
+    lfind; # introduced=21
+    lgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     link;
-    linkat;
+    linkat; # introduced=21
     listen;
-    listxattr;
-    llabs;
+    listxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    llabs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     lldiv;
-    llistxattr;
-    localeconv;
+    llistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    localeconv; # introduced=21
     localtime;
     localtime64; # arm x86 mips
     localtime64_r; # arm x86 mips
     localtime_r;
-    login_tty;
+    login_tty; # introduced=23
     longjmp;
     lrand48;
-    lremovexattr;
-    lsearch;
+    lremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lsearch; # introduced=21
     lseek;
     lseek64;
-    lsetxattr;
+    lsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     lstat;
-    lstat64;
+    lstat64; # introduced=21
     madvise;
     mallinfo;
     malloc;
-    malloc_info;
-    malloc_usable_size;
+    malloc_info; # introduced=23
+    malloc_usable_size; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     mbrlen;
-    mbrtoc16;
-    mbrtoc32;
+    mbrtoc16; # introduced=21
+    mbrtoc32; # introduced=21
     mbrtowc;
     mbsinit;
-    mbsnrtowcs;
+    mbsnrtowcs; # introduced=21
     mbsrtowcs;
     mbstowcs;
-    mbtowc;
+    mbtowc; # introduced=21
     memalign;
     memccpy;
     memchr;
@@ -646,114 +646,114 @@ LIBC {
     memcpy;
     memmem;
     memmove;
-    mempcpy;
+    mempcpy; # introduced=23
     memrchr;
     memset;
     mincore;
     mkdir;
     mkdirat;
     mkdtemp;
-    mkfifo;
-    mkfifoat;
+    mkfifo; # introduced=21
+    mkfifoat; # introduced=23
     mknod;
-    mknodat;
-    mkostemp;
-    mkostemp64;
-    mkostemps;
-    mkostemps64;
+    mknodat; # introduced=21
+    mkostemp; # introduced=23
+    mkostemp64; # introduced=23
+    mkostemps; # introduced=23
+    mkostemps64; # introduced=23
     mkstemp;
-    mkstemp64;
+    mkstemp64; # introduced=21
     mkstemps;
-    mkstemps64;
+    mkstemps64; # introduced=23
     mktemp;
     mktime;
     mktime64; # arm x86 mips
     mlock;
-    mlockall;
+    mlockall; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     mmap;
-    mmap64;
+    mmap64; # introduced=21
     mount;
     mprotect;
     mrand48;
     mremap;
     msync;
     munlock;
-    munlockall;
+    munlockall; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     munmap;
     nanosleep;
-    newlocale;
-    nftw;
-    nftw64;
+    newlocale; # introduced=21
+    nftw; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    nftw64; # introduced=21
     nice;
     nrand48;
-    ns_format_ttl; # arm64 x86_64 mips64
-    ns_get16; # arm64 x86_64 mips64
-    ns_get32; # arm64 x86_64 mips64
-    ns_initparse; # arm64 x86_64 mips64
-    ns_makecanon; # arm64 x86_64 mips64
-    ns_msg_getflag; # arm64 x86_64 mips64
-    ns_name_compress; # arm64 x86_64 mips64
-    ns_name_ntol; # arm64 x86_64 mips64
-    ns_name_ntop; # arm64 x86_64 mips64
-    ns_name_pack; # arm64 x86_64 mips64
-    ns_name_pton; # arm64 x86_64 mips64
-    ns_name_rollback; # arm64 x86_64 mips64
-    ns_name_skip; # arm64 x86_64 mips64
-    ns_name_uncompress; # arm64 x86_64 mips64
-    ns_name_unpack; # arm64 x86_64 mips64
-    ns_parserr; # arm64 x86_64 mips64
-    ns_put16; # arm64 x86_64 mips64
-    ns_put32; # arm64 x86_64 mips64
-    ns_samename; # arm64 x86_64 mips64
-    ns_skiprr; # arm64 x86_64 mips64
-    ns_sprintrr; # arm64 x86_64 mips64
-    ns_sprintrrf; # arm64 x86_64 mips64
+    ns_format_ttl; # arm64 x86_64 mips64 introduced=22
+    ns_get16; # arm64 x86_64 mips64 introduced=22
+    ns_get32; # arm64 x86_64 mips64 introduced=22
+    ns_initparse; # arm64 x86_64 mips64 introduced=22
+    ns_makecanon; # arm64 x86_64 mips64 introduced=22
+    ns_msg_getflag; # arm64 x86_64 mips64 introduced=22
+    ns_name_compress; # arm64 x86_64 mips64 introduced=22
+    ns_name_ntol; # arm64 x86_64 mips64 introduced=22
+    ns_name_ntop; # arm64 x86_64 mips64 introduced=22
+    ns_name_pack; # arm64 x86_64 mips64 introduced=22
+    ns_name_pton; # arm64 x86_64 mips64 introduced=23
+    ns_name_rollback; # arm64 x86_64 mips64 introduced=22
+    ns_name_skip; # arm64 x86_64 mips64 introduced=22
+    ns_name_uncompress; # arm64 x86_64 mips64 introduced=22
+    ns_name_unpack; # arm64 x86_64 mips64 introduced=22
+    ns_parserr; # arm64 x86_64 mips64 introduced=22
+    ns_put16; # arm64 x86_64 mips64 introduced=22
+    ns_put32; # arm64 x86_64 mips64 introduced=22
+    ns_samename; # arm64 x86_64 mips64 introduced=22
+    ns_skiprr; # arm64 x86_64 mips64 introduced=22
+    ns_sprintrr; # arm64 x86_64 mips64 introduced=22
+    ns_sprintrrf; # arm64 x86_64 mips64 introduced=22
     nsdispatch;
-    ntohl;
-    ntohs;
+    ntohl; # introduced=21
+    ntohs; # introduced=21
     open;
-    open64;
-    open_memstream;
-    open_wmemstream;
+    open64; # introduced=21
+    open_memstream; # introduced=23
+    open_wmemstream; # introduced=23
     openat;
-    openat64;
+    openat64; # introduced=21
     opendir;
     openlog;
-    openpty;
-    optarg;
-    opterr;
-    optind;
-    optopt;
-    optreset;
+    openpty; # introduced=23
+    optarg; # var
+    opterr; # var
+    optind; # var
+    optopt; # var
+    optreset; # var
     pathconf;
     pause;
     pclose;
     perror;
-    personality;
+    personality; # introduced-arm=15 introduced-arm64=21 introduced-mips=15 introduced-mips64=21 introduced-x86=15 introduced-x86_64=21
     pipe;
     pipe2;
     poll;
     popen;
-    posix_fadvise;
-    posix_fadvise64;
-    posix_fallocate;
-    posix_fallocate64;
-    posix_madvise;
-    posix_memalign;
-    posix_openpt;
-    ppoll;
+    posix_fadvise; # introduced=21
+    posix_fadvise64; # introduced=21
+    posix_fallocate; # introduced=21
+    posix_fallocate64; # introduced=21
+    posix_madvise; # introduced=23
+    posix_memalign; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    posix_openpt; # introduced=21
+    ppoll; # introduced=21
     prctl;
     pread;
-    pread64;
+    pread64; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     printf;
     prlimit; # arm64 x86_64 mips64
-    prlimit64;
-    process_vm_readv;
-    process_vm_writev;
+    prlimit64; # introduced=21
+    process_vm_readv; # introduced=23
+    process_vm_writev; # introduced=23
     pselect;
-    psiginfo;
-    psignal;
-    pthread_atfork;
+    psiginfo; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    psignal; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    pthread_atfork; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     pthread_attr_destroy;
     pthread_attr_getdetachstate;
     pthread_attr_getguardsize;
@@ -781,10 +781,10 @@ LIBC {
     pthread_cond_timeout_np; # arm x86 mips
     pthread_cond_wait;
     pthread_condattr_destroy;
-    pthread_condattr_getclock;
+    pthread_condattr_getclock; # introduced=21
     pthread_condattr_getpshared;
     pthread_condattr_init;
-    pthread_condattr_setclock;
+    pthread_condattr_setclock; # introduced=21
     pthread_condattr_setpshared;
     pthread_create;
     pthread_detach;
@@ -794,7 +794,7 @@ LIBC {
     pthread_getcpuclockid;
     pthread_getschedparam;
     pthread_getspecific;
-    pthread_gettid_np;
+    pthread_gettid_np; # introduced=21
     pthread_join;
     pthread_key_create;
     pthread_key_delete;
@@ -803,7 +803,7 @@ LIBC {
     pthread_mutex_init;
     pthread_mutex_lock;
     pthread_mutex_lock_timeout_np; # arm x86 mips
-    pthread_mutex_timedlock;
+    pthread_mutex_timedlock; # introduced=21
     pthread_mutex_trylock;
     pthread_mutex_unlock;
     pthread_mutexattr_destroy;
@@ -823,10 +823,10 @@ LIBC {
     pthread_rwlock_unlock;
     pthread_rwlock_wrlock;
     pthread_rwlockattr_destroy;
-    pthread_rwlockattr_getkind_np;
+    pthread_rwlockattr_getkind_np; # introduced=23
     pthread_rwlockattr_getpshared;
     pthread_rwlockattr_init;
-    pthread_rwlockattr_setkind_np;
+    pthread_rwlockattr_setkind_np; # introduced=23
     pthread_rwlockattr_setpshared;
     pthread_self;
     pthread_setname_np;
@@ -846,38 +846,38 @@ LIBC {
     putw; # arm x86 mips
     putwc;
     putwchar;
-    pvalloc; # arm x86 mips
+    pvalloc; # arm x86 mips introduced=17
     pwrite;
-    pwrite64;
+    pwrite64; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     qsort;
-    quick_exit;
+    quick_exit; # introduced=21
     raise;
-    rand;
-    rand_r;
-    random;
+    rand; # introduced=21
+    rand_r; # introduced=21
+    random; # introduced=21
     read;
-    readahead;
+    readahead; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     readdir;
-    readdir64;
-    readdir64_r;
+    readdir64; # introduced=21
+    readdir64_r; # introduced=21
     readdir_r;
     readlink;
-    readlinkat;
+    readlinkat; # introduced=21
     readv;
     realloc;
     realpath;
     reboot;
     recv;
     recvfrom;
-    recvmmsg;
+    recvmmsg; # introduced=21
     recvmsg;
     regcomp;
     regerror;
     regexec;
     regfree;
     remove;
-    removexattr;
-    remque;
+    removexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    remque; # introduced=21
     rename;
     renameat;
     res_init;
@@ -889,21 +889,21 @@ LIBC {
     rmdir;
     sbrk;
     scandir;
-    scandir64;
+    scandir64; # introduced=21
     scanf;
     sched_get_priority_max;
     sched_get_priority_min;
-    sched_getaffinity;
-    sched_getcpu;
+    sched_getaffinity; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    sched_getcpu; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     sched_getparam;
     sched_getscheduler;
     sched_rr_get_interval;
-    sched_setaffinity;
+    sched_setaffinity; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     sched_setparam;
     sched_setscheduler;
     sched_yield;
     seed48;
-    seekdir;
+    seekdir; # introduced=23
     select;
     sem_close;
     sem_destroy;
@@ -917,8 +917,8 @@ LIBC {
     sem_wait;
     send;
     sendfile;
-    sendfile64;
-    sendmmsg;
+    sendfile64; # introduced=21
+    sendmmsg; # introduced=21
     sendmsg;
     sendto;
     setbuf;
@@ -926,101 +926,101 @@ LIBC {
     setegid;
     setenv;
     seteuid;
-    setfsgid;
-    setfsuid;
+    setfsgid; # introduced=21
+    setfsuid; # introduced=21
     setgid;
     setgroups;
-    sethostname;
+    sethostname; # introduced=23
     setitimer;
     setjmp;
     setlinebuf;
     setlocale;
     setlogmask;
-    setmntent;
-    setns;
+    setmntent; # introduced=21
+    setns; # introduced=21
     setpgid;
     setpgrp;
     setpriority;
-    setprogname;
+    setprogname; # introduced=21
     setregid;
     setresgid;
     setresuid;
     setreuid;
     setrlimit;
-    setrlimit64;
+    setrlimit64; # introduced=21
     setservent;
     setsid;
     setsockopt;
-    setstate;
+    setstate; # introduced=21
     settimeofday;
     setuid;
     setutent;
     setvbuf;
-    setxattr;
+    setxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     shutdown;
     sigaction;
-    sigaddset;
+    sigaddset; # introduced=21
     sigaltstack;
     sigblock;
-    sigdelset;
-    sigemptyset;
-    sigfillset;
+    sigdelset; # introduced=21
+    sigemptyset; # introduced=21
+    sigfillset; # introduced=21
     siginterrupt;
-    sigismember;
-    siglongjmp;
-    signal;
-    signalfd;
+    sigismember; # introduced=21
+    siglongjmp; # introduced-arm=9 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
+    signal; # introduced=21
+    signalfd; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     sigpending;
     sigprocmask;
-    sigqueue;
-    sigsetjmp;
+    sigqueue; # introduced=23
+    sigsetjmp; # introduced-arm=9 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     sigsetmask;
     sigsuspend;
-    sigtimedwait;
+    sigtimedwait; # introduced=23
     sigwait;
-    sigwaitinfo;
+    sigwaitinfo; # introduced=23
     sleep;
     snprintf;
     socket;
     socketpair;
-    splice;
+    splice; # introduced=21
     sprintf;
-    srand;
+    srand; # introduced=21
     srand48;
-    srandom;
+    srandom; # introduced=21
     sscanf;
     stat;
-    stat64;
+    stat64; # introduced=21
     statfs;
-    statfs64;
-    statvfs;
-    statvfs64;
-    stderr;
-    stdin;
-    stdout;
-    stpcpy;
-    stpncpy;
+    statfs64; # introduced=21
+    statvfs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    statvfs64; # introduced=21
+    stderr; # var introduced=23
+    stdin; # var introduced=23
+    stdout; # var introduced=23
+    stpcpy; # introduced=21
+    stpncpy; # introduced=21
     strcasecmp;
-    strcasecmp_l;
+    strcasecmp_l; # introduced=23
     strcasestr;
     strcat;
     strchr;
     strcmp;
     strcoll;
-    strcoll_l;
+    strcoll_l; # introduced=21
     strcpy;
     strcspn;
     strdup;
     strerror;
-    strerror_l;
+    strerror_l; # introduced=23
     strerror_r;
     strftime;
-    strftime_l;
+    strftime_l; # introduced=21
     strlcat;
     strlcpy;
     strlen;
     strncasecmp;
-    strncasecmp_l;
+    strncasecmp_l; # introduced=23
     strncat;
     strncmp;
     strncpy;
@@ -1034,86 +1034,86 @@ LIBC {
     strspn;
     strstr;
     strtod;
-    strtof;
+    strtof; # introduced=21
     strtoimax;
     strtok;
     strtok_r;
     strtol;
-    strtold;
-    strtold_l;
+    strtold; # introduced=21
+    strtold_l; # introduced=21
     strtoll;
-    strtoll_l;
-    strtoq;
+    strtoll_l; # introduced=21
+    strtoq; # introduced=21
     strtoul;
     strtoull;
-    strtoull_l;
+    strtoull_l; # introduced=21
     strtoumax;
-    strtouq;
+    strtouq; # introduced=21
     strxfrm;
-    strxfrm_l;
-    swapoff;
-    swapon;
+    strxfrm_l; # introduced=21
+    swapoff; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    swapon; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     swprintf;
     swscanf;
     symlink;
-    symlinkat;
+    symlinkat; # introduced=21
     sync;
-    sys_siglist;
-    sys_signame;
+    sys_siglist; # var
+    sys_signame; # var
     syscall;
     sysconf;
     sysinfo;
     syslog;
     system;
-    tcdrain;
-    tcflow;
-    tcflush;
-    tcgetattr;
+    tcdrain; # introduced=21
+    tcflow; # introduced=21
+    tcflush; # introduced=21
+    tcgetattr; # introduced=21
     tcgetpgrp;
-    tcgetsid;
-    tcsendbreak;
-    tcsetattr;
+    tcgetsid; # introduced=21
+    tcsendbreak; # introduced=21
+    tcsetattr; # introduced=21
     tcsetpgrp;
-    tdelete;
-    tdestroy;
-    tee;
-    telldir;
+    tdelete; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tdestroy; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tee; # introduced=21
+    telldir; # introduced=23
     tempnam;
-    tfind;
-    tgkill;
+    tfind; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tgkill; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     time;
-    timegm;
+    timegm; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     timegm64; # arm x86 mips
-    timelocal;
+    timelocal; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     timelocal64; # arm x86 mips
     timer_create;
     timer_delete;
     timer_getoverrun;
     timer_gettime;
     timer_settime;
-    timerfd_create;
-    timerfd_gettime;
-    timerfd_settime;
+    timerfd_create; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    timerfd_gettime; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
+    timerfd_settime; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     times;
-    timezone;
+    timezone; # var
     tmpfile;
     tmpnam;
     toascii;
     tolower;
-    tolower_l;
+    tolower_l; # introduced=21
     toupper;
-    toupper_l;
+    toupper_l; # introduced=21
     towlower;
-    towlower_l;
+    towlower_l; # introduced=21
     towupper;
-    towupper_l;
+    towupper_l; # introduced=21
     truncate;
-    truncate64;
-    tsearch;
+    truncate64; # introduced=21
+    tsearch; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
     ttyname;
     ttyname_r;
-    twalk;
-    tzname;
+    twalk; # introduced=21
+    tzname; # var
     tzset;
     umask;
     umount;
@@ -1125,38 +1125,38 @@ LIBC {
     unlinkat;
     unlockpt;
     unsetenv;
-    unshare;
-    uselocale;
+    unshare; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
+    uselocale; # introduced=21
     usleep;
     utime;
-    utimensat;
+    utimensat; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     utimes;
     utmpname;
     valloc; # arm x86 mips
     vasprintf;
-    vdprintf;
+    vdprintf; # introduced=21
     verr;
     verrx;
     vfork;
     vfprintf;
     vfscanf;
     vfwprintf;
-    vfwscanf;
-    vmsplice;
+    vfwscanf; # introduced=21
+    vmsplice; # introduced=21
     vprintf;
     vscanf;
     vsnprintf;
     vsprintf;
     vsscanf;
     vswprintf;
-    vswscanf;
+    vswscanf; # introduced=21
     vsyslog;
     vwarn;
     vwarnx;
     vwprintf;
-    vwscanf;
+    vwscanf; # introduced=21
     wait;
-    wait4;
+    wait4; # introduced-arm=18 introduced-arm64=21 introduced-mips=18 introduced-mips64=21 introduced-x86=18 introduced-x86_64=21
     waitid;
     waitpid;
     warn;
@@ -1165,12 +1165,12 @@ LIBC {
     wcpncpy;
     wcrtomb;
     wcscasecmp;
-    wcscasecmp_l;
+    wcscasecmp_l; # introduced=23
     wcscat;
     wcschr;
     wcscmp;
     wcscoll;
-    wcscoll_l;
+    wcscoll_l; # introduced=21
     wcscpy;
     wcscspn;
     wcsdup;
@@ -1179,44 +1179,44 @@ LIBC {
     wcslcpy;
     wcslen;
     wcsncasecmp;
-    wcsncasecmp_l;
+    wcsncasecmp_l; # introduced=23
     wcsncat;
     wcsncmp;
     wcsncpy;
     wcsnlen;
-    wcsnrtombs;
+    wcsnrtombs; # introduced=21
     wcspbrk;
     wcsrchr;
     wcsrtombs;
     wcsspn;
     wcsstr;
     wcstod;
-    wcstof;
-    wcstoimax;
+    wcstof; # introduced=21
+    wcstoimax; # introduced=21
     wcstok;
     wcstol;
-    wcstold;
-    wcstold_l;
-    wcstoll;
-    wcstoll_l;
+    wcstold; # introduced=21
+    wcstold_l; # introduced=21
+    wcstoll; # introduced=21
+    wcstoll_l; # introduced=21
     wcstombs;
     wcstoul;
-    wcstoull;
-    wcstoull_l;
-    wcstoumax;
+    wcstoull; # introduced=21
+    wcstoull_l; # introduced=21
+    wcstoumax; # introduced=21
     wcswidth;
     wcsxfrm;
-    wcsxfrm_l;
+    wcsxfrm_l; # introduced=21
     wctob;
-    wctomb;
+    wctomb; # introduced=21
     wctype;
-    wctype_l;
+    wctype_l; # introduced=21
     wcwidth;
     wmemchr;
     wmemcmp;
     wmemcpy;
     wmemmove;
-    wmempcpy;
+    wmempcpy; # introduced=23
     wmemset;
     wprintf;
     write;
@@ -1226,7 +1226,7 @@ LIBC {
     *;
 };
 
-LIBC_N {
+LIBC_N { # introduced=24
   global:
     __aeabi_atexit; # arm
     __aeabi_memclr; # arm
@@ -1241,57 +1241,57 @@ LIBC_N {
     __aeabi_memset; # arm
     __aeabi_memset4; # arm
     __aeabi_memset8; # arm
-    __fread_chk;
-    __fwrite_chk;
-    __getcwd_chk;
+    __fread_chk; # introduced=24
+    __fwrite_chk; # introduced=24
+    __getcwd_chk; # introduced=24
     __gnu_Unwind_Find_exidx; # arm
-    __pwrite_chk;
-    __pwrite64_chk;
-    __write_chk;
-    adjtimex;
-    clock_adjtime;
-    fgetpos64;
-    fileno_unlocked;
-    fopen64;
-    freeifaddrs;
-    freopen64;
-    fseeko64;
-    fsetpos64;
-    ftello64;
-    funopen64;
-    getgrgid_r;
-    getgrnam_r;
-    getifaddrs;
-    if_freenameindex;
-    if_nameindex;
-    in6addr_any;
-    in6addr_loopback;
-    lockf;
-    lockf64;
-    preadv;
-    preadv64;
-    prlimit; # arm mips x86
-    pthread_barrierattr_destroy;
-    pthread_barrierattr_getpshared;
-    pthread_barrierattr_init;
-    pthread_barrierattr_setpshared;
-    pthread_barrier_destroy;
-    pthread_barrier_init;
-    pthread_barrier_wait;
-    pthread_spin_destroy;
-    pthread_spin_init;
-    pthread_spin_lock;
-    pthread_spin_trylock;
-    pthread_spin_unlock;
-    pwritev;
-    pwritev64;
-    scandirat;
-    scandirat64;
-    strchrnul;
-    tmpfile64;
+    __pwrite_chk; # introduced=24
+    __pwrite64_chk; # introduced=24
+    __write_chk; # introduced=24
+    adjtimex; # introduced=24
+    clock_adjtime; # introduced=24
+    fgetpos64; # introduced=24
+    fileno_unlocked; # introduced=24
+    fopen64; # introduced=24
+    freeifaddrs; # introduced=24
+    freopen64; # introduced=24
+    fseeko64; # introduced=24
+    fsetpos64; # introduced=24
+    ftello64; # introduced=24
+    funopen64; # introduced=24
+    getgrgid_r; # introduced=24
+    getgrnam_r; # introduced=24
+    getifaddrs; # introduced=24
+    if_freenameindex; # introduced=24
+    if_nameindex; # introduced=24
+    in6addr_any; # var introduced=24
+    in6addr_loopback; # var introduced=24
+    lockf; # introduced=24
+    lockf64; # introduced=24
+    preadv; # introduced=24
+    preadv64; # introduced=24
+    prlimit; # arm mips x86 introduced=24
+    pthread_barrierattr_destroy; # introduced=24
+    pthread_barrierattr_getpshared; # introduced=24
+    pthread_barrierattr_init; # introduced=24
+    pthread_barrierattr_setpshared; # introduced=24
+    pthread_barrier_destroy; # introduced=24
+    pthread_barrier_init; # introduced=24
+    pthread_barrier_wait; # introduced=24
+    pthread_spin_destroy; # introduced=24
+    pthread_spin_init; # introduced=24
+    pthread_spin_lock; # introduced=24
+    pthread_spin_trylock; # introduced=24
+    pthread_spin_unlock; # introduced=24
+    pwritev; # introduced=24
+    pwritev64; # introduced=24
+    scandirat; # introduced=24
+    scandirat64; # introduced=24
+    strchrnul; # introduced=24
+    tmpfile64; # introduced=24
 } LIBC;
 
-LIBC_O {
+LIBC_O { # future
   global:
     catclose;
     catgets;
