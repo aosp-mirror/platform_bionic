@@ -388,9 +388,45 @@ int fclose(FILE* fp) {
   return r;
 }
 
+int fileno_unlocked(FILE* fp) {
+  int fd = fp->_file;
+  if (fd == -1) {
+    errno = EBADF;
+    return -1;
+  }
+  return fd;
+}
+
 int fileno(FILE* fp) {
   ScopedFileLock sfl(fp);
   return fileno_unlocked(fp);
+}
+
+void clearerr_unlocked(FILE* fp) {
+  return __sclearerr(fp);
+}
+
+void clearerr(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  clearerr_unlocked(fp);
+}
+
+int feof_unlocked(FILE* fp) {
+  return __sfeof(fp);
+}
+
+int feof(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return feof_unlocked(fp);
+}
+
+int ferror_unlocked(FILE* fp) {
+  return __sferror(fp);
+}
+
+int ferror(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return ferror_unlocked(fp);
 }
 
 int __sread(void* cookie, char* buf, int n) {
@@ -602,4 +638,66 @@ FILE* funopen64(const void* cookie,
 
 char* ctermid(char* s) {
   return s ? strcpy(s, _PATH_TTY) : const_cast<char*>(_PATH_TTY);
+}
+
+int fgetc(FILE* fp) {
+  return getc(fp);
+}
+
+int fputc(int c, FILE* fp) {
+  return putc(c, fp);
+}
+
+ssize_t getline(char** buf, size_t* len, FILE* fp) {
+  return getdelim(buf, len, '\n', fp);
+}
+
+wint_t getwc(FILE* fp) {
+  return fgetwc(fp);
+}
+
+wint_t getwchar() {
+  return fgetwc(stdin);
+}
+
+wint_t putwc(wchar_t wc, FILE* fp) {
+  return fputwc(wc, fp);
+}
+
+wint_t putwchar(wchar_t wc) {
+  return fputwc(wc, stdout);
+}
+
+void rewind(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  fseek(fp, 0, SEEK_SET);
+  clearerr_unlocked(fp);
+}
+
+void setbuf(FILE* fp, char* buf) {
+  setbuffer(fp, buf, BUFSIZ);
+}
+
+void setbuffer(FILE* fp, char* buf, int size) {
+  setvbuf(fp, buf, buf ? _IOFBF : _IONBF, size);
+}
+
+int setlinebuf(FILE* fp) {
+  return setvbuf(fp, nullptr, _IOLBF, 0);
+}
+
+int vprintf(const char* fmt, va_list ap) {
+  return vfprintf(stdout, fmt, ap);
+}
+
+int vscanf(const char* fmt, va_list ap) {
+  return vfscanf(stdin, fmt, ap);
+}
+
+int vwprintf(const wchar_t* fmt, va_list ap) {
+  return vfwprintf(stdout, fmt, ap);
+}
+
+int vwscanf(const wchar_t* fmt, va_list ap) {
+  return vfwscanf(stdin, fmt, ap);
 }
