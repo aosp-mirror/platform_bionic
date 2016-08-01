@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "14f44640_22f55083",
+        "filename": "libc/arch-x86/atom/string/sse2-memset-atom.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2016-08-01T20:09:09Z",
+      "side": 1,
+      "message": "I\u0027m not sure what goes on here. Is it an attempt to adjust stack pointer?\n\n\"POP (%ebx)\" moves word from stack to memory adressed by %ebx - and I have no idea why would we want that here!\n\nPerhaps \"pop %ebx\" was intended?",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 48
+      },
+      "revId": "3a528f1cbfb053e09101a7b2e1ae767993929206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f42a5279_77fb22e4",
         "filename": "libc/arch-x86/silvermont/string/sse2-memset-slm.S",
         "patchSetId": 1
