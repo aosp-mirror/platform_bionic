@@ -89,24 +89,3 @@ int __fsetlocking(FILE* fp, int type) {
   _EXT(fp)->_caller_handles_locking = (type == FSETLOCKING_BYCALLER);
   return old_state;
 }
-
-void clearerr_unlocked(FILE* fp) {
-  return __sclearerr(fp);
-}
-
-int feof_unlocked(FILE* fp) {
-  return __sfeof(fp);
-}
-
-int ferror_unlocked(FILE* fp) {
-  return __sferror(fp);
-}
-
-int fileno_unlocked(FILE* fp) {
-  int fd = fp->_file;
-  if (fd == -1) {
-    errno = EBADF;
-    return -1;
-  }
-  return fd;
-}
