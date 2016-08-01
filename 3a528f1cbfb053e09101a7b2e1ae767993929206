@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f42a5279_77fb22e4",
+        "filename": "libc/arch-x86/silvermont/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-01T17:06:48Z",
+      "side": 1,
+      "message": "(i\u0027ll come back and remove all the non-PIC cruft.)",
+      "revId": "3a528f1cbfb053e09101a7b2e1ae767993929206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
