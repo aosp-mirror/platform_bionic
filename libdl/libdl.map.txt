@@ -35,6 +35,7 @@ LIBC_N {
 
 LIBC_PLATFORM {
   global:
+    android_dlwarning;
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;

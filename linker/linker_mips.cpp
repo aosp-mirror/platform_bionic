@@ -67,7 +67,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker,
     ElfW(Addr) sym_addr = 0;
     const char* sym_name = nullptr;
 
-    DEBUG("Processing '%s' relocation at index %zd", get_realpath(), idx);
+    DEBUG("Processing \"%s\" relocation at index %zd", get_realpath(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }

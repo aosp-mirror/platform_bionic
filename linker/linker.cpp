@@ -54,6 +54,7 @@
 #include "linker_block_allocator.h"
 #include "linker_gdb_support.h"
 #include "linker_debug.h"
+#include "linker_dlwarning.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
@@ -181,6 +182,73 @@ static const char* const kAsanDefaultLdPaths[] = {
 #endif
   nullptr
 };
+
+static bool is_system_library(const std::string& realpath) {
+  for (const auto& dir : g_default_namespace.get_default_library_paths()) {
+    if (file_is_in_dir(realpath, dir)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+#if defined(__LP64__)
+static const char* const kSystemLibDir = "/system/lib64";
+#else
+static const char* const kSystemLibDir = "/system/lib";
+#endif
+
+static std::string dirname(const char *path);
+
+// TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
+// gradually remove libraries from this list until it is gone.
+static bool is_greylisted(const char* name, const soinfo* needed_by) {
+  static const char* const kLibraryGreyList[] = {
+    "libandroid_runtime.so",
+    "libbinder.so",
+    "libcrypto.so",
+    "libcutils.so",
+    "libexpat.so",
+    "libgui.so",
+    "libmedia.so",
+    "libnativehelper.so",
+    "libskia.so",
+    "libssl.so",
+    "libstagefright.so",
+    "libsqlite.so",
+    "libui.so",
+    "libutils.so",
+    "libvorbisidec.so",
+    nullptr
+  };
+
+  // limit greylisting to apps targeting sdk version 23 and below
+  if (get_application_target_sdk_version() > 23) {
+    return false;
+  }
+
+  // if the library needed by a system library - implicitly assume it
+  // is greylisted
+
+  if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
+    return true;
+  }
+
+  // if this is an absolute path - make sure it points to /system/lib(64)
+  if (name[0] == '/' && dirname(name) == kSystemLibDir) {
+    // and reduce the path to basename
+    name = basename(name);
+  }
+
+  for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
+    if (strcmp(name, kLibraryGreyList[i]) == 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+// END OF WORKAROUND
 
 static const ElfW(Versym) kVersymNotNeeded = 0;
 static const ElfW(Versym) kVersymGlobal = 1;
@@ -491,7 +559,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
-    PRINT("readlink('%s') failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
   }
 
@@ -672,8 +740,8 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
       ELF_ST_BIND(s->st_info) == STB_WEAK) {
     return s->st_shndx != SHN_UNDEF;
   } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("unexpected ST_BIND value: %d for '%s' in '%s'",
-        ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
+    DL_WARN("unexpected ST_BIND value: %d for \"%s\" in \"%s\"",
+            ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
   }
 
   return false;
@@ -1081,6 +1149,14 @@ class LoadTask {
     extinfo_ = extinfo;
   }
 
+  bool is_dt_needed() const {
+    return is_dt_needed_;
+  }
+
+  void set_dt_needed(bool is_dt_needed) {
+    is_dt_needed_ = is_dt_needed;
+  }
+
   const ElfReader& get_elf_reader() const {
     CHECK(si_ != nullptr);
     return (*elf_readers_map_)[si_];
@@ -1120,7 +1196,8 @@ class LoadTask {
   LoadTask(const char* name, soinfo* needed_by,
            std::unordered_map<const soinfo*, ElfReader>* readers_map)
     : name_(name), needed_by_(needed_by), si_(nullptr),
-      fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map) {}
+      fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map),
+      is_dt_needed_(false) {}
 
   ~LoadTask() {
     if (fd_ != -1 && close_fd_) {
@@ -1136,6 +1213,9 @@ class LoadTask {
   bool close_fd_;
   off64_t file_offset_;
   std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
+  // TODO(dimitry): needed by workaround for http://b/26394120 (the grey-list)
+  bool is_dt_needed_;
+  // END OF WORKAROUND
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(LoadTask);
 };
@@ -1412,7 +1492,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   const char* const path = normalized_path.c_str();
-  TRACE("Trying zip file open from path '%s' -> normalized '%s'", input_path, path);
+  TRACE("Trying zip file open from path \"%s\" -> normalized \"%s\"", input_path, path);
 
   // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.
@@ -1558,6 +1638,14 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
 
+  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
+  if (fd == -1 && ns != &g_default_namespace && is_greylisted(name, needed_by)) {
+    // try searching for it on default_namespace default_library_path
+    fd = open_library_on_paths(zip_archive_cache, name, file_offset,
+                               g_default_namespace.get_default_library_paths(), realpath);
+  }
+  // END OF WORKAROUND
+
   return fd;
 }
 
@@ -1567,7 +1655,8 @@ static const char* fix_dt_needed(const char* dt_needed, const char* sopath __unu
   if (get_application_target_sdk_version() <= 22) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN("'%s' library has invalid DT_NEEDED entry '%s'", sopath, dt_needed);
+      DL_WARN("library \"%s\" has invalid DT_NEEDED entry \"%s\"", sopath, dt_needed);
+      add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
     }
 
     return bname;
@@ -1658,25 +1747,40 @@ static bool load_library(android_namespace_t* ns,
   }
 
   if (!ns->is_accessible(realpath)) {
-    // do not load libraries if they are not accessible for the specified namespace.
-    const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
-                                        "(unknown)" :
-                                        task->get_needed_by()->get_realpath();
+    // TODO(dimitry): workaround for http://b/26394120 - the grey-list
+    const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
+    if (is_greylisted(name, needed_by)) {
+      // print warning only if needed by non-system library
+      if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
+        const soinfo* needed_or_dlopened_by = task->get_needed_by();
+        const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
+                                                      needed_or_dlopened_by->get_realpath();
+        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
+                " - the access is temporarily granted as a workaround for http://b/26394120, note that the access"
+                " will be removed in future releases of Android.",
+                name, realpath.c_str(), sopath, ns->get_name());
+        add_dlwarning(sopath, "unauthorized access to",  name);
+      }
+    } else {
+      // do not load libraries if they are not accessible for the specified namespace.
+      const char* needed_or_dlopened_by = task->get_needed_by() == nullptr ?
+                                          "(unknown)" :
+                                          task->get_needed_by()->get_realpath();
 
-    DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
-           name, needed_or_dlopened_by, ns->get_name());
+      DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
+             name, needed_or_dlopened_by, ns->get_name());
 
-    PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
-          " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-          " permitted_paths=\"%s\"]",
-          name, realpath.c_str(),
-          needed_or_dlopened_by,
-          ns->get_name(),
-          android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
-          android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-          android::base::Join(ns->get_permitted_paths(), ':').c_str());
-
-    return false;
+      PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+            " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+            " permitted_paths=\"%s\"]",
+            name, realpath.c_str(),
+            needed_or_dlopened_by,
+            ns->get_name(),
+            android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+            android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+            android::base::Join(ns->get_permitted_paths(), ':').c_str());
+      return false;
+    }
   }
 
   soinfo* si = soinfo_alloc(ns, realpath.c_str(), &file_stat, file_offset, rtld_flags);
@@ -1822,7 +1926,7 @@ static bool find_library_internal(android_namespace_t* ns,
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
-  TRACE("[ '%s' find_loaded_library_by_soname returned false (*candidate=%s@%p). Trying harder...]",
+  TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
       task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags)) {
@@ -1950,6 +2054,7 @@ static bool find_libraries(android_namespace_t* ns,
 
     bool is_dt_needed = needed_by != nullptr && (needed_by != start_with || add_as_children);
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
+    task->set_dt_needed(is_dt_needed);
 
     if(!find_library_internal(ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
       return false;
@@ -2079,7 +2184,7 @@ static void soinfo_unload(soinfo* root) {
   }
 
   if (!root->can_unload()) {
-    TRACE("not unloading '%s' - the binary is flagged with NODELETE", root->get_realpath());
+    TRACE("not unloading \"%s\" - the binary is flagged with NODELETE", root->get_realpath());
     return;
   }
 
@@ -2677,7 +2782,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     const char* sym_name = nullptr;
     ElfW(Addr) addend = get_addend(rel, reloc);
 
-    DEBUG("Processing '%s' relocation at index %zd", get_realpath(), idx);
+    DEBUG("Processing \"%s\" relocation at index %zd", get_realpath(), idx);
     if (type == R_GENERIC_NONE) {
       continue;
     }
@@ -3435,7 +3540,7 @@ bool soinfo::prelink_image() {
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
-    INFO("[ Linking '%s' ]", get_realpath());
+    INFO("[ Linking \"%s\" ]", get_realpath());
     DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
@@ -3859,6 +3964,7 @@ bool soinfo::prelink_image() {
     soname_ = basename(realpath_.c_str());
     DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
         get_realpath(), soname_);
+    // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
   return true;
 }
@@ -3893,6 +3999,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     // phdr_table_protect_segments() after all of them are applied.
     DL_WARN("%s has text relocations. This is wasting memory and prevents "
             "security hardening. Please fix.", get_realpath());
+    add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s",
              get_realpath(), strerror(errno));
@@ -4156,11 +4263,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
-      INFO("[ LD_LIBRARY_PATH set to '%s' ]", ldpath_env);
+      INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
     if (ldpreload_env != nullptr) {
-      INFO("[ LD_PRELOAD set to '%s' ]", ldpreload_env);
+      INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
     }
   }
 
@@ -4319,7 +4426,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 #endif
 
   ElfW(Addr) entry = args.getauxval(AT_ENTRY);
-  TRACE("[ Ready to execute '%s' @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;
 }
 
