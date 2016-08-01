@@ -16,6 +16,23 @@
       "revId": "dd7f5194ae896682df09a7d18883ffcb36942370",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f42a5279_77e20232",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1515,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-01T17:09:08Z",
+      "side": 1,
+      "message": "If you want multiple version of this with LIBC_O being default - there an additional change needed.\n\nSee example for here: https://cs.corp.google.com/aosp-master/bionic/libc/arch-arm/bionic/__aeabi.c?l\u003d167",
+      "revId": "dd7f5194ae896682df09a7d18883ffcb36942370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
