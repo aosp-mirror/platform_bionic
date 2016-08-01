@@ -220,19 +220,18 @@ in particular for test isolation and parallelism (both on by default).
 
 The host tests require that you have `lunch`ed either an x86 or x86_64 target.
 
-    $ mma
-    $ mm bionic-unit-tests-run-on-host32
-    $ mm bionic-unit-tests-run-on-host64  # For 64-bit *targets* only.
+    $ ./tests/run-on-host.sh 32
+    $ ./tests/run-on-host.sh 64   # For x86_64-bit *targets* only.
+
+You can supply gtest flags as extra arguments to this script.
 
 ### Against glibc
 
 As a way to check that our tests do in fact test the correct behavior (and not
 just the behavior we think is correct), it is possible to run the tests against
-the host's glibc. The executables are already in your path.
+the host's glibc.
 
-    $ mma
-    $ bionic-unit-tests-glibc32
-    $ bionic-unit-tests-glibc64
+    $ ./tests/run-on-host.sh glibc
 
 
 Gathering test coverage
