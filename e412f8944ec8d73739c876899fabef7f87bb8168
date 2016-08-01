@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f42a5279_23c2f851",
+        "filename": "libc/arch-x86/silvermont/string/sse2-memset-slm.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-01T21:03:28Z",
+      "side": 1,
+      "message": "this seems suboptimal. i\u0027m not sure why the slm variant does mov-to-register+cmp-two-registers rather than cmp-with-large-immediate like the atom one does.",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 11
+      },
+      "revId": "e412f8944ec8d73739c876899fabef7f87bb8168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
