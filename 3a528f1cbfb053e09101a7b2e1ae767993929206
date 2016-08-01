@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f42a5279_03b81cc1",
+        "filename": "libc/arch-x86/atom/string/sse2-memset-atom.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-01T20:18:09Z",
+      "side": 1,
+      "message": "The space between the macro and the open paren is confusing, this looks like pop 0(%ebx)",
+      "parentUuid": "f42a5279_28c7776b",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 48
+      },
+      "revId": "3a528f1cbfb053e09101a7b2e1ae767993929206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f42a5279_77fb22e4",
         "filename": "libc/arch-x86/silvermont/string/sse2-memset-slm.S",
         "patchSetId": 1
