@@ -23,12 +23,18 @@
 
 __BEGIN_DECLS
 
-void* malloc(size_t byte_count) __mallocfunc __wur;
-void* calloc(size_t item_count, size_t item_size) __mallocfunc __wur;
-void* realloc(void* p, size_t byte_count) __wur;
+#if defined(__clang__)
+#define __BIONIC_ALLOC_SIZE(...) /* clang doesn't support attribute alloc_size. */
+#else
+#define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
+#endif
+
+void* malloc(size_t byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+void* calloc(size_t item_count, size_t item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+void* realloc(void* p, size_t byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 void free(void* p);
 
-void* memalign(size_t alignment, size_t byte_count) __mallocfunc __wur;
+void* memalign(size_t alignment, size_t byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
 size_t malloc_usable_size(const void* p) __INTRODUCED_IN(17);
 
 #ifndef STRUCT_MALLINFO_DECLARED
