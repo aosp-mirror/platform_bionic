@@ -1,4 +1,4 @@
-LIBC {
+LIBC_O {
   global:
     _ZdaPv;
     _ZdaPvRKSt9nothrow_t;
