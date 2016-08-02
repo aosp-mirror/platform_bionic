@@ -76,7 +76,7 @@ class ArchMap {
   }
 
  private:
-  std::array<T, size_t(Arch::x86_64) + 1> data_;
+  std::array<T, size_t(Arch::x86_64) + 1> data_ = {};
 };
 
 template <typename T>

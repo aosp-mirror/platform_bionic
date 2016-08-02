@@ -92,7 +92,7 @@ struct DeclarationAvailability {
       return false;
     }
 
-    for (auto it : arch_availability) {
+    for (const auto& it : arch_availability) {
       if (!it.second.empty()) {
         return false;
       }
@@ -142,6 +142,7 @@ struct Location {
 std::string to_string(const Location& loc);
 
 struct Declaration {
+  std::string name;
   Location location;
 
   bool is_extern;

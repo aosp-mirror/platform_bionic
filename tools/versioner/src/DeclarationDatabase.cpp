@@ -196,6 +196,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     auto declaration_it = symbol_it->second.declarations.find(location);
     if (declaration_it == symbol_it->second.declarations.end()) {
       Declaration declaration;
+      declaration.name = declaration_name;
       declaration.location = location;
       declaration.is_extern = is_extern;
       declaration.is_definition = is_definition;
@@ -335,7 +336,7 @@ std::string to_string(const DeclarationAvailability& decl_av) {
     ss << to_string(decl_av.global_availability) << ", ";
   }
 
-  for (auto it : decl_av.arch_availability) {
+  for (const auto& it : decl_av.arch_availability) {
     if (!it.second.empty()) {
       ss << to_string(it.first) << ": " << to_string(it.second) << ", ";
     }
