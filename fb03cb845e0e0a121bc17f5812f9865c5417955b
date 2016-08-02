@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "54d87e08_b76bb0ed",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T22:08:27Z",
+      "side": 1,
+      "message": "Whoops!\n\nFixed the glitch: https://android-review.googlesource.com/#/c/253024/",
+      "parentUuid": "4f39c5b7_98caa171",
+      "range": {
+        "startLine": 66,
+        "startChar": 65,
+        "endLine": 66,
+        "endChar": 68
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f39c5b7_78840d08",
         "filename": "tools/versioner/src/Preprocessor.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "54d87e08_573844f6",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T22:08:27Z",
+      "side": 1,
+      "message": "This gets glued onto an \u0027\u0026\u0026 __ANDROID_API__ \u003e\u003d \u003cn\u003e\u0027 and wrapped in parens, so it should be safe.",
+      "parentUuid": "4f39c5b7_78840d08",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 63
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f39c5b7_8399526b",
         "filename": "tools/versioner/src/Preprocessor.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2016-07-29T20:31:18Z",
       "side": 1,
       "message": "Fancy C++14. :)",
+      "range": {
+        "startLine": 217,
+        "startChar": 9,
+        "endLine": 217,
+        "endChar": 13
+      },
+      "revId": "fb03cb845e0e0a121bc17f5812f9865c5417955b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d87e08_f7137867",
+        "filename": "tools/versioner/src/Preprocessor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T22:08:27Z",
+      "side": 1,
+      "message": "I can\u0027t wait for C++17\u0027s destructuring/if with initialization",
+      "parentUuid": "4f39c5b7_8399526b",
       "range": {
         "startLine": 217,
         "startChar": 9,
