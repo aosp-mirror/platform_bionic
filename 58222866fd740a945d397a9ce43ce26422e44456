@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "54d87e08_f77cd84f",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T22:12:43Z",
+      "side": 1,
+      "message": "Are you sure we have the headers? I get lots of these without FORCE_BUILD_LLVM_COMPONENTS:\n\nbionic/tools/versioner/src/Utils.h:22:10: fatal error: \u0027llvm/ADT/StringRef.h\u0027 file not found\n#include \u003cllvm/ADT/StringRef.h\u003e\n\nbionic/tools/versioner/src/versioner.cpp:36:10: fatal error: \u0027clang/Frontend/TextDiagnosticPrinter.h\u0027 file not found\n#include \u003cclang/Frontend/TextDiagnosticPrinter.h\u003e",
+      "parentUuid": "54d87e08_5734c4e1",
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d87e08_b72730b9",
         "filename": "tools/versioner/src/Android.mk",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2016-08-02T21:58:12Z",
       "side": 1,
       "message": "This is redundant. We always include LOCAL_CFLAGS already in C++ compilations. If you want C-only flags, that is via LOCAL_CONLYFLAGS.",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 33
+      },
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d87e08_9779cc5e",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T22:12:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d87e08_b72730b9",
       "range": {
         "startLine": 13,
         "startChar": 18,
