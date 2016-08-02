@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d87e08_5734c4e1",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-08-02T21:58:12Z",
+      "side": 1,
+      "message": "I don\u0027t think this is fully necessary. We have prebuilts for libclang/libLLVM. It should build fine either way.",
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d87e08_b72730b9",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-08-02T21:58:12Z",
+      "side": 1,
+      "message": "This is redundant. We always include LOCAL_CFLAGS already in C++ compilations. If you want C-only flags, that is via LOCAL_CONLYFLAGS.",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 33
+      },
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
