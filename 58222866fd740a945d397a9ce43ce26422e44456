@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "54d87e08_97146cf1",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-08-02T22:16:06Z",
+      "side": 1,
+      "message": "Ah, I think the problem is that you need to add the LLVM dirs to your project. Take a look at frameworks/compile/slang/Android.mk and add the following kinds of lines at the start:\n\nLLVM_ROOT_PATH :\u003d external/llvm\nCLANG_ROOT_PATH :\u003d external/clang\ninclude $(CLANG_ROOT_PATH)/clang.mk\n\nThen add:\n\ninclude $(CLANG_HOST_BUILD_MK)\n\nbefore your executable command. I think that will be sufficient to declare that you want to build/link against the platform LLVM stuff.",
+      "parentUuid": "54d87e08_f77cd84f",
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d87e08_b72730b9",
         "filename": "tools/versioner/src/Android.mk",
         "patchSetId": 4
