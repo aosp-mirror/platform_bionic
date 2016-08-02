@@ -53,6 +53,13 @@
 
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
+#define PRINTF_IMPL(expr) \
+    va_list ap; \
+    va_start(ap, fmt); \
+    int result = (expr); \
+    va_end(ap); \
+    return result;
+
 #define std(flags, file) \
     {0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,nullptr,__swrite, \
     {(unsigned char *)(__sFext+file), 0},nullptr,0,{0},{0},{0,0},0,0}
@@ -412,7 +419,7 @@ void clearerr(FILE* fp) {
 }
 
 int feof_unlocked(FILE* fp) {
-  return __sfeof(fp);
+  return ((fp->_flags & __SEOF) != 0);
 }
 
 int feof(FILE* fp) {
@@ -640,12 +647,49 @@ char* ctermid(char* s) {
   return s ? strcpy(s, _PATH_TTY) : const_cast<char*>(_PATH_TTY);
 }
 
+int dprintf(int fd, const char* fmt, ...) {
+  PRINTF_IMPL(vdprintf(fd, fmt, ap));
+}
+
+int fprintf(FILE* fp, const char* fmt, ...) {
+  PRINTF_IMPL(vfprintf(fp, fmt, ap));
+}
+
 int fgetc(FILE* fp) {
   return getc(fp);
 }
 
 int fputc(int c, FILE* fp) {
   return putc(c, fp);
+}
+
+int fscanf(FILE* fp, const char* fmt, ...) {
+  PRINTF_IMPL(vfscanf(fp, fmt, ap));
+}
+
+int fwprintf(FILE* fp, const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vfwprintf(fp, fmt, ap));
+}
+
+int fwscanf(FILE* fp, const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vfwscanf(fp, fmt, ap));
+}
+
+int getc(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return getc_unlocked(fp);
+}
+
+int getc_unlocked(FILE* fp) {
+  return __sgetc(fp);
+}
+
+int getchar_unlocked() {
+  return getc_unlocked(stdin);
+}
+
+int getchar() {
+  return getc(stdin);
 }
 
 ssize_t getline(char** buf, size_t* len, FILE* fp) {
@@ -658,6 +702,35 @@ wint_t getwc(FILE* fp) {
 
 wint_t getwchar() {
   return fgetwc(stdin);
+}
+
+int printf(const char* fmt, ...) {
+  PRINTF_IMPL(vfprintf(stdout, fmt, ap));
+}
+
+int putc(int c, FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return putc_unlocked(c, fp);
+}
+
+int putc_unlocked(int c, FILE* fp) {
+  if (cantwrite(fp)) {
+    errno = EBADF;
+    return EOF;
+  }
+  _SET_ORIENTATION(fp, -1);
+  if (--fp->_w >= 0 || (fp->_w >= fp->_lbfsize && c != '\n')) {
+    return (*fp->_p++ = c);
+  }
+  return (__swbuf(c, fp));
+}
+
+int putchar(int c) {
+  return putc(c, stdout);
+}
+
+int putchar_unlocked(int c) {
+  return putc_unlocked(c, stdout);
 }
 
 wint_t putwc(wchar_t wc, FILE* fp) {
@@ -674,6 +747,10 @@ void rewind(FILE* fp) {
   clearerr_unlocked(fp);
 }
 
+int scanf(const char* fmt, ...) {
+  PRINTF_IMPL(vfscanf(stdin, fmt, ap));
+}
+
 void setbuf(FILE* fp, char* buf) {
   setbuffer(fp, buf, BUFSIZ);
 }
@@ -684,6 +761,14 @@ void setbuffer(FILE* fp, char* buf, int size) {
 
 int setlinebuf(FILE* fp) {
   return setvbuf(fp, nullptr, _IOLBF, 0);
+}
+
+int swprintf(wchar_t* s, size_t n, const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vswprintf(s, n, fmt, ap));
+}
+
+int swscanf(const wchar_t* s, const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vswscanf(s, fmt, ap));
 }
 
 int vprintf(const char* fmt, va_list ap) {
@@ -700,4 +785,12 @@ int vwprintf(const wchar_t* fmt, va_list ap) {
 
 int vwscanf(const wchar_t* fmt, va_list ap) {
   return vfwscanf(stdin, fmt, ap);
+}
+
+int wprintf(const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vfwprintf(stdout, fmt, ap));
+}
+
+int wscanf(const wchar_t* fmt, ...) {
+  PRINTF_IMPL(vfwscanf(stdin, fmt, ap));
 }
