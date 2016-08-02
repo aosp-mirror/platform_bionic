@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d87e08_9a9a515c",
+        "filename": "libc/tools/genversion-scripts.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-02T22:25:23Z",
+      "side": 1,
+      "message": "what about nobrillo? I suppose it never goes without an arch.. not sure if it can... but maybe add it here anyways?",
+      "revId": "7df1de039b082b983164fe85b6fcaef4286cc66c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
