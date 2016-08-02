@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "54d87e08_9a7331ac",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-02T23:05:04Z",
+      "side": 1,
+      "message": "Thanks, that worked. I split the makefile stuff out into its own commit: https://android-review.googlesource.com/#/c/253005",
+      "parentUuid": "54d87e08_97146cf1",
+      "revId": "58222866fd740a945d397a9ce43ce26422e44456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d87e08_b72730b9",
         "filename": "tools/versioner/src/Android.mk",
         "patchSetId": 4
