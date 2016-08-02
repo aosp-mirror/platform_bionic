@@ -289,13 +289,13 @@ static bool checkSymbol(const Symbol& symbol) {
     DeclarationAvailability availability;
     if (!decl->calculateAvailability(&availability)) {
       fprintf(stderr, "versioner: failed to calculate availability for declaration:\n");
-      decl->dump(cwd, std::cout, 2);
+      decl->dump(cwd, stderr, 2);
       return false;
     }
 
     if (decl->is_definition && !availability.empty()) {
       fprintf(stderr, "versioner: inline definition has non-empty versioning information:\n");
-      decl->dump(cwd, std::cout, 2);
+      decl->dump(cwd, stderr, 2);
       return false;
     }
   }

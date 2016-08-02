@@ -16,11 +16,11 @@
 
 #pragma once
 
-#include <iostream>
+#include <stdio.h>
+
 #include <map>
 #include <mutex>
 #include <set>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -154,34 +154,23 @@ struct Declaration {
     return location < rhs.location;
   }
 
-  void dump(const std::string& base_path = "", std::ostream& out = std::cout,
-            unsigned indent = 0) const {
+  void dump(const std::string& base_path = "", FILE* out = stdout, unsigned indent = 0) const {
     std::string indent_str(indent, ' ');
-    out << indent_str;
+    fprintf(out, "%s", indent_str.c_str());
 
-    if (is_extern) {
-      out << "extern";
-    } else {
-      out << "static";
-    }
-
-    if (is_definition) {
-      out << " definition";
-    } else {
-      out << " declaration";
-    }
-
-    out << " @ " << StripPrefix(location.filename, base_path).str() << ":" << location.start.line
-        << ":" << location.start.column;
+    fprintf(out, "%s ", is_extern ? "extern" : "static");
+    fprintf(out, "%s ", is_definition ? "definition" : "declaration");
+    fprintf(out, "@ %s:%u:%u", StripPrefix(location.filename, base_path).str().c_str(),
+            location.start.line, location.start.column);
 
     if (!availability.empty()) {
       DeclarationAvailability avail;
 
-      out << "\n" << indent_str << "  ";
+      fprintf(out, "\n%s  ", indent_str.c_str());
       if (!calculateAvailability(&avail)) {
-        out << "invalid availability";
+        fprintf(out, "invalid availability");
       } else {
-        out << to_string(avail);
+        fprintf(out, "%s", to_string(avail).c_str());
       }
     }
   }
@@ -202,22 +191,20 @@ struct Symbol {
     return name == rhs.name;
   }
 
-  void dump(const std::string& base_path = "", std::ostream& out = std::cout) const {
+  void dump(const std::string& base_path = "", FILE* out = stdout) const {
     DeclarationAvailability availability;
     bool valid_availability = calculateAvailability(&availability);
-    out << "  " << name << ": ";
+    fprintf(out, "  %s: ", name.c_str());
 
     if (valid_availability) {
-      out << to_string(availability);
+      fprintf(out, "%s\n", to_string(availability).c_str());
     } else {
-      out << "invalid";
+      fprintf(out, "invalid\n");
     }
-
-    out << "\n";
 
     for (auto& it : declarations) {
       it.second.dump(base_path, out, 4);
-      out << "\n";
+      fprintf(out, "\n");
     }
   }
 };
@@ -230,8 +217,8 @@ class HeaderDatabase {
 
   void parseAST(CompilationType type, clang::ASTUnit* ast);
 
-  void dump(const std::string& base_path = "", std::ostream& out = std::cout) const {
-    out << "HeaderDatabase contains " << symbols.size() << " symbols:\n";
+  void dump(const std::string& base_path = "", FILE* out = stdout) const {
+    fprintf(out, "HeaderDatabase contains %zu symbols:\n", symbols.size());
     for (const auto& pair : symbols) {
       pair.second.dump(base_path, out);
     }
