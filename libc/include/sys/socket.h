@@ -300,6 +300,7 @@ ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen
 
 #if defined(__BIONIC_FORTIFY)
 
+#if __ANDROID_API__ >= 24
 __BIONIC_FORTIFY_INLINE
 ssize_t recvfrom(int fd, void* buf, size_t len, int flags, const struct sockaddr* src_addr, socklen_t* addr_len) {
   size_t bos = __bos0(buf);
@@ -320,6 +321,7 @@ ssize_t recvfrom(int fd, void* buf, size_t len, int flags, const struct sockaddr
 
   return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
 }
+#endif /* __ANDROID_API__ >= 24 */
 
 __BIONIC_FORTIFY_INLINE
 ssize_t recv(int socket, void* buf, size_t len, int flags) {

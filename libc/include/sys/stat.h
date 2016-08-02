@@ -163,6 +163,7 @@ __errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
 #if defined(__BIONIC_FORTIFY)
 
+#if __ANDROID_API__ >= 18
 __BIONIC_FORTIFY_INLINE
 mode_t umask(mode_t mode) {
 #if !defined(__clang__)
@@ -175,6 +176,8 @@ mode_t umask(mode_t mode) {
 #endif
   return __umask_chk(mode);
 }
+#endif /* __ANDROID_API__ >= 18 */
+
 #endif /* defined(__BIONIC_FORTIFY) */
 
 #if __ANDROID_API__ >= 21
