@@ -37,6 +37,24 @@
 #define STDIO_TEST stdio
 #endif
 
+static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = false) {
+  rewind(fp);
+
+  char line[1024];
+  ASSERT_EQ(line, fgets(line, sizeof(line), fp));
+  ASSERT_STREQ(expected, line);
+
+  if (is_fmemopen) {
+    // fmemopen appends a trailing NUL byte, which probably shouldn't show up as an
+    // extra empty line, but does on every C library I tested...
+    ASSERT_EQ(line, fgets(line, sizeof(line), fp));
+    ASSERT_STREQ("", line);
+  }
+
+  // Make sure there isn't anything else in the file.
+  ASSERT_EQ(nullptr, fgets(line, sizeof(line), fp)) << "junk at end of file: " << line;
+}
+
 TEST(STDIO_TEST, flockfile_18208568_stderr) {
   // Check that we have a _recursive_ mutex for flockfile.
   flockfile(stderr);
@@ -69,13 +87,7 @@ TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
   rc = fprintf(fp, "hello\n");
   ASSERT_EQ(rc, 6);
 
-  rewind(fp);
-
-  char buf[16];
-  char* s = fgets(buf, sizeof(buf), fp);
-  ASSERT_TRUE(s != NULL);
-  ASSERT_STREQ("hello\n", s);
-
+  AssertFileIs(fp, "hello\n");
   fclose(fp);
 }
 
@@ -95,11 +107,7 @@ TEST(STDIO_TEST, dprintf) {
   FILE* tfile = fdopen(tf.fd, "r");
   ASSERT_TRUE(tfile != NULL);
 
-  char buf[7];
-  ASSERT_EQ(buf, fgets(buf, sizeof(buf), tfile));
-  ASSERT_STREQ("hello\n", buf);
-  // Make sure there isn't anything else in the file.
-  ASSERT_EQ(NULL, fgets(buf, sizeof(buf), tfile));
+  AssertFileIs(tfile, "hello\n");
   fclose(tfile);
 }
 
@@ -568,6 +576,17 @@ TEST(STDIO_TEST, snprintf_asterisk_overflow) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
+TEST(STDIO_TEST, fprintf) {
+  TemporaryFile tf;
+
+  FILE* tfile = fdopen(tf.fd, "r+");
+  ASSERT_TRUE(tfile != nullptr);
+
+  ASSERT_EQ(7, fprintf(tfile, "%d %s", 123, "abc"));
+  AssertFileIs(tfile, "123 abc");
+  fclose(tfile);
+}
+
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
   FILE* fp;
@@ -806,13 +825,7 @@ TEST(STDIO_TEST, fmemopen) {
 
   ASSERT_STREQ("<abc>\n", buf);
 
-  rewind(fp);
-
-  char line[16];
-  char* s = fgets(line, sizeof(line), fp);
-  ASSERT_TRUE(s != NULL);
-  ASSERT_STREQ("<abc>\n", s);
-
+  AssertFileIs(fp, "<abc>\n", true);
   fclose(fp);
 }
 
@@ -820,13 +833,7 @@ TEST(STDIO_TEST, fmemopen_NULL) {
   FILE* fp = fmemopen(nullptr, 128, "r+");
   ASSERT_NE(EOF, fputs("xyz\n", fp));
 
-  rewind(fp);
-
-  char line[16];
-  char* s = fgets(line, sizeof(line), fp);
-  ASSERT_TRUE(s != NULL);
-  ASSERT_STREQ("xyz\n", s);
-
+  AssertFileIs(fp, "xyz\n", true);
   fclose(fp);
 }
 
@@ -1196,15 +1203,10 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
   }
 
   for (size_t i = 0; i < 256; ++i) {
-    rewind(fps[i]);
-
-    char buf[BUFSIZ];
-    ASSERT_TRUE(fgets(buf, sizeof(buf), fps[i]) != nullptr);
-
     char expected[BUFSIZ];
     snprintf(expected, sizeof(expected), "hello %zu!\n", i);
-    ASSERT_STREQ(expected, buf);
 
+    AssertFileIs(fps[i], expected);
     fclose(fps[i]);
     delete tfs[i];
   }

@@ -246,19 +246,9 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
-#define __sfeof(p)     (((p)->_flags & __SEOF) != 0)
 #define __sferror(p)   (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
-#if !defined(__cplusplus)
 #define __sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
-static __inline int __sputc(int _c, FILE* _p) {
-  if (--_p->_w >= 0 || (_p->_w >= _p->_lbfsize && (char)_c != '\n')) {
-    return (*_p->_p++ = _c);
-  } else {
-    return (__swbuf(_c, _p));
-  }
-}
-#endif
 
 /* OpenBSD declares these in fvwrite.h but we want to ensure they're hidden. */
 struct __suio;
