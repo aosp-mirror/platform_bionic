@@ -178,16 +178,16 @@ char* realpath(const char* path, char* resolved) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 #if __ANDROID_API__ >= 21
-float strtof(const char*, char**);
-double atof(const char*);
-int abs(int) __pure2;
-long labs(long) __pure2;
-long long llabs(long long) __pure2;
-int rand(void);
-void srand(unsigned int);
-long random(void);
-void srandom(unsigned int);
-int grantpt(int);
+float strtof(const char*, char**) __INTRODUCED_IN(21);
+double atof(const char*) __INTRODUCED_IN(21);
+int abs(int) __pure2 __INTRODUCED_IN(21);
+long labs(long) __pure2 __INTRODUCED_IN(21);
+long long llabs(long long) __pure2 __INTRODUCED_IN(21);
+int rand(void) __INTRODUCED_IN(21);
+void srand(unsigned int) __INTRODUCED_IN(21);
+long random(void) __INTRODUCED_IN(21);
+void srandom(unsigned int) __INTRODUCED_IN(21);
+int grantpt(int) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
