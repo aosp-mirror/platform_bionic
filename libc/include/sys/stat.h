@@ -178,7 +178,7 @@ mode_t umask(mode_t mode) {
 #endif /* defined(__BIONIC_FORTIFY) */
 
 #if __ANDROID_API__ >= 21
-int mkfifo(const char*, mode_t);
+int mkfifo(const char*, mode_t) __INTRODUCED_IN(21);
 #else
 // Implemented as a static inline before 21.
 #endif
