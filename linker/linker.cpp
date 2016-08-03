@@ -55,6 +55,7 @@
 #include "linker_gdb_support.h"
 #include "linker_debug.h"
 #include "linker_dlwarning.h"
+#include "linker_namespaces.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
@@ -74,71 +75,6 @@ extern "C" void _start();
 // Override macros to use C++ style casts.
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
-
-struct android_namespace_t {
- public:
-  android_namespace_t() : name_(nullptr), is_isolated_(false) {}
-
-  const char* get_name() const { return name_; }
-  void set_name(const char* name) { name_ = name; }
-
-  bool is_isolated() const { return is_isolated_; }
-  void set_isolated(bool isolated) { is_isolated_ = isolated; }
-
-  const std::vector<std::string>& get_ld_library_paths() const {
-    return ld_library_paths_;
-  }
-  void set_ld_library_paths(std::vector<std::string>&& library_paths) {
-    ld_library_paths_ = library_paths;
-  }
-
-  const std::vector<std::string>& get_default_library_paths() const {
-    return default_library_paths_;
-  }
-  void set_default_library_paths(std::vector<std::string>&& library_paths) {
-    default_library_paths_ = library_paths;
-  }
-
-  const std::vector<std::string>& get_permitted_paths() const {
-    return permitted_paths_;
-  }
-  void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
-    permitted_paths_ = permitted_paths;
-  }
-
-  void add_soinfo(soinfo* si) {
-    soinfo_list_.push_back(si);
-  }
-
-  void add_soinfos(const soinfo::soinfo_list_t& soinfos) {
-    for (auto si : soinfos) {
-      add_soinfo(si);
-      si->add_secondary_namespace(this);
-    }
-  }
-
-  void remove_soinfo(soinfo* si) {
-    soinfo_list_.remove_if([&](soinfo* candidate) {
-      return si == candidate;
-    });
-  }
-
-  const soinfo::soinfo_list_t& soinfo_list() const { return soinfo_list_; }
-
-  // For isolated namespaces - checks if the file is on the search path;
-  // always returns true for not isolated namespace.
-  bool is_accessible(const std::string& path);
-
- private:
-  const char* name_;
-  bool is_isolated_;
-  std::vector<std::string> ld_library_paths_;
-  std::vector<std::string> default_library_paths_;
-  std::vector<std::string> permitted_paths_;
-  soinfo::soinfo_list_t soinfo_list_;
-
-  DISALLOW_COPY_AND_ASSIGN(android_namespace_t);
-};
 
 android_namespace_t g_default_namespace;
 
@@ -259,7 +195,7 @@ static std::vector<std::string> g_ld_preload_names;
 static std::vector<soinfo*> g_ld_preloads;
 
 static bool g_public_namespace_initialized;
-static soinfo::soinfo_list_t g_public_namespace;
+static soinfo_list_t g_public_namespace;
 
 int g_ld_debug_verbosity;
 abort_msg_t* g_abort_message = nullptr; // For debuggerd.
@@ -327,32 +263,6 @@ static void notify_gdb_of_load(soinfo* info) {
 
 static void notify_gdb_of_unload(soinfo* info) {
   notify_gdb_of_unload(&(info->link_map_head));
-}
-
-bool android_namespace_t::is_accessible(const std::string& file) {
-  if (!is_isolated_) {
-    return true;
-  }
-
-  for (const auto& dir : ld_library_paths_) {
-    if (file_is_in_dir(file, dir)) {
-      return true;
-    }
-  }
-
-  for (const auto& dir : default_library_paths_) {
-    if (file_is_in_dir(file, dir)) {
-      return true;
-    }
-  }
-
-  for (const auto& dir : permitted_paths_) {
-    if (file_is_under_dir(file, dir)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 LinkedListEntry<soinfo>* SoinfoListAllocator::alloc() {
@@ -938,8 +848,8 @@ uint32_t SymbolName::gnu_hash() {
 }
 
 bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo::soinfo_list_t& global_group,
-                      const soinfo::soinfo_list_t& local_group, const ElfW(Sym)** symbol) {
+                      soinfo** si_found_in, const soinfo_list_t& global_group,
+                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol) {
   SymbolName symbol_name(name);
   const ElfW(Sym)* s = nullptr;
 
@@ -1954,8 +1864,8 @@ static void soinfo_unload(soinfo* soinfos[], size_t count);
 //
 // This group consists of the main executable, LD_PRELOADs
 // and libraries with the DF_1_GLOBAL flag set.
-static soinfo::soinfo_list_t make_global_group(android_namespace_t* ns) {
-  soinfo::soinfo_list_t global_group;
+static soinfo_list_t make_global_group(android_namespace_t* ns) {
+  soinfo_list_t global_group;
   ns->soinfo_list().for_each([&](soinfo* si) {
     if ((si->get_dt_flags_1() & DF_1_GLOBAL) != 0) {
       global_group.push_back(si);
@@ -1970,12 +1880,12 @@ static soinfo::soinfo_list_t make_global_group(android_namespace_t* ns) {
 // group (see make_global_group). For all others this is a group
 // of RTLD_GLOBAL libraries (which includes the global group from
 // the default namespace).
-static soinfo::soinfo_list_t get_shared_group(android_namespace_t* ns) {
+static soinfo_list_t get_shared_group(android_namespace_t* ns) {
   if (ns == &g_default_namespace) {
     return make_global_group(ns);
   }
 
-  soinfo::soinfo_list_t shared_group;
+  soinfo_list_t shared_group;
   ns->soinfo_list().for_each([&](soinfo* si) {
     if ((si->get_rtld_flags() & RTLD_GLOBAL) != 0) {
       shared_group.push_back(si);
@@ -2015,7 +1925,7 @@ static bool find_libraries(android_namespace_t* ns,
   }
 
   // Construct global_group.
-  soinfo::soinfo_list_t global_group = make_global_group(ns);
+  soinfo_list_t global_group = make_global_group(ns);
 
   // If soinfos array is null allocate one on stack.
   // The array is needed in case of failure; for example
@@ -2122,7 +2032,7 @@ static bool find_libraries(android_namespace_t* ns,
 
 
   // Step 5: link libraries.
-  soinfo::soinfo_list_t local_group;
+  soinfo_list_t local_group;
   walk_dependencies_tree(
       (start_with != nullptr && add_as_children) ? &start_with : soinfos,
       (start_with != nullptr && add_as_children) ? 1 : soinfos_count,
@@ -2202,7 +2112,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
     return;
   }
 
-  soinfo::soinfo_list_t unload_list;
+  soinfo_list_t unload_list;
   for (size_t i = 0; i < count; ++i) {
     soinfo* si = soinfos[i];
 
@@ -2225,8 +2135,8 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
   // linked. This is why we can safely use the first one.
   soinfo* root = soinfos[0];
 
-  soinfo::soinfo_list_t local_unload_list;
-  soinfo::soinfo_list_t external_unload_list;
+  soinfo_list_t local_unload_list;
+  soinfo_list_t external_unload_list;
   soinfo* si = nullptr;
 
   while ((si = unload_list.pop_front()) != nullptr) {
@@ -2584,6 +2494,13 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
   return true;
 }
 
+static void add_soinfos_to_namespace(const soinfo_list_t& soinfos, android_namespace_t* ns) {
+  ns->add_soinfos(soinfos);
+  for (auto si : soinfos) {
+    si->add_secondary_namespace(ns);
+  }
+}
+
 android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* name,
                                       const char* ld_library_path,
@@ -2623,10 +2540,10 @@ android_namespace_t* create_namespace(const void* caller_addr,
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
     // If shared - clone the parent namespace
-    ns->add_soinfos(parent_namespace->soinfo_list());
+    add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
   } else {
     // If not shared - copy only the shared group
-    ns->add_soinfos(get_shared_group(parent_namespace));
+    add_soinfos_to_namespace(get_shared_group(parent_namespace), ns);
   }
 
   return ns;
@@ -3365,9 +3282,9 @@ const char* soinfo::get_soname() const {
 
 // This is a return on get_children()/get_parents() if
 // 'this->flags' does not have FLAG_NEW_SOINFO set.
-static soinfo::soinfo_list_t g_empty_list;
+static soinfo_list_t g_empty_list;
 
-soinfo::soinfo_list_t& soinfo::get_children() {
+soinfo_list_t& soinfo::get_children() {
   if (has_min_version(0)) {
     return children_;
   }
@@ -3375,7 +3292,7 @@ soinfo::soinfo_list_t& soinfo::get_children() {
   return g_empty_list;
 }
 
-const soinfo::soinfo_list_t& soinfo::get_children() const {
+const soinfo_list_t& soinfo::get_children() const {
   if (has_min_version(0)) {
     return children_;
   }
@@ -3383,7 +3300,7 @@ const soinfo::soinfo_list_t& soinfo::get_children() const {
   return g_empty_list;
 }
 
-soinfo::soinfo_list_t& soinfo::get_parents() {
+soinfo_list_t& soinfo::get_parents() {
   if (has_min_version(0)) {
     return parents_;
   }
@@ -4144,7 +4061,7 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   si->prelink_image();
-  si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr);
+  si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr);
 #endif
 }
 
@@ -4362,7 +4279,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
                       /* add_as_children */ true)) {
     __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
-    if (!si->link_image(g_empty_list, soinfo::soinfo_list_t::make_list(si), nullptr)) {
+    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
       __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
     }
     si->increment_ref_count();

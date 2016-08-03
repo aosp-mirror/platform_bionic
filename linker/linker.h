@@ -40,6 +40,7 @@
 #include "private/bionic_page.h"
 #include "private/libc_logging.h"
 #include "linked_list.h"
+#include "linker_common_types.h"
 #include "linker_logger.h"
 
 #include <string>
@@ -104,28 +105,6 @@ typedef void (*linker_ctor_function_t)(int, char**, char**);
 #define USE_RELA 1
 #endif
 
-struct soinfo;
-
-class SoinfoListAllocator {
- public:
-  static LinkedListEntry<soinfo>* alloc();
-  static void free(LinkedListEntry<soinfo>* entry);
-
- private:
-  // unconstructable
-  DISALLOW_IMPLICIT_CONSTRUCTORS(SoinfoListAllocator);
-};
-
-class NamespaceListAllocator {
- public:
-  static LinkedListEntry<android_namespace_t>* alloc();
-  static void free(LinkedListEntry<android_namespace_t>* entry);
-
- private:
-  // unconstructable
-  DISALLOW_IMPLICIT_CONSTRUCTORS(NamespaceListAllocator);
-};
-
 class SymbolName {
  public:
   explicit SymbolName(const char* name)
@@ -177,8 +156,6 @@ class VersionTracker {
 
 struct soinfo {
  public:
-  typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
-  typedef LinkedList<android_namespace_t, NamespaceListAllocator> android_namespace_list_t;
 #if defined(__work_around_b_24465209__)
  private:
   char old_name_[SOINFO_NAME_LEN];
@@ -434,8 +411,8 @@ struct soinfo {
 };
 
 bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo::soinfo_list_t& global_group,
-                      const soinfo::soinfo_list_t& local_group, const ElfW(Sym)** symbol);
+                      soinfo** si_found_in, const soinfo_list_t& global_group,
+                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol);
 
 enum RelocationKind {
   kRelocAbsolute = 0,
