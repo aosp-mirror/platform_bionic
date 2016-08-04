@@ -143,7 +143,13 @@ using std::atomic_uintmax_t;
 
 #include <stddef.h>  /* For ptrdiff_t. */
 #include <stdint.h>  /* TODO: don't drag in all the macros, just the types. */
-#include <uchar.h>   /* For char16_t and char32_t. */
+// Include uchar.h only when needed.  Bionic's stdatomic.h is also used for the
+// host (via a copy in prebuilts/clang) and uchar.h is not available in the
+// glibc used for the host.
+#if __STDC_VERSION__ >= 201112L
+# include <uchar.h>  /* For char16_t and char32_t.              */
+#endif
+
 
 #ifdef __clang__
 # if __has_extension(c_atomic) || __has_extension(cxx_atomic)
