@@ -26,44 +26,46 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_COMMON_TYPES_H
-#define __LINKER_COMMON_TYPES_H
+#ifndef __LINKER_GLOBALS_H
+#define __LINKER_GLOBALS_H
 
-#include <android/dlext.h>
-#include "linked_list.h"
+#include <link.h>
+#include <stddef.h>
 
-// TODO(dimitry): move this to linker_defines.h? Unless it is removed by
-// consequent refactoring steps.
+#include <unordered_map>
 
-// Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
-#if defined(__aarch64__) || defined(__x86_64__)
-#define USE_RELA 1
-#endif
+#define DL_ERR(fmt, x...) \
+    do { \
+      __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
+      /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
+      LD_LOG(kLogErrors, "%s\n", linker_get_error_buffer()); \
+    } while (false)
 
+#define DL_WARN(fmt, x...) \
+    do { \
+      __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
+      __libc_format_fd(2, "WARNING: linker: "); \
+      __libc_format_fd(2, fmt, ##x); \
+      __libc_format_fd(2, "\n"); \
+    } while (false)
+
+constexpr ElfW(Versym) kVersymNotNeeded = 0;
+constexpr ElfW(Versym) kVersymGlobal = 1;
+
+// These values are used to call constructors for .init_array && .preinit_array
+extern int g_argc;
+extern char** g_argv;
+extern char** g_envp;
 
 struct soinfo;
+struct android_namespace_t;
 
-class SoinfoListAllocator {
- public:
-  static LinkedListEntry<soinfo>* alloc();
-  static void free(LinkedListEntry<soinfo>* entry);
+extern android_namespace_t g_default_namespace;
 
- private:
-  // unconstructable
-  DISALLOW_IMPLICIT_CONSTRUCTORS(SoinfoListAllocator);
-};
+extern std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
 
-class NamespaceListAllocator {
- public:
-  static LinkedListEntry<android_namespace_t>* alloc();
-  static void free(LinkedListEntry<android_namespace_t>* entry);
+// Error buffer "variable"
+char* linker_get_error_buffer();
+size_t linker_get_error_buffer_size();
 
- private:
-  // unconstructable
-  DISALLOW_IMPLICIT_CONSTRUCTORS(NamespaceListAllocator);
-};
-
-typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
-typedef LinkedList<android_namespace_t, NamespaceListAllocator> android_namespace_list_t;
-
-#endif  /* __LINKER_COMMON_TYPES_H */
+#endif  /* __LINKER_GLOBALS_H */

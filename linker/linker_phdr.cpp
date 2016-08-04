@@ -36,6 +36,7 @@
 #include <unistd.h>
 
 #include "linker.h"
+#include "linker_globals.h"
 #include "linker_debug.h"
 #include "linker_utils.h"
 
