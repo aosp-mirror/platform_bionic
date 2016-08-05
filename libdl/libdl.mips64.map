@@ -17,8 +17,8 @@
 
 LIBC {
   global:
-    android_dlopen_ext;
-    dl_iterate_phdr;
+    android_dlopen_ext; # introduced=21
+    dl_iterate_phdr; # introduced-arm=21
     dladdr;
     dlclose;
     dlerror;
@@ -30,7 +30,7 @@ LIBC {
 
 LIBC_N {
   global:
-    dlvsym;
+    dlvsym; # introduced=24
 } LIBC;
 
 LIBC_PLATFORM {
