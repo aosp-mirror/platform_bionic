@@ -1201,25 +1201,25 @@ LIBC {
     *;
 };
 
-LIBC_N { # introduced=24
+LIBC_N { # introduced-arm64=24 introduced-mips=24 introduced-mips64=24 introduced-x86=24 introduced-x86_64=24
   global:
-    __aeabi_atexit; # arm
-    __aeabi_memclr; # arm
-    __aeabi_memclr4; # arm
-    __aeabi_memclr8; # arm
-    __aeabi_memcpy; # arm
-    __aeabi_memcpy4; # arm
-    __aeabi_memcpy8; # arm
-    __aeabi_memmove; # arm
-    __aeabi_memmove4; # arm
-    __aeabi_memmove8; # arm
-    __aeabi_memset; # arm
-    __aeabi_memset4; # arm
-    __aeabi_memset8; # arm
+    __aeabi_atexit; # arm versioned=24
+    __aeabi_memclr; # arm versioned=24
+    __aeabi_memclr4; # arm versioned=24
+    __aeabi_memclr8; # arm versioned=24
+    __aeabi_memcpy; # arm versioned=24
+    __aeabi_memcpy4; # arm versioned=24
+    __aeabi_memcpy8; # arm versioned=24
+    __aeabi_memmove; # arm versioned=24
+    __aeabi_memmove4; # arm versioned=24
+    __aeabi_memmove8; # arm versioned=24
+    __aeabi_memset; # arm versioned=24
+    __aeabi_memset4; # arm versioned=24
+    __aeabi_memset8; # arm versioned=24
     __fread_chk; # introduced=24
     __fwrite_chk; # introduced=24
     __getcwd_chk; # introduced=24
-    __gnu_Unwind_Find_exidx; # arm
+    __gnu_Unwind_Find_exidx; # arm versioned=24
     __pwrite_chk; # introduced=24
     __pwrite64_chk; # introduced=24
     __write_chk; # introduced=24
@@ -1266,38 +1266,38 @@ LIBC_N { # introduced=24
     tmpfile64; # introduced=24
 } LIBC;
 
-LIBC_O { # future
+LIBC_O {
   global:
-    catclose;
-    catgets;
-    catopen;
-    ctermid;
-    endgrent;
-    endpwent;
-    futimes;
-    futimesat;
-    getdomainname;
-    getgrent;
-    getpwent;
-    getsubopt;
-    hasmntopt;
-    lutimes;
-    mblen;
-    pthread_getname_np;
-    quotactl;
-    setdomainname;
-    setgrent;
-    setpwent;
-    sighold;
-    sigignore;
-    sigpause;
-    sigrelse;
-    sigset;
-    sync_file_range;
-    towctrans;
-    towctrans_l;
-    wctrans;
-    wctrans_l;
+    catclose; # future
+    catgets; # future
+    catopen; # future
+    ctermid; # future
+    endgrent; # future
+    endpwent; # future
+    futimes; # future
+    futimesat; # future
+    getdomainname; # future
+    getgrent; # future
+    getpwent; # future
+    getsubopt; # future
+    hasmntopt; # future
+    lutimes; # future
+    mblen; # future
+    pthread_getname_np; # future
+    quotactl; # future
+    setdomainname; # future
+    setgrent; # future
+    setpwent; # future
+    sighold; # future
+    sigignore; # future
+    sigpause; # future
+    sigrelse; # future
+    sigset; # future
+    sync_file_range; # future
+    towctrans; # future
+    towctrans_l; # future
+    wctrans; # future
+    wctrans_l; # future
 } LIBC_N;
 
 LIBC_PRIVATE {

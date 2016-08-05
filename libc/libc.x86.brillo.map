@@ -1197,7 +1197,7 @@ LIBC {
     *;
 };
 
-LIBC_N { # introduced=24
+LIBC_N { # introduced-arm64=24 introduced-mips=24 introduced-mips64=24 introduced-x86=24 introduced-x86_64=24
   global:
     __fread_chk; # introduced=24
     __fwrite_chk; # introduced=24
@@ -1248,38 +1248,38 @@ LIBC_N { # introduced=24
     tmpfile64; # introduced=24
 } LIBC;
 
-LIBC_O { # future
+LIBC_O {
   global:
-    catclose;
-    catgets;
-    catopen;
-    ctermid;
-    endgrent;
-    endpwent;
-    futimes;
-    futimesat;
-    getdomainname;
-    getgrent;
-    getpwent;
-    getsubopt;
-    hasmntopt;
-    lutimes;
-    mblen;
-    pthread_getname_np;
-    quotactl;
-    setdomainname;
-    setgrent;
-    setpwent;
-    sighold;
-    sigignore;
-    sigpause;
-    sigrelse;
-    sigset;
-    sync_file_range;
-    towctrans;
-    towctrans_l;
-    wctrans;
-    wctrans_l;
+    catclose; # future
+    catgets; # future
+    catopen; # future
+    ctermid; # future
+    endgrent; # future
+    endpwent; # future
+    futimes; # future
+    futimesat; # future
+    getdomainname; # future
+    getgrent; # future
+    getpwent; # future
+    getsubopt; # future
+    hasmntopt; # future
+    lutimes; # future
+    mblen; # future
+    pthread_getname_np; # future
+    quotactl; # future
+    setdomainname; # future
+    setgrent; # future
+    setpwent; # future
+    sighold; # future
+    sigignore; # future
+    sigpause; # future
+    sigrelse; # future
+    sigset; # future
+    sync_file_range; # future
+    towctrans; # future
+    towctrans_l; # future
+    wctrans; # future
+    wctrans_l; # future
 } LIBC_N;
 
 LIBC_PRIVATE {
