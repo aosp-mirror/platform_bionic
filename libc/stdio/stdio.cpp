@@ -741,6 +741,12 @@ wint_t putwchar(wchar_t wc) {
   return fputwc(wc, stdout);
 }
 
+int remove(const char* path) {
+  if (unlink(path) != -1) return 0;
+  if (errno != EISDIR) return -1;
+  return rmdir(path);
+}
+
 void rewind(FILE* fp) {
   ScopedFileLock sfl(fp);
   fseek(fp, 0, SEEK_SET);
