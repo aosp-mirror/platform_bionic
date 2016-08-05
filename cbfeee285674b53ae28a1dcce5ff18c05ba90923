@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34514af5_b9704376",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-08-05T09:05:44Z",
+      "side": 1,
+      "message": "Do you really intend stdout on these call(s), when you are using stderr on the previous line(s)?",
+      "range": {
+        "startLine": 293,
+        "startChar": 22,
+        "endLine": 293,
+        "endChar": 28
+      },
+      "revId": "cbfeee285674b53ae28a1dcce5ff18c05ba90923",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
