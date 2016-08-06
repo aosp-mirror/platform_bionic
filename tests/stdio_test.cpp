@@ -1307,3 +1307,25 @@ TEST(STDIO_TEST, ctermid) {
   ASSERT_EQ(buf, ctermid(buf));
   ASSERT_STREQ("/dev/tty", buf);
 }
+
+TEST(STDIO_TEST, remove) {
+  struct stat sb;
+
+  TemporaryFile tf;
+  ASSERT_EQ(0, remove(tf.filename));
+  ASSERT_EQ(-1, lstat(tf.filename, &sb));
+  ASSERT_EQ(ENOENT, errno);
+
+  TemporaryDir td;
+  ASSERT_EQ(0, remove(td.dirname));
+  ASSERT_EQ(-1, lstat(td.dirname, &sb));
+  ASSERT_EQ(ENOENT, errno);
+
+  errno = 0;
+  ASSERT_EQ(-1, remove(tf.filename));
+  ASSERT_EQ(ENOENT, errno);
+
+  errno = 0;
+  ASSERT_EQ(-1, remove(td.dirname));
+  ASSERT_EQ(ENOENT, errno);
+}
