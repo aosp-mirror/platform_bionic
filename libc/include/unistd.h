@@ -286,6 +286,7 @@ int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;
 
 #if defined(__BIONIC_FORTIFY)
 
+#if __ANDROID_API__ >= 24
 __BIONIC_FORTIFY_INLINE
 char* getcwd(char* buf, size_t size) {
     size_t bos = __bos(buf);
@@ -316,6 +317,7 @@ char* getcwd(char* buf, size_t size) {
 
     return __getcwd_chk(buf, size, bos);
 }
+#endif /* __ANDROID_API__ >= 24 */
 
 #if defined(__USE_FILE_OFFSET64)
 #define __PREAD_PREFIX(x) __pread64_ ## x
@@ -323,6 +325,7 @@ char* getcwd(char* buf, size_t size) {
 #define __PREAD_PREFIX(x) __pread_ ## x
 #endif
 
+#if __ANDROID_API__ >= 23
 __BIONIC_FORTIFY_INLINE
 ssize_t pread(int fd, void* buf, size_t count, off_t offset) {
     size_t bos = __bos0(buf);
@@ -372,6 +375,7 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
 
     return __pread64_chk(fd, buf, count, offset, bos);
 }
+#endif /* __ANDROID_API__ >= 23 */
 
 #if defined(__USE_FILE_OFFSET64)
 #define __PWRITE_PREFIX(x) __pwrite64_ ## x
@@ -379,6 +383,7 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
 #define __PWRITE_PREFIX(x) __pwrite_ ## x
 #endif
 
+#if __ANDROID_API__ >= 24
 __BIONIC_FORTIFY_INLINE
 ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset) {
     size_t bos = __bos0(buf);
@@ -428,7 +433,9 @@ ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset) {
 
     return __pwrite64_chk(fd, buf, count, offset, bos);
 }
+#endif /* __ANDROID_API__ >= 24 */
 
+#if __ANDROID_API__ >= 21
 __BIONIC_FORTIFY_INLINE
 ssize_t read(int fd, void* buf, size_t count) {
     size_t bos = __bos0(buf);
@@ -453,7 +460,9 @@ ssize_t read(int fd, void* buf, size_t count) {
 
     return __read_chk(fd, buf, count, bos);
 }
+#endif /* __ANDROID_API__ >= 21 */
 
+#if __ANDROID_API__ >= 24
 __BIONIC_FORTIFY_INLINE
 ssize_t write(int fd, const void* buf, size_t count) {
     size_t bos = __bos0(buf);
@@ -480,6 +489,7 @@ ssize_t write(int fd, const void* buf, size_t count) {
 
     return __write_chk(fd, buf, count, bos);
 }
+#endif /* __ANDROID_API__ >= 24 */
 
 __BIONIC_FORTIFY_INLINE
 ssize_t readlink(const char* path, char* buf, size_t size) {
