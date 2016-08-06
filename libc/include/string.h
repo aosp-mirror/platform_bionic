@@ -148,6 +148,7 @@ size_t __strlcat_chk(char* _Nonnull __restrict, const char* _Nonnull __restrict,
 
 #if defined(__BIONIC_FORTIFY)
 
+#if __ANDROID_API__ >= 23
 __BIONIC_FORTIFY_INLINE
 void* memchr(const void* s, int c, size_t n) {
     size_t bos = __bos(s);
@@ -189,7 +190,9 @@ void* memrchr(const void* s, int c, size_t n) {
 
     return __memrchr_chk(s, c, n, bos);
 }
+#endif /* __ANDROID_API__ >= 23 */
 
+#if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* _Nonnull __restrict dst, const void* _Nonnull __restrict src, size_t copy_amount) {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
@@ -199,17 +202,23 @@ __BIONIC_FORTIFY_INLINE
 void* memmove(void* _Nonnull dst, const void* _Nonnull src, size_t len) {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
+#endif /* __ANDROID_API__ >= 17 */
 
+#if __ANDROID_API__ >= 21
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
     return __builtin___stpcpy_chk(dst, src, __bos(dst));
 }
+#endif /* __ANDROID_API__ >= 21 */
 
+#if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
 char* strcpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
     return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
+#endif /* __ANDROID_API__ >= 17 */
 
+#if __ANDROID_API__ >= 21
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
     size_t bos_dst = __bos(dst);
@@ -230,7 +239,9 @@ char* stpncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src
 
     return __stpncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
+#endif /* __ANDROID_API__ >= 21 */
 
+#if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
     size_t bos_dst = __bos(dst);
@@ -326,7 +337,9 @@ size_t strlen(const char* _Nonnull s) {
 
     return __strlen_chk(s, bos);
 }
+#endif /* __ANDROID_API__ >= 17 */
 
+#if  __ANDROID_API__ >= 18
 __BIONIC_FORTIFY_INLINE
 char* strchr(const char* _Nonnull s, int c) {
     size_t bos = __bos(s);
@@ -364,7 +377,7 @@ char* strrchr(const char* _Nonnull s, int c) {
 
     return __strrchr_chk(s, c, bos);
 }
-
+#endif /* __ANDROID_API__ >= 18 */
 
 #endif /* defined(__BIONIC_FORTIFY) */
 
