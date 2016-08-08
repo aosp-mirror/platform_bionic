@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9974efbe_55349fdf",
+        "filename": "linker/linker_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-08T19:45:53Z",
+      "side": 1,
+      "message": "here and in .cpp",
+      "range": {
+        "startLine": 37,
+        "startChar": 26,
+        "endLine": 37,
+        "endChar": 32
+      },
+      "revId": "9f2d34b00da9e8468f0388a2472b4cfc77250ba2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
