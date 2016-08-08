@@ -16,6 +16,24 @@
       "revId": "c6db588305b92f8aa4e8a828d211d2bdcd8bfe11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9974efbe_4604f7e6",
+        "filename": "tools/versioner/src/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-08T23:39:58Z",
+      "side": 1,
+      "message": "-pedantic and -std\u003dc++11 from llvm\u0027s makefile",
+      "parentUuid": "34514af5_b69e905c",
+      "revId": "c6db588305b92f8aa4e8a828d211d2bdcd8bfe11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
