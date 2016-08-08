@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9974efbe_55f6df91",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3553,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-08T19:56:53Z",
+      "side": 1,
+      "message": "this might not be available if linker crashes before it was linked. fixed in next ps.",
+      "range": {
+        "startLine": 3553,
+        "startChar": 52,
+        "endLine": 3553,
+        "endChar": 58
+      },
+      "revId": "9f2d34b00da9e8468f0388a2472b4cfc77250ba2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9974efbe_55349fdf",
         "filename": "linker/linker_utils.h",
         "patchSetId": 3
@@ -13,6 +36,30 @@
       "writtenOn": "2016-08-08T19:45:53Z",
       "side": 1,
       "message": "here and in .cpp",
+      "range": {
+        "startLine": 37,
+        "startChar": 26,
+        "endLine": 37,
+        "endChar": 32
+      },
+      "revId": "9f2d34b00da9e8468f0388a2472b4cfc77250ba2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9974efbe_f57a8b81",
+        "filename": "linker/linker_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-08T19:56:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9974efbe_55349fdf",
       "range": {
         "startLine": 37,
         "startChar": 26,
