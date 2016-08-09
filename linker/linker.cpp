@@ -2220,21 +2220,6 @@ bool VersionTracker::init(const soinfo* si_from) {
   return init_verneed(si_from) && init_verdef(si_from);
 }
 
-#if !defined(__mips__)
-#if defined(USE_RELA)
-static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
-  return rela->r_addend;
-}
-#else
-static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
-  if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
-    return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
-  }
-  return 0;
-}
-#endif
-
 // TODO (dimitry): Methods below need to be moved out of soinfo
 // and in more isolated file in order minimize dependencies on
 // unnecessary object in the linker binary. Consider making them
@@ -2259,6 +2244,21 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
 
   return true;
 }
+
+#if !defined(__mips__)
+#if defined(USE_RELA)
+static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
+  return rela->r_addend;
+}
+#else
+static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
+  if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
+      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE) {
+    return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
+  }
+  return 0;
+}
+#endif
 
 template<typename ElfRelIteratorT>
 bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
