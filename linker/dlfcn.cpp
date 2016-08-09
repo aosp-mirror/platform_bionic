@@ -15,6 +15,7 @@
  */
 
 #include "linker.h"
+#include "linker_globals.h"
 #include "linker_dlwarning.h"
 
 #include <pthread.h>
@@ -260,8 +261,6 @@ static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
-
-extern android_namespace_t g_default_namespace;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
 soinfo* get_libdl_info() {

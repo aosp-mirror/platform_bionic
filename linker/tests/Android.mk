@@ -40,4 +40,6 @@ LOCAL_SRC_FILES := \
 # for __libc_fatal
 LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
 
+LOCAL_STATIC_LIBRARIES += libbase
+
 include $(BUILD_NATIVE_TEST)
