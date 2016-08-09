@@ -514,6 +514,8 @@ typedef enum __ns_cert_types {
 	(cp) += NS_INT32SZ; \
 } while (/*CONSTCOND*/0)
 
+__BEGIN_DECLS
+
 #if !defined(__LP64__)
 /* Annoyingly, LP32 shipped with __ names. */
 #define	ns_msg_getflag		__ns_msg_getflag
@@ -559,9 +561,36 @@ typedef enum __ns_cert_types {
 #define	ns_subdomain		__ns_subdomain
 #define	ns_makecanon		__ns_makecanon
 #define	ns_samename		__ns_samename
-#endif
 
-__BEGIN_DECLS
+int ns_msg_getflag(ns_msg, int);
+uint16_t ns_get16(const u_char*);
+uint32_t ns_get32(const u_char*);
+void ns_put16(uint16_t, u_char*);
+void ns_put32(uint32_t, u_char*);
+int ns_initparse(const u_char*, int, ns_msg*);
+int ns_skiprr(const u_char*, const u_char*, ns_sect, int);
+int ns_parserr(ns_msg*, ns_sect, int, ns_rr*);
+int ns_sprintrr(const ns_msg*, const ns_rr*, const char*, const char*, char*, size_t);
+int ns_sprintrrf(const u_char*, size_t, const char*, ns_class, ns_type, u_long, const u_char*,
+                 size_t, const char*, const char*, char*, size_t);
+int ns_format_ttl(u_long, char*, size_t);
+int ns_name_ntol(const u_char*, u_char*, size_t);
+int ns_name_ntop(const u_char*, char*, size_t);
+int ns_name_pton(const char*, u_char*, size_t);
+int ns_name_unpack(const u_char*, const u_char*, const u_char*, u_char*, size_t);
+int ns_name_pack(const u_char*, u_char*, int, const u_char**, const u_char**);
+int ns_name_uncompress(const u_char*, const u_char*, const u_char*, char*, size_t);
+int ns_name_compress(const char*, u_char*, size_t, const u_char**, const u_char**);
+int ns_name_skip(const u_char**, const u_char*);
+void ns_name_rollback(const u_char*, const u_char**, const u_char**);
+
+int ns_makecanon(const char*, char*, size_t);
+int ns_samename(const char*, const char*);
+
+#else
+/* The names of these symbols were accidentally prefixed with __ in L. */
+/* The duplication here is intentional to avoid declaring different symbols with the same
+ * declaration. */
 int ns_msg_getflag(ns_msg, int) __INTRODUCED_IN_64(23);
 uint16_t ns_get16(const u_char*) __INTRODUCED_IN_64(23);
 uint32_t ns_get32(const u_char*) __INTRODUCED_IN_64(23);
@@ -590,6 +619,8 @@ void ns_name_rollback(const u_char*, const u_char**, const u_char**) __INTRODUCE
 
 int ns_makecanon(const char*, char*, size_t) __INTRODUCED_IN_64(23);
 int ns_samename(const char*, const char*) __INTRODUCED_IN_64(23);
+#endif /* !defined(__LP64__) */
+
 __END_DECLS
 
 #ifdef BIND_4_COMPAT
