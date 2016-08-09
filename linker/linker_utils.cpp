@@ -15,7 +15,26 @@
  */
 
 #include "linker_utils.h"
+
 #include "linker_debug.h"
+#include "linker_globals.h"
+
+#include "android-base/strings.h"
+
+#include <sys/stat.h>
+#include <unistd.h>
+
+std::string dirname(const char* path) {
+  const char* last_slash = strrchr(path, '/');
+
+  if (last_slash == path) {
+    return "/";
+  } else if (last_slash == nullptr) {
+    return ".";
+  } else {
+    return std::string(path, last_slash - path);
+  }
+}
 
 bool normalize_path(const char* path, std::string* normalized_path) {
   // Input should be an absolute path
@@ -132,5 +151,54 @@ bool safe_add(off64_t* out, off64_t a, size_t b) {
 
 size_t page_offset(off64_t offset) {
   return static_cast<size_t>(offset & (PAGE_SIZE-1));
+}
+
+void split_path(const char* path, const char* delimiters,
+                std::vector<std::string>* paths) {
+  if (path != nullptr && path[0] != 0) {
+    *paths = android::base::Split(path, delimiters);
+  }
+}
+
+void resolve_paths(std::vector<std::string>& paths,
+                   std::vector<std::string>* resolved_paths) {
+  resolved_paths->clear();
+  for (const auto& path : paths) {
+    char resolved_path[PATH_MAX];
+    const char* original_path = path.c_str();
+    if (realpath(original_path, resolved_path) != nullptr) {
+      struct stat s;
+      if (stat(resolved_path, &s) == 0) {
+        if (S_ISDIR(s.st_mode)) {
+          resolved_paths->push_back(resolved_path);
+        } else {
+          DL_WARN("Warning: \"%s\" is not a directory (excluding from path)", resolved_path);
+          continue;
+        }
+      } else {
+        DL_WARN("Warning: cannot stat file \"%s\": %s", resolved_path, strerror(errno));
+        continue;
+      }
+    } else {
+      std::string zip_path;
+      std::string entry_path;
+
+      std::string normalized_path;
+
+      if (!normalize_path(original_path, &normalized_path)) {
+        DL_WARN("Warning: unable to normalize \"%s\"", original_path);
+        continue;
+      }
+
+      if (parse_zip_path(normalized_path.c_str(), &zip_path, &entry_path)) {
+        if (realpath(zip_path.c_str(), resolved_path) == nullptr) {
+          DL_WARN("Warning: unable to resolve \"%s\": %s", zip_path.c_str(), strerror(errno));
+          continue;
+        }
+
+        resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
+      }
+    }
+  }
 }
 
