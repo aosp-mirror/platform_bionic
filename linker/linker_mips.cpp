@@ -32,10 +32,12 @@
 
 #include "linker.h"
 #include "linker_debug.h"
+#include "linker_globals.h"
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
 #include "linker_sleb128.h"
+#include "linker_soinfo.h"
 
 template bool soinfo::relocate<plain_reloc_iterator>(const VersionTracker& version_tracker,
                                                      plain_reloc_iterator&& rel_iterator,
