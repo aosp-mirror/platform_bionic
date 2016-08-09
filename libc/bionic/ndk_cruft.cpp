@@ -377,4 +377,12 @@ int dlmalloc_trim(size_t) {
 
 #endif // !defined(__BRILLO__) && !defined (__LP64__)
 
+#if !defined(__LP64__)
+// LP32's <stdio.h> had putw (but not getw).
+// TODO: does brillo intentionally include this, or is there a missing `nobrillo`?
+int putw(int value, FILE* fp) {
+    return fwrite(&value, sizeof(value), 1, fp) == 1 ? 0 : EOF;
+}
+#endif
+
 } // extern "C"
