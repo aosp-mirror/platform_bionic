@@ -31,6 +31,7 @@
  * SUCH DAMAGE.
  */
 
+#define __BIONIC_NO_STDIO_FORTIFY
 #include <stdio.h>
 
 #include <errno.h>
@@ -643,6 +644,10 @@ FILE* funopen64(const void* cookie,
   return fp;
 }
 
+int asprintf(char** s, const char* fmt, ...) {
+  PRINTF_IMPL(vasprintf(s, fmt, ap));
+}
+
 char* ctermid(char* s) {
   return s ? strcpy(s, _PATH_TTY) : const_cast<char*>(_PATH_TTY);
 }
@@ -769,6 +774,18 @@ int setlinebuf(FILE* fp) {
   return setvbuf(fp, nullptr, _IOLBF, 0);
 }
 
+int snprintf(char* s, size_t n, const char* fmt, ...) {
+  PRINTF_IMPL(vsnprintf(s, n, fmt, ap));
+}
+
+int sprintf(char* s, const char* fmt, ...) {
+  PRINTF_IMPL(vsnprintf(s, INT_MAX, fmt, ap));
+}
+
+int sscanf(const char* s, const char* fmt, ...) {
+  PRINTF_IMPL(vsscanf(s, fmt, ap));
+}
+
 int swprintf(wchar_t* s, size_t n, const wchar_t* fmt, ...) {
   PRINTF_IMPL(vswprintf(s, n, fmt, ap));
 }
@@ -783,6 +800,10 @@ int vprintf(const char* fmt, va_list ap) {
 
 int vscanf(const char* fmt, va_list ap) {
   return vfscanf(stdin, fmt, ap);
+}
+
+int vsprintf(char* s, const char* fmt, va_list ap) {
+  return vsnprintf(s, INT_MAX, fmt, ap);
 }
 
 int vwprintf(const wchar_t* fmt, va_list ap) {
