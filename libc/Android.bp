@@ -17,8 +17,6 @@ libc_common_src_files = [
     "bionic/system_properties_compat.c",
     "stdio/fread.c",
     "stdio/refill.c",
-    "stdio/snprintf.c",
-    "stdio/sprintf.c",
     "stdio/stdio.cpp",
     "stdio/stdio_ext.cpp",
     "stdlib/atexit.c",
@@ -36,36 +34,26 @@ libc_common_src_files_32 = [
     "bionic/time64.c",
 ]
 
+libc_common_flags = [
+    "-D_LIBC=1",
+    "-Wall",
+    "-Wextra",
+    "-Wunused",
+    "-Wno-deprecated-declarations",
+
+    // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
+    "-Werror=pointer-to-int-cast",
+    "-Werror=int-to-pointer-cast",
+    "-Werror=type-limits",
+    "-Werror",
+]
+
 // Define some common cflags
 // ========================================================
 cc_defaults {
     name: "libc_defaults",
-    cflags: [
-        "-D_LIBC=1",
-        "-Wall",
-        "-Wextra",
-        "-Wunused",
-        "-Wno-deprecated-declarations",
-
-        // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
-        "-Werror=pointer-to-int-cast",
-        "-Werror=int-to-pointer-cast",
-        "-Werror=type-limits",
-        "-Werror",
-    ],
-    // TODO: split out the asflags.
-    asflags: [
-        "-D_LIBC=1",
-        "-Wall",
-        "-Wextra",
-        "-Wunused",
-
-        // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
-        "-Werror=pointer-to-int-cast",
-        "-Werror=int-to-pointer-cast",
-        "-Werror=type-limits",
-        "-Werror",
-    ],
+    cflags: libc_common_flags,
+    asflags: libc_common_flags,
     conlyflags: ["-std=gnu99"],
     cppflags: [],
     include_dirs: ["external/jemalloc/include"],
@@ -416,7 +404,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/net/ntohl.c",
         "upstream-openbsd/lib/libc/net/ntohs.c",
         "upstream-openbsd/lib/libc/net/res_random.c",
-        "upstream-openbsd/lib/libc/stdio/asprintf.c",
         "upstream-openbsd/lib/libc/stdio/fflush.c",
         "upstream-openbsd/lib/libc/stdio/fgetln.c",
         "upstream-openbsd/lib/libc/stdio/fgets.c",
@@ -442,7 +429,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/puts.c",
         "upstream-openbsd/lib/libc/stdio/rget.c",
         "upstream-openbsd/lib/libc/stdio/setvbuf.c",
-        "upstream-openbsd/lib/libc/stdio/sscanf.c",
         "upstream-openbsd/lib/libc/stdio/tempnam.c",
         "upstream-openbsd/lib/libc/stdio/tmpnam.c",
         "upstream-openbsd/lib/libc/stdio/ungetc.c",
@@ -454,7 +440,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
         "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
         "upstream-openbsd/lib/libc/stdio/vsnprintf.c",
-        "upstream-openbsd/lib/libc/stdio/vsprintf.c",
         "upstream-openbsd/lib/libc/stdio/vsscanf.c",
         "upstream-openbsd/lib/libc/stdio/vswprintf.c",
         "upstream-openbsd/lib/libc/stdio/vswscanf.c",
@@ -542,12 +527,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strncmp.c",
         "upstream-openbsd/lib/libc/string/strncpy.c",
     ],
-    multilib: {
-        lib32: {
-            // LP32 cruft
-            srcs: ["upstream-openbsd/lib/libc/stdio/putw.c"],
-        },
-    },
 
     arch: {
         arm: {
