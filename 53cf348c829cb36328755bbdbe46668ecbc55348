@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9924ef48_195cab1e",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-10T00:37:46Z",
+      "side": 1,
+      "message": "stevefung (bdk owner, judging by teams): any idea whether this is intentional or a bug?",
+      "revId": "53cf348c829cb36328755bbdbe46668ecbc55348",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
