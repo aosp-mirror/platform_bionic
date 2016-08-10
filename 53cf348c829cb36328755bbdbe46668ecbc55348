@@ -16,6 +16,24 @@
       "revId": "53cf348c829cb36328755bbdbe46668ecbc55348",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9924ef48_59eea321",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1076778
+      },
+      "writtenOn": "2016-08-10T00:50:06Z",
+      "side": 1,
+      "message": "Hmm, not sure, I\u0027m not familiar with the nobrillo stuff, and am not working on the bdk anymore (I need to update teams).  Added leecam, as I think he knows more on the history of the brillo modifications to bionic.",
+      "parentUuid": "9924ef48_195cab1e",
+      "revId": "53cf348c829cb36328755bbdbe46668ecbc55348",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
