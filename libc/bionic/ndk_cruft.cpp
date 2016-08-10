@@ -50,8 +50,8 @@
 
 extern "C" {
 
-// Brillo and LP64 don't need to support any legacy cruft.
-#if !defined(__BRILLO__) && !defined(__LP64__)
+// LP64 doesn't need to support any legacy cruft.
+#if !defined(__LP64__)
 
 // These were accidentally declared in <unistd.h> because we stupidly used to inline
 // getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
@@ -375,14 +375,11 @@ int dlmalloc_trim(size_t) {
     return 0;
 }
 
-#endif // !defined(__BRILLO__) && !defined (__LP64__)
-
-#if !defined(__LP64__)
 // LP32's <stdio.h> had putw (but not getw).
-// TODO: does brillo intentionally include this, or is there a missing `nobrillo`?
 int putw(int value, FILE* fp) {
     return fwrite(&value, sizeof(value), 1, fp) == 1 ? 0 : EOF;
 }
-#endif
+
+#endif // !defined (__LP64__)
 
 } // extern "C"
