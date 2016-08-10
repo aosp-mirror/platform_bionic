@@ -49,6 +49,12 @@
       __libc_format_fd(2, "\n"); \
     } while (false)
 
+#define DL_ERR_AND_LOG(fmt, x...) \
+  do { \
+    DL_ERR(fmt, x); \
+    PRINT(fmt, x); \
+  } while (false)
+
 constexpr ElfW(Versym) kVersymNotNeeded = 0;
 constexpr ElfW(Versym) kVersymGlobal = 1;
 
