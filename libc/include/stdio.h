@@ -264,7 +264,7 @@ size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict)
 __errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
 __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
-#if defined(__BIONIC_FORTIFY)
+#if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
 #if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
