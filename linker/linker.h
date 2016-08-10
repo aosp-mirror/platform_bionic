@@ -59,6 +59,12 @@
       __libc_format_fd(2, "\n"); \
     } while (false)
 
+#define DL_ERR_AND_LOG(fmt, x...) \
+  do { \
+    DL_ERR(fmt, x); \
+    PRINT(fmt, x); \
+  } while (false)
+
 #if defined(__LP64__)
 #define ELFW(what) ELF64_ ## what
 #else

@@ -248,14 +248,15 @@ bool ElfReader::VerifyElfHeader() {
   return true;
 }
 
-bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size) {
+bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment) {
   off64_t range_start;
   off64_t range_end;
 
   return safe_add(&range_start, file_offset_, offset) &&
          safe_add(&range_end, range_start, size) &&
-         range_start < file_size_ &&
-         range_end <= file_size_;
+         (range_start < file_size_) &&
+         (range_end <= file_size_) &&
+         ((offset % alignment) == 0);
 }
 
 // Loads the program header table from an ELF file into a read-only private
@@ -272,8 +273,11 @@ bool ElfReader::ReadProgramHeaders() {
 
   // Boundary checks
   size_t size = phdr_num_ * sizeof(ElfW(Phdr));
-  if (!CheckFileRange(header_.e_phoff, size)) {
-    DL_ERR("\"%s\" has invalid phdr offset/size", name_.c_str());
+  if (!CheckFileRange(header_.e_phoff, size, alignof(ElfW(Phdr)))) {
+    DL_ERR_AND_LOG("\"%s\" has invalid phdr offset/size: %zu/%zu",
+                   name_.c_str(),
+                   static_cast<size_t>(header_.e_phoff),
+                   size);
     return false;
   }
 
@@ -290,13 +294,16 @@ bool ElfReader::ReadSectionHeaders() {
   shdr_num_ = header_.e_shnum;
 
   if (shdr_num_ == 0) {
-    DL_ERR("\"%s\" has no section headers", name_.c_str());
+    DL_ERR_AND_LOG("\"%s\" has no section headers", name_.c_str());
     return false;
   }
 
   size_t size = shdr_num_ * sizeof(ElfW(Shdr));
-  if (!CheckFileRange(header_.e_shoff, size)) {
-    DL_ERR("\"%s\" has invalid shdr offset/size", name_.c_str());
+  if (!CheckFileRange(header_.e_shoff, size, alignof(const ElfW(Shdr)))) {
+    DL_ERR_AND_LOG("\"%s\" has invalid shdr offset/size: %zu/%zu",
+                   name_.c_str(),
+                   static_cast<size_t>(header_.e_shoff),
+                   size);
     return false;
   }
 
@@ -320,26 +327,27 @@ bool ElfReader::ReadDynamicSection() {
   }
 
   if (dynamic_shdr == nullptr) {
-    DL_ERR("\"%s\" .dynamic section header was not found", name_.c_str());
+    DL_ERR_AND_LOG("\"%s\" .dynamic section header was not found", name_.c_str());
     return false;
   }
 
   if (dynamic_shdr->sh_link >= shdr_num_) {
-    DL_ERR("\"%s\" .dynamic section has invalid sh_link: %d", name_.c_str(), dynamic_shdr->sh_link);
+    DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid sh_link: %d",
+                   name_.c_str(),
+                   dynamic_shdr->sh_link);
     return false;
   }
 
   const ElfW(Shdr)* strtab_shdr = &shdr_table_[dynamic_shdr->sh_link];
 
   if (strtab_shdr->sh_type != SHT_STRTAB) {
-    DL_ERR("\"%s\" .dynamic section has invalid link(%d) sh_type: %d (expected SHT_STRTAB)",
-           name_.c_str(), dynamic_shdr->sh_link, strtab_shdr->sh_type);
+    DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid link(%d) sh_type: %d (expected SHT_STRTAB)",
+                   name_.c_str(), dynamic_shdr->sh_link, strtab_shdr->sh_type);
     return false;
   }
 
-  if (!CheckFileRange(dynamic_shdr->sh_offset, dynamic_shdr->sh_size)) {
-    DL_ERR("\"%s\" has invalid offset/size of .dynamic section", name_.c_str());
-    PRINT("\"%s\" has invalid offset/size of .dynamic section", name_.c_str());
+  if (!CheckFileRange(dynamic_shdr->sh_offset, dynamic_shdr->sh_size, alignof(const ElfW(Dyn)))) {
+    DL_ERR_AND_LOG("\"%s\" has invalid offset/size of .dynamic section", name_.c_str());
     return false;
   }
 
@@ -350,9 +358,9 @@ bool ElfReader::ReadDynamicSection() {
 
   dynamic_ = static_cast<const ElfW(Dyn)*>(dynamic_fragment_.data());
 
-  if (!CheckFileRange(strtab_shdr->sh_offset, strtab_shdr->sh_size)) {
-    DL_ERR("\"%s\" has invalid offset/size of the .strtab section linked from .dynamic section",
-           name_.c_str());
+  if (!CheckFileRange(strtab_shdr->sh_offset, strtab_shdr->sh_size, alignof(const char))) {
+    DL_ERR_AND_LOG("\"%s\" has invalid offset/size of the .strtab section linked from .dynamic section",
+                   name_.c_str());
     return false;
   }
 
