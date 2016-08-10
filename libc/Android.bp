@@ -439,7 +439,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/vfscanf.c",
         "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
         "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
-        "upstream-openbsd/lib/libc/stdio/vsnprintf.c",
         "upstream-openbsd/lib/libc/stdio/vsscanf.c",
         "upstream-openbsd/lib/libc/stdio/vswprintf.c",
         "upstream-openbsd/lib/libc/stdio/vswscanf.c",

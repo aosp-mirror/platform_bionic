@@ -29,13 +29,19 @@
 
 #include <vector>
 
+#include "BionicDeathTest.h"
 #include "TemporaryFile.h"
 
 #if defined(NOFORTIFY)
 #define STDIO_TEST stdio_nofortify
+#define STDIO_DEATHTEST stdio_nofortify_DeathTest
 #else
 #define STDIO_TEST stdio
+#define STDIO_DEATHTEST stdio_DeathTest
 #endif
+
+class stdio_DeathTest : public BionicDeathTest {};
+class stdio_nofortify_DeathTest : public BionicDeathTest {};
 
 static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = false) {
   rewind(fp);
@@ -1328,4 +1334,29 @@ TEST(STDIO_TEST, remove) {
   errno = 0;
   ASSERT_EQ(-1, remove(td.dirname));
   ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
+  char buf[16];
+  ASSERT_EXIT(snprintf(buf, atol("-1"), "hello"),
+              testing::KilledBySignal(SIGABRT),
+#if defined(NOFORTIFY)
+              "FORTIFY: vsnprintf: size .* > SSIZE_MAX"
+#else
+              "FORTIFY: vsnprintf: prevented .*-byte write into 16-byte buffer"
+#endif
+              );
+}
+
+TEST(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
+  std::string buf = "world";
+  ASSERT_EXIT(snprintf(&buf[0], atol("-1"), "hello"),
+              testing::KilledBySignal(SIGABRT),
+              "FORTIFY: vsnprintf: size .* > SSIZE_MAX");
+}
+
+TEST(STDIO_TEST, sprintf_30445072) {
+  std::string buf = "world";
+  sprintf(&buf[0], "hello");
+  ASSERT_EQ(buf, "hello");
 }
