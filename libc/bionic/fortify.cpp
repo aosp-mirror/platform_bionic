@@ -424,7 +424,12 @@ extern "C" int __snprintf_chk(char* dst, size_t supplied_size, int flags,
 // Runtime implementation of __builtin____vsprintf_chk (used directly by compiler, not in headers).
 extern "C" int __vsprintf_chk(char* dst, int /*flags*/,
                               size_t dst_len_from_compiler, const char* format, va_list va) {
-  int result = vsnprintf(dst, dst_len_from_compiler, format, va);
+  // The compiler uses SIZE_MAX to mean "no idea", but our vsnprintf rejects sizes that large.
+  int result = vsnprintf(dst,
+                         dst_len_from_compiler == SIZE_MAX ? SSIZE_MAX : dst_len_from_compiler,
+                         format, va);
+
+  // Try to catch failures after the fact...
   __check_buffer_access("vsprintf", "write into", result + 1, dst_len_from_compiler);
   return result;
 }
