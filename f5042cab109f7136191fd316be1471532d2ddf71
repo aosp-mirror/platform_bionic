@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "596b579b_1cee9920",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-10T23:14:46Z",
+      "side": 0,
+      "message": "i\u0027ve no idea what this was for. has zero impact on the current headers and wasn\u0027t documented, so removing it...",
+      "revId": "f5042cab109f7136191fd316be1471532d2ddf71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
