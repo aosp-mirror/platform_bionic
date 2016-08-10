@@ -34,6 +34,24 @@
       "revId": "53cf348c829cb36328755bbdbe46668ecbc55348",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9924ef48_f9b68ff1",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-10T01:11:23Z",
+      "side": 1,
+      "message": "who does own the BDK now then?\n\n\"nobrillo\" basically means \"brillo doesn\u0027t need/want this Android backwards-compatibility cruft\". i assume it\u0027s a mistake that brillo exports putw (but doesn\u0027t declare it in any header, and doesn\u0027t have getw), but don\u0027t want to just change brillo by adding \"nobrillo\" without having someone from brillo sign off :-)",
+      "parentUuid": "9924ef48_59eea321",
+      "revId": "53cf348c829cb36328755bbdbe46668ecbc55348",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
