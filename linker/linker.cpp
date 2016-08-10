@@ -155,31 +155,34 @@ static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
 
-static const char* const kDefaultLdPaths[] = {
 #if defined(__LP64__)
-  "/system/lib64",
-  "/vendor/lib64",
+static const char* const kSystemLibDir     = "/system/lib64";
+static const char* const kVendorLibDir     = "/vendor/lib64";
+static const char* const kAsanSystemLibDir = "/data/lib64";
+static const char* const kAsanVendorLibDir = "/data/vendor/lib64";
 #else
-  "/system/lib",
-  "/vendor/lib",
+static const char* const kSystemLibDir     = "/system/lib";
+static const char* const kVendorLibDir     = "/vendor/lib";
+static const char* const kAsanSystemLibDir = "/data/lib";
+static const char* const kAsanVendorLibDir = "/data/vendor/lib";
 #endif
+
+static const char* const kDefaultLdPaths[] = {
+  kSystemLibDir,
+  kVendorLibDir,
   nullptr
 };
 
 static const char* const kAsanDefaultLdPaths[] = {
-#if defined(__LP64__)
-  "/data/lib64",
-  "/system/lib64",
-  "/data/vendor/lib64",
-  "/vendor/lib64",
-#else
-  "/data/lib",
-  "/system/lib",
-  "/data/vendor/lib",
-  "/vendor/lib",
-#endif
+  kAsanSystemLibDir,
+  kSystemLibDir,
+  kAsanVendorLibDir,
+  kVendorLibDir,
   nullptr
 };
+
+// Is ASAN enabled?
+static bool g_is_asan = false;
 
 static bool is_system_library(const std::string& realpath) {
   for (const auto& dir : g_default_namespace.get_default_library_paths()) {
@@ -190,12 +193,16 @@ static bool is_system_library(const std::string& realpath) {
   return false;
 }
 
-#if defined(__LP64__)
-static const char* const kSystemLibDir = "/system/lib64";
-#else
-static const char* const kSystemLibDir = "/system/lib";
-#endif
-
+// Checks if the file exists and not a directory.
+static bool file_exists(const char* path) {
+  int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
+  if (fd == -1) {
+    return false;
+  } else {
+    close(fd);
+    return true;
+  }
+}
 static std::string dirname(const char *path);
 
 // TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
@@ -2370,8 +2377,27 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
     }
   }
 
+  std::string asan_name_holder;
+
+  const char* translated_name = name;
+  if (g_is_asan) {
+    if (file_is_in_dir(name, kSystemLibDir)) {
+      asan_name_holder = std::string(kAsanSystemLibDir) + "/" + basename(name);
+      if (file_exists(asan_name_holder.c_str())) {
+        translated_name = asan_name_holder.c_str();
+        PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+      }
+    } else if (file_is_in_dir(name, kVendorLibDir)) {
+      asan_name_holder = std::string(kAsanVendorLibDir) + "/" + basename(name);
+      if (file_exists(asan_name_holder.c_str())) {
+        translated_name = asan_name_holder.c_str();
+        PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+      }
+    }
+  }
+
   ProtectedDataGuard guard;
-  soinfo* si = find_library(ns, name, flags, extinfo, caller);
+  soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   if (si != nullptr) {
     si->call_constructors();
     return si->to_handle();
@@ -4122,6 +4148,7 @@ static void init_default_namespace() {
   const char* bname = basename(interp);
   if (bname && (strcmp(bname, "linker_asan") == 0 || strcmp(bname, "linker_asan64") == 0)) {
     g_default_ld_paths = kAsanDefaultLdPaths;
+    g_is_asan = true;
   } else {
     g_default_ld_paths = kDefaultLdPaths;
   }
