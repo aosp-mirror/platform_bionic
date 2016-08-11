@@ -33,10 +33,10 @@
 
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
-static const char* __bionic_set_dlerror(char* new_value) {
+static char* __bionic_set_dlerror(char* new_value) {
   char** dlerror_slot = &reinterpret_cast<char**>(__get_tls())[TLS_SLOT_DLERROR];
 
-  const char* old_value = *dlerror_slot;
+  char* old_value = *dlerror_slot;
   *dlerror_slot = new_value;
   return old_value;
 }
@@ -52,8 +52,8 @@ static void __bionic_format_dlerror(const char* msg, const char* detail) {
   __bionic_set_dlerror(buffer);
 }
 
-const char* dlerror() {
-  const char* old_value = __bionic_set_dlerror(nullptr);
+char* dlerror() {
+  char* old_value = __bionic_set_dlerror(nullptr);
   return old_value;
 }
 
