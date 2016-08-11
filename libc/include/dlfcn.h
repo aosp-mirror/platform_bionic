@@ -51,7 +51,7 @@ typedef struct {
 
 void* dlopen(const char* filename, int flag);
 int dlclose(void* _Nonnull handle);
-const char* dlerror(void);
+char* dlerror(void);
 void* dlsym(void* handle, const char* _Nonnull symbol);
 void* dlvsym(void* handle, const char* _Nonnull symbol, const char* _Nonnull version) __INTRODUCED_IN(24);
 int dladdr(const void* addr, Dl_info* _Nonnull info);
