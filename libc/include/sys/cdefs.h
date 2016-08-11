@@ -40,7 +40,6 @@
 /*
  * Testing against Clang-specific extensions.
  */
-
 #ifndef __has_extension
 #define __has_extension         __has_feature
 #endif
@@ -57,19 +56,16 @@
 #define __has_attribute(x)      0
 #endif
 
-
 #define __strong_alias(alias, sym) \
     __asm__(".global " #alias "\n" \
             #alias " = " #sym);
 
 #if defined(__cplusplus)
-#define	__BEGIN_DECLS		extern "C" {
-#define	__END_DECLS		}
-#define	__static_cast(x,y)	static_cast<x>(y)
+#define __BEGIN_DECLS extern "C" {
+#define __END_DECLS }
 #else
-#define	__BEGIN_DECLS
-#define	__END_DECLS
-#define	__static_cast(x,y)	(x)y
+#define __BEGIN_DECLS
+#define __END_DECLS
 #endif
 
 #if defined(__cplusplus)
