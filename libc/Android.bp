@@ -1629,11 +1629,6 @@ cc_library {
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.arm.map",
-            product_variables: {
-                brillo: {
-                    version_script: "libc.arm.brillo.map",
-                },
-            },
 
             shared: {
                 srcs: [
@@ -1656,11 +1651,6 @@ cc_library {
         mips: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.mips.map",
-            product_variables: {
-                brillo: {
-                    version_script: "libc.mips.brillo.map",
-                },
-            },
         },
         mips64: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
@@ -1672,11 +1662,6 @@ cc_library {
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.x86.map",
-            product_variables: {
-                brillo: {
-                    version_script: "libc.x86.brillo.map",
-                },
-            },
         },
         x86_64: {
             // Don't re-export new/delete and friends, even if the compiler really wants to.
