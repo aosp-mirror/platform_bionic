@@ -140,8 +140,6 @@ static bool file_exists(const char* path) {
   }
 }
 
-static std::string dirname(const char *path);
-
 // TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
 // gradually remove libraries from this list until it is gone.
 static bool is_greylisted(const char* name, const soinfo* needed_by) {
