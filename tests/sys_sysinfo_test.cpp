@@ -17,17 +17,28 @@
 #include <gtest/gtest.h>
 
 #include <sys/sysinfo.h>
+#include <unistd.h>
 
 TEST(sys_sysinfo, smoke) {
-  int nprocessor = get_nprocs();
-  ASSERT_GT(nprocessor, 0);
+  int nprocs = get_nprocs();
+  ASSERT_GT(nprocs, 0);
+  ASSERT_EQ(sysconf(_SC_NPROCESSORS_ONLN), nprocs);
 
-  int nprocessor_conf = get_nprocs_conf();
-  ASSERT_GE(nprocessor_conf, nprocessor);
+  int nprocs_conf = get_nprocs_conf();
+  ASSERT_GE(nprocs_conf, nprocs);
+  ASSERT_EQ(sysconf(_SC_NPROCESSORS_CONF), nprocs_conf);
 
   long avail_phys_pages = get_avphys_pages();
   ASSERT_GT(avail_phys_pages, 0);
+  ASSERT_EQ(sysconf(_SC_AVPHYS_PAGES), avail_phys_pages);
 
   long phys_pages = get_phys_pages();
   ASSERT_GE(phys_pages, avail_phys_pages);
+  ASSERT_EQ(sysconf(_SC_PHYS_PAGES), phys_pages);
+}
+
+TEST(sys_sysinfo, sysinfo) {
+  struct sysinfo si;
+  memset(&si, 0, sizeof(si));
+  ASSERT_EQ(0, sysinfo(&si));
 }
