@@ -25,7 +25,7 @@
 
 void* dlopen(const char* filename __unused, int flag __unused) { return 0; }
 
-const char* dlerror(void) { return 0; }
+char* dlerror(void) { return 0; }
 
 void* dlsym(void* handle __unused, const char* symbol __unused) { return 0; }
 
