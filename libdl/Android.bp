@@ -60,3 +60,9 @@ cc_library {
         never: true,
     },
 }
+
+ndk_library {
+    name: "libdl.ndk",
+    symbol_file: "libdl.map.txt",
+    first_version: "9",
+}
