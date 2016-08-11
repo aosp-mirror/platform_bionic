@@ -131,13 +131,13 @@ static bool is_system_library(const std::string& realpath) {
 
 // Checks if the file exists and not a directory.
 static bool file_exists(const char* path) {
-  int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
-  if (fd == -1) {
+  struct stat s;
+
+  if (stat(path, &s) != 0) {
     return false;
-  } else {
-    close(fd);
-    return true;
   }
+
+  return S_ISREG(s.st_mode);
 }
 
 // TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
