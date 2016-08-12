@@ -39,6 +39,7 @@
 #include <bits/ioctl.h>
 #include <bits/lockf.h>
 #include <bits/posix_limits.h>
+#include <bits/seek_constants.h>
 #include <bits/sysconf.h>
 
 __BEGIN_DECLS
@@ -51,10 +52,6 @@ __BEGIN_DECLS
 #define X_OK 1
 #define W_OK 2
 #define R_OK 4
-
-#define SEEK_SET 0
-#define SEEK_CUR 1
-#define SEEK_END 2
 
 #define _PC_FILESIZEBITS 0
 #define _PC_LINK_MAX 1
