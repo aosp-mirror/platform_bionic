@@ -42,7 +42,7 @@ int pthread_barrierattr_destroy(pthread_barrierattr_t* attr) {
   return 0;
 }
 
-int pthread_barrierattr_getpshared(pthread_barrierattr_t* attr, int* pshared) {
+int pthread_barrierattr_getpshared(const pthread_barrierattr_t* attr, int* pshared) {
   *pshared = (*attr & 1) ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE;
   return 0;
 }
