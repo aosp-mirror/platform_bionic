@@ -275,43 +275,7 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#ifdef __clang__
-#define __AVAILABILITY(...) __attribute__((availability(android,__VA_ARGS__)))
-#else
-#define __AVAILABILITY(...)
-#endif
-
-#define __INTRODUCED_IN(api_level) __AVAILABILITY(introduced=api_level)
-#define __DEPRECATED_IN(api_level) __AVAILABILITY(deprecated=api_level)
-#define __REMOVED_IN(api_level) __AVAILABILITY(obsoleted=api_level)
-
-#define __INTRODUCED_IN_FUTURE __INTRODUCED_IN(10000)
-
-#if __LP64__
-#define __INTRODUCED_IN_32(api_level)
-#define __INTRODUCED_IN_64 __INTRODUCED_IN
-#else
-#define __INTRODUCED_IN_32 __INTRODUCED_IN
-#define __INTRODUCED_IN_64(api_level)
-#endif
-
-#if defined(__arm__)
-#define __INTRODUCED_IN_ARM __INTRODUCED_IN
-#else
-#define __INTRODUCED_IN_ARM(x)
-#endif
-
-#if defined(__i386__)
-#define __INTRODUCED_IN_X86 __INTRODUCED_IN
-#else
-#define __INTRODUCED_IN_X86(x)
-#endif
-
-#if defined(__mips__)
-#define __INTRODUCED_IN_MIPS __INTRODUCED_IN
-#else
-#define __INTRODUCED_IN_MIPS(x)
-#endif
+#include <android/versioning.h>
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if __LP64__
