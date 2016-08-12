@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bee6f9fc_62de926d",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:36:59Z",
+      "side": 1,
+      "message": "Since we\u0027re on a spree of POSIX pedantry, doesn\u0027t this also expose things like ptrdiff_t?",
+      "revId": "c5537889f5496fd303b8326a7c1e34c95a7ea290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
