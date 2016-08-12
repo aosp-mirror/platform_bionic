@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bee6f9fc_4285166c",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:21:25Z",
+      "side": 1,
+      "message": "restrict",
+      "range": {
+        "startLine": 219,
+        "startChar": 41,
+        "endLine": 219,
+        "endChar": 44
+      },
+      "revId": "8197aca7f2110fa764c1aecd005d878d8ddd3a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_827f1e72",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:21:25Z",
+      "side": 1,
+      "message": "restrict",
+      "range": {
+        "startLine": 220,
+        "startChar": 65,
+        "endLine": 220,
+        "endChar": 72
+      },
+      "revId": "8197aca7f2110fa764c1aecd005d878d8ddd3a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_627a1285",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:21:25Z",
+      "side": 1,
+      "message": "restrict",
+      "range": {
+        "startLine": 220,
+        "startChar": 44,
+        "endLine": 220,
+        "endChar": 52
+      },
+      "revId": "8197aca7f2110fa764c1aecd005d878d8ddd3a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_c27046a1",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:21:25Z",
+      "side": 1,
+      "message": "Same for these",
+      "revId": "8197aca7f2110fa764c1aecd005d878d8ddd3a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
