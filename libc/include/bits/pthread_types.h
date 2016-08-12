@@ -32,8 +32,6 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-typedef long pthread_t;
-
 typedef struct {
   uint32_t flags;
   void* stack_base;
@@ -45,5 +43,59 @@ typedef struct {
   char __reserved[16];
 #endif
 } pthread_attr_t;
+
+typedef struct {
+#if defined(__LP64__)
+  int64_t __private[4];
+#else
+  int32_t __private[8];
+#endif
+} pthread_barrier_t;
+
+typedef int pthread_barrierattr_t;
+
+typedef struct {
+#if defined(__LP64__)
+  int32_t __private[12];
+#else
+  int32_t __private[1];
+#endif
+} pthread_cond_t;
+
+typedef long pthread_condattr_t;
+
+typedef int pthread_key_t;
+
+typedef struct {
+#if defined(__LP64__)
+  int32_t __private[10];
+#else
+  int32_t __private[1];
+#endif
+} pthread_mutex_t;
+
+typedef long pthread_mutexattr_t;
+
+typedef int pthread_once_t;
+
+typedef struct {
+#if defined(__LP64__)
+  int32_t __private[14];
+#else
+  int32_t __private[10];
+#endif
+} pthread_rwlock_t;
+
+typedef long pthread_rwlockattr_t;
+
+typedef struct {
+#if defined(__LP64__)
+  int64_t __private;
+#else
+  int32_t __private[2];
+#endif
+} pthread_spinlock_t;
+
+typedef long pthread_t;
 
 #endif

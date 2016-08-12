@@ -35,6 +35,8 @@
 #include <linux/types.h>
 #include <linux/posix_types.h>
 
+#include <bits/pthread_types.h>
+
 /* gids, uids, and pids are all 32-bit. */
 typedef __kernel_gid32_t __gid_t;
 typedef __gid_t gid_t;
