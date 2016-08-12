@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bee6f9fc_8268fec0",
+        "filename": "libc/bionic/pthread_barrier.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:20:07Z",
+      "side": 1,
+      "message": "restrict",
+      "range": {
+        "startLine": 45,
+        "startChar": 75,
+        "endLine": 45,
+        "endChar": 82
+      },
+      "revId": "02ac028bf7899f293a39e991f346fd35e2910949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_e2562206",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-12T17:20:07Z",
+      "side": 1,
+      "message": "restrict",
+      "range": {
+        "startLine": 236,
+        "startChar": 49,
+        "endLine": 236,
+        "endChar": 56
+      },
+      "revId": "02ac028bf7899f293a39e991f346fd35e2910949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
