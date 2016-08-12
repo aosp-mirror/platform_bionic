@@ -47,6 +47,8 @@
 #define __need_NULL
 #include <stddef.h>
 
+#include <bits/seek_constants.h>
+
 __BEGIN_DECLS
 
 #if defined(__clang__)
@@ -105,10 +107,6 @@ extern FILE* __sF[] __REMOVED_IN(23);
 
 #define	L_tmpnam	1024	/* XXX must be == PATH_MAX */
 #define	TMP_MAX		308915776
-
-#define SEEK_SET 0
-#define SEEK_CUR 1
-#define SEEK_END 2
 
 /*
  * Functions defined in ANSI C standard.
