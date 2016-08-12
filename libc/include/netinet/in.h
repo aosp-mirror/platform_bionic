@@ -40,8 +40,6 @@
 
 __BEGIN_DECLS
 
-#define IPPORT_RESERVED  1024
-
 #define INET_ADDRSTRLEN 16
 
 typedef uint16_t in_port_t;

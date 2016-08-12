@@ -192,6 +192,8 @@ struct addrinfo {
  */
 #define	SCOPE_DELIMITER	'%'
 
+#define IPPORT_RESERVED 1024
+
 __BEGIN_DECLS
 
 /* BIONIC-BEGIN */
