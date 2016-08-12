@@ -1,2 +1,0 @@
-foo: availability mismatch between arm-9 and arm-12: [introduced = 9] before, [introduced = 10] after
-versioner: sanity check failed

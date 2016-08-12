@@ -1,5 +1,8 @@
-foo: availability mismatch for arm-9
-    foo declared in 2 locations:
-        extern function declaration @ headers/bar.h:1:5	[obsoleted = 12]
-        extern function declaration @ headers/foo.h:1:5	[obsoleted = 9]
+versioner: inconsistent availability for symbol 'foo'
+versioner: failed to calculate symbol availability
+  foo: invalid
+    extern declaration @ headers/bar.h:1:1
+      obsoleted = 12
+    extern declaration @ headers/foo.h:1:1
+      obsoleted = 9
 versioner: sanity check failed

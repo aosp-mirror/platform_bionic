@@ -19,10 +19,11 @@
 #include <string>
 #include <vector>
 
+#include <llvm/ADT/StringRef.h>
+
 std::string getWorkingDir();
 std::vector<std::string> collectFiles(const std::string& directory);
 
-namespace std {
 static __attribute__((unused)) std::string to_string(const char* c) {
   return c;
 }
@@ -30,13 +31,13 @@ static __attribute__((unused)) std::string to_string(const char* c) {
 static __attribute__((unused)) const std::string& to_string(const std::string& str) {
   return str;
 }
-}
 
 template <typename Collection>
 static std::string Join(Collection c, const std::string& delimiter = ", ") {
   std::string result;
   for (const auto& item : c) {
-    result.append(std::to_string(item));
+    using namespace std;
+    result.append(to_string(item));
     result.append(delimiter);
   }
   if (!result.empty()) {
@@ -44,3 +45,5 @@ static std::string Join(Collection c, const std::string& delimiter = ", ") {
   }
   return result;
 }
+
+llvm::StringRef StripPrefix(llvm::StringRef string, llvm::StringRef prefix);
