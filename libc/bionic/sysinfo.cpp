@@ -76,29 +76,14 @@ int get_nprocs() {
   return cpu_count;
 }
 
-static int __get_meminfo_page_count(const char* pattern) {
-  FILE* fp = fopen("/proc/meminfo", "re");
-  if (fp == NULL) {
-    return -1;
-  }
-
-  int page_count = -1;
-  char buf[256];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    long total;
-    if (sscanf(buf, pattern, &total) == 1) {
-      page_count = static_cast<int>(total / (sysconf(_SC_PAGE_SIZE) / 1024));
-      break;
-    }
-  }
-  fclose(fp);
-  return page_count;
-}
-
 long get_phys_pages() {
-  return __get_meminfo_page_count("MemTotal: %ld kB");
+  struct sysinfo si;
+  sysinfo(&si);
+  return (si.totalram * si.mem_unit) / sysconf(_SC_PAGE_SIZE);
 }
 
 long get_avphys_pages() {
-  return __get_meminfo_page_count("MemFree: %ld kB");
+  struct sysinfo si;
+  sysinfo(&si);
+  return ((si.freeram + si.bufferram) * si.mem_unit) / sysconf(_SC_PAGE_SIZE);
 }
