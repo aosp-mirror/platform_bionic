@@ -43,16 +43,6 @@ __BEGIN_DECLS
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 #endif
 
-typedef struct {
-#if defined(__LP64__)
-  int32_t __private[10];
-#else
-  int32_t __private[1];
-#endif
-} pthread_mutex_t;
-
-typedef long pthread_mutexattr_t;
-
 enum {
     PTHREAD_MUTEX_NORMAL = 0,
     PTHREAD_MUTEX_RECURSIVE = 1,
@@ -68,27 +58,7 @@ enum {
 #define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_RECURSIVE & 3) << 14) } }
 #define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_ERRORCHECK & 3) << 14) } }
 
-typedef struct {
-#if defined(__LP64__)
-  int32_t __private[12];
-#else
-  int32_t __private[1];
-#endif
-} pthread_cond_t;
-
-typedef long pthread_condattr_t;
-
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
-
-typedef struct {
-#if defined(__LP64__)
-  int32_t __private[14];
-#else
-  int32_t __private[10];
-#endif
-} pthread_rwlock_t;
-
-typedef long pthread_rwlockattr_t;
 
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 
@@ -97,31 +67,9 @@ enum {
   PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP = 1,
 };
 
-typedef int pthread_key_t;
-
-typedef int pthread_once_t;
-
 #define PTHREAD_ONCE_INIT 0
 
-typedef struct {
-#if defined(__LP64__)
-  int64_t __private[4];
-#else
-  int32_t __private[8];
-#endif
-} pthread_barrier_t;
-
-typedef int pthread_barrierattr_t;
-
 #define PTHREAD_BARRIER_SERIAL_THREAD -1
-
-typedef struct {
-#if defined(__LP64__)
-  int64_t __private;
-#else
-  int32_t __private[2];
-#endif
-} pthread_spinlock_t;
 
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
