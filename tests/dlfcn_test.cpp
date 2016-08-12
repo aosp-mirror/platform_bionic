@@ -1161,4 +1161,13 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\": W + E load segments are not allowed";
   ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
 }
+
+TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-unaligned_shdr_offset.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: ";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
