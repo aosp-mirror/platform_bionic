@@ -37,6 +37,7 @@
 #include <linux/uio.h>
 
 #include <bits/fcntl.h>
+#include <bits/seek_constants.h>
 
 #if defined(__USE_GNU) || defined(__USE_BSD)
 #include <bits/lockf.h>
