@@ -1,1 +1,1 @@
-int foo() __attribute__((availability(android, introduced = 10000)));
+int foo() __INTRODUCED_IN_FUTURE;

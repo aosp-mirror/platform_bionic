@@ -1,1 +1,1 @@
-int foo() __attribute__((availability(android, obsoleted = 9)));
+int foo() __REMOVED_IN(9);

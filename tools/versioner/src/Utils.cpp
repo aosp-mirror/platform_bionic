@@ -21,8 +21,11 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sstream>
 #include <string>
 #include <vector>
+
+#include "DeclarationDatabase.h"
 
 std::string getWorkingDir() {
   char buf[PATH_MAX];
@@ -53,4 +56,11 @@ std::vector<std::string> collectFiles(const std::string& directory) {
 
   fts_close(fts);
   return files;
+}
+
+llvm::StringRef StripPrefix(llvm::StringRef string, llvm::StringRef prefix) {
+  if (string.startswith(prefix)) {
+    return string.drop_front(prefix.size());
+  }
+  return string;
 }

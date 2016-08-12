@@ -1,2 +1,8 @@
-foo: availability mismatch between arm-9 and arm-12: [introduced = 9] before, [introduced = 10] after
+versioner: inconsistent availability for symbol 'foo'
+versioner: failed to calculate symbol availability
+  foo: invalid
+    extern declaration @ headers/foo.h:2:1
+      introduced = 9
+    extern declaration @ headers/foo.h:4:1
+      introduced = 10
 versioner: sanity check failed

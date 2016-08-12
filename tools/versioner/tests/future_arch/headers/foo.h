@@ -1,5 +1,5 @@
 #if defined(__arm__)
-int foo() __attribute__((availability(android, introduced = 9)));
+int foo() __INTRODUCED_IN(9);
 #else
-int foo() __attribute__((availability(android, introduced = 10000)));
+int foo() __INTRODUCED_IN_FUTURE;
 #endif

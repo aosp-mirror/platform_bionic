@@ -75,7 +75,7 @@ static std::string readPlatformFile(const CompilationType& type, llvm::StringRef
     }
 
     std::string path = std::string(platform_dir) + "/android-" + std::to_string(api_level) +
-                       "/arch-" + type.arch + "/symbols/" + filename;
+                       "/arch-" + to_string(type.arch) + "/symbols/" + filename;
 
     stream = std::ifstream(path);
     if (stream) {
@@ -86,7 +86,7 @@ static std::string readPlatformFile(const CompilationType& type, llvm::StringRef
   }
 
   if (required) {
-    errx(1, "failed to find platform file '%s' for %s", filename.c_str(), type.describe().c_str());
+    errx(1, "failed to find platform file '%s' for %s", filename.c_str(), to_string(type).c_str());
   }
 
   return std::string();
