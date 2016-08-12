@@ -42,7 +42,7 @@ typedef struct {
 #endif
 } sem_t;
 
-#define SEM_FAILED NULL
+#define SEM_FAILED __BIONIC_CAST(reinterpret_cast, sem_t*, 0)
 
 int sem_destroy(sem_t*);
 int sem_getvalue(sem_t*, int*);
