@@ -52,6 +52,24 @@
       "revId": "c5537889f5496fd303b8326a7c1e34c95a7ea290",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_45e9a00c",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-12T18:52:18Z",
+      "side": 1,
+      "message": "yes, \u003cstddef.h\u003e [always] comes from the compiler, but since both glibc and libc++ use the __need_NULL macro, i think we can count on continued support for it from both compilers :-)\n\n(and it fails safe anyway. i suspect most programmers don\u0027t even know that things like size_t and NULL are part of the library rather than the language, and i don\u0027t think there\u0027s any real harm in them being available even in circumstances where they\u0027re not required to be.)\n\n--\n\nas for transitive includes, i had a big clean up of some of the more offensive ones last year. i closed the bug even though i hadn\u0027t finished because what was left was minor and code in vendor/ meant we really couldn\u0027t fix it economically anyway. so unless you have specific counterexamples i don\u0027t think there\u0027s anything left to do there.",
+      "parentUuid": "bee6f9fc_42ba76d5",
+      "revId": "c5537889f5496fd303b8326a7c1e34c95a7ea290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
