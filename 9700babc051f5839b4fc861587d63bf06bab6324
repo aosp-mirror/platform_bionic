@@ -16,6 +16,24 @@
       "revId": "9700babc051f5839b4fc861587d63bf06bab6324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_827c7ee7",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-08-12T16:44:19Z",
+      "side": 1,
+      "message": "No, for now keep it in Android.mk",
+      "parentUuid": "bee6f9fc_822e3ef3",
+      "revId": "9700babc051f5839b4fc861587d63bf06bab6324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
