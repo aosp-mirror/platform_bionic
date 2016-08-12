@@ -217,8 +217,7 @@ ssize_t __readlink_chk(const char* path, char* buf, size_t size, size_t buf_size
 }
 
 ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buf_size,
-                       int flags, const sockaddr* src_addr,
-                       socklen_t* addrlen) {
+                       int flags, sockaddr* src_addr, socklen_t* addrlen) {
   __check_buffer_access("recvfrom", "write into", len, buf_size);
   return recvfrom(socket, buf, len, flags, src_addr, addrlen);
 }

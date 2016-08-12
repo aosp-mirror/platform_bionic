@@ -291,18 +291,18 @@ ssize_t send(int, const void*, size_t, int);
 ssize_t recv(int, void*, size_t, int);
 
 __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
-__socketcall ssize_t recvfrom(int, void*, size_t, int, const struct sockaddr*, socklen_t*);
+__socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*, socklen_t*);
 
 __errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, const struct sockaddr*, socklen_t*)
+ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*, socklen_t*)
   __INTRODUCED_IN(21);
-ssize_t __recvfrom_real(int, void*, size_t, int, const struct sockaddr*, socklen_t*) __RENAME(recvfrom);
+ssize_t __recvfrom_real(int, void*, size_t, int, struct sockaddr*, socklen_t*) __RENAME(recvfrom);
 
 #if defined(__BIONIC_FORTIFY)
 
 #if __ANDROID_API__ >= 24
 __BIONIC_FORTIFY_INLINE
-ssize_t recvfrom(int fd, void* buf, size_t len, int flags, const struct sockaddr* src_addr, socklen_t* addr_len) {
+ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len) {
   size_t bos = __bos0(buf);
 
 #if !defined(__clang__)
