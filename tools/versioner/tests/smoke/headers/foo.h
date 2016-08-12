@@ -1,1 +1,1 @@
-int foo() __attribute__((availability(android, introduced = 9)));
+int foo() __INTRODUCED_IN(9);

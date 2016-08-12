@@ -1,1 +1,1 @@
-versioner -v headers -p platforms -r arm -a 9
+versioner -v headers -p platforms -r arm -a 9 -i
