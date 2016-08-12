@@ -46,6 +46,19 @@ LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(LOCAL_MODULE)
 LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
 
+include $(CLEAR_VARS)
+LOCAL_MULTILIB := both
+LOCAL_MODULE := libtest_invalid-zero_shentsize.so
+LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
+LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
+LOCAL_MODULE_CLASS := EXECUTABLES
+
+LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(LOCAL_MODULE)
+LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(LOCAL_MODULE)
+LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(LOCAL_MODULE)
+LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(LOCAL_MODULE)
+include $(BUILD_PREBUILT)
+
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 build_host := true
 else

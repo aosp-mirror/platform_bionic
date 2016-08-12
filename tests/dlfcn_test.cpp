@@ -1170,4 +1170,12 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_zero_shentsize) {
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shentsize.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has unsupported e_shentsize: 0x0 (expected 0x";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
