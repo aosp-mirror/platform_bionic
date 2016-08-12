@@ -232,8 +232,8 @@ int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull);
 
 int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull attr) __INTRODUCED_IN(24);
-int pthread_barrierattr_getpshared(pthread_barrierattr_t* _Nonnull attr, int* _Nonnull pshared)
-  __INTRODUCED_IN(24);
+int pthread_barrierattr_getpshared(const pthread_barrierattr_t* _Nonnull attr,
+                                   int* _Nonnull pshared) __INTRODUCED_IN(24);
 int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull attr, int pshared)
   __INTRODUCED_IN(24);
 
