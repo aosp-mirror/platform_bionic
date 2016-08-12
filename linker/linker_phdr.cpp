@@ -604,9 +604,16 @@ bool ElfReader::LoadSegments() {
     }
 
     if (file_length != 0) {
+      int prot = PFLAGS_TO_PROT(phdr->p_flags);
+      // W + E PT_LOAD segments are not allowed.
+      if ((prot & (PROT_EXEC | PROT_WRITE)) == (PROT_EXEC | PROT_WRITE)) {
+        DL_ERR_AND_LOG("\"%s\": W + E load segments are not allowed", name_.c_str());
+        return false;
+      }
+
       void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
                             file_length,
-                            PFLAGS_TO_PROT(phdr->p_flags),
+                            prot,
                             MAP_FIXED|MAP_PRIVATE,
                             fd_,
                             file_offset_ + file_page_start);
