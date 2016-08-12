@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bee6f9fc_822e3ef3",
+        "filename": "tests/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-12T16:37:30Z",
+      "side": 1,
+      "message": "is there a way to do this in .bp?",
+      "revId": "9700babc051f5839b4fc861587d63bf06bab6324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
