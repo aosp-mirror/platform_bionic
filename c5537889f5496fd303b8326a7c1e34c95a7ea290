@@ -16,6 +16,24 @@
       "revId": "c5537889f5496fd303b8326a7c1e34c95a7ea290",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bee6f9fc_22380a84",
+        "filename": "libc/include/locale.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-12T17:45:54Z",
+      "side": 1,
+      "message": "not if you #define __need_NULL first (L35). we haven\u0027t been particularly good about that in the past, but, yes, i\u0027m trying to not introduce more leakage here.\n\n(but, yes, i\u0027m actually only checking we have *at least* what POSIX says. but POSIX is generally pretty loose about \"oh, and you can drag in the whole of \u003cunistd.h\u003e too, which itself can drag in pretty much everything else\", so i think the damage we\u0027d cause by cleaning up existing transitive includes would outweigh the very small potential benefit.)",
+      "parentUuid": "bee6f9fc_62de926d",
+      "revId": "c5537889f5496fd303b8326a7c1e34c95a7ea290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
