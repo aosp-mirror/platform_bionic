@@ -32,6 +32,9 @@
 #include <sys/cdefs.h>
 #include <xlocale.h>
 
+#define __need_NULL
+#include <stddef.h>
+
 __BEGIN_DECLS
 
 #define LC_CTYPE           0
