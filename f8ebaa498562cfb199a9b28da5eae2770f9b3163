@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe4871ff_e11ee0cc",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2177,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-13T00:05:46Z",
+      "side": 1,
+      "message": "It\u0027s not clear why this is specialized to ANDROID. Are we planning to push this upstream?",
+      "range": {
+        "startLine": 2177,
+        "startChar": 0,
+        "endLine": 2177,
+        "endChar": 15
+      },
+      "revId": "f8ebaa498562cfb199a9b28da5eae2770f9b3163",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
