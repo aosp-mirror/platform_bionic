@@ -22,6 +22,30 @@
       "revId": "f8ebaa498562cfb199a9b28da5eae2770f9b3163",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e105507_f32810eb",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-13T18:18:02Z",
+      "side": 1,
+      "message": "i mentioned this upstream and they didn\u0027t seem to care. (despite the fact that all shipping C libraries work around this one way or another.)\n\nthis file contains all the file reading, so it\u0027s already pretty forked (because we have one big tzdata file), but that\u0027s mostly from L2338 on. to make my life easier whenever i sync with upstream i\u0027ve tried to mark the stuff we change.",
+      "parentUuid": "fe4871ff_e11ee0cc",
+      "range": {
+        "startLine": 2177,
+        "startChar": 0,
+        "endLine": 2177,
+        "endChar": 15
+      },
+      "revId": "f8ebaa498562cfb199a9b28da5eae2770f9b3163",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
