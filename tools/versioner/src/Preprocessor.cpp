@@ -18,6 +18,7 @@
 
 #include <err.h>
 #include <fcntl.h>
+#include <fts.h>
 #include <libgen.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -31,6 +32,8 @@
 
 #include <llvm/ADT/StringRef.h>
 #include <llvm/ADT/Twine.h>
+#include <llvm/Support/FileSystem.h>
+#include <llvm/Support/Path.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
@@ -455,6 +458,36 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
       }
     }
   }
+
+  // Copy over any unchanged files directly.
+  char* fts_paths[2] = { const_cast<char*>(src_dir.c_str()), nullptr };
+  FTS* fts = fts_open(fts_paths, FTS_LOGICAL, nullptr);
+  while (FTSENT* ent = fts_read(fts)) {
+    llvm::StringRef path = ent->fts_path;
+    if (!path.startswith(src_dir)) {
+      err(1, "path '%s' doesn't start with source dir '%s'", ent->fts_path, src_dir.c_str());
+    }
+
+    if (ent->fts_info != FTS_F) {
+      continue;
+    }
+
+    std::string rel_path = path.substr(src_dir.length() + 1);
+    if (guards.count(rel_path) == 0) {
+      std::string dst_path = dst_dir + "/" + rel_path;
+      llvm::StringRef parent_path = llvm::sys::path::parent_path(dst_path);
+      if (llvm::sys::fs::create_directories(parent_path)) {
+        errx(1, "failed to ensure existence of directory '%s'", parent_path.str().c_str());
+      }
+      if (llvm::sys::fs::copy_file(path, dst_path)) {
+        errx(1, "failed to copy '%s/%s' to '%s'", src_dir.c_str(), path.str().c_str(),
+             dst_path.c_str());
+      }
+
+      printf("Copied unmodified header %s\n", dst_path.c_str());
+    }
+  }
+  fts_close(fts);
 
   for (const auto& file_it : guards) {
     file_lines[file_it.first] = readFileLines(file_it.first);
