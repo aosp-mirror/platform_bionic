@@ -3,8 +3,11 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 include $(CLEAR_TBLGEN_VARS)
 
-LLVM_ROOT_PATH := external/llvm
+# Only do this when Clang is available.
 CLANG_ROOT_PATH := external/clang
+ifneq ($(wildcard $(CLANG_ROOT_PATH)/clang.mk),)
+
+LLVM_ROOT_PATH := external/llvm
 include $(CLANG_ROOT_PATH)/clang.mk
 
 LOCAL_MODULE := versioner
@@ -41,3 +44,5 @@ LOCAL_CPPFLAGS := -std=c++14 -fno-rtti
 LOCAL_MODULE_HOST_OS := linux
 
 include $(BUILD_HOST_EXECUTABLE)
+
+endif
