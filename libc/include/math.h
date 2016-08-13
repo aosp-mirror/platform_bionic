@@ -81,6 +81,8 @@ typedef __float_t float_t;
 #define HUGE MAXFLOAT
 #endif
 
+extern int signgam;
+
 /*
  * Most of these functions depend on the rounding mode and have the side
  * effect of raising floating-point exceptions, so they are not declared
@@ -297,6 +299,13 @@ long double tanl(long double) __INTRODUCED_IN(21);
 long double tgammal(long double) __INTRODUCED_IN(21);
 long double truncl(long double);
 
+double j0(double);
+double j1(double);
+double jn(int, double);
+double y0(double);
+double y1(double);
+double yn(int, double);
+
 #define M_E		2.7182818284590452354	/* e */
 #define M_LOG2E		1.4426950408889634074	/* log 2e */
 #define M_LOG10E	0.43429448190325182765	/* log 10e */
@@ -314,13 +323,6 @@ long double truncl(long double);
 #define MAXFLOAT	((float)3.40282346638528860e+38)
 
 #if defined(__USE_BSD) || defined(__USE_GNU)
-extern int signgam;
-double j0(double);
-double j1(double);
-double jn(int, double);
-double y0(double);
-double y1(double);
-double yn(int, double);
 double gamma(double);
 double scalb(double, double);
 double drem(double, double);
