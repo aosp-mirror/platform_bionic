@@ -16,19 +16,18 @@
 
 LOCAL_PATH := $(call my-dir)
 
-# Move prebuilt test elf-files to $(TARGET_OUT_NATIVE_TESTS)
-include $(CLEAR_VARS)
-LOCAL_MULTILIB := both
-LOCAL_MODULE := libtest_invalid-rw_load_segment.so
-LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
-LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
-LOCAL_MODULE_CLASS := SHARED_LIBRARY
+# TODO(dimitry): replace with define once https://android-review.googlesource.com/247466 is reverted
+# https://github.com/google/kati/issues/83 is currently blocking it.
 
-LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(LOCAL_MODULE)
-LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(LOCAL_MODULE)
-LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(LOCAL_MODULE)
-LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(LOCAL_MODULE)
-include $(BUILD_PREBUILT)
+# Move prebuilt test elf-files to $(TARGET_OUT_NATIVE_TESTS)
+module := libtest_invalid-rw_load_segment.so
+include $(LOCAL_PATH)/Android.build.prebuilt.mk
+
+module := libtest_invalid-unaligned_shdr_offset.so
+include $(LOCAL_PATH)/Android.build.prebuilt.mk
+
+module := libtest_invalid-zero_shentsize.so
+include $(LOCAL_PATH)/Android.build.prebuilt.mk
 
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 build_host := true
