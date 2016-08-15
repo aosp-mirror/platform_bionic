@@ -53,12 +53,29 @@ def run_test(test_name, path):
     print("{} {}".format(prefix_pass, test_name))
     return True
 
+
+def usage():
+    print("Usage: run_tests.py [-f]")
+    print("    -f\t\tdon't run slow tests")
+    sys.exit(0)
+
+
 root_dir = os.path.dirname(os.path.realpath(__file__))
 test_dir = os.path.join(root_dir, "tests")
 tests = os.listdir(test_dir)
+run_slow = True
+
+if len(sys.argv) > 2:
+    usage()
+elif len(sys.argv) == 2:
+    if sys.argv[1] != "-f":
+        usage()
+    run_slow = False
 
 success = True
 for test in sorted(tests):
+    if test.startswith("slow") and not run_slow:
+        continue
     path = os.path.join(test_dir, test)
     if not os.path.isdir(path):
         continue
