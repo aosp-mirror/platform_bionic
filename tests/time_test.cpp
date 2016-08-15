@@ -102,18 +102,39 @@ TEST(time, mktime_10310929) {
 #if !defined(__LP64__)
   // 32-bit bionic stupidly had a signed 32-bit time_t.
   ASSERT_EQ(-1, mktime(&t));
+  ASSERT_EQ(EOVERFLOW, errno);
 #else
   // Everyone else should be using a signed 64-bit time_t.
   ASSERT_GE(sizeof(time_t) * 8, 64U);
 
   setenv("TZ", "America/Los_Angeles", 1);
   tzset();
+  errno = 0;
   ASSERT_EQ(static_cast<time_t>(4108348800U), mktime(&t));
+  ASSERT_EQ(0, errno);
 
   setenv("TZ", "UTC", 1);
   tzset();
+  errno = 0;
   ASSERT_EQ(static_cast<time_t>(4108320000U), mktime(&t));
+  ASSERT_EQ(0, errno);
 #endif
+}
+
+TEST(time, mktime_EOVERFLOW) {
+  struct tm t;
+  memset(&t, 0, sizeof(tm));
+  t.tm_year = 0;
+  t.tm_mon = 2;
+  t.tm_mday = 10;
+
+  errno = 0;
+  ASSERT_NE(static_cast<time_t>(-1), mktime(&t));
+  ASSERT_EQ(0, errno);
+
+  t.tm_year = INT_MAX;
+  ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
+  ASSERT_EQ(EOVERFLOW, errno);
 }
 
 TEST(time, strftime) {
