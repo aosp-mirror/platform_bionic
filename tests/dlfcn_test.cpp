@@ -1194,4 +1194,12 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
   ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shdr_table_offset.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: 0/";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
