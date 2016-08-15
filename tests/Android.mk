@@ -32,6 +32,9 @@ include $(LOCAL_PATH)/Android.build.prebuilt.mk
 bionic_tests_module := libtest_invalid-zero_shstrndx.so
 include $(LOCAL_PATH)/Android.build.prebuilt.mk
 
+bionic_tests_module := libtest_invalid-empty_shdr_table.so
+include $(LOCAL_PATH)/Android.build.prebuilt.mk
+
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 build_host := true
 else
