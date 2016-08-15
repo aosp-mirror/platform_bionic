@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "befa79f0_dc0a4d2c",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1081519
+      },
+      "writtenOn": "2016-08-15T15:39:37Z",
+      "side": 1,
+      "message": "Should we guard every test specifically with mips case or leave as it is?",
+      "range": {
+        "startLine": 1147,
+        "startChar": 24,
+        "endLine": 1147,
+        "endChar": 45
+      },
+      "revId": "2a4b733049d213b540258a8d45d7b05ef17f7acb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
