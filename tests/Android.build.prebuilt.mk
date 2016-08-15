@@ -16,13 +16,13 @@
 
 include $(CLEAR_VARS)
 LOCAL_MULTILIB := both
-LOCAL_MODULE := $(module)
+LOCAL_MODULE := $(bionic_tests_module)
 LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
 LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
 LOCAL_MODULE_CLASS := EXECUTABLES
 
-LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(module)
-LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(module)
-LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(module)
-LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(module)
+LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(bionic_tests_module)
+LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(bionic_tests_module)
+LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(bionic_tests_module)
+LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(bionic_tests_module)
 include $(BUILD_PREBUILT)
