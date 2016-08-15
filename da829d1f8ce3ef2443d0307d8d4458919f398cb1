@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b3c2fc0_173e1cde",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-15T21:29:40Z",
+      "side": 1,
+      "message": "It doesn\u0027t look like we have any real memmem tests, any chance of filing a bug or adding a couple?",
+      "revId": "da829d1f8ce3ef2443d0307d8d4458919f398cb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
