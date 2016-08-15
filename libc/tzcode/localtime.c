@@ -2174,6 +2174,10 @@ mktime_z(struct state *sp, struct tm *tmp)
 time_t
 mktime(struct tm *tmp)
 {
+#if __ANDROID__
+  int saved_errno = errno;
+#endif
+
   time_t t;
   int err = lock();
   if (err) {
@@ -2183,6 +2187,10 @@ mktime(struct tm *tmp)
   tzset_unlocked();
   t = mktime_tzname(lclptr, tmp, true);
   unlock();
+
+#if __ANDROID__
+  errno = (t == -1) ? EOVERFLOW : saved_errno;
+#endif
   return t;
 }
 
