@@ -1178,4 +1178,12 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shstrndx.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid e_shstrndx";
+  ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
