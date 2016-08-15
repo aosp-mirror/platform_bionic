@@ -22,6 +22,30 @@
       "revId": "ff25581083f84e1d8c033fc5467482c141c55226",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e61c5bb_17191491",
+        "filename": "tests/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-15T17:14:26Z",
+      "side": 1,
+      "message": "replaced - it is part of the next commit (adding yet another test).",
+      "parentUuid": "fe4871ff_c465f217",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 24,
+        "endChar": 47
+      },
+      "revId": "ff25581083f84e1d8c033fc5467482c141c55226",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
