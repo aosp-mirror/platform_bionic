@@ -1186,4 +1186,12 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
   ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-empty_shdr_table.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has no section headers";
+  ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
