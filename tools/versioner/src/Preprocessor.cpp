@@ -93,12 +93,12 @@ static DeclarationAvailability calculateRequiredGuard(const Declaration& declara
   }
 
   DeclarationAvailability result = decl_av;
-  if (result.global_availability.introduced < global_min_api_visible) {
+  if (result.global_availability.introduced <= global_min_api_visible) {
     result.global_availability.introduced = 0;
   }
 
   for (Arch arch : supported_archs) {
-    if (result.arch_availability[arch].introduced < arch_visibility[arch]) {
+    if (result.arch_availability[arch].introduced <= arch_visibility[arch]) {
       result.arch_availability[arch].introduced = 0;
     }
   }
