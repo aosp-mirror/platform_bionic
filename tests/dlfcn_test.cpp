@@ -1144,7 +1144,7 @@ TEST(dlfcn, dt_runpath_absolute_path) {
 }
 
 // Bionic specific tests
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__mips__)
 
 #if defined(__LP64__)
 #define NATIVE_TESTS_PATH "/nativetest64"
