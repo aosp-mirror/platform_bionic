@@ -16,6 +16,24 @@
       "revId": "b0af100297ead6f6f3637b9b00d55d161f368ec3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5b3c2fc0_97a1ece9",
+        "filename": "tools/versioner/run_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-08-15T21:37:02Z",
+      "side": 1,
+      "message": "(never mind, .gitignore file is inside the test directory, so this is needed to skip it)",
+      "parentUuid": "5b3c2fc0_f717185c",
+      "revId": "b0af100297ead6f6f3637b9b00d55d161f368ec3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
