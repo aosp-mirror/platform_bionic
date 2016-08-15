@@ -93,12 +93,12 @@ static DeclarationAvailability calculateRequiredGuard(const Declaration& declara
   }
 
   DeclarationAvailability result = decl_av;
-  if (result.global_availability.introduced < global_min_api_visible) {
+  if (result.global_availability.introduced <= global_min_api_visible) {
     result.global_availability.introduced = 0;
   }
 
   for (Arch arch : supported_archs) {
-    if (result.arch_availability[arch].introduced < arch_visibility[arch]) {
+    if (result.arch_availability[arch].introduced <= arch_visibility[arch]) {
       result.arch_availability[arch].introduced = 0;
     }
   }
@@ -459,7 +459,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     }
   }
 
-  // Copy over any unchanged files directly.
+  // Copy over the original headers before preprocessing.
   char* fts_paths[2] = { const_cast<char*>(src_dir.c_str()), nullptr };
   FTS* fts = fts_open(fts_paths, FTS_LOGICAL, nullptr);
   while (FTSENT* ent = fts_read(fts)) {
@@ -473,18 +473,14 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     }
 
     std::string rel_path = path.substr(src_dir.length() + 1);
-    if (guards.count(rel_path) == 0) {
-      std::string dst_path = dst_dir + "/" + rel_path;
-      llvm::StringRef parent_path = llvm::sys::path::parent_path(dst_path);
-      if (llvm::sys::fs::create_directories(parent_path)) {
-        errx(1, "failed to ensure existence of directory '%s'", parent_path.str().c_str());
-      }
-      if (llvm::sys::fs::copy_file(path, dst_path)) {
-        errx(1, "failed to copy '%s/%s' to '%s'", src_dir.c_str(), path.str().c_str(),
-             dst_path.c_str());
-      }
-
-      printf("Copied unmodified header %s\n", dst_path.c_str());
+    std::string dst_path = dst_dir + "/" + rel_path;
+    llvm::StringRef parent_path = llvm::sys::path::parent_path(dst_path);
+    if (llvm::sys::fs::create_directories(parent_path)) {
+      errx(1, "failed to ensure existence of directory '%s'", parent_path.str().c_str());
+    }
+    if (llvm::sys::fs::copy_file(path, dst_path)) {
+      errx(1, "failed to copy '%s/%s' to '%s'", src_dir.c_str(), path.str().c_str(),
+           dst_path.c_str());
     }
   }
   fts_close(fts);
