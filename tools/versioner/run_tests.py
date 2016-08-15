@@ -59,7 +59,10 @@ tests = os.listdir(test_dir)
 
 success = True
 for test in sorted(tests):
-    if not run_test(test, os.path.join(test_dir, test)):
+    path = os.path.join(test_dir, test)
+    if not os.path.isdir(path):
+        continue
+    if not run_test(test, path):
         success = False
 
 sys.exit(0 if success else 1)
