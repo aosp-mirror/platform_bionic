@@ -1,2 +1,1 @@
-versioner: compilation failure for arm-9 in /android/aosp/bionic/tools/versioner/tests/compilation_error/headers/foo.h
 versioner: compilation generated warnings or errors
