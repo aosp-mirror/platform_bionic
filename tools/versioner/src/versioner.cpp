@@ -89,6 +89,8 @@ class HeaderCompilationDatabase : public CompilationDatabase {
       command.push_back(std::move(header_path));
     }
 
+    command.push_back("-D_FILE_OFFSET_BITS="s + std::to_string(type.file_offset_bits));
+
     return CompileCommand(cwd, filename, command);
   }
 
@@ -184,8 +186,13 @@ static std::set<CompilationType> generateCompilationTypes(const std::set<Arch> s
       if (api_level < min_api) {
         continue;
       }
-      CompilationType type = { .arch = arch, .api_level = api_level };
-      result.insert(type);
+
+      for (int file_offset_bits : { 32, 64 }) {
+        CompilationType type = {
+          .arch = arch, .api_level = api_level, .file_offset_bits = file_offset_bits
+        };
+        result.insert(type);
+      }
     }
   }
   return result;
