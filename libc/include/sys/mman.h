@@ -57,8 +57,8 @@ void* mmap(void*, size_t, int, int, int, off_t);
 void* mmap64(void*, size_t, int, int, int, off64_t) __INTRODUCED_IN(21);
 
 int munmap(void*, size_t);
-int msync(const void*, size_t, int);
-int mprotect(const void*, size_t, int);
+int msync(void*, size_t, int);
+int mprotect(void*, size_t, int);
 void* mremap(void*, size_t, size_t, int, ...);
 
 int mlockall(int) __INTRODUCED_IN(17);
