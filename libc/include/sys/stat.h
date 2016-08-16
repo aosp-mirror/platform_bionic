@@ -141,6 +141,12 @@ struct stat64 { __STAT64_BODY };
 #define S_IEXEC S_IXUSR
 #endif
 
+/* POSIX mandates these, but Linux doesn't implement them as distinct file types. */
+#define S_TYPEISMQ(__sb) 0
+#define S_TYPEISSEM(__sb) 0
+#define S_TYPEISSHM(__sb) 0
+#define S_TYPEISTMO(__sb) 0
+
 int chmod(const char*, mode_t);
 int fchmod(int, mode_t);
 int mkdir(const char*, mode_t);
