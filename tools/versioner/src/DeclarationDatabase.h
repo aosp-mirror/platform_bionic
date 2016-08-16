@@ -43,10 +43,11 @@ enum class DeclarationType {
 struct CompilationType {
   Arch arch;
   int api_level;
+  int file_offset_bits;
 
  private:
   auto tie() const {
-    return std::tie(arch, api_level);
+    return std::tie(arch, api_level, file_offset_bits);
   }
 
  public:

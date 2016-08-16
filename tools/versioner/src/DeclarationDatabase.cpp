@@ -288,7 +288,7 @@ void HeaderDatabase::parseAST(CompilationType type, ASTUnit* ast) {
 
 std::string to_string(const CompilationType& type) {
   std::stringstream ss;
-  ss << to_string(type.arch) << "-" << type.api_level;
+  ss << to_string(type.arch) << "-" << type.api_level << " [fob = " << type.file_offset_bits << "]";
   return ss.str();
 }
 
