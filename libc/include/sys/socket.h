@@ -271,7 +271,7 @@ struct ucred {
 
 __socketcall int accept(int, struct sockaddr*, socklen_t*);
 __socketcall int accept4(int, struct sockaddr*, socklen_t*, int) __INTRODUCED_IN(21);
-__socketcall int bind(int, const struct sockaddr*, int);
+__socketcall int bind(int, const struct sockaddr*, socklen_t);
 __socketcall int connect(int, const struct sockaddr*, socklen_t);
 __socketcall int getpeername(int, struct sockaddr*, socklen_t*);
 __socketcall int getsockname(int, struct sockaddr*, socklen_t*);
@@ -279,16 +279,16 @@ __socketcall int getsockopt(int, int, int, void*, socklen_t*);
 __socketcall int listen(int, int);
 __socketcall int recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)
   __INTRODUCED_IN(21);
-__socketcall int recvmsg(int, struct msghdr*, int);
+__socketcall ssize_t recvmsg(int, struct msghdr*, int);
 __socketcall int sendmmsg(int, const struct mmsghdr*, unsigned int, int) __INTRODUCED_IN(21);
-__socketcall int sendmsg(int, const struct msghdr*, int);
+__socketcall ssize_t sendmsg(int, const struct msghdr*, int);
 __socketcall int setsockopt(int, int, int, const void*, socklen_t);
 __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
 
-ssize_t send(int, const void*, size_t, int);
 ssize_t recv(int, void*, size_t, int);
+ssize_t send(int, const void*, size_t, int);
 
 __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
 __socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*, socklen_t*);
