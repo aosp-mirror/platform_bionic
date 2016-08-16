@@ -1455,3 +1455,32 @@ TEST(STRING_TEST, memcpy_src_dst_same) {
   }
   RunSingleBufferAlignTest(MEDIUM, DoMemcpySameTest);
 }
+
+TEST(STRING_TEST, memmem_strstr_empty_needle) {
+  const char* some_haystack = "haystack";
+  const char* empty_haystack = "";
+
+  ASSERT_EQ(some_haystack, memmem(some_haystack, 8, "", 0));
+  ASSERT_EQ(empty_haystack, memmem(empty_haystack, 0, "", 0));
+
+  ASSERT_EQ(some_haystack, strstr(some_haystack, ""));
+  ASSERT_EQ(empty_haystack, strstr(empty_haystack, ""));
+}
+
+TEST(STRING_TEST, memmem_smoke) {
+  const char haystack[] = "big\0daddy\0giant\0haystacks";
+  ASSERT_EQ(haystack, memmem(haystack, sizeof(haystack), "", 0));
+  ASSERT_EQ(haystack + 3, memmem(haystack, sizeof(haystack), "", 1));
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "b", 1));
+  ASSERT_EQ(haystack + 1, memmem(haystack, sizeof(haystack), "i", 1));
+  ASSERT_EQ(haystack + 4, memmem(haystack, sizeof(haystack), "da", 2));
+  ASSERT_EQ(haystack + 8, memmem(haystack, sizeof(haystack), "y\0g", 3));
+}
+
+TEST(STRING_TEST, strstr_smoke) {
+  const char* haystack = "big daddy/giant haystacks";
+  ASSERT_EQ(haystack, strstr(haystack, ""));
+  ASSERT_EQ(haystack + 0, strstr(haystack, "b"));
+  ASSERT_EQ(haystack + 1, strstr(haystack, "i"));
+  ASSERT_EQ(haystack + 4, strstr(haystack, "da"));
+}
