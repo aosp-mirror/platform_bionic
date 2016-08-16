@@ -239,7 +239,7 @@ int     __signalfd4:signalfd4(int, const sigset_t*, size_t, int)  all
 # sockets
 int           __socket:socket(int, int, int)              arm,arm64,mips,mips64,x86_64
 int           socketpair(int, int, int, int*)    arm,arm64,mips,mips64,x86_64
-int           bind(int, struct sockaddr*, int)  arm,arm64,mips,mips64,x86_64
+int           bind(int, struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
 int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,arm64,mips,mips64,x86_64
 int           listen(int, int)                   arm,arm64,mips,mips64,x86_64
 int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
@@ -250,8 +250,8 @@ int           recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, sockl
 int           shutdown(int, int)  arm,arm64,mips,mips64,x86_64
 int           setsockopt(int, int, int, const void*, socklen_t)  arm,arm64,mips,mips64,x86_64
 int           getsockopt(int, int, int, void*, socklen_t*)    arm,arm64,mips,mips64,x86_64
-int           sendmsg(int, const struct msghdr*, unsigned int)  arm,arm64,mips,mips64,x86_64
-int           recvmsg(int, struct msghdr*, unsigned int)   arm,arm64,mips,mips64,x86_64
+ssize_t       recvmsg(int, struct msghdr*, unsigned int)   arm,arm64,mips,mips64,x86_64
+ssize_t       sendmsg(int, const struct msghdr*, unsigned int)  arm,arm64,mips,mips64,x86_64
 int           recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   arm,arm64,mips,mips64,x86_64
 int           sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,arm64,mips,mips64,x86_64
 
