@@ -21,10 +21,10 @@ LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TE
 LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/prebuilt-elf-files
 LOCAL_MODULE_CLASS := EXECUTABLES
 
-LOCAL_MODULE_TARGET_ARCH := arm arm64 x86 x86_64
-
 LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(bionic_tests_module)
 LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(bionic_tests_module)
 LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(bionic_tests_module)
 LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(bionic_tests_module)
+LOCAL_SRC_FILES_mips := prebuilt-elf-files/mips/$(bionic_tests_module)
+LOCAL_SRC_FILES_mips64 := prebuilt-elf-files/mips64/$(bionic_tests_module)
 include $(BUILD_PREBUILT)
