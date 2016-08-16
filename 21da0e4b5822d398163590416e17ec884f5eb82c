@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b2d0fd5_ec69c320",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-08-16T20:20:13Z",
+      "side": 1,
+      "message": "also takes void*",
+      "revId": "21da0e4b5822d398163590416e17ec884f5eb82c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
