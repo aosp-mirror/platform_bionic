@@ -220,10 +220,11 @@ struct servent* getservent(void);
 void herror(const char*);
 const char* hstrerror(int);
 
-int getaddrinfo(const char *, const char *, const struct addrinfo *, struct addrinfo **);
-int getnameinfo(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t, int);
-void freeaddrinfo(struct addrinfo *);
-const char	*gai_strerror(int);
+int getaddrinfo(const char*, const char*, const struct addrinfo*, struct addrinfo**);
+/* POSIX getnameinfo uses socklen_t, not size_t, but LP64 sizeof(socklen_t) != sizeof(size_t). */
+int getnameinfo(const struct sockaddr*, socklen_t, char*, size_t, char*, size_t, int);
+void freeaddrinfo(struct addrinfo*);
+const char* gai_strerror(int);
 void setservent(int);
 
 __END_DECLS
