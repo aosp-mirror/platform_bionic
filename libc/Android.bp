@@ -39,6 +39,7 @@ libc_common_flags = [
     "-Wextra",
     "-Wunused",
     "-Wno-deprecated-declarations",
+    "-Wframe-larger-than=2048",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
     "-Werror=pointer-to-int-cast",
@@ -175,6 +176,7 @@ cc_library_static {
         "-DINET6",
         "-Wno-unused-parameter",
         "-include netbsd-compat.h",
+        "-Wframe-larger-than=66000",
     ],
 
     local_include_dirs: [
@@ -203,7 +205,6 @@ cc_library_static {
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/qsort.c",
         "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
-        "upstream-freebsd/lib/libc/stdlib/realpath.c",
         "upstream-freebsd/lib/libc/string/wcpcpy.c",
         "upstream-freebsd/lib/libc/string/wcpncpy.c",
         "upstream-freebsd/lib/libc/string/wcscasecmp.c",
@@ -272,6 +273,25 @@ cc_library_static {
     ],
 
     name: "libc_freebsd",
+}
+
+cc_library_static {
+    defaults: ["libc_defaults"],
+    srcs: [
+        "upstream-freebsd/lib/libc/stdlib/realpath.c",
+    ],
+
+    cflags: [
+        "-Wno-sign-compare",
+        "-include freebsd-compat.h",
+        "-Wframe-larger-than=15000",
+    ],
+
+    local_include_dirs: [
+        "upstream-freebsd/android/include",
+    ],
+
+    name: "libc_freebsd_large_stack",
 }
 
 // ========================================================
@@ -358,7 +378,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/daemon.c",
         "upstream-openbsd/lib/libc/gen/err.c",
         "upstream-openbsd/lib/libc/gen/errx.c",
-        "upstream-openbsd/lib/libc/gen/exec.c",
         "upstream-openbsd/lib/libc/gen/fnmatch.c",
         "upstream-openbsd/lib/libc/gen/ftok.c",
         "upstream-openbsd/lib/libc/gen/getprogname.c",
@@ -434,10 +453,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/ungetwc.c",
         "upstream-openbsd/lib/libc/stdio/vasprintf.c",
         "upstream-openbsd/lib/libc/stdio/vdprintf.c",
-        "upstream-openbsd/lib/libc/stdio/vfprintf.c",
         "upstream-openbsd/lib/libc/stdio/vfscanf.c",
-        "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
-        "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
         "upstream-openbsd/lib/libc/stdio/vsscanf.c",
         "upstream-openbsd/lib/libc/stdio/vswprintf.c",
         "upstream-openbsd/lib/libc/stdio/vswscanf.c",
@@ -491,6 +507,29 @@ cc_library_static {
 
     local_include_dirs: [
         "private",
+        "stdio",
+        "upstream-openbsd/android/include",
+        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/lib/libc/gdtoa/",
+    ],
+}
+
+cc_library_static {
+    name: "libc_openbsd_large_stack",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "upstream-openbsd/lib/libc/gen/exec.c",
+        "upstream-openbsd/lib/libc/stdio/vfprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
+        "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+        "-Wno-sign-compare",
+        "-Wframe-larger-than=5000",
+    ],
+
+    local_include_dirs: [
         "stdio",
         "upstream-openbsd/android/include",
         "upstream-openbsd/lib/libc/include",
@@ -644,10 +683,7 @@ cc_library_static {
 
     local_include_dirs: [
         "private",
-        "stdio",
         "upstream-openbsd/android/include",
-        "upstream-openbsd/lib/libc/include",
-        "upstream-openbsd/lib/libc/gdtoa/",
     ],
 
     name: "libc_openbsd",
@@ -735,7 +771,6 @@ cc_library_static {
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
     ],
-    cflags: ["-Wframe-larger-than=2048"],
 
     arch: {
         arm: {
@@ -1330,7 +1365,6 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wmempcpy.cpp",
     ],
-    cflags: ["-Wframe-larger-than=2048"],
 
     multilib: {
         lib32: {
@@ -1380,7 +1414,6 @@ cc_library_static {
         "bionic/pthread_sigmask.cpp",
         "bionic/pthread_spinlock.cpp",
     ],
-    cflags: ["-Wframe-larger-than=2048"],
 
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
@@ -1475,9 +1508,11 @@ cc_library_static {
     whole_static_libs: [
         "libc_bionic_ndk",
         "libc_freebsd",
+        "libc_freebsd_large_stack",
         "libc_gdtoa",
         "libc_malloc",
         "libc_netbsd",
+        "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
         "libc_stack_protector",
         "libc_syscalls",
@@ -1507,10 +1542,12 @@ cc_library_static {
         "libc_bionic_ndk",
         "libc_dns",
         "libc_freebsd",
+        "libc_freebsd_large_stack",
         "libc_gdtoa",
         "libc_malloc",
         "libc_netbsd",
         "libc_openbsd",
+        "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
         "libc_pthread",
         "libc_stack_protector",
