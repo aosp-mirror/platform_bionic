@@ -21,7 +21,7 @@
 #include <linux/types.h>
 #define IPC_PRIVATE ((__kernel_key_t) 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct ipc_perm {
+struct __kernel_legacy_ipc_perm {
   __kernel_key_t key;
   __kernel_uid_t uid;
   __kernel_gid_t gid;

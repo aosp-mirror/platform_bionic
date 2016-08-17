@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_IPC_H
-#define _SYS_IPC_H
+#include <sys/shm.h>
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <linux/ipc.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
-#define ipc_perm ipc64_perm
+void* shmat(int id, const void* address, int flags) {
+#if __i386__
+  // See the kernel's ipc/syscall.c for the other side of this dance.
+  void* result = nullptr;
+  if (syscall(SYS_ipc, SHMAT, id, flags, &result, address, 0) == -1) {
+    return reinterpret_cast<void*>(-1);
+  }
+  return result;
+#else
+  return reinterpret_cast<void*>(syscall(SYS_shmat, id, address, flags));
+#endif
+}
 
-__BEGIN_DECLS
+int shmctl(int id, int cmd, struct shmid_ds* buf) {
+#if !defined(__LP64__)
+  // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
+  cmd |= IPC_64;
+#endif
+#if __i386__
+  return syscall(SYS_ipc, SHMCTL, id, cmd, 0, buf, 0);
+#else
+  return syscall(SYS_shmctl, id, cmd, buf);
+#endif
+}
 
-key_t ftok(const char* path, int id);
+int shmdt(const void* address) {
+#if __i386__
+  return syscall(SYS_ipc, SHMDT, 0, 0, 0, address, 0);
+#else
+  return syscall(SYS_shmdt, address);
+#endif
+}
 
-__END_DECLS
-
-#endif /* _SYS_IPC_H */
+int shmget(key_t key, size_t size, int flags) {
+#if __i386__
+  return syscall(SYS_ipc, SHMGET, key, size, flags, 0, 0);
+#else
+  return syscall(SYS_shmget, key, size, flags);
+#endif
+}

@@ -28,8 +28,8 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SHMALL (ULONG_MAX - (1UL << 24))
 #define SHMSEG SHMMNI
-struct shmid_ds {
-  struct ipc_perm shm_perm;
+struct __kernel_legacy_shmid_ds {
+  struct __kernel_legacy_ipc_perm shm_perm;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int shm_segsz;
   __kernel_time_t shm_atime;
