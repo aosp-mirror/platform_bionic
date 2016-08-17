@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbe60bfd_8232bef0",
+        "filename": "libc/bionic/sys_msg.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-17T01:19:09Z",
+      "side": 1,
+      "message": "since this one couldn\u0027t be auto-generated (because we add the flag), i didn\u0027t bother with the others either.",
+      "revId": "d46a325e89b5ca9902238c95cd081d2d0c858109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
