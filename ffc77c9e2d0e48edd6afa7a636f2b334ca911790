@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9b24e748_5c944cdd",
+        "filename": "libc/bionic/sys_msg.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-18T22:17:03Z",
+      "side": 1,
+      "message": "no, luckily all our 32-bit platforms are LP32.",
+      "parentUuid": "9b24e748_c7a16e8d",
+      "range": {
+        "startLine": 40,
+        "startChar": 9,
+        "endLine": 40,
+        "endChar": 16
+      },
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b24e748_872ff6ec",
         "filename": "libc/include/sys/sem.h",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-18T02:47:42Z",
       "side": 1,
       "message": "There is a gnu extension of semtimedop, is it worth adding it as long as you are here?",
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b24e748_1c01f4d9",
+        "filename": "libc/include/sys/sem.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-18T22:17:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b24e748_872ff6ec",
       "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "9b24e748_5ca20cee",
+        "filename": "tests/sys_msg_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-18T22:17:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b24e748_a74eb2c6",
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b24e748_2743829f",
         "filename": "tests/sys_msg_test.cpp",
         "patchSetId": 4
@@ -70,6 +130,30 @@
       "writtenOn": "2016-08-18T02:47:42Z",
       "side": 1,
       "message": "Probably want to verify the type is also returned properly.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 40
+      },
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b24e748_9ca8a4ce",
+        "filename": "tests/sys_msg_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-18T22:17:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b24e748_2743829f",
       "range": {
         "startLine": 65,
         "startChar": 0,
