@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b24e748_c7a16e8d",
+        "filename": "libc/bionic/sys_msg.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-18T02:47:42Z",
+      "side": 1,
+      "message": "Any issue with syscall returning a long and the function returning an int? Obviously for 64 bit this doesn\u0027t matter, but I don\u0027t know if there will be any warnings or errors based on this for 32 bit compiles.",
+      "range": {
+        "startLine": 40,
+        "startChar": 9,
+        "endLine": 40,
+        "endChar": 16
+      },
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b24e748_872ff6ec",
+        "filename": "libc/include/sys/sem.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-18T02:47:42Z",
+      "side": 1,
+      "message": "There is a gnu extension of semtimedop, is it worth adding it as long as you are here?",
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b24e748_a74eb2c6",
+        "filename": "tests/sys_msg_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-18T02:47:42Z",
+      "side": 1,
+      "message": "Is it worth adding some tests for errors? All of the test calls succeed.\n\nSame comment for the other tests.",
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b24e748_2743829f",
+        "filename": "tests/sys_msg_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-18T02:47:42Z",
+      "side": 1,
+      "message": "Probably want to verify the type is also returned properly.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 40
+      },
+      "revId": "ffc77c9e2d0e48edd6afa7a636f2b334ca911790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
