@@ -30,6 +30,22 @@
 #define _SYS_MSG_H_
 
 #include <sys/cdefs.h>
+#include <sys/ipc.h>
+
 #include <linux/msg.h>
+
+#define msqid_ds msqid64_ds
+
+__BEGIN_DECLS
+
+typedef __kernel_ulong_t msgqnum_t;
+typedef __kernel_ulong_t msglen_t;
+
+int msgctl(int, int, struct msqid_ds*) __INTRODUCED_IN_FUTURE;
+int msgget(key_t, int) __INTRODUCED_IN_FUTURE;
+ssize_t msgrcv(int, void*, size_t, long, int) __INTRODUCED_IN_FUTURE;
+int msgsnd(int, const void*, size_t, int) __INTRODUCED_IN_FUTURE;
+
+__END_DECLS
 
 #endif /* _SYS_MSG_H_ */

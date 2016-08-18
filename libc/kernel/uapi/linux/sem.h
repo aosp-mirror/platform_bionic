@@ -32,8 +32,8 @@
 #define SEM_STAT 18
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SEM_INFO 19
-struct semid_ds {
-  struct ipc_perm sem_perm;
+struct __kernel_legacy_semid_ds {
+  struct __kernel_legacy_ipc_perm sem_perm;
   __kernel_time_t sem_otime;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_time_t sem_ctime;
@@ -54,7 +54,7 @@ struct sembuf {
 };
 union semun {
   int val;
-  struct semid_ds __user * buf;
+  struct __kernel_legacy_semid_ds __user * buf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned short __user * array;
   struct seminfo __user * __buf;

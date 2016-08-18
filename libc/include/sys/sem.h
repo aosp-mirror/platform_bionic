@@ -30,6 +30,27 @@
 #define _SYS_SEM_H_
 
 #include <sys/cdefs.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+
+#if defined(__USE_GNU)
+#include <bits/timespec.h>
+#endif
+
 #include <linux/sem.h>
 
-#endif /* _SYS_SEM_H_ */
+#define semid_ds semid64_ds
+
+__BEGIN_DECLS
+
+int semctl(int, int, int, ...) __INTRODUCED_IN_FUTURE;
+int semget(key_t, int, int) __INTRODUCED_IN_FUTURE;
+int semop(int, struct sembuf*, size_t) __INTRODUCED_IN_FUTURE;
+
+#if defined(__USE_GNU)
+int semtimedop(int, struct sembuf*, size_t, const struct timespec*) __INTRODUCED_IN_FUTURE;
+#endif
+
+__END_DECLS
+
+#endif

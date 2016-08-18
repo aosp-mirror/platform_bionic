@@ -1266,11 +1266,23 @@ LIBC_O {
     hasmntopt; # future
     lutimes; # future
     mblen; # future
+    msgctl; # future
+    msgget; # future
+    msgrcv; # future
+    msgsnd; # future
     pthread_getname_np; # future
     quotactl; # future
+    semctl; # future
+    semget; # future
+    semop; # future
+    semtimedop; # future
     setdomainname; # future
     setgrent; # future
     setpwent; # future
+    shmat; # future
+    shmctl; # future
+    shmdt; # future
+    shmget; # future
     sighold; # future
     sigignore; # future
     sigpause; # future
