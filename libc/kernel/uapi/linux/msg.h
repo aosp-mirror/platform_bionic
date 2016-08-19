@@ -26,8 +26,8 @@
 #define MSG_EXCEPT 020000
 #define MSG_COPY 040000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct msqid_ds {
-  struct ipc_perm msg_perm;
+struct __kernel_legacy_msqid_ds {
+  struct __kernel_legacy_ipc_perm msg_perm;
   struct msg * msg_first;
   struct msg * msg_last;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
