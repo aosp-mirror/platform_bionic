@@ -41,18 +41,18 @@ int semctl(int id, int num, int cmd, ...) {
   va_start(ap, cmd);
   semun arg = va_arg(ap, semun);
   va_end(ap);
-#if __i386__
-  return syscall(SYS_ipc, SEMCTL, id, num, cmd, &arg, 0);
-#else
+#if defined(SYS_semctl)
   return syscall(SYS_semctl, id, num, cmd, arg);
+#else
+  return syscall(SYS_ipc, SEMCTL, id, num, cmd, &arg, 0);
 #endif
 }
 
 int semget(key_t key, int n, int flags) {
-#if __i386__
-  return syscall(SYS_ipc, SEMGET, key, n, flags, 0, 0);
-#else
+#if defined(SYS_semget)
   return syscall(SYS_semget, key, n, flags);
+#else
+  return syscall(SYS_ipc, SEMGET, key, n, flags, 0, 0);
 #endif
 }
 
@@ -61,9 +61,9 @@ int semop(int id, sembuf* ops, size_t op_count) {
 }
 
 int semtimedop(int id, sembuf* ops, size_t op_count, const timespec* ts) {
-#if __i386__
-  return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
-#else
+#if defined(SYS_semtimedop)
   return syscall(SYS_semtimedop, id, ops, op_count, ts);
+#else
+  return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
 #endif
 }
