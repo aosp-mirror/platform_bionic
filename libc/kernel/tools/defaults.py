@@ -59,6 +59,11 @@ kernel_token_replacements = {
     "ARG_MAX": "_KERNEL_ARG_MAX",
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
     "__unused": "__linux_unused",
+    # The non-64 stuff is legacy; msqid64_ds/ipc64_perm is what userspace wants.
+    "msqid_ds": "__kernel_legacy_msqid_ds",
+    "semid_ds": "__kernel_legacy_semid_ds",
+    "shmid_ds": "__kernel_legacy_shmid_ds",
+    "ipc_perm": "__kernel_legacy_ipc_perm",
     # The kernel's _NSIG/NSIG are one less than the userspace value, so we need to move them aside.
     "_NSIG": "_KERNEL__NSIG",
     "NSIG": "_KERNEL_NSIG",
