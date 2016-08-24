@@ -62,7 +62,7 @@ typedef struct mdu_array_info_s {
   int minor_version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int patch_version;
-  int ctime;
+  unsigned int ctime;
   int level;
   int size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -71,7 +71,7 @@ typedef struct mdu_array_info_s {
   int md_minor;
   int not_persistent;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  int utime;
+  unsigned int utime;
   int state;
   int active_disks;
   int working_disks;

@@ -316,239 +316,240 @@ enum xfrm_attr_type_t {
   XFRMA_PROTO,
   XFRMA_ADDRESS_FILTER,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMA_PAD,
   __XFRMA_MAX
 #define XFRMA_MAX (__XFRMA_MAX - 1)
 };
-struct xfrm_mark {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrm_mark {
   __u32 v;
   __u32 m;
 };
-enum xfrm_sadattr_type_t {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum xfrm_sadattr_type_t {
   XFRMA_SAD_UNSPEC,
   XFRMA_SAD_CNT,
   XFRMA_SAD_HINFO,
-  __XFRMA_SAD_MAX
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __XFRMA_SAD_MAX
 #define XFRMA_SAD_MAX (__XFRMA_SAD_MAX - 1)
 };
 struct xfrmu_sadhinfo {
-  __u32 sadhcnt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 sadhcnt;
   __u32 sadhmcnt;
 };
 enum xfrm_spdattr_type_t {
-  XFRMA_SPD_UNSPEC,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMA_SPD_UNSPEC,
   XFRMA_SPD_INFO,
   XFRMA_SPD_HINFO,
   XFRMA_SPD_IPV4_HTHRESH,
-  XFRMA_SPD_IPV6_HTHRESH,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMA_SPD_IPV6_HTHRESH,
   __XFRMA_SPD_MAX
 #define XFRMA_SPD_MAX (__XFRMA_SPD_MAX - 1)
 };
-struct xfrmu_spdinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrmu_spdinfo {
   __u32 incnt;
   __u32 outcnt;
   __u32 fwdcnt;
-  __u32 inscnt;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 inscnt;
   __u32 outscnt;
   __u32 fwdscnt;
 };
-struct xfrmu_spdhinfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrmu_spdhinfo {
   __u32 spdhcnt;
   __u32 spdhmcnt;
 };
-struct xfrmu_spdhthresh {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrmu_spdhthresh {
   __u8 lbits;
   __u8 rbits;
 };
-struct xfrm_usersa_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrm_usersa_info {
   struct xfrm_selector sel;
   struct xfrm_id id;
   xfrm_address_t saddr;
-  struct xfrm_lifetime_cfg lft;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct xfrm_lifetime_cfg lft;
   struct xfrm_lifetime_cur curlft;
   struct xfrm_stats stats;
   __u32 seq;
-  __u32 reqid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 reqid;
   __u16 family;
   __u8 mode;
   __u8 replay_window;
-  __u8 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 flags;
 #define XFRM_STATE_NOECN 1
 #define XFRM_STATE_DECAP_DSCP 2
 #define XFRM_STATE_NOPMTUDISC 4
-#define XFRM_STATE_WILDRECV 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRM_STATE_WILDRECV 8
 #define XFRM_STATE_ICMP 16
 #define XFRM_STATE_AF_UNSPEC 32
 #define XFRM_STATE_ALIGN4 64
-#define XFRM_STATE_ESN 128
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRM_STATE_ESN 128
 };
 #define XFRM_SA_XFLAG_DONT_ENCAP_DSCP 1
 struct xfrm_usersa_id {
-  xfrm_address_t daddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  xfrm_address_t daddr;
   __be32 spi;
   __u16 family;
   __u8 proto;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct xfrm_aevent_id {
   struct xfrm_usersa_id sa_id;
   xfrm_address_t saddr;
-  __u32 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 flags;
   __u32 reqid;
 };
 struct xfrm_userspi_info {
-  struct xfrm_usersa_info info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct xfrm_usersa_info info;
   __u32 min;
   __u32 max;
 };
-struct xfrm_userpolicy_info {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrm_userpolicy_info {
   struct xfrm_selector sel;
   struct xfrm_lifetime_cfg lft;
   struct xfrm_lifetime_cur curlft;
-  __u32 priority;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 priority;
   __u32 index;
   __u8 dir;
   __u8 action;
-#define XFRM_POLICY_ALLOW 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRM_POLICY_ALLOW 0
 #define XFRM_POLICY_BLOCK 1
   __u8 flags;
 #define XFRM_POLICY_LOCALOK 1
-#define XFRM_POLICY_ICMP 2
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRM_POLICY_ICMP 2
   __u8 share;
 };
 struct xfrm_userpolicy_id {
-  struct xfrm_selector sel;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct xfrm_selector sel;
   __u32 index;
   __u8 dir;
 };
-struct xfrm_user_acquire {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xfrm_user_acquire {
   struct xfrm_id id;
   xfrm_address_t saddr;
   struct xfrm_selector sel;
-  struct xfrm_userpolicy_info policy;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct xfrm_userpolicy_info policy;
   __u32 aalgos;
   __u32 ealgos;
   __u32 calgos;
-  __u32 seq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 seq;
 };
 struct xfrm_user_expire {
   struct xfrm_usersa_info state;
-  __u8 hard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 hard;
 };
 struct xfrm_user_polexpire {
   struct xfrm_userpolicy_info pol;
-  __u8 hard;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 hard;
 };
 struct xfrm_usersa_flush {
   __u8 proto;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct xfrm_user_report {
   __u8 proto;
   struct xfrm_selector sel;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct xfrm_user_kmaddress {
   xfrm_address_t local;
   xfrm_address_t remote;
-  __u32 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 reserved;
   __u16 family;
 };
 struct xfrm_user_migrate {
-  xfrm_address_t old_daddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  xfrm_address_t old_daddr;
   xfrm_address_t old_saddr;
   xfrm_address_t new_daddr;
   xfrm_address_t new_saddr;
-  __u8 proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 proto;
   __u8 mode;
   __u16 reserved;
   __u32 reqid;
-  __u16 old_family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 old_family;
   __u16 new_family;
 };
 struct xfrm_user_mapping {
-  struct xfrm_usersa_id id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct xfrm_usersa_id id;
   __u32 reqid;
   xfrm_address_t old_saddr;
   xfrm_address_t new_saddr;
-  __be16 old_sport;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __be16 old_sport;
   __be16 new_sport;
 };
 struct xfrm_address_filter {
-  xfrm_address_t saddr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  xfrm_address_t saddr;
   xfrm_address_t daddr;
   __u16 family;
   __u8 splen;
-  __u8 dplen;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 dplen;
 };
 #define XFRMGRP_ACQUIRE 1
 #define XFRMGRP_EXPIRE 2
-#define XFRMGRP_SA 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRMGRP_SA 4
 #define XFRMGRP_POLICY 8
 #define XFRMGRP_REPORT 0x20
 enum xfrm_nlgroups {
-  XFRMNLGRP_NONE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMNLGRP_NONE,
 #define XFRMNLGRP_NONE XFRMNLGRP_NONE
   XFRMNLGRP_ACQUIRE,
 #define XFRMNLGRP_ACQUIRE XFRMNLGRP_ACQUIRE
-  XFRMNLGRP_EXPIRE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMNLGRP_EXPIRE,
 #define XFRMNLGRP_EXPIRE XFRMNLGRP_EXPIRE
   XFRMNLGRP_SA,
 #define XFRMNLGRP_SA XFRMNLGRP_SA
-  XFRMNLGRP_POLICY,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMNLGRP_POLICY,
 #define XFRMNLGRP_POLICY XFRMNLGRP_POLICY
   XFRMNLGRP_AEVENTS,
 #define XFRMNLGRP_AEVENTS XFRMNLGRP_AEVENTS
-  XFRMNLGRP_REPORT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMNLGRP_REPORT,
 #define XFRMNLGRP_REPORT XFRMNLGRP_REPORT
   XFRMNLGRP_MIGRATE,
 #define XFRMNLGRP_MIGRATE XFRMNLGRP_MIGRATE
-  XFRMNLGRP_MAPPING,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XFRMNLGRP_MAPPING,
 #define XFRMNLGRP_MAPPING XFRMNLGRP_MAPPING
   __XFRMNLGRP_MAX
 };
-#define XFRMNLGRP_MAX (__XFRMNLGRP_MAX - 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define XFRMNLGRP_MAX (__XFRMNLGRP_MAX - 1)
 #endif

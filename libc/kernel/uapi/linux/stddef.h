@@ -17,3 +17,7 @@
  ****************************************************************************
  ****************************************************************************/
 #include <linux/compiler.h>
+#ifndef __always_inline
+#define __always_inline inline
+#endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

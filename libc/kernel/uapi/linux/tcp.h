@@ -182,6 +182,11 @@ struct tcp_info {
   __u32 tcpi_segs_out;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 tcpi_segs_in;
+  __u32 tcpi_notsent_bytes;
+  __u32 tcpi_min_rtt;
+  __u32 tcpi_data_segs_in;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 tcpi_data_segs_out;
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 struct tcp_md5sig {
