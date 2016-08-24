@@ -81,6 +81,29 @@
       "revId": "953f5791a7f60d72969baf9b215ee0bceaf87706",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8fa13f2_1c1af572",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-08-24T17:41:10Z",
+      "side": 1,
+      "message": "Maybe you prefer this function instead of ASSERT_EXIT because it can\u0027t catch stdout output. But I think using ASSERT_EXIT and dup2(STDERR_FILENO, STDOUT_FILENO) will make this function much shorter.",
+      "range": {
+        "startLine": 1097,
+        "startChar": 35,
+        "endLine": 1097,
+        "endChar": 39
+      },
+      "revId": "953f5791a7f60d72969baf9b215ee0bceaf87706",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
