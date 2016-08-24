@@ -1073,3 +1073,138 @@ TEST(UNISTD_TEST, setdomainname) {
     ASSERT_EQ(0, capset(&header, &old_caps[0])) << "failed to restore admin privileges";
   }
 }
+
+class ExecTestHelper {
+ public:
+  char** GetArgs() { return const_cast<char**>(args_.data()); }
+  char** GetEnv() { return const_cast<char**>(env_.data()); }
+
+  void SetArgs(const std::vector<const char*> args) { args_ = args; }
+  void SetEnv(const std::vector<const char*> env) { env_ = env; }
+
+  void Run(const std::function<void ()>& child_fn,
+           int expected_exit_status,
+           const char* expected_output) {
+    ASSERT_EXIT({ dup2(STDERR_FILENO, STDOUT_FILENO); child_fn(); },
+                ::testing::ExitedWithCode(expected_exit_status),
+                expected_output);
+  }
+
+ private:
+  std::vector<const char*> args_;
+  std::vector<const char*> env_;
+};
+
+#if defined(__GLIBC__)
+#define BIN_DIR "/bin/"
+#else
+#define BIN_DIR "/system/bin/"
+#endif
+
+TEST(UNISTD_TEST, execve_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execve("/", eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execve) {
+  // int execve(const char* path, char* argv[], char* envp[]);
+
+  // Test basic argument passing.
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { execve(BIN_DIR "echo", eth.GetArgs(), eth.GetEnv()); }, 0, "hello world\n");
+
+  // Test environment variable setting too.
+  eth.SetArgs({"printenv", nullptr});
+  eth.SetEnv({"A=B", nullptr});
+  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+}
+
+TEST(UNISTD_TEST, execl_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, execl("/", "/", nullptr));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execl) {
+  ExecTestHelper eth;
+  // int execl(const char* path, const char* arg, ...);
+  eth.Run([&]() { execl(BIN_DIR "echo", "echo", "hello", "world", nullptr); }, 0, "hello world\n");
+}
+
+TEST(UNISTD_TEST, execle_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execle("/", "/", nullptr, eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execle) {
+  ExecTestHelper eth;
+  eth.SetEnv({"A=B", nullptr});
+  // int execle(const char* path, const char* arg, ..., char* envp[]);
+  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0, "A=B\n");
+}
+
+TEST(UNISTD_TEST, execv_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execv("/", eth.GetArgs()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execv) {
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  // int execv(const char* path, char* argv[]);
+  eth.Run([&]() { execv(BIN_DIR "echo", eth.GetArgs()); }, 0, "hello world\n");
+}
+
+TEST(UNISTD_TEST, execlp_failure) {
+  errno = 0;
+  ASSERT_EQ(-1, execlp("/", "/", nullptr));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execlp) {
+  ExecTestHelper eth;
+  // int execlp(const char* file, const char* arg, ...);
+  eth.Run([&]() { execlp("echo", "echo", "hello", "world", nullptr); }, 0, "hello world\n");
+}
+
+TEST(UNISTD_TEST, execvp_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execvp("/", eth.GetArgs()));
+  ASSERT_EQ(EACCES, errno);
+}
+
+TEST(UNISTD_TEST, execvp) {
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  // int execvp(const char* file, char* argv[]);
+  eth.Run([&]() { execvp("echo", eth.GetArgs()); }, 0, "hello world\n");
+}
+
+TEST(UNISTD_TEST, execvpe_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, execvpe("this-does-not-exist", eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(ENOENT, errno);
+}
+
+TEST(UNISTD_TEST, execvpe) {
+  // int execvpe(const char* file, char* argv[], char* envp[]);
+
+  // Test basic argument passing.
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { execvpe("echo", eth.GetArgs(), eth.GetEnv()); }, 0, "hello world\n");
+
+  // Test environment variable setting too.
+  eth.SetArgs({"printenv", nullptr});
+  eth.SetEnv({"A=B", nullptr});
+  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+}
