@@ -23,6 +23,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <libgen.h>
 #include <limits.h>
 #include <stdint.h>
 #include <sys/capability.h>
@@ -1085,9 +1086,34 @@ class ExecTestHelper {
   void Run(const std::function<void ()>& child_fn,
            int expected_exit_status,
            const char* expected_output) {
-    ASSERT_EXIT({ dup2(STDERR_FILENO, STDOUT_FILENO); child_fn(); },
-                ::testing::ExitedWithCode(expected_exit_status),
-                expected_output);
+      int fds[2];
+      ASSERT_NE(pipe2(fds, 0), -1);
+
+      pid_t pid = fork();
+      ASSERT_NE(pid, -1);
+
+      if (pid == 0) {
+          // Child.
+          close(fds[0]);
+          dup2(fds[1], STDOUT_FILENO);
+          dup2(fds[1], STDERR_FILENO);
+          if (fds[1] != STDOUT_FILENO && fds[1] != STDERR_FILENO) close(fds[1]);
+          child_fn();
+          FAIL();
+      }
+
+      // Parent.
+      close(fds[1]);
+      std::string output;
+      char buf[BUFSIZ];
+      ssize_t bytes_read;
+      while ((bytes_read = TEMP_FAILURE_RETRY(read(fds[0], buf, sizeof(buf)))) > 0) {
+          output.append(buf, bytes_read);
+      }
+      close(fds[0]);
+
+      AssertChildExited(pid, expected_exit_status);
+      ASSERT_EQ(expected_output, output);
   }
 
  private:
@@ -1108,7 +1134,7 @@ TEST(UNISTD_TEST, execve_failure) {
   ASSERT_EQ(EACCES, errno);
 }
 
-TEST(UNISTD_TEST, execve) {
+TEST(UNISTD_TEST, execve_args) {
   // int execve(const char* path, char* argv[], char* envp[]);
 
   // Test basic argument passing.
@@ -1176,6 +1202,7 @@ TEST(UNISTD_TEST, execlp) {
 
 TEST(UNISTD_TEST, execvp_failure) {
   ExecTestHelper eth;
+  eth.SetArgs({nullptr});
   errno = 0;
   ASSERT_EQ(-1, execvp("/", eth.GetArgs()));
   ASSERT_EQ(EACCES, errno);
@@ -1207,4 +1234,41 @@ TEST(UNISTD_TEST, execvpe) {
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
   eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+}
+
+TEST(UNISTD_TEST, execvpe_ENOEXEC) {
+  // Create a shell script with #!.
+  TemporaryFile tf;
+  ASSERT_TRUE(android::base::WriteStringToFile("#!" BIN_DIR "sh\necho script\n", tf.filename));
+
+  // Set $PATH so we can find it.
+  setenv("PATH", dirname(tf.filename), 1);
+
+  ExecTestHelper eth;
+  eth.SetArgs({basename(tf.filename), nullptr});
+
+  // It's not inherently executable.
+  errno = 0;
+  ASSERT_EQ(-1, execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+
+  // Make it executable.
+  ASSERT_EQ(0, chmod(tf.filename, 0555));
+
+  // TemporaryFile will have a writable fd, so we can test ETXTBSY while we're here...
+  errno = 0;
+  ASSERT_EQ(-1, execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(ETXTBSY, errno);
+
+  // 1. The simplest test: the kernel should handle this.
+  ASSERT_EQ(0, close(tf.fd));
+  eth.Run([&]() { execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
+
+  // 2. Try again without a #!. We should have to handle this ourselves.
+  ASSERT_TRUE(android::base::WriteStringToFile("echo script\n", tf.filename));
+  eth.Run([&]() { execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
+
+  // 3. Again without a #!, but also with a leading '/', since that's a special case in the
+  // implementation.
+  eth.Run([&]() { execvpe(tf.filename, eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
 }
