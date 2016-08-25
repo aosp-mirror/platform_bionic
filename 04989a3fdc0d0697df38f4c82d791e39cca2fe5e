@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5f9c23d_1dc5135e",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-25T02:31:20Z",
+      "side": 1,
+      "message": "this was harmless.",
+      "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5f9c23d_fda9478c",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-25T02:31:20Z",
+      "side": 1,
+      "message": "as was this de-BSDification.",
+      "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5f9c23d_dda68bbc",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-25T02:31:20Z",
+      "side": 1,
+      "message": "this is the actual fix.",
+      "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
