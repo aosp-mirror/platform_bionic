@@ -4223,12 +4223,15 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     }
   }
 
-  const char* executable_path = get_executable_path();
   struct stat file_stat;
-  if (TEMP_FAILURE_RETRY(stat(executable_path, &file_stat)) != 0) {
-    __libc_fatal("unable to stat file for the executable \"%s\": %s", executable_path, strerror(errno));
+  // Stat "/proc/self/exe" instead of executable_path because
+  // the executable could be unlinked by this point and it should
+  // not cause a crash (see http://b/31084669)
+  if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
+    __libc_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
   }
 
+  const char* executable_path = get_executable_path();
   soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
   if (si == nullptr) {
     __libc_fatal("Couldn't allocate soinfo: out of memory?");
