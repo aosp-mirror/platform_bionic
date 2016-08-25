@@ -95,15 +95,15 @@ int execvp(const char* name, char* const* argv) {
   return execvpe(name, argv, environ);
 }
 
-static int __exec_as_script(char* buf, char* const* argv, char* const* envp) {
-  size_t arg_count = 0;
+static int __exec_as_script(const char* buf, char* const* argv, char* const* envp) {
+  size_t arg_count = 1;
   while (argv[arg_count] != nullptr) ++arg_count;
 
-  char* script_argv[arg_count + 2];
-  script_argv[0] = const_cast<char*>("sh");
+  const char* script_argv[arg_count + 2];
+  script_argv[0] = "sh";
   script_argv[1] = buf;
-  bcopy(argv + 1, script_argv + 2, arg_count * sizeof(char*));
-  return execve(_PATH_BSHELL, script_argv, envp);
+  memcpy(script_argv + 2, argv + 1, arg_count * sizeof(char*));
+  return execve(_PATH_BSHELL, const_cast<char**>(script_argv), envp);
 }
 
 int execvpe(const char* name, char* const* argv, char* const* envp) {
@@ -114,7 +114,9 @@ int execvpe(const char* name, char* const* argv, char* const* envp) {
   }
 
   // If it's an absolute or relative path name, it's easy.
-  if (strchr(name, '/')) return execve(name, argv, envp);
+  if (strchr(name, '/') && execve(name, argv, envp) == -1) {
+    return __exec_as_script(name, argv, envp);
+  }
 
   // Get the path we're searching.
   const char* path = getenv("PATH");
