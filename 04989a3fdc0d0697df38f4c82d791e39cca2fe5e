@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "e5f9c23d_a0d15455",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-25T05:58:16Z",
+      "side": 1,
+      "message": "yeah, i think the checks on the dup2s are useless because dup2 is a no-op in those circumstances anyway. but the close should probably be guarded (though if our caller has no stdout/stderr, there\u0027s probably not much point executing any more tests...).",
+      "parentUuid": "e5f9c23d_e0ee3c1b",
+      "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5f9c23d_c0fb40d7",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
@@ -81,6 +99,24 @@
       "writtenOn": "2016-08-25T05:41:15Z",
       "side": 1,
       "message": "Close fds[0]?",
+      "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5f9c23d_20e6643f",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-25T05:58:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5f9c23d_c0fb40d7",
       "revId": "04989a3fdc0d0697df38f4c82d791e39cca2fe5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
