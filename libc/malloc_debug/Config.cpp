@@ -321,7 +321,7 @@ void PropertyParser::LogUsage() {
   error_log("    recorded. of frames to capture. The default value is %zu.", DEFAULT_RECORD_ALLOCS);
   error_log("    If the allocation list fills up, all further allocations are not recorded.");
   error_log("");
-  error_log("  record_alloc_file[=FILE]");
+  error_log("  record_allocs_file[=FILE]");
   error_log("    This option only has meaning if the record_allocs options has been specified.");
   error_log("    This is the name of the file to which recording information will be dumped.");
   error_log("    The default is %s.", DEFAULT_RECORD_ALLOCS_FILE);
