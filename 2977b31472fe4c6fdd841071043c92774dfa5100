@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05d6d636_dfddd7dd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3368,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-26T23:27:16Z",
+      "side": 1,
+      "message": "should this be in __libc_init_AT_SECURE? (which is badly named --- it already sets up auxv and environ in addition to AT_SECURE.)",
+      "revId": "2977b31472fe4c6fdd841071043c92774dfa5100",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
