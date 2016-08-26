@@ -115,7 +115,8 @@ int execvpe(const char* name, char* const* argv, char* const* envp) {
 
   // If it's an absolute or relative path name, it's easy.
   if (strchr(name, '/') && execve(name, argv, envp) == -1) {
-    return __exec_as_script(name, argv, envp);
+    if (errno == ENOEXEC) return __exec_as_script(name, argv, envp);
+    return -1;
   }
 
   // Get the path we're searching.
