@@ -628,7 +628,9 @@ TEST(dlext, ns_smoke) {
 
   ASSERT_FALSE(android_init_namespaces(path.c_str(), nullptr));
   ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
-               "\"libnstest_public.so\" was not found in the default namespace", dlerror());
+               "a library with soname \"libnstest_public.so\" was not found in the "
+               "default namespace",
+               dlerror());
 
   const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
 
