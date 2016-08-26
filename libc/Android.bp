@@ -518,6 +518,7 @@ cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
     srcs: [
+        "upstream-openbsd/lib/libc/gen/exec.c",
         "upstream-openbsd/lib/libc/stdio/vfprintf.c",
         "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
         "upstream-openbsd/lib/libc/stdio/vfwscanf.c",
@@ -1237,7 +1238,6 @@ cc_library_static {
         "bionic/error.cpp",
         "bionic/eventfd_read.cpp",
         "bionic/eventfd_write.cpp",
-        "bionic/exec.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
