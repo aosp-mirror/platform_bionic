@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05d6d636_5f19c77b",
+        "filename": "libc/kernel/uapi/asm-arm/asm/auxvec.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-26T23:54:26Z",
+      "side": 1,
+      "message": "finally! (see vdso.cpp.)",
+      "revId": "866802a807393c63d994269cdf018343fb72d225",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
