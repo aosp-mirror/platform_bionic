@@ -22,6 +22,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
+#include "math_data_test.h"
+
 #define NUM_WCHARS(num_bytes) ((num_bytes)/sizeof(wchar_t))
 
 TEST(wchar, sizeof_wchar_t) {
@@ -389,24 +391,12 @@ TEST(wchar, mbsrtowcs) {
   ASSERT_EQ('\x20', *invalid);
 }
 
-TEST(wchar, wcstod) {
-  ASSERT_DOUBLE_EQ(1.23, wcstod(L"1.23", NULL));
-}
-
-TEST(wchar, wcstof) {
-  ASSERT_FLOAT_EQ(1.23f, wcstof(L"1.23", NULL));
-}
-
 TEST(wchar, wcstol) {
   ASSERT_EQ(123L, wcstol(L"123", NULL, 0));
 }
 
 TEST(wchar, wcstoll) {
   ASSERT_EQ(123LL, wcstol(L"123", NULL, 0));
-}
-
-TEST(wchar, wcstold) {
-  ASSERT_DOUBLE_EQ(1.23L, wcstold(L"1.23", NULL));
 }
 
 TEST(wchar, wcstoul) {
@@ -671,4 +661,65 @@ TEST(wchar, wcstoull_l_EINVAL) {
 TEST(wchar, wmempcpy) {
   wchar_t dst[6];
   ASSERT_EQ(&dst[4], wmempcpy(dst, L"hello", 4));
+}
+
+template <typename T>
+static void CheckWcsToFloat(T fn(const wchar_t* s, wchar_t** end)) {
+  FpUlpEq<0, T> pred;
+
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"9.0", nullptr));
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0.9e1", nullptr));
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0x1.2p3", nullptr));
+
+  EXPECT_TRUE(isnan(fn(L"+nan", nullptr)));
+  EXPECT_TRUE(isnan(fn(L"nan", nullptr)));
+  EXPECT_TRUE(isnan(fn(L"-nan", nullptr)));
+
+  EXPECT_TRUE(isnan(fn(L"+nan(0xff)", nullptr)));
+  EXPECT_TRUE(isnan(fn(L"nan(0xff)", nullptr)));
+  EXPECT_TRUE(isnan(fn(L"-nan(0xff)", nullptr)));
+
+  wchar_t* p;
+  EXPECT_TRUE(isnan(fn(L"+nanny", &p)));
+  EXPECT_STREQ(L"ny", p);
+  EXPECT_TRUE(isnan(fn(L"nanny", &p)));
+  EXPECT_STREQ(L"ny", p);
+  EXPECT_TRUE(isnan(fn(L"-nanny", &p)));
+  EXPECT_STREQ(L"ny", p);
+
+  EXPECT_EQ(0, fn(L"muppet", &p));
+  EXPECT_STREQ(L"muppet", p);
+  EXPECT_EQ(0, fn(L"  muppet", &p));
+  EXPECT_STREQ(L"  muppet", p);
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+inf", nullptr));
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"inf", nullptr));
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-inf", nullptr));
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinity", nullptr));
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinity", nullptr));
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinity", nullptr));
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinitude", &p));
+  EXPECT_STREQ(L"initude", p);
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinitude", &p));
+  EXPECT_STREQ(L"initude", p);
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinitude", &p));
+  EXPECT_STREQ(L"initude", p);
+
+  // Check case-insensitivity.
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"InFiNiTy", nullptr));
+  EXPECT_TRUE(isnan(fn(L"NaN", nullptr)));
+}
+
+TEST(wchar, wcstod) {
+  CheckWcsToFloat(wcstod);
+}
+
+TEST(wchar, wcstof) {
+  CheckWcsToFloat(wcstof);
+}
+
+TEST(wchar, wcstold) {
+  CheckWcsToFloat(wcstold);
 }

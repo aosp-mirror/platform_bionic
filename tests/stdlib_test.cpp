@@ -17,16 +17,18 @@
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
+#include "math_data_test.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <libgen.h>
 #include <limits.h>
+#include <math.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -288,16 +290,65 @@ TEST(stdlib, atof) {
   ASSERT_DOUBLE_EQ(1.23, atof("1.23"));
 }
 
+template <typename T>
+static void CheckStrToFloat(T fn(const char* s, char** end)) {
+  FpUlpEq<0, T> pred;
+
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn("9.0", nullptr));
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn("0.9e1", nullptr));
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
+
+  EXPECT_TRUE(isnan(fn("+nan", nullptr)));
+  EXPECT_TRUE(isnan(fn("nan", nullptr)));
+  EXPECT_TRUE(isnan(fn("-nan", nullptr)));
+
+  EXPECT_TRUE(isnan(fn("+nan(0xff)", nullptr)));
+  EXPECT_TRUE(isnan(fn("nan(0xff)", nullptr)));
+  EXPECT_TRUE(isnan(fn("-nan(0xff)", nullptr)));
+
+  char* p;
+  EXPECT_TRUE(isnan(fn("+nanny", &p)));
+  EXPECT_STREQ("ny", p);
+  EXPECT_TRUE(isnan(fn("nanny", &p)));
+  EXPECT_STREQ("ny", p);
+  EXPECT_TRUE(isnan(fn("-nanny", &p)));
+  EXPECT_STREQ("ny", p);
+
+  EXPECT_EQ(0, fn("muppet", &p));
+  EXPECT_STREQ("muppet", p);
+  EXPECT_EQ(0, fn("  muppet", &p));
+  EXPECT_STREQ("  muppet", p);
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("+inf", nullptr));
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("inf", nullptr));
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn("-inf", nullptr));
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("+infinity", nullptr));
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("infinity", nullptr));
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn("-infinity", nullptr));
+
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("+infinitude", &p));
+  EXPECT_STREQ("initude", p);
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("infinitude", &p));
+  EXPECT_STREQ("initude", p);
+  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn("-infinitude", &p));
+  EXPECT_STREQ("initude", p);
+
+  // Check case-insensitivity.
+  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn("InFiNiTy", nullptr));
+  EXPECT_TRUE(isnan(fn("NaN", nullptr)));
+}
+
 TEST(stdlib, strtod) {
-  ASSERT_DOUBLE_EQ(1.23, strtod("1.23", NULL));
+  CheckStrToFloat(strtod);
 }
 
 TEST(stdlib, strtof) {
-  ASSERT_FLOAT_EQ(1.23, strtof("1.23", NULL));
+  CheckStrToFloat(strtof);
 }
 
 TEST(stdlib, strtold) {
-  ASSERT_DOUBLE_EQ(1.23, strtold("1.23", NULL));
+  CheckStrToFloat(strtold);
 }
 
 TEST(stdlib, strtof_2206701) {

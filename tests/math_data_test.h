@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <math.h>
 #include <fenv.h>
 
 template <typename RT, typename T1>
@@ -102,7 +103,28 @@ template <> union fp_u<double> {
   uint64_t sign_magnitude;
 };
 
-// TODO: long double.
+template <> union fp_u<long double> {
+  long double value;
+#if defined(__LP64__)
+  struct {
+    unsigned fracl;
+    unsigned fraclm;
+    unsigned frachm;
+    unsigned frach:16;
+    unsigned exp:15;
+    unsigned sign:1;
+  } bits;
+  __int128_t sign_magnitude;
+#else
+  struct {
+      unsigned fracl;
+      unsigned frach:20;
+      unsigned exp:11;
+      unsigned sign:1;
+  } bits;
+  uint64_t sign_magnitude;
+#endif
+};
 
 template <typename T>
 static inline auto SignAndMagnitudeToBiased(const T& value) -> decltype(fp_u<T>::sign_magnitude) {
@@ -134,14 +156,8 @@ struct FpUlpEq {
       return ::testing::AssertionSuccess();
     }
 
-    // Output the actual and expected values as hex floating point.
-    char expected_str[64];
-    char actual_str[64];
-    snprintf(expected_str, sizeof(expected_str), "%a", expected);
-    snprintf(actual_str, sizeof(actual_str), "%a", actual);
-
     return ::testing::AssertionFailure()
-        << "expected (" << expected_str << ") != actual (" << actual_str << ")";
+        << "expected (" << std::hexfloat << expected << ") != actual (" << actual << ")";
   }
 };
 
@@ -282,4 +298,3 @@ void DoMathDataTest(data_1_3_t<RT, T1, T2, T3> (&data)[N], RT f(T1, T2, T3)) {
                         data[i].expected, f(data[i].input1, data[i].input2, data[i].input3)) << "Failed on element " << i;
   }
 }
-
