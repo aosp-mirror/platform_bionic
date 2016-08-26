@@ -1272,3 +1272,12 @@ TEST(UNISTD_TEST, execvpe_ENOEXEC) {
   // implementation.
   eth.Run([&]() { execvpe(tf.filename, eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
 }
+
+TEST(UNISTD_TEST, execvp_libcore_test_55017) {
+  ExecTestHelper eth;
+  eth.SetArgs({"/system/bin/does-not-exist", nullptr});
+
+  errno = 0;
+  ASSERT_EQ(-1, execvp("/system/bin/does-not-exist", eth.GetArgs()));
+  ASSERT_EQ(ENOENT, errno);
+}
