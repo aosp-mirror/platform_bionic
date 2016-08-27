@@ -309,6 +309,7 @@ static void __initialize_personality() {
 
 void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
+  __abort_message_ptr = args.abort_message_ptr;
 
   // Check that the kernel provided a value for AT_SECURE.
   bool found_AT_SECURE = false;
