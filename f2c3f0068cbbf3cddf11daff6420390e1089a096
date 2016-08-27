@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05d6d636_0a266bd1",
+        "filename": "tests/sys_msg_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-27T01:35:58Z",
+      "side": 1,
+      "message": "This could spuriously trigger if msgctl returns success and errno is already ENOSYS",
+      "revId": "f2c3f0068cbbf3cddf11daff6420390e1089a096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
