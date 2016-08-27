@@ -64,3 +64,93 @@ TEST(pty, forkpty) {
 
   close(master);
 }
+
+struct PtyReader_28979140_Arg {
+  int main_cpu_id;
+  int slave_fd;
+  uint32_t data_count;
+  bool finished;
+  std::atomic<bool> matched;
+};
+
+static void PtyReader_28979140(PtyReader_28979140_Arg* arg) {
+  arg->finished = false;
+  cpu_set_t cpus;
+  ASSERT_EQ(0, sched_getaffinity(0, sizeof(cpu_set_t), &cpus));
+  CPU_CLR(arg->main_cpu_id, &cpus);
+  ASSERT_EQ(0, sched_setaffinity(0, sizeof(cpu_set_t), &cpus));
+
+  uint32_t counter = 0;
+  while (counter <= arg->data_count) {
+    char buf[4096];  // Use big buffer to read to hit the bug more easily.
+    size_t to_read = std::min(sizeof(buf), (arg->data_count + 1 - counter) * sizeof(uint32_t));
+    ASSERT_TRUE(android::base::ReadFully(arg->slave_fd, buf, to_read));
+    size_t num_of_value = to_read / sizeof(uint32_t);
+    uint32_t* p = reinterpret_cast<uint32_t*>(buf);
+    while (num_of_value-- > 0) {
+      if (*p++ != counter++) {
+        arg->matched = false;
+      }
+    }
+  }
+  close(arg->slave_fd);
+  arg->finished = true;
+}
+
+TEST(pty, bug_28979140) {
+  // This test is to test a kernel bug, which uses a lock free ring-buffer to
+  // pass data through a raw pty, but missing necessary memory barriers.
+  cpu_set_t cpus;
+  ASSERT_EQ(0, sched_getaffinity(0, sizeof(cpu_set_t), &cpus));
+  if (CPU_COUNT(&cpus) < 2) {
+    GTEST_LOG_(INFO) << "This test tests bug happens only on multiprocessors.";
+    return;
+  }
+  constexpr uint32_t TEST_DATA_COUNT = 200000;
+
+  // 1. Open raw pty.
+  int master;
+  int slave;
+  ASSERT_EQ(0, openpty(&master, &slave, nullptr, nullptr, nullptr));
+  termios tattr;
+  ASSERT_EQ(0, tcgetattr(slave, &tattr));
+  cfmakeraw(&tattr);
+  ASSERT_EQ(0, tcsetattr(slave, TCSADRAIN, &tattr));
+
+  // 2. Make master thread and slave thread running on different cpus:
+  // master thread uses first available cpu, and slave thread uses other cpus.
+  PtyReader_28979140_Arg arg;
+  arg.main_cpu_id = -1;
+  for (int i = 0; i < CPU_SETSIZE; i++) {
+    if (CPU_ISSET(i, &cpus)) {
+      arg.main_cpu_id = i;
+      break;
+    }
+  }
+  ASSERT_GE(arg.main_cpu_id, 0);
+
+  // 3. Create thread for slave reader.
+  pthread_t thread;
+  arg.slave_fd = slave;
+  arg.data_count = TEST_DATA_COUNT;
+  arg.matched = true;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+                              reinterpret_cast<void*(*)(void*)>(PtyReader_28979140),
+                              &arg));
+
+  CPU_ZERO(&cpus);
+  CPU_SET(arg.main_cpu_id, &cpus);
+  ASSERT_EQ(0, sched_setaffinity(0, sizeof(cpu_set_t), &cpus));
+
+  // 4. Send data to slave.
+  uint32_t counter = 0;
+  while (counter <= TEST_DATA_COUNT) {
+    ASSERT_TRUE(android::base::WriteFully(master, &counter, sizeof(counter)));
+    ASSERT_TRUE(arg.matched) << "failed at count = " << counter;
+    counter++;
+  }
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  ASSERT_TRUE(arg.finished);
+  ASSERT_TRUE(arg.matched);
+  close(master);
+}
