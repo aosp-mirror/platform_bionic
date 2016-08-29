@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _NF_CONNTRACK_SCTP_H
-#define _NF_CONNTRACK_SCTP_H
+#ifndef _UAPI_NF_CONNTRACK_SCTP_H
+#define _UAPI_NF_CONNTRACK_SCTP_H
 #include <linux/netfilter/nf_conntrack_tuple_common.h>
 enum sctp_conntrack {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -34,11 +34,6 @@ enum sctp_conntrack {
   SCTP_CONNTRACK_HEARTBEAT_SENT,
   SCTP_CONNTRACK_HEARTBEAT_ACKED,
   SCTP_CONNTRACK_MAX
-};
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct ip_ct_sctp {
-  enum sctp_conntrack state;
-  __be32 vtag[IP_CT_DIR_MAX];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

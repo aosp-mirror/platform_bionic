@@ -34,7 +34,7 @@ struct mce {
   __u8 cpuvendor;
   __u8 inject_flags;
   __u8 severity;
-  __u8 usable_addr;
+  __u8 pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 cpuid;
   __u8 cs;

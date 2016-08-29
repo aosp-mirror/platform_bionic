@@ -29,5 +29,7 @@
 #define HWCAP_SHA2 (1 << 6)
 #define HWCAP_CRC32 (1 << 7)
 #define HWCAP_ATOMICS (1 << 8)
-#endif
+#define HWCAP_FPHP (1 << 9)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define HWCAP_ASIMDHP (1 << 10)
+#endif

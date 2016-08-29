@@ -19,10 +19,22 @@
 #ifndef _UAPI_XT_CGROUP_H
 #define _UAPI_XT_CGROUP_H
 #include <linux/types.h>
-struct xt_cgroup_info {
+#include <linux/limits.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xt_cgroup_info_v0 {
   __u32 id;
   __u32 invert;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xt_cgroup_info_v1 {
+  __u8 has_path;
+  __u8 has_classid;
+  __u8 invert_path;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 invert_classid;
+  char path[PATH_MAX];
+  __u32 classid;
+  void * priv __attribute__((aligned(8)));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+#endif

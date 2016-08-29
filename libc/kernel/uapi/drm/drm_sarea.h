@@ -18,46 +18,51 @@
  ****************************************************************************/
 #ifndef _DRM_SAREA_H_
 #define _DRM_SAREA_H_
-#include <drm/drm.h>
-#ifdef __alpha__
+#include "drm.h"
+#ifdef __cplusplus
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
+#ifdef __alpha__
 #define SAREA_MAX 0x2000U
 #elif defined(__mips__)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SAREA_MAX 0x4000U
 #elif defined(__ia64__)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SAREA_MAX 0x10000U
 #else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SAREA_MAX 0x2000U
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SAREA_MAX_DRAWABLES 256
 #define SAREA_DRAWABLE_CLAIMED_ENTRY 0x80000000
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_sarea_drawable {
   unsigned int stamp;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned int flags;
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_sarea_frame {
   unsigned int x;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned int y;
   unsigned int width;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned int height;
   unsigned int fullscreen;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct drm_sarea {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct drm_hw_lock lock;
   struct drm_hw_lock drawable_lock;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct drm_sarea_drawable drawableTable[SAREA_MAX_DRAWABLES];
   struct drm_sarea_frame frame;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   drm_context_t dummy_context;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_sarea_drawable drm_sarea_drawable_t;
 typedef struct drm_sarea_frame drm_sarea_frame_t;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct drm_sarea drm_sarea_t;
+#ifdef __cplusplus
+#endif
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

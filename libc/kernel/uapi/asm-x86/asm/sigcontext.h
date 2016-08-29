@@ -182,7 +182,7 @@ struct sigcontext_64 {
   __u16 gs;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 fs;
-  __u16 __pad0;
+  __u16 ss;
   __u64 err;
   __u64 trapno;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -254,20 +254,23 @@ struct sigcontext {
   __u16 cs;
   __u16 gs;
   __u16 fs;
-  __u16 __pad0;
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    __u16 ss;
+    __u16 __pad0;
+  };
   __u64 err;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 trapno;
   __u64 oldmask;
   __u64 cr2;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct _fpstate __user * fpstate;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __ILP32__
   __u32 __fpstate_pad;
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 reserved1[8];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
