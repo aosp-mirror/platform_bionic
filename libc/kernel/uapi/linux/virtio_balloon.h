@@ -41,10 +41,11 @@ struct virtio_balloon_config {
 #define VIRTIO_BALLOON_S_MEMFREE 4
 #define VIRTIO_BALLOON_S_MEMTOT 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIRTIO_BALLOON_S_NR 6
+#define VIRTIO_BALLOON_S_AVAIL 6
+#define VIRTIO_BALLOON_S_NR 7
 struct virtio_balloon_stat {
   __virtio16 tag;
-  __virtio64 val;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __virtio64 val;
 } __attribute__((packed));
 #endif
