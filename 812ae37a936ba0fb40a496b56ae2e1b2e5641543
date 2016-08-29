@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5934ad9_5ba3c3f3",
+        "filename": "tests/libs/Android.build.dt_runpath.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-29T23:31:37Z",
+      "side": 1,
+      "message": "Would it be better to have this set to $(module) and in all of the other places too?",
+      "range": {
+        "startLine": 79,
+        "startChar": 52,
+        "endLine": 79,
+        "endChar": 76
+      },
+      "revId": "812ae37a936ba0fb40a496b56ae2e1b2e5641543",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
