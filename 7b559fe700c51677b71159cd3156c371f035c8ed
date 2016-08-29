@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5934ad9_db6353e6",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-29T23:15:07Z",
+      "side": 1,
+      "message": "I don\u0027t think it makes sense to have both environment variables present. I think having the LIBC_DEBUG_MALLOC_OPTIONS set should be good enough.\n\nTrying to decode the other would just make things more complicated.",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 74
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5934ad9_1b45bb54",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-29T23:15:07Z",
+      "side": 1,
+      "message": "Extra whitespace.",
+      "range": {
+        "startLine": 315,
+        "startChar": 95,
+        "endLine": 315,
+        "endChar": 96
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5934ad9_fb2f2f87",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-29T23:15:07Z",
+      "side": 1,
+      "message": "I think it\u0027s better if this gets renamed to SetFromString, have the function take a std::string. Then have the caller decide what to pass in.",
+      "range": {
+        "startLine": 332,
+        "startChar": 13,
+        "endLine": 332,
+        "endChar": 30
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5934ad9_5b2663bc",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-29T23:15:07Z",
+      "side": 1,
+      "message": "I think it would be better to change this function to take a std::string and move the logic about where the options string comes from to the caller.",
+      "range": {
+        "startLine": 332,
+        "startChar": 13,
+        "endLine": 332,
+        "endChar": 31
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
