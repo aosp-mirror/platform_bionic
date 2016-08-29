@@ -28,42 +28,43 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   TCA_STATS_APP,
   TCA_STATS_RATE_EST64,
+  TCA_STATS_PAD,
   __TCA_STATS_MAX,
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define TCA_STATS_MAX (__TCA_STATS_MAX - 1)
 struct gnet_stats_basic {
   __u64 bytes;
-  __u32 packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 packets;
 };
 struct gnet_stats_basic_packed {
   __u64 bytes;
-  __u32 packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 packets;
 } __attribute__((packed));
 struct gnet_stats_rate_est {
   __u32 bps;
-  __u32 pps;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pps;
 };
 struct gnet_stats_rate_est64 {
   __u64 bps;
-  __u64 pps;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 pps;
 };
 struct gnet_stats_queue {
   __u32 qlen;
-  __u32 backlog;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 backlog;
   __u32 drops;
   __u32 requeues;
   __u32 overlimits;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct gnet_estimator {
   signed char interval;
   unsigned char ewma_log;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif

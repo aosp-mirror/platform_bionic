@@ -94,51 +94,56 @@ typedef struct siginfo {
       int _trapno;
 #endif
       short _addr_lsb;
-      struct {
+      union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-        void __user * _lower;
-        void __user * _upper;
-      } _addr_bnd;
+        struct {
+          void __user * _lower;
+          void __user * _upper;
+        } _addr_bnd;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+        __u32 _pkey;
+      };
     } _sigfault;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __ARCH_SI_BAND_T _band;
       int _fd;
     } _sigpoll;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       void __user * _call_addr;
       int _syscall;
       unsigned int _arch;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } _sigsys;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   } _sifields;
 } __ARCH_SI_ATTRIBUTES siginfo_t;
 #define __ARCH_SIGSYS
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_pid _sifields._kill._pid
 #define si_uid _sifields._kill._uid
 #define si_tid _sifields._timer._tid
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_overrun _sifields._timer._overrun
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_sys_private _sifields._timer._sys_private
 #define si_status _sifields._sigchld._status
 #define si_utime _sifields._sigchld._utime
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_stime _sifields._sigchld._stime
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_value _sifields._rt._sigval
 #define si_int _sifields._rt._sigval.sival_int
 #define si_ptr _sifields._rt._sigval.sival_ptr
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_addr _sifields._sigfault._addr
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __ARCH_SI_TRAPNO
 #define si_trapno _sifields._sigfault._trapno
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_addr_lsb _sifields._sigfault._addr_lsb
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_lower _sifields._sigfault._addr_bnd._lower
 #define si_upper _sifields._sigfault._addr_bnd._upper
+#define si_pkey _sifields._sigfault._pkey
 #define si_band _sifields._sigpoll._band
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define si_fd _sifields._sigpoll._fd
@@ -199,71 +204,72 @@ typedef struct siginfo {
 #define SEGV_MAPERR (__SI_FAULT | 1)
 #define SEGV_ACCERR (__SI_FAULT | 2)
 #define SEGV_BNDERR (__SI_FAULT | 3)
-#define NSIGSEGV 3
+#define SEGV_PKUERR (__SI_FAULT | 4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NSIGSEGV 4
 #define BUS_ADRALN (__SI_FAULT | 1)
 #define BUS_ADRERR (__SI_FAULT | 2)
 #define BUS_OBJERR (__SI_FAULT | 3)
-#define BUS_MCEERR_AR (__SI_FAULT | 4)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define BUS_MCEERR_AR (__SI_FAULT | 4)
 #define BUS_MCEERR_AO (__SI_FAULT | 5)
 #define NSIGBUS 5
 #define TRAP_BRKPT (__SI_FAULT | 1)
-#define TRAP_TRACE (__SI_FAULT | 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define TRAP_TRACE (__SI_FAULT | 2)
 #define TRAP_BRANCH (__SI_FAULT | 3)
 #define TRAP_HWBKPT (__SI_FAULT | 4)
 #define NSIGTRAP 4
-#define CLD_EXITED (__SI_CHLD | 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define CLD_EXITED (__SI_CHLD | 1)
 #define CLD_KILLED (__SI_CHLD | 2)
 #define CLD_DUMPED (__SI_CHLD | 3)
 #define CLD_TRAPPED (__SI_CHLD | 4)
-#define CLD_STOPPED (__SI_CHLD | 5)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define CLD_STOPPED (__SI_CHLD | 5)
 #define CLD_CONTINUED (__SI_CHLD | 6)
 #define NSIGCHLD 6
 #define POLL_IN (__SI_POLL | 1)
-#define POLL_OUT (__SI_POLL | 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define POLL_OUT (__SI_POLL | 2)
 #define POLL_MSG (__SI_POLL | 3)
 #define POLL_ERR (__SI_POLL | 4)
 #define POLL_PRI (__SI_POLL | 5)
-#define POLL_HUP (__SI_POLL | 6)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define POLL_HUP (__SI_POLL | 6)
 #define NSIGPOLL 6
 #define SYS_SECCOMP (__SI_SYS | 1)
 #define NSIGSYS 1
-#define SIGEV_SIGNAL 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SIGEV_SIGNAL 0
 #define SIGEV_NONE 1
 #define SIGEV_THREAD 2
 #define SIGEV_THREAD_ID 4
-#ifndef __ARCH_SIGEV_PREAMBLE_SIZE
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifndef __ARCH_SIGEV_PREAMBLE_SIZE
 #define __ARCH_SIGEV_PREAMBLE_SIZE (sizeof(int) * 2 + sizeof(sigval_t))
 #endif
 #define SIGEV_MAX_SIZE 64
-#define SIGEV_PAD_SIZE ((SIGEV_MAX_SIZE - __ARCH_SIGEV_PREAMBLE_SIZE) / sizeof(int))
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SIGEV_PAD_SIZE ((SIGEV_MAX_SIZE - __ARCH_SIGEV_PREAMBLE_SIZE) / sizeof(int))
 typedef struct sigevent {
   sigval_t sigev_value;
   int sigev_signo;
-  int sigev_notify;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  int sigev_notify;
   union {
     int _pad[SIGEV_PAD_SIZE];
     int _tid;
-    struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct {
       void(* _function) (sigval_t);
       void * _attribute;
     } _sigev_thread;
-  } _sigev_un;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  } _sigev_un;
 } sigevent_t;
 #define sigev_notify_function _sigev_un._sigev_thread._function
 #define sigev_notify_attributes _sigev_un._sigev_thread._attribute
-#define sigev_notify_thread_id _sigev_un._tid
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define sigev_notify_thread_id _sigev_un._tid
 #endif

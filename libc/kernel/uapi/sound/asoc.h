@@ -93,197 +93,236 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SND_SOC_TPLG_STREAM_PLAYBACK 0
 #define SND_SOC_TPLG_STREAM_CAPTURE 1
+#define SND_SOC_TPLG_TUPLE_TYPE_UUID 0
+#define SND_SOC_TPLG_TUPLE_TYPE_STRING 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SND_SOC_TPLG_TUPLE_TYPE_BOOL 2
+#define SND_SOC_TPLG_TUPLE_TYPE_BYTE 3
+#define SND_SOC_TPLG_TUPLE_TYPE_WORD 4
+#define SND_SOC_TPLG_TUPLE_TYPE_SHORT 5
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_hdr {
   __le32 magic;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 abi;
   __le32 version;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 type;
   __le32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 vendor_type;
   __le32 payload_size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 index;
   __le32 count;
+} __attribute__((packed));
+struct snd_soc_tplg_vendor_uuid_elem {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 token;
+  char uuid[16];
+} __attribute__((packed));
+struct snd_soc_tplg_vendor_value_elem {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 token;
+  __le32 value;
+} __attribute__((packed));
+struct snd_soc_tplg_vendor_string_elem {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 token;
+  char string[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+} __attribute__((packed));
+struct snd_soc_tplg_vendor_array {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 size;
+  __le32 type;
+  __le32 num_elems;
+  union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct snd_soc_tplg_vendor_uuid_elem uuid[0];
+    struct snd_soc_tplg_vendor_value_elem value[0];
+    struct snd_soc_tplg_vendor_string_elem string[0];
+  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_private {
   __le32 size;
-  char data[0];
+  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    char data[0];
+    struct snd_soc_tplg_vendor_array array[0];
+  };
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_tlv_dbscale {
   __le32 min;
   __le32 step;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 mute;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_ctl_tlv {
   __le32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 type;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union {
     __le32 data[SND_SOC_TPLG_TLV_SIZE];
     struct snd_soc_tplg_tlv_dbscale scale;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_channel {
   __le32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 reg;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 shift;
   __le32 id;
 } __attribute__((packed));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_io_ops {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 get;
   __le32 put;
   __le32 info;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_ctl_hdr {
   __le32 size;
   __le32 type;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 access;
   struct snd_soc_tplg_io_ops ops;
   struct snd_soc_tplg_ctl_tlv tlv;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_stream_caps {
   __le32 size;
   char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le64 formats;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 rates;
   __le32 rate_min;
   __le32 rate_max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 channels_min;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 channels_max;
   __le32 periods_min;
   __le32 periods_max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 period_size_min;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 period_size_max;
   __le32 buffer_size_min;
   __le32 buffer_size_max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_stream {
   __le32 size;
   char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le64 format;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 rate;
   __le32 period_bytes;
   __le32 buffer_bytes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 channels;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_manifest {
   __le32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 control_elems;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 widget_elems;
   __le32 graph_elems;
-  __le32 dai_elems;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 pcm_elems;
   __le32 dai_link_elems;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_private priv;
 } __attribute__((packed));
 struct snd_soc_tplg_mixer_control {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_ctl_hdr hdr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 size;
   __le32 min;
   __le32 max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 platform_max;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 invert;
   __le32 num_channels;
   struct snd_soc_tplg_channel channel[SND_SOC_TPLG_MAX_CHAN];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_private priv;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_enum_control {
   struct snd_soc_tplg_ctl_hdr hdr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 num_channels;
   struct snd_soc_tplg_channel channel[SND_SOC_TPLG_MAX_CHAN];
   __le32 items;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 mask;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 count;
   char texts[SND_SOC_TPLG_NUM_TEXTS][SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
   __le32 values[SND_SOC_TPLG_NUM_TEXTS * SNDRV_CTL_ELEM_ID_NAME_MAXLEN / 4];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_private priv;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_bytes_control {
   struct snd_soc_tplg_ctl_hdr hdr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 max;
   __le32 mask;
   __le32 base;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 num_regs;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_io_ops ext_ops;
   struct snd_soc_tplg_private priv;
 } __attribute__((packed));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_dapm_graph_elem {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char sink[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
   char control[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
   char source[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_dapm_widget {
   __le32 size;
   __le32 id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char sname[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
   __le32 reg;
   __le32 shift;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 mask;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 subseq;
   __le32 invert;
   __le32 ignore_suspend;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le16 event_flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le16 event_type;
   __le32 num_kcontrols;
   struct snd_soc_tplg_private priv;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct snd_soc_tplg_pcm {
   __le32 size;
   char pcm_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char dai_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 pcm_id;
   __le32 dai_id;
   __le32 playback;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 capture;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 compress;
   struct snd_soc_tplg_stream stream[SND_SOC_TPLG_STREAM_CONFIG_MAX];
   __le32 num_streams;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_stream_caps caps[2];
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __attribute__((packed));
 struct snd_soc_tplg_link_config {
   __le32 size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __le32 id;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct snd_soc_tplg_stream stream[SND_SOC_TPLG_STREAM_CONFIG_MAX];
   __le32 num_streams;
 } __attribute__((packed));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

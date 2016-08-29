@@ -38,43 +38,44 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PSR_D_BIT 0x00000200
 #define PSR_PAN_BIT 0x00400000
+#define PSR_UAO_BIT 0x00800000
 #define PSR_Q_BIT 0x08000000
-#define PSR_V_BIT 0x10000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define PSR_V_BIT 0x10000000
 #define PSR_C_BIT 0x20000000
 #define PSR_Z_BIT 0x40000000
 #define PSR_N_BIT 0x80000000
-#define PSR_f 0xff000000
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define PSR_f 0xff000000
 #define PSR_s 0x00ff0000
 #define PSR_x 0x0000ff00
 #define PSR_c 0x000000ff
-#ifndef __ASSEMBLY__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifndef __ASSEMBLY__
 struct user_pt_regs {
   __u64 regs[31];
   __u64 sp;
-  __u64 pc;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 pc;
   __u64 pstate;
 };
 struct user_fpsimd_state {
-  __uint128_t vregs[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __uint128_t vregs[32];
   __u32 fpsr;
   __u32 fpcr;
 };
-struct user_hwdebug_state {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct user_hwdebug_state {
   __u32 dbg_info;
   __u32 pad;
   struct {
-    __u64 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    __u64 addr;
     __u32 ctrl;
     __u32 pad;
   } dbg_regs[16];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
 #endif

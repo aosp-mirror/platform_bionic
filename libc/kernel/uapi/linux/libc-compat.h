@@ -19,7 +19,7 @@
 #ifndef _UAPI_LIBC_COMPAT_H
 #define _UAPI_LIBC_COMPAT_H
 #ifdef __GLIBC__
-#ifdef _NET_IF_H
+#if defined(_NET_IF_H) && defined(__USE_MISC)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __UAPI_DEF_IF_IFCONF 0
 #define __UAPI_DEF_IF_IFMAP 0

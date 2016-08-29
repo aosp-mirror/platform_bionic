@@ -16,38 +16,31 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_SYNC_H
-#define _UAPI_LINUX_SYNC_H
+#ifndef _UAPI_GPIO_H_
+#define _UAPI_GPIO_H_
 #include <linux/ioctl.h>
 #include <linux/types.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct sync_merge_data {
-  __s32 fd2;
+struct gpiochip_info {
   char name[32];
-  __s32 fence;
+  char label[32];
+  __u32 lines;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-struct sync_pt_info {
-  __u32 len;
-  char obj_name[32];
+#define GPIOLINE_FLAG_KERNEL (1UL << 0)
+#define GPIOLINE_FLAG_IS_OUT (1UL << 1)
+#define GPIOLINE_FLAG_ACTIVE_LOW (1UL << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  char driver_name[32];
-  __s32 status;
-  __u64 timestamp_ns;
-  __u8 driver_data[0];
+#define GPIOLINE_FLAG_OPEN_DRAIN (1UL << 3)
+#define GPIOLINE_FLAG_OPEN_SOURCE (1UL << 4)
+struct gpioline_info {
+  __u32 line_offset;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-};
-struct sync_fence_info_data {
-  __u32 len;
+  __u32 flags;
   char name[32];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __s32 status;
-  __u8 pt_info[0];
+  char consumer[32];
 };
-#define SYNC_IOC_MAGIC '>'
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SYNC_IOC_WAIT _IOW(SYNC_IOC_MAGIC, 0, __s32)
-#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 1, struct sync_merge_data)
-#define SYNC_IOC_FENCE_INFO _IOWR(SYNC_IOC_MAGIC, 2, struct sync_fence_info_data)
+#define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
+#define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

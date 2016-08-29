@@ -43,12 +43,12 @@ typedef struct siginfo {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     int _pad[SI_PAD_SIZE];
     struct {
-      pid_t _pid;
+      __kernel_pid_t _pid;
       __ARCH_SI_UID_T _uid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } _kill;
     struct {
-      timer_t _tid;
+      __kernel_timer_t _tid;
       int _overrun;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       char _pad[sizeof(__ARCH_SI_UID_T) - sizeof(int)];
@@ -57,26 +57,26 @@ typedef struct siginfo {
     } _timer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
-      pid_t _pid;
+      __kernel_pid_t _pid;
       __ARCH_SI_UID_T _uid;
       sigval_t _sigval;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } _rt;
     struct {
-      pid_t _pid;
+      __kernel_pid_t _pid;
       __ARCH_SI_UID_T _uid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       int _status;
-      clock_t _utime;
-      clock_t _stime;
+      __kernel_clock_t _utime;
+      __kernel_clock_t _stime;
     } _sigchld;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
-      pid_t _pid;
-      clock_t _utime;
+      __kernel_pid_t _pid;
+      __kernel_clock_t _utime;
       int _status;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-      clock_t _stime;
+      __kernel_clock_t _stime;
     } _irix_sigchld;
     struct {
       void __user * _addr;
@@ -86,33 +86,35 @@ typedef struct siginfo {
 #endif
       short _addr_lsb;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-      struct {
-        void __user * _lower;
-        void __user * _upper;
-      } _addr_bnd;
+      union {
+        struct {
+          void __user * _lower;
+          void __user * _upper;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+        } _addr_bnd;
+        __u32 _pkey;
+      };
     } _sigfault;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __ARCH_SI_BAND_T _band;
       int _fd;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } _sigpoll;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       void __user * _call_addr;
       int _syscall;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       unsigned int _arch;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     } _sigsys;
   } _sifields;
 } siginfo_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #undef SI_ASYNCIO
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #undef SI_TIMER
 #undef SI_MESGQ
 #define SI_ASYNCIO - 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SI_TIMER __SI_CODE(__SI_TIMER, - 3)
-#define SI_MESGQ __SI_CODE(__SI_MESGQ, - 4)
-#include <asm-generic/siginfo.h>
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SI_MESGQ __SI_CODE(__SI_MESGQ, - 4)
+#endif
