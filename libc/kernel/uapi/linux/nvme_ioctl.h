@@ -71,4 +71,5 @@ struct nvme_passthru_cmd {
 #define NVME_IOCTL_RESET _IO('N', 0x44)
 #define NVME_IOCTL_SUBSYS_RESET _IO('N', 0x45)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define NVME_IOCTL_RESCAN _IO('N', 0x46)
 #endif

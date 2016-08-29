@@ -176,7 +176,7 @@ struct boot_params {
   __u8 _pad9[276];
 } __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-enum {
+enum x86_hardware_subarch {
   X86_SUBARCH_PC = 0,
   X86_SUBARCH_LGUEST,
   X86_SUBARCH_XEN,

@@ -103,6 +103,9 @@
 #if defined(__NR_connect)
   #define SYS_connect __NR_connect
 #endif
+#if defined(__NR_copy_file_range)
+  #define SYS_copy_file_range __NR_copy_file_range
+#endif
 #if defined(__NR_creat)
   #define SYS_creat __NR_creat
 #endif
@@ -682,6 +685,9 @@
 #if defined(__NR_preadv)
   #define SYS_preadv __NR_preadv
 #endif
+#if defined(__NR_preadv2)
+  #define SYS_preadv2 __NR_preadv2
+#endif
 #if defined(__NR_prlimit64)
   #define SYS_prlimit64 __NR_prlimit64
 #endif
@@ -711,6 +717,9 @@
 #endif
 #if defined(__NR_pwritev)
   #define SYS_pwritev __NR_pwritev
+#endif
+#if defined(__NR_pwritev2)
+  #define SYS_pwritev2 __NR_pwritev2
 #endif
 #if defined(__NR_query_module)
   #define SYS_query_module __NR_query_module

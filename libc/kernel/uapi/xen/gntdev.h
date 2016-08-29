@@ -62,7 +62,29 @@ struct ioctl_gntdev_unmap_notify {
   __u32 event_channel_port;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct gntdev_grant_copy_segment {
+  union {
+    void __user * virt;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct {
+      grant_ref_t ref;
+      __u16 offset;
+      domid_t domid;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    } foreign;
+  } source, dest;
+  __u16 len;
+  __u16 flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s16 status;
+};
+#define IOCTL_GNTDEV_GRANT_COPY _IOC(_IOC_NONE, 'G', 8, sizeof(struct ioctl_gntdev_grant_copy))
+struct ioctl_gntdev_grant_copy {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int count;
+  struct gntdev_grant_copy_segment __user * segments;
+};
 #define UNMAP_NOTIFY_CLEAR_BYTE 0x1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define UNMAP_NOTIFY_SEND_EVENT 0x2
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
