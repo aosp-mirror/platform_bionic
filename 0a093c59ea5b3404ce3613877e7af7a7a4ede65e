@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "25059ac3_1a4839ba",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-29T21:21:45Z",
+      "side": 1,
+      "message": "this is NetBSD\u0027s code. i don\u0027t plan on changing it until the day when we come and rewrite all of this (and unify the char and wchar_t versions).",
+      "parentUuid": "25059ac3_d72fbc87",
+      "range": {
+        "startLine": 961,
+        "startChar": 4,
+        "endLine": 961,
+        "endChar": 14
+      },
+      "revId": "0a093c59ea5b3404ce3613877e7af7a7a4ede65e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25059ac3_b7ab28d8",
         "filename": "libc/stdio/vfscanf.c",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-29T20:24:51Z",
       "side": 1,
       "message": "What format is this? It doesn\u0027t appear to be supported by the old code.",
+      "range": {
+        "startLine": 1014,
+        "startChar": 8,
+        "endLine": 1014,
+        "endChar": 30
+      },
+      "revId": "0a093c59ea5b3404ce3613877e7af7a7a4ede65e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25059ac3_3ac41d10",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-29T21:21:45Z",
+      "side": 1,
+      "message": "ah, that\u0027s another test case i should add then... in hex floats, binary exponents are introduced by \u0027p\u0027 rather than \u0027e\u0027.",
+      "parentUuid": "25059ac3_b7ab28d8",
       "range": {
         "startLine": 1014,
         "startChar": 8,
