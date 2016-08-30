@@ -70,13 +70,14 @@ $(HOST_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
 # -----------------------------------------------------------------------------
 # Library used by dlext tests - different name non-default location
 # -----------------------------------------------------------------------------
+module := libdlext_test_fd
+
 libdlext_test_fd_src_files := \
     dlext_test_library.cpp \
 
 libdlext_test_fd_shared_libraries := libtest_simple
 
-libdlext_test_fd_install_to_out_data := true
-module := libdlext_test_fd
+libdlext_test_fd_install_to_out_data_dir := $(module)
 module_tag := optional
 build_type := target
 build_target := SHARED_LIBRARY
@@ -86,23 +87,25 @@ include $(TEST_PATH)/Android.build.mk
 # -----------------------------------------------------------------------------
 # Libraries used by dlext tests for open from a zip-file
 # -----------------------------------------------------------------------------
+module := libdlext_test_zip
+
 libdlext_test_zip_src_files := \
     dlext_test_library.cpp \
 
 libdlext_test_zip_shared_libraries := libatest_simple_zip
 
-libdlext_test_zip_install_to_out_data := true
-module := libdlext_test_zip
+libdlext_test_zip_install_to_out_data_dir := $(module)
 module_tag := optional
 build_type := target
 build_target := SHARED_LIBRARY
 include $(TEST_PATH)/Android.build.mk
 
+module := libatest_simple_zip
+
 libatest_simple_zip_src_files := \
     dlopen_testlib_simple.cpp
 
-libatest_simple_zip_install_to_out_data := true
-module := libatest_simple_zip
+libatest_simple_zip_install_to_out_data_dir := $(module)
 module_tag := optional
 build_type := target
 build_target := SHARED_LIBRARY
