@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5934ad9_8f10a5a9",
+        "filename": "libc/arch-arm/kryo/bionic/memcpy.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-30T15:29:15Z",
+      "side": 1,
+      "message": "delete this",
+      "revId": "341a1ea8fcdc1e22855621cbc23ad608249c4be5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
