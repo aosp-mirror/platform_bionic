@@ -34,6 +34,11 @@
 #include "TemporaryFile.h"
 
 TEST(sys_msg, smoke) {
+  if (msgctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
+    GTEST_LOG_(INFO) << "no <sys/msg.h> support in this kernel\n";
+    return;
+  }
+
   // Create a queue.
   TemporaryDir dir;
   key_t key = ftok(dir.dirname, 1);
@@ -72,23 +77,23 @@ TEST(sys_msg, smoke) {
 TEST(sys_msg, msgctl_failure) {
   errno = 0;
   ASSERT_EQ(-1, msgctl(-1, IPC_STAT, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_msg, msgget_failure) {
   errno = 0;
   ASSERT_EQ(-1, msgget(-1, 0));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_TRUE(errno == ENOENT || errno == ENOSYS);
 }
 
 TEST(sys_msg, msgrcv_failure) {
   errno = 0;
   ASSERT_EQ(-1, msgrcv(-1, nullptr, 0, 0, 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_msg, msgsnd_failure) {
   errno = 0;
   ASSERT_EQ(-1, msgsnd(-1, "", 0, 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }

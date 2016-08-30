@@ -34,6 +34,11 @@
 #include "TemporaryFile.h"
 
 TEST(sys_sem, smoke) {
+  if (semctl(-1, 0, IPC_RMID) == -1 && errno == ENOSYS) {
+    GTEST_LOG_(INFO) << "no <sys/sem.h> support in this kernel\n";
+    return;
+  }
+
   // Create a semaphore.
   TemporaryDir dir;
   key_t key = ftok(dir.dirname, 1);
@@ -73,23 +78,23 @@ TEST(sys_sem, smoke) {
 TEST(sys_sem, semget_failure) {
   errno = 0;
   ASSERT_EQ(-1, semget(-1, -1, 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_sem, semctl_failure) {
   errno = 0;
   ASSERT_EQ(-1, semctl(-1, 0, IPC_RMID));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_sem, semop_failure) {
   errno = 0;
   ASSERT_EQ(-1, semop(-1, nullptr, 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_sem, semtimedop_failure) {
   errno = 0;
   ASSERT_EQ(-1, semtimedop(-1, nullptr, 0, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
