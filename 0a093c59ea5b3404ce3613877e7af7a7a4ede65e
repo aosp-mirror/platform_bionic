@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "31908109_2211b05d",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-30T21:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25059ac3_3ac41d10",
+      "range": {
+        "startLine": 1014,
+        "startChar": 8,
+        "endLine": 1014,
+        "endChar": 30
+      },
+      "revId": "0a093c59ea5b3404ce3613877e7af7a7a4ede65e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25059ac3_175134de",
         "filename": "tests/stdlib_test.cpp",
         "patchSetId": 1
@@ -107,6 +131,24 @@
       "writtenOn": "2016-08-29T20:24:51Z",
       "side": 1,
       "message": "It looks like there aren\u0027t tests for a few of the test cases:\n\ninifinity (And maybe some mixed case version of this)\nnan(...)\n\nAlmost all of the cases here and in the other file do not have any data after the parsed value.\n\nFor example, it looks like infgh would match infinity and leave nfgh behind since it commits after the i, not after the nf. Is this how it should work?\n\nIt would be nice to have some other tests where the value is present but extra data is afterwards.",
+      "revId": "0a093c59ea5b3404ce3613877e7af7a7a4ede65e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31908109_c2fa440a",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-30T21:43:05Z",
+      "side": 1,
+      "message": "that\u0027s actually why i changed the scanf inf/nan tests: they now all have \"[\" and \"]\" around the actual content.\n\nadded tests for infinity and nan(blah), and trailing crap (because, yes, these should behave like strto*l and leave you a pointer to the crap).",
+      "parentUuid": "25059ac3_175134de",
       "revId": "0a093c59ea5b3404ce3613877e7af7a7a4ede65e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
