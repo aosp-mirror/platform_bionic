@@ -34,6 +34,11 @@
 #include "TemporaryFile.h"
 
 TEST(sys_shm, smoke) {
+  if (shmctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
+    GTEST_LOG_(INFO) << "no <sys/shm.h> support in this kernel\n";
+    return;
+  }
+
   // Create a segment.
   TemporaryDir dir;
   key_t key = ftok(dir.dirname, 1);
@@ -60,23 +65,23 @@ TEST(sys_shm, smoke) {
 TEST(sys_shm, shmat_failure) {
   errno = 0;
   ASSERT_EQ(reinterpret_cast<void*>(-1), shmat(-1, 0, SHM_RDONLY));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_shm, shmctl_failure) {
   errno = 0;
   ASSERT_EQ(-1, shmctl(-1, IPC_STAT, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_shm, shmdt_failure) {
   errno = 0;
   ASSERT_EQ(-1, shmdt(nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
 
 TEST(sys_shm, shmget_failure) {
   errno = 0;
   ASSERT_EQ(-1, shmget(-1, 1234, 0));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_TRUE(errno == ENOENT || errno == ENOSYS);
 }
