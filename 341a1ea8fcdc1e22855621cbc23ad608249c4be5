@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "a5934ad9_ca20db06",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-08-30T17:18:18Z",
+      "side": 1,
+      "message": "You are missing a curly brace here to end the \"kryo\" section.",
+      "revId": "341a1ea8fcdc1e22855621cbc23ad608249c4be5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5934ad9_8f10a5a9",
         "filename": "libc/arch-arm/kryo/bionic/memcpy.S",
         "patchSetId": 1
