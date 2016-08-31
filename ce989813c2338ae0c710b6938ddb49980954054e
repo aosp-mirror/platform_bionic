@@ -57,6 +57,24 @@
       "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31a6c1c4_cf269dd4",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-08-31T18:24:05Z",
+      "side": 1,
+      "message": "\u003e we should just use std::numeric_limits\u003ctime_t\u003e::max here.\n\nI don\u0027t think we have that available here?",
+      "parentUuid": "f16a69fa_e966dde2",
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
