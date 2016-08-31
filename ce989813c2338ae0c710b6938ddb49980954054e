@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "31a6c1c4_8f6e55f6",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-31T18:19:29Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to replace this with:\n\nif (__builtin_add_overflow(abs_ts.tv_sec, ts.tv_sec, \u0026abs_ts.tv_sec)) {\n  // Handle overflow.\n  abs_ts.tv_sec \u003d INT32_MAX;\n}\n\nThen you don\u0027t need to do anything special down below.\n\nYou could do the same for the add of tv_nsec, and for the ++ too just in case you wound up with INT_MAX32 from above.",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 68,
+        "endChar": 29
+      },
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f16a69fa_e966dde2",
         "filename": "libc/private/bionic_time_conversions.h",
         "patchSetId": 1
