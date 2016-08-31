@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1d7c939_cd1769b2",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-31T23:14:43Z",
+      "side": 0,
+      "message": "this has already been fixed upstream:\n\n        int pre_errno \u003d errno;\n        int ret;\n        if (len \u003e 256)\n                return (-1);\n        do {\n                ret \u003d syscall(SYS_getrandom, buf, len, 0);\n        } while (ret \u003d\u003d -1 \u0026\u0026 errno \u003d\u003d EINTR);\n\n        if (ret !\u003d len)\n                return (-1);\n        errno \u003d pre_errno;\n        return (0);",
+      "revId": "fac56897f8e665d966496c4cdf6737610caf3156",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
