@@ -22,6 +22,30 @@
       "revId": "dc18eb7fdaccc939f2e78cc149695bfccd90d3da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31a6c1c4_b290de4f",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-31T20:40:41Z",
+      "side": 1,
+      "message": "yeah, i think the latter was the intention (even if that\u0027s not what the old code did either). will fix.",
+      "parentUuid": "31a6c1c4_72c83668",
+      "range": {
+        "startLine": 455,
+        "startChar": 12,
+        "endLine": 455,
+        "endChar": 14
+      },
+      "revId": "dc18eb7fdaccc939f2e78cc149695bfccd90d3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
