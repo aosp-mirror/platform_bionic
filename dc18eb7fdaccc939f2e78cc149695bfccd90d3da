@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31a6c1c4_72c83668",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-08-31T20:37:19Z",
+      "side": 1,
+      "message": "Why is there a newline here? The other ones below don\u0027t have the newline in the front.\n\nShould you always add a newline if any one of the three variables (timeout_test_count, slow_test_count, or fail_test_count) are greater than 0?",
+      "range": {
+        "startLine": 455,
+        "startChar": 12,
+        "endLine": 455,
+        "endChar": 14
+      },
+      "revId": "dc18eb7fdaccc939f2e78cc149695bfccd90d3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
