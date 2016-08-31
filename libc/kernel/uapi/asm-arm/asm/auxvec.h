@@ -16,4 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#include <asm-generic/auxvec.h>
+#ifndef __ASM_AUXVEC_H
+#define __ASM_AUXVEC_H
+#define AT_SYSINFO_EHDR 33
+#endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

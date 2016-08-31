@@ -26,19 +26,20 @@
 #define EPOLL_CTL_DEL 2
 #define EPOLL_CTL_MOD 3
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define EPOLLEXCLUSIVE (1 << 28)
 #define EPOLLWAKEUP (1 << 29)
 #define EPOLLONESHOT (1 << 30)
 #define EPOLLET (1 << 31)
-#ifdef __x86_64__
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifdef __x86_64__
 #define EPOLL_PACKED __attribute__((packed))
 #else
 #define EPOLL_PACKED
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
 struct epoll_event {
   __u32 events;
   __u64 data;
-} EPOLL_PACKED;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} EPOLL_PACKED;
 #endif

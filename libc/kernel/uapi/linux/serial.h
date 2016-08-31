@@ -76,46 +76,48 @@ struct serial_struct {
 #define SERIAL_IO_TSI 5
 #define SERIAL_IO_MEM32BE 6
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SERIAL_IO_MEM16 7
 #define UART_CLEAR_FIFO 0x01
 #define UART_USE_FIFO 0x02
 #define UART_STARTECH 0x04
-#define UART_NATSEMI 0x08
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define UART_NATSEMI 0x08
 struct serial_multiport_struct {
   int irq;
   int port1;
-  unsigned char mask1, match1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned char mask1, match1;
   int port2;
   unsigned char mask2, match2;
   int port3;
-  unsigned char mask3, match3;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned char mask3, match3;
   int port4;
   unsigned char mask4, match4;
   int port_monitor;
-  int reserved[32];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  int reserved[32];
 };
 struct serial_icounter_struct {
   int cts, dsr, rng, dcd;
-  int rx, tx;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  int rx, tx;
   int frame, overrun, parity, brk;
   int buf_overrun;
   int reserved[9];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct serial_rs485 {
   __u32 flags;
 #define SER_RS485_ENABLED (1 << 0)
-#define SER_RS485_RTS_ON_SEND (1 << 1)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SER_RS485_RTS_ON_SEND (1 << 1)
 #define SER_RS485_RTS_AFTER_SEND (1 << 2)
 #define SER_RS485_RX_DURING_TX (1 << 4)
   __u32 delay_rts_before_send;
-  __u32 delay_rts_after_send;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 delay_rts_after_send;
   __u32 padding[5];
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

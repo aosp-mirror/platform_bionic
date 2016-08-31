@@ -43,56 +43,57 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #include <linux/types.h>
+#include <stdlib.h>
 struct agp_version {
-  __u16 major;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 major;
   __u16 minor;
 };
 typedef struct _agp_info {
-  struct agp_version version;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct agp_version version;
   __u32 bridge_id;
   __u32 agp_mode;
   unsigned long aper_base;
-  size_t aper_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  size_t aper_size;
   size_t pg_total;
   size_t pg_system;
   size_t pg_used;
-} agp_info;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} agp_info;
 typedef struct _agp_setup {
   __u32 agp_mode;
 } agp_setup;
-typedef struct _agp_segment {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+typedef struct _agp_segment {
   __kernel_off_t pg_start;
   __kernel_size_t pg_count;
   int prot;
-} agp_segment;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+} agp_segment;
 typedef struct _agp_region {
   __kernel_pid_t pid;
   __kernel_size_t seg_count;
-  struct _agp_segment * seg_list;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct _agp_segment * seg_list;
 } agp_region;
 typedef struct _agp_allocate {
   int key;
-  __kernel_size_t pg_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __kernel_size_t pg_count;
   __u32 type;
   __u32 physical;
 } agp_allocate;
-typedef struct _agp_bind {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+typedef struct _agp_bind {
   int key;
   __kernel_off_t pg_start;
 } agp_bind;
-typedef struct _agp_unbind {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+typedef struct _agp_unbind {
   int key;
   __u32 priority;
 } agp_unbind;
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
