@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "31a6c1c4_2ff009c6",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1072203
+      },
+      "writtenOn": "2016-08-31T19:07:23Z",
+      "side": 1,
+      "message": "\u003e Wouldn\u0027t it be better to replace this with:\n \u003e \n \u003e if (__builtin_add_overflow(abs_ts.tv_sec, ts.tv_sec,\n \u003e \u0026abs_ts.tv_sec)) {\n \u003e // Handle overflow.\n \u003e abs_ts.tv_sec \u003d INT32_MAX;\n \u003e }\n \u003e \n \u003e Then you don\u0027t need to do anything special down below.\n \u003e \n \u003e You could do the same for the add of tv_nsec, and for the ++ too\n \u003e just in case you wound up with INT_MAX32 from above.\n\nYet another thing I wasn\u0027t aware existed. Not surprising...\n\nI think it would make more sense to do the \"abs_ts.tv_sec +\u003d ts.tv_sec\" after the \"abs_ts.tv_nsec +\u003d ts.tv_nsec\" handling. Then we\u0027d only need to do __builtin_add_overflow once for tv_sec rather than twice. (If this code is around two decades from now for abs_ts.tv_sec++ to overflow then we\u0027ve got bigger problems)\n\nI\u0027m not sure about how to handle a tv_nsec overflow though. The maximum tv.tv_sec was at least a valid timespec, but tv.tv_nsec being over NS_PER_S might be a case to return an error. I can check what the behavior with tv.tv_nsec being over NS_PER_S was in previous releases, because at the very least if it didn\u0027t work then it shouldn\u0027t work now.",
+      "parentUuid": "31a6c1c4_8f6e55f6",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 68,
+        "endChar": 29
+      },
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f16a69fa_e966dde2",
         "filename": "libc/private/bionic_time_conversions.h",
         "patchSetId": 1
