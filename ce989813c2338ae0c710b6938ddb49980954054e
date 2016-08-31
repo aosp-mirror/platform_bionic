@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f16a69fa_e966dde2",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-31T15:51:35Z",
+      "side": 1,
+      "message": "given that you\u0027re inside a !__LP64__, this case and the one below can\u0027t happen.\n\nwe should just use std::numeric_limits\u003ctime_t\u003e::max here.\n\n...except that this seems wrong. we should return EINVAL like we do when timespec_from_timeval fails.",
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
