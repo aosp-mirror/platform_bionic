@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f16a69fa_09b7d9f3",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-31T16:43:56Z",
+      "side": 1,
+      "message": "this aborts: turns out that although the strtod family handles hex floats, our wcstod family doesn\u0027t...",
+      "revId": "f36f4c3101accc781503d22a01746492db360aab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
