@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "31a6c1c4_124fea34",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-08-31T20:15:32Z",
+      "side": 1,
+      "message": "i think this is another argument for EINVAL --- the overflow behavior was never defined, and the behavior has already differed between releases.\n\nbut, yeah, __builtin_add_overflow is a good idea.\n\nwhat app hit this, and what was their intention? (i\u0027m wondering whether we should abort instead of EINVAL to make the problem easier to debug.)",
+      "parentUuid": "31a6c1c4_2ff009c6",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 68,
+        "endChar": 29
+      },
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f16a69fa_e966dde2",
         "filename": "libc/private/bionic_time_conversions.h",
         "patchSetId": 1
