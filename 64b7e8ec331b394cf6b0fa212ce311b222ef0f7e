@@ -22,6 +22,30 @@
       "revId": "64b7e8ec331b394cf6b0fa212ce311b222ef0f7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1d7c939_30c64691",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 10
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-09-01T01:07:14Z",
+      "side": 1,
+      "message": "I just removed it, since upstream just uses syscall.",
+      "parentUuid": "f1d7c939_4db6d9d8",
+      "range": {
+        "startLine": 359,
+        "startChar": 4,
+        "endLine": 359,
+        "endChar": 13
+      },
+      "revId": "64b7e8ec331b394cf6b0fa212ce311b222ef0f7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
