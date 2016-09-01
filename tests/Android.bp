@@ -145,7 +145,11 @@ cc_test_library {
         "external/tinyxml2",
     ],
 
-    static_libs: ["libbase"],
+    static_libs: [
+        "libtinyxml2",
+        "liblog",
+        "libbase",
+    ],
     host_ldlibs: ["-lrt"],
 }
 
@@ -220,6 +224,9 @@ cc_test_library {
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],
+    shared: {
+        enabled: false,
+    }
 }
 
 // -----------------------------------------------------------------------------
