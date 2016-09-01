@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "31a6c1c4_f5917049",
+        "filename": "libc/private/bionic_time_conversions.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1072203
+      },
+      "writtenOn": "2016-09-01T18:10:08Z",
+      "side": 1,
+      "message": "\u003e i think this is another argument for EINVAL --- the overflow\n \u003e behavior was never defined, and the behavior has already differed\n \u003e between releases.\n \u003e \n \u003e but, yeah, __builtin_add_overflow is a good idea.\n \u003e \n \u003e what app hit this, and what was their intention? (i\u0027m wondering\n \u003e whether we should abort instead of EINVAL to make the problem\n \u003e easier to debug.)\n\nThe problem is that it *didn\u0027t* overflow before. absolute_timespec_from_timespec is new from change I6b3b9b2feae03680654cd64c3112ce7644632c87 (\"Use FUTEX_WAIT_BITSET to avoid converting timeouts.\")\n\nI actually hit this while bringing up the Galaxy Nexus on Nougat, it appears to be in a number of Samsung RILs. The intention is something like \"if function X gets a timeout other than 0 use it, otherwise just use MAX_TIMEOUT\". I\u0027m just patching the conveniently-exported MAX_TIMEOUT symbol at runtime to avoid the overflow altogether.\n\nObviously, supporting stuff from the Galaxy Nexus isn\u0027t a concern here, and I don\u0027t know if any apps are doing this. I just know it\u0027s a bug.",
+      "parentUuid": "31a6c1c4_124fea34",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 68,
+        "endChar": 29
+      },
+      "revId": "ce989813c2338ae0c710b6938ddb49980954054e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f16a69fa_e966dde2",
         "filename": "libc/private/bionic_time_conversions.h",
         "patchSetId": 1
