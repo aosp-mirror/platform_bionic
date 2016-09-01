@@ -26,7 +26,7 @@ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 LOCAL_MODULE := libdlext_test_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_TAGS := tests
-LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_zip
+LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
 include $(BUILD_SYSTEM)/base_rules.mk
@@ -48,7 +48,7 @@ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 LOCAL_MODULE := libdlext_test_runpath_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_TAGS := tests
-LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/libdlext_test_runpath_zip
+LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_runpath_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
 include $(BUILD_SYSTEM)/base_rules.mk
