@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "91668dcf_da326516",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1059813
+      },
+      "writtenOn": "2016-09-02T15:42:58Z",
+      "side": 1,
+      "message": "I removed it and changed the behavior of DEBUG_MALLOC_ENV_OPTIONS to enable debug malloc indecently of the value of the global settings.\n\nThe only risk with this approach is that if an application do a form\u0026exec then it is not possible to use debug malloc only for the parent or the child but it doesn\u0027t looks like a major usecase.",
+      "parentUuid": "a5934ad9_db6353e6",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 74
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5934ad9_1b45bb54",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-29T23:15:07Z",
       "side": 1,
       "message": "Extra whitespace.",
+      "range": {
+        "startLine": 315,
+        "startChar": 95,
+        "endLine": 315,
+        "endChar": 96
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91668dcf_fa372903",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1059813
+      },
+      "writtenOn": "2016-09-02T15:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5934ad9_1b45bb54",
       "range": {
         "startLine": 315,
         "startChar": 95,
@@ -87,6 +135,30 @@
         "startChar": 13,
         "endLine": 332,
         "endChar": 31
+      },
+      "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91668dcf_1a1dbd80",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1059813
+      },
+      "writtenOn": "2016-09-02T15:42:58Z",
+      "side": 1,
+      "message": "I changed it to SetFromOptionsString what is taking a \"const char*\". I think creating a std::string will gave us nothing but I can change it if you prefer that option more.",
+      "parentUuid": "a5934ad9_fb2f2f87",
+      "range": {
+        "startLine": 332,
+        "startChar": 13,
+        "endLine": 332,
+        "endChar": 30
       },
       "revId": "7b559fe700c51677b71159cd3156c371f035c8ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
