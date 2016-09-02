@@ -16,6 +16,24 @@
       "revId": "968c3645a899e2d9fee4b2cba461bc85f628e0b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d602bbf6_25ec34b6",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-02T21:29:52Z",
+      "side": 1,
+      "message": "agree.. we are not going to support DT_RPATH anyways, so there is no reason not to --enable-new-dtags for everything.",
+      "parentUuid": "d602bbf6_421cd6d5",
+      "revId": "968c3645a899e2d9fee4b2cba461bc85f628e0b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
