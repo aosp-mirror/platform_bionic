@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d602bbf6_421cd6d5",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-09-02T20:09:56Z",
+      "side": 1,
+      "message": "Should we configure the toolchain to enable this automatically for Android?",
+      "revId": "968c3645a899e2d9fee4b2cba461bc85f628e0b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
