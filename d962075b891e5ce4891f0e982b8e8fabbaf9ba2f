@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "917dad55_f13bd2f9",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-02T15:44:47Z",
+      "side": 1,
+      "message": "mention errno here too?",
+      "revId": "d962075b891e5ce4891f0e982b8e8fabbaf9ba2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
