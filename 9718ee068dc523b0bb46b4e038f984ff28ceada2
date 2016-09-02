@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "917dad55_eb75a18e",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2016-09-02T03:09:42Z",
+      "side": 1,
+      "message": "As an FYI, this does add gtest library to shared_libs by default, unless you set gtest: false.",
+      "revId": "9718ee068dc523b0bb46b4e038f984ff28ceada2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
