@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "917dad55_969fdcfd",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-09-02T06:13:53Z",
+      "side": 1,
+      "message": "Ugh, I guess this needs to be moved out into libc_stack_protector.a.",
+      "revId": "3a699b7803d36a61abda4cf766cff105fe3d3487",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
