@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d602bbf6_05fed898",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-04T16:10:36Z",
+      "side": 1,
+      "message": "unique_ptr?",
+      "revId": "d3207a8d352c118cae74333ff234f014fa2a07ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9685a3ca_c5d7acdd",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-04T16:10:36Z",
+      "side": 1,
+      "message": "I was thinking if we should have tests for \u0027Nan\u0027s \u0027iNfInItY\u0027s?",
+      "revId": "d3207a8d352c118cae74333ff234f014fa2a07ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
