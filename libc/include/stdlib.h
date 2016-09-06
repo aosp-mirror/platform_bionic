@@ -147,14 +147,23 @@ lldiv_t lldiv(long long, long long) __pure2;
 const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char*) __INTRODUCED_IN(21);
 
-int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE;
+int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE __VERSIONER_NO_GUARD;
 size_t mbstowcs(wchar_t*, const char*, size_t);
-int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21);
-int wctomb(char*, wchar_t) __INTRODUCED_IN(21);
+int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+int wctomb(char*, wchar_t) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+
 size_t wcstombs(char*, const wchar_t*, size_t);
 
+#if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
+#else
+/*
+ * 4 is only true for UTF-8 locales, but that's what we default to. We'll need
+ * the NDK compatibility library to fix this properly.
+ */
+#define MB_CUR_MAX 4
+#endif
 
 #if defined(__BIONIC_FORTIFY)
 
