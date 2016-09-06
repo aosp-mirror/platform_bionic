@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "762d8fd5_a9b5fd3e",
+        "filename": "libc/arch-arm/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-06T19:29:12Z",
+      "side": 1,
+      "message": "We probably aren\u0027t going to change this code, but it might be useful to add a comment about why this is happening to prevent someone changing this and causing a breakage. Although, if clang is being fixed quickly enough, it might not be worth it.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 4
+      },
+      "revId": "d30bc9e74b8ff3afceac973d334023564e64dbd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
