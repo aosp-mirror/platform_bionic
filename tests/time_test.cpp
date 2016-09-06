@@ -124,7 +124,10 @@ TEST(time, mktime_10310929) {
 TEST(time, mktime_EOVERFLOW) {
   struct tm t;
   memset(&t, 0, sizeof(tm));
-  t.tm_year = 0;
+
+  // LP32 year range is 1901-2038, so this year is guaranteed not to overflow.
+  t.tm_year = 2016 - 1900;
+
   t.tm_mon = 2;
   t.tm_mday = 10;
 
@@ -132,7 +135,10 @@ TEST(time, mktime_EOVERFLOW) {
   ASSERT_NE(static_cast<time_t>(-1), mktime(&t));
   ASSERT_EQ(0, errno);
 
+  // This will overflow for LP32 or LP64.
   t.tm_year = INT_MAX;
+
+  errno = 0;
   ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
   ASSERT_EQ(EOVERFLOW, errno);
 }
