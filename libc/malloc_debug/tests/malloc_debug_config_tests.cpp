@@ -122,7 +122,7 @@ std::string usage_string(
   "6 malloc_debug     recorded. of frames to capture. The default value is 8000000.\n"
   "6 malloc_debug     If the allocation list fills up, all further allocations are not recorded.\n"
   "6 malloc_debug \n"
-  "6 malloc_debug   record_alloc_file[=FILE]\n"
+  "6 malloc_debug   record_allocs_file[=FILE]\n"
   "6 malloc_debug     This option only has meaning if the record_allocs options has been specified.\n"
   "6 malloc_debug     This is the name of the file to which recording information will be dumped.\n"
   "6 malloc_debug     The default is /data/local/tmp/record_allocs.txt.\n"
