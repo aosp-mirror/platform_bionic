@@ -147,11 +147,7 @@ struct __sfileext {
 #define __SNPT 0
 #define __SOPT 0
 
-#if defined(__cplusplus)
-#define _EXT(fp) reinterpret_cast<__sfileext*>((fp)->_ext._base)
-#else
-#define _EXT(fp) ((struct __sfileext *)((fp)->_ext._base))
-#endif
+#define _EXT(fp) __BIONIC_CAST(reinterpret_cast, struct __sfileext*, (fp)->_ext._base)
 
 #define _UB(fp) _EXT(fp)->_ub
 #define _FLOCK(fp)  _EXT(fp)->_lock
@@ -171,7 +167,7 @@ do { \
 
 #define _FILEEXT_SETUP(f, fext) \
 do { \
-	(f)->_ext._base = (unsigned char *)(fext); \
+	(f)->_ext._base = __BIONIC_CAST(reinterpret_cast, unsigned char*, fext); \
 	_FILEEXT_INIT(f); \
 } while (0)
 
@@ -258,6 +254,9 @@ wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
 /* Remove the if (!__sdidinit) __sinit() idiom from untouched upstream stdio code. */
 extern void __sinit(void); // Not actually implemented.
 #define __sdidinit 1
+
+size_t parsefloat(FILE*, char*, char*);
+size_t wparsefloat(FILE*, wchar_t*, wchar_t*);
 
 __END_DECLS
 
