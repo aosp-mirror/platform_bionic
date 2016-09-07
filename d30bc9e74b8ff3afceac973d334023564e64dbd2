@@ -22,6 +22,30 @@
       "revId": "d30bc9e74b8ff3afceac973d334023564e64dbd2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "762d8fd5_439ffa54",
+        "filename": "libc/arch-arm/bionic/__bionic_clone.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1107393
+      },
+      "writtenOn": "2016-09-07T04:03:25Z",
+      "side": 1,
+      "message": "Sure~ Once the cause is found out, I will add a comment about this.",
+      "parentUuid": "762d8fd5_a9b5fd3e",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 4
+      },
+      "revId": "d30bc9e74b8ff3afceac973d334023564e64dbd2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
