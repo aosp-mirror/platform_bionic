@@ -164,6 +164,11 @@ void resolve_paths(std::vector<std::string>& paths,
                    std::vector<std::string>* resolved_paths) {
   resolved_paths->clear();
   for (const auto& path : paths) {
+    // skip empty paths
+    if (path.empty()) {
+      continue;
+    }
+
     char resolved_path[PATH_MAX];
     const char* original_path = path.c_str();
     if (realpath(original_path, resolved_path) != nullptr) {
