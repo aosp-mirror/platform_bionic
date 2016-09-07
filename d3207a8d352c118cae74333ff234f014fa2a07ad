@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b64b87fc_dec3812e",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-07T21:14:33Z",
+      "side": 1,
+      "message": "not in bionic proper. life is better in linker-land :-)",
+      "parentUuid": "d602bbf6_05fed898",
+      "revId": "d3207a8d352c118cae74333ff234f014fa2a07ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9685a3ca_c5d7acdd",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-04T16:10:36Z",
       "side": 1,
       "message": "I was thinking if we should have tests for \u0027Nan\u0027s \u0027iNfInItY\u0027s?",
+      "revId": "d3207a8d352c118cae74333ff234f014fa2a07ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b64b87fc_be20f50c",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-07T21:14:33Z",
+      "side": 1,
+      "message": "yeah, good point. will do.",
+      "parentUuid": "9685a3ca_c5d7acdd",
       "revId": "d3207a8d352c118cae74333ff234f014fa2a07ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
