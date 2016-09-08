@@ -84,6 +84,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     std::string declaration_name = getDeclName(named_decl);
     bool is_extern = named_decl->getFormalLinkage() == ExternalLinkage;
     bool is_definition = false;
+    bool no_guard = false;
 
     if (auto function_decl = dyn_cast<FunctionDecl>(decl)) {
       declaration_type = DeclarationType::function;
@@ -140,7 +141,9 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     // Find and parse __ANDROID_AVAILABILITY_DUMP__ annotations.
     for (const AnnotateAttr* attr : decl->specific_attrs<AnnotateAttr>()) {
       llvm::StringRef annotation = attr->getAnnotation();
-      if (annotation == "introduced_in_future") {
+      if (annotation == "versioner_no_guard") {
+        no_guard = true;
+      } else if (annotation == "introduced_in_future") {
         // Tag the compiled-for arch, since this can vary across archs.
         availability.arch_availability[type.arch].future = true;
       } else {
@@ -200,11 +203,13 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       declaration.location = location;
       declaration.is_extern = is_extern;
       declaration.is_definition = is_definition;
+      declaration.no_guard = no_guard;
       declaration.availability.insert(std::make_pair(type, availability));
       symbol_it->second.declarations.insert(std::make_pair(location, declaration));
     } else {
       if (declaration_it->second.is_extern != is_extern ||
-          declaration_it->second.is_definition != is_definition) {
+          declaration_it->second.is_definition != is_definition ||
+          declaration_it->second.no_guard != no_guard) {
         errx(1, "varying declaration of '%s' at %s:%u:%u", declaration_name.c_str(),
              location.filename.c_str(), location.start.line, location.start.column);
       }
