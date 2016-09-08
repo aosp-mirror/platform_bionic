@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "565c0b05_2dcde5ad",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-09-08T23:18:41Z",
+      "side": 1,
+      "message": "Hassle to do atm since libandroid_support is a prebuilt for the platform. I\u0027d like to get the unified headers checked in before I handle this since I\u0027ll probably come up with more things.",
+      "revId": "11f0e10c4911e39733145194ee78bb65d684fff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
