@@ -148,6 +148,7 @@ struct Declaration {
 
   bool is_extern;
   bool is_definition;
+  bool no_guard;
   std::map<CompilationType, DeclarationAvailability> availability;
 
   bool calculateAvailability(DeclarationAvailability* output) const;
@@ -161,6 +162,9 @@ struct Declaration {
 
     fprintf(out, "%s ", is_extern ? "extern" : "static");
     fprintf(out, "%s ", is_definition ? "definition" : "declaration");
+    if (no_guard) {
+      fprintf(out, "no_guard ");
+    }
     fprintf(out, "@ %s:%u:%u", StripPrefix(location.filename, base_path).str().c_str(),
             location.start.line, location.start.column);
 
