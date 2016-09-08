@@ -452,6 +452,11 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
       const Location& location = decl_it.first;
       const Declaration& decl = decl_it.second;
 
+      if (decl.no_guard) {
+        // No guard required.
+        continue;
+      }
+
       DeclarationAvailability macro_guard = calculateRequiredGuard(decl);
       if (!macro_guard.empty()) {
         guards[location.filename][location] = macro_guard;

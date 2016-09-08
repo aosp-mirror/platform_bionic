@@ -27,4 +27,6 @@
 #define __INTRODUCED_IN_X86(api_level) __attribute__((annotate("introduced_in_x86=" #api_level)))
 #define __INTRODUCED_IN_MIPS(api_level) __attribute__((annotate("introduced_in_mips=" #api_level)))
 
+#define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
+
 #endif /* ANDROID_VERSIONING_H */
