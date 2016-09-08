@@ -489,6 +489,7 @@ ssize_t write(int fd, const void* buf, size_t count) {
 }
 #endif /* __ANDROID_API__ >= 24 */
 
+#if __ANDROID_API__ >= 23
 __BIONIC_FORTIFY_INLINE
 ssize_t readlink(const char* path, char* buf, size_t size) {
     size_t bos = __bos(buf);
@@ -538,6 +539,7 @@ ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size) {
 
     return __readlinkat_chk(dirfd, path, buf, size, bos);
 }
+#endif /* __ANDROID_API__ >= 23 */
 
 #endif /* defined(__BIONIC_FORTIFY) */
 
