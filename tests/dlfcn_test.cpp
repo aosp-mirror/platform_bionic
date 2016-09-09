@@ -1129,8 +1129,20 @@ TEST(dlfcn, dt_runpath_smoke) {
   dlclose(handle);
 }
 
+// Bionic specific tests
+#if defined(__BIONIC__)
+
+#if defined(__LP64__)
+#define NATIVE_TESTS_PATH "/nativetest64/bionic-loader-test-libs"
+#else
+#define NATIVE_TESTS_PATH "/nativetest/bionic-loader-test-libs"
+#endif
+
+#define PREBUILT_ELF_PATH NATIVE_TESTS_PATH "/prebuilt-elf-files"
+
 TEST(dlfcn, dt_runpath_absolute_path) {
-  void* handle = dlopen(PATH_TO_SYSTEM_LIB "libtest_dt_runpath_d.so", RTLD_NOW);
+  std::string libpath = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH + "/libtest_dt_runpath_d.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   typedef void *(* dlopen_b_fn)();
@@ -1143,19 +1155,10 @@ TEST(dlfcn, dt_runpath_absolute_path) {
   dlclose(handle);
 }
 
-// Bionic specific tests
-#if defined(__BIONIC__)
-
-#if defined(__LP64__)
-#define NATIVE_TESTS_PATH "/nativetest64"
-#else
-#define NATIVE_TESTS_PATH "/nativetest"
-#endif
-
-#define PREBUILT_ELF_PATH NATIVE_TESTS_PATH "/prebuilt-elf-files"
-
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-rw_load_segment.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\": W + E load segments are not allowed";
@@ -1163,7 +1166,9 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
 }
 
 TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-unaligned_shdr_offset.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-unaligned_shdr_offset.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: ";
@@ -1171,7 +1176,9 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shentsize) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shentsize.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shentsize.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has unsupported e_shentsize: 0x0 (expected 0x";
@@ -1179,7 +1186,9 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shstrndx.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shstrndx.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid e_shstrndx";
@@ -1187,7 +1196,9 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
 }
 
 TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-empty_shdr_table.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-empty_shdr_table.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has no section headers";
@@ -1195,7 +1206,9 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shdr_table_offset.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shdr_table_offset.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has invalid shdr offset/size: 0/";
@@ -1203,7 +1216,9 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
-  std::string libpath = std::string(getenv("ANDROID_DATA")) + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shdr_table_content.so";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string libpath = data_path + PREBUILT_ELF_PATH + "/libtest_invalid-zero_shdr_table_content.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" .dynamic section header was not found";

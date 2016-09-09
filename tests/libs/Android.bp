@@ -17,6 +17,12 @@
 cc_defaults {
     name: "bionic_testlib_defaults",
     host_supported: true,
+    ldflags: [
+        "-Wl,--rpath,\\$${ORIGIN}",
+        "-Wl,--enable-new-dtags",
+    ],
+    relative_install_path: "bionic-loader-test-libs",
+    gtest: false,
     sanitize: {
         never: true,
     },
@@ -30,7 +36,7 @@ cc_defaults {
 // -----------------------------------------------------------------------------
 // Library to test gnu-styled hash
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libgnu-hash-table-library",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
@@ -48,7 +54,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library to test sysv-styled hash
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libsysv-hash-table-library",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
@@ -63,8 +69,9 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by dlext tests - without GNU RELRO program header
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libdlext_test_norelro",
+    defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
     ldflags: ["-Wl,-z,norelro"],
     shared_libs = ["libtest_simple"],
@@ -93,7 +100,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by dlfcn tests
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_simple",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_simple.cpp"],
@@ -102,7 +109,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by dlfcn nodelete tests
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_nodelete_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_nodelete_1.cpp"],
@@ -111,7 +118,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by dlfcn nodelete tests
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_nodelete_2",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_nodelete_2.cpp"],
@@ -120,7 +127,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by dlfcn nodelete tests
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_nodelete_dt_flags_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_nodelete_dt_flags_1.cpp"],
@@ -172,7 +179,7 @@ cc_library {
 //
 // libtest_with_dependency_loop -> a -> b -> c -> a
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_with_dependency_loop",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_root.cpp"],
@@ -182,7 +189,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // libtest_with_dependency_loop_a.so
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_with_dependency_loop_a",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_a.cpp"],
@@ -194,7 +201,7 @@ cc_library {
 //
 // this is temporary placeholder - will be removed
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_with_dependency_loop_b_tmp",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_invalid.cpp"],
@@ -204,7 +211,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // libtest_with_dependency_loop_b.so
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_with_dependency_loop_b",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_b.cpp"],
@@ -214,7 +221,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // libtest_with_dependency_loop_c.so
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_with_dependency_loop_c",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_loopy_c.cpp"],
@@ -230,7 +237,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 
 
-cc_library {
+cc_test_library {
     name: "libtest_relo_check_dt_needed_order",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_relo_check_dt_needed_order.cpp"],
@@ -240,13 +247,13 @@ cc_library {
     ],
 }
 
-cc_library {
+cc_test_library {
     name: "libtest_relo_check_dt_needed_order_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_relo_check_dt_needed_order_1.cpp"],
 }
 
-cc_library {
+cc_test_library {
     name: "libtest_relo_check_dt_needed_order_2",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_relo_check_dt_needed_order_2.cpp"],
@@ -260,7 +267,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library used by ifunc tests
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_ifunc",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc.c"],
@@ -281,7 +288,7 @@ cc_library {
 // Library used by atexit tests
 // -----------------------------------------------------------------------------
 
-cc_library {
+cc_test_library {
     name: "libtest_atexit",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["atexit_testlib.cpp"],
@@ -291,7 +298,7 @@ cc_library {
 // This library is used by dl_load test to check symbol preempting
 // by main executable
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libdl_preempt_test_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_preempt_library_1.cpp"],
@@ -301,7 +308,7 @@ cc_library {
 // This library is used by dl_load test to check symbol preempting
 // by libdl_preempt_test_1.so
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libdl_preempt_test_2",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_preempt_library_2.cpp"],
@@ -310,7 +317,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library with DF_1_GLOBAL
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libdl_test_df_1_global",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_global.cpp"],
@@ -328,7 +335,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library using symbol from libdl_test_df_1_global
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlsym_df_1_global",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_use_global.cpp"],
@@ -337,7 +344,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library with weak function
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlsym_weak_func",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_weak_function.cpp"],
@@ -346,7 +353,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library to check RTLD_LOCAL with dlsym in 'this'
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlsym_from_this",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_symbol.cpp"],
@@ -360,7 +367,7 @@ cc_library {
 }
 
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlsym_from_this_child",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_functions.cpp"],
@@ -368,7 +375,7 @@ cc_library {
 }
 
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlsym_from_this_grandchild",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_symbol2.cpp"],
@@ -377,7 +384,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Empty library
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_empty",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["empty.cpp"],
@@ -386,7 +393,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library with weak undefined function
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlopen_weak_undefined_func",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_weak_undefined.cpp"],
@@ -395,7 +402,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library with constructor that calls dlopen() b/7941716
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlopen_from_ctor",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_dlopen_from_ctor.cpp"],
@@ -409,7 +416,7 @@ cc_library {
 // -----------------------------------------------------------------------------
 // Library that depends on the library with constructor that calls dlopen() b/7941716
 // -----------------------------------------------------------------------------
-cc_library {
+cc_test_library {
     name: "libtest_dlopen_from_ctor_main",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["empty.cpp"],
