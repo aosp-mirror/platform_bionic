@@ -33,8 +33,9 @@
 #include <unistd.h>
 
 int semctl(int id, int num, int cmd, ...) {
-#if !defined(__LP64__)
+#if !defined(__LP64__) || defined(__mips__)
   // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
+  // Mips64 is an exception to this, it requires the flag.
   cmd |= IPC_64;
 #endif
   va_list ap;
