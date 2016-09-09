@@ -259,11 +259,12 @@ long double expm1l(long double) __INTRODUCED_IN(21);
 long double fabsl(long double) __pure2;
 long double fdiml(long double, long double);
 long double floorl(long double);
-long double fmal(long double, long double, long double) __INTRODUCED_IN(21);
+long double fmal(long double, long double, long double) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
 long double fmaxl(long double, long double) __pure2;
 long double fminl(long double, long double) __pure2;
 long double fmodl(long double, long double) __INTRODUCED_IN(21);
-long double frexpl(long double value, int*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
+long double frexpl(long double value, int*)
+    __INTRODUCED_IN(21) __VERSIONER_NO_GUARD; /* fundamentally !__pure2 */
 long double hypotl(long double, long double) __INTRODUCED_IN(21);
 int ilogbl(long double) __pure2;
 long double ldexpl(long double, int);
@@ -280,10 +281,10 @@ long lroundl(long double);
 long double modfl(long double, long double*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
 long double nanl(const char*) __pure2 __INTRODUCED_IN(13);
 long double nearbyintl(long double) __INTRODUCED_IN(21);
-long double nextafterl(long double, long double) __INTRODUCED_IN(21);
-double nexttoward(double, long double) __INTRODUCED_IN(18);
+long double nextafterl(long double, long double) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+double nexttoward(double, long double) __INTRODUCED_IN(18) __VERSIONER_NO_GUARD;
 float nexttowardf(float, long double);
-long double nexttowardl(long double, long double) __INTRODUCED_IN(18);
+long double nexttowardl(long double, long double) __INTRODUCED_IN(18) __VERSIONER_NO_GUARD;
 long double powl(long double, long double) __INTRODUCED_IN(21);
 long double remainderl(long double, long double) __INTRODUCED_IN(21);
 long double remquol(long double, long double, int*) __INTRODUCED_IN(21);
