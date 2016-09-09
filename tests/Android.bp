@@ -151,6 +151,9 @@ cc_test_library {
         "libbase",
     ],
     host_ldlibs: ["-lrt"],
+    shared: {
+        enabled: false,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -179,6 +182,9 @@ cc_test_library {
         "-D_FORTIFY_SOURCE=1",
         "-DTEST_NAME=Fortify1_gcc"
     ],
+    shared: {
+        enabled: false,
+    },
 }
 
 cc_test_library {
@@ -189,6 +195,9 @@ cc_test_library {
         "-D_FORTIFY_SOURCE=2",
         "-DTEST_NAME=Fortify2_gcc"
     ],
+    shared: {
+        enabled: false,
+    },
 }
 
 cc_test_library {
@@ -199,6 +208,9 @@ cc_test_library {
         "-D_FORTIFY_SOURCE=1",
         "-DTEST_NAME=Fortify1_clang"
     ],
+    shared: {
+        enabled: false,
+    },
 }
 
 cc_test_library {
@@ -209,6 +221,9 @@ cc_test_library {
         "-D_FORTIFY_SOURCE=2",
         "-DTEST_NAME=Fortify2_clang"
     ],
+    shared: {
+        enabled: false,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -226,7 +241,7 @@ cc_test_library {
     ],
     shared: {
         enabled: false,
-    }
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -241,6 +256,9 @@ cc_test_library {
             enabled: true,
         },
     },
+    shared: {
+        enabled: false,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -252,6 +270,9 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     srcs: ["gtest_main.cpp"],
     cppflags: ["-DUSING_GTEST_OUTPUT_FORMAT"],
+    shared: {
+        enabled: false,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -312,6 +333,10 @@ cc_defaults {
                 "libziparchive",
                 "libz",
                 "libutils",
+            ],
+            ldflags: [
+                "-Wl,--rpath,\\$${ORIGIN}/../bionic-loader-test-libs",
+                "-Wl,--enable-new-dtags",
             ],
         },
     }
