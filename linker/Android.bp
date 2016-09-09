@@ -22,6 +22,7 @@ cc_binary {
         "linker_gdb_support.cpp",
         "linker_globals.cpp",
         "linker_libc_support.c",
+        "linker_main.cpp",
         "linker_namespaces.cpp",
         "linker_logger.cpp",
         "linker_mapped_file_fragment.cpp",
