@@ -55,9 +55,9 @@ typedef int (*fn)(void);
 constexpr auto LIBSIZE = 1024 * 1024; // how much address space to reserve for it
 
 #if defined(__LP64__)
-#define NATIVE_TESTS_PATH "/nativetest64"
+#define NATIVE_TESTS_PATH "/nativetest64/bionic-loader-test-libs"
 #else
-#define NATIVE_TESTS_PATH "/nativetest"
+#define NATIVE_TESTS_PATH "/nativetest/bionic-loader-test-libs"
 #endif
 
 #define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
@@ -150,11 +150,9 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
   // lib_path is relative when $ANDROID_DATA is relative
-  char lib_realpath_buf[PATH_MAX];
-  ASSERT_TRUE(realpath(lib_path.c_str(), lib_realpath_buf) == lib_realpath_buf);
-  const std::string lib_realpath = std::string(lib_realpath_buf);
+  std::string lib_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")) + LIBZIPPATH, &lib_path)) << strerror(errno);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -179,7 +177,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   extinfo.library_fd_offset = 0;
   handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_EQ("dlopen failed: \"" + lib_realpath + "\" has bad ELF magic", dlerror());
+  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic", dlerror());
 
   // Check if dlsym works after unsuccessful dlopen().
   // Supply non-exiting one to make linker visit every soinfo.
@@ -235,7 +233,8 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 }
 
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
+  std::string lib_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")) + LIBZIPPATH, &lib_path)) << strerror(errno);
 
   void* handle = dlopen((lib_path + "!/libdir/libatest_simple_zip.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -248,7 +247,9 @@ TEST(dlfcn, dlopen_from_zip_absolute_path) {
 }
 
 TEST(dlfcn, dlopen_from_zip_with_dt_runpath) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH_WITH_RUNPATH;
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string lib_path = data_path + LIBZIPPATH_WITH_RUNPATH;
 
   void* handle = dlopen((lib_path + "!/libdir/libtest_dt_runpath_d_zip.so").c_str(), RTLD_NOW);
 
@@ -266,7 +267,9 @@ TEST(dlfcn, dlopen_from_zip_with_dt_runpath) {
 }
 
 TEST(dlfcn, dlopen_from_zip_ld_library_path) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH + "!/libdir";
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string lib_path = data_path + LIBZIPPATH + "!/libdir";
 
   typedef void (*fn_t)(const char*);
   fn_t android_update_LD_LIBRARY_PATH =
@@ -1110,7 +1113,9 @@ TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
+  std::string data_path;
+  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
+  const std::string lib_path = data_path + NATIVE_TESTS_PATH;
 
   const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
