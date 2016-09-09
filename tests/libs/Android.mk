@@ -29,6 +29,7 @@ common_additional_dependencies := \
     $(LOCAL_PATH)/Android.build.linker_namespaces.mk \
     $(LOCAL_PATH)/Android.build.pthread_atfork.mk \
     $(LOCAL_PATH)/Android.build.testlib.mk \
+    $(LOCAL_PATH)/Android.build.testlib.target.mk \
     $(LOCAL_PATH)/Android.build.versioned_lib.mk \
     $(TEST_PATH)/Android.build.mk
 
@@ -51,12 +52,12 @@ include $(LOCAL_PATH)/Android.build.testlib.mk
 # create symlink to libdlext_test.so for symlink test
 # -----------------------------------------------------------------------------
 # Use = instead of := to defer the evaluation of $@
-$(TARGET_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
+$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
     $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 
 ifneq ($(TARGET_2ND_ARCH),)
 # link 64 bit .so
-$(TARGET_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
+$($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
     $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
 endif
 
@@ -77,11 +78,12 @@ libdlext_test_fd_src_files := \
 
 libdlext_test_fd_shared_libraries := libtest_simple
 
-libdlext_test_fd_install_to_out_data_dir := $(module)
+libdlext_test_fd_relative_install_path := $(module)
+
+libdlext_test_fd_ldflags := -Wl,--rpath,\$${ORIGIN}/.. -Wl,--enable-new-dtags
+
 module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.target.mk
 
 
 # -----------------------------------------------------------------------------
@@ -94,22 +96,18 @@ libdlext_test_zip_src_files := \
 
 libdlext_test_zip_shared_libraries := libatest_simple_zip
 
-libdlext_test_zip_install_to_out_data_dir := $(module)
+libdlext_test_zip_relative_install_path := $(module)
 module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.target.mk
 
 module := libatest_simple_zip
 
 libatest_simple_zip_src_files := \
     dlopen_testlib_simple.cpp
 
-libatest_simple_zip_install_to_out_data_dir := $(module)
+libatest_simple_zip_relative_install_path := $(module)
 module_tag := optional
-build_type := target
-build_target := SHARED_LIBRARY
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.target.mk
 
 # ----------------------------------------------------------------------------
 # Library with soname which does not match filename
