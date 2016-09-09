@@ -55,6 +55,16 @@ const std::string& get_executable_path() {
   return g_executable_path;
 }
 
+bool get_realpath(const std::string& path, std::string* real_path) {
+  char realpath_buf[PATH_MAX];
+  if (realpath(path.c_str(), realpath_buf) != realpath_buf) {
+    return false;
+  }
+
+  *real_path = realpath_buf;
+  return true;
+}
+
 int get_argc() {
   return g_argc;
 }

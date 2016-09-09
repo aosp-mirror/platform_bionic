@@ -14,10 +14,17 @@
 # limitations under the License.
 #
 
-build_target := SHARED_LIBRARY
-build_type := host
+build_type := target
+# 1. Install test libraries to /data/nativetests../bionic-loader-test-libs/
+#    by default.
+ifeq ($($(module)_relative_install_path),)
+  $(module)_install_to_out_data_dir := bionic-loader-test-libs
+else
+  $(module)_install_to_out_data_dir := bionic-loader-test-libs/$($(module)_relative_install_path)
+endif
+# 2. Set dt_runpath to origin to resolve dependencies
+$(module)_ldflags += -Wl,--rpath,\$${ORIGIN} -Wl,--enable-new-dtags
 include $(TEST_PATH)/Android.build.mk
-bionic-loader-test-libs-host: $(LOCAL_MODULE)
 
-include $(LOCAL_PATH)/Android.build.testlib.target.mk
+bionic-loader-test-libs-target: $(LOCAL_MODULE)
 
