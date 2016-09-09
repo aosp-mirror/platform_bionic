@@ -239,9 +239,7 @@ char* stpncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src
 
     return __stpncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
-#endif /* __ANDROID_API__ >= 21 */
 
-#if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src, size_t n) {
     size_t bos_dst = __bos(dst);
@@ -262,7 +260,9 @@ char* strncpy(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src
 
     return __strncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
+#endif /* __ANDROID_API__ >= 21 */
 
+#if __ANDROID_API__ >= 17
 __BIONIC_FORTIFY_INLINE
 char* strcat(char* _Nonnull __restrict dst, const char* _Nonnull __restrict src) {
     return __builtin___strcat_chk(dst, src, __bos(dst));
