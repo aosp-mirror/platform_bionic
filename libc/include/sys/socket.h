@@ -114,7 +114,22 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
+#if __ANDROID_API__ >= 21
 struct cmsghdr* __cmsg_nxthdr(struct msghdr*, struct cmsghdr*) __INTRODUCED_IN(21);
+#else
+/* TODO(danalbert): Move this into libandroid_support. */
+static inline struct cmsghdr* __cmsg_nxthdr(struct msghdr* msg, struct cmsghdr* cmsg) {
+  struct cmsghdr* ptr =
+      __BIONIC_CAST(reinterpret_cast, struct cmsghdr*,
+                    (__BIONIC_CAST(reinterpret_cast, char*, cmsg) + CMSG_ALIGN(cmsg->cmsg_len)));
+  size_t len = __BIONIC_CAST(reinterpret_cast, char*, ptr + 1) -
+               __BIONIC_CAST(reinterpret_cast, char*, msg->msg_control);
+  if (len > msg->msg_controllen) {
+    return NULL;
+  }
+  return ptr;
+}
+#endif /* __ANDROID_API__ >= 21 */
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
