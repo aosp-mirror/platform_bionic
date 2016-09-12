@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b3b825a_29827537",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-12T19:11:11Z",
+      "side": 1,
+      "message": "I think it might be better to pass the options string to the init function. That way the malloc debug code doesn\u0027t need to know anything about properties or environment variables.\n\nIf we change this in the future, then everything underneath will continue to work.",
+      "range": {
+        "startLine": 393,
+        "startChar": 7,
+        "endLine": 393,
+        "endChar": 16
+      },
+      "revId": "09c619c07c518c4aecbafe43fab381d4d853c305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
