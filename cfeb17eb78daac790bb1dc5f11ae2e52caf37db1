@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b3b825a_d4e27c95",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-12T19:45:48Z",
+      "side": 1,
+      "message": "TODO: remove unhelpful comment.",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 3
+      },
+      "revId": "cfeb17eb78daac790bb1dc5f11ae2e52caf37db1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
