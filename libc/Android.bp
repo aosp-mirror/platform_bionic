@@ -1989,4 +1989,118 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
+// The following module lives in prebuilts/ndk because we need to preprocess the
+// headers to include ifdef guards for __ANDROID_API__. Update with
+// bionic/tools/update_headers.sh.
+// ndk_headers {
+//     name: "common_libc",
+//     from: "include",
+//     to: "",
+//     srcs: ["include/**/*.h"],
+// }
+
+ndk_headers {
+    name: "libc_linux",
+    from: "kernel/uapi/linux",
+    to: "linux",
+    srcs: ["kernel/uapi/linux/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_generic",
+    from: "kernel/uapi/asm-generic",
+    to: "asm-generic",
+    srcs: ["kernel/uapi/asm-generic/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_arm",
+    from: "kernel/uapi/asm-arm",
+    to: "arm-linux-androideabi",
+    srcs: ["kernel/uapi/asm-arm/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_arm64",
+    from: "kernel/uapi/asm-arm64",
+    to: "aarch64-linux-android",
+    srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_mips",
+    from: "kernel/uapi/asm-mips",
+    to: "mipsel-linux-android",
+    srcs: ["kernel/uapi/asm-mips/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_mips64",
+    from: "kernel/uapi/asm-mips",
+    to: "mips64el-linux-android",
+    srcs: ["kernel/uapi/asm-mips/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_x86",
+    from: "kernel/uapi/asm-x86",
+    to: "i686-linux-android",
+    srcs: ["kernel/uapi/asm-x86/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_asm_x86_64",
+    from: "kernel/uapi/asm-x86",
+    to: "x86_64-linux-android",
+    srcs: ["kernel/uapi/asm-x86/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_arm",
+    from: "arch-arm/include",
+    to: "arm-linux-androideabi",
+    srcs: ["arch-arm/include/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_arm64",
+    from: "arch-arm64/include",
+    to: "aarch64-linux-android",
+    srcs: ["arch-arm64/include/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_mips",
+    from: "arch-mips/include",
+    to: "mipsel-linux-android",
+    srcs: ["arch-mips/include/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_mips64",
+    from: "arch-mips/include",
+    to: "mips64el-linux-android",
+    srcs: ["arch-mips/include/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_x86",
+    from: "arch-x86/include",
+    to: "i686-linux-android",
+    srcs: ["arch-x86/include/**/*.h"],
+}
+
+ndk_headers {
+    name: "libc_machine_x86_64",
+    from: "arch-x86_64/include",
+    to: "x86_64-linux-android",
+    srcs: ["arch-x86_64/include/**/*.h"],
+}
+
+ndk_library {
+    name: "libc.ndk",
+    symbol_file: "libc.map.txt",
+    first_version: "9",
+}
+
 subdirs = ["malloc_debug"]
