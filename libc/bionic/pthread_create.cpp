@@ -56,7 +56,6 @@ void __init_tls(pthread_internal_t* thread) {
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
-  __init_thread_stack_guard(thread);
 }
 
 void __init_thread_stack_guard(pthread_internal_t* thread) {
@@ -182,6 +181,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   thread->mmap_size = mmap_size;
   thread->attr = *attr;
   __init_tls(thread);
+  __init_thread_stack_guard(thread);
 
   *threadp = thread;
   *child_stack = stack_top;
