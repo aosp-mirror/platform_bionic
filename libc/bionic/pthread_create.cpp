@@ -44,7 +44,7 @@
 #include "private/ScopedPthreadMutexLocker.h"
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.
-#if __i386__
+#if defined(__i386__)
 #include <asm/ldt.h>
 void __init_user_desc(struct user_desc*, bool, void*);
 #endif
