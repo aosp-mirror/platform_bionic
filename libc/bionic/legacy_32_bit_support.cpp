@@ -37,7 +37,7 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 
-#if __LP64__
+#if defined(__LP64__)
 #error This code is only needed on 32-bit systems!
 #endif
 

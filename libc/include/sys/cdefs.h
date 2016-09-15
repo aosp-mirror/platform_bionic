@@ -229,7 +229,7 @@
 #include <android/api-level.h>
 
 /* glibc compatibility. */
-#if __LP64__
+#if defined(__LP64__)
 #define __WORDSIZE 64
 #else
 #define __WORDSIZE 32
@@ -278,7 +278,7 @@
 #include <android/versioning.h>
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
-#if __LP64__
+#if defined(__LP64__)
 #define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
 #else
 #define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)

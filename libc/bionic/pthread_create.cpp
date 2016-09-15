@@ -101,7 +101,7 @@ int __init_thread(pthread_internal_t* thread) {
     sched_param param;
     param.sched_priority = thread->attr.sched_priority;
     if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
-#if __LP64__
+#if defined(__LP64__)
       // For backwards compatibility reasons, we only report failures on 64-bit devices.
       error = errno;
 #endif
