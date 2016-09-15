@@ -77,6 +77,12 @@ class HeaderCompilationDatabase : public CompilationDatabase {
     command.push_back("-D__ANDROID_API__="s + std::to_string(type.api_level));
     command.push_back("-D_FORTIFY_SOURCE=2");
     command.push_back("-D_GNU_SOURCE");
+    command.push_back("-Wall");
+    command.push_back("-Wextra");
+    command.push_back("-Werror");
+    command.push_back("-Wno-unused-macros");
+    command.push_back("-Wno-unused-function");
+    command.push_back("-Wno-unused-variable");
     command.push_back("-Wno-unknown-attributes");
     command.push_back("-Wno-pragma-once-outside-header");
     command.push_back("-target");
