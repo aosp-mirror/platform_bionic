@@ -261,6 +261,37 @@ cc_test_library {
     },
 }
 
+cc_test_library {
+    name: "libBionicLoaderTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "atexit_test.cpp",
+        "dl_test.cpp",
+        "dlfcn_test.cpp",
+        "pthread_dlfcn_test.cpp",
+    ],
+    static_libs: [
+        "libbase",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    shared: {
+        enabled: false,
+    },
+    target: {
+        android: {
+            srcs: [
+                "dlext_test.cpp",
+                "libdl_test.cpp",
+            ],
+            static_libs: [
+                "libpagemap",
+            ],
+        }
+    }
+}
+
 // -----------------------------------------------------------------------------
 // Library of bionic customized gtest main function, with normal gtest output format,
 // which is needed by bionic cts test.
@@ -288,6 +319,7 @@ cc_defaults {
 
     whole_static_libs: [
         "libBionicTests",
+        "libBionicLoaderTests",
         "libBionicGtestMain",
     ],
 
@@ -299,13 +331,7 @@ cc_defaults {
 
     srcs: [
         // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
-        "atexit_test.cpp",
-        "dl_test.cpp",
-        "dlext_test.cpp",
         "__cxa_thread_atexit_test.cpp",
-        "dlfcn_test.cpp",
-        "libdl_test.cpp",
-        "pthread_dlfcn_test.cpp",
         "thread_local_test.cpp",
     ],
 
@@ -322,7 +348,6 @@ cc_defaults {
         android: {
             shared_libs: [
                 "libdl",
-                "libpagemap",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
                 "libdl_test_df_1_global",
@@ -330,6 +355,7 @@ cc_defaults {
             static_libs: [
                 // The order of these libraries matters, do not shuffle them.
                 "libbase",
+                "libpagemap",
                 "libziparchive",
                 "libz",
                 "libutils",
