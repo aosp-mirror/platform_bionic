@@ -39,7 +39,7 @@ typedef short __int16_t;
 typedef unsigned short __uint16_t;
 typedef int __int32_t;
 typedef unsigned int __uint32_t;
-#if __LP64__
+#if defined(__LP64__)
 typedef long __int64_t;
 typedef unsigned long __uint64_t;
 #else
@@ -47,7 +47,7 @@ typedef long long __int64_t;
 typedef unsigned long long __uint64_t;
 #endif
 
-#if __LP64__
+#if defined(__LP64__)
 typedef long __intptr_t;
 typedef unsigned long __uintptr_t;
 #else
