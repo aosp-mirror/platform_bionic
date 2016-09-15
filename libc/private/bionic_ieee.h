@@ -79,7 +79,7 @@ struct ieee_double {
   unsigned dbl_sign:1;
 };
 
-#if __LP64__
+#if defined(__LP64__)
 
 /* 64-bit Android uses ld128 long doubles. */
 
