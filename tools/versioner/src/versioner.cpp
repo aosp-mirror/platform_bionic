@@ -80,6 +80,7 @@ class HeaderCompilationDatabase : public CompilationDatabase {
     command.push_back("-Wall");
     command.push_back("-Wextra");
     command.push_back("-Werror");
+    command.push_back("-Wundef");
     command.push_back("-Wno-unused-macros");
     command.push_back("-Wno-unused-function");
     command.push_back("-Wno-unused-variable");
