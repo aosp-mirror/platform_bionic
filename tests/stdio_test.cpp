@@ -548,7 +548,7 @@ TEST(STDIO_TEST, snprintf_d_INT_MIN) {
 TEST(STDIO_TEST, snprintf_ld_LONG_MAX) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%ld", LONG_MAX);
-#if __LP64__
+#if defined(__LP64__)
   EXPECT_STREQ("9223372036854775807", buf);
 #else
   EXPECT_STREQ("2147483647", buf);
@@ -558,7 +558,7 @@ TEST(STDIO_TEST, snprintf_ld_LONG_MAX) {
 TEST(STDIO_TEST, snprintf_ld_LONG_MIN) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%ld", LONG_MIN);
-#if __LP64__
+#if defined(__LP64__)
   EXPECT_STREQ("-9223372036854775808", buf);
 #else
   EXPECT_STREQ("-2147483648", buf);

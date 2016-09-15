@@ -23,7 +23,7 @@
 #define d_QNAN0 0x00000000
 #define d_QNAN1 0x7ff80000
 
-#if __LP64__
+#if defined(__LP64__)
 #define ld_QNAN0 0x00000000
 #define ld_QNAN1 0x00000000
 #define ld_QNAN2 0x00000000

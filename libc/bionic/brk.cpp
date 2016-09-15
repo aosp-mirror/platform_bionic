@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-#if __LP64__
+#if defined(__LP64__)
 static void* __bionic_brk;
 #else
 void* __bionic_brk; // Accidentally exported by the NDK.
