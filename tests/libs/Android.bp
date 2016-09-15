@@ -441,10 +441,4 @@ cc_binary_host {
         "libz",
         "libutils",
     ],
-
-    target: {
-        windows: {
-            enabled: true,
-        },
-    },
 }

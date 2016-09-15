@@ -19,6 +19,7 @@
 #include <stdlib.h>
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -36,7 +37,7 @@ static void usage() {
   fprintf(stderr, "    The output zip file that will be created from the input file.\n");
 }
 
-typedef std::pair<ZipEntry*, ZipString*> ZipData;
+using ZipData = std::pair<std::unique_ptr<ZipEntry>, std::unique_ptr<ZipString>>;
 
 static bool GetEntries(ZipArchiveHandle handle, std::vector<ZipData>* entries) {
   void* cookie;
@@ -49,14 +50,15 @@ static bool GetEntries(ZipArchiveHandle handle, std::vector<ZipData>* entries) {
   ZipEntry entry;
   ZipString name;
   while ((return_value = Next(cookie, &entry, &name)) == 0) {
-    entries->push_back(std::make_pair(new ZipEntry(entry), new ZipString(name)));
+    entries->emplace_back(std::make_pair(std::make_unique<ZipEntry>(entry),
+                                         std::make_unique<ZipString>(name)));
   }
   if (return_value != -1) {
     fprintf(stderr, "Error while iterating over zip entries: %s\n", ErrorCodeString(return_value));
   } else {
     // Sort by offset.
     std::sort(entries->begin(), entries->end(),
-              [](ZipData a, ZipData b) { return a.first->offset < b.first->offset; });
+              [](ZipData& a, ZipData& b) { return a.first->offset < b.first->offset; });
   }
 
   EndIteration(cookie);
@@ -75,8 +77,8 @@ static bool CreateAlignedZip(ZipArchiveHandle& handle, FILE* zip_dst, uint32_t a
 
   int32_t error;
   for (auto& entry : entries) {
-    ZipEntry* zip_entry = entry.first;
-    ZipString* zip_str = entry.second;
+    ZipEntry* zip_entry = entry.first.get();
+    ZipString* zip_str = entry.second.get();
 
     size_t flags = 0;
     if ((zip_entry->method & kCompressDeflated) != 0) {
