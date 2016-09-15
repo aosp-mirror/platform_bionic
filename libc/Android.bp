@@ -2007,6 +2007,13 @@ ndk_headers {
 }
 
 ndk_headers {
+    name: "libc_android",
+    from: "kernel/android/uapi/linux",
+    to: "linux",
+    srcs: ["kernel/android/uapi/linux/**/*.h"],
+}
+
+ndk_headers {
     name: "libc_asm_generic",
     from: "kernel/uapi/asm-generic",
     to: "asm-generic",
