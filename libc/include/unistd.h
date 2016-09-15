@@ -209,7 +209,7 @@ int acct(const char* __filepath);
 #if __ANDROID_API__ >= 21
 int getpagesize(void) __INTRODUCED_IN(21);
 #else
-__inline__ int getpagesize(void) {
+static __inline__ int getpagesize(void) {
   return sysconf(_SC_PAGESIZE);
 }
 #endif
