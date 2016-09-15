@@ -36,7 +36,7 @@
 extern "C" int __openat(int, const char*, int, int);
 
 static inline int force_O_LARGEFILE(int flags) {
-#if __LP64__
+#if defined(__LP64__)
   return flags; // No need, and aarch64's strace gets confused.
 #else
   return flags | O_LARGEFILE;

@@ -20,7 +20,7 @@
 
 // Paper over the fact that 32-bit kernels use fstatfs64/statfs64 with an extra argument,
 // but 64-bit kernels don't have the "64" bit suffix or the extra size_t argument.
-#if __LP64__
+#if defined(__LP64__)
 extern "C" int __fstatfs(int, struct statfs*);
 extern "C" int __statfs(const char*, struct statfs*);
 #  define __fstatfs64(fd,size,buf) __fstatfs(fd,buf)

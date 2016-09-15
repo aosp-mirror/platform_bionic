@@ -183,7 +183,7 @@ static void run_watchpoint_test(unsigned cpu) {
   run_watchpoint_test_impl<uint8_t>(cpu);
   run_watchpoint_test_impl<uint16_t>(cpu);
   run_watchpoint_test_impl<uint32_t>(cpu);
-#if __LP64__
+#if defined(__LP64__)
   run_watchpoint_test_impl<uint64_t>(cpu);
 #endif
 }
