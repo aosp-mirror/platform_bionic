@@ -133,7 +133,7 @@ TEST(libc_logging, ld_LONG_MAX) {
 #if defined(__BIONIC__)
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MAX);
-#if __LP64__
+#if defined(__LP64__)
   EXPECT_STREQ("9223372036854775807", buf);
 #else
   EXPECT_STREQ("2147483647", buf);
@@ -147,7 +147,7 @@ TEST(libc_logging, ld_LONG_MIN) {
 #if defined(__BIONIC__)
   char buf[BUFSIZ];
   __libc_format_buffer(buf, sizeof(buf), "%ld", LONG_MIN);
-#if __LP64__
+#if defined(__LP64__)
   EXPECT_STREQ("-9223372036854775808", buf);
 #else
   EXPECT_STREQ("-2147483648", buf);
