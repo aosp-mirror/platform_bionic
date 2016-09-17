@@ -23,7 +23,7 @@
 
 // http://b/20017123.
 TEST(sys_prctl, bug_20017123) {
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) // PR_SET_VMA is only available in Android kernels.
   size_t page_size = static_cast<size_t>(sysconf(_SC_PAGESIZE));
   void* p = mmap(NULL, page_size * 3, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, p);
