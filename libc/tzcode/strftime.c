@@ -39,7 +39,7 @@
 #include "fcntl.h"
 #include "locale.h"
 
-#if __ANDROID__
+#if defined(__BIONIC__)
 
 /* LP32 had a 32-bit time_t, so we need to work around that here. */
 #if defined(__LP64__)
