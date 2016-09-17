@@ -382,7 +382,7 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 	register int			fid;
 	register int			stored;
 	register ssize_t		nread;
-#if !defined(__ANDROID__)
+#if !defined(__BIONIC__)
 	register bool doaccess;
 	register char *fullname = lsp->fullname;
 #endif
@@ -397,7 +397,7 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 		  return EINVAL;
 	}
 
-#if defined(__ANDROID__)
+#if defined(__BIONIC__)
 	fid = __bionic_open_tzdata(name);
 #else
 	if (name[0] == ':')
@@ -1308,7 +1308,7 @@ tzsetwall(void)
 }
 #endif
 
-#if defined(__ANDROID__)
+#if defined(__BIONIC__)
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h> // For __system_property_serial.
 #endif
@@ -1316,7 +1316,7 @@ tzsetwall(void)
 static void
 tzset_unlocked(void)
 {
-#if defined(__ANDROID__)
+#if defined(__BIONIC__)
   // The TZ environment variable is meant to override the system-wide setting.
   const char* name = getenv("TZ");
 
@@ -2174,7 +2174,7 @@ mktime_z(struct state *sp, struct tm *tmp)
 time_t
 mktime(struct tm *tmp)
 {
-#if __ANDROID__
+#if defined(__BIONIC__)
   int saved_errno = errno;
 #endif
 
@@ -2188,7 +2188,7 @@ mktime(struct tm *tmp)
   t = mktime_tzname(lclptr, tmp, true);
   unlock();
 
-#if __ANDROID__
+#if defined(__BIONIC__)
   errno = (t == -1) ? EOVERFLOW : saved_errno;
 #endif
   return t;
