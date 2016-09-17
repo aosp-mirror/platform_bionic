@@ -108,9 +108,9 @@
 #include <stdarg.h>
 #include "nsswitch.h"
 
-#ifdef ANDROID_CHANGES
+#if defined(__BIONIC__)
 #include <sys/system_properties.h>
-#endif /* ANDROID_CHANGES */
+#endif
 
 typedef union sockaddr_union {
     struct sockaddr     generic;
@@ -325,7 +325,7 @@ freeaddrinfo(struct addrinfo *ai)
 {
 	struct addrinfo *next;
 
-#if __ANDROID__
+#if defined(__BIONIC__)
 	if (ai == NULL) return;
 #else
 	_DIAGASSERT(ai != NULL);
