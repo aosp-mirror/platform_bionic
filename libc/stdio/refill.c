@@ -53,7 +53,7 @@ __srefill(FILE *fp)
 {
 	fp->_r = 0;		/* largely a convenience for callers */
 
-#if !defined(__ANDROID__)
+#if !defined(__BIONIC__)
 	/* SysV does not make this test; take it out for compatibility */
 	if (fp->_flags & __SEOF)
 		return (EOF);
