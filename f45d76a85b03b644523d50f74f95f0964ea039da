@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10b0dbbd_9c5d724b",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-21T15:39:20Z",
+      "side": 1,
+      "message": "seems weird to annotate this but not wcscoll or wcscmp...",
+      "range": {
+        "startLine": 139,
+        "startChar": 74,
+        "endLine": 139,
+        "endChar": 84
+      },
+      "revId": "f45d76a85b03b644523d50f74f95f0964ea039da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
