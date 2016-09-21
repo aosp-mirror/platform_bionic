@@ -77,8 +77,12 @@ int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN
 double strtod(const char*, char**);
 long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
+double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
+float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
+long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
 long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
 long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+unsigned long strtoul_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
 unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 
 int atoi(const char*) __purefunc;
