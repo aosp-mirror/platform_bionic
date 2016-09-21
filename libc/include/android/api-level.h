@@ -35,8 +35,12 @@
  * Magic version number for a current development build, which has
  * not yet turned into an official release.
  */
+#ifndef __ANDROID_API_FUTURE__
+#define __ANDROID_API_FUTURE__ 10000
+#endif
+
 #ifndef __ANDROID_API__
-#define __ANDROID_API__ 10000
+#define __ANDROID_API__ __ANDROID_API_FUTURE__
 #endif
 
 #endif /* ANDROID_API_LEVEL_H */
