@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0dd072d_5d609bd6",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-09-21T22:45:03Z",
+      "side": 1,
+      "message": "No need to bracket sizeof\n\nsizeof(d-\u003ed_name)\n\nis good enough to pass clang (or it should be IMHO ;-/ )",
+      "range": {
+        "startLine": 69,
+        "startChar": 27,
+        "endLine": 69,
+        "endChar": 46
+      },
+      "revId": "5784453bd4048ed847cf9ca08de59e4f527b2506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f018a7be_2513ee70",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-09-21T22:45:03Z",
+      "side": 1,
+      "message": "As documented \"_D_EXACT_NAMLEN (DP) returns the length of DP\u003ed_name, not including its terminating null character.\" so there should be no need to add 1 to it.\n\nShould be strnlen(d-\u003ed_name, _D_ALLOC_NAMLEN(d) - 1) but does require us to have the regimen to ensure d-\u003ed_name[_D_ALLOC_NAMLEN(d) - 1] \u003d \u0027\\0\u0027 I thnk?",
+      "range": {
+        "startLine": 70,
+        "startChar": 27,
+        "endLine": 70,
+        "endChar": 75
+      },
+      "revId": "5784453bd4048ed847cf9ca08de59e4f527b2506",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
