@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10b0dbbd_c169c18e",
+        "filename": "libc/include/android/legacy_wchar_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-09-21T09:09:30Z",
+      "side": 1,
+      "message": "Note that I haven\u0027t added the float and double versions here. They aren\u0027t in the libc++ support header, so I didn\u0027t bother exposing them.",
+      "revId": "2e681b98d18228acd0378dff15e25bec3f74ab4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
