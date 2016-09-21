@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10b0dbbd_5c393af5",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-21T15:43:30Z",
+      "side": 1,
+      "message": "we\u0027re still missing strtol_l and strtoul_l. may as well get the lot while we\u0027re here...",
+      "revId": "feeeccf73b87162a28415c8609275e8bd5c8c469",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
