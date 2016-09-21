@@ -161,37 +161,4 @@
 #error neither __MIPSEL__ nor __MIPSEB__ are defined.
 #endif
 
-#ifdef _KERNEL
-#ifdef _KERNEL_OPT
-#include "opt_compat_netbsd.h"
-#endif
-#ifdef COMPAT_16
-/*
- * Up to 1.6, the ELF dynamic loader (ld.elf_so) was not relocatable.
- * Tell the kernel ELF exec code not to try relocating the interpreter
- * for dynamically-linked ELF binaries.
- */
-#define ELF_INTERP_NON_RELOCATABLE
-#endif /* COMPAT_16 */
-
-/*
- * We need to be able to include the ELF header so we can pick out the
- * ABI being used.
- */
-#ifdef ELFSIZE
-#define	ELF_MD_PROBE_FUNC	ELFNAME2(mips_netbsd,probe)
-#define	ELF_MD_COREDUMP_SETUP	ELFNAME2(coredump,setup)
-#endif
-
-struct exec_package;
-
-int mips_netbsd_elf32_probe(struct lwp *, struct exec_package *, void *, char *,
-	vaddr_t *);
-void coredump_elf32_setup(struct lwp *, void *);
-
-int mips_netbsd_elf64_probe(struct lwp *, struct exec_package *, void *, char *,
-	vaddr_t *);
-void coredump_elf64_setup(struct lwp *, void *);
-#endif /* _KERNEL */
-
 #endif /* _MIPS_ELF_MACHDEP_H_ */
