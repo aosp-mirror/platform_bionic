@@ -126,15 +126,4 @@
 /* Processor specific symbol types */
 #define STT_ARM_TFUNC		STT_LOPROC
 
-#ifdef _KERNEL
-#ifdef ELFSIZE
-#define	ELF_MD_PROBE_FUNC	ELFNAME2(arm_netbsd,probe)
-#endif
-
-struct exec_package;
-
-int arm_netbsd_elf32_probe(struct lwp *, struct exec_package *, void *, char *,
-	vaddr_t *);
-#endif
-
 #endif /* _ARM_ELF_MACHDEP_H_ */
