@@ -387,4 +387,6 @@ char* strrchr(const char* _Nonnull s, int c) {
 
 __END_DECLS
 
+#include <android/legacy_string_inlines.h>
+
 #endif /* _STRING_H */
