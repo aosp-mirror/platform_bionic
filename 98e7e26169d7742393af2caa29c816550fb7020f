@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30407fd3_253b7ad6",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-09-22T07:43:40Z",
+      "side": 1,
+      "message": "oops, copy paste fail",
+      "range": {
+        "startLine": 82,
+        "startChar": 50,
+        "endLine": 82,
+        "endChar": 65
+      },
+      "revId": "98e7e26169d7742393af2caa29c816550fb7020f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
