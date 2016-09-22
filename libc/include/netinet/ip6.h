@@ -99,15 +99,9 @@ struct ip6_hdr {
 #define IPV6_VERSION		0x60
 #define IPV6_VERSION_MASK	0xf0
 
-#if BYTE_ORDER == BIG_ENDIAN
-#define IPV6_FLOWINFO_MASK	0x0fffffff	/* flow info (28 bits) */
-#define IPV6_FLOWLABEL_MASK	0x000fffff	/* flow label (20 bits) */
-#else
-#if BYTE_ORDER == LITTLE_ENDIAN
 #define IPV6_FLOWINFO_MASK	0xffffff0f	/* flow info (28 bits) */
 #define IPV6_FLOWLABEL_MASK	0xffff0f00	/* flow label (20 bits) */
-#endif /* LITTLE_ENDIAN */
-#endif
+
 #if 1
 /* ECN bits proposed by Sally Floyd */
 #define IP6TOS_CE		0x01	/* congestion experienced */
@@ -200,17 +194,9 @@ struct ip6_opt_router {
 	u_int8_t ip6or_value[2];
 } __packed;
 /* Router alert values (in network byte order) */
-#if BYTE_ORDER == BIG_ENDIAN
-#define IP6_ALERT_MLD	0x0000
-#define IP6_ALERT_RSVP	0x0001
-#define IP6_ALERT_AN	0x0002
-#else
-#if BYTE_ORDER == LITTLE_ENDIAN
 #define IP6_ALERT_MLD	0x0000
 #define IP6_ALERT_RSVP	0x0100
 #define IP6_ALERT_AN	0x0200
-#endif /* LITTLE_ENDIAN */
-#endif
 
 /* Routing header */
 struct ip6_rthdr {
@@ -238,15 +224,9 @@ struct ip6_frag {
 	u_int32_t ip6f_ident;		/* identification */
 } __packed;
 
-#if BYTE_ORDER == BIG_ENDIAN
-#define IP6F_OFF_MASK		0xfff8	/* mask out offset from _offlg */
-#define IP6F_RESERVED_MASK	0x0006	/* reserved bits in ip6f_offlg */
-#define IP6F_MORE_FRAG		0x0001	/* more-fragments flag */
-#else /* BYTE_ORDER == LITTLE_ENDIAN */
 #define IP6F_OFF_MASK		0xf8ff	/* mask out offset from _offlg */
 #define IP6F_RESERVED_MASK	0x0600	/* reserved bits in ip6f_offlg */
 #define IP6F_MORE_FRAG		0x0100	/* more-fragments flag */
-#endif /* BYTE_ORDER == LITTLE_ENDIAN */
 
 /*
  * Internet implementation parameters.
