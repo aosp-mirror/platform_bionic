@@ -34,6 +34,24 @@
       "revId": "be291032f0e5553ed7975307b7eeb7344277a74b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90668bcf_21f88d62",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-23T17:30:05Z",
+      "side": 1,
+      "message": "(if the code you\u0027re trying to fix is this from booleans.c in selinux:\n\n\tfor (i \u003d 0; i \u003c *len; i++) {\n\t\tn[i] \u003d (char *)malloc(_D_ALLOC_NAMLEN(namelist[i]));\n\t\tif (!n[i]) {\n\t\t\trc \u003d -1;\n\t\t\tgoto bad_freen;\n\t\t}\n\t\tstrcpy(n[i], namelist[i]-\u003ed_name);\n\t}\n\nshouldn\u0027t you just replace that mess with\n\n\tfor (i \u003d 0; i \u003c *len; i++) {\n\t\tn[i] \u003d strdup(namelist[i]-\u003ed_name);\n\t\tif (!n[i]) {\n\t\t\trc \u003d -1;\n\t\t\tgoto bad_freen;\n\t\t}\n\t}\n\n? *someone* is going to have to pay to work out the length of the string, and this code is just moving it to strcpy and either doing the work twice [with an implementation of _D_ALLOC_NAMLEN that calls strlen] or wasting memory [with an implementation that tries to avoid calling strlen], even though you have to work out the exact length at some point anyway. seems like a mistaken premature optimization to me...)",
+      "parentUuid": "90668bcf_a1dadd01",
+      "revId": "be291032f0e5553ed7975307b7eeb7344277a74b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
