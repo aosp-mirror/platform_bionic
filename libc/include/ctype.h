@@ -97,4 +97,6 @@ int _toupper(int) __INTRODUCED_IN(21);
 
 __END_DECLS
 
+#include <android/legacy_ctype_inlines.h>
+
 #endif /* !_CTYPE_H_ */
