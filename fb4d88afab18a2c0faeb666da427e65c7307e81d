@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "90668bcf_7a014e12",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-23T22:01:34Z",
+      "side": 1,
+      "message": "done for the DlExtTest (this is now initialized in SetUp); leaving as is for the rest - do not want to run into problems with global variable initialization order.",
+      "parentUuid": "b0af0fac_4139f62a",
+      "range": {
+        "startLine": 101,
+        "startChar": 31,
+        "endLine": 101,
+        "endChar": 67
+      },
+      "revId": "fb4d88afab18a2c0faeb666da427e65c7307e81d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0af0fac_41f33666",
         "filename": "tests/gtest_globals.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-21T19:47:22Z",
       "side": 1,
       "message": "I think the format is usually:\n\n_BIONIC_TESTS_GTEST_GLOBALS_H\n\nInstead of this.",
+      "range": {
+        "startLine": 17,
+        "startChar": 8,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "fb4d88afab18a2c0faeb666da427e65c7307e81d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90668bcf_1a13f265",
+        "filename": "tests/gtest_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-23T22:01:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0af0fac_41f33666",
       "range": {
         "startLine": 17,
         "startChar": 8,
