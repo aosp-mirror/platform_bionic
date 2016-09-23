@@ -132,6 +132,7 @@ wchar_t          *wmemset(wchar_t *, wchar_t, size_t);
 int               wprintf(const wchar_t *, ...);
 int               wscanf(const wchar_t *, ...);
 
+#if __ANDROID_API__ >= 21
 long long wcstoll_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 unsigned long long wcstoull_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);
@@ -139,6 +140,9 @@ long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);
 int wcscoll_l(const wchar_t* _Nonnull, const wchar_t* _Nonnull, locale_t) __purefunc
     __INTRODUCED_IN(21);
 size_t wcsxfrm_l(wchar_t*, const wchar_t* _Nonnull, size_t, locale_t) __INTRODUCED_IN(21);
+#else
+// Implemented as static inlines before 21.
+#endif
 
 size_t wcslcat(wchar_t*, const wchar_t*, size_t);
 size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
