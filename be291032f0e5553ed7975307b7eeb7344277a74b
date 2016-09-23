@@ -16,6 +16,24 @@
       "revId": "be291032f0e5553ed7975307b7eeb7344277a74b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90668bcf_a1dadd01",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-23T17:24:41Z",
+      "side": 1,
+      "message": "that case doesn\u0027t happen though.\n\nalso, _D_ALLOC_NAMLEN is wrong... the 256 is the usual crappy C API lie for \"this is a variable-length string, but my language is too broken to admit such a concept\". d_reclen lets you work out the real size.\n\nmissing unit tests. (at least including one that would catch the _D_ALLOC_NAMLEN bug.)",
+      "parentUuid": "90668bcf_09f81562",
+      "revId": "be291032f0e5553ed7975307b7eeb7344277a74b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
