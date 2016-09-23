@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90668bcf_09f81562",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-09-23T01:17:56Z",
+      "side": 1,
+      "message": "Tested this, it returns 255 on the case d_name does not have a null byte...",
+      "revId": "be291032f0e5553ed7975307b7eeb7344277a74b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
