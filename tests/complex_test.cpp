@@ -288,7 +288,7 @@ TEST(complex, csqrt) {
 }
 
 TEST(complex, csqrtf) {
-  ASSERT_EQ(0.0f, csqrt(0));
+  ASSERT_EQ(0.0f, csqrtf(0));
 }
 
 TEST(complex, csqrtl) {

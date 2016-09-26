@@ -385,6 +385,27 @@ TEST(math, sinl) {
   ASSERT_DOUBLE_EQ(0.0L, sinl(0.0L));
 }
 
+TEST(math, sincos) {
+  double s, c;
+  sincos(0.0, &s, &c);
+  ASSERT_DOUBLE_EQ(0.0, s);
+  ASSERT_DOUBLE_EQ(1.0, c);
+}
+
+TEST(math, sincosf) {
+  float s, c;
+  sincosf(0.0f, &s, &c);
+  ASSERT_FLOAT_EQ(0.0f, s);
+  ASSERT_FLOAT_EQ(1.0f, c);
+}
+
+TEST(math, sincosl) {
+  long double s, c;
+  sincosl(0.0L, &s, &c);
+  ASSERT_DOUBLE_EQ(0.0L, s);
+  ASSERT_DOUBLE_EQ(1.0L, c);
+}
+
 TEST(math, tan) {
   ASSERT_DOUBLE_EQ(0.0, tan(0.0));
 }
