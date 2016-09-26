@@ -77,13 +77,7 @@ int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN
 double strtod(const char*, char**);
 long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
-double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
-float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
-long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
-long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
-long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 unsigned long strtoul_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
-unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
 
 int atoi(const char*) __purefunc;
 long atol(const char*) __purefunc;
@@ -201,8 +195,20 @@ void srand(unsigned int) __INTRODUCED_IN(21);
 long random(void) __INTRODUCED_IN(21);
 void srandom(unsigned int) __INTRODUCED_IN(21);
 int grantpt(int) __INTRODUCED_IN(21);
+
+long long strtoll_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+unsigned long long strtoull_l(const char*, char**, int, locale_t) __INTRODUCED_IN(21);
+long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
+#endif
+
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
+float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
+long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
+#else
+// Implemented as static inlines.
 #endif
 
 __END_DECLS
