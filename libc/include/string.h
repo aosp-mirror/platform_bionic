@@ -114,8 +114,12 @@ char* strsignal(int);
 int strcoll(const char* _Nonnull, const char* _Nonnull) __purefunc;
 size_t strxfrm(char* __restrict, const char* _Nonnull __restrict, size_t);
 
+#if __ANDROID_API__ >= 21
 int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __purefunc __INTRODUCED_IN(21);
 size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, locale_t) __INTRODUCED_IN(21);
+#else
+// Implemented as static inlines before 21.
+#endif
 
 #if defined(__USE_GNU) && !defined(basename)
 /*
