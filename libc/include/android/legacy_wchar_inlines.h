@@ -24,12 +24,12 @@ __BEGIN_DECLS
 
 #if __ANDROID_API__ < 21
 
-static __inline int wcscoll_l(const wchar_t* _Nonnull ws1, const char* _Nonull ws2,
+static __inline int wcscoll_l(const wchar_t* _Nonnull ws1, const wchar_t* _Nonnull ws2,
                               locale_t l __unused) {
   return wcscoll(ws1, ws2);
 }
 
-size_t wcsxfrm_l(wchar_t* dest, const char* _Nonnull src, size_t n, locale_t l __unused) {
+size_t wcsxfrm_l(wchar_t* dest, const wchar_t* _Nonnull src, size_t n, locale_t l __unused) {
   return wcsxfrm(dest, src, n);
 }
 
