@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c5be8336_17a14441",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-28T09:28:42Z",
+      "side": 1,
+      "message": "kTestlibDir is \"bionic-loader-test-libs\" it is not part of g_testlib_root, but do not remember why maybe it should be..",
+      "parentUuid": "c5be8336_894a3d7d",
+      "range": {
+        "startLine": 637,
+        "startChar": 54,
+        "endLine": 637,
+        "endChar": 65
+      },
+      "revId": "e4bf997b4dd85938b5d83bfdba26d3a4cf8492fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5be8336_c911d562",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c5be8336_579bbc16",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-28T09:28:42Z",
+      "side": 1,
+      "message": "I do not think so.. this is going to be called before test itself is started and exactly once. The constructors are called in single thread (and are protected by the linker mutex).",
+      "parentUuid": "c5be8336_c911d562",
+      "range": {
+        "startLine": 32,
+        "startChar": 2,
+        "endLine": 32,
+        "endChar": 48
+      },
+      "revId": "e4bf997b4dd85938b5d83bfdba26d3a4cf8492fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5be8336_2908693a",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2016-09-28T00:03:54Z",
       "side": 1,
       "message": "How about:\n\nout_path +\u003d \"/nativetest\";\n#if defined(__LP64__)\nout_path +\u003d \"64\";\n#endif\n\nSince kNativeTestsDir is only used once.",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 46
+      },
+      "revId": "e4bf997b4dd85938b5d83bfdba26d3a4cf8492fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5be8336_177024ce",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-09-28T09:28:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5be8336_2908693a",
       "range": {
         "startLine": 39,
         "startChar": 2,
