@@ -79,9 +79,9 @@ long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
 unsigned long strtoul_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
 
-int atoi(const char*) __purefunc;
-long atol(const char*) __purefunc;
-long long atoll(const char*) __purefunc;
+int atoi(const char*) __attribute_pure__;
+long atol(const char*) __attribute_pure__;
+long long atoll(const char*) __attribute_pure__;
 
 char* realpath(const char* path, char* resolved);
 int system(const char* string);
@@ -125,21 +125,21 @@ typedef struct {
     int  rem;
 } div_t;
 
-div_t div(int, int) __pure2;
+div_t div(int, int) __attribute_const__;
 
 typedef struct {
     long int  quot;
     long int  rem;
 } ldiv_t;
 
-ldiv_t ldiv(long, long) __pure2;
+ldiv_t ldiv(long, long) __attribute_const__;
 
 typedef struct {
     long long int  quot;
     long long int  rem;
 } lldiv_t;
 
-lldiv_t lldiv(long long, long long) __pure2;
+lldiv_t lldiv(long long, long long) __attribute_const__;
 
 /* BSD compatibility. */
 const char* getprogname(void) __INTRODUCED_IN(21);
@@ -186,10 +186,10 @@ char* realpath(const char* path, char* resolved) {
 
 #if __ANDROID_API__ >= 21
 float strtof(const char*, char**) __INTRODUCED_IN(21);
-double atof(const char*) __INTRODUCED_IN(21);
-int abs(int) __pure2 __INTRODUCED_IN(21);
-long labs(long) __pure2 __INTRODUCED_IN(21);
-long long llabs(long long) __pure2 __INTRODUCED_IN(21);
+double atof(const char*) __attribute_pure__ __INTRODUCED_IN(21);
+int abs(int) __attribute_const__ __INTRODUCED_IN(21);
+long labs(long) __attribute_const__ __INTRODUCED_IN(21);
+long long llabs(long long) __attribute_const__ __INTRODUCED_IN(21);
 int rand(void) __INTRODUCED_IN(21);
 void srand(unsigned int) __INTRODUCED_IN(21);
 long random(void) __INTRODUCED_IN(21);
