@@ -50,5 +50,5 @@ The total number of these structures returned in *info* is
 *overall\_size* divided by *info\_size*.
 
 Note, the size value in each allocation data structure will have bit 31 set
-if this allocation was created by the Zygote process. This helps to distinguish
-between native allocations created by the application.
+if this allocation was created in a process forked from the Zygote process.
+This helps to distinguish between native allocations created by the application.
