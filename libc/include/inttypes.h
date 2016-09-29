@@ -254,8 +254,8 @@ typedef struct {
 } imaxdiv_t;
 
 __BEGIN_DECLS
-intmax_t imaxabs(intmax_t) __pure2 __INTRODUCED_IN(19);
-imaxdiv_t imaxdiv(intmax_t, intmax_t) __pure2 __INTRODUCED_IN(19);
+intmax_t imaxabs(intmax_t) __attribute_const__ __INTRODUCED_IN(19);
+imaxdiv_t imaxdiv(intmax_t, intmax_t) __attribute_const__ __INTRODUCED_IN(19);
 intmax_t	strtoimax(const char *, char **, int);
 uintmax_t	strtoumax(const char *, char **, int);
 intmax_t wcstoimax(const wchar_t* __restrict, wchar_t** __restrict, int) __INTRODUCED_IN(21);
