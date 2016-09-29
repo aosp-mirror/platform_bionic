@@ -47,42 +47,42 @@ __BEGIN_DECLS
 #endif
 
 void* memccpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, int, size_t);
-void* memchr(const void* _Nonnull, int, size_t) __purefunc;
-void* memrchr(const void* _Nonnull, int, size_t) __purefunc;
-int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __purefunc;
+void* memchr(const void* _Nonnull, int, size_t) __attribute_pure__;
+void* memrchr(const void* _Nonnull, int, size_t) __attribute_pure__;
+int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __attribute_pure__;
 void* memcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t);
 #if defined(__USE_GNU)
 void* mempcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t) __INTRODUCED_IN(23);
 #endif
 void* memmove(void* _Nonnull, const void* _Nonnull, size_t);
 void* memset(void* _Nonnull, int, size_t);
-void* memmem(const void* _Nonnull, size_t, const void* _Nonnull, size_t) __purefunc;
+void* memmem(const void* _Nonnull, size_t, const void* _Nonnull, size_t) __attribute_pure__;
 
-char* strchr(const char* _Nonnull, int) __purefunc;
+char* strchr(const char* _Nonnull, int) __attribute_pure__;
 char* __strchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
-extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __purefunc;
+extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__;
+extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__;
 #else
-char* strchrnul(const char* _Nonnull, int) __purefunc __INTRODUCED_IN(24);
+char* strchrnul(const char* _Nonnull, int) __attribute_pure__ __INTRODUCED_IN(24);
 #endif
 #endif
 
-char* strrchr(const char* _Nonnull, int) __purefunc;
+char* strrchr(const char* _Nonnull, int) __attribute_pure__;
 char* __strrchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
 
-size_t strlen(const char* _Nonnull) __purefunc;
+size_t strlen(const char* _Nonnull) __attribute_pure__;
 size_t __strlen_chk(const char* _Nonnull, size_t) __INTRODUCED_IN(17);
-int strcmp(const char* _Nonnull, const char* _Nonnull) __purefunc;
+int strcmp(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 char* stpcpy(char* _Nonnull __restrict, const char* _Nonnull__restrict) __INTRODUCED_IN(21);
 char* strcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict);
 char* strcat(char* _Nonnull __restrict, const char* _Nonnull __restrict);
 
 char* strdup(const char* _Nonnull);
 
-char* strstr(const char* _Nonnull, const char* _Nonnull) __purefunc;
-char* strcasestr(const char* _Nonnull, const char* _Nonnull) __purefunc;
+char* strstr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
+char* strcasestr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 char* strtok(char* __restrict, const char* _Nonnull __restrict);
 char* strtok_r(char* __restrict, const char* _Nonnull __restrict, char** _Nonnull __restrict);
 
@@ -94,28 +94,28 @@ char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(
 int strerror_r(int, char*, size_t);
 #endif
 
-size_t strnlen(const char* _Nonnull, size_t) __purefunc;
+size_t strnlen(const char* _Nonnull, size_t) __attribute_pure__;
 char* strncat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 char* strndup(const char* _Nonnull, size_t);
-int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __purefunc;
+int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __attribute_pure__;
 char* stpncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t) __INTRODUCED_IN(21);
 char* strncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 
 size_t strlcat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 size_t strlcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t);
 
-size_t strcspn(const char* _Nonnull, const char* _Nonnull) __purefunc;
-char* strpbrk(const char* _Nonnull, const char* _Nonnull) __purefunc;
+size_t strcspn(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
+char* strpbrk(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 char* strsep(char** _Nonnull __restrict, const char* _Nonnull __restrict);
 size_t strspn(const char* _Nonnull, const char* _Nonnull);
 
 char* strsignal(int);
 
-int strcoll(const char* _Nonnull, const char* _Nonnull) __purefunc;
+int strcoll(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 size_t strxfrm(char* __restrict, const char* _Nonnull __restrict, size_t);
 
 #if __ANDROID_API__ >= 21
-int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __purefunc __INTRODUCED_IN(21);
+int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __attribute_pure__ __INTRODUCED_IN(21);
 size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.

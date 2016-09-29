@@ -86,25 +86,25 @@ extern int signgam;
 /*
  * Most of these functions depend on the rounding mode and have the side
  * effect of raising floating-point exceptions, so they are not declared
- * as __pure2.  In C99, FENV_ACCESS affects the purity of these functions.
+ * as __attribute_const__. In C99, FENV_ACCESS affects the purity of these functions.
  */
 
-int __fpclassifyd(double) __pure2;
-int __fpclassifyf(float) __pure2;
-int __fpclassifyl(long double) __pure2;
-int __isfinitef(float) __pure2;
-int __isfinite(double) __pure2;
-int __isfinitel(long double) __pure2;
-int __isinff(float) __pure2;
-int __isinfl(long double) __pure2;
-int __isnanf(float) __pure2 __INTRODUCED_IN(21);
-int __isnanl(long double) __pure2;
-int __isnormalf(float) __pure2;
-int __isnormal(double) __pure2;
-int __isnormall(long double) __pure2;
-int __signbit(double) __pure2;
-int __signbitf(float) __pure2;
-int __signbitl(long double) __pure2;
+int __fpclassifyd(double) __attribute_const__;
+int __fpclassifyf(float) __attribute_const__;
+int __fpclassifyl(long double) __attribute_const__;
+int __isfinitef(float) __attribute_const__;
+int __isfinite(double) __attribute_const__;
+int __isfinitel(long double) __attribute_const__;
+int __isinff(float) __attribute_const__;
+int __isinfl(long double) __attribute_const__;
+int __isnanf(float) __attribute_const__ __INTRODUCED_IN(21);
+int __isnanl(long double) __attribute_const__;
+int __isnormalf(float) __attribute_const__;
+int __isnormal(double) __attribute_const__;
+int __isnormall(long double) __attribute_const__;
+int __signbit(double) __attribute_const__;
+int __signbitf(float) __attribute_const__;
+int __signbitl(long double) __attribute_const__;
 
 double	acos(double);
 double	asin(double);
@@ -119,17 +119,17 @@ double	sinh(double);
 double	tanh(double);
 
 double	exp(double);
-double	frexp(double, int *);	/* fundamentally !__pure2 */
+double	frexp(double, int *);	/* fundamentally !__attribute_const__ */
 double	ldexp(double, int);
 double	log(double);
 double	log10(double);
-double	modf(double, double *);	/* fundamentally !__pure2 */
+double	modf(double, double *);	/* fundamentally !__attribute_const__ */
 
 double	pow(double, double);
 double	sqrt(double);
 
 double	ceil(double);
-double	fabs(double) __pure2;
+double	fabs(double) __attribute_const__;
 double	floor(double);
 double	fmod(double, double);
 
@@ -143,9 +143,9 @@ double	exp2(double);
 double	expm1(double);
 double	fma(double, double, double);
 double	hypot(double, double);
-int	ilogb(double) __pure2;
-int(isinf)(double) __pure2 __INTRODUCED_IN(21);
-int	(isnan)(double) __pure2;
+int	ilogb(double) __attribute_const__;
+int(isinf)(double) __attribute_const__ __INTRODUCED_IN(21);
+int	(isnan)(double) __attribute_const__;
 double	lgamma(double);
 long long llrint(double);
 long long llround(double);
@@ -155,7 +155,7 @@ double	logb(double);
 long	lrint(double);
 long	lround(double);
 
-double nan(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
+double nan(const char*) __attribute_const__ __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
     __INTRODUCED_IN_X86(9);
 
 double	nextafter(double, double);
@@ -163,10 +163,10 @@ double	remainder(double, double);
 double	remquo(double, double, int*);
 double	rint(double);
 
-double	copysign(double, double) __pure2;
+double	copysign(double, double) __attribute_const__;
 double	fdim(double, double);
-double	fmax(double, double) __pure2;
-double	fmin(double, double) __pure2;
+double	fmax(double, double) __attribute_const__;
+double	fmin(double, double) __attribute_const__;
 double	nearbyint(double);
 double	round(double);
 double scalbln(double, long) __INTRODUCED_IN_X86(18) __VERSIONER_NO_GUARD;
@@ -189,20 +189,20 @@ float	tanhf(float);
 float	exp2f(float);
 float	expf(float);
 float	expm1f(float);
-float	frexpf(float, int *);	/* fundamentally !__pure2 */
-int	ilogbf(float) __pure2;
+float	frexpf(float, int *);	/* fundamentally !__attribute_const__ */
+int	ilogbf(float) __attribute_const__;
 float	ldexpf(float, int);
 float	log10f(float);
 float	log1pf(float);
 float log2f(float) __INTRODUCED_IN(18);
 float	logf(float);
-float	modff(float, float *);	/* fundamentally !__pure2 */
+float	modff(float, float *);	/* fundamentally !__attribute_const__ */
 
 float	powf(float, float);
 float	sqrtf(float);
 
 float	ceilf(float);
-float	fabsf(float) __pure2;
+float	fabsf(float) __attribute_const__;
 float	floorf(float);
 float	fmodf(float, float);
 float	roundf(float);
@@ -218,12 +218,12 @@ float	asinhf(float);
 float	atanhf(float);
 float	cbrtf(float);
 float	logbf(float);
-float	copysignf(float, float) __pure2;
+float	copysignf(float, float) __attribute_const__;
 long long llrintf(float);
 long long llroundf(float);
 long	lrintf(float);
 long	lroundf(float);
-float nanf(const char*) __pure2 __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
+float nanf(const char*) __attribute_const__ __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
     __INTRODUCED_IN_X86(9);
 float	nearbyintf(float);
 float	nextafterf(float, float);
@@ -236,8 +236,8 @@ float	truncf(float);
 
 float	fdimf(float, float);
 float	fmaf(float, float, float);
-float	fmaxf(float, float) __pure2;
-float	fminf(float, float) __pure2;
+float	fmaxf(float, float) __attribute_const__;
+float	fminf(float, float) __attribute_const__;
 
 long double acoshl(long double) __INTRODUCED_IN(21);
 long double acosl(long double) __INTRODUCED_IN(21);
@@ -248,7 +248,7 @@ long double atanhl(long double) __INTRODUCED_IN(21);
 long double atanl(long double) __INTRODUCED_IN(21);
 long double cbrtl(long double) __INTRODUCED_IN(21);
 long double ceill(long double);
-long double copysignl(long double, long double) __pure2;
+long double copysignl(long double, long double) __attribute_const__;
 long double coshl(long double) __INTRODUCED_IN(21);
 long double cosl(long double) __INTRODUCED_IN(21);
 long double erfcl(long double) __INTRODUCED_IN(21);
@@ -256,17 +256,17 @@ long double erfl(long double) __INTRODUCED_IN(21);
 long double exp2l(long double) __INTRODUCED_IN(21);
 long double expl(long double) __INTRODUCED_IN(21);
 long double expm1l(long double) __INTRODUCED_IN(21);
-long double fabsl(long double) __pure2;
+long double fabsl(long double) __attribute_const__;
 long double fdiml(long double, long double);
 long double floorl(long double);
 long double fmal(long double, long double, long double) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
-long double fmaxl(long double, long double) __pure2;
-long double fminl(long double, long double) __pure2;
+long double fmaxl(long double, long double) __attribute_const__;
+long double fminl(long double, long double) __attribute_const__;
 long double fmodl(long double, long double) __INTRODUCED_IN(21);
 long double frexpl(long double value, int*)
-    __INTRODUCED_IN(21) __VERSIONER_NO_GUARD; /* fundamentally !__pure2 */
+    __INTRODUCED_IN(21) __VERSIONER_NO_GUARD; /* fundamentally !__attribute_const__ */
 long double hypotl(long double, long double) __INTRODUCED_IN(21);
-int ilogbl(long double) __pure2;
+int ilogbl(long double) __attribute_const__;
 long double ldexpl(long double, int);
 long double lgammal(long double) __INTRODUCED_IN(21);
 long long llrintl(long double) __INTRODUCED_IN(21);
@@ -278,8 +278,8 @@ long double logbl(long double) __INTRODUCED_IN(18);
 long double logl(long double) __INTRODUCED_IN(21);
 long lrintl(long double) __INTRODUCED_IN(21);
 long lroundl(long double);
-long double modfl(long double, long double*) __INTRODUCED_IN(21); /* fundamentally !__pure2 */
-long double nanl(const char*) __pure2 __INTRODUCED_IN(13);
+long double modfl(long double, long double*) __INTRODUCED_IN(21); /* fundamentally !__attribute_const__ */
+long double nanl(const char*) __attribute_const__ __INTRODUCED_IN(13);
 long double nearbyintl(long double) __INTRODUCED_IN(21);
 long double nextafterl(long double, long double) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
 double nexttoward(double, long double) __INTRODUCED_IN(18) __VERSIONER_NO_GUARD;
@@ -327,15 +327,15 @@ double yn(int, double);
 double gamma(double);
 double scalb(double, double);
 double drem(double, double);
-int finite(double) __pure2;
-int isnanf(float) __pure2;
+int finite(double) __attribute_const__;
+int isnanf(float) __attribute_const__;
 double gamma_r(double, int*);
 double lgamma_r(double, int*);
 double significand(double);
 long double lgammal_r(long double, int*) __INTRODUCED_IN(23);
 long double significandl(long double) __INTRODUCED_IN(21);
 float dremf(float, float);
-int finitef(float) __pure2;
+int finitef(float) __attribute_const__;
 float gammaf(float);
 float j0f(float);
 float j1f(float);
