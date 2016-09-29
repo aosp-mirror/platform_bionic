@@ -409,3 +409,15 @@ like two arguments instead of one.
     # setprop libc.debug.malloc.options backtrace
     # export LIBC_DEBUG_MALLOC_ENABLE 1
     # ls
+
+Enable malloc debug and dump the native allocation with backtraces to
+a file. This only works for zygote based java processes.
+
+    adb shell stop
+    adb shell setprop libc.debug.malloc.options backtrace
+    adb shell start
+    adb shell am dumpheap -n <PID_TO_DUMP> /data/local/tmp/heap.txt
+
+It is possible to use the backtrace\_enable\_on\_signal option as well,
+but it must be enabled through the signal before the file will contain
+any data.
