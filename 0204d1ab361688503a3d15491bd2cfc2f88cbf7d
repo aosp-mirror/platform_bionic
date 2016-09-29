@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "828ac1d9_67a6e619",
+        "filename": "tests/dlfcn_symlink_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-29T22:48:53Z",
+      "side": 1,
+      "message": "Nit, capitalize the The.",
+      "range": {
+        "startLine": 35,
+        "startChar": 5,
+        "endLine": 35,
+        "endChar": 8
+      },
+      "revId": "0204d1ab361688503a3d15491bd2cfc2f88cbf7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "828ac1d9_47788280",
+        "filename": "tests/dlfcn_symlink_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-29T22:48:53Z",
+      "side": 1,
+      "message": "Need to add #include \u003cstring\u003e to the top.",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "0204d1ab361688503a3d15491bd2cfc2f88cbf7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "828ac1d9_e7a2f6f6",
+        "filename": "tests/dlfcn_symlink_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-29T22:48:53Z",
+      "side": 1,
+      "message": "I\u0027ve usually put this on the next line so it\u0027s obvious this isn\u0027t a continuation of the ASSERT macro.",
+      "range": {
+        "startLine": 60,
+        "startChar": 68,
+        "endLine": 60,
+        "endChar": 70
+      },
+      "revId": "0204d1ab361688503a3d15491bd2cfc2f88cbf7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb243697_67f53848",
+        "filename": "tests/dlfcn_symlink_support.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-29T22:48:53Z",
+      "side": 1,
+      "message": "Probably better to add a _ to the end. Since this is private, I couldn\u0027t initially figure out this was a class variable.",
+      "range": {
+        "startLine": 40,
+        "startChar": 14,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "0204d1ab361688503a3d15491bd2cfc2f88cbf7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
