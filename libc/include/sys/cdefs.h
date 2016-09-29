@@ -102,13 +102,12 @@
 #endif	/* !(__STDC__ || __cplusplus) */
 
 #define __always_inline __attribute__((__always_inline__))
+#define __attribute_const__ __attribute__((__const__))
+#define __attribute_pure__ __attribute__((__pure__))
 #define __dead __attribute__((__noreturn__))
 #define __noreturn __attribute__((__noreturn__))
-#define __mallocfunc  __attribute__((malloc))
+#define __mallocfunc  __attribute__((__malloc__))
 #define __packed __attribute__((__packed__))
-#define __pure __attribute__((__const__))
-#define __pure2 __attribute__((__const__)) /* Android-added: used by FreeBSD libm */
-#define __purefunc    __attribute__((pure))
 #define __unused __attribute__((__unused__))
 #define __used __attribute__((__used__))
 
