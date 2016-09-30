@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "828ac1d9_f5f62055",
+        "filename": "libc/bionic/wchar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-09-30T00:34:49Z",
+      "side": 0,
+      "message": "deleting L87 and L100 is the active ingredient in this change.",
+      "revId": "cc9e9933e1b85592f96d04962b20e5051dc8ec28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
