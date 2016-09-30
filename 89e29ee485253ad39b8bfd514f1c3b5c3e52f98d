@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "828ac1d9_350fa846",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-09-30T00:57:33Z",
+      "side": 1,
+      "message": "Is it guaranteed that VALID will be a pointer that will not change so that this comparison will work? This just makes me a bit nervous since I\u0027m not sure what the compiler is allowed to do here for constexpr strings.",
+      "range": {
+        "startLine": 382,
+        "startChar": 12,
+        "endLine": 382,
+        "endChar": 22
+      },
+      "revId": "89e29ee485253ad39b8bfd514f1c3b5c3e52f98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
