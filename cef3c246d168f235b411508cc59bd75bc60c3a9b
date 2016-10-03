@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "828ac1d9_f56612e1",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-10-03T19:37:58Z",
+      "side": 1,
+      "message": "Should this be wrapped in TEMP_FAILURE_RETRY? (same for the other read).",
+      "range": {
+        "startLine": 429,
+        "startChar": 9,
+        "endLine": 429,
+        "endChar": 13
+      },
+      "revId": "cef3c246d168f235b411508cc59bd75bc60c3a9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
