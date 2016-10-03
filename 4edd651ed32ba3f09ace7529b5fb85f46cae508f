@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2911963_915d9cee",
+        "filename": "libc/tzcode/localtime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2364,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-10-03T23:54:01Z",
+      "side": 1,
+      "message": "This loses the O_BINARY, but I assume that this should never be present on a bionic device, correct?",
+      "range": {
+        "startLine": 2364,
+        "startChar": 52,
+        "endLine": 2364,
+        "endChar": 61
+      },
+      "revId": "4edd651ed32ba3f09ace7529b5fb85f46cae508f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
