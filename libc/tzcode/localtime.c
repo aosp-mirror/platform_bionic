@@ -426,7 +426,7 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 	  return errno;
 
 #if defined(__BIONIC__)
-	nread = read(fid, up->buf, entry_length);
+	nread = TEMP_FAILURE_RETRY(read(fid, up->buf, entry_length));
 #else
 	nread = read(fid, up->buf, sizeof up->buf);
 #endif
@@ -2361,7 +2361,7 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
     return -1;
   }
   snprintf(path, path_length, "%s/%s", path_prefix, path_suffix);
-  int fd = TEMP_FAILURE_RETRY(open(path, OPEN_MODE));
+  int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
   if (fd == -1) {
     free(path);
     return -2; // Distinguish failure to find any data from failure to find a specific id.
