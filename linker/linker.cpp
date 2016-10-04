@@ -4153,9 +4153,14 @@ static void init_default_namespace() {
     g_default_ld_paths = kDefaultLdPaths;
   }
 
+  char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
   for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
-    ld_default_paths.push_back(g_default_ld_paths[i]);
+    if (realpath(g_default_ld_paths[i], real_path) != nullptr) {
+      ld_default_paths.push_back(real_path);
+    } else {
+      ld_default_paths.push_back(g_default_ld_paths[i]);
+    }
   }
 
   g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
