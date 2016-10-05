@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f8ac8dc_a12ffe3e",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "i think he meant \"rules [because you have to] and recommendations [to avoid future trouble]\".",
+      "parentUuid": "7f8ac8dc_8158ba2e",
+      "range": {
+        "startLine": 5,
+        "startChar": 27,
+        "endLine": 5,
+        "endChar": 42
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8ac8dc_019d8ab9",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-05T21:55:18Z",
       "side": 1,
       "message": "future",
+      "range": {
+        "startLine": 6,
+        "startChar": 14,
+        "endLine": 6,
+        "endChar": 20
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_c12c824c",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "no, this document is all about shipped stuff so far. i\u0027ll be *adding* future stuff in a later change.",
+      "parentUuid": "7f8ac8dc_019d8ab9",
       "range": {
         "startLine": 6,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7f8ac8dc_81f2fac7",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "indeed.\n\ni\u0027ve removed all three paragraphs as unnecessary bloat.",
+      "parentUuid": "7f8ac8dc_a135bedd",
+      "range": {
+        "startLine": 8,
+        "startChar": 9,
+        "endLine": 8,
+        "endChar": 26
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8ac8dc_a167fedd",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2016-10-05T21:55:18Z",
       "side": 1,
       "message": "It\u0027s not clear that this means \"Enforced for apps targeting API 24 or greater\" instead of \"Enforced on a device running 24 or greater\"",
+      "range": {
+        "startLine": 19,
+        "startChar": 16,
+        "endLine": 19,
+        "endChar": 37
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_41fcf29b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f8ac8dc_a167fedd",
       "range": {
         "startLine": 19,
         "startChar": 16,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "7f8ac8dc_c107a2c0",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f8ac8dc_61a5760b",
+      "range": {
+        "startLine": 84,
+        "startChar": 47,
+        "endLine": 84,
+        "endChar": 54
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8ac8dc_41b4f23a",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -151,6 +271,30 @@
       "writtenOn": "2016-10-05T21:55:18Z",
       "side": 1,
       "message": "link?",
+      "range": {
+        "startLine": 142,
+        "startChar": 35,
+        "endLine": 143,
+        "endChar": 17
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_41d39227",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-05T22:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f8ac8dc_41b4f23a",
       "range": {
         "startLine": 142,
         "startChar": 35,
