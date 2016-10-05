@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f8ac8dc_8158ba2e",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "It\u0027s not quite a recommendation if it\u0027s necessary, is it? Rephrase to \"Applications should follow the rules and recommendations in order to ...\"?",
+      "range": {
+        "startLine": 5,
+        "startChar": 27,
+        "endLine": 5,
+        "endChar": 42
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_019d8ab9",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "future",
+      "range": {
+        "startLine": 6,
+        "startChar": 14,
+        "endLine": 6,
+        "endChar": 20
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_a135bedd",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "This is contradictory",
+      "range": {
+        "startLine": 8,
+        "startChar": 9,
+        "endLine": 8,
+        "endChar": 26
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_a167fedd",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "It\u0027s not clear that this means \"Enforced for apps targeting API 24 or greater\" instead of \"Enforced on a device running 24 or greater\"",
+      "range": {
+        "startLine": 19,
+        "startChar": 16,
+        "endLine": 19,
+        "endChar": 37
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_a1505e00",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": ",",
+      "range": {
+        "startLine": 22,
+        "startChar": 48,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_61a5760b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 84,
+        "startChar": 47,
+        "endLine": 84,
+        "endChar": 54
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f8ac8dc_41b4f23a",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-05T21:55:18Z",
+      "side": 1,
+      "message": "link?",
+      "range": {
+        "startLine": 142,
+        "startChar": 35,
+        "endLine": 143,
+        "endChar": 17
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
