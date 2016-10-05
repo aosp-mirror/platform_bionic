@@ -18,7 +18,7 @@ cc_defaults {
     name: "bionic_testlib_defaults",
     host_supported: true,
     ldflags: [
-        "-Wl,--rpath,\\$${ORIGIN}",
+        "-Wl,--rpath,${ORIGIN}",
         "-Wl,--enable-new-dtags",
     ],
     relative_install_path: "bionic-loader-test-libs",
