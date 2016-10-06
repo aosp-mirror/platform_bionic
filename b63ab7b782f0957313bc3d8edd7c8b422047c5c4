@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "1f78ecfe_2601166b",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-06T22:29:22Z",
+      "side": 1,
+      "message": "Maybe \"Enforced for target API level \u003e\u003d 24\"?\n\n(Also change it below?)",
+      "parentUuid": "7f8ac8dc_41fcf29b",
+      "range": {
+        "startLine": 19,
+        "startChar": 16,
+        "endLine": 19,
+        "endChar": 37
+      },
+      "revId": "b63ab7b782f0957313bc3d8edd7c8b422047c5c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8ac8dc_a1505e00",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
