@@ -49,6 +49,10 @@
 
 #include <bits/seek_constants.h>
 
+#if __ANDROID_API__ <= 23
+#include <bits/struct_file.h>
+#endif
+
 __BEGIN_DECLS
 
 #if defined(__clang__)
@@ -73,11 +77,11 @@ extern FILE* stderr __INTRODUCED_IN(23);
 #define stderr stderr
 #else
 /* Before M the actual symbols for stdin and friends had different names. */
-extern FILE* __sF[] __REMOVED_IN(23);
+extern FILE __sF[] __REMOVED_IN(23);
 
-#define stdin __sF[0]
-#define stdout __sF[1]
-#define stderr __sF[2]
+#define stdin (&__sF[0])
+#define stdout (&__sF[1])
+#define stderr (&__sF[2])
 #endif
 
 /*
