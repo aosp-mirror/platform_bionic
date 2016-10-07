@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f3b445a_c3a408b7",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-10-07T21:06:35Z",
+      "side": 1,
+      "message": "Can we get a bug filed to fix all of these ints to ssize_t? I don\u0027t think it causes a problem, but it causes me to cringe every time I see this.",
+      "range": {
+        "startLine": 445,
+        "startChar": 2,
+        "endLine": 445,
+        "endChar": 5
+      },
+      "revId": "59bde2e8f4dacc059beb7269b86b276ec091ad57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
