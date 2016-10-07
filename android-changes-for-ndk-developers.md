@@ -202,3 +202,22 @@ the library you were expecting.
 default. Ensure you're using the current NDK and that you haven't
 configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
+
+
+## Writable and Executable Segments (AOSP master)
+
+Each segment in an ELF file has associated flags that tell the
+dynamic linker what permissions to give the corresponding page in
+memory. For security, data shouldn't be executable and code shouldn't be
+writable. This means that the W (for Writable) and E (for Executable)
+flags should be mutually exclusive. This wasn't historically enforced,
+but is now.
+
+```
+$ readelf --program-headers -W libBadFlags.so | grep WE
+  LOAD           0x000000 0x00000000 0x00000000 0x4c01d 0x4c01d RWE 0x1000
+```
+
+*Resolution*: right now we're not actually sure where these are coming
+from, so if you find and fix these in your app, please let us know how
+they snuck in!
