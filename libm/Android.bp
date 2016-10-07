@@ -520,7 +520,6 @@ cc_library {
         "-Wno-uninitialized",
         "-Wno-unknown-pragmas",
     ],
-    conlyflags: ["-std=gnu11"],
 
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
