@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "9f0a1cd1_3a7f01b1",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-10-10T15:08:59Z",
+      "side": 1,
+      "message": "removed kTestlibDir it is now part of g_testlib_root",
+      "parentUuid": "c5be8336_17a14441",
+      "range": {
+        "startLine": 637,
+        "startChar": 54,
+        "endLine": 637,
+        "endChar": 65
+      },
+      "revId": "e4bf997b4dd85938b5d83bfdba26d3a4cf8492fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5be8336_c911d562",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 2
