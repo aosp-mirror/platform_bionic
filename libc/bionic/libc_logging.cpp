@@ -432,11 +432,6 @@ int __libc_format_fd(int fd, const char* format, ...) {
 }
 
 static int __libc_write_stderr(const char* tag, const char* msg) {
-  int fd = TEMP_FAILURE_RETRY(open("/dev/stderr", O_CLOEXEC | O_WRONLY | O_APPEND));
-  if (fd == -1) {
-    return -1;
-  }
-
   iovec vec[4];
   vec[0].iov_base = const_cast<char*>(tag);
   vec[0].iov_len = strlen(tag);
@@ -447,8 +442,7 @@ static int __libc_write_stderr(const char* tag, const char* msg) {
   vec[3].iov_base = const_cast<char*>("\n");
   vec[3].iov_len = 1;
 
-  int result = TEMP_FAILURE_RETRY(writev(fd, vec, 4));
-  close(fd);
+  int result = TEMP_FAILURE_RETRY(writev(STDERR_FILENO, vec, 4));
   return result;
 }
 
