@@ -32,6 +32,7 @@
 #include <pagemap/pagemap.h>
 #include <ziparchive/zip_archive.h>
 
+#include "gtest_globals.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 #include "dlext_private.h"
@@ -51,32 +52,22 @@
 
 
 typedef int (*fn)(void);
-#define LIBNAME "libdlext_test.so"
-#define LIBNAME_NORELRO "libdlext_test_norelro.so"
-constexpr auto LIBSIZE = 1024 * 1024; // how much address space to reserve for it
-
-#if defined(__LP64__)
-#define NATIVE_TESTS_PATH "/nativetest64/bionic-loader-test-libs"
-#else
-#define NATIVE_TESTS_PATH "/nativetest/bionic-loader-test-libs"
-#endif
-
-#define LIBPATH NATIVE_TESTS_PATH "/libdlext_test_fd/libdlext_test_fd.so"
-#define LIBZIPPATH NATIVE_TESTS_PATH "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"
-#define LIBZIPPATH_WITH_RUNPATH NATIVE_TESTS_PATH "/libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip"
-#define LIBZIP_SIMPLE_ZIP "libdir/libatest_simple_zip.so"
+constexpr const char* kLibName = "libdlext_test.so";
+constexpr const char* kLibNameNoRelro = "libdlext_test_norelro.so";
+constexpr const char* kLibZipSimpleZip = "libdir/libatest_simple_zip.so";
+constexpr auto kLibSize = 1024 * 1024; // how much address space to reserve for it
 
 class DlExtTest : public ::testing::Test {
 protected:
   virtual void SetUp() {
     handle_ = nullptr;
     // verify that we don't have the library loaded already
-    void* h = dlopen(LIBNAME, RTLD_NOW | RTLD_NOLOAD);
+    void* h = dlopen(kLibName, RTLD_NOW | RTLD_NOLOAD);
     ASSERT_TRUE(h == nullptr);
-    h = dlopen(LIBNAME_NORELRO, RTLD_NOW | RTLD_NOLOAD);
+    h = dlopen(kLibNameNoRelro, RTLD_NOW | RTLD_NOLOAD);
     ASSERT_TRUE(h == nullptr);
     // call dlerror() to swallow the error, and check it was the one we wanted
-    ASSERT_STREQ("dlopen failed: library \"" LIBNAME_NORELRO "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+    ASSERT_EQ(std::string("dlopen failed: library \"") + kLibNameNoRelro + "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
   }
 
   virtual void TearDown() {
@@ -89,7 +80,7 @@ protected:
 };
 
 TEST_F(DlExtTest, ExtInfoNull) {
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, nullptr);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, nullptr);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
@@ -99,7 +90,7 @@ TEST_F(DlExtTest, ExtInfoNull) {
 TEST_F(DlExtTest, ExtInfoNoFlags) {
   android_dlextinfo extinfo;
   extinfo.flags = 0;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
@@ -107,7 +98,7 @@ TEST_F(DlExtTest, ExtInfoNoFlags) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFd) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBPATH;
+  const std::string lib_path = g_testlib_root + "/libdlext_test_fd/libdlext_test_fd.so";
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD;
@@ -125,7 +116,7 @@ TEST_F(DlExtTest, ExtInfoUseFd) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + LIBZIPPATH;
+  const std::string lib_path = g_testlib_root + "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -136,8 +127,8 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   ASSERT_EQ(0, OpenArchive(lib_path.c_str(), &handle));
   ZipEntry zip_entry;
   ZipString zip_name;
-  zip_name.name = reinterpret_cast<const uint8_t*>(LIBZIP_SIMPLE_ZIP);
-  zip_name.name_length = sizeof(LIBZIP_SIMPLE_ZIP) - 1;
+  zip_name.name = reinterpret_cast<const uint8_t*>(kLibZipSimpleZip);
+  zip_name.name_length = strlen(kLibZipSimpleZip);
   ASSERT_EQ(0, FindEntry(handle, zip_name, &zip_entry));
   extinfo.library_fd_offset = zip_entry.offset;
   CloseArchive(handle);
@@ -151,9 +142,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
 }
 
 TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
-  // lib_path is relative when $ANDROID_DATA is relative
-  std::string lib_path;
-  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")) + LIBZIPPATH, &lib_path)) << strerror(errno);
+  const std::string lib_path = g_testlib_root + "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET;
@@ -238,8 +227,8 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
 }
 
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
-  std::string lib_path;
-  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")) + LIBZIPPATH, &lib_path)) << strerror(errno);
+  const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
+  const std::string lib_path = g_testlib_root + lib_zip_path;
 
   void* handle = dlopen((lib_path + "!/libdir/libatest_simple_zip.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -252,9 +241,8 @@ TEST(dlfcn, dlopen_from_zip_absolute_path) {
 }
 
 TEST(dlfcn, dlopen_from_zip_with_dt_runpath) {
-  std::string data_path;
-  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
-  const std::string lib_path = data_path + LIBZIPPATH_WITH_RUNPATH;
+  const std::string lib_zip_path = "/libdlext_test_runpath_zip/libdlext_test_runpath_zip_zipaligned.zip";
+  const std::string lib_path = g_testlib_root + lib_zip_path;
 
   void* handle = dlopen((lib_path + "!/libdir/libtest_dt_runpath_d_zip.so").c_str(), RTLD_NOW);
 
@@ -272,9 +260,8 @@ TEST(dlfcn, dlopen_from_zip_with_dt_runpath) {
 }
 
 TEST(dlfcn, dlopen_from_zip_ld_library_path) {
-  std::string data_path;
-  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
-  const std::string lib_path = data_path + LIBZIPPATH + "!/libdir";
+  const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
+  const std::string lib_path = g_testlib_root + lib_zip_path + "!/libdir";
 
   typedef void (*fn_t)(const char*);
   fn_t android_update_LD_LIBRARY_PATH =
@@ -305,19 +292,19 @@ TEST(dlfcn, dlopen_from_zip_ld_library_path) {
 
 
 TEST_F(DlExtTest, Reserved) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = LIBSIZE;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  extinfo.reserved_size = kLibSize;
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_GE(reinterpret_cast<void*>(f), start);
   EXPECT_LT(reinterpret_cast<void*>(f),
-            reinterpret_cast<char*>(start) + LIBSIZE);
+            reinterpret_cast<char*>(start) + kLibSize);
   EXPECT_EQ(4, f());
 
   // Check that after dlclose reserved address space is unmapped (and can be reused)
@@ -335,24 +322,24 @@ TEST_F(DlExtTest, ReservedTooSmall) {
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
   extinfo.reserved_addr = start;
   extinfo.reserved_size = PAGE_SIZE;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   EXPECT_EQ(nullptr, handle_);
 }
 
 TEST_F(DlExtTest, ReservedHint) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS_HINT;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = LIBSIZE;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  extinfo.reserved_size = kLibSize;
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_GE(reinterpret_cast<void*>(f), start);
   EXPECT_LT(reinterpret_cast<void*>(f),
-            reinterpret_cast<char*>(start) + LIBSIZE);
+            reinterpret_cast<char*>(start) + kLibSize);
   EXPECT_EQ(4, f());
 }
 
@@ -363,7 +350,7 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS_HINT;
   extinfo.reserved_addr = start;
   extinfo.reserved_size = PAGE_SIZE;
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
@@ -374,36 +361,36 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
 }
 
 TEST_F(DlExtTest, LoadAtFixedAddress) {
-  void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
-  munmap(start, LIBSIZE);
+  munmap(start, kLibSize);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
   extinfo.reserved_addr = start;
 
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_GE(reinterpret_cast<void*>(f), start);
-  EXPECT_LT(reinterpret_cast<void*>(f), reinterpret_cast<char*>(start) + LIBSIZE);
+  EXPECT_LT(reinterpret_cast<void*>(f), reinterpret_cast<char*>(start) + kLibSize);
 
   EXPECT_EQ(4, f());
   dlclose(handle_);
   handle_ = nullptr;
 
   // Check that dlclose unmapped the file
-  void* addr = mmap(start, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* addr = mmap(start, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_EQ(start, addr) << "dlclose did not unmap the memory";
 }
 
 TEST_F(DlExtTest, LoadAtFixedAddressTooSmall) {
-  void* start = mmap(nullptr, LIBSIZE + PAGE_SIZE, PROT_NONE,
+  void* start = mmap(nullptr, kLibSize + PAGE_SIZE, PROT_NONE,
                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
-  munmap(start, LIBSIZE + PAGE_SIZE);
-  void* new_addr = mmap(reinterpret_cast<uint8_t*>(start) + PAGE_SIZE, LIBSIZE, PROT_NONE,
+  munmap(start, kLibSize + PAGE_SIZE);
+  void* new_addr = mmap(reinterpret_cast<uint8_t*>(start) + PAGE_SIZE, kLibSize, PROT_NONE,
                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(new_addr != MAP_FAILED);
 
@@ -411,7 +398,7 @@ TEST_F(DlExtTest, LoadAtFixedAddressTooSmall) {
   extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
   extinfo.reserved_addr = start;
 
-  handle_ = android_dlopen_ext(LIBNAME, RTLD_NOW, &extinfo);
+  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
 }
 
@@ -419,11 +406,11 @@ class DlExtRelroSharingTest : public DlExtTest {
 protected:
   virtual void SetUp() {
     DlExtTest::SetUp();
-    void* start = mmap(nullptr, LIBSIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     ASSERT_TRUE(start != MAP_FAILED);
     extinfo_.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
     extinfo_.reserved_addr = start;
-    extinfo_.reserved_size = LIBSIZE;
+    extinfo_.reserved_size = kLibSize;
     extinfo_.relro_fd = -1;
   }
 
@@ -482,8 +469,8 @@ TEST_F(DlExtRelroSharingTest, ChildWritesGoodData) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME, tf.filename));
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName));
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
@@ -493,15 +480,15 @@ TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
   TemporaryFile tf; // // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME_NORELRO, tf.filename));
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME_NORELRO));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameNoRelro, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibNameNoRelro));
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
 }
 
 TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
-  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(LIBNAME));
+  ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName));
 }
 
 TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
@@ -513,14 +500,14 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(LIBNAME, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.filename));
 
   int pipefd[2];
   ASSERT_NOERROR(pipe(pipefd));
 
   size_t without_sharing, with_sharing;
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(LIBNAME, false, &without_sharing));
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(LIBNAME, true, &with_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, false, &without_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, true, &with_sharing));
 
   // We expect the sharing to save at least 10% of the total PSS. In practice
   // it saves 40%+ for this test.
@@ -644,9 +631,7 @@ TEST(dlext, ns_smoke) {
   ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
                "the list of public libraries is empty.", dlerror());
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-
-  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
@@ -654,20 +639,20 @@ TEST(dlext, ns_smoke) {
 
   // Check that libraries added to public namespace are NODELETE
   dlclose(handle_public);
-  handle_public = dlopen((lib_path + "/public_namespace_libs/" + g_public_lib).c_str(),
+  handle_public = dlopen((g_testlib_root + "/public_namespace_libs/" + g_public_lib).c_str(),
                          RTLD_NOW | RTLD_NOLOAD);
 
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
   android_namespace_t* ns1 =
           android_create_namespace("private", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
   ASSERT_TRUE(ns1 != nullptr) << dlerror();
 
   android_namespace_t* ns2 =
           android_create_namespace("private_isolated", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED, nullptr, nullptr);
   ASSERT_TRUE(ns2 != nullptr) << dlerror();
 
@@ -758,8 +743,7 @@ TEST(dlext, ns_isolated) {
   static const char* root_lib = "libnstest_root_not_isolated.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
@@ -769,14 +753,14 @@ TEST(dlext, ns_isolated) {
 
   android_namespace_t* ns_not_isolated =
           android_create_namespace("private", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated =
           android_create_namespace("private_isolated1",
                                    nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    nullptr,
                                    nullptr);
@@ -784,10 +768,10 @@ TEST(dlext, ns_isolated) {
 
   android_namespace_t* ns_isolated2 =
           android_create_namespace("private_isolated2",
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    nullptr,
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
-                                   lib_path.c_str(),
+                                   g_testlib_root.c_str(),
                                    nullptr);
   ASSERT_TRUE(ns_isolated2 != nullptr) << dlerror();
 
@@ -795,7 +779,7 @@ TEST(dlext, ns_isolated) {
   ASSERT_STREQ("dlopen failed: library \"libnstest_root_not_isolated.so\" not found", dlerror());
 
   std::string lib_private_external_path =
-      lib_path + "/private_namespace_libs_external/libnstest_private_external.so";
+      g_testlib_root + "/private_namespace_libs_external/libnstest_private_external.so";
 
   // Load lib_private_external_path to default namespace
   // (it should remain invisible for the isolated namespaces after this)
@@ -824,7 +808,7 @@ TEST(dlext, ns_isolated) {
 
   extinfo.library_namespace = ns_isolated2;
 
-  // this should work because isolation_path for private_isolated2 includes lib_path
+  // this should work because isolation_path for private_isolated2 includes g_testlib_root
   handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 != nullptr) << dlerror();
   dlclose(handle2);
@@ -865,8 +849,7 @@ TEST(dlext, ns_shared) {
   static const char* root_lib_isolated = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
@@ -877,18 +860,18 @@ TEST(dlext, ns_shared) {
   // preload this library to the default namespace to check if it
   // is shared later on.
   void* handle_dlopened =
-          dlopen((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
+          dlopen((g_testlib_root + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
 
   android_namespace_t* ns_not_isolated =
           android_create_namespace("private", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated_shared =
           android_create_namespace("private_isolated_shared", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
                                    nullptr, nullptr);
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
@@ -897,7 +880,7 @@ TEST(dlext, ns_shared) {
   ASSERT_STREQ("dlopen failed: library \"libnstest_root_not_isolated.so\" not found", dlerror());
 
   std::string lib_private_external_path =
-      lib_path + "/private_namespace_libs_external/libnstest_private_external.so";
+      g_testlib_root + "/private_namespace_libs_external/libnstest_private_external.so";
 
   // Load lib_private_external_path to default namespace
   // (it should remain invisible for the isolated namespaces after this)
@@ -981,8 +964,6 @@ TEST(dlext, ns_shared) {
 TEST(dlext, ns_shared_dlclose) {
   std::string path = "libc.so:libc++.so:libdl.so:libm.so";
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-
   android_set_application_target_sdk_version(42U); // something > 23
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
@@ -990,12 +971,12 @@ TEST(dlext, ns_shared_dlclose) {
   // preload this library to the default namespace to check if it
   // is shared later on.
   void* handle_dlopened =
-          dlopen((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
+          dlopen((g_testlib_root + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
 
   android_namespace_t* ns_isolated_shared =
           android_create_namespace("private_isolated_shared", nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
                                    nullptr, nullptr);
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
@@ -1016,7 +997,7 @@ TEST(dlext, ns_shared_dlclose) {
   ASSERT_TRUE(handle == nullptr)
       << "Error: libnstest_dlopened.so is still accessible in shared namespace";
 
-  handle = android_dlopen_ext((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
+  handle = android_dlopen_ext((g_testlib_root + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
                               RTLD_NOW | RTLD_NOLOAD, &extinfo);
   ASSERT_TRUE(handle == nullptr)
       << "Error: libnstest_dlopened.so is still accessible in shared namespace";
@@ -1025,14 +1006,14 @@ TEST(dlext, ns_shared_dlclose) {
   ASSERT_TRUE(handle == nullptr)
       << "Error: libnstest_dlopened.so is still accessible in default namespace";
 
-  handle = dlopen((lib_path + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
+  handle = dlopen((g_testlib_root + "/private_namespace_libs/libnstest_dlopened.so").c_str(),
                   RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr)
       << "Error: libnstest_dlopened.so is still accessible in default namespace";
 
   // Now lets see if the soinfo area gets reused in the wrong way:
   // load a library to default namespace.
-  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
@@ -1048,14 +1029,12 @@ TEST(dlext, ns_isolated_rtld_global) {
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr));
 
-  const std::string lib_path = std::string(getenv("ANDROID_DATA")) + NATIVE_TESTS_PATH;
-
-  const std::string lib_public_path = lib_path + "/public_namespace_libs";
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs";
 
   android_namespace_t* ns1 =
           android_create_namespace("isolated1",
                                    nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    lib_public_path.c_str(),
                                    nullptr);
@@ -1064,7 +1043,7 @@ TEST(dlext, ns_isolated_rtld_global) {
   android_namespace_t* ns2 =
           android_create_namespace("isolated2",
                                    nullptr,
-                                   (lib_path + "/private_namespace_libs").c_str(),
+                                   (g_testlib_root + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED,
                                    lib_public_path.c_str(),
                                    nullptr);
@@ -1083,7 +1062,7 @@ TEST(dlext, ns_isolated_rtld_global) {
   android_namespace_t* ns1_child =
         android_create_namespace("isolated1_child",
                                  nullptr,
-                                 (lib_path + "/private_namespace_libs").c_str(),
+                                 (g_testlib_root + "/private_namespace_libs").c_str(),
                                  ANDROID_NAMESPACE_TYPE_ISOLATED,
                                  nullptr,
                                  ns1);
@@ -1118,26 +1097,22 @@ TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  std::string data_path;
-  ASSERT_TRUE(get_realpath(std::string(getenv("ANDROID_DATA")), &data_path)) << strerror(errno);
-  const std::string lib_path = data_path + NATIVE_TESTS_PATH;
-
-  const std::string lib_public_path = lib_path + "/public_namespace_libs/" + g_public_lib;
+  const std::string lib_public_path = g_testlib_root + "/public_namespace_libs/" + g_public_lib;
   void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
 
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
-  ASSERT_TRUE(android_init_namespaces(path.c_str(), (lib_path + "/private_namespace_libs").c_str()))
+  ASSERT_TRUE(android_init_namespaces(path.c_str(), (g_testlib_root + "/private_namespace_libs").c_str()))
       << dlerror();
 
   android_namespace_t* ns = android_create_namespace(
                                 "private", nullptr,
-                                (lib_path + "/private_namespace_libs").c_str(),
+                                (g_testlib_root + "/private_namespace_libs").c_str(),
                                 ANDROID_NAMESPACE_TYPE_REGULAR, nullptr, nullptr);
 
   ASSERT_TRUE(ns != nullptr) << dlerror();
 
-  std::string private_library_absolute_path = lib_path + "/private_namespace_libs/" + root_lib;
+  std::string private_library_absolute_path = g_testlib_root + "/private_namespace_libs/" + root_lib;
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
