@@ -32,6 +32,8 @@
 
 #include "private/ScopeGuard.h"
 
+#if defined(__linux__)
+
 struct map_record {
   uintptr_t addr_start;
   uintptr_t addr_end;
@@ -94,6 +96,8 @@ class Maps {
 };
 
 extern "C" pid_t gettid();
+
+#endif
 
 static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
   while (tid == 0) {
