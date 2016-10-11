@@ -250,7 +250,16 @@ cc_test_library {
 cc_test_library {
     name: "libBionicGtestMain",
     defaults: ["bionic_tests_defaults"],
-    srcs: ["gtest_main.cpp"],
+    srcs: [
+        "gtest_main.cpp",
+        "gtest_globals.cpp",
+    ],
+    static_libs: [
+        "libbase",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
     target: {
         darwin: {
             enabled: true,
@@ -267,6 +276,7 @@ cc_test_library {
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
+        "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
@@ -299,7 +309,10 @@ cc_test_library {
 cc_test_library {
     name: "libBionicCtsGtestMain",
     defaults: ["bionic_tests_defaults"],
-    srcs: ["gtest_main.cpp"],
+    srcs: [
+        "gtest_main.cpp",
+        "gtest_globals_cts.cpp",
+    ],
     cppflags: ["-DUSING_GTEST_OUTPUT_FORMAT"],
     shared: {
         enabled: false,
@@ -426,6 +439,7 @@ cc_test_host {
 
     srcs: [
         "atexit_test.cpp",
+        "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
         "dl_test.cpp",
         "pthread_dlfcn_test.cpp",
