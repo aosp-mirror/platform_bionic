@@ -49,26 +49,6 @@ module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
-# create symlink to libdlext_test.so for symlink test
-# -----------------------------------------------------------------------------
-# Use = instead of := to defer the evaluation of $@
-$(TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-
-ifneq ($(TARGET_2ND_ARCH),)
-# link 64 bit .so
-$($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-endif
-
-# host symlinks
-$(HOST_OUT)/lib64/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-
-$(HOST_OUT)/lib/libdlext_test.so: PRIVATE_POST_INSTALL_CMD = \
-    $(hide) cd $(dir $@) && ln -sf $(notdir $@) libdlext_test_v2.so
-
-# -----------------------------------------------------------------------------
 # Library used by dlext tests - different name non-default location
 # -----------------------------------------------------------------------------
 module := libdlext_test_fd
