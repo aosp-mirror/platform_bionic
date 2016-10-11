@@ -267,6 +267,7 @@ cc_test_library {
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
+        "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
@@ -426,6 +427,7 @@ cc_test_host {
 
     srcs: [
         "atexit_test.cpp",
+        "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
         "dl_test.cpp",
         "pthread_dlfcn_test.cpp",
