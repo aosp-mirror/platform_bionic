@@ -17,15 +17,16 @@
 #include <gtest/gtest.h>
 
 #include <dlfcn.h>
-#include <libgen.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "private/ScopeGuard.h"
 
 #include <string>
 
+#include "dlfcn_symlink_support.h"
 #include "utils.h"
 
 #define ASSERT_SUBSTR(needle, haystack) \
@@ -1012,8 +1013,10 @@ TEST(dlfcn, dlopen_undefined_weak_func) {
 }
 
 TEST(dlfcn, dlopen_symlink) {
+  DlfcnSymlink symlink("dlopen_symlink");
+  const std::string symlink_name = basename(symlink.get_symlink_path().c_str());
   void* handle1 = dlopen("libdlext_test.so", RTLD_NOW);
-  void* handle2 = dlopen("libdlext_test_v2.so", RTLD_NOW);
+  void* handle2 = dlopen(symlink_name.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle1 != nullptr);
   ASSERT_TRUE(handle2 != nullptr);
   ASSERT_EQ(handle1, handle2);

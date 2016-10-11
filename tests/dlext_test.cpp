@@ -35,6 +35,7 @@
 #include "TemporaryFile.h"
 #include "utils.h"
 #include "dlext_private.h"
+#include "dlfcn_symlink_support.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE((ptr) != nullptr) << "dlerror: " << dlerror()
@@ -199,13 +200,15 @@ TEST_F(DlExtTest, ExtInfoUseOffsetWithoutFd) {
 }
 
 TEST(dlext, android_dlopen_ext_force_load_smoke) {
+  DlfcnSymlink symlink("android_dlopen_ext_force_load_smoke");
+  const std::string symlink_name = basename(symlink.get_symlink_path().c_str());
   // 1. Open actual file
   void* handle = dlopen("libdlext_test.so", RTLD_NOW);
   ASSERT_DL_NOTNULL(handle);
   // 2. Open link with force_load flag set
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_FORCE_LOAD;
-  void* handle2 = android_dlopen_ext("libdlext_test_v2.so", RTLD_NOW, &extinfo);
+  void* handle2 = android_dlopen_ext(symlink_name.c_str(), RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle2);
   ASSERT_TRUE(handle != handle2);
 
@@ -214,15 +217,17 @@ TEST(dlext, android_dlopen_ext_force_load_smoke) {
 }
 
 TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
+  DlfcnSymlink symlink("android_dlopen_ext_force_load_soname_exception");
+  const std::string symlink_name = basename(symlink.get_symlink_path().c_str());
   // Check if soname lookup still returns already loaded library
   // when ANDROID_DLEXT_FORCE_LOAD flag is specified.
-  void* handle = dlopen("libdlext_test_v2.so", RTLD_NOW);
+  void* handle = dlopen(symlink_name.c_str(), RTLD_NOW);
   ASSERT_DL_NOTNULL(handle);
 
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_FORCE_LOAD;
 
-  // Note that 'libdlext_test.so' is dt_soname for libdlext_test_v2.so
+  // Note that 'libdlext_test.so' is dt_soname for the symlink_name
   void* handle2 = android_dlopen_ext("libdlext_test.so", RTLD_NOW, &extinfo);
 
   ASSERT_DL_NOTNULL(handle2);
