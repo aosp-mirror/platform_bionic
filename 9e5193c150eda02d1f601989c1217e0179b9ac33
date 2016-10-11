@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff76b882_8fc0a992",
+        "filename": "libc/upstream-openbsd/android/include/arc4random.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-11T20:05:58Z",
+      "side": 1,
+      "message": "*p",
+      "range": {
+        "startLine": 83,
+        "startChar": 51,
+        "endLine": 83,
+        "endChar": 52
+      },
+      "revId": "9e5193c150eda02d1f601989c1217e0179b9ac33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
