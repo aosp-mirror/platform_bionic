@@ -25,6 +25,3 @@ endif
 # 2. Set dt_runpath to origin to resolve dependencies
 $(module)_ldflags += -Wl,--rpath,\$${ORIGIN} -Wl,--enable-new-dtags
 include $(TEST_PATH)/Android.build.mk
-
-bionic-loader-test-libs-target: $(LOCAL_MODULE)
-
