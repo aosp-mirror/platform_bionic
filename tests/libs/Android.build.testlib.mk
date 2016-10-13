@@ -17,7 +17,6 @@
 build_target := SHARED_LIBRARY
 build_type := host
 include $(TEST_PATH)/Android.build.mk
-bionic-loader-test-libs-host: $(LOCAL_MODULE)
 
 include $(LOCAL_PATH)/Android.build.testlib.target.mk
 
