@@ -61,6 +61,7 @@ bool NetlinkConnection::SendRequest(int type) {
   // Did we open a netlink socket yet?
   if (fd_ == -1) {
     fd_ = socket(PF_NETLINK, SOCK_RAW | SOCK_CLOEXEC, NETLINK_ROUTE);
+    if (fd_ == -1) return false;
   }
 
   // Construct and send the message.
@@ -83,7 +84,11 @@ bool NetlinkConnection::ReadResponses(void callback(void*, nlmsghdr*), void* con
     nlmsghdr* hdr = reinterpret_cast<nlmsghdr*>(data_);
     for (; NLMSG_OK(hdr, static_cast<size_t>(bytes_read)); hdr = NLMSG_NEXT(hdr, bytes_read)) {
       if (hdr->nlmsg_type == NLMSG_DONE) return true;
-      if (hdr->nlmsg_type == NLMSG_ERROR) return false;
+      if (hdr->nlmsg_type == NLMSG_ERROR) {
+        nlmsgerr* err = reinterpret_cast<nlmsgerr*>(NLMSG_DATA(hdr));
+        errno = (hdr->nlmsg_len >= NLMSG_LENGTH(sizeof(nlmsgerr))) ? -err->error : EIO;
+        return false;
+      }
       callback(context, hdr);
     }
   }
