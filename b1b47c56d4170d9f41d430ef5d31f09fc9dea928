@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "1c28fb81_d002e26c",
+        "filename": "libc/bionic/bionic_netlink.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-14T21:35:08Z",
+      "side": 1,
+      "message": "EFAULT is \"fault\" in the sense of \"address fault\". going with EIO instead.",
+      "parentUuid": "1c28fb81_f0d71ed7",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 61
+      },
+      "revId": "b1b47c56d4170d9f41d430ef5d31f09fc9dea928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc240697_28816300",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "writtenOn": "2016-10-14T19:47:55Z",
       "side": 1,
       "message": "Would this be better as:\n\nstd::vector\u003cstd::thread\u003e threads;\nfor (size_t i \u003d 0; i \u003c 128; ++i) {\n   std::thread thread([]() {\n     ifaddrs* addrs \u003d nullptr;\n     ASSERT_EQ(0, getifaddrs(\u0026addrs)) \u003c\u003c strerror(errno);\n     freeifaddrs(addrs);\n   });\n}\n\nfor (auto\u0026 t : threads) t.join();\n\nAlso, if the thread fails, does the test fail? I\u0027m never sure if that causes a failure or not.",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 30
+      },
+      "revId": "b1b47c56d4170d9f41d430ef5d31f09fc9dea928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c28fb81_10f18a78",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-14T21:35:08Z",
+      "side": 1,
+      "message": "nice. that avoids the \"ASSERTs must be in a -\u003e void function\" problem. we should probably clean up the pthread_create calls in the 16 test files that contain them but aren\u0027t actually pthread_test.cpp itself...\n\n\u003e Also, if the thread fails, does the test fail? I\u0027m never sure if that causes a failure or not.\n\nyou ask every time, and get the same answer every time :-)",
+      "parentUuid": "fc240697_28816300",
       "range": {
         "startLine": 285,
         "startChar": 0,
