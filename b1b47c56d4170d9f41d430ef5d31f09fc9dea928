@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fc240697_28dc0304",
+        "filename": "libc/bionic/bionic_netlink.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1112163
+      },
+      "writtenOn": "2016-10-14T19:54:50Z",
+      "side": 1,
+      "message": "it helps in debugging getting the actual error thrown by kernel. For instance in error debugged it was EBUSY or could be something else?",
+      "parentUuid": "fc240697_68a43ba2",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 61
+      },
+      "revId": "b1b47c56d4170d9f41d430ef5d31f09fc9dea928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc240697_28816300",
         "filename": "tests/ifaddrs_test.cpp",
         "patchSetId": 1
