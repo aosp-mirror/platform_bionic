@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc240697_68a43ba2",
+        "filename": "libc/bionic/bionic_netlink.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-10-14T19:47:55Z",
+      "side": 1,
+      "message": "If this isn\u0027t true, should we set errno to something like EFAULT, or some other default?",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 61
+      },
+      "revId": "b1b47c56d4170d9f41d430ef5d31f09fc9dea928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc240697_28816300",
+        "filename": "tests/ifaddrs_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-10-14T19:47:55Z",
+      "side": 1,
+      "message": "Would this be better as:\n\nstd::vector\u003cstd::thread\u003e threads;\nfor (size_t i \u003d 0; i \u003c 128; ++i) {\n   std::thread thread([]() {\n     ifaddrs* addrs \u003d nullptr;\n     ASSERT_EQ(0, getifaddrs(\u0026addrs)) \u003c\u003c strerror(errno);\n     freeifaddrs(addrs);\n   });\n}\n\nfor (auto\u0026 t : threads) t.join();\n\nAlso, if the thread fails, does the test fail? I\u0027m never sure if that causes a failure or not.",
+      "range": {
+        "startLine": 285,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 30
+      },
+      "revId": "b1b47c56d4170d9f41d430ef5d31f09fc9dea928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
