@@ -16,6 +16,24 @@
       "revId": "d48ed3836bb90a5c9c25168d7e430c92ddea8ce6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc28cfc6_27dc82ca",
+        "filename": "libc/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1224,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-10-19T21:38:40Z",
+      "side": 1,
+      "message": "Oh I see it needs to be out: [] looking at others...",
+      "parentUuid": "bc28cfc6_07c21eeb",
+      "revId": "d48ed3836bb90a5c9c25168d7e430c92ddea8ce6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
