@@ -32,13 +32,13 @@
 #include <sys/cdefs.h>
 
 /* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
-/* Keep it sorted. */
+/* Keep this list sorted by name. */
 #define _POSIX_ADVISORY_INFO        200809L
 #define _POSIX_AIO_LISTIO_MAX       2
 #define _POSIX_AIO_MAX              1
 #define _POSIX_ARG_MAX              4096
 #define _POSIX_ASYNCHRONOUS_IO      -1  /* not implemented */
-#define _POSIX_BARRIERS             -1  /* not implemented */
+#define _POSIX_BARRIERS             200809L
 #define _POSIX_CHILD_MAX            25
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
 #define _POSIX_CLOCK_SELECTION      200809L
@@ -81,7 +81,7 @@
 #define _POSIX_SHELL                1   /* system() supported */
 #define _POSIX_SIGQUEUE_MAX         32
 #define _POSIX_SPAWN                -1  /* not implemented */
-#define _POSIX_SPIN_LOCKS           -1  /* not implemented */
+#define _POSIX_SPIN_LOCKS           200809L
 #define _POSIX_SPORADIC_SERVER      -1  /* not implemented */
 #define _POSIX_SSIZE_MAX            32767
 #define _POSIX_STREAM_MAX           8
