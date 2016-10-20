@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc6c4f82_7e035972",
+        "filename": "libc/bionic/struct_file_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-20T16:06:55Z",
+      "side": 1,
+      "message": "can this just go in the existing stdio.cpp?",
+      "revId": "369fad694277f3006e8cd4d6b5e1ba8998fac099",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
