@@ -848,3 +848,16 @@ int wprintf(const wchar_t* fmt, ...) {
 int wscanf(const wchar_t* fmt, ...) {
   PRINTF_IMPL(vfwscanf(stdin, fmt, ap));
 }
+
+namespace {
+
+namespace phony {
+#include <bits/struct_file.h>
+}
+
+static_assert(sizeof(::__sFILE) == sizeof(phony::__sFILE),
+              "size mismatch between `struct __sFILE` implementation and public stub");
+static_assert(alignof(::__sFILE) == alignof(phony::__sFILE),
+              "alignment mismatch between `struct __sFILE` implementation and public stub");
+
+}
