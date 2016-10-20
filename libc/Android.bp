@@ -2004,6 +2004,7 @@ ndk_headers {
     from: "kernel/uapi/linux",
     to: "linux",
     srcs: ["kernel/uapi/linux/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2011,6 +2012,7 @@ ndk_headers {
     from: "kernel/android/uapi/linux",
     to: "linux",
     srcs: ["kernel/android/uapi/linux/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2018,6 +2020,7 @@ ndk_headers {
     from: "kernel/uapi/asm-generic",
     to: "asm-generic",
     srcs: ["kernel/uapi/asm-generic/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2025,6 +2028,7 @@ ndk_headers {
     from: "kernel/uapi/asm-arm",
     to: "arm-linux-androideabi",
     srcs: ["kernel/uapi/asm-arm/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2032,6 +2036,7 @@ ndk_headers {
     from: "kernel/uapi/asm-arm64",
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2039,6 +2044,7 @@ ndk_headers {
     from: "kernel/uapi/asm-mips",
     to: "mipsel-linux-android",
     srcs: ["kernel/uapi/asm-mips/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2046,6 +2052,7 @@ ndk_headers {
     from: "kernel/uapi/asm-mips",
     to: "mips64el-linux-android",
     srcs: ["kernel/uapi/asm-mips/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2053,6 +2060,7 @@ ndk_headers {
     from: "kernel/uapi/asm-x86",
     to: "i686-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2060,6 +2068,7 @@ ndk_headers {
     from: "kernel/uapi/asm-x86",
     to: "x86_64-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2067,6 +2076,7 @@ ndk_headers {
     from: "arch-arm/include",
     to: "arm-linux-androideabi",
     srcs: ["arch-arm/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2074,6 +2084,7 @@ ndk_headers {
     from: "arch-arm64/include",
     to: "aarch64-linux-android",
     srcs: ["arch-arm64/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2081,6 +2092,7 @@ ndk_headers {
     from: "arch-mips/include",
     to: "mipsel-linux-android",
     srcs: ["arch-mips/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2088,6 +2100,7 @@ ndk_headers {
     from: "arch-mips/include",
     to: "mips64el-linux-android",
     srcs: ["arch-mips/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2095,6 +2108,7 @@ ndk_headers {
     from: "arch-x86/include",
     to: "i686-linux-android",
     srcs: ["arch-x86/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_headers {
@@ -2102,6 +2116,7 @@ ndk_headers {
     from: "arch-x86_64/include",
     to: "x86_64-linux-android",
     srcs: ["arch-x86_64/include/**/*.h"],
+    license: "NOTICE",
 }
 
 ndk_library {
