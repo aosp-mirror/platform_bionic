@@ -628,3 +628,49 @@ TEST(time, clock_nanosleep_thread_cputime_id) {
   in.tv_nsec = 0;
   ASSERT_EQ(EINVAL, clock_nanosleep(CLOCK_THREAD_CPUTIME_ID, 0, &in, nullptr));
 }
+
+TEST(time, bug_31938693) {
+  // User-visible symptoms in N:
+  // http://b/31938693
+  // https://code.google.com/p/android/issues/detail?id=225132
+
+  // Actual underlying bug (the code change, not the tzdata upgrade that first exposed the bug):
+  // http://b/31848040
+
+  // This isn't a great test, because very few time zones were actually affected, and there's
+  // no real logic to which ones were affected: it was just a coincidence of the data that came
+  // after them in the tzdata file.
+
+  time_t t = 1475619727;
+  struct tm tm;
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(15, tm.tm_hour);
+
+  setenv("TZ", "Europe/London", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(23, tm.tm_hour);
+
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(13, tm.tm_hour);
+
+  setenv("TZ", "Pacific/Apia", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(12, tm.tm_hour);
+
+  setenv("TZ", "Pacific/Honolulu", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(12, tm.tm_hour);
+
+  setenv("TZ", "Asia/Magadan", 1);
+  tzset();
+  ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
+  EXPECT_EQ(9, tm.tm_hour);
+}
