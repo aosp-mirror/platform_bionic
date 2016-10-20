@@ -1227,4 +1227,26 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_textrels) {
+  const std::string libpath = g_testlib_root +
+                              "/" + kPrebuiltElfDir +
+                              "/libtest_invalid-textrels.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
+TEST(dlfcn, dlopen_invalid_textrels2) {
+  const std::string libpath = g_testlib_root +
+                              "/" + kPrebuiltElfDir +
+                              "/libtest_invalid-textrels2.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 #endif
