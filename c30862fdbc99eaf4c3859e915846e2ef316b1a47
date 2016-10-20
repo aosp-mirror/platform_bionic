@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc6c4f82_d144b364",
+        "filename": "libc/NOTICE",
+        "patchSetId": 1
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-20T22:12:27Z",
+      "side": 1,
+      "message": "(this feels like a \"spot the difference\" game relative to the previous entry in this file!)",
+      "revId": "c30862fdbc99eaf4c3859e915846e2ef316b1a47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
