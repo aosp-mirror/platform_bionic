@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc6c4f82_1e757d79",
+        "filename": "libc/include/bits/struct_file.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-20T17:07:37Z",
+      "side": 1,
+      "message": "or aligned(sizeof(void*))?",
+      "revId": "c58131b0ea721d3eb81290d0173b6a9e4090fc2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
