@@ -363,6 +363,9 @@ cc_test_library {
         android: {
             shared_libs: ["libdl"],
         },
+        host: {
+            host_ldlibs: ["-ldl"],
+        },
     },
 }
 
@@ -372,6 +375,14 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_functions.cpp"],
     shared_libs: ["libtest_dlsym_from_this_grandchild"],
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -409,6 +420,9 @@ cc_test_library {
     target: {
         android: {
             shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
         },
     },
 }
