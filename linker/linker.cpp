@@ -2880,7 +2880,7 @@ bool soinfo::prelink_image() {
 
       case DT_TEXTREL:
 #if defined(__LP64__)
-        DL_ERR("text relocations (DT_TEXTREL) found in 64-bit ELF file \"%s\"", get_realpath());
+        DL_ERR("\"%s\" has text relocations", get_realpath());
         return false;
 #else
         has_text_relocations = true;
@@ -2898,7 +2898,7 @@ bool soinfo::prelink_image() {
       case DT_FLAGS:
         if (d->d_un.d_val & DF_TEXTREL) {
 #if defined(__LP64__)
-          DL_ERR("text relocations (DF_TEXTREL) found in 64-bit ELF file \"%s\"", get_realpath());
+          DL_ERR("\"%s\" has text relocations", get_realpath());
           return false;
 #else
           has_text_relocations = true;
@@ -2913,7 +2913,7 @@ bool soinfo::prelink_image() {
         set_dt_flags_1(d->d_un.d_val);
 
         if ((d->d_un.d_val & ~SUPPORTED_DT_FLAGS_1) != 0) {
-          DL_WARN("%s: unsupported flags DT_FLAGS_1=%p", get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
+          DL_WARN("\"%s\" has unsupported flags DT_FLAGS_1=%p", get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
 #if defined(__mips__)
@@ -2980,7 +2980,7 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
-          DL_WARN("%s: unused DT entry: type %p arg %p", get_realpath(),
+          DL_WARN("\"%s\" unused DT entry: type %p arg %p", get_realpath(),
               reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
@@ -3067,13 +3067,12 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (has_text_relocations) {
     // Fail if app is targeting sdk version > 22
     if (get_application_target_sdk_version() > 22) {
-      PRINT("%s: has text relocations", get_realpath());
-      DL_ERR("%s: has text relocations", get_realpath());
+      DL_ERR_AND_LOG("\"%s\" has text relocations", get_realpath());
       return false;
     }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN("%s has text relocations. This is wasting memory and prevents "
+    DL_WARN("\"%s\" has text relocations. This is wasting memory and prevents "
             "security hardening. Please fix.", get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
