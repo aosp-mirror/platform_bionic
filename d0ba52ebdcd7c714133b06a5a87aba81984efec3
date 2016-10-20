@@ -22,6 +22,30 @@
       "revId": "d0ba52ebdcd7c714133b06a5a87aba81984efec3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc6c4f82_7f8033dd",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2016-10-20T20:23:19Z",
+      "side": 1,
+      "message": "It gets it implicitly because it uses the default libc++ STL, but better to declare it.",
+      "parentUuid": "bc6c4f82_d9ba9f19",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 18
+      },
+      "revId": "d0ba52ebdcd7c714133b06a5a87aba81984efec3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
