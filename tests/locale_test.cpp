@@ -59,9 +59,10 @@ TEST(locale, setlocale) {
   EXPECT_EQ(EINVAL, errno);
 
 #if defined(__BIONIC__)
-  // The "" locale is implementation-defined. For bionic, it's the C locale.
+  // The "" locale is implementation-defined. For bionic, it's the C.UTF-8 locale, which is
+  // pretty much all we support anyway.
   // glibc will give us something like "en_US.UTF-8", depending on the user's configuration.
-  EXPECT_STREQ("C", setlocale(LC_ALL, ""));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_ALL, ""));
 #endif
   EXPECT_STREQ("C", setlocale(LC_ALL, "C"));
   EXPECT_STREQ("C", setlocale(LC_ALL, "POSIX"));
