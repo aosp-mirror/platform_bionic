@@ -1,7 +1,6 @@
 /*	$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $	*/
 
 /*
- * Copyright 2008  Android Open Source Project (source port randomization)
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
  *

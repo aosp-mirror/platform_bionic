@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997 Mark Brinicombe
- * Copyright (c) 2010 Android Open Source Project.
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
