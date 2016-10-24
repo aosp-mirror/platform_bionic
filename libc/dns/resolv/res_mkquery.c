@@ -1,7 +1,6 @@
 /*	$NetBSD: res_mkquery.c,v 1.6 2006/01/24 17:40:32 christos Exp $	*/
 
 /*
- * Copyright (c) 2008  Android Open Source Project (query id randomization)
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
  *
