@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c1e75c23_35a51a89",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-25T20:11:47Z",
+      "side": 1,
+      "message": "your situation is creating new process via clone(nullptr) in https://android-review.googlesource.com/#/c/219374/11/init/service.cpp, but __start_thread is for new thread. Why not change in clone()? I doubt if anyone can use clone() to create new thread directly, in which case the tls array will be unset and you almost can\u0027t call any libc function.",
+      "parentUuid": "c1e75c23_b2c92066",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1e75c23_92ce1c6a",
         "filename": "libc/bionic/gettid.cpp",
         "patchSetId": 1
