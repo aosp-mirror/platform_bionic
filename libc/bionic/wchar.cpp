@@ -61,7 +61,7 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
   static mbstate_t __private_state;
   mbstate_t* state = (ps == NULL) ? &__private_state : ps;
 
-  // Our wchar_t is UTF-32
+  // Our wchar_t is UTF-32.
   return mbrtoc32(reinterpret_cast<char32_t*>(pwc), s, n, state);
 }
 
