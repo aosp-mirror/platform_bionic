@@ -37,7 +37,8 @@
 
 #include "private/bionic_macros.h"
 
-// We currently support a single locale, the "C" locale (also known as "POSIX").
+// We only support two locales, the "C" locale (also known as "POSIX"),
+// and the "C.UTF-8" locale (also known as "en_US.UTF-8").
 
 static bool __bionic_current_locale_is_utf8 = true;
 
@@ -100,12 +101,16 @@ static void __locale_init() {
   g_locale.int_n_sign_posn = CHAR_MAX;
 }
 
-static bool __is_supported_locale(const char* locale) {
-  return (strcmp(locale, "") == 0 ||
-          strcmp(locale, "C") == 0 ||
-          strcmp(locale, "C.UTF-8") == 0 ||
-          strcmp(locale, "en_US.UTF-8") == 0 ||
-          strcmp(locale, "POSIX") == 0);
+static bool __is_supported_locale(const char* locale_name) {
+  return (strcmp(locale_name, "") == 0 ||
+          strcmp(locale_name, "C") == 0 ||
+          strcmp(locale_name, "C.UTF-8") == 0 ||
+          strcmp(locale_name, "en_US.UTF-8") == 0 ||
+          strcmp(locale_name, "POSIX") == 0);
+}
+
+static bool __is_utf8_locale(const char* locale_name) {
+  return (*locale_name == '\0' || strstr(locale_name, "UTF-8"));
 }
 
 lconv* localeconv() {
@@ -133,7 +138,7 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
     return NULL;
   }
 
-  return new __locale_t(strstr(locale_name, "UTF-8") != NULL ? 4 : 1);
+  return new __locale_t(__is_utf8_locale(locale_name) ? 4 : 1);
 }
 
 char* setlocale(int category, const char* locale_name) {
@@ -150,7 +155,7 @@ char* setlocale(int category, const char* locale_name) {
       errno = ENOENT;
       return NULL;
     }
-    __bionic_current_locale_is_utf8 = (strstr(locale_name, "UTF-8") != NULL);
+    __bionic_current_locale_is_utf8 = __is_utf8_locale(locale_name);
   }
 
   return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
