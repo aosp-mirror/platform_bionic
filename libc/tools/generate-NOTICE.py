@@ -16,7 +16,7 @@ import tempfile
 
 def IsUninteresting(path):
     path = path.lower()
-    if path.endswith(".mk") or path.endswith(".py") or path.endswith(".pyc") or path.endswith(".txt") or path.endswith(".3"):
+    if path.endswith(".mk") or path.endswith(".py") or path.endswith(".pyc") or path.endswith(".txt") or path.endswith(".3") or path.endswith(".swp"):
         return True
     if path.endswith("/notice") or path.endswith("/readme") or path.endswith("/caveats"):
         return True
