@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1e75c23_72b4d8d8",
+        "filename": "libc/arch-arm/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-25T19:57:44Z",
+      "side": 1,
+      "message": "any idea why vfork is not written in vfork.cpp, like fork.cpp?",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 11
+      },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1e75c23_b2c92066",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-25T19:57:44Z",
+      "side": 1,
+      "message": "shall we check if __get_thread()-\u003etid \u003d\u003d 0, so we can avoid unnecessary syscall?",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1e75c23_92ce1c6a",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-25T19:57:44Z",
+      "side": 1,
+      "message": "Since we can set __get_thread()-\u003etid properly for clone. If we can also set __get_thread()-\u003etid properly for vfork, we can avoid this check, right? Since gettid() is more likely to be called than vfork()/clone(), I prefer to increase operations on those functions rather than this one.",
+      "range": {
+        "startLine": 35,
+        "startChar": 20,
+        "endLine": 35,
+        "endChar": 31
+      },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1e75c23_12bb4cc7",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-25T19:57:44Z",
+      "side": 1,
+      "message": "create separate test for gettid() to make it clearer?",
+      "range": {
+        "startLine": 424,
+        "startChar": 8,
+        "endLine": 424,
+        "endChar": 29
+      },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
