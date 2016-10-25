@@ -20,24 +20,81 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
-TEST(inttypes, misc) {
-  char buf[512];
+#define PRINTF_TYPED(FMT_SUFFIX, TYPE_SUFFIX) \
+  do { \
+    char buf[512]; \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRId##FMT_SUFFIX, int##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("123", buf); \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRIi##FMT_SUFFIX, int##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("123", buf); \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRIo##FMT_SUFFIX, int##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("173", buf); \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRIu##FMT_SUFFIX, uint##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("123", buf); \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRIx##FMT_SUFFIX, uint##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("7b", buf); \
+    memset(buf, 0, sizeof(buf)); \
+    snprintf(buf, sizeof(buf), "%" PRIX##FMT_SUFFIX, uint##TYPE_SUFFIX(123)); \
+    EXPECT_STREQ("7B", buf); \
+  } while (false) \
 
-  intptr_t i = 0;
-  uintptr_t u = 0;
+#define PRINTF_SIZED(WIDTH) \
+  PRINTF_TYPED(WIDTH, WIDTH##_t); \
+  PRINTF_TYPED(FAST##WIDTH, _fast##WIDTH##_t); \
+  PRINTF_TYPED(LEAST##WIDTH, _least##WIDTH##_t) \
 
-  snprintf(buf, sizeof(buf), "%08" PRIdPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIiPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIoPTR, i);
-  snprintf(buf, sizeof(buf), "%08" PRIuPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIxPTR, u);
-  snprintf(buf, sizeof(buf), "%08" PRIXPTR, u);
 
-  sscanf(buf, "%08" SCNdPTR, &i);
-  sscanf(buf, "%08" SCNiPTR, &i);
-  sscanf(buf, "%08" SCNoPTR, &u);
-  sscanf(buf, "%08" SCNuPTR, &u);
-  sscanf(buf, "%08" SCNxPTR, &u);
+#define SCANF_TYPED(FMT_SUFFIX, TYPE_SUFFIX) \
+  do { \
+    int##TYPE_SUFFIX dst_int##TYPE_SUFFIX = 0; \
+    uint##TYPE_SUFFIX dst_uint##TYPE_SUFFIX = 0u; \
+    \
+    sscanf("123", "%" SCNd##FMT_SUFFIX, &dst_int##TYPE_SUFFIX); \
+    EXPECT_EQ(123, dst_int##TYPE_SUFFIX); \
+    dst_int##TYPE_SUFFIX = 0; \
+    sscanf("123", "%" SCNi##FMT_SUFFIX, &dst_int##TYPE_SUFFIX); \
+    EXPECT_EQ(123, dst_int##TYPE_SUFFIX); \
+    dst_int##TYPE_SUFFIX = 0; \
+    sscanf("173", "%" SCNo##FMT_SUFFIX, &dst_int##TYPE_SUFFIX); \
+    EXPECT_EQ(123, dst_int##TYPE_SUFFIX); \
+    dst_int##TYPE_SUFFIX = 0; \
+    sscanf("123", "%" SCNu##FMT_SUFFIX, &dst_uint##TYPE_SUFFIX); \
+    EXPECT_EQ(123u, dst_uint##TYPE_SUFFIX); \
+    dst_uint##TYPE_SUFFIX = 0; \
+    sscanf("7B", "%" SCNx##FMT_SUFFIX, &dst_uint##TYPE_SUFFIX); \
+    EXPECT_EQ(123u, dst_uint##TYPE_SUFFIX); \
+    dst_uint##TYPE_SUFFIX = 0; \
+  } while (false) \
+
+#define SCANF_SIZED(SIZE) \
+  SCANF_TYPED(SIZE, SIZE##_t); \
+  SCANF_TYPED(FAST##SIZE, _fast##SIZE##_t); \
+  SCANF_TYPED(LEAST##SIZE, _least##SIZE##_t) \
+
+
+TEST(inttypes, printf_macros) {
+  PRINTF_SIZED(8);
+  PRINTF_SIZED(16);
+  PRINTF_SIZED(32);
+  PRINTF_SIZED(64);
+
+  PRINTF_TYPED(MAX, max_t);
+  PRINTF_TYPED(PTR, ptr_t);
+}
+
+TEST(inttypes, scanf_macros) {
+  SCANF_SIZED(8);
+  SCANF_SIZED(16);
+  SCANF_SIZED(32);
+  SCANF_SIZED(64);
+
+  SCANF_TYPED(MAX, max_t);
+  SCANF_TYPED(PTR, ptr_t);
 }
 
 TEST(inttypes, wcstoimax) {
