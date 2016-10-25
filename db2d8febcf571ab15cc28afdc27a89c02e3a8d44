@@ -22,6 +22,30 @@
       "revId": "db2d8febcf571ab15cc28afdc27a89c02e3a8d44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1e75c23_12a22c81",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2016-10-25T18:08:56Z",
+      "side": 1,
+      "message": "I wonder if a dontaudit + that is more appropriate. In general, we always want a 100% clean log with no avc denied messages by design. We could check current uid and skipping if its not privileged enough.\n\nI don\u0027t have any builds handy, what\u0027s the owner/group/mode of that file?\n\nI haven\u0027t been testing this patch recently FYI.",
+      "parentUuid": "41f36cab_34083809",
+      "range": {
+        "startLine": 658,
+        "startChar": 3,
+        "endLine": 658,
+        "endChar": 35
+      },
+      "revId": "db2d8febcf571ab15cc28afdc27a89c02e3a8d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
