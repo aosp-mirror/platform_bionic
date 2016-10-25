@@ -95,6 +95,23 @@
     },
     {
       "key": {
+        "uuid": "c1e75c23_b5deaaf4",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-25T20:28:18Z",
+      "side": 1,
+      "message": "This also doesn\u0027t store the retrieved value, so as soon as you call clone or vfork once, you permanently make gettid() slower on that thread?",
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1e75c23_12bb4cc7",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
