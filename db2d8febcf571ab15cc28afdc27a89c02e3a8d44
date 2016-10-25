@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41f36cab_34083809",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-10-25T17:32:07Z",
+      "side": 1,
+      "message": "Causes an selinux violation?\n\nsuggest adding a special persistent case for *head !\u003d reinterpret_cast\u003cpackagelistparser_state_t*\u003e(-EPERM) to block future attempts on this thread.",
+      "range": {
+        "startLine": 658,
+        "startChar": 3,
+        "endLine": 658,
+        "endChar": 35
+      },
+      "revId": "db2d8febcf571ab15cc28afdc27a89c02e3a8d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
