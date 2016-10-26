@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "218e78b3_31b7f826",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T21:31:54Z",
+      "side": 1,
+      "message": "I see. For debuggerd_client, maybe we can add a new field in pthread_attr_t, to pass in the clone_flag. So it no longer needs to use clone() to create new threads.",
+      "parentUuid": "218e78b3_91c1acea",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_c3f7ea6e",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
