@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "21c918eb_6e3b838f",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T22:52:58Z",
+      "side": 1,
+      "message": "I didn\u0027t see an obvious way (other than modifying all the bionic assembler code) to pass that kind of info down into __start_thread.",
+      "parentUuid": "218e78b3_d1c0941c",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_71a50088",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
@@ -42,6 +60,24 @@
         "endLine": 91,
         "endChar": 24
       },
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c918eb_8ef7df6f",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T22:52:58Z",
+      "side": 1,
+      "message": "\u003e This is not correct, self is the parent thread, I can\u0027t think up a situation that it equals child_tid.\n\nAfter forking a new process, shouldn\u0027t self should still work for the current thread in the child? The two values will be unequal if you do a direct clone without padding in child_tid.\n\n \u003e We don\u0027t have need to create new thread via clone(), and it is almost impossible to do so (as it can\u0027t init tls for the new thread). So only consider init tid for new process here.\n \u003e How about code like below:\n \u003e \n \u003e bool create_new_process \u003d !(flags \u0026 CLONE_THREAD);\n \u003e if (create_new_process) {\n \u003e   parent_pid \u003d self-\u003einvalidate_cached_pid();\n \u003e   parent_tid \u003d self-\u003etid;\n \u003e   self-\u003etid \u003d 0;\n \u003e }\n \u003e ...\n \u003e clone() system calls\n \u003e ...\n \u003e \n \u003e // we don\u0027t handle the situation using clone() to create new threads because the tls array can\u0027t be initialized properly.\n \u003e \n \u003e if (create_new_process) {\n \u003e   if (clone_result \u003d\u003d 0) {\n \u003e     // this is the child process.\n \u003e     pid_t tid \u003d syscall(__NR_gettid);\n \u003e     __get_thread()-\u003etid \u003d tid;\n \u003e     self-\u003eset_cached_pid(tid);\n \u003e \n \u003e   } else if (clone_result \u003e 0) {\n \u003e     // this is the parent process.\n \u003e     self-\u003etid \u003d parent_tid;\n \u003e     self-\u003eset_cached_pid(parent_pid);\n \u003e   }\n \u003e }\n \u003e \n \u003e and in __start_thread(), we can check if __get_thread()-\u003etid \u003d\u003d 0 before make syscall(gettid).\n\nI tried this and got hangs in the pthread tests, which I think are related to using CLONE_CHILD_CLEARTID futex. I think there is also an issue with doing this in the sched.clone test (see below comment).",
+      "parentUuid": "218e78b3_71a50088",
       "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -178,6 +214,24 @@
     },
     {
       "key": {
+        "uuid": "21c918eb_ce00b7b2",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T22:52:58Z",
+      "side": 1,
+      "message": "I looked into using CLONE_CHILD_SETTID but it drew out another problem: the sched.clone test uses clone(..., CLONE_VM ...) and that makes writing the cached value in clone() trickier.",
+      "parentUuid": "218e78b3_31b7f826",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_c3f7ea6e",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
@@ -189,6 +243,24 @@
       "writtenOn": "2016-10-26T18:12:06Z",
       "side": 1,
       "message": "maybe add a comment here, or add `fn !\u003d nullptr \u0026\u0026` --- something to make it a bit clearer why it\u0027s not always valid to reset. (i think you\u0027re right, but i had to think for a while to work out what\u0027s going on here.)",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c918eb_6b8d354b",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T22:52:58Z",
+      "side": 1,
+      "message": "I think the existing comment covers this pretty well (\"We\u0027re in the parent...\"). The value of fn doesn\u0027t influence things here because of the fixup work done in fork() and pthread_create(). If those functions didn\u0027t set_cached_pid() themselves, then not having this condition would result in the wrong value of getpid() being set in the child.",
+      "parentUuid": "218e78b3_c3f7ea6e",
       "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
