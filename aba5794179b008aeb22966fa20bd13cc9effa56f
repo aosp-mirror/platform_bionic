@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "218e78b3_ecc3f393",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T23:53:49Z",
+      "side": 1,
+      "message": "invalid self-\u003etid by -1 instead of 0. because in pthread_join(), it is waiting on self-\u003etid \u003d\u003d 0.",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 17
+      },
+      "revId": "aba5794179b008aeb22966fa20bd13cc9effa56f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "218e78b3_6cd8c37e",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T23:53:49Z",
+      "side": 1,
+      "message": "Also change here to -1?",
+      "range": {
+        "startLine": 37,
+        "startChar": 30,
+        "endLine": 37,
+        "endChar": 31
+      },
+      "revId": "aba5794179b008aeb22966fa20bd13cc9effa56f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
