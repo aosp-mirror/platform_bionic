@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "218e78b3_d1c0941c",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T20:33:32Z",
+      "side": 1,
+      "message": "If we are starting a new thread via pthread_create, no need to set it.\nIf we are starting a new thread not via pthread_create, __get_thread() is invalid.\nIf we are starting a new process via clone, we need to set it.",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "218e78b3_71a50088",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T20:33:32Z",
+      "side": 1,
+      "message": "This is not correct, self is the parent thread, I can\u0027t think up a situation that it equals child_tid.\n\nWe don\u0027t have need to create new thread via clone(), and it is almost impossible to do so (as it can\u0027t init tls for the new thread). So only consider init tid for new process here.\nHow about code like below:\n\nbool create_new_process \u003d !(flags \u0026 CLONE_THREAD);\nif (create_new_process) {\n  parent_pid \u003d self-\u003einvalidate_cached_pid();\n  parent_tid \u003d self-\u003etid;\n  self-\u003etid \u003d 0;\n}\n...\nclone() system calls\n...\n\n// we don\u0027t handle the situation using clone() to create new threads because the tls array can\u0027t be initialized properly.\n\nif (create_new_process) {\n  if (clone_result \u003d\u003d 0) {\n    // this is the child process.\n    pid_t tid \u003d syscall(__NR_gettid);\n    __get_thread()-\u003etid \u003d tid;\n    self-\u003eset_cached_pid(tid);\n\n  } else if (clone_result \u003e 0) {\n    // this is the parent process.\n    self-\u003etid \u003d parent_tid;\n    self-\u003eset_cached_pid(parent_pid);\n  }\n}\n\nand in __start_thread(), we can check if __get_thread()-\u003etid \u003d\u003d 0 before make syscall(gettid).",
+      "range": {
+        "startLine": 91,
+        "startChar": 20,
+        "endLine": 91,
+        "endChar": 24
+      },
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_83fec243",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
@@ -78,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "218e78b3_3107f880",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T20:33:32Z",
+      "side": 1,
+      "message": "currently there is no need to for using clone() to create new thread directly.",
+      "parentUuid": "218e78b3_e65f94f8",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_c3f7ea6e",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
@@ -89,6 +153,29 @@
       "writtenOn": "2016-10-26T18:12:06Z",
       "side": 1,
       "message": "maybe add a comment here, or add `fn !\u003d nullptr \u0026\u0026` --- something to make it a bit clearer why it\u0027s not always valid to reset. (i think you\u0027re right, but i had to think for a while to work out what\u0027s going on here.)",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "218e78b3_66e9c4cb",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-10-26T20:33:32Z",
+      "side": 1,
+      "message": "this is not used in GetTidCachingPthreadStartRoutine, why pass it?",
+      "range": {
+        "startLine": 579,
+        "startChar": 75,
+        "endLine": 579,
+        "endChar": 85
+      },
       "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
