@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "218e78b3_63c456f9",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-26T18:17:55Z",
+      "side": 1,
+      "message": "Should we just use CLONE_CHILD_SETTID pointing to self-\u003etid always, and copy it into the user\u0027s pointer if they passed the flag themselves? This saves us a syscall in this case.",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_c3f7ea6e",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
