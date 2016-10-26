@@ -37,25 +37,26 @@ using namespace llvm::object;
 
 std::unordered_set<std::string> getSymbols(const std::string& filename) {
   std::unordered_set<std::string> result;
-  auto binary = createBinary(filename);
-  if (std::error_code ec = binary.getError()) {
-    errx(1, "failed to open library at %s: %s\n", filename.c_str(), ec.message().c_str());
+  auto binaryOrError = createBinary(filename);
+  if (!binaryOrError) {
+    errx(1, "failed to open library at %s: %s\n", filename.c_str(),
+         llvm::toString(binaryOrError.takeError()).c_str());
   }
 
-  ELFObjectFileBase* elf = dyn_cast_or_null<ELFObjectFileBase>(binary.get().getBinary());
+  ELFObjectFileBase* elf = dyn_cast_or_null<ELFObjectFileBase>(binaryOrError.get().getBinary());
   if (!elf) {
     errx(1, "failed to parse %s as ELF", filename.c_str());
   }
 
   for (const ELFSymbolRef symbol : elf->getDynamicSymbolIterators()) {
-    ErrorOr<StringRef> symbol_name = symbol.getName();
+    Expected<StringRef> symbolNameOrError = symbol.getName();
 
-    if (std::error_code ec = binary.getError()) {
+    if (!symbolNameOrError) {
       errx(1, "failed to get symbol name for symbol in %s: %s", filename.c_str(),
-           ec.message().c_str());
+           llvm::toString(symbolNameOrError.takeError()).c_str());
     }
 
-    result.insert(symbol_name.get().str());
+    result.insert(symbolNameOrError.get().str());
   }
 
   return result;
