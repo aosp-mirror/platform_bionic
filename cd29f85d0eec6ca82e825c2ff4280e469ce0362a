@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "218e78b3_83fec243",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-26T18:12:06Z",
+      "side": 1,
+      "message": "should `fn \u003d\u003d nullptr` be the guard then? it\u0027s not obvious to me that these two are equivalent.",
+      "range": {
+        "startLine": 92,
+        "startChar": 7,
+        "endLine": 92,
+        "endChar": 39
+      },
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "218e78b3_c3f7ea6e",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-10-26T18:12:06Z",
+      "side": 1,
+      "message": "maybe add a comment here, or add `fn !\u003d nullptr \u0026\u0026` --- something to make it a bit clearer why it\u0027s not always valid to reset. (i think you\u0027re right, but i had to think for a while to work out what\u0027s going on here.)",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
