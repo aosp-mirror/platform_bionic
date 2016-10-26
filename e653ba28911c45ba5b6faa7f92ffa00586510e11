@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "e1f620e5_a3c55a2a",
+        "filename": "libc/arch-arm/bionic/vfork.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T02:57:21Z",
+      "side": 1,
+      "message": "I think it\u0027s because of this comment in the x86 file:\n\n\"This custom code preserves the return address across the system call.\"",
+      "parentUuid": "c1e75c23_72b4d8d8",
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1e75c23_b2c92066",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 1
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "21c918eb_652f26e9",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T02:57:21Z",
+      "side": 1,
+      "message": "You\u0027re right. Your suggestion to separate out the tests sussed out a bug that was giving misleading test results. I fixed the non-__start_thread case of clone as well, but we still need to unconditionally update the tid here.",
+      "parentUuid": "c1e75c23_b2c92066",
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1e75c23_92ce1c6a",
         "filename": "libc/bionic/gettid.cpp",
         "patchSetId": 1
@@ -112,6 +148,42 @@
     },
     {
       "key": {
+        "uuid": "e1f620e5_03b78ebb",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T02:57:21Z",
+      "side": 1,
+      "message": "The bug has some discussion on vfork. We can\u0027t set the tid in vfork because the change will affect the parent process as well. It\u0027s not clear to me that it\u0027s valid to even call getpid()/gettid() after vfork (per http://pubs.opengroup.org/onlinepubs/009695399/functions/vfork.html). So I\u0027ve dropped the vfork.S changes and skipped the gettid test for it.",
+      "parentUuid": "c1e75c23_92ce1c6a",
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c918eb_452caaf2",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T02:57:21Z",
+      "side": 1,
+      "message": "I reverted this part of the change.",
+      "parentUuid": "c1e75c23_b5deaaf4",
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1e75c23_12bb4cc7",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 1
@@ -129,6 +201,24 @@
         "endLine": 424,
         "endChar": 29
       },
+      "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c918eb_a5a59e58",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-26T02:57:21Z",
+      "side": 1,
+      "message": "Thank you for this suggestion. Doing so found a critical bug in my test logic, caused by gettid() being marked __attribute_const__. That was causing anything but the first call to gettid() in a function to be optimized out. And that meant several of the test assertions were not actually testing the correct thing.\n\nI added separate tests for all the gettid scenarios. I\u0027m skipping vfork per the other comment.",
+      "parentUuid": "c1e75c23_12bb4cc7",
       "revId": "e653ba28911c45ba5b6faa7f92ffa00586510e11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
