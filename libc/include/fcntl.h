@@ -78,7 +78,7 @@ ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) __INTRODUCED_IN
 #if defined(__USE_FILE_OFFSET64)
 int fallocate(int, int, off_t, off_t) __RENAME(fallocate64) __INTRODUCED_IN(21);
 int posix_fadvise(int, off_t, off_t, int) __RENAME(posix_fadvise64) __INTRODUCED_IN(21);
-int posix_fallocate(int, off_t, off_t) __RENAME(posix_fallocate) __INTRODUCED_IN(21);
+int posix_fallocate(int, off_t, off_t) __RENAME(posix_fallocate64) __INTRODUCED_IN(21);
 #else
 int fallocate(int, int, off_t, off_t) __INTRODUCED_IN(21);
 int posix_fadvise(int, off_t, off_t, int) __INTRODUCED_IN(21);
