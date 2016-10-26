@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "218e78b3_e65f94f8",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-10-26T19:45:46Z",
+      "side": 1,
+      "message": "CLONE_CHILD_SETTID claims to set the tid in only the child\u0027s memory (although, if they pass CLONE_VM, the child and parent have the same address space. I\u0027m not sure we can even sensibly handle CLONE_VM if it\u0027s not coming from our pthread functions.)\n\nMaybe we should have a pthread_create_np with custom clone flags for people who really need to mess with this stuff? It would have been useful for the debuggerd patchset I\u0027m working on now.",
+      "parentUuid": "218e78b3_638b76a9",
+      "revId": "cd29f85d0eec6ca82e825c2ff4280e469ce0362a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_c3f7ea6e",
         "filename": "libc/bionic/clone.cpp",
         "patchSetId": 2
