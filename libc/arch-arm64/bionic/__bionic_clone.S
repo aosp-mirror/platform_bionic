@@ -30,7 +30,7 @@
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 
-ENTRY(__bionic_clone)
+ENTRY_PRIVATE(__bionic_clone)
     # Push 'fn' and 'arg' onto the child stack.
     stp     x5, x6, [x1, #-16]!
 
@@ -57,4 +57,3 @@ ENTRY(__bionic_clone)
     ldp     x0, x1, [sp], #16
     b       __start_thread
 END(__bionic_clone)
-.hidden __bionic_clone
