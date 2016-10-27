@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "61d31097_eac8070a",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-27T15:27:08Z",
+      "side": 1,
+      "message": "Ah, thanks for pointing that out in pthread_join. That explains some of the hang behavior I saw.",
+      "parentUuid": "218e78b3_ecc3f393",
+      "revId": "aba5794179b008aeb22966fa20bd13cc9effa56f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_6cd8c37e",
         "filename": "libc/bionic/gettid.cpp",
         "patchSetId": 3
@@ -42,6 +60,24 @@
         "endLine": 37,
         "endChar": 31
       },
+      "revId": "aba5794179b008aeb22966fa20bd13cc9effa56f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61d31097_cacd4318",
+        "filename": "libc/bionic/gettid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-10-27T15:27:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "218e78b3_6cd8c37e",
       "revId": "aba5794179b008aeb22966fa20bd13cc9effa56f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
