@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e11aa056_66c1d0e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-10-27T20:20:34Z",
+      "side": 1,
+      "message": "I meant x86_64 for libc start not linker - will clarify",
+      "parentUuid": "218e78b3_b22a26ad",
+      "revId": "803490f16aa34e4df84a537c7ce5a569fb9c8e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "218e78b3_925d2a5f",
         "filename": "libc/arch-common/bionic/crtbegin.c",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-10-27T15:34:20Z",
       "side": 1,
       "message": "do we still need this?",
+      "revId": "803490f16aa34e4df84a537c7ce5a569fb9c8e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6e9326b_42cdf271",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-10-27T20:20:34Z",
+      "side": 1,
+      "message": "right - this is no longer needed.",
+      "parentUuid": "218e78b3_925d2a5f",
       "revId": "803490f16aa34e4df84a537c7ce5a569fb9c8e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
