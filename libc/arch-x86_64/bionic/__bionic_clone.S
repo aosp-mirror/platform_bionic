@@ -29,7 +29,7 @@
 #include <private/bionic_asm.h>
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-ENTRY(__bionic_clone)
+ENTRY_PRIVATE(__bionic_clone)
         # Copy 'fn' and 'arg' onto the child stack.
         movq    %r9, -16(%rsi)  # fn
         movq    8(%rsp), %rax   # Read 'arg'.
@@ -74,4 +74,3 @@ ENTRY(__bionic_clone)
         # We're the parent; nothing to do.
         ret
 END(__bionic_clone)
-.hidden __bionic_clone

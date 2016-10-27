@@ -31,7 +31,7 @@
 #include <linux/sched.h>
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-ENTRY(__bionic_clone)
+ENTRY_PRIVATE(__bionic_clone)
         .set	noreorder
         .cpload t9
         .set	reorder
@@ -69,4 +69,3 @@ ENTRY(__bionic_clone)
 	la	t9,__set_errno_internal
 	j	t9
 END(__bionic_clone)
-.hidden __bionic_clone
