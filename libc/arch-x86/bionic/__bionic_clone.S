@@ -1,7 +1,7 @@
 #include <private/bionic_asm.h>
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
-ENTRY(__bionic_clone)
+ENTRY_PRIVATE(__bionic_clone)
         pushl   %ebx
         .cfi_adjust_cfa_offset 4
         .cfi_rel_offset ebx, 0
@@ -62,4 +62,3 @@ ENTRY(__bionic_clone)
         .cfi_restore ebx
         ret
 END(__bionic_clone)
-.hidden __bionic_clone
