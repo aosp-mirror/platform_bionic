@@ -28,7 +28,7 @@
 #ifndef _MIPS64_ASM_H
 #define _MIPS64_ASM_H
 
-#define __bionic_asm_align 4
+#define __bionic_asm_align 16
 
 #undef __bionic_asm_custom_entry
 #undef __bionic_asm_custom_end

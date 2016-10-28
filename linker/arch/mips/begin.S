@@ -27,7 +27,7 @@
  */
 
     .text
-    .align    4
+    .balign   16
     .type    __start,@function
 
     .ent    __start

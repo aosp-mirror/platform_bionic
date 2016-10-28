@@ -41,7 +41,7 @@
 #define ENTRY_NO_DWARF(f) \
     .text; \
     .globl f; \
-    .align __bionic_asm_align; \
+    .balign __bionic_asm_align; \
     .type f, __bionic_asm_function_type; \
     f: \
     __bionic_asm_custom_entry(f); \
