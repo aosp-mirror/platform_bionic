@@ -75,6 +75,15 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
   pthread_internal_t* self = __get_thread();
   pid_t parent_pid = self->invalidate_cached_pid();
 
+  // Remmber the caller's tid so that it can be restored in the parent after clone.
+  pid_t caller_tid = self->tid;
+  // Invalidate the tid before the syscall. The value is lazily cached in gettid(),
+  // and it will be updated by fork() and pthread_create(). We don't do this if
+  // we are sharing address space with the child.
+  if (!(flags & (CLONE_VM|CLONE_VFORK))) {
+    self->tid = -1;
+  }
+
   // Actually do the clone.
   int clone_result;
   if (fn != nullptr) {
@@ -87,11 +96,16 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
 #endif
   }
 
-  // We're the parent, so put our known pid back in place.
-  // We leave the child without a cached pid, but:
-  // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
-  // 2. fork makes a clone system call directly.
-  // If any other cases become important, we could use a double trampoline like __pthread_start.
-  self->set_cached_pid(parent_pid);
+  if (clone_result != 0) {
+    // We're the parent, so put our known pid and tid back in place.
+    // We leave the child without a cached pid and tid, but:
+    // 1. pthread_create gives its children their own pthread_internal_t with the correct pid and tid.
+    // 2. fork uses CLONE_CHILD_SETTID to get the new pid/tid.
+    // 3. The tid is lazily fetched in gettid().
+    // If any other cases become important, we could use a double trampoline like __pthread_start.
+    self->set_cached_pid(parent_pid);
+    self->tid = caller_tid;
+  }
+
   return clone_result;
 }
