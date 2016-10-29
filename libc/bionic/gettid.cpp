@@ -31,5 +31,14 @@
 #include "pthread_internal.h"
 
 pid_t gettid() {
-  return __get_thread()->tid;
+  pthread_internal_t* self = __get_thread();
+  if (__predict_true(self)) {
+    pid_t tid = self->tid;
+    if (__predict_true(tid != -1)) {
+      return tid;
+    }
+    self->tid = syscall(__NR_gettid);
+    return self->tid;
+  }
+  return syscall(__NR_gettid);
 }
