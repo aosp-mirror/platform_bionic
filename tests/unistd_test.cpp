@@ -434,7 +434,7 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   ASSERT_NE(fork_result, -1);
   if (fork_result == 0) {
     // We're the child.
-    AssertGetPidCorrect();
+    ASSERT_NO_FATAL_FAILURE(AssertGetPidCorrect());
     ASSERT_EQ(parent_pid, getppid());
     _exit(123);
   } else {
@@ -444,12 +444,98 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
   }
 }
 
+// gettid() is marked as __attribute_const__, which will have the compiler
+// optimize out multiple calls to gettid in the same function. This wrapper
+// defeats that optimization.
+static __attribute__((__noinline__)) pid_t GetTidForTest() {
+  __asm__("");
+  return gettid();
+}
+
+static void AssertGetTidCorrect() {
+  // The loop is just to make manual testing/debugging with strace easier.
+  pid_t gettid_syscall_result = syscall(__NR_gettid);
+  for (size_t i = 0; i < 128; ++i) {
+    ASSERT_EQ(gettid_syscall_result, GetTidForTest());
+  }
+}
+
+static void TestGetTidCachingWithFork(int (*fork_fn)()) {
+  pid_t parent_tid = GetTidForTest();
+  ASSERT_EQ(syscall(__NR_gettid), parent_tid);
+
+  pid_t fork_result = fork_fn();
+  ASSERT_NE(fork_result, -1);
+  if (fork_result == 0) {
+    // We're the child.
+    EXPECT_EQ(syscall(__NR_getpid), syscall(__NR_gettid));
+    EXPECT_EQ(getpid(), GetTidForTest()) << "real tid is " << syscall(__NR_gettid)
+                                         << ", pid is " << syscall(__NR_getpid);
+    ASSERT_NO_FATAL_FAILURE(AssertGetTidCorrect());
+    _exit(123);
+  } else {
+    // We're the parent.
+    ASSERT_EQ(parent_tid, GetTidForTest());
+    AssertChildExited(fork_result, 123);
+  }
+}
+
 TEST(UNISTD_TEST, getpid_caching_and_fork) {
   TestGetPidCachingWithFork(fork);
 }
 
+TEST(UNISTD_TEST, gettid_caching_and_fork) {
+  TestGetTidCachingWithFork(fork);
+}
+
 TEST(UNISTD_TEST, getpid_caching_and_vfork) {
   TestGetPidCachingWithFork(vfork);
+}
+
+static int CloneLikeFork() {
+  return clone(nullptr, nullptr, SIGCHLD, nullptr);
+}
+
+TEST(UNISTD_TEST, getpid_caching_and_clone_process) {
+  TestGetPidCachingWithFork(CloneLikeFork);
+}
+
+TEST(UNISTD_TEST, gettid_caching_and_clone_process) {
+  TestGetTidCachingWithFork(CloneLikeFork);
+}
+
+static int CloneAndSetTid() {
+  pid_t child_tid = 0;
+  pid_t parent_tid = GetTidForTest();
+
+  int rv = clone(nullptr, nullptr, CLONE_CHILD_SETTID | SIGCHLD, nullptr, nullptr, nullptr, &child_tid);
+  EXPECT_NE(-1, rv);
+
+  if (rv == 0) {
+    // Child.
+    EXPECT_EQ(child_tid, GetTidForTest());
+    EXPECT_NE(child_tid, parent_tid);
+  } else {
+    EXPECT_NE(child_tid, GetTidForTest());
+    EXPECT_NE(child_tid, parent_tid);
+    EXPECT_EQ(GetTidForTest(), parent_tid);
+  }
+
+  return rv;
+}
+
+TEST(UNISTD_TEST, gettid_caching_and_clone_process_settid) {
+  TestGetTidCachingWithFork(CloneAndSetTid);
+}
+
+static int CloneStartRoutine(int (*start_routine)(void*)) {
+  void* child_stack[1024];
+  int clone_result = clone(start_routine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
+  if (clone_result == -1 && errno == EPERM && getuid() != 0) {
+    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
+    return clone_result;
+  }
+  return clone_result;
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {
@@ -461,15 +547,27 @@ TEST(UNISTD_TEST, getpid_caching_and_clone) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
-  void* child_stack[1024];
-  int clone_result = clone(GetPidCachingCloneStartRoutine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
-  if (clone_result == -1 && errno == EPERM && getuid() != 0) {
-    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
-    return;
-  }
+  int clone_result = CloneStartRoutine(GetPidCachingCloneStartRoutine);
   ASSERT_NE(clone_result, -1);
 
   ASSERT_EQ(parent_pid, getpid());
+
+  AssertChildExited(clone_result, 123);
+}
+
+static int GetTidCachingCloneStartRoutine(void*) {
+  AssertGetTidCorrect();
+  return 123;
+}
+
+TEST(UNISTD_TEST, gettid_caching_and_clone) {
+  pid_t parent_tid = GetTidForTest();
+  ASSERT_EQ(syscall(__NR_gettid), parent_tid);
+
+  int clone_result = CloneStartRoutine(GetTidCachingCloneStartRoutine);
+  ASSERT_NE(clone_result, -1);
+
+  ASSERT_EQ(parent_tid, GetTidForTest());
 
   AssertChildExited(clone_result, 123);
 }
@@ -490,6 +588,25 @@ TEST(UNISTD_TEST, getpid_caching_and_pthread_create) {
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_EQ(NULL, result);
+}
+
+static void* GetTidCachingPthreadStartRoutine(void*) {
+  AssertGetTidCorrect();
+  uint64_t tid = GetTidForTest();
+  return reinterpret_cast<void*>(tid);
+}
+
+TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
+  pid_t parent_tid = GetTidForTest();
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, NULL, GetTidCachingPthreadStartRoutine, &parent_tid));
+
+  ASSERT_EQ(parent_tid, GetTidForTest());
+
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
+  ASSERT_NE(static_cast<uint64_t>(parent_tid), reinterpret_cast<uint64_t>(result));
 }
 
 class UNISTD_DEATHTEST : public BionicDeathTest {};
