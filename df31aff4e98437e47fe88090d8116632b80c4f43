@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46cc62f9_86c34a27",
+        "filename": "libc/libstdc++.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-01T23:16:01Z",
+      "side": 1,
+      "message": "Don\u0027t you need to run libc/tools/genversion-scripts.py?\n\nAlso, I did that and got\nld.gold: error: version script assignment of LIBC_O to symbol _ZTV9type_info failed: symbol not defined",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 18
+      },
+      "revId": "df31aff4e98437e47fe88090d8116632b80c4f43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
