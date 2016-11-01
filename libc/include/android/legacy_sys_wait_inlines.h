@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,48 +25,25 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+
+#ifndef _ANDROID_LEGACY_SYS_WAIT_INLINES_H_
+#define _ANDROID_LEGACY_SYS_WAIT_INLINES_H_
 
 #include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include <sys/syscall.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#if __ANDROID_API__ < 18
 
 __BEGIN_DECLS
 
-#define WEXITSTATUS(s)  (((s) & 0xff00) >> 8)
-#define WCOREDUMP(s)    ((s) & 0x80)
-#define WTERMSIG(s)     ((s) & 0x7f)
-#define WSTOPSIG(s)     WEXITSTATUS(s)
-
-#define WIFEXITED(s)    (WTERMSIG(s) == 0)
-#define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
-#define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
-#define WIFCONTINUED(s) ((s) == 0xffff)
-
-#define W_EXITCODE(ret, sig)    ((ret) << 8 | (sig))
-#define W_STOPCODE(sig)         ((sig) << 8 | 0x7f)
-
-pid_t wait(int*);
-pid_t waitpid(pid_t, int*, int);
-#if __ANDROID_API__ >= 18
-pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
-
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-int waitid(idtype_t which, id_t id, siginfo_t* info, int options);
+static __inline pid_t wait4(pid_t pid, int* status, int options, struct rusage* rusage) {
+  return __BIONIC_CAST(static_cast, pid_t, syscall(__NR_wait4, pid, status, options, rusage));
+}
 
 __END_DECLS
 
-#include <android/legacy_sys_wait_inlines.h>
+#endif /* __ANDROID_API__ < 18 */
 
-#endif /* _SYS_WAIT_H_ */
+#endif /* _ANDROID_LEGACY_SYS_WAIT_INLINES_H_ */
