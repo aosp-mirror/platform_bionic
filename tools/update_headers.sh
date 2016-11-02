@@ -41,5 +41,7 @@ fi
 versioner -p versioner/platforms versioner/current versioner/dependencies \
   -o $HEADERS_INSTALL
 
-git -C $PREBUILTS_DIR add $HEADERS_INSTALL
+cp ../libc/NOTICE $PREBUILTS_DIR
+
+git -C $PREBUILTS_DIR add $HEADERS_INSTALL $PREBUILTS_DIR/NOTICE
 git -C $PREBUILTS_DIR commit -m "Update bionic headers to $VERSION."
