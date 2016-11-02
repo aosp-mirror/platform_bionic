@@ -32,9 +32,9 @@
 #include <stdlib.h>
 #include <sys/cdefs.h>
 
-__BEGIN_DECLS
-
 #if __ANDROID_API__ < 21
+
+__BEGIN_DECLS
 
 static __inline float strtof(const char *nptr, char **endptr) {
   return (float)strtod(nptr, endptr);
@@ -62,32 +62,7 @@ static __inline int grantpt(int __fd __attribute((unused))) {
   return 0; /* devpts does this all for us! */
 }
 
-static __inline long double strtold_l(const char* nptr, char** endptr, locale_t l __unused) {
-  return strtold(nptr, endptr);
-}
-
-static __inline long long strtoll_l(const char* nptr, char** endptr, int base, locale_t l __unused) {
-  return strtoll(nptr, endptr, base);
-}
-
-static __inline unsigned long long strtoull_l(const char* nptr, char** endptr, int base,
-                                              locale_t l __unused) {
-  return strtoull(nptr, endptr, base);
-}
-
-#endif /* __ANDROID_API__ < 21 */
-
-#if __ANDROID_API__ < __ANDROID_API_FUTURE__
-
-static __inline float strtof_l(const char* nptr, char** endptr, locale_t l __unused) {
-  return strtof(nptr, endptr);
-}
-
-static __inline double strtod_l(const char* nptr, char** endptr, locale_t l __unused) {
-  return strtod(nptr, endptr);
-}
-
-#endif /* __ANDROID_API__ < __ANDROID_API_FUTURE__ */
-
 __END_DECLS
+
+#endif
 #endif /* _ANDROID_LEGACY_STDLIB_INLINES_H_ */

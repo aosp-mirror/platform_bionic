@@ -109,6 +109,4 @@ time_t timegm(struct tm*) __INTRODUCED_IN(12);
 
 __END_DECLS
 
-#include <android/legacy_time_inlines.h>
-
 #endif /* _TIME_H_ */
