@@ -63,6 +63,4 @@ int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
 
 __END_DECLS
 
-#include <android/legacy_wctype_inlines.h>
-
 #endif /* _WCTYPE_H_ */
