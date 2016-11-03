@@ -22,6 +22,24 @@
       "revId": "e749abe9ab6dfaf9be17097f97080ee9c2f67c5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46cc62f9_06c90f47",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-11-03T21:40:09Z",
+      "side": 1,
+      "message": "We haven\u0027t completely followed this. We added fenv to libandroid_support. Having it there hasn\u0027t caused any issues yet, though I am currently battling the fact that cmake can\u0027t do the trivial `LOCAL_STATIC_LIRBARIES :\u003d libandroid_support` like ndk-build can.\n\nMaybe worth reversing that choice and putting the fenv inlines in the bionic headers?",
+      "parentUuid": "46cc62f9_e319455d",
+      "revId": "e749abe9ab6dfaf9be17097f97080ee9c2f67c5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
