@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46cc62f9_709fdd34",
+        "filename": "libc/bionic/pthread_atfork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-03T17:32:37Z",
+      "side": 1,
+      "message": "should this be followed by lock?",
+      "revId": "d42f0620f426d3d916de3ea5662fac3f9b14258a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
