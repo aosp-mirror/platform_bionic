@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46cc62f9_c376c9f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-03T20:28:04Z",
+      "side": 1,
+      "message": "ltp",
+      "range": {
+        "startLine": 13,
+        "startChar": 6,
+        "endLine": 13,
+        "endChar": 9
+      },
+      "revId": "ca6e5cd74b8d842c0ce0ad799c7681e8c48d4992",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
