@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46cc62f9_e319455d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-03T21:17:30Z",
+      "side": 1,
+      "message": "sounds like a good rule of thumb to me.",
+      "range": {
+        "startLine": 12,
+        "startChar": 20,
+        "endLine": 14,
+        "endChar": 19
+      },
+      "revId": "e749abe9ab6dfaf9be17097f97080ee9c2f67c5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
