@@ -40,6 +40,24 @@
       "revId": "e749abe9ab6dfaf9be17097f97080ee9c2f67c5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46cc62f9_0622afd6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-03T22:12:28Z",
+      "side": 1,
+      "message": "yeah, your formulation above is pretty convincing. if it\u0027s easier to apply that uniformly, sgtm. (and i\u0027d certainly rather ship something folks can [realistically] try in r14 than have to slip to r15.)",
+      "parentUuid": "46cc62f9_06c90f47",
+      "revId": "e749abe9ab6dfaf9be17097f97080ee9c2f67c5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
