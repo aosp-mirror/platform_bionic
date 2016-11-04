@@ -22,6 +22,24 @@
       "revId": "df31aff4e98437e47fe88090d8116632b80c4f43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf51f92_5affe98b",
+        "filename": "libc/libstdc++.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-11-04T23:46:43Z",
+      "side": 1,
+      "message": "Yes, I forgot to run this (dimitry should automate this, or at least add a preupload check like I did for NOTICE files).\n\nThe reason this is broken is because we actually broke this ABI in L: https://android-review.googlesource.com/c/95071/\n\nGiven that this ABI break is now in over 50% of devices, at this point I think we should probably just accept that it\u0027s broken and stop shipping this API in the NDK.\n\nAnyone disagree?",
+      "parentUuid": "46cc62f9_86c34a27",
+      "revId": "df31aff4e98437e47fe88090d8116632b80c4f43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
