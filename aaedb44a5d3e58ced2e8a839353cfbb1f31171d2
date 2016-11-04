@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_4b3565a3",
+        "filename": "tests/sys_prctl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-04T16:25:56Z",
+      "side": 1,
+      "message": "we should use getline rather than fgets.\n\nbut just use libbase instead (ReadFileToString, for-each on Split) and make all this easier :-)",
+      "revId": "aaedb44a5d3e58ced2e8a839353cfbb1f31171d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
