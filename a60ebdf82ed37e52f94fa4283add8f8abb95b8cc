@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "ebc99f45_510a9405",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-11-04T20:04:37Z",
+      "side": 1,
+      "message": "Done. I believe we still need to set_cached_pid() in the child from fork() because self-\u003etid will be set by the kernel (fork() uses CLONE_CHILD_SETTID into self-\u003etid), so the new branch wouldn\u0027t be taken.",
+      "parentUuid": "ebf51f92_2e7d875e",
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebf51f92_ee0d3fe7",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 2
@@ -42,6 +60,24 @@
         "endLine": 439,
         "endChar": 9
       },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebc99f45_71a6b0fe",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-11-04T20:04:37Z",
+      "side": 1,
+      "message": "Done. I augmented The TestGet{T,P}idCachingWithFork to take an exit_fn to call.",
+      "parentUuid": "ebf51f92_ee0d3fe7",
       "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "ebc99f45_f1394005",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-11-04T20:04:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebf51f92_ee237f6d",
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebf51f92_eee6dffe",
         "filename": "tests/unistd_test.cpp",
         "patchSetId": 2
@@ -88,6 +142,24 @@
         "endLine": 616,
         "endChar": 32
       },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebc99f45_312108ca",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2016-11-04T20:04:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebf51f92_eee6dffe",
       "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
