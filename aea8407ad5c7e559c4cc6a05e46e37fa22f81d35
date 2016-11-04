@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_b17f181a",
+        "filename": "tests/sys_prctl_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T18:42:30Z",
+      "side": 0,
+      "message": "can we keep the old check while adding the new one, or you have verified the new test can cover the old SEGV check?",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "aea8407ad5c7e559c4cc6a05e46e37fa22f81d35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
