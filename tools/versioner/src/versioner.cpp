@@ -276,6 +276,21 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
   return result;
 }
 
+static std::set<CompilationType> getCompilationTypes(const Declaration* decl) {
+  std::set<CompilationType> result;
+  for (const auto& it : decl->availability) {
+    result.insert(it.first);
+  }
+  return result;
+}
+
+template<typename T>
+static std::vector<T> Intersection(const std::set<T>& a, const std::set<T>& b) {
+  std::vector<T> intersection;
+  std::set_intersection(a.begin(), a.end(), b.begin(), b.end(), std::back_inserter(intersection));
+  return intersection;
+}
+
 // Perform a sanity check on a symbol's declarations, enforcing the following invariants:
 //   1. At most one inline definition of the function exists.
 //   2. All of the availability declarations for a symbol are compatible.
@@ -287,18 +302,23 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
 static bool checkSymbol(const Symbol& symbol) {
   std::string cwd = getWorkingDir() + "/";
 
-  const Declaration* inline_definition = nullptr;
+  std::unordered_map<const Declaration*, std::set<CompilationType>> inline_definitions;
   for (const auto& decl_it : symbol.declarations) {
     const Declaration* decl = &decl_it.second;
     if (decl->is_definition) {
-      if (inline_definition) {
-        fprintf(stderr, "versioner: multiple definitions of symbol %s\n", symbol.name.c_str());
-        symbol.dump(cwd);
-        inline_definition->dump(cwd);
-        return false;
+      std::set<CompilationType> compilation_types = getCompilationTypes(decl);
+      for (const auto& inline_def_it : inline_definitions) {
+        auto intersection = Intersection(compilation_types, inline_def_it.second);
+        if (!intersection.empty()) {
+          fprintf(stderr, "versioner: conflicting inline definitions:\n");
+          fprintf(stderr, "  declarations visible in: %s\n", Join(intersection, ", ").c_str());
+          decl->dump(cwd, stderr, 4);
+          inline_def_it.first->dump(cwd, stderr, 4);
+          return false;
+        }
       }
 
-      inline_definition = decl;
+      inline_definitions[decl] = std::move(compilation_types);
     }
 
     DeclarationAvailability availability;
