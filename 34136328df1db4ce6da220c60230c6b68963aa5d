@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_74763e4b",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T20:46:46Z",
+      "side": 1,
+      "message": "AssertChildExited?",
+      "range": {
+        "startLine": 588,
+        "startChar": 2,
+        "endLine": 592,
+        "endChar": 37
+      },
+      "revId": "34136328df1db4ce6da220c60230c6b68963aa5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
