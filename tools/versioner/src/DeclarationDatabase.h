@@ -173,9 +173,9 @@ struct Declaration {
 
       fprintf(out, "\n%s  ", indent_str.c_str());
       if (!calculateAvailability(&avail)) {
-        fprintf(out, "invalid availability");
+        fprintf(out, "invalid availability\n");
       } else {
-        fprintf(out, "%s", to_string(avail).c_str());
+        fprintf(out, "%s\n", to_string(avail).c_str());
       }
     }
   }
@@ -209,7 +209,6 @@ struct Symbol {
 
     for (auto& it : declarations) {
       it.second.dump(base_path, out, 4);
-      fprintf(out, "\n");
     }
   }
 };
