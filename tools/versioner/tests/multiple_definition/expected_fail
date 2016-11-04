@@ -1,0 +1,7 @@
+versioner: conflicting inline definitions:
+  declarations visible in: arm-9 [fob = 32], arm-9 [fob = 64], arm-12 [fob = 32], arm-12 [fob = 64]
+    static definition @ headers/foo.h:1:1
+      no availability
+    static definition @ headers/bar.h:1:1
+      no availability
+versioner: sanity check failed
