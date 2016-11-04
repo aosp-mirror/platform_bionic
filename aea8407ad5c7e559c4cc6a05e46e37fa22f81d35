@@ -22,6 +22,30 @@
       "revId": "aea8407ad5c7e559c4cc6a05e46e37fa22f81d35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf51f92_71649063",
+        "filename": "tests/sys_prctl_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-04T19:02:24Z",
+      "side": 0,
+      "message": "I verified that on a device that doesn\u0027t have a patch, this works.\n\nI found this because this line sometimes crashes and sometimes doesn\u0027t. So it did crash sometimes on the device that the new version detects 100% of the time.\n\nGiven the nature of the kernel bug, I think it would be impossible for it to be present and pass this test.",
+      "parentUuid": "ebf51f92_b17f181a",
+      "range": {
+        "startLine": 34,
+        "startChar": 9,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "aea8407ad5c7e559c4cc6a05e46e37fa22f81d35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
