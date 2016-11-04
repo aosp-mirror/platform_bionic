@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_2e7d875e",
+        "filename": "libc/bionic/clone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T18:36:37Z",
+      "side": 1,
+      "message": "do we need to consider using clone(nullptr) directly to create new process, then we have to add below code:\n\nelse if (self-\u003etid \u003d\u003d -1) {\n  self-\u003etid \u003d syscall(__NR_gettid);\n  self-\u003eset_cached_pid(self-\u003etid);\n}\n\nand remove calls to set_cached_pid() in fork.cpp as we have set them in clone()?",
+      "range": {
+        "startLine": 113,
+        "startChar": 2,
+        "endLine": 113,
+        "endChar": 3
+      },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf51f92_ee0d3fe7",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T18:36:37Z",
+      "side": 1,
+      "message": "The linux man page says the child process created by clone() or fork() can call exit() to stop, and the child process created by vfork() can call _exit() to stop.\nCan we cover this by using exit(123) for fork and clone test, and use _exit(123) for vfork test?",
+      "range": {
+        "startLine": 439,
+        "startChar": 4,
+        "endLine": 439,
+        "endChar": 9
+      },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf51f92_ee237f6d",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T18:36:37Z",
+      "side": 1,
+      "message": "dito",
+      "range": {
+        "startLine": 475,
+        "startChar": 4,
+        "endLine": 475,
+        "endChar": 9
+      },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf51f92_eee6dffe",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-11-04T18:36:37Z",
+      "side": 1,
+      "message": "this is similar to UNISTD_TEST.gettid_caching_and_clone except that we want to exit() explicitly instead of returning an exit code. Can we put this test near gettid_caching_and_clone, and reuse functions like AssertChildExited, CloneStartRoutine?",
+      "range": {
+        "startLine": 616,
+        "startChar": 18,
+        "endLine": 616,
+        "endChar": 32
+      },
+      "revId": "a60ebdf82ed37e52f94fa4283add8f8abb95b8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
