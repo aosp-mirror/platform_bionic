@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_40453c64",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-05T21:30:08Z",
+      "side": 0,
+      "message": "(this worried me until i realized that clone will do it for us.)",
+      "revId": "42eb0b255507ca4d3b4e94b7756c15ab742261c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
