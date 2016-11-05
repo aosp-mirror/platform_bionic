@@ -35,11 +35,17 @@ fi
 HEADERS_INSTALL=$PREBUILTS_DIR/headers
 if [ -d "$HEADERS_INSTALL" ]; then
   git -C $PREBUILTS_DIR rm -r --ignore-unmatch $HEADERS_INSTALL
-  rm -r $HEADERS_INSTALL
+  if [ -d $HEADERS_INSTALL ]; then
+    rm -r $HEADERS_INSTALL
+  fi
 fi
 
 versioner -p versioner/platforms versioner/current versioner/dependencies \
   -o $HEADERS_INSTALL
+if [ $? -ne 0 ]; then
+  >&2 echo "Header preprocessing failed"
+  exit 1
+fi
 
 cp ../libc/NOTICE $PREBUILTS_DIR
 
