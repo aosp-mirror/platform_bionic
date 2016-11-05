@@ -38,6 +38,11 @@ extern "C" __noreturn void __exit(int status);
 
 // Called from the __bionic_clone assembler to call the thread function then exit.
 extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
+  pthread_internal_t* self = __get_thread();
+  if (self && self->tid == -1) {
+    self->tid = syscall(__NR_gettid);
+  }
+
   int status = (*fn)(arg);
   __exit(status);
 }
@@ -105,6 +110,9 @@ int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
     // If any other cases become important, we could use a double trampoline like __pthread_start.
     self->set_cached_pid(parent_pid);
     self->tid = caller_tid;
+  } else if (self->tid == -1) {
+    self->tid = syscall(__NR_gettid);
+    self->set_cached_pid(self->tid);
   }
 
   return clone_result;

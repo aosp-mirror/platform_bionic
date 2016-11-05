@@ -426,7 +426,7 @@ static void AssertGetPidCorrect() {
   }
 }
 
-static void TestGetPidCachingWithFork(int (*fork_fn)()) {
+static void TestGetPidCachingWithFork(int (*fork_fn)(), void (*exit_fn)(int)) {
   pid_t parent_pid = getpid();
   ASSERT_EQ(syscall(__NR_getpid), parent_pid);
 
@@ -436,7 +436,7 @@ static void TestGetPidCachingWithFork(int (*fork_fn)()) {
     // We're the child.
     ASSERT_NO_FATAL_FAILURE(AssertGetPidCorrect());
     ASSERT_EQ(parent_pid, getppid());
-    _exit(123);
+    exit_fn(123);
   } else {
     // We're the parent.
     ASSERT_EQ(parent_pid, getpid());
@@ -460,7 +460,7 @@ static void AssertGetTidCorrect() {
   }
 }
 
-static void TestGetTidCachingWithFork(int (*fork_fn)()) {
+static void TestGetTidCachingWithFork(int (*fork_fn)(), void (*exit_fn)(int)) {
   pid_t parent_tid = GetTidForTest();
   ASSERT_EQ(syscall(__NR_gettid), parent_tid);
 
@@ -472,7 +472,7 @@ static void TestGetTidCachingWithFork(int (*fork_fn)()) {
     EXPECT_EQ(getpid(), GetTidForTest()) << "real tid is " << syscall(__NR_gettid)
                                          << ", pid is " << syscall(__NR_getpid);
     ASSERT_NO_FATAL_FAILURE(AssertGetTidCorrect());
-    _exit(123);
+    exit_fn(123);
   } else {
     // We're the parent.
     ASSERT_EQ(parent_tid, GetTidForTest());
@@ -481,15 +481,15 @@ static void TestGetTidCachingWithFork(int (*fork_fn)()) {
 }
 
 TEST(UNISTD_TEST, getpid_caching_and_fork) {
-  TestGetPidCachingWithFork(fork);
+  TestGetPidCachingWithFork(fork, exit);
 }
 
 TEST(UNISTD_TEST, gettid_caching_and_fork) {
-  TestGetTidCachingWithFork(fork);
+  TestGetTidCachingWithFork(fork, exit);
 }
 
 TEST(UNISTD_TEST, getpid_caching_and_vfork) {
-  TestGetPidCachingWithFork(vfork);
+  TestGetPidCachingWithFork(vfork, _exit);
 }
 
 static int CloneLikeFork() {
@@ -497,11 +497,11 @@ static int CloneLikeFork() {
 }
 
 TEST(UNISTD_TEST, getpid_caching_and_clone_process) {
-  TestGetPidCachingWithFork(CloneLikeFork);
+  TestGetPidCachingWithFork(CloneLikeFork, exit);
 }
 
 TEST(UNISTD_TEST, gettid_caching_and_clone_process) {
-  TestGetTidCachingWithFork(CloneLikeFork);
+  TestGetTidCachingWithFork(CloneLikeFork, exit);
 }
 
 static int CloneAndSetTid() {
@@ -525,7 +525,7 @@ static int CloneAndSetTid() {
 }
 
 TEST(UNISTD_TEST, gettid_caching_and_clone_process_settid) {
-  TestGetTidCachingWithFork(CloneAndSetTid);
+  TestGetTidCachingWithFork(CloneAndSetTid, exit);
 }
 
 static int CloneStartRoutine(int (*start_routine)(void*)) {
@@ -570,6 +570,22 @@ TEST(UNISTD_TEST, gettid_caching_and_clone) {
   ASSERT_EQ(parent_tid, GetTidForTest());
 
   AssertChildExited(clone_result, 123);
+}
+
+static int CloneChildExit(void*) {
+  AssertGetPidCorrect();
+  AssertGetTidCorrect();
+  exit(33);
+}
+
+TEST(UNISTD_TEST, clone_fn_and_exit) {
+  int clone_result = CloneStartRoutine(CloneChildExit);
+  ASSERT_NE(-1, clone_result);
+
+  AssertGetPidCorrect();
+  AssertGetTidCorrect();
+
+  AssertChildExited(clone_result, 33);
 }
 
 static void* GetPidCachingPthreadStartRoutine(void*) {

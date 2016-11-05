@@ -36,9 +36,6 @@ int fork() {
 
   pthread_internal_t* self = __get_thread();
 
-  // Remember the parent pid and invalidate the cached value while we fork.
-  pid_t parent_pid = self->invalidate_cached_pid();
-
   int result = clone(nullptr,
                      nullptr,
                      (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD),
@@ -47,10 +44,11 @@ int fork() {
                      nullptr,
                      &(self->tid));
   if (result == 0) {
+    // Update the cached pid, since clone() will not set it directly (as
+    // self->tid is updated by the kernel).
     self->set_cached_pid(gettid());
     __bionic_atfork_run_child();
   } else {
-    self->set_cached_pid(parent_pid);
     __bionic_atfork_run_parent();
   }
   return result;
