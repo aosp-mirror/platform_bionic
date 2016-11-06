@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebf51f92_a0b1802f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-06T00:45:07Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in LIBC_PLATFORM?",
+      "revId": "8fadcf710169ca3abc9dcbbf8f9d899184aad231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
