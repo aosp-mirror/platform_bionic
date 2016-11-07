@@ -40,6 +40,24 @@
       "revId": "df31aff4e98437e47fe88090d8116632b80c4f43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bde5729_239f2eec",
+        "filename": "libc/libstdc++.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-07T21:20:40Z",
+      "side": 1,
+      "message": "Sounds good.\nThanks for fixing this!",
+      "parentUuid": "ebf51f92_5affe98b",
+      "revId": "df31aff4e98437e47fe88090d8116632b80c4f43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
