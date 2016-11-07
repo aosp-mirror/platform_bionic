@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bde5729_03a07278",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-07T20:53:23Z",
+      "side": 1,
+      "message": "i\u0027m not sure this is a good idea, but if we are going to do this, shouldn\u0027t we define both __mips32__ and __mips64__?",
+      "revId": "1bfc67fe048866d46ea9ccb406ad11dbc06b608f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
