@@ -295,7 +295,7 @@ LIBC_O {
     ctanl;
 } LIBC;
 
-LIBC_DEPRECATED { # arm mips
+LIBC_DEPRECATED { # arm mips platform-only
   global: # arm mips
     __fixdfdi; # arm mips
     __fixsfdi; # arm mips
