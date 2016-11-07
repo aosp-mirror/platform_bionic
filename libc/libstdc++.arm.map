@@ -2,7 +2,6 @@
 LIBC_O {
   global:
     _ZSt7nothrow; # var
-    _ZTV9type_info; # var introduced-arm=9 introduced-mips=9
     _ZdaPv;
     _ZdaPvRKSt9nothrow_t;
     _ZdlPv;
