@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
+#include <inttypes.h>
+#include <stdio.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <unistd.h>
+
+#include <string>
+#include <vector>
+
+#include <gtest/gtest.h>
+
+#include "android-base/file.h"
+#include "android-base/strings.h"
 #include "private/bionic_prctl.h"
 
 // http://b/20017123.
@@ -29,9 +37,27 @@ TEST(sys_prctl, bug_20017123) {
   ASSERT_NE(MAP_FAILED, p);
   ASSERT_EQ(0, mprotect(p, page_size, PROT_NONE));
   ASSERT_NE(-1, prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, p, page_size * 3, "anonymous map space"));
-  volatile char* vp = reinterpret_cast<volatile char*>(p);
-  // Below memory access causes SEGV if the memory map is screwed up.
-  *(vp + page_size) = 0;
+  // Now read the maps and verify that there are no overlapped maps.
+  std::string file_data;
+  ASSERT_TRUE(android::base::ReadFileToString("/proc/self/maps", &file_data));
+
+  uintptr_t last_start = 0;
+  uintptr_t last_end = 0;
+  std::vector<std::string> lines = android::base::Split(file_data, "\n");
+  for (size_t i = 0; i < lines.size(); i++) {
+    if (lines[i].empty()) {
+      continue;
+    }
+    uintptr_t start;
+    uintptr_t end;
+    ASSERT_EQ(2, sscanf(lines[i].c_str(), "%" SCNxPTR "-%" SCNxPTR " ", &start, &end))
+        << "Failed to parse line: " << lines[i];
+    // This will never fail on the first line, so no need to do any special checking.
+    ASSERT_GE(start, last_end) << "Overlapping map detected:\n" << lines[i -1] << lines[i];
+    last_start = start;
+    last_end = end;
+  }
+
   ASSERT_EQ(0, munmap(p, page_size * 3));
 #else
   GTEST_LOG_(INFO) << "This test does nothing as it tests an Android specific kernel feature.";
