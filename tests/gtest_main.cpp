@@ -316,7 +316,7 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
 // PrettyUnitTestResultPrinter. The reason for copy is that PrettyUnitTestResultPrinter
 // is defined and used in gtest.cc, which is hard to reuse.
 static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list, size_t iteration,
-                                      int iteration_count) {
+                                      int iteration_count, size_t job_count) {
   if (iteration_count != 1) {
     printf("\nRepeating all tests (iteration %zu) . . .\n\n", iteration);
   }
@@ -328,9 +328,10 @@ static void OnTestIterationStartPrint(const std::vector<TestCase>& testcase_list
     test_count += testcase.TestCount();
   }
 
-  printf("Running %zu %s from %zu %s.\n",
+  printf("Running %zu %s from %zu %s (%zu %s).\n",
          test_count, (test_count == 1) ? "test" : "tests",
-         testcase_count, (testcase_count == 1) ? "test case" : "test cases");
+         testcase_count, (testcase_count == 1) ? "test case" : "test cases",
+         job_count, (job_count == 1) ? "job" : "jobs");
   fflush(stdout);
 }
 
@@ -870,7 +871,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
   for (size_t iteration = 1;
        iteration_count < 0 || iteration <= static_cast<size_t>(iteration_count);
        ++iteration) {
-    OnTestIterationStartPrint(testcase_list, iteration, iteration_count);
+    OnTestIterationStartPrint(testcase_list, iteration, iteration_count, job_count);
     int64_t iteration_start_time_ns = NanoTime();
     time_t epoch_iteration_start_time = time(NULL);
 
