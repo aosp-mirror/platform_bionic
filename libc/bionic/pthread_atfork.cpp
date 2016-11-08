@@ -130,13 +130,15 @@ void __bionic_atfork_run_prepare() {
 }
 
 void __bionic_atfork_run_child() {
+  g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+
+  pthread_mutex_lock(&g_atfork_list_mutex);
   g_atfork_list.walk_forward([](atfork_t* it) {
     if (it->child != nullptr) {
       it->child();
     }
   });
-
-  g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+  pthread_mutex_unlock(&g_atfork_list_mutex);
 }
 
 void __bionic_atfork_run_parent() {
