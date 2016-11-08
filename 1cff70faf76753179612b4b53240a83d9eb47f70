@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bde5729_df8f36b6",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-08T17:25:12Z",
+      "side": 1,
+      "message": "even in C \u003cstdbool.h\u003e gives you bool, true, and false...",
+      "range": {
+        "startLine": 2105,
+        "startChar": 7,
+        "endLine": 2105,
+        "endChar": 10
+      },
+      "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bde5729_bf926add",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-08T17:25:12Z",
+      "side": 1,
+      "message": "presumably `numservers` can never be large enough for n**2 to be a problem?",
+      "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
