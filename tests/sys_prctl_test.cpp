@@ -53,7 +53,8 @@ TEST(sys_prctl, bug_20017123) {
     ASSERT_EQ(2, sscanf(lines[i].c_str(), "%" SCNxPTR "-%" SCNxPTR " ", &start, &end))
         << "Failed to parse line: " << lines[i];
     // This will never fail on the first line, so no need to do any special checking.
-    ASSERT_GE(start, last_end) << "Overlapping map detected:\n" << lines[i -1] << lines[i];
+    ASSERT_GE(start, last_end)
+        << "Overlapping map detected:\n" << lines[i -1] << '\n' << lines[i] << '\n';
     last_start = start;
     last_end = end;
   }
