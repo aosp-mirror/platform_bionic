@@ -106,17 +106,11 @@
 #  endif
 # endif
 
-/* Bionic: the following has been optimized out from our processed kernel headers */
-
-#define  CHILD_MAX   999
-#define  OPEN_MAX    256
-
 /* Bionic-specific definitions */
 
 #define  _POSIX_VERSION             200809L   /* Posix C language bindings version */
 #define  _POSIX2_VERSION            -1        /* we don't support Posix command-line tools */
 #define  _XOPEN_VERSION             700       /* by Posix definition */
-
 
 /* >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS */
 #define PTHREAD_DESTRUCTOR_ITERATIONS 4
