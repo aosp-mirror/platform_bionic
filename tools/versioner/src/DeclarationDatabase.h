@@ -30,7 +30,7 @@
 #include "Utils.h"
 
 namespace clang {
-class ASTUnit;
+class ASTContext;
 class Decl;
 }
 
@@ -220,7 +220,7 @@ class HeaderDatabase {
  public:
   std::map<std::string, Symbol> symbols;
 
-  void parseAST(CompilationType type, clang::ASTUnit* ast);
+  void parseAST(CompilationType type, clang::ASTContext& ast);
 
   void dump(const std::string& base_path = "", FILE* out = stdout) const {
     fprintf(out, "HeaderDatabase contains %zu symbols:\n", symbols.size());
