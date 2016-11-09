@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b770b47_9775ce3e",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-09T21:26:27Z",
+      "side": 1,
+      "message": "how did you hit that? should we just #include \u003csys/cdefs.h\u003e in all our scrubbed uapi headers?",
+      "revId": "27e38db3a98fb4c86bfd9b93e6ca005f6e8dbad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
