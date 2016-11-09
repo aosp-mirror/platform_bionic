@@ -44,6 +44,8 @@
 #include "Preprocessor.h"
 #include "SymbolDatabase.h"
 #include "Utils.h"
+#include "VFS.h"
+
 #include "versioner.h"
 
 using namespace std::string_literals;
@@ -138,6 +140,8 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     errx(1, "compileHeaders received no CompilationTypes");
   }
 
+  auto vfs = createCommonVFS(header_dir, dependency_dir, add_include);
+
   size_t thread_count = max_thread_count;
   std::vector<std::thread> threads;
 
@@ -151,7 +155,7 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     }
   }
 
-  initializeTargetCC1FlagCache(types, requirements);
+  initializeTargetCC1FlagCache(vfs, types, requirements);
 
   std::vector<std::pair<CompilationType, const std::string&>> jobs;
   for (CompilationType type : types) {
@@ -165,16 +169,16 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
 
   if (thread_count == 1) {
     for (const auto& job : jobs) {
-      compileHeader(result.get(), job.first, job.second);
+      compileHeader(vfs, result.get(), job.first, job.second);
     }
   } else {
     // Spawn threads.
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &result, &header_dir, thread_count, i]() {
+      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, i]() {
         size_t index = i;
         while (index < jobs.size()) {
           const auto& job = jobs[index];
-          compileHeader(result.get(), job.first, job.second);
+          compileHeader(vfs, result.get(), job.first, job.second);
           index += thread_count;
         }
       });
