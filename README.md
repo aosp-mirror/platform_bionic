@@ -268,6 +268,25 @@ First, build and run the host tests as usual (see above).
 The coverage report is now available at `covreport/index.html`.
 
 
+Running the benchmarks
+----------------------
+
+### Device benchmarks
+
+    $ mma
+    $ adb remount
+    $ adb sync
+    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
+    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
+
+You can use `--benchmark_filter=getpid` to just run benchmarks with "getpid"
+in their name.
+
+### Host benchmarks
+
+See the "Host tests" section of "Running the tests" above.
+
+
 Attaching GDB to the tests
 --------------------------
 
