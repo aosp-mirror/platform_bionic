@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b770b47_8267ca43",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-11-09T22:46:53Z",
+      "side": 1,
+      "message": "This seems a bit fragile. cc1 options can change/disappear, while the top-level options are generally more compatible across releases. Is there some way to get this behavior that would be better than hard-coding cc1 command lines?\n\nChatted with jmgao and he has a plan for making this better.",
+      "revId": "05a81cc0dfc5e1ed6e540f9c321300c49f0f5595",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
