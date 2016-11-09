@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cbd3fbe9_869afa47",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2016-11-09T00:46:22Z",
+      "side": 1,
+      "message": "modernization++\n\nI just didn\u0027t know whether it was better to keep with the style or not.\n\nFixed!",
+      "parentUuid": "2bde5729_df8f36b6",
+      "range": {
+        "startLine": 2105,
+        "startChar": 7,
+        "endLine": 2105,
+        "endChar": 10
+      },
+      "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bde5729_bf926add",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2016-11-08T17:25:12Z",
       "side": 1,
       "message": "presumably `numservers` can never be large enough for n**2 to be a problem?",
+      "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbd3fbe9_268f8e0c",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2016-11-09T00:46:22Z",
+      "side": 1,
+      "message": "MAXNS is 4, so I figured it couldn\u0027t get worse than 16.  But now I\u0027m trying to track down where numservers comes from whether it\u0027s capped to MAXNS or not.",
+      "parentUuid": "2bde5729_bf926add",
       "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
