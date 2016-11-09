@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b770b47_f70c52b0",
+        "filename": "tools/versioner/src/VFS.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-09T21:28:19Z",
+      "side": 1,
+      "message": "unique_ptr?",
+      "revId": "84e65c92b5700966614e68f3ca0519e8d874d6fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
