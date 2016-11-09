@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b770b47_e2cc8e21",
+        "filename": "tools/versioner/src/VFS.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-11-09T22:32:42Z",
+      "side": 1,
+      "message": "Do you need fts_close() on any of these error paths?",
+      "revId": "c224adaf3597a55e4670f162e5a3cf087a7ab456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
