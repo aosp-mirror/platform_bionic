@@ -221,7 +221,7 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
     bool future = avail.arch_availability[*it.second.begin()].future;
 
     if (future) {
-      return "0";
+      return "__ANDROID_API__ >= __ANDROID_API_FUTURE__";
     }
 
     // The maximum min_version of the set.

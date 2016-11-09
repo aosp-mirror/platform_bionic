@@ -40,3 +40,5 @@ int multiple_introduced_2() __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(14) __I
     __INTRODUCED_IN_64(22);
 
 int group_lp32() __INTRODUCED_IN_ARM(12) __INTRODUCED_IN_X86(12) __INTRODUCED_IN_MIPS(12);
+
+int future() __INTRODUCED_IN_FUTURE;
