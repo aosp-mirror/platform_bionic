@@ -16,6 +16,24 @@
       "revId": "c224adaf3597a55e4670f162e5a3cf087a7ab456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b770b47_a22526c8",
+        "filename": "tools/versioner/src/VFS.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-09T22:49:02Z",
+      "side": 1,
+      "message": "no: http://man7.org/linux/man-pages/man3/err.3.html\n\nbut using unique_ptr would avoid anyone having to think about it :-)",
+      "parentUuid": "4b770b47_e2cc8e21",
+      "revId": "c224adaf3597a55e4670f162e5a3cf087a7ab456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
