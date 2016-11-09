@@ -81,6 +81,24 @@
       "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbd3fbe9_26122eca",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2016-11-09T01:50:34Z",
+      "side": 1,
+      "message": "Oh, duh.\n\n_resolv_set_nameservers_for_net() guarantees numservers \u003c\u003d MAXNS, or it returns E2BIG, up on line 1966.",
+      "parentUuid": "cbd3fbe9_268f8e0c",
+      "revId": "1cff70faf76753179612b4b53240a83d9eb47f70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
