@@ -68,3 +68,9 @@ int multiple_introduced_2() __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(14) __I
 int group_lp32() __INTRODUCED_IN_ARM(12) __INTRODUCED_IN_X86(12) __INTRODUCED_IN_MIPS(12);
 #endif /* (!defined(__LP64__) && __ANDROID_API__ >= 12) || (defined(__LP64__)) */
 
+
+
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+int future() __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
