@@ -26,7 +26,9 @@ TBLGEN_TABLES := \
 LOCAL_SRC_FILES := \
   versioner.cpp \
   Arch.cpp \
+  CompilationType.cpp \
   DeclarationDatabase.cpp \
+  Driver.cpp \
   Preprocessor.cpp \
   SymbolDatabase.cpp \
   Utils.cpp

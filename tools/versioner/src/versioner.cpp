@@ -34,167 +34,30 @@
 #include <unordered_map>
 #include <vector>
 
-#include <clang/AST/ASTConsumer.h>
-#include <clang/Basic/TargetInfo.h>
-#include <clang/Driver/Compilation.h>
-#include <clang/Driver/Driver.h>
-#include <clang/Frontend/CompilerInstance.h>
-#include <clang/Frontend/CompilerInvocation.h>
-#include <clang/Frontend/FrontendAction.h>
-#include <clang/Frontend/FrontendActions.h>
-#include <clang/Frontend/TextDiagnosticPrinter.h>
-#include <clang/Frontend/Utils.h>
-#include <clang/FrontendTool/Utils.h>
-#include <clang/Tooling/Tooling.h>
 #include <llvm/ADT/StringRef.h>
 
 #include <android-base/parseint.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
+#include "Driver.h"
 #include "Preprocessor.h"
 #include "SymbolDatabase.h"
 #include "Utils.h"
 #include "versioner.h"
 
 using namespace std::string_literals;
-using namespace clang;
-using namespace tooling;
 
+bool add_include;
 bool verbose;
-static bool add_include;
 static int max_thread_count = 48;
-
-static std::vector<std::string> generateCompileCommand(CompilationType& type,
-                                                       const std::string& filename,
-                                                       const std::string& header_dir,
-                                                       const std::vector<std::string>& include_dirs) {
-  std::vector<std::string> cmd = { "versioner" };
-  cmd.push_back("-std=c11");
-
-  cmd.push_back("-Wall");
-  cmd.push_back("-Wextra");
-  cmd.push_back("-Werror");
-  cmd.push_back("-Wundef");
-  cmd.push_back("-Wno-unused-macros");
-  cmd.push_back("-Wno-unused-function");
-  cmd.push_back("-Wno-unused-variable");
-  cmd.push_back("-Wno-unknown-attributes");
-  cmd.push_back("-Wno-pragma-once-outside-header");
-
-  cmd.push_back("-target");
-  cmd.push_back(arch_targets[type.arch]);
-
-  cmd.push_back("-DANDROID");
-  cmd.push_back("-D__ANDROID_API__="s + std::to_string(type.api_level));
-  cmd.push_back("-D_FORTIFY_SOURCE=2");
-  cmd.push_back("-D_GNU_SOURCE");
-  cmd.push_back("-D_FILE_OFFSET_BITS="s + std::to_string(type.file_offset_bits));
-
-  cmd.push_back("-nostdinc");
-  std::string header_path;
-  if (add_include) {
-    const char* top = getenv("ANDROID_BUILD_TOP");
-    header_path = to_string(top) + "/bionic/libc/include/android/versioning.h";
-    cmd.push_back("-include");
-    cmd.push_back(header_path);
-  }
-
-  for (const auto& dir : include_dirs) {
-    cmd.push_back("-isystem");
-    cmd.push_back(dir);
-  }
-
-  cmd.push_back(filename);
-
-  return cmd;
-}
-
-class VersionerASTConsumer : public clang::ASTConsumer {
- public:
-  HeaderDatabase* header_database;
-  CompilationType type;
-
-  VersionerASTConsumer(HeaderDatabase* header_database, CompilationType type)
-      : header_database(header_database), type(type) {
-  }
-
-  virtual void HandleTranslationUnit(ASTContext& ctx) override {
-    header_database->parseAST(type, ctx);
-  }
-};
-
-class VersionerASTAction : public clang::ASTFrontendAction {
- public:
-  HeaderDatabase* header_database;
-  CompilationType type;
-
-  VersionerASTAction(HeaderDatabase* header_database, CompilationType type)
-      : header_database(header_database), type(type) {
-  }
-
-  virtual std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance& Compiler,
-                                                         llvm::StringRef InFile) override {
-    return std::make_unique<VersionerASTConsumer>(header_database, type);
-  }
-};
-
-static void compileHeader(HeaderDatabase* header_database, CompilationType type,
-                          const std::string& filename, const std::string& header_dir,
-                          const std::vector<std::string>& include_dirs) {
-  DiagnosticOptions diagnostic_options;
-  auto diagnostic_printer = new TextDiagnosticPrinter(llvm::errs(), &diagnostic_options);
-
-  IntrusiveRefCntPtr<DiagnosticIDs> diagnostic_ids(new DiagnosticIDs());
-  IntrusiveRefCntPtr<DiagnosticsEngine> diags(
-      new DiagnosticsEngine(diagnostic_ids, &diagnostic_options, diagnostic_printer, false));
-  driver::Driver Driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags);
-
-  std::vector<std::string> cmd = generateCompileCommand(type, filename, header_dir, include_dirs);
-  llvm::SmallVector<const char*, 32> Args;
-
-  for (const std::string& str : cmd) {
-    Args.push_back(str.c_str());
-  }
-
-  std::unique_ptr<driver::Compilation> Compilation(Driver.BuildCompilation(Args));
-
-  const driver::Command &Cmd = llvm::cast<driver::Command>(*Compilation->getJobs().begin());
-  const driver::ArgStringList &CCArgs = Cmd.getArguments();
-
-  auto invocation = std::make_unique<CompilerInvocation>();
-  if (!CompilerInvocation::CreateFromArgs(
-          *invocation.get(), const_cast<const char**>(CCArgs.data()),
-          const_cast<const char**>(CCArgs.data()) + CCArgs.size(), *diags)) {
-    errx(1, "failed to create CompilerInvocation");
-  }
-
-  clang::CompilerInstance Compiler;
-  Compiler.setInvocation(invocation.release());
-  Compiler.setDiagnostics(diags.get());
-
-  VersionerASTAction versioner_action(header_database, type);
-  if (!Compiler.ExecuteAction(versioner_action)) {
-    errx(1, "compilation generated warnings or errors");
-  }
-
-  if (diags->getNumWarnings() || diags->hasErrorOccurred()) {
-    errx(1, "compilation generated warnings or errors");
-  }
-}
-
-struct CompilationRequirements {
-  std::vector<std::string> headers;
-  std::vector<std::string> dependencies;
-};
 
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
   std::vector<std::string> headers = collectFiles(header_dir);
-
   std::vector<std::string> dependencies = { header_dir };
   if (!dependency_dir.empty()) {
-    auto collect_children = [&dependencies](const std::string& dir_path) {
+    auto collect_children = [&dependencies, &dependency_dir](const std::string& dir_path) {
       DIR* dir = opendir(dir_path.c_str());
       if (!dir) {
         err(1, "failed to open dependency directory '%s'", dir_path.c_str());
@@ -268,15 +131,6 @@ static std::set<CompilationType> generateCompilationTypes(const std::set<Arch> s
   return result;
 }
 
-struct Job {
-  Job(CompilationType type, const std::string& header, const std::vector<std::string>& dependencies)
-      : type(type), header(header), dependencies(dependencies) {
-  }
-  CompilationType type;
-  const std::string& header;
-  const std::vector<std::string>& dependencies;
-};
-
 static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<CompilationType>& types,
                                                       const std::string& header_dir,
                                                       const std::string& dependency_dir) {
@@ -286,49 +140,52 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
 
   size_t thread_count = max_thread_count;
   std::vector<std::thread> threads;
-  std::vector<Job> jobs;
 
   std::map<CompilationType, HeaderDatabase> header_databases;
   std::unordered_map<Arch, CompilationRequirements> requirements;
 
-  std::string cwd = getWorkingDir();
-
   auto result = std::make_unique<HeaderDatabase>();
-  auto spawn_threads = [&]() {
-    thread_count = std::min(thread_count, jobs.size());
-    for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &result, &header_dir, thread_count, i]() {
-        size_t index = i;
-        while (index < jobs.size()) {
-          const auto& job = jobs[index];
-          compileHeader(result.get(), job.type, job.header, header_dir, job.dependencies);
-          index += thread_count;
-        }
-      });
-    }
-  };
-  auto reap_threads = [&]() {
-    for (auto& thread : threads) {
-      thread.join();
-    }
-    threads.clear();
-  };
-
   for (const auto& type : types) {
     if (requirements.count(type.arch) == 0) {
       requirements[type.arch] = collectRequirements(type.arch, header_dir, dependency_dir);
     }
   }
 
+  initializeTargetCC1FlagCache(types, requirements);
+
+  std::vector<std::pair<CompilationType, const std::string&>> jobs;
   for (CompilationType type : types) {
     CompilationRequirements& req = requirements[type.arch];
     for (const std::string& header : req.headers) {
-      jobs.emplace_back(type, header, req.dependencies);
+      jobs.emplace_back(type, header);
     }
   }
 
-  spawn_threads();
-  reap_threads();
+  thread_count = std::min(thread_count, jobs.size());
+
+  if (thread_count == 1) {
+    for (const auto& job : jobs) {
+      compileHeader(result.get(), job.first, job.second);
+    }
+  } else {
+    // Spawn threads.
+    for (size_t i = 0; i < thread_count; ++i) {
+      threads.emplace_back([&jobs, &result, &header_dir, thread_count, i]() {
+        size_t index = i;
+        while (index < jobs.size()) {
+          const auto& job = jobs[index];
+          compileHeader(result.get(), job.first, job.second);
+          index += thread_count;
+        }
+      });
+    }
+
+    // Reap them.
+    for (auto& thread : threads) {
+      thread.join();
+    }
+    threads.clear();
+  }
 
   return result;
 }
