@@ -16,6 +16,24 @@
       "revId": "84e65c92b5700966614e68f3ca0519e8d874d6fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b770b47_c3ef1494",
+        "filename": "tools/versioner/src/VFS.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-10T02:30:27Z",
+      "side": 1,
+      "message": "There\u0027s a couple of other cases of this, so I left this as is and cleaned them all up in a follow up patch.",
+      "parentUuid": "4b770b47_f70c52b0",
+      "revId": "84e65c92b5700966614e68f3ca0519e8d874d6fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
