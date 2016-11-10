@@ -130,7 +130,7 @@ static std::map<std::string, NdkSymbolType> parsePlatform(const CompilationType&
       }
 
       if (result.count(symbol_name) != 0) {
-        if (verbose) {
+        if (strict) {
           printf("duplicated symbol '%s' in '%s'\n", symbol_name.str().c_str(), file.str().c_str());
         }
       }
