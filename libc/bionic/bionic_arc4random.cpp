@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,44 +26,33 @@
  * SUCH DAMAGE.
  */
 
-#include <assert.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include <sys/cdefs.h>
-
 #include "private/bionic_arc4random.h"
-#include "private/bionic_globals.h"
-#include "private/libc_logging.h"
+
+#include <errno.h>
+#include <stdlib.h>
+#include <sys/auxv.h>
+#include <syscall.h>
+#include <unistd.h>
+
 #include "private/KernelArgumentBlock.h"
+#include "private/libc_logging.h"
 
-void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
-  long value;
-  __libc_safe_arc4random_buf(&value, sizeof(value), args);
+void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
+  static bool have_getrandom = syscall(SYS_getrandom, nullptr, 0, 0) == -1 && errno != ENOSYS;
+  static bool have_urandom = access("/dev/urandom", R_OK) == 0;
+  static size_t at_random_bytes_consumed = 0;
 
-  // Mask off the last bit to store the signal flag.
-  globals->setjmp_cookie = value & ~1;
-}
-
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_get(long sigflag) {
-  if (sigflag & ~1) {
-    __libc_fatal("unexpected sigflag value: %ld", sigflag);
+  if (have_getrandom || have_urandom) {
+    arc4random_buf(buf, n);
+    return;
   }
 
-  return __libc_globals->setjmp_cookie | sigflag;
-}
-
-// Aborts if cookie doesn't match, returns the signal flag otherwise.
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_check(long cookie) {
-  if (__libc_globals->setjmp_cookie != (cookie & ~1)) {
-    __libc_fatal("setjmp cookie mismatch");
+  if (at_random_bytes_consumed + n > 16) {
+    __libc_fatal("ran out of AT_RANDOM bytes, have %zu, requested %zu",
+                 16 - at_random_bytes_consumed, n);
   }
 
-  return cookie & 1;
-}
-
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_checksum_mismatch() {
-  __libc_fatal("setjmp checksum mismatch");
+  memcpy(buf, reinterpret_cast<char*>(args.getauxval(AT_RANDOM)) + at_random_bytes_consumed, n);
+  at_random_bytes_consumed += n;
+  return;
 }

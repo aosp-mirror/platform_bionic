@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,44 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#include <assert.h>
-#include <errno.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/auxv.h>
-#include <sys/cdefs.h>
+#ifndef _PRIVATE_BIONIC_ARC4RANDOM_H_
+#define _PRIVATE_BIONIC_ARC4RANDOM_H_
 
-#include "private/bionic_arc4random.h"
-#include "private/bionic_globals.h"
-#include "private/libc_logging.h"
+#include <stddef.h>
+
 #include "private/KernelArgumentBlock.h"
 
-void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
-  long value;
-  __libc_safe_arc4random_buf(&value, sizeof(value), args);
+/*
+ * arc4random aborts if it's unable to fetch entropy, which is always the case
+ * for init on devices without getrandom(2), since /dev/random hasn't been
+ * created yet. Provide a wrapper function that falls back to AT_RANDOM if
+ * we don't have getrandom and /dev/urandom is missing.
+ */
 
-  // Mask off the last bit to store the signal flag.
-  globals->setjmp_cookie = value & ~1;
-}
+void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args);
 
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_get(long sigflag) {
-  if (sigflag & ~1) {
-    __libc_fatal("unexpected sigflag value: %ld", sigflag);
-  }
-
-  return __libc_globals->setjmp_cookie | sigflag;
-}
-
-// Aborts if cookie doesn't match, returns the signal flag otherwise.
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_check(long cookie) {
-  if (__libc_globals->setjmp_cookie != (cookie & ~1)) {
-    __libc_fatal("setjmp cookie mismatch");
-  }
-
-  return cookie & 1;
-}
-
-extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_checksum_mismatch() {
-  __libc_fatal("setjmp checksum mismatch");
-}
+#endif
