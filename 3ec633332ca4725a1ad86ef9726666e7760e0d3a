@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb935fd8_afd8013b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-11T01:57:01Z",
+      "side": 1,
+      "message": "explain why?\n\n(just so you can give a more specific error message? maybe pass a const char* in instead?)",
+      "revId": "3ec633332ca4725a1ad86ef9726666e7760e0d3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
