@@ -29,6 +29,7 @@
 #include <clang/AST/ASTConsumer.h>
 #include <clang/Basic/Diagnostic.h>
 #include <clang/Basic/TargetInfo.h>
+#include <clang/Basic/VirtualFileSystem.h>
 #include <clang/Driver/Compilation.h>
 #include <clang/Driver/Driver.h>
 #include <clang/Frontend/CompilerInstance.h>
@@ -92,7 +93,8 @@ static IntrusiveRefCntPtr<DiagnosticsEngine> constructDiags() {
 // Run it once to generate flags for each target, and memoize the results.
 static std::unordered_map<CompilationType, std::vector<std::string>> cc1_flags;
 static const char* filename_placeholder = "__VERSIONER_PLACEHOLDER__";
-static void generateTargetCC1Flags(CompilationType type,
+static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+                                   CompilationType type,
                                    const std::vector<std::string>& include_dirs) {
   std::vector<std::string> cmd = { "versioner" };
   cmd.push_back("-std=c11");
@@ -122,12 +124,8 @@ static void generateTargetCC1Flags(CompilationType type,
   cmd.push_back("-nostdinc");
 
   if (add_include) {
-    const char* top = getenv("ANDROID_BUILD_TOP");
-    if (!top) {
-      errx(1, "-i passed, but ANDROID_BUILD_TOP is unset");
-    }
     cmd.push_back("-include");
-    cmd.push_back(to_string(top) + "/bionic/libc/include/android/versioning.h");
+    cmd.push_back("android/versioning.h");
   }
 
   for (const auto& dir : include_dirs) {
@@ -138,7 +136,7 @@ static void generateTargetCC1Flags(CompilationType type,
   cmd.push_back(filename_placeholder);
 
   auto diags = constructDiags();
-  driver::Driver driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags);
+  driver::Driver driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags, vfs);
   driver.setCheckInputsExist(false);
 
   llvm::SmallVector<const char*, 32> driver_args;
@@ -192,7 +190,8 @@ static std::vector<const char*> getCC1Command(CompilationType type, const std::s
   return result;
 }
 
-void initializeTargetCC1FlagCache(const std::set<CompilationType>& types,
+void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+                                  const std::set<CompilationType>& types,
                                   const std::unordered_map<Arch, CompilationRequirements>& reqs) {
   if (!cc1_flags.empty()) {
     errx(1, "reinitializing target CC1 flag cache?");
@@ -201,14 +200,14 @@ void initializeTargetCC1FlagCache(const std::set<CompilationType>& types,
   auto start = std::chrono::high_resolution_clock::now();
   std::vector<std::thread> threads;
   for (const CompilationType type : types) {
-    threads.emplace_back([type, &reqs]() {
+    threads.emplace_back([type, &vfs, &reqs]() {
       const auto& arch_req_it = reqs.find(type.arch);
       if (arch_req_it == reqs.end()) {
         errx(1, "CompilationRequirement map missing entry for CompilationType %s",
              to_string(type).c_str());
       }
 
-      generateTargetCC1Flags(type, arch_req_it->second.dependencies);
+      generateTargetCC1Flags(vfs, type, arch_req_it->second.dependencies);
     });
   }
   for (auto& thread : threads) {
@@ -226,7 +225,8 @@ void initializeTargetCC1FlagCache(const std::set<CompilationType>& types,
   }
 }
 
-void compileHeader(HeaderDatabase* header_database, CompilationType type,
+void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+                   HeaderDatabase* header_database, CompilationType type,
                    const std::string& filename) {
   auto diags = constructDiags();
   std::vector<const char*> cc1_flags = getCC1Command(type, filename);
@@ -239,6 +239,7 @@ void compileHeader(HeaderDatabase* header_database, CompilationType type,
   clang::CompilerInstance Compiler;
   Compiler.setInvocation(invocation.release());
   Compiler.setDiagnostics(diags.get());
+  Compiler.setVirtualFileSystem(vfs);
 
   VersionerASTAction versioner_action(header_database, type);
   if (!Compiler.ExecuteAction(versioner_action)) {
