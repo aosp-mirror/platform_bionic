@@ -16,31 +16,20 @@
 
 #pragma once
 
-#include <map>
 #include <set>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 
-extern bool verbose;
-extern bool add_include;
+#include "Arch.h"
+#include "DeclarationDatabase.h"
 
-#define D(...)             \
-  do {                     \
-    if (verbose) {         \
-      printf(__VA_ARGS__); \
-    }                      \
-  } while (0)
-
-static const std::unordered_map<std::string, std::set<Arch>> header_blacklist = {
-  // Internal header.
-  { "sys/_system_properties.h", supported_archs },
-
-  // time64.h #errors when included on LP64 archs.
-  { "time64.h", { Arch::arm64, Arch::mips64, Arch::x86_64 } },
+struct CompilationRequirements {
+  std::vector<std::string> headers;
+  std::vector<std::string> dependencies;
 };
 
-static const std::unordered_set<std::string> missing_symbol_whitelist = {
-  // atexit comes from crtbegin.
-  "atexit",
-};
+void initializeTargetCC1FlagCache(const std::set<CompilationType>& types,
+                                  const std::unordered_map<Arch, CompilationRequirements>& reqs);
+
+void compileHeader(HeaderDatabase* header_database, CompilationType type,
+                   const std::string& filename);
