@@ -29,8 +29,9 @@
 #ifndef _SYS_UCONTEXT_H_
 #define _SYS_UCONTEXT_H_
 
-#include <signal.h>
 #include <sys/cdefs.h>
+
+#include <signal.h>
 #include <sys/user.h>
 
 __BEGIN_DECLS

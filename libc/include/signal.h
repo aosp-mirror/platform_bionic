@@ -29,12 +29,13 @@
 #ifndef _SIGNAL_H_
 #define _SIGNAL_H_
 
+#include <sys/cdefs.h>
+#include <sys/types.h>
+
 #include <asm/sigcontext.h>
 #include <bits/pthread_types.h>
 #include <bits/timespec.h>
 #include <limits.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
 
 #if defined(__LP64__) || defined(__mips__)
 /* For 64-bit (and mips), the kernel's struct sigaction doesn't match the POSIX one,
