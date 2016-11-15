@@ -16,25 +16,12 @@
 
 #pragma once
 
-#include <set>
+#include <memory>
 #include <string>
-#include <unordered_map>
 
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
+#include <clang/Basic/VirtualFileSystem.h>
 
-#include "Arch.h"
-#include "DeclarationDatabase.h"
-#include "VFS.h"
-
-struct CompilationRequirements {
-  std::vector<std::string> headers;
-  std::vector<std::string> dependencies;
-};
-
-void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
-                                  const std::set<CompilationType>& types,
-                                  const std::unordered_map<Arch, CompilationRequirements>& reqs);
-
-void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
-                   HeaderDatabase* header_database, CompilationType type,
-                   const std::string& filename);
+llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> createCommonVFS(const std::string& header_dir,
+                                                                 const std::string& dependency_dir,
+                                                                 bool add_versioning_header);

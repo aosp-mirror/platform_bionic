@@ -31,7 +31,8 @@ LOCAL_SRC_FILES := \
   Driver.cpp \
   Preprocessor.cpp \
   SymbolDatabase.cpp \
-  Utils.cpp
+  Utils.cpp \
+  VFS.cpp
 
 LOCAL_SHARED_LIBRARIES := libclang libLLVM libbase
 
