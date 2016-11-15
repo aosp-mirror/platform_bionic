@@ -34,20 +34,22 @@
 #include <string.h>
 #include <wchar.h>
 
-// TODO: these only work for the ASCII range; rewrite to dlsym icu4c? http://b/14499654
-
-int iswalnum(wint_t wc) { return isalnum(wc); }
-int iswalpha(wint_t wc) { return isalpha(wc); }
+// These functions are either defined to be the same as their ASCII cousins,
+// or defined in terms of other functions.
+int iswalnum(wint_t wc) { return iswdigit(wc) || iswalpha(wc); }
 int iswblank(wint_t wc) { return isblank(wc); }
-int iswcntrl(wint_t wc) { return iscntrl(wc); }
 int iswdigit(wint_t wc) { return isdigit(wc); }
-int iswgraph(wint_t wc) { return isgraph(wc); }
-int iswlower(wint_t wc) { return islower(wc); }
+int iswgraph(wint_t wc) { return !iswspace(wc) && iswprint(wc); }
+int iswlower(wint_t wc) { return towlower(wc) != wc; }
+int iswupper(wint_t wc) { return towupper(wc) != wc; }
+int iswxdigit(wint_t wc) { return isxdigit(wc); }
+
+// TODO: need proper implementations of these.
+int iswalpha(wint_t wc) { return isalpha(wc); }
+int iswcntrl(wint_t wc) { return iscntrl(wc); }
 int iswprint(wint_t wc) { return isprint(wc); }
 int iswpunct(wint_t wc) { return ispunct(wc); }
 int iswspace(wint_t wc) { return isspace(wc); }
-int iswupper(wint_t wc) { return isupper(wc); }
-int iswxdigit(wint_t wc) { return isxdigit(wc); }
 
 int iswalnum_l(wint_t c, locale_t) { return iswalnum(c); }
 int iswalpha_l(wint_t c, locale_t) { return iswalpha(c); }
@@ -84,6 +86,7 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
   return iswctype(wc, char_class);
 }
 
+// TODO: need proper implementations of these.
 wint_t towlower(wint_t wc) { return tolower(wc); }
 wint_t towupper(wint_t wc) { return toupper(wc); }
 
