@@ -16,6 +16,11 @@
 
 #pragma once
 
+#include <errno.h>
+#include <libgen.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include <string>
 #include <vector>
 
@@ -24,16 +29,53 @@
 std::string getWorkingDir();
 std::vector<std::string> collectFiles(const std::string& directory);
 
-static __attribute__((unused)) std::string to_string(const char* c) {
+static inline std::string dirname(const std::string& path) {
+  std::unique_ptr<char, decltype(&free)> path_copy(strdup(path.c_str()), free);
+  return dirname(path_copy.get());
+}
+
+static inline bool is_directory(const std::string& path) {
+  struct stat st;
+  if (stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
+    return true;
+  }
+  return false;
+}
+
+static inline bool mkdirs(const std::string& path) {
+  if (is_directory(path)) {
+    return true;
+  }
+
+  std::string parent = dirname(path);
+  if (parent == path) {
+    return false;
+  }
+
+  if (!mkdirs(parent)) {
+    return false;
+  }
+
+  if (mkdir(path.c_str(), 0700) != 0) {
+    if (errno != EEXIST) {
+      return false;
+    }
+    return is_directory(path);
+  }
+
+  return true;
+}
+
+static inline std::string to_string(const char* c) {
   return c;
 }
 
-static __attribute__((unused)) const std::string& to_string(const std::string& str) {
+static inline const std::string& to_string(const std::string& str) {
   return str;
 }
 
 template <typename Collection>
-static std::string Join(Collection c, const std::string& delimiter = ", ") {
+static inline std::string Join(Collection c, const std::string& delimiter = ", ") {
   std::string result;
   for (const auto& item : c) {
     using namespace std;

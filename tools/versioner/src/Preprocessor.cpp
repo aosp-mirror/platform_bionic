@@ -121,33 +121,6 @@ static std::deque<std::string> readFileLines(const std::string& path) {
   return result;
 }
 
-static std::string dirname(const std::string& path) {
-  std::unique_ptr<char, decltype(&free)> path_copy(strdup(path.c_str()), free);
-  return dirname(path_copy.get());
-}
-
-static bool mkdirs(const std::string& path) {
-  struct stat st;
-  if (stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
-    return true;
-  }
-
-  std::string parent = dirname(path);
-  if (parent == path) {
-    return false;
-  }
-
-  if (!mkdirs(parent)) {
-    return false;
-  }
-
-  if (mkdir(path.c_str(), 0700) != 0) {
-    return false;
-  }
-
-  return true;
-}
-
 static void writeFileLines(const std::string& path, const std::deque<std::string>& lines) {
   if (!mkdirs(dirname(path))) {
     err(1, "failed to create directory '%s'", dirname(path).c_str());

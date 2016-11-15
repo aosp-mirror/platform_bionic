@@ -284,9 +284,8 @@ bool Symbol::hasDeclaration(const CompilationType& type) const {
   return false;
 }
 
-void HeaderDatabase::parseAST(CompilationType type, ASTUnit* ast) {
+void HeaderDatabase::parseAST(CompilationType type, ASTContext& ctx) {
   std::unique_lock<std::mutex> lock(this->mutex);
-  ASTContext& ctx = ast->getASTContext();
   Visitor visitor(*this, type, ctx);
   visitor.TraverseDecl(ctx.getTranslationUnitDecl());
 }
