@@ -29,11 +29,12 @@
 #ifndef _ELF_H
 #define _ELF_H
 
+#include <sys/cdefs.h>
+
 #include <linux/auxvec.h>
 #include <linux/elf.h>
 #include <linux/elf-em.h>
 #include <machine/elf_machdep.h>
-#include <sys/cdefs.h>
 
 #define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
 #define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
