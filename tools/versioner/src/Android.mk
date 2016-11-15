@@ -31,7 +31,7 @@ LOCAL_SRC_FILES := \
   SymbolDatabase.cpp \
   Utils.cpp
 
-LOCAL_SHARED_LIBRARIES := libclang libLLVM
+LOCAL_SHARED_LIBRARIES := libclang libLLVM libbase
 
 include $(CLANG_HOST_BUILD_MK)
 include $(CLANG_TBLGEN_RULES_MK)
