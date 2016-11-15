@@ -26,12 +26,15 @@ TBLGEN_TABLES := \
 LOCAL_SRC_FILES := \
   versioner.cpp \
   Arch.cpp \
+  CompilationType.cpp \
   DeclarationDatabase.cpp \
+  Driver.cpp \
   Preprocessor.cpp \
   SymbolDatabase.cpp \
-  Utils.cpp
+  Utils.cpp \
+  VFS.cpp
 
-LOCAL_SHARED_LIBRARIES := libclang libLLVM
+LOCAL_SHARED_LIBRARIES := libclang libLLVM libbase
 
 include $(CLANG_HOST_BUILD_MK)
 include $(CLANG_TBLGEN_RULES_MK)

@@ -16,31 +16,25 @@
 
 #pragma once
 
-#include <map>
 #include <set>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 
-extern bool verbose;
-extern bool add_include;
+#include <llvm/ADT/IntrusiveRefCntPtr.h>
 
-#define D(...)             \
-  do {                     \
-    if (verbose) {         \
-      printf(__VA_ARGS__); \
-    }                      \
-  } while (0)
+#include "Arch.h"
+#include "DeclarationDatabase.h"
+#include "VFS.h"
 
-static const std::unordered_map<std::string, std::set<Arch>> header_blacklist = {
-  // Internal header.
-  { "sys/_system_properties.h", supported_archs },
-
-  // time64.h #errors when included on LP64 archs.
-  { "time64.h", { Arch::arm64, Arch::mips64, Arch::x86_64 } },
+struct CompilationRequirements {
+  std::vector<std::string> headers;
+  std::vector<std::string> dependencies;
 };
 
-static const std::unordered_set<std::string> missing_symbol_whitelist = {
-  // atexit comes from crtbegin.
-  "atexit",
-};
+void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+                                  const std::set<CompilationType>& types,
+                                  const std::unordered_map<Arch, CompilationRequirements>& reqs);
+
+void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+                   HeaderDatabase* header_database, CompilationType type,
+                   const std::string& filename);

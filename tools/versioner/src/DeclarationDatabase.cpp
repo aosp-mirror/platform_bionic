@@ -284,17 +284,10 @@ bool Symbol::hasDeclaration(const CompilationType& type) const {
   return false;
 }
 
-void HeaderDatabase::parseAST(CompilationType type, ASTUnit* ast) {
+void HeaderDatabase::parseAST(CompilationType type, ASTContext& ctx) {
   std::unique_lock<std::mutex> lock(this->mutex);
-  ASTContext& ctx = ast->getASTContext();
   Visitor visitor(*this, type, ctx);
   visitor.TraverseDecl(ctx.getTranslationUnitDecl());
-}
-
-std::string to_string(const CompilationType& type) {
-  std::stringstream ss;
-  ss << to_string(type.arch) << "-" << type.api_level << " [fob = " << type.file_offset_bits << "]";
-  return ss.str();
 }
 
 std::string to_string(const AvailabilityValues& av) {

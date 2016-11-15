@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -33,105 +34,32 @@
 #include <unordered_map>
 #include <vector>
 
-#include <clang/Frontend/TextDiagnosticPrinter.h>
-#include <clang/Tooling/Tooling.h>
 #include <llvm/ADT/StringRef.h>
+
+#include <android-base/parseint.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
+#include "Driver.h"
 #include "Preprocessor.h"
 #include "SymbolDatabase.h"
 #include "Utils.h"
+#include "VFS.h"
+
 #include "versioner.h"
 
 using namespace std::string_literals;
-using namespace clang;
-using namespace clang::tooling;
 
+bool add_include;
 bool verbose;
-static bool add_include;
-
-class HeaderCompilationDatabase : public CompilationDatabase {
-  CompilationType type;
-  std::string cwd;
-  std::vector<std::string> headers;
-  std::vector<std::string> include_dirs;
-
- public:
-  HeaderCompilationDatabase(CompilationType type, std::string cwd, std::vector<std::string> headers,
-                            std::vector<std::string> include_dirs)
-      : type(type),
-        cwd(std::move(cwd)),
-        headers(std::move(headers)),
-        include_dirs(std::move(include_dirs)) {
-  }
-
-  CompileCommand generateCompileCommand(const std::string& filename) const {
-    std::vector<std::string> command = { "clang-tool", filename, "-nostdlibinc" };
-    for (const auto& dir : include_dirs) {
-      command.push_back("-isystem");
-      command.push_back(dir);
-    }
-    command.push_back("-std=c11");
-    command.push_back("-DANDROID");
-    command.push_back("-D__ANDROID_API__="s + std::to_string(type.api_level));
-    command.push_back("-D_FORTIFY_SOURCE=2");
-    command.push_back("-D_GNU_SOURCE");
-    command.push_back("-Wall");
-    command.push_back("-Wextra");
-    command.push_back("-Werror");
-    command.push_back("-Wundef");
-    command.push_back("-Wno-unused-macros");
-    command.push_back("-Wno-unused-function");
-    command.push_back("-Wno-unused-variable");
-    command.push_back("-Wno-unknown-attributes");
-    command.push_back("-Wno-pragma-once-outside-header");
-    command.push_back("-target");
-    command.push_back(arch_targets[type.arch]);
-
-    if (add_include) {
-      const char* top = getenv("ANDROID_BUILD_TOP");
-      std::string header_path = to_string(top) + "/bionic/libc/include/android/versioning.h";
-      command.push_back("-include");
-      command.push_back(std::move(header_path));
-    }
-
-    command.push_back("-D_FILE_OFFSET_BITS="s + std::to_string(type.file_offset_bits));
-
-    return CompileCommand(cwd, filename, command);
-  }
-
-  std::vector<CompileCommand> getAllCompileCommands() const override {
-    std::vector<CompileCommand> commands;
-    for (const std::string& file : headers) {
-      commands.push_back(generateCompileCommand(file));
-    }
-    return commands;
-  }
-
-  std::vector<CompileCommand> getCompileCommands(StringRef file) const override {
-    std::vector<CompileCommand> commands;
-    commands.push_back(generateCompileCommand(file));
-    return commands;
-  }
-
-  std::vector<std::string> getAllFiles() const override {
-    return headers;
-  }
-};
-
-struct CompilationRequirements {
-  std::vector<std::string> headers;
-  std::vector<std::string> dependencies;
-};
+static int max_thread_count = 48;
 
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
   std::vector<std::string> headers = collectFiles(header_dir);
-
   std::vector<std::string> dependencies = { header_dir };
   if (!dependency_dir.empty()) {
-    auto collect_children = [&dependencies](const std::string& dir_path) {
+    auto collect_children = [&dependencies, &dependency_dir](const std::string& dir_path) {
       DIR* dir = opendir(dir_path.c_str());
       if (!dir) {
         err(1, "failed to open dependency directory '%s'", dir_path.c_str());
@@ -207,70 +135,60 @@ static std::set<CompilationType> generateCompilationTypes(const std::set<Arch> s
 
 static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<CompilationType>& types,
                                                       const std::string& header_dir,
-                                                      const std::string& dependency_dir,
-                                                      bool* failed) {
-  constexpr size_t thread_count = 8;
-  size_t threads_created = 0;
-  std::mutex mutex;
-  std::vector<std::thread> threads(thread_count);
+                                                      const std::string& dependency_dir) {
+  if (types.empty()) {
+    errx(1, "compileHeaders received no CompilationTypes");
+  }
+
+  auto vfs = createCommonVFS(header_dir, dependency_dir, add_include);
+
+  size_t thread_count = max_thread_count;
+  std::vector<std::thread> threads;
 
   std::map<CompilationType, HeaderDatabase> header_databases;
   std::unordered_map<Arch, CompilationRequirements> requirements;
 
-  std::string cwd = getWorkingDir();
-  bool errors = false;
-
+  auto result = std::make_unique<HeaderDatabase>();
   for (const auto& type : types) {
     if (requirements.count(type.arch) == 0) {
       requirements[type.arch] = collectRequirements(type.arch, header_dir, dependency_dir);
     }
   }
 
-  auto result = std::make_unique<HeaderDatabase>();
-  for (const auto& type : types) {
-    size_t thread_id = threads_created++;
-    if (thread_id >= thread_count) {
-      thread_id = thread_id % thread_count;
-      threads[thread_id].join();
+  initializeTargetCC1FlagCache(vfs, types, requirements);
+
+  std::vector<std::pair<CompilationType, const std::string&>> jobs;
+  for (CompilationType type : types) {
+    CompilationRequirements& req = requirements[type.arch];
+    for (const std::string& header : req.headers) {
+      jobs.emplace_back(type, header);
+    }
+  }
+
+  thread_count = std::min(thread_count, jobs.size());
+
+  if (thread_count == 1) {
+    for (const auto& job : jobs) {
+      compileHeader(vfs, result.get(), job.first, job.second);
+    }
+  } else {
+    // Spawn threads.
+    for (size_t i = 0; i < thread_count; ++i) {
+      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, i]() {
+        size_t index = i;
+        while (index < jobs.size()) {
+          const auto& job = jobs[index];
+          compileHeader(vfs, result.get(), job.first, job.second);
+          index += thread_count;
+        }
+      });
     }
 
-    threads[thread_id] = std::thread(
-        [&](CompilationType type) {
-          const auto& req = requirements[type.arch];
-
-          HeaderCompilationDatabase compilation_database(type, cwd, req.headers, req.dependencies);
-
-          ClangTool tool(compilation_database, req.headers);
-
-          clang::DiagnosticOptions diagnostic_options;
-          std::vector<std::unique_ptr<ASTUnit>> asts;
-          tool.buildASTs(asts);
-          for (const auto& ast : asts) {
-            clang::DiagnosticsEngine& diagnostics_engine = ast->getDiagnostics();
-            if (diagnostics_engine.getNumWarnings() || diagnostics_engine.hasErrorOccurred()) {
-              std::unique_lock<std::mutex> l(mutex);
-              errors = true;
-              printf("versioner: compilation failure for %s in %s\n", to_string(type).c_str(),
-                     ast->getOriginalSourceFileName().str().c_str());
-            }
-
-            result->parseAST(type, ast.get());
-          }
-        },
-        type);
-  }
-
-  if (threads_created < thread_count) {
-    threads.resize(threads_created);
-  }
-
-  for (auto& thread : threads) {
-    thread.join();
-  }
-
-  if (errors) {
-    printf("versioner: compilation generated warnings or errors\n");
-    *failed = errors;
+    // Reap them.
+    for (auto& thread : threads) {
+      thread.join();
+    }
+    threads.clear();
   }
 
   return result;
@@ -492,6 +410,7 @@ static void usage(bool help = false) {
     fprintf(stderr, "\n");
     fprintf(stderr, "Miscellaneous:\n");
     fprintf(stderr, "  -d\t\tdump function availability\n");
+    fprintf(stderr, "  -j THREADS\tmaximum number of threads to use\n");
     fprintf(stderr, "  -h\t\tdisplay this message\n");
     exit(0);
   }
@@ -503,12 +422,12 @@ int main(int argc, char** argv) {
   std::string platform_dir;
   std::set<Arch> selected_architectures;
   std::set<int> selected_levels;
-  bool dump = false;
   std::string preprocessor_output_path;
   bool force = false;
+  bool dump = false;
 
   int c;
-  while ((c = getopt(argc, argv, "a:r:p:vo:fdhi")) != -1) {
+  while ((c = getopt(argc, argv, "a:r:p:vo:fdj:hi")) != -1) {
     default_args = false;
     switch (c) {
       case 'a': {
@@ -573,6 +492,12 @@ int main(int argc, char** argv) {
 
       case 'd':
         dump = true;
+        break;
+
+      case 'j':
+        if (!android::base::ParseInt<int>(optarg, &max_thread_count, 1)) {
+          usage();
+        }
         break;
 
       case 'h':
@@ -647,10 +572,10 @@ int main(int argc, char** argv) {
     symbol_database = parsePlatforms(compilation_types, platform_dir);
   }
 
-  bool failed = false;
   std::unique_ptr<HeaderDatabase> declaration_database =
-      compileHeaders(compilation_types, header_dir, dependency_dir, &failed);
+      compileHeaders(compilation_types, header_dir, dependency_dir);
 
+  bool failed = false;
   if (dump) {
     declaration_database->dump(header_dir + "/");
   } else {

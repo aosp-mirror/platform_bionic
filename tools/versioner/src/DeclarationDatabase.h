@@ -27,10 +27,11 @@
 #include <llvm/ADT/StringRef.h>
 
 #include "Arch.h"
+#include "CompilationType.h"
 #include "Utils.h"
 
 namespace clang {
-class ASTUnit;
+class ASTContext;
 class Decl;
 }
 
@@ -39,28 +40,6 @@ enum class DeclarationType {
   variable,
   inconsistent,
 };
-
-struct CompilationType {
-  Arch arch;
-  int api_level;
-  int file_offset_bits;
-
- private:
-  auto tie() const {
-    return std::tie(arch, api_level, file_offset_bits);
-  }
-
- public:
-  bool operator<(const CompilationType& other) const {
-    return tie() < other.tie();
-  }
-
-  bool operator==(const CompilationType& other) const {
-    return tie() == other.tie();
-  }
-};
-
-std::string to_string(const CompilationType& type);
 
 struct AvailabilityValues {
   bool future = false;
@@ -219,7 +198,7 @@ class HeaderDatabase {
  public:
   std::map<std::string, Symbol> symbols;
 
-  void parseAST(CompilationType type, clang::ASTUnit* ast);
+  void parseAST(CompilationType type, clang::ASTContext& ast);
 
   void dump(const std::string& base_path = "", FILE* out = stdout) const {
     fprintf(out, "HeaderDatabase contains %zu symbols:\n", symbols.size());
