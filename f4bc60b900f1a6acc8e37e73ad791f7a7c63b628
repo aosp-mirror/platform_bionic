@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "503c1cf2_3b891bb6",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T20:19:03Z",
+      "side": 1,
+      "message": "\u003c __ANDROID_API_N__",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_3b063b3e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T20:19:03Z",
+      "side": 1,
+      "message": "\u003c __ANDROID_API_M__",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_bb208bb1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3035,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T20:19:03Z",
+      "side": 1,
+      "message": "\u003c",
+      "range": {
+        "startLine": 3035,
+        "startChar": 36,
+        "endLine": 3035,
+        "endChar": 38
+      },
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_db1bcf8b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3040,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T20:19:03Z",
+      "side": 1,
+      "message": "same here \u003c M",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_db42af5d",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T20:19:03Z",
+      "side": 1,
+      "message": "\u003c ANDROID_API_N",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
