@@ -142,6 +142,8 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
     if (dladdr(reinterpret_cast<void*>(frames[frame_num]), &info) != 0) {
       offset = reinterpret_cast<uintptr_t>(info.dli_saddr);
       symbol = info.dli_sname;
+    } else {
+      info.dli_fname = nullptr;
     }
 
     uintptr_t rel_pc = offset;
