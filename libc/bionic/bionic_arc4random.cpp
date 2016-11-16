@@ -38,7 +38,7 @@
 #include "private/libc_logging.h"
 
 void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
-  static bool have_getrandom = syscall(SYS_getrandom, nullptr, 0, 0) == -1 && errno != ENOSYS;
+  static bool have_getrandom = syscall(SYS_getrandom, nullptr, 0, 0) != -1 || errno != ENOSYS;
   static bool have_urandom = access("/dev/urandom", R_OK) == 0;
   static size_t at_random_bytes_consumed = 0;
 
