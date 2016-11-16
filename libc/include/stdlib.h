@@ -152,7 +152,7 @@ int wctomb(char*, wchar_t) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
 
 size_t wcstombs(char*, const wchar_t*, size_t);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 #else
@@ -184,7 +184,7 @@ char* realpath(const char* path, char* resolved) {
 
 #endif /* defined(__BIONIC_FORTIFY) */
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 float strtof(const char*, char**) __INTRODUCED_IN(21);
 double atof(const char*) __attribute_pure__ __INTRODUCED_IN(21);
 int abs(int) __attribute_const__ __INTRODUCED_IN(21);

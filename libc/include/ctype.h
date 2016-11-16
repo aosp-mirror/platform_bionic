@@ -76,7 +76,7 @@ int isxdigit(int);
 int tolower(int);
 int toupper(int);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 int isalnum_l(int, locale_t) __INTRODUCED_IN(21);
 int isalpha_l(int, locale_t) __INTRODUCED_IN(21);
 int isblank_l(int, locale_t) __INTRODUCED_IN(21);

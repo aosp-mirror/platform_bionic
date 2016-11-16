@@ -118,7 +118,7 @@ int sigaction(int, const struct sigaction*, struct sigaction*);
 
 int siginterrupt(int, int);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
 int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
 int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
