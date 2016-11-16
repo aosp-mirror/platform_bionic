@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "503c1cf2_b31f30d4",
+        "filename": "libc/Android.bp",
+        "patchSetId": 25
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "nit: tabs",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 1
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_5247b56d",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "KernelArgumentBlock\u0026 ? and maybe just bypass this function completely and call __libc_init_main_thread",
+      "range": {
+        "startLine": 84,
+        "startChar": 31,
+        "endLine": 84,
+        "endChar": 36
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_ee75383b",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 25
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 1
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_938cac1a",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "!\u003d nullptr",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_c8b843cb",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "already checked it in L22",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_731e48dc",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "what you are trying to test here?",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_93c30c28",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-16T18:20:11Z",
+      "side": 1,
+      "message": "!\u003d nullptr",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
