@@ -27,7 +27,7 @@ constexpr auto KB = 1024;
 // TODO: test unaligned operation too? (currently everything will be 8-byte aligned by malloc.)
 
 static void BM_string_memcmp(benchmark::State& state) {
-  const size_t nbytes = state.range_x();
+  const size_t nbytes = state.range(0);
   char* src = new char[nbytes]; char* dst = new char[nbytes];
   memset(src, 'x', nbytes);
   memset(dst, 'x', nbytes);
@@ -44,7 +44,7 @@ static void BM_string_memcmp(benchmark::State& state) {
 BENCHMARK(BM_string_memcmp)->AT_COMMON_SIZES;
 
 static void BM_string_memcpy(benchmark::State& state) {
-  const size_t nbytes = state.range_x();
+  const size_t nbytes = state.range(0);
   char* src = new char[nbytes]; char* dst = new char[nbytes];
   memset(src, 'x', nbytes);
 
@@ -59,7 +59,7 @@ static void BM_string_memcpy(benchmark::State& state) {
 BENCHMARK(BM_string_memcpy)->AT_COMMON_SIZES;
 
 static void BM_string_memmove(benchmark::State& state) {
-  const size_t nbytes = state.range_x();
+  const size_t nbytes = state.range(0);
   char* buf = new char[nbytes + 64];
   memset(buf, 'x', nbytes + 64);
 
@@ -73,7 +73,7 @@ static void BM_string_memmove(benchmark::State& state) {
 BENCHMARK(BM_string_memmove)->AT_COMMON_SIZES;
 
 static void BM_string_memset(benchmark::State& state) {
-  const size_t nbytes = state.range_x();
+  const size_t nbytes = state.range(0);
   char* dst = new char[nbytes];
 
   while (state.KeepRunning()) {
@@ -86,7 +86,7 @@ static void BM_string_memset(benchmark::State& state) {
 BENCHMARK(BM_string_memset)->AT_COMMON_SIZES;
 
 static void BM_string_strlen(benchmark::State& state) {
-  const size_t nbytes = state.range_x();
+  const size_t nbytes = state.range(0);
   char* s = new char[nbytes];
   memset(s, 'x', nbytes);
   s[nbytes - 1] = 0;

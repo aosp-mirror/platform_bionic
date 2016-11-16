@@ -28,7 +28,7 @@ constexpr auto KB = 1024;
 
 template <typename Fn>
 void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
-  size_t chunk_size = state.range_x();
+  size_t chunk_size = state.range(0);
 
   FILE* fp = fopen("/dev/zero", "rw");
   __fsetlocking(fp, FSETLOCKING_BYCALLER);
