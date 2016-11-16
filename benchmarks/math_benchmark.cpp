@@ -25,7 +25,7 @@ static const char* names[] = { "1234.0", "nan", "HUGE_VAL", "0.0" };
 #define BENCHMARK_COMMON_VALS(name) BENCHMARK(name)->Arg(0)->Arg(1)->Arg(2)->Arg(3)
 
 static void SetLabel(benchmark::State& state) {
-  state.SetLabel(names[state.range_x()]);
+  state.SetLabel(names[state.range(0)]);
 }
 
 // Avoid optimization.
@@ -61,7 +61,7 @@ BENCHMARK(BM_math_logb);
 
 static void BM_math_isfinite_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += isfinite(v);
   }
@@ -76,7 +76,7 @@ BENCHMARK_COMMON_VALS(BM_math_isfinite_macro);
 #endif
 static void BM_math_isfinite(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += test_isfinite(v);
   }
@@ -86,7 +86,7 @@ BENCHMARK_COMMON_VALS(BM_math_isfinite);
 
 static void BM_math_isinf_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += isinf(v);
   }
@@ -96,7 +96,7 @@ BENCHMARK_COMMON_VALS(BM_math_isinf_macro);
 
 static void BM_math_isinf(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += (isinf)(v);
   }
@@ -106,7 +106,7 @@ BENCHMARK_COMMON_VALS(BM_math_isinf);
 
 static void BM_math_isnan_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += isnan(v);
   }
@@ -116,7 +116,7 @@ BENCHMARK_COMMON_VALS(BM_math_isnan_macro);
 
 static void BM_math_isnan(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += (isnan)(v);
   }
@@ -126,7 +126,7 @@ BENCHMARK_COMMON_VALS(BM_math_isnan);
 
 static void BM_math_isnormal_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += isnormal(v);
   }
@@ -137,7 +137,7 @@ BENCHMARK_COMMON_VALS(BM_math_isnormal_macro);
 #if defined(__BIONIC__)
 static void BM_math_isnormal(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += (__isnormal)(v);
   }
@@ -180,7 +180,7 @@ BENCHMARK(BM_math_sin_fesetenv);
 
 static void BM_math_fpclassify(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += fpclassify(v);
   }
@@ -190,7 +190,7 @@ BENCHMARK_COMMON_VALS(BM_math_fpclassify);
 
 static void BM_math_signbit_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += signbit(v);
   }
@@ -200,7 +200,7 @@ BENCHMARK_COMMON_VALS(BM_math_signbit_macro);
 
 static void BM_math_signbit(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += (__signbit)(v);
   }
@@ -210,7 +210,7 @@ BENCHMARK_COMMON_VALS(BM_math_signbit);
 
 static void BM_math_fabs_macro(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += fabs(v);
   }
@@ -220,7 +220,7 @@ BENCHMARK_COMMON_VALS(BM_math_fabs_macro);
 
 static void BM_math_fabs(benchmark::State& state) {
   d = 0.0;
-  v = values[state.range_x()];
+  v = values[state.range(0)];
   while (state.KeepRunning()) {
     d += (fabs)(v);
   }

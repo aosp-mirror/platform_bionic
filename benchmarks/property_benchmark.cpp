@@ -142,7 +142,7 @@ struct LocalPropertyTestState {
 };
 
 static void BM_property_get(benchmark::State& state) {
-  const size_t nprops = state.range_x();
+  const size_t nprops = state.range(0);
 
   LocalPropertyTestState pa(nprops);
   if (!pa.valid) return;
@@ -155,7 +155,7 @@ static void BM_property_get(benchmark::State& state) {
 BENCHMARK(BM_property_get)->TEST_NUM_PROPS;
 
 static void BM_property_find(benchmark::State& state) {
-  const size_t nprops = state.range_x();
+  const size_t nprops = state.range(0);
 
   LocalPropertyTestState pa(nprops);
   if (!pa.valid) return;
@@ -167,7 +167,7 @@ static void BM_property_find(benchmark::State& state) {
 BENCHMARK(BM_property_find)->TEST_NUM_PROPS;
 
 static void BM_property_read(benchmark::State& state) {
-  const size_t nprops = state.range_x();
+  const size_t nprops = state.range(0);
 
   LocalPropertyTestState pa(nprops);
   if (!pa.valid) return;
@@ -190,7 +190,7 @@ static void BM_property_read(benchmark::State& state) {
 BENCHMARK(BM_property_read)->TEST_NUM_PROPS;
 
 static void BM_property_serial(benchmark::State& state) {
-  const size_t nprops = state.range_x();
+  const size_t nprops = state.range(0);
 
   LocalPropertyTestState pa(nprops);
   if (!pa.valid) return;
