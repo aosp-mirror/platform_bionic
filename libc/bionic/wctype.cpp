@@ -40,8 +40,12 @@ int iswalnum(wint_t wc) { return iswdigit(wc) || iswalpha(wc); }
 int iswblank(wint_t wc) { return isblank(wc); }
 int iswdigit(wint_t wc) { return isdigit(wc); }
 int iswgraph(wint_t wc) { return !iswspace(wc) && iswprint(wc); }
-int iswlower(wint_t wc) { return towlower(wc) != wc; }
-int iswupper(wint_t wc) { return towupper(wc) != wc; }
+int iswlower(wint_t wc) {
+  return towlower(wc) == wc && !(iswcntrl(wc) || iswdigit(wc) || iswpunct(wc) || iswspace(wc));
+}
+int iswupper(wint_t wc) {
+  return towupper(wc) == wc && !(iswcntrl(wc) || iswdigit(wc) || iswpunct(wc) || iswspace(wc));
+}
 int iswxdigit(wint_t wc) { return isxdigit(wc); }
 
 // TODO: need proper implementations of these.
