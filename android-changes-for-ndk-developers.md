@@ -218,6 +218,6 @@ $ readelf --program-headers -W libBadFlags.so | grep WE
   LOAD           0x000000 0x00000000 0x00000000 0x4c01d 0x4c01d RWE 0x1000
 ```
 
-*Resolution*: right now we're not actually sure where these are coming
-from, so if you find and fix these in your app, please let us know how
-they snuck in!
+*Resolution*: we're aware of one middleware product that introduces these
+into your app. The middleware vendor is aware of the problem and has a fix
+available.
