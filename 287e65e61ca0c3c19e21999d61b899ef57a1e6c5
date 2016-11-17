@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "503c1cf2_d0956690",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T01:28:18Z",
+      "side": 1,
+      "message": "(speaking of things we\u0027ll have to remember to come back and fix...)",
+      "range": {
+        "startLine": 225,
+        "startChar": 39,
+        "endLine": 225,
+        "endChar": 50
+      },
+      "revId": "287e65e61ca0c3c19e21999d61b899ef57a1e6c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_907bde91",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T01:28:18Z",
+      "side": 1,
+      "message": "i meant literally just \"lib.so\" since this isn\u0027t the interesting part of the error...",
+      "range": {
+        "startLine": 231,
+        "startChar": 16,
+        "endLine": 231,
+        "endChar": 43
+      },
+      "revId": "287e65e61ca0c3c19e21999d61b899ef57a1e6c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
