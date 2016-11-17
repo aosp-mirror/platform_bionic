@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "503c1cf2_b539b4ec",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:46:48Z",
+      "side": 1,
+      "message": "\"ELF header\" here and elsewhere?",
+      "range": {
+        "startLine": 225,
+        "startChar": 11,
+        "endLine": 225,
+        "endChar": 21
+      },
+      "revId": "fa7b2b3c268e0dac408d5af9bb3f65830d307a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_352644cd",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:46:48Z",
+      "side": 1,
+      "message": "cut this part?\n\nmaybe just say \"lib.so\" to help the interesting part fit?",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 231,
+        "endChar": 32
+      },
+      "revId": "fa7b2b3c268e0dac408d5af9bb3f65830d307a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_954d908a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:46:48Z",
+      "side": 1,
+      "message": "why are the add_dlwarning messages different?",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 59
+      },
+      "revId": "fa7b2b3c268e0dac408d5af9bb3f65830d307a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
