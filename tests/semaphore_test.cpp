@@ -188,7 +188,7 @@ static void* SemWaitEINTRThreadFn(void* arg) {
 
 TEST(semaphore, sem_wait_no_EINTR_in_sdk_less_equal_than_23) {
 #if defined(__BIONIC__)
-  android_set_application_target_sdk_version(23U);
+  android_set_application_target_sdk_version(__ANDROID_API_M__);
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));
   ScopedSignalHandler handler(SIGUSR1, sem_wait_test_signal_handler);

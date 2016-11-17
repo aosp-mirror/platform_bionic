@@ -154,8 +154,8 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
     nullptr
   };
 
-  // limit greylisting to apps targeting sdk version 23 and below
-  if (get_application_target_sdk_version() > 23) {
+  // If you're targeting N, you don't get the greylist.
+  if (get_application_target_sdk_version() >= __ANDROID_API_N__) {
     return false;
   }
 
@@ -776,9 +776,10 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
-    // if the library is opened by application with target api level <= 22
+    // if the library is opened by application with target api level < M.
     // See http://b/21565766
-    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() > 22) {
+    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 &&
+        si->get_target_sdk_version() >= __ANDROID_API_M__) {
       continue;
     }
 
@@ -1031,7 +1032,7 @@ static int open_library(android_namespace_t* ns,
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
-  if (get_application_target_sdk_version() <= 22) {
+  if (get_application_target_sdk_version() < __ANDROID_API_M__) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
       DL_WARN("library \"%s\" has invalid DT_NEEDED entry \"%s\"", sopath, dt_needed);
@@ -3031,12 +3032,12 @@ bool soinfo::prelink_image() {
   // In the case when dt_soname is absent some apps stop working
   // because they can't find dt_needed library by soname.
   // This workaround should keep them working. (applies only
-  // for apps targeting sdk version <=22). Make an exception for
+  // for apps targeting sdk version < M). Make an exception for
   // the main executable and linker; they do not need to have dt_soname
   if (soname_ == nullptr &&
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
-      get_application_target_sdk_version() <= 22) {
+      get_application_target_sdk_version() < __ANDROID_API_M__) {
     soname_ = basename(realpath_.c_str());
     DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
         get_realpath(), soname_);
@@ -3065,8 +3066,8 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
-    // Fail if app is targeting sdk version > 22
-    if (get_application_target_sdk_version() > 22) {
+    // Fail if app is targeting M or above.
+    if (get_application_target_sdk_version() >= __ANDROID_API_M__) {
       DL_ERR_AND_LOG("\"%s\" has text relocations", get_realpath());
       return false;
     }
@@ -3226,4 +3227,3 @@ void init_default_namespace() {
 
   g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
 };
-
