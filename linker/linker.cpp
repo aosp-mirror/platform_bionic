@@ -44,8 +44,6 @@
 #include <vector>
 
 // Private C library headers.
-#include "private/KernelArgumentBlock.h"
-#include "private/ScopedPthreadMutexLocker.h"
 #include "private/ScopeGuard.h"
 
 #include "linker.h"
@@ -65,11 +63,6 @@
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
-
-extern void __libc_init_globals(KernelArgumentBlock&);
-extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
-
-extern "C" void _start();
 
 // Override macros to use C++ style casts.
 #undef ELF_ST_TYPE
