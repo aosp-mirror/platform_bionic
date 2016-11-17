@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b09b987b_81a544e9",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T21:03:22Z",
+      "side": 1,
+      "message": "(alternatively, you can use std::thread these days...)",
+      "revId": "9f0c6b364ebbffd24d4e410396b980fe2fc0d6e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
