@@ -32,7 +32,7 @@
 #include <errno.h>
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < 21
+#if __ANDROID_API__ < __ANDROID_API_L__
 
 __BEGIN_DECLS
 
