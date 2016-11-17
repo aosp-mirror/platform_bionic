@@ -221,3 +221,16 @@ $ readelf --program-headers -W libBadFlags.so | grep WE
 *Resolution*: we're aware of one middleware product that introduces these
 into your app. The middleware vendor is aware of the problem and has a fix
 available.
+
+## Invalid ELF header/section headers (AOSP master)
+
+Android loader now checks for invalid values in ELF header and section headers and fails
+if they are invalid.
+
+*Example error*
+dlopen failed: "/data/data/com.example.bad/lib.so" has unsupported e_shentsize: 0x0 (expected 0x28)
+
+*Resolution*
+Do not use tools that produce invalid/malformed elf-files. Note that using them puts application
+under high risk of being incompatible with future versions of Android.
+
