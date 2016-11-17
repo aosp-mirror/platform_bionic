@@ -248,14 +248,26 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_shentsize != sizeof(ElfW(Shdr))) {
-    DL_ERR("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
-           name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
-    return false;
+    // Fail if app is targeting Android O or above
+    if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
+      DL_ERR_AND_LOG("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
+                     name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
+      return false;
+    }
+    DL_WARN("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
+            name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
+    add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
   if (header_.e_shstrndx == 0) {
-    DL_ERR("\"%s\" has invalid e_shstrndx", name_.c_str());
-    return false;
+    // Fail if app is targeting Android O or above
+    if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
+      DL_ERR_AND_LOG("\"%s\" has invalid e_shstrndx", name_.c_str());
+      return false;
+    }
+
+    DL_WARN("\"%s\" has invalid e_shstrndx", name_.c_str());
+    add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
   return true;
