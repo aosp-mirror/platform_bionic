@@ -34,7 +34,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#if __ANDROID_API__ < 18
+#if __ANDROID_API__ < __ANDROID_API_J_MR2__
 
 __BEGIN_DECLS
 
@@ -44,6 +44,6 @@ static __inline pid_t wait4(pid_t pid, int* status, int options, struct rusage* 
 
 __END_DECLS
 
-#endif /* __ANDROID_API__ < 18 */
+#endif /* __ANDROID_API__ < __ANDROID_API_J_MR2__ */
 
 #endif /* _ANDROID_LEGACY_SYS_WAIT_INLINES_H_ */

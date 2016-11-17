@@ -53,7 +53,7 @@ __errordecl(__ppoll_too_small_error, "ppoll: pollfd array smaller than fd count"
 
 #if defined(__BIONIC_FORTIFY)
 
-#if __ANDROID_API__ >= 23
+#if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
 int poll(struct pollfd* fds, nfds_t fd_count, int timeout) {
 #if defined(__clang__)
@@ -85,7 +85,7 @@ int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout, c
   return __ppoll_real(fds, fd_count, timeout, mask);
 #endif
 }
-#endif /* __ANDROID_API__ >= 23 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
 #endif
 

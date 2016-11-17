@@ -169,7 +169,7 @@ off_t lseek(int __fd, off_t __offset, int __whence);
 
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= 21
+#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
 ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset) __RENAME(pread64)
   __INTRODUCED_IN(12);
@@ -206,7 +206,7 @@ int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
 
 int acct(const char* __filepath);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 int getpagesize(void) __INTRODUCED_IN(21);
 #else
 static __inline__ int getpagesize(void) {
@@ -284,7 +284,7 @@ int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;
 
 #if defined(__BIONIC_FORTIFY)
 
-#if __ANDROID_API__ >= 24
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
 char* getcwd(char* buf, size_t size) {
     size_t bos = __bos(buf);
@@ -315,7 +315,7 @@ char* getcwd(char* buf, size_t size) {
 
     return __getcwd_chk(buf, size, bos);
 }
-#endif /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if defined(__USE_FILE_OFFSET64)
 #define __PREAD_PREFIX(x) __pread64_ ## x
@@ -323,7 +323,7 @@ char* getcwd(char* buf, size_t size) {
 #define __PREAD_PREFIX(x) __pread_ ## x
 #endif
 
-#if __ANDROID_API__ >= 23
+#if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
 ssize_t pread(int fd, void* buf, size_t count, off_t offset) {
     size_t bos = __bos0(buf);
@@ -373,7 +373,7 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
 
     return __pread64_chk(fd, buf, count, offset, bos);
 }
-#endif /* __ANDROID_API__ >= 23 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
 #if defined(__USE_FILE_OFFSET64)
 #define __PWRITE_PREFIX(x) __pwrite64_ ## x
@@ -381,7 +381,7 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
 #define __PWRITE_PREFIX(x) __pwrite_ ## x
 #endif
 
-#if __ANDROID_API__ >= 24
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
 ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset) {
     size_t bos = __bos0(buf);
@@ -431,9 +431,9 @@ ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset) {
 
     return __pwrite64_chk(fd, buf, count, offset, bos);
 }
-#endif /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
 ssize_t read(int fd, void* buf, size_t count) {
     size_t bos = __bos0(buf);
@@ -458,9 +458,9 @@ ssize_t read(int fd, void* buf, size_t count) {
 
     return __read_chk(fd, buf, count, bos);
 }
-#endif /* __ANDROID_API__ >= 21 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
-#if __ANDROID_API__ >= 24
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
 ssize_t write(int fd, const void* buf, size_t count) {
     size_t bos = __bos0(buf);
@@ -487,9 +487,9 @@ ssize_t write(int fd, const void* buf, size_t count) {
 
     return __write_chk(fd, buf, count, bos);
 }
-#endif /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
-#if __ANDROID_API__ >= 23
+#if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
 ssize_t readlink(const char* path, char* buf, size_t size) {
     size_t bos = __bos(buf);
@@ -539,7 +539,7 @@ ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size) {
 
     return __readlinkat_chk(dirfd, path, buf, size, bos);
 }
-#endif /* __ANDROID_API__ >= 23 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
 #endif /* defined(__BIONIC_FORTIFY) */
 

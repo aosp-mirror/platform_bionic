@@ -31,7 +31,7 @@
 
 #include <fenv.h>
 
-#if __ANDROID_API__ < 21 && defined(__arm__)
+#if __ANDROID_API__ < __ANDROID_API_L__ && defined(__arm__)
 
 __BEGIN_DECLS
 
@@ -149,6 +149,6 @@ static __inline int fegetexcept(void) {
 
 __END_DECLS
 
-#endif /* __ANDROID_API__ < 21 && defined(__arm__) */
+#endif /* __ANDROID_API__ < __ANDROID_API_L__ && defined(__arm__) */
 
 #endif /* ANDROID_LEGACY_FENV_INLINES_ARM_H */

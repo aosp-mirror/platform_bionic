@@ -51,7 +51,7 @@ __BEGIN_DECLS
 
 pid_t wait(int*);
 pid_t waitpid(pid_t, int*, int);
-#if __ANDROID_API__ >= 18
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
 pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(18);
 #else
 // Implemented as a static inline before 18.

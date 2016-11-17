@@ -132,7 +132,7 @@ wchar_t          *wmemset(wchar_t *, wchar_t, size_t);
 int               wprintf(const wchar_t *, ...);
 int               wscanf(const wchar_t *, ...);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 long long wcstoll_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 unsigned long long wcstoull_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);

@@ -31,7 +31,7 @@
 
 #include <fenv.h>
 
-#if __ANDROID_API__ < 21 && (defined(__mips__) && !defined(__LP64__))
+#if __ANDROID_API__ < __ANDROID_API_L__ && (defined(__mips__) && !defined(__LP64__))
 
 __BEGIN_DECLS
 
@@ -163,6 +163,6 @@ static __inline int fegetexcept(void) {
 
 __END_DECLS
 
-#endif /* __ANDROID_API__ < 21 && (defined(__mips__) && !defined(__LP64__)) */
+#endif /* __ANDROID_API__ < __ANDROID_API_L__ && (defined(__mips__) && !defined(__LP64__)) */
 
 #endif /* ANDROID_LEGACY_FENV_INLINES_MIPS_H */
