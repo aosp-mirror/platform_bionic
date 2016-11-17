@@ -22,6 +22,30 @@
       "revId": "324bd43b767eece2c7f3dc0706067e9ef9a476cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_6c25b7bf",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-17T21:57:35Z",
+      "side": 1,
+      "message": "removing these leaves 20 fortify tests (not supported by clang) not run.. Enabling them for clang leads to failures like this:\n\nDeath test: __builtin___sprintf_chk(buf, 0, __builtin_object_size((buf), 1), \"%s\", source_buf)\n\nso we cannot remove them for now.",
+      "parentUuid": "b09b987b_c1fd8cc1",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 32
+      },
+      "revId": "324bd43b767eece2c7f3dc0706067e9ef9a476cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
