@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "503c1cf2_9508f008",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "seems from this comment and cferris\u0027 that everyone prefers \u003e\u003d and \u003c as the \"obvious\" comparisons. i\u0027d been fussy with \u003e\u003d but not \u003c vs \u003c\u003d. done.",
+      "parentUuid": "503c1cf2_3b891bb6",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_9be2e712",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2016-11-16T20:24:51Z",
       "side": 1,
       "message": "Might want this to match the code and mention this is for L and below.",
+      "range": {
+        "startLine": 779,
+        "startChar": 72,
+        "endLine": 779,
+        "endChar": 74
+      },
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_15f4e0d3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_9be2e712",
       "range": {
         "startLine": 779,
         "startChar": 72,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "503c1cf2_75e8ccf6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_3b063b3e",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_bb208bb1",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -70,6 +130,30 @@
       "writtenOn": "2016-11-16T20:19:03Z",
       "side": 1,
       "message": "\u003c",
+      "range": {
+        "startLine": 3035,
+        "startChar": 36,
+        "endLine": 3035,
+        "endChar": 38
+      },
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_95df5052",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3035,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_bb208bb1",
       "range": {
         "startLine": 3035,
         "startChar": 36,
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "503c1cf2_f5533cfa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3040,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_db1bcf8b",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_db42af5d",
         "filename": "linker/linker_soinfo.cpp",
         "patchSetId": 1
@@ -110,6 +212,24 @@
       "writtenOn": "2016-11-16T20:19:03Z",
       "side": 1,
       "message": "\u003c ANDROID_API_N",
+      "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_355e4404",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-17T00:54:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_db42af5d",
       "revId": "f4bc60b900f1a6acc8e37e73ad791f7a7c63b628",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
