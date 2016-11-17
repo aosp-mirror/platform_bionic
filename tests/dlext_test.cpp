@@ -1191,10 +1191,9 @@ TEST(dlext, dlopen_handle_value_platform) {
 }
 
 TEST(dlext, dlopen_handle_value_app_compat) {
-  android_set_application_target_sdk_version(23);
+  android_set_application_target_sdk_version(__ANDROID_API_M__);
   void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(reinterpret_cast<uintptr_t>(handle) % sizeof(uintptr_t) == 0)
           << "dlopen should return valid pointer";
   dlclose(handle);
 }
-

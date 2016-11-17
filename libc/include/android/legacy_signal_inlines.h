@@ -39,7 +39,7 @@ __BEGIN_DECLS
 
 sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
 
-#if __ANDROID_API__ < 21
+#if __ANDROID_API__ < __ANDROID_API_L__
 
 static __inline int sigismember(const sigset_t *set, int signum) {
   /* Signal numbers start at 1, but bit positions start at 0. */
@@ -98,7 +98,7 @@ static __inline sighandler_t signal(int s, sighandler_t f) {
   return bsd_signal(s, f);
 }
 
-#endif /* __ANDROID_API__ < 21 */
+#endif /* __ANDROID_API__ < __ANDROID_API_L__ */
 
 __END_DECLS
 
