@@ -116,6 +116,30 @@
       "revId": "fa7b2b3c268e0dac408d5af9bb3f65830d307a2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503c1cf2_302932b5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-17T01:16:37Z",
+      "side": 1,
+      "message": "wanted to keep is simple in the toast. The details are in the log.",
+      "parentUuid": "503c1cf2_954d908a",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 59
+      },
+      "revId": "fa7b2b3c268e0dac408d5af9bb3f65830d307a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
