@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);

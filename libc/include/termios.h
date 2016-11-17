@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 // Implemented as static inlines before 21.
 speed_t cfgetispeed(const struct termios*) __INTRODUCED_IN(21);
 speed_t cfgetospeed(const struct termios*) __INTRODUCED_IN(21);

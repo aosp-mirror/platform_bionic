@@ -49,7 +49,7 @@
 
 #include <bits/seek_constants.h>
 
-#if __ANDROID_API__ <= 23
+#if __ANDROID_API__ < __ANDROID_API_N__
 #include <bits/struct_file.h>
 #endif
 
@@ -66,7 +66,7 @@ typedef off64_t fpos64_t;
 struct __sFILE;
 typedef struct __sFILE FILE;
 
-#if __ANDROID_API__ >= 23
+#if __ANDROID_API__ >= __ANDROID_API_M__
 extern FILE* stdin __INTRODUCED_IN(23);
 extern FILE* stdout __INTRODUCED_IN(23);
 extern FILE* stderr __INTRODUCED_IN(23);
@@ -268,7 +268,7 @@ __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
-#if __ANDROID_API__ >= 17
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 0) int vsnprintf(char* dest, size_t size, const char* _Nonnull format, __va_list ap) {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
@@ -302,9 +302,9 @@ __printflike(2, 3) int sprintf(char* dest, const char* _Nonnull format, ...) {
     return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 #endif
-#endif /* __ANDROID_API__ >= 17 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
-#if __ANDROID_API__ >= 24
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
 size_t fread(void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
     size_t bos = __bos0(buf);
@@ -356,7 +356,7 @@ size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __r
 
     return __fwrite_chk(buf, size, count, stream, bos);
 }
-#endif /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if !defined(__clang__)
 

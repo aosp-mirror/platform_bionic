@@ -608,7 +608,7 @@ bool ElfReader::LoadSegments() {
       int prot = PFLAGS_TO_PROT(phdr->p_flags);
       if ((prot & (PROT_EXEC | PROT_WRITE)) == (PROT_EXEC | PROT_WRITE)) {
         // W + E PT_LOAD segments are not allowed in O.
-        if (get_application_target_sdk_version() > 25) {
+        if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
           DL_ERR_AND_LOG("\"%s\": W + E load segments are not allowed", name_.c_str());
           return false;
         }

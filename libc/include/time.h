@@ -77,7 +77,7 @@ struct tm* gmtime_r(const time_t*, struct tm*);
 char* strptime(const char*, const char*, struct tm*);
 size_t strftime(char*, size_t, const char*, const struct tm*);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inline before 21.
