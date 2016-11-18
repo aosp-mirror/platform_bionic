@@ -25,6 +25,7 @@
 #include "private/ScopeGuard.h"
 
 #include <string>
+#include <thread>
 
 #include "gtest_globals.h"
 #include "dlfcn_symlink_support.h"
@@ -754,24 +755,45 @@ TEST(dlfcn, dlopen_failure) {
 #endif
 }
 
-static void* ConcurrentDlErrorFn(void*) {
-  dlopen("/child/thread", RTLD_NOW);
-  return reinterpret_cast<void*>(strdup(dlerror()));
+static void ConcurrentDlErrorFn(std::string& error) {
+  ASSERT_TRUE(dlerror() == nullptr);
+
+  void* handle = dlopen("/child/thread", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+
+  const char* err = dlerror();
+  ASSERT_TRUE(err != nullptr);
+
+  error = err;
+}
+
+TEST(dlfcn, dlerror_concurrent_buffer) {
+  void* handle = dlopen("/main/thread", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+  const char* main_thread_error = dlerror();
+  ASSERT_TRUE(main_thread_error != nullptr);
+  ASSERT_SUBSTR("/main/thread", main_thread_error);
+
+  std::string child_thread_error;
+  std::thread t(ConcurrentDlErrorFn, std::ref(child_thread_error));
+  t.join();
+  ASSERT_SUBSTR("/child/thread", child_thread_error.c_str());
+
+  // Check that main thread local buffer was not modified.
+  ASSERT_SUBSTR("/main/thread", main_thread_error);
 }
 
 TEST(dlfcn, dlerror_concurrent) {
-  dlopen("/main/thread", RTLD_NOW);
+  void* handle = dlopen("/main/thread", RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+
+  std::string child_thread_error;
+  std::thread t(ConcurrentDlErrorFn, std::ref(child_thread_error));
+  t.join();
+  ASSERT_SUBSTR("/child/thread", child_thread_error.c_str());
+
   const char* main_thread_error = dlerror();
-  ASSERT_SUBSTR("/main/thread", main_thread_error);
-
-  pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentDlErrorFn, nullptr));
-  void* result;
-  ASSERT_EQ(0, pthread_join(t, &result));
-  char* child_thread_error = static_cast<char*>(result);
-  ASSERT_SUBSTR("/child/thread", child_thread_error);
-  free(child_thread_error);
-
+  ASSERT_TRUE(main_thread_error != nullptr);
   ASSERT_SUBSTR("/main/thread", main_thread_error);
 }
 
