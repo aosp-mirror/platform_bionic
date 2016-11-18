@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "500b3ca9_90a4daeb",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-18T22:09:42Z",
+      "side": 1,
+      "message": "This backup and a few of the other backup routines aren\u0027t correct.\n\nThus the static unit tests are failing.",
+      "range": {
+        "startLine": 57,
+        "startChar": 80,
+        "endLine": 57,
+        "endChar": 87
+      },
+      "revId": "08a79f1af76516f2e8a54bcfeacf323069e6429b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
