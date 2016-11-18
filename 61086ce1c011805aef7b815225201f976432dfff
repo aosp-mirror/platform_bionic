@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b09b987b_e0efe03d",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-18T18:52:32Z",
+      "side": 1,
+      "message": "If there ever is a small file in that directory, this will access past the end of the name.",
+      "range": {
+        "startLine": 64,
+        "startChar": 44,
+        "endLine": 64,
+        "endChar": 59
+      },
+      "revId": "61086ce1c011805aef7b815225201f976432dfff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_e0552015",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-18T18:52:32Z",
+      "side": 1,
+      "message": "Is this an ndk library? If not will app have a problem loading this library?",
+      "range": {
+        "startLine": 77,
+        "startChar": 29,
+        "endLine": 77,
+        "endChar": 42
+      },
+      "revId": "61086ce1c011805aef7b815225201f976432dfff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_a03cf8d7",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-18T18:52:32Z",
+      "side": 1,
+      "message": "No dump of dlerror?",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 82
+      },
+      "revId": "61086ce1c011805aef7b815225201f976432dfff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_40dfcc52",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-18T18:52:32Z",
+      "side": 1,
+      "message": "This feels a little dangerous. I\u0027m not sure of the initialization rules, but is this initialization done on libc.so load? If so, this might affect startup.\n\nIf not, could this cause thread safety issues?\n\nWould it be better to have a single init call using pthread_once that sets all of these variables? That way it\u0027s only done if someone ever uses these functions.",
+      "range": {
+        "startLine": 53,
+        "startChar": 2,
+        "endLine": 53,
+        "endChar": 100
+      },
+      "revId": "61086ce1c011805aef7b815225201f976432dfff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
