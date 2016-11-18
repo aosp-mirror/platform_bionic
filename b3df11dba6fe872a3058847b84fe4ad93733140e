@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "500b3ca9_30888e40",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-18T22:18:02Z",
+      "side": 1,
+      "message": "!/",
+      "range": {
+        "startLine": 96,
+        "startChar": 16,
+        "endLine": 96,
+        "endChar": 17
+      },
+      "revId": "b3df11dba6fe872a3058847b84fe4ad93733140e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
