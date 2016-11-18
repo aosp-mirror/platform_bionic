@@ -70,6 +70,30 @@
       "revId": "324bd43b767eece2c7f3dc0706067e9ef9a476cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_0fdfba53",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2016-11-18T02:21:46Z",
+      "side": 1,
+      "message": "Glancing at them, it looks like lots of these tests should be able to pass with the new clang FORTIFY. If you\u0027d like, I can run them with my local clang-FORTIFY enabled, and tell you what breaks. I just need to know how to run them, since the instructions here (https://sites.google.com/a/google.com/android-bionic/home/unit-tests) don\u0027t seem to work on my machine. :)",
+      "parentUuid": "b09b987b_87df14f6",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 32
+      },
+      "revId": "324bd43b767eece2c7f3dc0706067e9ef9a476cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
