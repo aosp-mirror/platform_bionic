@@ -25,8 +25,6 @@
 
 #include "log_fake.h"
 
-extern "C" int property_set(const char*, const char*);
-
 class MallocDebugConfigTest : public ::testing::Test {
  protected:
   void SetUp() override {
@@ -38,10 +36,9 @@ class MallocDebugConfigTest : public ::testing::Test {
 
   std::unique_ptr<Config> config;
 
-  bool InitConfig(const char* property_value) {
+  bool InitConfig(const char* options) {
     config.reset(new Config);
-    property_set("libc.debug.malloc.options", property_value);
-    return config->SetFromProperties();
+    return config->Set(options);
   }
 };
 
