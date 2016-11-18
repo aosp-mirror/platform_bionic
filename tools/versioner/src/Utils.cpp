@@ -25,6 +25,8 @@
 #include <string>
 #include <vector>
 
+#include <android-base/strings.h>
+
 #include "DeclarationDatabase.h"
 
 std::string getWorkingDir() {
@@ -35,8 +37,8 @@ std::string getWorkingDir() {
   return buf;
 }
 
-std::vector<std::string> collectFiles(const std::string& directory) {
-  std::vector<std::string> files;
+std::vector<std::string> collectHeaders(const std::string& directory) {
+  std::vector<std::string> headers;
 
   char* dir_argv[2] = { const_cast<char*>(directory.c_str()), nullptr };
   FTS* fts = fts_open(dir_argv, FTS_LOGICAL | FTS_NOCHDIR, nullptr);
@@ -51,11 +53,15 @@ std::vector<std::string> collectFiles(const std::string& directory) {
       continue;
     }
 
-    files.push_back(ent->fts_path);
+    if (!android::base::EndsWith(ent->fts_path, ".h")) {
+      continue;
+    }
+
+    headers.push_back(ent->fts_path);
   }
 
   fts_close(fts);
-  return files;
+  return headers;
 }
 
 llvm::StringRef StripPrefix(llvm::StringRef string, llvm::StringRef prefix) {
