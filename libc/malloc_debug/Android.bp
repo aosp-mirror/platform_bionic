@@ -111,7 +111,6 @@ cc_test {
         "tests/backtrace_fake.cpp",
         "tests/log_fake.cpp",
         "tests/libc_fake.cpp",
-        "tests/property_fake.cpp",
         "tests/malloc_debug_config_tests.cpp",
         "tests/malloc_debug_unit_tests.cpp",
     ],

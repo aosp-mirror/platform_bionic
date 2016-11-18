@@ -49,7 +49,7 @@ class DebugData {
   DebugData() = default;
   ~DebugData() = default;
 
-  bool Initialize();
+  bool Initialize(const char* options);
 
   static bool Disabled();
 

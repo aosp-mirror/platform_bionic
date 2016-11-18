@@ -37,8 +37,6 @@
 #include <string>
 #include <vector>
 
-#include <sys/system_properties.h>
-
 #include <private/bionic_macros.h>
 
 #include "Config.h"
@@ -329,13 +327,7 @@ void PropertyParser::LogUsage() {
 
 // This function is designed to be called once. A second call will not
 // reset all variables.
-bool Config::SetFromProperties() {
-  char property_str[PROP_VALUE_MAX];
-  memset(property_str, 0, sizeof(property_str));
-  if (!__system_property_get("libc.debug.malloc.options", property_str)) {
-    return false;
-  }
-
+bool Config::Set(const char* options_str) {
   // Initialize a few default values.
   fill_alloc_value = DEFAULT_FILL_ALLOC_VALUE;
   fill_free_value = DEFAULT_FILL_FREE_VALUE;
@@ -426,7 +418,7 @@ bool Config::SetFromProperties() {
   }
 
   // Process each property name we can find.
-  PropertyParser parser(property_str);
+  PropertyParser parser(options_str);
   bool valid = true;
   std::string property;
   std::string value;
