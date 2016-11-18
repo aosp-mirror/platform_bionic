@@ -56,7 +56,7 @@ static int max_thread_count = 48;
 
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
-  std::vector<std::string> headers = collectFiles(header_dir);
+  std::vector<std::string> headers = collectHeaders(header_dir);
   std::vector<std::string> dependencies = { header_dir };
   if (!dependency_dir.empty()) {
     auto collect_children = [&dependencies, &dependency_dir](const std::string& dir_path) {
