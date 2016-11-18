@@ -56,7 +56,7 @@ constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
 constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD | BACKTRACE | FREE_TRACK | LEAK_TRACK;
 
 struct Config {
-  bool SetFromProperties();
+  bool Set(const char* str);
 
   size_t front_guard_bytes = 0;
   size_t rear_guard_bytes = 0;

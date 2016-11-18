@@ -62,7 +62,8 @@ const MallocDispatch* g_dispatch;
 // ------------------------------------------------------------------------
 __BEGIN_DECLS
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child);
+bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+    const char* options);
 void debug_finalize();
 void debug_get_malloc_leak_info(
     uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
@@ -178,8 +179,9 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   return g_debug->GetPointer(header);
 }
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child) {
-  if (malloc_zygote_child == nullptr) {
+bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+    const char* options) {
+  if (malloc_zygote_child == nullptr || options == nullptr) {
     return false;
   }
 
@@ -194,7 +196,7 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
   }
 
   DebugData* debug = new DebugData();
-  if (!debug->Initialize()) {
+  if (!debug->Initialize(options)) {
     delete debug;
     DebugDisableFinalize();
     return false;

@@ -37,8 +37,8 @@
 #include "malloc_debug.h"
 #include "TrackData.h"
 
-bool DebugData::Initialize() {
-  if (!config_.SetFromProperties()) {
+bool DebugData::Initialize(const char* options) {
+  if (!config_.Set(options)) {
     return false;
   }
 
