@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "500b3ca9_10d58aa0",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-18T21:49:30Z",
+      "side": 1,
+      "message": "well, the first part is 22 and the second part 23. i was assuming we\u0027d put any future changes in here too.",
+      "parentUuid": "500b3ca9_901dfadf",
+      "revId": "499e4c983733c707af5985f2dda5638823ad9b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "500b3ca9_90429aaa",
         "filename": "android-changes-for-ndk-developers.md",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-11-18T21:41:06Z",
       "side": 1,
       "message": "This one is not bionic change... or not only bionic change.\n\nStarting with Android M loader allows to dlopen libraries from any zip-file using \"\u003czip\u003e!/\u003centry\u003e\" path. Given that the entry is page-aligned and stored uncompressed.",
+      "revId": "499e4c983733c707af5985f2dda5638823ad9b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "500b3ca9_5089c2b4",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-18T21:49:30Z",
+      "side": 1,
+      "message": "the document is called \"android changes\" :-)\n\nadded the extra note about this applying to all zip files.",
+      "parentUuid": "500b3ca9_90429aaa",
       "revId": "499e4c983733c707af5985f2dda5638823ad9b9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
