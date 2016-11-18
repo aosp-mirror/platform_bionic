@@ -27,7 +27,7 @@
 #include <llvm/ADT/StringRef.h>
 
 std::string getWorkingDir();
-std::vector<std::string> collectFiles(const std::string& directory);
+std::vector<std::string> collectHeaders(const std::string& directory);
 
 static inline std::string dirname(const std::string& path) {
   std::unique_ptr<char, decltype(&free)> path_copy(strdup(path.c_str()), free);
