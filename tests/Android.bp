@@ -385,6 +385,12 @@ cc_test {
     name: "bionic-unit-tests",
     defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
     clang: true,
+
+    target: {
+        android: {
+            shared_libs: ["libicuuc"],
+        },
+    },
 }
 
 cc_test {

@@ -1623,6 +1623,7 @@ cc_library {
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
+            "bionic/icu_static.cpp",
             "bionic/malloc_common.cpp",
             "bionic/libc_init_static.cpp",
         ],
@@ -1633,6 +1634,7 @@ cc_library {
         srcs: [
             "arch-common/bionic/crtbegin_so.c",
             "arch-common/bionic/crtbrand.S",
+            "bionic/icu.cpp",
             "bionic/malloc_common.cpp",
             "bionic/libc_init_dynamic.cpp",
             "bionic/NetdClient.cpp",
