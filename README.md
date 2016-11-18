@@ -219,6 +219,9 @@ in particular for test isolation and parallelism (both on by default).
 ### Host tests
 
 The host tests require that you have `lunch`ed either an x86 or x86_64 target.
+Note that due to ABI limitations (specifically, the size of pthread_mutex_t),
+32-bit bionic requires PIDs less than 65536. To enforce this, set /proc/sys/kernel/pid_max
+to 65536.
 
     $ ./tests/run-on-host.sh 32
     $ ./tests/run-on-host.sh 64   # For x86_64-bit *targets* only.
