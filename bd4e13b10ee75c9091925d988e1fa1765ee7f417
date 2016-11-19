@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b09b987b_671950f2",
+        "filename": "libc/Android.bp",
+        "patchSetId": 25
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_b31f30d4",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 1
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_5247b56d",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 25
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-16T18:20:11Z",
       "side": 1,
       "message": "KernelArgumentBlock\u0026 ? and maybe just bypass this function completely and call __libc_init_main_thread",
+      "range": {
+        "startLine": 84,
+        "startChar": 31,
+        "endLine": 84,
+        "endChar": 36
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b987b_c7b3dc99",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_5247b56d",
       "range": {
         "startLine": 84,
         "startChar": 31,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b09b987b_07d5e4a0",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 25
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_ee75383b",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 1
+      },
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_938cac1a",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 25
@@ -82,6 +154,24 @@
       "writtenOn": "2016-11-16T18:20:11Z",
       "side": 1,
       "message": "!\u003d nullptr",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "500b3ca9_b6ceb66f",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_938cac1a",
       "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -105,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "500b3ca9_76b95ecc",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_c8b843cb",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_731e48dc",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 25
@@ -122,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "500b3ca9_36c3e646",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Expanded a comment.",
+      "parentUuid": "503c1cf2_731e48dc",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "503c1cf2_93c30c28",
         "filename": "tests/safestack_test.cpp",
         "patchSetId": 25
@@ -133,6 +259,24 @@
       "writtenOn": "2016-11-16T18:20:11Z",
       "side": 1,
       "message": "!\u003d nullptr",
+      "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "500b3ca9_56b65adc",
+        "filename": "tests/safestack_test.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-19T00:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "503c1cf2_93c30c28",
       "revId": "bd4e13b10ee75c9091925d988e1fa1765ee7f417",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
