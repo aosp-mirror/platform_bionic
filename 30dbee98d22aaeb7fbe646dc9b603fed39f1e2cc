@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "500b3ca9_73584b74",
+        "filename": "libc/private/bionic_arc4random.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-19T19:03:30Z",
+      "side": 1,
+      "message": "add a \"has\" in here?",
+      "range": {
+        "startLine": 48,
+        "startChar": 22,
+        "endLine": 48,
+        "endChar": 23
+      },
+      "revId": "30dbee98d22aaeb7fbe646dc9b603fed39f1e2cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
