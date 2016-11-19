@@ -22,6 +22,30 @@
       "revId": "08a79f1af76516f2e8a54bcfeacf323069e6429b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "500b3ca9_1347cf97",
+        "filename": "libc/bionic/wctype.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-19T18:56:43Z",
+      "side": 1,
+      "message": "this one\u0027s wrong (but none of the others are, afaics), but the real problem with the static tests is that they don\u0027t have a working dlopen/dlsym. that\u0027s why icu_static.cpp exists.\n\ni\u0027ll add run-time checks in the tests to just skip the unicode cases until we have a working libdl.a...",
+      "parentUuid": "500b3ca9_90a4daeb",
+      "range": {
+        "startLine": 57,
+        "startChar": 80,
+        "endLine": 57,
+        "endChar": 87
+      },
+      "revId": "08a79f1af76516f2e8a54bcfeacf323069e6429b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
