@@ -11,6 +11,92 @@ you need to have the “binutils” package installed for readelf,
 and “pax-utils” for scanelf.
 
 
+## Changes to library search order
+
+We have made various fixes to library search order when resolving symbols.
+
+With API 22, load order switched from depth-first to breadth-first to
+fix dlsym(3).
+
+Before API 23, the default search order was to try the main executable,
+LD_PRELOAD libraries, the library itself, and its DT_NEEDED libraries
+in that order. For API 23 and later, for any given library, the dynamic
+linker divides other libraries into the global group and the local
+group. The global group is shared by all libraries and contains the main
+executable, LD_PRELOAD libraries, and any library with the DF_1_GLOBAL
+flag set (by passing “-z global” to ld(1)). The local group is
+the breadth-first transitive closure of the library and its DT_NEEDED
+libraries. The M dynamic linker searches the global group followed by
+the local group. This allows ASAN, for example, to ensure that it can
+intercept any symbol.
+
+
+## RTLD_LOCAL (Available in API level >= 23)
+
+The dlopen(3) RTLD_LOCAL flag used to be ignored but is implemented
+correctly in API 23 and later. Note that RTLD_LOCAL is the default,
+so even calls to dlopen(3) that didn’t explicitly use RTLD_LOCAL will
+be affected (unless they explicitly used RTLD_GLOBAL). With RTLD_LOCAL,
+symbols will not be made available to libraries loaded by later calls
+to dlopen(3) (as opposed to being referenced by DT_NEEDED entries).
+
+
+## GNU hashes (Availible in API level >= 23)
+
+The GNU hash style available with --hash-style=gnu allows faster
+symbol lookup and is now supported by the dynamic linker in API 23 and
+above. (Use --hash-style=both if you want to build code that uses this
+feature >= Android M but still works on older releases.)
+
+
+## Correct soname/path handling (Available in API level >= 23)
+
+The dynamic linker now understands the difference
+between a library’s soname and its path  (public bug
+https://code.google.com/p/android/issues/detail?id=6670). API level 23
+is the first release where search by soname is implemented. Earlier
+releases would assume that the basename of the library was the soname,
+and used that to search for already-loaded libraries. For example,
+`dlopen("/this/directory/does/not/exist/libc.so", RTLD_NOW)` would
+find `/system/lib/libc.so` because it’s already loaded. This also meant
+that it was impossible to have two libraries `"dir1/libx.so"` and
+`"dir2/libx.so"` --- the dynamic linker couldn’t tell the difference
+and would always use whichever was loaded first, even if you explicitly
+tried to load both. This also applied to DT_NEEDED entries.
+
+Some apps have bad DT_NEEDED entries (usually absolute paths on the build
+machine’s file system) that used to work because we ignored everything
+but the basename. These apps will fail to load on API level 23 and above.
+
+
+## Symbol versioning (Available in API level >= 23)
+
+Symbol versioning allows libraries to provide better backwards
+compatibility. For example, if a library author knowingly changes
+the behavior of a function, they can provide two versions in the same
+library so that old code gets the old version and new code gets the new
+version. This is supported in API level 23 and above.
+
+
+## Opening shared libraries directly from an APK
+
+In API level 23 and above, it’s possible to open a .so file directly from
+your APK. Just use `System.loadLibrary("foo")` exactly as normal but set
+`android:extractNativeLibs="false"` in your `AndroidManifest.xml`. In
+older releases, the .so files were extracted from the APK file
+at install time. This meant that they took up space in your APK and
+again in your installation directory (and this was counted against you
+and reported to the user as space taken up by your app). Any .so file
+that you want to load directly from your APK must be page aligned
+(on a 4096-byte boundary) in the zip file and stored uncompressed.
+Current versions of the zipalign tool take care of alignment.
+
+Note that in API level 23 and above dlopen(3) will open a library from
+any zip file, not just your APK. Just give dlopen(3) a path of the form
+"my_zip_file.zip!/libs/libstuff.so". As with APKs, the library must be
+page-aligned and stored uncompressed for this to work.
+
+
 ## Private API (Enforced for API level >= 24)
 
 Native libraries must use only public API, and must not link against
@@ -204,7 +290,7 @@ configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
 
 
-## Writable and Executable Segments (AOSP master)
+## Writable and Executable Segments (Enforced for API level >= 26)
 
 Each segment in an ELF file has associated flags that tell the
 dynamic linker what permissions to give the corresponding page in
@@ -222,15 +308,16 @@ $ readelf --program-headers -W libBadFlags.so | grep WE
 into your app. The middleware vendor is aware of the problem and has a fix
 available.
 
-## Invalid ELF header/section headers (AOSP master)
+## Invalid ELF header/section headers (Enforced for API level >= 26)
 
-Android loader now checks for invalid values in ELF header and section headers and fails
-if they are invalid.
+In API level 26 and above the dynamic linker checks more values in
+the ELF header and section headers and fails if they are invalid.
 
 *Example error*
+```
 dlopen failed: "/data/data/com.example.bad/lib.so" has unsupported e_shentsize: 0x0 (expected 0x28)
+```
 
-*Resolution*
-Do not use tools that produce invalid/malformed elf-files. Note that using them puts application
-under high risk of being incompatible with future versions of Android.
-
+*Resolution*: don't use tools that produce invalid/malformed
+ELF files. Note that using them puts application under high risk of
+being incompatible with future versions of Android.
