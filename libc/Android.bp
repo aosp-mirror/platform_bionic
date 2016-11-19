@@ -1262,6 +1262,7 @@ cc_library_static {
         "bionic/ifaddrs.cpp",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
+        "bionic/langinfo.cpp",
         "bionic/lchown.cpp",
         "bionic/lfs64_support.cpp",
         "bionic/__libc_current_sigrtmax.cpp",
