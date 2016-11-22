@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+extern bool strict;
 extern bool verbose;
 extern bool add_include;
 
