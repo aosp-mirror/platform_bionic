@@ -1804,9 +1804,12 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   if (si != nullptr) {
-    failure_guard.disable();
-    si->call_constructors();
     void* handle = si->to_handle();
+    LD_LOG(kLogDlopen,
+           "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
+           si->get_realpath(), si->get_soname(), handle);
+    si->call_constructors();
+    failure_guard.disable();
     LD_LOG(kLogDlopen,
            "... dlopen successful: realpath=\"%s\", soname=\"%s\", handle=%p",
            si->get_realpath(), si->get_soname(), handle);
