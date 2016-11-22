@@ -22,7 +22,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#if defined(__linux__)
+#include <sched.h>
+#endif
+
 #include <atomic>
+#include <chrono>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -36,6 +41,7 @@
 
 #include <llvm/ADT/StringRef.h>
 
+#include <android-base/macros.h>
 #include <android-base/parseint.h>
 
 #include "Arch.h"
@@ -48,11 +54,27 @@
 
 #include "versioner.h"
 
+using namespace std::chrono_literals;
 using namespace std::string_literals;
 
 bool add_include;
 bool verbose;
-static int max_thread_count = 48;
+
+static int getCpuCount();
+static int max_thread_count = getCpuCount();
+
+static int getCpuCount() {
+#if defined(__linux__)
+  cpu_set_t cpu_set;
+  int rc = sched_getaffinity(getpid(), sizeof(cpu_set), &cpu_set);
+  if (rc != 0) {
+    err(1, "sched_getaffinity failed");
+  }
+  return CPU_COUNT(&cpu_set);
+#else
+  return 1;
+#endif
+}
 
 static CompilationRequirements collectRequirements(const Arch& arch, const std::string& header_dir,
                                                    const std::string& dependency_dir) {
@@ -158,6 +180,7 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
   initializeTargetCC1FlagCache(vfs, types, requirements);
 
   std::vector<std::pair<CompilationType, const std::string&>> jobs;
+  std::atomic<size_t> job_index(0);
   for (CompilationType type : types) {
     CompilationRequirements& req = requirements[type.arch];
     for (const std::string& header : req.headers) {
@@ -173,13 +196,17 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     }
   } else {
     // Spawn threads.
+    size_t cpu_count = getCpuCount();
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &result, &header_dir, vfs, thread_count, i]() {
-        size_t index = i;
-        while (index < jobs.size()) {
-          const auto& job = jobs[index];
+      threads.emplace_back([&jobs, &job_index, &result, &header_dir, vfs, cpu_count, i]() {
+        while (true) {
+          size_t idx = job_index++;
+          if (idx >= jobs.size()) {
+            return;
+          }
+
+          const auto& job = jobs[idx];
           compileHeader(vfs, result.get(), job.first, job.second);
-          index += thread_count;
         }
       });
     }
@@ -572,8 +599,15 @@ int main(int argc, char** argv) {
     symbol_database = parsePlatforms(compilation_types, platform_dir);
   }
 
+  auto start = std::chrono::high_resolution_clock::now();
   std::unique_ptr<HeaderDatabase> declaration_database =
       compileHeaders(compilation_types, header_dir, dependency_dir);
+  auto end = std::chrono::high_resolution_clock::now();
+
+  if (verbose) {
+    auto diff = (end - start) / 1.0ms;
+    printf("Compiled headers for %zu targets in %0.2LFms\n", compilation_types.size(), diff);
+  }
 
   bool failed = false;
   if (dump) {
