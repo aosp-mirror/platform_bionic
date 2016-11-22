@@ -57,8 +57,9 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-bool add_include;
+bool strict;
 bool verbose;
+bool add_include;
 
 static int getCpuCount();
 static int max_thread_count = getCpuCount();
@@ -389,7 +390,7 @@ static bool checkVersions(const std::set<CompilationType>& types,
       failed = true;
     }
 
-    if (verbose) {
+    if (strict) {
       auto extra_it = extra_availability.find(symbol_name);
       if (extra_it != extra_availability.end()) {
         printf("%s: declaration marked unavailable but symbol available in [%s]\n",
@@ -429,7 +430,7 @@ static void usage(bool help = false) {
     fprintf(stderr, "\n");
     fprintf(stderr, "Validation:\n");
     fprintf(stderr, "  -p PATH\tcompare against NDK platform at PATH\n");
-    fprintf(stderr, "  -v\t\tenable verbose warnings\n");
+    fprintf(stderr, "  -s\t\tenable strict warnings\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Preprocessing:\n");
     fprintf(stderr, "  -o PATH\tpreprocess header files and emit them at PATH\n");
@@ -438,6 +439,7 @@ static void usage(bool help = false) {
     fprintf(stderr, "Miscellaneous:\n");
     fprintf(stderr, "  -d\t\tdump function availability\n");
     fprintf(stderr, "  -j THREADS\tmaximum number of threads to use\n");
+    fprintf(stderr, "  -v\t\tenable verbose logging\n");
     fprintf(stderr, "  -h\t\tdisplay this message\n");
     exit(0);
   }
@@ -454,7 +456,7 @@ int main(int argc, char** argv) {
   bool dump = false;
 
   int c;
-  while ((c = getopt(argc, argv, "a:r:p:vo:fdj:hi")) != -1) {
+  while ((c = getopt(argc, argv, "a:r:p:so:fdj:vhi")) != -1) {
     default_args = false;
     switch (c) {
       case 'a': {
@@ -499,8 +501,8 @@ int main(int argc, char** argv) {
         break;
       }
 
-      case 'v':
-        verbose = true;
+      case 's':
+        strict = true;
         break;
 
       case 'o':
@@ -525,6 +527,10 @@ int main(int argc, char** argv) {
         if (!android::base::ParseInt<int>(optarg, &max_thread_count, 1)) {
           usage();
         }
+        break;
+
+      case 'v':
+        verbose = true;
         break;
 
       case 'h':
