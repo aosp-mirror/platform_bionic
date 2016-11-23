@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7083e087_839de043",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2634,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-23T17:17:21Z",
+      "side": 1,
+      "message": "I do not think the failure to load a library should affect global state.. This will lead to the situation when loader is broken and cannot load anything else after the first unsuccessful attempt.",
+      "range": {
+        "startLine": 2634,
+        "startChar": 8,
+        "endLine": 2634,
+        "endChar": 28
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7083e087_a343c4b1",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-23T17:17:21Z",
+      "side": 1,
+      "message": "sizeof(uint32_t)",
+      "range": {
+        "startLine": 1091,
+        "startChar": 24,
+        "endLine": 1091,
+        "endChar": 25
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7083e087_63b7fcb6",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-23T17:17:21Z",
+      "side": 1,
+      "message": "sizeof(uint32_t)",
+      "range": {
+        "startLine": 1093,
+        "startChar": 19,
+        "endLine": 1093,
+        "endChar": 20
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7083e087_e33dcc23",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1094,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-23T17:17:21Z",
+      "side": 1,
+      "message": "Introduce constants?",
+      "range": {
+        "startLine": 1094,
+        "startChar": 11,
+        "endLine": 1094,
+        "endChar": 12
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
