@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0d632b_5dc94b67",
+        "filename": "libc/bionic/bionic_arc4random.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-23T22:53:07Z",
+      "side": 1,
+      "message": "arc4random_buf",
+      "range": {
+        "startLine": 44,
+        "startChar": 15,
+        "endLine": 44,
+        "endChar": 26
+      },
+      "revId": "ea82452ea6f33a36e95b23d7c5f6f66c7317a488",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_5db26be5",
+        "filename": "libc/bionic/bionic_arc4random.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-23T22:53:07Z",
+      "side": 1,
+      "message": "if the kernel entropy pool hasn\u0027t been initialized",
+      "range": {
+        "startLine": 45,
+        "startChar": 24,
+        "endLine": 45,
+        "endChar": 96
+      },
+      "revId": "ea82452ea6f33a36e95b23d7c5f6f66c7317a488",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_bd9aa758",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-23T22:53:07Z",
+      "side": 1,
+      "message": "Remove this line, it\u0027s not needed and will make pulling from upstream harder",
+      "revId": "ea82452ea6f33a36e95b23d7c5f6f66c7317a488",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_8093fc3c",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-23T22:53:07Z",
+      "side": 1,
+      "message": "Move this next to the syscall and reword to something like \"Use GRND_NONBLOCK to avoid blocking before the entropy pool has been initialized\"",
+      "revId": "ea82452ea6f33a36e95b23d7c5f6f66c7317a488",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
