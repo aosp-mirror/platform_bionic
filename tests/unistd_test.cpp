@@ -530,12 +530,7 @@ TEST(UNISTD_TEST, gettid_caching_and_clone_process_settid) {
 
 static int CloneStartRoutine(int (*start_routine)(void*)) {
   void* child_stack[1024];
-  int clone_result = clone(start_routine, &child_stack[1024], CLONE_NEWNS | SIGCHLD, NULL);
-  if (clone_result == -1 && errno == EPERM && getuid() != 0) {
-    GTEST_LOG_(INFO) << "This test only works if you have permission to CLONE_NEWNS; try running as root.\n";
-    return clone_result;
-  }
-  return clone_result;
+  return clone(start_routine, &child_stack[1024], SIGCHLD, NULL);
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {
