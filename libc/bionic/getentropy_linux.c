@@ -102,7 +102,7 @@ getentropy(void *buf, size_t len)
 	ret = getentropy_getrandom(buf, len);
 	if (ret != -1)
 		return (ret);
-	if (errno != ENOSYS)
+	if (errno != ENOSYS && errno != EAGAIN)
 		return (-1);
 
 	/*
@@ -200,7 +200,11 @@ getentropy_getrandom(void *buf, size_t len)
 	if (len > 256)
 		return (-1);
 	do {
-		ret = syscall(SYS_getrandom, buf, len, 0);
+		/*
+		 * Use GRND_NONBLOCK to avoid blocking before the
+		 * entropy pool has been initialized
+		 */
+		ret = syscall(SYS_getrandom, buf, len, GRND_NONBLOCK);
 	} while (ret == -1 && errno == EINTR);
 
 	if ((size_t)ret != len)
