@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0d632b_f681594e",
+        "filename": "tests/gtest_globals_cts.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2016-11-28T18:35:56Z",
+      "side": 1,
+      "message": "I don\u0027t think you need this, you could just return the value down below. Since this is test code, I don\u0027t think you need to optimize it any further.",
+      "range": {
+        "startLine": 21,
+        "startChar": 25,
+        "endLine": 21,
+        "endChar": 39
+      },
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
