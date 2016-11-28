@@ -476,7 +476,10 @@ cc_test_host {
 
     include_dirs: ["bionic/libc"],
 
-    ldflags: ["-Wl,--export-dynamic"],
+    ldflags: [
+        "-Wl,--rpath,${ORIGIN}/../bionic-loader-test-libs",
+        "-Wl,--export-dynamic",
+    ],
 
     sanitize: {
         never: false,
