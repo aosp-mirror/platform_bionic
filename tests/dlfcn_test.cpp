@@ -1013,6 +1013,22 @@ TEST(dlfcn, rtld_next_known_symbol) {
   ASSERT_TRUE(addr != nullptr);
 }
 
+// Check that RTLD_NEXT of a libc symbol works in dlopened library
+TEST(dlfcn, rtld_next_from_library) {
+  void* library_with_close = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
+  ASSERT_TRUE(library_with_close != nullptr) << dlerror();
+  void* expected_addr = dlsym(RTLD_DEFAULT, "close");
+  ASSERT_TRUE(expected_addr != nullptr) << dlerror();
+  typedef void* (*get_libc_close_ptr_fn_t)();
+  get_libc_close_ptr_fn_t get_libc_close_ptr =
+      reinterpret_cast<get_libc_close_ptr_fn_t>(dlsym(library_with_close, "get_libc_close_ptr"));
+  ASSERT_TRUE(get_libc_close_ptr != nullptr) << dlerror();
+  ASSERT_EQ(expected_addr, get_libc_close_ptr());
+
+  dlclose(library_with_close);
+}
+
+
 TEST(dlfcn, dlsym_weak_func) {
   dlerror();
   void* handle = dlopen("libtest_dlsym_weak_func.so", RTLD_NOW);
@@ -1159,7 +1175,7 @@ TEST(dlfcn, dt_runpath_smoke) {
 #if defined(__BIONIC__)
 
 TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = g_testlib_root + "/libtest_dt_runpath_d.so";
+  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
@@ -1174,7 +1190,7 @@ TEST(dlfcn, dt_runpath_absolute_path) {
 }
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
@@ -1184,7 +1200,7 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
 }
 
 TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-unaligned_shdr_offset.so";
 
@@ -1195,7 +1211,7 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shentsize) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shentsize.so";
 
@@ -1206,7 +1222,7 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shstrndx.so";
 
@@ -1217,7 +1233,7 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
 }
 
 TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-empty_shdr_table.so";
 
@@ -1228,7 +1244,7 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shdr_table_offset.so";
 
@@ -1239,7 +1255,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shdr_table_content.so";
 
@@ -1250,7 +1266,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-textrels.so";
 
@@ -1261,7 +1277,7 @@ TEST(dlfcn, dlopen_invalid_textrels) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels2) {
-  const std::string libpath = g_testlib_root +
+  const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-textrels2.so";
 

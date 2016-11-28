@@ -21,11 +21,20 @@
 
 #include <string>
 
-static std::string get_testlib_root() {
+static std::string init_testlib_root() {
   std::string out_path;
   const char* data_dir = getenv("ANDROID_DATA");
   if (data_dir == nullptr) {
-    out_path = "/data";
+    // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
+    std::string path = get_executable_path();
+
+    path = get_dirname(path.c_str());
+    path += "/../..";
+
+    if (!get_realpath(path.c_str(), &out_path)) {
+      printf("Failed to get realpath for \"%s\"", path.c_str());
+      abort();
+    }
   } else {
     out_path = data_dir;
   }
@@ -35,12 +44,18 @@ static std::string get_testlib_root() {
   out_path += "64";
 #endif
   out_path += "/bionic-loader-test-libs";
+
   std::string real_path;
   if (!get_realpath(out_path, &real_path)) {
+    printf("\"%s\": does not exists", out_path.c_str());
     abort();
   }
 
   return real_path;
 }
 
-const std::string g_testlib_root = get_testlib_root();
+const std::string& get_testlib_root() {
+  static const std::string testlib_root = init_testlib_root();
+  return testlib_root;
+}
+

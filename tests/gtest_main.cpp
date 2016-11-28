@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <libgen.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdarg.h>
@@ -63,6 +64,15 @@ bool get_realpath(const std::string& path, std::string* real_path) {
 
   *real_path = realpath_buf;
   return true;
+}
+
+std::string get_dirname(const char* path) {
+#if defined(__BIONIC__)
+  return dirname(path);
+#else
+  // GLIBC does not have const char* dirname
+  return dirname(const_cast<char*>(path));
+#endif
 }
 
 int get_argc() {
