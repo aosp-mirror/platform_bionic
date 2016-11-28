@@ -22,6 +22,30 @@
       "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_765789e9",
+        "filename": "tests/gtest_globals_cts.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T18:50:48Z",
+      "side": 1,
+      "message": "the function returns const reference - I am not sure it will do the right thing... I believe we still need something addressable here, no?",
+      "parentUuid": "4d0d632b_f681594e",
+      "range": {
+        "startLine": 21,
+        "startChar": 25,
+        "endLine": 21,
+        "endChar": 39
+      },
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
