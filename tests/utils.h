@@ -128,6 +128,8 @@ const std::string& get_executable_path();
 
 // Get realpath
 bool get_realpath(const std::string& path, std::string* realpath);
+// Get dirname
+std::string get_dirname(const char* path);
 
 // Access to argc/argv/envp
 int get_argc();

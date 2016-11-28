@@ -18,4 +18,8 @@
 
 #include <string>
 
-const std::string g_testlib_root = "/data/local/tmp/lib/bionic-loader-test-libs";
+static const std::string g_testlib_root = "/data/local/tmp/lib/bionic-loader-test-libs";
+
+const std::string& get_testlib_root() {
+  return g_testlib_root;
+}

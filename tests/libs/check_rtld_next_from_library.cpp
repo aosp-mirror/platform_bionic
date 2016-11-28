@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_TESTS_GTEST_GLOBALS_H
-#define _BIONIC_TESTS_GTEST_GLOBALS_H
+#include <dlfcn.h>
+#include <stdlib.h>
 
-#include <string>
+static void* g_libc_close_ptr;
 
-constexpr const char* kPrebuiltElfDir = "prebuilt-elf-files";
+static void __attribute__((constructor)) __libc_close_lookup() {
+  g_libc_close_ptr = dlsym(RTLD_NEXT, "close");
+}
 
-const std::string& get_testlib_root();
+// A libc function used for RTLD_NEXT
+// This function in not supposed to be called
+extern "C" int __attribute__((weak)) close(int) {
+  abort();
+}
 
-#endif  // _BIONIC_TESTS_GTEST_GLOBALS_H
+extern "C" void* get_libc_close_ptr() {
+  return g_libc_close_ptr;
+}
+
+

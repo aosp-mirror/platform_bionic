@@ -411,6 +411,24 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Check that RTLD_NEXT of a libc symbol works in dlopened library
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_check_rtld_next_from_library",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["check_rtld_next_from_library.cpp"],
+
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
 // Library with constructor that calls dlopen() b/7941716
 // -----------------------------------------------------------------------------
 cc_test_library {
