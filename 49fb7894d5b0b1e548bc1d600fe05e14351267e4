@@ -134,6 +134,24 @@
       "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_f9894ab5",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-28T19:39:27Z",
+      "side": 1,
+      "message": "bionic\u0027s dirname is [incorrectly, but for the best so we\u0027ve never \"fixed\" it] const char*. it\u0027s glibc that\u0027s the problem.\n\nhow about making this just\n\n  return dirname(const_cast\u003c\u003e());\n\n?",
+      "parentUuid": "4d0d632b_16f3adbe",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
