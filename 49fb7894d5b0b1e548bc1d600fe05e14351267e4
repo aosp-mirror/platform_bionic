@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4d0d632b_99cb6e0a",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-28T19:36:58Z",
+      "side": 1,
+      "message": "that code won\u0027t be executed until the first call to get_testlib_root anyway, so nothing would change there.\n\n(basically, the compiler just writes the locking for you, and the scope of the global is reduced to the scope of the function.)",
+      "parentUuid": "4d0d632b_f6b4b9d5",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0d632b_f681594e",
         "filename": "tests/gtest_globals_cts.cpp",
         "patchSetId": 1
