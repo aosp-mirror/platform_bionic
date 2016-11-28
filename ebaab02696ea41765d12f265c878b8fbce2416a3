@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d0d632b_96c45d54",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2016-11-28T19:01:14Z",
+      "side": 1,
+      "message": "shall we use b/14499654 or b/18492914 for this CL?",
+      "revId": "ebaab02696ea41765d12f265c878b8fbce2416a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
