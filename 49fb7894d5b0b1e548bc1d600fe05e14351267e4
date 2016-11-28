@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4d0d632b_f6b4b9d5",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T19:02:22Z",
+      "side": 1,
+      "message": "we need path to executable here. And it becomes available after call to main().\n\nalso\n\nstatic T value \u003d init_fn();\n\ndoes not have access to argc/argv",
+      "parentUuid": "4d0d632b_1614cd07",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0d632b_f681594e",
         "filename": "tests/gtest_globals_cts.cpp",
         "patchSetId": 1
@@ -77,6 +95,24 @@
       "writtenOn": "2016-11-28T18:55:32Z",
       "side": 1,
       "message": "why not just dirname?\n\nunit tests?",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_16f3adbe",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T19:02:22Z",
+      "side": 1,
+      "message": "dirname does not support const char* (maybe we need one that does?)",
+      "parentUuid": "4d0d632b_9649fd33",
       "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
