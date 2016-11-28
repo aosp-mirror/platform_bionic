@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "4d0d632b_6f744c3f",
+        "filename": "tests/gtest_globals_cts.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-28T21:46:05Z",
+      "side": 1,
+      "message": "(i thought the style guide said not to return references unless you need to, but i can\u0027t find it.)",
+      "parentUuid": "4d0d632b_f41dd12a",
+      "range": {
+        "startLine": 23,
+        "startChar": 17,
+        "endLine": 23,
+        "endChar": 18
+      },
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0d632b_9649fd33",
         "filename": "tests/gtest_main.cpp",
         "patchSetId": 1
