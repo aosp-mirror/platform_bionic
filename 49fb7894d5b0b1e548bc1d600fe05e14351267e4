@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "4d0d632b_f46dd11c",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T21:07:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d0d632b_99cb6e0a",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d0d632b_f681594e",
         "filename": "tests/gtest_globals_cts.cpp",
         "patchSetId": 1
@@ -90,6 +108,30 @@
       "side": 1,
       "message": "the function returns const reference - I am not sure it will do the right thing... I believe we still need something addressable here, no?",
       "parentUuid": "4d0d632b_f681594e",
+      "range": {
+        "startLine": 21,
+        "startChar": 25,
+        "endLine": 21,
+        "endChar": 39
+      },
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_34434981",
+        "filename": "tests/gtest_globals_cts.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T21:07:40Z",
+      "side": 1,
+      "message": "tried anyways - resulted in \"error: returning reference to local temporary object [-Werror,-Wreturn-stack-address]\"",
+      "parentUuid": "4d0d632b_765789e9",
       "range": {
         "startLine": 21,
         "startChar": 25,
@@ -149,6 +191,24 @@
       "side": 1,
       "message": "bionic\u0027s dirname is [incorrectly, but for the best so we\u0027ve never \"fixed\" it] const char*. it\u0027s glibc that\u0027s the problem.\n\nhow about making this just\n\n  return dirname(const_cast\u003c\u003e());\n\n?",
       "parentUuid": "4d0d632b_16f3adbe",
+      "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d0d632b_74f1c175",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-11-28T21:07:40Z",
+      "side": 1,
+      "message": "ok. done",
+      "parentUuid": "4d0d632b_f9894ab5",
       "revId": "49fb7894d5b0b1e548bc1d600fe05e14351267e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
