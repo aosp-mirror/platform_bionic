@@ -1272,6 +1272,8 @@ LIBC_O {
     msgget; # future
     msgrcv; # future
     msgsnd; # future
+    nl_langinfo; # future
+    nl_langinfo_l; # future
     pthread_getname_np; # future
     quotactl; # future
     semctl; # future
