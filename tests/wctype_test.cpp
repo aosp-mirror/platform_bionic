@@ -16,6 +16,8 @@
 
 #include <wctype.h>
 
+#include <dlfcn.h>
+
 #include <gtest/gtest.h>
 
 class UtfLocale {
@@ -25,63 +27,75 @@ class UtfLocale {
   locale_t l;
 };
 
+// bionic's dlsym doesn't work in static binaries, so we can't access icu,
+// so any unicode test case will fail.
+static bool have_dl = (dlopen("libc.so", 0) != nullptr);
+
 static void TestIsWideFn(int fn(wint_t),
                          int fn_l(wint_t, locale_t),
                          const wchar_t* trues,
                          const wchar_t* falses) {
   UtfLocale l;
   for (const wchar_t* p = trues; *p; ++p) {
+    if (!have_dl && *p > 0x7f) {
+      GTEST_LOG_(INFO) << "skipping unicode test " << *p;
+      continue;
+    }
     EXPECT_TRUE(fn(*p)) << *p;
     EXPECT_TRUE(fn_l(*p, l.l)) << *p;
   }
   for (const wchar_t* p = falses; *p; ++p) {
+    if (!have_dl && *p > 0x7f) {
+      GTEST_LOG_(INFO) << "skipping unicode test " << *p;
+      continue;
+    }
     EXPECT_FALSE(fn(*p)) << *p;
     EXPECT_FALSE(fn_l(*p, l.l)) << *p;
   }
 }
 
 TEST(wctype, iswalnum) {
-  TestIsWideFn(iswalnum, iswalnum_l, L"1aA", L"! \b");
+  TestIsWideFn(iswalnum, iswalnum_l, L"1aAÇçΔδ", L"! \b");
 }
 
 TEST(wctype, iswalpha) {
-  TestIsWideFn(iswalpha, iswalpha_l, L"aA", L"1! \b");
+  TestIsWideFn(iswalpha, iswalpha_l, L"aAÇçΔδ", L"1! \b");
 }
 
 TEST(wctype, iswblank) {
-  TestIsWideFn(iswblank, iswblank_l, L" \t", L"1aA!\b");
+  TestIsWideFn(iswblank, iswblank_l, L" \t", L"1aA!\bÇçΔδ");
 }
 
 TEST(wctype, iswcntrl) {
-  TestIsWideFn(iswcntrl, iswcntrl_l, L"\b", L"1aA! ");
+  TestIsWideFn(iswcntrl, iswcntrl_l, L"\b\u009f", L"1aA! ÇçΔδ");
 }
 
 TEST(wctype, iswdigit) {
-  TestIsWideFn(iswdigit, iswdigit_l, L"1", L"aA! \b");
+  TestIsWideFn(iswdigit, iswdigit_l, L"1", L"aA! \bÇçΔδ");
 }
 
 TEST(wctype, iswgraph) {
-  TestIsWideFn(iswgraph, iswgraph_l, L"1aA!", L" \b");
+  TestIsWideFn(iswgraph, iswgraph_l, L"1aA!ÇçΔδ", L" \b");
 }
 
 TEST(wctype, iswlower) {
-  TestIsWideFn(iswlower, iswlower_l, L"a", L"1A! \b");
+  TestIsWideFn(iswlower, iswlower_l, L"açδ", L"1A! \bÇΔ");
 }
 
 TEST(wctype, iswprint) {
-  TestIsWideFn(iswprint, iswprint_l, L"1aA! ", L"\b");
+  TestIsWideFn(iswprint, iswprint_l, L"1aA! ÇçΔδ", L"\b");
 }
 
 TEST(wctype, iswpunct) {
-  TestIsWideFn(iswpunct, iswpunct_l, L"!", L"1aA \b");
+  TestIsWideFn(iswpunct, iswpunct_l, L"!", L"1aA \bÇçΔδ");
 }
 
 TEST(wctype, iswspace) {
-  TestIsWideFn(iswspace, iswspace_l, L" \f\t", L"1aA!\b");
+  TestIsWideFn(iswspace, iswspace_l, L" \f\t", L"1aA!\bÇçΔδ");
 }
 
 TEST(wctype, iswupper) {
-  TestIsWideFn(iswupper, iswupper_l, L"A", L"1a! \b");
+  TestIsWideFn(iswupper, iswupper_l, L"AÇΔ", L"1a! \bçδ");
 }
 
 TEST(wctype, iswxdigit) {
@@ -89,29 +103,65 @@ TEST(wctype, iswxdigit) {
 }
 
 TEST(wctype, towlower) {
+  EXPECT_EQ(WEOF, towlower(WEOF));
   EXPECT_EQ(wint_t('!'), towlower(L'!'));
   EXPECT_EQ(wint_t('a'), towlower(L'a'));
   EXPECT_EQ(wint_t('a'), towlower(L'A'));
+  if (have_dl) {
+    EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
+    EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
+    EXPECT_EQ(wint_t(L'δ'), towlower(L'δ'));
+    EXPECT_EQ(wint_t(L'δ'), towlower(L'Δ'));
+  } else {
+    GTEST_LOG_(INFO) << "skipping unicode towlower tests";
+  }
 }
 
 TEST(wctype, towlower_l) {
   UtfLocale l;
+  EXPECT_EQ(WEOF, towlower(WEOF));
   EXPECT_EQ(wint_t('!'), towlower_l(L'!', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'a', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'A', l.l));
+  if (have_dl) {
+    EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
+    EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
+    EXPECT_EQ(wint_t(L'δ'), towlower_l(L'δ', l.l));
+    EXPECT_EQ(wint_t(L'δ'), towlower_l(L'Δ', l.l));
+  } else {
+    GTEST_LOG_(INFO) << "skipping unicode towlower_l tests";
+  }
 }
 
 TEST(wctype, towupper) {
+  EXPECT_EQ(WEOF, towupper(WEOF));
   EXPECT_EQ(wint_t('!'), towupper(L'!'));
   EXPECT_EQ(wint_t('A'), towupper(L'a'));
   EXPECT_EQ(wint_t('A'), towupper(L'A'));
+  if (have_dl) {
+    EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
+    EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
+    EXPECT_EQ(wint_t(L'Δ'), towupper(L'δ'));
+    EXPECT_EQ(wint_t(L'Δ'), towupper(L'Δ'));
+  } else {
+    GTEST_LOG_(INFO) << "skipping unicode towupper tests";
+  }
 }
 
 TEST(wctype, towupper_l) {
   UtfLocale l;
+  EXPECT_EQ(WEOF, towupper_l(WEOF, l.l));
   EXPECT_EQ(wint_t('!'), towupper_l(L'!', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'a', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'A', l.l));
+  if (have_dl) {
+    EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
+    EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
+    EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'δ', l.l));
+    EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'Δ', l.l));
+  } else {
+    GTEST_LOG_(INFO) << "skipping unicode towupper_l tests";
+  }
 }
 
 TEST(wctype, wctype) {
