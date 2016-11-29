@@ -22,6 +22,30 @@
       "revId": "b64854c8c2c7a4cf202867fc07e4d02ec54867b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_ca97d5d6",
+        "filename": "libc/bionic/bionic_arc4random.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-29T23:59:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f01d104e_81b4edb1",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 42,
+        "endChar": 38
+      },
+      "revId": "b64854c8c2c7a4cf202867fc07e4d02ec54867b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
