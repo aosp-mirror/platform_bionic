@@ -34,26 +34,53 @@
 #include <string.h>
 #include <wchar.h>
 
-// These functions are either defined to be the same as their ASCII cousins,
-// or defined in terms of other functions.
-int iswalnum(wint_t wc) { return iswdigit(wc) || iswalpha(wc); }
-int iswblank(wint_t wc) { return isblank(wc); }
-int iswdigit(wint_t wc) { return isdigit(wc); }
-int iswgraph(wint_t wc) { return !iswspace(wc) && iswprint(wc); }
-int iswlower(wint_t wc) {
-  return towlower(wc) == wc && !(iswcntrl(wc) || iswdigit(wc) || iswpunct(wc) || iswspace(wc));
-}
-int iswupper(wint_t wc) {
-  return towupper(wc) == wc && !(iswcntrl(wc) || iswdigit(wc) || iswpunct(wc) || iswspace(wc));
-}
-int iswxdigit(wint_t wc) { return isxdigit(wc); }
+#include "private/icu.h"
 
-// TODO: need proper implementations of these.
-int iswalpha(wint_t wc) { return isalpha(wc); }
-int iswcntrl(wint_t wc) { return iscntrl(wc); }
-int iswprint(wint_t wc) { return isprint(wc); }
-int iswpunct(wint_t wc) { return ispunct(wc); }
-int iswspace(wint_t wc) { return isspace(wc); }
+static constexpr int UCHAR_ALPHABETIC = 0;
+static constexpr int UCHAR_LOWERCASE = 22;
+static constexpr int UCHAR_POSIX_ALNUM = 44;
+static constexpr int UCHAR_POSIX_BLANK = 45;
+static constexpr int UCHAR_POSIX_GRAPH = 46;
+static constexpr int UCHAR_POSIX_PRINT = 47;
+static constexpr int UCHAR_POSIX_XDIGIT = 48;
+static constexpr int UCHAR_UPPERCASE = 30;
+static constexpr int UCHAR_WHITE_SPACE = 31;
+
+static constexpr int U_CONTROL_CHAR = 15;
+
+static bool __icu_hasBinaryProperty(wint_t wc, int property, int (*fallback)(int)) {
+  typedef int (*FnT)(wint_t, int);
+  static auto u_hasBinaryProperty = reinterpret_cast<FnT>(__find_icu_symbol("u_hasBinaryProperty"));
+  return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
+}
+
+int iswalnum(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_ALNUM, isalnum); }
+int iswalpha(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_ALPHABETIC, isalpha); }
+int iswblank(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_BLANK, isblank); }
+int iswgraph(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_GRAPH, isgraph); }
+int iswlower(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_LOWERCASE, islower); }
+int iswprint(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_PRINT, isprint); }
+int iswspace(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_WHITE_SPACE, isspace); }
+int iswupper(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_UPPERCASE, isupper); }
+int iswxdigit(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_XDIGIT, isxdigit); }
+
+int iswcntrl(wint_t wc) {
+  typedef int (*FnT)(wint_t);
+  static auto u_charType = reinterpret_cast<FnT>(__find_icu_symbol("u_charType"));
+  return u_charType ? (u_charType(wc) == U_CONTROL_CHAR) : iscntrl(wc);
+}
+
+int iswdigit(wint_t wc) {
+  typedef int (*FnT)(wint_t);
+  static auto u_isdigit = reinterpret_cast<FnT>(__find_icu_symbol("u_isdigit"));
+  return u_isdigit ? u_isdigit(wc) : isdigit(wc);
+}
+
+int iswpunct(wint_t wc) {
+  typedef int (*FnT)(wint_t);
+  static auto u_ispunct = reinterpret_cast<FnT>(__find_icu_symbol("u_ispunct"));
+  return u_ispunct ? u_ispunct(wc) : ispunct(wc);
+}
 
 int iswalnum_l(wint_t c, locale_t) { return iswalnum(c); }
 int iswalpha_l(wint_t c, locale_t) { return iswalpha(c); }
@@ -90,12 +117,20 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
   return iswctype(wc, char_class);
 }
 
-// TODO: need proper implementations of these.
-wint_t towlower(wint_t wc) { return tolower(wc); }
-wint_t towupper(wint_t wc) { return toupper(wc); }
+wint_t towlower(wint_t wc) {
+  typedef wchar_t (*FnT)(wchar_t);
+  static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
+  return u_tolower ? u_tolower(wc) : tolower(wc);
+}
 
-wint_t towupper_l(int c, locale_t) { return towupper(c); }
-wint_t towlower_l(int c, locale_t) { return towlower(c); }
+wint_t towupper(wint_t wc) {
+  typedef wchar_t (*FnT)(wchar_t);
+  static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
+  return u_toupper ? u_toupper(wc) : toupper(wc);
+}
+
+wint_t towupper_l(wint_t c, locale_t) { return towupper(c); }
+wint_t towlower_l(wint_t c, locale_t) { return towlower(c); }
 
 wctype_t wctype(const char* property) {
   static const char* const  properties[WC_TYPE_MAX] = {
