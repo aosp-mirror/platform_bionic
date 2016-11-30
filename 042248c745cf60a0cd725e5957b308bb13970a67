@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f01d104e_e500421f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-30T00:55:15Z",
+      "side": 1,
+      "message": "Put this in its own scope to save some stack space?",
+      "revId": "042248c745cf60a0cd725e5957b308bb13970a67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_4a8e8550",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-30T00:55:15Z",
+      "side": 1,
+      "message": "Start the entire allocation out as PROT_NONE and mprotect just the stack part of it to save a syscall?",
+      "revId": "042248c745cf60a0cd725e5957b308bb13970a67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_aa1c592e",
+        "filename": "libc/bionic/safestack.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-30T00:55:15Z",
+      "side": 1,
+      "message": "Is there any reason to not use a power of two here?",
+      "range": {
+        "startLine": 136,
+        "startChar": 37,
+        "endLine": 136,
+        "endChar": 42
+      },
+      "revId": "042248c745cf60a0cd725e5957b308bb13970a67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_85c14eee",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 31
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2016-11-30T00:55:15Z",
+      "side": 1,
+      "message": "spaces",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 1
+      },
+      "revId": "042248c745cf60a0cd725e5957b308bb13970a67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
