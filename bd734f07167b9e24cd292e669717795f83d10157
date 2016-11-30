@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f01d104e_20b165df",
+        "filename": "libc/include/sys/limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-11-30T07:18:46Z",
+      "side": 0,
+      "message": "losing this causes quite a bit of breakage. choices:\n\n1. fix the breakage in the tree, let NDK users fix theirs later.\n\n2. add #include \u003cfloat.h\u003e to \u003csys/limits.h\u003e to preserve the old behavior.\n\n3. add #include \u003cfloat.h\u003e to \u003climits.h\u003e to preserve the old behavior (but increase pollution (but increase consistency between \u003climits.h\u003e and \u003csys/limits.h\u003e)).\n\npreferences?",
+      "revId": "bd734f07167b9e24cd292e669717795f83d10157",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
