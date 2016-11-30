@@ -2009,10 +2009,21 @@ cc_object {
 // }
 
 ndk_headers {
-    name: "libc_linux",
-    from: "kernel/uapi/linux",
-    to: "linux",
-    srcs: ["kernel/uapi/linux/**/*.h"],
+    name: "libc_uapi",
+    from: "kernel/uapi",
+    to: "",
+    srcs: [
+        "kernel/uapi/asm-generic/**/*.h",
+        "kernel/uapi/drm/**/*.h",
+        "kernel/uapi/linux/**/*.h",
+        "kernel/uapi/misc/**/*.h",
+        "kernel/uapi/mtd/**/*.h",
+        "kernel/uapi/rdma/**/*.h",
+        "kernel/uapi/scsi/**/*.h",
+        "kernel/uapi/sound/**/*.h",
+        "kernel/uapi/video/**/*.h",
+        "kernel/uapi/xen/**/*.h",
+    ],
     license: "NOTICE",
 }
 
@@ -2021,14 +2032,6 @@ ndk_headers {
     from: "kernel/android/uapi/linux",
     to: "linux",
     srcs: ["kernel/android/uapi/linux/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_asm_generic",
-    from: "kernel/uapi/asm-generic",
-    to: "asm-generic",
-    srcs: ["kernel/uapi/asm-generic/**/*.h"],
     license: "NOTICE",
 }
 
