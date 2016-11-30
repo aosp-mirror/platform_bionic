@@ -62,8 +62,8 @@ int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
 
 # <sys/resource.h>
 int getrusage(int, struct rusage*)  all
-int __getpriority:getpriority(int, int)  all
-int setpriority(int, int, int)   all
+int __getpriority:getpriority(int, id_t)  all
+int setpriority(int, id_t, int)   all
 # On LP64, rlimit and rlimit64 are the same.
 # On 32-bit systems we use prlimit64 to implement the rlimit64 functions.
 int getrlimit:ugetrlimit(int, struct rlimit*)  arm,x86
