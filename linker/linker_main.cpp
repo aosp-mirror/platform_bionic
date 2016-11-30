@@ -40,7 +40,9 @@
 
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
+#ifdef __ANDROID__
 #include "debuggerd/client.h"
+#endif
 
 #include <vector>
 
@@ -217,6 +219,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   __system_properties_init(); // may use 'environ'
 
   // Register the debuggerd signal handler.
+#ifdef __ANDROID__
   debuggerd_callbacks_t callbacks = {
     .get_abort_message = []() {
       return g_abort_message;
@@ -224,6 +227,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     .post_dump = &notify_gdb_of_libraries,
   };
   debuggerd_init(&callbacks);
+#endif
 
   g_linker_logger.ResetState();
 
