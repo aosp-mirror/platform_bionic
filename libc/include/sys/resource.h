@@ -48,8 +48,8 @@ int setrlimit(int, const struct rlimit*);
 int getrlimit64(int, struct rlimit64*) __INTRODUCED_IN(21);
 int setrlimit64(int, const struct rlimit64*) __INTRODUCED_IN(21);
 
-int getpriority(int, int);
-int setpriority(int, int, int);
+int getpriority(int, id_t);
+int setpriority(int, id_t, int);
 
 int getrusage(int, struct rusage*);
 

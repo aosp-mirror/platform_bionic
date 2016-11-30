@@ -25,13 +25,12 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <sys/resource.h>
 
-extern int __getpriority(int, int);
+extern "C" int __getpriority(int, id_t);
 
-int getpriority(int which, int who)
-{
+int getpriority(int which, id_t who) {
   int result = __getpriority(which, who);
-
-  return ( result < 0 ) ? result : 20-result;
+  return (result < 0) ? result : 20-result;
 }
