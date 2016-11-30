@@ -117,8 +117,8 @@ int         mlockall(int flags)   all
 int         munlockall()   all
 int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
 int         __ioctl:ioctl(int, int, void*)  all
-int         readv(int, const struct iovec*, int)   all
-int         writev(int, const struct iovec*, int)  all
+ssize_t     readv(int, const struct iovec*, int)   all
+ssize_t     writev(int, const struct iovec*, int)  all
 int         __fcntl64:fcntl64(int, int, void*)  arm,mips,x86
 int         fcntl(int, int, void*)  arm64,mips64,x86_64
 int         flock(int, int)   all
