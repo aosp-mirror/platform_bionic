@@ -34,8 +34,8 @@
 
 __BEGIN_DECLS
 
-int readv(int, const struct iovec*, int);
-int writev(int, const struct iovec*, int);
+ssize_t readv(int, const struct iovec*, int);
+ssize_t writev(int, const struct iovec*, int);
 
 #if defined(__USE_GNU)
 #if defined(__USE_FILE_OFFSET64)
