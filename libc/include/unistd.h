@@ -148,7 +148,7 @@ int fchownat(int __dirfd, const char* __path, uid_t __owner, gid_t __group, int 
 int lchown(const char* __path, uid_t __owner, gid_t __group);
 char* getcwd(char* __buf, size_t __size);
 
-int sync(void);
+void sync(void);
 
 int close(int __fd);
 
