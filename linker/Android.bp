@@ -1,6 +1,7 @@
 cc_library_static {
     name: "liblinker_malloc",
     clang: true,
+    defaults: ["linux_bionic_supported"],
 
     srcs: [
         "linker_allocator.cpp",
@@ -13,6 +14,7 @@ cc_library_static {
 
 cc_binary {
     clang: true,
+    defaults: ["linux_bionic_supported"],
 
     srcs: [
         "dlfcn.cpp",
@@ -112,7 +114,6 @@ cc_binary {
         "libbase",
         "libz",
         "liblog",
-        "libdebuggerd_client",
 
         // Important: The liblinker_malloc should be the last library in the list
         // to overwrite any other malloc implementations by other static libraries.
@@ -131,7 +132,13 @@ cc_binary {
        },
     },
     target: {
+        android: {
+            static_libs: ["libdebuggerd_client"],
+        },
         android64: {
+            cflags: ["-DTARGET_IS_64_BIT"],
+        },
+        linux_bionic: {
             cflags: ["-DTARGET_IS_64_BIT"],
         },
     },
