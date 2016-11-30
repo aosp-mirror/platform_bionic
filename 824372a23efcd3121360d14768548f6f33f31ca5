@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f01d104e_8ae23d13",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2634,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-30T00:23:26Z",
+      "side": 1,
+      "message": "good point, done",
+      "parentUuid": "7083e087_839de043",
+      "range": {
+        "startLine": 2634,
+        "startChar": 8,
+        "endLine": 2634,
+        "endChar": 28
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7083e087_a343c4b1",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-23T17:17:21Z",
       "side": 1,
       "message": "sizeof(uint32_t)",
+      "range": {
+        "startLine": 1091,
+        "startChar": 24,
+        "endLine": 1091,
+        "endChar": 25
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_ca5275f8",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-30T00:23:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7083e087_a343c4b1",
       "range": {
         "startLine": 1091,
         "startChar": 24,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f01d104e_ea5731e5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-30T00:23:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7083e087_63b7fcb6",
+      "range": {
+        "startLine": 1093,
+        "startChar": 19,
+        "endLine": 1093,
+        "endChar": 20
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7083e087_e33dcc23",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2016-11-23T17:17:21Z",
       "side": 1,
       "message": "Introduce constants?",
+      "range": {
+        "startLine": 1094,
+        "startChar": 11,
+        "endLine": 1094,
+        "endChar": 12
+      },
+      "revId": "824372a23efcd3121360d14768548f6f33f31ca5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f01d104e_0a5d6d06",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1094,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-11-30T00:23:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7083e087_e33dcc23",
       "range": {
         "startLine": 1094,
         "startChar": 11,
