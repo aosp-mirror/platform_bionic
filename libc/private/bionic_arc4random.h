@@ -39,7 +39,12 @@
  * created yet. Provide a wrapper function that falls back to AT_RANDOM if
  * we don't have getrandom and /dev/urandom is missing.
  */
-
 void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args);
+
+/*
+ * Return true if libc has an unlimited entropy source (something other than
+ * AT_RANDOM), and arc4random* calls will always succeed.
+ */
+bool __libc_arc4random_has_unlimited_entropy();
 
 #endif
