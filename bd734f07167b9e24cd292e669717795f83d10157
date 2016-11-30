@@ -16,6 +16,24 @@
       "revId": "bd734f07167b9e24cd292e669717795f83d10157",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd60731e_f687def7",
+        "filename": "libc/include/sys/limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-11-30T23:31:29Z",
+      "side": 0,
+      "message": "A few weeks ago I would have said definitely 1, since we\u0027re about to make NDK users deal with this kind of stuff anyway. With beta 1 now fully cooked, I\u0027m a bit more hesitant, but I think we should do that anyway since that\u0027s only beta 1...",
+      "parentUuid": "f01d104e_20b165df",
+      "revId": "bd734f07167b9e24cd292e669717795f83d10157",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
