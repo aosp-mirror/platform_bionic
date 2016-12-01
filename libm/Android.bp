@@ -528,6 +528,7 @@ cc_library {
     native_coverage: bionic_coverage,
     sanitize: {
         address: false,
+        coverage: false,
     },
     stl: "none",
 }
