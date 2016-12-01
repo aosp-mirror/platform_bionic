@@ -29,7 +29,7 @@
 #include <unistd.h>
 
 #include <errno.h>
-#include <sys/limits.h>
+#include <limits.h>
 #include <sys/vfs.h>
 
 static long __filesizebits(const struct statfs& s) {
