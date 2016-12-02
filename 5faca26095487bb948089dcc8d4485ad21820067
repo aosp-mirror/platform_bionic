@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd60731e_a10075b5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2698,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-02T16:15:28Z",
+      "side": 1,
+      "message": "This might leave g_safestack_required \u0026\u0026 g_non_safestack_libraries_present in invalid state. As well as any other error for this or any dt_needed library.",
+      "revId": "5faca26095487bb948089dcc8d4485ad21820067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
