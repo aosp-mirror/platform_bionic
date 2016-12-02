@@ -1347,7 +1347,8 @@ TEST(UNISTD_TEST, execvpe_failure) {
   ExecTestHelper eth;
   errno = 0;
   ASSERT_EQ(-1, execvpe("this-does-not-exist", eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(ENOENT, errno);
+  // Running in CTS we might not even be able to search all directories in $PATH.
+  ASSERT_TRUE(errno == ENOENT || errno == EACCES);
 }
 
 TEST(UNISTD_TEST, execvpe) {
@@ -1380,8 +1381,8 @@ TEST(UNISTD_TEST, execvpe_ENOEXEC) {
   ASSERT_EQ(-1, execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()));
   ASSERT_EQ(EACCES, errno);
 
-  // Make it executable.
-  ASSERT_EQ(0, chmod(tf.filename, 0555));
+  // Make it executable (and keep it writable because we're going to rewrite it below).
+  ASSERT_EQ(0, chmod(tf.filename, 0777));
 
   // TemporaryFile will have a writable fd, so we can test ETXTBSY while we're here...
   errno = 0;
