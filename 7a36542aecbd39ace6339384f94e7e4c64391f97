@@ -22,6 +22,30 @@
       "revId": "7a36542aecbd39ace6339384f94e7e4c64391f97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_d14a569d",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-02T23:10:09Z",
+      "side": 1,
+      "message": "yes it is.\n\n(you don\u0027t need it *every* time, but the easier it is to just copy \u0026 paste, the better.)",
+      "parentUuid": "6d06a7a0_11bd8e64",
+      "range": {
+        "startLine": 238,
+        "startChar": 18,
+        "endLine": 238,
+        "endChar": 29
+      },
+      "revId": "7a36542aecbd39ace6339384f94e7e4c64391f97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
