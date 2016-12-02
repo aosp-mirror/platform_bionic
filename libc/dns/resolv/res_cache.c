@@ -2010,8 +2010,8 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             }
             cache_info->nscount = numservers;
 
-            // Flush the cache and reset the stats.
-            _flush_cache_for_net_locked(netid);
+            // Clear the NS statistics because the mapping to nameservers might have changed.
+            _res_cache_clear_stats_locked(cache_info);
 
             // increment the revision id to ensure that sample state is not written back if the
             // servers change; in theory it would suffice to do so only if the servers or
