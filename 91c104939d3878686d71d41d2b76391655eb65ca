@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6d06a7a0_2b7f0580",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-12-02T20:57:53Z",
+      "side": 1,
+      "message": "Implementation seemed cleaner, but it\u0027s marginal. ps2 has the single function form. Let me know which you prefer.",
+      "parentUuid": "6d06a7a0_6b5cdd37",
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d06a7a0_cb6ce9e6",
         "filename": "libc/bionic/wcstod.cpp",
         "patchSetId": 1
@@ -42,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "6d06a7a0_eb1fad26",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-12-02T20:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d06a7a0_cb6ce9e6",
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d06a7a0_2b66e501",
         "filename": "tests/wchar_test.cpp",
         "patchSetId": 1
@@ -53,6 +89,24 @@
       "writtenOn": "2016-12-02T20:40:10Z",
       "side": 1,
       "message": "put the other ignored space characters in too?",
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_4b8c7954",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2016-12-02T20:57:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d06a7a0_2b66e501",
       "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
