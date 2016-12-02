@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d06a7a0_6b5cdd37",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-02T20:40:10Z",
+      "side": 1,
+      "message": "why two functions?",
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_cb6ce9e6",
+        "filename": "libc/bionic/wcstod.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-02T20:40:10Z",
+      "side": 1,
+      "message": "actual",
+      "range": {
+        "startLine": 93,
+        "startChar": 84,
+        "endLine": 93,
+        "endChar": 92
+      },
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_2b66e501",
+        "filename": "tests/wchar_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-02T20:40:10Z",
+      "side": 1,
+      "message": "put the other ignored space characters in too?",
+      "revId": "91c104939d3878686d71d41d2b76391655eb65ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
