@@ -686,6 +686,11 @@ static void CheckWcsToFloat(T fn(const wchar_t* s, wchar_t** end)) {
   EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0.9e1", nullptr));
   EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0x1.2p3", nullptr));
 
+  const wchar_t* s = L" \t\v\f\r\n9.0";
+  wchar_t* p;
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn(s, &p));
+  EXPECT_EQ(s + wcslen(s), p);
+
   EXPECT_TRUE(isnan(fn(L"+nan", nullptr)));
   EXPECT_TRUE(isnan(fn(L"nan", nullptr)));
   EXPECT_TRUE(isnan(fn(L"-nan", nullptr)));
@@ -694,7 +699,6 @@ static void CheckWcsToFloat(T fn(const wchar_t* s, wchar_t** end)) {
   EXPECT_TRUE(isnan(fn(L"nan(0xff)", nullptr)));
   EXPECT_TRUE(isnan(fn(L"-nan(0xff)", nullptr)));
 
-  wchar_t* p;
   EXPECT_TRUE(isnan(fn(L"+nanny", &p)));
   EXPECT_STREQ(L"ny", p);
   EXPECT_TRUE(isnan(fn(L"nanny", &p)));
