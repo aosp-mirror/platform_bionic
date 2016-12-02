@@ -298,6 +298,11 @@ static void CheckStrToFloat(T fn(const char* s, char** end)) {
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("0.9e1", nullptr));
   EXPECT_PRED_FORMAT2(pred, 9.0, fn("0x1.2p3", nullptr));
 
+  const char* s = " \t\v\f\r\n9.0";
+  char* p;
+  EXPECT_PRED_FORMAT2(pred, 9.0, fn(s, &p));
+  EXPECT_EQ(s + strlen(s), p);
+
   EXPECT_TRUE(isnan(fn("+nan", nullptr)));
   EXPECT_TRUE(isnan(fn("nan", nullptr)));
   EXPECT_TRUE(isnan(fn("-nan", nullptr)));
@@ -306,7 +311,6 @@ static void CheckStrToFloat(T fn(const char* s, char** end)) {
   EXPECT_TRUE(isnan(fn("nan(0xff)", nullptr)));
   EXPECT_TRUE(isnan(fn("-nan(0xff)", nullptr)));
 
-  char* p;
   EXPECT_TRUE(isnan(fn("+nanny", &p)));
   EXPECT_STREQ("ny", p);
   EXPECT_TRUE(isnan(fn("nanny", &p)));
