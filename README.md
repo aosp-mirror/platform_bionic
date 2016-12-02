@@ -200,9 +200,8 @@ The tests are all built from the tests/ directory.
 
 ### Device tests
 
-    $ mma
-    $ adb remount
-    $ adb sync
+    $ mma # In $ANDROID_ROOT/bionic.
+    $ adb root && adb remount && adb sync
     $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
     $ adb shell \
         /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
@@ -215,6 +214,30 @@ Note that we use our own custom gtest runner that offers a superset of the
 options documented at
 <https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options>,
 in particular for test isolation and parallelism (both on by default).
+
+### Device tests via CTS
+
+Most of the unit tests are executed by CTS. By default, CTS runs as
+a non-root user, so the unit tests must also pass when not run as root.
+Some tests cannot do any useful work unless run as root. In this case,
+the test should check `getuid() == 0` and do nothing otherwise (typically
+we log in this case to prevent accidents!). Obviously, if the test can be
+rewritten to not require root, that's an even better solution.
+
+Currently, the list of bionic CTS tests is generated at build time by
+running a host version of the test executable and dumping the list of
+all tests. In order for this to continue to work, all architectures must
+have the same number of tests, and the host version of the executable
+must also have the same number of tests.
+
+Running the gtests directly is orders of magnitude faster than using CTS,
+but in cases where you really have to run CTS:
+
+    $ make cts # In $ANDROID_ROOT.
+    $ adb unroot # Because real CTS doesn't run as root.
+    # This will sync any *test* changes, but not *code* changes:
+    $ cts-tradefed \
+        run singleCommand cts --skip-preconditions -m CtsBionicTestCases
 
 ### Host tests
 
