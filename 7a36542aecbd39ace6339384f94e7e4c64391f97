@@ -46,6 +46,29 @@
       "revId": "7a36542aecbd39ace6339384f94e7e4c64391f97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_f1131a84",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-02T23:15:35Z",
+      "side": 1,
+      "message": "adb sync data instead?",
+      "range": {
+        "startLine": 238,
+        "startChar": 51,
+        "endLine": 238,
+        "endChar": 59
+      },
+      "revId": "7a36542aecbd39ace6339384f94e7e4c64391f97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
