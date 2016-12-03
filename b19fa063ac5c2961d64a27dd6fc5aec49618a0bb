@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d06a7a0_e2fa2a9b",
+        "filename": "libdl/ld_android.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-03T20:10:26Z",
+      "side": 1,
+      "message": "what\u0027s the empty file for?",
+      "revId": "b19fa063ac5c2961d64a27dd6fc5aec49618a0bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
