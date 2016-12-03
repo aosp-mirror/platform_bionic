@@ -16,6 +16,24 @@
       "revId": "5faca26095487bb948089dcc8d4485ad21820067",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_fcfc1101",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2698,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-12-03T00:44:33Z",
+      "side": 1,
+      "message": "Another good point!\nI think I\u0027ve fixed it now, but in an ugly way.\nAlternatives are:\n* move the check to the end of find_libraries in the same block with the disabling of the failure guard.\n* run the check early and update global state at the end of find_libraries. That would parse elf notes twice.\n* replace global booleans with counters so that any change to the global state can be reverted. I think that would require a flag in struct soinfo to record the fact that the library has been \"safestack-processed\". Otherwise, it looks like soinfo_unload can catch a soinfo basically in any stage of it\u0027s life. This would also let us downgrade safestack-required status of the process on dlclose().",
+      "parentUuid": "cd60731e_a10075b5",
+      "revId": "5faca26095487bb948089dcc8d4485ad21820067",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
