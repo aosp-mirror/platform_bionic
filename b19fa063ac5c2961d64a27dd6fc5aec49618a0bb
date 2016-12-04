@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "6d06a7a0_9d974fd6",
+        "filename": "libdl/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-04T07:11:18Z",
+      "side": 1,
+      "message": "this is why we need empty file; the final version should not have it.. or if I won\u0027t be able to get rid of it, it will be replaced by linker, and linker with symlink to /system/lib/ld-android.so",
+      "range": {
+        "startLine": 98,
+        "startChar": 11,
+        "endLine": 98,
+        "endChar": 21
+      },
+      "revId": "b19fa063ac5c2961d64a27dd6fc5aec49618a0bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d06a7a0_e2fa2a9b",
         "filename": "libdl/ld_android.c",
         "patchSetId": 6
