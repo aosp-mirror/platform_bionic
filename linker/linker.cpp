@@ -324,9 +324,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
 // in that section (via *pcount).
 //
 // Intended to be called by libc's __gnu_Unwind_Find_exidx().
-//
-// This function is exposed via dlfcn.cpp and libdl.so.
-_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
+_Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
   uintptr_t addr = reinterpret_cast<uintptr_t>(pc);
 
   for (soinfo* si = solist_get_head(); si != 0; si = si->next) {
@@ -1730,8 +1728,9 @@ static std::string android_dlextinfo_to_string(const android_dlextinfo* info) {
                                         info->library_namespace : nullptr);
 }
 
-void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
-                  void* caller_addr) {
+void* do_dlopen(const char* name, int flags,
+                const android_dlextinfo* extinfo,
+                const void* caller_addr) {
   soinfo* const caller = find_containing_library(caller_addr);
   android_namespace_t* ns = get_caller_namespace(caller);
 
@@ -1855,8 +1854,11 @@ static soinfo* soinfo_from_handle(void* handle) {
   return static_cast<soinfo*>(handle);
 }
 
-bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
-              void* caller_addr, void** symbol) {
+bool do_dlsym(void* handle,
+              const char* sym_name,
+              const char* sym_ver,
+              const void* caller_addr,
+              void** symbol) {
 #if !defined(__LP64__)
   if (handle == nullptr) {
     DL_ERR("dlsym failed: library handle is null");
