@@ -108,10 +108,6 @@
 #include <stdarg.h>
 #include "nsswitch.h"
 
-#if defined(__BIONIC__)
-#include <sys/system_properties.h>
-#endif
-
 typedef union sockaddr_union {
     struct sockaddr     generic;
     struct sockaddr_in  in;

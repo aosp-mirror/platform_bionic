@@ -101,7 +101,6 @@ __RCSID("$NetBSD: res_init.c,v 1.8 2006/03/19 03:10:08 christos Exp $");
 #ifdef ANDROID_CHANGES
 #include <errno.h>
 #include <fcntl.h>
-#include <sys/system_properties.h>
 #endif /* ANDROID_CHANGES */
 
 /* ensure that sockaddr_in6 and IN6ADDR_ANY_INIT are declared / defined */
