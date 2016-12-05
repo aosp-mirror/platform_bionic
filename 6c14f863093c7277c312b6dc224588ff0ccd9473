@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d06a7a0_c31a8555",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-12-05T22:09:20Z",
+      "side": 1,
+      "message": "why limit this to absolute paths?",
+      "range": {
+        "startLine": 1788,
+        "startChar": 49,
+        "endLine": 1788,
+        "endChar": 74
+      },
+      "revId": "6c14f863093c7277c312b6dc224588ff0ccd9473",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
