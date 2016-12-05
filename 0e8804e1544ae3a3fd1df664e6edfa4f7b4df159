@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d06a7a0_63ebd931",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-05T21:56:06Z",
+      "side": 1,
+      "message": "or adb root \u0026\u0026 adb sync data if there is no need in updating /system... note that on most of userdebug builds in order to be able to remount we need to run \"adb root \u0026\u0026 adb disable-verity \u0026\u0026 adb reboot\" after every fastboot flashall.",
+      "revId": "0e8804e1544ae3a3fd1df664e6edfa4f7b4df159",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
