@@ -38,7 +38,6 @@
 
 #include <errno.h>
 #include <arpa/nameser.h>
-#include <sys/system_properties.h>
 #include <net/if.h>
 #include <netdb.h>
 #include <linux/if.h>
@@ -137,7 +136,6 @@
  * *****************************************
  */
 #define  CONFIG_MAX_ENTRIES    64 * 2 * 5
-/* name of the system property that can be used to set the cache size */
 
 /****************************************************************************/
 /****************************************************************************/
@@ -2286,4 +2284,3 @@ _resolv_cache_add_resolver_stats_sample( unsigned netid, int revision_id, int ns
 
     pthread_mutex_unlock(&_res_cache_list_lock);
 }
-
