@@ -16,6 +16,24 @@
       "revId": "0e8804e1544ae3a3fd1df664e6edfa4f7b4df159",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_63519926",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-05T21:59:08Z",
+      "side": 1,
+      "message": "feel free to add a section describing the differences between user/userdebug/eng, but just syncing /data is almost certainly _not_ what someone working on bionic intends. (and if they do, they know how to do that themselves anyway.)",
+      "parentUuid": "6d06a7a0_63ebd931",
+      "revId": "0e8804e1544ae3a3fd1df664e6edfa4f7b4df159",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
