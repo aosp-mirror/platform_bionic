@@ -22,6 +22,46 @@
       "revId": "6c14f863093c7277c312b6dc224588ff0ccd9473",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_03577de9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1791,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-05T22:11:51Z",
+      "side": 1,
+      "message": "because this check works only for absolute paths anyways.",
+      "range": {
+        "startLine": 1791,
+        "startChar": 10,
+        "endLine": 1791,
+        "endChar": 24
+      },
+      "revId": "6c14f863093c7277c312b6dc224588ff0ccd9473",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d06a7a0_e35b4911",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1797,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-05T22:11:51Z",
+      "side": 1,
+      "message": "as well as this one",
+      "revId": "6c14f863093c7277c312b6dc224588ff0ccd9473",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
