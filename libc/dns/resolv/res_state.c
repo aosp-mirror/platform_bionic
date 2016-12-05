@@ -36,8 +36,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
-#include <sys/_system_properties.h>
 
 /* Set to 1 to enable debug traces */
 #define DEBUG 0
@@ -54,8 +52,6 @@ typedef struct {
     int                  _h_errno;
     // TODO: Have one __res_state per network so we don't have to repopulate frequently.
     struct __res_state  _nres[1];
-    unsigned             _serial;
-    struct prop_info*   _pi;
     struct res_static   _rstatic[1];
 } _res_thread;
 
@@ -66,12 +62,6 @@ _res_thread_alloc(void)
 
     if (rt) {
         rt->_h_errno = 0;
-        /* Special system property which tracks any changes to 'net.*'. */
-        rt->_serial = 0;
-        rt->_pi = (struct prop_info*) __system_property_find("net.change");
-        if (rt->_pi) {
-            rt->_serial = __system_property_serial(rt->_pi);
-        }
         memset(rt->_rstatic, 0, sizeof rt->_rstatic);
     }
     return rt;
@@ -116,32 +106,7 @@ _res_thread_get(void)
     rt = pthread_getspecific( _res_key );
 
     if (rt != NULL) {
-        /* We already have one thread-specific DNS state object.
-         * Check the serial value for any changes to net.* properties */
-        D("%s: Called for tid=%d rt=%p rt->pi=%p rt->serial=%d",
-           __FUNCTION__, gettid(), rt, rt->_pi, rt->_serial);
-        if (rt->_pi == NULL) {
-            /* The property wasn't created when _res_thread_get() was
-             * called the last time. This should only happen very
-             * early during the boot sequence. First, let's try to see if it
-             * is here now. */
-            rt->_pi = (struct prop_info*) __system_property_find("net.change");
-            if (rt->_pi == NULL) {
-                /* Still nothing, return current state */
-                D("%s: exiting for tid=%d rt=%p since system property not found",
-                  __FUNCTION__, gettid(), rt);
-                return rt;
-            }
-        }
-        if (rt->_serial == __system_property_serial(rt->_pi)) {
-            /* Nothing changed, so return the current state */
-            D("%s: tid=%d rt=%p nothing changed, returning",
-              __FUNCTION__, gettid(), rt);
-            return rt;
-        }
-        /* Update the recorded serial number, and go reset the state */
-        rt->_serial = __system_property_serial(rt->_pi);
-        goto RESET_STATE;
+        return rt;
     }
 
     /* It is the first time this function is called in this thread,
@@ -154,11 +119,10 @@ _res_thread_get(void)
     D("%s: tid=%d Created new DNS state rt=%p",
       __FUNCTION__, gettid(), rt);
 
-RESET_STATE:
     /* Reset the state, note that res_ninit() can now properly reset
      * an existing state without leaking memory.
      */
-    D("%s: tid=%d, rt=%p, resetting DNS state (options RES_INIT=%d)",
+    D("%s: tid=%d, rt=%p, setting DNS state (options RES_INIT=%d)",
       __FUNCTION__, gettid(), rt, (rt->_nres->options & RES_INIT) != 0);
     if ( res_ninit( rt->_nres ) < 0 ) {
         /* This should not happen */
