@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed27f748_88e62729",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-06T22:45:19Z",
+      "side": 1,
+      "message": "this line is different from previous version (in previous version it was __dl_iterate...)",
+      "revId": "4388262476bca9a3a43e195fd005052310cdc08c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
