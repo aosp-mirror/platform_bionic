@@ -57,55 +57,6 @@ cc_library {
     allow_undefined_symbols: true,
     system_shared_libs: [],
 
-    // This is placeholder library the actual implementation is (currently)
-    // provided by the linker.
-    shared_libs: [ "ld-android" ],
-
-    sanitize: {
-        never: true,
-    },
-}
-
-cc_library {
-    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
-    // libgcc.a are made static to ld-android.so.  This in turn ensures that libraries that
-    // a) pull symbols from libgcc.a and b) depend on ld-android.so will not rely on ld-android.so
-    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
-    // we use this property to make sure libc.so has its own copy of the code from
-    // libgcc.a it uses.
-    //
-    // DO NOT REMOVE --exclude-libs!
-
-    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
-
-    // for x86, exclude libgcc_eh.a for the same reasons as above
-    arch: {
-        x86: {
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
-        },
-        x86_64: {
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
-        },
-    },
-    srcs: ["ld_android.c"],
-    cflags: [
-        "-Wall",
-        "-Wextra",
-        "-Wunused",
-        "-Werror",
-    ],
-    stl: "none",
-
-    name: "ld-android",
-
-    // NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
-    // few symbols from libc. Using --no-undefined here results in having to link
-    // against libc creating a circular dependency which is removed and we end up
-    // with missing symbols. Since this library is just a bunch of stubs, we set
-    // LOCAL_ALLOW_UNDEFINED_SYMBOLS to remove --no-undefined from the linker flags.
-    allow_undefined_symbols: true,
-    system_shared_libs: [],
-
     sanitize: {
         never: true,
     },
