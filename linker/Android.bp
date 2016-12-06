@@ -103,6 +103,12 @@ cc_binary {
 
     cppflags: ["-Wold-style-cast"],
 
+    // we are going to link libc++_static manually because
+    // when stl is not set to "none" build system adds libdl
+    // to the list of static libraries which needs to be
+    // avoided in the case of building loader.
+    stl: "none",
+
     // we don't want crtbegin.o (because we have begin.o), so unset it
     // just for this module
     nocrt: true,
@@ -114,6 +120,7 @@ cc_binary {
         "libbase",
         "libz",
         "liblog",
+        "libc++_static",
 
         // Important: The liblinker_malloc should be the last library in the list
         // to overwrite any other malloc implementations by other static libraries.
