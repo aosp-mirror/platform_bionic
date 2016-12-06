@@ -1785,18 +1785,21 @@ void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo,
   std::string asan_name_holder;
 
   const char* translated_name = name;
-  if (g_is_asan) {
-    if (file_is_in_dir(name, kSystemLibDir)) {
-      asan_name_holder = std::string(kAsanSystemLibDir) + "/" + basename(name);
-      if (file_exists(asan_name_holder.c_str())) {
-        translated_name = asan_name_holder.c_str();
-        PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
-      }
-    } else if (file_is_in_dir(name, kVendorLibDir)) {
-      asan_name_holder = std::string(kAsanVendorLibDir) + "/" + basename(name);
-      if (file_exists(asan_name_holder.c_str())) {
-        translated_name = asan_name_holder.c_str();
-        PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+  if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
+    char translated_path[PATH_MAX];
+    if (realpath(translated_name, translated_path) != nullptr) {
+      if (file_is_in_dir(translated_path, kSystemLibDir)) {
+        asan_name_holder = std::string(kAsanSystemLibDir) + "/" + basename(translated_path);
+        if (file_exists(asan_name_holder.c_str())) {
+          translated_name = asan_name_holder.c_str();
+          PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+        }
+      } else if (file_is_in_dir(translated_path, kVendorLibDir)) {
+        asan_name_holder = std::string(kAsanVendorLibDir) + "/" + basename(translated_path);
+        if (file_exists(asan_name_holder.c_str())) {
+          translated_name = asan_name_holder.c_str();
+          PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+        }
       }
     }
   }
