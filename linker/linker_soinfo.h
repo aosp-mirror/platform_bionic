@@ -336,7 +336,7 @@ struct soinfo {
   android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
-  friend soinfo* get_libdl_info(const char* linker_path);
+  friend soinfo* get_libdl_info();
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
