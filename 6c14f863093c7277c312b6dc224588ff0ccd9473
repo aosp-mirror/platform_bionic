@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "6d06a7a0_b4cc65c7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1791,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-12-06T00:38:05Z",
+      "side": 1,
+      "message": "OK.\nI\u0027m still worried about the case where one library is opened via absolute and then relative path, and we end up loading it twice.",
+      "parentUuid": "6d06a7a0_9e8f424a",
+      "range": {
+        "startLine": 1791,
+        "startChar": 10,
+        "endLine": 1791,
+        "endChar": 24
+      },
+      "revId": "6c14f863093c7277c312b6dc224588ff0ccd9473",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d06a7a0_e35b4911",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
