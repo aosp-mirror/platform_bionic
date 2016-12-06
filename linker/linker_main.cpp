@@ -160,11 +160,16 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
  * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
  * Note that the linker shouldn't be on the soinfo list.
  */
-static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
+static void init_linker_info_for_gdb(ElfW(Addr) linker_base) {
   static link_map linker_link_map_for_gdb;
+#if defined(__LP64__)
+  static char kLinkerPath[] = "/system/bin/linker64";
+#else
+  static char kLinkerPath[] = "/system/bin/linker";
+#endif
 
   linker_link_map_for_gdb.l_addr = linker_base;
-  linker_link_map_for_gdb.l_name = linker_path;
+  linker_link_map_for_gdb.l_name = kLinkerPath;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
@@ -195,12 +200,6 @@ static const char* get_executable_path() {
 
   return executable_path.c_str();
 }
-
-#if defined(__LP64__)
-static char kLinkerPath[] = "/system/bin/linker64";
-#else
-static char kLinkerPath[] = "/system/bin/linker";
-#endif
 
 /*
  * This code is called after the linker has linked itself and
@@ -283,7 +282,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   map->l_addr = 0;
   map->l_name = const_cast<char*>(executable_path);
   insert_link_map_into_debug_map(map);
-  init_linker_info_for_gdb(linker_base, kLinkerPath);
+  init_linker_info_for_gdb(linker_base);
 
   // Extract information passed from the kernel.
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
@@ -525,8 +524,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = get_libdl_info(kLinkerPath);
-  g_default_namespace.add_soinfo(solist);
+  solist = get_libdl_info();
+  sonext = get_libdl_info();
+  g_default_namespace.add_soinfo(get_libdl_info());
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.

@@ -101,27 +101,17 @@ enum RelocationKind {
 
 void count_relocation(RelocationKind kind);
 
-soinfo* get_libdl_info(const char* linker_path);
+soinfo* get_libdl_info();
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
-void* do_dlopen(const char* name,
-                int flags,
-                const android_dlextinfo* extinfo,
-                const void* caller_addr);
-
+void* do_dlopen(const char* name, int flags, const android_dlextinfo* extinfo, void* caller_addr);
 int do_dlclose(void* handle);
 
 int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data);
 
-#if defined(__arm__)
-_Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount);
-#endif
-
-bool do_dlsym(void* handle, const char* sym_name,
-              const char* sym_ver,
-              const void* caller_addr,
-              void** symbol);
+bool do_dlsym(void* handle, const char* sym_name, const char* sym_ver,
+              void* caller_addr, void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
 

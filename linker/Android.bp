@@ -1,5 +1,6 @@
 cc_library_static {
     name: "liblinker_malloc",
+    clang: true,
     defaults: ["linux_bionic_supported"],
 
     srcs: [
@@ -12,7 +13,9 @@ cc_library_static {
 }
 
 cc_binary {
+    clang: true,
     defaults: ["linux_bionic_supported"],
+
     srcs: [
         "dlfcn.cpp",
         "linker.cpp",
@@ -95,6 +98,8 @@ cc_binary {
         "-Wunused",
         "-Werror",
     ],
+
+    conlyflags: ["-std=gnu99"],
 
     cppflags: ["-Wold-style-cast"],
 
