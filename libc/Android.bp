@@ -1578,10 +1578,9 @@ cc_library_static {
 // dynamic linker.
 
 cc_library_static {
+    name: "libc_nomalloc",
+
     defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/dl_iterate_phdr_static.cpp",
-    ],
 
     arch: {
         arm: {
@@ -1590,8 +1589,6 @@ cc_library_static {
     },
 
     cflags: ["-DLIBC_STATIC"],
-
-    name: "libc_nomalloc",
 
     whole_static_libs: [
         "libc_common",
