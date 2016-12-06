@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
+#include <pty.h>
+
 #include <gtest/gtest.h>
 
-#include <pty.h>
+#include <pthread.h>
 #include <sys/ioctl.h>
+
+#include <atomic>
+
+#include <android-base/file.h>
 
 #include "utils.h"
 
