@@ -16,6 +16,24 @@
       "revId": "4388262476bca9a3a43e195fd005052310cdc08c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed27f748_a93c45d6",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-07T01:59:56Z",
+      "side": 1,
+      "message": "comment explaining why this one is different since even the maintainer got it wrong first try? :-)",
+      "parentUuid": "ed27f748_88e62729",
+      "revId": "4388262476bca9a3a43e195fd005052310cdc08c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
