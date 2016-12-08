@@ -1299,6 +1299,17 @@ ip6_str2scopeid(char *scope, struct sockaddr_in6 *sin6, u_int32_t *scopeid)
 static const char AskedForGot[] =
 	"gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
+#define BOUNDED_INCR(x) \
+	do { \
+		BOUNDS_CHECK(cp, x); \
+		cp += (x); \
+	} while (/*CONSTCOND*/0)
+
+#define BOUNDS_CHECK(ptr, count) \
+	do { \
+		if (eom - (ptr) < (count)) { h_errno = NO_RECOVERY; return NULL; } \
+	} while (/*CONSTCOND*/0)
+
 static struct addrinfo *
 getanswer(const querybuf *answer, int anslen, const char *qname, int qtype,
     const struct addrinfo *pai)
@@ -1344,7 +1355,8 @@ getanswer(const querybuf *answer, int anslen, const char *qname, int qtype,
 	qdcount = ntohs(hp->qdcount);
 	bp = hostbuf;
 	ep = hostbuf + sizeof hostbuf;
-	cp = answer->buf + HFIXEDSZ;
+	cp = answer->buf;
+	BOUNDED_INCR(HFIXEDSZ);
 	if (qdcount != 1) {
 		h_errno = NO_RECOVERY;
 		return (NULL);
@@ -1354,7 +1366,7 @@ getanswer(const querybuf *answer, int anslen, const char *qname, int qtype,
 		h_errno = NO_RECOVERY;
 		return (NULL);
 	}
-	cp += n + QFIXEDSZ;
+	BOUNDED_INCR(n + QFIXEDSZ);
 	if (qtype == T_A || qtype == T_AAAA || qtype == T_ANY) {
 		/* res_send() has already verified that the query name is the
 		 * same as the one we sent; this just gets the expanded name
@@ -1379,12 +1391,14 @@ getanswer(const querybuf *answer, int anslen, const char *qname, int qtype,
 			continue;
 		}
 		cp += n;			/* name */
+		BOUNDS_CHECK(cp, 3 * INT16SZ + INT32SZ);
 		type = _getshort(cp);
  		cp += INT16SZ;			/* type */
 		class = _getshort(cp);
  		cp += INT16SZ + INT32SZ;	/* class, TTL */
 		n = _getshort(cp);
 		cp += INT16SZ;			/* len */
+		BOUNDS_CHECK(cp, n);
 		if (class != C_IN) {
 			/* XXX - debug? syslog? */
 			cp += n;
