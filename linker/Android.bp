@@ -129,14 +129,11 @@ cc_binary {
     static_executable: true,
 
     name: "linker",
+    symlinks: ["linker_asan"],
     multilib: {
-        lib32: {
-            symlinks: ["linker_asan"],
-        },
         lib64: {
             suffix: "64",
-            symlinks: ["linker_asan64"],
-       },
+        },
     },
     target: {
         android: {
