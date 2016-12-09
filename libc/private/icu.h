@@ -29,6 +29,27 @@
 #ifndef _PRIVATE_ICU_H
 #define _PRIVATE_ICU_H
 
+#include <stdint.h>
+
+typedef int8_t UBool;
+typedef int32_t UChar32;
+
+enum UProperty {
+  UCHAR_ALPHABETIC = 0,
+  UCHAR_LOWERCASE = 22,
+  UCHAR_POSIX_ALNUM = 44,
+  UCHAR_POSIX_BLANK = 45,
+  UCHAR_POSIX_GRAPH = 46,
+  UCHAR_POSIX_PRINT = 47,
+  UCHAR_POSIX_XDIGIT = 48,
+  UCHAR_UPPERCASE = 30,
+  UCHAR_WHITE_SPACE = 31,
+};
+
+enum UCharCategory {
+  U_CONTROL_CHAR = 15,
+};
+
 void* __find_icu_symbol(const char* symbol_name);
 
 #endif  // _PRIVATE_ICU_H
