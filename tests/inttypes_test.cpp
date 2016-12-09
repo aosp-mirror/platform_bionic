@@ -98,11 +98,15 @@ TEST(inttypes, scanf_macros) {
 }
 
 TEST(inttypes, wcstoimax) {
-  ASSERT_EQ(123, wcstoimax(L"123", NULL, 10));
+  wchar_t* end = nullptr;
+  EXPECT_EQ(123, wcstoimax(L"  +123x", &end, 10));
+  EXPECT_EQ(L'x', *end);
 }
 
 TEST(inttypes, wcstoumax) {
-  ASSERT_EQ(123U, wcstoumax(L"123", NULL, 10));
+  wchar_t* end = nullptr;
+  EXPECT_EQ(123U, wcstoumax(L"  +123x", &end, 10));
+  EXPECT_EQ(L'x', *end);
 }
 
 TEST(inttypes, strtoimax_EINVAL) {

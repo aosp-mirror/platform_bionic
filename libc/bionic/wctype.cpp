@@ -36,20 +36,8 @@
 
 #include "private/icu.h"
 
-static constexpr int UCHAR_ALPHABETIC = 0;
-static constexpr int UCHAR_LOWERCASE = 22;
-static constexpr int UCHAR_POSIX_ALNUM = 44;
-static constexpr int UCHAR_POSIX_BLANK = 45;
-static constexpr int UCHAR_POSIX_GRAPH = 46;
-static constexpr int UCHAR_POSIX_PRINT = 47;
-static constexpr int UCHAR_POSIX_XDIGIT = 48;
-static constexpr int UCHAR_UPPERCASE = 30;
-static constexpr int UCHAR_WHITE_SPACE = 31;
-
-static constexpr int U_CONTROL_CHAR = 15;
-
-static bool __icu_hasBinaryProperty(wint_t wc, int property, int (*fallback)(int)) {
-  typedef int (*FnT)(wint_t, int);
+static bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
+  typedef UBool (*FnT)(UChar32, UProperty);
   static auto u_hasBinaryProperty = reinterpret_cast<FnT>(__find_icu_symbol("u_hasBinaryProperty"));
   return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
 }
@@ -65,19 +53,19 @@ int iswupper(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_UPPERCASE, is
 int iswxdigit(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_XDIGIT, isxdigit); }
 
 int iswcntrl(wint_t wc) {
-  typedef int (*FnT)(wint_t);
+  typedef int8_t (*FnT)(UChar32);
   static auto u_charType = reinterpret_cast<FnT>(__find_icu_symbol("u_charType"));
   return u_charType ? (u_charType(wc) == U_CONTROL_CHAR) : iscntrl(wc);
 }
 
 int iswdigit(wint_t wc) {
-  typedef int (*FnT)(wint_t);
+  typedef UBool (*FnT)(UChar32);
   static auto u_isdigit = reinterpret_cast<FnT>(__find_icu_symbol("u_isdigit"));
   return u_isdigit ? u_isdigit(wc) : isdigit(wc);
 }
 
 int iswpunct(wint_t wc) {
-  typedef int (*FnT)(wint_t);
+  typedef UBool (*FnT)(UChar32);
   static auto u_ispunct = reinterpret_cast<FnT>(__find_icu_symbol("u_ispunct"));
   return u_ispunct ? u_ispunct(wc) : ispunct(wc);
 }
@@ -118,13 +106,13 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
 }
 
 wint_t towlower(wint_t wc) {
-  typedef wchar_t (*FnT)(wchar_t);
+  typedef UChar32 (*FnT)(UChar32);
   static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
   return u_tolower ? u_tolower(wc) : tolower(wc);
 }
 
 wint_t towupper(wint_t wc) {
-  typedef wchar_t (*FnT)(wchar_t);
+  typedef UChar32 (*FnT)(UChar32);
   static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
   return u_toupper ? u_toupper(wc) : toupper(wc);
 }
