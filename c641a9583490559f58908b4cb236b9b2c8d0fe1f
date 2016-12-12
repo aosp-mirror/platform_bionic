@@ -22,6 +22,30 @@
       "revId": "c641a9583490559f58908b4cb236b9b2c8d0fe1f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a280382_44a2a291",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2016-12-12T22:28:29Z",
+      "side": 1,
+      "message": "I have verified that only one \u0027-\u0027 is allowed. Using \"-getgrent*:-bionic_selftest*\" can\u0027t remove bionic_selftest*. And the help message of --gtest_filter is:\n--gtest_filter\u003dPOSTIVE_PATTERNS[-NEGATIVE_PATTERNS]",
+      "parentUuid": "1a280382_44b8620e",
+      "range": {
+        "startLine": 1034,
+        "startChar": 50,
+        "endLine": 1039,
+        "endChar": 7
+      },
+      "revId": "c641a9583490559f58908b4cb236b9b2c8d0fe1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
