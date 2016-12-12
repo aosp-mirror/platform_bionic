@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a280382_44b8620e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-12T22:09:44Z",
+      "side": 1,
+      "message": "(do we actually need this `if`? can\u0027t you say something like \"*grp*:-*getgrent*:-bionic_selftest*\"? is only one \u0027-\u0027 allowed?)",
+      "range": {
+        "startLine": 1034,
+        "startChar": 50,
+        "endLine": 1039,
+        "endChar": 7
+      },
+      "revId": "c641a9583490559f58908b4cb236b9b2c8d0fe1f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
