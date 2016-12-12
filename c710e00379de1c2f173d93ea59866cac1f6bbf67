@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a280382_c4bb32a6",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2016-12-12T21:43:49Z",
+      "side": 1,
+      "message": "Just change this to one, and /system/etc/*?",
+      "range": {
+        "startLine": 470,
+        "startChar": 0,
+        "endLine": 473,
+        "endChar": 4
+      },
+      "revId": "c710e00379de1c2f173d93ea59866cac1f6bbf67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
