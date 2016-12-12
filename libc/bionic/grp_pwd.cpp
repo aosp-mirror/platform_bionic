@@ -43,9 +43,6 @@
 #include "private/libc_logging.h"
 #include "private/ThreadLocalBuffer.h"
 
-// Generated android_ids array
-#include "generated_android_ids.h"
-
 // POSIX seems to envisage an implementation where the <pwd.h> functions are
 // implemented by brute-force searching with getpwent(3), and the <grp.h>
 // functions are implemented similarly with getgrent(3). This means that it's
