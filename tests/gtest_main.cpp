@@ -1020,16 +1020,16 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
   std::string gtest_filter_str;
   for (size_t i = args.size() - 1; i >= 1; --i) {
     if (strncmp(args[i], "--gtest_filter=", strlen("--gtest_filter=")) == 0) {
-      gtest_filter_str = std::string(args[i]);
+      gtest_filter_str = args[i] + strlen("--gtest_filter=");
       args.erase(args.begin() + i);
       break;
     }
   }
   if (enable_selftest == true) {
-    args.push_back(strdup("--gtest_filter=bionic_selftest*"));
+    gtest_filter_str = "bionic_selftest*";
   } else {
-    if (gtest_filter_str == "") {
-      gtest_filter_str = "--gtest_filter=-bionic_selftest*";
+    if (gtest_filter_str.empty()) {
+      gtest_filter_str = "-bionic_selftest*";
     } else {
       // Find if '-' for NEGATIVE_PATTERNS exists.
       if (gtest_filter_str.find("-") != std::string::npos) {
@@ -1038,8 +1038,9 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
         gtest_filter_str += ":-bionic_selftest*";
       }
     }
-    args.push_back(strdup(gtest_filter_str.c_str()));
   }
+  gtest_filter_str = "--gtest_filter=" + gtest_filter_str;
+  args.push_back(strdup(gtest_filter_str.c_str()));
 
   options.isolate = true;
   // Parse arguments that make us can't run in isolation mode.
