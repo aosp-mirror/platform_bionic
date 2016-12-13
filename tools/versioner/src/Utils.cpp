@@ -41,14 +41,14 @@ std::vector<std::string> collectHeaders(const std::string& directory) {
   std::vector<std::string> headers;
 
   char* dir_argv[2] = { const_cast<char*>(directory.c_str()), nullptr };
-  FTS* fts = fts_open(dir_argv, FTS_LOGICAL | FTS_NOCHDIR, nullptr);
+  std::unique_ptr<FTS, decltype(&fts_close)> fts(
+      fts_open(dir_argv, FTS_LOGICAL | FTS_NOCHDIR, nullptr), fts_close);
 
   if (!fts) {
     err(1, "failed to open directory '%s'", directory.c_str());
   }
 
-  FTSENT* ent;
-  while ((ent = fts_read(fts))) {
+  while (FTSENT* ent = fts_read(fts.get())) {
     if (ent->fts_info & (FTS_D | FTS_DP)) {
       continue;
     }
@@ -60,7 +60,6 @@ std::vector<std::string> collectHeaders(const std::string& directory) {
     headers.push_back(ent->fts_path);
   }
 
-  fts_close(fts);
   return headers;
 }
 

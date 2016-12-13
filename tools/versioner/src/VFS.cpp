@@ -36,12 +36,14 @@ using namespace clang::vfs;
 
 static void addDirectoryToVFS(InMemoryFileSystem* vfs, const std::string& path) {
   char* paths[] = { const_cast<char*>(path.c_str()), nullptr };
-  FTS* fts = fts_open(paths, FTS_COMFOLLOW | FTS_LOGICAL | FTS_NOCHDIR, nullptr);
+  std::unique_ptr<FTS, decltype(&fts_close)> fts(
+      fts_open(paths, FTS_COMFOLLOW | FTS_LOGICAL | FTS_NOCHDIR, nullptr), fts_close);
+
   if (!fts) {
     err(1, "failed to open directory %s", path.c_str());
   }
 
-  while (FTSENT* ent = fts_read(fts)) {
+  while (FTSENT* ent = fts_read(fts.get())) {
     if ((ent->fts_info & FTS_F) == 0) {
       continue;
     }
@@ -61,8 +63,6 @@ static void addDirectoryToVFS(InMemoryFileSystem* vfs, const std::string& path) 
       errx(1, "failed to add file '%s'", file_path);
     }
   }
-
-  fts_close(fts);
 }
 
 llvm::IntrusiveRefCntPtr<FileSystem> createCommonVFS(const std::string& header_dir,
