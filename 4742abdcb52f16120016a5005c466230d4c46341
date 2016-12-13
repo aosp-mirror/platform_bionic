@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a280382_90a9e4c9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-13T02:01:11Z",
+      "side": 1,
+      "message": "don\u0027t we do this for you? if we don\u0027t, we should :-)",
+      "range": {
+        "startLine": 1887,
+        "startChar": 29,
+        "endLine": 1887,
+        "endChar": 37
+      },
+      "revId": "4742abdcb52f16120016a5005c466230d4c46341",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
