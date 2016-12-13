@@ -40,6 +40,7 @@
 
 constexpr const uint32_t kLogErrors = 1 << 0;
 constexpr const uint32_t kLogDlopen = 1 << 1;
+constexpr const uint32_t kLogDlsym  = 1 << 2;
 
 class LinkerLogger {
  public:
