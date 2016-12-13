@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 The Android Open Source Project
+# Copyright (C) 2016 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +14,14 @@
 # limitations under the License.
 #
 
-build_target := SHARED_LIBRARY
-build_type := target
-include $(LOCAL_PATH)/Android.build.testlib.internal.mk
+# 1. Install test libraries to $ANDROID_DATA/nativetests../bionic-loader-test-libs/
+#    by default.
+ifeq ($($(module)_relative_install_path),)
+  $(module)_install_to_native_tests_dir := bionic-loader-test-libs
+else
+  $(module)_install_to_native_tests_dir := bionic-loader-test-libs/$($(module)_relative_install_path)
+endif
+# 2. Set dt_runpath to origin to resolve dependencies
+$(module)_ldflags += -Wl,--rpath,\$${ORIGIN} -Wl,--enable-new-dtags
+
+include $(TEST_PATH)/Android.build.mk
