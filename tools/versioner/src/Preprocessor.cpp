@@ -439,8 +439,13 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
 
   // Copy over the original headers before preprocessing.
   char* fts_paths[2] = { const_cast<char*>(src_dir.c_str()), nullptr };
-  FTS* fts = fts_open(fts_paths, FTS_LOGICAL, nullptr);
-  while (FTSENT* ent = fts_read(fts)) {
+  std::unique_ptr<FTS, decltype(&fts_close)> fts(fts_open(fts_paths, FTS_LOGICAL, nullptr),
+                                                 fts_close);
+  if (!fts) {
+    err(1, "failed to open directory %s", src_dir.c_str());
+  }
+
+  while (FTSENT* ent = fts_read(fts.get())) {
     llvm::StringRef path = ent->fts_path;
     if (!path.startswith(src_dir)) {
       err(1, "path '%s' doesn't start with source dir '%s'", ent->fts_path, src_dir.c_str());
@@ -461,7 +466,6 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
            dst_path.c_str());
     }
   }
-  fts_close(fts);
 
   for (const auto& file_it : guards) {
     file_lines[file_it.first] = readFileLines(file_it.first);
