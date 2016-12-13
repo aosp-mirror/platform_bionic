@@ -20,24 +20,30 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(common_additional_dependencies)
 LOCAL_MODULE := $(module)
 LOCAL_MODULE_TAGS := $(module_tag)
 ifeq ($(build_type),host)
-# Always make host multilib
-LOCAL_MULTILIB := both
+  # Always make host multilib
+  LOCAL_MULTILIB := both
 endif
 
 ifneq ($(findstring LIBRARY, $(build_target)),LIBRARY)
-    LOCAL_MODULE_STEM_32 := $(module)32
-    LOCAL_MODULE_STEM_64 := $(module)64
+  LOCAL_MODULE_STEM_32 := $(module)32
+  LOCAL_MODULE_STEM_64 := $(module)64
 else
-ifneq ($($(module)_install_to_out_data_dir),)
-    LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)TARGET_OUT_DATA_NATIVE_TESTS)/$($(module)_install_to_out_data_dir)
-    LOCAL_MODULE_PATH_64 := $(TARGET_OUT_DATA_NATIVE_TESTS)/$($(module)_install_to_out_data_dir)
+ifneq ($($(module)_install_to_native_tests_dir),)
+  ifeq ($(build_type),host)
+    native_tests_var := HOST_OUT_NATIVE_TESTS
+  else
+    native_tests_var := TARGET_OUT_DATA_NATIVE_TESTS
+  endif
+
+  LOCAL_MODULE_PATH_32 := $($(TARGET_2ND_ARCH_VAR_PREFIX)$(native_tests_var))/$($(module)_install_to_native_tests_dir)
+  LOCAL_MODULE_PATH_64 := $($(native_tests_var))/$($(module)_install_to_native_tests_dir)
 endif
 endif
 
 LOCAL_CLANG := $($(module)_clang_$(build_type))
 
 ifneq ($($(module)_allow_asan),true)
-LOCAL_SANITIZE := never
+  LOCAL_SANITIZE := never
 endif
 
 LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
@@ -45,11 +51,11 @@ LOCAL_FORCE_STATIC_EXECUTABLE := $($(module)_force_static_executable)
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := $($(module)_allow_undefined_symbols)
 
 ifneq ($($(module)_multilib),)
-    LOCAL_MULTILIB := $($(module)_multilib)
+  LOCAL_MULTILIB := $($(module)_multilib)
 endif
 
 ifneq ($($(module)_relative_path),)
-    LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
+  LOCAL_MODULE_RELATIVE_PATH := $($(module)_relative_path)
 endif
 
 LOCAL_CFLAGS := \
@@ -97,9 +103,9 @@ LOCAL_LDLIBS := \
     $($(module)_ldlibs_$(build_type)) \
 
 ifeq ($(LOCAL_FORCE_STATIC_EXECUTABLE),true)
-LOCAL_CXX_STL := libc++_static
+  LOCAL_CXX_STL := libc++_static
 else
-LOCAL_CXX_STL := libc++
+  LOCAL_CXX_STL := libc++
 endif
 
 ifeq ($(build_type),target)
