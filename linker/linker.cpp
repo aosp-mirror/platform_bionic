@@ -1869,15 +1869,33 @@ bool do_dlsym(void* handle,
   }
 #endif
 
-  if (sym_name == nullptr) {
-    DL_ERR("dlsym failed: symbol name is null");
-    return false;
-  }
-
   soinfo* found = nullptr;
   const ElfW(Sym)* sym = nullptr;
   soinfo* caller = find_containing_library(caller_addr);
   android_namespace_t* ns = get_caller_namespace(caller);
+  soinfo* si = nullptr;
+  if (handle != RTLD_DEFAULT && handle != RTLD_NEXT) {
+    si = soinfo_from_handle(handle);
+  }
+
+  LD_LOG(kLogDlsym,
+         "dlsym(handle=%p(\"%s\"), sym_name=\"%s\", sym_ver=\"%s\", caller=\"%s\", caller_ns=%s@%p) ...",
+         handle,
+         si != nullptr ? si->get_realpath() : "n/a",
+         sym_name,
+         sym_ver,
+         caller == nullptr ? "(null)" : caller->get_realpath(),
+         ns == nullptr ? "(null)" : ns->get_name(),
+         ns);
+
+  auto failure_guard = make_scope_guard([&]() {
+    LD_LOG(kLogDlsym, "... dlsym failed: %s", linker_get_error_buffer());
+  });
+
+  if (sym_name == nullptr) {
+    DL_ERR("dlsym failed: symbol name is null");
+    return false;
+  }
 
   version_info vi_instance;
   version_info* vi = nullptr;
@@ -1891,7 +1909,6 @@ bool do_dlsym(void* handle,
   if (handle == RTLD_DEFAULT || handle == RTLD_NEXT) {
     sym = dlsym_linear_lookup(ns, sym_name, vi, &found, caller, handle);
   } else {
-    soinfo* si = soinfo_from_handle(handle);
     if (si == nullptr) {
       DL_ERR("dlsym failed: invalid handle: %p", handle);
       return false;
@@ -1904,6 +1921,10 @@ bool do_dlsym(void* handle,
 
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
       *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+      failure_guard.disable();
+      LD_LOG(kLogDlsym,
+             "... dlsym successful: sym_name=\"%s\", sym_ver=\"%s\", found in=\"%s\", address=%p",
+             sym_name, sym_ver, found->get_soname(), *symbol);
       return true;
     }
 
