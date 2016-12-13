@@ -65,39 +65,6 @@
 
 __BEGIN_DECLS
 
-#define _PATH_PASSWD        "/etc/passwd"
-#define _PATH_MASTERPASSWD  "/etc/master.passwd"
-#define _PATH_MASTERPASSWD_LOCK "/etc/ptmp"
-
-#define _PATH_PASSWD_CONF   "/etc/passwd.conf"
-#define _PATH_PASSWDCONF    _PATH_PASSWD_CONF   /* XXX: compat */
-#define _PATH_USERMGMT_CONF "/etc/usermgmt.conf"
-
-#define _PATH_MP_DB     "/etc/pwd.db"
-#define _PATH_SMP_DB        "/etc/spwd.db"
-
-#define _PATH_PWD_MKDB      "/usr/sbin/pwd_mkdb"
-
-#define _PW_KEYBYNAME       '1' /* stored by name */
-#define _PW_KEYBYNUM        '2' /* stored by entry in the "file" */
-#define _PW_KEYBYUID        '3' /* stored by uid */
-
-#define _PASSWORD_EFMT1     '_' /* extended DES encryption format */
-#define _PASSWORD_NONDES    '$' /* non-DES encryption formats */
-
-#define _PASSWORD_LEN       128 /* max length, not counting NUL */
-
-#define _PASSWORD_NOUID     0x01    /* flag for no specified uid. */
-#define _PASSWORD_NOGID     0x02    /* flag for no specified gid. */
-#define _PASSWORD_NOCHG     0x04    /* flag for no specified change. */
-#define _PASSWORD_NOEXP     0x08    /* flag for no specified expire. */
-
-#define _PASSWORD_OLDFMT    0x10    /* flag to expect an old style entry */
-#define _PASSWORD_NOWARN    0x20    /* no warnings for bad entries */
-
-#define _PASSWORD_WARNDAYS  14  /* days to warn about expiry */
-#define _PASSWORD_CHGNOW    -1  /* special day to force password change at next login */
-
 struct passwd {
   char* pw_name;
   char* pw_passwd;
