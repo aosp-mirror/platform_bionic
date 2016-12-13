@@ -16,18 +16,31 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_SW_SYNC_H
-#define _UAPI_LINUX_SW_SYNC_H
-#include <linux/types.h>
-struct sw_sync_create_fence_data {
+#ifndef _UAPI_VGEM_DRM_H_
+#define _UAPI_VGEM_DRM_H_
+#include "drm.h"
+#ifdef __cplusplus
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u32 value;
-  char name[32];
-  __s32 fence;
+#endif
+#define DRM_VGEM_FENCE_ATTACH 0x1
+#define DRM_VGEM_FENCE_SIGNAL 0x2
+#define DRM_IOCTL_VGEM_FENCE_ATTACH DRM_IOWR(DRM_COMMAND_BASE + DRM_VGEM_FENCE_ATTACH, struct drm_vgem_fence_attach)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define DRM_IOCTL_VGEM_FENCE_SIGNAL DRM_IOW(DRM_COMMAND_BASE + DRM_VGEM_FENCE_SIGNAL, struct drm_vgem_fence_signal)
+struct drm_vgem_fence_attach {
+  __u32 handle;
+  __u32 flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VGEM_FENCE_WRITE 0x1
+  __u32 out_fence;
+  __u32 pad;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SW_SYNC_IOC_MAGIC 'W'
-#define SW_SYNC_IOC_CREATE_FENCE _IOWR(SW_SYNC_IOC_MAGIC, 0, struct sw_sync_create_fence_data)
-#define SW_SYNC_IOC_INC _IOW(SW_SYNC_IOC_MAGIC, 1, __u32)
-#endif
+struct drm_vgem_fence_signal {
+  __u32 fence;
+  __u32 flags;
+};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#ifdef __cplusplus
+#endif
+#endif
