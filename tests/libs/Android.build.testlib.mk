@@ -14,9 +14,6 @@
 # limitations under the License.
 #
 
-build_target := SHARED_LIBRARY
-build_type := host
-include $(TEST_PATH)/Android.build.mk
+include $(LOCAL_PATH)/Android.build.testlib.host.mk
 
 include $(LOCAL_PATH)/Android.build.testlib.target.mk
-
