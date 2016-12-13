@@ -114,76 +114,76 @@ static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_ty
 
 #endif
 
-TEST(getpwnam, system_id_root) {
+TEST(pwd, getpwnam_system_id_root) {
   check_get_passwd("root", 0, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, system_id_system) {
+TEST(pwd, getpwnam_system_id_system) {
   check_get_passwd("system", 1000, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_radio) {
+TEST(pwd, getpwnam_app_id_radio) {
   check_get_passwd("radio", 1001, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_5000) {
+TEST(pwd, getpwnam_oem_id_5000) {
   check_get_passwd("oem_5000", 5000, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_5999) {
+TEST(pwd, getpwnam_oem_id_5999) {
   check_get_passwd("oem_5999", 5999, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_2900) {
+TEST(pwd, getpwnam_oem_id_2900) {
   check_get_passwd("oem_2900", 2900, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, oem_id_2999) {
+TEST(pwd, getpwnam_oem_id_2999) {
   check_get_passwd("oem_2999", 2999, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_nobody) {
+TEST(pwd, getpwnam_app_id_nobody) {
   check_get_passwd("nobody", 9999, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_u0_a0) {
+TEST(pwd, getpwnam_app_id_u0_a0) {
   check_get_passwd("u0_a0", 10000, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u0_a1234) {
+TEST(pwd, getpwnam_app_id_u0_a1234) {
   check_get_passwd("u0_a1234", 11234, TYPE_APP);
 }
 
 // Test the difference between uid and shared gid.
-TEST(getpwnam, app_id_u0_a49999) {
+TEST(pwd, getpwnam_app_id_u0_a49999) {
   check_get_passwd("u0_a49999", 59999, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u0_i1) {
+TEST(pwd, getpwnam_app_id_u0_i1) {
   check_get_passwd("u0_i1", 99001, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u1_root) {
+TEST(pwd, getpwnam_app_id_u1_root) {
   check_get_passwd("u1_root", 100000, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_u1_radio) {
+TEST(pwd, getpwnam_app_id_u1_radio) {
   check_get_passwd("u1_radio", 101001, TYPE_SYSTEM);
 }
 
-TEST(getpwnam, app_id_u1_a0) {
+TEST(pwd, getpwnam_app_id_u1_a0) {
   check_get_passwd("u1_a0", 110000, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u1_a40000) {
+TEST(pwd, getpwnam_app_id_u1_a40000) {
   check_get_passwd("u1_a40000", 150000, TYPE_APP);
 }
 
-TEST(getpwnam, app_id_u1_i0) {
+TEST(pwd, getpwnam_app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
 }
 
-TEST(getpwent, iterate) {
+TEST(pwd, getpwent_iterate) {
   passwd* pwd;
   std::bitset<10000> exist;
   bool application = false;
@@ -295,80 +295,80 @@ static void check_get_group(const char*, gid_t) {
 
 #endif
 
-TEST(getgrnam, system_id_root) {
+TEST(grp, getgrnam_system_id_root) {
   check_get_group("root", 0);
 }
 
-TEST(getgrnam, system_id_system) {
+TEST(grp, getgrnam_system_id_system) {
   check_get_group("system", 1000);
 }
 
-TEST(getgrnam, app_id_radio) {
+TEST(grp, getgrnam_app_id_radio) {
   check_get_group("radio", 1001);
 }
 
-TEST(getgrnam, oem_id_5000) {
+TEST(grp, getgrnam_oem_id_5000) {
   check_get_group("oem_5000", 5000);
 }
 
-TEST(getgrnam, oem_id_5999) {
+TEST(grp, getgrnam_oem_id_5999) {
   check_get_group("oem_5999", 5999);
 }
 
-TEST(getgrnam, oem_id_2900) {
+TEST(grp, getgrnam_oem_id_2900) {
   check_get_group("oem_2900", 2900);
 }
 
-TEST(getgrnam, oem_id_2999) {
+TEST(grp, getgrnam_oem_id_2999) {
   check_get_group("oem_2999", 2999);
 }
 
-TEST(getgrnam, app_id_nobody) {
+TEST(grp, getgrnam_app_id_nobody) {
   check_get_group("nobody", 9999);
 }
 
-TEST(getgrnam, app_id_u0_a0) {
+TEST(grp, getgrnam_app_id_u0_a0) {
   check_get_group("u0_a0", 10000);
 }
 
-TEST(getgrnam, app_id_u0_a1234) {
+TEST(grp, getgrnam_app_id_u0_a1234) {
   check_get_group("u0_a1234", 11234);
 }
 
-TEST(getgrnam, app_id_u0_a9999) {
+TEST(grp, getgrnam_app_id_u0_a9999) {
   check_get_group("u0_a9999", 19999);
 }
 
 // Test the difference between uid and shared gid.
-TEST(getgrnam, app_id_all_a9999) {
+TEST(grp, getgrnam_app_id_all_a9999) {
   check_get_group("all_a9999", 59999);
 }
 
-TEST(getgrnam, app_id_u0_i1) {
+TEST(grp, getgrnam_app_id_u0_i1) {
   check_get_group("u0_i1", 99001);
 }
 
-TEST(getgrnam, app_id_u1_root) {
+TEST(grp, getgrnam_app_id_u1_root) {
   check_get_group("u1_root", 100000);
 }
 
-TEST(getgrnam, app_id_u1_radio) {
+TEST(grp, getgrnam_app_id_u1_radio) {
   check_get_group("u1_radio", 101001);
 }
 
-TEST(getgrnam, app_id_u1_a0) {
+TEST(grp, getgrnam_app_id_u1_a0) {
   check_get_group("u1_a0", 110000);
 }
 
-TEST(getgrnam, app_id_u1_a40000) {
+TEST(grp, getgrnam_app_id_u1_a40000) {
   check_get_group("u1_a40000", 150000);
 }
 
-TEST(getgrnam, app_id_u1_i0) {
+TEST(grp, getgrnam_app_id_u1_i0) {
   check_get_group("u1_i0", 199000);
 }
 
-TEST(getgrnam_r, reentrancy) {
+TEST(grp, getgrnam_r_reentrancy) {
 #if defined(__BIONIC__)
   group grp_storage[2];
   char buf[2][512];
@@ -388,7 +388,7 @@ TEST(getgrnam_r, reentrancy) {
 #endif
 }
 
-TEST(getgrgid_r, reentrancy) {
+TEST(grp, getgrgid_r_reentrancy) {
 #if defined(__BIONIC__)
   group grp_storage[2];
   char buf[2][512];
@@ -408,7 +408,7 @@ TEST(getgrgid_r, reentrancy) {
 #endif
 }
 
-TEST(getgrnam_r, large_enough_suggested_buffer_size) {
+TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
   long size = sysconf(_SC_GETGR_R_SIZE_MAX);
   ASSERT_GT(size, 0);
   char buf[size];
@@ -418,7 +418,7 @@ TEST(getgrnam_r, large_enough_suggested_buffer_size) {
   check_group(grp, "root", 0);
 }
 
-TEST(getgrent, iterate) {
+TEST(grp, getgrent_iterate) {
   group* grp;
   std::bitset<10000> exist;
   bool application = false;
