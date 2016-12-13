@@ -99,10 +99,20 @@ enum {
 #define TCP_CC_INFO 26
 #define TCP_SAVE_SYN 27
 #define TCP_SAVED_SYN 28
-struct tcp_repair_opt {
+#define TCP_REPAIR_WINDOW 29
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct tcp_repair_opt {
   __u32 opt_code;
   __u32 opt_val;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct tcp_repair_window {
+  __u32 snd_wl1;
+  __u32 snd_wnd;
+  __u32 max_window;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 rcv_wnd;
+  __u32 rcv_wup;
 };
 enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

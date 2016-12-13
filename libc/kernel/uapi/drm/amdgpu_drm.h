@@ -377,128 +377,129 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_MMR_SH_INDEX_SHIFT 8
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define AMDGPU_INFO_MMR_SH_INDEX_MASK 0xff
+struct drm_amdgpu_query_fw {
+  __u32 fw_type;
+  __u32 ip_instance;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 index;
+  __u32 _pad;
+};
 struct drm_amdgpu_info {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 return_pointer;
   __u32 return_size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 query;
   union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u32 id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 _pad;
     } mode_crtc;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u32 type;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 ip_instance;
     } query_hw_ip;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     struct {
       __u32 dword_offset;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 count;
       __u32 instance;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __u32 flags;
     } read_mmr_reg;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-    struct {
-      __u32 fw_type;
-      __u32 ip_instance;
-      __u32 index;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-      __u32 _pad;
-    } query_fw;
+    struct drm_amdgpu_query_fw query_fw;
   };
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_amdgpu_info_gds {
   __u32 gds_gfx_partition_size;
   __u32 compute_partition_size;
-  __u32 gds_total_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 gds_total_size;
   __u32 gws_per_gfx_partition;
   __u32 gws_per_compute_partition;
   __u32 oa_per_gfx_partition;
-  __u32 oa_per_compute_partition;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 oa_per_compute_partition;
   __u32 _pad;
 };
 struct drm_amdgpu_info_vram_gtt {
-  __u64 vram_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 vram_size;
   __u64 vram_cpu_accessible_size;
   __u64 gtt_size;
 };
-struct drm_amdgpu_info_firmware {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_amdgpu_info_firmware {
   __u32 ver;
   __u32 feature;
 };
-#define AMDGPU_VRAM_TYPE_UNKNOWN 0
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define AMDGPU_VRAM_TYPE_UNKNOWN 0
 #define AMDGPU_VRAM_TYPE_GDDR1 1
 #define AMDGPU_VRAM_TYPE_DDR2 2
 #define AMDGPU_VRAM_TYPE_GDDR3 3
-#define AMDGPU_VRAM_TYPE_GDDR4 4
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define AMDGPU_VRAM_TYPE_GDDR4 4
 #define AMDGPU_VRAM_TYPE_GDDR5 5
 #define AMDGPU_VRAM_TYPE_HBM 6
 #define AMDGPU_VRAM_TYPE_DDR3 7
-struct drm_amdgpu_info_device {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
   __u32 external_rev;
-  __u32 pci_rev;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 pci_rev;
   __u32 family;
   __u32 num_shader_engines;
   __u32 num_shader_arrays_per_engine;
-  __u32 gpu_counter_freq;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 gpu_counter_freq;
   __u64 max_engine_clock;
   __u64 max_memory_clock;
   __u32 cu_active_number;
-  __u32 cu_ao_mask;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 cu_ao_mask;
   __u32 cu_bitmap[4][4];
   __u32 enabled_rb_pipes_mask;
   __u32 num_rb_pipes;
-  __u32 num_hw_gfx_contexts;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 num_hw_gfx_contexts;
   __u32 _pad;
   __u64 ids_flags;
   __u64 virtual_address_offset;
-  __u64 virtual_address_max;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 virtual_address_max;
   __u32 virtual_address_alignment;
   __u32 pte_fragment_size;
   __u32 gart_page_size;
-  __u32 ce_ram_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 ce_ram_size;
   __u32 vram_type;
   __u32 vram_bit_width;
   __u32 vce_harvest_config;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
   __u32 hw_ip_version_minor;
-  __u64 capabilities_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 capabilities_flags;
   __u32 ib_start_alignment;
   __u32 ib_size_alignment;
   __u32 available_rings;
-  __u32 _pad;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 _pad;
 };
 #define AMDGPU_FAMILY_UNKNOWN 0
 #define AMDGPU_FAMILY_CI 120
-#define AMDGPU_FAMILY_KV 125
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define AMDGPU_FAMILY_KV 125
 #define AMDGPU_FAMILY_VI 130
 #define AMDGPU_FAMILY_CZ 135
 #ifdef __cplusplus
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
 #endif

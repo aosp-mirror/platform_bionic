@@ -242,62 +242,68 @@ struct rdma_ucm_join_ip_mcast {
   __u32 id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+enum {
+  RDMA_MC_JOIN_FLAG_FULLMEMBER,
+  RDMA_MC_JOIN_FLAG_SENDONLY_FULLMEMBER,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  RDMA_MC_JOIN_FLAG_RESERVED,
+};
 struct rdma_ucm_join_mcast {
   __u64 response;
-  __u64 uid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 uid;
   __u32 id;
   __u16 addr_size;
-  __u16 reserved;
-  struct sockaddr_storage addr;
+  __u16 join_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct sockaddr_storage addr;
 };
 struct rdma_ucm_get_event {
   __u64 response;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct rdma_ucm_event_resp {
   __u64 uid;
   __u32 id;
-  __u32 event;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 event;
   __u32 status;
   union {
     struct rdma_ucm_conn_param conn;
-    struct rdma_ucm_ud_param ud;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct rdma_ucm_ud_param ud;
   } param;
 };
 enum {
-  RDMA_OPTION_ID = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  RDMA_OPTION_ID = 0,
   RDMA_OPTION_IB = 1
 };
 enum {
-  RDMA_OPTION_ID_TOS = 0,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  RDMA_OPTION_ID_TOS = 0,
   RDMA_OPTION_ID_REUSEADDR = 1,
   RDMA_OPTION_ID_AFONLY = 2,
   RDMA_OPTION_IB_PATH = 1
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct rdma_ucm_set_option {
   __u64 optval;
   __u32 id;
-  __u32 level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 level;
   __u32 optname;
   __u32 optlen;
 };
-struct rdma_ucm_migrate_id {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct rdma_ucm_migrate_id {
   __u64 response;
   __u32 id;
   __u32 fd;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct rdma_ucm_migrate_resp {
   __u32 events_reported;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

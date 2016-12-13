@@ -44,5 +44,10 @@ struct ioctl_evtchn_notify {
   unsigned int port;
 };
 #define IOCTL_EVTCHN_RESET _IOC(_IOC_NONE, 'E', 5, 0)
+#define IOCTL_EVTCHN_RESTRICT_DOMID _IOC(_IOC_NONE, 'E', 6, sizeof(struct ioctl_evtchn_restrict_domid))
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ioctl_evtchn_restrict_domid {
+  domid_t domid;
+};
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

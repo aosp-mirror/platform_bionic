@@ -16,33 +16,58 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __LINUX_TC_SKBEDIT_H
-#define __LINUX_TC_SKBEDIT_H
-#include <linux/pkt_cls.h>
-#define TCA_ACT_SKBEDIT 11
+#ifndef _UAPI_LINUX_VIRTIO_VSOCK_H
+#define _UAPI_LINUX_VIRTIO_VSOCK_H
+#include <linux/types.h>
+#include <linux/virtio_ids.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define SKBEDIT_F_PRIORITY 0x1
-#define SKBEDIT_F_QUEUE_MAPPING 0x2
-#define SKBEDIT_F_MARK 0x4
-#define SKBEDIT_F_PTYPE 0x8
+#include <linux/virtio_config.h>
+struct virtio_vsock_config {
+  __le64 guest_cid;
+} __attribute__((packed));
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct tc_skbedit {
-  tc_gen;
+enum virtio_vsock_event_id {
+  VIRTIO_VSOCK_EVENT_TRANSPORT_RESET = 0,
 };
-enum {
+struct virtio_vsock_event {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  TCA_SKBEDIT_UNSPEC,
-  TCA_SKBEDIT_TM,
-  TCA_SKBEDIT_PARMS,
-  TCA_SKBEDIT_PRIORITY,
+  __le32 id;
+} __attribute__((packed));
+struct virtio_vsock_hdr {
+  __le64 src_cid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  TCA_SKBEDIT_QUEUE_MAPPING,
-  TCA_SKBEDIT_MARK,
-  TCA_SKBEDIT_PAD,
-  TCA_SKBEDIT_PTYPE,
+  __le64 dst_cid;
+  __le32 src_port;
+  __le32 dst_port;
+  __le32 len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __TCA_SKBEDIT_MAX
+  __le16 type;
+  __le16 op;
+  __le32 flags;
+  __le32 buf_alloc;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __le32 fwd_cnt;
+} __attribute__((packed));
+enum virtio_vsock_type {
+  VIRTIO_VSOCK_TYPE_STREAM = 1,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-#define TCA_SKBEDIT_MAX (__TCA_SKBEDIT_MAX - 1)
+enum virtio_vsock_op {
+  VIRTIO_VSOCK_OP_INVALID = 0,
+  VIRTIO_VSOCK_OP_REQUEST = 1,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  VIRTIO_VSOCK_OP_RESPONSE = 2,
+  VIRTIO_VSOCK_OP_RST = 3,
+  VIRTIO_VSOCK_OP_SHUTDOWN = 4,
+  VIRTIO_VSOCK_OP_RW = 5,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  VIRTIO_VSOCK_OP_CREDIT_UPDATE = 6,
+  VIRTIO_VSOCK_OP_CREDIT_REQUEST = 7,
+};
+enum virtio_vsock_shutdown {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  VIRTIO_VSOCK_SHUTDOWN_RCV = 1,
+  VIRTIO_VSOCK_SHUTDOWN_SEND = 2,
+};
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

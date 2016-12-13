@@ -16,14 +16,20 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __VSP1_USER_H__
-#define __VSP1_USER_H__
+#ifndef _UAPI_LINUX_VTPM_PROXY_H
+#define _UAPI_LINUX_VTPM_PROXY_H
 #include <linux/types.h>
-#include <linux/videodev2.h>
+#include <linux/ioctl.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIDIOC_VSP1_LUT_CONFIG _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct vsp1_lut_config)
-struct vsp1_lut_config {
-  __u32 lut[256];
+struct vtpm_proxy_new_dev {
+  __u32 flags;
+  __u32 tpm_num;
+  __u32 fd;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 major;
+  __u32 minor;
 };
+#define VTPM_PROXY_FLAG_TPM2 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define VTPM_PROXY_IOC_NEW_DEV _IOWR(0xa1, 0x00, struct vtpm_proxy_new_dev)
 #endif
