@@ -91,103 +91,113 @@ enum bpf_map_type {
   BPF_MAP_TYPE_PERCPU_ARRAY,
   BPF_MAP_TYPE_STACK_TRACE,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BPF_MAP_TYPE_CGROUP_ARRAY,
 };
 enum bpf_prog_type {
   BPF_PROG_TYPE_UNSPEC,
-  BPF_PROG_TYPE_SOCKET_FILTER,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BPF_PROG_TYPE_SOCKET_FILTER,
   BPF_PROG_TYPE_KPROBE,
   BPF_PROG_TYPE_SCHED_CLS,
   BPF_PROG_TYPE_SCHED_ACT,
-  BPF_PROG_TYPE_TRACEPOINT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BPF_PROG_TYPE_TRACEPOINT,
+  BPF_PROG_TYPE_XDP,
 };
 #define BPF_PSEUDO_MAP_FD 1
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BPF_ANY 0
 #define BPF_NOEXIST 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BPF_EXIST 2
 #define BPF_F_NO_PREALLOC (1U << 0)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 union bpf_attr {
   struct {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u32 map_type;
     __u32 key_size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u32 value_size;
     __u32 max_entries;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u32 map_flags;
   };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct {
     __u32 map_fd;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __aligned_u64 key;
     union {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __aligned_u64 value;
       __aligned_u64 next_key;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     };
     __u64 flags;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
   struct {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u32 prog_type;
     __u32 insn_cnt;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __aligned_u64 insns;
     __aligned_u64 license;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __u32 log_level;
     __u32 log_size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __aligned_u64 log_buf;
     __u32 kern_version;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
   struct {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __aligned_u64 pathname;
     __u32 bpf_fd;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
 } __attribute__((aligned(8)));
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum bpf_func_id {
   BPF_FUNC_unspec,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_map_lookup_elem,
   BPF_FUNC_map_update_elem,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_map_delete_elem,
   BPF_FUNC_probe_read,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_ktime_get_ns,
   BPF_FUNC_trace_printk,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_get_prandom_u32,
   BPF_FUNC_get_smp_processor_id,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_skb_store_bytes,
   BPF_FUNC_l3_csum_replace,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_l4_csum_replace,
   BPF_FUNC_tail_call,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_clone_redirect,
   BPF_FUNC_get_current_pid_tgid,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_get_current_uid_gid,
   BPF_FUNC_get_current_comm,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_get_cgroup_classid,
   BPF_FUNC_skb_vlan_push,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_skb_vlan_pop,
   BPF_FUNC_skb_get_tunnel_key,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_skb_set_tunnel_key,
   BPF_FUNC_perf_event_read,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_redirect,
   BPF_FUNC_get_route_realm,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_perf_event_output,
   BPF_FUNC_skb_load_bytes,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_get_stackid,
   BPF_FUNC_csum_diff,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   BPF_FUNC_skb_get_tunnel_opt,
   BPF_FUNC_skb_set_tunnel_opt,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BPF_FUNC_skb_change_proto,
+  BPF_FUNC_skb_change_type,
+  BPF_FUNC_skb_under_cgroup,
+  BPF_FUNC_get_hash_recalc,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  BPF_FUNC_get_current_task,
+  BPF_FUNC_probe_write_user,
   __BPF_FUNC_MAX_ID,
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -209,42 +219,56 @@ enum bpf_func_id {
 #define BPF_F_DONT_FRAGMENT (1ULL << 2)
 #define BPF_F_INDEX_MASK 0xffffffffULL
 #define BPF_F_CURRENT_CPU BPF_F_INDEX_MASK
-struct __sk_buff {
+#define BPF_F_CTXLEN_MASK (0xfffffULL << 32)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct __sk_buff {
   __u32 len;
   __u32 pkt_type;
   __u32 mark;
-  __u32 queue_mapping;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 queue_mapping;
   __u32 protocol;
   __u32 vlan_present;
   __u32 vlan_tci;
-  __u32 vlan_proto;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 vlan_proto;
   __u32 priority;
   __u32 ingress_ifindex;
   __u32 ifindex;
-  __u32 tc_index;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 tc_index;
   __u32 cb[5];
   __u32 hash;
   __u32 tc_classid;
-  __u32 data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 data;
   __u32 data_end;
 };
 struct bpf_tunnel_key {
-  __u32 tunnel_id;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 tunnel_id;
   union {
     __u32 remote_ipv4;
     __u32 remote_ipv6[4];
-  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  };
   __u8 tunnel_tos;
   __u8 tunnel_ttl;
   __u16 tunnel_ext;
-  __u32 tunnel_label;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 tunnel_label;
 };
+enum xdp_action {
+  XDP_ABORTED = 0,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  XDP_DROP,
+  XDP_PASS,
+  XDP_TX,
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct xdp_md {
+  __u32 data;
+  __u32 data_end;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

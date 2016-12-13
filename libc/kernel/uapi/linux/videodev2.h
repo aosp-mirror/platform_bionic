@@ -267,44 +267,44 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_PAL8 v4l2_fourcc('P', 'A', 'L', '8')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_UV8 v4l2_fourcc('U', 'V', '8', ' ')
-#define V4L2_PIX_FMT_YVU410 v4l2_fourcc('Y', 'V', 'U', '9')
-#define V4L2_PIX_FMT_YVU420 v4l2_fourcc('Y', 'V', '1', '2')
 #define V4L2_PIX_FMT_YUYV v4l2_fourcc('Y', 'U', 'Y', 'V')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_YYUV v4l2_fourcc('Y', 'Y', 'U', 'V')
 #define V4L2_PIX_FMT_YVYU v4l2_fourcc('Y', 'V', 'Y', 'U')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_UYVY v4l2_fourcc('U', 'Y', 'V', 'Y')
 #define V4L2_PIX_FMT_VYUY v4l2_fourcc('V', 'Y', 'U', 'Y')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV422P v4l2_fourcc('4', '2', '2', 'P')
-#define V4L2_PIX_FMT_YUV411P v4l2_fourcc('4', '1', '1', 'P')
 #define V4L2_PIX_FMT_Y41P v4l2_fourcc('Y', '4', '1', 'P')
 #define V4L2_PIX_FMT_YUV444 v4l2_fourcc('Y', '4', '4', '4')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_YUV555 v4l2_fourcc('Y', 'U', 'V', 'O')
 #define V4L2_PIX_FMT_YUV565 v4l2_fourcc('Y', 'U', 'V', 'P')
 #define V4L2_PIX_FMT_YUV32 v4l2_fourcc('Y', 'U', 'V', '4')
-#define V4L2_PIX_FMT_YUV410 v4l2_fourcc('Y', 'U', 'V', '9')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define V4L2_PIX_FMT_YUV420 v4l2_fourcc('Y', 'U', '1', '2')
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_HM12 v4l2_fourcc('H', 'M', '1', '2')
 #define V4L2_PIX_FMT_M420 v4l2_fourcc('M', '4', '2', '0')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV12 v4l2_fourcc('N', 'V', '1', '2')
 #define V4L2_PIX_FMT_NV21 v4l2_fourcc('N', 'V', '2', '1')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV16 v4l2_fourcc('N', 'V', '1', '6')
 #define V4L2_PIX_FMT_NV61 v4l2_fourcc('N', 'V', '6', '1')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV24 v4l2_fourcc('N', 'V', '2', '4')
 #define V4L2_PIX_FMT_NV42 v4l2_fourcc('N', 'V', '4', '2')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV12M v4l2_fourcc('N', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV21M v4l2_fourcc('N', 'M', '2', '1')
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV16M v4l2_fourcc('N', 'M', '1', '6')
 #define V4L2_PIX_FMT_NV61M v4l2_fourcc('N', 'M', '6', '1')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
+#define V4L2_PIX_FMT_YUV410 v4l2_fourcc('Y', 'U', 'V', '9')
+#define V4L2_PIX_FMT_YVU410 v4l2_fourcc('Y', 'V', 'U', '9')
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define V4L2_PIX_FMT_YUV411P v4l2_fourcc('4', '1', '1', 'P')
+#define V4L2_PIX_FMT_YUV420 v4l2_fourcc('Y', 'U', '1', '2')
+#define V4L2_PIX_FMT_YVU420 v4l2_fourcc('Y', 'V', '1', '2')
+#define V4L2_PIX_FMT_YUV422P v4l2_fourcc('4', '2', '2', 'P')
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define V4L2_PIX_FMT_YUV420M v4l2_fourcc('Y', 'M', '1', '2')
 #define V4L2_PIX_FMT_YVU420M v4l2_fourcc('Y', 'M', '2', '1')

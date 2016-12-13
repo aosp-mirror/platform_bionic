@@ -83,12 +83,13 @@ struct icmphdr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
       __be16 mtu;
     } frag;
+    __u8 reserved[4];
   } un;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define ICMP_FILTER 1
 struct icmp_filter {
   __u32 data;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
