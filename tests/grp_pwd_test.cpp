@@ -339,6 +339,22 @@ TEST(getgrnam, app_id_u0_a9999) {
   check_get_group("u0_a9999", 19999);
 }
 
+TEST(getgrnam, app_id_u0_a0_cache) {
+  check_get_group("u0_a0_cache", 20000);
+}
+
+TEST(getgrnam, app_id_u0_a1234_cache) {
+  check_get_group("u0_a1234_cache", 21234);
+}
+
+TEST(getgrnam, app_id_u0_a9999_cache) {
+  check_get_group("u0_a9999_cache", 29999);
+}
+
+TEST(getgrnam, app_id_u10_a1234_cache) {
+  check_get_group("u10_a1234_cache", 1021234);
+}
+
 // Test the difference between uid and shared gid.
 TEST(getgrnam, app_id_all_a9999) {
   check_get_group("all_a9999", 59999);
