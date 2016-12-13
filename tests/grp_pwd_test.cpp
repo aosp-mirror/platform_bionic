@@ -30,9 +30,6 @@
 
 #include <private/android_filesystem_config.h>
 
-// Generated android_ids array
-#include "generated_android_ids.h"
-
 enum uid_type_t {
   TYPE_SYSTEM,
   TYPE_APP

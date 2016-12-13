@@ -1193,13 +1193,6 @@ cc_library_static {
     name: "libc_bionic",
 }
 
-genrule {
-    name: "generated_android_ids",
-    out: [ "generated_android_ids.h" ],
-    tool_files: [ "fs_config_generator.py" ],
-    cmd: "$(location fs_config_generator.py) aidarray system/core/include/private/android_filesystem_config.h > $(out)",
-}
-
 // ========================================================
 // libc_bionic_ndk.a- The portions of libc_bionic that can
 // be safely used in libc_ndk.a (no troublesome global data
@@ -1388,7 +1381,6 @@ cc_library_static {
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
-    generated_headers: ["generated_android_ids"],
 }
 
 // ========================================================
