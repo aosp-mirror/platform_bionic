@@ -311,7 +311,7 @@ struct rtnexthop {
 #define RTNH_F_OFFLOAD 8
 #define RTNH_F_LINKDOWN 16
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define RTNH_COMPARE_MASK (RTNH_F_DEAD | RTNH_F_LINKDOWN)
+#define RTNH_COMPARE_MASK (RTNH_F_DEAD | RTNH_F_LINKDOWN | RTNH_F_OFFLOAD)
 #define RTNH_ALIGNTO 4
 #define RTNH_ALIGN(len) (((len) + RTNH_ALIGNTO - 1) & ~(RTNH_ALIGNTO - 1))
 #define RTNH_OK(rtnh,len) ((rtnh)->rtnh_len >= sizeof(struct rtnexthop) && ((int) (rtnh)->rtnh_len) <= (len))
