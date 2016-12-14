@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_TYPES_H_
 #define _SYS_TYPES_H_
 
@@ -103,20 +104,6 @@ typedef loff_t off64_t;
 typedef __kernel_off_t off_t;
 typedef __kernel_loff_t loff_t;
 typedef loff_t off64_t;
-#endif
-
-/* while POSIX wants these in <sys/types.h>, we
- * declare then in <pthread.h> instead */
-#if 0
-typedef  .... pthread_attr_t;
-typedef  .... pthread_cond_t;
-typedef  .... pthread_condattr_t;
-typedef  .... pthread_key_t;
-typedef  .... pthread_mutex_t;
-typedef  .... pthread_once_t;
-typedef  .... pthread_rwlock_t;
-typedef  .... pthread_rwlock_attr_t;
-typedef  .... pthread_t;
 #endif
 
 #if !defined(__LP64__)
