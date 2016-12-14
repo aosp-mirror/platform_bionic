@@ -45,6 +45,7 @@ static const char* kLdDebugPropertyPrefix = "debug.ld.app.";
 
 static const char* kOptionErrors = "dlerror";
 static const char* kOptionDlopen = "dlopen";
+static const char* kOptionDlsym = "dlsym";
 
 static std::string property_get(const char* name) {
   char value[PROP_VALUE_MAX] = {};
@@ -66,6 +67,8 @@ static uint32_t ParseProperty(const std::string& value) {
       flags |= kLogErrors;
     } else if (o == kOptionDlopen){
       flags |= kLogDlopen;
+    } else if (o == kOptionDlsym){
+      flags |= kLogDlsym;
     } else {
       __libc_format_log(ANDROID_LOG_WARN, "linker", "Unknown debug.ld option \"%s\", will ignore.", o.c_str());
     }
