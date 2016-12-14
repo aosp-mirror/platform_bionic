@@ -172,6 +172,16 @@ TEST(dlfcn, dlsym_handle_global_sym) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlsym_handle_empty_symbol) {
+  // check that dlsym of an empty symbol fails (see http://b/33530622)
+  void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  void* sym = dlsym(handle, "");
+  ASSERT_TRUE(sym == nullptr);
+  ASSERT_SUBSTR("undefined symbol: ", dlerror());
+  dlclose(handle);
+}
+
 TEST(dlfcn, dlsym_with_dependencies) {
   void* handle = dlopen("libtest_with_dependency.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr);
