@@ -69,29 +69,30 @@ enum {
   FRA_FWMASK,
   FRA_OIFNAME,
   /* MANUAL CHANGE:
-   * Temporarily remove this define since it conflicts with the android
-   * kernel value FRA_UID_START that has not been upstreamed yet.
+   * Temporarily remove the following two defines since they conflict with
+   * the android kernel value FRA_UID_START that has not been upstreamed yet.
   FRA_PAD,
+  FRA_L3MDEV,
    */
-  __FRA_MAX
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __FRA_MAX
 };
 #define FRA_MAX (__FRA_MAX - 1)
 enum {
-  FR_ACT_UNSPEC,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  FR_ACT_UNSPEC,
   FR_ACT_TO_TBL,
   FR_ACT_GOTO,
   FR_ACT_NOP,
-  FR_ACT_RES3,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  FR_ACT_RES3,
   FR_ACT_RES4,
   FR_ACT_BLACKHOLE,
   FR_ACT_UNREACHABLE,
-  FR_ACT_PROHIBIT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  FR_ACT_PROHIBIT,
   __FR_ACT_MAX,
 };
 #define FR_ACT_MAX (__FR_ACT_MAX - 1)
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

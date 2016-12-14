@@ -94,47 +94,55 @@ enum cxl_event_type {
   CXL_EVENT_AFU_INTERRUPT = 1,
   CXL_EVENT_DATA_STORAGE = 2,
   CXL_EVENT_AFU_ERROR = 3,
-};
+  CXL_EVENT_AFU_DRIVER = 4,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct cxl_event_header {
   __u16 type;
   __u16 size;
-  __u16 process_element;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 process_element;
   __u16 reserved1;
 };
 struct cxl_event_afu_interrupt {
-  __u16 flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 flags;
   __u16 irq;
   __u32 reserved1;
 };
-struct cxl_event_data_storage {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct cxl_event_data_storage {
   __u16 flags;
   __u16 reserved1;
   __u32 reserved2;
-  __u64 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 addr;
   __u64 dsisr;
   __u64 reserved3;
 };
-struct cxl_event_afu_error {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct cxl_event_afu_error {
   __u16 flags;
   __u16 reserved1;
   __u32 reserved2;
-  __u64 error;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 error;
+};
+struct cxl_event_afu_driver_reserved {
+  __u32 data_size;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 data[];
 };
 struct cxl_event {
   struct cxl_event_header header;
-  union {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  union {
     struct cxl_event_afu_interrupt irq;
     struct cxl_event_data_storage fault;
     struct cxl_event_afu_error afu_error;
-  };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct cxl_event_afu_driver_reserved afu_driver_event;
+  };
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

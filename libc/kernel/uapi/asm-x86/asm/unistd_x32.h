@@ -399,21 +399,21 @@
 #define __NR_vmsplice (__X32_SYSCALL_BIT + 532)
 #define __NR_move_pages (__X32_SYSCALL_BIT + 533)
 #define __NR_preadv (__X32_SYSCALL_BIT + 534)
-#define __NR_preadv2 (__X32_SYSCALL_BIT + 534)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_pwritev (__X32_SYSCALL_BIT + 535)
-#define __NR_pwritev2 (__X32_SYSCALL_BIT + 535)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_rt_tgsigqueueinfo (__X32_SYSCALL_BIT + 536)
 #define __NR_recvmmsg (__X32_SYSCALL_BIT + 537)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_sendmmsg (__X32_SYSCALL_BIT + 538)
 #define __NR_process_vm_readv (__X32_SYSCALL_BIT + 539)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_process_vm_writev (__X32_SYSCALL_BIT + 540)
 #define __NR_setsockopt (__X32_SYSCALL_BIT + 541)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_getsockopt (__X32_SYSCALL_BIT + 542)
 #define __NR_io_setup (__X32_SYSCALL_BIT + 543)
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_io_submit (__X32_SYSCALL_BIT + 544)
 #define __NR_execveat (__X32_SYSCALL_BIT + 545)
+#define __NR_preadv2 (__X32_SYSCALL_BIT + 546)
+#define __NR_pwritev2 (__X32_SYSCALL_BIT + 547)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
