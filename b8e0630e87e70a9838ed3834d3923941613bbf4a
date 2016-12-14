@@ -16,6 +16,24 @@
       "revId": "b8e0630e87e70a9838ed3834d3923941613bbf4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba99b795_1328d34a",
+        "filename": "android-changes-for-ndk-developers.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2016-12-14T23:00:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba99b795_f3c68fa9",
+      "revId": "b8e0630e87e70a9838ed3834d3923941613bbf4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
