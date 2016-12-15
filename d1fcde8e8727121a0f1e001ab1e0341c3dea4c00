@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba99b795_d68c965a",
+        "filename": "tools/versioner/src/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2016-12-15T02:46:55Z",
+      "side": 1,
+      "message": "Isn\u0027t this the default?",
+      "revId": "d1fcde8e8727121a0f1e001ab1e0341c3dea4c00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
