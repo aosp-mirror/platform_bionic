@@ -273,7 +273,7 @@ cc_test_library {
 
 cc_test_library {
     name: "libBionicLoaderTests",
-    defaults: ["bionic_tests_defaults"],
+    defaults: ["bionic_tests_defaults", "llvm-defaults"],
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
@@ -298,6 +298,12 @@ cc_test_library {
             ],
             static_libs: [
                 "libpagemap",
+                "libLLVMObject",
+                "libLLVMBitReader",
+                "libLLVMMC",
+                "libLLVMMCParser",
+                "libLLVMCore",
+                "libLLVMSupport",
             ],
         }
     }
@@ -373,6 +379,12 @@ cc_defaults {
                 "libziparchive",
                 "libz",
                 "libutils",
+                "libLLVMObject",
+                "libLLVMBitReader",
+                "libLLVMMC",
+                "libLLVMMCParser",
+                "libLLVMCore",
+                "libLLVMSupport",
             ],
             ldflags: [
                 "-Wl,--rpath,${ORIGIN}/../bionic-loader-test-libs",
