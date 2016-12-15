@@ -321,3 +321,22 @@ dlopen failed: "/data/data/com.example.bad/lib.so" has unsupported e_shentsize: 
 *Resolution*: don't use tools that produce invalid/malformed
 ELF files. Note that using them puts application under high risk of
 being incompatible with future versions of Android.
+
+## Enable logging of dlopen/dlsym and library loading errors for apps (Available in Android O)
+
+Starting with Android O it is possible to enable logging of all dlsym/dlopen calls
+for debuggable apps. Here is short instruction on how to do that:
+```
+adb shell setprop debug.ld.app.com.example.myapp dlsym,dlopen,dlerror
+adb logcat
+```
+
+Any subset of (dlsym,dlopen,dlerror) can be used.
+
+On userdebug and eng builds it is possible to enable tracing for the whole system
+by using debug.ld.all system property instead of app-specific one:
+```
+adb shell setprop debug.ld.all dlerror,dlopen
+```
+
+enables logging of all errors and dlopen calls
