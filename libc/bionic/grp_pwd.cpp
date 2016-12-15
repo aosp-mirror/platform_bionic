@@ -205,10 +205,11 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
 }
 
 // Translate a user/group name to the corresponding user/group id.
-// all_a1234 -> 0 * AID_USER + AID_SHARED_GID_START + 1234 (group name only)
-// u0_a1234 -> 0 * AID_USER + AID_APP + 1234
-// u2_i1000 -> 2 * AID_USER + AID_ISOLATED_START + 1000
-// u1_system -> 1 * AID_USER + android_ids['system']
+// all_a1234 -> 0 * AID_USER_OFFSET + AID_SHARED_GID_START + 1234 (group name only)
+// u0_a1234_cache -> 0 * AID_USER_OFFSET + AID_CACHE_GID_START + 1234 (group name only)
+// u0_a1234 -> 0 * AID_USER_OFFSET + AID_APP_START + 1234
+// u2_i1000 -> 2 * AID_USER_OFFSET + AID_ISOLATED_START + 1000
+// u1_system -> 1 * AID_USER_OFFSET + android_ids['system']
 // returns 0 and sets errno to ENOENT in case of error.
 static id_t app_id_from_name(const char* name, bool is_group) {
   char* end;
@@ -242,7 +243,13 @@ static id_t app_id_from_name(const char* name, bool is_group) {
       }
     } else {
       // end will point to \0 if the strtoul below succeeds.
-      appid = strtoul(end+2, &end, 10) + AID_APP;
+      appid = strtoul(end+2, &end, 10);
+      if (is_group && !strcmp(end, "_cache")) {
+        end += 6;
+        appid += AID_CACHE_GID_START;
+      } else {
+        appid += AID_APP_START;
+      }
     }
   } else if (end[1] == 'i' && isdigit(end[2])) {
     // end will point to \0 if the strtoul below succeeds.
@@ -271,20 +278,20 @@ static id_t app_id_from_name(const char* name, bool is_group) {
   }
 
   // Check that app id is within range.
-  if (appid >= AID_USER) {
+  if (appid >= AID_USER_OFFSET) {
     errno = ENOENT;
     return 0;
   }
 
-  return (appid + userid*AID_USER);
+  return (appid + userid*AID_USER_OFFSET);
 }
 
 static void print_app_name_from_uid(const uid_t uid, char* buffer, const int bufferlen) {
-  const uid_t appid = uid % AID_USER;
-  const uid_t userid = uid / AID_USER;
+  const uid_t appid = uid % AID_USER_OFFSET;
+  const uid_t userid = uid / AID_USER_OFFSET;
   if (appid >= AID_ISOLATED_START) {
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
-  } else if (appid < AID_APP) {
+  } else if (appid < AID_APP_START) {
     for (size_t n = 0; n < android_id_count; n++) {
       if (android_ids[n].aid == appid) {
         snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
@@ -292,18 +299,20 @@ static void print_app_name_from_uid(const uid_t uid, char* buffer, const int buf
       }
     }
   } else {
-    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
+    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP_START);
   }
 }
 
 static void print_app_name_from_gid(const gid_t gid, char* buffer, const int bufferlen) {
-  const uid_t appid = gid % AID_USER;
-  const uid_t userid = gid / AID_USER;
+  const uid_t appid = gid % AID_USER_OFFSET;
+  const uid_t userid = gid / AID_USER_OFFSET;
   if (appid >= AID_ISOLATED_START) {
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
   } else if (userid == 0 && appid >= AID_SHARED_GID_START && appid <= AID_SHARED_GID_END) {
     snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
-  } else if (appid < AID_APP) {
+  } else if (appid >= AID_CACHE_GID_START && appid <= AID_CACHE_GID_END) {
+    snprintf(buffer, bufferlen, "u%u_a%u_cache", userid, appid - AID_CACHE_GID_START);
+  } else if (appid < AID_APP_START) {
     for (size_t n = 0; n < android_id_count; n++) {
       if (android_ids[n].aid == appid) {
         snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
@@ -311,7 +320,7 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
       }
     }
   } else {
-    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP);
+    snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP_START);
   }
 }
 
@@ -371,21 +380,21 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 }
 
 // Translate a uid into the corresponding name.
-// 0 to AID_APP-1                   -> "system", "radio", etc.
-// AID_APP to AID_ISOLATED_START-1  -> u0_a1234
-// AID_ISOLATED_START to AID_USER-1 -> u0_i1234
-// AID_USER+                        -> u1_radio, u1_a1234, u2_i1234, etc.
+// 0 to AID_APP_START-1                    -> "system", "radio", etc.
+// AID_APP_START to AID_ISOLATED_START-1   -> u0_a1234
+// AID_ISOLATED_START to AID_USER_OFFSET-1 -> u0_i1234
+// AID_USER_OFFSET+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_APP) {
+  if (uid < AID_APP_START) {
     errno = ENOENT;
     return NULL;
   }
 
   print_app_name_from_uid(uid, state->name_buffer_, sizeof(state->name_buffer_));
 
-  const uid_t appid = uid % AID_USER;
-  if (appid < AID_APP) {
+  const uid_t appid = uid % AID_USER_OFFSET;
+  if (appid < AID_APP_START) {
       snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
   } else {
       snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/data");
@@ -405,7 +414,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
 // Translate a gid into the corresponding app_<gid>
 // group structure (sets errno to ENOENT on failure).
 static group* app_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_APP) {
+  if (gid < AID_APP_START) {
     errno = ENOENT;
     return NULL;
   }
@@ -513,10 +522,10 @@ passwd* getpwent() {
   }
 
   start = end;
-  end += AID_USER - AID_APP; // Do not expose higher users
+  end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher users
 
   if (state->getpwent_idx < end) {
-    return app_id_to_passwd(state->getpwent_idx++ - start + AID_APP, state);
+    return app_id_to_passwd(state->getpwent_idx++ - start + AID_APP_START, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
@@ -641,11 +650,11 @@ group* getgrent() {
   }
 
   start = end;
-  end += AID_USER - AID_APP; // Do not expose higher groups
+  end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher groups
 
   if (state->getgrent_idx < end) {
     init_group_state(state);
-    return app_id_to_group(state->getgrent_idx++ - start + AID_APP, state);
+    return app_id_to_group(state->getgrent_idx++ - start + AID_APP_START, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
