@@ -21,6 +21,7 @@ cc_library {
     arch: {
         arm: {
             version_script: "libdl.arm.map",
+            ldflags: ["-Wl,--hash-style=both"],
         },
         arm64: {
             version_script: "libdl.arm64.map",
@@ -32,7 +33,10 @@ cc_library {
             version_script: "libdl.mips64.map",
         },
         x86: {
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            ldflags: [
+                "-Wl,--exclude-libs=libgcc_eh.a",
+                "-Wl,--hash-style=both",
+            ],
             version_script: "libdl.x86.map",
         },
         x86_64: {
