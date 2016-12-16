@@ -61,11 +61,10 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       return mangled;
     }
 
-    auto identifier = decl->getIdentifier();
-    if (!identifier) {
-      return "<error>";
+    if (auto identifier = decl->getIdentifier()) {
+      return identifier->getName();
     }
-    return identifier->getName();
+    return "<error>";
   }
 
   bool VisitDecl(Decl* decl) {
@@ -172,18 +171,16 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
               &arch_availability[Arch::x86_64].introduced } },
         };
 
-        auto it = prefix_map.find(fragments[0]);
-        if (it == prefix_map.end()) {
-          continue;
-        }
-        int value;
-        if (fragments[1].getAsInteger(10, value)) {
-          errx(1, "invalid __ANDROID_AVAILABILITY_DUMP__ annotation: '%s'",
-               annotation.str().c_str());
-        }
+        if (auto it = prefix_map.find(fragments[0]); it != prefix_map.end()) {
+          int value;
+          if (fragments[1].getAsInteger(10, value)) {
+            errx(1, "invalid __ANDROID_AVAILABILITY_DUMP__ annotation: '%s'",
+                 annotation.str().c_str());
+          }
 
-        for (int* ptr : it->second) {
-          *ptr = value;
+          for (int* ptr : it->second) {
+            *ptr = value;
+          }
         }
       }
     }
@@ -196,8 +193,16 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     }
 
     // Find or insert an entry for the declaration.
-    auto declaration_it = symbol_it->second.declarations.find(location);
-    if (declaration_it == symbol_it->second.declarations.end()) {
+    if (auto declaration_it = symbol_it->second.declarations.find(location);
+        declaration_it != symbol_it->second.declarations.end()) {
+      if (declaration_it->second.is_extern != is_extern ||
+          declaration_it->second.is_definition != is_definition ||
+          declaration_it->second.no_guard != no_guard) {
+        errx(1, "varying declaration of '%s' at %s:%u:%u", declaration_name.c_str(),
+             location.filename.c_str(), location.start.line, location.start.column);
+      }
+      declaration_it->second.availability.insert(std::make_pair(type, availability));
+    } else {
       Declaration declaration;
       declaration.name = declaration_name;
       declaration.location = location;
@@ -206,14 +211,6 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       declaration.no_guard = no_guard;
       declaration.availability.insert(std::make_pair(type, availability));
       symbol_it->second.declarations.insert(std::make_pair(location, declaration));
-    } else {
-      if (declaration_it->second.is_extern != is_extern ||
-          declaration_it->second.is_definition != is_definition ||
-          declaration_it->second.no_guard != no_guard) {
-        errx(1, "varying declaration of '%s' at %s:%u:%u", declaration_name.c_str(),
-             location.filename.c_str(), location.start.line, location.start.column);
-      }
-      declaration_it->second.availability.insert(std::make_pair(type, availability));
     }
 
     return true;
