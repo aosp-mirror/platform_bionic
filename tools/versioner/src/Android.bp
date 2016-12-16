@@ -37,6 +37,7 @@ cc_binary_host {
     target: {
         host: {
             cppflags: [
+                "-std=gnu++1z",
                 "-fno-rtti",
             ],
         },
