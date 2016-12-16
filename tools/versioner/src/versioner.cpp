@@ -382,8 +382,8 @@ static bool checkVersions(const std::set<CompilationType>& types,
     const std::string& symbol_name = it.first;
 
     bool symbol_error = false;
-    auto missing_it = missing_availability.find(symbol_name);
-    if (missing_it != missing_availability.end()) {
+    if (auto missing_it = missing_availability.find(symbol_name);
+        missing_it != missing_availability.end()) {
       printf("%s: declaration marked available but symbol missing in [%s]\n", symbol_name.c_str(),
              Join(missing_it->second, ", ").c_str());
       symbol_error = true;
@@ -391,8 +391,8 @@ static bool checkVersions(const std::set<CompilationType>& types,
     }
 
     if (strict) {
-      auto extra_it = extra_availability.find(symbol_name);
-      if (extra_it != extra_availability.end()) {
+      if (auto extra_it = extra_availability.find(symbol_name);
+          extra_it != extra_availability.end()) {
         printf("%s: declaration marked unavailable but symbol available in [%s]\n",
                symbol_name.c_str(), Join(extra_it->second, ", ").c_str());
         symbol_error = true;
@@ -401,11 +401,12 @@ static bool checkVersions(const std::set<CompilationType>& types,
     }
 
     if (symbol_error) {
-      auto symbol_it = header_database->symbols.find(symbol_name);
-      if (symbol_it == header_database->symbols.end()) {
+      if (auto symbol_it = header_database->symbols.find(symbol_name);
+          symbol_it != header_database->symbols.end()) {
+        symbol_it->second.dump(cwd);
+      } else {
         errx(1, "failed to find symbol in header database");
       }
-      symbol_it->second.dump(cwd);
     }
   }
 
