@@ -1,0 +1,57 @@
+cc_binary_host {
+    name: "versioner",
+
+    srcs: [
+        "versioner.cpp",
+        "Arch.cpp",
+        "CompilationType.cpp",
+        "DeclarationDatabase.cpp",
+        "Driver.cpp",
+        "Preprocessor.cpp",
+        "SymbolDatabase.cpp",
+        "Utils.cpp",
+        "VFS.cpp",
+    ],
+
+    shared_libs: [
+        "libclang",
+        "libLLVM",
+        "libbase",
+    ],
+
+    header_libs: [
+        "llvm-headers",
+        "clang-headers",
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-unused-parameter",
+
+        "-D__STDC_CONSTANT_MACROS",
+        "-D__STDC_LIMIT_MACROS",
+    ],
+
+    target: {
+        host: {
+            cppflags: [
+                "-fno-rtti",
+            ],
+        },
+        darwin: {
+            enabled: false,
+        },
+        windows: {
+            enabled: false,
+        },
+    },
+
+    product_variables: {
+        unbundled_build: {
+            // Only do this when Clang is available.
+            enabled: false,
+        },
+    },
+}
