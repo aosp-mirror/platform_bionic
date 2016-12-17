@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a3f8799_ee8bd471",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2016-12-17T06:29:39Z",
+      "side": 1,
+      "message": "Note: getauxval(AT_SECURE) is documented to return non-zero if the executable should be treated securely, but issetugid() is documented as returning 1 under the same circumstances. That\u0027s why I\u0027m not just returning the value from getauxval(AT_SECURE) directly.",
+      "revId": "43f156b0748588d19ed17d9f5a9cd581671d8eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
