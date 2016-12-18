@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7ab57f43_f3c48a33",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2016-12-18T21:28:27Z",
+      "side": 1,
+      "message": "Could do, but if we added new sections it would be neater to do it at the end and then this would become the offset.\n\nYou can see some of my understanding of the format in the associated ZoneCompactor change.\n\nI started with adding length fields for the various sections, but since the existing code assumes they are all continuous it seemed unnecessary / duplicative. It seemed neater to do it this way.",
+      "parentUuid": "3a3f8799_a928e6f6",
+      "revId": "7ed982a792cffffc9bfc37f6748b91528d944d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a3f8799_c9f3727d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-12-18T18:43:19Z",
       "side": 1,
       "message": "if it\u0027s not planned, why are we here?\n\nif it is planned, don\u0027t we want to do it properly and have something more like ELF\u0027s table of (type, offset, size)? we can skip the type if we stick with the strict ordering, but if we do ever need to extend the format it was a mistake to not have sizes. as this change points out, \"the start of the next section tells you the end of this\" is okay except for the final section (or if you had any special alignment requirements).\n\ngiven that there\u0027s no version number (what were we thinking?!), any change might be a good time to add that too. make the first new field a magic number that\u0027s also a version number? and if that\u0027s valid, what follows is a (type,offset,size) table or an (offset,size) table. maybe including the existing sections too, on the assumption that new code would check the magic first and just ignore the legacy fields if given a new data file?",
+      "revId": "7ed982a792cffffc9bfc37f6748b91528d944d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ab57f43_33af3263",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2016-12-18T21:28:27Z",
+      "side": 1,
+      "message": "We are here because I was thinking to myself how I would evolve the format? I realized that doing so by adding a section at the end would mean I\u0027d have to prepare different  tzdata files for older versions. I also realized we had no way of detecting file truncation right now.\n\nRight now, we could add sections by adding more offsets but adding sections before the index. That would make the format harder to understand because the offsets (and therefore the length calculations) would be in a funny order (compared to the original 3 sections).\n\nI was happy enough to document the existing format as requiring all sections to be continuous. That means that the length field is implied and is not required. We just need the length of the final section, which also happens to be offset to a future section. I can change the name if you prefer.\n\nThis way a small change now means that later if we do want to add sections we can naturally add them in a backwards compatible way: older versions will just ignore the additional sections.\n\nI actually think the chance of adding new sections is quite slim. This seemed like a small change for a small benefit. Adding type, etc. would mean designing a new format and extra hassle when back-porting tzdata updates. I didn\u0027t think the cost/benefit worked out.\n\nI do like the idea of adding a type if we redesign the format. I couldn\u0027t see the immediate benefit of adding a version right now because I would have to decide whether to have major / minor and whether a new version should be rejected by existing code (or only if the major version changes...?). I decided to assume that if we made a backwards-incompatible change we could revamp the whole file / add the version then.",
+      "parentUuid": "3a3f8799_c9f3727d",
       "revId": "7ed982a792cffffc9bfc37f6748b91528d944d49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
