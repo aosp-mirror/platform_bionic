@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a3f8799_a928e6f6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-18T18:43:19Z",
+      "side": 1,
+      "message": "if you want to add a \"length\" field, do so and call it that?",
+      "revId": "7ed982a792cffffc9bfc37f6748b91528d944d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a3f8799_c9f3727d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-18T18:43:19Z",
+      "side": 1,
+      "message": "if it\u0027s not planned, why are we here?\n\nif it is planned, don\u0027t we want to do it properly and have something more like ELF\u0027s table of (type, offset, size)? we can skip the type if we stick with the strict ordering, but if we do ever need to extend the format it was a mistake to not have sizes. as this change points out, \"the start of the next section tells you the end of this\" is okay except for the final section (or if you had any special alignment requirements).\n\ngiven that there\u0027s no version number (what were we thinking?!), any change might be a good time to add that too. make the first new field a magic number that\u0027s also a version number? and if that\u0027s valid, what follows is a (type,offset,size) table or an (offset,size) table. maybe including the existing sections too, on the assumption that new code would check the magic first and just ignore the legacy fields if given a new data file?",
+      "revId": "7ed982a792cffffc9bfc37f6748b91528d944d49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
