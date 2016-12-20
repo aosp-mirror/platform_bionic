@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f71b4a68_94e7c4f6",
+        "filename": "tests/wctype_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1114223
+      },
+      "writtenOn": "2016-12-20T15:37:11Z",
+      "side": 1,
+      "message": "Static bionic tests started to segfault on MIPS. I saw that this piece of code gets executed before main() and crash. dlopen() does not crash if called after the application has initialized properly (e.g. if I convert have_dl from variable to C function). I was wondering is dlopen() expected to work if called before main() in static applications?",
+      "revId": "a57ca0da69ab9a3f870a584ba1ddab9af432c639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
