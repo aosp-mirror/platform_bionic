@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f74a6a97_b5f7fdda",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1536,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2016-12-23T02:08:49Z",
+      "side": 1,
+      "message": "This is wrong: soinfos include libraries that were loaded previously, and we end up updating cfi shadow for them twice.\n\nThis should be limited to libraries in load_tasks.\n\nFix next week.",
+      "revId": "1e6fcf67d2298684f86aa6516c2404c29aca7894",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
