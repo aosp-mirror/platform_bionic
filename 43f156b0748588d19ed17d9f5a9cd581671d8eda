@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f74a6a97_e04b7e2a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2016-12-27T22:02:12Z",
+      "side": 1,
+      "message": "TMPDIR is already on the UNSAFE_VARIABLE_NAMES list, so i think this is a no-op. and possibly undesirable? isn\u0027t the aim to disallow _inheriting_ of $TMPDIR, not to break $TMPDIR if it\u0027s used internally? given how broken the temporary directory situation is on Android, isn\u0027t setting $TMPDIR currently the only workaround to make most of the temporary directory-related functionality work?\n\n/me wonders if we shouldn\u0027t set TMPDIR to the app\u0027s data cache directory automatically...",
+      "revId": "43f156b0748588d19ed17d9f5a9cd581671d8eda",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a3f8799_ee8bd471",
         "filename": "libc/bionic/ndk_cruft.cpp",
         "patchSetId": 1
