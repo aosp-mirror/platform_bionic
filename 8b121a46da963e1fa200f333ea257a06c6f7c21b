@@ -39,6 +39,30 @@
       "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74a6a97_c9466d74",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1026058
+      },
+      "writtenOn": "2016-12-28T17:14:08Z",
+      "side": 1,
+      "message": "Actually it\u0027d be even better if we updated the bug with every file that needs changing.  Please add this there, as I don\u0027t think I did.  (also, I gave you the wrong bug: see b/33642277)",
+      "parentUuid": "f74a6a97_89110576",
+      "range": {
+        "startLine": 947,
+        "startChar": 9,
+        "endLine": 947,
+        "endChar": 35
+      },
+      "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
