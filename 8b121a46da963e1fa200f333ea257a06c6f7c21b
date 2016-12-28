@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f74a6a97_e9ffe9f0",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1026058
+      },
+      "writtenOn": "2016-12-28T17:08:56Z",
+      "side": 1,
+      "message": "constexpr please (enh@ comment carried over from: https://android-review.googlesource.com/#/c/308766/2/init/init.cpp)",
+      "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74a6a97_89110576",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1026058
+      },
+      "writtenOn": "2016-12-28T17:08:56Z",
+      "side": 1,
+      "message": "please add a #TODO and link to b/33703528",
+      "range": {
+        "startLine": 947,
+        "startChar": 9,
+        "endLine": 947,
+        "endChar": 35
+      },
+      "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
