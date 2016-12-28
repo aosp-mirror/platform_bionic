@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f74a6a97_349644da",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2016-12-28T20:31:07Z",
+      "side": 1,
+      "message": "hrm, not sure how much that helps in this case. Also, there are other static const char * global in this file, but I\u0027ll change it anyway. The use is local to the function in the following loop.",
+      "parentUuid": "f74a6a97_e9ffe9f0",
+      "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f74a6a97_89110576",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -60,6 +78,24 @@
         "endLine": 947,
         "endChar": 35
       },
+      "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74a6a97_149b4800",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2016-12-28T20:31:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f74a6a97_c9466d74",
       "revId": "8b121a46da963e1fa200f333ea257a06c6f7c21b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
