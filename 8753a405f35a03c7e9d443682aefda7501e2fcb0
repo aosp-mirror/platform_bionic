@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3726c2ad_7f688363",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2017-01-03T16:30:53Z",
+      "side": 1,
+      "message": "This list isn\u0027t terminated... resulting in a failure as follows :\n\nout/soong/.bootstrap/bin/minibp -t -b out/soong -d out/soong/.minibootstrap/build.ninja.in.d -o out/soong/.minibootstrap/build.ninja.in Android.bp\nerror: bionic/libc/Android.bp:1020:11: expected bool, list, or string value; found \"}\"",
+      "range": {
+        "startLine": 1017,
+        "startChar": 30,
+        "endLine": 1017,
+        "endChar": 31
+      },
+      "revId": "8753a405f35a03c7e9d443682aefda7501e2fcb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
