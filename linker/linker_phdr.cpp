@@ -373,21 +373,37 @@ bool ElfReader::ReadDynamicSection() {
   }
 
   if (pt_dynamic_offset != dynamic_shdr->sh_offset) {
-    DL_ERR("\"%s\" .dynamic section has invalid offset: 0x%zx, "
-           "expected to match PT_DYNAMIC offset: 0x%zx",
-           name_.c_str(),
-           static_cast<size_t>(dynamic_shdr->sh_offset),
-           pt_dynamic_offset);
-    return false;
+    if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
+      DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid offset: 0x%zx, "
+                     "expected to match PT_DYNAMIC offset: 0x%zx",
+                     name_.c_str(),
+                     static_cast<size_t>(dynamic_shdr->sh_offset),
+                     pt_dynamic_offset);
+      return false;
+    }
+    DL_WARN("\"%s\" .dynamic section has invalid offset: 0x%zx, "
+            "expected to match PT_DYNAMIC offset: 0x%zx",
+            name_.c_str(),
+            static_cast<size_t>(dynamic_shdr->sh_offset),
+            pt_dynamic_offset);
+    add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
   if (pt_dynamic_filesz != dynamic_shdr->sh_size) {
-    DL_ERR("\"%s\" .dynamic section has invalid size: 0x%zx, "
-           "expected to match PT_DYNAMIC filesz: 0x%zx",
-           name_.c_str(),
-           static_cast<size_t>(dynamic_shdr->sh_size),
-           pt_dynamic_filesz);
-    return false;
+    if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
+      DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid size: 0x%zx, "
+                     "expected to match PT_DYNAMIC filesz: 0x%zx",
+                     name_.c_str(),
+                     static_cast<size_t>(dynamic_shdr->sh_size),
+                     pt_dynamic_filesz);
+      return false;
+    }
+    DL_WARN("\"%s\" .dynamic section has invalid size: 0x%zx, "
+            "expected to match PT_DYNAMIC filesz: 0x%zx",
+            name_.c_str(),
+            static_cast<size_t>(dynamic_shdr->sh_size),
+            pt_dynamic_filesz);
+    add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
   if (dynamic_shdr->sh_link >= shdr_num_) {
