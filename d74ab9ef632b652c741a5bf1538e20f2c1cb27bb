@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "f71b4a68_bd1f4320",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2017-01-04T09:49:24Z",
+      "side": 1,
+      "message": "why is this required ? you can return a const prop_info_header* here..",
+      "range": {
+        "startLine": 292,
+        "startChar": 41,
+        "endLine": 292,
+        "endChar": 58
+      },
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f71b4a68_fd15bb03",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2017-01-04T09:49:24Z",
+      "side": 1,
+      "message": "why is this const_cast required ?",
+      "range": {
+        "startLine": 313,
+        "startChar": 8,
+        "endLine": 313,
+        "endChar": 38
+      },
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f71b4a68_dd12ff19",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2017-01-04T09:49:24Z",
+      "side": 1,
+      "message": "why is this const_cast required ?",
+      "range": {
+        "startLine": 333,
+        "startChar": 8,
+        "endLine": 333,
+        "endChar": 38
+      },
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5755f637_204c70e2",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
