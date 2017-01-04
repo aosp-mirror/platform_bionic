@@ -56,10 +56,12 @@ enum ThreadJoinState {
 class thread_local_dtor;
 
 class pthread_internal_t {
- public:
-  class pthread_internal_t* next;
-  class pthread_internal_t* prev;
+  // These two fields preserve backwards compatibility for code accessing the `tid` field,
+  // since we didn't always offer pthread_gettid_np.
+  void* unused0 __unused;
+  void* unused1 __unused;
 
+ public:
   pid_t tid;
 
  private:
@@ -112,15 +114,12 @@ class pthread_internal_t {
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
 };
 
-__LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ int __init_thread(pthread_internal_t*);
+__LIBC_HIDDEN__ void __free_thread(pthread_internal_t*);
 
-__LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
-__LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
-__LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_tls(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
 
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {

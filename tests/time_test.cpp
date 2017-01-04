@@ -509,14 +509,14 @@ TEST(time, timer_delete_terminates) {
 
 struct TimerDeleteData {
   timer_t timer_id;
-  pthread_t thread_id;
+  pid_t tid;
   volatile bool complete;
 };
 
 static void TimerDeleteCallback(sigval_t value) {
   TimerDeleteData* tdd = reinterpret_cast<TimerDeleteData*>(value.sival_ptr);
 
-  tdd->thread_id = pthread_self();
+  tdd->tid = gettid();
   timer_delete(tdd->timer_id);
   tdd->complete = true;
 }
@@ -548,8 +548,9 @@ TEST(time, timer_delete_from_timer_thread) {
   // Since bionic timers are implemented by creating a thread to handle the
   // callback, verify that the thread actually completes.
   cur_time = time(NULL);
-  while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5);
-  ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
+  while ((kill(tdd.tid, 0) != -1 || errno != ESRCH) && (time(NULL) - cur_time) < 5);
+  ASSERT_EQ(-1, kill(tdd.tid, 0));
+  ASSERT_EQ(ESRCH, errno);
 #endif
 }
 
