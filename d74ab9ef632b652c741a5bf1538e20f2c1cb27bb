@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5755f637_204c70e2",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1019198
+      },
+      "writtenOn": "2017-01-04T00:09:55Z",
+      "side": 1,
+      "message": "I believe that this line should be removed.",
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5755f637_e0ff183a",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1019198
+      },
+      "writtenOn": "2017-01-04T00:09:55Z",
+      "side": 1,
+      "message": "This will result in increasing size of prop_msg regardless of version. Won\u0027t this affect any performance on communication?",
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
