@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5755f637_a0288097",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-01-04T08:35:55Z",
+      "side": 1,
+      "message": "yes you are right.",
+      "parentUuid": "5755f637_204c70e2",
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5755f637_e0ff183a",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-04T00:09:55Z",
       "side": 1,
       "message": "This will result in increasing size of prop_msg regardless of version. Won\u0027t this affect any performance on communication?",
+      "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5755f637_e0327803",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-01-04T08:35:55Z",
+      "side": 1,
+      "message": "you are right. will optimize it later.",
+      "parentUuid": "5755f637_e0ff183a",
       "revId": "d74ab9ef632b652c741a5bf1538e20f2c1cb27bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
