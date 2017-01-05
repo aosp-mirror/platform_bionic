@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77acba9b_4d336f08",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-05T21:47:41Z",
+      "side": 1,
+      "message": "char*",
+      "range": {
+        "startLine": 947,
+        "startChar": 20,
+        "endLine": 947,
+        "endChar": 26
+      },
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77acba9b_ed2b6392",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-05T21:47:41Z",
+      "side": 1,
+      "message": "traditional idiomatic:\n\n  for (size_t i \u003d 0; i \u003c sizeof(property_contexts)/sizeof(property_contexts[0]); ++i) {\n\nmodern idiomatic:\n\n  for (const char* property_context : property_contexts) {\n\n(or auto.)",
+      "range": {
+        "startLine": 952,
+        "startChar": 9,
+        "endLine": 952,
+        "endChar": 12
+      },
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77acba9b_cdcbffaf",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-05T21:47:41Z",
+      "side": 1,
+      "message": "really? why?\n\n(seems like this might be better and clearer if you rename initialize_properties initialize_properties_from_file(const char*), and then put the new code that calls it twice in a new initialize_properties. then you can explain why a failure to read from one file means you want to discard stuff from the other file.)",
+      "range": {
+        "startLine": 955,
+        "startChar": 0,
+        "endLine": 956,
+        "endChar": 33
+      },
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
