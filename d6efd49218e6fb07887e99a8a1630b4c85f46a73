@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77acba9b_705e4694",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-05T22:21:41Z",
+      "side": 1,
+      "message": "I was initially considering different sized bins for property values (with ability to recycle them) - but this leads us to another error condition - \"out of memory\" while updating a property - this is main reason this is fixed sized buffer and not bins of power of 2s",
+      "range": {
+        "startLine": 64,
+        "startChar": 32,
+        "endLine": 64,
+        "endChar": 56
+      },
+      "revId": "d6efd49218e6fb07887e99a8a1630b4c85f46a73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
