@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "578ed681_52ebf2f4",
+        "filename": "tests/gtest_preinit_debuggerd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-06T22:56:14Z",
+      "side": 1,
+      "message": "extra newline?",
+      "revId": "e3d9bdd534318dc0806ceb7338c901fe2623c3dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
