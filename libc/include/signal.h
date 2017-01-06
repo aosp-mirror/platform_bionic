@@ -150,6 +150,7 @@ sighandler_t sigset(int, sighandler_t)
 int raise(int);
 int kill(pid_t, int);
 int killpg(int, int);
+int tgkill(int tgid, int tid, int sig) __INTRODUCED_IN_32(16);
 
 int sigaltstack(const stack_t*, stack_t*);
 

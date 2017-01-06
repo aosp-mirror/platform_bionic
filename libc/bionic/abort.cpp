@@ -31,8 +31,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern "C" int tgkill(int tgid, int tid, int sig);
-
 void abort() {
   // Don't block SIGABRT to give any signal handler a chance; we ignore
   // any errors -- X311J doesn't allow abort to return anyway.
