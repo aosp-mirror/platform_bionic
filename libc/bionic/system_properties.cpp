@@ -1046,7 +1046,7 @@ int __system_property_set_filename(const char *filename)
 int __system_property_area_init()
 {
     free_and_unmap_contexts();
-    mkdir(property_filename, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    mkdir(property_filename, S_IRWXU | S_IXGRP | S_IXOTH);
     if (!initialize_properties()) {
         return -1;
     }
