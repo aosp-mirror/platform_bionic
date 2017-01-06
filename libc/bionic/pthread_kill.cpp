@@ -32,8 +32,6 @@
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
-extern "C" int tgkill(int tgid, int tid, int sig);
-
 int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
