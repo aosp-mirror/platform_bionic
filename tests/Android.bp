@@ -422,6 +422,9 @@ cc_test {
     defaults: ["bionic_tests_defaults"],
     host_supported: false,
 
+    srcs: [
+        "gtest_preinit_debuggerd.cpp",
+    ],
     whole_static_libs: [
         "libBionicTests",
         "libBionicGtestMain",
@@ -435,6 +438,7 @@ cc_test {
         "libtinyxml2",
         "liblog",
         "libbase",
+        "libdebuggerd_client",
     ],
 
     static_executable: true,
