@@ -29,7 +29,9 @@ class UtfLocale {
 
 // bionic's dlsym doesn't work in static binaries, so we can't access icu,
 // so any unicode test case will fail.
-static bool have_dl = (dlopen("libc.so", 0) != nullptr);
+static bool have_dl() {
+  return (dlopen("libc.so", 0) != nullptr);
+}
 
 static void TestIsWideFn(int fn(wint_t),
                          int fn_l(wint_t, locale_t),
@@ -37,7 +39,7 @@ static void TestIsWideFn(int fn(wint_t),
                          const wchar_t* falses) {
   UtfLocale l;
   for (const wchar_t* p = trues; *p; ++p) {
-    if (!have_dl && *p > 0x7f) {
+    if (!have_dl() && *p > 0x7f) {
       GTEST_LOG_(INFO) << "skipping unicode test " << *p;
       continue;
     }
@@ -45,7 +47,7 @@ static void TestIsWideFn(int fn(wint_t),
     EXPECT_TRUE(fn_l(*p, l.l)) << *p;
   }
   for (const wchar_t* p = falses; *p; ++p) {
-    if (!have_dl && *p > 0x7f) {
+    if (!have_dl() && *p > 0x7f) {
       GTEST_LOG_(INFO) << "skipping unicode test " << *p;
       continue;
     }
@@ -107,7 +109,7 @@ TEST(wctype, towlower) {
   EXPECT_EQ(wint_t('!'), towlower(L'!'));
   EXPECT_EQ(wint_t('a'), towlower(L'a'));
   EXPECT_EQ(wint_t('a'), towlower(L'A'));
-  if (have_dl) {
+  if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
     EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
     EXPECT_EQ(wint_t(L'δ'), towlower(L'δ'));
@@ -123,7 +125,7 @@ TEST(wctype, towlower_l) {
   EXPECT_EQ(wint_t('!'), towlower_l(L'!', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'a', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'A', l.l));
-  if (have_dl) {
+  if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
     EXPECT_EQ(wint_t(L'δ'), towlower_l(L'δ', l.l));
@@ -138,7 +140,7 @@ TEST(wctype, towupper) {
   EXPECT_EQ(wint_t('!'), towupper(L'!'));
   EXPECT_EQ(wint_t('A'), towupper(L'a'));
   EXPECT_EQ(wint_t('A'), towupper(L'A'));
-  if (have_dl) {
+  if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
     EXPECT_EQ(wint_t(L'Δ'), towupper(L'δ'));
@@ -154,7 +156,7 @@ TEST(wctype, towupper_l) {
   EXPECT_EQ(wint_t('!'), towupper_l(L'!', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'a', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'A', l.l));
-  if (have_dl) {
+  if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
     EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'δ', l.l));
