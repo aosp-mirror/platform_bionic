@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77acba9b_098cf518",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-09T19:20:58Z",
+      "side": 1,
+      "message": "we can remove this completely - the only thing that is stopping it are tests and benchmarks.\n\ninit links libc statically.",
+      "revId": "d80e56fb15a51b9171dfa68438ea09d7f0e11445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
