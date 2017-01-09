@@ -22,6 +22,30 @@
       "revId": "3bdb31b51b353d12e482d28d6ffe115944f8819e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77acba9b_718633a8",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-09T22:40:39Z",
+      "side": 1,
+      "message": "answer: because i copy \u0026 pasted too literally from the other bit of direct logging in the linker.\n\nsorry, missed your comment before hitting submit. fixed here: https://android-review.googlesource.com/320096",
+      "parentUuid": "77acba9b_7e00c269",
+      "range": {
+        "startLine": 319,
+        "startChar": 4,
+        "endLine": 319,
+        "endChar": 20
+      },
+      "revId": "3bdb31b51b353d12e482d28d6ffe115944f8819e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
