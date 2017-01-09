@@ -56,6 +56,7 @@
 #include "private/bionic_futex.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
+#include "private/bionic_sdk_version.h"
 #include "private/libc_logging.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
@@ -1265,6 +1266,11 @@ unsigned int __system_property_wait_any(unsigned int serial)
 
 const prop_info *__system_property_find_nth(unsigned n)
 {
+    if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
+      __libc_fatal("__system_property_find_nth is not supported since Android O,"
+                   " please use __system_property_foreach instead.");
+    }
+
     find_nth_cookie cookie(n);
 
     const int err = __system_property_foreach(find_nth_fn, &cookie);
