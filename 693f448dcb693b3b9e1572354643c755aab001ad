@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "77acba9b_51620f20",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2017-01-09T22:41:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77acba9b_4d336f08",
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77acba9b_ed2b6392",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "77acba9b_b1328b20",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2017-01-09T22:41:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77acba9b_ed2b6392",
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77acba9b_cdcbffaf",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 3
@@ -65,6 +101,24 @@
         "endLine": 956,
         "endChar": 33
       },
+      "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77acba9b_d127ffe1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2017-01-09T22:41:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77acba9b_cdcbffaf",
       "revId": "693f448dcb693b3b9e1572354643c755aab001ad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
