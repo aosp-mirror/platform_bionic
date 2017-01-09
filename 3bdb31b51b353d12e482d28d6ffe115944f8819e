@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77acba9b_7e00c269",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-09T21:34:37Z",
+      "side": 1,
+      "message": "actually this will not show up in logcat - also why not STDERR?",
+      "range": {
+        "startLine": 319,
+        "startChar": 4,
+        "endLine": 319,
+        "endChar": 20
+      },
+      "revId": "3bdb31b51b353d12e482d28d6ffe115944f8819e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
