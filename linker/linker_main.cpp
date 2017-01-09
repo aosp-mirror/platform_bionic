@@ -306,9 +306,21 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   si->dynamic = nullptr;
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
+
+  // We haven't supported non-PIE since Lollipop for security reasons.
   if (elf_hdr->e_type != ET_DYN) {
-    __libc_fatal("\"%s\": error: only position independent executables (PIE) are supported.",
-                 g_argv[0]);
+    // We don't use __libc_fatal here because we don't want a tombstone: it's
+    // been several years now but we still find ourselves on app compatibility
+    // investigations because some app's trying to launch an executable that
+    // hasn't worked in at least three years, and we've "helpfully" dropped a
+    // tombstone for them. The tombstone never provided any detail relevant to
+    // fixing the problem anyway, and the utility of drawing extra attention
+    // to the problem is non-existent at this late date.
+    __libc_format_fd(STDOUT_FILENO,
+                     "\"%s\": error: Android 5.0 and later only support "
+                     "position-independent executables (-fPIE).",
+                     g_argv[0]);
+    exit(0);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
