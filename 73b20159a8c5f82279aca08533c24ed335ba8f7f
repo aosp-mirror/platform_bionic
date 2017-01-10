@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77acba9b_c5f9f9a5",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-01-10T02:52:22Z",
+      "side": 1,
+      "message": "I think it might be better to do the changes in this file in a separate CL.\n\nThe current CL description does not mention the fact that you are marking a test as should fail.",
+      "range": {
+        "startLine": 942,
+        "startChar": 17,
+        "endLine": 942,
+        "endChar": 37
+      },
+      "revId": "73b20159a8c5f82279aca08533c24ed335ba8f7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
