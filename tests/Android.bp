@@ -155,6 +155,8 @@ cc_test_library {
     shared: {
         enabled: false,
     },
+
+    generated_headers: ["generated_android_ids"],
 }
 
 // -----------------------------------------------------------------------------
