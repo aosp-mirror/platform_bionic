@@ -316,9 +316,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     // tombstone for them. The tombstone never provided any detail relevant to
     // fixing the problem anyway, and the utility of drawing extra attention
     // to the problem is non-existent at this late date.
-    __libc_format_fd(STDOUT_FILENO,
+    __libc_format_fd(STDERR_FILENO,
                      "\"%s\": error: Android 5.0 and later only support "
-                     "position-independent executables (-fPIE).",
+                     "position-independent executables (-fPIE).\n",
                      g_argv[0]);
     exit(0);
   }
