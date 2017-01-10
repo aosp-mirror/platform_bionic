@@ -16,6 +16,24 @@
       "revId": "d68b445a1abbb5dac06cb1bbb5075993e3313765",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77acba9b_ef725e50",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2017-01-10T00:24:04Z",
+      "side": 1,
+      "message": "\u003e why?\n\nThanks for pointing this out again, I had forgotten why I did that before. Turns out this is actually wrong.\nWe *only* want to error out if we can\u0027t find \"plat_property_contexts\" since \"nonplat\" is optional. so, I\u0027ll just\nget rid of the array and instead do something like ..\n\n constexpr const char *system_prop_context \u003d \"/plat_property_contexts\";\n constexpr const char *vendor_prop_context \u003d \"/nonplat_property_contexts\";\n\n if (!initialize_properties_from_file(system_prop_context))\n   return false;\n\n initialize_properties_from_file(vendor_prop_context);\n\n return true;\n\nIt was that way before, because I made it similar to how SELinux build is done. Where  we are currently installing\nan empty property_contexts file as \"nonplat_property_contexts\" when the device sepolicy doesn\u0027t provide one\nin order to keep the original \u0027build_sepolicy\u0027 macro happy at : \n - https://android-review.googlesource.com/c/317825/4/Android.mk#802\n - https://android-review.googlesource.com/c/317825/4/reqd_mask/property_contexts",
+      "parentUuid": "77acba9b_31b67b23",
+      "revId": "d68b445a1abbb5dac06cb1bbb5075993e3313765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
