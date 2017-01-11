@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ba99b795_0ce798cc",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-11T19:16:35Z",
+      "side": 1,
+      "message": "If we are going to enable cfi for apps - this needs to move to LIBC_O section...",
+      "revId": "1e6fcf67d2298684f86aa6516c2404c29aca7894",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f74a6a97_b5f7fdda",
         "filename": "linker/linker.cpp",
         "patchSetId": 16
