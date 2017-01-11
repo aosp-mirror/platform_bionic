@@ -244,16 +244,10 @@ TEST(properties, find_nth) {
     ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
     ASSERT_EQ(0, __system_property_add("property_other", 14, "value3", 6));
 
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(0));
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(1));
-    ASSERT_NE((const prop_info *)NULL, __system_property_find_nth(2));
-
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(3));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(4));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(5));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(100));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(200));
-    ASSERT_EQ((const prop_info *)NULL, __system_property_find_nth(247));
+    // This method is no longer supported and should result in abort
+    ASSERT_EXIT(__system_property_find_nth(0), testing::KilledBySignal(SIGABRT),
+                "__system_property_find_nth is not supported since Android O,"
+                " please use __system_property_foreach instead.");
 #else // __BIONIC__
     GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
