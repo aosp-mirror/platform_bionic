@@ -22,6 +22,30 @@
       "revId": "2e615b3a308f2ef5be6bd6412651e0946dcd3363",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_1223aad9",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-11T02:28:49Z",
+      "side": 1,
+      "message": "yeah, \"KNOWN_FAILURE\" or \"EXPECTED_FAILURE\" would seem more revealing.\n\ni was fine with \"xfail\" since a google search will explain it to me.\n\nif we\u0027re going to have a macro, maybe make it take a bug number [that it doesn\u0027t otherwise use] to try to enforce that behavior?\n\n\n\n\nah, i\u0027ve just understood what this macro really is. yeah, terrible name :-)\n\nEXPECTED_FAILURE_ON_BIONIC?",
+      "parentUuid": "83de51f5_32a34e41",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 22
+      },
+      "revId": "2e615b3a308f2ef5be6bd6412651e0946dcd3363",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
