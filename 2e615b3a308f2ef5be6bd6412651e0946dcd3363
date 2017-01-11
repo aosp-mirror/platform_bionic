@@ -46,6 +46,30 @@
       "revId": "2e615b3a308f2ef5be6bd6412651e0946dcd3363",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_988254a0",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-11T21:01:35Z",
+      "side": 1,
+      "message": "I chose KNOWN_FAILURE_ON_BIONIC",
+      "parentUuid": "83de51f5_1223aad9",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 22
+      },
+      "revId": "2e615b3a308f2ef5be6bd6412651e0946dcd3363",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
