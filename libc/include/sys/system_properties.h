@@ -81,7 +81,8 @@ int __system_property_read(const prop_info *pi, char *name, char *value);
 ** is inefficient and order of results may change from call
 ** to call.
 */ 
-const prop_info *__system_property_find_nth(unsigned n);
+const prop_info *__system_property_find_nth(unsigned n)
+  __REMOVED_IN(26);
 
 /* Pass a prop_info for each system property to the provided
 ** callback.  Use __system_property_read() to read the value
