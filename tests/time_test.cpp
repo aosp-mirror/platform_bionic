@@ -674,3 +674,39 @@ TEST(time, bug_31938693) {
   ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
   EXPECT_EQ(9, tm.tm_hour);
 }
+
+TEST(time, bug_31339449) {
+  // POSIX says localtime acts as if it calls tzset.
+  // tzset does two things:
+  //  1. it sets the time zone ctime/localtime/mktime/strftime will use.
+  //  2. it sets the global `tzname`.
+  // POSIX says localtime_r need not set `tzname` (2).
+  // Q: should localtime_r set the time zone (1)?
+  // Upstream tzcode (and glibc) answer "no", everyone else answers "yes".
+
+  // Pick a time, any time...
+  time_t t = 1475619727;
+
+  // Call tzset with a specific timezone.
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+  // If we change the timezone and call localtime, localtime should use the new timezone.
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm* tm_p = localtime(&t);
+  EXPECT_EQ(15, tm_p->tm_hour);
+
+  // Reset the timezone back.
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+#if defined(__BIONIC__)
+  // If we change the timezone again and call localtime_r, localtime_r should use the new timezone.
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm tm = {};
+  localtime_r(&t, &tm);
+  EXPECT_EQ(15, tm.tm_hour);
+#else
+  // The BSDs agree with us, but glibc gets this wrong.
+#endif
+}
