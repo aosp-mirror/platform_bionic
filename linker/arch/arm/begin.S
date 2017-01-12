@@ -33,5 +33,5 @@ ENTRY(_start)
   bl __linker_init
 
   /* linker init returns the _entry address in the main image */
-  mov pc, r0
+  bx r0
 END(_start)
