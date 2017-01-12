@@ -1327,21 +1327,22 @@ tzset_unlocked(void)
 
   // If that's not set, look at the "persist.sys.timezone" system property.
   if (name == NULL) {
+    // The lookup is the most expensive part by several orders of magnitude, so we cache it.
+    // We check for null more than once because the system property may not have been set
+    // yet, so our first lookup may fail.
     static const prop_info* pi;
+    if (pi == NULL) pi = __system_property_find("persist.sys.timezone");
 
-    if (!pi) {
-      pi = __system_property_find("persist.sys.timezone");
-    }
     if (pi) {
-      static char buf[PROP_VALUE_MAX];
-      static uint32_t s = -1;
-      static bool ok = false;
+      // If the property hasn't changed since the last time we read it, there's nothing else to do.
+      static uint32_t last_serial = -1;
       uint32_t serial = __system_property_serial(pi);
-      if (serial != s) {
-        ok = __system_property_read(pi, 0, buf) > 0;
-        s = serial;
-      }
-      if (ok) {
+      if (serial == last_serial) return;
+
+      // Otherwise read the new value...
+      last_serial = serial;
+      char buf[PROP_VALUE_MAX];
+      if (__system_property_read(pi, NULL, buf) > 0) {
         // POSIX and Java disagree about the sign in a timezone string. For POSIX, "GMT+3" means
         // "3 hours west/behind", but for Java it means "3 hours east/ahead". Since (a) Java is
         // the one that matches human expectations and (b) this system property is used directly
@@ -1532,16 +1533,22 @@ localtime_rz(struct state *sp, time_t const *timep, struct tm *tmp)
 #endif
 
 static struct tm *
-localtime_tzset(time_t const *timep, struct tm *tmp, bool setname)
+localtime_tzset(time_t const *timep, struct tm *tmp)
 {
   int err = lock();
   if (err) {
     errno = err;
     return NULL;
   }
-  if (setname || !lcl_is_set)
-    tzset_unlocked();
-  tmp = localsub(lclptr, timep, setname, tmp);
+
+  // http://b/31339449: POSIX says localtime(3) acts as if it called tzset(3), but upstream
+  // and glibc both think it's okay for localtime_r(3) to not do so (presumably because of
+  // the "not required to set tzname" clause). It's unclear that POSIX actually intended this,
+  // the BSDs disagree with glibc, and it's confusing to developers to have localtime_r(3)
+  // behave differently than other time zone-sensitive functions in <time.h>.
+  tzset_unlocked();
+
+  tmp = localsub(lclptr, timep, true, tmp);
   unlock();
   return tmp;
 }
@@ -1549,13 +1556,13 @@ localtime_tzset(time_t const *timep, struct tm *tmp, bool setname)
 struct tm *
 localtime(const time_t *timep)
 {
-  return localtime_tzset(timep, &tm, true);
+  return localtime_tzset(timep, &tm);
 }
 
 struct tm *
 localtime_r(const time_t *timep, struct tm *tmp)
 {
-  return localtime_tzset(timep, tmp, false);
+  return localtime_tzset(timep, tmp);
 }
 
 /*
