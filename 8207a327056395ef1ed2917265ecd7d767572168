@@ -2,6 +2,103 @@
   "comments": [
     {
       "key": {
+        "uuid": "83de51f5_56711048",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "extern?\n\nAlso if this is not part of public api - it should probably not be present in this header.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 6
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_9bb001e9",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "18?",
+      "range": {
+        "startLine": 282,
+        "startChar": 96,
+        "endLine": 282,
+        "endChar": 98
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_b0ce4465",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "one field per line. uintptr_t?",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_7b60bd42",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "isn\u0027t it already protected?",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_db20c919",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "!\u003d nullptr",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_a97cb15f",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 18
@@ -43,6 +140,229 @@
         "endLine": 170,
         "endChar": 60
       },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_fb1d8dde",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "!\u003d 0",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_3b1475ba",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "{} here and everywhere",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_1021506d",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "void*",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_f0792c6e",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "RTLD_NOW, LAZY was never supported by android.",
+      "range": {
+        "startLine": 10,
+        "startChar": 36,
+        "endLine": 10,
+        "endChar": 45
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_b00084b9",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "should this check KilledBySignal?",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_300c94f1",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "NOW",
+      "range": {
+        "startLine": 63,
+        "startChar": 43,
+        "endLine": 63,
+        "endChar": 52
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_30701482",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 18
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "nit: tab",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 1
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_908c6090",
+        "filename": "tests/libs/cfi_test_lib.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "void* here and everywhere.",
+      "range": {
+        "startLine": 18,
+        "startChar": 42,
+        "endLine": 18,
+        "endChar": 48
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_b09164a8",
+        "filename": "tests/libs/cfi_test_lib.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "void* /* Diag */ ?",
+      "range": {
+        "startLine": 18,
+        "startChar": 66,
+        "endLine": 18,
+        "endChar": 70
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_5086f86d",
+        "filename": "tests/libs/cfi_test_lib.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "and remove this.",
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_7010dc38",
+        "filename": "tests/libs/cfi_test_lib.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-12T23:02:10Z",
+      "side": 1,
+      "message": "!\u003d nullptr?",
       "revId": "8207a327056395ef1ed2917265ecd7d767572168",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
