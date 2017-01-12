@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "83de51f5_ec8e42c0",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-12T00:27:53Z",
+      "side": 1,
+      "message": "Yes. I think at this point we are only looking at the platform modules. Let\u0027s keep this in mind.",
+      "parentUuid": "ba99b795_0ce798cc",
+      "revId": "1e6fcf67d2298684f86aa6516c2404c29aca7894",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f74a6a97_b5f7fdda",
         "filename": "linker/linker.cpp",
         "patchSetId": 16
