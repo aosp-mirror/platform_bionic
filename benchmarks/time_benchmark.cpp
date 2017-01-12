@@ -40,7 +40,7 @@ BENCHMARK(BM_time_clock_gettime_syscall);
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, nullptr);
   }
 }
 BENCHMARK(BM_time_gettimeofday);
@@ -48,14 +48,31 @@ BENCHMARK(BM_time_gettimeofday);
 void BM_time_gettimeofday_syscall(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
-    syscall(__NR_gettimeofday, &tv, NULL);
+    syscall(__NR_gettimeofday, &tv, nullptr);
   }
 }
 BENCHMARK(BM_time_gettimeofday_syscall);
 
 void BM_time_time(benchmark::State& state) {
   while (state.KeepRunning()) {
-    time(NULL);
+    time(nullptr);
   }
 }
 BENCHMARK(BM_time_time);
+
+void BM_time_localtime(benchmark::State& state) {
+  time_t t = time(nullptr);
+  while (state.KeepRunning()) {
+    localtime(&t);
+  }
+}
+BENCHMARK(BM_time_localtime);
+
+void BM_time_localtime_r(benchmark::State& state) {
+  time_t t = time(nullptr);
+  while (state.KeepRunning()) {
+    struct tm tm;
+    localtime_r(&t, &tm);
+  }
+}
+BENCHMARK(BM_time_localtime_r);
