@@ -32,6 +32,12 @@
 
 #include "private/ScopeGuard.h"
 
+#if defined(__BIONIC__)
+#define KNOWN_FAILURE_ON_BIONIC(x) xfail_ ## x
+#else
+#define KNOWN_FAILURE_ON_BIONIC(x) x
+#endif
+
 #if defined(__linux__)
 
 struct map_record {
