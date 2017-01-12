@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83de51f5_7b28bdb3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-12T22:30:37Z",
+      "side": 1,
+      "message": "Is this valid? There are conditionals in asm-generic that depend on the target (grep for __BITS_PER_LONG), and this will use whatever the host cpp is configured for, right?",
+      "revId": "1728e9fc739aa1478c4a2d9a3d861d4fd18330fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_bb82a59f",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-12T22:30:37Z",
+      "side": 1,
+      "message": "were",
+      "range": {
+        "startLine": 39,
+        "startChar": 36,
+        "endLine": 39,
+        "endChar": 39
+      },
+      "revId": "1728e9fc739aa1478c4a2d9a3d861d4fd18330fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
