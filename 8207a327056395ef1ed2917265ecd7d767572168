@@ -22,6 +22,30 @@
       "revId": "8207a327056395ef1ed2917265ecd7d767572168",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_6c8c92d4",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-12T00:27:53Z",
+      "side": 1,
+      "message": "A CFI check may be done as early as .preinit_array, and it needs CFI initialized at that point.\n\nThis probably deserves a comment in libdl source :) That code can be invoked before global constructors. It needs to be careful with the globals.",
+      "parentUuid": "83de51f5_a97cb15f",
+      "range": {
+        "startLine": 170,
+        "startChar": 50,
+        "endLine": 170,
+        "endChar": 60
+      },
+      "revId": "8207a327056395ef1ed2917265ecd7d767572168",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
