@@ -101,16 +101,38 @@
         vld1.8      {d0}, [r1]!
         vst1.8      {d0}, [r0, :64]!
 
-2:      // Make sure we have at least 64 bytes to copy.
+2:      cmp         r2, #256
+        ble         .L_copy_loop
+
+        // Make sure DST is 64 BYTE aligned.
+        rsb         r3, r0, #0
+        ands        r3, r3, #0x30
+        beq         .L_copy_loop
+
+        sub         r2, r2, r3
+        cmp         r3, #0x10
+        beq         .L_copy_16
+
+        vld1.8      {d0  - d3},   [r1]!
+        vst1.8      {d0  - d3},   [r0, :128]!
+        ands        r3, r3, #0x10
+        beq         .L_copy_loop
+
+.L_copy_16:
+        vld1.8      {d0, d1}, [r1]!
+        vst1.8      {d0, d1}, [r0, :128]!
+
+.L_copy_loop:
+        // Make sure we have at least 64 bytes to copy.
         subs        r2, r2, #64
         blo         2f
 
 1:      // The main loop copies 64 bytes at a time.
         vld1.8      {d0  - d3},   [r1]!
-        vld1.8      {d4  - d7},   [r1]!
+        vst1.8      {d0  - d3},   [r0, :128]!
         pld         [r1, #(64*4)]
         subs        r2, r2, #64
-        vst1.8      {d0  - d3},   [r0, :128]!
+        vld1.8      {d4  - d7},   [r1]!
         vst1.8      {d4  - d7},   [r0, :128]!
         bhs         1b
 
