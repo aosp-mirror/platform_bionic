@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "83de51f5_369fac42",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-12T23:08:14Z",
+      "side": 1,
+      "message": "I hadn\u0027t spotted this, but yes, I think it will work. It gets the bitsperlong.h from the header folder I specify, which then defines __BITS_PER_LONG as 64, so behavior will be consistent independent of host.\n\nNeedless to say I\u0027ve only tested it on goobuntu box though.",
+      "parentUuid": "83de51f5_7b28bdb3",
+      "revId": "1728e9fc739aa1478c4a2d9a3d861d4fd18330fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_bb82a59f",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2017-01-12T22:30:37Z",
       "side": 1,
       "message": "were",
+      "range": {
+        "startLine": 39,
+        "startChar": 36,
+        "endLine": 39,
+        "endChar": 39
+      },
+      "revId": "1728e9fc739aa1478c4a2d9a3d861d4fd18330fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_76c45423",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-12T23:08:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83de51f5_bb82a59f",
       "range": {
         "startLine": 39,
         "startChar": 36,
