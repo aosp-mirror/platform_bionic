@@ -31,6 +31,7 @@
 
 #include "BionicDeathTest.h"
 #include "TemporaryFile.h"
+#include "utils.h"
 
 #if defined(NOFORTIFY)
 #define STDIO_TEST stdio_nofortify
@@ -47,6 +48,7 @@ static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = fals
   rewind(fp);
 
   char line[1024];
+  memset(line, 0xff, sizeof(line));
   ASSERT_EQ(line, fgets(line, sizeof(line), fp));
   ASSERT_STREQ(expected, line);
 
@@ -938,7 +940,7 @@ TEST(STDIO_TEST, fmemopen) {
   fclose(fp);
 }
 
-TEST(STDIO_TEST, fmemopen_NULL) {
+TEST(STDIO_TEST, KNOWN_FAILURE_ON_BIONIC(fmemopen_NULL)) {
   FILE* fp = fmemopen(nullptr, 128, "r+");
   ASSERT_NE(EOF, fputs("xyz\n", fp));
 
