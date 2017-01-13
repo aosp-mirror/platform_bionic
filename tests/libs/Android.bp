@@ -26,6 +26,7 @@ cc_defaults {
     sanitize: {
         never: true,
     },
+    stl: "libc++_static",
     target: {
         darwin: {
             enabled: false,
