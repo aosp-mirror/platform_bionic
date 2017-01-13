@@ -133,116 +133,117 @@ struct input_mask {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define BUS_RMI 0x1D
 #define BUS_CEC 0x1E
+#define BUS_INTEL_ISHTP 0x1F
 #define MT_TOOL_FINGER 0
-#define MT_TOOL_PEN 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define MT_TOOL_PEN 1
 #define MT_TOOL_PALM 2
 #define MT_TOOL_MAX 2
 #define FF_STATUS_STOPPED 0x00
-#define FF_STATUS_PLAYING 0x01
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_STATUS_PLAYING 0x01
 #define FF_STATUS_MAX 0x01
 struct ff_replay {
   __u16 length;
-  __u16 delay;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 delay;
 };
 struct ff_trigger {
   __u16 button;
-  __u16 interval;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 interval;
 };
 struct ff_envelope {
   __u16 attack_length;
-  __u16 attack_level;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 attack_level;
   __u16 fade_length;
   __u16 fade_level;
 };
-struct ff_constant_effect {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ff_constant_effect {
   __s16 level;
   struct ff_envelope envelope;
 };
-struct ff_ramp_effect {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct ff_ramp_effect {
   __s16 start_level;
   __s16 end_level;
   struct ff_envelope envelope;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct ff_condition_effect {
   __u16 right_saturation;
   __u16 left_saturation;
-  __s16 right_coeff;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s16 right_coeff;
   __s16 left_coeff;
   __u16 deadband;
   __s16 center;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct ff_periodic_effect {
   __u16 waveform;
   __u16 period;
-  __s16 magnitude;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __s16 magnitude;
   __s16 offset;
   __u16 phase;
   struct ff_envelope envelope;
-  __u32 custom_len;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 custom_len;
   __s16 __user * custom_data;
 };
 struct ff_rumble_effect {
-  __u16 strong_magnitude;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 strong_magnitude;
   __u16 weak_magnitude;
 };
 struct ff_effect {
-  __u16 type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 type;
   __s16 id;
   __u16 direction;
   struct ff_trigger trigger;
-  struct ff_replay replay;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct ff_replay replay;
   union {
     struct ff_constant_effect constant;
     struct ff_ramp_effect ramp;
-    struct ff_periodic_effect periodic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+    struct ff_periodic_effect periodic;
     struct ff_condition_effect condition[2];
     struct ff_rumble_effect rumble;
   } u;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define FF_RUMBLE 0x50
 #define FF_PERIODIC 0x51
 #define FF_CONSTANT 0x52
-#define FF_SPRING 0x53
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_SPRING 0x53
 #define FF_FRICTION 0x54
 #define FF_DAMPER 0x55
 #define FF_INERTIA 0x56
-#define FF_RAMP 0x57
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_RAMP 0x57
 #define FF_EFFECT_MIN FF_RUMBLE
 #define FF_EFFECT_MAX FF_RAMP
 #define FF_SQUARE 0x58
-#define FF_TRIANGLE 0x59
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_TRIANGLE 0x59
 #define FF_SINE 0x5a
 #define FF_SAW_UP 0x5b
 #define FF_SAW_DOWN 0x5c
-#define FF_CUSTOM 0x5d
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_CUSTOM 0x5d
 #define FF_WAVEFORM_MIN FF_SQUARE
 #define FF_WAVEFORM_MAX FF_CUSTOM
 #define FF_GAIN 0x60
-#define FF_AUTOCENTER 0x61
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define FF_AUTOCENTER 0x61
 #define FF_MAX_EFFECTS FF_GAIN
 #define FF_MAX 0x7f
 #define FF_CNT (FF_MAX + 1)
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
