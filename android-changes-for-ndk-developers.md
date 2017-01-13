@@ -11,6 +11,26 @@ you need to have the “binutils” package installed for readelf,
 and “pax-utils” for scanelf.
 
 
+## How we manage incompatible changes
+
+Our general practice with dynamic linker behavior changes is that they
+will be tied to an app's target API level:
+
+* Below the affected API level we'll preserve the old behavior or issue
+a warning, as appropriate.
+
+* At the affected API level and above, we’ll refuse to load the library.
+
+* Warnings about any behavior change that will affect a library if you
+increase your target API level will appear in logcat when that library
+is loaded, even if you're not yet targeting that API level.
+
+* On a developer preview build, dynamic linker warnings will also show up
+as toasts. Experience has shown that many developers don’t habitually
+check logcat for warnings until their app stops functioning, so the
+toasts help bring some visibility to the issues before it's too late.
+
+
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
