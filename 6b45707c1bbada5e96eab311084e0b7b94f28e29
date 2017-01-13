@@ -1,0 +1,169 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83de51f5_6d1ec22e",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "this is no longer needed.",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_c0af753e",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "I think this is good idea but FIXME does not really belong here.",
+      "range": {
+        "startLine": 156,
+        "startChar": 31,
+        "endLine": 156,
+        "endChar": 36
+      },
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_4d0f3ee8",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "I think this should be a dlerror().. it is not an assertion - it is possible to get a library with unaligned __cfi_check symbol address, and it should not result in abort. But seems ok if it results in dlerror().\n\n(and maybe L157 too)\n\n(or just log and leave it unchecked - if we want to force it on platform libs check a namespace and dlerror() on default one?)",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_8032cd5c",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "Would it be easier to use linker\u0027s \u0026shadow_start in libdl?",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_00b33dd7",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "maybe use a flag here? and scope size_t i into for loop.",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_a0db51fd",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "check this inside MaybeInit() in place of L184 CHECK() have it return true if it has done all the work and early return on it.",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_c0ea157f",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "I am not sure what is happening here - is the remap clearing VMA_ANON_NAME? If so maybe have ShadowWrite d-tor reset the name to avoid multiple calls?",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_60c009dd",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "(see L170 comment) in which case NotifyLibDl can be called only once. even if shadow_start is nullptr",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83de51f5_407145f6",
+        "filename": "tests/Android.bp",
+        "patchSetId": 19
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-13T02:32:50Z",
+      "side": 1,
+      "message": "tab...",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 9
+      },
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
