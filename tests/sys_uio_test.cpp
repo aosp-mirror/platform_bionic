@@ -70,8 +70,38 @@ TEST(sys_uio, preadv64_pwritev64) {
 
 TEST(sys_uio, process_vm_readv) {
   ASSERT_EQ(0, process_vm_readv(0, nullptr, 0, nullptr, 0, 0));
+
+  // Test that we can read memory from our own process
+  char src[1024] = "This is the source buffer containing some data";
+  char dst[1024] = "";
+  iovec remote = { src, sizeof src };
+  iovec local = { dst, sizeof dst };
+  ASSERT_EQ(ssize_t(sizeof src), process_vm_readv(getpid(), &local, 1, &remote, 1, 0));
+  // Check whether data was copied (in the correct direction)
+  ASSERT_EQ('T', dst[0]);
+  ASSERT_EQ(0, memcmp(src, dst, sizeof src));
+
+  // Reading from non-allocated memory should return an error
+  remote = { nullptr, sizeof dst };
+  ASSERT_EQ(-1, process_vm_readv(getpid(), &local, 1, &remote, 1, 0));
+  ASSERT_EQ(EFAULT, errno);
 }
 
 TEST(sys_uio, process_vm_writev) {
   ASSERT_EQ(0, process_vm_writev(0, nullptr, 0, nullptr, 0, 0));
+
+  // Test that we can read memory from our own process
+  char src[1024] = "This is the source buffer containing some data";
+  char dst[1024] = "";
+  iovec remote = { dst, sizeof dst };
+  iovec local = { src, sizeof src };
+  ASSERT_EQ(ssize_t(sizeof src), process_vm_writev(getpid(), &local, 1, &remote, 1, 0));
+  // Check whether data was copied (in the correct direction)
+  ASSERT_EQ('T', dst[0]);
+  ASSERT_EQ(0, memcmp(src, dst, sizeof src));
+
+  // Writing to non-allocated memory should return an error
+  remote = { nullptr, sizeof dst };
+  ASSERT_EQ(-1, process_vm_writev(getpid(), &local, 1, &remote, 1, 0));
+  ASSERT_EQ(EFAULT, errno);
 }
