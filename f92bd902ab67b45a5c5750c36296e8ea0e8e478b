@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e360ede6_10d50c99",
+        "filename": "linker/arch/arm/begin.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1092708
+      },
+      "writtenOn": "2017-01-13T22:19:05Z",
+      "side": 1,
+      "message": "Should I update the year here?",
+      "revId": "f92bd902ab67b45a5c5750c36296e8ea0e8e478b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
