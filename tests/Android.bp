@@ -366,6 +366,8 @@ cc_defaults {
 
     include_dirs: ["bionic/libc"],
 
+    stl: "libc++_static",
+
     target: {
         android: {
             shared_libs: [
