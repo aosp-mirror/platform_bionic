@@ -942,9 +942,9 @@ static int read_spec_entries(char *line_buf, int num_args, ...)
     return items;
 }
 
-static bool initialize_properties() {
-    FILE* file = fopen("/property_contexts", "re");
+static bool initialize_properties_from_file(const char *filename) {
 
+    FILE* file = fopen(filename, "re");
     if (!file) {
         return false;
     }
@@ -988,6 +988,20 @@ static bool initialize_properties() {
 
     free(buffer);
     fclose(file);
+
+    return true;
+}
+
+static bool initialize_properties() {
+    // TODO: Change path to /system/property_contexts after b/27805372
+    if (!initialize_properties_from_file("/plat_property_contexts")) {
+        return false;
+    }
+
+    // TODO: Change path to /vendor/property_contexts after b/27805372
+    // device-specific property context is optional, so load if it exists.
+    initialize_properties_from_file("/nonplat_property_contexts");
+
     return true;
 }
 
