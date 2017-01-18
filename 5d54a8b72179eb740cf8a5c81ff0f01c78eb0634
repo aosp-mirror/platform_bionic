@@ -1,0 +1,650 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23b3e516_76d95063",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Run pylint and pep8.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_e954bd37",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "#!/usr/bin/env python\n\n(support for virtualenv)",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43753906_dffe43b7",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "function_names_use_underscores\n\nAlso, not an accurate name. Yes, it creates a file (although actually only sometimes), but that\u0027s by far the smallest part of what this function does.",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 17
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c39e897c_bbc10785",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "[x if architecture in x and x[architecture] for x in syscalls]",
+      "range": {
+        "startLine": 13,
+        "startChar": 15,
+        "endLine": 13,
+        "endChar": 80
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43753906_7f6e2faa",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "[x[\"name\"] for x in syscalls]",
+      "range": {
+        "startLine": 16,
+        "startChar": 14,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43aa999c_d786e4b3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "\"names\" seems like a better name than \"content\"",
+      "range": {
+        "startLine": 16,
+        "startChar": 4,
+        "endLine": 16,
+        "endChar": 11
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_09dbb9ff",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Why almost? Can\u0027t we just pick a better prefix if this isn\u0027t perfect?",
+      "range": {
+        "startLine": 20,
+        "startChar": 38,
+        "endLine": 20,
+        "endChar": 46
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_24989c08",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "You\u0027re inconsistent about \" and \u0027 in this file. Doesn\u0027t matter which you choose, but be consistent.",
+      "range": {
+        "startLine": 21,
+        "startChar": 17,
+        "endLine": 21,
+        "endChar": 18
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "236e8540_5ed3350e",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "This is sensitive to the cwd. Is that okay for this script? If not, use `THIS_DIR \u003d os.path.dirname(os.path.abspath(__file__))` in the global scope and os.path.join with it.",
+      "range": {
+        "startLine": 21,
+        "startChar": 18,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_499f7140",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Why are you using the analyzer?",
+      "range": {
+        "startLine": 21,
+        "startChar": 49,
+        "endLine": 21,
+        "endChar": 57
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b3e516_91d066d9",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "name",
+      "range": {
+        "startLine": 25,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 9
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e399cd94_f7b7a235",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "`not name.startswith(\"__NR_\")` would be safer.",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 26,
+        "endChar": 26
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "036b4132_af5eb453",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Should I know what this means? Might need to expand the comment.",
+      "range": {
+        "startLine": 26,
+        "startChar": 28,
+        "endLine": 26,
+        "endChar": 72
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_3e97cd68",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Does `cpp.communicate()` not work for some reason? The idiomatic way of dealing with Popen would be to use that rather than closing stdin yourself and calling readlines on stdout.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_69ca6d27",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "A comment around here saying:\n\n    # The input is now the preprocessed source file. This will contain a lot\n    # of junk from the preprocessor, but our lines will be in the format:\n    #\n    #     __SECCOMP_${NAME}, __NR_${NAME}\n\nWould really help. I\u0027m not even certain that\u0027s correct, but based on my reading of the above I\u0027m pretty sure it\u0027s right.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_9e2c616c",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "l.startswith(prefix)",
+      "range": {
+        "startLine": 36,
+        "startChar": 37,
+        "endLine": 36,
+        "endChar": 63
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_69218d1b",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "The repeated nested list comprehensions are getting a little rough. Maybe this whole section would be better written as:\n\n    syscalls \u003d ()\n    for line in content:\n        if not line.strip() or not line.startswith(prefix):\n            continue\n\n        # We might pick up extra whitespace during preprocessing, so best to\n        # strip.\n        name, value \u003d [w.strip() for w in line.split(\u0027,\u0027)]\n\n        # Bonus points if you extract a remove_prefix function.\n        name \u003d name[len(prefix):]\n\n        # Note that some of the numbers were expressed as base + offset, so\n        # we need to `eval`, not just `int`.\n        value \u003d eval(value)\n\n        syscalls.append((name, value))\n    syscalls \u003d sorted(syscalls, lambda x, y: cmp(x[1], y[1]))",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_8914296a",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "list",
+      "range": {
+        "startLine": 48,
+        "startChar": 18,
+        "endLine": 48,
+        "endChar": 21
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_495cd15b",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "name, value",
+      "range": {
+        "startLine": 50,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_e90afd08",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "I had a really hard time parsing this code, but assuming I got it right, I think the following is much more approachable:\n\n    class SyscallRange(object):\n        def __init__(self, name, value):\n            self.names \u003d [name]\n            self.begin \u003d begin\n            self.end \u003d begin + 1\n\n        def add(self, name, value):\n            if value !\u003d self.end:\n                raise ValueError\n            self.end +\u003d 1\n            self.names.append(name)\n\n\n    ranges \u003d []\n    for name, value in syscalls:\n        if not ranges:\n            ranges.append(SyscallRange(name, value))\n            continue\n\n        last_range \u003d ranges[-1]\n        if last_range.end \u003d\u003d value:\n            last_range.add(name, value)\n        else:\n            ranges.append(SyscallRange(name, value))",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_a9fac597",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "It\u0027s doing this in both cases.",
+      "range": {
+        "startLine": 57,
+        "startChar": 59,
+        "endLine": 57,
+        "endChar": 86
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_8916e9ff",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Not a very good name. This name typically means the equivalent of `strip`. \"chop\" only describes implementation details and says nothing about what the function does.\n\nI can\u0027t really comment on any of the guts here.",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 12
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_04c48021",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Don\u0027t you want to include the names in a comment here?\n\nShould probably make a `def bpf_jump(begin, end, name)` to cut down on the duplication.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_a4e90c8d",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "filters? jumps? I\u0027m not exactly sure what these things are, but `output` is too vague.",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_4414b8ba",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "for i, bpf in enumerate(output):",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_242c1cfe",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Might be missing some domain knowledge here, but I have no idea why `len(output) - i - 1` and such are being performed. What do the values at that location represent?",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_e42224d4",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "I like using textwrap.dedent for this kind of thing:\n\n    output \u003d textwrap.dedent(\"\"\"\\\n        // Autogenerated file - edit at your peril!!\n\n        #include \u003clinux/filter.h\u003e\n        ...\n        \"\"\").format(architecture\u003darchitecture)\n\nEssentially a heredoc for Python that appropriately strips leading whitespace. No need to repeat all the quotes and commas on every line or escape inline quotes.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_e454e437",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Do we actually care? `git status` will tell us this. That\u0027s just a potentially expensive comparison that we probably don\u0027t need.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_245fbc52",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "File operations in Python should be performed using `with`:\n\n    with open(output_path, \u0027w\u0027) as output_file:\n        # do stuff",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_c4044837",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "if __name__ \u003d\u003d \u0027__main__\u0027:\n        main()\n\nThen put all this in a main function (this should be importable so it can be tested)",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_042800b3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Ah, I see. This is fine too.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_042640d7",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-18T20:54:41Z",
+      "side": 1,
+      "message": "Should create a main() function. That way this can be run via import if necessary.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
