@@ -41,7 +41,7 @@
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
 #ifdef __ANDROID__
-#include "debuggerd/client.h"
+#include "debuggerd/handler.h"
 #endif
 
 #include <vector>
