@@ -103,6 +103,8 @@ void count_relocation(RelocationKind kind);
 
 soinfo* get_libdl_info(const char* linker_path);
 
+soinfo* find_containing_library(const void* p);
+
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 void* do_dlopen(const char* name,
@@ -124,6 +126,10 @@ bool do_dlsym(void* handle, const char* sym_name,
               void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
+
+// void ___cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr, void *Ret);
+// void ___cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData, void *Ret);
+void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
@@ -162,8 +168,5 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       uint64_t type,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace);
-
-constexpr unsigned kLibraryAlignmentBits = 18;
-constexpr size_t kLibraryAlignment = 1UL << kLibraryAlignmentBits;
 
 #endif

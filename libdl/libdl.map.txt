@@ -35,6 +35,9 @@ LIBC_N {
 
 LIBC_PLATFORM {
   global:
+    __cfi_init;
+    __cfi_slowpath;
+    __cfi_slowpath_diag;
     android_dlwarning;
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
