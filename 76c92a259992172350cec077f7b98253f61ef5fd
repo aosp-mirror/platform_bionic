@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4377f97f_c4a8c820",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-18T20:49:16Z",
+      "side": 1,
+      "message": "I think it is ok to fail if we somehow ended up with overlapping mmaps from shared libs. It should not happen, right? Maybe just replace CHECK with __libc_fatal()?",
+      "revId": "76c92a259992172350cec077f7b98253f61ef5fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_848fb0bb",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-18T20:49:16Z",
+      "side": 1,
+      "message": "does it save anything?",
+      "range": {
+        "startLine": 144,
+        "startChar": 74,
+        "endLine": 144,
+        "endChar": 87
+      },
+      "revId": "76c92a259992172350cec077f7b98253f61ef5fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
