@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4377f97f_647a948d",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T21:14:28Z",
+      "side": 1,
+      "message": "It\u0027s possible in theory because of MAP_FIXED mappings that can not be realigned. ART does that. I\u0027ve never seen it happen with cfi-enabled libraries in practice.\n\nLet\u0027s do the kUncheckedShadow thing for now.",
+      "parentUuid": "4377f97f_c4a8c820",
+      "revId": "76c92a259992172350cec077f7b98253f61ef5fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_848fb0bb",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 20
@@ -30,6 +48,30 @@
       "writtenOn": "2017-01-18T20:49:16Z",
       "side": 1,
       "message": "does it save anything?",
+      "range": {
+        "startLine": 144,
+        "startChar": 74,
+        "endLine": 144,
+        "endChar": 87
+      },
+      "revId": "76c92a259992172350cec077f7b98253f61ef5fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4377f97f_242b3ca1",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T21:14:28Z",
+      "side": 1,
+      "message": "Yeah, the mapping is like 4MB on Aarch64, and its RSS is ~20KB.",
+      "parentUuid": "4377f97f_848fb0bb",
       "range": {
         "startLine": 144,
         "startChar": 74,
