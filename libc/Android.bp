@@ -1203,9 +1203,10 @@ cc_library_static {
 
 genrule {
     name: "generated_android_ids",
-    out: [ "generated_android_ids.h" ],
-    tool_files: [ "fs_config_generator.py" ],
-    cmd: "$(location fs_config_generator.py) aidarray system/core/include/private/android_filesystem_config.h > $(out)",
+    out: ["generated_android_ids.h"],
+    srcs: [":android_filesystem_config_header"],
+    tool_files: ["fs_config_generator.py"],
+    cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
 }
 
 // ========================================================
