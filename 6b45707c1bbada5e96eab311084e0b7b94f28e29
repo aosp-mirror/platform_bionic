@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "03118109_736360ed",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83de51f5_c0af753e",
+      "range": {
+        "startLine": 156,
+        "startChar": 31,
+        "endLine": 156,
+        "endChar": 36
+      },
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_4d0f3ee8",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 19
@@ -53,6 +77,24 @@
       "writtenOn": "2017-01-13T02:32:50Z",
       "side": 1,
       "message": "I think this should be a dlerror().. it is not an assertion - it is possible to get a library with unaligned __cfi_check symbol address, and it should not result in abort. But seems ok if it results in dlerror().\n\n(and maybe L157 too)\n\n(or just log and leave it unchecked - if we want to force it on platform libs check a namespace and dlerror() on default one?)",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03118109_733520f9",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "I\u0027ve changed the code to handle one library at a time, with the ability to return an error that would fail dlopen() in a proper way. Now these (and one on NotifyLibDl) are DL_ERR.",
+      "parentUuid": "83de51f5_4d0f3ee8",
       "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -76,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "236e8540_fec94108",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "It would be slower, because shadow_start would no longer be PC-relative for libdl code and would require an extra load. Libdl code needs to be fast, linker code - not so much.",
+      "parentUuid": "83de51f5_8032cd5c",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_00b33dd7",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 19
@@ -87,6 +147,24 @@
       "writtenOn": "2017-01-13T02:32:50Z",
       "side": 1,
       "message": "maybe use a flag here? and scope size_t i into for loop.",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43753906_dab2d1d1",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83de51f5_00b33dd7",
       "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -110,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "236e8540_b941a3a2",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "I\u0027ve changed MaybeInit to return false in case of an error to support dlerror(), and now moving the check as you suggest would require a second return value. Is it OK to leave it as is?",
+      "parentUuid": "83de51f5_a0db51fd",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_c0ea157f",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 19
@@ -121,6 +217,24 @@
       "writtenOn": "2017-01-13T02:32:50Z",
       "side": 1,
       "message": "I am not sure what is happening here - is the remap clearing VMA_ANON_NAME? If so maybe have ShadowWrite d-tor reset the name to avoid multiple calls?",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43753906_3a3da530",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "Yes. And what\u0027s worse, mremap creates new VMA regions (or smth like that) in the kernel, and we end up with multiple adjacent [cfi shadow] lines in /proc/maps, even after FixupVmaName.\n\nMoving it to ShadowWrite dtor would increase the runtime number of calls (one per library vs one per AfterLoad).",
+      "parentUuid": "83de51f5_c0ea157f",
       "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -144,6 +258,24 @@
     },
     {
       "key": {
+        "uuid": "e3e70d23_2c994f5a",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "I\u0027ve found a better way: we do nothing at all until InitialLinkDone, then check the entire solist at once for anything CFI-related. At this point libdl must be present and the temporary shadow pointer is not needed. Subsequent AfterLoad() calls do incremental checks as before.",
+      "parentUuid": "83de51f5_60c009dd",
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83de51f5_407145f6",
         "filename": "tests/Android.bp",
         "patchSetId": 19
@@ -155,6 +287,30 @@
       "writtenOn": "2017-01-13T02:32:50Z",
       "side": 1,
       "message": "tab...",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 9
+      },
+      "revId": "6b45707c1bbada5e96eab311084e0b7b94f28e29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03118109_f385b060",
+        "filename": "tests/Android.bp",
+        "patchSetId": 19
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-18T02:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83de51f5_407145f6",
       "range": {
         "startLine": 298,
         "startChar": 0,
