@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4377f97f_6fca6d27",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-18T21:28:53Z",
+      "side": 1,
+      "message": "I think linker always checks for this kind of stuff by doing mmap with hint first and failing if the requested region in not mappable.\n\nIt is still possible for caller to do map_fixed/unmap and then call the linker - but in this case I feel like aborting is safer than letting dso maps to overlap.\n\nSame goes for the case when caller wants to use already reserved space.. if any of it belongs to already loaded library it will not end well.",
+      "parentUuid": "4377f97f_647a948d",
+      "revId": "76c92a259992172350cec077f7b98253f61ef5fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_848fb0bb",
         "filename": "linker/linker_cfi.cpp",
         "patchSetId": 20
