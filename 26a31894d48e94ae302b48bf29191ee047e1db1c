@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_f8d36e40",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T21:35:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8852ac9_984a6291",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8852ac9_182ad29a",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 5
@@ -76,6 +94,24 @@
       "writtenOn": "2017-01-19T21:27:40Z",
       "side": 1,
       "message": "Should pull the functions and classes in this function out to global scope.",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_58813a23",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T21:35:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8852ac9_783e7edb",
       "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
