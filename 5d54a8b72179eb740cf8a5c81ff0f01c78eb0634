@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_e243c6a9",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done. pep8 seems to want indentation a factor of 4, pylink 2. I went with 2.",
+      "parentUuid": "23b3e516_76d95063",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_e954bd37",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "#!/usr/bin/env python\n\n(support for virtualenv)",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_02410aa1",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_e954bd37",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_c2c80205",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43753906_dffe43b7",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 17
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c39e897c_bbc10785",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -70,6 +130,30 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "[x if architecture in x and x[architecture] for x in syscalls]",
+      "range": {
+        "startLine": 13,
+        "startChar": 15,
+        "endLine": 13,
+        "endChar": 80
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_22d1aeae",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c39e897c_bbc10785",
       "range": {
         "startLine": 13,
         "startChar": 15,
@@ -128,6 +212,54 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_42d632a8",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43aa999c_d786e4b3",
+      "range": {
+        "startLine": 16,
+        "startChar": 4,
+        "endLine": 16,
+        "endChar": 11
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_02e82a5f",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43753906_7f6e2faa",
+      "range": {
+        "startLine": 16,
+        "startChar": 14,
+        "endLine": 16,
+        "endChar": 48
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_09dbb9ff",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -139,6 +271,30 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "Why almost? Can\u0027t we just pick a better prefix if this isn\u0027t perfect?",
+      "range": {
+        "startLine": 20,
+        "startChar": 38,
+        "endLine": 20,
+        "endChar": 46
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_2c6f5ca3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_09dbb9ff",
       "range": {
         "startLine": 20,
         "startChar": 38,
@@ -220,6 +376,78 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_621816a4",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_24989c08",
+      "range": {
+        "startLine": 21,
+        "startChar": 17,
+        "endLine": 21,
+        "endChar": 18
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_cc7b5065",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "You saw below that we set cwd, so I think this is OK",
+      "parentUuid": "236e8540_5ed3350e",
+      "range": {
+        "startLine": 21,
+        "startChar": 18,
+        "endLine": 21,
+        "endChar": 23
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_8c5ea8f7",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_499f7140",
+      "range": {
+        "startLine": 21,
+        "startChar": 49,
+        "endLine": 21,
+        "endChar": 57
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23b3e516_91d066d9",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -231,6 +459,30 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "name",
+      "range": {
+        "startLine": 25,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 9
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_a215be68",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23b3e516_91d066d9",
       "range": {
         "startLine": 25,
         "startChar": 8,
@@ -289,6 +541,54 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_a24cde80",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "036b4132_af5eb453",
+      "range": {
+        "startLine": 26,
+        "startChar": 28,
+        "endLine": 26,
+        "endChar": 72
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_c249e26f",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Well, due to me not putting the above-mentioned comment in, your reading was wrong, but fixed up appropriately and hopefully it\u0027s clearer now",
+      "parentUuid": "e399cd94_f7b7a235",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 26,
+        "endChar": 26
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_3e97cd68",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -306,6 +606,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_85dc44c8",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Changed. Is it OK to continue using the stdin.write method for writing out the data? This seems more natural than making the input into a single string and putting it through communicate",
+      "parentUuid": "4377f97f_3e97cd68",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_69ca6d27",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -317,6 +635,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "A comment around here saying:\n\n    # The input is now the preprocessed source file. This will contain a lot\n    # of junk from the preprocessor, but our lines will be in the format:\n    #\n    #     __SECCOMP_${NAME}, __NR_${NAME}\n\nWould really help. I\u0027m not even certain that\u0027s correct, but based on my reading of the above I\u0027m pretty sure it\u0027s right.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_e56f5011",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_69ca6d27",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -346,6 +682,30 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_45a4fc47",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_9e2c616c",
+      "range": {
+        "startLine": 36,
+        "startChar": 37,
+        "endLine": 36,
+        "endChar": 63
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_69218d1b",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -363,6 +723,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_659b40b9",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_69218d1b",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_8914296a",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -374,6 +752,30 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "list",
+      "range": {
+        "startLine": 48,
+        "startChar": 18,
+        "endLine": 48,
+        "endChar": 21
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_25953883",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_8914296a",
       "range": {
         "startLine": 48,
         "startChar": 18,
@@ -409,6 +811,30 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_e5dc3056",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_495cd15b",
+      "range": {
+        "startLine": 50,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_e90afd08",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -420,6 +846,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "I had a really hard time parsing this code, but assuming I got it right, I think the following is much more approachable:\n\n    class SyscallRange(object):\n        def __init__(self, name, value):\n            self.names \u003d [name]\n            self.begin \u003d begin\n            self.end \u003d begin + 1\n\n        def add(self, name, value):\n            if value !\u003d self.end:\n                raise ValueError\n            self.end +\u003d 1\n            self.names.append(name)\n\n\n    ranges \u003d []\n    for name, value in syscalls:\n        if not ranges:\n            ranges.append(SyscallRange(name, value))\n            continue\n\n        last_range \u003d ranges[-1]\n        if last_range.end \u003d\u003d value:\n            last_range.add(name, value)\n        else:\n            ranges.append(SyscallRange(name, value))",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_85e8c4c5",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_e90afd08",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -472,6 +916,30 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_25abf879",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_8916e9ff",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 12
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_04c48021",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -483,6 +951,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "Don\u0027t you want to include the names in a comment here?\n\nShould probably make a `def bpf_jump(begin, end, name)` to cut down on the duplication.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_0bbfe56c",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "No, we don\u0027t want the names here - this is the jump to differing ranges.\n\nAdded the function",
+      "parentUuid": "4377f97f_04c48021",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -512,6 +998,30 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_48c3b31c",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_a4e90c8d",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 10
+      },
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_4414b8ba",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -523,6 +1033,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "for i, bpf in enumerate(output):",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_683f97d9",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_4414b8ba",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -546,6 +1074,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_c830230c",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_242c1cfe",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_e42224d4",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -557,6 +1103,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "I like using textwrap.dedent for this kind of thing:\n\n    output \u003d textwrap.dedent(\"\"\"\\\n        // Autogenerated file - edit at your peril!!\n\n        #include \u003clinux/filter.h\u003e\n        ...\n        \"\"\").format(architecture\u003darchitecture)\n\nEssentially a heredoc for Python that appropriately strips leading whitespace. No need to repeat all the quotes and commas on every line or escape inline quotes.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_6b50f174",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_e42224d4",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -580,6 +1144,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_c8490370",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Well I find this really useful, and it\u0027s the same as in the existing gensyscalls",
+      "parentUuid": "4377f97f_e454e437",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_245fbc52",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -591,6 +1173,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "File operations in Python should be performed using `with`:\n\n    with open(output_path, \u0027w\u0027) as output_file:\n        # do stuff",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_48e893f2",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_245fbc52",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -614,6 +1214,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_a8611fe6",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_c4044837",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_042800b3",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -625,6 +1243,24 @@
       "writtenOn": "2017-01-18T20:54:41Z",
       "side": 1,
       "message": "Ah, I see. This is fine too.",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_88077b92",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-01-19T17:04:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4377f97f_042800b3",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
