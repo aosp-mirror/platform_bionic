@@ -44,7 +44,7 @@ cc_library {
             version_script: "libdl.x86_64.map",
         },
     },
-    srcs: ["libdl.c"],
+    srcs: ["libdl.c", "libdl_cfi.cpp"],
     cflags: [
         "-Wall",
         "-Wextra",
@@ -60,6 +60,9 @@ cc_library {
     // LOCAL_ALLOW_UNDEFINED_SYMBOLS to remove --no-undefined from the linker flags.
     allow_undefined_symbols: true,
     system_shared_libs: [],
+
+    // For private/CFIShadow.h.
+    include_dirs: ["bionic/libc"],
 
     // This is placeholder library the actual implementation is (currently)
     // provided by the linker.
