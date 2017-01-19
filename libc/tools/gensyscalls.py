@@ -674,6 +674,7 @@ class State:
 
 logging.basicConfig(level=logging.INFO)
 
-state = State()
-state.process_file(os.path.join(bionic_libc_root, "SYSCALLS.TXT"))
-state.regenerate()
+if __name__ == "__main__":
+    state = State()
+    state.process_file(os.path.join(bionic_libc_root, "SYSCALLS.TXT"))
+    state.regenerate()
