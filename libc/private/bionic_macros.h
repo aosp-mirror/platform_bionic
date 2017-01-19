@@ -48,11 +48,11 @@
     ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
     : (1UL << (32 - __builtin_clz(static_cast<unsigned int>(value)))))
 
-static inline uintptr_t align_down(uintptr_t p, size_t align) {
+static constexpr uintptr_t align_down(uintptr_t p, size_t align) {
   return p & ~(align - 1);
 }
 
-static inline uintptr_t align_up(uintptr_t p, size_t align) {
+static constexpr uintptr_t align_up(uintptr_t p, size_t align) {
   return (p + align - 1) & ~(align - 1);
 }
 
