@@ -31,7 +31,8 @@
 // POSIX timers use __SIGRTMIN + 0.
 // libbacktrace uses __SIGRTMIN + 1.
 // libcore uses __SIGRTMIN + 2.
+// __SIGRTMIN + 3 is reserved for triggering native stack dumps.
 
 int __libc_current_sigrtmin(void) {
-  return __SIGRTMIN + 3;
+  return __SIGRTMIN + 4;
 }
