@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_b83e462a",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Ah, right. Everything else in this directory follows two spaces (which doesn\u0027t follow any of our public style guides, but the mistake has already been made, so being consistent is best).",
+      "parentUuid": "e8852ac9_e243c6a9",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4377f97f_e954bd37",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -448,6 +466,24 @@
     },
     {
       "key": {
+        "uuid": "e8852ac9_58861ab7",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Yep, this is fine.",
+      "parentUuid": "e8852ac9_cc7b5065",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23b3e516_91d066d9",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 4
@@ -618,6 +654,24 @@
       "side": 1,
       "message": "Changed. Is it OK to continue using the stdin.write method for writing out the data? This seems more natural than making the input into a single string and putting it through communicate",
       "parentUuid": "4377f97f_3e97cd68",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_187092f3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Yeah, I agree that stdin.write() is more readable for this.",
+      "parentUuid": "e8852ac9_85dc44c8",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -1156,6 +1210,24 @@
       "side": 1,
       "message": "Well I find this really useful, and it\u0027s the same as in the existing gensyscalls",
       "parentUuid": "4377f97f_e454e437",
+      "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_78a43e48",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Ah, if we already do this for other tools then that\u0027s okay.",
+      "parentUuid": "e8852ac9_c8490370",
       "revId": "5d54a8b72179eb740cf8a5c81ff0f01c78eb0634",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
