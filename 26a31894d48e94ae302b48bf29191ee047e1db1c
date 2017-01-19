@@ -1,0 +1,169 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8852ac9_984a6291",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "nit: our modules should come after system imports",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_182ad29a",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Would be a good candidate to pull out into a smaller function for unit testing.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 59
+      },
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_d8330a16",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "This too.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 46
+      },
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_783e7edb",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Should pull the functions and classes in this function out to global scope.",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_38ac76dc",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Here to L126 also a good candidate for testing.",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_98b26248",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "Ah, gotcha. I\u0027d thought the value being computed was an index, not a distance. Thanks for adding the comment. That\u0027s much clearer!",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_d8a8eac9",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "And here to 145",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_b8a086e6",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "nit: 2 lines between top level definitions",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_5895ba81",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-19T21:27:40Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "26a31894d48e94ae302b48bf29191ee047e1db1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
