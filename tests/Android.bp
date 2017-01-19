@@ -442,7 +442,7 @@ cc_test {
         "libtinyxml2",
         "liblog",
         "libbase",
-        "libdebuggerd_client",
+        "libdebuggerd_handler",
     ],
 
     static_executable: true,
