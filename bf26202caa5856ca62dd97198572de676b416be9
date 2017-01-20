@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8852ac9_de9a01b1",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-01-20T22:46:25Z",
+      "side": 1,
+      "message": "Oops, this is wrong, the case of (s !\u003d kInvalidShadow) needs to increase sv, as before.\nThis is incredibly hard to test.",
+      "revId": "bf26202caa5856ca62dd97198572de676b416be9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
