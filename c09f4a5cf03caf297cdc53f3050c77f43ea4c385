@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8852ac9_b64ad290",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-01-20T00:58:14Z",
+      "side": 1,
+      "message": "/odm/build.prop?",
+      "range": {
+        "startLine": 89,
+        "startChar": 36,
+        "endLine": 89,
+        "endChar": 58
+      },
+      "revId": "c09f4a5cf03caf297cdc53f3050c77f43ea4c385",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
