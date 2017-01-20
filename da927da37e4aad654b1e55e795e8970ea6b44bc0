@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8852ac9_c1e540ae",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-01-20T23:23:18Z",
+      "side": 1,
+      "message": "Do we really want this to be fatal?  Any legacy code that iterates over all properties with __system_property_foreach() and __system_property_read() will exit fatally if any properties contain keys \u003e PROP_NAME_MAX.\n\ngetprop as part of toybox does precisely this and also would need to be updated, regardless of if this is a fatal failure.",
+      "range": {
+        "startLine": 1199,
+        "startChar": 18,
+        "endLine": 1199,
+        "endChar": 30
+      },
+      "revId": "da927da37e4aad654b1e55e795e8970ea6b44bc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
