@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8852ac9_f6f05aac",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-01-20T01:29:42Z",
+      "side": 1,
+      "message": "what is this change for?",
+      "range": {
+        "startLine": 1342,
+        "startChar": 38,
+        "endLine": 1342,
+        "endChar": 46
+      },
+      "revId": "2969f7daaecd4f2c75df82fb82c9984b116d0600",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
