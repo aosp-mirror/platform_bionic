@@ -22,6 +22,30 @@
       "revId": "da927da37e4aad654b1e55e795e8970ea6b44bc0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8852ac9_61ec7443",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-20T23:39:43Z",
+      "side": 1,
+      "message": "Let\u0027s print error and truncate then. And probably add a test for it.",
+      "parentUuid": "e8852ac9_c1e540ae",
+      "range": {
+        "startLine": 1199,
+        "startChar": 18,
+        "endLine": 1199,
+        "endChar": 30
+      },
+      "revId": "da927da37e4aad654b1e55e795e8970ea6b44bc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
