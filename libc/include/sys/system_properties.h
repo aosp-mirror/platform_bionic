@@ -30,7 +30,6 @@
 #define _INCLUDE_SYS_SYSTEM_PROPERTIES_H
 
 #include <sys/cdefs.h>
-#include <stddef.h>
 
 __BEGIN_DECLS
 
@@ -65,17 +64,13 @@ const prop_info *__system_property_find(const char *name);
 /* Read the value of a system property.  Returns the length
 ** of the value.  Copies the value and \0 terminator into
 ** the provided value pointer.  Total length (including
-** terminator) will be no greater that PROP_VALUE_MAX for
-** __system_property_read.
+** terminator) will be no greater that PROP_VALUE_MAX.
 **
 ** If name is nonzero, up to PROP_NAME_MAX bytes will be
 ** copied into the provided name pointer.  The name will
 ** be \0 terminated.
 */
 int __system_property_read(const prop_info *pi, char *name, char *value);
-void __system_property_read_callback(const prop_info *pi,
-                                     void (*)(void* cookie, const char *name, const char *value),
-                                     void* cookie) __INTRODUCED_IN_FUTURE;
 
 /* Return a prop_info for the nth system property, or NULL if 
 ** there is no nth property.  Use __system_property_read() to
