@@ -59,8 +59,10 @@
 #include "private/bionic_sdk_version.h"
 #include "private/libc_logging.h"
 
-static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
+static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+static const char* kServiceVersionPropertyName = "ro.property_service.version";
 
 /*
  * Properties are stored in a hybrid trie/binary tree structure.
@@ -81,8 +83,7 @@ static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 
 // Represents a node in the trie.
 struct prop_bt {
-    uint8_t namelen;
-    uint8_t reserved[3];
+    uint32_t namelen;
 
     // The property trie is updated only by the init process (single threaded) which provides
     // property service. And it can be read by multiple threads at the same time.
@@ -107,7 +108,7 @@ struct prop_bt {
 
     char name[0];
 
-    prop_bt(const char *name, const uint8_t name_length) {
+    prop_bt(const char *name, const uint32_t name_length) {
         this->namelen = name_length;
         memcpy(this->name, name, name_length);
         this->name[name_length] = '\0';
@@ -140,9 +141,9 @@ public:
 
 private:
     void *allocate_obj(const size_t size, uint_least32_t *const off);
-    prop_bt *new_prop_bt(const char *name, uint8_t namelen, uint_least32_t *const off);
-    prop_info *new_prop_info(const char *name, uint8_t namelen,
-                             const char *value, uint8_t valuelen,
+    prop_bt *new_prop_bt(const char *name, uint32_t namelen, uint_least32_t *const off);
+    prop_info *new_prop_info(const char *name, uint32_t namelen,
+                             const char *value, uint32_t valuelen,
                              uint_least32_t *const off);
     void *to_prop_obj(uint_least32_t off);
     prop_bt *to_prop_bt(atomic_uint_least32_t *off_p);
@@ -151,11 +152,11 @@ private:
     prop_bt *root_node();
 
     prop_bt *find_prop_bt(prop_bt *const bt, const char *name,
-                          uint8_t namelen, bool alloc_if_needed);
+                          uint32_t namelen, bool alloc_if_needed);
 
     const prop_info *find_property(prop_bt *const trie, const char *name,
-                                   uint8_t namelen, const char *value,
-                                   uint8_t valuelen, bool alloc_if_needed);
+                                   uint32_t namelen, const char *value,
+                                   uint32_t valuelen, bool alloc_if_needed);
 
     bool foreach_property(prop_bt *const trie,
                           void (*propfn)(const prop_info *pi, void *cookie),
@@ -173,19 +174,20 @@ private:
 
 struct prop_info {
     atomic_uint_least32_t serial;
+    // we need to keep this buffer around because the property
+    // value can be modified whereas name is constant.
     char value[PROP_VALUE_MAX];
     char name[0];
 
-    prop_info(const char *name, const uint8_t namelen, const char *value,
-              const uint8_t valuelen) {
+    prop_info(const char *name, uint32_t namelen, const char *value, uint32_t valuelen) {
         memcpy(this->name, name, namelen);
         this->name[namelen] = '\0';
         atomic_init(&this->serial, valuelen << 24);
         memcpy(this->value, value, valuelen);
         this->value[valuelen] = '\0';
     }
-private:
-    DISALLOW_COPY_AND_ASSIGN(prop_info);
+  private:
+    DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
 
 struct find_nth_cookie {
@@ -358,7 +360,7 @@ void *prop_area::allocate_obj(const size_t size, uint_least32_t *const off)
     return data_ + *off;
 }
 
-prop_bt *prop_area::new_prop_bt(const char *name, uint8_t namelen, uint_least32_t *const off)
+prop_bt *prop_area::new_prop_bt(const char *name, uint32_t namelen, uint_least32_t *const off)
 {
     uint_least32_t new_offset;
     void *const p = allocate_obj(sizeof(prop_bt) + namelen + 1, &new_offset);
@@ -371,8 +373,8 @@ prop_bt *prop_area::new_prop_bt(const char *name, uint8_t namelen, uint_least32_
     return NULL;
 }
 
-prop_info *prop_area::new_prop_info(const char *name, uint8_t namelen,
-        const char *value, uint8_t valuelen, uint_least32_t *const off)
+prop_info *prop_area::new_prop_info(const char *name, uint32_t namelen,
+        const char *value, uint32_t valuelen, uint_least32_t *const off)
 {
     uint_least32_t new_offset;
     void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
@@ -408,8 +410,8 @@ inline prop_bt *prop_area::root_node()
     return reinterpret_cast<prop_bt*>(to_prop_obj(0));
 }
 
-static int cmp_prop_name(const char *one, uint8_t one_len, const char *two,
-        uint8_t two_len)
+static int cmp_prop_name(const char *one, uint32_t one_len, const char *two,
+        uint32_t two_len)
 {
     if (one_len < two_len)
         return -1;
@@ -420,7 +422,7 @@ static int cmp_prop_name(const char *one, uint8_t one_len, const char *two,
 }
 
 prop_bt *prop_area::find_prop_bt(prop_bt *const bt, const char *name,
-                                 uint8_t namelen, bool alloc_if_needed)
+                                 uint32_t namelen, bool alloc_if_needed)
 {
 
     prop_bt* current = bt;
@@ -471,7 +473,7 @@ prop_bt *prop_area::find_prop_bt(prop_bt *const bt, const char *name,
 }
 
 const prop_info *prop_area::find_property(prop_bt *const trie, const char *name,
-        uint8_t namelen, const char *value, uint8_t valuelen,
+        uint32_t namelen, const char *value, uint32_t valuelen,
         bool alloc_if_needed)
 {
     if (!trie) return NULL;
@@ -481,7 +483,7 @@ const prop_info *prop_area::find_property(prop_bt *const trie, const char *name,
     while (true) {
         const char *sep = strchr(remaining_name, '.');
         const bool want_subtree = (sep != NULL);
-        const uint8_t substr_size = (want_subtree) ?
+        const uint32_t substr_size = (want_subtree) ?
             sep - remaining_name : strlen(remaining_name);
 
         if (!substr_size) {
@@ -531,28 +533,93 @@ const prop_info *prop_area::find_property(prop_bt *const trie, const char *name,
     }
 }
 
-static int send_prop_msg(const prop_msg *msg)
-{
-    const int fd = socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
-    if (fd == -1) {
-        return -1;
+class PropertyServiceConnection {
+ public:
+  PropertyServiceConnection() : last_error_(0) {
+    fd_ = socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
+    if (fd_ == -1) {
+      last_error_ = errno;
+      return;
     }
 
     const size_t namelen = strlen(property_service_socket);
-
     sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
     strlcpy(addr.sun_path, property_service_socket, sizeof(addr.sun_path));
     addr.sun_family = AF_LOCAL;
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
-    if (TEMP_FAILURE_RETRY(connect(fd, reinterpret_cast<sockaddr*>(&addr), alen)) < 0) {
-        close(fd);
-        return -1;
+
+    if (TEMP_FAILURE_RETRY(connect(fd_, reinterpret_cast<sockaddr*>(&addr), alen)) == -1) {
+      close(fd_);
+      fd_ = -1;
+      last_error_ = errno;
+    }
+  }
+
+  bool IsValid() {
+    return fd_ != -1;
+  }
+
+  int GetLastError() {
+    return last_error_;
+  }
+
+  bool SendUint32(uint32_t value) {
+    int result = TEMP_FAILURE_RETRY(send(fd_, &value, sizeof(value), 0));
+    return CheckSendRecvResult(result, sizeof(value));
+  }
+
+  bool SendString(const char* value) {
+    uint32_t valuelen = strlen(value);
+    if (!SendUint32(valuelen)) {
+      return false;
     }
 
-    const int num_bytes = TEMP_FAILURE_RETRY(send(fd, msg, sizeof(prop_msg), 0));
+    int result = TEMP_FAILURE_RETRY(send(fd_, value, valuelen, 0));
+    return CheckSendRecvResult(result, valuelen);
+  }
+
+  bool RecvInt32(int32_t* value) {
+    int result = TEMP_FAILURE_RETRY(recv(fd_, value, sizeof(*value), MSG_WAITALL));
+    return CheckSendRecvResult(result, sizeof(*value));
+  }
+
+  int GetFd() {
+    return fd_;
+  }
+
+  ~PropertyServiceConnection() {
+    if (fd_ != -1) {
+      close(fd_);
+    }
+  }
+ private:
+  bool CheckSendRecvResult(int result, int expected_len) {
+    if (result == -1) {
+      last_error_ = errno;
+    } else if (result != expected_len) {
+      last_error_ = -1;
+    } else {
+      last_error_ = 0;
+    }
+
+    return last_error_ == 0;
+  }
+
+  int fd_;
+  int last_error_;
+};
+
+static int send_prop_msg(const prop_msg* msg) {
+    PropertyServiceConnection connection;
+    if (!connection.IsValid()) {
+      return connection.GetLastError();
+    }
 
     int result = -1;
+    int fd = connection.GetFd();
+
+    const int num_bytes = TEMP_FAILURE_RETRY(send(fd, msg, sizeof(prop_msg), 0));
     if (num_bytes == sizeof(prop_msg)) {
         // We successfully wrote to the property server but now we
         // wait for the property server to finish its work.  It
@@ -578,11 +645,13 @@ static int send_prop_msg(const prop_msg *msg)
             // ms so callers who do read-after-write can reliably see
             // what they've written.  Most of the time.
             // TODO: fix the system properties design.
+            __libc_format_log(ANDROID_LOG_WARN, "libc",
+                              "Property service has timed out while trying to set \"%s\" to \"%s\"",
+                              msg->name, msg->value);
             result = 0;
         }
     }
 
-    close(fd);
     return result;
 }
 
@@ -1124,12 +1193,47 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
         atomic_thread_fence(memory_order_acquire);
         if (serial ==
                 load_const_atomic(&(pi->serial), memory_order_relaxed)) {
-            if (name != 0) {
-                strcpy(name, pi->name);
+            if (name != nullptr) {
+                size_t namelen = strlcpy(name, pi->name, PROP_NAME_MAX);
+                if(namelen >= PROP_NAME_MAX) {
+                  __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                                    "The property name length for \"%s\" is >= %d;"
+                                    " please use __system_property_read_callback"
+                                    " to read this property. (the name is truncated to \"%s\")",
+                                    pi->name, PROP_NAME_MAX - 1, name);
+                }
             }
             return len;
         }
     }
+}
+
+void __system_property_read_callback(const prop_info* pi,
+                                     void (*callback)(void* cookie, const char* name, const char* value),
+                                     void* cookie) {
+  // TODO (dimitry): do we need compat mode for this function?
+  if (__predict_false(compat_mode)) {
+    char value_buf[PROP_VALUE_MAX];
+    __system_property_read_compat(pi, nullptr, value_buf);
+    callback(cookie, pi->name, value_buf);
+    return;
+  }
+
+  while (true) {
+    uint32_t serial = __system_property_serial(pi); // acquire semantics
+    size_t len = SERIAL_VALUE_LEN(serial);
+    char value_buf[len+1];
+
+    memcpy(value_buf, pi->value, len);
+    value_buf[len] = '\0';
+
+    // TODO: see todo in __system_property_read function
+    atomic_thread_fence(memory_order_acquire);
+    if (serial == load_const_atomic(&(pi->serial), memory_order_relaxed)) {
+      callback(cookie, pi->name, value_buf);
+      return;
+    }
+  }
 }
 
 int __system_property_get(const char *name, char *value)
@@ -1137,38 +1241,88 @@ int __system_property_get(const char *name, char *value)
     const prop_info *pi = __system_property_find(name);
 
     if (pi != 0) {
-        return __system_property_read(pi, 0, value);
+        return __system_property_read(pi, nullptr, value);
     } else {
         value[0] = 0;
         return 0;
     }
 }
 
-int __system_property_set(const char *key, const char *value)
-{
-    if (key == 0) return -1;
-    if (value == 0) value = "";
-    if (strlen(key) >= PROP_NAME_MAX) return -1;
+static constexpr uint32_t kProtocolVersion1 = 1;
+static constexpr uint32_t kProtocolVersion2 = 2; // current
+
+static atomic_uint_least32_t g_propservice_protocol_version = 0;
+
+static void detect_protocol_version() {
+    char value[PROP_VALUE_MAX];
+    if (__system_property_get(kServiceVersionPropertyName, value) == 0) {
+        g_propservice_protocol_version = kProtocolVersion1;
+        __libc_format_log(ANDROID_LOG_WARN, "libc",
+                          "Using old property service protocol (\"%s\" is not set)",
+                          kServiceVersionPropertyName);
+    } else {
+        uint32_t version = static_cast<uint32_t>(atoll(value));
+        if (version >= kProtocolVersion2) {
+            g_propservice_protocol_version = kProtocolVersion2;
+        } else {
+          __libc_format_log(ANDROID_LOG_WARN, "libc",
+                            "Using old property service protocol (\"%s\"=\"%s\")",
+                            kServiceVersionPropertyName, value);
+            g_propservice_protocol_version = kProtocolVersion1;
+        }
+    }
+}
+
+int __system_property_set(const char* key, const char* value) {
+    if (key == nullptr) return -1;
+    if (value == nullptr) value = "";
     if (strlen(value) >= PROP_VALUE_MAX) return -1;
 
-    prop_msg msg;
-    memset(&msg, 0, sizeof msg);
-    msg.cmd = PROP_MSG_SETPROP;
-    strlcpy(msg.name, key, sizeof msg.name);
-    strlcpy(msg.value, value, sizeof msg.value);
-
-    const int err = send_prop_msg(&msg);
-    if (err < 0) {
-        return err;
+    if (g_propservice_protocol_version == 0) {
+        detect_protocol_version();
     }
 
-    return 0;
+    int result = -1;
+    if (g_propservice_protocol_version == kProtocolVersion1) {
+        // Old protocol does not support long names
+        if (strlen(key) >= PROP_NAME_MAX) return -1;
+
+        prop_msg msg;
+        memset(&msg, 0, sizeof msg);
+        msg.cmd = PROP_MSG_SETPROP;
+        strlcpy(msg.name, key, sizeof msg.name);
+        strlcpy(msg.value, value, sizeof msg.value);
+
+        result = send_prop_msg(&msg);
+    } else {
+        // Use proper protocol
+        PropertyServiceConnection connection;
+        if (connection.IsValid() &&
+            connection.SendUint32(PROP_MSG_SETPROP2) &&
+            connection.SendString(key) &&
+            connection.SendString(value) &&
+            connection.RecvInt32(&result)) {
+          if (result != PROP_SUCCESS) {
+            __libc_format_log(ANDROID_LOG_WARN, "libc",
+                              "Unable to set property \"%s\" to \"%s\": error code: 0x%x",
+                              key, value, result);
+          }
+        } else {
+          result = connection.GetLastError();
+          __libc_format_log(ANDROID_LOG_WARN, "libc",
+                            "Unable to set property \"%s\" to \"%s\": error code: 0x%x (%s)",
+                            key, value, result, strerror(result));
+        }
+    }
+
+    return result != 0 ? -1 : 0;
 }
 
 int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 {
-    if (len >= PROP_VALUE_MAX)
+    if (len >= PROP_VALUE_MAX) {
         return -1;
+    }
 
     prop_area* pa = __system_property_area__;
 
@@ -1183,7 +1337,8 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
     // used memory_order_relaxed atomics, and use the analogous
     // counterintuitive fence.
     atomic_thread_fence(memory_order_release);
-    memcpy(pi->value, value, len + 1);
+    strlcpy(pi->value, value, len + 1);
+
     atomic_store_explicit(
         &pi->serial,
         (len << 24) | ((serial + 1) & 0xffffff),
@@ -1202,12 +1357,13 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 int __system_property_add(const char *name, unsigned int namelen,
             const char *value, unsigned int valuelen)
 {
-    if (namelen >= PROP_NAME_MAX)
+    if (valuelen >= PROP_VALUE_MAX) {
         return -1;
-    if (valuelen >= PROP_VALUE_MAX)
+    }
+
+    if (namelen < 1) {
         return -1;
-    if (namelen < 1)
-        return -1;
+    }
 
     if (!__system_property_area__) {
         return -1;
@@ -1221,8 +1377,9 @@ int __system_property_add(const char *name, unsigned int namelen,
     }
 
     bool ret = pa->add(name, namelen, value, valuelen);
-    if (!ret)
+    if (!ret) {
         return -1;
+    }
 
     // There is only a single mutator, but we want to make sure that
     // updates are visible to a reader waiting for the update.
