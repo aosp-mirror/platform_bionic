@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd2fc734_39d58d3f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-24T22:07:32Z",
+      "side": 1,
+      "message": "prop",
+      "range": {
+        "startLine": 16,
+        "startChar": 43,
+        "endLine": 16,
+        "endChar": 47
+      },
+      "revId": "859eb29c407ff6cf7c0ef2a216c932fd73c8adce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ea76847_eb2c548d",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-01-24T22:07:32Z",
+      "side": 1,
+      "message": "Do these have to be separate writes? writev seems like it\u0027s strictly better than what we\u0027re doing here.",
+      "revId": "859eb29c407ff6cf7c0ef2a216c932fd73c8adce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
