@@ -96,14 +96,21 @@ void CFIShadowWriter::Add(uintptr_t begin, uintptr_t end, uintptr_t cfi_check) {
   uint16_t* shadow_end = MemToShadow(end - 1) + 1;
 
   ShadowWrite sw(shadow_begin, shadow_end);
-  uint16_t sv = ((begin + kShadowAlign - cfi_check) >> kCfiCheckGranularity) + kRegularShadowMin;
+  uint16_t sv_begin = ((begin + kShadowAlign - cfi_check) >> kCfiCheckGranularity) + kRegularShadowMin;
 
   // With each step of the loop below, __cfi_check address computation base is increased by
   // 2**ShadowGranularity.
   // To compensate for that, each next shadow value must be increased by 2**ShadowGranularity /
   // 2**CfiCheckGranularity.
   uint16_t sv_step = 1 << (kShadowGranularity - kCfiCheckGranularity);
+  uint16_t sv = sv_begin;
   for (uint16_t& s : sw) {
+    if (sv < sv_begin) {
+      // If shadow value wraps around, also fall back to unchecked. This means the binary is too
+      // large. FIXME: consider using a (slow) resolution function instead.
+      s = kUncheckedShadow;
+      continue;
+    }
     // If there is something there already, fall back to unchecked. This may happen in rare cases
     // with MAP_FIXED libraries. FIXME: consider using a (slow) resolution function instead.
     s = (s == kInvalidShadow) ? sv : kUncheckedShadow;
@@ -191,6 +198,7 @@ bool CFIShadowWriter::NotifyLibDl(soinfo* solist, uintptr_t p) {
 
 bool CFIShadowWriter::MaybeInit(soinfo* new_si, soinfo* solist) {
   CHECK(initial_link_done);
+  CHECK(shadow_start == nullptr);
   // Check if CFI shadow must be initialized at this time.
   bool found = false;
   if (new_si == nullptr) {
@@ -250,7 +258,7 @@ void CFIShadowWriter::BeforeUnload(soinfo* si) {
 }
 
 bool CFIShadowWriter::InitialLinkDone(soinfo* solist) {
-  CHECK(!initial_link_done)
+  CHECK(!initial_link_done);
   initial_link_done = true;
   return MaybeInit(nullptr, solist);
 }
