@@ -69,7 +69,7 @@ private:
 static void foreach_test_callback(const prop_info *pi, void* cookie) {
     size_t *count = static_cast<size_t *>(cookie);
 
-    ASSERT_TRUE(pi != nullptr);
+    ASSERT_NE((prop_info *)NULL, pi);
     (*count)++;
 }
 
@@ -98,15 +98,16 @@ static void hierarchical_test_callback(const prop_info *pi, void *cookie) {
     ok[name_i][name_j][name_k] = true;
 }
 
-static void* PropertyWaitHelperFn(void* arg) {
-    int* flag = static_cast<int*>(arg);
-    prop_info* pi = const_cast<prop_info*>(__system_property_find("property"));
+static void *PropertyWaitHelperFn(void *arg) {
+    int *flag = (int *)arg;
+    prop_info *pi;
+    pi = (prop_info *)__system_property_find("property");
     usleep(100000);
 
     *flag = 1;
     __system_property_update(pi, "value3", 6);
 
-    return nullptr;
+    return NULL;
 }
 
 #endif // __BIONIC__
@@ -122,16 +123,6 @@ TEST(properties, add) {
     ASSERT_EQ(0, __system_property_add("other_property", 14, "value2", 6));
     ASSERT_EQ(0, __system_property_add("property_other", 14, "value3", 6));
 
-    // check that there is no limit on property name length
-    char name[PROP_NAME_MAX + 11];
-    name[0] = 'p';
-    for (size_t i = 1; i < sizeof(name); i++) {
-      name[i] = 'x';
-    }
-
-    name[sizeof(name)-1] = '\0';
-    ASSERT_EQ(0, __system_property_add(name, strlen(name), "value", 5));
-
     ASSERT_EQ(6, __system_property_get("property", propvalue));
     ASSERT_STREQ(propvalue, "value1");
 
@@ -140,9 +131,6 @@ TEST(properties, add) {
 
     ASSERT_EQ(6, __system_property_get("property_other", propvalue));
     ASSERT_STREQ(propvalue, "value3");
-
-    ASSERT_EQ(5, __system_property_get(name, propvalue));
-    ASSERT_STREQ(propvalue, "value");
 #else // __BIONIC__
     GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
@@ -335,6 +323,7 @@ TEST(properties, errors) {
     ASSERT_EQ(0, __system_property_find("property1"));
     ASSERT_EQ(0, __system_property_get("property1", prop_value));
 
+    ASSERT_EQ(-1, __system_property_add("name", PROP_NAME_MAX, "value", 5));
     ASSERT_EQ(-1, __system_property_add("name", 4, "value", PROP_VALUE_MAX));
     ASSERT_EQ(-1, __system_property_update(NULL, "value", PROP_VALUE_MAX));
 #else // __BIONIC__
@@ -370,13 +359,12 @@ TEST(properties, wait) {
 
     ASSERT_EQ(0, __system_property_add("property", 8, "value1", 6));
     serial = __system_property_wait_any(0);
-
-    pi = const_cast<prop_info*>(__system_property_find("property"));
-    ASSERT_TRUE(pi != nullptr);
+    pi = (prop_info *)__system_property_find("property");
+    ASSERT_NE((prop_info *)NULL, pi);
     __system_property_update(pi, "value2", 6);
     serial = __system_property_wait_any(serial);
 
-    ASSERT_EQ(0, pthread_create(&t, nullptr, PropertyWaitHelperFn, &flag));
+    ASSERT_EQ(0, pthread_create(&t, NULL, PropertyWaitHelperFn, &flag));
     ASSERT_EQ(flag, 0);
     serial = __system_property_wait_any(serial);
     ASSERT_EQ(flag, 1);
@@ -408,7 +396,9 @@ TEST_F(properties_DeathTest, read_only) {
 
   // This test only makes sense if we're talking to the real system property service.
   struct stat sb;
-  ASSERT_FALSE(stat(PROP_FILENAME, &sb) == -1 && errno == ENOENT);
+  if (stat(PROP_FILENAME, &sb) == -1 && errno == ENOENT) {
+    return;
+  }
 
   ASSERT_EXIT(__system_property_add("property", 8, "value", 5), KilledByFault(), "");
 #else // __BIONIC__
