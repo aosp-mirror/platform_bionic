@@ -276,7 +276,12 @@ TEST(dlfcn, ifunc) {
   dlclose(handle);
 }
 
+// ld.gold for arm produces incorrect binary (see http://b/27930475 for details)
+#if defined(__arm__)
+TEST(dlfcn, KNOWN_FAILURE_ON_BIONIC(ifunc_ctor_call)) {
+#else
 TEST(dlfcn, ifunc_ctor_call) {
+#endif
   typedef const char* (*fn_ptr)();
 
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
@@ -291,7 +296,12 @@ TEST(dlfcn, ifunc_ctor_call) {
   dlclose(handle);
 }
 
+// ld.gold for arm produces incorrect binary (see http://b/27930475 for details)
+#if defined(__arm__)
+TEST(dlfcn, KNOWN_FAILURE_ON_BIONIC(ifunc_ctor_call_rtld_lazy)) {
+#else
 TEST(dlfcn, ifunc_ctor_call_rtld_lazy) {
+#endif
   typedef const char* (*fn_ptr)();
 
   void* handle = dlopen("libtest_ifunc.so", RTLD_LAZY);
