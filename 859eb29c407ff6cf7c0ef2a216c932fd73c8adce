@@ -39,6 +39,23 @@
       "revId": "859eb29c407ff6cf7c0ef2a216c932fd73c8adce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b88713e_856e7fbd",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-24T22:18:54Z",
+      "side": 1,
+      "message": "they do not have to be.. writev requires an array of iovec.. not sure if it is better - produces more code.",
+      "revId": "859eb29c407ff6cf7c0ef2a216c932fd73c8adce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
