@@ -29,7 +29,7 @@
 // See documentation in http://clang.llvm.org/docs/ControlFlowIntegrityDesign.html#shared-library-support.
 //
 // Shadow is mapped and initialized lazily as soon as the first CFI-enabled DSO is loaded.
-// It is updated after a set of libraries is loaded (but before any constructors are ran), and
+// It is updated after any library is loaded (but before any constructors are ran), and
 // before any library is unloaded.
 class CFIShadowWriter : private CFIShadow {
   // Returns pointer to the shadow element for an address.
@@ -56,17 +56,15 @@ class CFIShadowWriter : private CFIShadow {
   uintptr_t MapShadow();
 
   // Initialize CFI shadow and update its contents for everything in solist if any loaded library is
-  // CFI-enabled. If soinfos != nullptr, do an incremental check by looking only at the libraries in
-  // soinfos[]; otherwise look at the entire solist.
-  //
-  // Returns false if the shadow is already initialized. It is the caller's responsibility to update
-  // the shadow for the new libraries in that case.
-  // Otherwise, returns true and leaves the shadow either up-to-date or uninitialized.
+  // CFI-enabled. If new_si != nullptr, do an incremental check by looking only at new_si; otherwise
+  // look at the entire solist.
   bool MaybeInit(soinfo *new_si, soinfo *solist);
 
   // Set a human readable name for the entire shadow region.
   void FixupVmaName();
 
+  // Pass the pointer to the mapped shadow region to libdl. Must only be called once.
+  // Flips shadow_start to a non-nullptr value.
   bool NotifyLibDl(soinfo *solist, uintptr_t p);
 
   // Pointer to the shadow start address.
@@ -75,7 +73,7 @@ class CFIShadowWriter : private CFIShadow {
   bool initial_link_done;
 
  public:
-  // Update shadow after loading a set of DSOs.
+  // Update shadow after loading a DSO.
   // This function will initialize the shadow if it sees a CFI-enabled DSO for the first time.
   // In that case it will retroactively update shadow for all previously loaded DSOs. "solist" is a
   // pointer to the global list.
@@ -85,6 +83,7 @@ class CFIShadowWriter : private CFIShadow {
   // Update shadow before unloading a DSO.
   void BeforeUnload(soinfo* si);
 
+  // This is called as soon as the initial set of libraries is linked.
   bool InitialLinkDone(soinfo *solist);
 
   // Handle failure to locate __cfi_check for a target address.
