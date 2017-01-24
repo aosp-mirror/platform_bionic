@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1379c454_f2955e31",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-24T22:06:34Z",
+      "side": 0,
+      "message": "I do not know why I did that...",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 19
+      },
+      "revId": "d8388cd303ed734b5e703217f24e03f89b72b0c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
