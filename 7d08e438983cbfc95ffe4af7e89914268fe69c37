@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca98b830_3567061b",
+        "filename": "libc/arch-arm/bionic/kuser_helper_on.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-25T15:44:05Z",
+      "side": 1,
+      "message": "we\u0027ve already used this name (and some tools look for it). call it \"Android kuser helper\" or something?",
+      "range": {
+        "startLine": 35,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 18
+      },
+      "revId": "7d08e438983cbfc95ffe4af7e89914268fe69c37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
