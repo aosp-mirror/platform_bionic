@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "34afa66b_8a12ac24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-25T22:43:52Z",
+      "side": 1,
+      "message": "Can we do better? aiui we don\u0027t have the kernels to handle this yet, so maybe not right now, but this should be doable with gtest (a death test and a non-death test that call exec)",
+      "revId": "7d08e438983cbfc95ffe4af7e89914268fe69c37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e13dc6f0_fbf82968",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1700,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-01-25T22:43:52Z",
+      "side": 1,
+      "message": "Doesn\u0027t this already get included because crtbegin is already a part of libc?",
+      "revId": "7d08e438983cbfc95ffe4af7e89914268fe69c37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca98b830_3567061b",
         "filename": "libc/arch-arm/bionic/kuser_helper_on.S",
         "patchSetId": 1
