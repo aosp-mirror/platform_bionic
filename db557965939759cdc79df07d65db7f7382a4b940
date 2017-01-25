@@ -33,6 +33,23 @@
       "revId": "db557965939759cdc79df07d65db7f7382a4b940",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a4a1882_741c6165",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-25T18:23:47Z",
+      "side": 1,
+      "message": "grep for GTEST_LOG_ in this directory for examples.",
+      "revId": "db557965939759cdc79df07d65db7f7382a4b940",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
