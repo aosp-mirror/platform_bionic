@@ -22,27 +22,18 @@
 #include <string>
 
 static std::string init_testlib_root() {
+  // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
+  std::string path = get_executable_path();
+
+  path = get_dirname(path.c_str());
+  path += "/..";
+
   std::string out_path;
-  const char* data_dir = getenv("ANDROID_DATA");
-  if (data_dir == nullptr) {
-    // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
-    std::string path = get_executable_path();
-
-    path = get_dirname(path.c_str());
-    path += "/../..";
-
-    if (!get_realpath(path.c_str(), &out_path)) {
-      printf("Failed to get realpath for \"%s\"", path.c_str());
-      abort();
-    }
-  } else {
-    out_path = data_dir;
+  if (!get_realpath(path.c_str(), &out_path)) {
+    printf("Failed to get realpath for \"%s\"", path.c_str());
+    abort();
   }
 
-  out_path = out_path + "/nativetest";
-#if defined(__LP64__)
-  out_path += "64";
-#endif
   out_path += "/bionic-loader-test-libs";
 
   std::string real_path;
