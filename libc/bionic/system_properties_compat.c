@@ -43,6 +43,7 @@
 
 #define TOC_NAME_LEN(toc)       ((toc) >> 24)
 #define TOC_TO_INFO(area, toc)  ((prop_info_compat*) (((char*) area) + ((toc) & 0xFFFFFF)))
+#define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
 struct prop_area_compat {
     unsigned volatile count;
