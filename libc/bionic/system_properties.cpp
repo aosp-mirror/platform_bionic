@@ -575,6 +575,12 @@ class PropertyServiceConnection {
       return false;
     }
 
+    // Trying to send even 0 bytes to closed socket may lead to
+    // broken pipe (http://b/34670529).
+    if (valuelen == 0) {
+      return true;
+    }
+
     int result = TEMP_FAILURE_RETRY(send(fd_, value, valuelen, 0));
     return CheckSendRecvResult(result, valuelen);
   }
