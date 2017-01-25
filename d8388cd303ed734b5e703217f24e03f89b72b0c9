@@ -22,6 +22,29 @@
       "revId": "d8388cd303ed734b5e703217f24e03f89b72b0c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2bbc66a_8c6f631f",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2017-01-25T10:05:32Z",
+      "side": 0,
+      "message": "For historical reasons, I assume. It was using ANDROID_DATA before last change and it probably looked easier to go two levels up... but now, when in some cases it\u0027s two levels and in some cases three... it\u0027s easier to do what is done for executable itself here.",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 19
+      },
+      "revId": "d8388cd303ed734b5e703217f24e03f89b72b0c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
