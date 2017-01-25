@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a6e0727_de048b3c",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-25T16:21:02Z",
+      "side": 1,
+      "message": "do you want to log in the cases where you\u0027re not actually testing because the hardware doesn\u0027t support it? (we often log when a test \"does nothing\".)",
+      "revId": "db557965939759cdc79df07d65db7f7382a4b940",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
