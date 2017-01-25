@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ddd51b0_4aaa1074",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-25T22:38:49Z",
+      "side": 1,
+      "message": "is there something in the system config we can check to see if we are running on NB enabled device?",
+      "revId": "14b9d7199c1b147ef6ce6e522ff14413930d2127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
