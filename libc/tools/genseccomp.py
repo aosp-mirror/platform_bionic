@@ -126,7 +126,7 @@ def construct_bpf(architecture, header_dir, output_path):
              ", 0, " + str(len(bpf)) + "),")
 
   # Add the error and allow calls at the end
-  bpf.append("BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL),")
+  bpf.append("BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRAP),")
   bpf.append("BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),")
 
   # And output policy
