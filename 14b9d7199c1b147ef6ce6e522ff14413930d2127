@@ -16,6 +16,23 @@
       "revId": "14b9d7199c1b147ef6ce6e522ff14413930d2127",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cba971a5_617f651d",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2017-01-25T22:59:52Z",
+      "side": 1,
+      "message": "I think the most reliable thing is to look on ro.dalvik.vm.native.bridge in default.prop.\n\nAfter that you could look on ro.product.cpu.abi to find out which architecture is primary, but that property is deprecated.\n\nro.product.cpu.abilist specifies all supported architectures, and usually the primary one comes first, but you could swap them around (I often do that to test emulation of applications which also have an x86 libraries).\n\nI think straightforward attempt to load library from \"alternate path\" is the simplest solution: if you could find library in /system/lib/arm/libc.so and that one is not the system library then... WHAT is it? WHY is it there?\n\nThe fact that libraries on Android usually live in /system/lib and /system/lib64 is a historical artifact, I think eventually they would move.\n\nNote that on desktop libc libraries used to be found in /lib/libc.so.6 and /lib64/libc.so.6, but today they live in /lib/x86_64-linux-gnu/libc.so.6 or /lib/i386-linux-gnu/libc.so.6 which matches ALTERNATE PATH, not primary one.",
+      "revId": "14b9d7199c1b147ef6ce6e522ff14413930d2127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
