@@ -41,6 +41,6 @@ struct __res_params {
     uint8_t success_threshold; // 0: disable, value / 100 otherwise
     uint8_t min_samples; // min # samples needed for statistics to be considered meaningful
     uint8_t max_samples; // max # samples taken into account for statistics
-} __attribute__((__packed__));
+};
 
 #endif // _RESOLV_PARAMS_H
