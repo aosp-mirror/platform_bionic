@@ -71,7 +71,7 @@ struct android_net_context {
     unsigned dns_netid;
     unsigned dns_mark;
     uid_t uid;
-} __attribute__((packed));
+};
 
 #define NET_CONTEXT_INVALID_UID ((uid_t)-1)
 
