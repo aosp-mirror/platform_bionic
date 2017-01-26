@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "cac8c20b_d33d319d",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2017-01-26T18:52:05Z",
+      "side": 1,
+      "message": "Really the former, in order to ensure the latter.\n\nDid you have something in mind for clarifying the comment?",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b85fedd5_16df262e",
         "filename": "benchmarks/atomic_benchmark.cpp",
         "patchSetId": 2
@@ -36,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "dec14f92_df03487d",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2017-01-26T18:52:05Z",
+      "side": 1,
+      "message": "Good to know. We could use ClobberMemory() instead of the volatile counter, but I\u0027m not sure it\u0027s an improvement. It\u0027s not clear what effect ClobberMemory() would have on the loop logic. Volatile has weird semantics that are hard to pin down precisely. But on everything but Itanium (where it essentially implies acquire/release), I think they\u0027re what we want here.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "569f53e6_3d4ab697",
         "filename": "benchmarks/atomic_benchmark.cpp",
         "patchSetId": 2
@@ -47,6 +81,23 @@
       "writtenOn": "2017-01-26T17:33:29Z",
       "side": 1,
       "message": "Does it perhaps make sense to include the expected ARM 32/64 assembly code for these benchmarks (as a comment)?\n\nEspecially in ART we might use the asm directly, as a fast path in addition to C++, so it\u0027s imperative to know cost of underlying instructions , not just the abstractions.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7caf022a_f9e28d38",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2017-01-26T18:52:05Z",
+      "side": 1,
+      "message": "I\u0027ll add a comment with a pointer to the Cambridge web site. This stuff is still not quite as stable as one might hope, for multiple reasons.",
       "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
