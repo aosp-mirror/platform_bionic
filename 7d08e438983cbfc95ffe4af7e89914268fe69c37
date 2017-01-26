@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "d82fc98e_6a30d8d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1100093
+      },
+      "writtenOn": "2017-01-26T18:43:28Z",
+      "side": 1,
+      "message": "This note enables the kuser_helper page.  If the kernel doesn\u0027t have it, it is just an extra note and nothing changes",
+      "revId": "7d08e438983cbfc95ffe4af7e89914268fe69c37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e13dc6f0_fbf82968",
         "filename": "libc/Android.bp",
         "patchSetId": 1
@@ -47,6 +64,29 @@
       "writtenOn": "2017-01-25T15:44:05Z",
       "side": 1,
       "message": "we\u0027ve already used this name (and some tools look for it). call it \"Android kuser helper\" or something?",
+      "range": {
+        "startLine": 35,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 18
+      },
+      "revId": "7d08e438983cbfc95ffe4af7e89914268fe69c37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "536981fe_642282e4",
+        "filename": "libc/arch-arm/bionic/kuser_helper_on.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1100093
+      },
+      "writtenOn": "2017-01-26T18:43:28Z",
+      "side": 1,
+      "message": "Discussed with Elliot offline, this is correct since this is the name of the owner, not the note; and type 3 is unused.",
       "range": {
         "startLine": 35,
         "startChar": 11,
