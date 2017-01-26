@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "569f53e6_3d4ab697",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1021471
+      },
+      "writtenOn": "2017-01-26T17:33:29Z",
+      "side": 1,
+      "message": "Does it perhaps make sense to include the expected ARM 32/64 assembly code for these benchmarks (as a comment)?\n\nEspecially in ART we might use the asm directly, as a fast path in addition to C++, so it\u0027s imperative to know cost of underlying instructions , not just the abstractions.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
