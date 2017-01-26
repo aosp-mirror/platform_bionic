@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e771359_f7426049",
+        "filename": "libc/kernel/uapi/linux/fib_rules.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-01-26T19:26:34Z",
+      "side": 0,
+      "message": "The code in system/netd/server/RouteController.cpp has removed the assert and claims that upstream has taken their change. However, it\u0027s not in this kernel, but I did find something called FRA_UID_RANGE in the latest kernel which is probably the upstream change.\n\nSince this does cause any problems yet, I\u0027m not going to propagate this change.",
+      "range": {
+        "startLine": 71,
+        "startChar": 2,
+        "endLine": 73,
+        "endChar": 77
+      },
+      "revId": "18c009ca96a432b35c76aeb9f62687b2db5153c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
