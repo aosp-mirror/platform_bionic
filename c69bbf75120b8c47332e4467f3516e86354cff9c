@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "ac277db2_0773f9bf",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1021471
+      },
+      "writtenOn": "2017-01-26T23:33:01Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure to begin with what this meant. Perhaps something a bit more explicit ?\n\n  Ensure that the compiler emits memory instructions (e.g. load or store) prior to the fence. \n  This in turn will ensure that the CPU has outstanding memory operations when the fence is executed.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b85fedd5_16df262e",
         "filename": "benchmarks/atomic_benchmark.cpp",
         "patchSetId": 2
@@ -98,6 +115,23 @@
       "writtenOn": "2017-01-26T18:52:05Z",
       "side": 1,
       "message": "I\u0027ll add a comment with a pointer to the Cambridge web site. This stuff is still not quite as stable as one might hope, for multiple reasons.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6c0972d_5d02a0d4",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1021471
+      },
+      "writtenOn": "2017-01-26T23:33:01Z",
+      "side": 1,
+      "message": "Yes, link to that site would be just perfect to accompany this I think.",
       "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
