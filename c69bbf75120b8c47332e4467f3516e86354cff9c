@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "c18423d6_e97f1e0f",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1021471
+      },
+      "writtenOn": "2017-01-26T17:43:47Z",
+      "side": 1,
+      "message": "Is this meant to be a software or a hardware level comment?\n\ni.e. is it trying to force compiler to emit a memory ld/t instruction before the fence?\n\nOR is it trying to make sure CPU is going to have a memory operation queued/in-flight when the fence is executed?",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b85fedd5_16df262e",
+        "filename": "benchmarks/atomic_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1021471
+      },
+      "writtenOn": "2017-01-26T17:43:47Z",
+      "side": 1,
+      "message": "There\u0027s also benchmark::DoNotOptimize(expr) and benchmark::ClobberMemory() which might be helpful with avoiding over-optimizations.",
+      "revId": "c69bbf75120b8c47332e4467f3516e86354cff9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "569f53e6_3d4ab697",
         "filename": "benchmarks/atomic_benchmark.cpp",
         "patchSetId": 2
