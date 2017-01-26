@@ -921,7 +921,25 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #else
 #define PATH_TO_SYSTEM_LIB "/system/lib/"
 #endif
+#if defined (__aarch64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
+#elif defined (__arm__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
+#elif defined (__i386__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
+#elif defined (__x86_64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86_64/"
+#elif defined (__mips__)
+#if defined(__LP64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips64/"
+#else
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
+#endif
+#else
+#error "Unknown architecture"
+#endif
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
+#define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__BIONIC__)
@@ -929,9 +947,18 @@ TEST(dlfcn, dladdr_libc) {
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
   ASSERT_TRUE(dladdr(addr, &info) != 0);
 
-  // /system/lib is symlink when this test is executed on host.
   char libc_realpath[PATH_MAX];
-  ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+
+  // Check if libc is in canonical path or in alternate path.
+  if (strncmp(ALTERNATE_PATH_TO_SYSTEM_LIB,
+              info.dli_fname,
+              sizeof(ALTERNATE_PATH_TO_SYSTEM_LIB) - 1) == 0) {
+    // Platform with emulated architecture.  Symlink on ARC++.
+    ASSERT_TRUE(realpath(ALTERNATE_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+  } else {
+    // /system/lib is symlink when this test is executed on host.
+    ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+  }
 
   ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
@@ -1248,8 +1275,14 @@ void validate_compatibility_of_native_library(const std::string& path, ELFT* elf
 }
 
 void validate_compatibility_of_native_library(const char* soname) {
-  std::string path = std::string(PATH_TO_SYSTEM_LIB) + soname;
+  // On the systems with emulation system libraries would be of different
+  // architecture.  Try to use alternate paths first.
+  std::string path = std::string(ALTERNATE_PATH_TO_SYSTEM_LIB) + soname;
   auto binary_or_error = llvm::object::createBinary(path);
+  if (!binary_or_error) {
+    path = std::string(PATH_TO_SYSTEM_LIB) + soname;
+    binary_or_error = llvm::object::createBinary(path);
+  }
   ASSERT_FALSE(!binary_or_error);
 
   llvm::object::Binary* binary = binary_or_error.get().getBinary();
