@@ -64,18 +64,20 @@ struct user_fpsimd_state {
   __uint128_t vregs[32];
   __u32 fpsr;
   __u32 fpcr;
-};
+  __u32 __reserved[2];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct user_hwdebug_state {
   __u32 dbg_info;
   __u32 pad;
-  struct {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct {
     __u64 addr;
     __u32 ctrl;
     __u32 pad;
-  } dbg_regs[16];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  } dbg_regs[16];
 };
 #endif
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
