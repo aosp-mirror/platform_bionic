@@ -179,32 +179,6 @@ cc_defaults {
 }
 
 cc_test_library {
-    name: "libfortify1-tests-gcc",
-    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
-    clang: false,
-    cflags: [
-        "-D_FORTIFY_SOURCE=1",
-        "-DTEST_NAME=Fortify1_gcc"
-    ],
-    shared: {
-        enabled: false,
-    },
-}
-
-cc_test_library {
-    name: "libfortify2-tests-gcc",
-    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
-    clang: false,
-    cflags: [
-        "-D_FORTIFY_SOURCE=2",
-        "-DTEST_NAME=Fortify2_gcc"
-    ],
-    shared: {
-        enabled: false,
-    },
-}
-
-cc_test_library {
     name: "libfortify1-tests-clang",
     defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
     clang: true,
@@ -238,8 +212,6 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     whole_static_libs: [
         "libBionicStandardTests",
-        "libfortify1-tests-gcc",
-        "libfortify2-tests-gcc",
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],
@@ -412,12 +384,6 @@ cc_test {
     },
 }
 
-cc_test {
-    name: "bionic-unit-tests-gcc",
-    defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
-    clang: false,
-}
-
 // -----------------------------------------------------------------------------
 // Tests for the device linked against bionic's static library. Run with:
 //   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
@@ -484,8 +450,6 @@ cc_test_host {
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicGtestMain",
-        "libfortify1-tests-gcc",
-        "libfortify2-tests-gcc",
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],
