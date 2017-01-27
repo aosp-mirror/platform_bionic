@@ -68,12 +68,8 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   FRA_FWMASK,
   FRA_OIFNAME,
-  /* MANUAL CHANGE:
-   * Temporarily remove the following two defines since they conflict with
-   * the android kernel value FRA_UID_START that has not been upstreamed yet.
   FRA_PAD,
   FRA_L3MDEV,
-   */
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __FRA_MAX
 };

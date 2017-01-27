@@ -82,80 +82,99 @@ enum {
   INET_DIAG_BC_D_COND,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   INET_DIAG_BC_DEV_COND,
+  INET_DIAG_BC_MARK_COND,
 };
 struct inet_diag_hostcond {
-  __u8 family;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 family;
   __u8 prefix_len;
   int port;
   __be32 addr[0];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
+struct inet_diag_markcond {
+  __u32 mark;
+  __u32 mask;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct inet_diag_msg {
   __u8 idiag_family;
   __u8 idiag_state;
-  __u8 idiag_timer;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 idiag_timer;
   __u8 idiag_retrans;
   struct inet_diag_sockid id;
   __u32 idiag_expires;
-  __u32 idiag_rqueue;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 idiag_rqueue;
   __u32 idiag_wqueue;
   __u32 idiag_uid;
   __u32 idiag_inode;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 enum {
   INET_DIAG_NONE,
   INET_DIAG_MEMINFO,
-  INET_DIAG_INFO,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  INET_DIAG_INFO,
   INET_DIAG_VEGASINFO,
   INET_DIAG_CONG,
   INET_DIAG_TOS,
-  INET_DIAG_TCLASS,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  INET_DIAG_TCLASS,
   INET_DIAG_SKMEMINFO,
   INET_DIAG_SHUTDOWN,
   INET_DIAG_DCTCPINFO,
-  INET_DIAG_PROTOCOL,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  INET_DIAG_PROTOCOL,
   INET_DIAG_SKV6ONLY,
   INET_DIAG_LOCALS,
   INET_DIAG_PEERS,
-  INET_DIAG_PAD,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  INET_DIAG_PAD,
+  INET_DIAG_MARK,
+  INET_DIAG_BBRINFO,
   __INET_DIAG_MAX,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define INET_DIAG_MAX (__INET_DIAG_MAX - 1)
 struct inet_diag_meminfo {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 idiag_rmem;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 idiag_wmem;
   __u32 idiag_fmem;
   __u32 idiag_tmem;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct tcpvegas_info {
   __u32 tcpv_enabled;
   __u32 tcpv_rttcnt;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 tcpv_rtt;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 tcpv_minrtt;
 };
 struct tcp_dctcp_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 dctcp_enabled;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 dctcp_ce_state;
   __u32 dctcp_alpha;
   __u32 dctcp_ab_ecn;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 dctcp_ab_tot;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
+struct tcp_bbr_info {
+  __u32 bbr_bw_lo;
+  __u32 bbr_bw_hi;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 bbr_min_rtt;
+  __u32 bbr_pacing_gain;
+  __u32 bbr_cwnd_gain;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 union tcp_cc_info {
   struct tcpvegas_info vegas;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct tcp_dctcp_info dctcp;
+  struct tcp_bbr_info bbr;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif
