@@ -30,8 +30,8 @@
 #define TRAP_HWBKPT 4
 #endif
 
-template<typename T>
-static void __attribute__((noreturn)) fork_child(unsigned cpu, T &data) {
+template <typename T>
+static void __attribute__((noreturn)) watchpoint_fork_child(unsigned cpu, T& data) {
   // Extra precaution: make sure we go away if anything happens to our parent.
   if (prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0) == -1) {
     perror("prctl(PR_SET_PDEATHSIG)");
@@ -71,7 +71,9 @@ class ChildGuard {
   pid_t pid;
 };
 
-static bool are_watchpoints_supported(pid_t child) {
+enum class HwFeature { Watchpoint, Breakpoint };
+
+static bool is_hw_feature_supported(pid_t child, HwFeature feature) {
 #if defined(__arm__)
   long capabilities;
   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
@@ -79,26 +81,34 @@ static bool are_watchpoints_supported(pid_t child) {
     EXPECT_EQ(EIO, errno);
     return false;
   }
-  return ((capabilities >> 8) & 0xff) > 0;
+  switch (feature) {
+    case HwFeature::Watchpoint:
+      return ((capabilities >> 8) & 0xff) > 0;
+    case HwFeature::Breakpoint:
+      return (capabilities & 0xff) > 0;
+  }
 #elif defined(__aarch64__)
   user_hwdebug_state dreg_state;
   iovec iov;
   iov.iov_base = &dreg_state;
   iov.iov_len = sizeof(dreg_state);
 
-  long result = ptrace(PTRACE_GETREGSET, child, NT_ARM_HW_WATCH, &iov);
+  long result = ptrace(PTRACE_GETREGSET, child,
+                       feature == HwFeature::Watchpoint ? NT_ARM_HW_WATCH : NT_ARM_HW_BREAK, &iov);
   if (result == -1) {
     EXPECT_EQ(EINVAL, errno);
     return false;
   }
   return (dreg_state.dbg_info & 0xff) > 0;
 #elif defined(__i386__) || defined(__x86_64__)
-  // We assume watchpoints are always supported on x86.
+  // We assume watchpoints and breakpoints are always supported on x86.
   (void) child;
+  (void)feature;
   return true;
 #else
   // TODO: mips support.
   (void) child;
+  (void)feature;
   return false;
 #endif
 }
@@ -153,7 +163,7 @@ static void run_watchpoint_test_impl(unsigned cpu) {
 
   pid_t child = fork();
   ASSERT_NE(-1, child) << strerror(errno);
-  if (child == 0) fork_child(cpu, data);
+  if (child == 0) watchpoint_fork_child(cpu, data);
 
   ChildGuard guard(child);
 
@@ -162,7 +172,10 @@ static void run_watchpoint_test_impl(unsigned cpu) {
   ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
-  if (!are_watchpoints_supported(child)) return;
+  if (!is_hw_feature_supported(child, HwFeature::Watchpoint)) {
+    GTEST_LOG_(INFO) << "Skipping test because hardware support is not available.\n";
+    return;
+  }
 
   set_watchpoint(child, &data, sizeof data);
 
@@ -191,7 +204,7 @@ static void run_watchpoint_test(unsigned cpu) {
 // Test watchpoint API. The test is considered successful if our watchpoints get hit OR the
 // system reports that watchpoint support is not present. We run the test for different
 // watchpoint sizes, while pinning the process to each cpu in turn, for better coverage.
-TEST(ptrace, watchpoint_stress) {
+TEST(sys_ptrace, watchpoint_stress) {
   cpu_set_t available_cpus;
   ASSERT_EQ(0, sched_getaffinity(0, sizeof available_cpus, &available_cpus));
 
@@ -199,4 +212,103 @@ TEST(ptrace, watchpoint_stress) {
     if (!CPU_ISSET(cpu, &available_cpus)) continue;
     run_watchpoint_test(cpu);
   }
+}
+
+static void __attribute__((noinline)) breakpoint_func() {
+  asm volatile("");
+}
+
+static void __attribute__((noreturn)) breakpoint_fork_child() {
+  // Extra precaution: make sure we go away if anything happens to our parent.
+  if (prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0) == -1) {
+    perror("prctl(PR_SET_PDEATHSIG)");
+    _exit(1);
+  }
+
+  if (ptrace(PTRACE_TRACEME, 0, nullptr, nullptr) == -1) {
+    perror("ptrace(PTRACE_TRACEME)");
+    _exit(2);
+  }
+
+  raise(SIGSTOP);  // Synchronize with the tracer, let it set the breakpoint.
+
+  breakpoint_func();  // Now trigger the breakpoint.
+
+  _exit(0);
+}
+
+static void set_breakpoint(pid_t child) {
+  uintptr_t address = uintptr_t(breakpoint_func);
+#if defined(__arm__) || defined(__aarch64__)
+  address &= ~3;
+  const unsigned byte_mask = 0xf;
+  const unsigned enable = 1;
+  const unsigned control = byte_mask << 5 | enable;
+
+#ifdef __arm__
+  ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, 1, &address)) << strerror(errno);
+  ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, 2, &control)) << strerror(errno);
+#else  // aarch64
+  user_hwdebug_state dreg_state;
+  memset(&dreg_state, 0, sizeof dreg_state);
+  dreg_state.dbg_regs[0].addr = reinterpret_cast<uintptr_t>(address);
+  dreg_state.dbg_regs[0].ctrl = control;
+
+  iovec iov;
+  iov.iov_base = &dreg_state;
+  iov.iov_len = offsetof(user_hwdebug_state, dbg_regs) + sizeof(dreg_state.dbg_regs[0]);
+
+  ASSERT_EQ(0, ptrace(PTRACE_SETREGSET, child, NT_ARM_HW_BREAK, &iov)) << strerror(errno);
+#endif
+#elif defined(__i386__) || defined(__x86_64__)
+  ASSERT_EQ(0, ptrace(PTRACE_POKEUSER, child, offsetof(user, u_debugreg[0]), address))
+      << strerror(errno);
+  errno = 0;
+  unsigned data = ptrace(PTRACE_PEEKUSER, child, offsetof(user, u_debugreg[7]), nullptr);
+  ASSERT_EQ(0, errno);
+
+  const unsigned size = 0;
+  const unsigned enable = 1;
+  const unsigned type = 0;  // Execute
+
+  const unsigned mask = 3 << 18 | 3 << 16 | 1;
+  const unsigned value = size << 18 | type << 16 | enable;
+  data &= mask;
+  data |= value;
+  ASSERT_EQ(0, ptrace(PTRACE_POKEUSER, child, offsetof(user, u_debugreg[7]), data))
+      << strerror(errno);
+#else
+  (void)child;
+#endif
+}
+
+// Test hardware breakpoint API. The test is considered successful if the breakpoints get hit OR the
+// system reports that hardware breakpoint support is not present.
+TEST(sys_ptrace, hardware_breakpoint) {
+  pid_t child = fork();
+  ASSERT_NE(-1, child) << strerror(errno);
+  if (child == 0) breakpoint_fork_child();
+
+  ChildGuard guard(child);
+
+  int status;
+  ASSERT_EQ(child, waitpid(child, &status, __WALL)) << strerror(errno);
+  ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
+  ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
+
+  if (!is_hw_feature_supported(child, HwFeature::Breakpoint)) {
+    GTEST_LOG_(INFO) << "Skipping test because hardware support is not available.\n";
+    return;
+  }
+
+  set_breakpoint(child);
+
+  ASSERT_EQ(0, ptrace(PTRACE_CONT, child, nullptr, nullptr)) << strerror(errno);
+  ASSERT_EQ(child, waitpid(child, &status, __WALL)) << strerror(errno);
+  ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
+  ASSERT_EQ(SIGTRAP, WSTOPSIG(status)) << "Status was: " << status;
+
+  siginfo_t siginfo;
+  ASSERT_EQ(0, ptrace(PTRACE_GETSIGINFO, child, nullptr, &siginfo)) << strerror(errno);
+  ASSERT_EQ(TRAP_HWBKPT, siginfo.si_code);
 }
