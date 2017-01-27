@@ -488,4 +488,8 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __NR_preadv2 378
 #define __NR_pwritev2 379
+#define __NR_pkey_mprotect 380
+#define __NR_pkey_alloc 381
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_pkey_free 382
 #endif

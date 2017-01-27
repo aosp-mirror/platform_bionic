@@ -429,5 +429,8 @@
 #define __NR_copy_file_range 326
 #define __NR_preadv2 327
 #define __NR_pwritev2 328
-#endif
+#define __NR_pkey_mprotect 329
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define __NR_pkey_alloc 330
+#define __NR_pkey_free 331
+#endif

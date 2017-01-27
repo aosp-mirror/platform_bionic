@@ -733,76 +733,77 @@ enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   TCA_FQ_FLOW_REFILL_DELAY,
   TCA_FQ_ORPHAN_MASK,
+  TCA_FQ_LOW_RATE_THRESHOLD,
   __TCA_FQ_MAX
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
 struct tc_fq_qd_stats {
   __u64 gc_flows;
-  __u64 highprio_packets;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 highprio_packets;
   __u64 tcp_retrans;
   __u64 throttled;
   __u64 flows_plimit;
-  __u64 pkts_too_long;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 pkts_too_long;
   __u64 allocation_errors;
   __s64 time_next_delayed_flow;
   __u32 flows;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 inactive_flows;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 throttled_flows;
-  __u32 pad;
+  __u32 unthrottle_latency_ns;
 };
-enum {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+enum {
   TCA_HHF_UNSPEC,
   TCA_HHF_BACKLOG_LIMIT,
   TCA_HHF_QUANTUM,
-  TCA_HHF_HH_FLOWS_LIMIT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  TCA_HHF_HH_FLOWS_LIMIT,
   TCA_HHF_RESET_TIMEOUT,
   TCA_HHF_ADMIT_BYTES,
   TCA_HHF_EVICT_TIMEOUT,
-  TCA_HHF_NON_HH_WEIGHT,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  TCA_HHF_NON_HH_WEIGHT,
   __TCA_HHF_MAX
 };
 #define TCA_HHF_MAX (__TCA_HHF_MAX - 1)
-struct tc_hhf_xstats {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct tc_hhf_xstats {
   __u32 drop_overlimit;
   __u32 hh_overlimit;
   __u32 hh_tot_count;
-  __u32 hh_cur_count;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 hh_cur_count;
 };
 enum {
   TCA_PIE_UNSPEC,
-  TCA_PIE_TARGET,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  TCA_PIE_TARGET,
   TCA_PIE_LIMIT,
   TCA_PIE_TUPDATE,
   TCA_PIE_ALPHA,
-  TCA_PIE_BETA,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  TCA_PIE_BETA,
   TCA_PIE_ECN,
   TCA_PIE_BYTEMODE,
   __TCA_PIE_MAX
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define TCA_PIE_MAX (__TCA_PIE_MAX - 1)
 struct tc_pie_xstats {
   __u32 prob;
-  __u32 delay;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 delay;
   __u32 avg_dq_rate;
   __u32 packets_in;
   __u32 dropped;
-  __u32 overlimit;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 overlimit;
   __u32 maxq;
   __u32 ecn_mark;
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
