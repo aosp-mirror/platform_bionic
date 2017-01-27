@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b89b3fe_69d57287",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T06:43:38Z",
+      "side": 1,
+      "message": "why the empty line?",
+      "revId": "723acd972890fd48510ee1384b98eb1f69b9a88e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
