@@ -670,6 +670,15 @@
 #if defined(__NR_pivot_root)
   #define SYS_pivot_root __NR_pivot_root
 #endif
+#if defined(__NR_pkey_alloc)
+  #define SYS_pkey_alloc __NR_pkey_alloc
+#endif
+#if defined(__NR_pkey_free)
+  #define SYS_pkey_free __NR_pkey_free
+#endif
+#if defined(__NR_pkey_mprotect)
+  #define SYS_pkey_mprotect __NR_pkey_mprotect
+#endif
 #if defined(__NR_poll)
   #define SYS_poll __NR_poll
 #endif
