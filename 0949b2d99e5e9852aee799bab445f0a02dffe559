@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e44f859_9a06c162",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "(missing copyright header in this file.)",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a0e8572_0f196a00",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "getprogname(3)?",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8c7adaf_b17f03d2",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "ah.\n\n+dimitry for how best to refer to other files.",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc5221f3_6fabfcd2",
+        "filename": "tests/libs/cfi_test_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "copyright header",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f89a302_2546872e",
+        "filename": "tests/libs/cfi_test_helper2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "copyright header.",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1579f73b_11d31b1c",
+        "filename": "tests/libs/cfi_test_helper2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "aren\u0027t assertions disabled?",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3301e2d9_641d1a13",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-27T23:04:38Z",
+      "side": 1,
+      "message": "2-space indent.",
+      "revId": "0949b2d99e5e9852aee799bab445f0a02dffe559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
