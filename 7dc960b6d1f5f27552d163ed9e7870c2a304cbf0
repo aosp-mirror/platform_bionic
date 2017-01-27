@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1a2faee_87db44fe",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-27T01:41:16Z",
+      "side": 1,
+      "message": "fix these as well?",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 327,
+        "endChar": 9
+      },
+      "revId": "7dc960b6d1f5f27552d163ed9e7870c2a304cbf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "993b7b9b_b2c42531",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-01-27T01:41:16Z",
+      "side": 1,
+      "message": "init does not need it anymore - maybe we can move it to cpp.\n\nnot necessarily in this CL",
+      "revId": "7dc960b6d1f5f27552d163ed9e7870c2a304cbf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
