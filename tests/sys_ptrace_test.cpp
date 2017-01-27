@@ -279,6 +279,7 @@ static void set_breakpoint(pid_t child) {
       << strerror(errno);
 #else
   (void)child;
+  (void)address;
 #endif
 }
 
