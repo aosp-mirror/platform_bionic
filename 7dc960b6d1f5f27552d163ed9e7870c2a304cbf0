@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "66566115_1f30e1a1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-28T00:17:55Z",
+      "side": 1,
+      "message": "i\u0027d rather just run it through clang-format in another patch (where there are no non-clang-format changes).\n\ni\u0027ll revert the whitespace changes in the meantime...",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 327,
+        "endChar": 9
+      },
+      "revId": "7dc960b6d1f5f27552d163ed9e7870c2a304cbf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "993b7b9b_b2c42531",
         "filename": "libc/include/sys/_system_properties.h",
         "patchSetId": 3
@@ -36,6 +59,23 @@
       "writtenOn": "2017-01-27T01:41:16Z",
       "side": 1,
       "message": "init does not need it anymore - maybe we can move it to cpp.\n\nnot necessarily in this CL",
+      "revId": "7dc960b6d1f5f27552d163ed9e7870c2a304cbf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e255d54f_6a4134a0",
+        "filename": "libc/include/sys/_system_properties.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-28T00:17:55Z",
+      "side": 1,
+      "message": "Done",
       "revId": "7dc960b6d1f5f27552d163ed9e7870c2a304cbf0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
