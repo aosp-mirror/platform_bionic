@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -59,6 +60,14 @@
 #include "private/bionic_sdk_version.h"
 #include "private/libc_logging.h"
 
+static constexpr int PROP_FILENAME_MAX = 1024;
+
+static constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;
+static constexpr uint32_t PROP_AREA_VERSION = 0xfc6ed0ab;
+
+static constexpr size_t PA_SIZE = 128 * 1024;
+
+#define SERIAL_DIRTY(serial) ((serial) & 1)
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
@@ -199,30 +208,14 @@ struct find_nth_cookie {
     }
 };
 
+// This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
+// It's also used in a libnativehelper test.
+prop_area* __system_property_area__ = nullptr;
+
 static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
-static bool compat_mode = false;
 static size_t pa_data_size;
 static size_t pa_size;
 static bool initialized = false;
-
-// NOTE: This isn't static because system_properties_compat.c
-// requires it.
-prop_area *__system_property_area__ = NULL;
-
-static int get_fd_from_env(void)
-{
-    // This environment variable consistes of two decimal integer
-    // values separated by a ",". The first value is a file descriptor
-    // and the second is the size of the system properties area. The
-    // size is currently unused.
-    char *env = getenv("ANDROID_PROPERTY_WORKSPACE");
-
-    if (!env) {
-        return -1;
-    }
-
-    return atoi(env);
-}
 
 static prop_area* map_prop_area_rw(const char* filename, const char* context,
                                    bool* fsetxattr_failed) {
@@ -267,7 +260,6 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
 
     pa_size = PA_SIZE;
     pa_data_size = pa_size - sizeof(prop_area);
-    compat_mode = false;
 
     void *const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (memory_area == MAP_FAILED) {
@@ -303,47 +295,20 @@ static prop_area* map_fd_ro(const int fd) {
     }
 
     prop_area* pa = reinterpret_cast<prop_area*>(map_result);
-    if ((pa->magic() != PROP_AREA_MAGIC) ||
-        (pa->version() != PROP_AREA_VERSION &&
-         pa->version() != PROP_AREA_VERSION_COMPAT)) {
+    if ((pa->magic() != PROP_AREA_MAGIC) || (pa->version() != PROP_AREA_VERSION)) {
         munmap(pa, pa_size);
         return nullptr;
-    }
-
-    if (pa->version() == PROP_AREA_VERSION_COMPAT) {
-        compat_mode = true;
     }
 
     return pa;
 }
 
-static prop_area* map_prop_area(const char* filename, bool is_legacy) {
+static prop_area* map_prop_area(const char* filename) {
     int fd = open(filename, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
-    bool close_fd = true;
-    if (fd == -1 && errno == ENOENT && is_legacy) {
-        /*
-         * For backwards compatibility, if the file doesn't
-         * exist, we use the environment to get the file descriptor.
-         * For security reasons, we only use this backup if the kernel
-         * returns ENOENT. We don't want to use the backup if the kernel
-         * returns other errors such as ENOMEM or ENFILE, since it
-         * might be possible for an external program to trigger this
-         * condition.
-         * Only do this for the legacy prop file, secured prop files
-         * do not have a backup
-         */
-        fd = get_fd_from_env();
-        close_fd = false;
-    }
-
-    if (fd < 0) {
-        return nullptr;
-    }
+    if (fd == -1) return nullptr;
 
     prop_area* map_result = map_fd_ro(fd);
-    if (close_fd) {
-        close(fd);
-    }
+    close(fd);
 
     return map_result;
 }
@@ -616,6 +581,12 @@ class PropertyServiceConnection {
   int last_error_;
 };
 
+struct prop_msg {
+    unsigned cmd;
+    char name[PROP_NAME_MAX];
+    char value[PROP_VALUE_MAX];
+};
+
 static int send_prop_msg(const prop_msg* msg) {
     PropertyServiceConnection connection;
     if (!connection.IsValid()) {
@@ -839,7 +810,7 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
     if (access_rw) {
         pa_ = map_prop_area_rw(filename, context_, fsetxattr_failed);
     } else {
-        pa_ = map_prop_area(filename, false);
+        pa_ = map_prop_area(filename);
     }
     lock_.unlock();
     return pa_;
@@ -899,7 +870,7 @@ static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
         __system_property_area__ =
             map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
     } else {
-        __system_property_area__ = map_prop_area(filename, false);
+        __system_property_area__ = map_prop_area(filename);
     }
     return __system_property_area__;
 }
@@ -1098,7 +1069,7 @@ int __system_properties_init()
             return -1;
         }
     } else {
-        __system_property_area__ = map_prop_area(property_filename, true);
+        __system_property_area__ = map_prop_area(property_filename);
         if (!__system_property_area__) {
             return -1;
         }
@@ -1157,10 +1128,6 @@ const prop_info *__system_property_find(const char *name)
         return nullptr;
     }
 
-    if (__predict_false(compat_mode)) {
-        return __system_property_find_compat(name);
-    }
-
     prop_area* pa = get_prop_area_for_name(name);
     if (!pa) {
         __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
@@ -1178,12 +1145,7 @@ static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s,
     return atomic_load_explicit(non_const_s, mo);
 }
 
-int __system_property_read(const prop_info *pi, char *name, char *value)
-{
-    if (__predict_false(compat_mode)) {
-        return __system_property_read_compat(pi, name, value);
-    }
-
+int __system_property_read(const prop_info *pi, char *name, char *value) {
     while (true) {
         uint32_t serial = __system_property_serial(pi); // acquire semantics
         size_t len = SERIAL_VALUE_LEN(serial);
@@ -1217,14 +1179,6 @@ int __system_property_read(const prop_info *pi, char *name, char *value)
 void __system_property_read_callback(const prop_info* pi,
                                      void (*callback)(void* cookie, const char* name, const char* value),
                                      void* cookie) {
-  // TODO (dimitry): do we need compat mode for this function?
-  if (__predict_false(compat_mode)) {
-    char value_buf[PROP_VALUE_MAX];
-    __system_property_read_compat(pi, nullptr, value_buf);
-    callback(cookie, pi->name, value_buf);
-    return;
-  }
-
   while (true) {
     uint32_t serial = __system_property_serial(pi); // acquire semantics
     size_t len = SERIAL_VALUE_LEN(serial);
@@ -1444,15 +1398,10 @@ const prop_info *__system_property_find_nth(unsigned n)
     return cookie.pi;
 }
 
-int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie),
-        void *cookie)
+int __system_property_foreach(void (*propfn)(const prop_info *pi, void *cookie), void *cookie)
 {
     if (!__system_property_area__) {
         return -1;
-    }
-
-    if (__predict_false(compat_mode)) {
-        return __system_property_foreach_compat(propfn, cookie);
     }
 
     list_foreach(contexts, [propfn, cookie](context_node* l) {
