@@ -12,7 +12,6 @@ libc_common_src_files = [
     "bionic/sigblock.c",
     "bionic/siginterrupt.c",
     "bionic/sigsetmask.c",
-    "bionic/system_properties_compat.c",
     "stdio/fread.c",
     "stdio/parsefloat.c",
     "stdio/refill.c",
