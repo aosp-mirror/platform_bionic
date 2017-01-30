@@ -33,6 +33,11 @@
 #include <sys/types.h>
 #include <linux/ipc.h>
 
+#if defined(__USE_GNU)
+#define __key key
+#define __seq seq
+#endif
+
 #define ipc_perm ipc64_perm
 
 __BEGIN_DECLS
