@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "983ea909_09a3cd64",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-01-31T06:03:42Z",
+      "side": 1,
+      "message": "specifically the mips64 build:\n\n  prebuilts/gcc/linux-x86/mips/mips64el-linux-android-4.9/mips64el-linux-android/bin/ld: warning: cannot find entry symbol xport-dynamic-symbol\u003d__cfi_check; defaulting to 0000000000000650",
+      "revId": "6fcd7a7d28aa6be42bbc99070c93d4d16b56ab57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
