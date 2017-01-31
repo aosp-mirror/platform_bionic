@@ -45,6 +45,23 @@
       "revId": "9160ed9bb76f64d1237393dcabf098f9c52f5b3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d833e690_fdb3f9a1",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-01-31T19:00:09Z",
+      "side": 1,
+      "message": "l-\u003epa()-\u003eforeach(propfn, cookie);\n\nWhy does clang format get this wrong?  It got it wrong when I had originally ran it too (though I had kept the original 4 space indent).",
+      "revId": "9160ed9bb76f64d1237393dcabf098f9c52f5b3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
