@@ -1203,52 +1203,6 @@ TEST(UNISTD_TEST, setdomainname) {
   }
 }
 
-class ExecTestHelper {
- public:
-  char** GetArgs() { return const_cast<char**>(args_.data()); }
-  char** GetEnv() { return const_cast<char**>(env_.data()); }
-
-  void SetArgs(const std::vector<const char*> args) { args_ = args; }
-  void SetEnv(const std::vector<const char*> env) { env_ = env; }
-
-  void Run(const std::function<void ()>& child_fn,
-           int expected_exit_status,
-           const char* expected_output) {
-      int fds[2];
-      ASSERT_NE(pipe2(fds, 0), -1);
-
-      pid_t pid = fork();
-      ASSERT_NE(pid, -1);
-
-      if (pid == 0) {
-          // Child.
-          close(fds[0]);
-          dup2(fds[1], STDOUT_FILENO);
-          dup2(fds[1], STDERR_FILENO);
-          if (fds[1] != STDOUT_FILENO && fds[1] != STDERR_FILENO) close(fds[1]);
-          child_fn();
-          FAIL();
-      }
-
-      // Parent.
-      close(fds[1]);
-      std::string output;
-      char buf[BUFSIZ];
-      ssize_t bytes_read;
-      while ((bytes_read = TEMP_FAILURE_RETRY(read(fds[0], buf, sizeof(buf)))) > 0) {
-          output.append(buf, bytes_read);
-      }
-      close(fds[0]);
-
-      AssertChildExited(pid, expected_exit_status);
-      ASSERT_EQ(expected_output, output);
-  }
-
- private:
-  std::vector<const char*> args_;
-  std::vector<const char*> env_;
-};
-
 #if defined(__GLIBC__)
 #define BIN_DIR "/bin/"
 #else
