@@ -204,7 +204,7 @@ struct find_nth_cookie {
   const uint32_t n;
   const prop_info* pi;
 
-  explicit find_nth_cookie(uint32_t n) : count(0), n(n), pi(NULL) {
+  explicit find_nth_cookie(uint32_t n) : count(0), n(n), pi(nullptr) {
   }
 };
 
@@ -261,7 +261,7 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
   pa_size = PA_SIZE;
   pa_data_size = pa_size - sizeof(prop_area);
 
-  void* const memory_area = mmap(NULL, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  void* const memory_area = mmap(nullptr, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (memory_area == MAP_FAILED) {
     close(fd);
     return nullptr;
@@ -288,7 +288,7 @@ static prop_area* map_fd_ro(const int fd) {
   pa_size = fd_stat.st_size;
   pa_data_size = pa_size - sizeof(prop_area);
 
-  void* const map_result = mmap(NULL, pa_size, PROT_READ, MAP_SHARED, fd, 0);
+  void* const map_result = mmap(nullptr, pa_size, PROT_READ, MAP_SHARED, fd, 0);
   if (map_result == MAP_FAILED) {
     return nullptr;
   }
@@ -315,7 +315,7 @@ static prop_area* map_prop_area(const char* filename) {
 void* prop_area::allocate_obj(const size_t size, uint_least32_t* const off) {
   const size_t aligned = BIONIC_ALIGN(size, sizeof(uint_least32_t));
   if (bytes_used_ + aligned > pa_data_size) {
-    return NULL;
+    return nullptr;
   }
 
   *off = bytes_used_;
@@ -326,30 +326,30 @@ void* prop_area::allocate_obj(const size_t size, uint_least32_t* const off) {
 prop_bt* prop_area::new_prop_bt(const char* name, uint32_t namelen, uint_least32_t* const off) {
   uint_least32_t new_offset;
   void* const p = allocate_obj(sizeof(prop_bt) + namelen + 1, &new_offset);
-  if (p != NULL) {
+  if (p != nullptr) {
     prop_bt* bt = new (p) prop_bt(name, namelen);
     *off = new_offset;
     return bt;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 prop_info* prop_area::new_prop_info(const char* name, uint32_t namelen, const char* value,
                                     uint32_t valuelen, uint_least32_t* const off) {
   uint_least32_t new_offset;
   void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
-  if (p != NULL) {
+  if (p != nullptr) {
     prop_info* info = new (p) prop_info(name, namelen, value, valuelen);
     *off = new_offset;
     return info;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void* prop_area::to_prop_obj(uint_least32_t off) {
-  if (off > pa_data_size) return NULL;
+  if (off > pa_data_size) return nullptr;
 
   return (data_ + off);
 }
@@ -382,7 +382,7 @@ prop_bt* prop_area::find_prop_bt(prop_bt* const bt, const char* name, uint32_t n
   prop_bt* current = bt;
   while (true) {
     if (!current) {
-      return NULL;
+      return nullptr;
     }
 
     const int ret = cmp_prop_name(name, namelen, current->name, current->namelen);
@@ -396,7 +396,7 @@ prop_bt* prop_area::find_prop_bt(prop_bt* const bt, const char* name, uint32_t n
         current = to_prop_bt(&current->left);
       } else {
         if (!alloc_if_needed) {
-          return NULL;
+          return nullptr;
         }
 
         uint_least32_t new_offset;
@@ -412,7 +412,7 @@ prop_bt* prop_area::find_prop_bt(prop_bt* const bt, const char* name, uint32_t n
         current = to_prop_bt(&current->right);
       } else {
         if (!alloc_if_needed) {
-          return NULL;
+          return nullptr;
         }
 
         uint_least32_t new_offset;
@@ -429,20 +429,20 @@ prop_bt* prop_area::find_prop_bt(prop_bt* const bt, const char* name, uint32_t n
 const prop_info* prop_area::find_property(prop_bt* const trie, const char* name, uint32_t namelen,
                                           const char* value, uint32_t valuelen,
                                           bool alloc_if_needed) {
-  if (!trie) return NULL;
+  if (!trie) return nullptr;
 
   const char* remaining_name = name;
   prop_bt* current = trie;
   while (true) {
     const char* sep = strchr(remaining_name, '.');
-    const bool want_subtree = (sep != NULL);
+    const bool want_subtree = (sep != nullptr);
     const uint32_t substr_size = (want_subtree) ? sep - remaining_name : strlen(remaining_name);
 
     if (!substr_size) {
-      return NULL;
+      return nullptr;
     }
 
-    prop_bt* root = NULL;
+    prop_bt* root = nullptr;
     uint_least32_t children_offset = atomic_load_explicit(&current->children, memory_order_relaxed);
     if (children_offset != 0) {
       root = to_prop_bt(&current->children);
@@ -455,12 +455,12 @@ const prop_info* prop_area::find_property(prop_bt* const trie, const char* name,
     }
 
     if (!root) {
-      return NULL;
+      return nullptr;
     }
 
     current = find_prop_bt(root, remaining_name, substr_size, alloc_if_needed);
     if (!current) {
-      return NULL;
+      return nullptr;
     }
 
     if (!want_subtree) break;
@@ -480,7 +480,7 @@ const prop_info* prop_area::find_property(prop_bt* const trie, const char* name,
 
     return new_info;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -890,8 +890,8 @@ static prop_area* get_prop_area_for_name(const char* name) {
 
 /* Read an entry from a spec file (e.g. file_contexts) */
 static inline int read_spec_entry(char** entry, char** ptr, int* len) {
-  *entry = NULL;
-  char* tmp_buf = NULL;
+  *entry = nullptr;
+  char* tmp_buf = nullptr;
 
   while (isspace(**ptr) && **ptr != '\0') (*ptr)++;
 
@@ -1333,7 +1333,7 @@ unsigned int __system_property_serial(const prop_info* pi) {
   uint32_t serial = load_const_atomic(&pi->serial, memory_order_acquire);
   while (SERIAL_DIRTY(serial)) {
     __futex_wait(const_cast<volatile void*>(reinterpret_cast<const void*>(&pi->serial)), serial,
-                 NULL);
+                 nullptr);
     serial = load_const_atomic(&pi->serial, memory_order_acquire);
   }
   return serial;
@@ -1348,7 +1348,7 @@ unsigned int __system_property_wait_any(unsigned int serial) {
   }
 
   do {
-    __futex_wait(pa->serial(), serial, NULL);
+    __futex_wait(pa->serial(), serial, nullptr);
     my_serial = atomic_load_explicit(pa->serial(), memory_order_acquire);
   } while (my_serial == serial);
 
@@ -1366,7 +1366,7 @@ const prop_info* __system_property_find_nth(unsigned n) {
 
   const int err = __system_property_foreach(find_nth_fn, &cookie);
   if (err < 0) {
-    return NULL;
+    return nullptr;
   }
 
   return cookie.pi;
