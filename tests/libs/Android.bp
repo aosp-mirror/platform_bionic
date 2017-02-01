@@ -494,20 +494,3 @@ cc_test_library {
         cfi: false,
     },
 }
-
-cc_test {
-    name: "cfi_test_helper",
-    host_supported: false,
-    defaults: ["bionic_testlib_defaults"],
-    srcs: ["cfi_test_helper.cpp"],
-    ldflags: ["-rdynamic"],
-}
-
-cc_test {
-    name: "cfi_test_helper2",
-    host_supported: false,
-    defaults: ["bionic_testlib_defaults"],
-    srcs: ["cfi_test_helper2.cpp"],
-    shared_libs: ["libcfi-test"],
-    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
-}
