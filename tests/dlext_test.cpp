@@ -621,12 +621,6 @@ TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
   std::string path = std::string("libc.so:libc++.so:libdl.so:libm.so:") + g_public_lib;
 
-  ASSERT_FALSE(android_init_namespaces(path.c_str(), nullptr));
-  ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
-               "a library with soname \"libnstest_public.so\" was not found in the "
-               "default namespace",
-               dlerror());
-
   ASSERT_FALSE(android_init_namespaces("", nullptr));
   ASSERT_STREQ("android_init_namespaces failed: error initializing public namespace: "
                "the list of public libraries is empty.", dlerror());
@@ -637,12 +631,15 @@ TEST(dlext, ns_smoke) {
 
   ASSERT_TRUE(android_init_namespaces(path.c_str(), nullptr)) << dlerror();
 
-  // Check that libraries added to public namespace are NODELETE
+  // Check that libraries added to public namespace are not NODELETE
   dlclose(handle_public);
-  handle_public = dlopen((get_testlib_root() + "/public_namespace_libs/" + g_public_lib).c_str(),
-                         RTLD_NOW | RTLD_NOLOAD);
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW | RTLD_NOLOAD);
 
-  ASSERT_TRUE(handle_public != nullptr) << dlerror();
+  ASSERT_TRUE(handle_public == nullptr);
+  ASSERT_EQ(std::string("dlopen failed: library \"") + lib_public_path +
+               "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
 
   android_namespace_t* ns1 =
           android_create_namespace("private", nullptr,
