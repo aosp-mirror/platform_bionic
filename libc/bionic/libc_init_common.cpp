@@ -114,10 +114,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
   __check_max_thread_id();
 #endif
 
-  // Get the main thread from TLS and add it to the thread list.
-  pthread_internal_t* main_thread = __get_thread();
-  __pthread_internal_add(main_thread);
-
   // Register atfork handlers to take and release the arc4random lock.
   pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
 
