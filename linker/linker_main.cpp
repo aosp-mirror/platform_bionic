@@ -321,7 +321,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
                      "\"%s\": error: Android 5.0 and later only support "
                      "position-independent executables (-fPIE).\n",
                      g_argv[0]);
-    exit(0);
+    exit(EXIT_FAILURE);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
