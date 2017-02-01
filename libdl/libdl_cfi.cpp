@@ -29,10 +29,12 @@ static struct {
   char padding[PAGE_SIZE - sizeof(v)];
 } shadow_base_storage alignas(PAGE_SIZE);
 
+// __cfi_init is called by the loader as soon as the shadow is mapped. This may happen very early
+// during startup, before libdl.so global constructors, and, on i386, even before __libc_sysinfo is
+// initialized. This function should not do any system calls.
 extern "C" uintptr_t* __cfi_init(uintptr_t shadow_base) {
   shadow_base_storage.v = shadow_base;
   static_assert(sizeof(shadow_base_storage) == PAGE_SIZE, "");
-  mprotect(&shadow_base_storage, PAGE_SIZE, PROT_READ);
   return &shadow_base_storage.v;
 }
 
