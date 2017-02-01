@@ -1228,10 +1228,7 @@ static bool load_library(android_namespace_t* ns,
   return load_library(ns, task, load_tasks, rtld_flags, realpath);
 }
 
-// Returns true if library was found and false in 2 cases
-// 1. (for default namespace only) The library was found but loaded under different
-//    target_sdk_version (*candidate != nullptr)
-// 2. The library was not found by soname (*candidate is nullptr)
+// Returns true if library was found and false otherwise
 static bool find_loaded_library_by_soname(android_namespace_t* ns,
                                          const char* name, soinfo** candidate) {
   *candidate = nullptr;
@@ -1241,30 +1238,11 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
     return false;
   }
 
-  uint32_t target_sdk_version = get_application_target_sdk_version();
-
   return !ns->soinfo_list().visit([&](soinfo* si) {
     const char* soname = si->get_soname();
     if (soname != nullptr && (strcmp(name, soname) == 0)) {
-      // If the library was opened under different target sdk version
-      // skip this step and try to reopen it. The exceptions are
-      // "libdl.so" and global group. There is no point in skipping
-      // them because relocation process is going to use them
-      // in any case.
-
-      // TODO (dimitry): remove this once linker stops imposing as libdl.so
-      bool is_libdl = (si == solist_get_head());
-
-      if (is_libdl || (si->get_dt_flags_1() & DF_1_GLOBAL) != 0 ||
-          !si->is_linked() || si->get_target_sdk_version() == target_sdk_version ||
-          ns != &g_default_namespace) {
-        *candidate = si;
-        return false;
-      } else if (*candidate == nullptr) {
-        // for the different sdk version in the default namespace
-        // remember the first library.
-        *candidate = si;
-      }
+      *candidate = si;
+      return false;
     }
 
     return true;
@@ -1301,19 +1279,7 @@ static bool find_library_internal(android_namespace_t* ns,
   TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
       task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags)) {
-    return true;
-  } else {
-    // In case we were unable to load the library but there
-    // is a candidate loaded under the same soname but different
-    // sdk level - return it anyways.
-    if (candidate != nullptr) {
-      task->set_soinfo(candidate);
-      return true;
-    }
-  }
-
-  return false;
+  return load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags);
 }
 
 static void soinfo_unload(soinfo* si);
