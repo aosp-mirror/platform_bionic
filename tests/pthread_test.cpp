@@ -235,11 +235,6 @@ static void AssertDetached(pthread_t t, bool is_detached) {
   ASSERT_EQ(is_detached, (detach_state == PTHREAD_CREATE_DETACHED));
 }
 
-static void MakeDeadThread(pthread_t& t) {
-  ASSERT_EQ(0, pthread_create(&t, NULL, IdFn, NULL));
-  ASSERT_EQ(0, pthread_join(t, NULL));
-}
-
 TEST(pthread, pthread_create) {
   void* expected_result = reinterpret_cast<void*>(123);
   // Can we create a thread?
@@ -443,16 +438,6 @@ TEST(pthread, pthread_setname_np__pthread_getname_np__other_PR_SET_DUMPABLE) {
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
-TEST(pthread, pthread_setname_np__pthread_getname_np__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  // Call pthread_getname_np and pthread_setname_np after the thread has already exited.
-  ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
-  char name[64];
-  ASSERT_EQ(ENOENT, pthread_getname_np(dead_thread, name, sizeof(name)));
-}
-
 TEST(pthread, pthread_kill__0) {
   // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.
   ASSERT_EQ(0, pthread_kill(pthread_self(), 0));
@@ -476,13 +461,6 @@ TEST(pthread, pthread_kill__in_signal_handler) {
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
 }
 
-TEST(pthread, pthread_detach__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
-}
-
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   SpinFunctionHelper spin_helper;
 
@@ -495,46 +473,6 @@ TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   ASSERT_EQ(0, clock_gettime(c, &ts));
   spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
-}
-
-TEST(pthread, pthread_getcpuclockid__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  clockid_t c;
-  ASSERT_EQ(ESRCH, pthread_getcpuclockid(dead_thread, &c));
-}
-
-TEST(pthread, pthread_getschedparam__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  int policy;
-  sched_param param;
-  ASSERT_EQ(ESRCH, pthread_getschedparam(dead_thread, &policy, &param));
-}
-
-TEST(pthread, pthread_setschedparam__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  int policy = 0;
-  sched_param param;
-  ASSERT_EQ(ESRCH, pthread_setschedparam(dead_thread, policy, &param));
-}
-
-TEST(pthread, pthread_join__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  ASSERT_EQ(ESRCH, pthread_join(dead_thread, NULL));
-}
-
-TEST(pthread, pthread_kill__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  ASSERT_EQ(ESRCH, pthread_kill(dead_thread, 0));
 }
 
 TEST(pthread, pthread_join__multijoin) {

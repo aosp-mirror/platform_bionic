@@ -34,10 +34,7 @@
 int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
   ErrnoRestorer errno_restorer;
 
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
-    return ESRCH;
-  }
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
 
   int rc = sched_setscheduler(thread->tid, policy, param);
   if (rc == -1) {
