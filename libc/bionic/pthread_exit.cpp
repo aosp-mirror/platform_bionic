@@ -104,9 +104,6 @@ void pthread_exit(void* return_value) {
     // because we'll have freed the memory before the thread actually exits.
     __set_tid_address(NULL);
 
-    // pthread_internal_t is freed below with stack, not here.
-    __pthread_internal_remove(thread);
-
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
       // That's not something we can do in C.
