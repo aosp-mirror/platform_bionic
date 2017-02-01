@@ -32,10 +32,7 @@
 #include "pthread_internal.h"
 
 int pthread_detach(pthread_t t) {
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
-    return ESRCH;
-  }
+  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
   while (old_state == THREAD_NOT_JOINED &&
