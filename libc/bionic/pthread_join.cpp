@@ -36,7 +36,10 @@ int pthread_join(pthread_t t, void** return_value) {
     return EDEADLK;
   }
 
-  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
+    return ESRCH;
+  }
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
   while ((old_state == THREAD_NOT_JOINED || old_state == THREAD_EXITED_NOT_JOINED) &&
@@ -62,6 +65,6 @@ int pthread_join(pthread_t t, void** return_value) {
     *return_value = thread->return_value;
   }
 
-  __free_thread(thread);
+  __pthread_internal_remove_and_free(thread);
   return 0;
 }
