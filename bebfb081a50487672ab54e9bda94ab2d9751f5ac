@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6dbc007_976f4c76",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-02T02:15:28Z",
+      "side": 1,
+      "message": "add todo? To remove this once cts is fixed... and link to a bug.",
+      "revId": "bebfb081a50487672ab54e9bda94ab2d9751f5ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
