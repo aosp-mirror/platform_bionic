@@ -31,7 +31,10 @@
 #include "pthread_internal.h"
 
 int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
-  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
+    return ESRCH;
+  }
 
   // The tid is stored in the top bits, but negated.
   clockid_t result = ~static_cast<clockid_t>(thread->tid) << 3;

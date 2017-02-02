@@ -37,6 +37,10 @@ extern "C" int tgkill(int tgid, int tid, int sig);
 int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
-  pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  if (thread == NULL) {
+    return ESRCH;
+  }
+
   return (tgkill(getpid(), thread->tid, sig) == -1) ? errno : 0;
 }
