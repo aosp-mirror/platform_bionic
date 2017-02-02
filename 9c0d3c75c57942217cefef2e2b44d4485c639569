@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f3ad85e_32d1d522",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1300,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-02T02:22:18Z",
+      "side": 1,
+      "message": "This call probably needs visited_namespaces check to avoid infinite loops.",
+      "revId": "9c0d3c75c57942217cefef2e2b44d4485c639569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
