@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7838611_4880e9c8",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-02T23:28:10Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 4
+      },
+      "revId": "d1d9e0ba4fa2f6634f3db1baaabc00d6dd4d2a99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54326daa_69c59270",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-02T23:28:10Z",
+      "side": 1,
+      "message": "missing?",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 17
+      },
+      "revId": "d1d9e0ba4fa2f6634f3db1baaabc00d6dd4d2a99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
