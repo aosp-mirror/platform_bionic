@@ -115,13 +115,6 @@ int __init_thread(pthread_internal_t* thread) {
   return error;
 }
 
-void __free_thread(pthread_internal_t* thread) {
-  if (thread->mmap_size != 0) {
-    // Free mapped space, including thread stack and pthread_internal_t.
-    munmap(thread->attr.stack_base, thread->mmap_size);
-  }
-}
-
 static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_size) {
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
@@ -272,7 +265,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // be unblocked, but we're about to unmap the memory the mutex is stored in, so this serves as a
     // reminder that you can't rewrite this function to use a ScopedPthreadMutexLocker.
     thread->startup_handshake_lock.unlock();
-    __free_thread(thread);
+    if (thread->mmap_size != 0) {
+      munmap(thread->attr.stack_base, thread->mmap_size);
+    }
     __libc_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s", strerror(errno));
     return clone_errno;
   }
@@ -282,13 +277,14 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     // Mark the thread detached and replace its start_routine with a no-op.
     // Letting the thread run is the easiest way to clean up its resources.
     atomic_store(&thread->join_state, THREAD_DETACHED);
+    __pthread_internal_add(thread);
     thread->start_routine = __do_nothing;
     thread->startup_handshake_lock.unlock();
     return init_errno;
   }
 
   // Publish the pthread_t and unlock the mutex to let the new thread start running.
-  *thread_out = reinterpret_cast<pthread_t>(thread);
+  *thread_out = __pthread_internal_add(thread);
   thread->startup_handshake_lock.unlock();
 
   return 0;
