@@ -16,6 +16,24 @@
       "revId": "bebfb081a50487672ab54e9bda94ab2d9751f5ac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb5c80e3_42df198e",
+        "filename": "tests/cfi_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-02-02T22:47:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6dbc007_976f4c76",
+      "revId": "bebfb081a50487672ab54e9bda94ab2d9751f5ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
