@@ -144,8 +144,6 @@ double	expm1(double);
 double	fma(double, double, double);
 double	hypot(double, double);
 int	ilogb(double) __attribute_const__;
-int(isinf)(double) __attribute_const__ __INTRODUCED_IN(21);
-int	(isnan)(double) __attribute_const__;
 double	lgamma(double);
 long long llrint(double);
 long long llround(double);
