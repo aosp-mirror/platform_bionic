@@ -44,6 +44,7 @@ LIBC_PLATFORM {
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;
-    android_init_namespaces;
+    android_init_anonymous_namespace;
     android_create_namespace;
+    android_link_namespaces;
 } LIBC_N;

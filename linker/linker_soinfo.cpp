@@ -634,6 +634,11 @@ void soinfo::add_secondary_namespace(android_namespace_t* secondary_ns) {
   secondary_namespaces_.push_back(secondary_ns);
 }
 
+android_namespace_list_t& soinfo::get_secondary_namespaces() {
+  CHECK(has_min_version(3));
+  return secondary_namespaces_;
+}
+
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
@@ -694,7 +699,6 @@ size_t soinfo::decrement_ref_count() {
 soinfo* soinfo::get_local_group_root() const {
   return local_group_root_;
 }
-
 
 void soinfo::set_mapped_by_caller(bool mapped_by_caller) {
   if (mapped_by_caller) {
