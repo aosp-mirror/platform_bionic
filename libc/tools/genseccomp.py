@@ -117,16 +117,17 @@ def construct_bpf(architecture, header_dir, output_path):
     # len(bpf) - i - 1, which is where we will put the kill statement, and
     # then the statement after that is the allow statement
     if "{fail}" in statement and "{allow}" in statement:
-      bpf[i] = statement.format(fail=str(len(bpf) - i - 1),
-                                allow=str(len(bpf) - i))
+      bpf[i] = statement.format(fail=str(len(bpf) - i),
+                                allow=str(len(bpf) - i - 1))
 
   # Add check that we aren't off the bottom of the syscalls
   bpf.insert(0,
              "BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, " + str(ranges[0].begin) +
              ", 0, " + str(len(bpf)) + "),")
 
-  # Add the error and allow calls at the end
-  bpf.append("BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRAP),")
+  # Add the allow calls at the end. If the syscall is not matched, we will
+  # continue. This allows the user to choose to match further syscalls, and
+  # also to choose the action when we want to block
   bpf.append("BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),")
 
   # And output policy
