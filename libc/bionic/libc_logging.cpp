@@ -597,7 +597,7 @@ static void __libc_fatal_va_list(const char* prefix, const char* format, va_list
 
   out_vformat(os, format, args);
 
-  // Log to stderr for the benefit of "adb shell" users.
+  // Log to stderr for the benefit of "adb shell" users and gtests.
   struct iovec iov[2] = {
     { msg, os.total },
     { const_cast<char*>("\n"), 1 },
