@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f519a3fc_5445b9a2",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-07T19:16:34Z",
+      "side": 1,
+      "message": "is there a less confusing choice than \"linked\"? if not, some comment explaining the sense in which these are \"linked\"?",
+      "revId": "3f9d1d28942c57829e79f312178aed2912c5fe3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
