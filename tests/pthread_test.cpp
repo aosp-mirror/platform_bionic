@@ -443,16 +443,6 @@ TEST(pthread, pthread_setname_np__pthread_getname_np__other_PR_SET_DUMPABLE) {
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
-TEST(pthread, pthread_setname_np__pthread_getname_np__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  // Call pthread_getname_np and pthread_setname_np after the thread has already exited.
-  ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
-  char name[64];
-  ASSERT_EQ(ENOENT, pthread_getname_np(dead_thread, name, sizeof(name)));
-}
-
 TEST(pthread, pthread_kill__0) {
   // Signal 0 just tests that the thread exists, so it's safe to call on ourselves.
   ASSERT_EQ(0, pthread_kill(pthread_self(), 0));
@@ -495,32 +485,6 @@ TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   ASSERT_EQ(0, clock_gettime(c, &ts));
   spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
-}
-
-TEST(pthread, pthread_getcpuclockid__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  clockid_t c;
-  ASSERT_EQ(ESRCH, pthread_getcpuclockid(dead_thread, &c));
-}
-
-TEST(pthread, pthread_getschedparam__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  int policy;
-  sched_param param;
-  ASSERT_EQ(ESRCH, pthread_getschedparam(dead_thread, &policy, &param));
-}
-
-TEST(pthread, pthread_setschedparam__no_such_thread) {
-  pthread_t dead_thread;
-  MakeDeadThread(dead_thread);
-
-  int policy = 0;
-  sched_param param;
-  ASSERT_EQ(ESRCH, pthread_setschedparam(dead_thread, policy, &param));
 }
 
 TEST(pthread, pthread_join__no_such_thread) {
