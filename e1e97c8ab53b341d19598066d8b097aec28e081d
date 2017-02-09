@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b45d4da0_29dc3bd8",
+        "filename": "libc/arch-arm/bionic/kuser_helper_on.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T22:20:56Z",
+      "side": 1,
+      "message": "s/abitag/kuser_helper_on/g too? since this isn\u0027t actually the abi tag, it\u0027s a copy \u0026 paste of it.",
+      "range": {
+        "startLine": 30,
+        "startChar": 7,
+        "endLine": 30,
+        "endChar": 13
+      },
+      "revId": "e1e97c8ab53b341d19598066d8b097aec28e081d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
