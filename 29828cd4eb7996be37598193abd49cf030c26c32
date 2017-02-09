@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e7d80bf_f80f323d",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "isn\u0027t this wrong? *sendto* has a const here, but not recvfrom.",
+      "range": {
+        "startLine": 222,
+        "startChar": 34,
+        "endLine": 222,
+        "endChar": 39
+      },
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d031025f_652e15a9",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "this should only be in \u003cunistd.h\u003e.",
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e239bb90_5b331971",
+        "filename": "libc/include/string.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "__bionic_zero_size_is_okay_t?",
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe661750_160529d9",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "(see earlier comment in implementation.)",
+      "range": {
+        "startLine": 324,
+        "startChar": 55,
+        "endLine": 324,
+        "endChar": 60
+      },
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d13a9d8_6ab093d7",
+        "filename": "libc/upstream-freebsd/lib/libc/stdlib/realpath.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "these are annoying, but it doesn\u0027t seem like we have a choice and the build will break if we ever clobber them, so...",
+      "range": {
+        "startLine": 51,
+        "startChar": 67,
+        "endLine": 51,
+        "endChar": 81
+      },
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e73e978_c68720ce",
+        "filename": "tests/fortify_compilation_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-09T23:11:00Z",
+      "side": 1,
+      "message": "that\u0027s even more unfortunate than \"call to unavailable function\"...",
+      "range": {
+        "startLine": 310,
+        "startChar": 21,
+        "endLine": 310,
+        "endChar": 34
+      },
+      "revId": "29828cd4eb7996be37598193abd49cf030c26c32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
