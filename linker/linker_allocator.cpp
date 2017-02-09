@@ -196,8 +196,6 @@ void LinkerSmallObjectAllocator::alloc_page() {
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, "linker_alloc_small_objects");
 
-  memset(map_ptr, 0, PAGE_SIZE);
-
   page_info* info = reinterpret_cast<page_info*>(map_ptr);
   memcpy(info->signature, kSignature, sizeof(kSignature));
   info->type = type_;
@@ -242,8 +240,6 @@ void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, allocated_size, "linker_alloc_lob");
-
-  memset(map_ptr, 0, allocated_size);
 
   page_info* info = reinterpret_cast<page_info*>(map_ptr);
   memcpy(info->signature, kSignature, sizeof(kSignature));
