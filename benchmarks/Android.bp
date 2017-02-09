@@ -25,6 +25,7 @@ cc_defaults {
         "-Wunused",
     ],
     srcs: [
+        "atomic_benchmark.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",
