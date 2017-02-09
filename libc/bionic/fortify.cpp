@@ -71,6 +71,8 @@
 
 #include "private/bionic_fortify.h"
 
+struct __bionic_zero_size_is_okay_t __bionic_zero_size_is_okay;
+
 //
 // For more details see:
 //   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html

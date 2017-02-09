@@ -37,7 +37,7 @@
 extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const kernel_sigset_t*, size_t);
 extern "C" int __pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*);
 
-int poll(pollfd* fds, nfds_t fd_count, int ms) {
+int poll(pollfd* fds, nfds_t fd_count, int ms) __overloadable {
   timespec ts;
   timespec* ts_ptr = NULL;
   if (ms >= 0) {
@@ -47,7 +47,7 @@ int poll(pollfd* fds, nfds_t fd_count, int ms) {
   return __ppoll(fds, fd_count, ts_ptr, NULL, 0);
 }
 
-int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) {
+int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) __overloadable {
   timespec mutable_ts;
   timespec* mutable_ts_ptr = NULL;
   if (ts != NULL) {
