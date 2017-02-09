@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "176ade8f_0d117e6c",
+        "filename": "linker/linker_memory.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-09T21:48:25Z",
+      "side": 1,
+      "message": "std::atomic maybe?",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "4b235faaaf22b9164f2cf73fc4cd19f4061ca545",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
