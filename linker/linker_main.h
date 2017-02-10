@@ -58,7 +58,8 @@ bool find_libraries(android_namespace_t* ns,
                     size_t ld_preloads_count,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
-                    bool add_as_children);
+                    bool add_as_children,
+                    bool search_linked_namespaces);
 
 void solist_add_soinfo(soinfo* si);
 bool solist_remove_soinfo(soinfo* si);
