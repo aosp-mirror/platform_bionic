@@ -448,6 +448,29 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library used to check init/fini call order
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_init_fini_order_root",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_root.cpp"],
+    shared_libs: ["libtest_init_fini_order_child"],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_child.cpp"],
+    shared_libs: ["libtest_init_fini_order_grand_child"],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_grand_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_grand_child.cpp"],
+}
+
+// -----------------------------------------------------------------------------
 // Library that depends on the library with constructor that calls dlopen() b/7941716
 // -----------------------------------------------------------------------------
 cc_test_library {
