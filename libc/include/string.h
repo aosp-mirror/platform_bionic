@@ -168,13 +168,13 @@ struct __bionic_zero_size_is_okay_t {};
 // trickery...
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-void* memcpy(void* _Nonnull __restrict const dst __pass_object_size,
+void* memcpy(void* _Nonnull __restrict const dst __pass_object_size0,
         const void* _Nonnull __restrict src, size_t copy_amount) __overloadable {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memmove(void* const _Nonnull dst __pass_object_size,
+void* memmove(void* const _Nonnull dst __pass_object_size0,
         const void* _Nonnull src, size_t len) __overloadable {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
@@ -209,7 +209,7 @@ char* strncat(char* const _Nonnull __restrict dst __pass_object_size,
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void* const _Nonnull s __pass_object_size, int c, size_t n)
+void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n)
         __overloadable {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
@@ -343,7 +343,7 @@ size_t strlen(const char* const _Nonnull s __pass_object_size)
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char* const _Nonnull s __pass_object_size_n(0))
+size_t strlen(const char* const _Nonnull s __pass_object_size0)
         __overloadable {
     size_t bos = __bos0(s);
 
@@ -358,7 +358,7 @@ size_t strlen(const char* const _Nonnull s __pass_object_size_n(0))
 
 #if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
 __BIONIC_FORTIFY_INLINE
-char* strchr(const char* const _Nonnull s __pass_object_size_n(0), int c)
+char* strchr(const char* const _Nonnull s __pass_object_size0, int c)
         __overloadable {
     size_t bos = __bos0(s);
 
@@ -395,7 +395,7 @@ void* memset(void* _Nonnull s, int c, size_t n,
         __error_if_overflows_dst(memset, s, n, "size");
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void* const _Nonnull s __pass_object_size, int c, size_t n,
+void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n,
              struct __bionic_zero_size_is_okay_t ok __attribute__((unused)))
         __overloadable {
     return __builtin___memset_chk(s, c, n, __bos0(s));
