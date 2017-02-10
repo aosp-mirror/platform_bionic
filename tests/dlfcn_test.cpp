@@ -1136,6 +1136,28 @@ TEST(dlfcn, dlopen_dlopen_from_ctor) {
 #endif
 }
 
+static std::string g_fini_call_order_str;
+
+static void register_fini_call(const char* s) {
+  g_fini_call_order_str += s;
+}
+
+TEST(dlfcn, init_fini_call_order) {
+  void* handle = dlopen("libtest_init_fini_order_root.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*get_init_order_number_t)();
+  get_init_order_number_t get_init_order_number =
+          reinterpret_cast<get_init_order_number_t>(dlsym(handle, "get_init_order_number"));
+  ASSERT_EQ(321, get_init_order_number());
+
+  typedef void (*set_fini_callback_t)(void (*f)(const char*));
+  set_fini_callback_t set_fini_callback =
+          reinterpret_cast<set_fini_callback_t>(dlsym(handle, "set_fini_callback"));
+  set_fini_callback(register_fini_call);
+  dlclose(handle);
+  ASSERT_EQ("(root)(child)(grandchild)", g_fini_call_order_str);
+}
+
 TEST(dlfcn, symbol_versioning_use_v1) {
   void* handle = dlopen("libtest_versioned_uselibv1.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
