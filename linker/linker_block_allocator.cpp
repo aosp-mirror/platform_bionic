@@ -113,8 +113,6 @@ void LinkerBlockAllocator::create_new_page() {
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, PAGE_SIZE, "linker_alloc");
 
-  memset(page, 0, PAGE_SIZE);
-
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
   first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerBlockAllocatorPage*))/block_size_;
