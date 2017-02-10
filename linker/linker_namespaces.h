@@ -33,6 +33,29 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
+
+struct android_namespace_t;
+
+struct android_namespace_link_t {
+ public:
+  android_namespace_link_t(android_namespace_t* linked_namespace,
+                           const std::unordered_set<std::string>& shared_lib_sonames)
+      : linked_namespace_(linked_namespace), shared_lib_sonames_(shared_lib_sonames)
+  {}
+
+  android_namespace_t* linked_namespace() const {
+    return linked_namespace_;
+  }
+
+  bool is_accessible(const char* soname) const {
+    return shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
+  }
+
+ private:
+  android_namespace_t* const linked_namespace_;
+  const std::unordered_set<std::string> shared_lib_sonames_;
+};
 
 struct android_namespace_t {
  public:
@@ -65,6 +88,14 @@ struct android_namespace_t {
     permitted_paths_ = permitted_paths;
   }
 
+  const std::vector<android_namespace_link_t>& linked_namespaces() const {
+    return linked_namespaces_;
+  }
+  void add_linked_namespace(android_namespace_t* linked_namespace,
+                            const std::unordered_set<std::string>& shared_lib_sonames) {
+    linked_namespaces_.push_back(android_namespace_link_t(linked_namespace, shared_lib_sonames));
+  }
+
   void add_soinfo(soinfo* si) {
     soinfo_list_.push_back(si);
   }
@@ -93,6 +124,11 @@ struct android_namespace_t {
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
   std::vector<std::string> permitted_paths_;
+  // Loader looks into linked namespace if it was not able
+  // to find a library in this namespace. Note that library
+  // lookup in linked namespaces are limited by the list of
+  // shared sonames.
+  std::vector<android_namespace_link_t> linked_namespaces_;
   soinfo_list_t soinfo_list_;
 
   DISALLOW_COPY_AND_ASSIGN(android_namespace_t);
