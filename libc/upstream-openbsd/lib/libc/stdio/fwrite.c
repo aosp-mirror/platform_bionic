@@ -45,7 +45,7 @@
  * Return the number of whole objects written.
  */
 size_t
-fwrite(const void *buf, size_t size, size_t count, FILE *fp)
+fwrite(const void *buf, size_t size, size_t count, FILE *fp) __overloadable
 {
 	size_t n;
 	struct __suio uio;

@@ -46,7 +46,7 @@ typedef	long word;		/* "word" used for optimal copy speed */
  * Copy a block of memory, handling overlap.
  */
 void *
-memmove(void *dst0, const void *src0, size_t length)
+memmove(void *dst0, const void *src0, size_t length) __overloadable
 {
 	char *dst = dst0;
 	const char *src = src0;

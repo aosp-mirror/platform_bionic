@@ -161,28 +161,51 @@ int stat(const char*, struct stat*);
 int stat64(const char*, struct stat64*) __INTRODUCED_IN(21);
 
 int mknod(const char*, mode_t, dev_t);
-mode_t umask(mode_t);
+mode_t umask(mode_t) __overloadable __RENAME_CLANG(umask);
 
 mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
-mode_t __umask_real(mode_t) __RENAME(umask);
-__errordecl(__umask_invalid_mode, "umask called with invalid mode");
 
 #if defined(__BIONIC_FORTIFY)
+#define __umask_invalid_mode_str "umask called with invalid mode"
+
+#if defined(__clang__)
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
+/*
+ * Abuse enable_if to make these be seen as overloads of umask, rather than
+ * definitions.
+ */
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+mode_t umask(mode_t mode) __overloadable
+        __enable_if(1, "")
+        __enable_if(mode & ~0777, __umask_invalid_mode_str)
+        __errorattr(__umask_invalid_mode_str);
+
+__BIONIC_FORTIFY_INLINE
+mode_t umask(mode_t mode) __enable_if(1, "") __overloadable {
+  return __umask_chk(mode);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+
+#else /* defined(__clang__) */
+__errordecl(__umask_invalid_mode, __umask_invalid_mode_str);
+extern mode_t __umask_real(mode_t) __RENAME(umask);
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR2__
 __BIONIC_FORTIFY_INLINE
 mode_t umask(mode_t mode) {
-#if !defined(__clang__)
   if (__builtin_constant_p(mode)) {
     if ((mode & 0777) != mode) {
       __umask_invalid_mode();
     }
     return __umask_real(mode);
   }
-#endif
   return __umask_chk(mode);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+
+#endif /* defined(__clang__) */
+#undef __umask_invalid_mode_str
 
 #endif /* defined(__BIONIC_FORTIFY) */
 

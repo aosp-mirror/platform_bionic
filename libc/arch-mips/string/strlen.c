@@ -32,7 +32,7 @@
 #include <string.h>
 
 size_t
-strlen(const char *str)
+strlen(const char *str) __overloadable
 {
 	const char *s;
 

@@ -181,12 +181,29 @@
 #define __wur __attribute__((__warn_unused_result__))
 
 #ifdef __clang__
-#define __errorattr(msg) __attribute__((unavailable(msg)))
+#  define __errorattr(msg) __attribute__((unavailable(msg)))
+#  define __warnattr(msg) __attribute__((deprecated(msg)))
+#  define __warnattr_real(msg) __attribute__((deprecated(msg)))
+#  define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
 #else
-#define __errorattr(msg) __attribute__((__error__(msg)))
+#  define __errorattr(msg) __attribute__((__error__(msg)))
+#  define __warnattr(msg) __attribute__((__warning__(msg)))
+#  define __warnattr_real __warnattr
+/* enable_if doesn't exist on other compilers; give an error if it's used. */
+
+/* errordecls really don't work as well in clang as they do in GCC. */
+#  define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 #endif
 
-#define __errordecl(name, msg) extern void name(void) __errorattr(msg)
+#if defined(ANDROID_STRICT)
+/*
+ * For things that are sketchy, but not necessarily an error. FIXME: Enable
+ * this.
+ */
+#  define __warnattr_strict(msg) /* __warnattr(msg) */
+#else
+#  define __warnattr_strict(msg)
+#endif
 
 /*
  * Some BSD source needs these macros.
@@ -242,21 +259,59 @@
  * See
  * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
  */
+
+#define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
+
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
 #  define __BIONIC_FORTIFY 1
 #  if _FORTIFY_SOURCE == 2
-#    define __bos(s) __builtin_object_size((s), 1)
+#    define __bos_level 1
 #  else
-#    define __bos(s) __builtin_object_size((s), 0)
+#    define __bos_level 0
 #  endif
-#  define __bos0(s) __builtin_object_size((s), 0)
+#  define __bosn(s, n) __builtin_object_size((s), (n))
+#  define __bos(s) __bosn((s), __bos_level)
+#  define __bos0(s) __bosn((s), 0)
 #  if defined(__clang__)
-#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
+#    define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
+/*
+ * FORTIFY'ed functions all have either enable_if or pass_object_size, which
+ * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
+ * therefore call the unFORTIFYed version of read.
+ */
+#    define __call_bypassing_fortify(fn) (&fn)
+/*
+ * Because clang-FORTIFY uses overloads, we can't mark functions as `extern
+ * inline` without making them available externally.
+ */
+#    define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline
+/* Error functions don't have bodies, so they can just be static. */
+#    define __BIONIC_ERROR_FUNCTION_VISIBILITY static
 #  else
+/*
+ * Where they can, GCC and clang-style FORTIFY share implementations.
+ * So, make these nops in GCC.
+ */
+#    define __pass_object_size_n(n)
+#    define __call_bypassing_fortify(fn) (fn)
+/* __BIONIC_FORTIFY_NONSTATIC_INLINE is pointless in GCC's FORTIFY */
 #    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
 #  endif
+#  define __pass_object_size __pass_object_size_n(__bos_level)
 #endif
-#define __BIONIC_FORTIFY_UNKNOWN_SIZE __BIONIC_CAST(static_cast, size_t, -1)
+
+/* Used to support clangisms with FORTIFY. This isn't in the FORTIFY section
+ * because these change how symbols are emitted. The linker must be kept happy.
+ */
+#ifdef __clang__
+#  define __overloadable __attribute__((overloadable))
+// Don't use __RENAME directly because on gcc, this could result in a number of
+// unnecessary renames.
+#  define __RENAME_CLANG(x) __RENAME(x)
+#else
+#  define __overloadable
+#  define __RENAME_CLANG(x)
+#endif
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
@@ -303,5 +358,15 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
  * build working.
  */
 #define __NDK_FPABI__
+#if defined(__clang__)
+/*
+ * Used when we need to check for overflow when multiplying x and y. This
+ * should only be used where __size_mul_overflow can not work, because it makes
+ * assumptions that __size_mul_overflow doesn't (x and y are positive, ...),
+ * *and* doesn't make use of compiler intrinsics, so it's probably slower than
+ * __size_mul_overflow.
+ */
+#define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
+#endif
 
 #endif /* !_SYS_CDEFS_H_ */

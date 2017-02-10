@@ -27,7 +27,7 @@
  * If retval >= dsize, truncation occurred.
  */
 size_t
-strlcat(char *dst, const char *src, size_t dsize)
+strlcat(char *dst, const char *src, size_t dsize) __overloadable
 {
 	const char *odst = dst;
 	const char *osrc = src;
