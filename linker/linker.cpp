@@ -186,7 +186,9 @@ static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_preload_names;
 
 static bool g_public_namespace_initialized;
-static soinfo_list_t g_public_namespace;
+
+// TODO (dimitry): Remove once interface between libnativeloader and the linker is updated
+static std::unordered_set<std::string> g_public_namespace_sonames;
 
 #if STATS
 struct linker_stats_t {
@@ -525,7 +527,8 @@ class LoadTask {
 
   static deleter_t deleter;
 
-  static LoadTask* create(const char* name, soinfo* needed_by,
+  static LoadTask* create(const char* name,
+                          soinfo* needed_by,
                           std::unordered_map<const soinfo*, ElfReader>* readers_map) {
     LoadTask* ptr = TypeBasedAllocator<LoadTask>::alloc();
     return new (ptr) LoadTask(name, needed_by, readers_map);
@@ -616,7 +619,8 @@ class LoadTask {
   }
 
  private:
-  LoadTask(const char* name, soinfo* needed_by,
+  LoadTask(const char* name,
+           soinfo* needed_by,
            std::unordered_map<const soinfo*, ElfReader>* readers_map)
     : name_(name), needed_by_(needed_by), si_(nullptr),
       fd_(-1), close_fd_(false), file_offset_(0), elf_readers_map_(readers_map),
@@ -1094,14 +1098,6 @@ static bool load_library(android_namespace_t* ns,
 
     soinfo* si = ns->soinfo_list().find_if(predicate);
 
-    // check public namespace
-    if (si == nullptr) {
-      si = g_public_namespace.find_if(predicate);
-      if (si != nullptr) {
-        ns->add_soinfo(si);
-      }
-    }
-
     if (si != nullptr) {
       TRACE("library \"%s\" is already loaded under different name/path \"%s\" - "
             "will return existing soinfo", name, si->get_realpath());
@@ -1117,6 +1113,9 @@ static bool load_library(android_namespace_t* ns,
 
   if (!ns->is_accessible(realpath)) {
     // TODO(dimitry): workaround for http://b/26394120 - the grey-list
+
+    // TODO(dimitry) before O release: add a namespace attribute to have this enabled
+    // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_greylisted(name, needed_by)) {
       // print warning only if needed by non-system library
@@ -1249,11 +1248,79 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
   });
 }
 
+static std::string resolve_soname(const std::string& name) {
+  // We assume that soname equals to basename here
+
+  // TODO(dimitry): consider having honest absolute-path -> soname resolution
+  // note that since we might end up refusing to load this library because
+  // it is not in shared libs list we need to get the soname without actually loading
+  // the library.
+  //
+  // On the other hand there are several places where we already assume that
+  // soname == basename in particular for any not-loaded library mentioned
+  // in DT_NEEDED list.
+  return basename(name.c_str());
+}
+
+
+static bool find_library_in_linked_namespace(const android_namespace_link_t& namespace_link,
+                                             LoadTask* task,
+                                             int rtld_flags) {
+  android_namespace_t* ns = namespace_link.linked_namespace();
+
+  soinfo* candidate;
+  bool loaded = false;
+
+  std::string soname;
+  if (find_loaded_library_by_soname(ns, task->get_name(), &candidate)) {
+    loaded = true;
+    soname = candidate->get_soname();
+  } else {
+    soname = resolve_soname(task->get_name());
+  }
+
+  if (!namespace_link.is_accessible(soname.c_str())) {
+    // the library is not accessible via namespace_link
+    return false;
+  }
+
+  // if library is already loaded - return it
+  if (loaded) {
+    task->set_soinfo(candidate);
+    return true;
+  }
+
+  // try to load the library - once namespace boundary is crossed
+  // we need to load a library within separate load_group
+  // to avoid using symbols from foreign namespace while.
+  //
+  // All symbols during relocation should be resolved within a
+  // namespace to preserve library locality to a namespace.
+  const char* name = task->get_name();
+  if (find_libraries(ns,
+                     task->get_needed_by(),
+                     &name,
+                     1,
+                     &candidate,
+                     nullptr /* ld_preloads */,
+                     0 /* ld_preload_count*/,
+                     rtld_flags,
+                     nullptr /* extinfo*/,
+                     false /* add_as_children */,
+                     false /* search_linked_namespaces */)) {
+    task->set_soinfo(candidate);
+    return true;
+  }
+
+  return false;
+}
+
 static bool find_library_internal(android_namespace_t* ns,
                                   LoadTask* task,
                                   ZipArchiveCache* zip_archive_cache,
                                   LoadTaskList* load_tasks,
-                                  int rtld_flags) {
+                                  int rtld_flags,
+                                  bool search_linked_namespaces) {
   soinfo* candidate;
 
   if (find_loaded_library_by_soname(ns, task->get_name(), &candidate)) {
@@ -1261,25 +1328,27 @@ static bool find_library_internal(android_namespace_t* ns,
     return true;
   }
 
-  if (ns != &g_default_namespace) {
-    // check public namespace
-    candidate = g_public_namespace.find_if([&](soinfo* si) {
-      return strcmp(task->get_name(), si->get_soname()) == 0;
-    });
-
-    if (candidate != nullptr) {
-      ns->add_soinfo(candidate);
-      task->set_soinfo(candidate);
-      return true;
-    }
-  }
-
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
   TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
       task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  return load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags);
+  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags)) {
+    return true;
+  }
+
+  if (search_linked_namespaces) {
+    // if a library was not found - look into linked namespaces
+    for (auto& linked_namespace : ns->linked_namespaces()) {
+      if (find_library_in_linked_namespace(linked_namespace,
+                                           task,
+                                           rtld_flags)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 static void soinfo_unload(soinfo* si);
@@ -1344,7 +1413,8 @@ bool find_libraries(android_namespace_t* ns,
                     size_t ld_preloads_count,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
-                    bool add_as_children) {
+                    bool add_as_children,
+                    bool search_linked_namespaces) {
   // Step 0: prepare.
   LoadTaskList load_tasks;
   std::unordered_map<const soinfo*, ElfReader> readers_map;
@@ -1396,7 +1466,12 @@ bool find_libraries(android_namespace_t* ns,
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
     task->set_dt_needed(is_dt_needed);
 
-    if(!find_library_internal(ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
+    if (!find_library_internal(ns,
+                               task,
+                               &zip_archive_cache,
+                               &load_tasks,
+                               rtld_flags,
+                               search_linked_namespaces || is_dt_needed)) {
       return false;
     }
 
@@ -1404,10 +1479,10 @@ bool find_libraries(android_namespace_t* ns,
 
     if (is_dt_needed) {
       needed_by->add_child(si);
-    }
 
-    if (si->is_linked()) {
-      si->increment_ref_count();
+      if (si->is_linked()) {
+        si->increment_ref_count();
+      }
     }
 
     // When ld_preloads is not null, the first
@@ -1471,10 +1546,6 @@ bool find_libraries(android_namespace_t* ns,
     return true;
   });
 
-  // We need to increment ref_count in case
-  // the root of the local group was not linked.
-  bool was_local_group_root_linked = local_group.front()->is_linked();
-
   bool linked = local_group.visit([&](soinfo* si) {
     if (!si->is_linked()) {
       if (!si->link_image(global_group, local_group, extinfo) ||
@@ -1496,10 +1567,6 @@ bool find_libraries(android_namespace_t* ns,
     failure_guard.disable();
   }
 
-  if (!was_local_group_root_linked) {
-    local_group.front()->increment_ref_count();
-  }
-
   return linked;
 }
 
@@ -1511,10 +1578,21 @@ static soinfo* find_library(android_namespace_t* ns,
 
   if (name == nullptr) {
     si = solist_get_somain();
-  } else if (!find_libraries(ns, needed_by, &name, 1, &si, nullptr, 0, rtld_flags,
-                             extinfo, /* add_as_children */ false)) {
+  } else if (!find_libraries(ns,
+                             needed_by,
+                             &name,
+                             1,
+                             &si,
+                             nullptr,
+                             0,
+                             rtld_flags,
+                             extinfo,
+                             false /* add_as_children */,
+                             true /* search_linked_namespaces */)) {
     return nullptr;
   }
+
+  si->increment_ref_count();
 
   return si;
 }
@@ -1934,28 +2012,11 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
     return false;
   }
 
-  std::vector<std::string> sonames = android::base::Split(public_ns_sonames, ":");
+  auto sonames = android::base::Split(public_ns_sonames, ":");
 
   ProtectedDataGuard guard;
 
-  auto failure_guard = make_scope_guard([&]() {
-    g_public_namespace.clear();
-  });
-
-  for (const auto& soname : sonames) {
-    soinfo* candidate = nullptr;
-
-    find_loaded_library_by_soname(&g_default_namespace, soname.c_str(), &candidate);
-
-    if (candidate == nullptr) {
-      DL_ERR("error initializing public namespace: a library with soname \"%s\""
-             " was not found in the default namespace", soname.c_str());
-      return false;
-    }
-
-    candidate->set_nodelete();
-    g_public_namespace.push_back(candidate);
-  }
+  g_public_namespace_sonames = std::unordered_set<std::string>(sonames.begin(), sonames.end());
 
   g_public_namespace_initialized = true;
 
@@ -1971,8 +2032,8 @@ bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_
     g_public_namespace_initialized = false;
     return false;
   }
+
   g_anonymous_namespace = anon_ns;
-  failure_guard.disable();
   return true;
 }
 
@@ -2027,6 +2088,10 @@ android_namespace_t* create_namespace(const void* caller_addr,
     // If not shared - copy only the shared group
     add_soinfos_to_namespace(get_shared_group(parent_namespace), ns);
   }
+
+  // link it to default namespace
+  // TODO (dimitry): replace this with user-supplied link once interface is updated
+  ns->add_linked_namespace(&g_default_namespace, g_public_namespace_sonames);
 
   return ns;
 }
