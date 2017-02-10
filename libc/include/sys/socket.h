@@ -317,25 +317,59 @@ __socketcall int shutdown(int, int);
 __socketcall int socket(int, int, int);
 __socketcall int socketpair(int, int, int, int*);
 
-ssize_t recv(int, void*, size_t, int);
+ssize_t recv(int, void*, size_t, int) __overloadable __RENAME_CLANG(recv);
 ssize_t send(int, const void*, size_t, int);
 
 __socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
-__socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*, socklen_t*);
+__socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*,
+        socklen_t*) __overloadable __RENAME_CLANG(recvfrom);
 
-__errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*, socklen_t*)
-  __INTRODUCED_IN(21);
-ssize_t __recvfrom_real(int, void*, size_t, int, struct sockaddr*, socklen_t*) __RENAME(recvfrom);
+ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*,
+        socklen_t*) __INTRODUCED_IN(21);
 
 #if defined(__BIONIC_FORTIFY)
 
+#if defined(__clang__)
 #if __ANDROID_API__ >= __ANDROID_API_N__
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+ssize_t recvfrom(int fd, void* const buf __pass_object_size, size_t len,
+                 int flags, struct sockaddr* src_addr, socklen_t* addr_len)
+        __overloadable
+        __enable_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                    __bos(buf) < len, "selected when the buffer is too small")
+        __errorattr("size is larger than the destination buffer");
+
 __BIONIC_FORTIFY_INLINE
-ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len) {
+ssize_t recvfrom(int fd, void* const buf __pass_object_size, size_t len,
+                 int flags, struct sockaddr* src_addr, socklen_t* addr_len)
+      __overloadable {
   size_t bos = __bos0(buf);
 
-#if !defined(__clang__)
+  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    return __call_bypassing_fortify(recvfrom)(fd, buf, len, flags, src_addr,
+              addr_len);
+  }
+
+  return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+
+__BIONIC_FORTIFY_INLINE
+ssize_t recv(int socket, void* const buf __pass_object_size, size_t len,
+             int flags) __overloadable {
+  return recvfrom(socket, buf, len, flags, NULL, 0);
+}
+
+#else /* defined(__clang__) */
+ssize_t __recvfrom_real(int, void*, size_t, int, struct sockaddr*, socklen_t*) __RENAME(recvfrom);
+__errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
+
+#if __ANDROID_API__ >= __ANDROID_API_N__
+__BIONIC_FORTIFY_INLINE
+ssize_t recvfrom(int fd, void* buf, size_t len, int flags,
+                 struct sockaddr* src_addr, socklen_t* addr_len) {
+  size_t bos = __bos0(buf);
+
   if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
     return __recvfrom_real(fd, buf, len, flags, src_addr, addr_len);
   }
@@ -347,7 +381,6 @@ ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_
   if (__builtin_constant_p(len) && (len > bos)) {
     __recvfrom_error();
   }
-#endif
 
   return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
 }
@@ -357,6 +390,8 @@ __BIONIC_FORTIFY_INLINE
 ssize_t recv(int socket, void* buf, size_t len, int flags) {
   return recvfrom(socket, buf, len, flags, NULL, 0);
 }
+
+#endif /* defined(__clang__) */
 
 #endif /* __BIONIC_FORTIFY */
 

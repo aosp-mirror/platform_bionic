@@ -38,7 +38,7 @@
  * are written at dst (at most n+1 bytes being appended).  Return dst.
  */
 char *
-strncat(char *dst, const char *src, size_t n)
+strncat(char *dst, const char *src, size_t n) __overloadable
 {
 	if (n != 0) {
 		char *d = dst;
