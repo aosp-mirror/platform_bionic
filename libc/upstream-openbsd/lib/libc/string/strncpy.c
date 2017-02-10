@@ -39,7 +39,7 @@
  * Return dst.
  */
 char *
-strncpy(char *dst, const char *src, size_t n)
+strncpy(char *dst, const char *src, size_t n) __overloadable
 {
 	if (n != 0) {
 		char *d = dst;

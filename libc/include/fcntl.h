@@ -67,9 +67,10 @@ __BEGIN_DECLS
 
 int creat(const char*, mode_t);
 int creat64(const char*, mode_t) __INTRODUCED_IN(21);
-int openat(int, const char*, int, ...);
+int openat(int, const char*, int, ...) __overloadable
+        __RENAME_CLANG(openat);
 int openat64(int, const char*, int, ...) __INTRODUCED_IN(21);
-int open(const char*, int, ...);
+int open(const char*, int, ...) __overloadable __RENAME_CLANG(open);
 int open64(const char*, int, ...) __INTRODUCED_IN(21);
 ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int) __INTRODUCED_IN(21);
 ssize_t tee(int, int, size_t, unsigned int) __INTRODUCED_IN(21);
@@ -94,15 +95,71 @@ int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN_FUTURE;
 #endif
 
 int __open_2(const char*, int) __INTRODUCED_IN(17);
-int __open_real(const char*, int, ...) __RENAME(open);
 int __openat_2(int, const char*, int) __INTRODUCED_IN(17);
+/*
+ * These are the easiest way to call the real open even in clang FORTIFY.
+ */
+int __open_real(const char*, int, ...) __RENAME(open);
 int __openat_real(int, const char*, int, ...) __RENAME(openat);
-__errordecl(__creat_missing_mode, "called with O_CREAT, but missing mode");
-__errordecl(__creat_too_many_args, "too many arguments");
+
 
 #if defined(__BIONIC_FORTIFY)
+#define __open_too_many_args_error "too many arguments"
+#define __open_too_few_args_error "called with O_CREAT, but missing mode"
+#if defined(__clang__)
 
-#if !defined(__clang__)
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
+        __errorattr(__open_too_many_args_error);
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int open(const char* pathname, int flags) __overloadable
+        __enable_if(flags & O_CREAT, __open_too_few_args_error)
+        __errorattr(__open_too_few_args_error);
+
+/*
+ * pass_object_size serves two purposes here, neither of which involve __bos: it
+ * disqualifies this function from having its address taken (so &open works),
+ * and it makes overload resolution prefer open(const char *, int) over
+ * open(const char *, int, ...).
+ */
+__BIONIC_FORTIFY_INLINE
+int open(const char* const __pass_object_size pathname,
+         int flags) __overloadable {
+    return __open_2(pathname, flags);
+}
+
+__BIONIC_FORTIFY_INLINE
+int open(const char* const __pass_object_size pathname, int flags, mode_t modes)
+        __overloadable {
+    return __open_real(pathname, flags, modes);
+}
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int openat(int dirfd, const char* pathname, int flags) __overloadable
+        __enable_if(flags & O_CREAT, __open_too_few_args_error)
+        __errorattr(__open_too_few_args_error);
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
+        __overloadable
+        __errorattr(__open_too_many_args_error);
+
+__BIONIC_FORTIFY_INLINE
+int openat(int dirfd, const char* const __pass_object_size pathname,
+           int flags) __overloadable {
+    return __openat_2(dirfd, pathname, flags);
+}
+
+__BIONIC_FORTIFY_INLINE
+int openat(int dirfd, const char* const __pass_object_size pathname, int flags,
+           mode_t modes) __overloadable {
+    return __openat_real(dirfd, pathname, flags, modes);
+}
+
+#else /* defined(__clang__) */
+__errordecl(__creat_missing_mode, __open_too_few_args_error);
+__errordecl(__creat_too_many_args, __open_too_many_args_error);
 
 __BIONIC_FORTIFY_INLINE
 int open(const char* pathname, int flags, ...) {
@@ -142,8 +199,10 @@ int openat(int dirfd, const char* pathname, int flags, ...) {
     return __openat_real(dirfd, pathname, flags, __builtin_va_arg_pack());
 }
 
-#endif /* !defined(__clang__) */
+#endif /* defined(__clang__) */
 
+#undef __open_too_many_args_error
+#undef __open_too_few_args_error
 #endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS

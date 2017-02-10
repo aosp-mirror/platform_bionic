@@ -43,7 +43,7 @@
  * Do not return NULL if n == 1.
  */
 char *
-fgets(char *buf, int n, FILE *fp)
+fgets(char *buf, int n, FILE *fp) __overloadable
 {
 	size_t len;
 	char *s;
