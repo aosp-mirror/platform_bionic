@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "929c69c2_b0a7ff15",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-10T04:55:02Z",
+      "side": 1,
+      "message": "this results in ref-count \u003d\u003d 2 on first load. test and fix for this are on the way",
+      "revId": "d637be89145c317b20994e23952f2b8ddadfcb54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
