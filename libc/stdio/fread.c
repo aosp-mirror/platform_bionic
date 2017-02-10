@@ -41,7 +41,7 @@
 #define MUL_NO_OVERFLOW	(1UL << (sizeof(size_t) * 4))
 
 size_t
-fread(void *buf, size_t size, size_t count, FILE *fp)
+fread(void *buf, size_t size, size_t count, FILE *fp) __overloadable
 {
 	/*
 	 * Extension:  Catch integer overflow.

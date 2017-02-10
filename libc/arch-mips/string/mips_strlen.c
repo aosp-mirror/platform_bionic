@@ -49,7 +49,7 @@
 #endif
 
 size_t
-strlen (const char *_a)
+strlen (const char *_a) __overloadable
 {
   int cnt = 0;
   unsigned x;

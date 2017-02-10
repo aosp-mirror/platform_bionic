@@ -121,13 +121,16 @@ int	 feof(FILE *);
 int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
-char	*fgets(char * __restrict, int, FILE * __restrict);
+char	*fgets(char * __restrict, int, FILE * __restrict) __overloadable
+  __RENAME_CLANG(fgets);
 int	 fprintf(FILE * __restrict , const char * __restrict _Nonnull, ...) __printflike(2, 3);
 int	 fputc(int, FILE *);
 int	 fputs(const char * __restrict, FILE * __restrict);
-size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict);
+size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict)
+      __overloadable __RENAME_CLANG(fread);
 int	 fscanf(FILE * __restrict, const char * __restrict _Nonnull, ...) __scanflike(2, 3);
-size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict);
+size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict)
+    __overloadable __RENAME_CLANG(fwrite);
 int	 getc(FILE *);
 int	 getchar(void);
 ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(18);
@@ -155,12 +158,17 @@ int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0)
     (defined(__cplusplus) && __cplusplus <= 201103L)
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
-int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0);
-char* tmpnam(char*) __attribute__((deprecated("tmpnam is unsafe, use mkstemp or tmpfile instead")));
+int sprintf(char* __restrict, const char* __restrict _Nonnull, ...)
+    __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf")
+    __overloadable __RENAME_CLANG(sprintf);
+int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list)
+    __overloadable __printflike(2, 0) __RENAME_CLANG(vsprintf)
+    __warnattr_strict("vsprintf is often misused; please use vsnprintf");
+char* tmpnam(char*)
+    __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 #define P_tmpdir "/tmp/" /* deprecated */
 char* tempnam(const char*, const char*)
-    __attribute__((deprecated("tempnam is unsafe, use mkstemp or tmpfile instead")));
+    __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 
 int rename(const char*, const char*);
 int renameat(int, const char*, int, const char*);
@@ -210,10 +218,12 @@ FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict
 FILE* tmpfile(void);
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* __restrict, size_t, const char* __restrict _Nonnull, ...) __printflike(3, 4);
+int snprintf(char* __restrict, size_t, const char* __restrict _Nonnull, ...)
+    __printflike(3, 4) __overloadable __RENAME_CLANG(snprintf);
 int vfscanf(FILE* __restrict, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
 int vscanf(const char* _Nonnull , __va_list) __scanflike(1, 0);
-int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_list) __printflike(3, 0);
+int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_list)
+    __printflike(3, 0) __overloadable __RENAME_CLANG(vsnprintf);
 int vsscanf(const char* __restrict _Nonnull, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
@@ -250,66 +260,182 @@ int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
 #endif /* __USE_BSD */
 
 char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
-char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
-__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
-__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
-
 size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
-  __INTRODUCED_IN(24);
-size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
-__errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
-__errordecl(__fread_overflow, "fread called with overflowing size * count");
-
+    __INTRODUCED_IN(24);
 size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
-  __INTRODUCED_IN(24);
-size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
-__errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
-__errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
+    __INTRODUCED_IN(24);
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
-__BIONIC_FORTIFY_INLINE
-__printflike(3, 0) int vsnprintf(char* dest, size_t size, const char* _Nonnull format, __va_list ap) {
+__BIONIC_FORTIFY_INLINE __printflike(3, 0)
+int vsnprintf(char *const __pass_object_size dest, size_t size,
+              const char *_Nonnull format, __va_list ap) __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
-__BIONIC_FORTIFY_INLINE
-__printflike(2, 0) int vsprintf(char* dest, const char* _Nonnull format, __va_list ap) {
+__BIONIC_FORTIFY_INLINE __printflike(2, 0)
+int vsprintf(char *const __pass_object_size dest, const char *_Nonnull format,
+             __va_list ap) __overloadable {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if defined(__clang__)
-  #if !defined(snprintf)
-    #define __wrap_snprintf(dest, size, ...) __builtin___snprintf_chk(dest, size, 0, __bos(dest), __VA_ARGS__)
-    #define snprintf(...) __wrap_snprintf(__VA_ARGS__)
-  #endif
-#else
-__BIONIC_FORTIFY_INLINE
-__printflike(3, 4) int snprintf(char* dest, size_t size, const char* _Nonnull format, ...) {
-    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, __builtin_va_arg_pack());
-}
-#endif
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+/*
+ * Simple case: `format` can't have format specifiers, so we can just compare
+ * its length to the length of `dest`
+ */
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int snprintf(char *__restrict dest, size_t size, const char *__restrict format)
+    __overloadable
+    __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                __bos(dest) < __builtin_strlen(format),
+                "format string will always overflow destination buffer")
+    __errorattr("format string will always overflow destination buffer");
 
-#if defined(__clang__)
-  #if !defined(sprintf)
-    #define __wrap_sprintf(dest, ...) __builtin___sprintf_chk(dest, 0, __bos(dest), __VA_ARGS__)
-    #define sprintf(...) __wrap_sprintf(__VA_ARGS__)
-  #endif
-#else
 __BIONIC_FORTIFY_INLINE
-__printflike(2, 3) int sprintf(char* dest, const char* _Nonnull format, ...) {
-    return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
+__printflike(3, 4)
+int snprintf(char *__restrict const __pass_object_size dest,
+             size_t size, const char *__restrict format, ...) __overloadable {
+    va_list va;
+    va_start(va, format);
+    int result = __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, va);
+    va_end(va);
+    return result;
 }
-#endif
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int sprintf(char *__restrict dest, const char *__restrict format) __overloadable
+    __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                __bos(dest) < __builtin_strlen(format),
+                "format string will always overflow destination buffer")
+    __errorattr("format string will always overflow destination buffer");
+
+__BIONIC_FORTIFY_INLINE
+__printflike(2, 3)
+int sprintf(char *__restrict const __pass_object_size dest,
+        const char *__restrict format, ...) __overloadable {
+    va_list va;
+    va_start(va, format);
+    int result = __builtin___vsprintf_chk(dest, 0, __bos(dest), format, va);
+    va_end(va);
+    return result;
+}
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
-size_t fread(void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+size_t fread(void *__restrict buf, size_t size, size_t count,
+             FILE *__restrict stream) __overloadable
+        __enable_if(__unsafe_check_mul_overflow(size, count), "size * count overflows")
+        __errorattr("size * count overflows");
+
+__BIONIC_FORTIFY_INLINE
+size_t fread(void *__restrict buf, size_t size, size_t count,
+             FILE *__restrict stream) __overloadable
+    __enable_if(!__unsafe_check_mul_overflow(size, count), "no overflow")
+    __enable_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                size * count > __bos(buf), "size * count is too large")
+    __errorattr("size * count is too large");
+
+__BIONIC_FORTIFY_INLINE
+size_t fread(void *__restrict const __pass_object_size buf, size_t size,
+             size_t count, FILE *__restrict stream) __overloadable {
     size_t bos = __bos0(buf);
 
-#if !defined(__clang__)
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __call_bypassing_fortify(fread)(buf, size, count, stream);
+    }
+
+    return __fread_chk(buf, size, count, stream, bos);
+}
+
+size_t fwrite(const void * __restrict buf, size_t size,
+              size_t count, FILE * __restrict stream) __overloadable
+    __enable_if(__unsafe_check_mul_overflow(size, count),
+                "size * count overflows")
+    __errorattr("size * count overflows");
+
+size_t fwrite(const void * __restrict buf, size_t size,
+              size_t count, FILE * __restrict stream) __overloadable
+    __enable_if(!__unsafe_check_mul_overflow(size, count), "no overflow")
+    __enable_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                size * count > __bos(buf), "size * count is too large")
+    __errorattr("size * count is too large");
+
+__BIONIC_FORTIFY_INLINE
+size_t fwrite(const void * __restrict const __pass_object_size buf, size_t size,
+              size_t count, FILE * __restrict stream) __overloadable {
+    size_t bos = __bos0(buf);
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __call_bypassing_fortify(fwrite)(buf, size, count, stream);
+    }
+
+    return __fwrite_chk(buf, size, count, stream, bos);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+char *fgets(char* __restrict dest, int size, FILE* stream) __overloadable
+    __enable_if(size < 0, "size is negative")
+    __errorattr("size is negative");
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+char *fgets(char* dest, int size, FILE* stream) __overloadable
+    __enable_if(size >= 0 && size > __bos(dest),
+                "size is larger than the destination buffer")
+    __errorattr("size is larger than the destination buffer");
+
+__BIONIC_FORTIFY_INLINE
+char *fgets(char* __restrict const __pass_object_size dest,
+        int size, FILE* stream) __overloadable {
+    size_t bos = __bos(dest);
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __call_bypassing_fortify(fgets)(dest, size, stream);
+    }
+
+    return __fgets_chk(dest, size, stream, bos);
+}
+
+#else /* defined(__clang__) */
+
+size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
+__errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
+__errordecl(__fread_overflow, "fread called with overflowing size * count");
+
+char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
+__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
+__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
+
+size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
+__errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
+__errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
+
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+__BIONIC_FORTIFY_INLINE __printflike(3, 4)
+int snprintf(char *__restrict dest, size_t size, const char* _Nonnull format, ...)
+{
+    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format,
+                                    __builtin_va_arg_pack());
+}
+
+__BIONIC_FORTIFY_INLINE __printflike(2, 3)
+int sprintf(char *__restrict dest, const char* _Nonnull format, ...) {
+    return __builtin___sprintf_chk(dest, 0, __bos(dest), format,
+                                   __builtin_va_arg_pack());
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+
+#if __ANDROID_API__ >= __ANDROID_API_N__
+__BIONIC_FORTIFY_INLINE
+size_t fread(void *__restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+    size_t bos = __bos0(buf);
+
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __fread_real(buf, size, count, stream);
     }
@@ -326,7 +452,6 @@ size_t fread(void * __restrict buf, size_t size, size_t count, FILE * __restrict
 
         return __fread_real(buf, size, count, stream);
     }
-#endif
 
     return __fread_chk(buf, size, count, stream, bos);
 }
@@ -335,7 +460,6 @@ __BIONIC_FORTIFY_INLINE
 size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
     size_t bos = __bos0(buf);
 
-#if !defined(__clang__)
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __fwrite_real(buf, size, count, stream);
     }
@@ -352,13 +476,10 @@ size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __r
 
         return __fwrite_real(buf, size, count, stream);
     }
-#endif
 
     return __fwrite_chk(buf, size, count, stream, bos);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-#if !defined(__clang__)
 
 __BIONIC_FORTIFY_INLINE
 char *fgets(char* dest, int size, FILE* stream) {
@@ -390,8 +511,7 @@ char *fgets(char* dest, int size, FILE* stream) {
     return __fgets_chk(dest, size, stream, bos);
 }
 
-#endif /* !defined(__clang__) */
-
+#endif /* defined(__clang__) */
 #endif /* defined(__BIONIC_FORTIFY) */
 
 #if defined(__clang__)
