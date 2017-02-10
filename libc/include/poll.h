@@ -38,27 +38,65 @@ __BEGIN_DECLS
 
 typedef unsigned int nfds_t;
 
-int poll(struct pollfd*, nfds_t, int);
-int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __INTRODUCED_IN(21);
+int poll(struct pollfd*, nfds_t, int) __overloadable __RENAME_CLANG(poll);
+int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*)
+        __overloadable __RENAME_CLANG(ppoll) __INTRODUCED_IN(21);
 
 int __poll_chk(struct pollfd*, nfds_t, int, size_t) __INTRODUCED_IN(23);
+int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*, size_t)
+  __INTRODUCED_IN(23);
+
+#if defined(__BIONIC_FORTIFY)
+#if __ANDROID_API__ >= __ANDROID_API_M__
+#if defined(__clang__)
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int poll(struct pollfd* fds, nfds_t fd_count, int timeout) __overloadable
+        __enable_if(__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                    __bos(fds) < sizeof(*fds) * fd_count,
+                    "selected when there aren't fd_count fds")
+        __errorattr("too many fds specified");
+
+__BIONIC_FORTIFY_INLINE
+int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count,
+        int timeout) __overloadable {
+  size_t bos_fds = __bos(fds);
+
+  if (bos_fds == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+      return __call_bypassing_fortify(poll)(fds, fd_count, timeout);
+  }
+
+  return __poll_chk(fds, fd_count, timeout, bos_fds);
+}
+
+__BIONIC_ERROR_FUNCTION_VISIBILITY
+int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout,
+          const sigset_t* mask)  __overloadable
+        __enable_if(__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                    __bos(fds) < sizeof(*fds) * fd_count,
+                    "selected when there aren't fd_count fds")
+        __errorattr("too many fds specified");
+
+__BIONIC_FORTIFY_INLINE
+int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count,
+          const struct timespec* timeout, const sigset_t* mask) __overloadable {
+  size_t bos_fds = __bos(fds);
+
+  if (bos_fds == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+      return __call_bypassing_fortify(ppoll)(fds, fd_count, timeout, mask);
+  }
+
+  return __ppoll_chk(fds, fd_count, timeout, mask, bos_fds);
+}
+#else /* defined(__clang__) */
 int __poll_real(struct pollfd*, nfds_t, int) __RENAME(poll);
 __errordecl(__poll_too_small_error, "poll: pollfd array smaller than fd count");
 
-int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*, size_t)
-  __INTRODUCED_IN(23);
 int __ppoll_real(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __RENAME(ppoll)
   __INTRODUCED_IN(21);
 __errordecl(__ppoll_too_small_error, "ppoll: pollfd array smaller than fd count");
 
-#if defined(__BIONIC_FORTIFY)
-
-#if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
 int poll(struct pollfd* fds, nfds_t fd_count, int timeout) {
-#if defined(__clang__)
-  return __poll_chk(fds, fd_count, timeout, __bos(fds));
-#else
   if (__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
     if (!__builtin_constant_p(fd_count)) {
       return __poll_chk(fds, fd_count, timeout, __bos(fds));
@@ -67,14 +105,11 @@ int poll(struct pollfd* fds, nfds_t fd_count, int timeout) {
     }
   }
   return __poll_real(fds, fd_count, timeout);
-#endif
 }
 
 __BIONIC_FORTIFY_INLINE
-int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout, const sigset_t* mask) {
-#if defined(__clang__)
-  return __ppoll_chk(fds, fd_count, timeout, mask, __bos(fds));
-#else
+int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout,
+          const sigset_t* mask) {
   if (__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
     if (!__builtin_constant_p(fd_count)) {
       return __ppoll_chk(fds, fd_count, timeout, mask, __bos(fds));
@@ -83,11 +118,11 @@ int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout, c
     }
   }
   return __ppoll_real(fds, fd_count, timeout, mask);
-#endif
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
-#endif
+#endif /* defined(__clang__) */
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+#endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS
 

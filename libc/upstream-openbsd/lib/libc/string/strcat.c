@@ -37,7 +37,7 @@ __warn_references(strcat,
 #endif
 
 char *
-strcat(char *s, const char *append)
+strcat(char *s, const char *append) __overloadable
 {
 	char *save = s;
 
