@@ -1661,12 +1661,14 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
         TRACE("%s@%p needs to unload %s@%p", si->get_realpath(), si,
             child->get_realpath(), child);
 
+        child->get_parents().remove(si);
+
         if (local_unload_list.contains(child)) {
           continue;
         } else if (child->is_linked() && child->get_local_group_root() != root) {
           external_unload_list.push_back(child);
-        } else {
-          unload_list.push_front(child);
+        } else if (child->get_parents().empty()) {
+          unload_list.push_back(child);
         }
       }
     } else {
