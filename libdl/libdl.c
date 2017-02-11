@@ -72,8 +72,8 @@ __attribute__((__weak__, visibility("default")))
 uint32_t __loader_android_get_application_target_sdk_version();
 
 __attribute__((__weak__, visibility("default")))
-bool __loader_android_init_namespaces(const char* public_ns_sonames,
-                                      const char* anon_ns_library_path);
+bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                               const char* library_search_path);
 
 __attribute__((__weak__, visibility("default")))
 struct android_namespace_t* __loader_android_create_namespace(
@@ -84,6 +84,12 @@ struct android_namespace_t* __loader_android_create_namespace(
                                 const char* permitted_when_isolated_path,
                                 struct android_namespace_t* parent,
                                 const void* caller_addr);
+
+__attribute__((__weak__, visibility("default")))
+bool __loader_android_link_namespaces(
+                                struct android_namespace_t* namespace_from,
+                                struct android_namespace_t* namespace_to,
+                                const char* shared_libs_sonames);
 
 __attribute__((__weak__, visibility("default")))
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
@@ -146,9 +152,9 @@ uint32_t android_get_application_target_sdk_version() {
   return __loader_android_get_application_target_sdk_version();
 }
 
-bool android_init_namespaces(const char* public_ns_sonames,
-                             const char* anon_ns_library_path) {
-  return __loader_android_init_namespaces(public_ns_sonames, anon_ns_library_path);
+bool android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                      const char* library_search_path) {
+  return __loader_android_init_anonymous_namespace(shared_libs_sonames, library_search_path);
 }
 
 struct android_namespace_t* android_create_namespace(const char* name,
@@ -165,6 +171,12 @@ struct android_namespace_t* android_create_namespace(const char* name,
                                            permitted_when_isolated_path,
                                            parent,
                                            caller_addr);
+}
+
+bool android_link_namespaces(struct android_namespace_t* namespace_from,
+                             struct android_namespace_t* namespace_to,
+                             const char* shared_libs_sonames) {
+  return __loader_android_link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
 }
 
 void android_dlwarning(void* obj, void (*f)(void*, const char*)) {

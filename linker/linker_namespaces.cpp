@@ -27,6 +27,7 @@
  */
 
 #include "linker_namespaces.h"
+#include "linker_soinfo.h"
 #include "linker_utils.h"
 
 #include <vector>
@@ -57,3 +58,23 @@ bool android_namespace_t::is_accessible(const std::string& file) {
   return false;
 }
 
+bool android_namespace_t::is_accessible(soinfo* s) {
+  std::vector<soinfo*> soinfos;
+  soinfos.push_back(s);
+  s->get_parents().for_each([&](soinfo* parent_si) {
+    soinfos.push_back(parent_si);
+  });
+
+  return std::find_if(soinfos.begin(), soinfos.end(), [this](soinfo* si) {
+    if (si->get_primary_namespace() == this) {
+      return true;
+    }
+
+    const android_namespace_list_t& secondary_namespaces = si->get_secondary_namespaces();
+    if (secondary_namespaces.find(this) != secondary_namespaces.end()) {
+      return true;
+    }
+
+    return false;
+  }) != soinfos.end();
+}
