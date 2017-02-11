@@ -263,6 +263,7 @@ struct soinfo {
   const std::vector<std::string>& get_dt_runpath() const;
   android_namespace_t* get_primary_namespace();
   void add_secondary_namespace(android_namespace_t* secondary_ns);
+  android_namespace_list_t& get_secondary_namespaces();
 
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;
