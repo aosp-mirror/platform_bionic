@@ -30,8 +30,6 @@
 #include "private/ScopedPthreadMutexLocker.h"
 #include "private/ThreadLocalBuffer.h"
 
-/* This file hijacks the symbols stubbed out in libdl.so. */
-
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static char* __bionic_set_dlerror(char* new_value) {
@@ -155,12 +153,12 @@ void __android_dlwarning(void* obj, void (*f)(void*, const char*)) {
   get_dlwarning(obj, f);
 }
 
-bool __android_init_namespaces(const char* public_ns_sonames,
-                             const char* anon_ns_library_path) {
+bool __android_init_anonymous_namespace(const char* shared_libs_sonames,
+                                         const char* library_search_path) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
-  bool success = init_namespaces(public_ns_sonames, anon_ns_library_path);
+  bool success = init_anonymous_namespace(shared_libs_sonames, library_search_path);
   if (!success) {
-    __bionic_format_dlerror("android_init_namespaces failed", linker_get_error_buffer());
+    __bionic_format_dlerror("android_init_anonymous_namespace failed", linker_get_error_buffer());
   }
 
   return success;
@@ -188,6 +186,20 @@ android_namespace_t* __android_create_namespace(const char* name,
   }
 
   return result;
+}
+
+bool __android_link_namespaces(android_namespace_t* namespace_from,
+                               android_namespace_t* namespace_to,
+                               const char* shared_libs_sonames) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+
+  bool success = link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
+
+  if (!success) {
+    __bionic_format_dlerror("android_link_namespaces failed", linker_get_error_buffer());
+  }
+
+  return success;
 }
 
 void __cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *CallerPc) {
@@ -226,15 +238,15 @@ static const char ANDROID_LIBDL_STRTAB[] =
   // 01234567890 1234567890123456789012345678901234567890123456789012 3456789012345678901234567890123456789
     "dlopen_ext\0__loader_android_set_application_target_sdk_version\0__loader_android_get_application_targ"
   // 3*
-  // 000000000011111 111112222222222333333333344444444 4455555555556666666666777777777788 8888888899999999 99
-  // 012345678901234 567890123456789012345678901234567 8901234567890123456789012345678901 2345678901234567 89
-    "et_sdk_version\0__loader_android_init_namespaces\0__loader_android_create_namespace\0__loader_dlvsym\0__"
+  // 000000000011111 111112222222222333333333344444444445555555 5556666666666777777777788888888889 999999999
+  // 012345678901234 567890123456789012345678901234567890123456 7890123456789012345678901234567890 123456789
+    "et_sdk_version\0__loader_android_init_anonymous_namespace\0__loader_android_create_namespace\0__loader_"
   // 4*
-  // 0000000000111111111122222 222223333333333444 4444444555555555566666666667777 77777788888888889999999999
-  // 0123456789012345678901234 567890123456789012 3456789012345678901234567890123 45678901234567890123456789
-    "loader_android_dlwarning\0__loader_cfi_fail\0"
+  // 0000000 000111111111122222222223333 333333444444444455 555555556666666666777777777788888 888889999999999
+  // 0123456 789012345678901234567890123 456789012345678901 234567890123456789012345678901234 567890123456789
+    "dlvsym\0__loader_android_dlwarning\0__loader_cfi_fail\0__loader_android_link_namespaces\0"
 #if defined(__arm__)
-  // 443
+  // 485
     "__loader_dl_unwind_find_exidx\0"
 #endif
     ;
@@ -256,13 +268,14 @@ static ElfW(Sym) g_libdl_symtab[] = {
   ELFW(SYM_INITIALIZER)(183, &__android_dlopen_ext, 1),
   ELFW(SYM_INITIALIZER)(211, &__android_set_application_target_sdk_version, 1),
   ELFW(SYM_INITIALIZER)(263, &__android_get_application_target_sdk_version, 1),
-  ELFW(SYM_INITIALIZER)(315, &__android_init_namespaces, 1),
-  ELFW(SYM_INITIALIZER)(348, &__android_create_namespace, 1),
-  ELFW(SYM_INITIALIZER)(382, &__dlvsym, 1),
-  ELFW(SYM_INITIALIZER)(398, &__android_dlwarning, 1),
-  ELFW(SYM_INITIALIZER)(425, &__cfi_fail, 1),
+  ELFW(SYM_INITIALIZER)(315, &__android_init_anonymous_namespace, 1),
+  ELFW(SYM_INITIALIZER)(357, &__android_create_namespace, 1),
+  ELFW(SYM_INITIALIZER)(391, &__dlvsym, 1),
+  ELFW(SYM_INITIALIZER)(407, &__android_dlwarning, 1),
+  ELFW(SYM_INITIALIZER)(434, &__cfi_fail, 1),
+  ELFW(SYM_INITIALIZER)(452, &__android_link_namespaces, 1),
 #if defined(__arm__)
-  ELFW(SYM_INITIALIZER)(443, &__dl_unwind_find_exidx, 1),
+  ELFW(SYM_INITIALIZER)(485, &__dl_unwind_find_exidx, 1),
 #endif
 };
 
@@ -279,9 +292,9 @@ static ElfW(Sym) g_libdl_symtab[] = {
 // Note that adding any new symbols here requires stubbing them out in libdl.
 static unsigned g_libdl_buckets[1] = { 1 };
 #if defined(__arm__)
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 0 };
 #else
-static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0 };
+static unsigned g_libdl_chains[] = { 0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 0 };
 #endif
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));

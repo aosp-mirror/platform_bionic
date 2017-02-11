@@ -25,10 +25,13 @@
 # 2. Check that public libraries loaded in different namespaces are shared
 #    between them.
 # 3. Check that namespace sticks on dlopen
+# 4. Check that having access to shared library (libnstest_public.so)
+#    does not expose symbols from dependent library (libnstest_public_internal.so)
 #
 # Dependency tree (visibility)
 # libnstest_root.so (this should be local to the namespace)
 # +-> libnstest_public.so
+#     +-> libnstest_public_internal.so
 # +-> libnstest_private.so
 #
 # libnstest_dlopened.so (library in private namespace dlopened from libnstest_root.so)
@@ -39,7 +42,13 @@ libnstest_root_relative_install_path := private_namespace_libs
 module := libnstest_root
 include $(LOCAL_PATH)/Android.build.testlib.target.mk
 
+libnstest_public_internal_src_files := namespaces_public_internal.cpp
+module := libnstest_public_internal
+libnstest_public_internal_relative_install_path := public_namespace_libs
+include $(LOCAL_PATH)/Android.build.testlib.target.mk
+
 libnstest_public_src_files := namespaces_public.cpp
+libnstest_public_shared_libraries := libnstest_public_internal
 module := libnstest_public
 libnstest_public_relative_install_path := public_namespace_libs
 include $(LOCAL_PATH)/Android.build.testlib.target.mk

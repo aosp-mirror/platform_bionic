@@ -118,6 +118,11 @@ struct android_namespace_t {
   // always returns true for not isolated namespace.
   bool is_accessible(const std::string& path);
 
+  // Returns true if si is accessible from this namespace. A soinfo
+  // is considered accessible when it belongs to this namespace
+  // or one of it's parent soinfos belongs to this namespace.
+  bool is_accessible(soinfo* si);
+
  private:
   const char* name_;
   bool is_isolated_;
