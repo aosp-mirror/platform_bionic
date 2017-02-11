@@ -448,13 +448,26 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
-// Library used to check init/fini call order
+// Libraries used to check init/fini call order
 // -----------------------------------------------------------------------------
 cc_test_library {
     name: "libtest_init_fini_order_root",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_check_init_fini_root.cpp"],
-    shared_libs: ["libtest_init_fini_order_child"],
+    shared_libs: [
+        "libtest_init_fini_order_child",
+        "libtest_init_fini_order_grand_child",
+    ],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_root2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_root.cpp"],
+    shared_libs: [
+        "libtest_init_fini_order_grand_child",
+        "libtest_init_fini_order_child",
+    ],
 }
 
 cc_test_library {
