@@ -136,6 +136,10 @@ class LinkedList {
     tail_ = nullptr;
   }
 
+  bool empty() {
+    return (head_ == nullptr);
+  }
+
   template<typename F>
   void for_each(F action) const {
     visit([&] (T* si) {
@@ -177,6 +181,12 @@ class LinkedList {
         e = e->next;
       }
     }
+  }
+
+  void remove(T* element) {
+    remove_if([&](T* e) {
+      return e == element;
+    });
   }
 
   template<typename F>
