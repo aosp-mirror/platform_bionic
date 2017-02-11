@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f1b388d_56af8104",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-11T05:49:05Z",
+      "side": 1,
+      "message": "uint32_t?",
+      "range": {
+        "startLine": 1169,
+        "startChar": 54,
+        "endLine": 1169,
+        "endChar": 62
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "555cf3d5_605b4ae9",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-11T05:49:05Z",
+      "side": 1,
+      "message": "also uint32_t?",
+      "range": {
+        "startLine": 1344,
+        "startChar": 40,
+        "endLine": 1344,
+        "endChar": 52
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "620ce37a_32c61372",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-11T05:49:05Z",
+      "side": 1,
+      "message": "I think this one is fine - it should work with new names, the only problem is the assumption that the value length is fixed, but I think the time to deprecate it is when this is replaced by __system_property_nget()",
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6be48204_1997f251",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-11T05:49:05Z",
+      "side": 1,
+      "message": "not only deprecated but will fail once app targets O",
+      "range": {
+        "startLine": 76,
+        "startChar": 3,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
