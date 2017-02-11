@@ -1142,8 +1142,9 @@ static void register_fini_call(const char* s) {
   g_fini_call_order_str += s;
 }
 
-TEST(dlfcn, init_fini_call_order) {
-  void* handle = dlopen("libtest_init_fini_order_root.so", RTLD_NOW);
+static void test_init_fini_call_order_for(const char* libname) {
+  g_fini_call_order_str.clear();
+  void* handle = dlopen(libname, RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   typedef int (*get_init_order_number_t)();
   get_init_order_number_t get_init_order_number =
@@ -1156,6 +1157,11 @@ TEST(dlfcn, init_fini_call_order) {
   set_fini_callback(register_fini_call);
   dlclose(handle);
   ASSERT_EQ("(root)(child)(grandchild)", g_fini_call_order_str);
+}
+
+TEST(dlfcn, init_fini_call_order) {
+  test_init_fini_call_order_for("libtest_init_fini_order_root.so");
+  test_init_fini_call_order_for("libtest_init_fini_order_root2.so");
 }
 
 TEST(dlfcn, symbol_versioning_use_v1) {
