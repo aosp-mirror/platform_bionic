@@ -69,6 +69,30 @@
       "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9f1d906_bd674e0c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T20:57:38Z",
+      "side": 1,
+      "message": "clang disagrees :-)\n\n  bionic/libc/bionic/system_properties.cpp:1359:18: error: const_cast from \u0027const atomic_uint_least32_t *\u0027 (aka \u0027const _Atomic(uint_least32_t) *\u0027) to \u0027volatile void *\u0027 is not allowed",
+      "parentUuid": "3ee0bc49_ccca7a06",
+      "range": {
+        "startLine": 1359,
+        "startChar": 44,
+        "endLine": 1359,
+        "endChar": 73
+      },
+      "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
