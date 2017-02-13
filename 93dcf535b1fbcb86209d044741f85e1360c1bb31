@@ -93,6 +93,30 @@
       "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f94a478_ecb679c6",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-13T21:16:25Z",
+      "side": 1,
+      "message": "Try const_cast\u003cAtomic(uint_least32_t)*\u003e?",
+      "parentUuid": "d9f1d906_bd674e0c",
+      "range": {
+        "startLine": 1359,
+        "startChar": 44,
+        "endLine": 1359,
+        "endChar": 73
+      },
+      "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
