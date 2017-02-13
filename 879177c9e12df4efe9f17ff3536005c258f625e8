@@ -46,6 +46,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6edd430e_b5a32be5",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-13T18:28:33Z",
+      "side": 1,
+      "message": "Thanks. So what about libartd.so, and all the other libraries used by libarttestd.so? Is that already compiled global?",
+      "parentUuid": "0d1bcc2f_276ed0df",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
