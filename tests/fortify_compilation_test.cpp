@@ -184,7 +184,7 @@ void test_recvfrom() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__recvfrom_error' declared with attribute error: recvfrom called with size bigger than buffer
-  // CLANG: error: call to unavailable function 'recvfrom': size is larger than the destination buffer
+  // CLANG: error: call to unavailable function 'recvfrom': recvfrom called with size bigger than buffer
   recvfrom(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), NULL);
 }
 
