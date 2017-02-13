@@ -22,6 +22,30 @@
       "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "755401ab_96c50a8e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T19:31:51Z",
+      "side": 1,
+      "message": "as i explained on the bug, i haven\u0027t seen an example that actually needs one.",
+      "parentUuid": "5e7bb4a3_ec1d3696",
+      "range": {
+        "startLine": 1356,
+        "startChar": 26,
+        "endLine": 1356,
+        "endChar": 31
+      },
+      "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
