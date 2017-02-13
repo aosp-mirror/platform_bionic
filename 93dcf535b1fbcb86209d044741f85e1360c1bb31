@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e7bb4a3_ec1d3696",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 1010465
+      },
+      "writtenOn": "2017-02-13T19:22:10Z",
+      "side": 1,
+      "message": "can we also have a version with timeout?",
+      "range": {
+        "startLine": 1356,
+        "startChar": 26,
+        "endLine": 1356,
+        "endChar": 31
+      },
+      "revId": "93dcf535b1fbcb86209d044741f85e1360c1bb31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
