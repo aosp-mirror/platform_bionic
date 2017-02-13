@@ -70,6 +70,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "114f29bf_61ba0479",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-13T18:40:13Z",
+      "side": 1,
+      "message": "libc.so is kind of special.. nobody wants to have second copy of it because it will lead to crash. Other libraries are not.\n\nI think in case of art-test longer term I would try to untie that test namespace from /system/lib.\n\nThis actually makes me think this might not have fixed everything. I will run all tests to check and see if this is the case.",
+      "parentUuid": "6edd430e_b5a32be5",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
