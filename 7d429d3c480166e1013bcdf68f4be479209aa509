@@ -22,6 +22,30 @@
       "revId": "7d429d3c480166e1013bcdf68f4be479209aa509",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c23afc8_0aba1f3f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1349,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-13T15:16:23Z",
+      "side": 1,
+      "message": "anonymous namespace comes to play only when loader is unable to identify callers namespace.",
+      "parentUuid": "e88f5080_66ba9f20",
+      "range": {
+        "startLine": 1340,
+        "startChar": 0,
+        "endLine": 1349,
+        "endChar": 3
+      },
+      "revId": "7d429d3c480166e1013bcdf68f4be479209aa509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
