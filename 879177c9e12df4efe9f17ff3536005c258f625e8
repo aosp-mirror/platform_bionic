@@ -22,6 +22,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d1bcc2f_276ed0df",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-13T18:22:33Z",
+      "side": 1,
+      "message": "global libraries are shared between all namespaces. This flags sets DF_1_GLOBAL bit for DT_FLAGS_1 field in dynamic section of libc.so.\n\nBefore we were looking into public libraries before trying to load library in \u0027this\u0027 namespace. With recent change it is no longer the case. For one public libraries are no longer a thing. They have been replaced by the list of shared libraries (shared between linked namespaces).",
+      "parentUuid": "b39e63a3_c75754bc",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
