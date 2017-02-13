@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b39e63a3_c75754bc",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-13T18:14:17Z",
+      "side": 1,
+      "message": "Not familiar with linker flags: what does that do the the output?\n\nAlso, why do you need that now but not before?",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
