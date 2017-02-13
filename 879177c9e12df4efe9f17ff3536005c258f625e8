@@ -94,6 +94,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "827d4171_8980477c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-13T18:53:29Z",
+      "side": 1,
+      "message": "\u003e libc.so is kind of special.. nobody wants to have second copy of it\n \u003e because it will lead to crash. Other libraries are not.\n\nBy chance or by design? What\u0027s the chance of having a new libc++ update that will lead to the same crashes.\n\n \u003e \n \u003e I think in case of art-test longer term I would try to untie that\n \u003e test namespace from /system/lib.\n \u003e \n \u003e This actually makes me think this might not have fixed everything.\n \u003e I will run all tests to check and see if this is the case.\n\nIf we\u0027re loading libartd.so twice, I\u0027m surprised you passed eg JniTest.",
+      "parentUuid": "114f29bf_61ba0479",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
