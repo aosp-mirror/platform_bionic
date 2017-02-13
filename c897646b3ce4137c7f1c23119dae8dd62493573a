@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3ef3fe77_a0bc9c78",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T19:16:25Z",
+      "side": 1,
+      "message": "all the existing API is `unsigned` rather than `uint32_t`, but i guess we may as well move that way...",
+      "parentUuid": "8f1b388d_56af8104",
+      "range": {
+        "startLine": 1169,
+        "startChar": 54,
+        "endLine": 1169,
+        "endChar": 62
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "555cf3d5_605b4ae9",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-11T05:49:05Z",
       "side": 1,
       "message": "also uint32_t?",
+      "range": {
+        "startLine": 1344,
+        "startChar": 40,
+        "endLine": 1344,
+        "endChar": 52
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b143bc04_25fabbd4",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T19:16:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "555cf3d5_605b4ae9",
       "range": {
         "startLine": 1344,
         "startChar": 40,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "25fa75cf_6d9ff1bf",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T19:16:25Z",
+      "side": 1,
+      "message": "no reason for people not to start moving off it already though. __system_property_read_callback already works even if we do change the value length limit.",
+      "parentUuid": "620ce37a_32c61372",
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6be48204_1997f251",
         "filename": "libc/include/sys/system_properties.h",
         "patchSetId": 1
@@ -76,6 +142,30 @@
       "writtenOn": "2017-02-11T05:49:05Z",
       "side": 1,
       "message": "not only deprecated but will fail once app targets O",
+      "range": {
+        "startLine": 76,
+        "startChar": 3,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "c897646b3ce4137c7f1c23119dae8dd62493573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f80c7ca9_7414eff2",
+        "filename": "libc/include/sys/system_properties.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-13T19:16:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6be48204_1997f251",
       "range": {
         "startLine": 76,
         "startChar": 3,
