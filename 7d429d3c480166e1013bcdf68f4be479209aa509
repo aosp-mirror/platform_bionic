@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e88f5080_66ba9f20",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1349,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-13T14:28:05Z",
+      "side": 1,
+      "message": "IIUC, this needs to happen *before* load_library, otherwise \"public\" libraries like libc.so will be loaded by the anonymous namespace.\n\nMaybe that\u0027s only if LD_LIBRARY_PATH contains the path of libc.so? The ART tests do that, and as a consequence this behavioral change broke them.",
+      "range": {
+        "startLine": 1340,
+        "startChar": 0,
+        "endLine": 1349,
+        "endChar": 3
+      },
+      "revId": "7d429d3c480166e1013bcdf68f4be479209aa509",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
