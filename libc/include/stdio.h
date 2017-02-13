@@ -341,7 +341,7 @@ size_t fread(void *__restrict buf, size_t size, size_t count,
     __errorattr("size * count is too large");
 
 __BIONIC_FORTIFY_INLINE
-size_t fread(void *__restrict const __pass_object_size buf, size_t size,
+size_t fread(void *__restrict const __pass_object_size0 buf, size_t size,
              size_t count, FILE *__restrict stream) __overloadable {
     size_t bos = __bos0(buf);
 
@@ -366,8 +366,9 @@ size_t fwrite(const void * __restrict buf, size_t size,
     __errorattr("size * count is too large");
 
 __BIONIC_FORTIFY_INLINE
-size_t fwrite(const void * __restrict const __pass_object_size buf, size_t size,
-              size_t count, FILE * __restrict stream) __overloadable {
+size_t fwrite(const void * __restrict const __pass_object_size0 buf,
+              size_t size, size_t count, FILE * __restrict stream)
+        __overloadable {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {

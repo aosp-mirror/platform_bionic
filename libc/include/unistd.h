@@ -322,7 +322,7 @@ ssize_t pread(int fd, void* buf, size_t count, off_t offset) __overloadable
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pread(int fd, void* const __pass_object_size buf, size_t count,
+ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count,
               off_t offset) __overloadable {
     size_t bos = __bos0(buf);
 
@@ -343,7 +343,7 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) __overloadable
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pread64(int fd, void* const __pass_object_size buf, size_t count,
+ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count,
                 off64_t offset) __overloadable {
     size_t bos = __bos0(buf);
 
@@ -368,7 +368,7 @@ ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset)
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite(int fd, const void* const __pass_object_size buf, size_t count,
+ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count,
                off_t offset) __overloadable {
     size_t bos = __bos0(buf);
 
@@ -391,8 +391,8 @@ ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset)
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite64(int fd, const void* const __pass_object_size buf, size_t count,
-                 off64_t offset) __overloadable {
+ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf,
+                 size_t count, off64_t offset) __overloadable {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -413,7 +413,7 @@ ssize_t read(int fd, void* buf, size_t count) __overloadable
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t read(int fd, void* const __pass_object_size buf, size_t count)
+ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
         __overloadable {
     size_t bos = __bos0(buf);
 
@@ -434,7 +434,7 @@ ssize_t write(int fd, const void* buf, size_t count) __overloadable
         __error_if_overflows_objectsize(count, __bos0(buf));
 
 __BIONIC_FORTIFY_INLINE
-ssize_t write(int fd, const void* const __pass_object_size buf, size_t count)
+ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
         __overloadable {
     size_t bos = __bos0(buf);
 

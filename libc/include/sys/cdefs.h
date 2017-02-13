@@ -298,6 +298,7 @@
 #    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
 #  endif
 #  define __pass_object_size __pass_object_size_n(__bos_level)
+#  define __pass_object_size0 __pass_object_size_n(0)
 #endif
 
 /* Used to support clangisms with FORTIFY. This isn't in the FORTIFY section
