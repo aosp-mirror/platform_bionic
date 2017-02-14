@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "257f064c_0b128538",
+        "filename": "libc/bionic/send.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-14T22:03:31Z",
+      "side": 1,
+      "message": ".clang-format :-)",
+      "parentUuid": "090e8acf_49299e98",
+      "revId": "ead64cee541a59debe3e5638e3f91c379335c320",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a7181bc_81e7e7c9",
         "filename": "libc/include/sys/socket.h",
         "patchSetId": 5
