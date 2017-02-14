@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69372bec_8075cda8",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-14T02:27:48Z",
+      "side": 1,
+      "message": "nit: tgkill instead?",
+      "range": {
+        "startLine": 551,
+        "startChar": 10,
+        "endLine": 551,
+        "endChar": 14
+      },
+      "revId": "11859d467c035081f8acafeaf0184b670cd41c48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
