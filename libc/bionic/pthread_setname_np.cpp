@@ -43,14 +43,8 @@
 #define MAX_TASK_COMM_LEN 16
 
 static int __open_task_comm_fd(pthread_t t, int flags) {
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == nullptr) {
-    errno = ENOENT;
-    return -1;
-  }
-
   char comm_name[64];
-  snprintf(comm_name, sizeof(comm_name), "/proc/self/task/%d/comm", thread->tid);
+  snprintf(comm_name, sizeof(comm_name), "/proc/self/task/%d/comm", pthread_gettid_np(t));
   return open(comm_name, O_CLOEXEC | flags);
 }
 

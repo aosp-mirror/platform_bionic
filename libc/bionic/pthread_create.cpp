@@ -41,7 +41,6 @@
 #include "private/bionic_tls.h"
 #include "private/libc_logging.h"
 #include "private/ErrnoRestorer.h"
-#include "private/ScopedPthreadMutexLocker.h"
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if defined(__i386__)
