@@ -90,20 +90,22 @@ TEST(properties, smoke) {
     ASSERT_TRUE(pi != nullptr);
 
     std::string expected_name = property_name;
-    __system_property_read_callback(pi, [](void* cookie, const char *name, const char *value) {
-      const std::string* expected_name = static_cast<const std::string*>(cookie);
-      ASSERT_EQ(*expected_name, name);
-      ASSERT_STREQ("value1-1", value);
+    __system_property_read_callback(pi,
+      [](void* cookie, const char* name, const char* value, unsigned /*serial*/) {
+        const std::string* expected_name = static_cast<const std::string*>(cookie);
+        ASSERT_EQ(*expected_name, name);
+        ASSERT_STREQ("value1-1", value);
     }, &expected_name);
 
     pi = __system_property_find(long_property_name.c_str());
     ASSERT_TRUE(pi != nullptr);
 
     expected_name = long_property_name;
-    __system_property_read_callback(pi, [](void* cookie, const char *name, const char *value) {
-      const std::string* expected_name = static_cast<const std::string*>(cookie);
-      ASSERT_EQ(*expected_name, name);
-      ASSERT_STREQ("value2", value);
+    __system_property_read_callback(pi,
+      [](void* cookie, const char* name, const char* value, unsigned /*serial*/) {
+        const std::string* expected_name = static_cast<const std::string*>(cookie);
+        ASSERT_EQ(*expected_name, name);
+        ASSERT_STREQ("value2", value);
     }, &expected_name);
 
     // Check that read() for long names still works but returns truncated version of the name
