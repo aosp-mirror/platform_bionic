@@ -31,13 +31,11 @@
 #include "pthread_internal.h"
 
 int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
-    return ESRCH;
-  }
+  pid_t tid = pthread_gettid_np(t);
+  if (tid == -1) return ESRCH;
 
   // The tid is stored in the top bits, but negated.
-  clockid_t result = ~static_cast<clockid_t>(thread->tid) << 3;
+  clockid_t result = ~static_cast<clockid_t>(tid) << 3;
   // Bits 0 and 1: clock type (0 = CPUCLOCK_PROF, 1 = CPUCLOCK_VIRT, 2 = CPUCLOCK_SCHED).
   result |= 2;
   // Bit 2: thread (set) or process (clear)?
