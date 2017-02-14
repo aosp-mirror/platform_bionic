@@ -166,6 +166,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "69c31f28_581fff59",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-14T15:30:11Z",
+      "side": 1,
+      "message": "Thanks, I\u0027ll file a bug to track progress.",
+      "parentUuid": "2d0973dd_6133cc13",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
