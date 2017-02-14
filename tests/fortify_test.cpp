@@ -623,6 +623,12 @@ TEST_F(DEATHTEST, recv_fortified) {
   ASSERT_FORTIFY(recv(0, buf, data_len, 0));
 }
 
+TEST_F(DEATHTEST, send_fortified) {
+  size_t data_len = atoi("11"); // suppress compiler optimizations
+  char buf[10] = {0};
+  ASSERT_FORTIFY(send(0, buf, data_len, 0));
+}
+
 TEST_F(DEATHTEST, FD_ISSET_fortified) {
 #if defined(__BIONIC__) // glibc catches this at compile-time.
   fd_set set;
