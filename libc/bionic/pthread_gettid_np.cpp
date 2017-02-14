@@ -29,5 +29,6 @@
 #include "pthread_internal.h"
 
 pid_t pthread_gettid_np(pthread_t t) {
-  return reinterpret_cast<pthread_internal_t*>(t)->tid;
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  return thread ? thread->tid : -1;
 }
