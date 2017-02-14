@@ -118,6 +118,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfaff449_c87eadb5",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2017-02-14T00:37:59Z",
+      "side": 1,
+      "message": "\u003e \u003e libc.so is kind of special.. nobody wants to have second copy of\n \u003e it\n \u003e \u003e because it will lead to crash. Other libraries are not.\n \u003e \n \u003e By chance or by design? What\u0027s the chance of having a new libc++\n \u003e update that will lead to the same crashes.\n \u003e \n \u003e \u003e\n \u003e \u003e I think in case of art-test longer term I would try to untie that\n \u003e \u003e test namespace from /system/lib.\n \u003e \u003e\n \u003e \u003e This actually makes me think this might not have fixed\n \u003e everything.\n \u003e \u003e I will run all tests to check and see if this is the case.\n \u003e \n \u003e If we\u0027re loading libartd.so twice, I\u0027m surprised you passed eg\n \u003e JniTest.\n\nJust checked, and we are indeed still failing tests that load libarttestd.so. 004-JniTest is fixed, but not eg 004-StackWalk, 004-UnsafeTest, etc.",
+      "parentUuid": "827d4171_8980477c",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
