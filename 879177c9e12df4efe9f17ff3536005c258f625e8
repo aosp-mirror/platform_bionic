@@ -142,6 +142,30 @@
       "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d0973dd_6133cc13",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1668,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-14T01:01:01Z",
+      "side": 1,
+      "message": "ok.. I will see what I can do about them.",
+      "parentUuid": "bfaff449_c87eadb5",
+      "range": {
+        "startLine": 1668,
+        "startChar": 0,
+        "endLine": 1668,
+        "endChar": 31
+      },
+      "revId": "879177c9e12df4efe9f17ff3536005c258f625e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
