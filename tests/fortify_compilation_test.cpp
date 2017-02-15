@@ -310,3 +310,22 @@ void test_memset_args_flipped() {
   // CLANG: 'memset' is deprecated: will set 0 bytes; maybe the arguments got flipped? (Add __bionic_zero_size_is_okay as a fourth argument to silence this.)
   memset(from, sizeof(from), 0);
 }
+
+void test_sendto() {
+  char buf[4] = {0};
+  sockaddr_in addr;
+
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__sendto_error' declared with attribute error: sendto called with size bigger than buffer
+  // CLANG: error: call to unavailable function 'sendto': sendto called with size bigger than buffer
+  sendto(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), sizeof(sockaddr_in));
+}
+
+void test_send() {
+  char buf[4] = {0};
+
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__sendto_error' declared with attribute error: sendto called with size bigger than buffer
+  // CLANG: error: call to unavailable function 'send': send called with size bigger than buffer
+  send(0, buf, 6, 0);
+}

@@ -224,6 +224,13 @@ ssize_t __recvfrom_chk(int socket, void* buf, size_t len, size_t buf_size,
   return recvfrom(socket, buf, len, flags, src_addr, addrlen);
 }
 
+ssize_t __sendto_chk(int socket, const void* buf, size_t len, size_t buflen,
+                     int flags, const struct sockaddr* dest_addr,
+                     socklen_t addrlen) {
+  __check_buffer_access("sendto", "read from", len, buflen);
+  return sendto(socket, buf, len, flags, dest_addr, addrlen);
+}
+
 // Runtime implementation of __builtin____stpcpy_chk (used directly by compiler, not in headers)..
 extern "C" char* __stpcpy_chk(char* dst, const char* src, size_t dst_len) {
   // TODO: optimize so we don't scan src twice.
