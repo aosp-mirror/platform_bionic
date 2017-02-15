@@ -108,6 +108,7 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 #define __open_too_few_args_error "called with O_CREAT, but missing mode"
 #if defined(__clang__)
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
         __errorattr(__open_too_many_args_error);
@@ -156,11 +157,13 @@ int openat(int dirfd, const char* const __pass_object_size pathname, int flags,
            mode_t modes) __overloadable {
     return __openat_real(dirfd, pathname, flags, modes);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #else /* defined(__clang__) */
 __errordecl(__creat_missing_mode, __open_too_few_args_error);
 __errordecl(__creat_too_many_args, __open_too_many_args_error);
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
@@ -198,6 +201,7 @@ int openat(int dirfd, const char* pathname, int flags, ...) {
 
     return __openat_real(dirfd, pathname, flags, __builtin_va_arg_pack());
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #endif /* defined(__clang__) */
 

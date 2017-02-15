@@ -98,7 +98,7 @@ char* strtok_r(char* __restrict, const char* _Nonnull __restrict, char** _Nonnul
 
 char* strerror(int);
 char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
-#if defined(__USE_GNU)
+#if defined(__USE_GNU) && __ANDROID_API__ >= 23
 char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
 int strerror_r(int, char*, size_t);
@@ -194,7 +194,6 @@ char* strcpy(char* _Nonnull __restrict const dst __pass_object_size,
         const char* _Nonnull __restrict src) __overloadable {
     return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 __BIONIC_FORTIFY_INLINE
 char* strcat(char* _Nonnull __restrict const dst __pass_object_size,
@@ -213,6 +212,7 @@ void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n)
         __overloadable {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 
 #if defined(__clang__)
@@ -287,9 +287,7 @@ char* stpncpy(char* __restrict const _Nonnull dst __pass_object_size,
 
     return __stpncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* __restrict const _Nonnull dst __pass_object_size,
         const char* __restrict const _Nonnull src __pass_object_size,
@@ -304,7 +302,9 @@ char* strncpy(char* __restrict const _Nonnull dst __pass_object_size,
 
     return __strncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* const _Nonnull __restrict dst __pass_object_size,
         const char *_Nonnull __restrict src, size_t size) __overloadable {
@@ -383,6 +383,7 @@ char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 /* In *many* cases, memset(foo, sizeof(foo), 0) is a mistake where the user has
  * flipped the size + value arguments. However, there may be cases (e.g. with
  * macros) where it's okay for the size to fold to zero. We should warn on this,
@@ -412,6 +413,7 @@ void* memset(void* _Nonnull s, int c, size_t n) __overloadable
         __warnattr_real("will set 0 bytes; maybe the arguments got flipped? "
                         "(Add __bionic_zero_size_is_okay as a fourth argument "
                         "to silence this.)");
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #undef __error_zero_size
 #undef __error_if_overflows_dst
