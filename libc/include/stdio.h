@@ -379,6 +379,7 @@ size_t fwrite(const void * __restrict const __pass_object_size0 buf,
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 char *fgets(char* __restrict dest, int size, FILE* stream) __overloadable
     __enable_if(size < 0, "size is negative")
@@ -401,6 +402,7 @@ char *fgets(char* __restrict const __pass_object_size dest,
 
     return __fgets_chk(dest, size, stream, bos);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #else /* defined(__clang__) */
 
@@ -482,6 +484,7 @@ size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __r
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 char *fgets(char* dest, int size, FILE* stream) {
     size_t bos = __bos(dest);
@@ -511,6 +514,7 @@ char *fgets(char* dest, int size, FILE* stream) {
 
     return __fgets_chk(dest, size, stream, bos);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #endif /* defined(__clang__) */
 #endif /* defined(__BIONIC_FORTIFY) */
