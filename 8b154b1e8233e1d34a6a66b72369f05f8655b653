@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5202e96d_31badbe2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-15T05:59:14Z",
+      "side": 1,
+      "message": "portable code already has to use template tricks to find out what strerror_r it\u0027s getting, so it\u0027s probably not much worse in practice.",
+      "revId": "8b154b1e8233e1d34a6a66b72369f05f8655b653",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
