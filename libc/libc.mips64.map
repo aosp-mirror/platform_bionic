@@ -1188,6 +1188,7 @@ LIBC_N { # introduced-arm64=24 introduced-mips=24 introduced-mips64=24 introduce
 
 LIBC_O {
   global:
+    __sendto_chk; # future
     __system_property_read_callback; # future
     __system_property_wait; # future
     catclose; # future

@@ -28,6 +28,6 @@
 
 #include <sys/socket.h>
 
-ssize_t send(int socket, const void* buf, size_t len, int flags) {
+ssize_t send(int socket, const void* buf, size_t len, int flags) __overloadable {
   return sendto(socket, buf, len, flags, NULL, 0);
 }
