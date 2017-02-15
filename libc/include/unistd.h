@@ -403,6 +403,7 @@ ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf,
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 ssize_t read(int fd, void* buf, size_t count) __overloadable
         __error_if_overflows_ssizet(count);
@@ -423,7 +424,9 @@ ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
 
     return __read_chk(fd, buf, count, bos);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 ssize_t write(int fd, const void* buf, size_t count) __overloadable
         __error_if_overflows_ssizet(count);
@@ -444,7 +447,9 @@ ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
 
     return __write_chk(fd, buf, count, bos);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
+#if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 ssize_t readlink(const char* path, char* buf, size_t size) __overloadable
         __error_if_overflows_ssizet(size);
@@ -465,7 +470,6 @@ ssize_t readlink(const char* path, char* const __pass_object_size buf,
 
     return __readlink_chk(path, buf, size, bos);
 }
-
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size)
@@ -490,6 +494,7 @@ ssize_t readlinkat(int dirfd, const char* path,
 
     return __readlinkat_chk(dirfd, path, buf, size, bos);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
 #undef __enable_if_no_overflow_ssizet
 #undef __error_if_overflows_objectsize
