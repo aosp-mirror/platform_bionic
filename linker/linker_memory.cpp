@@ -29,22 +29,51 @@
 #include "linker_allocator.h"
 
 #include <stdlib.h>
+#include <sys/cdefs.h>
+#include <unistd.h>
+
+#include "private/libc_logging.h"
 
 static LinkerMemoryAllocator g_linker_allocator;
+static pid_t fallback_tid = 0;
+
+// Used by libdebuggerd_handler to switch allocators during a crash dump, in
+// case the linker heap is corrupted. Do not use this function.
+extern "C" void __linker_use_fallback_allocator() {
+  if (fallback_tid != 0) {
+    __libc_format_log(ANDROID_LOG_ERROR, "libc",
+                      "attempted to set fallback allocator multiple times");
+    return;
+  }
+
+  fallback_tid = gettid();
+}
+
+static LinkerMemoryAllocator& get_fallback_allocator() {
+  static LinkerMemoryAllocator fallback_allocator;
+  return fallback_allocator;
+}
+
+static LinkerMemoryAllocator& get_allocator() {
+  if (__predict_false(fallback_tid) && __predict_false(gettid() == fallback_tid)) {
+    return get_fallback_allocator();
+  }
+  return g_linker_allocator;
+}
 
 void* malloc(size_t byte_count) {
-  return g_linker_allocator.alloc(byte_count);
+  return get_allocator().alloc(byte_count);
 }
 
 void* calloc(size_t item_count, size_t item_size) {
-  return g_linker_allocator.alloc(item_count*item_size);
+  return get_allocator().alloc(item_count*item_size);
 }
 
 void* realloc(void* p, size_t byte_count) {
-  return g_linker_allocator.realloc(p, byte_count);
+  return get_allocator().realloc(p, byte_count);
 }
 
 void free(void* ptr) {
-  g_linker_allocator.free(ptr);
+  get_allocator().free(ptr);
 }
 
