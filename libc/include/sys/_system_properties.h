@@ -30,7 +30,6 @@
 #define _INCLUDE_SYS__SYSTEM_PROPERTIES_H
 
 #include <sys/cdefs.h>
-#include <stdbool.h>
 #include <stdint.h>
 
 #ifndef _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
@@ -121,25 +120,6 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 ** Returns the serial number on success, -1 on error.
 */
 uint32_t __system_property_serial(const prop_info* pi);
-
-/*
- * Waits for the specific system property identified by `pi` to be updated
- * past `old_serial`. Waits no longer than `relative_timeout`, or forever
- * if `relaive_timeout` is null.
- *
- * If `pi` is null, waits for the global serial number instead.
- *
- * If you don't know the current serial, use 0.
- *
- * Returns true and updates `*new_serial_ptr` on success, or false if the call
- * timed out.
- */
-struct timespec;
-bool __system_property_wait(const prop_info* pi,
-                            uint32_t old_serial,
-                            uint32_t* new_serial_ptr,
-                            const struct timespec* relative_timeout)
-    __INTRODUCED_IN_FUTURE;
 
 /* Initialize the system properties area in read only mode.
  * Should be done by all processes that need to read system
