@@ -117,9 +117,17 @@ cc_binary {
         "libutils",
         "libbase",
         "libz",
+
+        "libdebuggerd_handler_core",
+        "libdebuggerd_handler_fallback",
+        "libdebuggerd",
+        "libbacktrace",
+        "libunwind",
+        "liblzma",
+        "libcutils",
+
         "liblog",
         "libc++_static",
-        "libdebuggerd_handler",
 
         // Important: The liblinker_malloc should be the last library in the list
         // to overwrite any other malloc implementations by other static libraries.
