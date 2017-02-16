@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b84311cb_b1137756",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-02-16T04:15:39Z",
+      "side": 1,
+      "message": "filegroups allow this to some extent now, but it looks like you aren\u0027t using module-local paths in the current soong code anyways",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "0289dcb64d4fc9d06abc6ef051da6f0f3e9c5c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40f3523b_2948c721",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2015,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-02-16T04:15:39Z",
+      "side": 1,
+      "message": "update this?",
+      "range": {
+        "startLine": 2012,
+        "startChar": 0,
+        "endLine": 2015,
+        "endChar": 34
+      },
+      "revId": "0289dcb64d4fc9d06abc6ef051da6f0f3e9c5c7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
