@@ -422,6 +422,13 @@ int __libc_format_buffer(char* buffer, size_t buffer_size, const char* format, .
   return os.total;
 }
 
+int __libc_format_buffer_va_list(char* buffer, size_t buffer_size, const char* format,
+                                 va_list args) {
+  BufferOutputStream os(buffer, buffer_size);
+  out_vformat(os, format, args);
+  return os.total;
+}
+
 int __libc_format_fd(int fd, const char* format, ...) {
   FdOutputStream os(fd);
   va_list args;
