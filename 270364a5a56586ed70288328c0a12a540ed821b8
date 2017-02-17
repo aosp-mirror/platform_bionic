@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "63724227_230fcb36",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-17T01:30:49Z",
+      "side": 1,
+      "message": "nope - If we want to open it for vendors we probably should include it to NDK. I will revert this change.",
+      "parentUuid": "53770172_9510c02f",
+      "revId": "270364a5a56586ed70288328c0a12a540ed821b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84b8da7d_e4888834",
         "filename": "libc/libc.map.txt",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-17T01:12:02Z",
       "side": 1,
       "message": "i\u0027m actually just uploading changes that remove the last platform caller of this. so we can actually *remove* it from the platform if we want... (or ndk_cruft it?)",
+      "revId": "270364a5a56586ed70288328c0a12a540ed821b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8e1f30a_3d73f161",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-17T01:30:49Z",
+      "side": 1,
+      "message": "we can just remove it",
+      "parentUuid": "84b8da7d_e4888834",
       "revId": "270364a5a56586ed70288328c0a12a540ed821b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
