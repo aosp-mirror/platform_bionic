@@ -110,7 +110,7 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
 
   // Historically we'd return null, but
   if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
-    __libc_fatal("attempt to use invalid pthread_t");
+    __libc_fatal("invalid pthread_t %p passed to libc", thread);
   }
   return nullptr;
 }
