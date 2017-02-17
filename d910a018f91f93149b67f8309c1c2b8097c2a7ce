@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "922ed4d1_8ef93858",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1010465
+      },
+      "writtenOn": "2017-02-17T01:41:46Z",
+      "side": 1,
+      "message": "-1 for uint32_t sounds strange. Is serial always not -1?",
+      "range": {
+        "startLine": 1363,
+        "startChar": 6,
+        "endLine": 1363,
+        "endChar": 15
+      },
+      "revId": "d910a018f91f93149b67f8309c1c2b8097c2a7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
