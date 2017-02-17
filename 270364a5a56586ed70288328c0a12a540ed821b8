@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53770172_9510c02f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-17T01:12:02Z",
+      "side": 1,
+      "message": "is \"platform\" still intended to be accessible to vendor code? (i considered moving __system_property_wait here but it\u0027s used in libbase.)",
+      "revId": "270364a5a56586ed70288328c0a12a540ed821b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84b8da7d_e4888834",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1572,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-17T01:12:02Z",
+      "side": 1,
+      "message": "i\u0027m actually just uploading changes that remove the last platform caller of this. so we can actually *remove* it from the platform if we want... (or ndk_cruft it?)",
+      "revId": "270364a5a56586ed70288328c0a12a540ed821b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
