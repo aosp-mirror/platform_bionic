@@ -347,18 +347,6 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
 }
 #endif
 
-/*
- * TODO(danalbert): Remove this once we've moved entirely off prebuilts/ndk.
- *
- * The NDK used to have a __NDK_FPABI__ that was defined to empty for most cases
- * but `__attribute__((pcs("aapcs")))` for the now defunct armeabi-v7a-hard ABI.
- *
- * During the transition from prebuilts/ndk to ndk_headers, we'll have some
- * headers that still use __NDK_FPABI__ while the libc headers have stopped
- * defining it. In the interim, just provide an empty definition to keep the
- * build working.
- */
-#define __NDK_FPABI__
 #if defined(__clang__)
 /*
  * Used when we need to check for overflow when multiplying x and y. This
