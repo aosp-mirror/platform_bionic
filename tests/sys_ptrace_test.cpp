@@ -17,13 +17,20 @@
 #include <sys/ptrace.h>
 
 #include <elf.h>
+#include <fcntl.h>
 #include <sched.h>
 #include <sys/prctl.h>
+#include <sys/ptrace.h>
 #include <sys/uio.h>
 #include <sys/user.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <gtest/gtest.h>
+
+#include <android-base/unique_fd.h>
+
+using android::base::unique_fd;
 
 // Host libc does not define this.
 #ifndef TRAP_HWBKPT
@@ -312,4 +319,95 @@ TEST(sys_ptrace, hardware_breakpoint) {
   siginfo_t siginfo;
   ASSERT_EQ(0, ptrace(PTRACE_GETSIGINFO, child, nullptr, &siginfo)) << strerror(errno);
   ASSERT_EQ(TRAP_HWBKPT, siginfo.si_code);
+}
+
+class PtraceResumptionTest : public ::testing::Test {
+ public:
+  pid_t worker = -1;
+  PtraceResumptionTest() {
+  }
+
+  ~PtraceResumptionTest() {
+  }
+
+  void AssertDeath(int signo);
+  void Start(std::function<void()> f) {
+    unique_fd worker_pipe_read, worker_pipe_write;
+    int pipefd[2];
+    ASSERT_EQ(0, pipe2(pipefd, O_CLOEXEC));
+    worker_pipe_read.reset(pipefd[0]);
+    worker_pipe_write.reset(pipefd[1]);
+
+    worker = fork();
+    ASSERT_NE(-1, worker);
+    if (worker == 0) {
+      char buf;
+      worker_pipe_write.reset();
+      TEMP_FAILURE_RETRY(read(worker_pipe_read.get(), &buf, sizeof(buf)));
+      exit(0);
+    }
+
+    pid_t tracer = fork();
+    ASSERT_NE(-1, tracer);
+    if (tracer == 0) {
+      f();
+      if (HasFatalFailure()) {
+        exit(1);
+      }
+      exit(0);
+    }
+
+    int result;
+    pid_t rc = waitpid(tracer, &result, 0);
+    ASSERT_EQ(tracer, rc);
+    EXPECT_TRUE(WIFEXITED(result) || WIFSIGNALED(result));
+    if (WIFEXITED(result)) {
+      if (WEXITSTATUS(result) != 0) {
+        FAIL() << "tracer failed";
+      }
+    }
+
+    rc = waitpid(worker, &result, WNOHANG);
+    ASSERT_EQ(0, rc);
+
+    worker_pipe_write.reset();
+
+    rc = waitpid(worker, &result, 0);
+    ASSERT_EQ(worker, rc);
+    EXPECT_TRUE(WIFEXITED(result));
+    EXPECT_EQ(WEXITSTATUS(result), 0);
+  }
+};
+
+static void wait_for_ptrace_stop(pid_t pid) {
+  while (true) {
+    int status;
+    pid_t rc = TEMP_FAILURE_RETRY(waitpid(pid, &status, __WALL));
+    if (rc != pid) {
+      abort();
+    }
+    if (WIFSTOPPED(status)) {
+      return;
+    }
+  }
+}
+
+TEST_F(PtraceResumptionTest, seize) {
+  Start([this]() { ASSERT_EQ(0, ptrace(PTRACE_SEIZE, worker, 0, 0)) << strerror(errno); });
+}
+
+TEST_F(PtraceResumptionTest, seize_interrupt) {
+  Start([this]() {
+    ASSERT_EQ(0, ptrace(PTRACE_SEIZE, worker, 0, 0)) << strerror(errno);
+    ASSERT_EQ(0, ptrace(PTRACE_INTERRUPT, worker, 0, 0)) << strerror(errno);
+  });
+}
+
+TEST_F(PtraceResumptionTest, seize_interrupt_cont) {
+  Start([this]() {
+    ASSERT_EQ(0, ptrace(PTRACE_SEIZE, worker, 0, 0)) << strerror(errno);
+    ASSERT_EQ(0, ptrace(PTRACE_INTERRUPT, worker, 0, 0)) << strerror(errno);
+    wait_for_ptrace_stop(worker);
+    ASSERT_EQ(0, ptrace(PTRACE_CONT, worker, 0, 0)) << strerror(errno);
+  });
 }
