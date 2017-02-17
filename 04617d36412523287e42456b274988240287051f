@@ -52,6 +52,24 @@
       "revId": "04617d36412523287e42456b274988240287051f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f28cfc3_50eed15d",
+        "filename": "linker/linker_logger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-17T22:52:49Z",
+      "side": 1,
+      "message": "for example?\n\n(and include it in the code comment.)",
+      "parentUuid": "956bff1c_ecd7c7b1",
+      "revId": "04617d36412523287e42456b274988240287051f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
