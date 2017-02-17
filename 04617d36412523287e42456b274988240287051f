@@ -16,6 +16,24 @@
       "revId": "04617d36412523287e42456b274988240287051f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "956bff1c_ecd7c7b1",
+        "filename": "linker/linker_logger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-17T22:51:57Z",
+      "side": 1,
+      "message": "when application start a service...",
+      "parentUuid": "9a31d4b7_cdd3eeb6",
+      "revId": "04617d36412523287e42456b274988240287051f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
