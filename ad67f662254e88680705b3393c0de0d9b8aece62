@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ed5f44_b532bb5d",
+        "filename": "libc/SECCOMP_WHITELIST.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2017-02-17T18:49:47Z",
+      "side": 1,
+      "message": "a bunch of inconsistencies in this file with regards to tabs vs spaces. Fix?",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
