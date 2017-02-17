@@ -4,6 +4,10 @@ cc_library {
         "seccomp_policy.cpp",
         "arm_policy.cpp",
         "arm64_policy.cpp",
+        "x86_policy.cpp",
+        "x86_64_policy.cpp",
+        "mips_policy.cpp",
+        "mips64_policy.cpp",
     ],
     export_include_dirs: ["include"],
     shared: {

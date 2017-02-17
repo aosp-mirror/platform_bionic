@@ -24,5 +24,13 @@ extern const struct sock_filter arm_filter[];
 extern const size_t arm_filter_size;
 extern const struct sock_filter arm64_filter[];
 extern const size_t arm64_filter_size;
+extern const struct sock_filter x86_filter[];
+extern const size_t x86_filter_size;
+extern const struct sock_filter x86_64_filter[];
+extern const size_t x86_64_filter_size;
+extern const struct sock_filter mips_filter[];
+extern const size_t mips_filter_size;
+extern const struct sock_filter mips64_filter[];
+extern const size_t mips64_filter_size;
 
 #endif
