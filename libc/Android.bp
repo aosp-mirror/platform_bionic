@@ -1665,6 +1665,8 @@ cc_library {
         keep_symbols: true,
     },
 
+    ldflags: ["-Wl,-z,global"],
+
     // Do not pack libc.so relocations; see http://b/20645321 for details.
     pack_relocations: false,
 
