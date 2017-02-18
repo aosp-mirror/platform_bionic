@@ -90,21 +90,17 @@ void LinkerLogger::ResetState() {
   flags_ |= ParseProperty(value);
 
   // get process basename
-  std::string process_name = basename(g_argv[0]);
+  const char* process_name_start = basename(g_argv[0]);
+  // remove ':' and everything after it. This is naming convention for
+  // services: https://developer.android.com/guide/components/services.html
+  const char* process_name_end = strchr(process_name_start, ':');
+
+  std::string process_name = (process_name_end != nullptr) ?
+                             std::string(process_name_start, (process_name_end - process_name_start)) :
+                             std::string(process_name_start);
 
   std::string property_name = std::string(kLdDebugPropertyPrefix) + process_name;
 
-  // Property names are limited to PROP_NAME_MAX.
-
-  if (property_name.size() >= PROP_NAME_MAX) {
-    size_t count = PROP_NAME_MAX - 1;
-    // remove trailing dots...
-    while (property_name[count-1] == '.') {
-      --count;
-    }
-
-    property_name = property_name.substr(0, count);
-  }
   value = property_get(property_name.c_str());
   flags_ |= ParseProperty(value);
 }
