@@ -49,10 +49,10 @@
 // XXX then the signal will be lost.
 
 // We use one bit in pthread_condattr_t (long) values as the 'shared' flag
-// and one bit for the clock type (CLOCK_REALTIME is ((clockid_t) 1), and
-// CLOCK_MONOTONIC is ((clockid_t) 0).). The rest of the bits are a counter.
+// and one bit for the clock type (CLOCK_REALTIME is 0 and
+// CLOCK_MONOTONIC is 1). The rest of the bits are a counter.
 //
-// The 'value' field pthread_cond_t has the same layout.
+// The 'value' field in pthread_cond_t has the same layout.
 
 #define COND_SHARED_MASK 0x0001
 #define COND_CLOCK_MASK 0x0002
