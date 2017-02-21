@@ -23,7 +23,7 @@
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/posix_types.h>
 #define __bitwise__
-#define __bitwise
+#define __bitwise __bitwise__
 typedef __u16 __bitwise __le16;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef __u16 __bitwise __be16;
