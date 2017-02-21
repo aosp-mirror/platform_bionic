@@ -898,6 +898,37 @@ TEST(dlext, ns_unload_between_namespaces) {
             "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 }
 
+TEST(dlext, ns_greylist) {
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  const std::string ns_search_path = get_testlib_root() + "/private_namespace_libs";
+
+  android_namespace_t* ns =
+          android_create_namespace("namespace",
+                                   nullptr,
+                                   ns_search_path.c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_TRUE(android_link_namespaces(ns, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns;
+
+  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  dlclose(handle);
+
+  android_set_application_target_sdk_version(__ANDROID_API_N__);
+  handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
+}
+
 TEST(dlext, ns_cyclic_namespaces) {
   // Test that ns1->ns2->ns1 link does not break the loader
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
