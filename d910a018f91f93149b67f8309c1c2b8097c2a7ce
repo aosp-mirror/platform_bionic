@@ -22,6 +22,30 @@
       "revId": "d910a018f91f93149b67f8309c1c2b8097c2a7ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddcef5dc_d8fa893f",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1105075
+      },
+      "writtenOn": "2017-02-21T20:10:20Z",
+      "side": 1,
+      "message": "Do we need handle EINTR as well?\nIn the old IServiceMnager, we used sleep, which will wake in this case?\nhttps://cs.corp.google.com/android/frameworks/native/libs/binder/IServiceManager.cpp?type\u003dcs\u0026q\u003dIServiceManager\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d140",
+      "parentUuid": "922ed4d1_8ef93858",
+      "range": {
+        "startLine": 1363,
+        "startChar": 6,
+        "endLine": 1363,
+        "endChar": 15
+      },
+      "revId": "d910a018f91f93149b67f8309c1c2b8097c2a7ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
