@@ -1341,24 +1341,35 @@ uint32_t __system_property_serial(const prop_info* pi) {
 }
 
 uint32_t __system_property_wait_any(uint32_t old_serial) {
-  prop_area* pa = __system_property_area__;
-  if (!pa) return 0;
-
   uint32_t new_serial;
-  do {
-    __futex_wait(pa->serial(), old_serial, nullptr);
-    new_serial = atomic_load_explicit(pa->serial(), memory_order_acquire);
-  } while (new_serial == old_serial);
+  __system_property_wait(nullptr, old_serial, &new_serial, nullptr);
   return new_serial;
 }
 
-uint32_t __system_property_wait(const prop_info* pi, uint32_t old_serial) {
+bool __system_property_wait(const prop_info* pi,
+                            uint32_t old_serial,
+                            uint32_t* new_serial_ptr,
+                            const timespec* relative_timeout) {
+  // Are we waiting on the global serial or a specific serial?
+  atomic_uint_least32_t* serial_ptr;
+  if (pi == nullptr) {
+    if (__system_property_area__ == nullptr) return -1;
+    serial_ptr = __system_property_area__->serial();
+  } else {
+    serial_ptr = const_cast<atomic_uint_least32_t*>(&pi->serial);
+  }
+
   uint32_t new_serial;
   do {
-    __futex_wait(const_cast<_Atomic(uint_least32_t)*>(&pi->serial), old_serial, nullptr);
-    new_serial = load_const_atomic(&pi->serial, memory_order_acquire);
+    int rc;
+    if ((rc = __futex_wait(serial_ptr, old_serial, relative_timeout)) != 0 && rc == -ETIMEDOUT) {
+      return false;
+    }
+    new_serial = load_const_atomic(serial_ptr, memory_order_acquire);
   } while (new_serial == old_serial);
-  return new_serial;
+
+  *new_serial_ptr = new_serial;
+  return true;
 }
 
 const prop_info* __system_property_find_nth(unsigned n) {

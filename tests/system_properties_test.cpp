@@ -402,7 +402,9 @@ TEST(properties, __system_property_wait) {
         __system_property_update(pi, "value2", 6);
     });
 
-    __system_property_wait(pi, serial);
+    uint32_t new_serial;
+    __system_property_wait(pi, serial, &new_serial, nullptr);
+    ASSERT_GT(new_serial, serial);
 
     char value[PROP_VALUE_MAX];
     ASSERT_EQ(6, __system_property_get("property", value));
