@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "772c2b5a_5628cdfb",
+        "filename": "tests/stack_protector_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-22T23:03:49Z",
+      "side": 1,
+      "message": "might make more sense to keep the old #include and static assert that no-one changed this in the enum?",
+      "revId": "92c5528d5902da93c14587c4577d98026958862b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
