@@ -30,6 +30,7 @@
 #define _INCLUDE_SYS__SYSTEM_PROPERTIES_H
 
 #include <sys/cdefs.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifndef _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
@@ -122,18 +123,22 @@ int __system_property_update(prop_info *pi, const char *value, unsigned int len)
 uint32_t __system_property_serial(const prop_info* pi);
 
 /*
- * Waits for any system property to be updated past `old_serial`.
- * If you don't know the current global serial number, use 0.
- * Returns the new global serial number.
- */
-uint32_t __system_property_wait_any(uint32_t old_serial);
-
-/*
- * Waits for the specific system property identified by `pi` to be updated past `old_serial`.
+ * Waits for the specific system property identified by `pi` to be updated
+ * past `old_serial`. Waits no longer than `relative_timeout`, or forever
+ * if `relaive_timeout` is null.
+ *
+ * If `pi` is null, waits for the global serial number instead.
+ *
  * If you don't know the current serial, use 0.
- * Returns the serial number for `pi` that caused the wake.
+ *
+ * Returns true and updates `*new_serial_ptr` on success, or false if the call
+ * timed out.
  */
-uint32_t __system_property_wait(const prop_info* pi, uint32_t old_serial)
+struct timespec;
+bool __system_property_wait(const prop_info* pi,
+                            uint32_t old_serial,
+                            uint32_t* new_serial_ptr,
+                            const struct timespec* relative_timeout)
     __INTRODUCED_IN_FUTURE;
 
 /* Initialize the system properties area in read only mode.
@@ -143,6 +148,9 @@ uint32_t __system_property_wait(const prop_info* pi, uint32_t old_serial)
  * Returns 0 on success, -1 otherwise.
  */
 int __system_properties_init();
+
+/* Deprecated: use __system_property_wait instead. */
+uint32_t __system_property_wait_any(uint32_t old_serial);
 
 __END_DECLS
 
