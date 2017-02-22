@@ -27,11 +27,10 @@
  */
 
 #include <string.h>
-#include "private/ThreadLocalBuffer.h"
+
+#include "bionic/pthread_internal.h"
 
 extern "C" const char* __strerror_lookup(int);
-
-static ThreadLocalBuffer<char, NL_TEXTMAX> g_strerror_tls_buffer;
 
 char* strerror(int error_number) {
   // Just return the original constant in the easy cases.
@@ -40,7 +39,8 @@ char* strerror(int error_number) {
     return result;
   }
 
-  result = g_strerror_tls_buffer.get();
-  strerror_r(error_number, result, g_strerror_tls_buffer.size());
+  bionic_tls& tls = __get_bionic_tls();
+  result = tls.strerror_buf;
+  strerror_r(error_number, result, sizeof(tls.strerror_buf));
   return result;
 }
