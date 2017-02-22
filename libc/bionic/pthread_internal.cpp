@@ -110,7 +110,16 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
 
   // Historically we'd return null, but
   if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
-    __libc_fatal("invalid pthread_t %p passed to libc", thread);
+    if (thread == nullptr) {
+      // This seems to be a common mistake, and it's relatively harmless because
+      // there will never be a valid thread at address 0, whereas other invalid
+      // addresses might sometimes contain threads or things that look enough like
+      // threads for us to do some real damage by continuing.
+      // TODO: try getting rid of this when Treble lets us keep vendor blobs on an old API level.
+      __libc_format_log(ANDROID_LOG_WARN, "libc", "invalid pthread_t (0) passed to libc");
+    } else {
+      __libc_fatal("invalid pthread_t %p passed to libc", thread);
+    }
   }
   return nullptr;
 }
