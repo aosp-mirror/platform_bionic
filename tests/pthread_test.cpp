@@ -447,7 +447,12 @@ TEST_F(pthread_DeathTest, pthread_setname_np__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  EXPECT_DEATH(pthread_setname_np(dead_thread, "short 3"), "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_setname_np(dead_thread, "short 3"), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_setname_np__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ENOENT, pthread_setname_np(null_thread, "short 3"));
 }
 
 TEST_F(pthread_DeathTest, pthread_getname_np__no_such_thread) {
@@ -455,8 +460,14 @@ TEST_F(pthread_DeathTest, pthread_getname_np__no_such_thread) {
   MakeDeadThread(dead_thread);
 
   char name[64];
-  EXPECT_DEATH(pthread_getname_np(dead_thread, name, sizeof(name)),
-               "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_getname_np(dead_thread, name, sizeof(name)), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_getname_np__null_thread) {
+  pthread_t null_thread = 0;
+
+  char name[64];
+  EXPECT_EQ(ENOENT, pthread_getname_np(null_thread, name, sizeof(name)));
 }
 
 TEST(pthread, pthread_kill__0) {
@@ -486,7 +497,12 @@ TEST_F(pthread_DeathTest, pthread_detach__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  EXPECT_DEATH(pthread_detach(dead_thread), "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_detach(dead_thread), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_detach__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_detach(null_thread));
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
@@ -508,7 +524,13 @@ TEST_F(pthread_DeathTest, pthread_getcpuclockid__no_such_thread) {
   MakeDeadThread(dead_thread);
 
   clockid_t c;
-  EXPECT_DEATH(pthread_getcpuclockid(dead_thread, &c), "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_getcpuclockid(dead_thread, &c), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_getcpuclockid__null_thread) {
+  pthread_t null_thread = 0;
+  clockid_t c;
+  EXPECT_EQ(ESRCH, pthread_getcpuclockid(null_thread, &c));
 }
 
 TEST_F(pthread_DeathTest, pthread_getschedparam__no_such_thread) {
@@ -517,8 +539,14 @@ TEST_F(pthread_DeathTest, pthread_getschedparam__no_such_thread) {
 
   int policy;
   sched_param param;
-  EXPECT_DEATH(pthread_getschedparam(dead_thread, &policy, &param),
-               "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_getschedparam(dead_thread, &policy, &param), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_getschedparam__null_thread) {
+  pthread_t null_thread = 0;
+  int policy;
+  sched_param param;
+  EXPECT_EQ(ESRCH, pthread_getschedparam(null_thread, &policy, &param));
 }
 
 TEST_F(pthread_DeathTest, pthread_setschedparam__no_such_thread) {
@@ -527,22 +555,38 @@ TEST_F(pthread_DeathTest, pthread_setschedparam__no_such_thread) {
 
   int policy = 0;
   sched_param param;
-  EXPECT_DEATH(pthread_setschedparam(dead_thread, policy, &param),
-               "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_setschedparam(dead_thread, policy, &param), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_setschedparam__null_thread) {
+  pthread_t null_thread = 0;
+  int policy = 0;
+  sched_param param;
+  EXPECT_EQ(ESRCH, pthread_setschedparam(null_thread, policy, &param));
 }
 
 TEST_F(pthread_DeathTest, pthread_join__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  EXPECT_DEATH(pthread_join(dead_thread, NULL), "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_join(dead_thread, NULL), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_join__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_join(null_thread, NULL));
 }
 
 TEST_F(pthread_DeathTest, pthread_kill__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  EXPECT_DEATH(pthread_kill(dead_thread, 0), "attempt to use invalid pthread_t");
+  EXPECT_DEATH(pthread_kill(dead_thread, 0), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_kill__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_kill(null_thread, 0));
 }
 
 TEST(pthread, pthread_join__multijoin) {
