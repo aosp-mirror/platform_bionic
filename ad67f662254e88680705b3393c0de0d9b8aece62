@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "e9f4cb9f_88a9824d",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "On fixing below line, realized function is const.format(params) and decided to remove",
+      "parentUuid": "27f3bd6f_d0f160b7",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "df1f40ba_c71c35d5",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -70,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "619ec287_7fc8a838",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Removed function, and replaced with const.format",
+      "parentUuid": "df1f40ba_c71c35d5",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6b34093_2cf85a08",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -81,6 +117,30 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "untested",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 31
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "191b2afb_0fba9269",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Test was there but misnamed, Fixed.",
+      "parentUuid": "e6b34093_2cf85a08",
       "range": {
         "startLine": 106,
         "startChar": 4,
@@ -116,6 +176,30 @@
     },
     {
       "key": {
+        "uuid": "4aa0d978_b2dd8d06",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "013eabe6_8d381e99",
+      "range": {
+        "startLine": 146,
+        "startChar": 4,
+        "endLine": 146,
+        "endChar": 25
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e29c65ba_77c45b3a",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -127,6 +211,30 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "untested",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 166,
+        "endChar": 17
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c4316b1_bdc75a57",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done. However, I did this by moving all the IO to the main function, meeting the letter, but maybe not the spirit, of your request?",
+      "parentUuid": "e29c65ba_77c45b3a",
       "range": {
         "startLine": 166,
         "startChar": 4,
@@ -162,6 +270,30 @@
     },
     {
       "key": {
+        "uuid": "2ac3a0ea_3f727d55",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7faca055_f3f9ab01",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 21
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f514a4ef_32714348",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -173,6 +305,24 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "Maybe:\n\n    POLICY_CONFIGS \u003d [\n        (\"arm\", \"kernel/uapi/asm-arm\"),\n        ...\n    }\n\ninstead?\n\nThen main becomes:\n\n    for arch, header_path in POLICY_CONFIGS:\n        construct_bpf(\n            ANDROID_SYSCALL_FILES, arch, header_path,\n            \"seccomp/{}_policy.c\".format(arch))\n\nWould make it easier to add support for other architectures later.",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b9bde98_088440ed",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f514a4ef_32714348",
       "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -202,6 +352,30 @@
     },
     {
       "key": {
+        "uuid": "401cde59_8dea5692",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d10b67a4_ded11cdc",
+      "range": {
+        "startLine": 193,
+        "startChar": 4,
+        "endLine": 193,
+        "endChar": 10
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "545e5071_7cc2f65b",
         "filename": "libc/tools/test_genseccomp.py",
         "patchSetId": 1
@@ -213,6 +387,24 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "The unittests should probably operate on test data rather than the real thing. genseccomp.py would still be working correctly even if we changed the list of syscalls, but this test might start failing. You can use tricks like this to turn a test string into a file object: https://android.googlesource.com/platform/build/soong/+/master/cc/test_gen_stub_libs.py#135",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b562555_cdf50157",
+        "filename": "libc/tools/test_genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done, though I\u0027m not convinced it was worth it ...",
+      "parentUuid": "545e5071_7cc2f65b",
       "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -236,6 +428,24 @@
     },
     {
       "key": {
+        "uuid": "fab0db2c_9026a0fe",
+        "filename": "libc/tools/test_genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Agreed",
+      "parentUuid": "2fab9bd3_8edc6a9e",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa881aa3_3c0c970a",
         "filename": "libc/tools/test_genseccomp.py",
         "patchSetId": 1
@@ -247,6 +457,24 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "Missing the asserts for the second range.",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18ce9052_31d341b8",
+        "filename": "libc/tools/test_genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa881aa3_3c0c970a",
       "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -276,6 +504,30 @@
     },
     {
       "key": {
+        "uuid": "d07a0cab_0276d085",
+        "filename": "libc/tools/test_genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65625402_e1ccab7a",
+      "range": {
+        "startLine": 62,
+        "startChar": 6,
+        "endLine": 62,
+        "endChar": 31
+      },
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "acf88e5b_8a142c30",
         "filename": "libc/tools/test_genseccomp.py",
         "patchSetId": 1
@@ -287,6 +539,24 @@
       "writtenOn": "2017-02-21T21:15:33Z",
       "side": 1,
       "message": "Should also have a case for multiple ranges.",
+      "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "593bf37b_52e9e81e",
+        "filename": "libc/tools/test_genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-22T21:26:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acf88e5b_8a142c30",
       "revId": "ad67f662254e88680705b3393c0de0d9b8aece62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
