@@ -500,18 +500,18 @@ class SysCallsTxtParser:
 
         logging.debug(t)
 
-
-    def parse_file(self, file_path):
-        logging.debug("parse_file: %s" % file_path)
-        fp = open(file_path)
-        for line in fp.xreadlines():
+    def parse_open_file(self, fp):
+        for line in fp:
             self.lineno += 1
             line = line.strip()
             if not line: continue
             if line[0] == '#': continue
             self.parse_line(line)
 
-        fp.close()
+    def parse_file(self, file_path):
+        logging.debug("parse_file: %s" % file_path)
+        with open(file_path) as fp:
+            parse_open_file(fp)
 
 
 class State:
