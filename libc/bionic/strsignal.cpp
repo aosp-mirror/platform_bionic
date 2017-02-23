@@ -27,12 +27,11 @@
  */
 
 #include <string.h>
-#include "private/ThreadLocalBuffer.h"
+
+#include "bionic/pthread_internal.h"
 
 extern "C" const char* __strsignal_lookup(int);
 extern "C" const char* __strsignal(int, char*, size_t);
-
-static ThreadLocalBuffer<char, NL_TEXTMAX> g_strsignal_tls_buffer;
 
 char* strsignal(int signal_number) {
   // Just return the original constant in the easy cases.
@@ -41,6 +40,6 @@ char* strsignal(int signal_number) {
     return result;
   }
 
-  return const_cast<char*>(__strsignal(signal_number, g_strsignal_tls_buffer.get(),
-                                       g_strsignal_tls_buffer.size()));
+  bionic_tls& tls = __get_bionic_tls();
+  return const_cast<char*>(__strsignal(signal_number, tls.strsignal_buf, sizeof(tls.strsignal_buf)));
 }

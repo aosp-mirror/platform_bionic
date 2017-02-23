@@ -37,6 +37,8 @@
 
 #include "private/bionic_macros.h"
 
+#include "bionic/pthread_internal.h"
+
 // We only support two locales, the "C" locale (also known as "POSIX"),
 // and the "C.UTF-8" locale (also known as "en_US.UTF-8").
 
@@ -161,17 +163,9 @@ char* setlocale(int category, const char* locale_name) {
   return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
 }
 
-// We can't use a constructor to create g_uselocal_key, because it may be used in constructors.
-static pthread_once_t g_uselocale_once = PTHREAD_ONCE_INIT;
-static pthread_key_t g_uselocale_key;
-
-static void g_uselocale_key_init() {
-  pthread_key_create(&g_uselocale_key, NULL);
-}
-
 locale_t uselocale(locale_t new_locale) {
-  pthread_once(&g_uselocale_once, g_uselocale_key_init);
-  locale_t old_locale = static_cast<locale_t>(pthread_getspecific(g_uselocale_key));
+  locale_t* locale_storage = &__get_bionic_tls().locale;
+  locale_t old_locale = *locale_storage;
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
@@ -179,7 +173,7 @@ locale_t uselocale(locale_t new_locale) {
   }
 
   if (new_locale != NULL) {
-    pthread_setspecific(g_uselocale_key, new_locale);
+    *locale_storage = new_locale;
   }
 
   return old_locale;

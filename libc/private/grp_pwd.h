@@ -1,5 +1,7 @@
+#pragma once
+
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +28,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BIONIC_THREAD_LOCAL_BUFFER_H_included
-#define _BIONIC_THREAD_LOCAL_BUFFER_H_included
+#include <grp.h>
+#include <pwd.h>
 
-#include <malloc.h>
-#include <pthread.h>
-
-// TODO: use __thread instead?
-
-template <typename T, size_t Size = sizeof(T)>
-class ThreadLocalBuffer {
- public:
-  ThreadLocalBuffer() {
-    // We used to use pthread_once to initialize the keys, but life is more predictable
-    // if we allocate them all up front when the C library starts up, via __constructor__.
-    pthread_key_create(&key_, free);
-  }
-
-  T* get() {
-    T* result = reinterpret_cast<T*>(pthread_getspecific(key_));
-    if (result == nullptr) {
-      result = reinterpret_cast<T*>(calloc(1, Size));
-      pthread_setspecific(key_, result);
-    }
-    return result;
-  }
-
-  size_t size() { return Size; }
-
- private:
-  pthread_key_t key_;
+struct group_state_t {
+  group group_;
+  char* group_members_[2];
+  char group_name_buffer_[32];
+  // Must be last so init_group_state can run a simple memset for the above
+  ssize_t getgrent_idx;
 };
 
-#endif // _BIONIC_THREAD_LOCAL_BUFFER_H_included
+struct passwd_state_t {
+  passwd passwd_;
+  char name_buffer_[32];
+  char dir_buffer_[32];
+  char sh_buffer_[32];
+  ssize_t getpwent_idx;
+};
