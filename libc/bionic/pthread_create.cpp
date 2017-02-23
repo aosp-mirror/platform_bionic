@@ -55,6 +55,18 @@ void __init_tls(pthread_internal_t* thread) {
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
+
+  // Add a guard page before and after.
+  size_t allocation_size = BIONIC_TLS_SIZE + 2 * PAGE_SIZE;
+  void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation == MAP_FAILED) {
+    __libc_fatal("failed to allocate TLS");
+  }
+
+  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) + PAGE_SIZE);
+  if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
+    __libc_fatal("failed to mprotect TLS");
+  }
 }
 
 void __init_thread_stack_guard(pthread_internal_t* thread) {

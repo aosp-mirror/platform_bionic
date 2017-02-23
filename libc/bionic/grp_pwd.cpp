@@ -39,9 +39,9 @@
 
 #include "private/android_filesystem_config.h"
 #include "private/bionic_macros.h"
+#include "private/grp_pwd.h"
 #include "private/ErrnoRestorer.h"
 #include "private/libc_logging.h"
-#include "private/ThreadLocalBuffer.h"
 
 // Generated android_ids array
 #include "generated_android_ids.h"
@@ -52,25 +52,14 @@
 // okay for all the <grp.h> functions to share state, and all the <passwd.h>
 // functions to share state, but <grp.h> functions can't clobber <passwd.h>
 // functions' state and vice versa.
+#include "bionic/pthread_internal.h"
+static group_state_t* get_group_tls_buffer() {
+  return &__get_bionic_tls().group;
+}
 
-struct group_state_t {
-  group group_;
-  char* group_members_[2];
-  char group_name_buffer_[32];
-  // Must be last so init_group_state can run a simple memset for the above
-  ssize_t getgrent_idx;
-};
-
-struct passwd_state_t {
-  passwd passwd_;
-  char name_buffer_[32];
-  char dir_buffer_[32];
-  char sh_buffer_[32];
-  ssize_t getpwent_idx;
-};
-
-static ThreadLocalBuffer<group_state_t> g_group_tls_buffer;
-static ThreadLocalBuffer<passwd_state_t> g_passwd_tls_buffer;
+static passwd_state_t* get_passwd_tls_buffer() {
+  return &__get_bionic_tls().passwd;
+}
 
 static void init_group_state(group_state_t* state) {
   memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_idx));
@@ -78,7 +67,7 @@ static void init_group_state(group_state_t* state) {
 }
 
 static group_state_t* __group_state() {
-  group_state_t* result = g_group_tls_buffer.get();
+  group_state_t* result = get_group_tls_buffer();
   if (result != nullptr) {
     init_group_state(result);
   }
@@ -432,7 +421,7 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
 }
 
 passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
-  passwd_state_t* state = g_passwd_tls_buffer.get();
+  passwd_state_t* state = get_passwd_tls_buffer();
   if (state == NULL) {
     return NULL;
   }
@@ -450,7 +439,7 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
 }
 
 passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
-  passwd_state_t* state = g_passwd_tls_buffer.get();
+  passwd_state_t* state = get_passwd_tls_buffer();
   if (state == NULL) {
     return NULL;
   }
@@ -483,7 +472,7 @@ char* getlogin() { // NOLINT: implementing bad function.
 }
 
 void setpwent() {
-  passwd_state_t* state = g_passwd_tls_buffer.get();
+  passwd_state_t* state = get_passwd_tls_buffer();
   if (state) {
     state->getpwent_idx = 0;
   }
@@ -494,7 +483,7 @@ void endpwent() {
 }
 
 passwd* getpwent() {
-  passwd_state_t* state = g_passwd_tls_buffer.get();
+  passwd_state_t* state = get_passwd_tls_buffer();
   if (state == NULL) {
     return NULL;
   }
@@ -608,7 +597,7 @@ int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
 }
 
 void setgrent() {
-  group_state_t* state = g_group_tls_buffer.get();
+  group_state_t* state = get_group_tls_buffer();
   if (state) {
     state->getgrent_idx = 0;
   }
@@ -619,7 +608,7 @@ void endgrent() {
 }
 
 group* getgrent() {
-  group_state_t* state = g_group_tls_buffer.get();
+  group_state_t* state = get_group_tls_buffer();
   if (state == NULL) {
     return NULL;
   }

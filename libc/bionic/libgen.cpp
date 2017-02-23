@@ -34,10 +34,7 @@
 #include <sys/cdefs.h>
 #include <sys/param.h>
 
-#include "private/ThreadLocalBuffer.h"
-
-static ThreadLocalBuffer<char, MAXPATHLEN> g_basename_tls_buffer;
-static ThreadLocalBuffer<char, MAXPATHLEN> g_dirname_tls_buffer;
+#include "bionic/pthread_internal.h"
 
 static int __basename_r(const char* path, char* buffer, size_t buffer_size) {
   const char* startp = NULL;
@@ -161,13 +158,13 @@ __LIBC32_LEGACY_PUBLIC__ int dirname_r(const char* path, char* buffer, size_t bu
 }
 
 char* basename(const char* path) {
-  char* buf = g_basename_tls_buffer.get();
-  int rc = __basename_r(path, buf, g_basename_tls_buffer.size());
+  char* buf = __get_bionic_tls().basename_buf;
+  int rc = __basename_r(path, buf, sizeof(__get_bionic_tls().basename_buf));
   return (rc < 0) ? NULL : buf;
 }
 
 char* dirname(const char* path) {
-  char* buf = g_dirname_tls_buffer.get();
-  int rc = __dirname_r(path, buf, g_dirname_tls_buffer.size());
+  char* buf = __get_bionic_tls().dirname_buf;
+  int rc = __dirname_r(path, buf, sizeof(__get_bionic_tls().dirname_buf));
   return (rc < 0) ? NULL : buf;
 }

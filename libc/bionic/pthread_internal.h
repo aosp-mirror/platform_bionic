@@ -110,6 +110,8 @@ class pthread_internal_t {
    */
 #define __BIONIC_DLERROR_BUFFER_SIZE 512
   char dlerror_buffer[__BIONIC_DLERROR_BUFFER_SIZE];
+
+  bionic_tls* bionic_tls;
 };
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
@@ -131,6 +133,10 @@ static inline __always_inline pthread_internal_t* __get_thread() {
 
   // This happens when called during libc initialization before TLS has been initialized.
   return nullptr;
+}
+
+static inline __always_inline bionic_tls& __get_bionic_tls() {
+  return *__get_thread()->bionic_tls;
 }
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
