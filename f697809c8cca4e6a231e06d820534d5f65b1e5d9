@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "131503fc_4f2afe14",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1125653
+      },
+      "writtenOn": "2017-02-23T17:16:58Z",
+      "side": 1,
+      "message": "And here developers are thinking they are helping you out with the opaque types.  I suggest poking upstream about this.\n\nAnd epoll is a pain, you picked a good example :)",
+      "parentUuid": "566ae680_40f357f0",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af358981_905002da",
         "filename": "libc/include/sys/epoll.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f3475f99_8ce9dfd2",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1125653
+      },
+      "writtenOn": "2017-02-23T17:16:58Z",
+      "side": 1,
+      "message": "Let\u0027s fix this upstream and have them defined as (1U \u003c\u003c x) properly so you can use them!",
+      "parentUuid": "af358981_905002da",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ead7fc2a_aaae43ea",
         "filename": "libc/include/sys/epoll.h",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2017-02-23T17:03:50Z",
       "side": 1,
       "message": "3. and then there are constants that seem like they should be in the uapi header but aren\u0027t, that we still have to define ourselves.",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "467c6868_cbba00a6",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1125653
+      },
+      "writtenOn": "2017-02-23T17:16:58Z",
+      "side": 1,
+      "message": "Ick, not good, yes upstream should define these, I don\u0027t know why the libc is supposed to do that itself.",
+      "parentUuid": "ead7fc2a_aaae43ea",
       "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
