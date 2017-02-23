@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6524a41_a2ba198c",
+        "filename": "libc/include/android/legacy_termios_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-23T22:01:07Z",
+      "side": 1,
+      "message": "rewrite cfsetispeed and cfsetospeed as just \"return cfsetspeed\"?\n\n(or not, since that was another part of where i got bogged down yesterday.)",
+      "revId": "4473e34acbd9b8f97f04dd52ac7ccd856370e6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
