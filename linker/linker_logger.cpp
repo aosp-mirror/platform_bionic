@@ -85,13 +85,20 @@ void LinkerLogger::ResetState() {
   }
 
   flags_ = 0;
-  // check flag applied to all processes first
+
+  // Check flag applied to all processes first.
   std::string value = property_get(kSystemLdDebugProperty);
   flags_ |= ParseProperty(value);
 
-  // get process basename
+  // Ignore processes started without argv (http://b/33276926).
+  if (g_argv[0] == nullptr) {
+    return;
+  }
+
+  // Get process basename.
   const char* process_name_start = basename(g_argv[0]);
-  // remove ':' and everything after it. This is naming convention for
+
+  // Remove ':' and everything after it. This is the naming convention for
   // services: https://developer.android.com/guide/components/services.html
   const char* process_name_end = strchr(process_name_start, ':');
 
