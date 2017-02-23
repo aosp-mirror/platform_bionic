@@ -2012,15 +2012,12 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-// The following module lives in prebuilts/ndk because we need to preprocess the
-// headers to include ifdef guards for __ANDROID_API__. Update with
-// bionic/tools/update_headers.sh.
-// ndk_headers {
-//     name: "common_libc",
-//     from: "include",
-//     to: "",
-//     srcs: ["include/**/*.h"],
-// }
+preprocessed_ndk_headers {
+    name: "common_libc",
+    from: "include",
+    to: "",
+    license: "NOTICE",
+}
 
 ndk_headers {
     name: "libc_uapi",
