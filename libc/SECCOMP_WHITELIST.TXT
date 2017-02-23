@@ -1,0 +1,88 @@
+# This file is used to populate seccomp's whitelist policy in comination with SYSCALLS.txt.
+#
+# Each non-blank, non-comment line has the following format:
+#
+# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
+#
+# where:
+#       arch_list ::= "all" | arch+
+#       arch      ::= "arm" | "arm64" | "mips" | "mips64" | "x86" | "x86_64"
+#
+# Note:
+#      - syscall_name corresponds to the name of the syscall, which may differ from
+#        the exported function name (example: the exit syscall is implemented by the _exit()
+#        function, which is not the same as the standard C exit() function which calls it)
+
+#      - alias_list is optional comma separated list of function aliases
+#
+#      - The call_id parameter, given that func_name and syscall_name have
+#        been provided, allows the user to specify dispatch style syscalls.
+#        For example, socket() syscall on i386 actually becomes:
+#          socketcall(__NR_socket, 1, *(rest of args on stack)).
+#
+#      - Each parameter type is assumed to be stored in 32 bits.
+#
+# This file is processed by a python script named gensyscalls.py.
+
+# syscalls needed to boot android
+int	pivot_root:pivot_root(const char *new_root, const char *put_old)	arm64
+int	ioprio_get:ioprio_get(int which, int who)	arm64
+int	ioprio_set:ioprio_set(int which, int who, int ioprio)	arm64
+pid_t	gettid:gettid()	arm64,arm
+int	futex:futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3)	arm64,arm
+int	clone:clone(int (*fn)(void *), void *child_stack, int flags, void *arg, ..) arm64,arm
+int	rt_sigreturn:rt_sigreturn(unsigned long __unused)	arm64,arm
+int	rt_tgsigqueueinfo:int rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *uinfo)	arm64,arm
+int	restart_syscall:int restart_syscall()	arm64,arm
+int	getrandom:int getrandom(void *buf, size_t buflen, unsigned int flags) arm64,arm
+
+# Needed for performance tools
+int	perf_event_open:perf_event_open(struct perf_event_attr *attr, pid_t pid, int cpu, int group_fd, unsigned long flags)	arm64,arm
+
+# Needed for strace
+int	tkill:tkill(int tid, int sig)	arm64,arm
+
+# b/35034743
+int	syncfs:syncfs(int fd)	arm64
+
+# b/34763393
+int	seccomp:seccomp(unsigned int operation, unsigned int flags, void *args)	arm64,arm
+
+# syscalls needed to boot android
+int	sigreturn:sigreturn(unsigned long __unused)	arm
+
+# Syscalls needed to run GFXBenchmark
+pid_t	vfork:vfork()	arm
+
+# Needed for debugging 32-bit Chrome
+int	pipe:pipe(int pipefd[2])	arm
+
+# b/34651972
+int	access:access(const char *pathname, int mode)	arm
+int	stat64:stat64(const char *restrict path, struct stat64 *restrict buf)	arm
+
+# b/34813887
+int	open:open(const char *path, int oflag, ... ) arm
+int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) arm
+int	getdents64:getdents64(unsigned int fd, struct linux_dirent64 *dirp, unsigned int count) arm
+
+# b/34719286
+int	eventfd:eventfd(unsigned int initval, int flags)	arm
+
+# b/34817266
+int	epoll_wait:epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)	arm
+
+# Needed by sanitizers (b/34606909)
+# 5 (__NR_open) and 195 (__NR_stat64) are also required, but they are
+# already allowed.
+ssize_t	readlink:readlink(const char *path, char *buf, size_t bufsiz)	arm
+
+# b/34908783
+int	epoll_create:epoll_create(int size)	arm
+
+# b/34979910
+int	creat:creat(const char *pathname, mode_t mode)	arm
+int	unlink:unlink(const char *pathname)	arm
+
+# b/35059702
+int	lstat64:lstat64(const char *restrict path, struct stat64 *restrict buf)	arm
