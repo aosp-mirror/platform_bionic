@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "566ae680_40f357f0",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-23T17:03:50Z",
+      "side": 1,
+      "message": "gregkh: here\u0027s an example in a nutshell of all the most common problems we have trying to expose uapi headers directly.\n\n1. we have to move uapi structs out of the way because they have more opaque types than userspace expects (here, __u64 instead of the union epoll_data; __be32 instead of struct inaddr is another common one).",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af358981_905002da",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-23T17:03:50Z",
+      "side": 1,
+      "message": "2. sometimes there are constants we can\u0027t use for one reason or another.",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ead7fc2a_aaae43ea",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-23T17:03:50Z",
+      "side": 1,
+      "message": "3. and then there are constants that seem like they should be in the uapi header but aren\u0027t, that we still have to define ourselves.",
+      "revId": "f697809c8cca4e6a231e06d820534d5f65b1e5d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

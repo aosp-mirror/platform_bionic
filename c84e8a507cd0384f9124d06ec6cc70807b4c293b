@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f78f449_f6abd543",
+        "filename": "libc/include/sys/epoll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-23T17:03:50Z",
+      "side": 0,
+      "message": "but we do always get _something_ out of it. this header is a particularly bad example where the uapi header has very little to offer: just four constants.",
+      "revId": "c84e8a507cd0384f9124d06ec6cc70807b4c293b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
