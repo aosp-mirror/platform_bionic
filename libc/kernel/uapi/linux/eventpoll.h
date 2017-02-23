@@ -37,7 +37,7 @@
 #define EPOLL_PACKED
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-struct epoll_event {
+struct __kernel_uapi_epoll_event {
   __u32 events;
   __u64 data;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
