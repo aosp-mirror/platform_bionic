@@ -29,10 +29,15 @@
 #ifndef __BIONIC_PRIVATE_BIONIC_TLS_H_
 #define __BIONIC_PRIVATE_BIONIC_TLS_H_
 
+#include <locale.h>
+#include <mntent.h>
+#include <stdio.h>
 #include <sys/cdefs.h>
+#include <sys/param.h>
 
 #include "bionic_macros.h"
 #include "__get_tls.h"
+#include "grp_pwd.h"
 
 __BEGIN_DECLS
 
@@ -77,6 +82,28 @@ enum {
   BIONIC_TLS_SLOTS // Must come last!
 };
 
+// ~3 pages.
+struct bionic_tls {
+  locale_t locale;
+
+  char basename_buf[MAXPATHLEN];
+  char dirname_buf[MAXPATHLEN];
+
+  mntent mntent_buf;
+  char mntent_strings[BUFSIZ];
+
+  char ptsname_buf[32];
+  char ttyname_buf[64];
+
+  char strerror_buf[NL_TEXTMAX];
+  char strsignal_buf[NL_TEXTMAX];
+
+  group_state_t group;
+  passwd_state_t passwd;
+};
+
+#define BIONIC_TLS_SIZE (BIONIC_ALIGN(sizeof(bionic_tls), PAGE_SIZE))
+
 /*
  * Bionic uses some pthread keys internally. All pthread keys used internally
  * should be created in constructors, except for keys that may be used in or
@@ -86,22 +113,10 @@ enum {
  * pthread_test should fail if we forget.
  *
  * These are the pthread keys currently used internally by libc:
- *
- *  basename               libc (ThreadLocalBuffer)
- *  dirname                libc (ThreadLocalBuffer)
- *  uselocale              libc (can be used in constructors)
- *  getmntent_mntent       libc (ThreadLocalBuffer)
- *  getmntent_strings      libc (ThreadLocalBuffer)
- *  ptsname                libc (ThreadLocalBuffer)
- *  ttyname                libc (ThreadLocalBuffer)
- *  strerror               libc (ThreadLocalBuffer)
- *  strsignal              libc (ThreadLocalBuffer)
- *  passwd                 libc (ThreadLocalBuffer)
- *  group                  libc (ThreadLocalBuffer)
  *  _res_key               libc (constructor in BSD code)
  */
 
-#define LIBC_PTHREAD_KEY_RESERVED_COUNT 12
+#define LIBC_PTHREAD_KEY_RESERVED_COUNT 1
 
 /* Internally, jemalloc uses a single key for per thread data. */
 #define JEMALLOC_PTHREAD_KEY_RESERVED_COUNT 1

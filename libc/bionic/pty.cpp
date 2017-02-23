@@ -36,10 +36,7 @@
 #include <unistd.h>
 #include <utmp.h>
 
-#include "private/ThreadLocalBuffer.h"
-
-static ThreadLocalBuffer<char, 32> g_ptsname_tls_buffer;
-static ThreadLocalBuffer<char, 64> g_ttyname_tls_buffer;
+#include "bionic/pthread_internal.h"
 
 int getpt() {
   return posix_openpt(O_RDWR|O_NOCTTY);
@@ -54,8 +51,9 @@ int posix_openpt(int flags) {
 }
 
 char* ptsname(int fd) {
-  char* buf = g_ptsname_tls_buffer.get();
-  int error = ptsname_r(fd, buf, g_ptsname_tls_buffer.size());
+  bionic_tls& tls = __get_bionic_tls();
+  char* buf = tls.ptsname_buf;
+  int error = ptsname_r(fd, buf, sizeof(tls.ptsname_buf));
   return (error == 0) ? buf : NULL;
 }
 
@@ -80,8 +78,9 @@ int ptsname_r(int fd, char* buf, size_t len) {
 }
 
 char* ttyname(int fd) {
-  char* buf = g_ttyname_tls_buffer.get();
-  int error = ttyname_r(fd, buf, g_ttyname_tls_buffer.size());
+  bionic_tls& tls = __get_bionic_tls();
+  char* buf = tls.ttyname_buf;
+  int error = ttyname_r(fd, buf, sizeof(tls.ttyname_buf));
   return (error == 0) ? buf : NULL;
 }
 
