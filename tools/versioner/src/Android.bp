@@ -41,6 +41,9 @@ cc_binary_host {
                 "-fno-rtti",
             ],
         },
+        darwin: {
+            enabled: false,
+        },
         windows: {
             enabled: false,
         },
