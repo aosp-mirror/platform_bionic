@@ -1364,3 +1364,11 @@ TEST(UNISTD_TEST, execvp_libcore_test_55017) {
   ASSERT_EQ(-1, execvp("/system/bin/does-not-exist", eth.GetArgs()));
   ASSERT_EQ(ENOENT, errno);
 }
+
+TEST(UNISTD_TEST, exec_argv0_null) {
+  // http://b/33276926
+  char* args[] = {nullptr};
+  char* envs[] = {nullptr};
+  ASSERT_EXIT(execve("/system/bin/run-as", args, envs), testing::ExitedWithCode(1),
+              "<unknown>: usage: run-as");
+}
