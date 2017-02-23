@@ -40,7 +40,6 @@
 #include <bionic/pthread_internal.h>
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
-#include "private/ThreadLocalBuffer.h"
 
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 

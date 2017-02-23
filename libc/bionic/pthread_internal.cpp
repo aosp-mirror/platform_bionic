@@ -86,6 +86,10 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 }
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
+  // Unmap the TLS, including guard pages.
+  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PAGE_SIZE;
+  munmap(allocation, BIONIC_TLS_SIZE + 2 * PAGE_SIZE);
+
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->attr.stack_base, thread->mmap_size);
