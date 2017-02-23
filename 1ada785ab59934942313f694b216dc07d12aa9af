@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb71527b_47fbdf0f",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-02-23T18:03:45Z",
+      "side": 1,
+      "message": "long line",
+      "revId": "1ada785ab59934942313f694b216dc07d12aa9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9203dcf3_b188a5d3",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-02-23T18:03:45Z",
+      "side": 1,
+      "message": "long line",
+      "revId": "1ada785ab59934942313f694b216dc07d12aa9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3e343dd_ada2754c",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-02-23T18:03:45Z",
+      "side": 1,
+      "message": "Idiomatically this is:\n\n    with open(file_path) as fp:\n        parse_open_file(fp)\n\n(the practical reason for this is that if an exception is thrown by parse_open_file and caught at a higher level, fp being garbage collected and closed isn\u0027t predictable; not a problem in this particular case, but it\u0027s better to not leave the issue for later)",
+      "range": {
+        "startLine": 513,
+        "startChar": 8,
+        "endLine": 515,
+        "endChar": 18
+      },
+      "revId": "1ada785ab59934942313f694b216dc07d12aa9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
