@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "960ab8db_a3f3f4f5",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T17:37:07Z",
+      "side": 1,
+      "message": "should we have this in libc_logging.h?",
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "661bfa2c_d3d83431",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T17:37:07Z",
+      "side": 1,
+      "message": "move these inside SocketWriter?",
+      "range": {
+        "startLine": 559,
+        "startChar": 0,
+        "endLine": 560,
+        "endChar": 38
+      },
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "683fdebb_d251db41",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T17:37:07Z",
+      "side": 1,
+      "message": "what use is the numerical errno value?",
+      "range": {
+        "startLine": 1311,
+        "startChar": 80,
+        "endLine": 1311,
+        "endChar": 90
+      },
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
