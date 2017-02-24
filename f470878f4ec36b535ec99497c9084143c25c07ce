@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcb70ac9_81947123",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1288,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-24T21:27:26Z",
+      "side": 1,
+      "message": "Should these error cases set errno?",
+      "revId": "f470878f4ec36b535ec99497c9084143c25c07ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cce4ae5c_08c36fa2",
+        "filename": "libc/private/libc_logging.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-24T21:27:26Z",
+      "side": 1,
+      "message": "Wrap in do { } while(0) to require a semicolon",
+      "revId": "f470878f4ec36b535ec99497c9084143c25c07ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
