@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c6cb6f05_2481ed34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-24T20:51:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffc6b307_2afdaa0e",
+      "range": {
+        "startLine": 12,
+        "startChar": 54,
+        "endLine": 12,
+        "endChar": 62
+      },
+      "revId": "ca6605c398b76edd89a1e79bd8f3b63dad317cf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d18bc6f_4d83e4fb",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2017-02-24T20:46:02Z",
       "side": 1,
       "message": "Why 16 and 16?  There\u0027s only one user of this, so if I count right, we\u0027ll only ever need 3 Uints and 5 Iovs.",
+      "revId": "ca6605c398b76edd89a1e79bd8f3b63dad317cf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8934f86_559df9a8",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-24T20:51:59Z",
+      "side": 1,
+      "message": "reduced to 8",
+      "parentUuid": "0d18bc6f_4d83e4fb",
       "revId": "ca6605c398b76edd89a1e79bd8f3b63dad317cf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
