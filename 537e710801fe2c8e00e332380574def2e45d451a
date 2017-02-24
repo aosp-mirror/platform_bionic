@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "483f8d93_0b8df73b",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be using \u003candroid-base/logging.h\u003e?",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb7f6837_460a4f86",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "always use C++ casts",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 24
+      },
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a44c7fa_a36ccae8",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "no need to wrap?",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 47
+      },
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d037b5d9_a73ccc93",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "(the google C++ style guide says this is allowed, but we prefer {} on all loops.)",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19d50d22_a83083a2",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "{} or one line\n\nhttps://google.github.io/styleguide/cppguide.html#Conditionals",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2dcc8476_9ad77cb5",
+        "filename": "libc/seccomp/seccomp_policy.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T00:49:35Z",
+      "side": 1,
+      "message": "if you want this to be callable from C, you need\n\n  __BEGIN_DECLS\n\n  __END_DECLS\n\naround the declaration. if you don\u0027t, you can lose the #include \u003cstdbool.h\u003e.",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
