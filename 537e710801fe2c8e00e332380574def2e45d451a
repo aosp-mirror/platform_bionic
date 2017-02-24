@@ -215,6 +215,24 @@
       "revId": "537e710801fe2c8e00e332380574def2e45d451a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34c7cab9_71b286ae",
+        "filename": "libc/seccomp/seccomp_policy.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-24T20:54:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1352579_e246131b",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
