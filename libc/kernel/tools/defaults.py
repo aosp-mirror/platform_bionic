@@ -75,6 +75,8 @@ kernel_token_replacements = {
     "SIGRTMAX": "__SIGRTMAX",
     # We want to support both BSD and Linux member names in struct udphdr.
     "udphdr": "__kernel_udphdr",
+    # The kernel's struct epoll_event just has __u64 for the data.
+    "epoll_event": "__kernel_uapi_epoll_event",
     }
 
 # this is the set of known static inline functions that we want to keep
