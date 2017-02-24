@@ -197,6 +197,24 @@
       "revId": "537e710801fe2c8e00e332380574def2e45d451a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1352579_e246131b",
+        "filename": "libc/seccomp/seccomp_policy.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-24T19:13:16Z",
+      "side": 1,
+      "message": "want to choose one way or the other?",
+      "parentUuid": "2dcc8476_9ad77cb5",
+      "revId": "537e710801fe2c8e00e332380574def2e45d451a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
