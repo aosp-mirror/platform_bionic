@@ -185,10 +185,12 @@ LIBC {
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
+    __system_property_area_serial; # introduced=23
     __system_property_find;
     __system_property_foreach; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_get;
     __system_property_read;
+    __system_property_serial; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_set; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     __timer_create; # arm x86 mips
     __timer_delete; # arm x86 mips
@@ -1540,8 +1542,6 @@ LIBC_PLATFORM {
     __system_property_area__; # var
     __system_property_add;
     __system_property_area_init;
-    __system_property_area_serial;
-    __system_property_serial;
     __system_property_set_filename;
     __system_property_update;
     android_net_res_stats_get_info_for_net;
