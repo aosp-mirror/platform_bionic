@@ -31,11 +31,17 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <fcntl.h> /* For O_CLOEXEC. */
 #include <signal.h> /* For sigset_t. */
+
+#include <linux/eventpoll.h>
+/* TODO: https://lkml.org/lkml/2017/2/23/416 has a better fix. */
+#undef EPOLLWAKEUP
+#undef EPOLLONESHOT
+#undef EPOLLET
 
 __BEGIN_DECLS
 
+/* TODO: remove once https://lkml.org/lkml/2017/2/23/417 is upstream. */
 #define EPOLLIN          0x00000001
 #define EPOLLPRI         0x00000002
 #define EPOLLOUT         0x00000004
@@ -50,12 +56,6 @@ __BEGIN_DECLS
 #define EPOLLWAKEUP      0x20000000
 #define EPOLLONESHOT     0x40000000
 #define EPOLLET          0x80000000
-
-#define EPOLL_CTL_ADD    1
-#define EPOLL_CTL_DEL    2
-#define EPOLL_CTL_MOD    3
-
-#define EPOLL_CLOEXEC O_CLOEXEC
 
 typedef union epoll_data {
   void* ptr;
