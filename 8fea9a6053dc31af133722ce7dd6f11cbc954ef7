@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f943a18b_05c6ce29",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-24T19:19:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "960ab8db_a3f3f4f5",
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "661bfa2c_d3d83431",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "1260ed59_d9aad64e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-24T19:19:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "661bfa2c_d3d83431",
+      "range": {
+        "startLine": 559,
+        "startChar": 0,
+        "endLine": 560,
+        "endChar": 38
+      },
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "683fdebb_d251db41",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2017-02-24T17:37:07Z",
       "side": 1,
       "message": "what use is the numerical errno value?",
+      "range": {
+        "startLine": 1311,
+        "startChar": 80,
+        "endLine": 1311,
+        "endChar": 90
+      },
+      "revId": "8fea9a6053dc31af133722ce7dd6f11cbc954ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfb72362_723338bd",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-02-24T19:19:18Z",
+      "side": 1,
+      "message": "for cases when for some reason strerror does not recognize it. (possibly bug in setting last_error_ for connection)",
+      "parentUuid": "683fdebb_d251db41",
       "range": {
         "startLine": 1311,
         "startChar": 80,
