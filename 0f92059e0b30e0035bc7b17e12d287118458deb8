@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "690edff4_6c2517c0",
+        "filename": "libc/seccomp/seccomp_policy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-24T20:51:23Z",
+      "side": 1,
+      "message": "Hold on - new version coming which removes this",
+      "revId": "0f92059e0b30e0035bc7b17e12d287118458deb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
