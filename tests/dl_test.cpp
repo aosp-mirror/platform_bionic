@@ -24,6 +24,8 @@
 
 #include <string>
 
+#include "utils.h"
+
 extern "C" int main_global_default_serial() {
   return 3370318;
 }
@@ -67,6 +69,21 @@ TEST(dl, lib_preempts_global_default) {
 
 TEST(dl, lib_does_not_preempt_global_protected) {
   ASSERT_EQ(3370318, lib_global_protected_get_serial());
+}
+
+TEST(dl, exec_linker) {
+#if defined(__BIONIC__)
+#if defined(__LP64__)
+  static constexpr const char* kPathToLinker = "/system/bin/linker64";
+#else
+  static constexpr const char* kPathToLinker = "/system/bin/linker";
+#endif
+  ExecTestHelper eth;
+  std::string expected_output = std::string("This is ") + kPathToLinker +
+                                ", the helper program for dynamic executables.\n";
+  eth.SetArgs( { kPathToLinker, nullptr });
+  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+#endif
 }
 
 // TODO: Add tests for LD_PRELOADs
