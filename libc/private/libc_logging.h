@@ -97,6 +97,14 @@ int __libc_format_log_va_list(int pri, const char* _Nonnull tag, const char* _No
 #endif
 int __libc_write_log(int pri, const char* _Nonnull tag, const char* _Nonnull msg);
 
+#define CHECK(predicate) \
+  do { \
+    if (!(predicate)) { \
+      __libc_fatal("%s:%d: %s CHECK '" #predicate "' failed", \
+          __FILE__, __LINE__, __FUNCTION__); \
+    } \
+  } while(0)
+
 __END_DECLS
 
 #endif
