@@ -496,7 +496,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // see also https://code.google.com/p/android/issues/detail?id=63174
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
     __libc_format_fd(STDOUT_FILENO,
-                     "This is %s, the helper program for shared library executables.\n",
+                     "This is %s, the helper program for dynamic executables.\n",
                      args.argv[0]);
     exit(0);
   }
