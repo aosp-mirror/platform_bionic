@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c28222e_68ec0663",
+        "filename": "tests/endian_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-02-25T03:10:14Z",
+      "side": 1,
+      "message": "Does this complain about sign conversion?",
+      "revId": "ba267f45d62f5b33a6bbb96147d88fbab017b4ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
