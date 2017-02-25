@@ -58,6 +58,7 @@ cc_test_library {
         "complex_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
+        "endian_test.cpp",
         "error_test.cpp",
         "eventfd_test.cpp",
         "fcntl_test.cpp",
