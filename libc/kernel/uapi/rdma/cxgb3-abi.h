@@ -17,7 +17,7 @@
  ****************************************************************************
  ****************************************************************************/
 #ifndef CXGB3_ABI_USER_H
-#define CXBG3_ABI_USER_H
+#define CXGB3_ABI_USER_H
 #include <linux/types.h>
 #define IWCH_UVERBS_ABI_VERSION 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

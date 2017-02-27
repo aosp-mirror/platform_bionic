@@ -98,7 +98,7 @@ struct rdma_ucm_bind {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 addr_size;
   __u16 reserved;
-  struct sockaddr_storage addr;
+  struct __kernel_sockaddr_storage addr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct rdma_ucm_resolve_ip {
@@ -116,8 +116,8 @@ struct rdma_ucm_resolve_addr {
   __u16 dst_size;
   __u32 reserved;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  struct sockaddr_storage src_addr;
-  struct sockaddr_storage dst_addr;
+  struct __kernel_sockaddr_storage src_addr;
+  struct __kernel_sockaddr_storage dst_addr;
 };
 struct rdma_ucm_resolve_route {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
@@ -157,8 +157,8 @@ struct rdma_ucm_query_addr_resp {
   __u16 src_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 dst_size;
-  struct sockaddr_storage src_addr;
-  struct sockaddr_storage dst_addr;
+  struct __kernel_sockaddr_storage src_addr;
+  struct __kernel_sockaddr_storage dst_addr;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct rdma_ucm_query_path_resp {
@@ -256,7 +256,7 @@ struct rdma_ucm_join_mcast {
   __u16 addr_size;
   __u16 join_flags;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  struct sockaddr_storage addr;
+  struct __kernel_sockaddr_storage addr;
 };
 struct rdma_ucm_get_event {
   __u64 response;
