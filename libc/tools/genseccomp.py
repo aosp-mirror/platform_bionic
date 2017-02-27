@@ -149,8 +149,8 @@ def convert_bpf_to_output(bpf, architecture):
     #include <linux/filter.h>
     #include <errno.h>
 
-    #include "seccomp_policy.h"
-    const struct sock_filter {architecture}_filter[] = {{
+    #include "seccomp_bpfs.h"
+    const sock_filter {architecture}_filter[] = {{
     """).format(architecture=architecture)
 
   footer = textwrap.dedent("""\
@@ -196,7 +196,7 @@ def main():
 
     # And output policy
     existing = ""
-    output_path = "seccomp/{}_policy.c".format(arch)
+    output_path = "seccomp/{}_policy.cpp".format(arch)
     if os.path.isfile(output_path):
       existing = open(output_path).read()
     if output == existing:
