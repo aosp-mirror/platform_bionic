@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3b807a6f_f1902668",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-27T20:43:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc0d879b_0fc8fb67",
+      "revId": "43559a1b946d22cc67dec196f62fd7c660fa0c79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4f923e4_ed206175",
         "filename": "libc/seccomp/seccomp_policy.cpp",
         "patchSetId": 2
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "696df88d_dc446b90",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-27T20:43:56Z",
+      "side": 1,
+      "message": "I was trying to optimize a pointless thing.\n\nDone.",
+      "parentUuid": "d3e56e58_34b10590",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 42
+      },
+      "revId": "43559a1b946d22cc67dec196f62fd7c660fa0c79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "488739de_31154e94",
         "filename": "libc/seccomp/seccomp_policy.cpp",
         "patchSetId": 2
@@ -101,6 +143,30 @@
       "side": 1,
       "message": "that\u0027s an interesting alphabet you\u0027re using.\n\n(do you actually need \u003clinux/unistd.h\u003e? not \u003cunistd.h\u003e?)",
       "parentUuid": "488739de_31154e94",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 17
+      },
+      "revId": "43559a1b946d22cc67dec196f62fd7c660fa0c79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb43b73e_15c20e1a",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1044551
+      },
+      "writtenOn": "2017-02-27T20:43:56Z",
+      "side": 1,
+      "message": "I don\u0027t actually need either.",
+      "parentUuid": "5d6614d1_aaf7f16c",
       "range": {
         "startLine": 23,
         "startChar": 0,
