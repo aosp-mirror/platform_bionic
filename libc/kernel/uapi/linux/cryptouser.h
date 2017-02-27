@@ -46,70 +46,75 @@ enum crypto_attr_type_t {
   CRYPTOCFGA_REPORT_AKCIPHER,
   CRYPTOCFGA_REPORT_KPP,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  CRYPTOCFGA_REPORT_ACOMP,
   __CRYPTOCFGA_MAX
 #define CRYPTOCFGA_MAX (__CRYPTOCFGA_MAX - 1)
 };
-struct crypto_user_alg {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct crypto_user_alg {
   char cru_name[CRYPTO_MAX_ALG_NAME];
   char cru_driver_name[CRYPTO_MAX_ALG_NAME];
   char cru_module_name[CRYPTO_MAX_ALG_NAME];
-  __u32 cru_type;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 cru_type;
   __u32 cru_mask;
   __u32 cru_refcnt;
   __u32 cru_flags;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct crypto_report_larval {
   char type[CRYPTO_MAX_NAME];
 };
-struct crypto_report_hash {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct crypto_report_hash {
   char type[CRYPTO_MAX_NAME];
   unsigned int blocksize;
   unsigned int digestsize;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct crypto_report_cipher {
   char type[CRYPTO_MAX_ALG_NAME];
   unsigned int blocksize;
-  unsigned int min_keysize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int min_keysize;
   unsigned int max_keysize;
 };
 struct crypto_report_blkcipher {
-  char type[CRYPTO_MAX_NAME];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  char type[CRYPTO_MAX_NAME];
   char geniv[CRYPTO_MAX_NAME];
   unsigned int blocksize;
   unsigned int min_keysize;
-  unsigned int max_keysize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int max_keysize;
   unsigned int ivsize;
 };
 struct crypto_report_aead {
-  char type[CRYPTO_MAX_NAME];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  char type[CRYPTO_MAX_NAME];
   char geniv[CRYPTO_MAX_NAME];
   unsigned int blocksize;
   unsigned int maxauthsize;
-  unsigned int ivsize;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  unsigned int ivsize;
 };
 struct crypto_report_comp {
   char type[CRYPTO_MAX_NAME];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct crypto_report_rng {
   char type[CRYPTO_MAX_NAME];
   unsigned int seedsize;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct crypto_report_akcipher {
   char type[CRYPTO_MAX_NAME];
 };
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct crypto_report_kpp {
+  char type[CRYPTO_MAX_NAME];
+};
+struct crypto_report_acomp {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char type[CRYPTO_MAX_NAME];
 };
