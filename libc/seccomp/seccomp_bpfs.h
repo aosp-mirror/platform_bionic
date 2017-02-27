@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef SECCOMP_POLICY_H
-#define SECCOMP_POLICY_H
+#ifndef SECCOMP_BPFS_H
+#define SECCOMP_BPFS_H
 
-bool set_seccomp_filter();
+#include <stddef.h>
+#include <linux/seccomp.h>
+
+extern const struct sock_filter arm_filter[];
+extern const size_t arm_filter_size;
+extern const struct sock_filter arm64_filter[];
+extern const size_t arm64_filter_size;
 
 #endif
