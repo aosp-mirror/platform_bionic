@@ -56,6 +56,16 @@ struct inet_diag_req_v2 {
   struct inet_diag_sockid id;
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct inet_diag_req_raw {
+  __u8 sdiag_family;
+  __u8 sdiag_protocol;
+  __u8 idiag_ext;
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 sdiag_raw_protocol;
+  __u32 idiag_states;
+  struct inet_diag_sockid id;
+};
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
   INET_DIAG_REQ_NONE,
   INET_DIAG_REQ_BYTECODE,

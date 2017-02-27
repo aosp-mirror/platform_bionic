@@ -47,22 +47,23 @@ enum {
 #define NBD_FLAG_SEND_FLUSH (1 << 2)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NBD_FLAG_SEND_TRIM (1 << 5)
+#define NBD_FLAG_CAN_MULTI_CONN (1 << 8)
 #define NBD_REQUEST_MAGIC 0x25609513
 #define NBD_REPLY_MAGIC 0x67446698
-struct nbd_request {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct nbd_request {
   __be32 magic;
   __be32 type;
   char handle[8];
-  __be64 from;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __be64 from;
   __be32 len;
 } __attribute__((packed));
 struct nbd_reply {
-  __be32 magic;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __be32 magic;
   __be32 error;
   char handle[8];
 };
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif
