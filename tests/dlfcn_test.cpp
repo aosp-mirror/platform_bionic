@@ -916,11 +916,6 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #endif
 }
 
-#if defined(__LP64__)
-#define PATH_TO_SYSTEM_LIB "/system/lib64/"
-#else
-#define PATH_TO_SYSTEM_LIB "/system/lib/"
-#endif
 #if defined (__aarch64__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
 #elif defined (__arm__)
