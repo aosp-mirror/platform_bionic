@@ -571,6 +571,9 @@ class State:
         pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z]\S+)')
         for unistd_h in ["kernel/uapi/asm-generic/unistd.h",
                          "kernel/uapi/asm-arm/asm/unistd.h",
+                         "kernel/uapi/asm-arm/asm/unistd-common.h",
+                         "kernel/uapi/asm-arm/asm/unistd-eabi.h",
+                         "kernel/uapi/asm-arm/asm/unistd-oabi.h",
                          "kernel/uapi/asm-mips/asm/unistd.h",
                          "kernel/uapi/asm-x86/asm/unistd_32.h",
                          "kernel/uapi/asm-x86/asm/unistd_64.h"]:

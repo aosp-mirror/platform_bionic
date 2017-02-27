@@ -626,35 +626,35 @@ struct kvm_enable_cap {
   __u8 pad[64];
 };
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_PPC_PVINFO_FLAGS_EV_IDLE (1 << 0)
 struct kvm_ppc_pvinfo {
   __u32 flags;
   __u32 hcall[4];
-  __u8 pad[108];
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u8 pad[108];
 };
 #define KVM_PPC_PAGE_SIZES_MAX_SZ 8
 struct kvm_ppc_one_page_size {
-  __u32 page_shift;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 page_shift;
   __u32 pte_enc;
 };
 struct kvm_ppc_one_seg_page_size {
-  __u32 page_shift;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 page_shift;
   __u32 slb_enc;
   struct kvm_ppc_one_page_size enc[KVM_PPC_PAGE_SIZES_MAX_SZ];
 };
-#define KVM_PPC_PAGE_SIZES_REAL 0x00000001
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define KVM_PPC_PAGE_SIZES_REAL 0x00000001
 #define KVM_PPC_1T_SEGMENTS 0x00000002
 struct kvm_ppc_smmu_info {
   __u64 flags;
-  __u32 slb_size;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 slb_size;
   __u32 pad;
   struct kvm_ppc_one_seg_page_size sps[KVM_PPC_PAGE_SIZES_MAX_SZ];
 };
-#define KVM_PPC_PVINFO_FLAGS_EV_IDLE (1 << 0)
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVMIO 0xAE
 #define KVM_VM_S390_UCONTROL 1

@@ -49,10 +49,11 @@ struct mce {
   __u64 mcgcap;
   __u64 synd;
   __u64 ipid;
-};
+  __u64 ppin;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define MCE_GET_RECORD_LEN _IOR('M', 1, int)
 #define MCE_GET_LOG_LEN _IOR('M', 2, int)
 #define MCE_GETCLEAR_FLAGS _IOR('M', 3, int)
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#endif

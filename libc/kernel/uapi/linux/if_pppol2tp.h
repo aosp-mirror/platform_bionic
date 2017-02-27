@@ -22,55 +22,57 @@
 #include <linux/in.h>
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/in6.h>
+#include <linux/l2tp.h>
 struct pppol2tp_addr {
   __kernel_pid_t pid;
-  int fd;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  int fd;
   struct sockaddr_in addr;
   __u16 s_tunnel, s_session;
   __u16 d_tunnel, d_session;
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 struct pppol2tpin6_addr {
   __kernel_pid_t pid;
   int fd;
-  __u16 s_tunnel, s_session;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 s_tunnel, s_session;
   __u16 d_tunnel, d_session;
   struct sockaddr_in6 addr;
 };
-struct pppol2tpv3_addr {
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+struct pppol2tpv3_addr {
   __kernel_pid_t pid;
   int fd;
   struct sockaddr_in addr;
-  __u32 s_tunnel, s_session;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u32 s_tunnel, s_session;
   __u32 d_tunnel, d_session;
 };
 struct pppol2tpv3in6_addr {
-  __kernel_pid_t pid;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __kernel_pid_t pid;
   int fd;
   __u32 s_tunnel, s_session;
   __u32 d_tunnel, d_session;
-  struct sockaddr_in6 addr;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  struct sockaddr_in6 addr;
 };
 enum {
   PPPOL2TP_SO_DEBUG = 1,
-  PPPOL2TP_SO_RECVSEQ = 2,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  PPPOL2TP_SO_RECVSEQ = 2,
   PPPOL2TP_SO_SENDSEQ = 3,
   PPPOL2TP_SO_LNSMODE = 4,
   PPPOL2TP_SO_REORDERTO = 5,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
-  PPPOL2TP_MSG_DEBUG = (1 << 0),
-  PPPOL2TP_MSG_CONTROL = (1 << 1),
-  PPPOL2TP_MSG_SEQ = (1 << 2),
+  PPPOL2TP_MSG_DEBUG = L2TP_MSG_DEBUG,
+  PPPOL2TP_MSG_CONTROL = L2TP_MSG_CONTROL,
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  PPPOL2TP_MSG_DATA = (1 << 3),
+  PPPOL2TP_MSG_SEQ = L2TP_MSG_SEQ,
+  PPPOL2TP_MSG_DATA = L2TP_MSG_DATA,
 };
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

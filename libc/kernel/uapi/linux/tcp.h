@@ -199,16 +199,27 @@ struct tcp_info {
   __u32 tcpi_data_segs_in;
   __u32 tcpi_data_segs_out;
   __u64 tcpi_delivery_rate;
-};
+  __u64 tcpi_busy_time;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u64 tcpi_rwnd_limited;
+  __u64 tcpi_sndbuf_limited;
+};
+enum {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  TCP_NLA_PAD,
+  TCP_NLA_BUSY,
+  TCP_NLA_RWND_LIMITED,
+  TCP_NLA_SNDBUF_LIMITED,
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #define TCP_MD5SIG_MAXKEYLEN 80
 struct tcp_md5sig {
   struct __kernel_sockaddr_storage tcpm_addr;
-  __u16 __tcpm_pad1;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __u16 __tcpm_pad1;
   __u16 tcpm_keylen;
   __u32 __tcpm_pad2;
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
-};
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+};
 #endif
