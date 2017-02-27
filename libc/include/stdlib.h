@@ -158,10 +158,11 @@ size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 #else
 /*
- * 4 is only true for UTF-8 locales, but that's what we default to. We'll need
- * the NDK compatibility library to fix this properly.
+ * Pre-L we didn't have any locale support and so we were always the POSIX
+ * locale. POSIX specifies that MB_CUR_MAX for the POSIX locale is 1:
+ * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdlib.h.html
  */
-#define MB_CUR_MAX 4
+#define MB_CUR_MAX 1
 #endif
 
 #if defined(__BIONIC_FORTIFY)
