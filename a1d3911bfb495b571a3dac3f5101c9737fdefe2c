@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65c12b4a_c2cdd4a5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-27T20:54:20Z",
+      "side": 1,
+      "message": "name",
+      "range": {
+        "startLine": 149,
+        "startChar": 33,
+        "endLine": 149,
+        "endChar": 37
+      },
+      "revId": "a1d3911bfb495b571a3dac3f5101c9737fdefe2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bc31c2d_6e9b2fa0",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 920,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-27T20:54:20Z",
+      "side": 1,
+      "message": "maybe\n\n  // An app targeting M can open libnativehelper.so because it\u0027s on the greylist.",
+      "revId": "a1d3911bfb495b571a3dac3f5101c9737fdefe2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa60abb_a74f9932",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-27T20:54:20Z",
+      "side": 1,
+      "message": "and\n\n  // An app targeting N no longer has the greylist.",
+      "revId": "a1d3911bfb495b571a3dac3f5101c9737fdefe2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "184db311_b6d3ece9",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-02-27T20:54:20Z",
+      "side": 1,
+      "message": "and\n\n  // But an app targeting N can still access NDK libraries.\n\n(assuming that\u0027s what you\u0027re specifically trying to test here.)",
+      "revId": "a1d3911bfb495b571a3dac3f5101c9737fdefe2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
