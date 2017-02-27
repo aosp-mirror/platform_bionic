@@ -3,8 +3,8 @@
 #include <linux/filter.h>
 #include <errno.h>
 
-#include "seccomp_bpfs.h"
-const sock_filter arm_filter[] = {
+#include "seccomp_policy.h"
+const struct sock_filter arm_filter[] = {
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 125),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 168, 63, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 77, 31, 0),
