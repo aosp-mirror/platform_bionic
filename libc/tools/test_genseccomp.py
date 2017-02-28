@@ -107,8 +107,8 @@ ssize_t     read(int, void*, size_t)        all
     #include <linux/filter.h>
     #include <errno.h>
 
-    #include "seccomp_policy.h"
-    const struct sock_filter arm_filter[] = {
+    #include "seccomp_bpfs.h"
+    const sock_filter arm_filter[] = {
     line1
     line2
     };
@@ -136,8 +136,8 @@ ssize_t     read(int, void*, size_t)        all
     #include <linux/filter.h>
     #include <errno.h>
 
-    #include "seccomp_policy.h"
-    const struct sock_filter arm_filter[] = {
+    #include "seccomp_bpfs.h"
+    const sock_filter arm_filter[] = {
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 0, 3),
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 140, 1, 0),
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4, 2, 1), //read
