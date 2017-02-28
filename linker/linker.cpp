@@ -132,9 +132,34 @@ static bool file_exists(const char* path) {
   return S_ISREG(s.st_mode);
 }
 
+static std::string resolve_soname(const std::string& name) {
+  // We assume that soname equals to basename here
+
+  // TODO(dimitry): consider having honest absolute-path -> soname resolution
+  // note that since we might end up refusing to load this library because
+  // it is not in shared libs list we need to get the soname without actually loading
+  // the library.
+  //
+  // On the other hand there are several places where we already assume that
+  // soname == basename in particular for any not-loaded library mentioned
+  // in DT_NEEDED list.
+  return basename(name.c_str());
+}
+
+static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const char* name) {
+  std::string soname = resolve_soname(name);
+  for (auto& ns_link : ns->linked_namespaces()) {
+    if (ns_link.is_accessible(soname.c_str())) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
 // gradually remove libraries from this list until it is gone.
-static bool is_greylisted(const char* name, const soinfo* needed_by) {
+static bool is_greylisted(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
   static const char* const kLibraryGreyList[] = {
     "libandroid_runtime.so",
     "libbinder.so",
@@ -160,10 +185,10 @@ static bool is_greylisted(const char* name, const soinfo* needed_by) {
   }
 
   // if the library needed by a system library - implicitly assume it
-  // is greylisted
-
+  // is greylisted unless it is in the list of shared libraries for one or
+  // more linked namespaces
   if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
-    return true;
+    return !maybe_accessible_via_namespace_links(ns, name);
   }
 
   // if this is an absolute path - make sure it points to /system/lib(64)
@@ -1048,7 +1073,7 @@ static int open_library(android_namespace_t* ns,
   }
 
   // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (fd == -1 && ns != &g_default_namespace && is_greylisted(name, needed_by)) {
+  if (fd == -1 && ns != &g_default_namespace && is_greylisted(ns, name, needed_by)) {
     // try searching for it on default_namespace default_library_path
     fd = open_library_on_paths(zip_archive_cache, name, file_offset,
                                g_default_namespace.get_default_library_paths(), realpath);
@@ -1144,7 +1169,7 @@ static bool load_library(android_namespace_t* ns,
     // TODO(dimitry) before O release: add a namespace attribute to have this enabled
     // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
-    if (is_greylisted(name, needed_by)) {
+    if (is_greylisted(ns, name, needed_by)) {
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
@@ -1165,15 +1190,18 @@ static bool load_library(android_namespace_t* ns,
       DL_ERR("library \"%s\" needed or dlopened by \"%s\" is not accessible for the namespace \"%s\"",
              name, needed_or_dlopened_by, ns->get_name());
 
-      PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
-            " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-            " permitted_paths=\"%s\"]",
-            name, realpath.c_str(),
-            needed_or_dlopened_by,
-            ns->get_name(),
-            android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
-            android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-            android::base::Join(ns->get_permitted_paths(), ':').c_str());
+      // do not print this if a library is in the list of shared libraries for linked namespaces
+      if (!maybe_accessible_via_namespace_links(ns, name)) {
+        PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+              " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+              " permitted_paths=\"%s\"]",
+              name, realpath.c_str(),
+              needed_or_dlopened_by,
+              ns->get_name(),
+              android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+              android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+              android::base::Join(ns->get_permitted_paths(), ':').c_str());
+      }
       return false;
     }
   }
@@ -1274,21 +1302,6 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
     return true;
   });
 }
-
-static std::string resolve_soname(const std::string& name) {
-  // We assume that soname equals to basename here
-
-  // TODO(dimitry): consider having honest absolute-path -> soname resolution
-  // note that since we might end up refusing to load this library because
-  // it is not in shared libs list we need to get the soname without actually loading
-  // the library.
-  //
-  // On the other hand there are several places where we already assume that
-  // soname == basename in particular for any not-loaded library mentioned
-  // in DT_NEEDED list.
-  return basename(name.c_str());
-}
-
 
 static bool find_library_in_linked_namespace(const android_namespace_link_t& namespace_link,
                                              LoadTask* task,
