@@ -32,6 +32,12 @@
 
 #include "private/ScopeGuard.h"
 
+#if defined(__LP64__)
+#define PATH_TO_SYSTEM_LIB "/system/lib64/"
+#else
+#define PATH_TO_SYSTEM_LIB "/system/lib/"
+#endif
+
 #if defined(__BIONIC__)
 #define KNOWN_FAILURE_ON_BIONIC(x) xfail_ ## x
 #else

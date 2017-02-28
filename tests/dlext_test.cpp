@@ -917,12 +917,19 @@ TEST(dlext, ns_greylist) {
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns;
 
+  // An app targeting M can open libnativehelper.so because it's on the greylist.
   android_set_application_target_sdk_version(__ANDROID_API_M__);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
+  // Check that loader did not load another copy of libdl.so while loading greylisted library.
+  void* dlsym_ptr = dlsym(handle, "dlsym");
+  ASSERT_TRUE(dlsym_ptr != nullptr) << dlerror();
+  ASSERT_EQ(&dlsym, dlsym_ptr);
+
   dlclose(handle);
 
+  // An app targeting N no longer has the greylist.
   android_set_application_target_sdk_version(__ANDROID_API_N__);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
