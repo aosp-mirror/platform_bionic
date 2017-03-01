@@ -209,7 +209,6 @@ struct find_nth_cookie {
 };
 
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
-// It's also used in a libnativehelper test.
 prop_area* __system_property_area__ = nullptr;
 
 static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
