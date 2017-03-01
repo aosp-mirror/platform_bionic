@@ -33,6 +33,24 @@
       "revId": "d82de4b4a429727377488338a57f2627e0145d14",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ffa84c3_fa994fa5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-01T16:07:01Z",
+      "side": 1,
+      "message": "ok, I removed kVendorVndkExt and moved kSystemVndkExtlibDir to the front of kSystemVndkLibDir so that vndk-ext library is searched prior to vndk library of the same soname.",
+      "parentUuid": "38b98a27_18a1853d",
+      "revId": "d82de4b4a429727377488338a57f2627e0145d14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
