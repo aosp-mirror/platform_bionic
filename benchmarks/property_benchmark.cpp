@@ -28,8 +28,6 @@
 
 #include <benchmark/benchmark.h>
 
-extern void* __system_property_area__;
-
 // Do not exceed 512, that is about the largest number of properties
 // that can be created with the current property area size.
 #define TEST_NUM_PROPS \
@@ -52,9 +50,6 @@ struct LocalPropertyTestState {
              android_data, strerror(errno));
       return;
     }
-
-    old_pa = __system_property_area__;
-    __system_property_area__ = NULL;
 
     pa_dirname = dirname;
     pa_filename = pa_dirname + "/__properties__";
@@ -111,9 +106,8 @@ struct LocalPropertyTestState {
     if (!valid)
       return;
 
-    __system_property_area__ = old_pa;
-
     __system_property_set_filename(PROP_FILENAME);
+    __system_property_area_init();
     unlink(pa_filename.c_str());
     rmdir(pa_dirname.c_str());
 
@@ -138,7 +132,6 @@ struct LocalPropertyTestState {
  private:
   std::string pa_dirname;
   std::string pa_filename;
-  void* old_pa;
 };
 
 static void BM_property_get(benchmark::State& state) {
