@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1064e750_1c02c81c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-03-01T20:15:19Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "3abe747e_328e1d45",
+      "range": {
+        "startLine": 9,
+        "startChar": 15,
+        "endLine": 9,
+        "endChar": 33
+      },
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e2478e01_65192b6a",
         "filename": "libc/Android.bp",
         "patchSetId": 2
@@ -59,6 +83,24 @@
     },
     {
       "key": {
+        "uuid": "765b18cb_7faa2c61",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-03-01T20:15:19Z",
+      "side": 1,
+      "message": "another CL in build system is https://android-review.googlesource.com/#/c/346252/. I don\u0027t know if it is in the right direction. But I have tried another way using sdk_version: \"24\", that is a big pain. Because by setting sdk_version, it only allows me to link with libraries built with sdk_version, so I can\u0027t link libBionicTests/libbase/liblog. What\u0027s more, I can\u0027t build libBionicTests with sdk_version set to an older version than current platform, because that makes tests for newest functions not working.",
+      "parentUuid": "fe0591e7_fa4cf73c",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98a9cf7d_47ece1fd",
         "filename": "tests/Android.bp",
         "patchSetId": 2
@@ -70,6 +112,24 @@
       "writtenOn": "2017-03-01T19:49:18Z",
       "side": 1,
       "message": "This is a TODO, right?\n\nWe can\u0027t ship like this because that means every NDK module that uses this will need to use this flag, and it\u0027s generally a bad idea to do so.",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b2054a4_0e179c98",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-03-01T20:15:19Z",
+      "side": 1,
+      "message": "I will try to remove this.",
+      "parentUuid": "98a9cf7d_47ece1fd",
       "revId": "917a140e79d93918c1eb915983978c86e55915c6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
