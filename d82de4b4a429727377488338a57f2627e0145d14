@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66c3365f_8cbfcd1c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-01T08:01:32Z",
+      "side": 1,
+      "message": "this..",
+      "revId": "d82de4b4a429727377488338a57f2627e0145d14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38b98a27_18a1853d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-01T08:01:32Z",
+      "side": 1,
+      "message": "and this should not be on the search path for the same namespace (even if it is default namespace).",
+      "revId": "d82de4b4a429727377488338a57f2627e0145d14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
