@@ -101,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "da6eb650_61dad8d4",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-01T20:19:31Z",
+      "side": 1,
+      "message": "Yeah, we may need to add NDK variants of libbase and friends. This test definitely will need to be built against the NDK as any other module would though because otherwise we\u0027re not testing it as it would be used.",
+      "parentUuid": "765b18cb_7faa2c61",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98a9cf7d_47ece1fd",
         "filename": "tests/Android.bp",
         "patchSetId": 2
