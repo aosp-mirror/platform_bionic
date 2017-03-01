@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3abe747e_328e1d45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-01T19:49:18Z",
+      "side": 1,
+      "message": "arm32 is way more interesting for this.",
+      "range": {
+        "startLine": 9,
+        "startChar": 15,
+        "endLine": 9,
+        "endChar": 33
+      },
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2478e01_65192b6a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-01T19:49:18Z",
+      "side": 1,
+      "message": "Hmm. We should probably be building this against the NDK so the build system can catch us if we accidentally put anything platform specific in here. Right now that will be a giant pain because all the static libs that get built into this would need to be built with the NDK too, but it\u0027s something we might want to think about.",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe0591e7_fa4cf73c",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-01T19:49:18Z",
+      "side": 1,
+      "message": "To be an accurate test, this will need to be `sdk_version: \"24\"` (and moving that target down to 14 as we get things working). I\u0027m guessing I have some build work to do before that will actually work though (the headers don\u0027t autoupdate atm because unbundled branches).",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98a9cf7d_47ece1fd",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-01T19:49:18Z",
+      "side": 1,
+      "message": "This is a TODO, right?\n\nWe can\u0027t ship like this because that means every NDK module that uses this will need to use this flag, and it\u0027s generally a bad idea to do so.",
+      "revId": "917a140e79d93918c1eb915983978c86e55915c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
