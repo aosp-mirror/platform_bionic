@@ -50,6 +50,24 @@
       "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb261255_7a52aac6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-03-01T20:53:24Z",
+      "side": 1,
+      "message": "yes, each of these directories should have a corresponding asan path",
+      "parentUuid": "4ad66b98_7eed6d4b",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
