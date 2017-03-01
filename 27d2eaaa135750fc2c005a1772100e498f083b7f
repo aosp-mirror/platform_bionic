@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f2d166e_5b618089",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-01T17:57:04Z",
+      "side": 1,
+      "message": "use lib/$(arch) instead since we are changing things...?",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36fa5984_782f9f8a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-01T17:57:04Z",
+      "side": 1,
+      "message": "This is new - why do we need this on system partition?",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ad66b98_7eed6d4b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-01T17:57:04Z",
+      "side": 1,
+      "message": "asan dirs for /vndk and co?",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
