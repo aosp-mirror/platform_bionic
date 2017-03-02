@@ -104,12 +104,12 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 285, 31, 30), //waitid|socket|bind|connect|liste
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 289, 30, 29), //getsockname|getpeername|socketpair
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 350, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 327, 7, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 317, 3, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 316, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 292, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 291, 25, 24), //sendto
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 298, 24, 23), //recvfrom|shutdown|setsockopt|getsockopt|sendmsg|recvmsg
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 322, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 319, 22, 21), //inotify_add_watch|inotify_rm_watch
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 319, 22, 21), //inotify_init|inotify_add_watch|inotify_rm_watch
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 326, 21, 20), //openat|mkdirat|mknodat|fchownat
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 345, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 340, 1, 0),
