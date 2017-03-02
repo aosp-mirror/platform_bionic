@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f022889e_7afdaba4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-02T22:02:11Z",
+      "side": 1,
+      "message": "no reason. I think nobody thought about this much at the time.",
+      "parentUuid": "5f5ae01d_bf493e7c",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36fa5984_782f9f8a",
         "filename": "linker/linker.cpp",
         "patchSetId": 10
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "oh this is my mistake during bulk edit. sorry for it. it should be /vendor/lib/sameprocess",
       "parentUuid": "36fa5984_782f9f8a",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ab45f40_5c56af38",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-02T22:02:11Z",
+      "side": 1,
+      "message": "afaik libraries from this directory are used exclusively by zygote. If so this search path should not be part of the default namespace search path.",
+      "parentUuid": "0ad02973_c3f22e1d",
       "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
