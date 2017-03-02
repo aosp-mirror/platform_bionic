@@ -91,3 +91,6 @@ int	lstat64:lstat64(const char *restrict path, struct stat64 *restrict buf)	arm
 int	fcntl:fcntl(int fd, int cmd, ... /* arg */ )	arm
 pid_t	fork:fork()	arm
 int	poll:poll(struct pollfd *fds, nfds_t nfds, int timeout)	arm
+
+# b/35906875
+int	inotify_init()	arm
