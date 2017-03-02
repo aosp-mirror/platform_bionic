@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5f5ae01d_bf493e7c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-02T02:52:57Z",
+      "side": 1,
+      "message": "AFAIK, lib/$(arch) is only used when TARGET_TRANSLATE_2ND_ARCH :\u003d true (e.g. aosp_x86_arm).\n\nHowever, I am curious why haven\u0027t we had lib/$(arch) in the default search path",
+      "parentUuid": "1f2d166e_5b618089",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36fa5984_782f9f8a",
         "filename": "linker/linker.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-01T17:57:04Z",
       "side": 1,
       "message": "This is new - why do we need this on system partition?",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ad02973_c3f22e1d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-02T02:52:57Z",
+      "side": 1,
+      "message": "oh this is my mistake during bulk edit. sorry for it. it should be /vendor/lib/sameprocess",
+      "parentUuid": "36fa5984_782f9f8a",
       "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -65,6 +101,24 @@
       "side": 1,
       "message": "yes, each of these directories should have a corresponding asan path",
       "parentUuid": "4ad66b98_7eed6d4b",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cbcca6d_a3e6a2d0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-02T02:52:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb261255_7a52aac6",
       "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
