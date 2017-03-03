@@ -31,8 +31,14 @@ def get_kernel_dir():
 
 def get_android_root():
     if "ANDROID_BUILD_TOP" in os.environ:
+        # Verify that the current directory is in the root.
+        # If not, then print an error.
+        cwd = os.getcwd()
+        root = os.environ["ANDROID_BUILD_TOP"]
+        if len(cwd) < len(root) or not root == cwd[:len(root)]:
+            panic("Not in android tree pointed at by ANDROID_BUILD_TOP (%s)\n" % root)
         return os.environ["ANDROID_BUILD_TOP"]
-    panic("Unable to find root of tree, did you forget to lunch a target?")
+    panic("Unable to find root of tree, did you forget to lunch a target?\n")
 
 
 class StringOutput:
