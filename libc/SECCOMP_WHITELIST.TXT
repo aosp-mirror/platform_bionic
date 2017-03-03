@@ -94,3 +94,4 @@ int	poll:poll(struct pollfd *fds, nfds_t nfds, int timeout)	arm
 
 # b/35906875
 int	inotify_init()	arm
+uid_t	getuid()	arm
