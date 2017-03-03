@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0eb6230d_e3b2acca",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-03T00:41:59Z",
+      "side": 1,
+      "message": "I don\u0027t know too. But it seems that x86_arm devices such as fugu have their own linker implementation: https://cs.corp.google.com/android/device/asus/fugu/self-extractors/intel/staging/device-partial.mk?type\u003dcs\u0026q\u003df:fugu+linker\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d149\n\n\nI think we need to fix it when we re-implement it using ld.config.txt.",
+      "parentUuid": "f022889e_7afdaba4",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36fa5984_782f9f8a",
         "filename": "linker/linker.cpp",
         "patchSetId": 10
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "afaik libraries from this directory are used exclusively by zygote. If so this search path should not be part of the default namespace search path.",
       "parentUuid": "0ad02973_c3f22e1d",
+      "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e1beb41_5b65bb6a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-03T00:41:59Z",
+      "side": 1,
+      "message": "No, it isn\u0027t. Sameprocess HALs can be loaded by from app_process and vendor HAL services (e.g. /vendor/bin/android.hardware.camera@X.X-service). So this must be in default search path. Anyway, we will redo this in ld.config.txt.",
+      "parentUuid": "6ab45f40_5c56af38",
       "revId": "27d2eaaa135750fc2c005a1772100e498f083b7f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
