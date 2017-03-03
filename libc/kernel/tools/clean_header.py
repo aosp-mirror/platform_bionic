@@ -79,55 +79,33 @@ def print_error(no_update, msg):
     sys.stderr.write("warning: " + msg)
 
 
-def cleanupFile(dst_dir, src_dir, rel_path, no_update = True):
+def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     """reads an original header and perform the cleanup operation on it
        this functions returns the destination path and the clean header
        as a single string"""
-    # check the header path
-    full_path = os.path.join(src_dir, rel_path)
-
-    if not os.path.exists(full_path):
-        print_error(no_update, "file does not exist: '%s'\n" % full_path)
+    # Check the header path
+    if not os.path.exists(src_file):
+        print_error(no_update, "'%s' does not exist\n" % src_file)
         return None, None
 
-    if not os.path.isfile(full_path):
-        print_error(no_update, "path is not a file: '%s'\n" % full_path)
+    if not os.path.isfile(src_file):
+        print_error(no_update, "'%s' is not a file\n" % src_file)
         return None, None
 
-    # convert into destination path, extracting architecture if needed
-    # and the corresponding list of known static functions
-    #
+    # Extract the architecture if found.
     arch = None
     statics = kernel_known_generic_statics
-    m = re.match(r"asm-([\w\d_\+\.\-]+)(/.*)", rel_path)
-    if m and m.group(1) != 'generic':
-        dst_path = "arch-%s/asm/%s" % m.groups()
-        arch = m.group(1)
-        statics  = statics.union(kernel_known_statics.get(arch, set()))
-    else:
-        # process headers under the uapi directory
-        # note the "asm" level has been explicitly added in the original
-        # kernel header tree for architectural-dependent uapi headers
-        m_uapi = re.match(r"(uapi)/([\w\d_\+\.\-]+)(/.*)", rel_path)
-        if m_uapi:
-            dst_path = rel_path
-            m_uapi_arch = re.match(r"asm-([\w\d_\+\.\-]+)", m_uapi.group(2))
-            if m_uapi_arch and m_uapi_arch.group(1) != 'generic':
-                arch = m_uapi_arch.group(1)
-                statics = statics.union(kernel_known_statics.get(arch, set()))
-        # common headers (ie non-asm and non-uapi)
-        else:
-            dst_path = os.path.join("android", rel_path)
+    m = re.search(r"(^|/)asm-([\w\d_\+\.\-]+)/.*", rel_path)
+    if m and m.group(2) != 'generic':
+        arch = m.group(2)
+        statics = statics.union(kernel_known_statics.get(arch, set()))
 
-    dst_path = os.path.join(dst_dir, dst_path)
-
-    # now, let's parse the file
-    #
+    # Now, let's parse the file.
     parser = cpp.BlockParser()
-    blocks = parser.parseFile(full_path)
+    blocks = parser.parseFile(src_file)
     if not parser.parsed:
-        print_error(no_update, "can't parse '%s'%" % full_path)
-        return None, None
+        print_error(no_update, "Can't parse '%s'" % src_file)
+        return None
 
     macros = kernel_known_macros.copy()
     if arch and arch in kernel_default_arch_macros:
@@ -145,7 +123,7 @@ def cleanupFile(dst_dir, src_dir, rel_path, no_update = True):
     out = StringOutput()
     out.write(kernel_disclaimer)
     blocks.writeWithWarning(out, kernel_warning, 4)
-    return dst_path, out.get()
+    return out.get()
 
 
 if __name__ == "__main__":
@@ -194,22 +172,26 @@ if __name__ == "__main__":
 
     if no_update:
         for path in args:
-            dst_path, newdata = cleanupFile(dst_dir, src_dir, path)
-            print newdata
+            dst_file = os.path.join(dst_dir, path)
+            src_file = os.path.join(src_dir, path)
+            new_data = cleanupFile(dst_file, src_file, path)
+            print new_data
 
         sys.exit(0)
 
-    # now let's update our files.
+    # Now let's update our files.
 
     b = BatchFileUpdater()
 
     for path in args:
-        dst_path, newdata = cleanupFile(dst_dir, src_dir, path, no_update)
-        if not dst_path:
+        dst_file = os.path.join(dst_dir, path)
+        src_file = os.path.join(src_dir, path)
+        new_data = cleanupFile(dst_file, src_file, path, no_update)
+        if not new_data:
             continue
 
-        b.readFile(dst_path)
-        r = b.editFile(dst_path, newdata)
+        b.readFile(path)
+        r = b.editFile(path, new_data)
         if r == 0:
             r = "unchanged"
         elif r == 1:
@@ -217,7 +199,7 @@ if __name__ == "__main__":
         else:
             r = "added"
 
-        print "cleaning: %-*s -> %-*s (%s)" % (35, path, 35, dst_path, r)
+        print "cleaning: %-*s -> %-*s (%s)" % (35, path, 35, path, r)
 
 
     b.updateGitFiles()
