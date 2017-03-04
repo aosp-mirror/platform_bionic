@@ -1,0 +1,15 @@
+cc_library {
+    name: "libseccomp_policy",
+    srcs: [
+        "seccomp_policy.cpp",
+        "arm_policy.cpp",
+        "arm64_policy.cpp",
+    ],
+    export_include_dirs: ["include"],
+    shared: {
+        shared_libs: ["libbase"],
+    },
+    static: {
+        static_libs: ["libbase"],
+    },
+}
