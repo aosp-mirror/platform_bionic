@@ -2155,4 +2155,4 @@ ndk_library {
     first_version: "9",
 }
 
-subdirs = ["malloc_debug"]
+subdirs = ["*"]
