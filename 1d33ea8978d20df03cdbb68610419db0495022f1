@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "607a6d8a_3dbe0996",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-04T23:40:52Z",
+      "side": 1,
+      "message": "I am still not convinced this belongs in this list. The end goal is to remove /vendor/* from this list.",
+      "revId": "1d33ea8978d20df03cdbb68610419db0495022f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
