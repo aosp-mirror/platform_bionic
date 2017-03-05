@@ -16,6 +16,24 @@
       "revId": "1d33ea8978d20df03cdbb68610419db0495022f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33573944_438f6638",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-05T05:31:53Z",
+      "side": 1,
+      "message": "I totally agree on the end goal. Please consider this as just an interim workaround before ld.config.txt is done.\n\nIn the end, we will have\n\nsystem-ns for /system/lib\n\nvendor-ns for /vendor/lib\n\ndefault-ns will be linked to system-ns and vendor-ns (with different ld.config.txt settings depending on the path of the main exec). Am I right?",
+      "parentUuid": "607a6d8a_3dbe0996",
+      "revId": "1d33ea8978d20df03cdbb68610419db0495022f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
