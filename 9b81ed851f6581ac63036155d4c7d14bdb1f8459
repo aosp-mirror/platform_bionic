@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "234dfefc_b640ab82",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-06T19:12:39Z",
+      "side": 1,
+      "message": "This method will return the list everything listed above - it should probably be changed to return only /system/lib:/vendor/lib for compatibility and to avoid looking into places apps are not supposed to look into.",
+      "revId": "9b81ed851f6581ac63036155d4c7d14bdb1f8459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
