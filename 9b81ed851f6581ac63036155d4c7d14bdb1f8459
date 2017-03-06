@@ -16,6 +16,24 @@
       "revId": "9b81ed851f6581ac63036155d4c7d14bdb1f8459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb3210db_a114ce63",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-06T19:39:59Z",
+      "side": 1,
+      "message": "but not something to address in this CL though. There is asan aspect to this. And there are other users beside apps unfortunately.",
+      "parentUuid": "234dfefc_b640ab82",
+      "revId": "9b81ed851f6581ac63036155d4c7d14bdb1f8459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
