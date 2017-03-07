@@ -207,7 +207,6 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
 }
 // END OF WORKAROUND
 
-static const char* const* g_default_ld_paths;
 static std::vector<std::string> g_ld_preload_names;
 
 static bool g_anonymous_namespace_initialized;
@@ -1783,18 +1782,22 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   // See b/17302493 for further details.
   // Once the above bug is fixed, this code can be modified to use
   // snprintf again.
-  size_t required_len = 0;
-  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
-    required_len += strlen(g_default_ld_paths[i]) + 1;
+  const auto& default_ld_paths = g_default_namespace.get_default_library_paths();
+
+  size_t required_size = 0;
+  for (const auto& path : default_ld_paths) {
+    required_size += path.size() + 1;
   }
-  if (buffer_size < required_len) {
+
+  if (buffer_size < required_size) {
     __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
-                 "buffer len %zu, required len %zu", buffer_size, required_len);
+                 "buffer len %zu, required len %zu", buffer_size, required_size);
   }
+
   char* end = buffer;
-  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
+  for (size_t i = 0; i < default_ld_paths.size(); ++i) {
     if (i > 0) *end++ = ':';
-    end = stpcpy(end, g_default_ld_paths[i]);
+    end = stpcpy(end, default_ld_paths[i].c_str());
   }
 }
 
@@ -3342,20 +3345,20 @@ void init_default_namespace() {
   const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
                                                        somain->load_bias);
   const char* bname = basename(interp);
-  if (bname && (strcmp(bname, "linker_asan") == 0 || strcmp(bname, "linker_asan64") == 0)) {
-    g_default_ld_paths = kAsanDefaultLdPaths;
-    g_is_asan = true;
-  } else {
-    g_default_ld_paths = kDefaultLdPaths;
-  }
+
+  bool is_asan = bname != nullptr &&
+                 (strcmp(bname, "linker_asan") == 0 ||
+                  strcmp(bname, "linker_asan64") == 0);
+  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
+  g_is_asan = is_asan;
 
   char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
-  for (size_t i = 0; g_default_ld_paths[i] != nullptr; ++i) {
-    if (realpath(g_default_ld_paths[i], real_path) != nullptr) {
+  for (size_t i = 0; default_ld_paths[i] != nullptr; ++i) {
+    if (realpath(default_ld_paths[i], real_path) != nullptr) {
       ld_default_paths.push_back(real_path);
     } else {
-      ld_default_paths.push_back(g_default_ld_paths[i]);
+      ld_default_paths.push_back(default_ld_paths[i]);
     }
   }
 
