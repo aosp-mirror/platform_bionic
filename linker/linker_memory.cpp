@@ -39,14 +39,20 @@ static pid_t fallback_tid = 0;
 
 // Used by libdebuggerd_handler to switch allocators during a crash dump, in
 // case the linker heap is corrupted. Do not use this function.
-extern "C" void __linker_use_fallback_allocator() {
+extern "C" void __linker_enable_fallback_allocator() {
   if (fallback_tid != 0) {
-    __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                      "attempted to set fallback allocator multiple times");
-    return;
+    __libc_fatal("attempted to use currently-in-use fallback allocator");
   }
 
   fallback_tid = gettid();
+}
+
+extern "C" void __linker_disable_fallback_allocator() {
+  if (fallback_tid == 0) {
+    __libc_fatal("attempted to disable unused fallback allocator");
+  }
+
+  fallback_tid = 0;
 }
 
 static LinkerMemoryAllocator& get_fallback_allocator() {
