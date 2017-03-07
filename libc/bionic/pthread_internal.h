@@ -141,13 +141,11 @@ static inline __always_inline bionic_tls& __get_bionic_tls() {
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
-#if defined(__LP64__)
-// SIGSTKSZ is not big enough for 64-bit arch.
-// See https://code.google.com/p/android/issues/detail?id=187064.
+// SIGSTKSZ (8kB) is not big enough.
+// snprintf to a stack buffer of size PATH_MAX consumes ~7kB of stack.
+// Also, on 64-bit, logging uses more than 8kB by itself:
+// https://code.google.com/p/android/issues/detail?id=187064
 #define SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE (16 * 1024)
-#else
-#define SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE SIGSTKSZ
-#endif
 
 /*
  * Traditionally we gave threads a 1MiB stack. When we started
