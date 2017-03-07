@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b01f5e8_599ce966",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-03-07T19:13:57Z",
+      "side": 0,
+      "message": "You are losing a check here. Should this check be added to __android_create_namespace? That way you still have this check but only in the case where it matters.",
+      "range": {
+        "startLine": 2106,
+        "startChar": 2,
+        "endLine": 2106,
+        "endChar": 43
+      },
+      "revId": "77ad64267c65fe876f27265ee91063810f5fe71a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
