@@ -80,11 +80,17 @@ struct android_namespace_t {
   void set_default_library_paths(std::vector<std::string>&& library_paths) {
     default_library_paths_ = library_paths;
   }
+  void set_default_library_paths(const std::vector<std::string>& library_paths) {
+    default_library_paths_ = library_paths;
+  }
 
   const std::vector<std::string>& get_permitted_paths() const {
     return permitted_paths_;
   }
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
+    permitted_paths_ = permitted_paths;
+  }
+  void set_permitted_paths(const std::vector<std::string>& permitted_paths) {
     permitted_paths_ = permitted_paths;
   }
 

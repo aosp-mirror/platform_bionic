@@ -19,6 +19,7 @@ cc_binary {
         "linker_block_allocator.cpp",
         "linker_dlwarning.cpp",
         "linker_cfi.cpp",
+        "linker_config.cpp",
         "linker_gdb_support.cpp",
         "linker_globals.cpp",
         "linker_libc_support.c",

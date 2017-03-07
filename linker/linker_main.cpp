@@ -209,6 +209,8 @@ static char kLinkerPath[] = "/system/bin/linker";
  * and other non-local data at this point.
  */
 static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(Addr) linker_base) {
+  ProtectedDataGuard guard;
+
 #if TIMING
   struct timeval t0, t1;
   gettimeofday(&t0, 0);
@@ -330,7 +332,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   somain = si;
 
-  init_default_namespace();
+  init_default_namespace(executable_path);
 
   if (!si->prelink_image()) {
     __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
@@ -381,19 +383,15 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   }
 
-  {
-    ProtectedDataGuard guard;
+  si->call_pre_init_constructors();
 
-    si->call_pre_init_constructors();
-
-    /* After the prelink_image, the si->load_bias is initialized.
-     * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
-     * We need to update this value for so exe here. So Unwind_Backtrace
-     * for some arch like x86 could work correctly within so exe.
-     */
-    map->l_addr = si->load_bias;
-    si->call_constructors();
-  }
+  /* After the prelink_image, the si->load_bias is initialized.
+   * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
+   * We need to update this value for so exe here. So Unwind_Backtrace
+   * for some arch like x86 could work correctly within so exe.
+   */
+  map->l_addr = si->load_bias;
+  si->call_constructors();
 
 #if TIMING
   gettimeofday(&t1, nullptr);
