@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17224eda_329a423e",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-07T06:16:06Z",
+      "side": 1,
+      "message": "include a link to the LP32 bug too?\n\nand/or just inline the \"one snprintf\" claim.",
+      "revId": "2fd3365b849d3bb35331bded61c779f14aee72e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
