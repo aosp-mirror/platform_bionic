@@ -22,6 +22,30 @@
       "revId": "77ad64267c65fe876f27265ee91063810f5fe71a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e9f4b0e_513485bd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-07T19:17:15Z",
+      "side": 0,
+      "message": "It does not really matter. It is perfectly fine to have anonymous namespace pointing at default one outside of apps namespaces.\n\nThe check was added because before O we had only zygote use this and it made sense.",
+      "parentUuid": "6b01f5e8_599ce966",
+      "range": {
+        "startLine": 2106,
+        "startChar": 2,
+        "endLine": 2106,
+        "endChar": 43
+      },
+      "revId": "77ad64267c65fe876f27265ee91063810f5fe71a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
