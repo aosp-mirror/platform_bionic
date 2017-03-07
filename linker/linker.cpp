@@ -2058,8 +2058,6 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
 
   ProtectedDataGuard guard;
 
-  g_anonymous_namespace_initialized = true;
-
   // create anonymous namespace
   // When the caller is nullptr - create_namespace will take global group
   // from the anonymous namespace, which is fine because anonymous namespace
@@ -2075,16 +2073,15 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
                        &g_default_namespace);
 
   if (anon_ns == nullptr) {
-    g_anonymous_namespace_initialized = false;
     return false;
   }
 
   if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames)) {
-    g_anonymous_namespace_initialized = false;
     return false;
   }
 
   g_anonymous_namespace = anon_ns;
+  g_anonymous_namespace_initialized = true;
 
   return true;
 }
@@ -2103,11 +2100,6 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       uint64_t type,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace) {
-  if (!g_anonymous_namespace_initialized) {
-    DL_ERR("cannot create namespace: anonymous namespace is not initialized.");
-    return nullptr;
-  }
-
   if (parent_namespace == nullptr) {
     // if parent_namespace is nullptr -> set it to the caller namespace
     soinfo* caller_soinfo = find_containing_library(caller_addr);
