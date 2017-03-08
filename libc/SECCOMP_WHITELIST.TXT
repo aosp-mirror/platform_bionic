@@ -43,7 +43,7 @@ int	perf_event_open:perf_event_open(struct perf_event_attr *attr, pid_t pid, int
 int	tkill:tkill(int tid, int sig)	arm64,arm
 
 # b/35034743
-int	syncfs:syncfs(int fd)	arm64
+int	syncfs:syncfs(int fd)	arm64,arm
 
 # b/34763393
 int	seccomp:seccomp(unsigned int operation, unsigned int flags, void *args)	arm64,arm
