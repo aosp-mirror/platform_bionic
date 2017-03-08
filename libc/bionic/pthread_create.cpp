@@ -62,11 +62,13 @@ void __init_tls(pthread_internal_t* thread) {
   if (allocation == MAP_FAILED) {
     __libc_fatal("failed to allocate TLS");
   }
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard page");
 
   thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) + PAGE_SIZE);
   if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
     __libc_fatal("failed to mprotect TLS");
   }
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->bionic_tls, BIONIC_TLS_SIZE, "bionic TLS");
 }
 
 void __init_thread_stack_guard(pthread_internal_t* thread) {
