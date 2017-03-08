@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "47cddeda_43c9947e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1066,
+      "author": {
+        "id": 1018773
+      },
+      "writtenOn": "2017-03-08T23:29:28Z",
+      "side": 1,
+      "message": "Done. I was just trying to preserve the unexplained old behavior. I have no idea why the pre-existing behavior is like that...",
+      "parentUuid": "180fc0b0_d28ad232",
+      "revId": "e92233785e33f42a639eace30872725cfea79def",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe9abcd5_ad5bf70b",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-08T22:46:55Z",
       "side": 1,
       "message": "Here too",
+      "revId": "e92233785e33f42a639eace30872725cfea79def",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58d5f913_d871a36e",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1071,
+      "author": {
+        "id": 1018773
+      },
+      "writtenOn": "2017-03-08T23:29:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe9abcd5_ad5bf70b",
       "revId": "e92233785e33f42a639eace30872725cfea79def",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
