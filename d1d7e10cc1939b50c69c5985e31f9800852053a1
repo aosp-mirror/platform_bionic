@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f448970d_f7d76288",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-03-09T00:45:07Z",
+      "side": 1,
+      "message": "I added the link to the 64-bit bug back, but I don\u0027t really want to mention what exactly is doing the snprintf to a PATH_MAX buffer, because the comment will probably never get updated.",
+      "parentUuid": "bc457128_feed58e5",
+      "range": {
+        "startLine": 145,
+        "startChar": 3,
+        "endLine": 145,
+        "endChar": 70
+      },
+      "revId": "d1d7e10cc1939b50c69c5985e31f9800852053a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c144847_2069088f",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-09T00:20:18Z",
       "side": 1,
       "message": "Is it possible this will be optimized away? I can\u0027t remember whether we compile the test code with -O0 (maybe we should if not).\n\nAlso, do we know that this actually crashes if there is not enough stack?  Does the stack checker work if it\u0027s the signal handler function itself that overruns its stack?",
+      "range": {
+        "startLine": 1905,
+        "startChar": 0,
+        "endLine": 1906,
+        "endChar": 52
+      },
+      "revId": "d1d7e10cc1939b50c69c5985e31f9800852053a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af3129d_7df6bc53",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1906,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-03-09T00:45:07Z",
+      "side": 1,
+      "message": "This definitely does crash when the signal stack size is 8kb.\n\nI changed it to be less optimizable (although a sufficiently smart compiler could still theoretically make this not work)",
+      "parentUuid": "1c144847_2069088f",
       "range": {
         "startLine": 1905,
         "startChar": 0,
