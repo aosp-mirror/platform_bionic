@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc457128_feed58e5",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-03-09T00:20:18Z",
+      "side": 1,
+      "message": "This is kind of a vague description.  I think there should be a pointer to a bug or some function that uses snprintf like this so that if it gets removed, it would be possible to shrink this value again.\n\nAs of right now, I don\u0027t think anyone would know if it was safe to shrink this value.",
+      "range": {
+        "startLine": 145,
+        "startChar": 3,
+        "endLine": 145,
+        "endChar": 70
+      },
+      "revId": "d1d7e10cc1939b50c69c5985e31f9800852053a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c144847_2069088f",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1906,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-03-09T00:20:18Z",
+      "side": 1,
+      "message": "Is it possible this will be optimized away? I can\u0027t remember whether we compile the test code with -O0 (maybe we should if not).\n\nAlso, do we know that this actually crashes if there is not enough stack?  Does the stack checker work if it\u0027s the signal handler function itself that overruns its stack?",
+      "range": {
+        "startLine": 1905,
+        "startChar": 0,
+        "endLine": 1906,
+        "endChar": 52
+      },
+      "revId": "d1d7e10cc1939b50c69c5985e31f9800852053a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
