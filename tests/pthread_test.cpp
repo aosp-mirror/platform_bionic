@@ -1888,17 +1888,26 @@ static volatile bool signal_handler_on_altstack_done;
 
 static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
   ASSERT_EQ(SIGUSR1, signo);
-  // Check if we have enough stack space for unwinding.
-  int count = 0;
-  _Unwind_Backtrace(FrameCounter, &count);
-  ASSERT_GT(count, 0);
-  // Check if we have enough stack space for logging.
-  std::string s(2048, '*');
-  GTEST_LOG_(INFO) << s;
-  signal_handler_on_altstack_done = true;
+  {
+    // Check if we have enough stack space for unwinding.
+    int count = 0;
+    _Unwind_Backtrace(FrameCounter, &count);
+    ASSERT_GT(count, 0);
+  }
+  {
+    // Check if we have enough stack space for logging.
+    std::string s(2048, '*');
+    GTEST_LOG_(INFO) << s;
+    signal_handler_on_altstack_done = true;
+  }
+  {
+    // Check if we have enough stack space for snprintf to a PATH_MAX buffer, plus some extra.
+    char buf[PATH_MAX + 2048];
+    ASSERT_GT(snprintf(buf, sizeof(buf), "/proc/%d/status", getpid()), 0);
+  }
 }
 
-TEST(pthread, big_enough_signal_stack_for_64bit_arch) {
+TEST(pthread, big_enough_signal_stack) {
   signal_handler_on_altstack_done = false;
   ScopedSignalHandler handler(SIGUSR1, SignalHandlerOnAltStack, SA_SIGINFO | SA_ONSTACK);
   kill(getpid(), SIGUSR1);
