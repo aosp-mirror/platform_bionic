@@ -1058,14 +1058,22 @@ static bool initialize_properties() {
     return true;
   }
 
-  // TODO: Change path to /system/property_contexts after b/27805372
-  if (!initialize_properties_from_file("/plat_property_contexts")) {
-    return false;
+  // Use property_contexts from /system & /vendor, fall back to those from /
+  if (access("/system/etc/selinux/plat_property_contexts", R_OK) != -1) {
+    if (!initialize_properties_from_file("/system/etc/selinux/plat_property_contexts")) {
+      return false;
+    }
+    if (!initialize_properties_from_file("/vendor/etc/selinux/nonplat_property_contexts")) {
+      return false;
+    }
+  } else {
+    if (!initialize_properties_from_file("/plat_property_contexts")) {
+      return false;
+    }
+    if (!initialize_properties_from_file("/nonplat_property_contexts")) {
+      return false;
+    }
   }
-
-  // TODO: Change path to /vendor/property_contexts after b/27805372
-  // device-specific property context is optional, so load if it exists.
-  initialize_properties_from_file("/nonplat_property_contexts");
 
   return true;
 }
