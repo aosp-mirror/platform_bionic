@@ -36,6 +36,30 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+void format_string(std::string* str, const std::vector<std::pair<std::string, std::string>>& params) {
+  size_t pos = 0;
+  while (pos < str->size()) {
+    pos = str->find("$", pos);
+    if (pos == std::string::npos) break;
+    for (const auto& param : params) {
+      const std::string& token = param.first;
+      const std::string& replacement = param.second;
+      if (str->substr(pos + 1, token.size()) == token) {
+        str->replace(pos, token.size() + 1, replacement);
+        // -1 to compensate for the ++pos below.
+        pos += replacement.size() - 1;
+        break;
+      } else if (str->substr(pos + 1, token.size() + 2) == "{" + token + "}") {
+        str->replace(pos, token.size() + 3, replacement);
+        pos += replacement.size() - 1;
+        break;
+      }
+    }
+    // Skip $ in case it did not match any of the known substitutions.
+    ++pos;
+  }
+}
+
 std::string dirname(const char* path) {
   const char* last_slash = strrchr(path, '/');
 
