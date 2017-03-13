@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4567506_97bb3cd7",
+        "filename": "linker/tests/linker_utils_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-03-13T23:07:01Z",
+      "side": 1,
+      "message": "It might be useful to have a test string that ends in $, such as str \u003d \"LIB$\";",
+      "range": {
+        "startLine": 39,
+        "startChar": 2,
+        "endLine": 39,
+        "endChar": 61
+      },
+      "revId": "1f10634ece92f3df4d853da27730e1a4f2b3be2a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
