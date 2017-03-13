@@ -16,6 +16,7 @@
 
 #include "seccomp_policy.h"
 
+#include <assert.h>
 #include <linux/audit.h>
 #include <linux/filter.h>
 #include <linux/seccomp.h>
@@ -25,69 +26,84 @@
 
 #include <android-base/logging.h>
 
+#include "seccomp_bpfs.h"
+
+
 #if defined __arm__ || defined __aarch64__
 
-extern const struct sock_filter arm_filter[];
-extern const size_t arm_filter_size;
-extern const struct sock_filter arm64_filter[];
-extern const size_t arm64_filter_size;
+#define DUAL_ARCH
+#define PRIMARY_ARCH AUDIT_ARCH_AARCH64
+static const struct sock_filter* primary_filter = arm64_filter;
+static const size_t primary_filter_size = arm64_filter_size;
+#define SECONDARY_ARCH AUDIT_ARCH_ARM
+static const struct sock_filter* secondary_filter = arm_filter;
+static const size_t secondary_filter_size = arm_filter_size;
+
+#elif defined __i386__ || defined __x86_64__
+
+#define DUAL_ARCH
+#define PRIMARY_ARCH AUDIT_ARCH_X86_64
+static const struct sock_filter* primary_filter = x86_64_filter;
+static const size_t primary_filter_size = x86_64_filter_size;
+#define SECONDARY_ARCH AUDIT_ARCH_I386
+static const struct sock_filter* secondary_filter = x86_filter;
+static const size_t secondary_filter_size = x86_filter_size;
+
+#elif defined __mips__ || defined __mips64__
+
+#define DUAL_ARCH
+#define PRIMARY_ARCH AUDIT_ARCH_MIPS64
+static const struct sock_filter* primary_filter = mips64_filter;
+static const size_t primary_filter_size = mips64_filter_size;
+#define SECONDARY_ARCH AUDIT_ARCH_MIPS
+static const struct sock_filter* secondary_filter = mips_filter;
+static const size_t secondary_filter_size = mips_filter_size;
+
+#else
+#error No architecture was defined!
+#endif
+
 
 #define syscall_nr (offsetof(struct seccomp_data, nr))
 #define arch_nr (offsetof(struct seccomp_data, arch))
 
 typedef std::vector<sock_filter> filter;
 
-// We want to keep the below inline functions for debugging and future
-// development even though they are not all sed currently.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-function"
-
-static inline void Kill(filter& f) {
-    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL));
-}
-
-static inline void Trap(filter& f) {
+inline void Disallow(filter& f) {
     f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRAP));
 }
 
-static inline void Error(filter& f, __u16 retcode) {
-    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ERRNO + retcode));
-}
-
-inline static void Trace(filter& f) {
-    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRACE));
-}
-
-inline static void Allow(filter& f) {
-    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW));
-}
-
-#pragma clang diagnostic pop
-
-inline static void ExamineSyscall(filter& f) {
+static void ExamineSyscall(filter& f) {
     f.push_back(BPF_STMT(BPF_LD|BPF_W|BPF_ABS, syscall_nr));
 }
 
-inline static int SetValidateArchitectureJumpTarget(size_t offset, filter& f) {
+#ifdef DUAL_ARCH
+static bool SetValidateArchitectureJumpTarget(size_t offset, filter& f) {
     size_t jump_length = f.size() - offset - 1;
     auto u8_jump_length = (__u8) jump_length;
     if (u8_jump_length != jump_length) {
         LOG(FATAL)
             << "Can't set jump greater than 255 - actual jump is " <<  jump_length;
-        return -1;
+        return false;
     }
-    f[offset] = BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, AUDIT_ARCH_ARM, u8_jump_length, 0);
-    return 0;
+    f[offset] = BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, SECONDARY_ARCH, u8_jump_length, 0);
+    return true;
 }
 
-inline static size_t ValidateArchitectureAndJumpIfNeeded(filter& f) {
+static size_t ValidateArchitectureAndJumpIfNeeded(filter& f) {
     f.push_back(BPF_STMT(BPF_LD|BPF_W|BPF_ABS, arch_nr));
-
-    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, AUDIT_ARCH_AARCH64, 2, 0));
-    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, AUDIT_ARCH_ARM, 1, 0));
-    Trap(f);
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, PRIMARY_ARCH, 2, 0));
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, SECONDARY_ARCH, 1, 0));
+    Disallow(f);
     return f.size() - 2;
 }
+#else
+static void ValidateArchitecture(filter& f) {
+    f.push_back(BPF_STMT(BPF_LD|BPF_W|BPF_ABS, arch_nr));
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, PRIMARY_ARCH, 1, 0));
+    Disallow(f);
+}
+#endif
 
 static bool install_filter(filter const& f) {
     struct sock_fprog prog = {
@@ -107,41 +123,34 @@ static bool install_filter(filter const& f) {
 bool set_seccomp_filter() {
     filter f;
 
+#ifdef DUAL_ARCH
     // Note that for mixed 64/32 bit architectures, ValidateArchitecture inserts a
     // jump that must be changed to point to the start of the 32-bit policy
     // 32 bit syscalls will not hit the policy between here and the call to SetJump
-    auto offset_to_32bit_filter = ValidateArchitectureAndJumpIfNeeded(f);
+    auto offset_to_secondary_filter = ValidateArchitectureAndJumpIfNeeded(f);
+#else
+    ValidateArchitecture(f);
+#endif
 
-    // 64-bit filter
     ExamineSyscall(f);
 
-    // arm64-only filter - autogenerated from bionic syscall usage
-    for (size_t i = 0; i < arm64_filter_size; ++i) {
-        f.push_back(arm64_filter[i]);
+    for (size_t i = 0; i < primary_filter_size; ++i) {
+        f.push_back(primary_filter[i]);
     }
-    Trap(f);
+    Disallow(f);
 
-    if (SetValidateArchitectureJumpTarget(offset_to_32bit_filter, f) != 0) {
-        return -1;
+#ifdef DUAL_ARCH
+    if (!SetValidateArchitectureJumpTarget(offset_to_secondary_filter, f)) {
+        return false;
     }
 
-    // 32-bit filter
     ExamineSyscall(f);
 
-    // arm32 filter - autogenerated from bionic syscall usage
-    for (size_t i = 0; i < arm_filter_size; ++i) {
-        f.push_back(arm_filter[i]);
+    for (size_t i = 0; i < secondary_filter_size; ++i) {
+        f.push_back(secondary_filter[i]);
     }
-    Trap(f);
+    Disallow(f);
+#endif
 
     return install_filter(f);
 }
-
-#else // if defined __arm__ || defined __aarch64__
-
-bool set_seccomp_filter() {
-    LOG(INFO) << "Not setting seccomp filter - wrong architecture";
-    return true;
-}
-
-#endif
