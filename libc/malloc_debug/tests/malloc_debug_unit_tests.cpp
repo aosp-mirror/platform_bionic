@@ -999,7 +999,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_not_enabled) {
 
 struct InfoEntry {
   size_t size;
-  size_t num_frames;
+  size_t num_allocations;
   uintptr_t frames[0];
 } __attribute__((packed));
 
@@ -1033,7 +1033,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_single) {
 
   InfoEntry* entry = reinterpret_cast<InfoEntry*>(expected_info.data());
   entry->size = 200;
-  entry->num_frames = 3;
+  entry->num_allocations = 1;
   entry->frames[0] = 0xf;
   entry->frames[1] = 0xe;
   entry->frames[2] = 0xd;
@@ -1082,7 +1082,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
 
   // These values will be in the reverse order that we create.
   entry2->size = 500;
-  entry2->num_frames = 4;
+  entry2->num_allocations = 1;
   entry2->frames[0] = 0xf;
   entry2->frames[1] = 0xe;
   entry2->frames[2] = 0xd;
@@ -1097,7 +1097,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   memset(pointers[0], 0, entry2->size);
 
   entry1->size = 4100;
-  entry1->num_frames = 16;
+  entry1->num_allocations = 1;
   for (size_t i = 0; i < 16; i++) {
     entry1->frames[i] = 0xbc000 + i;
   }
@@ -1112,7 +1112,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   memset(pointers[1], 0, entry1->size);
 
   entry0->size = 9000;
-  entry0->num_frames = 1;
+  entry0->num_allocations = 1;
 
   entry0->frames[0] = 0x104;
   backtrace_fake_add(std::vector<uintptr_t> {0x104});
@@ -1159,7 +1159,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
 
   // These values will be in the reverse order that we create.
   entry1->size = 500;
-  entry1->num_frames = 4;
+  entry1->num_allocations = 1;
   entry1->frames[0] = 0xf;
   entry1->frames[1] = 0xe;
   entry1->frames[2] = 0xd;
@@ -1174,7 +1174,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
   memset(pointers[0], 0, entry1->size);
 
   entry0->size = 4100;
-  entry0->num_frames = 16;
+  entry0->num_allocations = 1;
   for (size_t i = 0; i < 16; i++) {
     entry0->frames[i] = 0xbc000 + i;
   }
@@ -1373,7 +1373,7 @@ static void VerifyZygoteSet(size_t memory_bytes) {
   memset(expected_info.data(), 0, expected_info_size);
   InfoEntry* entry = reinterpret_cast<InfoEntry*>(expected_info.data());
   entry->size = memory_bytes | (1U << 31);
-  entry->num_frames = 1;
+  entry->num_allocations = 1;
   entry->frames[0] = 0x1;
 
   uint8_t* info;
