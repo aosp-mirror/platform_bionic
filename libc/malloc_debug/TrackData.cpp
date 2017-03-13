@@ -123,11 +123,12 @@ void TrackData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
   GetList(&list);
 
   uint8_t* data = *info;
+  size_t num_allocations = 1;
   for (const auto& header : list) {
     BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
     if (back_header->num_frames > 0) {
       memcpy(data, &header->size, sizeof(size_t));
-      memcpy(&data[sizeof(size_t)], &back_header->num_frames, sizeof(size_t));
+      memcpy(&data[sizeof(size_t)], &num_allocations, sizeof(size_t));
       memcpy(&data[2 * sizeof(size_t)], &back_header->frames[0],
             back_header->num_frames * sizeof(uintptr_t));
 
