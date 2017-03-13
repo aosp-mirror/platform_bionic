@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d71bf1c1_404fc5e7",
+        "filename": "libc/seccomp/seccomp_policy.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-13T18:24:10Z",
+      "side": 1,
+      "message": "type*?",
+      "range": {
+        "startLine": 36,
+        "startChar": 20,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "6a038603a8a5e914c540f4dd63a45268deb14bdb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
