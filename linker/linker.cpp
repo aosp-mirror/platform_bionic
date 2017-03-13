@@ -1889,14 +1889,16 @@ void* do_dlopen(const char* name, int flags,
   if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
     char translated_path[PATH_MAX];
     if (realpath(translated_name, translated_path) != nullptr) {
-      if (file_is_in_dir(translated_path, kSystemLibDir)) {
-        asan_name_holder = std::string(kAsanSystemLibDir) + "/" + basename(translated_path);
+      if (file_is_under_dir(translated_path, kSystemLibDir)) {
+        asan_name_holder = std::string(kAsanSystemLibDir) + "/" +
+            (translated_path + strlen(kSystemLibDir) + 1);
         if (file_exists(asan_name_holder.c_str())) {
           translated_name = asan_name_holder.c_str();
           PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
         }
-      } else if (file_is_in_dir(translated_path, kVendorLibDir)) {
-        asan_name_holder = std::string(kAsanVendorLibDir) + "/" + basename(translated_path);
+      } else if (file_is_under_dir(translated_path, kVendorLibDir)) {
+        asan_name_holder = std::string(kAsanVendorLibDir) + "/" +
+            (translated_path + strlen(kVendorLibDir) + 1);
         if (file_exists(asan_name_holder.c_str())) {
           translated_name = asan_name_holder.c_str();
           PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
