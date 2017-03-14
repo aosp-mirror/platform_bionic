@@ -34,6 +34,13 @@
 
 #include "../linker_utils.h"
 
+TEST(linker_utils, format_string) {
+  std::vector<std::pair<std::string, std::string>> params = {{ "LIB", "lib32"}, { "SDKVER", "42"}};
+  std::string str_smoke = "LIB$LIB${LIB${SDKVER}SDKVER$TEST$";
+  format_string(&str_smoke, params);
+  ASSERT_EQ("LIBlib32${LIB42SDKVER$TEST$", str_smoke);
+}
+
 TEST(linker_utils, normalize_path_smoke) {
   std::string output;
   ASSERT_TRUE(normalize_path("/../root///dir/.///dir2/somedir/../zipfile!/dir/dir9//..///afile", &output));
