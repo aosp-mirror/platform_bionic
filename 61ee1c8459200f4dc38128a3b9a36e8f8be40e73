@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c88aec6e_fedc5a78",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-03-14T23:26:46Z",
+      "side": 1,
+      "message": "Yeah, using that instead.",
+      "parentUuid": "22a99e9a_880ece88",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 16
+      },
+      "revId": "61ee1c8459200f4dc38128a3b9a36e8f8be40e73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "206c9c1a_f9f47c1f",
         "filename": "tests/leak_test.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "0073d6ca_6d6ef298",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-03-14T23:26:46Z",
+      "side": 1,
+      "message": "Replacing this with UNUSED instead, but for future reference, in projects that aren\u0027t bionic, do we actually want to use static_cast\u003cvoid\u003e(\u003cthing to throw away\u003e)? It looks a lot like static_cast\u003cvoid*\u003e to me.",
+      "parentUuid": "206c9c1a_f9f47c1f",
+      "range": {
+        "startLine": 81,
+        "startChar": 2,
+        "endLine": 81,
+        "endChar": 8
+      },
+      "revId": "61ee1c8459200f4dc38128a3b9a36e8f8be40e73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a9dbe0b_61ec8fe3",
         "filename": "tests/leak_test.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2017-03-14T22:03:41Z",
       "side": 1,
       "message": "Typo?",
+      "range": {
+        "startLine": 100,
+        "startChar": 33,
+        "endLine": 100,
+        "endChar": 34
+      },
+      "revId": "61ee1c8459200f4dc38128a3b9a36e8f8be40e73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92dbdb66_5cdaaef2",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-03-14T23:26:46Z",
+      "side": 1,
+      "message": "That\u0027s intentional, to force it to decay to a function pointer (although I think it should work without the plus, I\u0027ll remove it if that\u0027s true)",
+      "parentUuid": "4a9dbe0b_61ec8fe3",
       "range": {
         "startLine": 100,
         "startChar": 33,
