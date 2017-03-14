@@ -34,6 +34,8 @@
 
 extern const char* const kZipFileSeparator;
 
+void format_string(std::string* str, const std::vector<std::pair<std::string, std::string>>& params);
+
 bool file_is_in_dir(const std::string& file, const std::string& dir);
 bool file_is_under_dir(const std::string& file, const std::string& dir);
 bool normalize_path(const char* path, std::string* normalized_path);
