@@ -81,29 +81,9 @@ void soinfo::set_dt_runpath(const char* path) {
 
   std::string origin = dirname(get_realpath());
   // FIXME: add $LIB and $PLATFORM.
-  std::pair<std::string, std::string> substs[] = {{"ORIGIN", origin}};
+  std::vector<std::pair<std::string, std::string>> params = {{"ORIGIN", origin}};
   for (auto&& s : runpaths) {
-    size_t pos = 0;
-    while (pos < s.size()) {
-      pos = s.find("$", pos);
-      if (pos == std::string::npos) break;
-      for (const auto& subst : substs) {
-        const std::string& token = subst.first;
-        const std::string& replacement = subst.second;
-        if (s.substr(pos + 1, token.size()) == token) {
-          s.replace(pos, token.size() + 1, replacement);
-          // -1 to compensate for the ++pos below.
-          pos += replacement.size() - 1;
-          break;
-        } else if (s.substr(pos + 1, token.size() + 2) == "{" + token + "}") {
-          s.replace(pos, token.size() + 3, replacement);
-          pos += replacement.size() - 1;
-          break;
-        }
-      }
-      // Skip $ in case it did not match any of the known substitutions.
-      ++pos;
-    }
+    format_string(&s, params);
   }
 
   resolve_paths(runpaths, &dt_runpath_);
