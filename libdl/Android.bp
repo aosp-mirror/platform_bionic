@@ -104,6 +104,7 @@ cc_library {
     stl: "none",
 
     name: "ld-android",
+    defaults: ["linux_bionic_supported"],
 
     // NOTE: libdl needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a needs a
     // few symbols from libc. Using --no-undefined here results in having to link
