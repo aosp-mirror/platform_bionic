@@ -171,7 +171,7 @@ class Test {
 
   TestResult GetResult() const { return result_; }
   TestResult GetExpectedResult() const {
-    return GetName().find("xfail_") == 0 ? TEST_FAILED : TEST_SUCCESS;
+    return GetName().find("xfail") == 0 ? TEST_FAILED : TEST_SUCCESS;
   }
 
   void SetTestTime(int64_t elapsed_time_ns) { elapsed_time_ns_ = elapsed_time_ns; }
