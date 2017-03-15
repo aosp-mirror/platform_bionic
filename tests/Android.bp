@@ -70,6 +70,7 @@ cc_test_library {
         "ifaddrs_test.cpp",
         "inttypes_test.cpp",
         "langinfo_test.cpp",
+        "leak_test.cpp",
         "libc_logging_test.cpp",
         "libgen_basename_test.cpp",
         "libgen_test.cpp",
