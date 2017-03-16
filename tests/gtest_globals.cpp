@@ -19,17 +19,19 @@
 #include <gtest/gtest.h>
 #include "utils.h"
 
+#include <android-base/file.h>
+
 #include <string>
 
 static std::string init_testlib_root() {
   // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
   std::string path = get_executable_path();
 
-  path = get_dirname(path.c_str());
+  path = android::base::Dirname(path);
   path += "/..";
 
   std::string out_path;
-  if (!get_realpath(path.c_str(), &out_path)) {
+  if (!android::base::Realpath(path.c_str(), &out_path)) {
     printf("Failed to get realpath for \"%s\"", path.c_str());
     abort();
   }
@@ -37,7 +39,7 @@ static std::string init_testlib_root() {
   out_path += "/bionic-loader-test-libs";
 
   std::string real_path;
-  if (!get_realpath(out_path, &real_path)) {
+  if (!android::base::Realpath(out_path, &real_path)) {
     printf("\"%s\": does not exists", out_path.c_str());
     abort();
   }

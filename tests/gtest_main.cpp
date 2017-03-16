@@ -56,25 +56,6 @@ const std::string& get_executable_path() {
   return g_executable_path;
 }
 
-bool get_realpath(const std::string& path, std::string* real_path) {
-  char realpath_buf[PATH_MAX];
-  if (realpath(path.c_str(), realpath_buf) != realpath_buf) {
-    return false;
-  }
-
-  *real_path = realpath_buf;
-  return true;
-}
-
-std::string get_dirname(const char* path) {
-#if defined(__BIONIC__)
-  return dirname(path);
-#else
-  // GLIBC does not have const char* dirname
-  return dirname(const_cast<char*>(path));
-#endif
-}
-
 int get_argc() {
   return g_argc;
 }
