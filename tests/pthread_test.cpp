@@ -1886,25 +1886,34 @@ extern _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx, void* arg);
 
 static volatile bool signal_handler_on_altstack_done;
 
+__attribute__((__noinline__))
+static void signal_handler_backtrace() {
+  // Check if we have enough stack space for unwinding.
+  int count = 0;
+  _Unwind_Backtrace(FrameCounter, &count);
+  ASSERT_GT(count, 0);
+}
+
+__attribute__((__noinline__))
+static void signal_handler_logging() {
+  // Check if we have enough stack space for logging.
+  std::string s(2048, '*');
+  GTEST_LOG_(INFO) << s;
+  signal_handler_on_altstack_done = true;
+}
+
+__attribute__((__noinline__))
+static void signal_handler_snprintf() {
+  // Check if we have enough stack space for snprintf to a PATH_MAX buffer, plus some extra.
+  char buf[PATH_MAX + 2048];
+  ASSERT_GT(snprintf(buf, sizeof(buf), "/proc/%d/status", getpid()), 0);
+}
+
 static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
   ASSERT_EQ(SIGUSR1, signo);
-  {
-    // Check if we have enough stack space for unwinding.
-    int count = 0;
-    _Unwind_Backtrace(FrameCounter, &count);
-    ASSERT_GT(count, 0);
-  }
-  {
-    // Check if we have enough stack space for logging.
-    std::string s(2048, '*');
-    GTEST_LOG_(INFO) << s;
-    signal_handler_on_altstack_done = true;
-  }
-  {
-    // Check if we have enough stack space for snprintf to a PATH_MAX buffer, plus some extra.
-    char buf[PATH_MAX + 2048];
-    ASSERT_GT(snprintf(buf, sizeof(buf), "/proc/%d/status", getpid()), 0);
-  }
+  signal_handler_backtrace();
+  signal_handler_logging();
+  signal_handler_snprintf();
 }
 
 TEST(pthread, big_enough_signal_stack) {
