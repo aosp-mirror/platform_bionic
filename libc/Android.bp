@@ -632,7 +632,22 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
-
+        mips: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
+                "upstream-openbsd/lib/libc/string/strncmp.c",
+            ],
+        },
+        mips64: {
+            exclude_srcs: [
+                "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memmove.c",
+                "upstream-openbsd/lib/libc/string/strcpy.c",
+                "upstream-openbsd/lib/libc/string/strncmp.c",
+            ],
+        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -1041,9 +1056,16 @@ cc_library_static {
         mips: {
             srcs: [
                 "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memcpy.c",
                 "arch-mips/string/memset.S",
                 "arch-mips/string/strcmp.S",
+                "arch-mips/string/strncmp.S",
+                "arch-mips/string/strlen.c",
+                "arch-mips/string/strnlen.c",
+                "arch-mips/string/strchr.c",
+                "arch-mips/string/strcpy.c",
+                "arch-mips/string/memchr.c",
+                "arch-mips/string/memmove.c",
 
                 "arch-mips/bionic/__bionic_clone.S",
                 "arch-mips/bionic/cacheflush.cpp",
@@ -1052,25 +1074,25 @@ cc_library_static {
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
-
-                "arch-mips/string/mips_strlen.c",
             ],
-            rev6: {
-                srcs: [
-                    "arch-mips/string/strlen.c",
-                ],
-                exclude_srcs: [
-                    "arch-mips/string/mips_strlen.c",
-                ],
-            },
+            exclude_srcs: [
+                "bionic/strchr.cpp",
+                "bionic/strnlen.c",
+            ],
         },
         mips64: {
             srcs: [
                 "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.S",
+                "arch-mips/string/memcpy.c",
                 "arch-mips/string/memset.S",
                 "arch-mips/string/strcmp.S",
+                "arch-mips/string/strncmp.S",
                 "arch-mips/string/strlen.c",
+                "arch-mips/string/strnlen.c",
+                "arch-mips/string/strchr.c",
+                "arch-mips/string/strcpy.c",
+                "arch-mips/string/memchr.c",
+                "arch-mips/string/memmove.c",
 
                 "arch-mips64/bionic/__bionic_clone.S",
                 "arch-mips64/bionic/_exit_with_stack_teardown.S",
@@ -1078,6 +1100,10 @@ cc_library_static {
                 "arch-mips64/bionic/syscall.S",
                 "arch-mips64/bionic/vfork.S",
                 "arch-mips64/bionic/stat.cpp",
+            ],
+            exclude_srcs: [
+                "bionic/strchr.cpp",
+                "bionic/strnlen.c",
             ],
         },
 

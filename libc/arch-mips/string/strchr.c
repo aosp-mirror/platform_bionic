@@ -35,81 +35,104 @@
 #define op_t        unsigned long int
 #define op_size     sizeof (op_t)
 
-#if __mips64 || __mips_isa_rev >= 2
-static inline size_t __attribute__ ((always_inline))
-do_bytes (const char *base, const char *p, op_t inval)
-{
-  op_t outval = 0;
 #if __mips64
-  __asm__ volatile (
-    "dsbh %1, %0 \n\t"
-    "dshd %0, %1 \n\t"
-    "dclz %1, %0 \n\t"
-    : "+r" (inval), "+r" (outval)
-  );
-#else
-  __asm__ volatile (
-    "wsbh %1, %0 \n\t"
-    "rotr %0, %1, 16 \n\t"
-    "clz %1, %0 \n\t"
-    : "+r" (inval), "+r" (outval)
-  );
-#endif
-  p += (outval >> 3);
-  return (size_t) (p - base);
-}
-
-#define DO_WORD(w, cnt) {                                \
-  op_t val = ((w[cnt] - mask_1) & ~w[cnt]) & mask_128;   \
-  if (val)                                               \
-    return do_bytes(str, (const char *)(w + cnt), val);  \
-}
-#else
-static inline size_t __attribute__ ((always_inline))
-do_bytes (const char *base, const char *p)
+typedef struct
 {
-  for (; *p; ++p);
-  return (size_t) (p - base);
-}
-
-#define DO_WORD(w, cnt) {                           \
-  if (((w[cnt] - mask_1) & ~w[cnt]) & mask_128)     \
-    return do_bytes(str, (const char *)(w + cnt));  \
-}
+  op_t B0:8, B1:8, B2:8, B3:8, B4:8, B5:8, B6:8, B7:8;
+} bits_t;
+#else
+typedef struct
+{
+  op_t B0:8, B1:8, B2:8, B3:8;
+} bits_t;
 #endif
 
-size_t
-strlen (const char *str) __overloadable
+typedef union
 {
-  if (*str) {
-    const char *p = (const char *) str;
-    const op_t *w;
-    op_t mask_1, mask_128;
+  op_t v;
+  bits_t b;
+} bitfields_t;
 
-    while ((size_t) p % sizeof (op_t)) {
-      if (!(*p))
-        return (p - str);
-      p++;
-    }
+#define DO_BYTE(i)                  \
+  if (a.b.B##i != ch) {             \
+    if(a.b.B##i == '\0') return 0;  \
+    p++;                            \
+  } else                            \
+    return (char *)p;
 
+#define DO_WORD(w, cnt) {                            \
+  op_t val = w[cnt] ^ mask_c;                        \
+  if ((((w[cnt] - mask_1) & ~w[cnt]) & mask_128) ||  \
+    (((val - mask_1) & ~val) & mask_128)) {          \
+    return do_bytes(w + cnt, ch);                    \
+  }                                                  \
+}
+
+static inline char * __attribute__ ((always_inline))
+do_bytes (const op_t* w, unsigned char ch)
+{
+  bitfields_t a;
+  unsigned char* p = (unsigned char *) w;
+  a.v = *w;
+#if __mips64
+  DO_BYTE(0)
+  DO_BYTE(1)
+  DO_BYTE(2)
+  DO_BYTE(3)
+  DO_BYTE(4)
+  DO_BYTE(5)
+  DO_BYTE(6)
+  DO_BYTE(7)
+#else
+  DO_BYTE(0)
+  DO_BYTE(1)
+  DO_BYTE(2)
+  DO_BYTE(3)
+#endif
+  return (char *)p;
+}
+
+char* strchr(const char* s, int c) __overloadable
+{
+  const op_t *w;
+  op_t mask_1, mask_128, mask_c;
+  const unsigned char ch = c;
+  unsigned char* p = (unsigned char *) s;
+
+  /*
+   * Check byte by byte till initial alignment
+   */
+  for ( ; *p != ch && ((size_t) p % op_size) != 0; p++)
+    if (*p == '\0')
+      return 0;
+
+  if (*p != ch) {
+    w = (const op_t *) p;
+
+    mask_c = ch | (ch << 8);
+    mask_c |= mask_c << 16;
     __asm__ volatile (
       "li %0, 0x01010101 \n\t"
       : "=r" (mask_1)
     );
 #if __mips64
     mask_1 |= mask_1 << 32;
+    mask_c |= mask_c << 32;
 #endif
     mask_128 = mask_1 << 7;
 
-    w = (const op_t *) p;
-
+    /*
+     * Check word/dword wize after initial alignment till character match
+     * or end of string
+     */
     while (1) {
-      DO_WORD(w, 0);
-      DO_WORD(w, 1);
-      DO_WORD(w, 2);
-      DO_WORD(w, 3);
+      DO_WORD(w, 0)
+      DO_WORD(w, 1)
+      DO_WORD(w, 2)
+      DO_WORD(w, 3)
       w += 4;
     }
   }
-  return 0;
+
+  return (char *)p;
 }

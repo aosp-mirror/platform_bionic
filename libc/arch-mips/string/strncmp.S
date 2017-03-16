@@ -47,16 +47,18 @@
 #if __mips64
 # define NSIZE 8
 # define LW ld
+# define LWR ldr
+# define LWL ldl
 # define EXT dext
 # define SRL dsrl
-# define SLL dsll
 # define SUBU dsubu
 #else
 # define NSIZE 4
 # define LW lw
+# define LWR lwr
+# define LWL lwl
 # define EXT ext
 # define SRL srl
-# define SLL sll
 # define SUBU subu
 #endif
 
@@ -74,7 +76,7 @@
 
 /* Testing on a little endian machine showed using CLZ was a
    performance loss, so we are not turning it on by default.  */
-#if defined(ENABLE_CLZ) && (__mips_isa_rev > 1)
+#if defined(ENABLE_CLZ) && (__mips_isa_rev > 1) && (!__mips64)
 # define USE_CLZ
 #endif
 
@@ -114,53 +116,64 @@
     bne t8, t9, L(bexit89)
 
 /* Allow the routine to be named something else if desired.  */
-#ifndef STRCMP_NAME
-# define STRCMP_NAME strcmp
+#ifndef STRNCMP_NAME
+# define STRNCMP_NAME strncmp
 #endif
 
 #ifdef __ANDROID__
-LEAF(STRCMP_NAME, 0)
+LEAF(STRNCMP_NAME, 0)
 #else
-LEAF(STRCMP_NAME)
+LEAF(STRNCMP_NAME)
 #endif
     .set    nomips16
     .set    noreorder
 
+    srl t0, a2, (2 + NSIZE / 4)
+    beqz  t0, L(byteloop) #process by bytes if less than (2 * NSIZE)
     andi t1, a1, (NSIZE - 1)
-    beqz t1, L(exitalign)
+    beqz  t1, L(exitalign)
     or   t0, zero, NSIZE
     SUBU t1, t0, t1 #process (NSIZE - 1) bytes at max
+    SUBU a2, a2, t1 #dec count by t1
 
 L(alignloop): #do by bytes until a1 aligned
     BYTECMP01(0)
     SUBU t1, t1, 0x1
     PTR_ADDIU a0, a0, 0x1
-    bnez  t1, L(alignloop)
+    bne  t1, zero, L(alignloop)
     PTR_ADDIU a1, a1, 0x1
 
 L(exitalign):
 
 /* string a1 is NSIZE byte aligned at this point. */
-
+#ifndef __mips1
     lui t8, 0x0101
     ori t8, 0x0101
     lui t9, 0x7f7f
     ori t9, 0x7f7f
 #if __mips64
-    dsll t1, t8, 32
-    or  t8, t1
+    dsll t0, t8, 32
+    or  t8, t0
     dsll t1, t9, 32
     or  t9, t1
 #endif
+#endif
 
-    andi t2, a0, (NSIZE - 1) #check if a0 aligned
-    SUBU t3, t0, t2 #t3 will be used as shifter
-    bnez t2, L(uloopenter)
-    SUBU a2, a0, t2 #bring back a0 to aligned position
+/* hardware or software alignment not supported for mips1
+   rev6 archs have h/w unaligned support
+   remainings archs need to implemented with unaligned instructions */
+
+#if __mips1
+    andi t0, a0, (NSIZE - 1)
+    bne  t0, zero, L(byteloop)
+#elif __mips_isa_rev < 6
+    andi t0, a0, (NSIZE - 1)
+    bne  t0, zero, L(uwordloop)
+#endif
 
 #define STRCMPW(OFFSET) \
-    LW   v0, OFFSET(a0); \
-    LW   v1, OFFSET(a1); \
+    LW   v0, (OFFSET)(a0); \
+    LW   v1, (OFFSET)(a1); \
     SUBU t0, v0, t8; \
     bne  v0, v1, L(worddiff); \
     nor  t1, v0, t9; \
@@ -168,6 +181,8 @@ L(exitalign):
     bne  t0, zero, L(returnzero);\
 
 L(wordloop):
+    SUBU t1, a2, (8 * NSIZE)
+    bltz t1, L(onewords)
     STRCMPW(0 * NSIZE)
     DELAY_READ
     STRCMPW(1 * NSIZE)
@@ -183,47 +198,64 @@ L(wordloop):
     STRCMPW(6 * NSIZE)
     DELAY_READ
     STRCMPW(7 * NSIZE)
+    SUBU a2, a2, (8 * NSIZE)
     PTR_ADDIU a0, a0, (8 * NSIZE)
     b   L(wordloop)
     PTR_ADDIU a1, a1, (8 * NSIZE)
 
+L(onewords):
+    SUBU t1, a2, NSIZE
+    bltz t1, L(byteloop)
+    STRCMPW(0)
+    SUBU a2, a2, NSIZE
+    PTR_ADDIU a0, a0, NSIZE
+    b   L(onewords)
+    PTR_ADDIU a1, a1, NSIZE
+
+#if __mips_isa_rev < 6 && !__mips1
 #define USTRCMPW(OFFSET) \
-    LW  v1, OFFSET(a1); \
+    LWR v0, (OFFSET)(a0); \
+    LWL v0, (OFFSET + NSIZE - 1)(a0); \
+    LW  v1, (OFFSET)(a1); \
     SUBU    t0, v0, t8; \
+    bne v0, v1, L(worddiff); \
     nor t1, v0, t9; \
     and t0, t0, t1; \
-    bne t0, zero, L(worddiff); \
-    SRL v0, t2; \
-    LW  a3, (OFFSET + NSIZE)(a2); \
-    SUBU    t0, v1, t8; \
-    SLL t1, a3, t3; \
-    or v0, v0, t1; \
-    bne v0, v1, L(worddiff); \
-    nor t1, v1, t9; \
-    and t0, t0, t1; \
-    bne t0, zero, L(returnzero); \
-    move v0, a3;\
-
-L(uloopenter):
-    LW  v0, 0(a2)
-    SLL t2, 3  #multiply by 8
-    SLL t3, 3  #multiply by 8
-    li  a3, -1 #all 1s
-    SRL a3, t3
-    or v0, a3 #replace with all 1s if zeros in unintented read
+    bne t0, zero, L(returnzero);\
 
 L(uwordloop):
+    SUBU t1, a2, (8 * NSIZE)
+    bltz t1, L(uonewords)
     USTRCMPW(0 * NSIZE)
+    DELAY_READ
     USTRCMPW(1 * NSIZE)
+    DELAY_READ
     USTRCMPW(2 * NSIZE)
+    DELAY_READ
     USTRCMPW(3 * NSIZE)
+    DELAY_READ
     USTRCMPW(4 * NSIZE)
+    DELAY_READ
     USTRCMPW(5 * NSIZE)
+    DELAY_READ
     USTRCMPW(6 * NSIZE)
+    DELAY_READ
     USTRCMPW(7 * NSIZE)
-    PTR_ADDIU a2, a2, (8 * NSIZE)
+    SUBU a2, a2, (8 * NSIZE)
+    PTR_ADDIU a0, a0, (8 * NSIZE)
     b   L(uwordloop)
     PTR_ADDIU a1, a1, (8 * NSIZE)
+
+L(uonewords):
+    SUBU t1, a2, NSIZE
+    bltz t1, L(byteloop)
+    USTRCMPW(0)
+    SUBU a2, a2, NSIZE
+    PTR_ADDIU a0, a0, NSIZE
+    b   L(uonewords)
+    PTR_ADDIU a1, a1, NSIZE
+
+#endif
 
 L(returnzero):
     j   ra
@@ -332,17 +364,24 @@ L(wexit01):
 #endif /* USE_CLZ */
 
 L(byteloop):
+    beq a2, zero, L(returnzero)
+    SUBU a2, a2, 1
     BYTECMP01(0)
+    nop
+    beq a2, zero, L(returnzero)
+    SUBU a2, a2, 1
     BYTECMP89(1)
+    nop
+    beq a2, zero, L(returnzero)
+    SUBU a2, a2, 1
     BYTECMP01(2)
+    nop
+    beq a2, zero, L(returnzero)
+    SUBU a2, a2, 1
     BYTECMP89(3)
-    BYTECMP01(4)
-    BYTECMP89(5)
-    BYTECMP01(6)
-    BYTECMP89(7)
-    PTR_ADDIU a0, a0, 8
+    PTR_ADDIU a0, a0, 4
     b   L(byteloop)
-    PTR_ADDIU a1, a1, 8
+    PTR_ADDIU a1, a1, 4
 
 L(bexit01):
     j   ra
@@ -354,9 +393,9 @@ L(bexit89):
     .set    at
     .set    reorder
 
-END(STRCMP_NAME)
+END(STRNCMP_NAME)
 #ifndef __ANDROID__
 # ifdef _LIBC
-libc_hidden_builtin_def (STRCMP_NAME)
+libc_hidden_builtin_def (STRNCMP_NAME)
 # endif
 #endif
