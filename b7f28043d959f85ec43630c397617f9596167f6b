@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31d5771a_1a87b042",
+        "filename": "linker/linker_logger.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-17T23:57:17Z",
+      "side": 1,
+      "message": "not \"private/bionic_systrace.h\"?\n\ni thought we had some trouble using the cutils one before?",
+      "revId": "b7f28043d959f85ec43630c397617f9596167f6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
