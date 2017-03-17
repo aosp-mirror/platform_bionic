@@ -1861,6 +1861,9 @@ static std::string android_dlextinfo_to_string(const android_dlextinfo* info) {
 void* do_dlopen(const char* name, int flags,
                 const android_dlextinfo* extinfo,
                 const void* caller_addr) {
+  std::string trace_prefix = std::string("dlopen: ") + (name == nullptr ? "(nullptr)" : name);
+  ScopedTrace trace(trace_prefix.c_str());
+  ScopedTrace loading_trace((trace_prefix + " - loading and linking").c_str());
   soinfo* const caller = find_containing_library(caller_addr);
   android_namespace_t* ns = get_caller_namespace(caller);
 
@@ -1937,6 +1940,8 @@ void* do_dlopen(const char* name, int flags,
 
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
+  loading_trace.End();
+
   if (si != nullptr) {
     void* handle = si->to_handle();
     LD_LOG(kLogDlopen,
