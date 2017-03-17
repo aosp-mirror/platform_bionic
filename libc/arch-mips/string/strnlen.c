@@ -32,8 +32,8 @@
 
 #include <string.h>
 
-#define op_t        unsigned long int
-#define op_size     sizeof (op_t)
+#define op_t                unsigned long int
+#define op_size             sizeof (op_t)
 
 #if __mips64 || __mips_isa_rev >= 2
 static inline size_t __attribute__ ((always_inline))
@@ -59,10 +59,10 @@ do_bytes (const char *base, const char *p, op_t inval)
   return (size_t) (p - base);
 }
 
-#define DO_WORD(w, cnt) {                                \
-  op_t val = ((w[cnt] - mask_1) & ~w[cnt]) & mask_128;   \
-  if (val)                                               \
-    return do_bytes(str, (const char *)(w + cnt), val);  \
+#define DO_WORD(in, val) {                          \
+  op_t tmp = ((val - mask_1) & ~val) & mask_128;    \
+  if (tmp)                                          \
+    return do_bytes(str, (const char *)(in), tmp);  \
 }
 #else
 static inline size_t __attribute__ ((always_inline))
@@ -72,25 +72,25 @@ do_bytes (const char *base, const char *p)
   return (size_t) (p - base);
 }
 
-#define DO_WORD(w, cnt) {                           \
-  if (((w[cnt] - mask_1) & ~w[cnt]) & mask_128)     \
-    return do_bytes(str, (const char *)(w + cnt));  \
+#define DO_WORD(in, val) {                     \
+  if (((val - mask_1) & ~val) & mask_128) {    \
+    return do_bytes(str, (const char *)(in));  \
+  }                                            \
 }
 #endif
 
-size_t
-strlen (const char *str) __overloadable
-{
-  if (*str) {
+size_t strnlen (const char *str, size_t n) {
+  if (n != 0) {
     const char *p = (const char *) str;
     const op_t *w;
     op_t mask_1, mask_128;
 
-    while ((size_t) p % sizeof (op_t)) {
+    for (; n > 0 && ((size_t) p % op_size) != 0; --n, ++p) {
       if (!(*p))
         return (p - str);
-      p++;
     }
+
+    w = (const op_t *) p;
 
     __asm__ volatile (
       "li %0, 0x01010101 \n\t"
@@ -101,15 +101,39 @@ strlen (const char *str) __overloadable
 #endif
     mask_128 = mask_1 << 7;
 
-    w = (const op_t *) p;
-
-    while (1) {
-      DO_WORD(w, 0);
-      DO_WORD(w, 1);
-      DO_WORD(w, 2);
-      DO_WORD(w, 3);
+    /*
+     * Check op_size byteswize after initial alignment
+     */
+    while (n >= 4 * op_size) {
+      const op_t w0 = w[0];
+      const op_t w1 = w[1];
+      const op_t w2 = w[2];
+      const op_t w3 = w[3];
+      DO_WORD(w + 0, w0)
+      DO_WORD(w + 1, w1)
+      DO_WORD(w + 2, w2)
+      DO_WORD(w + 3, w3)
       w += 4;
+      n -= 4 * op_size;
     }
+
+    while (n >= op_size) {
+      DO_WORD(w, w[0]);
+      w++;
+      n -= op_size;
+    }
+
+    /*
+     * Check bytewize for remaining bytes
+     */
+    p = (const char *) w;
+    for (; n > 0; --n, ++p) {
+      if (!(*p))
+        return (p - str);
+    }
+
+    return (p - str);
   }
+
   return 0;
 }
