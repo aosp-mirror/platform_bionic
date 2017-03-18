@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "761cc6a1_b6a6005b",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-18T02:49:06Z",
+      "side": 1,
+      "message": "not an enum?",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 34
+      },
+      "revId": "9123915c6a6289c0a0920587b26bf0939163a7c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5102c4ab_4090ec53",
+        "filename": "linker/linker_config.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-18T02:49:06Z",
+      "side": 1,
+      "message": "why \"binary\"? i feel like i\u0027m missing something here.\n\nisn\u0027t this just the set of namespaces (`NamespaceConfig`s) read from the file?",
+      "range": {
+        "startLine": 113,
+        "startChar": 6,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "9123915c6a6289c0a0920587b26bf0939163a7c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
