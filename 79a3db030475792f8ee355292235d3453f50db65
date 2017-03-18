@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9463a001_39e77da1",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-03-18T05:55:07Z",
+      "side": 1,
+      "message": "Maybe we should do a bulk rewrite of these to their named equivalents at some point. Just waiting for the day that we read the decoder ring wrong and mismatch an edit like this.",
+      "range": {
+        "startLine": 204,
+        "startChar": 48,
+        "endLine": 204,
+        "endChar": 50
+      },
+      "revId": "79a3db030475792f8ee355292235d3453f50db65",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
