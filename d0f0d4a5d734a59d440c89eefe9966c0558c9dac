@@ -34,6 +34,24 @@
       "revId": "d0f0d4a5d734a59d440c89eefe9966c0558c9dac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec5e63bd_810711c0",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-20T19:43:56Z",
+      "side": 1,
+      "message": "it leaks - fixed in next ps",
+      "parentUuid": "871330ec_1c09a6fa",
+      "revId": "d0f0d4a5d734a59d440c89eefe9966c0558c9dac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
