@@ -45,6 +45,30 @@
       "revId": "9123915c6a6289c0a0920587b26bf0939163a7c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "628875db_050fa259",
+        "filename": "linker/linker_config.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-20T18:45:28Z",
+      "side": 1,
+      "message": "yes - for this binary.",
+      "parentUuid": "5102c4ab_4090ec53",
+      "range": {
+        "startLine": 113,
+        "startChar": 6,
+        "endLine": 113,
+        "endChar": 18
+      },
+      "revId": "9123915c6a6289c0a0920587b26bf0939163a7c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
