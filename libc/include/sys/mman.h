@@ -49,7 +49,7 @@ __BEGIN_DECLS
 #define POSIX_MADV_WILLNEED   MADV_WILLNEED
 #define POSIX_MADV_DONTNEED   MADV_DONTNEED
 
-#if defined(__USE_FILE_OFFSET64)
+#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
 void* mmap(void*, size_t, int, int, int, off_t) __RENAME(mmap64) __INTRODUCED_IN(21);
 #else
 void* mmap(void*, size_t, int, int, int, off_t);
