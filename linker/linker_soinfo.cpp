@@ -409,11 +409,17 @@ void soinfo::call_constructors() {
     si->call_constructors();
   });
 
-  TRACE("\"%s\": calling constructors", get_realpath());
+  if (!is_linker()) {
+    bionic_trace_begin((std::string("calling constructors: ") + get_realpath()).c_str());
+  }
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   call_function("DT_INIT", init_func_, get_realpath());
   call_array("DT_INIT_ARRAY", init_array_, init_array_count_, false, get_realpath());
+
+  if (!is_linker()) {
+    bionic_trace_end();
+  }
 }
 
 void soinfo::call_destructors() {

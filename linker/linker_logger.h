@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "private/bionic_macros.h"
+#include "private/bionic_systrace.h"
 
 #define LD_LOG(type, x...) \
   { \

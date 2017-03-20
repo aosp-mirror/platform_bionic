@@ -48,10 +48,11 @@ static bool should_trace() {
   // case an audit will be logged, and during boot before the property server has
   // been started, in which case we store the global property_area serial to prevent
   // the costly find operation until we see a changed property_area.
-  if (!g_pinfo && g_property_area_serial != __system_property_area_serial()) {
+  if (g_pinfo == nullptr && g_property_area_serial != __system_property_area_serial()) {
     g_property_area_serial = __system_property_area_serial();
     g_pinfo = __system_property_find(SYSTRACE_PROPERTY_NAME);
   }
+
   if (g_pinfo) {
     // Find out which tags have been enabled on the command line and set
     // the value of tags accordingly.  If the value of the property changes,
@@ -61,10 +62,11 @@ static bool should_trace() {
     // not to move.
     uint32_t cur_serial = __system_property_serial(g_pinfo);
     if (cur_serial != g_property_serial) {
-      g_property_serial = cur_serial;
-      char value[PROP_VALUE_MAX];
-      __system_property_read(g_pinfo, 0, value);
-      g_tags = strtoull(value, nullptr, 0);
+      __system_property_read_callback(g_pinfo,
+              [] (void*, const char*, const char* value, uint32_t serial) {
+                g_property_serial = serial;
+                g_tags = strtoull(value, nullptr, 0);
+              }, nullptr);
     }
     result = ((g_tags & ATRACE_TAG_BIONIC) != 0);
   }
@@ -81,7 +83,7 @@ static int get_trace_marker_fd() {
   return g_trace_marker_fd;
 }
 
-ScopedTrace::ScopedTrace(const char* message) {
+void bionic_trace_begin(const char* message) {
   if (!should_trace()) {
     return;
   }
@@ -102,7 +104,7 @@ ScopedTrace::ScopedTrace(const char* message) {
   TEMP_FAILURE_RETRY(write(trace_marker_fd, buf, len));
 }
 
-ScopedTrace::~ScopedTrace() {
+void bionic_trace_end() {
   if (!should_trace()) {
     return;
   }
@@ -113,4 +115,19 @@ ScopedTrace::~ScopedTrace() {
   }
 
   TEMP_FAILURE_RETRY(write(trace_marker_fd, "E", 1));
+}
+
+ScopedTrace::ScopedTrace(const char* message) : called_end_(false) {
+  bionic_trace_begin(message);
+}
+
+ScopedTrace::~ScopedTrace() {
+  End();
+}
+
+void ScopedTrace::End() {
+  if (!called_end_) {
+    bionic_trace_end();
+    called_end_ = true;
+  }
 }
