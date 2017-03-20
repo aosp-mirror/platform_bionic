@@ -95,7 +95,7 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 243, 38, 37), //gettid|readahead|setxattr|lsetxa
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 249, 37, 36), //exit_group
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 270, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 256, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 253, 34, 33), //epoll_create|epoll_ctl|epoll_wait
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 254, 34, 33), //epoll_create|epoll_ctl|epoll_wait|remap_file_pages
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 269, 33, 32), //set_tid_address|timer_create|timer_settime|timer_gettime|timer_getoverrun|timer_delete|clock_settime|clock_gettime|clock_getres|clock_nanosleep|statfs64|fstatfs64|tgkill
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 280, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 271, 31, 30), //arm_fadvise64_64
