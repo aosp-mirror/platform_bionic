@@ -94,3 +94,6 @@ int	poll:poll(struct pollfd *fds, nfds_t nfds, int timeout)	arm,x86,mips
 # b/35906875. Note mips already has getuid from SYSCALLS.TXT
 int	inotify_init()	arm,x86,mips
 uid_t	getuid()	arm,x86
+
+# b/36435222
+int	remap_file_pages(void *addr, size_t size, int prot, size_t pgoff, int flags)	arm,x86,mips
