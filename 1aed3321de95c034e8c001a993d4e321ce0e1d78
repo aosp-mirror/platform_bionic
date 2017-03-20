@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11da0116_c1661fd4",
+        "filename": "libc/bionic/bionic_systrace.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-20T18:58:15Z",
+      "side": 1,
+      "message": "begin",
+      "range": {
+        "startLine": 86,
+        "startChar": 12,
+        "endLine": 86,
+        "endChar": 31
+      },
+      "revId": "1aed3321de95c034e8c001a993d4e321ce0e1d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6cc58017_3ec9def5",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-20T18:58:15Z",
+      "side": 1,
+      "message": "End",
+      "range": {
+        "startLine": 31,
+        "startChar": 7,
+        "endLine": 31,
+        "endChar": 10
+      },
+      "revId": "1aed3321de95c034e8c001a993d4e321ce0e1d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "409bbf4a_b5931a93",
+        "filename": "libc/private/bionic_systrace.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-20T18:58:15Z",
+      "side": 1,
+      "message": "maybe clearer with the sense flipped, called_end_?",
+      "range": {
+        "startLine": 33,
+        "startChar": 7,
+        "endLine": 33,
+        "endChar": 16
+      },
+      "revId": "1aed3321de95c034e8c001a993d4e321ce0e1d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
