@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6312d0f_7f0cade3",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-20T18:54:50Z",
+      "side": 1,
+      "message": "looks like only the start tag uses the message, so the lifetime isn\u0027t an issue here.",
+      "revId": "d0f0d4a5d734a59d440c89eefe9966c0558c9dac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
