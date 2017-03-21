@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "49d49235_abc1ee8b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1676,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-21T18:30:13Z",
+      "side": 1,
+      "message": "are you sure you don\u0027t want to give ScopedTrace a std::string constructor in addition to its const char* one, since most of your callers pass std::string?",
+      "revId": "6705e8caf55834112ec46ac95d5b08ce499abe20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
