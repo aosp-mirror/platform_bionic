@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4379e326_c3310801",
+        "filename": "libc/include/bits/posix_limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-21T18:28:52Z",
+      "side": 1,
+      "message": "(one problem we have is that the granularity of these macros doesn\u0027t match our reality. i\u0027ve gone with the API level at which we had _all_ the functionality.)",
+      "revId": "06d7f2c78968d1f3e72eb96a5e2472c22c08cd19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e25dd144_32d68d3d",
+        "filename": "libc/include/bits/posix_limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-21T18:28:52Z",
+      "side": 1,
+      "message": "this is probably the tricky one... all the pthread*timed* functions _except_ this one were in much longer. but i think this is the one folks are actually testing for. (it\u0027s certainly the one in the bug report.)",
+      "revId": "06d7f2c78968d1f3e72eb96a5e2472c22c08cd19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
