@@ -31,20 +31,22 @@
 
 #include <sys/cdefs.h>
 
+#define __BIONIC_POSIX_FEATURE_SINCE(level) (((__ANDROID_API__) >= level) ? 200809L : -1)
+
 /* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
 /* Keep this list sorted by name. */
-#define _POSIX_ADVISORY_INFO        200809L
+#define _POSIX_ADVISORY_INFO __BIONIC_POSIX_FEATURE_SINCE(23) /* posix_memadvise arrived late. */
 #define _POSIX_AIO_LISTIO_MAX       2
 #define _POSIX_AIO_MAX              1
 #define _POSIX_ARG_MAX              4096
 #define _POSIX_ASYNCHRONOUS_IO      -1  /* not implemented */
-#define _POSIX_BARRIERS             200809L
+#define _POSIX_BARRIERS __BIONIC_POSIX_FEATURE_SINCE(24)
 #define _POSIX_CHILD_MAX            25
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
 #define _POSIX_CLOCK_SELECTION      200809L
 #define _POSIX_CPUTIME              0  /* Use sysconf to detect support at runtime. */
 #define _POSIX_DELAYTIMER_MAX       32
-#define _POSIX_FSYNC                200809L  /* fdatasync() supported */
+#define _POSIX_FSYNC 200809L
 #define _POSIX_HOST_NAME_MAX        255
 #define _POSIX_IPV6                 200809L
 #define _POSIX_JOB_CONTROL          1  /* job control is a Linux feature */
@@ -53,8 +55,8 @@
 #define _POSIX_MAPPED_FILES         200809L  /* mmap-ed files supported */
 #define _POSIX_MAX_CANON            255
 #define _POSIX_MAX_INPUT            255
-#define _POSIX_MEMLOCK              200809L
-#define _POSIX_MEMLOCK_RANGE        200809L
+#define _POSIX_MEMLOCK __BIONIC_POSIX_FEATURE_SINCE(17) /* mlockall. */
+#define _POSIX_MEMLOCK_RANGE        200809L /* mlock. */
 #define _POSIX_MEMORY_PROTECTION    200809L
 #define _POSIX_MESSAGE_PASSING      -1  /* not implemented */
 #define _POSIX_MONOTONIC_CLOCK      0  /* the monotonic clock may be available; ask sysconf */
@@ -81,7 +83,7 @@
 #define _POSIX_SHELL                1   /* system() supported */
 #define _POSIX_SIGQUEUE_MAX         32
 #define _POSIX_SPAWN                -1  /* not implemented */
-#define _POSIX_SPIN_LOCKS           200809L
+#define _POSIX_SPIN_LOCKS __BIONIC_POSIX_FEATURE_SINCE(24)
 #define _POSIX_SPORADIC_SERVER      -1  /* not implemented */
 #define _POSIX_SSIZE_MAX            32767
 #define _POSIX_STREAM_MAX           8
@@ -103,7 +105,7 @@
 #define _POSIX_THREAD_SAFE_FUNCTIONS 200809L
 #define _POSIX_THREAD_SPORADIC_SERVER -1  /* not implemented */
 #define _POSIX_THREAD_THREADS_MAX   64
-#define _POSIX_TIMEOUTS             200809L
+#define _POSIX_TIMEOUTS __BIONIC_POSIX_FEATURE_SINCE(21) /* pthread_mutex_timedlock arrived late. */
 #define _POSIX_TIMERS               200809L  /* Posix timers are supported */
 #define _POSIX_TIMER_MAX            32
 #define _POSIX_TRACE                -1  /* not implemented */
