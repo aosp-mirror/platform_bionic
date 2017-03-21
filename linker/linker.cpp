@@ -1673,6 +1673,8 @@ static void soinfo_unload(soinfo* root) {
     root = root->get_local_group_root();
   }
 
+  ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
+
   if (!root->can_unload()) {
     TRACE("not unloading \"%s\" - the binary is flagged with NODELETE", root->get_realpath());
     return;
@@ -1999,6 +2001,7 @@ bool do_dlsym(void* handle,
               const char* sym_ver,
               const void* caller_addr,
               void** symbol) {
+  ScopedTrace trace("dlsym");
 #if !defined(__LP64__)
   if (handle == nullptr) {
     DL_ERR("dlsym failed: library handle is null");
@@ -2074,6 +2077,7 @@ bool do_dlsym(void* handle,
 }
 
 int do_dlclose(void* handle) {
+  ScopedTrace trace("dlclose");
   ProtectedDataGuard guard;
   soinfo* si = soinfo_from_handle(handle);
   if (si == nullptr) {
