@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbd2d372_e3e42f44",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1076052
+      },
+      "writtenOn": "2017-03-21T09:35:36Z",
+      "side": 1,
+      "message": "I only see changes to the cortex-a15 source.",
+      "range": {
+        "startLine": 7,
+        "startChar": 39,
+        "endLine": 7,
+        "endChar": 70
+      },
+      "revId": "0c7a0554db6e900a359ba4716d59994505765dd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
