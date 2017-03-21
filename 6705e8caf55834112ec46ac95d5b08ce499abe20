@@ -16,6 +16,24 @@
       "revId": "6705e8caf55834112ec46ac95d5b08ce499abe20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f45d364_87978d03",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1676,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-21T18:39:17Z",
+      "side": 1,
+      "message": "bionic_systrace is part of libc... I do not think we can use std::string there yet.",
+      "parentUuid": "49d49235_abc1ee8b",
+      "revId": "6705e8caf55834112ec46ac95d5b08ce499abe20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
