@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8227473a_f90f6786",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-22T05:25:11Z",
+      "side": 1,
+      "message": "%zu\n\nwe didn\u0027t get a warning for that?",
+      "range": {
+        "startLine": 153,
+        "startChar": 46,
+        "endLine": 153,
+        "endChar": 48
+      },
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
