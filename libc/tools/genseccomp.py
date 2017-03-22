@@ -149,13 +149,14 @@ def convert_ranges_to_bpf(ranges):
       bpf[i] = statement.format(fail=str(len(bpf) - i),
                                 allow=str(len(bpf) - i - 1))
 
-  # Add check that we aren't off the bottom of the syscalls
-  bpf.insert(0, BPF_JGE.format(ranges[0].begin, 0, str(len(bpf))) + ',')
 
   # Add the allow calls at the end. If the syscall is not matched, we will
   # continue. This allows the user to choose to match further syscalls, and
   # also to choose the action when we want to block
   bpf.append(BPF_ALLOW + ",")
+
+  # Add check that we aren't off the bottom of the syscalls
+  bpf.insert(0, BPF_JGE.format(ranges[0].begin, 0, str(len(bpf))) + ',')
   return bpf
 
 

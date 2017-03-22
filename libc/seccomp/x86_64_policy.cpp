@@ -5,7 +5,7 @@
 
 #include "seccomp_bpfs.h"
 const sock_filter x86_64_filter[] = {
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 79),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 80),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 157, 39, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 72, 19, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 32, 9, 0),

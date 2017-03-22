@@ -113,13 +113,13 @@ ssize_t     read(int, void*, size_t)        all
   def test_convert_ranges_to_bpf(self):
     ranges = genseccomp.convert_NRs_to_ranges([("b", 2), ("a", 1)])
     bpf = genseccomp.convert_ranges_to_bpf(ranges)
-    self.assertEquals(bpf, ['BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 1, 0, 1),',
+    self.assertEquals(bpf, ['BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 1, 0, 2),',
                             'BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 1, 0), //a|b',
                             'BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),'])
 
     ranges = genseccomp.convert_NRs_to_ranges([("b", 3), ("a", 1)])
     bpf = genseccomp.convert_ranges_to_bpf(ranges)
-    self.assertEquals(bpf, ['BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 1, 0, 3),',
+    self.assertEquals(bpf, ['BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 1, 0, 4),',
                             'BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 1, 0),',
                             'BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 2, 2, 1), //a',
                             'BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4, 1, 0), //b',
@@ -165,7 +165,7 @@ ssize_t     read(int, void*, size_t)        all
 
     #include "seccomp_bpfs.h"
     const sock_filter arm_filter[] = {
-    BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 0, 3),
+    BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 0, 4),
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 140, 1, 0),
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4, 2, 1), //read
     BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 141, 1, 0), //_llseek
