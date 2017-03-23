@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "81a4370a_93979640",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T07:45:42Z",
+      "side": 1,
+      "message": "please ignore comment above. sorry.\n\nhowever, it doesn\u0027t work when I add additional namespace and link it to the default namespace as follows.\n\n[system]\nadditional.namespaces \u003d sphal\nnamespace.default.isolated \u003d true\nnamespace.default.search.paths \u003d ....\nnamespace.default.permitted.paths \u003d ...\nnamespace.default.links \u003d sphal\nnamespace.default.link.sphal.shared_libs \u003d ...\n\nnamespace.sphal.isolated \u003d false\nnamespace.sphal.search.paths \u003d ...\nnamespace.sphal.permitted.paths \u003d ...",
+      "parentUuid": "bcc30482_ae99c83e",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b290a9bc_5af3c2f7",
         "filename": "linker/tests/linker_config_test.cpp",
         "patchSetId": 4
