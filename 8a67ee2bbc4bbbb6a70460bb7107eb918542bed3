@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "30d1d540_e527b213",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2193,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T14:51:30Z",
+      "side": 1,
+      "message": "This should not be executed while initializing default namespaces.\n\n-----------------------\nif (init_completed) {\n  ProtectedDataGuard guard\n  namespace_from-\u003eadd_linked_namespace(..);\n}\nelse {\n  namespace_from-\u003eadd_linked_namespace(..);\n}\n\ninit_completed assume to be a static bool that is set true after the default namespaces are initialized.",
+      "range": {
+        "startLine": 2193,
+        "startChar": 0,
+        "endLine": 2193,
+        "endChar": 27
+      },
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6377a81_26b90b11",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3454,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T14:51:30Z",
+      "side": 1,
+      "message": "This triggers ProtectDataGuard so that subsequent modification to the list (e.g. soinfo_list).",
+      "range": {
+        "startLine": 3454,
+        "startChar": 0,
+        "endLine": 3454,
+        "endChar": 83
+      },
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37403e63_2776ac27",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3461,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T14:51:30Z",
+      "side": 1,
+      "message": "Access violation happens here.",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8227473a_f90f6786",
         "filename": "linker/linker_config.cpp",
         "patchSetId": 4
