@@ -22,6 +22,40 @@
       "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcc30482_ae99c83e",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T07:05:49Z",
+      "side": 1,
+      "message": "I thought permitted paths are required only when isolated \u003d true, however it always requires permitted paths.",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b290a9bc_5af3c2f7",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T07:05:49Z",
+      "side": 1,
+      "message": "don\u0027t we need to add \"namespace.default.links \u003d system\" ?",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
