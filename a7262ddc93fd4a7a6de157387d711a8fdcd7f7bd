@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25dc1064_e44dcef6",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-23T23:33:30Z",
+      "side": 1,
+      "message": "hand (don\u0027t ask me why!)",
+      "range": {
+        "startLine": 486,
+        "startChar": 25,
+        "endLine": 486,
+        "endChar": 30
+      },
+      "revId": "a7262ddc93fd4a7a6de157387d711a8fdcd7f7bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0471c86_8c71e953",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-23T23:33:30Z",
+      "side": 1,
+      "message": "information",
+      "range": {
+        "startLine": 486,
+        "startChar": 11,
+        "endLine": 486,
+        "endChar": 21
+      },
+      "revId": "a7262ddc93fd4a7a6de157387d711a8fdcd7f7bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
