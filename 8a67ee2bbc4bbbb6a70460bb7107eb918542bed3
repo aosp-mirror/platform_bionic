@@ -189,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "657a5f06_4ab7982e",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-03-23T23:53:13Z",
+      "side": 1,
+      "message": "yeah, the error was due to ProtectedGuard. This statement is innocent.",
+      "parentUuid": "5fde589b_64f61a2a",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b290a9bc_5af3c2f7",
         "filename": "linker/tests/linker_config_test.cpp",
         "patchSetId": 4
