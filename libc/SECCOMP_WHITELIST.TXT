@@ -97,3 +97,6 @@ uid_t	getuid()	arm,x86
 
 # b/36435222
 int	remap_file_pages(void *addr, size_t size, int prot, size_t pgoff, int flags)	arm,x86,mips
+
+# b/36449658
+int	rename(const char *oldpath, const char *newpath)	arm,x86,mips
