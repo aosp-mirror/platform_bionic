@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea135dcc_a5fdbf89",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2193,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-23T17:56:36Z",
+      "side": 1,
+      "message": "fixed.",
+      "parentUuid": "30d1d540_e527b213",
+      "range": {
+        "startLine": 2193,
+        "startChar": 0,
+        "endLine": 2193,
+        "endChar": 27
+      },
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6377a81_26b90b11",
         "filename": "linker/linker.cpp",
         "patchSetId": 4
@@ -88,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "e8fb0c16_4cdcfacd",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-23T17:56:36Z",
+      "side": 1,
+      "message": "no warning... done",
+      "parentUuid": "8227473a_f90f6786",
+      "range": {
+        "startLine": 153,
+        "startChar": 46,
+        "endLine": 153,
+        "endChar": 48
+      },
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcc30482_ae99c83e",
         "filename": "linker/linker_config.cpp",
         "patchSetId": 4
@@ -123,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "5fde589b_64f61a2a",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-23T17:56:36Z",
+      "side": 1,
+      "message": "in what way? was this because of ProtectedGuard?",
+      "parentUuid": "81a4370a_93979640",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b290a9bc_5af3c2f7",
         "filename": "linker/tests/linker_config_test.cpp",
         "patchSetId": 4
@@ -134,6 +200,24 @@
       "writtenOn": "2017-03-23T07:05:49Z",
       "side": 1,
       "message": "don\u0027t we need to add \"namespace.default.links \u003d system\" ?",
+      "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73aab3c4_10e72db7",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-23T17:56:36Z",
+      "side": 1,
+      "message": "right - added test for this as well.",
+      "parentUuid": "b290a9bc_5af3c2f7",
       "revId": "8a67ee2bbc4bbbb6a70460bb7107eb918542bed3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
