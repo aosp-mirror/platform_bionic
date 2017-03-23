@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a167363d_3aa39cde",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-23T23:34:45Z",
+      "side": 0,
+      "message": "don\u0027t we want to keep the test?",
+      "revId": "e98d1e68ce37bb9238e3c50ea6b01d1057adb2eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
