@@ -26,32 +26,21 @@
  * SUCH DAMAGE.
  */
 
+#include "linker_logger.h"
+
 #include <string.h>
 #include <sys/prctl.h>
-#include <sys/system_properties.h>
 #include <unistd.h>
 
 #include <string>
 #include <vector>
 
 #include "android-base/strings.h"
-#include "linker_logger.h"
+#include "private/CachedProperty.h"
 #include "private/libc_logging.h"
 
 LinkerLogger g_linker_logger;
-
-static const char* kSystemLdDebugProperty = "debug.ld.all";
-static const char* kLdDebugPropertyPrefix = "debug.ld.app.";
-
-static const char* kOptionErrors = "dlerror";
-static const char* kOptionDlopen = "dlopen";
-static const char* kOptionDlsym = "dlsym";
-
-static std::string property_get(const char* name) {
-  char value[PROP_VALUE_MAX] = {};
-  __system_property_get(name, value);
-  return value;
-}
+bool g_greylist_disabled = false;
 
 static uint32_t ParseProperty(const std::string& value) {
   if (value.empty()) {
@@ -63,38 +52,22 @@ static uint32_t ParseProperty(const std::string& value) {
   uint32_t flags = 0;
 
   for (const auto& o : options) {
-    if (o == kOptionErrors) {
+    if (o == "dlerror") {
       flags |= kLogErrors;
-    } else if (o == kOptionDlopen){
+    } else if (o == "dlopen") {
       flags |= kLogDlopen;
-    } else if (o == kOptionDlsym){
+    } else if (o == "dlsym") {
       flags |= kLogDlsym;
     } else {
-      __libc_format_log(ANDROID_LOG_WARN, "linker", "Unknown debug.ld option \"%s\", will ignore.", o.c_str());
+      __libc_format_log(ANDROID_LOG_WARN, "linker", "Ignoring unknown debug.ld option \"%s\"",
+                        o.c_str());
     }
   }
 
   return flags;
 }
 
-void LinkerLogger::ResetState() {
-  // the most likely scenario app is not debuggable and
-  // is running on user build - the logging is disabled.
-  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
-    return;
-  }
-
-  flags_ = 0;
-
-  // Check flag applied to all processes first.
-  std::string value = property_get(kSystemLdDebugProperty);
-  flags_ |= ParseProperty(value);
-
-  // Ignore processes started without argv (http://b/33276926).
-  if (g_argv[0] == nullptr) {
-    return;
-  }
-
+static void GetAppSpecificProperty(char* buffer) {
   // Get process basename.
   const char* process_name_start = basename(g_argv[0]);
 
@@ -106,10 +79,42 @@ void LinkerLogger::ResetState() {
                              std::string(process_name_start, (process_name_end - process_name_start)) :
                              std::string(process_name_start);
 
-  std::string property_name = std::string(kLdDebugPropertyPrefix) + process_name;
+  std::string property_name = std::string("debug.ld.app.") + process_name;
+  __system_property_get(property_name.c_str(), buffer);
+}
 
-  value = property_get(property_name.c_str());
-  flags_ |= ParseProperty(value);
+void LinkerLogger::ResetState() {
+  // The most likely scenario app is not debuggable and
+  // is running on a user build, in which case logging is disabled.
+  if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
+    return;
+  }
+
+  // This is a convenient place to check whether the greylist should be disabled for testing.
+  static CachedProperty greylist_disabled("debug.ld.greylist_disabled");
+  bool old_value = g_greylist_disabled;
+  g_greylist_disabled = (strcmp(greylist_disabled.Get(), "true") == 0);
+  if (g_greylist_disabled != old_value) {
+    __libc_format_log(ANDROID_LOG_INFO, "linker", "%s greylist",
+                      g_greylist_disabled ? "Disabling" : "Enabling");
+  }
+
+  flags_ = 0;
+
+  // For logging, check the flag applied to all processes first.
+  static CachedProperty debug_ld_all("debug.ld.all");
+  flags_ |= ParseProperty(debug_ld_all.Get());
+
+  // Ignore processes started without argv (http://b/33276926).
+  if (g_argv[0] == nullptr) {
+    return;
+  }
+
+  // Otherwise check the app-specific property too.
+  // We can't easily cache the property here because argv[0] changes.
+  char debug_ld_app[PROP_VALUE_MAX] = {};
+  GetAppSpecificProperty(debug_ld_app);
+  flags_ |= ParseProperty(debug_ld_app);
 }
 
 void LinkerLogger::Log(uint32_t type, const char* format, ...) {
@@ -122,4 +127,3 @@ void LinkerLogger::Log(uint32_t type, const char* format, ...) {
   __libc_format_log_va_list(ANDROID_LOG_DEBUG, "linker", format, ap);
   va_end(ap);
 }
-
