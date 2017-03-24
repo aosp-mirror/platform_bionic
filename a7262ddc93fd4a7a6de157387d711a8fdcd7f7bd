@@ -45,6 +45,30 @@
       "revId": "a7262ddc93fd4a7a6de157387d711a8fdcd7f7bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa2514c3_b7038ba1",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-24T00:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0471c86_8c71e953",
+      "range": {
+        "startLine": 486,
+        "startChar": 11,
+        "endLine": 486,
+        "endChar": 21
+      },
+      "revId": "a7262ddc93fd4a7a6de157387d711a8fdcd7f7bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
