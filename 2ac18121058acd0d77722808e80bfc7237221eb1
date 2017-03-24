@@ -45,6 +45,30 @@
       "revId": "2ac18121058acd0d77722808e80bfc7237221eb1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be65e679_016c85a6",
+        "filename": "linker/ld.config.format.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-03-24T16:27:48Z",
+      "side": 1,
+      "message": "they are used in mappings",
+      "parentUuid": "59fbc269_42147858",
+      "range": {
+        "startLine": 26,
+        "startChar": 28,
+        "endLine": 26,
+        "endChar": 40
+      },
+      "revId": "2ac18121058acd0d77722808e80bfc7237221eb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
