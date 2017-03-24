@@ -481,25 +481,19 @@ static void __linker_cannot_link(const char* argv0) {
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
-  ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
+  // AT_BASE is set to 0 in the case when linker is run by iself
+  // so in order to link the linker it needs to calcuate AT_BASE
+  // using information at hand. The trick below takes advantage
+  // of the fact that the value of linktime_addr before relocations
+  // are run is an offset and this can be used to calculate AT_BASE.
+  static uintptr_t linktime_addr = reinterpret_cast<uintptr_t>(&linktime_addr);
+  ElfW(Addr) linker_addr = reinterpret_cast<uintptr_t>(&linktime_addr) - linktime_addr;
+
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so(nullptr, nullptr, nullptr, 0, 0);
-
-  // If the linker is not acting as PT_INTERP entry_point is equal to
-  // _start. Which means that the linker is running as an executable and
-  // already linked by PT_INTERP.
-  //
-  // This happens when user tries to run 'adb shell /system/bin/linker'
-  // see also https://code.google.com/p/android/issues/detail?id=63174
-  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    __libc_format_fd(STDOUT_FILENO,
-                     "This is %s, the helper program for dynamic executables.\n",
-                     args.argv[0]);
-    exit(0);
-  }
 
   linker_so.base = linker_addr;
   linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
@@ -546,6 +540,19 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
 
   // Initialize the linker's own global variables
   linker_so.call_constructors();
+
+  // If the linker is not acting as PT_INTERP entry_point is equal to
+  // _start. Which means that the linker is running as an executable and
+  // already linked by PT_INTERP.
+  //
+  // This happens when user tries to run 'adb shell /system/bin/linker'
+  // see also https://code.google.com/p/android/issues/detail?id=63174
+  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
+    __libc_format_fd(STDOUT_FILENO,
+                     "This is %s, the helper program for dynamic executables.\n",
+                     args.argv[0]);
+    exit(0);
+  }
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
