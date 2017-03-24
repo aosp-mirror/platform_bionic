@@ -1256,7 +1256,7 @@ TEST(dlfcn, dt_runpath_smoke) {
 // Bionic specific tests
 #if defined(__BIONIC__)
 
-#if defined(__arm__) || defined(__i386__)
+#if defined(__arm__)
 const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
   return reinterpret_cast<const llvm::ELF::Elf32_Dyn*>(p);
 }
@@ -1320,7 +1320,7 @@ void validate_compatibility_of_native_library(const char* soname) {
   validate_compatibility_of_native_library(path, elf);
 }
 
-// This is a test for app compatibility workaround for arm and x86 apps
+// This is a test for app compatibility workaround for arm apps
 // affected by http://b/24465209
 TEST(dlext, compat_elf_hash_and_relocation_tables) {
   validate_compatibility_of_native_library("libc.so");
@@ -1332,7 +1332,7 @@ TEST(dlext, compat_elf_hash_and_relocation_tables) {
   validate_compatibility_of_native_library("libjnigraphics.so");
 }
 
-#endif //  defined(__arm__) || defined(__i386__)
+#endif //  defined(__arm__)
 
 TEST(dlfcn, dt_runpath_absolute_path) {
   std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
