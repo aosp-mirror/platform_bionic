@@ -93,6 +93,30 @@
       "revId": "2ac18121058acd0d77722808e80bfc7237221eb1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02c81224_d327b949",
+        "filename": "linker/ld.config.format.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-24T22:44:34Z",
+      "side": 1,
+      "message": "can you make the example below do so? it\u0027s not obvious from this where/why you\u0027d introduce one (or more than one).",
+      "parentUuid": "be65e679_016c85a6",
+      "range": {
+        "startLine": 26,
+        "startChar": 28,
+        "endLine": 26,
+        "endChar": 40
+      },
+      "revId": "2ac18121058acd0d77722808e80bfc7237221eb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
