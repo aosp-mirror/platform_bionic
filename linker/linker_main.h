@@ -44,7 +44,7 @@ class ProtectedDataGuard {
   static size_t ref_count_;
 };
 
-void init_default_namespace();
+void init_default_namespace(const char* executable_path);
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
                      struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags);

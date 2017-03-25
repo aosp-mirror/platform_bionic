@@ -49,6 +49,7 @@
 #include "linker.h"
 #include "linker_block_allocator.h"
 #include "linker_cfi.h"
+#include "linker_config.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_debug.h"
@@ -76,6 +77,8 @@ static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 
 static LinkerTypeAllocator<android_namespace_t> g_namespace_allocator;
 static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_list_allocator;
+
+static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir           = "/system/lib64";
@@ -3367,21 +3370,9 @@ bool soinfo::protect_relro() {
   return true;
 }
 
-void init_default_namespace() {
-  g_default_namespace.set_name("(default)");
+static void init_default_namespace_no_config(bool is_asan) {
   g_default_namespace.set_isolated(false);
-
-  soinfo* somain = solist_get_somain();
-
-  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
-                                                       somain->load_bias);
-  const char* bname = basename(interp);
-
-  bool is_asan = bname != nullptr &&
-                 (strcmp(bname, "linker_asan") == 0 ||
-                  strcmp(bname, "linker_asan64") == 0);
   auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
-  g_is_asan = is_asan;
 
   char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
@@ -3394,4 +3385,91 @@ void init_default_namespace() {
   }
 
   g_default_namespace.set_default_library_paths(std::move(ld_default_paths));
-};
+}
+
+void init_default_namespace(const char* executable_path) {
+  g_default_namespace.set_name("(default)");
+
+  soinfo* somain = solist_get_somain();
+
+  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
+                                                       somain->load_bias);
+  const char* bname = basename(interp);
+
+  g_is_asan = bname != nullptr &&
+              (strcmp(bname, "linker_asan") == 0 ||
+               strcmp(bname, "linker_asan64") == 0);
+
+  const Config* config = nullptr;
+
+  std::string error_msg;
+
+  if (!Config::read_binary_config(kLdConfigFilePath,
+                                  executable_path,
+                                  g_is_asan,
+                                  &config,
+                                  &error_msg)) {
+    if (!error_msg.empty()) {
+      DL_WARN("error reading config file \"%s\" for \"%s\" (will use default configuration): %s",
+              kLdConfigFilePath,
+              executable_path,
+              error_msg.c_str());
+    }
+    config = nullptr;
+  }
+
+  if (config == nullptr) {
+    init_default_namespace_no_config(g_is_asan);
+    return;
+  }
+
+  const auto& namespace_configs = config->namespace_configs();
+  std::unordered_map<std::string, android_namespace_t*> namespaces;
+
+  // 1. Initialize default namespace
+  const NamespaceConfig* default_ns_config = config->default_namespace_config();
+
+  g_default_namespace.set_isolated(default_ns_config->isolated());
+  g_default_namespace.set_default_library_paths(default_ns_config->search_paths());
+  g_default_namespace.set_permitted_paths(default_ns_config->permitted_paths());
+
+  namespaces[default_ns_config->name()] = &g_default_namespace;
+
+  // 2. Initialize other namespaces
+
+  for (auto& ns_config : namespace_configs) {
+    if (namespaces.find(ns_config->name()) != namespaces.end()) {
+      continue;
+    }
+
+    android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
+    ns->set_name(ns_config->name());
+    ns->set_isolated(ns_config->isolated());
+    ns->set_default_library_paths(ns_config->search_paths());
+    ns->set_permitted_paths(ns_config->permitted_paths());
+
+    namespaces[ns_config->name()] = ns;
+  }
+
+  // 3. Establish links between namespaces
+  for (auto& ns_config : namespace_configs) {
+    auto it_from = namespaces.find(ns_config->name());
+    CHECK(it_from != namespaces.end());
+    android_namespace_t* namespace_from = it_from->second;
+    for (const NamespaceLinkConfig& ns_link : ns_config->links()) {
+      auto it_to = namespaces.find(ns_link.ns_name());
+      CHECK(it_to != namespaces.end());
+      android_namespace_t* namespace_to = it_to->second;
+      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+    }
+  }
+  // we can no longer rely on the fact that libdl.so is part of default namespace
+  // this is why we want to add ld-android.so to all namespaces from ld.config.txt
+  soinfo* ld_android_so = solist_get_head();
+  for (auto it : namespaces) {
+    it.second->add_soinfo(ld_android_so);
+    // TODO (dimitry): somain and ld_preloads should probably be added to all of these namespaces too?
+  }
+
+  set_application_target_sdk_version(config->target_sdk_version());
+}
