@@ -81,39 +81,19 @@ static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_lis
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 
 #if defined(__LP64__)
-static const char* const kSystemLibDir           = "/system/lib64";
-static const char* const kSystemNdkLibDir       = "/system/lib64/ndk";
-static const char* const kSystemVndkLibDir       = "/system/lib64/vndk";
-static const char* const kSystemVndkExtLibDir    = "/system/lib64/vndk-ext";
-static const char* const kVendorSpHalLibDir      = "/vendor/lib64/sameprocess";
-static const char* const kVendorLibDir           = "/vendor/lib64";
-static const char* const kAsanSystemLibDir       = "/data/lib64";
-static const char* const kAsanSystemNdkLibDir       = "/data/lib64/ndk";
-static const char* const kAsanSystemVndkLibDir       = "/data/lib64/vndk";
-static const char* const kAsanSystemVndkExtLibDir    = "/data/lib64/vndk-ext";
-static const char* const kAsanVendorSpHalLibDir      = "/data/vendor/lib64/sameprocess";
-static const char* const kAsanVendorLibDir       = "/data/vendor/lib64";
+static const char* const kSystemLibDir     = "/system/lib64";
+static const char* const kVendorLibDir     = "/vendor/lib64";
+static const char* const kAsanSystemLibDir = "/data/lib64";
+static const char* const kAsanVendorLibDir = "/data/vendor/lib64";
 #else
-static const char* const kSystemLibDir           = "/system/lib";
-static const char* const kSystemNdkLibDir       = "/system/lib/ndk";
-static const char* const kSystemVndkLibDir       = "/system/lib/vndk";
-static const char* const kSystemVndkExtLibDir    = "/system/lib/vndk-ext";
-static const char* const kVendorSpHalLibDir      = "/vendor/lib/sameprocess";
-static const char* const kVendorLibDir           = "/vendor/lib";
-static const char* const kAsanSystemLibDir       = "/data/lib";
-static const char* const kAsanSystemNdkLibDir       = "/data/lib/ndk";
-static const char* const kAsanSystemVndkLibDir       = "/data/lib/vndk";
-static const char* const kAsanSystemVndkExtLibDir    = "/data/lib/vndk-ext";
-static const char* const kAsanVendorSpHalLibDir      = "/data/vendor/lib/sameprocess";
-static const char* const kAsanVendorLibDir       = "/data/vendor/lib";
+static const char* const kSystemLibDir     = "/system/lib";
+static const char* const kVendorLibDir     = "/vendor/lib";
+static const char* const kAsanSystemLibDir = "/data/lib";
+static const char* const kAsanVendorLibDir = "/data/vendor/lib";
 #endif
 
 static const char* const kDefaultLdPaths[] = {
   kSystemLibDir,
-  kSystemNdkLibDir,
-  kSystemVndkExtLibDir,
-  kSystemVndkLibDir,
-  kVendorSpHalLibDir,
   kVendorLibDir,
   nullptr
 };
@@ -121,14 +101,6 @@ static const char* const kDefaultLdPaths[] = {
 static const char* const kAsanDefaultLdPaths[] = {
   kAsanSystemLibDir,
   kSystemLibDir,
-  kAsanSystemNdkLibDir,
-  kSystemNdkLibDir,
-  kAsanSystemVndkExtLibDir,
-  kSystemVndkExtLibDir,
-  kAsanSystemVndkLibDir,
-  kSystemVndkLibDir,
-  kAsanVendorSpHalLibDir,
-  kVendorSpHalLibDir,
   kAsanVendorLibDir,
   kVendorLibDir,
   nullptr
