@@ -40,6 +40,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../libc/
 
 LOCAL_SRC_FILES := \
   linker_block_allocator_test.cpp \
+  linker_config_test.cpp \
   linker_globals.cpp \
   linked_list_test.cpp \
   linker_memory_allocator_test.cpp \
@@ -47,7 +48,8 @@ LOCAL_SRC_FILES := \
   linker_utils_test.cpp \
   ../linker_allocator.cpp \
   ../linker_block_allocator.cpp \
-  ../linker_utils.cpp
+  ../linker_config.cpp \
+  ../linker_utils.cpp \
 
 # for __libc_fatal
 LOCAL_SRC_FILES += ../../libc/bionic/libc_logging.cpp
