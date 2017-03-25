@@ -46,7 +46,9 @@ bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* 
 // 1. For regular path it converts it to realpath()
 // 2. For path in a zip file it uses realpath on the zipfile
 //    normalizes entry name by calling normalize_path function.
-void resolve_paths(std::vector<std::string>& paths, std::vector<std::string>* resolved_paths);
+void resolve_paths(std::vector<std::string>& paths,
+                   std::vector<std::string>* resolved_paths);
+
 void split_path(const char* path, const char* delimiters, std::vector<std::string>* paths);
 
 std::string dirname(const char* path);
