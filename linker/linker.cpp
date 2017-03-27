@@ -1110,11 +1110,43 @@ static void for_each_dt_needed(const ElfReader& elf_reader, F action) {
   }
 }
 
+static bool find_loaded_library_by_inode(android_namespace_t* ns,
+                                         const struct stat& file_stat,
+                                         off64_t file_offset,
+                                         bool search_linked_namespaces,
+                                         soinfo** candidate) {
+
+  auto predicate = [&](soinfo* si) {
+    return si->get_st_dev() != 0 &&
+           si->get_st_ino() != 0 &&
+           si->get_st_dev() == file_stat.st_dev &&
+           si->get_st_ino() == file_stat.st_ino &&
+           si->get_file_offset() == file_offset;
+  };
+
+  *candidate = ns->soinfo_list().find_if(predicate);
+
+  if (*candidate == nullptr && search_linked_namespaces) {
+    for (auto& link : ns->linked_namespaces()) {
+      android_namespace_t* linked_ns = link.linked_namespace();
+      soinfo* si = linked_ns->soinfo_list().find_if(predicate);
+
+      if (si != nullptr && link.is_accessible(si->get_soname())) {
+        *candidate = si;
+        return true;
+      }
+    }
+  }
+
+  return *candidate != nullptr;
+}
+
 static bool load_library(android_namespace_t* ns,
                          LoadTask* task,
                          LoadTaskList* load_tasks,
                          int rtld_flags,
-                         const std::string& realpath) {
+                         const std::string& realpath,
+                         bool search_linked_namespaces) {
   off64_t file_offset = task->get_file_offset();
   const char* name = task->get_name();
   const android_dlextinfo* extinfo = task->get_extinfo();
@@ -1142,17 +1174,8 @@ static bool load_library(android_namespace_t* ns,
   // Check for symlink and other situations where
   // file can have different names, unless ANDROID_DLEXT_FORCE_LOAD is set
   if (extinfo == nullptr || (extinfo->flags & ANDROID_DLEXT_FORCE_LOAD) == 0) {
-    auto predicate = [&](soinfo* si) {
-      return si->get_st_dev() != 0 &&
-             si->get_st_ino() != 0 &&
-             si->get_st_dev() == file_stat.st_dev &&
-             si->get_st_ino() == file_stat.st_ino &&
-             si->get_file_offset() == file_offset;
-    };
-
-    soinfo* si = ns->soinfo_list().find_if(predicate);
-
-    if (si != nullptr) {
+    soinfo* si = nullptr;
+    if (find_loaded_library_by_inode(ns, file_stat, file_offset, search_linked_namespaces, &si)) {
       TRACE("library \"%s\" is already loaded under different name/path \"%s\" - "
             "will return existing soinfo", name, si->get_realpath());
       task->set_soinfo(si);
@@ -1247,7 +1270,8 @@ static bool load_library(android_namespace_t* ns,
                          LoadTask* task,
                          ZipArchiveCache* zip_archive_cache,
                          LoadTaskList* load_tasks,
-                         int rtld_flags) {
+                         int rtld_flags,
+                         bool search_linked_namespaces) {
   const char* name = task->get_name();
   soinfo* needed_by = task->get_needed_by();
   const android_dlextinfo* extinfo = task->get_extinfo();
@@ -1268,7 +1292,7 @@ static bool load_library(android_namespace_t* ns,
 
     task->set_fd(extinfo->library_fd, false);
     task->set_file_offset(file_offset);
-    return load_library(ns, task, load_tasks, rtld_flags, realpath);
+    return load_library(ns, task, load_tasks, rtld_flags, realpath, search_linked_namespaces);
   }
 
   // Open the file.
@@ -1281,19 +1305,12 @@ static bool load_library(android_namespace_t* ns,
   task->set_fd(fd, true);
   task->set_file_offset(file_offset);
 
-  return load_library(ns, task, load_tasks, rtld_flags, realpath);
+  return load_library(ns, task, load_tasks, rtld_flags, realpath, search_linked_namespaces);
 }
 
-// Returns true if library was found and false otherwise
 static bool find_loaded_library_by_soname(android_namespace_t* ns,
-                                         const char* name, soinfo** candidate) {
-  *candidate = nullptr;
-
-  // Ignore filename with path.
-  if (strchr(name, '/') != nullptr) {
-    return false;
-  }
-
+                                          const char* name,
+                                          soinfo** candidate) {
   return !ns->soinfo_list().visit([&](soinfo* si) {
     const char* soname = si->get_soname();
     if (soname != nullptr && (strcmp(name, soname) == 0)) {
@@ -1305,6 +1322,38 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
   });
 }
 
+// Returns true if library was found and false otherwise
+static bool find_loaded_library_by_soname(android_namespace_t* ns,
+                                         const char* name,
+                                         bool search_linked_namespaces,
+                                         soinfo** candidate) {
+  *candidate = nullptr;
+
+  // Ignore filename with path.
+  if (strchr(name, '/') != nullptr) {
+    return false;
+  }
+
+  bool found = find_loaded_library_by_soname(ns, name, candidate);
+
+  if (!found && search_linked_namespaces) {
+    // if a library was not found - look into linked namespaces
+    for (auto& link : ns->linked_namespaces()) {
+      if (!link.is_accessible(name)) {
+        continue;
+      }
+
+      android_namespace_t* linked_ns = link.linked_namespace();
+
+      if (find_loaded_library_by_soname(linked_ns, name, candidate)) {
+        return true;
+      }
+    }
+  }
+
+  return found;
+}
+
 static bool find_library_in_linked_namespace(const android_namespace_link_t& namespace_link,
                                              LoadTask* task,
                                              int rtld_flags) {
@@ -1314,7 +1363,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   bool loaded = false;
 
   std::string soname;
-  if (find_loaded_library_by_soname(ns, task->get_name(), &candidate)) {
+  if (find_loaded_library_by_soname(ns, task->get_name(), false, &candidate)) {
     loaded = true;
     soname = candidate->get_soname();
   } else {
@@ -1365,7 +1414,7 @@ static bool find_library_internal(android_namespace_t* ns,
                                   bool search_linked_namespaces) {
   soinfo* candidate;
 
-  if (find_loaded_library_by_soname(ns, task->get_name(), &candidate)) {
+  if (find_loaded_library_by_soname(ns, task->get_name(), search_linked_namespaces, &candidate)) {
     task->set_soinfo(candidate);
     return true;
   }
@@ -1375,7 +1424,7 @@ static bool find_library_internal(android_namespace_t* ns,
   TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]",
       task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags)) {
+  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
     return true;
   }
 
