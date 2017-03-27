@@ -17,6 +17,10 @@
 #ifndef SECCOMP_POLICY_H
 #define SECCOMP_POLICY_H
 
+#include <stddef.h>
+#include <linux/filter.h>
+
 bool set_seccomp_filter();
+void get_seccomp_filter(const sock_filter*& filter, size_t& filter_size);
 
 #endif
