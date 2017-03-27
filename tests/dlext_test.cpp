@@ -672,8 +672,59 @@ TEST(dlext, ns_smoke) {
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
 
+  // dlopen for a public library using an absolute path should work
+  // 1. For isolated namespaces
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns2;
+  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  ASSERT_TRUE(handle == handle_public);
+
+  dlclose(handle);
+
+  // 1.1 even if it wasn't loaded before
+  dlclose(handle_public);
+
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle_public == nullptr);
+  ASSERT_EQ(std::string("dlopen failed: library \"") + lib_public_path +
+               "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+
+  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == handle_public);
+
+  dlclose(handle);
+
+  // 2. And for regular namespaces (make sure it does not load second copy of the library)
+  extinfo.library_namespace = ns1;
+  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  ASSERT_TRUE(handle == handle_public);
+
+  dlclose(handle);
+
+  // 2.1 Unless it was not loaded before - in which case it will load a duplicate.
+  // TODO(dimitry): This is broken. Maybe we need to deprecate non-isolated namespaces?
+  dlclose(handle_public);
+
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle_public == nullptr);
+  ASSERT_EQ(std::string("dlopen failed: library \"") + lib_public_path +
+               "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
+
+  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
+
+  ASSERT_TRUE(handle != handle_public);
+
+  dlclose(handle);
+
   extinfo.library_namespace = ns1;
 
   void* handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
@@ -684,14 +735,6 @@ TEST(dlext, ns_smoke) {
   ASSERT_TRUE(handle2 != nullptr) << dlerror();
 
   ASSERT_TRUE(handle1 != handle2);
-
-  // dlopen for a public library using an absolute path should work for isolated namespaces
-  extinfo.library_namespace = ns2;
-  handle = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-  ASSERT_TRUE(handle == handle_public);
-
-  dlclose(handle);
 
   typedef const char* (*fn_t)();
 
