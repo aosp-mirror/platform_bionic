@@ -2102,8 +2102,7 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
                        "(anonymous)",
                        nullptr,
                        library_search_path,
-                       // TODO (dimitry): change to isolated eventually.
-                       ANDROID_NAMESPACE_TYPE_REGULAR,
+                       ANDROID_NAMESPACE_TYPE_ISOLATED,
                        nullptr,
                        &g_default_namespace);
 
