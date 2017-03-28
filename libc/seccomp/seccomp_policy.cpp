@@ -18,7 +18,6 @@
 
 #include <assert.h>
 #include <linux/audit.h>
-#include <linux/filter.h>
 #include <linux/seccomp.h>
 #include <sys/prctl.h>
 
@@ -153,4 +152,14 @@ bool set_seccomp_filter() {
 #endif
 
     return install_filter(f);
+}
+
+void get_seccomp_filter(const sock_filter*& filter, size_t& filter_size) {
+#if defined __aarch64__ || defined __x86_64__ || defined __mips64__
+    filter = primary_filter;
+    filter_size = primary_filter_size;
+#else
+    filter = secondary_filter;
+    filter_size = secondary_filter_size;
+#endif
 }
