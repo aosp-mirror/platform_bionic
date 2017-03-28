@@ -48,6 +48,7 @@ static char* __bionic_set_dlerror(char* new_value) {
 
   char* old_value = *dlerror_slot;
   *dlerror_slot = new_value;
+  LD_LOG(kLogErrors, "%s\n", new_value);
   return old_value;
 }
 
