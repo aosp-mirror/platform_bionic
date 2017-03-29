@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f23ea8f_451a3a34",
+        "filename": "libc/arch-arm/cortex-a15/bionic/memset.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-03-29T18:24:34Z",
+      "side": 1,
+      "message": "All of our code uses dwarf unwind information.\n\nChange this to:\n\n        .cfi_def_cfa_offset 4\n        .cfi_rel_offset r0, 0",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 24
+      },
+      "revId": "f5a2d1c7600bc9ab4eb0447b22a1cbe8daf93667",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
