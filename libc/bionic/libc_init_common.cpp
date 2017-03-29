@@ -62,7 +62,11 @@ const char* __progname;
 char** environ;
 
 #if defined(__i386__)
-__LIBC_HIDDEN__ void* __libc_sysinfo = nullptr;
+__attribute__((__naked__)) static void __libc_int0x80() {
+  __asm__ volatile("int $0x80; ret");
+}
+
+__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 
 __LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
   __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
