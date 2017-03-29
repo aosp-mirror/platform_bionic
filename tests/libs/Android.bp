@@ -547,3 +547,17 @@ cc_test {
     shared_libs: ["libcfi-test"],
     ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
 }
+
+cc_test {
+    name: "preinit_getauxval_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["preinit_getauxval_test_helper.cpp"],
+}
+
+cc_test {
+    name: "preinit_syscall_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["preinit_syscall_test_helper.cpp"],
+}
