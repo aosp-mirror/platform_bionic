@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef LIBS_UTILS_H
-#define LIBS_UTILS_H
-
-#include <assert.h>
+#include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <unistd.h>
+#include <sys/auxv.h>
 
-#define CHECK(e) \
-    ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
+#include "libs_utils.h"
 
-#endif  // LIBS_UTILS_H
+static unsigned long g_AT_RANDOM;
+static unsigned long g_AT_PAGESZ;
+
+static void preinit_ctor() {
+  g_AT_RANDOM = getauxval(AT_RANDOM);
+  g_AT_PAGESZ = getauxval(AT_PAGESZ);
+}
+
+__attribute__((section(".preinit_array"), used)) void (*preinit_ctor_p)(void) = preinit_ctor;
+
+int main() {
+  // Did getauxval during preinit get the same results as getauxval now?
+  CHECK(getauxval(AT_RANDOM) == g_AT_RANDOM);
+  CHECK(getauxval(AT_PAGESZ) == g_AT_PAGESZ);
+  return 0;
+}
