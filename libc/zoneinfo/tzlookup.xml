@@ -1,0 +1,1622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<timezones>
+  <!-- Time zones by country.
+
+       Data in this file originates from IANA's zone.tab file.
+       The ordering of zones within each country is Android-specific and
+       affects Android behavior, see below for details.
+
+       The ordering of country elements is not important but is kept in ASCII
+       order by code for easier maintenance. There must only be one country
+       element per unique code. The code attribute is the (lower cased)
+       ISO 3166 2-character country code used in the IANA zones.tab file.
+
+       The <id> entries contain the IANA IDs for time zones used in a
+       country.
+
+       The file is used when picking a time zone for an Android device given
+       a known local time, offset from UTC and whether the local zone is
+       currently observing DST.
+
+       The ordering of <id> elements is important because it influence the
+       order that time zones in a country are considered.
+
+       Currently the <id> entries are mostly primarily ordered by raw (non-DST)
+       offset and then "desirability". This ordering is an historical artifact
+       that is likely to change in future.
+
+       The most sensible ordering for <id> entries for a country is by
+       population of users that observe the time zone to maximize the
+       probability of matching an arbitrary user. Then:
+
+       The first <id> entry for a given country should have the highest
+       likelihood of matching the user's needs when only the user's country
+       code is available.
+
+       The first zone that matches a user's country, offset and DST state
+       should have the highest likelihood of matching the user's needs when
+       country code, offset and DST state are available.
+    -->
+  <countryzones>
+
+    <!-- ANDORRA, 1:00 -->
+    <country code="ad">
+      <id>Europe/Andorra</id>
+    </country>
+
+    <!-- UNITED ARAB EMIRATES, 4:00 -->
+    <country code="ae">
+      <id>Asia/Dubai</id>
+    </country>
+
+    <!-- AFGHANISTAN, 4:30 -->
+    <country code="af">
+      <id>Asia/Kabul</id>
+    </country>
+
+    <!-- ANTIGUA AND BARBUDA, -4:00 -->
+    <country code="ag">
+      <id>America/Antigua</id>
+    </country>
+
+    <!-- ANGUILLA, -4:00 -->
+    <country code="ai">
+      <id>America/Anguilla</id>
+    </country>
+
+    <!-- ALBANIA, 1:00 -->
+    <country code="al">
+      <id>Europe/Tirane</id>
+    </country>
+
+    <!-- ARMENIA, 4:00 -->
+    <country code="am">
+      <id>Asia/Yerevan</id>
+    </country>
+
+    <!-- ANGOLA, 1:00 -->
+    <country code="ao">
+      <id>Africa/Luanda</id>
+    </country>
+
+    <!-- ANTARCTICA -->
+    <country code="aq">
+      <!-- 12:00 -->
+      <id>Antarctica/McMurdo</id>
+
+      <!-- 10:00 -->
+      <id>Antarctica/DumontDUrville</id>
+
+      <!-- 8:00 -->
+      <id>Antarctica/Casey</id>
+
+      <!-- 7:00 -->
+      <id>Antarctica/Davis</id>
+
+      <!-- 5:00 -->
+      <id>Antarctica/Mawson</id>
+
+      <!-- 6:00 -->
+      <id>Antarctica/Vostok</id>
+
+      <!-- 3:00 -->
+      <id>Antarctica/Syowa</id>
+
+      <!-- 0:00 -->
+      <id>Antarctica/Troll</id>
+
+      <!-- -3:00 -->
+      <id>Antarctica/Rothera</id>
+
+      <!-- -4:00 -->
+      <id>Antarctica/Palmer</id>
+    </country>
+
+    <!-- ARGENTINA, -3:00 -->
+    <country code="ar">
+      <id>America/Argentina/Buenos_Aires</id>
+      <id>America/Argentina/Cordoba</id>
+      <id>America/Argentina/Salta</id>
+      <id>America/Argentina/Jujuy</id>
+      <id>America/Argentina/Tucuman</id>
+      <id>America/Argentina/Catamarca</id>
+      <id>America/Argentina/La_Rioja</id>
+      <id>America/Argentina/San_Juan</id>
+      <id>America/Argentina/Mendoza</id>
+      <id>America/Argentina/San_Luis</id>
+      <id>America/Argentina/Rio_Gallegos</id>
+      <id>America/Argentina/Ushuaia</id>
+    </country>
+
+    <!-- AMERICAN SAMOA, -11:00 -->
+    <country code="as">
+      <id>Pacific/Pago_Pago</id>
+    </country>
+
+    <!-- AUSTRIA, 1:00 -->
+    <country code="at">
+      <id>Europe/Vienna</id>
+    </country>
+
+    <!-- AUSTRALIA -->
+    <country code="au">
+      <!-- 10:00 -->
+      <id>Australia/Sydney</id>
+      <id>Australia/Melbourne</id>
+      <id>Australia/Brisbane</id>
+      <id>Australia/Hobart</id>
+      <id>Australia/Currie</id>
+      <id>Australia/Lindeman</id>
+
+      <!-- 11:00 -->
+      <id>Antarctica/Macquarie</id>
+
+      <!-- 10:30 -->
+      <id>Australia/Lord_Howe</id>
+
+      <!-- 9:30 -->
+      <id>Australia/Adelaide</id>
+      <id>Australia/Broken_Hill</id>
+      <id>Australia/Darwin</id>
+
+      <!-- 8:00 -->
+      <id>Australia/Perth</id>
+
+      <!-- 8:45 -->
+      <id>Australia/Eucla</id>
+    </country>
+
+    <!-- ARUBA, -4:00 -->
+    <country code="aw">
+      <id>America/Aruba</id>
+    </country>
+
+    <!-- ALAND ISLANDS, 2:00 -->
+    <country code="ax">
+      <id>Europe/Mariehamn</id>
+    </country>
+
+    <!-- AZERBAIJAN, 4:00 -->
+    <country code="az">
+      <id>Asia/Baku</id>
+    </country>
+
+    <!-- BOSNIA AND HERZEGOVINA, 1:00 -->
+    <country code="ba">
+      <id>Europe/Sarajevo</id>
+    </country>
+
+    <!-- BARBADOS, -4:00 -->
+    <country code="bb">
+      <id>America/Barbados</id>
+    </country>
+
+    <!-- BANGLADESH, 6:00 -->
+    <country code="bd">
+      <id>Asia/Dhaka</id>
+    </country>
+
+    <!-- BELGIUM, 1:00 -->
+    <country code="be">
+      <id>Europe/Brussels</id>
+    </country>
+
+    <!-- BURKINA FASO, 0:00 -->
+    <country code="bf">
+      <id>Africa/Ouagadougou</id>
+    </country>
+
+    <!-- BULGARIA, 2:00 -->
+    <country code="bg">
+      <id>Europe/Sofia</id>
+    </country>
+
+    <!-- BAHRAIN, 3:00 -->
+    <country code="bh">
+      <id>Asia/Bahrain</id>
+    </country>
+
+    <!-- BURUNDI, 2:00 -->
+    <country code="bi">
+      <id>Africa/Bujumbura</id>
+    </country>
+
+    <!-- BENIN, 1:00 -->
+    <country code="bj">
+      <id>Africa/Porto-Novo</id>
+    </country>
+
+    <!-- Saint Barthélemy, -4:00 -->
+    <country code="bl">
+      <id>America/St_Barthelemy</id>
+    </country>
+
+    <!-- BERMUDA, -4:00 -->
+    <country code="bm">
+      <id>Atlantic/Bermuda</id>
+    </country>
+
+    <!-- BRUNEI DARUSSALAM, 8:00 -->
+    <country code="bn">
+      <id>Asia/Brunei</id>
+    </country>
+
+    <!-- BOLIVIA, -4:00 -->
+    <country code="bo">
+      <id>America/La_Paz</id>
+    </country>
+
+    <!-- Caribbean Netherlands, -4:00 -->
+    <country code="bq">
+      <id>America/Kralendijk</id>
+    </country>
+
+    <!-- BRAZIL -->
+    <country code="br">
+      <!-- -2:00 -->
+      <id>America/Noronha</id>
+
+      <!-- -3:00 -->
+      <id>America/Sao_Paulo</id>
+      <id>America/Belem</id>
+      <id>America/Fortaleza</id>
+      <id>America/Recife</id>
+      <id>America/Araguaina</id>
+      <id>America/Maceio</id>
+      <id>America/Bahia</id>
+      <id>America/Santarem</id>
+
+      <!-- -4:00 -->
+      <id>America/Manaus</id>
+      <id>America/Campo_Grande</id>
+      <id>America/Cuiaba</id>
+      <id>America/Porto_Velho</id>
+      <id>America/Boa_Vista</id>
+
+      <!-- -5:00 -->
+      <id>America/Eirunepe</id>
+      <id>America/Rio_Branco</id>
+    </country>
+
+    <!-- BAHAMAS, -5:00 -->
+    <country code="bs">
+      <id>America/Nassau</id>
+    </country>
+
+    <!-- BHUTAN, 6:00 -->
+    <country code="bt">
+      <id>Asia/Thimphu</id>
+    </country>
+
+    <!-- BOTSWANA, 2:00 -->
+    <country code="bw">
+      <id>Africa/Gaborone</id>
+    </country>
+
+    <!-- BELARUS, 3:00 -->
+    <country code="by">
+      <id>Europe/Minsk</id>
+    </country>
+
+    <!-- BELIZE, -6:00 -->
+    <country code="bz">
+      <id>America/Belize</id>
+    </country>
+
+    <!-- CANADA -->
+    <country code="ca">
+      <!-- -3:30 -->
+      <id>America/St_Johns</id>
+
+      <!-- -4:00 -->
+      <id>America/Halifax</id>
+      <id>America/Glace_Bay</id>
+      <id>America/Moncton</id>
+      <id>America/Goose_Bay</id>
+      <id>America/Blanc-Sablon</id>
+
+      <!-- -5:00 -->
+      <id>America/Toronto</id>
+      <id>America/Nipigon</id>
+      <id>America/Thunder_Bay</id>
+      <id>America/Iqaluit</id>
+      <id>America/Pangnirtung</id>
+      <id>America/Atikokan</id>
+
+      <!-- -6:00 -->
+      <id>America/Winnipeg</id>
+      <id>America/Regina</id>
+      <id>America/Rankin_Inlet</id>
+      <id>America/Rainy_River</id>
+      <id>America/Swift_Current</id>
+      <id>America/Resolute</id>
+
+      <!-- -7:00 -->
+      <id>America/Edmonton</id>
+      <id>America/Cambridge_Bay</id>
+      <id>America/Yellowknife</id>
+      <id>America/Inuvik</id>
+      <id>America/Dawson_Creek</id>
+      <id>America/Creston</id>
+      <id>America/Fort_Nelson</id>
+
+      <!-- -8:00 -->
+      <id>America/Vancouver</id>
+      <id>America/Whitehorse</id>
+      <id>America/Dawson</id>
+    </country>
+
+    <!-- COCOS (KEELING) ISLANDS, 6:30 -->
+    <country code="cc">
+      <id>Indian/Cocos</id>
+    </country>
+
+    <!-- CONGO, THE DEMOCRATIC REPUBLIC OF THE -->
+    <country code="cd">
+      <!-- 2:00 -->
+      <id>Africa/Lubumbashi</id>
+
+      <!-- 1:00 -->
+      <id>Africa/Kinshasa</id>
+    </country>
+
+    <!-- CENTRAL AFRICAN REPUBLIC, 1:00 -->
+    <country code="cf">
+      <id>Africa/Bangui</id>
+    </country>
+
+    <!-- CONGO, 1:00 -->
+    <country code="cg">
+      <id>Africa/Brazzaville</id>
+    </country>
+
+    <!-- SWITZERLAND, 1:00 -->
+    <country code="ch">
+      <id>Europe/Zurich</id>
+    </country>
+
+    <!-- COTE D'IVOIRE, 0:00 -->
+    <country code="ci">
+      <id>Africa/Abidjan</id>
+    </country>
+
+    <!-- COOK ISLANDS, -10:00 -->
+    <country code="ck">
+      <id>Pacific/Rarotonga</id>
+    </country>
+
+    <!-- CHILE -->
+    <country code="cl">
+      <!-- -3:00 -->
+      <id>America/Punta_Arenas</id>
+
+      <!-- -4:00 -->
+      <id>America/Santiago</id>
+
+      <!-- -6:00 -->
+      <id>Pacific/Easter</id>
+    </country>
+
+    <!-- CAMEROON, 1:00 -->
+    <country code="cm">
+      <id>Africa/Douala</id>
+    </country>
+
+    <!-- CHINA -->
+    <country code="cn">
+      <!-- 8:00 -->
+      <id>Asia/Shanghai</id>
+
+      <!-- 6:00 -->
+      <id>Asia/Urumqi</id>
+    </country>
+
+    <!-- COLOMBIA, -5:00 -->
+    <country code="co">
+      <id>America/Bogota</id>
+    </country>
+
+    <!-- COSTA RICA, -6:00 -->
+    <country code="cr">
+      <id>America/Costa_Rica</id>
+    </country>
+
+    <!-- CUBA, -5:00 -->
+    <country code="cu">
+      <id>America/Havana</id>
+    </country>
+
+    <!-- CAPE VERDE, -1:00 -->
+    <country code="cv">
+      <id>Atlantic/Cape_Verde</id>
+    </country>
+
+    <!-- Curaçao, -4:00 -->
+    <country code="cw">
+      <id>America/Curacao</id>
+    </country>
+
+    <!-- CHRISTMAS ISLAND, 7:00 -->
+    <country code="cx">
+      <id>Indian/Christmas</id>
+    </country>
+
+    <!-- CYPRUS -->
+    <country code="cy">
+      <!-- 2:00 -->
+      <id>Asia/Nicosia</id>
+
+      <!-- 3:00 -->
+      <id>Asia/Famagusta</id>
+    </country>
+
+    <!-- CZECH REPUBLIC, 1:00 -->
+    <country code="cz">
+      <id>Europe/Prague</id>
+    </country>
+
+    <!-- GERMANY, 1:00 -->
+    <country code="de">
+      <id>Europe/Berlin</id>
+      <id>Europe/Busingen</id>
+    </country>
+
+    <!-- DJIBOUTI, 3:00 -->
+    <country code="dj">
+      <id>Africa/Djibouti</id>
+    </country>
+
+    <!-- DENMARK, 1:00 -->
+    <country code="dk">
+      <id>Europe/Copenhagen</id>
+    </country>
+
+    <!-- DOMINICA, -4:00 -->
+    <country code="dm">
+      <id>America/Dominica</id>
+    </country>
+
+    <!-- DOMINICAN REPUBLIC, -4:00 -->
+    <country code="do">
+      <id>America/Santo_Domingo</id>
+    </country>
+
+    <!-- ALGERIA, 1:00 -->
+    <country code="dz">
+      <id>Africa/Algiers</id>
+    </country>
+
+    <!-- ECUADOR -->
+    <country code="ec">
+      <!-- -5:00 -->
+      <id>America/Guayaquil</id>
+
+      <!-- -6:00 -->
+      <id>Pacific/Galapagos</id>
+    </country>
+
+    <!-- ESTONIA, 2:00 -->
+    <country code="ee">
+      <id>Europe/Tallinn</id>
+    </country>
+
+    <!-- EGYPT, 2:00 -->
+    <country code="eg">
+      <id>Africa/Cairo</id>
+    </country>
+
+    <!-- WESTERN SAHARA, 0:00 -->
+    <country code="eh">
+      <id>Africa/El_Aaiun</id>
+    </country>
+
+    <!-- ERITREA, 3:00 -->
+    <country code="er">
+      <id>Africa/Asmara</id>
+    </country>
+
+    <!-- SPAIN -->
+    <country code="es">
+      <!-- 1:00 -->
+      <id>Europe/Madrid</id>
+      <id>Africa/Ceuta</id>
+
+      <!-- 0:00 -->
+      <id>Atlantic/Canary</id>
+    </country>
+
+    <!-- ETHIOPIA, 3:00 -->
+    <country code="et">
+      <id>Africa/Addis_Ababa</id>
+    </country>
+
+    <!-- FINLAND, 2:00 -->
+    <country code="fi">
+      <id>Europe/Helsinki</id>
+    </country>
+
+    <!-- FIJI, 12:00 -->
+    <country code="fj">
+      <id>Pacific/Fiji</id>
+    </country>
+
+    <!-- FALKLAND ISLANDS (MALVINAS), -3:00 -->
+    <country code="fk">
+      <id>Atlantic/Stanley</id>
+    </country>
+
+    <!-- MICRONESIA, FEDERATED STATES OF -->
+    <country code="fm">
+      <!-- 11:00 -->
+      <id>Pacific/Pohnpei</id>
+      <id>Pacific/Kosrae</id>
+
+      <!-- 10:00 -->
+      <id>Pacific/Chuuk</id>
+    </country>
+
+    <!-- FAROE ISLANDS, 0:00 -->
+    <country code="fo">
+      <id>Atlantic/Faroe</id>
+    </country>
+
+    <!-- FRANCE, 1:00 -->
+    <country code="fr">
+      <id>Europe/Paris</id>
+    </country>
+
+    <!-- GABON, 1:00 -->
+    <country code="ga">
+      <id>Africa/Libreville</id>
+    </country>
+
+    <!-- UNITED KINGDOM, 0:00 -->
+    <country code="gb">
+      <id>Europe/London</id>
+    </country>
+
+    <!-- GRENADA, -4:00 -->
+    <country code="gd">
+      <id>America/Grenada</id>
+    </country>
+
+    <!-- GEORGIA, 4:00 -->
+    <country code="ge">
+      <id>Asia/Tbilisi</id>
+    </country>
+
+    <!-- FRENCH GUIANA, -3:00 -->
+    <country code="gf">
+      <id>America/Cayenne</id>
+    </country>
+
+    <!-- GUERNSEY, 0:00 -->
+    <country code="gg">
+      <id>Europe/Guernsey</id>
+    </country>
+
+    <!-- GHANA, 0:00 -->
+    <country code="gh">
+      <id>Africa/Accra</id>
+    </country>
+
+    <!-- GIBRALTAR, 1:00 -->
+    <country code="gi">
+      <id>Europe/Gibraltar</id>
+    </country>
+
+    <!-- GREENLAND -->
+    <country code="gl">
+      <!-- 0:00 -->
+      <id>America/Danmarkshavn</id>
+
+      <!-- -1:00 -->
+      <id>America/Scoresbysund</id>
+
+      <!-- -3:00 -->
+      <id>America/Godthab</id>
+
+      <!-- -4:00 -->
+      <id>America/Thule</id>
+    </country>
+
+    <!-- GAMBIA, 0:00 -->
+    <country code="gm">
+      <id>Africa/Banjul</id>
+    </country>
+
+    <!-- GUINEA, 0:00 -->
+    <country code="gn">
+      <id>Africa/Conakry</id>
+    </country>
+
+    <!-- GUADELOUPE, -4:00 -->
+    <country code="gp">
+      <id>America/Guadeloupe</id>
+    </country>
+
+    <!-- EQUATORIAL GUINEA, 1:00 -->
+    <country code="gq">
+      <id>Africa/Malabo</id>
+    </country>
+
+    <!-- GREECE, 2:00 -->
+    <country code="gr">
+      <id>Europe/Athens</id>
+    </country>
+
+    <!-- SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS, -2:00 -->
+    <country code="gs">
+      <id>Atlantic/South_Georgia</id>
+    </country>
+
+    <!-- GUATEMALA, -6:00 -->
+    <country code="gt">
+      <id>America/Guatemala</id>
+    </country>
+
+    <!-- GUAM, 10:00 -->
+    <country code="gu">
+      <id>Pacific/Guam</id>
+    </country>
+
+    <!-- GUINEA-BISSAU, 0:00 -->
+    <country code="gw">
+      <id>Africa/Bissau</id>
+    </country>
+
+    <!-- GUYANA, -4:00 -->
+    <country code="gy">
+      <id>America/Guyana</id>
+    </country>
+
+    <!-- HONG KONG, 8:00 -->
+    <country code="hk">
+      <id>Asia/Hong_Kong</id>
+    </country>
+
+    <!-- HONDURAS, -6:00 -->
+    <country code="hn">
+      <id>America/Tegucigalpa</id>
+    </country>
+
+    <!-- CROATIA, 1:00 -->
+    <country code="hr">
+      <id>Europe/Zagreb</id>
+    </country>
+
+    <!-- HAITI, -5:00 -->
+    <country code="ht">
+      <id>America/Port-au-Prince</id>
+    </country>
+
+    <!-- HUNGARY, 1:00 -->
+    <country code="hu">
+      <id>Europe/Budapest</id>
+    </country>
+
+    <!-- INDONESIA -->
+    <country code="id">
+      <!-- 9:00 -->
+      <id>Asia/Jayapura</id>
+
+      <!-- 8:00 -->
+      <id>Asia/Makassar</id>
+
+      <!-- 7:00 -->
+      <id>Asia/Jakarta</id>
+      <id>Asia/Pontianak</id>
+    </country>
+
+    <!-- IRELAND, 0:00 -->
+    <country code="ie">
+      <id>Europe/Dublin</id>
+    </country>
+
+    <!-- ISRAEL, 2:00 -->
+    <country code="il">
+      <id>Asia/Jerusalem</id>
+    </country>
+
+    <!-- ISLE OF MAN, 0:00 -->
+    <country code="im">
+      <id>Europe/Isle_of_Man</id>
+    </country>
+
+    <!-- INDIA, 5:30 -->
+    <country code="in">
+      <id>Asia/Kolkata</id>
+    </country>
+
+    <!-- BRITISH INDIAN OCEAN TERRITORY, 6:00 -->
+    <country code="io">
+      <id>Indian/Chagos</id>
+    </country>
+
+    <!-- IRAQ, 3:00 -->
+    <country code="iq">
+      <id>Asia/Baghdad</id>
+    </country>
+
+    <!-- IRAN, ISLAMIC REPUBLIC OF, 3:30 -->
+    <country code="ir">
+      <id>Asia/Tehran</id>
+    </country>
+
+    <!-- ICELAND, 0:00 -->
+    <country code="is">
+      <id>Atlantic/Reykjavik</id>
+    </country>
+
+    <!-- ITALY, 1:00 -->
+    <country code="it">
+      <id>Europe/Rome</id>
+    </country>
+
+    <!-- JERSEY, 0:00 -->
+    <country code="je">
+      <id>Europe/Jersey</id>
+    </country>
+
+    <!-- JAMAICA, -5:00 -->
+    <country code="jm">
+      <id>America/Jamaica</id>
+    </country>
+
+    <!-- JORDAN, 2:00 -->
+    <country code="jo">
+      <id>Asia/Amman</id>
+    </country>
+
+    <!-- JAPAN, 9:00 -->
+    <country code="jp">
+      <id>Asia/Tokyo</id>
+    </country>
+
+    <!-- KENYA, 3:00 -->
+    <country code="ke">
+      <id>Africa/Nairobi</id>
+    </country>
+
+    <!-- KYRGYZSTAN, 6:00 -->
+    <country code="kg">
+      <id>Asia/Bishkek</id>
+    </country>
+
+    <!-- CAMBODIA, 7:00 -->
+    <country code="kh">
+      <id>Asia/Phnom_Penh</id>
+    </country>
+
+    <!-- KIRIBATI -->
+    <country code="ki">
+      <!-- 14:00 -->
+      <id>Pacific/Kiritimati</id>
+
+      <!-- 13:00 -->
+      <id>Pacific/Enderbury</id>
+
+      <!-- 12:00 -->
+      <id>Pacific/Tarawa</id>
+    </country>
+
+    <!-- COMOROS, 3:00 -->
+    <country code="km">
+      <id>Indian/Comoro</id>
+    </country>
+
+    <!-- SAINT KITTS AND NEVIS, -4:00 -->
+    <country code="kn">
+      <id>America/St_Kitts</id>
+    </country>
+
+    <!-- KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF, 8:30 -->
+    <country code="kp">
+      <id>Asia/Pyongyang</id>
+    </country>
+
+    <!-- KOREA, REPUBLIC OF, 9:00 -->
+    <country code="kr">
+      <id>Asia/Seoul</id>
+    </country>
+
+    <!-- KUWAIT, 3:00 -->
+    <country code="kw">
+      <id>Asia/Kuwait</id>
+    </country>
+
+    <!-- CAYMAN ISLANDS, -5:00 -->
+    <country code="ky">
+      <id>America/Cayman</id>
+    </country>
+
+    <!-- KAZAKHSTAN -->
+    <country code="kz">
+      <!-- 6:00 -->
+      <id>Asia/Almaty</id>
+      <id>Asia/Qyzylorda</id>
+
+      <!-- 5:00 -->
+      <id>Asia/Aqtau</id>
+      <id>Asia/Oral</id>
+      <id>Asia/Aqtobe</id>
+      <id>Asia/Atyrau</id>
+    </country>
+
+    <!-- LAO PEOPLE'S DEMOCRATIC REPUBLIC, 7:00 -->
+    <country code="la">
+      <id>Asia/Vientiane</id>
+    </country>
+
+    <!-- LEBANON, 2:00 -->
+    <country code="lb">
+      <id>Asia/Beirut</id>
+    </country>
+
+    <!-- SAINT LUCIA, -4:00 -->
+    <country code="lc">
+      <id>America/St_Lucia</id>
+    </country>
+
+    <!-- LIECHTENSTEIN, 1:00 -->
+    <country code="li">
+      <id>Europe/Vaduz</id>
+    </country>
+
+    <!-- SRI LANKA, 5:30 -->
+    <country code="lk">
+      <id>Asia/Colombo</id>
+    </country>
+
+    <!-- LIBERIA, 0:00 -->
+    <country code="lr">
+      <id>Africa/Monrovia</id>
+    </country>
+
+    <!-- LESOTHO, 2:00 -->
+    <country code="ls">
+      <id>Africa/Maseru</id>
+    </country>
+
+    <!-- LITHUANIA, 2:00 -->
+    <country code="lt">
+      <id>Europe/Vilnius</id>
+    </country>
+
+    <!-- LUXEMBOURG, 1:00 -->
+    <country code="lu">
+      <id>Europe/Luxembourg</id>
+    </country>
+
+    <!-- LATVIA, 2:00 -->
+    <country code="lv">
+      <id>Europe/Riga</id>
+    </country>
+
+    <!-- LIBYAN ARAB JAMAHIRIYA, 2:00 -->
+    <country code="ly">
+      <id>Africa/Tripoli</id>
+    </country>
+
+    <!-- MOROCCO, 0:00 -->
+    <country code="ma">
+      <id>Africa/Casablanca</id>
+    </country>
+
+    <!-- MONACO, 1:00 -->
+    <country code="mc">
+      <id>Europe/Monaco</id>
+    </country>
+
+    <!-- MOLDOVA, 2:00 -->
+    <country code="md">
+      <id>Europe/Chisinau</id>
+    </country>
+
+    <!-- MONTENEGRO, 1:00 -->
+    <country code="me">
+      <id>Europe/Podgorica</id>
+    </country>
+
+    <!-- Collectivity of Saint Martin, -4:00 -->
+    <country code="mf">
+      <id>America/Marigot</id>
+    </country>
+
+    <!-- MADAGASCAR, 3:00 -->
+    <country code="mg">
+      <id>Indian/Antananarivo</id>
+    </country>
+
+    <!-- MARSHALL ISLANDS, 12:00 -->
+    <country code="mh">
+      <id>Pacific/Majuro</id>
+      <id>Pacific/Kwajalein</id>
+    </country>
+
+    <!-- MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF, 1:00 -->
+    <country code="mk">
+      <id>Europe/Skopje</id>
+    </country>
+
+    <!-- MALI, 0:00 -->
+    <country code="ml">
+      <id>Africa/Bamako</id>
+    </country>
+
+    <!-- MYANMAR, 6:30 -->
+    <country code="mm">
+      <id>Asia/Yangon</id>
+    </country>
+
+    <!-- MONGOLIA -->
+    <country code="mn">
+      <!-- 8:00 -->
+      <id>Asia/Choibalsan</id>
+      <id>Asia/Ulaanbaatar</id>
+
+      <!-- 7:00 -->
+      <id>Asia/Hovd</id>
+    </country>
+
+    <!-- MACAO, 8:00 -->
+    <country code="mo">
+      <id>Asia/Macau</id>
+    </country>
+
+    <!-- NORTHERN MARIANA ISLANDS, 10:00 -->
+    <country code="mp">
+      <id>Pacific/Saipan</id>
+    </country>
+
+    <!-- MARTINIQUE, -4:00 -->
+    <country code="mq">
+      <id>America/Martinique</id>
+    </country>
+
+    <!-- MAURITANIA, 0:00 -->
+    <country code="mr">
+      <id>Africa/Nouakchott</id>
+    </country>
+
+    <!-- MONTSERRAT, -4:00 -->
+    <country code="ms">
+      <id>America/Montserrat</id>
+    </country>
+
+    <!-- MALTA, 1:00 -->
+    <country code="mt">
+      <id>Europe/Malta</id>
+    </country>
+
+    <!-- MAURITIUS, 4:00 -->
+    <country code="mu">
+      <id>Indian/Mauritius</id>
+    </country>
+
+    <!-- MALDIVES, 5:00 -->
+    <country code="mv">
+      <id>Indian/Maldives</id>
+    </country>
+
+    <!-- MALAWI, 2:00 -->
+    <country code="mw">
+      <id>Africa/Blantyre</id>
+    </country>
+
+    <!-- MEXICO -->
+    <country code="mx">
+      <!-- -6:00 -->
+      <id>America/Mexico_City</id>
+      <id>America/Merida</id>
+      <id>America/Monterrey</id>
+      <id>America/Matamoros</id>
+      <id>America/Bahia_Banderas</id>
+
+      <!-- -5:00 -->
+      <id>America/Cancun</id>
+
+      <!-- -7:00 -->
+      <id>America/Chihuahua</id>
+      <id>America/Hermosillo</id>
+      <id>America/Mazatlan</id>
+      <id>America/Ojinaga</id>
+
+      <!-- -8:00 -->
+      <id>America/Tijuana</id>
+    </country>
+
+    <!-- MALAYSIA, 8:00 -->
+    <country code="my">
+      <id>Asia/Kuala_Lumpur</id>
+      <id>Asia/Kuching</id>
+    </country>
+
+    <!-- MOZAMBIQUE, 2:00 -->
+    <country code="mz">
+      <id>Africa/Maputo</id>
+    </country>
+
+    <!-- NAMIBIA, 1:00 -->
+    <country code="na">
+      <id>Africa/Windhoek</id>
+    </country>
+
+    <!-- NEW CALEDONIA, 11:00 -->
+    <country code="nc">
+      <id>Pacific/Noumea</id>
+    </country>
+
+    <!-- NIGER, 1:00 -->
+    <country code="ne">
+      <id>Africa/Niamey</id>
+    </country>
+
+    <!-- NORFOLK ISLAND, 11:30 -->
+    <country code="nf">
+      <id>Pacific/Norfolk</id>
+    </country>
+
+    <!-- NIGERIA, 1:00 -->
+    <country code="ng">
+      <id>Africa/Lagos</id>
+    </country>
+
+    <!-- NICARAGUA, -6:00 -->
+    <country code="ni">
+      <id>America/Managua</id>
+    </country>
+
+    <!-- NETHERLANDS, 1:00 -->
+    <country code="nl">
+      <id>Europe/Amsterdam</id>
+    </country>
+
+    <!-- NORWAY, 1:00 -->
+    <country code="no">
+      <id>Europe/Oslo</id>
+    </country>
+
+    <!-- NEPAL, 5:45 -->
+    <country code="np">
+      <id>Asia/Kathmandu</id>
+    </country>
+
+    <!-- NAURU, 12:00 -->
+    <country code="nr">
+      <id>Pacific/Nauru</id>
+    </country>
+
+    <!-- NIUE, -11:00 -->
+    <country code="nu">
+      <id>Pacific/Niue</id>
+    </country>
+
+    <!-- NEW ZEALAND, 12:00 -->
+    <country code="nz">
+      <!-- 12:00 -->
+      <id>Pacific/Auckland</id>
+
+      <!-- 12:45 -->
+      <id>Pacific/Chatham</id>
+    </country>
+
+    <!-- OMAN, 4:00 -->
+    <country code="om">
+      <id>Asia/Muscat</id>
+    </country>
+
+    <!-- PANAMA, -5:00 -->
+    <country code="pa">
+      <id>America/Panama</id>
+    </country>
+
+    <!-- PERU, -5:00 -->
+    <country code="pe">
+      <id>America/Lima</id>
+    </country>
+
+    <!-- FRENCH POLYNESIA -->
+    <country code="pf">
+      <!-- -9:00 -->
+      <id>Pacific/Gambier</id>
+
+      <!-- -9:30 -->
+      <id>Pacific/Marquesas</id>
+
+      <!-- -10:00 -->
+      <id>Pacific/Tahiti</id>
+    </country>
+
+    <!-- PAPUA NEW GUINEA -->
+    <country code="pg">
+      <!-- 10:00 -->
+      <id>Pacific/Port_Moresby</id>
+
+      <!-- 11:00 -->
+      <id>Pacific/Bougainville</id>
+    </country>
+
+    <!-- PHILIPPINES, 8:00 -->
+    <country code="ph">
+      <id>Asia/Manila</id>
+    </country>
+
+    <!-- PAKISTAN, 5:00 -->
+    <country code="pk">
+      <id>Asia/Karachi</id>
+    </country>
+
+    <!-- POLAND, 1:00 -->
+    <country code="pl">
+      <id>Europe/Warsaw</id>
+    </country>
+
+    <!-- SAINT PIERRE AND MIQUELON, -3:00 -->
+    <country code="pm">
+      <id>America/Miquelon</id>
+    </country>
+
+    <!-- PITCAIRN, -8:00 -->
+    <country code="pn">
+      <id>Pacific/Pitcairn</id>
+    </country>
+
+    <!-- PUERTO RICO, -4:00 -->
+    <country code="pr">
+      <id>America/Puerto_Rico</id>
+    </country>
+
+    <!-- PALESTINE, 2:00 -->
+    <country code="ps">
+      <id>Asia/Gaza</id>
+      <id>Asia/Hebron</id>
+    </country>
+
+    <!-- PORTUGAL -->
+    <country code="pt">
+      <!-- 0:00 -->
+      <id>Europe/Lisbon</id>
+      <id>Atlantic/Madeira</id>
+
+      <!-- -1:00 -->
+      <id>Atlantic/Azores</id>
+    </country>
+
+    <!-- PALAU, 9:00 -->
+    <country code="pw">
+      <id>Pacific/Palau</id>
+    </country>
+
+    <!-- PARAGUAY, -4:00 -->
+    <country code="py">
+      <id>America/Asuncion</id>
+    </country>
+
+    <!-- QATAR, 3:00 -->
+    <country code="qa">
+      <id>Asia/Qatar</id>
+    </country>
+
+    <!-- REUNION, 4:00 -->
+    <country code="re">
+      <id>Indian/Reunion</id>
+    </country>
+
+    <!-- ROMANIA, 2:00 -->
+    <country code="ro">
+      <id>Europe/Bucharest</id>
+    </country>
+
+    <!-- SERBIA, 1:00 -->
+    <country code="rs">
+      <id>Europe/Belgrade</id>
+    </country>
+
+    <!-- RUSSIAN FEDERATION -->
+    <country code="ru">
+      <!-- 12:00 -->
+      <id>Asia/Kamchatka</id>
+      <id>Asia/Anadyr</id>
+
+      <!-- 11:00 -->
+      <id>Asia/Magadan</id>
+      <id>Asia/Sakhalin</id>
+      <id>Asia/Srednekolymsk</id>
+
+      <!-- 10:00 -->
+      <id>Asia/Vladivostok</id>
+      <id>Asia/Ust-Nera</id>
+
+      <!-- 9:00 -->
+      <id>Asia/Yakutsk</id>
+      <id>Asia/Chita</id>
+      <id>Asia/Khandyga</id>
+
+      <!-- 8:00 -->
+      <id>Asia/Irkutsk</id>
+
+      <!-- 7:00 -->
+      <id>Asia/Krasnoyarsk</id>
+      <id>Asia/Novosibirsk</id>
+      <id>Asia/Barnaul</id>
+      <id>Asia/Novokuznetsk</id>
+      <id>Asia/Tomsk</id>
+
+      <!-- 6:00 -->
+      <id>Asia/Omsk</id>
+
+      <!-- 5:00 -->
+      <id>Asia/Yekaterinburg</id>
+
+      <!-- 4:00 -->
+      <id>Europe/Samara</id>
+      <id>Europe/Astrakhan</id>
+      <id>Europe/Ulyanovsk</id>
+      <id>Europe/Saratov</id>
+
+      <!-- 3:00 -->
+      <id>Europe/Moscow</id>
+      <id>Europe/Volgograd</id>
+      <id>Europe/Kirov</id>
+      <id>Europe/Simferopol</id>
+
+      <!-- 2:00 -->
+      <id>Europe/Kaliningrad</id>
+    </country>
+
+    <!-- RWANDA, 2:00 -->
+    <country code="rw">
+      <id>Africa/Kigali</id>
+    </country>
+
+    <!-- SAUDI ARABIA, 3:00 -->
+    <country code="sa">
+      <id>Asia/Riyadh</id>
+    </country>
+
+    <!-- SOLOMON ISLANDS, 11:00 -->
+    <country code="sb">
+      <id>Pacific/Guadalcanal</id>
+    </country>
+
+    <!-- SEYCHELLES, 4:00 -->
+    <country code="sc">
+      <id>Indian/Mahe</id>
+    </country>
+
+    <!-- SUDAN, 3:00 -->
+    <country code="sd">
+      <id>Africa/Khartoum</id>
+    </country>
+
+    <!-- SWEDEN, 1:00 -->
+    <country code="se">
+      <id>Europe/Stockholm</id>
+    </country>
+
+    <!-- SINGAPORE, 8:00 -->
+    <country code="sg">
+      <id>Asia/Singapore</id>
+    </country>
+
+    <!-- SAINT HELENA, 0:00 -->
+    <country code="sh">
+      <id>Atlantic/St_Helena</id>
+    </country>
+
+    <!-- SLOVENIA, 1:00 -->
+    <country code="si">
+      <id>Europe/Ljubljana</id>
+    </country>
+
+    <!-- SVALBARD AND JAN MAYEN, 1:00 -->
+    <country code="sj">
+      <id>Arctic/Longyearbyen</id>
+    </country>
+
+    <!-- SLOVAKIA, 1:00 -->
+    <country code="sk">
+      <id>Europe/Bratislava</id>
+    </country>
+
+    <!-- SIERRA LEONE, 0:00 -->
+    <country code="sl">
+      <id>Africa/Freetown</id>
+    </country>
+
+    <!-- SAN MARINO, 1:00 -->
+    <country code="sm">
+      <id>Europe/San_Marino</id>
+    </country>
+
+    <!-- SENEGAL, 0:00 -->
+    <country code="sn">
+      <id>Africa/Dakar</id>
+    </country>
+
+    <!-- SOMALIA, 3:00 -->
+    <country code="so">
+      <id>Africa/Mogadishu</id>
+    </country>
+
+    <!-- SURINAME, -3:00 -->
+    <country code="sr">
+      <id>America/Paramaribo</id>
+    </country>
+
+    <!-- South Sudan, 3:00 -->
+    <country code="ss">
+      <id>Africa/Juba</id>
+    </country>
+
+    <!-- SAO TOME AND PRINCIPE, 0:00 -->
+    <country code="st">
+      <id>Africa/Sao_Tome</id>
+    </country>
+
+    <!-- EL SALVADOR, -6:00 -->
+    <country code="sv">
+      <id>America/El_Salvador</id>
+    </country>
+
+    <!-- Sint Maarten, -4:00 -->
+    <country code="sx">
+      <id>America/Lower_Princes</id>
+    </country>
+
+    <!-- SYRIAN ARAB REPUBLIC, 2:00 -->
+    <country code="sy">
+      <id>Asia/Damascus</id>
+    </country>
+
+    <!-- SWAZILAND, 2:00 -->
+    <country code="sz">
+      <id>Africa/Mbabane</id>
+    </country>
+
+    <!-- TURKS AND CAICOS ISLANDS, -4:00 -->
+    <country code="tc">
+      <id>America/Grand_Turk</id>
+    </country>
+
+    <!-- CHAD, 1:00 -->
+    <country code="td">
+      <id>Africa/Ndjamena</id>
+    </country>
+
+    <!-- FRENCH SOUTHERN TERRITORIES -->
+    <country code="tf">
+      <!-- 5:00 -->
+      <id>Indian/Kerguelen</id>
+    </country>
+
+    <!-- TOGO, 0:00 -->
+    <country code="tg">
+      <id>Africa/Lome</id>
+    </country>
+
+    <!-- THAILAND, 7:00 -->
+    <country code="th">
+      <id>Asia/Bangkok</id>
+    </country>
+
+    <!-- TAJIKISTAN, 5:00 -->
+    <country code="tj">
+      <id>Asia/Dushanbe</id>
+    </country>
+
+    <!-- TOKELAU, +13:00 -->
+    <country code="tk">
+      <id>Pacific/Fakaofo</id>
+    </country>
+
+    <!-- TIMOR-LESTE, 9:00 -->
+    <country code="tl">
+      <id>Asia/Dili</id>
+    </country>
+
+    <!-- TURKMENISTAN, 5:00 -->
+    <country code="tm">
+      <id>Asia/Ashgabat</id>
+    </country>
+
+    <!-- TUNISIA, 1:00 -->
+    <country code="tn">
+      <id>Africa/Tunis</id>
+    </country>
+
+    <!-- TONGA, 13:00 -->
+    <country code="to">
+      <id>Pacific/Tongatapu</id>
+    </country>
+
+    <!-- TURKEY, 3:00 -->
+    <country code="tr">
+      <id>Europe/Istanbul</id>
+    </country>
+
+    <!-- TRINIDAD AND TOBAGO, -4:00 -->
+    <country code="tt">
+      <id>America/Port_of_Spain</id>
+    </country>
+
+    <!-- TUVALU, 12:00 -->
+    <country code="tv">
+      <id>Pacific/Funafuti</id>
+    </country>
+
+    <!-- TAIWAN, PROVINCE OF CHINA, 8:00 -->
+    <country code="tw">
+      <id>Asia/Taipei</id>
+    </country>
+
+    <!-- TANZANIA, UNITED REPUBLIC OF, 3:00 -->
+    <country code="tz">
+      <id>Africa/Dar_es_Salaam</id>
+    </country>
+
+    <!-- UKRAINE, 2:00 -->
+    <country code="ua">
+      <id>Europe/Kiev</id>
+      <id>Europe/Uzhgorod</id>
+      <id>Europe/Zaporozhye</id>
+    </country>
+
+    <!-- UGANDA, 3:00 -->
+    <country code="ug">
+      <id>Africa/Kampala</id>
+    </country>
+
+    <!-- UNITED STATES MINOR OUTLYING ISLANDS -->
+    <country code="um">
+      <!-- 12:00 -->
+      <id>Pacific/Wake</id>
+
+      <!-- -11:00 -->
+      <id>Pacific/Midway</id>
+    </country>
+
+    <!-- UNITED STATES -->
+    <country code="us">
+      <!-- -5:00 -->
+      <id>America/New_York</id>
+      <id>America/Detroit</id>
+      <id>America/Kentucky/Louisville</id>
+      <id>America/Kentucky/Monticello</id>
+      <id>America/Indiana/Indianapolis</id>
+      <id>America/Indiana/Vincennes</id>
+      <id>America/Indiana/Winamac</id>
+      <id>America/Indiana/Marengo</id>
+      <id>America/Indiana/Petersburg</id>
+      <id>America/Indiana/Vevay</id>
+
+      <!-- -6:00 -->
+      <id>America/Chicago</id>
+      <id>America/Indiana/Knox</id>
+      <id>America/Menominee</id>
+      <id>America/North_Dakota/Center</id>
+      <id>America/North_Dakota/New_Salem</id>
+      <id>America/Indiana/Tell_City</id>
+      <id>America/North_Dakota/Beulah</id>
+
+      <!-- -7:00 -->
+      <id>America/Denver</id>
+      <id>America/Boise</id>
+      <id>America/Phoenix</id>
+
+      <!-- -8:00 -->
+      <id>America/Los_Angeles</id>
+
+      <!-- -9:00 -->
+      <id>America/Anchorage</id>
+      <id>America/Juneau</id>
+      <id>America/Yakutat</id>
+      <id>America/Nome</id>
+      <id>America/Metlakatla</id>
+      <id>America/Sitka</id>
+
+      <!-- -10:00 -->
+      <id>Pacific/Honolulu</id>
+      <id>America/Adak</id>
+    </country>
+
+    <!-- URUGUAY, -3:00 -->
+    <country code="uy">
+      <id>America/Montevideo</id>
+    </country>
+
+    <!-- UZBEKISTAN, 5:00 -->
+    <country code="uz">
+      <id>Asia/Tashkent</id>
+      <id>Asia/Samarkand</id>
+    </country>
+
+    <!-- HOLY SEE (VATICAN CITY STATE), 1:00 -->
+    <country code="va">
+      <id>Europe/Vatican</id>
+    </country>
+
+    <!-- SAINT VINCENT AND THE GRENADINES, -4:00 -->
+    <country code="vc">
+      <id>America/St_Vincent</id>
+    </country>
+
+    <!-- VENEZUELA, -4:00 -->
+    <country code="ve">
+      <id>America/Caracas</id>
+    </country>
+
+    <!-- VIRGIN ISLANDS, BRITISH, -4:00 -->
+    <country code="vg">
+      <id>America/Tortola</id>
+    </country>
+
+    <!-- VIRGIN ISLANDS, U.S., -4:00 -->
+    <country code="vi">
+      <id>America/St_Thomas</id>
+    </country>
+
+    <!-- VIET NAM, 7:00 -->
+    <country code="vn">
+      <id>Asia/Ho_Chi_Minh</id>
+    </country>
+
+    <!-- VANUATU, 11:00 -->
+    <country code="vu">
+      <id>Pacific/Efate</id>
+    </country>
+
+    <!-- WALLIS AND FUTUNA, 12:00 -->
+    <country code="wf">
+      <id>Pacific/Wallis</id>
+    </country>
+
+    <!-- SAMOA, 13:00 -->
+    <country code="ws">
+      <id>Pacific/Apia</id>
+    </country>
+
+    <!-- YEMEN, 3:00 -->
+    <country code="ye">
+      <id>Asia/Aden</id>
+    </country>
+
+    <!-- MAYOTTE, 3:00 -->
+    <country code="yt">
+      <id>Indian/Mayotte</id>
+    </country>
+
+    <!-- SOUTH AFRICA, 2:00 -->
+    <country code="za">
+      <id>Africa/Johannesburg</id>
+    </country>
+
+    <!-- ZAMBIA, 2:00 -->
+    <country code="zm">
+      <id>Africa/Lusaka</id>
+    </country>
+
+    <!-- ZIMBABWE, 2:00 -->
+    <country code="zw">
+      <id>Africa/Harare</id>
+    </country>
+  </countryzones>
+</timezones>
