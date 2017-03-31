@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "b1d0434d_8e77a87f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-03-31T01:02:50Z",
+      "side": 1,
+      "message": "You could generate these based on kSystemLibDir and kAsanLibDirPrefix and get rid of kAsanDefaultLdPaths",
+      "revId": "3aae19049f86043bb53b5f7dbbbee7a75070abac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fdc0ad9_ed5959c4",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
