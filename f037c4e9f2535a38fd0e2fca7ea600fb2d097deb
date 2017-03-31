@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "330fa737_93ac2bfe",
+        "filename": "libc/include/math.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-03-31T00:04:21Z",
+      "side": 1,
+      "message": "at least put them in a separate section with a comment?",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 40
+      },
+      "revId": "f037c4e9f2535a38fd0e2fca7ea600fb2d097deb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
