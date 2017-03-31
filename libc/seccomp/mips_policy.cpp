@@ -44,11 +44,11 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4068, 73, 72), //setsid|sigaction
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4074, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4072, 71, 70), //setreuid|setregid
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4082, 70, 69), //sethostname|setrlimit|getrlimit|getrusage|gettimeofday|settimeofday|getgroups|setgroups
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4091, 3, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4090, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4087, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4086, 67, 66), //readlink
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4089, 66, 65), //swapon|reboot
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4093, 65, 64), //munmap|truncate
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4093, 65, 64), //mmap|munmap|truncate
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4118, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4114, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4103, 1, 0),
