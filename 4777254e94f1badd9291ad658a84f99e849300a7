@@ -22,6 +22,30 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "854a2700_ee26f330",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2017-03-31T18:01:23Z",
+      "side": 1,
+      "message": "malloc_debug_unit_tests here is a folder name, not the binary name. So the binary will be pushed to the device at:\n/data/local/tmp/malloc_debug_unit_tests/malloc_debug_unit_tests\n\nThus each binary is running in its own folder. I think the name is kept in the path to make sure less chance of collision.\n\nI don\u0027t think the PushFilePreparer is that smart to pick a tmp dir automatically. Also, the binary should be located in a folder for GTest to be able to run the binary (through option native-test-device-path in line 23)",
+      "parentUuid": "4328e79f_e5648160",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
