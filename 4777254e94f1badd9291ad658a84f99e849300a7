@@ -94,6 +94,54 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "328df5b6_b7f285b8",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2017-03-31T21:42:48Z",
+      "side": 1,
+      "message": "yeah, something like generic $TMP could be handy. Related change is needed in GTest to look for modules in $TMP though. \n\nPushFilePreparer is generic, the option push takes in a module and direct (-\u003e) it to a target dir, which has no knowledge of if the test is a native test.",
+      "parentUuid": "bcce4f42_a7806dca",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26b6ad0b_a774c4ae",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2017-03-31T21:42:48Z",
+      "side": 1,
+      "message": "+sbasi\n\nThe details of these changes are described in the design doc:\nhttps://docs.google.com/document/d/1eabK3srlBLouMiBMrNP3xJPiRRdcoCquNxC8gBWPvx8/edit\n\nThe goal is basically to move test configuration closer to the test itself, so\n1. developers can run tradefed command line to run the test, same as in the test lab.\n2. one can add/remove a test to/from a suite in the project containing the test. For example, a test becomes unstable and needs some fix, the developer fixing the test can remove the test from apct suite in the same project, without the need to create a CL in tradefed.\n3. having test config next to the test makes it more obvious that a test is running in desired suites in the lab.",
+      "parentUuid": "dd51bae1_8adf1e95",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
