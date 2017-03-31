@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4328e79f_e5648160",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-03-31T17:56:19Z",
+      "side": 1,
+      "message": "It seems unfortunate to hardcode this location in every single test description.  Can we just tell the test runner that we want the file pushed to a temporary directory and run from there?\n\nThat would also let the test runner provide better isolation by creating a new temp directory per test and cleaning it up",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
