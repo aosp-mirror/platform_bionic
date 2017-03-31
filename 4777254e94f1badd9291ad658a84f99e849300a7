@@ -142,6 +142,30 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f047de2_52afef2f",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-03-31T22:38:10Z",
+      "side": 1,
+      "message": "I agree that test config should go near the test, but I think this config is at the wrong level.  As a test developer, I should just be able to say \"this is a gtest\", and maybe \"I also need these files\".  Everything else is an implementation detail of the test runner, and shouldn\u0027t be duplicated in every test config.  At the _very_ least, I think this file should look something like:\n\n  \u003cconfiguration description\u003d\"Config for malloc_debug_unit_tests\"\u003e\n      \u003ctarget_preparer class\u003d\"com.android.tradefed.targetprep.GtestPreparer\"\u003e\n          \u003coption name\u003d\"module-name\" value\u003d\"malloc_debug_unit_tests\" /\u003e\n      \u003c/target_preparer\u003e\n      \u003coption name\u003d\"test-suite-tag\" value\u003d\"apct\" /\u003e\n      \u003ctest class\u003d\"com.android.tradefed.testtype.GTest\" \u003e\n          \u003coption name\u003d\"module-name\" value\u003d\"malloc_debug_unit_tests\" /\u003e\n      \u003c/test\u003e\n  \u003c/configuration\u003e\n\nEven better would be not having to separately specify the preparer and the runner.\n\nEven betterer would be not having to specify this file at all, and just have the build system generate it - it should already know the name of the module, that the module is a gtest, and the test suites it belongs to.  Maybe generate it if test_suites is set but test_config is not set, and use a file specified by test_config if it is set?",
+      "parentUuid": "26b6ad0b_a774c4ae",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
