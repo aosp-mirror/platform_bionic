@@ -46,6 +46,30 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcce4f42_a7806dca",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-03-31T19:35:04Z",
+      "side": 1,
+      "message": "At least supporting $TMP or $TESTDIR or something would help.\n\nIf PushFilePreparer is specifying a directory, why does GTest get /data/local/tmp?  Is it assuming that every config is going push the test into the file \u003cnative-test-device-path\u003e/\u003ctest_name\u003e/\u003ctest_name\u003e?  That seems error prone.",
+      "parentUuid": "854a2700_ee26f330",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
