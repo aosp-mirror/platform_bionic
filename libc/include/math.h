@@ -153,6 +153,20 @@ double	logb(double);
 long	lrint(double);
 long	lround(double);
 
+/*
+ * https://code.google.com/p/android/issues/detail?id=271629
+ * To be fully compliant with C++, we need to not define these (C doesn't
+ * specify them either). Exposing these means that isinf and isnan will have a
+ * return type of int in C++ rather than bool like they're supposed to be.
+ *
+ * GNU libstdc++ 4.9 isn't able to handle a standard compliant C library. Its
+ * <cmath> will `#undef isnan` from math.h and only adds the function overloads
+ * to the std namespace, making it impossible to use both <cmath> (which gets
+ * included by a lot of other standard headers) and ::isnan.
+ */
+int(isinf)(double) __attribute_const__ __INTRODUCED_IN(21);
+int	(isnan)(double) __attribute_const__;
+
 double nan(const char*) __attribute_const__ __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13)
     __INTRODUCED_IN_X86(9);
 
