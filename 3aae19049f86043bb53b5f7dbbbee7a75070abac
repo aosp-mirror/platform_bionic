@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "39ecc798_4f8ef6a6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1068404
+      },
+      "writtenOn": "2017-03-31T03:10:34Z",
+      "side": 1,
+      "message": "I called this out in my previous response also - it seems cleaner to  retain these (for now) and keep the single boolean switch in init_default_namespace_no_config(), than to introduce the runtime generation of the asan-ified path there (unless you strongly disagree of course).",
+      "parentUuid": "b1d0434d_8e77a87f",
+      "revId": "3aae19049f86043bb53b5f7dbbbee7a75070abac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fdc0ad9_ed5959c4",
         "filename": "linker/linker.cpp",
         "patchSetId": 2
@@ -48,6 +66,30 @@
       "writtenOn": "2017-03-31T00:49:00Z",
       "side": 1,
       "message": "Why so much space here?",
+      "range": {
+        "startLine": 95,
+        "startChar": 43,
+        "endLine": 95,
+        "endChar": 49
+      },
+      "revId": "3aae19049f86043bb53b5f7dbbbee7a75070abac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55ddd471_a21abbb9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1068404
+      },
+      "writtenOn": "2017-03-31T03:10:34Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "5fdc0ad9_ed5959c4",
       "range": {
         "startLine": 95,
         "startChar": 43,
