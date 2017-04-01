@@ -166,6 +166,30 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "050b4990_07a41799",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2017-04-01T00:41:18Z",
+      "side": 1,
+      "message": "Filed b/36818939 to track the test config issue. I think that\u0027s a good idea.\n\nFor the build system to generate it, I think it makes sense for gtest, not sure what needs to be done though. Also, the builder shouldn\u0027t try to overwrite existing test config files, as that could be updated with more user options.\n\nI need to abandon this CL as one pointed out that I should put internal doc link in this cl.",
+      "parentUuid": "7f047de2_52afef2f",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
