@@ -2353,9 +2353,9 @@ time(time_t *p)
 #include <stdint.h>
 #include <arpa/inet.h> // For ntohl(3).
 
-static int __bionic_open_tzdata_path(const char* path_prefix_variable, const char* path_suffix,
-                                     const char* olson_id,
-                                     int32_t* entry_length) {
+#if !defined(__ANDROID__)
+static char* make_path(const char* path_prefix_variable,
+                       const char* path_suffix) {
   const char* path_prefix = getenv(path_prefix_variable);
   if (path_prefix == NULL) {
     fprintf(stderr, "%s: %s not set!\n", __FUNCTION__, path_prefix_variable);
@@ -2368,9 +2368,15 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
     return -1;
   }
   snprintf(path, path_length, "%s/%s", path_prefix, path_suffix);
+  return path;
+}
+#endif
+
+static int __bionic_open_tzdata_path(const char* path,
+                                     const char* olson_id,
+                                     int32_t* entry_length) {
   int fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
   if (fd == -1) {
-    free(path);
     return -2; // Distinguish failure to find any data from failure to find a specific id.
   }
 
@@ -2389,7 +2395,6 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (bytes_read != sizeof(header)) {
     fprintf(stderr, "%s: could not read header of \"%s\": %s\n",
             __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
-    free(path);
     close(fd);
     return -1;
   }
@@ -2397,7 +2402,6 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
     fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n",
             __FUNCTION__, path, header.tzdata_version);
-    free(path);
     close(fd);
     return -1;
   }
@@ -2412,7 +2416,6 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
     fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n",
             __FUNCTION__, path, strerror(errno));
-    free(path);
     close(fd);
     return -1;
   }
@@ -2423,14 +2426,12 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (index == NULL) {
     fprintf(stderr, "%s: couldn't allocate %zd-byte index for \"%s\"\n",
             __FUNCTION__, index_size, path);
-    free(path);
     close(fd);
     return -1;
   }
   if (TEMP_FAILURE_RETRY(read(fd, index, index_size)) != index_size) {
     fprintf(stderr, "%s: could not read index of \"%s\": %s\n",
             __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
-    free(path);
     free(index);
     close(fd);
     return -1;
@@ -2462,7 +2463,6 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   free(index);
 
   if (specific_zone_offset == -1) {
-    free(path);
     close(fd);
     return -1;
   }
@@ -2470,29 +2470,50 @@ static int __bionic_open_tzdata_path(const char* path_prefix_variable, const cha
   if (TEMP_FAILURE_RETRY(lseek(fd, specific_zone_offset, SEEK_SET)) == -1) {
     fprintf(stderr, "%s: could not seek to %ld in \"%s\": %s\n",
             __FUNCTION__, specific_zone_offset, path, strerror(errno));
-    free(path);
     close(fd);
     return -1;
   }
 
   // TODO: check that there's TZ_MAGIC at this offset, so we can fall back to the other file if not.
 
-  free(path);
   return fd;
 }
 
 static int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
-  int fd = __bionic_open_tzdata_path("ANDROID_DATA", "/misc/zoneinfo/current/tzdata",
-                                     olson_id, entry_length);
-  if (fd < 0) {
-    fd = __bionic_open_tzdata_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata",
-                                   olson_id, entry_length);
-    if (fd == -2) {
-      // The first thing that 'recovery' does is try to format the current time. It doesn't have
-      // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
-      fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
-    }
+  int fd;
+
+#if defined(__ANDROID__)
+  // On Android, try the two hard-coded locations.
+  fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
+                                 olson_id, entry_length);
+  if (fd >= 0) return fd;
+
+  fd = __bionic_open_tzdata_path("/system/usr/share/zoneinfo/tzdata",
+                                 olson_id, entry_length);
+  if (fd >= 0) return fd;
+#else
+  // On the host, we don't expect those locations to exist, and we're not
+  // worried about security so we trust $ANDROID_DATA and $ANDROID_ROOT to
+  // point us in the right direction.
+  char* path = make_path("ANDROID_DATA", "/misc/zoneinfo/current/tzdata");
+  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  free(path);
+  if (fd >= 0) return fd;
+
+  path = make_path("ANDROID_ROOT", "/usr/share/zoneinfo/tzdata");
+  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  free(path);
+  if (fd >= 0) return fd;
+#endif
+
+  // Not finding any tzdata is more serious that not finding a specific zone,
+  // and worth logging.
+  if (fd == -2) {
+    // The first thing that 'recovery' does is try to format the current time. It doesn't have
+    // any tzdata available, so we must not abort here --- doing so breaks the recovery image!
+    fprintf(stderr, "%s: couldn't find any tzdata when looking for %s!\n", __FUNCTION__, olson_id);
   }
+
   return fd;
 }
 
