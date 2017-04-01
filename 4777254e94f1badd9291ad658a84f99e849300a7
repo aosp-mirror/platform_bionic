@@ -214,6 +214,30 @@
       "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06983f58_7a0f78ed",
+        "filename": "libc/malloc_debug/AndroidTest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1083173
+      },
+      "writtenOn": "2017-04-01T00:49:49Z",
+      "side": 1,
+      "message": "We\u0027ll get documentation checked in next week explaining the new workflow.\n\n\nAt its core what we are doing is making writing and running APCT just like CTS,WTS,GTS,PTS, etc so there is one test workflow in Android.\n\n\n@Colin, the autogeneration for gtest is an interesting idea and we\u0027ll take a look at it, thanks.",
+      "parentUuid": "dccc5dcd_cc5be9dd",
+      "range": {
+        "startLine": 19,
+        "startChar": 60,
+        "endLine": 19,
+        "endChar": 76
+      },
+      "revId": "4777254e94f1badd9291ad658a84f99e849300a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
