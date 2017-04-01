@@ -98,12 +98,6 @@
  *     is too short to accomodate the cached result.
  */
 
-/* the name of an environment variable that will be checked the first time
- * this code is called if its value is "0", then the resolver cache is
- * disabled.
- */
-#define  CONFIG_ENV  "BIONIC_DNSCACHE"
-
 /* default number of entries kept in the cache. This value has been
  * determined by browsing through various sites and counting the number
  * of corresponding requests. Keep in mind that our framework is currently
@@ -1812,13 +1806,6 @@ static void _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info);
 static void
 _res_cache_init(void)
 {
-    const char*  env = getenv(CONFIG_ENV);
-
-    if (env && atoi(env) == 0) {
-        /* the cache is disabled */
-        return;
-    }
-
     memset(&_res_cache_list, 0, sizeof(_res_cache_list));
     pthread_mutex_init(&_res_cache_list_lock, NULL);
 }
