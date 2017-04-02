@@ -22,6 +22,30 @@
       "revId": "d3e7d088453e089b3d625b0864ccdf3c74893f18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcc5c4d6_848c5a69",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-02T00:40:57Z",
+      "side": 1,
+      "message": "iirc bundled apps still use this.. I will take a look",
+      "parentUuid": "f670a50b_6a74aac1",
+      "range": {
+        "startLine": 711,
+        "startChar": 36,
+        "endLine": 711,
+        "endChar": 87
+      },
+      "revId": "d3e7d088453e089b3d625b0864ccdf3c74893f18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
