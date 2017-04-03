@@ -336,7 +336,6 @@ static void mergeGuards(std::deque<std::string>& file_lines, GuardMap& guard_map
 
         current_location.column = pos + 1;
         if (line[pos] != '/') {
-          D("Trailing character '%c' is not a slash: %s\n", line[pos], line.substr(pos).c_str());
           valid = false;
           break;
         }
