@@ -244,6 +244,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
   // of executing a setuid program or the result of an SELinux
   // security transition.
   static constexpr const char* UNSAFE_VARIABLE_NAMES[] = {
+    "ANDROID_DNS_MODE",
     "GCONV_PATH",
     "GETCONF_DIR",
     "HOSTALIASES",
