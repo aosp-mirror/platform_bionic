@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ca63f45b_9eb10d9c",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-04-03T23:00:05Z",
+      "side": 1,
+      "message": "Storing the size is useful for the consumer still, but this check is presumably getting optimized out anyway. Deleted.",
+      "parentUuid": "7943ba38_fcdd9b7c",
+      "revId": "e55b6ede82cc9591d34723f709ebb7add29bb998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf99ffad_0bf4c297",
         "filename": "libc/bionic/android_set_abort_message.cpp",
         "patchSetId": 1
