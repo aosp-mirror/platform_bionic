@@ -336,7 +336,6 @@ static void mergeGuards(std::deque<std::string>& file_lines, GuardMap& guard_map
 
         current_location.column = pos + 1;
         if (line[pos] != '/') {
-          D("Trailing character '%c' is not a slash: %s\n", line[pos], line.substr(pos).c_str());
           valid = false;
           break;
         }
@@ -409,7 +408,9 @@ static void rewriteFile(const std::string& output_path, std::deque<std::string>&
     file_lines[loc.start.line - 1].insert(loc.start.column - 1, prologue);
   }
 
-  printf("Preprocessing %s...\n", output_path.c_str());
+  if (verbose) {
+    printf("Preprocessing %s...\n", output_path.c_str());
+  }
   writeFileLines(output_path, file_lines);
 }
 
