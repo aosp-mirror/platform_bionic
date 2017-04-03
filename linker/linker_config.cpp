@@ -459,6 +459,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     }
 
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));
+    ns_config->set_visible(properties.get_bool(property_name_prefix + ".visible"));
 
     // these are affected by is_asan flag
     if (is_asan) {

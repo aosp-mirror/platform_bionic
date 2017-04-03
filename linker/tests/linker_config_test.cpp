@@ -59,6 +59,7 @@ static const char* config_str =
   "namespace.default.links = system\n"
   "namespace.default.link.system.shared_libs = libc.so:libm.so:libdl.so:libstdc++.so\n"
   "namespace.system.isolated = true\n"
+  "namespace.system.visible = true\n"
   "namespace.system.search.paths = /system/${LIB}\n"
   "namespace.system.permitted.paths = /system/${LIB}\n"
   "namespace.system.asan.search.paths = /data:/system/${LIB}\n"
@@ -139,6 +140,7 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(default_ns_config != nullptr);
 
   ASSERT_TRUE(default_ns_config->isolated());
+  ASSERT_FALSE(default_ns_config->visible());
   ASSERT_EQ(kExpectedDefaultSearchPath, default_ns_config->search_paths());
   ASSERT_EQ(kExpectedDefaultPermittedPath, default_ns_config->permitted_paths());
 
@@ -165,6 +167,7 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(ns_system != nullptr) << "system namespace was not found";
 
   ASSERT_TRUE(ns_system->isolated());
+  ASSERT_TRUE(ns_system->visible());
   ASSERT_EQ(kExpectedSystemSearchPath, ns_system->search_paths());
   ASSERT_EQ(kExpectedSystemPermittedPath, ns_system->permitted_paths());
 }
