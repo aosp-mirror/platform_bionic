@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05cd78e2_d38b5250",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-03T18:23:51Z",
+      "side": 1,
+      "message": "(not for this CL, but can we delete these now? is anyone still using the C versions?)",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 629,
+        "endChar": 64
+      },
+      "revId": "950a95836d5040e5d123a2128c85e8ac8b46588c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
