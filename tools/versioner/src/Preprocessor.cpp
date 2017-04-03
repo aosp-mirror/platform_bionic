@@ -409,7 +409,9 @@ static void rewriteFile(const std::string& output_path, std::deque<std::string>&
     file_lines[loc.start.line - 1].insert(loc.start.column - 1, prologue);
   }
 
-  printf("Preprocessing %s...\n", output_path.c_str());
+  if (verbose) {
+    printf("Preprocessing %s...\n", output_path.c_str());
+  }
   writeFileLines(output_path, file_lines);
 }
 
