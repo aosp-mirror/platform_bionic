@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7943ba38_fcdd9b7c",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-03T22:31:01Z",
+      "side": 1,
+      "message": "maybe it is time to address this?",
+      "revId": "e55b6ede82cc9591d34723f709ebb7add29bb998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf99ffad_0bf4c297",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-03T22:31:01Z",
+      "side": 1,
+      "message": "move this check to L72?",
+      "revId": "e55b6ede82cc9591d34723f709ebb7add29bb998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
