@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29273243_8a7df1c7",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2017-04-03T03:34:04Z",
+      "side": 1,
+      "message": "Is there a reason to clear this variable here? I don\u0027t think anything ever sets it. Perhaps we should just delete the variable instead?",
+      "range": {
+        "startLine": 248,
+        "startChar": 5,
+        "endLine": 248,
+        "endChar": 20
+      },
+      "revId": "438b1173f0c71ee8c469e9272ebe67c96a39dc75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
