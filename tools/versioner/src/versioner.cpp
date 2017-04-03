@@ -435,7 +435,7 @@ static void usage(bool help = false) {
     fprintf(stderr, "\n");
     fprintf(stderr, "Preprocessing:\n");
     fprintf(stderr, "  -o PATH\tpreprocess header files and emit them at PATH\n");
-    fprintf(stderr, "  -f\tpreprocess header files even if validation fails\n");
+    fprintf(stderr, "  -f\t\tpreprocess header files even if validation fails\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Miscellaneous:\n");
     fprintf(stderr, "  -d\t\tdump function availability\n");
