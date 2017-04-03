@@ -76,6 +76,7 @@ __noreturn void __fortify_fatal(const char* _Nonnull, ...) __printflike(1, 2);
 //
 // Formatting routines for the C library's internal debugging.
 // Unlike the usual alternatives, these don't allocate, and they don't drag in all of stdio.
+// These are async signal safe, so they can be called from signal handlers.
 //
 
 int __libc_format_buffer(char* _Nonnull buf, size_t size, const char* _Nonnull fmt, ...) __printflike(3, 4);

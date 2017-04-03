@@ -119,13 +119,7 @@ cc_binary {
         "libbase",
         "libz",
 
-        "libdebuggerd_handler_core",
         "libdebuggerd_handler_fallback",
-        "libdebuggerd",
-        "libbacktrace",
-        "libunwind",
-        "liblzma",
-        "libcutils",
 
         "liblog",
         "libc++_static",
