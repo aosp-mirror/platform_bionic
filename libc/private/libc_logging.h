@@ -62,11 +62,6 @@ enum {
   LOG_ID_MAX
 };
 
-struct abort_msg_t {
-  size_t size;
-  char msg[0];
-};
-
 // Formats a message to the log (priority 'fatal'), then aborts.
 __noreturn void __libc_fatal(const char* _Nonnull, ...) __printflike(1, 2);
 
