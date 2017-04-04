@@ -358,9 +358,9 @@ size_t strlen(const char* const _Nonnull s __pass_object_size0)
 
 #if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
 __BIONIC_FORTIFY_INLINE
-char* strchr(const char* const _Nonnull s __pass_object_size0, int c)
+char* strchr(const char* const _Nonnull s __pass_object_size, int c)
         __overloadable {
-    size_t bos = __bos0(s);
+    size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strchr(s, c);
