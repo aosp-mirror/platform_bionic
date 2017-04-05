@@ -22,10 +22,10 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "private/ScopeGuard.h"
-
 #include <string>
 #include <thread>
+
+#include <android-base/scopeguard.h>
 
 #include "gtest_globals.h"
 #include "dlfcn_symlink_support.h"
@@ -330,9 +330,7 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // in both dt_needed libraries, the correct relocation should
   // use the function defined in libtest_relo_check_dt_needed_order_1.so
   void* handle = nullptr;
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
 
   handle = dlopen("libtest_relo_check_dt_needed_order.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -986,9 +984,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("libgnu-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
@@ -1009,9 +1005,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
 TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
   void* handle = dlopen("libsysv-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
