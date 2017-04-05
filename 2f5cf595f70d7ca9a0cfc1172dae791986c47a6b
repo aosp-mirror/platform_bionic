@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4d0f2df_fc114c0c",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-05T15:01:09Z",
+      "side": 1,
+      "message": "char*",
+      "range": {
+        "startLine": 325,
+        "startChar": 20,
+        "endLine": 325,
+        "endChar": 26
+      },
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f7568f8_6b2510fe",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-05T15:01:09Z",
+      "side": 1,
+      "message": "should we add the const-correct overloads ourselves too? presumably we don\u0027t want different behavior between \u003ccstring\u003e and \u003cstring.h\u003e?\n\n(GNU extension strchrnul above is already const-correct, for example.)",
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cdeaa478_2b4cb4e1",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-05T15:01:09Z",
+      "side": 1,
+      "message": "this file too",
+      "range": {
+        "startLine": 240,
+        "startChar": 55,
+        "endLine": 240,
+        "endChar": 61
+      },
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
