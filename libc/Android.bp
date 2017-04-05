@@ -1894,28 +1894,10 @@ cc_defaults {
     },
 }
 
-// Android.mk:start
-// # crt obj files
-// # ========================================================
-// # crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-// libc_crt_target_cflags := \
-//    -I$(LOCAL_PATH)/include \
-//    -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) \
-//
-// my_2nd_arch_prefix :=
-// include $(LOCAL_PATH)/arch-$(TARGET_ARCH)/$(TARGET_ARCH).mk
-// include $(LOCAL_PATH)/crt.mk
-// ifdef TARGET_2ND_ARCH
-// my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
-// include $(LOCAL_PATH)/arch-$(TARGET_2ND_ARCH)/$(TARGET_2ND_ARCH).mk
-// include $(LOCAL_PATH)/crt.mk
-// my_2nd_arch_prefix :=
-// endif
-//
-// include $(call all-makefiles-under,$(LOCAL_PATH))
-// Android.mk:end
+// crt obj files
 cc_object {
     name: "crtbrand",
+    // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
     local_include_dirs: ["include"],
     product_variables: {
         platform_sdk_version: {
@@ -1930,7 +1912,6 @@ cc_object {
     ],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_so1",
     local_include_dirs: ["include"],
@@ -1942,7 +1923,6 @@ cc_object {
     ],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_so",
 
@@ -1956,7 +1936,6 @@ cc_object {
     ],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtend_so",
     local_include_dirs: ["include"],
@@ -1968,7 +1947,6 @@ cc_object {
     ],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
@@ -2004,7 +1982,6 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_static",
 
@@ -2015,7 +1992,6 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
@@ -2050,7 +2026,6 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-// Android.mk:ignore
 cc_object {
     name: "crtbegin_dynamic",
 
@@ -2061,7 +2036,6 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-// Android.mk:ignore
 cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
