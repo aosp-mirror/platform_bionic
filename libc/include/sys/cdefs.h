@@ -297,9 +297,12 @@
 /* __BIONIC_FORTIFY_NONSTATIC_INLINE is pointless in GCC's FORTIFY */
 #    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
 #  endif
-#  define __pass_object_size __pass_object_size_n(__bos_level)
-#  define __pass_object_size0 __pass_object_size_n(0)
+#else
+/* Further increase sharing for some inline functions */
+#  define __pass_object_size_n(n)
 #endif
+#define __pass_object_size __pass_object_size_n(__bos_level)
+#define __pass_object_size0 __pass_object_size_n(0)
 
 /* Used to support clangisms with FORTIFY. This isn't in the FORTIFY section
  * because these change how symbols are emitted. The linker must be kept happy.
