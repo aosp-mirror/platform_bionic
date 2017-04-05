@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e546bb19_1cfa86f1",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-05T20:08:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4d0f2df_fc114c0c",
+      "range": {
+        "startLine": 325,
+        "startChar": 20,
+        "endLine": 325,
+        "endChar": 26
+      },
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f7568f8_6b2510fe",
         "filename": "libc/include/string.h",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "90d55f27_51e11310",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-05T20:08:01Z",
+      "side": 1,
+      "message": "(FWIW, libcxx defines these in its \u003cstring.h\u003e, which AFAICT picks ours up by using #include_next. so, the only way i think you\u0027ll see the difference is if you\u0027re using bionic with not-libc++.)\n\neither way, done :)",
+      "parentUuid": "9f7568f8_6b2510fe",
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdeaa478_2b4cb4e1",
         "filename": "tests/fortify_test.cpp",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2017-04-05T15:01:09Z",
       "side": 1,
       "message": "this file too",
+      "range": {
+        "startLine": 240,
+        "startChar": 55,
+        "endLine": 240,
+        "endChar": 61
+      },
+      "revId": "2f5cf595f70d7ca9a0cfc1172dae791986c47a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f318d61d_ddfb0783",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-05T20:08:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdeaa478_2b4cb4e1",
       "range": {
         "startLine": 240,
         "startChar": 55,
