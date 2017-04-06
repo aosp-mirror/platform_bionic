@@ -116,20 +116,34 @@ TEST(stdatomic, atomic_compare_exchange) {
 
   atomic_store(&i, 123);
   expected = 123;
-  ASSERT_TRUE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_FALSE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  ASSERT_TRUE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed,
+          memory_order_relaxed));
+  ASSERT_FALSE(atomic_compare_exchange_strong_explicit(&i, &expected, 456, memory_order_relaxed,
+          memory_order_relaxed));
   ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
   expected = 123;
-  ASSERT_TRUE(atomic_compare_exchange_weak(&i, &expected, 456));
+  int iter_count = 0;
+  do {
+    ++iter_count;
+    ASSERT_LT(iter_count, 100);  // Arbitrary limit on spurious compare_exchange failures.
+    ASSERT_EQ(expected, 123);
+  } while(!atomic_compare_exchange_weak(&i, &expected, 456));
   ASSERT_FALSE(atomic_compare_exchange_weak(&i, &expected, 456));
   ASSERT_EQ(456, expected);
 
   atomic_store(&i, 123);
   expected = 123;
-  ASSERT_TRUE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
-  ASSERT_FALSE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed, memory_order_relaxed));
+  iter_count = 0;
+  do {
+    ++iter_count;
+    ASSERT_LT(iter_count, 100);
+    ASSERT_EQ(expected, 123);
+  } while(!atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed,
+          memory_order_relaxed));
+  ASSERT_FALSE(atomic_compare_exchange_weak_explicit(&i, &expected, 456, memory_order_relaxed,
+          memory_order_relaxed));
   ASSERT_EQ(456, expected);
 }
 
