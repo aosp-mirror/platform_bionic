@@ -363,7 +363,6 @@ char* strchr(const char* const _Nonnull s __pass_object_size, int c)
         return __builtin_strchr(s, c);
     }
 
-    // return __builtin_strchr(s, c);
     return __strchr_chk(s, c, bos);
 }
 
@@ -599,6 +598,92 @@ char* strrchr(const char* _Nonnull s, int c) {
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
 #endif /* defined(__clang__) */
 #endif /* defined(__BIONIC_FORTIFY) */
+
+/* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
+#if defined(__cplusplus) && defined(__clang__)
+/*
+ * Use two enable_ifs so these overloads don't conflict with + are preferred over libcxx's. This can
+ * be reduced to 1 after libcxx recognizes that we have const-correct overloads.
+ */
+#define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
+extern "C++" {
+inline __always_inline
+void* __bionic_memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n) {
+    return memchr(s, c, n);
+}
+
+inline __always_inline
+const void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
+        __prefer_this_overload {
+    return __bionic_memchr(s, c, n);
+}
+
+inline __always_inline
+void* memchr(void* const _Nonnull s __pass_object_size, int c, size_t n) __prefer_this_overload {
+    return __bionic_memchr(s, c, n);
+}
+
+inline __always_inline
+char* __bionic_strchr(const char* const _Nonnull s __pass_object_size, int c) {
+    return strchr(s, c);
+}
+
+inline __always_inline
+const char* strchr(const char* const _Nonnull s __pass_object_size, int c)
+        __prefer_this_overload {
+    return __bionic_strchr(s, c);
+}
+
+inline __always_inline
+char* strchr(char* const _Nonnull s __pass_object_size, int c)
+        __prefer_this_overload {
+    return __bionic_strchr(s, c);
+}
+
+inline __always_inline
+char* __bionic_strrchr(const char* const _Nonnull s __pass_object_size, int c) {
+    return strrchr(s, c);
+}
+
+inline __always_inline
+const char* strrchr(const char* const _Nonnull s __pass_object_size, int c) __prefer_this_overload {
+    return __bionic_strrchr(s, c);
+}
+
+inline __always_inline
+char* strrchr(char* const _Nonnull s __pass_object_size, int c) __prefer_this_overload {
+    return __bionic_strrchr(s, c);
+}
+
+/* Functions with no FORTIFY counterpart. */
+inline __always_inline
+char* __bionic_strstr(const char* _Nonnull h, const char* _Nonnull n) { return strstr(h, n); }
+
+inline __always_inline
+const char* strstr(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+    return __bionic_strstr(h, n);
+}
+
+inline __always_inline
+char* strstr(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+    return __bionic_strstr(h, n);
+}
+
+inline __always_inline
+char* __bionic_strpbrk(const char* _Nonnull h, const char* _Nonnull n) { return strpbrk(h, n); }
+
+inline __always_inline
+char* strpbrk(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+    return __bionic_strpbrk(h, n);
+}
+
+inline __always_inline
+const char* strpbrk(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+    return __bionic_strpbrk(h, n);
+}
+}
+#undef __prefer_this_overload
+#endif
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
