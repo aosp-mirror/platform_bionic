@@ -322,7 +322,7 @@ int ftime(struct timeb* tb) {
 
 // This was removed from POSIX 2008.
 char* index(const char* str, int ch) {
-  return strchr(str, ch);
+  return const_cast<char*>(strchr(str, ch));
 }
 
 // This was removed from BSD.

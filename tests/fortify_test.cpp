@@ -231,35 +231,41 @@ TEST_F(DEATHTEST, strcpy3_fortified2) {
 }
 #endif
 
-#ifndef __clang__
-// This test is disabled in clang because clang doesn't properly detect
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strchr_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
   myfoo.b[0] = '\0';
   ASSERT_FORTIFY(printf("%s", strchr(myfoo.a, 'a')));
+  ASSERT_FORTIFY(printf("%s", strchr(static_cast<const char*>(myfoo.a), 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
 
-#ifndef __clang__
-// This test is disabled in clang because clang doesn't properly detect
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strrchr_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
   memcpy(myfoo.a, "0123456789", 10);
   memcpy(myfoo.b, "01234", 6);
   ASSERT_FORTIFY(printf("%s", strrchr(myfoo.a, 'a')));
+  ASSERT_FORTIFY(printf("%s", strrchr(static_cast<const char*>(myfoo.a), 'a')));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
 }
-#endif
+
+TEST_F(DEATHTEST, memchr_fortified2) {
+#if defined(__BIONIC__)
+  foo myfoo;
+  volatile int asize = sizeof(myfoo.a) + 1;
+  memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
+  ASSERT_FORTIFY(printf("%s", memchr(myfoo.a, 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", memchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
 
 #ifndef __clang__
 // This test is disabled in clang because clang doesn't properly detect
