@@ -43,8 +43,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include <android-base/scopeguard.h>
+
 // Private C library headers.
-#include "private/ScopeGuard.h"
 
 #include "linker.h"
 #include "linker_block_allocator.h"
@@ -1536,13 +1537,13 @@ bool find_libraries(android_namespace_t* ns,
   // list of libraries to link - see step 2.
   size_t soinfos_count = 0;
 
-  auto scope_guard = make_scope_guard([&]() {
+  auto scope_guard = android::base::make_scope_guard([&]() {
     for (LoadTask* t : load_tasks) {
       LoadTask::deleter(t);
     }
   });
 
-  auto failure_guard = make_scope_guard([&]() {
+  auto failure_guard = android::base::make_scope_guard([&]() {
     // Housekeeping
     soinfo_unload(soinfos, soinfos_count);
   });
@@ -1661,7 +1662,7 @@ bool find_libraries(android_namespace_t* ns,
       }
     });
 
-    failure_guard.disable();
+    failure_guard.Disable();
   }
 
   return linked;
@@ -1904,9 +1905,8 @@ void* do_dlopen(const char* name, int flags,
          ns == nullptr ? "(null)" : ns->get_name(),
          ns);
 
-  auto failure_guard = make_scope_guard([&]() {
-    LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer());
-  });
+  auto failure_guard = android::base::make_scope_guard(
+      [&]() { LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer()); });
 
   if ((flags & ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) {
     DL_ERR("invalid flags to dlopen: %x", flags);
@@ -1966,7 +1966,7 @@ void* do_dlopen(const char* name, int flags,
            "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
            si->get_realpath(), si->get_soname(), handle);
     si->call_constructors();
-    failure_guard.disable();
+    failure_guard.Disable();
     LD_LOG(kLogDlopen,
            "... dlopen successful: realpath=\"%s\", soname=\"%s\", handle=%p",
            si->get_realpath(), si->get_soname(), handle);
@@ -2044,9 +2044,8 @@ bool do_dlsym(void* handle,
          ns == nullptr ? "(null)" : ns->get_name(),
          ns);
 
-  auto failure_guard = make_scope_guard([&]() {
-    LD_LOG(kLogDlsym, "... dlsym failed: %s", linker_get_error_buffer());
-  });
+  auto failure_guard = android::base::make_scope_guard(
+      [&]() { LD_LOG(kLogDlsym, "... dlsym failed: %s", linker_get_error_buffer()); });
 
   if (sym_name == nullptr) {
     DL_ERR("dlsym failed: symbol name is null");
@@ -2077,7 +2076,7 @@ bool do_dlsym(void* handle,
 
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
       *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
-      failure_guard.disable();
+      failure_guard.Disable();
       LD_LOG(kLogDlsym,
              "... dlsym successful: sym_name=\"%s\", sym_ver=\"%s\", found in=\"%s\", address=%p",
              sym_name, sym_ver, found->get_soname(), *symbol);

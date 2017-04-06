@@ -36,11 +36,10 @@
 
 #include <unistd.h>
 
+#include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
 #include <android-base/file.h>
 #include <android-base/test_utils.h>
-
-#include "private/ScopeGuard.h"
 
 
 static const char* config_str =
@@ -116,9 +115,8 @@ static void run_linker_config_smoke_test(bool is_asan) {
   std::string executable_path = std::string(tmp_dir.path) + "/some-binary";
   std::string version_file = std::string(tmp_dir.path) + "/.version";
 
-  auto file_guard = make_scope_guard([&version_file] {
-    unlink(version_file.c_str());
-  });
+  auto file_guard =
+      android::base::make_scope_guard([&version_file] { unlink(version_file.c_str()); });
 
   ASSERT_TRUE(write_version(version_file, 113U)) << strerror(errno);
 
