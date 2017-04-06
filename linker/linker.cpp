@@ -185,7 +185,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   };
 
   // If you're targeting N, you don't get the greylist.
-  if (get_application_target_sdk_version() >= __ANDROID_API_N__) {
+  if (g_greylist_disabled || get_application_target_sdk_version() >= __ANDROID_API_N__) {
     return false;
   }
 
