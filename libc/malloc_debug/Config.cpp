@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -66,174 +67,227 @@ static constexpr size_t DEFAULT_RECORD_ALLOCS = 8000000;
 static constexpr size_t MAX_RECORD_ALLOCS = 50000000;
 static constexpr const char DEFAULT_RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
 
-struct Option {
-  Option(std::string name, uint64_t option, bool combo_option = false, bool* config = nullptr)
-      : name(name), option(option), combo_option(combo_option), config(config) {}
-  virtual ~Option() = default;
+const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
+    {"guard",
+      {FRONT_GUARD | REAR_GUARD, &Config::SetGuard},
+    },
+    {"front_guard",
+      {FRONT_GUARD, &Config::SetFrontGuard},
+    },
+    {"rear_guard",
+      {REAR_GUARD, &Config::SetRearGuard},
+    },
 
-  std::string name;
+    {"backtrace",
+      {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
+    },
+    {"backtrace_enable_on_signal",
+      {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
+    },
 
-  uint64_t option;
-  // If set to true, then all of the options following are set on until
-  // the combo_option value is set to false.
-  bool combo_option = false;
-  bool* config;
+    {"fill",
+      {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
+    },
+    {"fill_on_alloc",
+      {FILL_ON_ALLOC, &Config::SetFillOnAlloc},
+    },
+    {"fill_on_free",
+      {FILL_ON_FREE, &Config::SetFillOnFree},
+    },
 
-  virtual bool ParseValue(const std::string& option_name, const std::string& value) const;
+    {"expand_alloc",
+      {EXPAND_ALLOC, &Config::SetExpandAlloc},
+    },
 
-  virtual void SetDefault() const { }
+    {"free_track",
+      {FREE_TRACK | FILL_ON_FREE, &Config::SetFreeTrack},
+    },
+    {"free_track_backtrace_num_frames",
+      {0, &Config::SetFreeTrackBacktraceNumFrames},
+    },
+
+    {"leak_track",
+      {LEAK_TRACK | TRACK_ALLOCS, &Config::VerifyValueEmpty},
+    },
+
+    {"record_allocs",
+      {RECORD_ALLOCS, &Config::SetRecordAllocs},
+    },
+    {"record_allocs_file",
+      {0, &Config::SetRecordAllocsFile},
+    },
 };
 
-bool Option::ParseValue(const std::string& option_name, const std::string& raw_value) const {
-  if (!raw_value.empty()) {
-    error_log("%s: value set for option '%s' which does not take a value",
-              getprogname(), option_name.c_str());
-    return false;
-  }
-  return true;
-}
-
-struct OptionString : public Option {
-  OptionString(std::string name, uint64_t option, std::string default_value,
-                std::string* value, bool combo_option = false,
-                bool* config = nullptr)
-      : Option(name, option, combo_option, config), default_value(default_value), value(value) {}
-  virtual ~OptionString() = default;
-
-  std::string default_value;
-  std::string* value;
-
-  bool ParseValue(const std::string& option_name, const std::string& value) const override;
-
-  void SetDefault() const override { if (value) *value = default_value; }
-};
-
-bool OptionString::ParseValue(const std::string&, const std::string& raw_value) const {
-  if (!raw_value.empty()) {
-    *value = raw_value;
-  }
-  return true;
-}
-
-struct OptionSizeT : public Option {
-  OptionSizeT(std::string name, size_t default_value, size_t min_value, size_t max_value,
-          uint64_t option, size_t* value, bool combo_option = false, bool* config = nullptr)
-      : Option(name, option, combo_option, config), default_value(default_value),
-        min_value(min_value), max_value(max_value), value(value) {}
-  virtual ~OptionSizeT() = default;
-
-  size_t default_value;
-  size_t min_value;
-  size_t max_value;
-
-  size_t* value;
-
-  bool ParseValue(const std::string& option_name, const std::string& value) const override;
-
-  void SetDefault() const override { if (value) *value = default_value; }
-};
-
-bool OptionSizeT::ParseValue(const std::string& option_name, const std::string& raw_value) const {
-  if (raw_value.empty()) {
-    // Value should have been set by the SetDefault() pass.
-    return true;
-  }
+bool Config::ParseValue(const std::string& option, const std::string& value,
+                        size_t min_value, size_t max_value, size_t* parsed_value) const {
+  assert(!value.empty());
 
   // Parse the value into a size_t value.
   errno = 0;
   char* end;
-  long parsed_value = strtol(raw_value.c_str(), &end, 10);
+  long long_value = strtol(value.c_str(), &end, 10);
   if (errno != 0) {
-    error_log("%s: bad value for option '%s': %s", getprogname(), option_name.c_str(),
+    error_log("%s: bad value for option '%s': %s", getprogname(), option.c_str(),
               strerror(errno));
     return false;
   }
-  if (end == raw_value.c_str()) {
-    error_log("%s: bad value for option '%s'", getprogname(), option_name.c_str());
+  if (end == value.c_str()) {
+    error_log("%s: bad value for option '%s'", getprogname(), option.c_str());
     return false;
   }
-  if (static_cast<size_t>(end - raw_value.c_str()) != raw_value.size()) {
+  if (static_cast<size_t>(end - value.c_str()) != value.size()) {
     error_log("%s: bad value for option '%s', non space found after option: %s",
-              getprogname(), option_name.c_str(), end);
+              getprogname(), option.c_str(), end);
     return false;
   }
-  if (parsed_value < 0) {
+  if (long_value < 0) {
     error_log("%s: bad value for option '%s', value cannot be negative: %ld",
-              getprogname(), option_name.c_str(), parsed_value);
+              getprogname(), option.c_str(), long_value);
     return false;
   }
 
-  if (static_cast<size_t>(parsed_value) < min_value) {
+  if (static_cast<size_t>(long_value) < min_value) {
     error_log("%s: bad value for option '%s', value must be >= %zu: %ld",
-              getprogname(), option_name.c_str(), min_value, parsed_value);
+              getprogname(), option.c_str(), min_value, long_value);
     return false;
   }
-  if (static_cast<size_t>(parsed_value) > max_value) {
+  if (static_cast<size_t>(long_value) > max_value) {
     error_log("%s: bad value for option '%s', value must be <= %zu: %ld",
-              getprogname(), option_name.c_str(), max_value, parsed_value);
+              getprogname(), option.c_str(), max_value, long_value);
     return false;
   }
-  *value = static_cast<size_t>(parsed_value);
+  *parsed_value = static_cast<size_t>(long_value);
   return true;
 }
 
-class PropertyParser {
- public:
-  explicit PropertyParser(const char* property) : cur_(property) {}
+bool Config::ParseValue(const std::string& option, const std::string& value, size_t default_value,
+                        size_t min_value, size_t max_value, size_t* new_value) const {
+  if (value.empty()) {
+    *new_value = default_value;
+    return true;
+  }
+  return ParseValue(option, value, min_value, max_value, new_value);
+}
 
-  bool Get(std::string* property, std::string* value);
+bool Config::SetGuard(const std::string& option, const std::string& value) {
+  if (value.empty()) {
+    // Set the defaults.
+    front_guard_bytes_ = DEFAULT_GUARD_BYTES;
+    rear_guard_bytes_ = DEFAULT_GUARD_BYTES;
+    return true;
+  }
 
-  bool Done() { return done_; }
-
-  void LogUsage();
-
- private:
-  const char* cur_ = nullptr;
-
-  bool done_ = false;
-
-  DISALLOW_COPY_AND_ASSIGN(PropertyParser);
-};
-
-bool PropertyParser::Get(std::string* property, std::string* value) {
-  // Process each property name we can find.
-  while (isspace(*cur_))
-    ++cur_;
-
-  if (*cur_ == '\0') {
-    done_ = true;
+  if (!ParseValue(option, value, 1, MAX_GUARD_BYTES, &rear_guard_bytes_)) {
     return false;
   }
 
-  const char* start = cur_;
-  while (!isspace(*cur_) && *cur_ != '=' && *cur_ != '\0')
-    ++cur_;
+  // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
+  // make sure that the header is aligned properly.
+  front_guard_bytes_ = BIONIC_ALIGN(rear_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
+  return true;
+}
 
-  *property = std::string(start, cur_ - start);
+bool Config::SetFrontGuard(const std::string& option, const std::string& value) {
+  if (!ParseValue(option, value, DEFAULT_GUARD_BYTES, 1, MAX_GUARD_BYTES, &front_guard_bytes_)) {
+    return false;
+  }
+  // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
+  // make sure that the header is aligned properly.
+  front_guard_bytes_ = BIONIC_ALIGN(front_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
+  return true;
+}
 
-  // Skip any spaces after the name.
-  while (isspace(*cur_))
-    ++cur_;
+bool Config::SetRearGuard(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, DEFAULT_GUARD_BYTES, 1, MAX_GUARD_BYTES, &rear_guard_bytes_);
+}
 
-  value->clear();
-  if (*cur_ == '=') {
-    ++cur_;
-    // Skip the space after the equal.
-    while (isspace(*cur_))
-      ++cur_;
+bool Config::SetFill(const std::string& option, const std::string& value) {
+  if (value.empty()) {
+    // Set the defaults.
+    fill_on_alloc_bytes_ = SIZE_MAX;
+    fill_on_free_bytes_ = SIZE_MAX;
+    return true;
+  }
 
-    start = cur_;
-    while (!isspace(*cur_) && *cur_ != '\0')
-      ++cur_;
+  if (!ParseValue(option, value, 1, SIZE_MAX, &fill_on_alloc_bytes_)) {
+    return false;
+  }
+  fill_on_free_bytes_ = fill_on_alloc_bytes_;
+  return true;
+}
 
-    if (cur_ != start) {
-      *value = std::string(start, cur_ - start);
-    }
+bool Config::SetFillOnAlloc(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, SIZE_MAX, 1, SIZE_MAX, &fill_on_alloc_bytes_);
+}
+
+bool Config::SetFillOnFree(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, SIZE_MAX, 1, SIZE_MAX, &fill_on_free_bytes_);
+}
+
+bool Config::SetBacktrace(const std::string& option, const std::string& value) {
+  backtrace_enabled_ = true;
+  return ParseValue(option, value, DEFAULT_BACKTRACE_FRAMES, 1, MAX_BACKTRACE_FRAMES,
+                    &backtrace_frames_);
+}
+
+bool Config::SetBacktraceEnableOnSignal(const std::string& option, const std::string& value) {
+  backtrace_enable_on_signal_ = true;
+  return ParseValue(option, value, DEFAULT_BACKTRACE_FRAMES, 1, MAX_BACKTRACE_FRAMES,
+                    &backtrace_frames_);
+}
+
+bool Config::SetExpandAlloc(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, &expand_alloc_bytes_);
+}
+
+bool Config::SetFreeTrack(const std::string& option, const std::string& value) {
+  // This option enables fill on free, so set the bytes to the default value.
+  if (fill_on_free_bytes_ == 0) {
+    fill_on_free_bytes_ = SIZE_MAX;
+  }
+  if (free_track_backtrace_num_frames_ == 0) {
+    free_track_backtrace_num_frames_ = DEFAULT_BACKTRACE_FRAMES;
+  }
+
+  return ParseValue(option, value, DEFAULT_FREE_TRACK_ALLOCATIONS, 1, MAX_FREE_TRACK_ALLOCATIONS,
+                    &free_track_allocations_);
+}
+
+bool Config::SetFreeTrackBacktraceNumFrames(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, DEFAULT_BACKTRACE_FRAMES, 0, MAX_BACKTRACE_FRAMES,
+                    &free_track_backtrace_num_frames_);
+}
+
+bool Config::SetRecordAllocs(const std::string& option, const std::string& value) {
+  if (record_allocs_file_.empty()) {
+    record_allocs_file_ = DEFAULT_RECORD_ALLOCS_FILE;
+  }
+  return ParseValue(option, value, DEFAULT_RECORD_ALLOCS, 1, MAX_RECORD_ALLOCS,
+                    &record_allocs_num_entries_);
+}
+
+bool Config::SetRecordAllocsFile(const std::string&, const std::string& value) {
+  if (value.empty()) {
+    // Set the default.
+    record_allocs_file_ = DEFAULT_RECORD_ALLOCS_FILE;
+    return true;
+  }
+  record_allocs_file_ = value;
+  return true;
+}
+
+bool Config::VerifyValueEmpty(const std::string& option, const std::string& value) {
+  if (!value.empty()) {
+    // This is not valid.
+    error_log("%s: value set for option '%s' which does not take a value",
+              getprogname(), option.c_str());
+    return false;
   }
   return true;
 }
 
-void PropertyParser::LogUsage() {
+
+void Config::LogUsage() const {
   error_log("malloc debug options usage:");
   error_log("");
   error_log("  front_guard[=XX]");
@@ -325,155 +379,85 @@ void PropertyParser::LogUsage() {
   error_log("    The default is %s.", DEFAULT_RECORD_ALLOCS_FILE);
 }
 
-// This function is designed to be called once. A second call will not
-// reset all variables.
-bool Config::Set(const char* options_str) {
-  // Initialize a few default values.
-  fill_alloc_value = DEFAULT_FILL_ALLOC_VALUE;
-  fill_free_value = DEFAULT_FILL_FREE_VALUE;
-  front_guard_value = DEFAULT_FRONT_GUARD_VALUE;
-  rear_guard_value = DEFAULT_REAR_GUARD_VALUE;
-  backtrace_signal = SIGRTMAX - 19;
-  record_allocs_signal = SIGRTMAX - 18;
-  free_track_backtrace_num_frames = 0;
-  record_allocs_file.clear();
+bool Config::GetOption(const char** options_str, std::string* option, std::string* value) {
+  const char* cur = *options_str;
+  // Process each property name we can find.
+  while (isspace(*cur))
+    ++cur;
 
-  // Parse the options are of the format:
-  //   option_name or option_name=XX
-
-  // Supported options:
-  const OptionSizeT option_guard(
-      "guard", DEFAULT_GUARD_BYTES, 1, MAX_GUARD_BYTES, 0, nullptr, true);
-  // Enable front guard. Value is the size of the guard.
-  const OptionSizeT option_front_guard(
-      "front_guard", DEFAULT_GUARD_BYTES, 1, MAX_GUARD_BYTES, FRONT_GUARD,
-      &this->front_guard_bytes, true);
-  // Enable end guard. Value is the size of the guard.
-  const OptionSizeT option_rear_guard(
-      "rear_guard", DEFAULT_GUARD_BYTES, 1, MAX_GUARD_BYTES, REAR_GUARD, &this->rear_guard_bytes,
-      true);
-
-  // Enable logging the backtrace on allocation. Value is the total
-  // number of frames to log.
-  const OptionSizeT option_backtrace(
-      "backtrace", DEFAULT_BACKTRACE_FRAMES, 1, MAX_BACKTRACE_FRAMES, BACKTRACE | TRACK_ALLOCS,
-      &this->backtrace_frames, false, &this->backtrace_enabled);
-  // Enable gathering backtrace values on a signal.
-  const OptionSizeT option_backtrace_enable_on_signal(
-      "backtrace_enable_on_signal", DEFAULT_BACKTRACE_FRAMES, 1, MAX_BACKTRACE_FRAMES,
-      BACKTRACE | TRACK_ALLOCS, &this->backtrace_frames, false, &this->backtrace_enable_on_signal);
-
-  const OptionSizeT option_fill("fill", SIZE_MAX, 1, SIZE_MAX, 0, nullptr, true);
-  // Fill the allocation with an arbitrary pattern on allocation.
-  // Value is the number of bytes of the allocation to fill
-  // (default entire allocation).
-  const OptionSizeT option_fill_on_alloc(
-      "fill_on_alloc", SIZE_MAX, 1, SIZE_MAX, FILL_ON_ALLOC, &this->fill_on_alloc_bytes, true);
-  // Fill the allocation with an arbitrary pattern on free.
-  // Value is the number of bytes of the allocation to fill
-  // (default entire allocation).
-  const OptionSizeT option_fill_on_free(
-      "fill_on_free", SIZE_MAX, 1, SIZE_MAX, FILL_ON_FREE, &this->fill_on_free_bytes, true);
-
-  // Expand the size of every alloc by this number bytes. Value is
-  // the total number of bytes to expand every allocation by.
-  const OptionSizeT option_expand_alloc(
-      "expand_alloc", DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, EXPAND_ALLOC,
-      &this->expand_alloc_bytes);
-
-  // Keep track of the freed allocations and verify at a later date
-  // that they have not been used. Turning this on, also turns on
-  // fill on free.
-  const OptionSizeT option_free_track(
-      "free_track", DEFAULT_FREE_TRACK_ALLOCATIONS, 1, MAX_FREE_TRACK_ALLOCATIONS,
-      FREE_TRACK | FILL_ON_FREE, &this->free_track_allocations);
-  // Number of backtrace frames to keep when free_track is enabled. If this
-  // value is set to zero, no backtrace will be kept.
-  const OptionSizeT option_free_track_backtrace_num_frames(
-      "free_track_backtrace_num_frames", DEFAULT_BACKTRACE_FRAMES, 0, MAX_BACKTRACE_FRAMES, 0,
-      &this->free_track_backtrace_num_frames);
-
-  // Enable printing leaked allocations.
-  const Option option_leak_track("leak_track", LEAK_TRACK | TRACK_ALLOCS);
-
-  const OptionSizeT option_record_allocs(
-      "record_allocs", DEFAULT_RECORD_ALLOCS, 1, MAX_RECORD_ALLOCS, RECORD_ALLOCS,
-      &this->record_allocs_num_entries);
-  const OptionString option_record_allocs_file(
-      "record_allocs_file", 0, DEFAULT_RECORD_ALLOCS_FILE, &this->record_allocs_file);
-
-  const Option* option_list[] = {
-    &option_guard, &option_front_guard, &option_rear_guard,
-    &option_backtrace, &option_backtrace_enable_on_signal,
-    &option_fill, &option_fill_on_alloc, &option_fill_on_free,
-    &option_expand_alloc,
-    &option_free_track, &option_free_track_backtrace_num_frames,
-    &option_leak_track,
-    &option_record_allocs, &option_record_allocs_file,
-  };
-
-  // Set defaults for all of the options.
-  for (size_t i = 0; i < sizeof(option_list)/sizeof(Option*); i++) {
-    option_list[i]->SetDefault();
+  if (*cur == '\0') {
+    *options_str = cur;
+    return false;
   }
 
-  // Process each property name we can find.
-  PropertyParser parser(options_str);
-  bool valid = true;
-  std::string property;
-  std::string value;
-  while (valid && parser.Get(&property, &value)) {
-    bool found = false;
-    for (size_t i = 0; i < sizeof(option_list)/sizeof(Option*); i++) {
-      if (property == option_list[i]->name) {
-        if (option_list[i]->option == 0 && option_list[i]->combo_option) {
-          const std::string* option_name = &option_list[i]->name;
-          i++;
-          for (; i < sizeof(option_list)/sizeof(Option*) && option_list[i]->combo_option; i++) {
-            if (!option_list[i]->ParseValue(*option_name, value)) {
-              valid = false;
-              break;
-            }
-            if (option_list[i]->config) {
-              *option_list[i]->config = true;
-            }
-            options |= option_list[i]->option;
-          }
-          if (!valid) {
-            break;
-          }
-        } else {
-          if (!option_list[i]->ParseValue(option_list[i]->name, value)) {
-            valid = false;
-            break;
-          }
-          if (option_list[i]->config) {
-            *option_list[i]->config = true;
-          }
-          options |= option_list[i]->option;
-        }
-        found = true;
-        break;
-      }
+  const char* start = cur;
+  while (!isspace(*cur) && *cur != '=' && *cur != '\0')
+    ++cur;
+
+  *option = std::string(start, cur - start);
+
+  // Skip any spaces after the name.
+  while (isspace(*cur))
+    ++cur;
+
+  value->clear();
+  if (*cur == '=') {
+    ++cur;
+    // Skip the space after the equal.
+    while (isspace(*cur))
+      ++cur;
+
+    start = cur;
+    while (!isspace(*cur) && *cur != '\0')
+      ++cur;
+
+    if (cur != start) {
+      *value = std::string(start, cur - start);
     }
-    if (valid && !found) {
-      error_log("%s: unknown option %s", getprogname(), property.c_str());
+  }
+  *options_str = cur;
+  return true;
+}
+
+bool Config::Init(const char* options_str) {
+  // Initialize a few default values.
+  fill_alloc_value_ = DEFAULT_FILL_ALLOC_VALUE;
+  fill_free_value_ = DEFAULT_FILL_FREE_VALUE;
+  front_guard_value_ = DEFAULT_FRONT_GUARD_VALUE;
+  rear_guard_value_ = DEFAULT_REAR_GUARD_VALUE;
+  backtrace_signal_ = SIGRTMAX - 19;
+  record_allocs_signal_ = SIGRTMAX - 18;
+  free_track_backtrace_num_frames_ = 0;
+  record_allocs_file_.clear();
+  fill_on_free_bytes_ = 0;
+  backtrace_enable_on_signal_ = false;
+  backtrace_enabled_ = false;
+
+  // Process each option name we can find.
+  std::string option;
+  std::string value;
+  bool valid = true;
+  while (GetOption(&options_str, &option, &value)) {
+    auto entry = kOptions.find(option);
+    if (entry == kOptions.end()) {
+      error_log("%s: unknown option %s", getprogname(), option.c_str());
       valid = false;
       break;
     }
-  }
 
-  valid = valid && parser.Done();
-
-  if (valid) {
-    // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
-    // make sure that the header is aligned properly.
-    if (options & FRONT_GUARD) {
-      front_guard_bytes = BIONIC_ALIGN(front_guard_bytes, MINIMUM_ALIGNMENT_BYTES);
+    const OptionInfo* info = &entry->second;
+    auto process_func = info->process_func;
+    if (process_func != nullptr && !(this->*process_func)(option, value)) {
+      valid = false;
+      break;
     }
-  } else {
-    parser.LogUsage();
+    options_ |= info->option;
   }
 
-  return valid;
+  if (!valid || *options_str != '\0') {
+    LogUsage();
+    return false;
+  }
+
+  return true;
 }

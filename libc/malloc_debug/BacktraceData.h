@@ -36,7 +36,7 @@
 #include "OptionData.h"
 
 // Forward declarations.
-struct Config;
+class Config;
 
 class BacktraceData : public OptionData {
  public:
