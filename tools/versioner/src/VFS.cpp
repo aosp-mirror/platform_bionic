@@ -54,7 +54,7 @@ static void addDirectoryToVFS(InMemoryFileSystem* vfs, const std::string& path) 
       err(1, "failed to open header '%s'", file_path);
     }
 
-    auto buffer_opt = llvm::MemoryBuffer::getOpenFileSlice(fd, file_path, -1, 0);
+    auto buffer_opt = llvm::MemoryBuffer::getOpenFile(fd, file_path, -1, false, false);
     if (!buffer_opt) {
       errx(1, "failed to map header '%s'", file_path);
     }
