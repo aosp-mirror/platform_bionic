@@ -996,7 +996,7 @@ TEST(UNISTD_TEST, sysconf_SC_ARG_MAX) {
   if (rl.rlim_cur == RLIM_INFINITY) {
     rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
   }
-  auto guard = make_scope_guard([&rl, original_rlim_cur]() {
+  auto guard = android::base::make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
