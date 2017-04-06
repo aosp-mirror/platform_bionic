@@ -133,7 +133,7 @@ extern char* __getcwd_chk(char* buf, size_t len, size_t actual_size) {
 
 void* __memchr_chk(const void* s, int c, size_t n, size_t actual_size) {
   __check_buffer_access("memchr", "read from", n, actual_size);
-  return memchr(s, c, n);
+  return const_cast<void*>(memchr(s, c, n));
 }
 
 // Runtime implementation of __builtin____memmove_chk (used directly by compiler, not in headers).
