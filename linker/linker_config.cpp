@@ -33,9 +33,8 @@
 #include "linker_utils.h"
 
 #include <android-base/file.h>
+#include <android-base/scopeguard.h>
 #include <android-base/strings.h>
-
-#include <private/ScopeGuard.h>
 
 #include <stdlib.h>
 
@@ -379,9 +378,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
 
   Properties properties(std::move(property_map));
 
-  auto failure_guard = make_scope_guard([] {
-    g_config.clear();
-  });
+  auto failure_guard = android::base::make_scope_guard([] { g_config.clear(); });
 
   std::unordered_map<std::string, NamespaceConfig*> namespace_configs;
 
@@ -469,7 +466,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     ns_config->set_permitted_paths(properties.get_paths(property_name_prefix + ".permitted.paths"));
   }
 
-  failure_guard.disable();
+  failure_guard.Disable();
   *config = &g_config;
   return true;
 }
