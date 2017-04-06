@@ -33,9 +33,10 @@
 #include <atomic>
 #include <vector>
 
+#include <android-base/scopeguard.h>
+
 #include "private/bionic_constants.h"
 #include "private/bionic_macros.h"
-#include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
 #include "utils.h"
@@ -64,7 +65,7 @@ TEST(pthread, pthread_key_many_distinct) {
   int nkeys = PTHREAD_KEYS_MAX / 2;
   std::vector<pthread_key_t> keys;
 
-  auto scope_guard = make_scope_guard([&keys]{
+  auto scope_guard = android::base::make_scope_guard([&keys] {
     for (const auto& key : keys) {
       EXPECT_EQ(0, pthread_key_delete(key));
     }
@@ -1362,7 +1363,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   }
   EXPECT_EQ(rl.rlim_cur, stack_size);
 
-  auto guard = make_scope_guard([&rl, original_rlim_cur]() {
+  auto guard = android::base::make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
