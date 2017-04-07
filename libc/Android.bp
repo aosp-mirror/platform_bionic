@@ -2171,13 +2171,13 @@ ndk_headers {
 }
 
 ndk_library {
-    name: "libc.ndk",
+    name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
 }
 
 llndk_library {
-    name: "libc.llndk",
+    name: "libc",
     symbol_file: "libc.map.txt",
     export_headers_as_system: true,
     export_preprocessed_headers: ["include"],
@@ -2234,7 +2234,7 @@ llndk_library {
 }
 
 ndk_library {
-    name: "libstdc++.ndk",
+    name: "libstdc++",
     symbol_file: "libstdc++.map.txt",
     first_version: "9",
 }
