@@ -1817,6 +1817,7 @@ cc_library {
 cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
+    vendor_available: true,
 
     no_default_compiler_flags: true,
 
@@ -1846,6 +1847,7 @@ cc_defaults {
 cc_defaults {
     name: "crt_so_defaults",
 
+    vendor_available: true,
     arch: {
         mips: {
             cflags: ["-fPIC"],
