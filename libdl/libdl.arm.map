@@ -47,4 +47,5 @@ LIBC_PLATFORM {
     android_init_anonymous_namespace;
     android_create_namespace;
     android_link_namespaces;
+    android_get_exported_namespace;
 } LIBC_N;

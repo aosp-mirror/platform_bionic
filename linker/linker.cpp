@@ -72,6 +72,7 @@
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
 
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
+static std::unordered_map<std::string, android_namespace_t*> g_exported_namespaces;
 
 static LinkerTypeAllocator<soinfo> g_soinfo_allocator;
 static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
@@ -3460,6 +3461,9 @@ void init_default_namespace(const char* executable_path) {
     ns->set_permitted_paths(ns_config->permitted_paths());
 
     namespaces[ns_config->name()] = ns;
+    if (ns_config->visible()) {
+      g_exported_namespaces[ns_config->name()] = ns;
+    }
   }
 
   // 3. Establish links between namespaces
@@ -3483,4 +3487,17 @@ void init_default_namespace(const char* executable_path) {
   }
 
   set_application_target_sdk_version(config->target_sdk_version());
+}
+
+// This function finds a namespace exported in ld.config.txt by its name.
+// A namespace can be exported by setting .visible property to true.
+android_namespace_t* get_exported_namespace(const char* name) {
+  if (name == nullptr) {
+    return nullptr;
+  }
+  auto it = g_exported_namespaces.find(std::string(name));
+  if (it == g_exported_namespaces.end()) {
+    return nullptr;
+  }
+  return it->second;
 }

@@ -62,7 +62,7 @@ class NamespaceLinkConfig {
 class NamespaceConfig {
  public:
   explicit NamespaceConfig(const std::string& name)
-      : name_(name), isolated_(false)
+      : name_(name), isolated_(false), visible_(false)
   {}
 
   const char* name() const {
@@ -71,6 +71,10 @@ class NamespaceConfig {
 
   bool isolated() const {
     return isolated_;
+  }
+
+  bool visible() const {
+    return visible_;
   }
 
   const std::vector<std::string>& search_paths() const {
@@ -93,6 +97,10 @@ class NamespaceConfig {
     isolated_ = isolated;
   }
 
+  void set_visible(bool visible) {
+    visible_ = visible;
+  }
+
   void set_search_paths(std::vector<std::string>&& search_paths) {
     search_paths_ = search_paths;
   }
@@ -103,6 +111,7 @@ class NamespaceConfig {
  private:
   const std::string name_;
   bool isolated_;
+  bool visible_;
   std::vector<std::string> search_paths_;
   std::vector<std::string> permitted_paths_;
   std::vector<NamespaceLinkConfig> namespace_links_;
