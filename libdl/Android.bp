@@ -124,3 +124,8 @@ ndk_library {
     symbol_file: "libdl.map.txt",
     first_version: "9",
 }
+
+llndk_library {
+    name: "libdl.llndk",
+    symbol_file: "libdl.map.txt",
+}

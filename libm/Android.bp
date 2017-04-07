@@ -538,3 +538,8 @@ ndk_library {
     symbol_file: "libm.map.txt",
     first_version: "9",
 }
+
+llndk_library {
+    name: "libm.llndk",
+    symbol_file: "libm.map.txt",
+}
