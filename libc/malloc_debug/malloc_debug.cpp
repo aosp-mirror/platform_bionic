@@ -118,7 +118,7 @@ static void LogTagError(const Header* header, const void* pointer, const char* n
   error_log(LOG_DIVIDER);
   if (header->tag == DEBUG_FREE_TAG) {
     error_log("+++ ALLOCATION %p USED AFTER FREE (%s)", pointer, name);
-    if (g_debug->config().options & FREE_TRACK) {
+    if (g_debug->config().options() & FREE_TRACK) {
       g_debug->free_track->LogBacktrace(header);
     }
   } else {
@@ -147,32 +147,32 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   header->usable_size -= g_debug->pointer_offset() +
       reinterpret_cast<uintptr_t>(header) - reinterpret_cast<uintptr_t>(orig_pointer);
 
-  if (g_debug->config().options & FRONT_GUARD) {
+  if (g_debug->config().options() & FRONT_GUARD) {
     uint8_t* guard = g_debug->GetFrontGuard(header);
-    memset(guard, g_debug->config().front_guard_value, g_debug->config().front_guard_bytes);
+    memset(guard, g_debug->config().front_guard_value(), g_debug->config().front_guard_bytes());
   }
 
-  if (g_debug->config().options & REAR_GUARD) {
+  if (g_debug->config().options() & REAR_GUARD) {
     uint8_t* guard = g_debug->GetRearGuard(header);
-    memset(guard, g_debug->config().rear_guard_value, g_debug->config().rear_guard_bytes);
+    memset(guard, g_debug->config().rear_guard_value(), g_debug->config().rear_guard_bytes());
     // If the rear guard is enabled, set the usable size to the exact size
     // of the allocation.
     header->usable_size = header->real_size();
   }
 
   bool backtrace_found = false;
-  if (g_debug->config().options & BACKTRACE) {
+  if (g_debug->config().options() & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
     if (g_debug->backtrace->enabled()) {
       back_header->num_frames = backtrace_get(
-          &back_header->frames[0], g_debug->config().backtrace_frames);
+          &back_header->frames[0], g_debug->config().backtrace_frames());
       backtrace_found = back_header->num_frames > 0;
     } else {
       back_header->num_frames = 0;
     }
   }
 
-  if (g_debug->config().options & TRACK_ALLOCS) {
+  if (g_debug->config().options() & TRACK_ALLOCS) {
     g_debug->track->Add(header, backtrace_found);
   }
 
@@ -215,11 +215,11 @@ void debug_finalize() {
     return;
   }
 
-  if (g_debug->config().options & FREE_TRACK) {
+  if (g_debug->config().options() & FREE_TRACK) {
     g_debug->free_track->VerifyAll();
   }
 
-  if (g_debug->config().options & LEAK_TRACK) {
+  if (g_debug->config().options() & LEAK_TRACK) {
     g_debug->track->DisplayLeaks();
   }
 
@@ -250,7 +250,7 @@ void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size,
   *total_memory = 0;
   *backtrace_size = 0;
 
-  if (!(g_debug->config().options & BACKTRACE)) {
+  if (!(g_debug->config().options() & BACKTRACE)) {
     error_log("get_malloc_leak_info: Allocations not being tracked, to enable "
               "set the option 'backtrace'.");
     return;
@@ -315,11 +315,11 @@ static void *internal_malloc(size_t size) {
     pointer = g_dispatch->malloc(real_size);
   }
 
-  if (pointer != nullptr && g_debug->config().options & FILL_ON_ALLOC) {
+  if (pointer != nullptr && g_debug->config().options() & FILL_ON_ALLOC) {
     size_t bytes = internal_malloc_usable_size(pointer);
-    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes;
+    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
     bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_alloc_value, bytes);
+    memset(pointer, g_debug->config().fill_alloc_value(), bytes);
   }
   return pointer;
 }
@@ -332,7 +332,7 @@ void* debug_malloc(size_t size) {
 
   void* pointer = internal_malloc(size);
 
-  if (g_debug->config().options & RECORD_ALLOCS) {
+  if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new MallocEntry(pointer, size));
   }
 
@@ -351,20 +351,20 @@ static void internal_free(void* pointer) {
     }
     free_pointer = header->orig_pointer;
 
-    if (g_debug->config().options & FRONT_GUARD) {
+    if (g_debug->config().options() & FRONT_GUARD) {
       if (!g_debug->front_guard->Valid(header)) {
         g_debug->front_guard->LogFailure(header);
       }
     }
-    if (g_debug->config().options & REAR_GUARD) {
+    if (g_debug->config().options() & REAR_GUARD) {
       if (!g_debug->rear_guard->Valid(header)) {
         g_debug->rear_guard->LogFailure(header);
       }
     }
 
-    if (g_debug->config().options & TRACK_ALLOCS) {
+    if (g_debug->config().options() & TRACK_ALLOCS) {
       bool backtrace_found = false;
-      if (g_debug->config().options & BACKTRACE) {
+      if (g_debug->config().options() & BACKTRACE) {
         BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
         backtrace_found = back_header->num_frames > 0;
       }
@@ -377,13 +377,13 @@ static void internal_free(void* pointer) {
     bytes = g_dispatch->malloc_usable_size(pointer);
   }
 
-  if (g_debug->config().options & FILL_ON_FREE) {
-    size_t fill_bytes = g_debug->config().fill_on_free_bytes;
+  if (g_debug->config().options() & FILL_ON_FREE) {
+    size_t fill_bytes = g_debug->config().fill_on_free_bytes();
     bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_free_value, bytes);
+    memset(pointer, g_debug->config().fill_free_value(), bytes);
   }
 
-  if (g_debug->config().options & FREE_TRACK) {
+  if (g_debug->config().options() & FREE_TRACK) {
     // Do not add the allocation until we are done modifying the pointer
     // itself. This avoids a race if a lot of threads are all doing
     // frees at the same time and we wind up trying to really free this
@@ -401,7 +401,7 @@ void debug_free(void* pointer) {
   }
   ScopedDisableDebugCalls disable;
 
-  if (g_debug->config().options & RECORD_ALLOCS) {
+  if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new FreeEntry(pointer));
   }
 
@@ -466,14 +466,14 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     pointer = g_dispatch->memalign(alignment, real_size);
   }
 
-  if (pointer != nullptr && g_debug->config().options & FILL_ON_ALLOC) {
+  if (pointer != nullptr && g_debug->config().options() & FILL_ON_ALLOC) {
     size_t bytes = internal_malloc_usable_size(pointer);
-    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes;
+    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
     bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_alloc_value, bytes);
+    memset(pointer, g_debug->config().fill_alloc_value(), bytes);
   }
 
-  if (g_debug->config().options & RECORD_ALLOCS) {
+  if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment));
   }
 
@@ -488,14 +488,14 @@ void* debug_realloc(void* pointer, size_t bytes) {
 
   if (pointer == nullptr) {
     pointer = internal_malloc(bytes);
-    if (g_debug->config().options & RECORD_ALLOCS) {
+    if (g_debug->config().options() & RECORD_ALLOCS) {
       g_debug->record->AddEntry(new ReallocEntry(pointer, bytes, nullptr));
     }
     return pointer;
   }
 
   if (bytes == 0) {
-    if (g_debug->config().options & RECORD_ALLOCS) {
+    if (g_debug->config().options() & RECORD_ALLOCS) {
       g_debug->record->AddEntry(new ReallocEntry(nullptr, bytes, pointer));
     }
 
@@ -504,8 +504,8 @@ void* debug_realloc(void* pointer, size_t bytes) {
   }
 
   size_t real_size = bytes;
-  if (g_debug->config().options & EXPAND_ALLOC) {
-    real_size += g_debug->config().expand_alloc_bytes;
+  if (g_debug->config().options() & EXPAND_ALLOC) {
+    real_size += g_debug->config().expand_alloc_bytes();
     if (real_size < bytes) {
       // Overflow.
       errno = ENOMEM;
@@ -539,12 +539,12 @@ void* debug_realloc(void* pointer, size_t bytes) {
       if (*g_malloc_zygote_child) {
         header->set_zygote();
       }
-      if (g_debug->config().options & REAR_GUARD) {
+      if (g_debug->config().options() & REAR_GUARD) {
         // Don't bother allocating a smaller pointer in this case, simply
         // change the header usable_size and reset the rear guard.
         header->usable_size = header->real_size();
-        memset(g_debug->GetRearGuard(header), g_debug->config().rear_guard_value,
-               g_debug->config().rear_guard_bytes);
+        memset(g_debug->GetRearGuard(header), g_debug->config().rear_guard_value(),
+               g_debug->config().rear_guard_bytes());
       }
       // Do not bother recording, this is essentially a nop.
       return pointer;
@@ -568,18 +568,18 @@ void* debug_realloc(void* pointer, size_t bytes) {
     }
   }
 
-  if (g_debug->config().options & FILL_ON_ALLOC) {
+  if (g_debug->config().options() & FILL_ON_ALLOC) {
     size_t bytes = internal_malloc_usable_size(new_pointer);
-    if (bytes > g_debug->config().fill_on_alloc_bytes) {
-      bytes = g_debug->config().fill_on_alloc_bytes;
+    if (bytes > g_debug->config().fill_on_alloc_bytes()) {
+      bytes = g_debug->config().fill_on_alloc_bytes();
     }
     if (bytes > prev_size) {
       memset(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(new_pointer) + prev_size),
-             g_debug->config().fill_alloc_value, bytes - prev_size);
+             g_debug->config().fill_alloc_value(), bytes - prev_size);
     }
   }
 
-  if (g_debug->config().options & RECORD_ALLOCS) {
+  if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new ReallocEntry(new_pointer, bytes, pointer));
   }
 
@@ -629,7 +629,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
   } else {
     pointer = g_dispatch->calloc(1, real_size);
   }
-  if (g_debug->config().options & RECORD_ALLOCS) {
+  if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new CallocEntry(pointer, bytes, nmemb));
   }
   return pointer;
@@ -668,7 +668,7 @@ int debug_iterate(uintptr_t base, size_t size,
         const void* pointer = reinterpret_cast<void*>(base);
         if (g_debug->need_header()) {
           const Header* header = reinterpret_cast<const Header*>(pointer);
-          if (g_debug->config().options & TRACK_ALLOCS) {
+          if (g_debug->config().options() & TRACK_ALLOCS) {
             if (g_debug->track->Contains(header)) {
               // Return just the body of the allocation if we're sure the header exists
               ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
@@ -704,7 +704,7 @@ ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_co
 
   if (g_debug->need_header()) {
     Header* header;
-    if (g_debug->config().options & TRACK_ALLOCS) {
+    if (g_debug->config().options() & TRACK_ALLOCS) {
       header = g_debug->GetHeader(pointer);
       if (!g_debug->track->Contains(header)) {
         return 0;
@@ -715,7 +715,7 @@ ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_co
     if (header->tag != DEBUG_TAG) {
       return 0;
     }
-    if (g_debug->config().options & BACKTRACE) {
+    if (g_debug->config().options() & BACKTRACE) {
       BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
       if (back_header->num_frames > 0) {
         if (frame_count > back_header->num_frames) {
