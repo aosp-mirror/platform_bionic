@@ -92,7 +92,7 @@ void TrackData::DisplayLeaks() {
   for (const auto& header : list) {
     error_log("+++ %s leaked block of size %zu at %p (leak %zu of %zu)", getprogname(),
               header->real_size(), debug_->GetPointer(header), ++track_count, list.size());
-    if (debug_->config().options & BACKTRACE) {
+    if (debug_->config().options() & BACKTRACE) {
       BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
       if (back_header->num_frames > 0) {
         error_log("Backtrace at time of allocation:");
@@ -111,7 +111,7 @@ void TrackData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
     return;
   }
 
-  *backtrace_size = debug_->config().backtrace_frames;
+  *backtrace_size = debug_->config().backtrace_frames();
   *info_size = sizeof(size_t) * 2 + sizeof(uintptr_t) * *backtrace_size;
   *info = reinterpret_cast<uint8_t*>(g_dispatch->calloc(*info_size, total_backtrace_allocs_));
   if (*info == nullptr) {

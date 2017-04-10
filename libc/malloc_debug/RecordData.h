@@ -144,7 +144,7 @@ class MemalignEntry : public MallocEntry {
   DISALLOW_COPY_AND_ASSIGN(MemalignEntry);
 };
 
-struct Config;
+class Config;
 
 class RecordData {
  public:

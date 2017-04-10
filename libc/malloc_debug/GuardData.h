@@ -41,7 +41,7 @@
 // Forward declarations.
 class DebugData;
 struct Header;
-struct Config;
+class Config;
 
 class GuardData : public OptionData {
  public:
