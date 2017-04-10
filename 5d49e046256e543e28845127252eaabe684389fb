@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c3c9b71_d5b68f4a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3254,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-10T19:55:58Z",
+      "side": 1,
+      "message": "I do not remember if there is a test checking this error message. I think there is - one of invalid* tests.",
+      "revId": "5d49e046256e543e28845127252eaabe684389fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
