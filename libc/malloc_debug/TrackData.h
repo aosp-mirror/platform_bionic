@@ -41,7 +41,7 @@
 
 // Forward declarations.
 struct Header;
-struct Config;
+class Config;
 class DebugData;
 
 class TrackData : public OptionData {

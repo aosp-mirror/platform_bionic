@@ -185,20 +185,20 @@ bool RecordData::Initialize(const Config& config) {
   dump_act.sa_sigaction = RecordDump;
   dump_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
   sigemptyset(&dump_act.sa_mask);
-  if (sigaction(config.record_allocs_signal, &dump_act, nullptr) != 0) {
+  if (sigaction(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
     error_log("Unable to set up record dump signal function: %s", strerror(errno));
     return false;
   }
   pthread_setspecific(key_, nullptr);
 
   info_log("%s: Run: 'kill -%d %d' to dump the allocation records.", getprogname(),
-           config.record_allocs_signal, getpid());
+           config.record_allocs_signal(), getpid());
 
-  num_entries_ = config.record_allocs_num_entries;
+  num_entries_ = config.record_allocs_num_entries();
   entries_ = new const RecordEntry*[num_entries_];
   cur_index_ = 0;
   dump_ = false;
-  dump_file_ = config.record_allocs_file;
+  dump_file_ = config.record_allocs_file();
 
   return true;
 }
