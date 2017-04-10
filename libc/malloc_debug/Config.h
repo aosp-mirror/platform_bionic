@@ -32,6 +32,7 @@
 #include <stdint.h>
 
 #include <string>
+#include <unordered_map>
 
 constexpr uint64_t FRONT_GUARD = 0x1;
 constexpr uint64_t REAR_GUARD = 0x2;
@@ -55,34 +56,100 @@ constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
 // If one or more of these options is set, then a special header is needed.
 constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD | BACKTRACE | FREE_TRACK | LEAK_TRACK;
 
-struct Config {
-  bool Set(const char* str);
+class Config {
+ public:
+  bool Init(const char* options_str);
 
-  size_t front_guard_bytes = 0;
-  size_t rear_guard_bytes = 0;
+  void LogUsage() const;
 
-  bool backtrace_enable_on_signal = false;
-  int backtrace_signal = 0;
-  bool backtrace_enabled = false;
-  size_t backtrace_frames = 0;
+  uint64_t options() const { return options_; }
 
-  size_t fill_on_alloc_bytes = 0;
-  size_t fill_on_free_bytes = 0;
+  int backtrace_signal() const { return backtrace_signal_; }
+  size_t backtrace_frames() const { return backtrace_frames_; }
+  size_t backtrace_enabled() const { return backtrace_enabled_; }
+  size_t backtrace_enable_on_signal() const { return backtrace_enable_on_signal_; }
 
-  size_t expand_alloc_bytes = 0;
+  size_t front_guard_bytes() const { return front_guard_bytes_; }
+  size_t rear_guard_bytes() const { return rear_guard_bytes_; }
+  uint8_t front_guard_value() const { return front_guard_value_; }
+  uint8_t rear_guard_value() const { return rear_guard_value_; }
 
-  size_t free_track_allocations = 0;
-  size_t free_track_backtrace_num_frames = 0;
+  size_t expand_alloc_bytes() const { return expand_alloc_bytes_; }
 
-  int record_allocs_signal = 0;
-  size_t record_allocs_num_entries = 0;
-  std::string record_allocs_file;
+  size_t free_track_allocations() const { return free_track_allocations_; }
+  size_t free_track_backtrace_num_frames() const { return free_track_backtrace_num_frames_; }
 
-  uint64_t options = 0;
-  uint8_t fill_alloc_value;
-  uint8_t fill_free_value;
-  uint8_t front_guard_value;
-  uint8_t rear_guard_value;
+  size_t fill_on_alloc_bytes() const { return fill_on_alloc_bytes_; }
+  size_t fill_on_free_bytes() const { return fill_on_free_bytes_; }
+  uint8_t fill_alloc_value() const { return fill_alloc_value_; }
+  uint8_t fill_free_value() const { return fill_free_value_; }
+
+  int record_allocs_signal() const { return record_allocs_signal_; }
+  size_t record_allocs_num_entries() const { return record_allocs_num_entries_; }
+  const std::string& record_allocs_file() const { return record_allocs_file_; }
+
+ private:
+  struct OptionInfo {
+    uint64_t option;
+    bool (Config::*process_func)(const std::string&, const std::string&);
+  };
+
+  bool ParseValue(const std::string& option, const std::string& value, size_t default_value,
+                  size_t min_value, size_t max_value, size_t* new_value) const;
+
+  bool ParseValue(const std::string& option, const std::string& value, size_t min_value,
+                  size_t max_value, size_t* parsed_value) const;
+
+  bool SetGuard(const std::string& option, const std::string& value);
+  bool SetFrontGuard(const std::string& option, const std::string& value);
+  bool SetRearGuard(const std::string& option, const std::string& value);
+
+  bool SetFill(const std::string& option, const std::string& value);
+  bool SetFillOnAlloc(const std::string& option, const std::string& value);
+  bool SetFillOnFree(const std::string& option, const std::string& value);
+
+  bool SetBacktrace(const std::string& option, const std::string& value);
+  bool SetBacktraceEnableOnSignal(const std::string& option, const std::string& value);
+
+  bool SetExpandAlloc(const std::string& option, const std::string& value);
+
+  bool SetFreeTrack(const std::string& option, const std::string& value);
+  bool SetFreeTrackBacktraceNumFrames(const std::string& option, const std::string& value);
+
+  bool SetRecordAllocs(const std::string& option, const std::string& value);
+  bool SetRecordAllocsFile(const std::string& option, const std::string& value);
+
+  bool VerifyValueEmpty(const std::string& option, const std::string& value);
+
+  static bool GetOption(const char** option_str, std::string* option, std::string* value);
+
+  const static std::unordered_map<std::string, OptionInfo> kOptions;
+
+  size_t front_guard_bytes_ = 0;
+  size_t rear_guard_bytes_ = 0;
+
+  bool backtrace_enable_on_signal_ = false;
+  int backtrace_signal_ = 0;
+  bool backtrace_enabled_ = false;
+  size_t backtrace_frames_ = 0;
+
+  size_t fill_on_alloc_bytes_ = 0;
+  size_t fill_on_free_bytes_ = 0;
+
+  size_t expand_alloc_bytes_ = 0;
+
+  size_t free_track_allocations_ = 0;
+  size_t free_track_backtrace_num_frames_ = 0;
+
+  int record_allocs_signal_ = 0;
+  size_t record_allocs_num_entries_ = 0;
+  std::string record_allocs_file_;
+
+  uint64_t options_ = 0;
+  uint8_t fill_alloc_value_;
+  uint8_t fill_free_value_;
+  uint8_t front_guard_value_;
+  uint8_t rear_guard_value_;
 };
 
 #endif  // MALLOC_DEBUG_CONFIG_H
