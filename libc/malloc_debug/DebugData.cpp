@@ -38,54 +38,54 @@
 #include "TrackData.h"
 
 bool DebugData::Initialize(const char* options) {
-  if (!config_.Set(options)) {
+  if (!config_.Init(options)) {
     return false;
   }
 
   // Check to see if the options that require a header are enabled.
-  if (config_.options & HEADER_OPTIONS) {
+  if (config_.options() & HEADER_OPTIONS) {
     need_header_ = true;
 
     // Initialize all of the static header offsets.
     pointer_offset_ = BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 
-    if (config_.options & BACKTRACE) {
+    if (config_.options() & BACKTRACE) {
       backtrace.reset(new BacktraceData(this, config_, &pointer_offset_));
       if (!backtrace->Initialize(config_)) {
         return false;
       }
     }
 
-    if (config_.options & FRONT_GUARD) {
+    if (config_.options() & FRONT_GUARD) {
       front_guard.reset(new FrontGuardData(this, config_, &pointer_offset_));
     }
 
     extra_bytes_ = pointer_offset_;
 
     // Initialize all of the non-header data.
-    if (config_.options & REAR_GUARD) {
+    if (config_.options() & REAR_GUARD) {
       rear_guard.reset(new RearGuardData(this, config_));
-      extra_bytes_ += config_.rear_guard_bytes;
+      extra_bytes_ += config_.rear_guard_bytes();
     }
 
-    if (config_.options & FREE_TRACK) {
+    if (config_.options() & FREE_TRACK) {
       free_track.reset(new FreeTrackData(this, config_));
     }
 
-    if (config_.options & TRACK_ALLOCS) {
+    if (config_.options() & TRACK_ALLOCS) {
       track.reset(new TrackData(this));
     }
   }
 
-  if (config_.options & RECORD_ALLOCS) {
+  if (config_.options() & RECORD_ALLOCS) {
     record.reset(new RecordData());
     if (!record->Initialize(config_)) {
       return false;
     }
   }
 
-  if (config_.options & EXPAND_ALLOC) {
-    extra_bytes_ += config_.expand_alloc_bytes;
+  if (config_.options() & EXPAND_ALLOC) {
+    extra_bytes_ += config_.expand_alloc_bytes();
   }
   return true;
 }

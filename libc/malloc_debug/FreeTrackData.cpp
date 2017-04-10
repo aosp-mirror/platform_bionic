@@ -37,15 +37,15 @@
 #include "malloc_debug.h"
 
 FreeTrackData::FreeTrackData(DebugData* debug, const Config& config)
-    : OptionData(debug), backtrace_num_frames_(config.free_track_backtrace_num_frames) {
+    : OptionData(debug), backtrace_num_frames_(config.free_track_backtrace_num_frames()) {
   cmp_mem_.resize(4096);
-  memset(cmp_mem_.data(), config.fill_free_value, cmp_mem_.size());
+  memset(cmp_mem_.data(), config.fill_free_value(), cmp_mem_.size());
 }
 
 void FreeTrackData::LogFreeError(const Header* header, const uint8_t* pointer) {
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p USED AFTER FREE", pointer);
-  uint8_t fill_free_value = debug_->config().fill_free_value;
+  uint8_t fill_free_value = debug_->config().fill_free_value();
   for (size_t i = 0; i < header->usable_size; i++) {
     if (pointer[i] != fill_free_value) {
       error_log("  allocation[%zu] = 0x%02x (expected 0x%02x)", i, pointer[i], fill_free_value);
@@ -69,8 +69,8 @@ void FreeTrackData::VerifyAndFree(const Header* header) {
   } else {
     const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
     size_t bytes = header->usable_size;
-    bytes = (bytes < debug_->config().fill_on_free_bytes) ? bytes
-        : debug_->config().fill_on_free_bytes;
+    bytes = (bytes < debug_->config().fill_on_free_bytes()) ? bytes
+        : debug_->config().fill_on_free_bytes();
     while (bytes > 0) {
       size_t bytes_to_cmp = (bytes < cmp_mem_.size()) ? bytes : cmp_mem_.size();
       if (memcmp(memory, cmp_mem_.data(), bytes_to_cmp) != 0) {
@@ -92,7 +92,7 @@ void FreeTrackData::VerifyAndFree(const Header* header) {
 
 void FreeTrackData::Add(const Header* header) {
   pthread_mutex_lock(&mutex_);
-  if (list_.size() == debug_->config().free_track_allocations) {
+  if (list_.size() == debug_->config().free_track_allocations()) {
     const Header* old_header = list_.back();
     VerifyAndFree(old_header);
     list_.pop_back();
