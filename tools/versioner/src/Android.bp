@@ -45,11 +45,4 @@ cc_binary_host {
             enabled: false,
         },
     },
-
-    product_variables: {
-        unbundled_build: {
-            // Only do this when Clang is available.
-            enabled: false,
-        },
-    },
 }
