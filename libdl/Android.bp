@@ -120,12 +120,12 @@ cc_library {
 }
 
 ndk_library {
-    name: "libdl.ndk",
+    name: "libdl",
     symbol_file: "libdl.map.txt",
     first_version: "9",
 }
 
 llndk_library {
-    name: "libdl.llndk",
+    name: "libdl",
     symbol_file: "libdl.map.txt",
 }
