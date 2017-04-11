@@ -511,7 +511,7 @@ class SysCallsTxtParser:
     def parse_file(self, file_path):
         logging.debug("parse_file: %s" % file_path)
         with open(file_path) as fp:
-            parse_open_file(fp)
+            self.parse_open_file(fp)
 
 
 class State:
