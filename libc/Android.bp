@@ -129,6 +129,7 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "tzcode/**/*.c",
+        "tzcode/bionic.cpp",
         "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
     ],
 
