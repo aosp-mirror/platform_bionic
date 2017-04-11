@@ -534,12 +534,12 @@ cc_library {
 }
 
 ndk_library {
-    name: "libm.ndk",
+    name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
 }
 
 llndk_library {
-    name: "libm.llndk",
+    name: "libm",
     symbol_file: "libm.map.txt",
 }
