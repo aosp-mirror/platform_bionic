@@ -46,6 +46,30 @@
       "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98972245_d1f6c9c6",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-04-11T22:46:20Z",
+      "side": 1,
+      "message": "Ah, okay.  Sgtm.",
+      "parentUuid": "b09ae196_4eb2028f",
+      "range": {
+        "startLine": 480,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 42
+      },
+      "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
