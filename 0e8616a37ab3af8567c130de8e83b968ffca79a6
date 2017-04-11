@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bda9d245_d4f2f743",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-11T22:22:27Z",
+      "side": 1,
+      "message": "you\u0027ll probably want to look at the next file first, which is where all this file\u0027s code came from.\n\nthis highlighted bit is the meat of the change.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
