@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86c426ba_e6bf043c",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-04-11T22:34:07Z",
+      "side": 1,
+      "message": "Is this to prevent the two CachedProperties from being created in parallel?  Isn\u0027t there already a lock in CachedProperty otherwise?",
+      "range": {
+        "startLine": 480,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 42
+      },
+      "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
