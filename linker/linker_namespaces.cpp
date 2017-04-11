@@ -27,6 +27,7 @@
  */
 
 #include "linker_namespaces.h"
+#include "linker_globals.h"
 #include "linker_soinfo.h"
 #include "linker_utils.h"
 
@@ -58,6 +59,13 @@ bool android_namespace_t::is_accessible(const std::string& file) {
 
 bool android_namespace_t::is_accessible(soinfo* s) {
   auto is_accessible_ftor = [this] (soinfo* si) {
+    // This is workaround for apps hacking into soinfo list.
+    // and inserting their own entries into it. (http://b/37191433)
+    if (!si->has_min_version(3)) {
+      DL_WARN("invalid soinfo version for \"%s\"", si->get_soname());
+      return false;
+    }
+
     if (si->get_primary_namespace() == this) {
       return true;
     }
