@@ -54,6 +54,7 @@
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
+#include "private/ErrnoRestorer.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
@@ -1096,6 +1097,9 @@ static void free_and_unmap_contexts() {
 }
 
 int __system_properties_init() {
+  // This is called from __libc_init_common, and should leave errno at 0 (http://b/37248982).
+  ErrnoRestorer errno_restorer;
+
   if (initialized) {
     list_foreach(contexts, [](context_node* l) { l->reset_access(); });
     return 0;
