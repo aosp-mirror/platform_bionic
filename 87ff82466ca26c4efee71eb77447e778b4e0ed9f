@@ -22,6 +22,30 @@
       "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09ae196_4eb2028f",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-11T22:40:08Z",
+      "side": 1,
+      "message": "no, it\u0027s because i\u0027ve realized that having the lock in CachedProperties is stupid and doesn\u0027t help. i feel like the guy responsible for java.util.Vector.\n\nthis use case is a good example: what you want to know is that you can use the const char* from Get until you\u0027re done with it. so what you really want is your own lock around whatever set of CachedProperty instances you have.\n\nthe linker case in oc-dev is fine because we\u0027re really relying on the linker\u0027s existing lock for this stronger property. and the localtime.c change i uploaded this afternoon is fine because that\u0027s really relying on the existing tzcode lock. but there\u0027s no existing \"logging\" lock here, so we need to introduce one.\n\ni\u0027ll document this in CachedProperty as part of the change that removes its lock.",
+      "parentUuid": "86c426ba_e6bf043c",
+      "range": {
+        "startLine": 480,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 42
+      },
+      "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
