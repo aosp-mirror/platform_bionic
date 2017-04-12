@@ -33,10 +33,11 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-#include "private/bionic_lock.h"
-
+// Cached system property lookup. For code that needs to read the same property multiple times,
+// this class helps optimize those lookups.
 class CachedProperty {
  public:
+  // The lifetime of `property_name` must be greater than that of this CachedProperty.
   CachedProperty(const char* property_name)
     : property_name_(property_name),
       prop_info_(nullptr),
@@ -45,9 +46,10 @@ class CachedProperty {
     cached_value_[0] = '\0';
   }
 
+  // Returns the current value of the underlying system property as cheaply as possible.
+  // The returned pointer is valid until the next call to Get. It is the caller's responsibility
+  // to provide a lock for thread-safety.
   const char* Get() {
-    lock_.lock();
-
     // Do we have a `struct prop_info` yet?
     if (prop_info_ == nullptr) {
       // `__system_property_find` is expensive, so only retry if a property
@@ -67,12 +69,10 @@ class CachedProperty {
       }
     }
 
-    lock_.unlock();
     return cached_value_;
   }
 
  private:
-  Lock lock_;
   const char* property_name_;
   const prop_info* prop_info_;
   uint32_t cached_area_serial_;
