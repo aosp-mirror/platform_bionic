@@ -22,6 +22,213 @@
       "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e42510b2_30b46cfa",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this be better as nullptr? Also the call sites don\u0027t check the return code of make_path.",
+      "range": {
+        "startLine": 78,
+        "startChar": 11,
+        "endLine": 78,
+        "endChar": 13
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ade2fb7_a210a208",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 83,
+        "startChar": 11,
+        "endLine": 83,
+        "endChar": 13
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33880250_69ed544c",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Should this just be deleted?",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 6
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6199a3a8_a9f4df01",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "The code actually computes this twice, is it worth doing it once and verifying that data_offset \u003e index_offset?",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 78
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "266a5d3c_ea7be3dd",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Won\u0027t this abort if it can\u0027t allocate the data?",
+      "range": {
+        "startLine": 139,
+        "startChar": 16,
+        "endLine": 139,
+        "endChar": 37
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "209ca100_5ab98f17",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Would this be better as constexpr? Since it\u0027s a constant.",
+      "range": {
+        "startLine": 154,
+        "startChar": 2,
+        "endLine": 154,
+        "endChar": 14
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c92c5fa_8b4c39d1",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Do you need to verify that index_size is a multiple of struct index_entry_t? Otherwise, you might access past the end of the buffer when looking at the last entry.",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 17
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9088eec4_4d819a05",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "reinterpret_cast?",
+      "range": {
+        "startLine": 163,
+        "startChar": 32,
+        "endLine": 163,
+        "endChar": 55
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f875560b_039bec20",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:03:36Z",
+      "side": 1,
+      "message": "Need to check return value.",
+      "range": {
+        "startLine": 212,
+        "startChar": 15,
+        "endLine": 212,
+        "endChar": 24
+      },
+      "revId": "0e8616a37ab3af8567c130de8e83b968ffca79a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
