@@ -26,7 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#include "../private/libc_logging.h" // Relative path so we can #include this .cpp file for testing.
+// Relative paths so we can #include this .cpp file for testing.
+#include "../private/CachedProperty.h"
+#include "../private/libc_logging.h"
 #include "../private/ScopedPthreadMutexLocker.h"
 
 #include <android/set_abort_message.h>
@@ -46,9 +48,6 @@
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
-
-#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
-#include <sys/_system_properties.h>
 
 // Must be kept in sync with frameworks/base/core/java/android/util/EventLog.java.
 enum AndroidEventLogType {
@@ -477,62 +476,17 @@ static int __libc_open_log_socket() {
   return log_fd;
 }
 
-struct cache {
-  const prop_info* pinfo;
-  uint32_t serial;
-  char c;
-};
+static clockid_t __android_log_clockid() {
+  static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  ScopedPthreadMutexLocker locker(&mutex);
 
-static void refresh_cache(struct cache *cache, const char *key)
-{
-  if (!cache->pinfo) {
-    cache->pinfo = __system_property_find(key);
-    if (!cache->pinfo) {
-      return;
-    }
-  }
-  uint32_t serial = __system_property_serial(cache->pinfo);
-  if (serial == cache->serial) {
-    return;
-  }
-  cache->serial = serial;
+  static CachedProperty ro_logd_timestamp("ro.logd.timestamp");
+  static CachedProperty persist_logd_timestamp("persist.logd.timestamp");
 
-  char buf[PROP_VALUE_MAX];
-  __system_property_read(cache->pinfo, 0, buf);
-  cache->c = buf[0];
-}
+  char ch = persist_logd_timestamp.Get()[0];
+  if (ch == '\0') ch = ro_logd_timestamp.Get()[0];
 
-// Timestamp state generally remains constant, since a change is
-// rare, we can accept a trylock failure gracefully.
-static pthread_mutex_t lock_clockid = PTHREAD_MUTEX_INITIALIZER;
-
-static clockid_t __android_log_clockid()
-{
-  static struct cache r_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
-  static struct cache p_time_cache = { NULL, static_cast<uint32_t>(-1), 0 };
-  char c;
-
-  if (pthread_mutex_trylock(&lock_clockid)) {
-    // We are willing to accept some race in this context
-    if (!(c = p_time_cache.c)) {
-      c = r_time_cache.c;
-    }
-  } else {
-    static uint32_t serial;
-    uint32_t current_serial = __system_property_area_serial();
-    if (current_serial != serial) {
-      refresh_cache(&r_time_cache, "ro.logd.timestamp");
-      refresh_cache(&p_time_cache, "persist.logd.timestamp");
-      serial = current_serial;
-    }
-    if (!(c = p_time_cache.c)) {
-      c = r_time_cache.c;
-    }
-
-    pthread_mutex_unlock(&lock_clockid);
-  }
-
-  return (tolower(c) == 'm') ? CLOCK_MONOTONIC : CLOCK_REALTIME;
+  return (tolower(ch) == 'm') ? CLOCK_MONOTONIC : CLOCK_REALTIME;
 }
 
 struct log_time { // Wire format
