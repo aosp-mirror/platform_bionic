@@ -93,6 +93,30 @@
       "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89a4115b_327bd597",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-12T18:33:01Z",
+      "side": 1,
+      "message": "no. it\u0027s an internal buffer. it\u0027ll return the empty string.",
+      "parentUuid": "29626e6d_1cd4bfde",
+      "range": {
+        "startLine": 486,
+        "startChar": 12,
+        "endLine": 486,
+        "endChar": 40
+      },
+      "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
