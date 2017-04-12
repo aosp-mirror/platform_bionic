@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cabe5146_bfd5ef9c",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T19:13:45Z",
+      "side": 1,
+      "message": "Should this be deleted?",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 6
+      },
+      "revId": "df7008096fd905bdd2007798b13b37e8810bf0c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
