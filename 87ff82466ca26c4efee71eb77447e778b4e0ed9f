@@ -70,6 +70,29 @@
       "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29626e6d_1cd4bfde",
+        "filename": "libc/bionic/libc_logging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-12T18:07:20Z",
+      "side": 1,
+      "message": "Is it ever possible for this to return nullptr?",
+      "range": {
+        "startLine": 486,
+        "startChar": 12,
+        "endLine": 486,
+        "endChar": 40
+      },
+      "revId": "87ff82466ca26c4efee71eb77447e778b4e0ed9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
