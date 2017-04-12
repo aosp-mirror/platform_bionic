@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0945724f_8cc84453",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003966
+      },
+      "writtenOn": "2017-04-12T19:29:06Z",
+      "side": 1,
+      "message": "Please use\n\n  Bug: 37253880\n\ninstead",
+      "revId": "a0fe3f8809ce105992edc59dc16a26f704a1427a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
