@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f0a3af5_4dffa9e5",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-12T21:07:46Z",
+      "side": 0,
+      "message": "this had been useful every time i\u0027d had to debug this code, but i\u0027m struggling to remember the last time i did, so, yeah, it\u0027s probably time to let it go...",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 6
+      },
+      "revId": "735f41afc43bb83ed738be569b50c6039069e611",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
