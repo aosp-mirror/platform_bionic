@@ -34,6 +34,8 @@
 
 #include <unordered_map>
 
+#include "private/libc_logging.h"
+
 #define DL_ERR(fmt, x...) \
     do { \
       __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
