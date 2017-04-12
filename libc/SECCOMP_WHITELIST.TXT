@@ -1,4 +1,5 @@
-# This file is used to populate seccomp's whitelist policy in comination with SYSCALLS.txt.
+# This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
+# Note that the resultant policy is applied only to zygote spawned processes.
 #
 # Each non-blank, non-comment line has the following format:
 #
