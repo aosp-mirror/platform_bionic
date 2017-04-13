@@ -187,6 +187,7 @@ LIBC {
     __sym_ston;
     __system_property_area_serial; # introduced=23
     __system_property_find;
+    __system_property_find_nth;
     __system_property_foreach; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_get;
     __system_property_read;
@@ -1532,7 +1533,6 @@ LIBC_PRIVATE {
 
 LIBC_DEPRECATED {
   global:
-    __system_property_find_nth;
     __system_property_wait_any;
 };
 
