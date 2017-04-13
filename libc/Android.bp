@@ -1019,7 +1019,7 @@ cc_library_static {
             kryo: {
                 srcs: [
                     "arch-arm/krait/bionic/memcpy.S",
-                    "arch-arm/krait/bionic/memset.S",
+                    "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/krait/bionic/strcmp.S",
                     "arch-arm/krait/bionic/__strcat_chk.S",
                     "arch-arm/krait/bionic/__strcpy_chk.S",
