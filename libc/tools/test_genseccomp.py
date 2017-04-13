@@ -24,7 +24,7 @@ class TestGenseccomp(unittest.TestCase):
     return self.get_config(arch)[2]
 
   def test_get_names(self):
-    syscalls = cStringIO.StringIO(textwrap.dedent("""\
+    bionic = cStringIO.StringIO(textwrap.dedent("""\
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
     """))
@@ -33,11 +33,17 @@ int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
 ssize_t     read(int, void*, size_t)        all
     """))
 
-    syscall_files = [syscalls, whitelist]
-    names = genseccomp.get_names(syscall_files, "arm")
-    for f in syscall_files:
-      f.seek(0)
-    names64 = genseccomp.get_names(syscall_files, "arm64")
+    empty = cStringIO.StringIO(textwrap.dedent("""\
+    """))
+
+    names = genseccomp.get_names([bionic, whitelist, empty], "arm")
+    bionic.seek(0)
+    whitelist.seek(0)
+    empty.seek(0)
+    names64 = genseccomp.get_names([bionic, whitelist, empty], "arm64")
+    bionic.seek(0)
+    whitelist.seek(0)
+    empty.seek(0)
 
     self.assertIn("fchown", names64)
     self.assertNotIn("fchown", names)
@@ -45,6 +51,47 @@ ssize_t     read(int, void*, size_t)        all
     self.assertNotIn("_llseek", names64)
     self.assertIn("read", names)
     self.assertIn("read", names64)
+
+    # Blacklist item must be in bionic
+    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+int         fchown2:fchown2(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
+    """))
+    with self.assertRaises(RuntimeError):
+      genseccomp.get_names([bionic, whitelist, blacklist], "arm")
+    bionic.seek(0)
+    whitelist.seek(0)
+    blacklist.seek(0)
+
+    # Test blacklist item is removed
+    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
+    """))
+    names = genseccomp.get_names([bionic, whitelist, blacklist], "arm64")
+    bionic.seek(0)
+    whitelist.seek(0)
+    blacklist.seek(0)
+    self.assertIn("read", names)
+    self.assertNotIn("fchown", names)
+
+    # Blacklist item must not be in whitelist
+    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
+    """))
+    with self.assertRaises(RuntimeError):
+      genseccomp.get_names([empty, whitelist, blacklist], "arm")
+    empty.seek(0)
+    whitelist.seek(0)
+    blacklist.seek(0)
+
+    # No dups in bionic and whitelist
+    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
+    """))
+    with self.assertRaises(RuntimeError):
+      genseccomp.get_names([bionic, whitelist, empty], "arm")
+    bionic.seek(0)
+    whitelist.seek(0)
+    empty.seek(0)
 
   def test_convert_names_to_NRs(self):
     self.assertEquals(genseccomp.convert_names_to_NRs(["open"],
@@ -153,7 +200,10 @@ ssize_t     read(int, void*, size_t)        all
     ssize_t     read(int, void*, size_t)        all
     """))
 
-    syscall_files = [syscalls, whitelist]
+    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+    """))
+
+    syscall_files = [syscalls, whitelist, blacklist]
     output = genseccomp.construct_bpf(syscall_files, "arm", self.get_headers("arm"),
                                       self.get_switches("arm"))
 
