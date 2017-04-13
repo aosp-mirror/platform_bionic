@@ -27,11 +27,22 @@ class SyscallRange(object):
 
 
 def get_names(syscall_files, architecture):
-  syscalls = []
+  syscall_lists = []
   for syscall_file in syscall_files:
     parser = SysCallsTxtParser()
     parser.parse_open_file(syscall_file)
-    syscalls += parser.syscalls
+    syscall_lists.append(parser.syscalls)
+
+  bionic, whitelist, blacklist = syscall_lists[0], syscall_lists[1], syscall_lists[2]
+  for x in blacklist:
+    if not x in bionic:
+      raise RuntimeError("Blacklist item not in bionic - aborting " + str(x))
+
+    if x in whitelist:
+      raise RuntimeError("Blacklist item in whitelist - aborting " + str(x))
+
+  bionic_minus_blacklist = [x for x in bionic if x not in blacklist]
+  syscalls = bionic_minus_blacklist + whitelist
 
   # Select only elements matching required architecture
   syscalls = [x for x in syscalls if architecture in x and x[architecture]]
@@ -47,8 +58,7 @@ def get_names(syscall_files, architecture):
     dups.remove("socketcall")
 
   if len(dups) > 0:
-    print "Duplicate entries found - aborting ", dups
-    exit(-1)
+    raise RuntimeError("Duplicate entries found - aborting " + str(dups))
 
   # Remove remaining duplicates
   return list(set(names))
@@ -188,7 +198,9 @@ def construct_bpf(syscall_files, architecture, header_dir, extra_switches):
   return convert_bpf_to_output(bpf, architecture)
 
 
-ANDROID_SYSCALL_FILES = ["SYSCALLS.TXT", "SECCOMP_WHITELIST.TXT"]
+ANDROID_SYSCALL_FILES = ["SYSCALLS.TXT",
+                         "SECCOMP_WHITELIST.TXT",
+                         "SECCOMP_BLACKLIST.TXT"]
 
 
 POLICY_CONFIGS = [("arm", "kernel/uapi/asm-arm", []),
