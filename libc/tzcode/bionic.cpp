@@ -75,16 +75,34 @@ static char* make_path(const char* path_prefix_variable,
   const char* path_prefix = getenv(path_prefix_variable);
   if (path_prefix == nullptr) {
     fprintf(stderr, "%s: %s not set!\n", __FUNCTION__, path_prefix_variable);
-    return -1;
+    abort();
   }
   char* path;
   if (asprintf(&path, "%s/%s", path_prefix, path_suffix) == -1) {
     fprintf(stderr, "%s: couldn't allocate \"%s/%s\"\n", __FUNCTION__, path_prefix, path_suffix);
-    return -1;
+    abort();
   }
   return path;
 }
 #endif
+
+// byte[12] tzdata_version  -- "tzdata2012f\0"
+// int index_offset
+// int data_offset
+// int zonetab_offset
+struct bionic_tzdata_header_t {
+  char tzdata_version[12];
+  int32_t index_offset;
+  int32_t data_offset;
+  int32_t zonetab_offset;
+};
+static constexpr size_t NAME_LENGTH = 40;
+struct index_entry_t {
+  char buf[NAME_LENGTH];
+  int32_t start;
+  int32_t length;
+  int32_t unused; // Was raw GMT offset; always 0 since tzdata2014f (L).
+};
 
 static int __bionic_open_tzdata_path(const char* path,
                                      const char* olson_id,
@@ -94,17 +112,7 @@ static int __bionic_open_tzdata_path(const char* path,
     return -2; // Distinguish failure to find any data from failure to find a specific id.
   }
 
-  // byte[12] tzdata_version  -- "tzdata2012f\0"
-  // int index_offset
-  // int data_offset
-  // int zonetab_offset
-  struct bionic_tzdata_header {
-    char tzdata_version[12];
-    int32_t index_offset;
-    int32_t data_offset;
-    int32_t zonetab_offset;
-  } header;
-  memset(&header, 0, sizeof(header));
+  bionic_tzdata_header_t header = {};
   ssize_t bytes_read = TEMP_FAILURE_RETRY(read(fd, &header, sizeof(header)));
   if (bytes_read != sizeof(header)) {
     fprintf(stderr, "%s: could not read header of \"%s\": %s\n",
@@ -114,53 +122,47 @@ static int __bionic_open_tzdata_path(const char* path,
   }
 
   if (strncmp(header.tzdata_version, "tzdata", 6) != 0 || header.tzdata_version[11] != 0) {
-    fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n",
-            __FUNCTION__, path, header.tzdata_version);
+    fprintf(stderr, "%s: bad magic in \"%s\": \"%.6s\"\n", __FUNCTION__, path, header.tzdata_version);
     close(fd);
     return -1;
   }
 
-#if 0
-  fprintf(stderr, "version: %s\n", header.tzdata_version);
-  fprintf(stderr, "index_offset = %d\n", ntohl(header.index_offset));
-  fprintf(stderr, "data_offset = %d\n", ntohl(header.data_offset));
-  fprintf(stderr, "zonetab_offset = %d\n", ntohl(header.zonetab_offset));
-#endif
-
   if (TEMP_FAILURE_RETRY(lseek(fd, ntohl(header.index_offset), SEEK_SET)) == -1) {
-    fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n",
-            __FUNCTION__, path, strerror(errno));
+    fprintf(stderr, "%s: couldn't seek to index in \"%s\": %s\n", __FUNCTION__, path, strerror(errno));
+    close(fd);
+    return -1;
+  }
+
+  if (ntohl(header.data_offset) > ntohl(header.index_offset)) {
+    fprintf(stderr, "%s: invalid data and index offsets in \"%s\": %u %u\n",
+            __FUNCTION__, path, ntohl(header.data_offset), ntohl(header.index_offset));
+    close(fd);
+    return -1;
+  }
+  const size_t index_size = ntohl(header.data_offset) - ntohl(header.index_offset);
+  if ((index_size % sizeof(index_entry_t)) != 0) {
+    fprintf(stderr, "%s: invalid index size in \"%s\": %zd\n", __FUNCTION__, path, index_size);
     close(fd);
     return -1;
   }
 
   off_t specific_zone_offset = -1;
-  ssize_t index_size = ntohl(header.data_offset) - ntohl(header.index_offset);
-  char* index = new char[index_size];
+  char* index = reinterpret_cast<char*>(malloc(index_size));
   if (index == nullptr) {
-    fprintf(stderr, "%s: couldn't allocate %zd-byte index for \"%s\"\n",
-            __FUNCTION__, index_size, path);
+    fprintf(stderr, "%s: couldn't allocate %zd-byte index for \"%s\"\n", __FUNCTION__, index_size, path);
     close(fd);
     return -1;
   }
-  if (TEMP_FAILURE_RETRY(read(fd, index, index_size)) != index_size) {
+  if (TEMP_FAILURE_RETRY(read(fd, index, index_size)) != static_cast<ssize_t>(index_size)) {
     fprintf(stderr, "%s: could not read index of \"%s\": %s\n",
             __FUNCTION__, path, (bytes_read == -1) ? strerror(errno) : "short read");
-    delete[] index;
+    free(index);
     close(fd);
     return -1;
   }
 
-  static const size_t NAME_LENGTH = 40;
-  struct index_entry_t {
-    char buf[NAME_LENGTH];
-    int32_t start;
-    int32_t length;
-    int32_t unused; // Was raw GMT offset; always 0 since tzdata2014f (L).
-  };
-
-  size_t id_count = (ntohl(header.data_offset) - ntohl(header.index_offset)) / sizeof(struct index_entry_t);
-  struct index_entry_t* entry = (struct index_entry_t*) index;
+  size_t id_count = index_size / sizeof(index_entry_t);
+  index_entry_t* entry = reinterpret_cast<index_entry_t*>(index);
   for (size_t i = 0; i < id_count; ++i) {
     char this_id[NAME_LENGTH + 1];
     memcpy(this_id, entry->buf, NAME_LENGTH);
@@ -174,7 +176,7 @@ static int __bionic_open_tzdata_path(const char* path,
 
     ++entry;
   }
-  delete[] index;
+  free(index);
 
   if (specific_zone_offset == -1) {
     close(fd);
