@@ -133,7 +133,7 @@ static int __bionic_open_tzdata_path(const char* path,
     return -1;
   }
 
-  if (ntohl(header.data_offset) > ntohl(header.index_offset)) {
+  if (ntohl(header.index_offset) > ntohl(header.data_offset)) {
     fprintf(stderr, "%s: invalid data and index offsets in \"%s\": %u %u\n",
             __FUNCTION__, path, ntohl(header.data_offset), ntohl(header.index_offset));
     close(fd);
