@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a83398db_0982db48",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1132043
+      },
+      "writtenOn": "2017-04-14T18:23:23Z",
+      "side": 1,
+      "message": "was this used for debugging and left here by mistake?\nThis is showing up in stdout and then date returns a message like:\n\n$ date +%s\n__bionic_open_tzdata_path: invalid data and index offsets in \"/system/usr/share/zoneinfo/tzdata\": 30860 24\n33262726",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 87
+      },
+      "revId": "a01cbaa87d5126a7757ecf96dd6b691a60bce283",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
