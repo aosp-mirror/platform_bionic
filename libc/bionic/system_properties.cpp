@@ -501,9 +501,9 @@ class PropertyServiceConnection {
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
     if (TEMP_FAILURE_RETRY(connect(socket_, reinterpret_cast<sockaddr*>(&addr), alen)) == -1) {
+      last_error_ = errno;
       close(socket_);
       socket_ = -1;
-      last_error_ = errno;
     }
   }
 
