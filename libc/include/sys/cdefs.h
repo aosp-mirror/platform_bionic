@@ -256,8 +256,7 @@
  * added to commonly used libc functions. If a buffer overrun is
  * detected, the program is safely aborted.
  *
- * See
- * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
+ * https://android-developers.googleblog.com/2017/04/fortify-in-android.html
  */
 
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)

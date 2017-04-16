@@ -71,15 +71,16 @@
 
 #include "private/bionic_fortify.h"
 
-struct __bionic_zero_size_is_okay_t __bionic_zero_size_is_okay;
-
 //
-// For more details see:
+// For more about FORTIFY see:
+//
+//   https://android-developers.googleblog.com/2017/04/fortify-in-android.html
+//
 //   http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html
 //   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
 //
-// TODO: add a link to similar clang documentation?
-//
+
+struct __bionic_zero_size_is_okay_t __bionic_zero_size_is_okay;
 
 int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_ISSET", fd, set_size);
