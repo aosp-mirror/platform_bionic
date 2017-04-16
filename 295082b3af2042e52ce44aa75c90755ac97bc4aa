@@ -16,6 +16,24 @@
       "revId": "295082b3af2042e52ce44aa75c90755ac97bc4aa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08f8fef8_9105281a",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-16T15:44:14Z",
+      "side": 1,
+      "message": "do you have the .clang-format you used to reformat the linker? if so we should check it in before it starts to diverge again...",
+      "parentUuid": "e7ccc875_a9d3a4a0",
+      "revId": "295082b3af2042e52ce44aa75c90755ac97bc4aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
