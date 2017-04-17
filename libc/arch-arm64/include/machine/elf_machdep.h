@@ -29,20 +29,6 @@
 #ifndef _AARCH64_ELF_MACHDEP_H_
 #define _AARCH64_ELF_MACHDEP_H_
 
-#if defined(__AARCH64EB__)
-#define ELF64_MACHDEP_ENDIANNESS    ELFDATA2MSB
-#else
-#define ELF64_MACHDEP_ENDIANNESS    ELFDATA2LSB
-#endif
-
-#define ELF64_MACHDEP_ID_CASES                      \
-    case EM_AARCH64:                                \
-        break;
-
-#define ELF64_MACHDEP_ID    EM_AARCH64
-
-#define ARCH_ELFSIZE        64  /* MD native binary size */
-
 /* Null relocations */
 #define R_ARM_NONE                      0
 #define R_AARCH64_NONE                  256

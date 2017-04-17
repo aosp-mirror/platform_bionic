@@ -1,21 +1,7 @@
 /*	$NetBSD: elf_machdep.h,v 1.4 2010/03/18 08:28:33 cegger Exp $	*/
 
-#if !defined __i386__
-
-#define	ELF32_MACHDEP_ENDIANNESS	ELFDATA2LSB
-#define	ELF32_MACHDEP_ID_CASES						\
-		case EM_386:						\
-			break;
-
-#define	ELF64_MACHDEP_ENDIANNESS	ELFDATA2LSB
-#define	ELF64_MACHDEP_ID_CASES						\
-		case EM_X86_64:						\
-			break;
-
-#define	ELF32_MACHDEP_ID	EM_386
-#define	ELF64_MACHDEP_ID	EM_X86_64
-
-#define ARCH_ELFSIZE		64	/* MD native binary size */
+#ifndef _X86_64_ELF_MACHDEP_H_
+#define _X86_64_ELF_MACHDEP_H_
 
 /* x86-64 relocations */
 
@@ -50,8 +36,4 @@
 
 #define	R_TYPE(name)	__CONCAT(R_X86_64_,name)
 
-#else	/*	!__i386__	*/
-
-#include <i386/elf_machdep.h>
-
-#endif	/*	!__i386__	*/
+#endif
