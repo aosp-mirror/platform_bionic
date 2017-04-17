@@ -46,6 +46,14 @@ class CachedProperty {
     cached_value_[0] = '\0';
   }
 
+  // Returns true if the property has been updated (based on the serial rather than the value)
+  // since the last call to Get.
+  bool DidChange() {
+    uint32_t initial_property_serial_ = cached_property_serial_;
+    Get();
+    return (cached_property_serial_ != initial_property_serial_);
+  }
+
   // Returns the current value of the underlying system property as cheaply as possible.
   // The returned pointer is valid until the next call to Get. It is the caller's responsibility
   // to provide a lock for thread-safety.
