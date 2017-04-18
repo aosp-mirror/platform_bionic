@@ -3,26 +3,6 @@
 #ifndef _MIPS_ELF_MACHDEP_H_
 #define  _MIPS_ELF_MACHDEP_H_
 
-#ifdef _LP64
-#define ARCH_ELFSIZE		64	/* MD native binary size */
-#else
-#define ARCH_ELFSIZE		32	/* MD native binary size */
-#endif
-
-#if ELFSIZE == 32
-#define	ELF32_MACHDEP_ID_CASES						\
-		case EM_MIPS:						\
-			break;
-
-#define	ELF32_MACHDEP_ID	EM_MIPS
-#elif ELFSIZE == 64
-#define	ELF64_MACHDEP_ID_CASES						\
-		case EM_MIPS:						\
-			break;
-
-#define	ELF64_MACHDEP_ID	EM_MIPS
-#endif
-
 /* mips relocs.  */
 
 #define R_MIPS_NONE		0
@@ -150,8 +130,5 @@
 #define	EF_MIPS_ABI_O64		0x00002000
 #define	EF_MIPS_ABI_EABI32	0x00003000
 #define	EF_MIPS_ABI_EABI64	0x00004000
-
-#define	ELF32_MACHDEP_ENDIANNESS	ELFDATA2LSB
-#define	ELF64_MACHDEP_ENDIANNESS	ELFDATA2LSB
 
 #endif /* _MIPS_ELF_MACHDEP_H_ */
