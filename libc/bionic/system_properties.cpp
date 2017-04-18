@@ -200,15 +200,6 @@ struct prop_info {
   DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
 
-struct find_nth_cookie {
-  uint32_t count;
-  const uint32_t n;
-  const prop_info* pi;
-
-  explicit find_nth_cookie(uint32_t n) : count(0), n(n), pi(nullptr) {
-  }
-};
-
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
 prop_area* __system_property_area__ = nullptr;
 
@@ -657,14 +648,6 @@ static int send_prop_msg(const prop_msg* msg) {
   }
 
   return result;
-}
-
-static void find_nth_fn(const prop_info* pi, void* ptr) {
-  find_nth_cookie* cookie = reinterpret_cast<find_nth_cookie*>(ptr);
-
-  if (cookie->n == cookie->count) cookie->pi = pi;
-
-  cookie->count++;
 }
 
 bool prop_area::foreach_property(prop_bt* const trie,
@@ -1456,20 +1439,19 @@ bool __system_property_wait(const prop_info* pi,
 }
 
 const prop_info* __system_property_find_nth(unsigned n) {
-  if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
-    __libc_fatal(
-        "__system_property_find_nth is not supported since Android O,"
-        " please use __system_property_foreach instead.");
-  }
+  struct find_nth {
+    const uint32_t sought;
+    uint32_t current;
+    const prop_info* result;
 
-  find_nth_cookie cookie(n);
-
-  const int err = __system_property_foreach(find_nth_fn, &cookie);
-  if (err < 0) {
-    return nullptr;
-  }
-
-  return cookie.pi;
+    explicit find_nth(uint32_t n) : sought(n), current(0), result(nullptr) {}
+    static void fn(const prop_info* pi, void* ptr) {
+      find_nth* self = reinterpret_cast<find_nth*>(ptr);
+      if (self->current++ == self->sought) self->result = pi;
+    }
+  } state(n);
+  __system_property_foreach(find_nth::fn, &state);
+  return state.result;
 }
 
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) {
@@ -1479,7 +1461,7 @@ int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie),
 
   list_foreach(contexts, [propfn, cookie](context_node* l) {
     if (l->check_access_and_open()) {
-      l->pa()->foreach (propfn, cookie);
+      l->pa()->foreach(propfn, cookie);
     }
   });
   return 0;
