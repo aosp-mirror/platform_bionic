@@ -178,6 +178,7 @@ typedef struct {
 
 #define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
 
+#define PT_ARM_EXIDX (PT_LOPROC + 1)
 #define PT_GNU_RELRO 0x6474e552
 
 #define STB_LOOS      10
