@@ -316,6 +316,16 @@ configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
 
 
+## DT_RUNPATH support (Available in API level >= 24)
+
+If an ELF file contains a DT_RUNPATH entry, the directories listed there
+will be searched to resolve DT_NEEDED entries. The string `${ORIGIN}` will
+be rewritten at runtime to the directory containing the ELF file. This
+allows the use of relative paths. The `${LIB}` and `${PLATFORM}`
+substitutions supported on some systems are not currently implemented on
+Android.
+
+
 ## Writable and Executable Segments (Enforced for API level >= 26)
 
 Each segment in an ELF file has associated flags that tell the
