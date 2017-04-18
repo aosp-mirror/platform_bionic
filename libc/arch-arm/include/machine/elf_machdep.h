@@ -3,12 +3,6 @@
 #ifndef _ARM_ELF_MACHDEP_H_
 #define _ARM_ELF_MACHDEP_H_
 
-#define ELF32_MACHDEP_ENDIANNESS	ELFDATA2LSB
-
-#define ELF64_MACHDEP_ENDIANNESS	XXX	/* break compilation */
-#define ELF64_MACHDEP_ID_CASES                                          \
-		/* no 64-bit ELF machine types supported */
-
 /* Processor specific flags for the ELF header e_flags field.  */
 #define EF_ARM_RELEXEC		0x00000001
 #define EF_ARM_HASENTRY		0x00000002
@@ -29,14 +23,6 @@
 #define	EF_ARM_EABI_VER3	0x03000000
 #define	EF_ARM_EABI_VER4	0x04000000
 #define	EF_ARM_EABI_VER5	0x05000000
-
-#define	ELF32_MACHDEP_ID_CASES						\
-		case EM_ARM:						\
-			break;
-
-#define	ELF32_MACHDEP_ID	EM_ARM
-
-#define ARCH_ELFSIZE		32	/* MD native binary size */
 
 /* Processor specific relocation types */
 
