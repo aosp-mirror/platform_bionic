@@ -412,7 +412,7 @@ void* memset(void* _Nonnull s, int c, size_t n) __overloadable
 #undef __error_zero_size
 #undef __error_if_overflows_dst
 #else // defined(__clang__)
-extern char* __strncpy_real(char* __restrict, const char*, size_t) __RENAME(strcpy);
+extern char* __strncpy_real(char* __restrict, const char*, size_t) __RENAME(strncpy);
 extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 extern size_t __strlcpy_real(char* __restrict, const char* __restrict, size_t)
     __RENAME(strlcpy);
