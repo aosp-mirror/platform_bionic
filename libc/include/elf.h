@@ -32,9 +32,13 @@
 #include <sys/cdefs.h>
 
 #include <bits/auxvec.h>
+#include <bits/elf_arm.h>
+#include <bits/elf_arm64.h>
+#include <bits/elf_mips.h>
+#include <bits/elf_x86.h>
+#include <bits/elf_x86_64.h>
 #include <linux/elf.h>
 #include <linux/elf-em.h>
-#include <machine/elf_machdep.h>
 
 #define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
 #define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
@@ -178,7 +182,6 @@ typedef struct {
 
 #define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
 
-#define PT_ARM_EXIDX (PT_LOPROC + 1)
 #define PT_GNU_RELRO 0x6474e552
 
 #define STB_LOOS      10
