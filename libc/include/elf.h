@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 
-#include <linux/auxvec.h>
+#include <bits/auxvec.h>
 #include <linux/elf.h>
 #include <linux/elf-em.h>
 #include <machine/elf_machdep.h>
