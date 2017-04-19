@@ -71,8 +71,6 @@
 
 #define R_MIPS_max		51
 
-#define R_TYPE(name)		__CONCAT(R_MIPS_,name)
-
 #define	R_MIPS16_min		100
 #define	R_MIPS16_26		100
 #define	R_MIPS16_GPREL		101
