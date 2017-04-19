@@ -2246,6 +2246,9 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
         if (local_unload_list.contains(child)) {
           continue;
         } else if (child->is_linked() && child->get_local_group_root() != root) {
+          child->get_parents().remove_if([&] (const soinfo* parent) {
+            return parent == si;
+          });
           external_unload_list.push_back(child);
         } else {
           unload_list.push_front(child);
