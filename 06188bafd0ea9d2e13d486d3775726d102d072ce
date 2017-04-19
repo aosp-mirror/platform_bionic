@@ -16,6 +16,24 @@
       "revId": "06188bafd0ea9d2e13d486d3775726d102d072ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19b3e756_820f3bca",
+        "filename": "libc/include/sys/memfd.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-04-19T20:27:53Z",
+      "side": 1,
+      "message": "This is from the linux manpage, and was in a patch to glibc that seems to have not been merged because of CLA issues,\n and the original submitter gave up on submitting it? (https://plus.google.com/+RichardHughes/posts/XhyKPfsFANg)",
+      "parentUuid": "a2ad6a60_d9fb8b55",
+      "revId": "06188bafd0ea9d2e13d486d3775726d102d072ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
