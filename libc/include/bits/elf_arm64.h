@@ -87,6 +87,4 @@
 #define R_AARCH64_TLS_DTPREL32          1031
 #define R_AARCH64_IRELATIVE             1032
 
-#define R_TYPE(name)        __CONCAT(R_AARCH64_,name)
-
 #endif /* _AARCH64_ELF_MACHDEP_H_ */
