@@ -22,6 +22,29 @@
       "revId": "76b9ea13ced808ddba5c6dc3bf0ab1d29d697393",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2e41cb0_896465eb",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-20T23:17:19Z",
+      "side": 1,
+      "message": "am i right in thinking we _don\u0027t_ want any of these that contain \"swab\", but we do want the rest? (since they\u0027re the ones that _don\u0027t_ have a builtin?)",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 23
+      },
+      "revId": "76b9ea13ced808ddba5c6dc3bf0ab1d29d697393",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
