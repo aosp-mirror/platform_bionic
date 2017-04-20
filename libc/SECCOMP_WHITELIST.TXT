@@ -104,3 +104,14 @@ int	rename(const char *oldpath, const char *newpath)	arm,x86,mips
 
 # b/36726183. Note arm does not support mmap
 void*	mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)	x86,mips
+
+# Useful new syscalls which we don't yet use in bionic.
+int sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int flags) all
+int sched_setattr(pid_t pid, struct sched_attr* attr, unsigned int size, unsigned int flags) all
+int memfd_create(const char* name, unsigned int flags) all
+int renameat2(int olddirfd, const char* oldpath, int newdirfd, const char* newpath, unsigned int flags)  all
+int execveat(int dirfd, const char* pathname, char* const* argv, char* const* envp, int flags)  all
+ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, size_t len, unsigned int flags) all
+int mlock2(const void* addr, size_t len, int flags) all
+ssize_t preadv2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
+ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
