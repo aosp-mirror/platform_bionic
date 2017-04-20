@@ -77,7 +77,7 @@ int posix_memalign(void** memptr, size_t alignment, size_t size) __INTRODUCED_IN
 double strtod(const char*, char**);
 long double strtold(const char*, char**) __INTRODUCED_IN(21);
 
-unsigned long strtoul_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
+unsigned long strtoul_l(const char*, char**, int, locale_t) __INTRODUCED_IN(26);
 
 int atoi(const char*) __attribute_pure__;
 long atol(const char*) __attribute_pure__;
@@ -119,7 +119,7 @@ char* ptsname(int);
 int ptsname_r(int, char*, size_t);
 int unlockpt(int);
 
-int getsubopt(char**, char* const*, char**) __INTRODUCED_IN_FUTURE;
+int getsubopt(char**, char* const*, char**) __INTRODUCED_IN(26);
 
 typedef struct {
     int  quot;
@@ -146,7 +146,7 @@ lldiv_t lldiv(long long, long long) __attribute_const__;
 const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char*) __INTRODUCED_IN(21);
 
-int mblen(const char*, size_t) __INTRODUCED_IN_FUTURE __VERSIONER_NO_GUARD;
+int mblen(const char*, size_t) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
 size_t mbstowcs(wchar_t*, const char*, size_t);
 int mbtowc(wchar_t*, const char*, size_t) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
 int wctomb(char*, wchar_t) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
@@ -226,9 +226,9 @@ long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
 #endif
 
 #if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
-float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN_FUTURE;
-long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN_FUTURE;
+double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN(26);
+float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN(26);
+long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN(26);
 #else
 // Implemented as static inlines.
 #endif
