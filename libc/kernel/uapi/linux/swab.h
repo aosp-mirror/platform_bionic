@@ -41,70 +41,115 @@
 #else
 #endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+static inline __attribute__((__const__)) __u32 __fswahw32(__u32 val) {
 #ifdef __arch_swahw32
+  return __arch_swahw32(val);
 #else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return ___constant_swahw32(val);
 #endif
+}
+static inline __attribute__((__const__)) __u32 __fswahb32(__u32 val) {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __arch_swahb32
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return __arch_swahb32(val);
 #else
+  return ___constant_swahb32(val);
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
-#ifdef __HAVE_BUILTIN_BSWAP16__
+}
 #define __swab16(x) (__u16) __builtin_bswap16((__u16) (x))
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#else
-#define __swab16(x) (__builtin_constant_p((__u16) (x)) ? ___constant_swab16(x) : __fswab16(x))
-#endif
-#ifdef __HAVE_BUILTIN_BSWAP32__
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __swab32(x) (__u32) __builtin_bswap32((__u32) (x))
-#else
-#define __swab32(x) (__builtin_constant_p((__u32) (x)) ? ___constant_swab32(x) : __fswab32(x))
-#endif
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#ifdef __HAVE_BUILTIN_BSWAP64__
 #define __swab64(x) (__u64) __builtin_bswap64((__u64) (x))
-#else
-#define __swab64(x) (__builtin_constant_p((__u64) (x)) ? ___constant_swab64(x) : __fswab64(x))
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
 #define __swahw32(x) (__builtin_constant_p((__u32) (x)) ? ___constant_swahw32(x) : __fswahw32(x))
 #define __swahb32(x) (__builtin_constant_p((__u32) (x)) ? ___constant_swahb32(x) : __fswahb32(x))
+static __always_inline __u16 __swab16p(const __u16 * p) {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __arch_swab16p
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return __arch_swab16p(p);
 #else
+  return __swab16(* p);
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+}
+static __always_inline __u32 __swab32p(const __u32 * p) {
 #ifdef __arch_swab32p
-#else
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return __arch_swab32p(p);
+#else
+  return __swab32(* p);
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+}
+static __always_inline __u64 __swab64p(const __u64 * p) {
 #ifdef __arch_swab64p
-#else
-#endif
+  return __arch_swab64p(p);
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#else
+  return __swab64(* p);
+#endif
+}
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+static inline __u32 __swahw32p(const __u32 * p) {
 #ifdef __arch_swahw32p
+  return __arch_swahw32p(p);
 #else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return __swahw32(* p);
 #endif
+}
+static inline __u32 __swahb32p(const __u32 * p) {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __arch_swahb32p
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  return __arch_swahb32p(p);
 #else
+  return __swahb32(* p);
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+}
+static inline void __swab16s(__u16 * p) {
 #ifdef __arch_swab16s
-#else
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __arch_swab16s(p);
+#else
+  * p = __swab16p(p);
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+}
+static __always_inline void __swab32s(__u32 * p) {
 #ifdef __arch_swab32s
-#else
-#endif
+  __arch_swab32s(p);
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#else
+  * p = __swab32p(p);
+#endif
+}
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+static __always_inline void __swab64s(__u64 * p) {
 #ifdef __arch_swab64s
+  __arch_swab64s(p);
 #else
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  * p = __swab64p(p);
 #endif
+}
+static inline void __swahw32s(__u32 * p) {
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __arch_swahw32s
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __arch_swahw32s(p);
 #else
+  * p = __swahw32p(p);
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
+}
+static inline void __swahb32s(__u32 * p) {
 #ifdef __arch_swahb32s
-#else
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+  __arch_swahb32s(p);
+#else
+  * p = __swahb32p(p);
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+}
 #endif
