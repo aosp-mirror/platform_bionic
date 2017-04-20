@@ -61,7 +61,7 @@ int endmntent(FILE*) __INTRODUCED_IN(21);
 struct mntent* getmntent(FILE*);
 struct mntent* getmntent_r(FILE*, struct mntent*, char*, int) __INTRODUCED_IN(21);
 FILE* setmntent(const char*, const char*) __INTRODUCED_IN(21);
-char* hasmntopt(const struct mntent*, const char*) __INTRODUCED_IN_FUTURE;
+char* hasmntopt(const struct mntent*, const char*) __INTRODUCED_IN(26);
 
 __END_DECLS
 

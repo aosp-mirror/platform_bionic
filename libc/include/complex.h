@@ -61,63 +61,63 @@ __BEGIN_DECLS
 /* 7.3.5.1 The cacos functions */
 double complex cacos(double complex) __INTRODUCED_IN(23);
 float complex cacosf(float complex) __INTRODUCED_IN(23);
-long double complex cacosl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex cacosl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.5.2 The casin functions */
 double complex casin(double complex) __INTRODUCED_IN(23);
 float complex casinf(float complex) __INTRODUCED_IN(23);
-long double complex casinl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex casinl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.5.1 The catan functions */
 double complex catan(double complex) __INTRODUCED_IN(23);
 float complex catanf(float complex) __INTRODUCED_IN(23);
-long double complex catanl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex catanl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.5.1 The ccos functions */
 double complex ccos(double complex) __INTRODUCED_IN(23);
 float complex ccosf(float complex) __INTRODUCED_IN(23);
-long double complex ccosl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex ccosl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.5.1 The csin functions */
 double complex csin(double complex) __INTRODUCED_IN(23);
 float complex csinf(float complex) __INTRODUCED_IN(23);
-long double complex csinl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex csinl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.5.1 The ctan functions */
 double complex ctan(double complex) __INTRODUCED_IN(23);
 float complex ctanf(float complex) __INTRODUCED_IN(23);
-long double complex ctanl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex ctanl(long double complex) __INTRODUCED_IN(26);
 
 /* 7.3.6 Hyperbolic functions */
 /* 7.3.6.1 The cacosh functions */
 double complex cacosh(double complex) __INTRODUCED_IN(23);
 float complex cacoshf(float complex) __INTRODUCED_IN(23);
-long double complex cacoshl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex cacoshl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.6.2 The casinh functions */
 double complex casinh(double complex) __INTRODUCED_IN(23);
 float complex casinhf(float complex) __INTRODUCED_IN(23);
-long double complex casinhl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex casinhl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.6.3 The catanh functions */
 double complex catanh(double complex) __INTRODUCED_IN(23);
 float complex catanhf(float complex) __INTRODUCED_IN(23);
-long double complex catanhl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex catanhl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.6.4 The ccosh functions */
 double complex ccosh(double complex) __INTRODUCED_IN(23);
 float complex ccoshf(float complex) __INTRODUCED_IN(23);
-long double complex ccoshl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex ccoshl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.6.5 The csinh functions */
 double complex csinh(double complex) __INTRODUCED_IN(23);
 float complex csinhf(float complex) __INTRODUCED_IN(23);
-long double complex csinhl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex csinhl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.6.6 The ctanh functions */
 double complex ctanh(double complex) __INTRODUCED_IN(23);
 float complex ctanhf(float complex) __INTRODUCED_IN(23);
-long double complex ctanhl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex ctanhl(long double complex) __INTRODUCED_IN(26);
 
 /* 7.3.7 Exponential and logarithmic functions */
 /* 7.3.7.1 The cexp functions */
 double complex cexp(double complex) __INTRODUCED_IN(23);
 float complex cexpf(float complex) __INTRODUCED_IN(23);
-long double complex cexpl(long double complex) __INTRODUCED_IN_FUTURE;
+long double complex cexpl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.7.2 The clog functions */
-double complex clog(double complex) __INTRODUCED_IN_FUTURE;
-float complex clogf(float complex) __INTRODUCED_IN_FUTURE;
-long double complex clogl(long double complex) __INTRODUCED_IN_FUTURE;
+double complex clog(double complex) __INTRODUCED_IN(26);
+float complex clogf(float complex) __INTRODUCED_IN(26);
+long double complex clogl(long double complex) __INTRODUCED_IN(26);
 
 /* 7.3.8 Power and absolute-value functions */
 /* 7.3.8.1 The cabs functions */
@@ -125,9 +125,9 @@ double cabs(double complex) __INTRODUCED_IN(23);
 float cabsf(float complex) __INTRODUCED_IN(23);
 long double cabsl(long double complex) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23);
 /* 7.3.8.2 The cpow functions */
-double complex cpow(double complex, double complex) __INTRODUCED_IN_FUTURE;
-float complex cpowf(float complex, float complex) __INTRODUCED_IN_FUTURE;
-long double complex cpowl(long double complex, long double complex) __INTRODUCED_IN_FUTURE;
+double complex cpow(double complex, double complex) __INTRODUCED_IN(26);
+float complex cpowf(float complex, float complex) __INTRODUCED_IN(26);
+long double complex cpowl(long double complex, long double complex) __INTRODUCED_IN(26);
 /* 7.3.8.3 The csqrt functions */
 double complex csqrt(double complex) __INTRODUCED_IN(23);
 float complex csqrtf(float complex) __INTRODUCED_IN(23);

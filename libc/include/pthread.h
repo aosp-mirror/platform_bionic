@@ -207,7 +207,7 @@ int pthread_spin_unlock(pthread_spinlock_t* _Nonnull) __INTRODUCED_IN(24);
 pthread_t pthread_self(void) __attribute_const__;
 
 #if defined(__USE_GNU)
-int pthread_getname_np(pthread_t, char* _Nonnull, size_t) __INTRODUCED_IN_FUTURE;
+int pthread_getname_np(pthread_t, char* _Nonnull, size_t) __INTRODUCED_IN(26);
 #endif
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t, const char* _Nonnull);
