@@ -58,7 +58,7 @@ const prop_info* __system_property_find(const char* name);
  */
 void __system_property_read_callback(const prop_info *pi,
     void (*callback)(void* cookie, const char *name, const char *value, uint32_t serial),
-    void* cookie) __INTRODUCED_IN_FUTURE;
+    void* cookie) __INTRODUCED_IN(26);
 
 /*
  * Passes a `prop_info` for each system property to the provided
@@ -86,7 +86,7 @@ bool __system_property_wait(const prop_info* pi,
                             uint32_t old_serial,
                             uint32_t* new_serial_ptr,
                             const struct timespec* relative_timeout)
-    __INTRODUCED_IN_FUTURE;
+    __INTRODUCED_IN(26);
 
 /* Deprecated. In Android O and above, there's no limit on property name length. */
 #define PROP_NAME_MAX   32
