@@ -199,6 +199,15 @@ bool ElfReader::ReadElfHeader() {
   return true;
 }
 
+static const char* EM_to_string(int em) {
+  if (em == EM_386) return "EM_386";
+  if (em == EM_AARCH64) return "EM_AARCH64";
+  if (em == EM_ARM) return "EM_ARM";
+  if (em == EM_MIPS) return "EM_MIPS";
+  if (em == EM_X86_64) return "EM_X86_64";
+  return "EM_???";
+}
+
 bool ElfReader::VerifyElfHeader() {
   if (memcmp(header_.e_ident, ELFMAG, SELFMAG) != 0) {
     DL_ERR("\"%s\" has bad ELF magic", name_.c_str());
@@ -244,7 +253,8 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_machine != GetTargetElfMachine()) {
-    DL_ERR("\"%s\" has unexpected e_machine: %d", name_.c_str(), header_.e_machine);
+    DL_ERR("\"%s\" has unexpected e_machine: %d (%s)", name_.c_str(), header_.e_machine,
+           EM_to_string(header_.e_machine));
     return false;
   }
 
