@@ -43,12 +43,12 @@
 
 __BEGIN_DECLS
 
-int semctl(int, int, int, ...) __INTRODUCED_IN_FUTURE;
-int semget(key_t, int, int) __INTRODUCED_IN_FUTURE;
-int semop(int, struct sembuf*, size_t) __INTRODUCED_IN_FUTURE;
+int semctl(int, int, int, ...) __INTRODUCED_IN(26);
+int semget(key_t, int, int) __INTRODUCED_IN(26);
+int semop(int, struct sembuf*, size_t) __INTRODUCED_IN(26);
 
 #if defined(__USE_GNU)
-int semtimedop(int, struct sembuf*, size_t, const struct timespec*) __INTRODUCED_IN_FUTURE;
+int semtimedop(int, struct sembuf*, size_t, const struct timespec*) __INTRODUCED_IN(26);
 #endif
 
 __END_DECLS

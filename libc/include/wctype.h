@@ -55,8 +55,8 @@ wint_t towupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
 // Implemented as static inlines before 21.
 #endif
 
-wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN_FUTURE;
-wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN_FUTURE;
+wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN(26);
+wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN(26);
 
 wctype_t wctype_l(const char*, locale_t) __INTRODUCED_IN(21);
 int iswctype_l(wint_t, wctype_t, locale_t) __INTRODUCED_IN(21);
