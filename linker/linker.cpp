@@ -361,16 +361,14 @@ static bool realpath_fd(int fd, std::string* realpath) {
 //
 // Intended to be called by libc's __gnu_Unwind_Find_exidx().
 _Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
-  uintptr_t addr = reinterpret_cast<uintptr_t>(pc);
-
   for (soinfo* si = solist_get_head(); si != 0; si = si->next) {
-    if ((addr >= si->base) && (addr < (si->base + si->size))) {
+    if ((pc >= si->base) && (pc < (si->base + si->size))) {
         *pcount = si->ARM_exidx_count;
         return reinterpret_cast<_Unwind_Ptr>(si->ARM_exidx);
     }
   }
   *pcount = 0;
-  return nullptr;
+  return 0;
 }
 
 #endif
