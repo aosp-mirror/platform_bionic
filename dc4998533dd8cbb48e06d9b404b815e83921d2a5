@@ -16,6 +16,24 @@
       "revId": "dc4998533dd8cbb48e06d9b404b815e83921d2a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c9d8ddb_53b5db80",
+        "filename": "tests/swab_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-21T19:55:03Z",
+      "side": 1,
+      "message": "I looked and it doesn\u0027t look we do, I\u0027ll remove the #ifs.",
+      "parentUuid": "a367d0c0_394e883a",
+      "revId": "dc4998533dd8cbb48e06d9b404b815e83921d2a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
