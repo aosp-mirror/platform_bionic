@@ -82,7 +82,7 @@ static CompilationRequirements collectRequirements(const Arch& arch, const std::
   std::vector<std::string> headers = collectHeaders(header_dir);
   std::vector<std::string> dependencies = { header_dir };
   if (!dependency_dir.empty()) {
-    auto collect_children = [&dependencies, &dependency_dir](const std::string& dir_path) {
+    auto collect_children = [&dependencies](const std::string& dir_path) {
       DIR* dir = opendir(dir_path.c_str());
       if (!dir) {
         err(1, "failed to open dependency directory '%s'", dir_path.c_str());
@@ -197,9 +197,8 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     }
   } else {
     // Spawn threads.
-    size_t cpu_count = getCpuCount();
     for (size_t i = 0; i < thread_count; ++i) {
-      threads.emplace_back([&jobs, &job_index, &result, &header_dir, vfs, cpu_count, i]() {
+      threads.emplace_back([&jobs, &job_index, &result, vfs]() {
         while (true) {
           size_t idx = job_index++;
           if (idx >= jobs.size()) {
