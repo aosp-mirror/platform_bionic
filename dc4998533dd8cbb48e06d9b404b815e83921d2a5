@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a367d0c0_394e883a",
+        "filename": "tests/swab_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-21T19:48:20Z",
+      "side": 1,
+      "message": "i don\u0027t think we build the tests for the Mac, do we?",
+      "revId": "dc4998533dd8cbb48e06d9b404b815e83921d2a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
