@@ -39,9 +39,9 @@ __BEGIN_DECLS
 typedef void* nl_catd;
 typedef int nl_item;
 
-nl_catd catopen(const char*, int) __INTRODUCED_IN_FUTURE;
-char* catgets(nl_catd, int, int, const char*) __INTRODUCED_IN_FUTURE;
-int catclose(nl_catd) __INTRODUCED_IN_FUTURE;
+nl_catd catopen(const char*, int) __INTRODUCED_IN(26);
+char* catgets(nl_catd, int, int, const char*) __INTRODUCED_IN(26);
+int catclose(nl_catd) __INTRODUCED_IN(26);
 
 __END_DECLS
 

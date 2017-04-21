@@ -91,7 +91,7 @@ int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU)
 ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(16);
-int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN_FUTURE;
+int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN(26);
 #endif
 
 int __open_2(const char*, int) __INTRODUCED_IN(17);

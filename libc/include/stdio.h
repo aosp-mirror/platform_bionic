@@ -227,7 +227,7 @@ int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_li
 int vsscanf(const char* __restrict _Nonnull, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
-char* ctermid(char*) __INTRODUCED_IN_FUTURE;
+char* ctermid(char*) __INTRODUCED_IN(26);
 
 FILE* fdopen(int, const char*);
 int fileno(FILE*);

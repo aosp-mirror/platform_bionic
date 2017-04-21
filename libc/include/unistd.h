@@ -262,8 +262,8 @@ ssize_t __write_chk(int, const void*, size_t, size_t) __INTRODUCED_IN(24);
 ssize_t __readlink_chk(const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
 ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
 
-int getdomainname(char*, size_t) __INTRODUCED_IN_FUTURE;
-int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;
+int getdomainname(char*, size_t) __INTRODUCED_IN(26);
+int setdomainname(const char*, size_t) __INTRODUCED_IN(26);
 
 #if defined(__BIONIC_FORTIFY)
 
