@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddb01ad3_34d5c74d",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-22T01:25:21Z",
+      "side": 1,
+      "message": "not __attribute__((__const__))?",
+      "range": {
+        "startLine": 84,
+        "startChar": 28,
+        "endLine": 84,
+        "endChar": 33
+      },
+      "revId": "b76a8f0dfdf0608b73ce24041cdd4a7b84433317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
