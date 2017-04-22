@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d5e0e3a_d9a94e5b",
+        "filename": "tests/link_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-22T00:27:45Z",
+      "side": 1,
+      "message": "add a check that this is the fist info? in order to avoid situation when test passes for broken dl_iterate_phdr - for example when it returns 0 for everything.",
+      "revId": "5a82fc947fa60b2abf1e941f5ed447a99041114f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "852b9ab2_081a9e54",
+        "filename": "tests/link_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-22T00:27:45Z",
+      "side": 1,
+      "message": "break;",
+      "range": {
+        "startLine": 63,
+        "startChar": 10,
+        "endLine": 63,
+        "endChar": 16
+      },
+      "revId": "5a82fc947fa60b2abf1e941f5ed447a99041114f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
