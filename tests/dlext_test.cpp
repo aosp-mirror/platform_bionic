@@ -24,9 +24,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
 #include <android/dlext.h>
+
+#include <linux/memfd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <sys/vfs.h>
 #include <sys/wait.h>
 
 #include <pagemap/pagemap.h>
@@ -800,6 +804,98 @@ TEST(dlext, ns_smoke) {
   ASSERT_STREQ("This string is from private namespace (dlopened library)", ns_get_dlopened_string2());
 
   dlclose(handle2);
+}
+
+TEST(dlext, dlopen_ext_use_o_tmpfile_fd) {
+  const std::string lib_path = get_testlib_root() + "/libtest_simple.so";
+
+  int tmpfd = TEMP_FAILURE_RETRY(
+        open(get_testlib_root().c_str(), O_TMPFILE | O_CLOEXEC | O_RDWR | O_EXCL));
+
+  // Ignore kernels without O_TMPFILE flag support
+  if (tmpfd == -1 && (errno == EISDIR || errno == EINVAL || errno == EOPNOTSUPP)) {
+    return;
+  }
+
+  ASSERT_TRUE(tmpfd != -1) << strerror(errno);
+
+  android_namespace_t* ns =
+          android_create_namespace("testing-o_tmpfile",
+                                   nullptr,
+                                   get_testlib_root().c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_DL_NOTNULL(ns);
+
+  ASSERT_TRUE(android_link_namespaces(ns, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString(lib_path, &content)) << strerror(errno);
+  ASSERT_TRUE(android::base::WriteStringToFd(content, tmpfd)) << strerror(errno);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_fd = tmpfd;
+  extinfo.library_namespace = ns;
+
+  void* handle = android_dlopen_ext("foobar", RTLD_NOW, &extinfo);
+
+  ASSERT_DL_NOTNULL(handle);
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
+}
+
+TEST(dlext, dlopen_ext_use_memfd) {
+  const std::string lib_path = get_testlib_root() + "/libtest_simple.so";
+
+  // create memfd
+  int memfd = syscall(__NR_memfd_create, "foobar", MFD_CLOEXEC);
+  if (memfd == -1 && errno == ENOSYS) {
+    return;
+  }
+
+  ASSERT_TRUE(memfd != -1) << strerror(errno);
+
+  // Check st.f_type is TMPFS_MAGIC for memfd
+  struct statfs st;
+  ASSERT_TRUE(TEMP_FAILURE_RETRY(fstatfs(memfd, &st)) == 0) << strerror(errno);
+  ASSERT_EQ(static_cast<decltype(st.f_type)>(TMPFS_MAGIC), st.f_type);
+
+  android_namespace_t* ns =
+          android_create_namespace("testing-memfd",
+                                   nullptr,
+                                   get_testlib_root().c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_DL_NOTNULL(ns);
+
+  ASSERT_TRUE(android_link_namespaces(ns, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  // read file into memfd backed one.
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString(lib_path, &content)) << strerror(errno);
+  ASSERT_TRUE(android::base::WriteStringToFd(content, memfd)) << strerror(errno);
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_LIBRARY_FD | ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_fd = memfd;
+  extinfo.library_namespace = ns;
+
+  void* handle = android_dlopen_ext("foobar", RTLD_NOW, &extinfo);
+
+  ASSERT_DL_NOTNULL(handle);
+
+  uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_DL_NOTNULL(taxicab_number);
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
 }
 
 TEST(dlext, ns_symbol_visibilty_one_namespace) {
