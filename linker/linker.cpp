@@ -1539,7 +1539,6 @@ void soinfo::add_child(soinfo* child) {
   }
 
   this->children.push_front(child);
-  child->parents.push_front(this);
 }
 
 void soinfo::remove_all_links() {
