@@ -36,7 +36,6 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/param.h>
-#include <sys/vfs.h>
 #include <unistd.h>
 
 #include <new>
@@ -1191,15 +1190,7 @@ static bool load_library(android_namespace_t* ns,
     return false;
   }
 
-  struct statfs fs_stat;
-  if (TEMP_FAILURE_RETRY(fstatfs(task->get_fd(), &fs_stat)) != 0) {
-    DL_ERR("unable to fstatfs file for the library \"%s\": %s", name, strerror(errno));
-    return false;
-  }
-
-  // do not check accessibility using realpath if fd is located on tmpfs
-  // this enables use of memfd_create() for apps
-  if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
+  if (!ns->is_accessible(realpath)) {
     // TODO(dimitry): workaround for http://b/26394120 - the grey-list
 
     // TODO(dimitry) before O release: add a namespace attribute to have this enabled
