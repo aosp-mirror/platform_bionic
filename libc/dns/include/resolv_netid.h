@@ -34,6 +34,7 @@
  */
 #include <sys/cdefs.h>
 #include <netinet/in.h>
+#include "resolv_params.h"
 #include <stdio.h>
 
 /*
@@ -71,6 +72,7 @@ struct android_net_context {
     unsigned dns_netid;
     unsigned dns_mark;
     uid_t uid;
+    res_send_qhook qhook;
 };
 
 #define NET_CONTEXT_INVALID_UID ((uid_t)-1)
@@ -83,6 +85,7 @@ int android_getaddrinfofornet(const char *, const char *, const struct addrinfo 
  * TODO: consider refactoring android_getaddrinfo_proxy() to serve as an
  * explore_fqdn() dispatch table method, with the below function only making DNS calls.
  */
+struct hostent *android_gethostbyaddrfornetcontext(const void *, socklen_t, int, const struct android_net_context *) __used_in_netd;
 int android_getaddrinfofornetcontext(const char *, const char *, const struct addrinfo *,
     const struct android_net_context *, struct addrinfo **) __used_in_netd;
 
@@ -97,7 +100,7 @@ extern void _resolv_flush_cache_for_net(unsigned netid) __used_in_netd;
 extern void _resolv_delete_cache_for_net(unsigned netid) __used_in_netd;
 
 /* Internal use only. */
-struct hostent *android_gethostbyaddrfornet_proxy(const void *, socklen_t, int , unsigned, unsigned) __LIBC_HIDDEN__;
+struct hostent *android_gethostbyaddrfornetcontext_proxy(const void *, socklen_t, int , const struct android_net_context *) __LIBC_HIDDEN__;
 int android_getnameinfofornet(const struct sockaddr *, socklen_t, char *, size_t, char *, size_t, int, unsigned, unsigned) __LIBC_HIDDEN__;
 FILE* android_open_proxy(void) __LIBC_HIDDEN__;
 
