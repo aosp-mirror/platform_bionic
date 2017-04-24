@@ -827,8 +827,7 @@ gethostbyname_internal(const char *name, int af, res_state res, struct hostent *
 	FILE* proxy = android_open_proxy();
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
-		res_setnetid(res, netcontext->dns_netid);
-		res_setmark(res, netcontext->dns_mark);
+		res_setnetcontext(res, netcontext);
 		return gethostbyname_internal_real(name, af, res, hp, hbuf, hbuflen, errorp);
 	}
 
@@ -1296,8 +1295,7 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		free(buf);
 		return NS_NOTFOUND;
 	}
-	res_setnetid(res, netcontext->dns_netid);
-	res_setmark(res, netcontext->dns_mark);
+	res_setnetcontext(res, netcontext);
 	n = res_nquery(res, qbuf, C_IN, T_PTR, buf->buf, (int)sizeof(buf->buf));
 	if (n < 0) {
 		free(buf);
