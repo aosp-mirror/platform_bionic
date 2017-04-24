@@ -257,6 +257,7 @@ cc_test_library {
         "dl_test.cpp",
         "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
+        "link_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
     static_libs: [
