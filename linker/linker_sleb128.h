@@ -31,6 +31,8 @@
 
 #include <stdint.h>
 
+#include <async_safe/log.h>
+
 #include "linker_debug.h"
 
 // Helper classes for decoding LEB128, used in packed relocation data.
@@ -50,7 +52,7 @@ class sleb128_decoder {
 
     do {
       if (current_ >= end_) {
-        __libc_fatal("sleb128_decoder ran out of bounds");
+        async_safe_fatal("sleb128_decoder ran out of bounds");
       }
       byte = *current_++;
       value |= (static_cast<size_t>(byte & 127) << shift);

@@ -54,12 +54,13 @@
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
+#include <async_safe/log.h>
+
 #include "private/ErrnoRestorer.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_sdk_version.h"
-#include "private/libc_logging.h"
 
 static constexpr int PROP_FILENAME_MAX = 1024;
 
@@ -227,8 +228,8 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
 
   if (context) {
     if (fsetxattr(fd, XATTR_NAME_SELINUX, context, strlen(context) + 1, 0) != 0) {
-      __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                        "fsetxattr failed to set context (%s) for \"%s\"", context, filename);
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "fsetxattr failed to set context (%s) for \"%s\"", context, filename);
       /*
        * fsetxattr() will fail during system properties tests due to selinux policy.
        * We do not want to create a custom policy for the tester, so we will continue in
@@ -640,9 +641,9 @@ static int send_prop_msg(const prop_msg* msg) {
       // ms so callers who do read-after-write can reliably see
       // what they've written.  Most of the time.
       // TODO: fix the system properties design.
-      __libc_format_log(ANDROID_LOG_WARN, "libc",
-                        "Property service has timed out while trying to set \"%s\" to \"%s\"",
-                        msg->name, msg->value);
+      async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                            "Property service has timed out while trying to set \"%s\" to \"%s\"",
+                            msg->name, msg->value);
       result = 0;
     }
   }
@@ -806,7 +807,8 @@ bool context_node::open(bool access_rw, bool* fsetxattr_failed) {
   }
 
   char filename[PROP_FILENAME_MAX];
-  int len = __libc_format_buffer(filename, sizeof(filename), "%s/%s", property_filename, context_);
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", property_filename,
+                                     context_);
   if (len < 0 || len > PROP_FILENAME_MAX) {
     lock_.unlock();
     return false;
@@ -841,7 +843,8 @@ void context_node::reset_access() {
 
 bool context_node::check_access() {
   char filename[PROP_FILENAME_MAX];
-  int len = __libc_format_buffer(filename, sizeof(filename), "%s/%s", property_filename, context_);
+  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", property_filename,
+                                     context_);
   if (len < 0 || len > PROP_FILENAME_MAX) {
     return false;
   }
@@ -864,7 +867,8 @@ void context_node::unmap() {
 static bool map_system_property_area(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
   int len =
-      __libc_format_buffer(filename, sizeof(filename), "%s/properties_serial", property_filename);
+      async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial",
+                               property_filename);
   if (len < 0 || len > PROP_FILENAME_MAX) {
     __system_property_area__ = nullptr;
     return false;
@@ -1152,7 +1156,7 @@ const prop_info* __system_property_find(const char* name) {
 
   prop_area* pa = get_prop_area_for_name(name);
   if (!pa) {
-    __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
     return nullptr;
   }
 
@@ -1184,11 +1188,11 @@ int __system_property_read(const prop_info* pi, char* name, char* value) {
       if (name != nullptr) {
         size_t namelen = strlcpy(name, pi->name, PROP_NAME_MAX);
         if (namelen >= PROP_NAME_MAX) {
-          __libc_format_log(ANDROID_LOG_ERROR, "libc",
-                            "The property name length for \"%s\" is >= %d;"
-                            " please use __system_property_read_callback"
-                            " to read this property. (the name is truncated to \"%s\")",
-                            pi->name, PROP_NAME_MAX - 1, name);
+          async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                                "The property name length for \"%s\" is >= %d;"
+                                " please use __system_property_read_callback"
+                                " to read this property. (the name is truncated to \"%s\")",
+                                pi->name, PROP_NAME_MAX - 1, name);
         }
       }
       return len;
@@ -1239,17 +1243,17 @@ static void detect_protocol_version() {
   char value[PROP_VALUE_MAX];
   if (__system_property_get(kServiceVersionPropertyName, value) == 0) {
     g_propservice_protocol_version = kProtocolVersion1;
-    __libc_format_log(ANDROID_LOG_WARN, "libc",
-                      "Using old property service protocol (\"%s\" is not set)",
-                      kServiceVersionPropertyName);
+    async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                          "Using old property service protocol (\"%s\" is not set)",
+                          kServiceVersionPropertyName);
   } else {
     uint32_t version = static_cast<uint32_t>(atoll(value));
     if (version >= kProtocolVersion2) {
       g_propservice_protocol_version = kProtocolVersion2;
     } else {
-      __libc_format_log(ANDROID_LOG_WARN, "libc",
-                        "Using old property service protocol (\"%s\"=\"%s\")",
-                        kServiceVersionPropertyName, value);
+      async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                            "Using old property service protocol (\"%s\"=\"%s\")",
+                            kServiceVersionPropertyName, value);
       g_propservice_protocol_version = kProtocolVersion1;
     }
   }
@@ -1280,49 +1284,49 @@ int __system_property_set(const char* key, const char* value) {
     PropertyServiceConnection connection;
     if (!connection.IsValid()) {
       errno = connection.GetLastError();
-      __libc_format_log(ANDROID_LOG_WARN,
-                        "libc",
-                        "Unable to set property \"%s\" to \"%s\": connection failed; errno=%d (%s)",
-                        key,
-                        value,
-                        errno,
-                        strerror(errno));
+      async_safe_format_log(ANDROID_LOG_WARN,
+                            "libc",
+                            "Unable to set property \"%s\" to \"%s\": connection failed; errno=%d (%s)",
+                            key,
+                            value,
+                            errno,
+                            strerror(errno));
       return -1;
     }
 
     SocketWriter writer(&connection);
     if (!writer.WriteUint32(PROP_MSG_SETPROP2).WriteString(key).WriteString(value).Send()) {
       errno = connection.GetLastError();
-      __libc_format_log(ANDROID_LOG_WARN,
-                        "libc",
-                        "Unable to set property \"%s\" to \"%s\": write failed; errno=%d (%s)",
-                        key,
-                        value,
-                        errno,
-                        strerror(errno));
+      async_safe_format_log(ANDROID_LOG_WARN,
+                            "libc",
+                            "Unable to set property \"%s\" to \"%s\": write failed; errno=%d (%s)",
+                            key,
+                            value,
+                            errno,
+                            strerror(errno));
       return -1;
     }
 
     int result = -1;
     if (!connection.RecvInt32(&result)) {
       errno = connection.GetLastError();
-      __libc_format_log(ANDROID_LOG_WARN,
-                        "libc",
-                        "Unable to set property \"%s\" to \"%s\": recv failed; errno=%d (%s)",
-                        key,
-                        value,
-                        errno,
-                        strerror(errno));
+      async_safe_format_log(ANDROID_LOG_WARN,
+                            "libc",
+                            "Unable to set property \"%s\" to \"%s\": recv failed; errno=%d (%s)",
+                            key,
+                            value,
+                            errno,
+                            strerror(errno));
       return -1;
     }
 
     if (result != PROP_SUCCESS) {
-      __libc_format_log(ANDROID_LOG_WARN,
-                        "libc",
-                        "Unable to set property \"%s\" to \"%s\": error code: 0x%x",
-                        key,
-                        value,
-                        result);
+      async_safe_format_log(ANDROID_LOG_WARN,
+                            "libc",
+                            "Unable to set property \"%s\" to \"%s\": error code: 0x%x",
+                            key,
+                            value,
+                            result);
       return -1;
     }
 
@@ -1377,7 +1381,7 @@ int __system_property_add(const char* name, unsigned int namelen, const char* va
   prop_area* pa = get_prop_area_for_name(name);
 
   if (!pa) {
-    __libc_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
     return -1;
   }
 

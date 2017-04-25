@@ -167,7 +167,7 @@ extern "C" void* valloc(size_t bytes) {
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <private/libc_logging.h>
+#include <async_safe/log.h>
 #include <sys/system_properties.h>
 
 extern "C" int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
@@ -188,9 +188,9 @@ static ssize_t (*g_debug_malloc_backtrace_func)(void*, uintptr_t*, size_t);
 // Log functions
 // =============================================================================
 #define error_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
 #define info_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
 // =============================================================================
 
 // =============================================================================

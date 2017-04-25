@@ -34,20 +34,20 @@
 
 #include <unordered_map>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 #define DL_ERR(fmt, x...) \
     do { \
-      __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
+      async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
       /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
     } while (false)
 
 #define DL_WARN(fmt, x...) \
     do { \
-      __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
-      __libc_format_fd(2, "WARNING: linker: "); \
-      __libc_format_fd(2, fmt, ##x); \
-      __libc_format_fd(2, "\n"); \
+      async_safe_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
+      async_safe_format_fd(2, "WARNING: linker: "); \
+      async_safe_format_fd(2, fmt, ##x); \
+      async_safe_format_fd(2, "\n"); \
     } while (false)
 
 #define DL_ERR_AND_LOG(fmt, x...) \
