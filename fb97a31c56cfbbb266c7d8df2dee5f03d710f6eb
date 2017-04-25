@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "27f59a5e_1daac7c1",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-25T23:12:27Z",
+      "side": 1,
+      "message": "derp; looks like we\u0027re updating external/clang as a part of this. ignore me. :)",
+      "parentUuid": "87ae9346_d59a8688",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 5
+      },
+      "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ef70acd_a8fb6a85",
         "filename": "tools/versioner/src/Driver.cpp",
         "patchSetId": 1
