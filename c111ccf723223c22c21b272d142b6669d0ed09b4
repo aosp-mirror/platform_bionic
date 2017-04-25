@@ -34,6 +34,24 @@
       "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "955b983f_4d31691e",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-25T02:04:09Z",
+      "side": 1,
+      "message": "they don\u0027t matter in linker code.. linker has its own copy of libc (statically linked).",
+      "parentUuid": "44a4b3a3_50e6d502",
+      "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
