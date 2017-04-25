@@ -16,6 +16,24 @@
       "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a4b3a3_50e6d502",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1096239
+      },
+      "writtenOn": "2017-04-25T02:01:58Z",
+      "side": 1,
+      "message": "L580 is linker_so\u0027s constructor, and I mean the soinfo at L314, it\u0027s constructor is called at L434 in the function __linker_init_post_relocation.",
+      "parentUuid": "e46f68b1_655456e1",
+      "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
