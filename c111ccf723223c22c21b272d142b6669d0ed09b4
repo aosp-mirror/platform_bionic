@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e46f68b1_655456e1",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-25T01:46:41Z",
+      "side": 1,
+      "message": "the constructors have been already called - see L580",
+      "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
