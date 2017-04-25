@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "0d3603d8_f4b415ad",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-25T23:14:26Z",
+      "side": 1,
+      "message": "Nope, we aren\u0027t :(  We are just updating the external/clang in aosp/dev now and will update the prebuilts soon.  We\u0027ll update the external/clang in aosp/master (which is used for RenderScript and also header-abi-dumper) in the near future, but not immediately.",
+      "parentUuid": "27f59a5e_1daac7c1",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 5
+      },
+      "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ef70acd_a8fb6a85",
         "filename": "tools/versioner/src/Driver.cpp",
         "patchSetId": 1
