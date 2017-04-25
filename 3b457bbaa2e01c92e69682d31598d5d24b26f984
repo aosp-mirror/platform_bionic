@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5e6664c5_3863f382",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-25T19:51:32Z",
+      "side": 1,
+      "message": "How many devices did you test this on? I\u0027m worried that this increase is not consistent across all devices.",
+      "range": {
+        "startLine": 517,
+        "startChar": 0,
+        "endLine": 518,
+        "endChar": 60
+      },
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9ba6a1b_1c0da97f",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
