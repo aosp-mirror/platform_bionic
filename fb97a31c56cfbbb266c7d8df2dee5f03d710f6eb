@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "015c3c36_7f0a7edf",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-25T22:45:49Z",
+      "side": 1,
+      "message": "This update is to the dev branch which also builds bionic, and has alloc_size available now.  But it\u0027s not ready to be pushed to the platform yet.  We can delete these lines once we push prebuilts to the platform.\n\nYi, please put a comment here as well as in Driver/versioner.cpp that there is pending clean up once the prebuilts are updated.",
+      "parentUuid": "4dbc2c44_93e19070",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 5
+      },
+      "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ef70acd_a8fb6a85",
         "filename": "tools/versioner/src/Driver.cpp",
         "patchSetId": 1
