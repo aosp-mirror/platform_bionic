@@ -22,6 +22,47 @@
       "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87ae9346_d59a8688",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-25T22:45:42Z",
+      "side": 1,
+      "message": "my only concern with that would be users of external/clang (e.g. header-abi-dumper). if that\u0027s still at r275480, then it looks like that\u0027ll bump up against an attribute its never seen. \n\ni\u0027m pretty sure that it won\u0027t be a problem, since clang is generally good at gracefully ignoring unknown attributes, but it\u0027s something we should probably verify.",
+      "parentUuid": "4dbc2c44_93e19070",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 5
+      },
+      "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ef70acd_a8fb6a85",
+        "filename": "tools/versioner/src/Driver.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-04-25T22:45:42Z",
+      "side": 1,
+      "message": "looks like the indent got messed up here",
+      "revId": "fb97a31c56cfbbb266c7d8df2dee5f03d710f6eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
