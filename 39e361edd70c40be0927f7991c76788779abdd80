@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cabea6ee_c85f4084",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-04-26T08:24:36Z",
+      "side": 1,
+      "message": "You didn\u0027t handle Pirama\u0027s comment for this issue. Please add a similar comment about removing this once the bug is closed.",
+      "revId": "39e361edd70c40be0927f7991c76788779abdd80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae3e1e82_e6cc440c",
+        "filename": "tools/versioner/src/Driver.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-04-26T08:24:36Z",
+      "side": 1,
+      "message": "I think that bionic follows the 2 spaces before a comment rule, but I also think that it would be better to just put this on a separate line.",
+      "revId": "39e361edd70c40be0927f7991c76788779abdd80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
