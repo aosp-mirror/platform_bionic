@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8491bd86_3db72784",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2017-04-26T14:54:47Z",
+      "side": 1,
+      "message": "Is that guaranteed to be the case? I can imagine it being possible that there are no more pages mapped from the library after the relro section, if there\u0027s no r/w data.",
+      "revId": "b4036d3a99ae4beaffe000b41ca17d89f18c5cf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
