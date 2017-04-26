@@ -16,6 +16,24 @@
       "revId": "b4036d3a99ae4beaffe000b41ca17d89f18c5cf0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5cdee0b_587ffc04",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T23:06:32Z",
+      "side": 1,
+      "message": "I think it\u0027s the libdlext_test.so maintainer\u0027s responsibility to manage this. There is no guarantee that a library contains RELRO right? We can tweak the libdlext_test.so build config to achieve this.",
+      "parentUuid": "8491bd86_3db72784",
+      "revId": "b4036d3a99ae4beaffe000b41ca17d89f18c5cf0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
