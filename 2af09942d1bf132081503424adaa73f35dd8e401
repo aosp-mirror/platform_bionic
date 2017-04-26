@@ -51,6 +51,24 @@
       "revId": "2af09942d1bf132081503424adaa73f35dd8e401",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddffd802_e7abb793",
+        "filename": "tools/versioner/src/Driver.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-26T17:38:30Z",
+      "side": 1,
+      "message": "Actually versioner is building against external/llvm of the aosp/master branch.  That won\u0027t be fixed until we fix b/35936936 or make versioner link against prebuilt libLLVM.so as Steve suggested.\n\nb/37423073 will just update the prebuilts in prebuilts/clang/host/*",
+      "parentUuid": "e63b776d_36e3cc3f",
+      "revId": "2af09942d1bf132081503424adaa73f35dd8e401",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
