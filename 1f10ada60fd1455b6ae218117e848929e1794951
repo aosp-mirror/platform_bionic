@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2b8b9a03_8739e148",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1796,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-26T22:34:34Z",
+      "side": 1,
+      "message": "I created a libasync_safe_log. I like the shorter name, but if you really like the logging name, I could do it.",
+      "parentUuid": "c24f9ee5_42addbe8",
+      "range": {
+        "startLine": 1796,
+        "startChar": 3,
+        "endLine": 1796,
+        "endChar": 11
+      },
+      "revId": "1f10ada60fd1455b6ae218117e848929e1794951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff8e5fd3_839e4d48",
         "filename": "libc/Android.bp",
         "patchSetId": 3
@@ -60,6 +84,24 @@
       "writtenOn": "2017-04-26T00:31:46Z",
       "side": 1,
       "message": "we only want to export one header file, so i think we need to move the header file (and the source, and the .bp) into its own directory (similar to the seccomp library).",
+      "revId": "1f10ada60fd1455b6ae218117e848929e1794951",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "703961e3_97ea953a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1807,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-04-26T22:34:34Z",
+      "side": 1,
+      "message": "I moved this to a separate directory. I\u0027m not sure that I\u0027ve chosen the best way to do this, so let me know what you think.",
+      "parentUuid": "ff8e5fd3_839e4d48",
       "revId": "1f10ada60fd1455b6ae218117e848929e1794951",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
