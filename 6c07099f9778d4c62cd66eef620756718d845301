@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9068a459_ba2ae428",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-26T17:42:37Z",
+      "side": 1,
+      "message": "You can refer to the bug for the rebase here (b/37423073).",
+      "revId": "6c07099f9778d4c62cd66eef620756718d845301",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
