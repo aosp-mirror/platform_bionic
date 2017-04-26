@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08ae980c_e163b97a",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-26T05:24:24Z",
+      "side": 1,
+      "message": "Can you leave a comment here that this can be deleted once we update the prebuilts?  Unlike the versioner change, we don\u0027t need to wait for the aosp/master rebase here.",
+      "revId": "2af09942d1bf132081503424adaa73f35dd8e401",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48183058_31c13f2d",
+        "filename": "tools/versioner/src/Driver.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2017-04-26T05:24:24Z",
+      "side": 1,
+      "message": "Can you leave a comment here to delete this once b/35936936 is fixed?\n\nPS: b/35936936 will probably be re-targeted to r300080 now.",
+      "revId": "2af09942d1bf132081503424adaa73f35dd8e401",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
