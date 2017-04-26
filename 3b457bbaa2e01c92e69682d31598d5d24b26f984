@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1340eb5b_1754c6cd",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T06:13:43Z",
+      "side": 1,
+      "message": "\u003e How many devices did you test this on? I\u0027m worried that this increase is not consistent across all devices.\n\nTest on 4 devices: Nexus Player (arm, x86), Pixel (arm, arm64), Nexus 5X (arm, arm64) and Nexus 6P (arm, arm64).\n\nThe memory usage and saving is based on libdlext_test.so which is the same for all devices (same ISA I mean), so the result should be the same.",
+      "parentUuid": "5e6664c5_3863f382",
+      "range": {
+        "startLine": 517,
+        "startChar": 0,
+        "endLine": 518,
+        "endChar": 60
+      },
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9ba6a1b_1c0da97f",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "d8c0a425_4718413e",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T06:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9ba6a1b_1c0da97f",
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02b7a4d4_4cce14a6",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2017-04-25T18:12:49Z",
       "side": 1,
       "message": "android::base::EndsWith()?",
+      "range": {
+        "startLine": 543,
+        "startChar": 8,
+        "endLine": 543,
+        "endChar": 14
+      },
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6c3b259_d0b8ecd8",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T06:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02b7a4d4_4cce14a6",
       "range": {
         "startLine": 543,
         "startChar": 8,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "fbd4cfbd_e893fe13",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T06:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edfa9a5b_93f9e356",
+      "range": {
+        "startLine": 548,
+        "startChar": 41,
+        "endLine": 548,
+        "endChar": 57
+      },
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7539787e_d91d9d82",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 2
@@ -99,6 +189,30 @@
       "writtenOn": "2017-04-25T18:12:49Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 549,
+        "startChar": 8,
+        "endLine": 549,
+        "endChar": 14
+      },
+      "revId": "3b457bbaa2e01c92e69682d31598d5d24b26f984",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f67afa8_a5721bd0",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1104175
+      },
+      "writtenOn": "2017-04-26T06:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7539787e_d91d9d82",
       "range": {
         "startLine": 549,
         "startChar": 8,
