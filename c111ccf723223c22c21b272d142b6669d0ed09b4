@@ -52,6 +52,24 @@
       "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4de2ec93_f7f192a6",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1096239
+      },
+      "writtenOn": "2017-04-26T03:45:26Z",
+      "side": 1,
+      "message": "L434 is call the constructor of somain, which is the main executable\u0027s soinfo, see L320, L373.\n\nexit() will call the  destructor of somain. this could make an Crash.",
+      "parentUuid": "955b983f_4d31691e",
+      "revId": "c111ccf723223c22c21b272d142b6669d0ed09b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
