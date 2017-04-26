@@ -42,6 +42,7 @@
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
+#include <llvm/Config/config.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
@@ -237,7 +238,14 @@ void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
   }
 
   clang::CompilerInstance Compiler;
+
+// Remove the workaround once b/35936936 is fixed.
+#if LLVM_VERSION_MAJOR >= 5
+  Compiler.setInvocation(std::move(invocation));
+#else
   Compiler.setInvocation(invocation.release());
+#endif
+
   Compiler.setDiagnostics(diags.get());
   Compiler.setVirtualFileSystem(vfs);
 
