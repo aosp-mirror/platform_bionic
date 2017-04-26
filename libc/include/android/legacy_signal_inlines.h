@@ -41,6 +41,25 @@ sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
 
 #if __ANDROID_API__ < __ANDROID_API_L__
 
+/* These weren't introduced until L. */
+int __libc_current_sigrtmax() __attribute__((__weak__)) __VERSIONER_NO_GUARD;
+int __libc_current_sigrtmin() __attribute__((__weak__)) __VERSIONER_NO_GUARD;
+
+static __inline int __ndk_legacy___libc_current_sigrtmax() {
+  if (__libc_current_sigrtmax) return __libc_current_sigrtmax();
+  return __SIGRTMAX; /* Should match __libc_current_sigrtmax. */
+}
+
+static __inline int __ndk_legacy___libc_current_sigrtmin() {
+  if (__libc_current_sigrtmin) return __libc_current_sigrtmin();
+  return __SIGRTMIN + 4; /* Should match __libc_current_sigrtmin. */
+}
+
+#undef SIGRTMAX
+#define SIGRTMAX __ndk_legacy___libc_current_sigrtmax()
+#undef SIGRTMIN
+#define SIGRTMIN __ndk_legacy___libc_current_sigrtmin()
+
 static __inline int sigismember(const sigset_t *set, int signum) {
   /* Signal numbers start at 1, but bit positions start at 0. */
   int bit = signum - 1;
