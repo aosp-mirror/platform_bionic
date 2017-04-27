@@ -34,5 +34,7 @@
 // __SIGRTMIN + 3 is reserved for triggering native stack dumps.
 
 int __libc_current_sigrtmin(void) {
+  // If you change this, also change __ndk_legacy___libc_current_sigrtmin
+  // in <android/legacy_signal_inlines.h> to match.
   return __SIGRTMIN + 4;
 }

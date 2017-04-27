@@ -131,6 +131,11 @@ _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
 }
 #endif
 
+/*
+ * This needs to be defined as weak because it is also defined in libc.a.
+ * Without this, static executables will have a multiple definition error.
+ */
+__attribute__((__weak__))
 int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data), void* data) {
   return __loader_dl_iterate_phdr(cb, data);
 }
