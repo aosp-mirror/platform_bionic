@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "539d5f2b_b51d3491",
+        "filename": "libc/async_safe_log/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-27T15:54:30Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "bc925315a698b03455a0562cbde52b41bf8c99a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00fa8368_252779e5",
+        "filename": "libc/async_safe_log/include/async_safe_log.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-27T15:54:30Z",
+      "side": 1,
+      "message": "i think for the style, this file should be \u003casync_safe_log/log.h\u003e. no exported .h files at the top level.",
+      "revId": "bc925315a698b03455a0562cbde52b41bf8c99a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "836bac1d_82236cb0",
+        "filename": "libc/async_safe_log/include/async_safe_log.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-27T15:54:30Z",
+      "side": 1,
+      "message": "if we\u0027re exporting all this stuff, we should probably lose the __.\n\nand shouldn\u0027t this be async_safe_* or async_safe::*?\n\n\"safe_fatal\" in particular sounds crazy.",
+      "range": {
+        "startLine": 68,
+        "startChar": 16,
+        "endLine": 68,
+        "endChar": 18
+      },
+      "revId": "bc925315a698b03455a0562cbde52b41bf8c99a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df259790_6e9efa88",
+        "filename": "libc/bionic/assert.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-04-27T15:54:30Z",
+      "side": 1,
+      "message": "should libc just stay as it was? private/libc_logging.h can #define or whatever. for libc, the \"async safe\" part is an implementation detail.",
+      "revId": "bc925315a698b03455a0562cbde52b41bf8c99a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
