@@ -266,7 +266,7 @@ TEST(sys_ptrace, watchpoint_imprecise) {
   ASSERT_EQ(0, sigaction(SIGALRM, &action, &oldaction)) << strerror(errno);
   alarm(5);
 
-  run_watchpoint_test<Uint128_t>(watchpoint_imprecise_child, 8, 8);
+  run_watchpoint_test<Uint128_t>(watchpoint_imprecise_child, 8, sizeof(void*));
 
   ASSERT_EQ(0, sigaction(SIGALRM, &oldaction, nullptr)) << strerror(errno);
 }
