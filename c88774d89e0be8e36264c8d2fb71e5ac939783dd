@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f8ddcd7_f927b7b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-27T18:21:14Z",
+      "side": 1,
+      "message": "missing \"cherry-picked from \" line.\n\nyou can use \"git cherry-pick -x ...\" to have git automatically generate that line",
+      "revId": "c88774d89e0be8e36264c8d2fb71e5ac939783dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
