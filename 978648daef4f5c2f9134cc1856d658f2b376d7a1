@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39703c09_780dd07f",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-04-27T00:03:42Z",
+      "side": 1,
+      "message": "strcmp(...) \u003d\u003d 0?",
+      "range": {
+        "startLine": 546,
+        "startChar": 55,
+        "endLine": 546,
+        "endChar": 89
+      },
+      "revId": "978648daef4f5c2f9134cc1856d658f2b376d7a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
