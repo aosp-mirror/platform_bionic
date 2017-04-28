@@ -2076,10 +2076,18 @@ ndk_headers {
 }
 
 ndk_headers {
-    name: "libc_android",
+    name: "libc_kernel_android_uapi_linux",
     from: "kernel/android/uapi/linux",
     to: "linux",
     srcs: ["kernel/android/uapi/linux/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
+    name: "libc_kernel_android_scsi",
+    from: "kernel/android/scsi",
+    to: "scsi",
+    srcs: ["kernel/android/scsi/**/*.h"],
     license: "NOTICE",
 }
 
