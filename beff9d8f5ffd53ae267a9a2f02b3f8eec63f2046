@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7485b219_62e33729",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-04-29T02:37:08Z",
+      "side": 1,
+      "message": "uses a prebuilt version of clang",
+      "range": {
+        "startLine": 448,
+        "startChar": 13,
+        "endLine": 448,
+        "endChar": 43
+      },
+      "revId": "beff9d8f5ffd53ae267a9a2f02b3f8eec63f2046",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
