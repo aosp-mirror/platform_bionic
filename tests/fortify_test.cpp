@@ -219,7 +219,6 @@ TEST_F(DEATHTEST, memchr_fortified2) {
 #endif // __BIONIC__
 }
 
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcpy_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
@@ -231,7 +230,6 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
 #endif // __BIONIC__
 }
 
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcat_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
