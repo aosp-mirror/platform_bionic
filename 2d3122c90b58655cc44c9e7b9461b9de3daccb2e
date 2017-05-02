@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fd9f513_656db63f",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-05-02T21:55:19Z",
+      "side": 1,
+      "message": "Remove the ! and remove the #else and then this just works for both the old and new, right?",
+      "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
