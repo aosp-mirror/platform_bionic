@@ -34,6 +34,24 @@
       "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e034d60f_bd682e40",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-05-02T22:02:04Z",
+      "side": 1,
+      "message": "Yeah, I was thinking\n\n    #ifdef __clang__ \u0026\u0026 __has_attribute(alloc_size)\n    TEST_F(DEATHTEST, sprintf_malloc_fortified) {\n    ...\n    #endif\n\nThat way the test gets built if we support it and skipped if we don\u0027t. I think I was too concise in trying to explain that previously. Or I\u0027m misunderstanding something.",
+      "parentUuid": "90d21ae7_de1e1b17",
+      "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
