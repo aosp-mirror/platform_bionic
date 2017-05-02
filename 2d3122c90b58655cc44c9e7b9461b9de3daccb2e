@@ -70,6 +70,24 @@
       "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfe63def_3a9d5f10",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-05-02T22:20:59Z",
+      "side": 1,
+      "message": "I thought the answer was \"no\" now, but if I\u0027m wrong on that then yeah, ignore me :)",
+      "parentUuid": "07850dfe_37a2847f",
+      "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
