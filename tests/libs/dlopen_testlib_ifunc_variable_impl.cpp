@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,52 +14,40 @@
  * limitations under the License.
  */
 
+#include <dlfcn.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static int g_flag = 0;
+static uintptr_t g_flag = 0;
 
 static void __attribute__((constructor)) init_flag() {
-  g_flag = 1;
+  g_flag = reinterpret_cast<uintptr_t>(dlsym(RTLD_DEFAULT, "dlsym"));
 }
 
 static const char* is_ctor_called() __attribute__ ((ifunc("is_ctor_called_ifun")));
 
-const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
+extern "C" const char* foo() __attribute__ ((ifunc ("foo_ifunc")));
 
 // Static linker creates GLOBAL/IFUNC symbol and JUMP_SLOT relocation type for plt segment
-const char* is_ctor_called_jump_slot() __attribute__ ((ifunc("is_ctor_called_ifun")));
+extern "C" const char* is_ctor_called_jump_slot() __attribute__ ((ifunc("is_ctor_called_ifun")));
 
-const char* is_ctor_called_irelative() {
+extern "C" const char* is_ctor_called_irelative() {
   // Call internal ifunc-resolved function with IRELATIVE reloc
   return is_ctor_called();
 }
 
-const char* return_true() {
-  return "true";
+extern "C" const char* var_true = "true";
+extern "C" const char* var_false = "false";
+
+extern "C" const char* v1 = "unset";
+extern "C" const char* v2 = "set";
+
+extern "C" void* is_ctor_called_ifun() {
+  return g_flag == 0 ? &var_false : &var_true;
 }
 
-const char* return_false() {
-  return "false";
-}
-
-const char* f1() {
-  return "unset";
-}
-
-const char* f2() {
-  return "set";
-}
-
-void* is_ctor_called_ifun() {
-  return g_flag == 0 ? return_false : return_true;
-}
-
-void* foo_ifunc() {
+extern "C" void* foo_ifunc() {
    char* choice = getenv("IFUNC_CHOICE");
-   return choice == NULL ? f1 : f2;
-}
-
-const char* foo_library() {
-   return foo();
+   return choice == NULL ? &v1 : &v2;
 }
