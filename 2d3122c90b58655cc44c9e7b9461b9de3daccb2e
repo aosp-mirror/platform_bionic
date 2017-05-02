@@ -16,6 +16,24 @@
       "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90d21ae7_de1e1b17",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-05-02T21:58:49Z",
+      "side": 1,
+      "message": "No, alloc_size only appears in the new clang that Yi is testing. The problem is that this is going to cause a breakage because of the #error. We don\u0027t want to have another project as part of the multi-commit if we can help it.",
+      "parentUuid": "3fd9f513_656db63f",
+      "revId": "2d3122c90b58655cc44c9e7b9461b9de3daccb2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
