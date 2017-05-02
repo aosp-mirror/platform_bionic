@@ -445,6 +445,12 @@ static void usage(bool help = false) {
   }
 }
 
+// versioner uses a prebuilt version of clang, which is not up-to-date wrt/
+// container annotations. So disable container overflow checking. b/37775238
+extern "C" const char* __asan_default_options() {
+  return "detect_container_overflow=0";
+}
+
 int main(int argc, char** argv) {
   std::string cwd = getWorkingDir() + "/";
   bool default_args = true;
