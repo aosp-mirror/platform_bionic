@@ -26,6 +26,7 @@
 #include <unistd.h>
 
 #include <android/dlext.h>
+#include <android-base/strings.h>
 
 #include <linux/memfd.h>
 #include <sys/mman.h>
@@ -464,7 +465,8 @@ protected:
     EXPECT_EQ(1729U, *taxicab_number);
   }
 
-  void SpawnChildrenAndMeasurePss(const char* lib, bool share_relro, size_t* pss_out);
+  void SpawnChildrenAndMeasurePss(const char* lib, const char* relro_file, bool share_relro,
+                                  size_t* pss_out);
 
   android_dlextinfo extinfo_;
 };
@@ -510,19 +512,23 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   ASSERT_NOERROR(pipe(pipefd));
 
   size_t without_sharing, with_sharing;
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, false, &without_sharing));
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, true, &with_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.filename, false, &without_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.filename, true, &with_sharing));
+  ASSERT_LT(with_sharing, without_sharing);
 
-  // We expect the sharing to save at least 10% of the total PSS. In practice
-  // it saves 40%+ for this test.
-  size_t expected_size = without_sharing - (without_sharing/10);
-  EXPECT_LT(with_sharing, expected_size);
+  // We expect the sharing to save at least 50% of the library's total PSS.
+  // In practice it saves 80%+ for this library in the test.
+  size_t pss_saved = without_sharing - with_sharing;
+  size_t expected_min_saved = without_sharing / 2;
+
+  EXPECT_LT(expected_min_saved, pss_saved);
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
 }
 
-void getPss(pid_t pid, size_t* pss_out) {
+void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pid,
+            size_t* total_pss) {
   pm_kernel_t* kernel;
   ASSERT_EQ(0, pm_kernel_create(&kernel));
 
@@ -533,21 +539,28 @@ void getPss(pid_t pid, size_t* pss_out) {
   size_t num_maps;
   ASSERT_EQ(0, pm_process_maps(process, &maps, &num_maps));
 
-  size_t total_pss = 0;
-  for (size_t i = 0; i < num_maps; i++) {
-    pm_memusage_t usage;
-    ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
-    total_pss += usage.pss;
+  // Calculate total PSS of the library.
+  *total_pss = 0;
+  bool saw_relro_file = false;
+  for (size_t i = 0; i < num_maps; ++i) {
+    if (android::base::EndsWith(maps[i]->name, lib) || strcmp(maps[i]->name, relro_file) == 0) {
+      if (strcmp(maps[i]->name, relro_file) == 0) saw_relro_file = true;
+
+      pm_memusage_t usage;
+      ASSERT_EQ(0, pm_map_usage(maps[i], &usage));
+      *total_pss += usage.pss;
+    }
   }
-  *pss_out = total_pss;
 
   free(maps);
   pm_process_destroy(process);
   pm_kernel_destroy(kernel);
+
+  if (shared_relro) ASSERT_TRUE(saw_relro_file);
 }
 
-void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool share_relro,
-                                                       size_t* pss_out) {
+void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, const char* relro_file,
+                                                       bool share_relro, size_t* pss_out) {
   const int CHILDREN = 20;
 
   // Create children
@@ -600,11 +613,11 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, bool sha
     childpipe[i] = parent_done_pipe[1];
   }
 
-  // Sum the PSS of all the children
+  // Sum the PSS of tested library of all the children
   size_t total_pss = 0;
   for (int i=0; i<CHILDREN; ++i) {
     size_t child_pss;
-    ASSERT_NO_FATAL_FAILURE(getPss(child_pids[i], &child_pss));
+    ASSERT_NO_FATAL_FAILURE(GetPss(share_relro, lib, relro_file, child_pids[i], &child_pss));
     total_pss += child_pss;
   }
   *pss_out = total_pss;
