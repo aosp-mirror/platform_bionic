@@ -16,6 +16,24 @@
       "revId": "36c19aea13dbb62e7c89253befae9c0f1a6c2316",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02b983cf_b3c74e00",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-03T02:00:23Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "7ee8b9e0_47e108fa",
+      "revId": "36c19aea13dbb62e7c89253befae9c0f1a6c2316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
