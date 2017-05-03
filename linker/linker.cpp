@@ -2182,17 +2182,35 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
-  ns->set_ld_library_paths(std::move(ld_library_paths));
-  ns->set_default_library_paths(std::move(default_library_paths));
-  ns->set_permitted_paths(std::move(permitted_paths));
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
+    // append parent namespace paths.
+    std::copy(parent_namespace->get_ld_library_paths().begin(),
+              parent_namespace->get_ld_library_paths().end(),
+              back_inserter(ld_library_paths));
+
+    std::copy(parent_namespace->get_default_library_paths().begin(),
+              parent_namespace->get_default_library_paths().end(),
+              back_inserter(default_library_paths));
+
+    std::copy(parent_namespace->get_permitted_paths().begin(),
+              parent_namespace->get_permitted_paths().end(),
+              back_inserter(permitted_paths));
+
     // If shared - clone the parent namespace
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
+    // and copy parent namespace links
+    for (auto& link : parent_namespace->linked_namespaces()) {
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+    }
   } else {
     // If not shared - copy only the shared group
     add_soinfos_to_namespace(get_shared_group(parent_namespace), ns);
   }
+
+  ns->set_ld_library_paths(std::move(ld_library_paths));
+  ns->set_default_library_paths(std::move(default_library_paths));
+  ns->set_permitted_paths(std::move(permitted_paths));
 
   return ns;
 }

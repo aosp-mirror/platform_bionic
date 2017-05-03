@@ -1363,6 +1363,70 @@ TEST(dlext, ns_shared) {
   dlclose(handle2);
 }
 
+TEST(dlext, ns_shared_links_and_paths) {
+  // Create parent namespace (isolated, not shared)
+  android_namespace_t* ns_isolated =
+          android_create_namespace("private_isolated",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   (get_testlib_root() + "/public_namespace_libs").c_str(),
+                                   nullptr);
+  ASSERT_TRUE(ns_isolated != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_isolated, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  // Create shared namespace with ns_isolated parent
+  android_namespace_t* ns_shared =
+          android_create_namespace("private_shared",
+                                   nullptr,
+                                   nullptr,
+                                   ANDROID_NAMESPACE_TYPE_SHARED | ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   ns_isolated);
+  ASSERT_TRUE(ns_shared != nullptr) << dlerror();
+
+  // 1. Load a library in ns_shared to check that it has inherited
+  // search path and the link to the default namespace.
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_shared;
+
+  {
+    void* handle = android_dlopen_ext("libnstest_private.so", RTLD_NOW, &extinfo);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    const char** ns_private_extern_string = static_cast<const char**>(dlsym(handle, "g_private_extern_string"));
+    ASSERT_TRUE(ns_private_extern_string != nullptr) << dlerror();
+    ASSERT_STREQ("This string is from private namespace", *ns_private_extern_string);
+
+    dlclose(handle);
+  }
+  // 2. Load another test library by absolute path to check that
+  // it has inherited permitted_when_isolated_path
+  {
+    void* handle = android_dlopen_ext(
+            (get_testlib_root() + "/public_namespace_libs/libnstest_public.so").c_str(),
+            RTLD_NOW,
+            &extinfo);
+
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    const char** ns_public_extern_string = static_cast<const char**>(dlsym(handle, "g_public_extern_string"));
+    ASSERT_TRUE(ns_public_extern_string != nullptr) << dlerror();
+    ASSERT_STREQ("This string is from public namespace", *ns_public_extern_string);
+
+    dlclose(handle);
+  }
+
+  // 3. Check that it is still isolated.
+  {
+    void* handle = android_dlopen_ext(
+            (get_testlib_root() + "/libtest_empty.so").c_str(),
+            RTLD_NOW,
+            &extinfo);
+
+    ASSERT_TRUE(handle == nullptr);
+  }
+}
+
 TEST(dlext, ns_shared_dlclose) {
   android_set_application_target_sdk_version(42U); // something > 23
 
