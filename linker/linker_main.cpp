@@ -45,6 +45,8 @@
 #include "debuggerd/handler.h"
 #endif
 
+#include <async_safe/log.h>
+
 #include <vector>
 
 extern void __libc_init_globals(KernelArgumentBlock&);
@@ -189,7 +191,7 @@ static const char* get_executable_path() {
     char path[PATH_MAX];
     ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
     if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      __libc_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
     }
     executable_path = std::string(path, path_len);
   }
@@ -267,13 +269,13 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // the executable could be unlinked by this point and it should
   // not cause a crash (see http://b/31084669)
   if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
-    __libc_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+    async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
   }
 
   const char* executable_path = get_executable_path();
   soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
   if (si == nullptr) {
-    __libc_fatal("Couldn't allocate soinfo: out of memory?");
+    async_safe_fatal("Couldn't allocate soinfo: out of memory?");
   }
 
   /* bootstrap the link map, the main exe always needs to be first */
@@ -319,7 +321,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     // tombstone for them. The tombstone never provided any detail relevant to
     // fixing the problem anyway, and the utility of drawing extra attention
     // to the problem is non-existent at this late date.
-    __libc_format_fd(STDERR_FILENO,
+    async_safe_format_fd(STDERR_FILENO,
                      "\"%s\": error: Android 5.0 and later only support "
                      "position-independent executables (-fPIE).\n",
                      g_argv[0]);
@@ -335,7 +337,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   init_default_namespace(executable_path);
 
   if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   }
 
   // add somain to global group
@@ -369,10 +371,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
                       nullptr,
                       true /* add_as_children */,
                       true /* search_linked_namespaces */)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+      async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
     }
     si->increment_ref_count();
   }
@@ -380,7 +382,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   add_vdso(args);
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   }
 
   si->call_pre_init_constructors();
@@ -464,7 +466,7 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
 }
 
 static void __linker_cannot_link(const char* argv0) {
-  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
+  async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
 }
 
 /*
@@ -546,7 +548,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    __libc_format_fd(STDOUT_FILENO,
+    async_safe_format_fd(STDOUT_FILENO,
                      "This is %s, the helper program for dynamic executables.\n",
                      args.argv[0]);
     exit(0);

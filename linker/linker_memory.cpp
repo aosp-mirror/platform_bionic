@@ -32,7 +32,7 @@
 #include <sys/cdefs.h>
 #include <unistd.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 static LinkerMemoryAllocator g_linker_allocator;
 static pid_t fallback_tid = 0;
@@ -41,7 +41,7 @@ static pid_t fallback_tid = 0;
 // case the linker heap is corrupted. Do not use this function.
 extern "C" void __linker_enable_fallback_allocator() {
   if (fallback_tid != 0) {
-    __libc_fatal("attempted to use currently-in-use fallback allocator");
+    async_safe_fatal("attempted to use currently-in-use fallback allocator");
   }
 
   fallback_tid = gettid();
@@ -49,7 +49,7 @@ extern "C" void __linker_enable_fallback_allocator() {
 
 extern "C" void __linker_disable_fallback_allocator() {
   if (fallback_tid == 0) {
-    __libc_fatal("attempted to disable unused fallback allocator");
+    async_safe_fatal("attempted to disable unused fallback allocator");
   }
 
   fallback_tid = 0;
