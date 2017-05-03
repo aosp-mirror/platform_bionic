@@ -272,16 +272,72 @@ cc_test_library {
 cc_test_library {
     name: "libtest_ifunc",
     defaults: ["bionic_testlib_defaults"],
-    srcs: ["dlopen_testlib_ifunc.c"],
+    srcs: ["dlopen_testlib_ifunc.cpp"],
 
-    // TODO(dimitry): clang does not support ifunc attribute
-    clang: false,
     arch: {
         mips: {
             enabled: false,
         },
         mips64: {
             enabled: false,
+        },
+    },
+
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
+        },
+    },
+}
+
+cc_test_library {
+    name: "libtest_ifunc_variable",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_ifunc_variable.cpp"],
+    shared_libs: [ "libtest_ifunc_variable_impl" ],
+
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
+        },
+    },
+}
+
+cc_test_library {
+    name: "libtest_ifunc_variable_impl",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_ifunc_variable_impl.cpp"],
+
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+
+    target: {
+        android: {
+            shared_libs: ["libdl"],
+        },
+        host: {
+            host_ldlibs: ["-ldl"],
         },
     },
 }
