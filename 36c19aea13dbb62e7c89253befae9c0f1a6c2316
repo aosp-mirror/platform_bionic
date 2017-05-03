@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ee8b9e0_47e108fa",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-03T00:38:56Z",
+      "side": 1,
+      "message": "tabs?",
+      "revId": "36c19aea13dbb62e7c89253befae9c0f1a6c2316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
