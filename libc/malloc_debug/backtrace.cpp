@@ -158,13 +158,13 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
       char* demangled_symbol = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
       const char* best_name = (demangled_symbol != nullptr) ? demangled_symbol : symbol;
 
-      __libc_format_buffer(buf, sizeof(buf),
-          "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")\n", frame_num,
+      async_safe_format_buffer(
+          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")\n", frame_num,
           rel_pc, soname, best_name, frames[frame_num] - offset);
       free(demangled_symbol);
     } else {
-      __libc_format_buffer(buf, sizeof(buf),
-          "          #%02zd  pc %" PAD_PTR "  %s\n", frame_num, rel_pc, soname);
+      async_safe_format_buffer(
+          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s\n", frame_num, rel_pc, soname);
     }
     str += buf;
   }

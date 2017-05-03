@@ -19,7 +19,7 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 static const char* syslog_log_tag = NULL;
 static int syslog_priority_mask = 0xff;
@@ -109,7 +109,7 @@ void vsyslog(int priority, const char* fmt, va_list args) {
     *dst = '\0';
   }
 
-  // We can't let __libc_format_log do the formatting because it doesn't support
+  // We can't let async_safe_format_log do the formatting because it doesn't support
   // all the printf functionality.
   char log_line[1024];
   vsnprintf(log_line, sizeof(log_line), log_fmt, args);
@@ -118,5 +118,5 @@ void vsyslog(int priority, const char* fmt, va_list args) {
     free(const_cast<char*>(log_fmt));
   }
 
-  __libc_format_log(android_log_priority, log_tag, "%s", log_line);
+  async_safe_format_log(android_log_priority, log_tag, "%s", log_line);
 }

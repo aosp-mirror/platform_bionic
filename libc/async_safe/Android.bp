@@ -1,0 +1,15 @@
+// ========================================================
+// libasync_safe.a
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    srcs: [
+        "async_safe_log.cpp",
+    ],
+
+    name: "libasync_safe",
+
+    include_dirs: ["bionic/libc"],
+
+    export_include_dirs: ["include"],
+}

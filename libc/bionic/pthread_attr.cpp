@@ -33,9 +33,10 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
-#include "private/libc_logging.h"
 #include "pthread_internal.h"
 
 int pthread_attr_init(pthread_attr_t* attr) {
@@ -117,12 +118,12 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
 static uintptr_t __get_main_stack_startstack() {
   FILE* fp = fopen("/proc/self/stat", "re");
   if (fp == nullptr) {
-    __libc_fatal("couldn't open /proc/self/stat: %s", strerror(errno));
+    async_safe_fatal("couldn't open /proc/self/stat: %s", strerror(errno));
   }
 
   char line[BUFSIZ];
   if (fgets(line, sizeof(line), fp) == nullptr) {
-    __libc_fatal("couldn't read /proc/self/stat: %s", strerror(errno));
+    async_safe_fatal("couldn't read /proc/self/stat: %s", strerror(errno));
   }
 
   fclose(fp);
@@ -138,7 +139,7 @@ static uintptr_t __get_main_stack_startstack() {
              "%*u %*u %*u %*u %*u %*u %*u "
              "%*d %*d %*d %*d %*d %*d "
              "%*u %*u %*d %*u %*u %*u %" SCNuPTR, &startstack) != 1) {
-    __libc_fatal("couldn't parse /proc/self/stat");
+    async_safe_fatal("couldn't parse /proc/self/stat");
   }
 
   return startstack;
@@ -163,7 +164,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   // Hunt for the region that contains that address.
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
-    __libc_fatal("couldn't open /proc/self/maps");
+    async_safe_fatal("couldn't open /proc/self/maps");
   }
   char line[BUFSIZ];
   while (fgets(line, sizeof(line), fp) != NULL) {
@@ -177,7 +178,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
       }
     }
   }
-  __libc_fatal("Stack not found in /proc/self/maps");
+  async_safe_fatal("Stack not found in /proc/self/maps");
 }
 
 int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {

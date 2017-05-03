@@ -36,6 +36,8 @@
 #include <android-base/scopeguard.h>
 #include <android-base/strings.h>
 
+#include <async_safe/log.h>
+
 #include <stdlib.h>
 
 #include <string>
@@ -149,7 +151,7 @@ static std::string create_error_msg(const char* file,
                                     size_t lineno,
                                     const std::string& msg) {
   char buf[1024];
-  __libc_format_buffer(buf, sizeof(buf), "%s:%zu: error: %s", file, lineno, msg.c_str());
+  async_safe_format_buffer(buf, sizeof(buf), "%s:%zu: error: %s", file, lineno, msg.c_str());
 
   return std::string(buf);
 }
@@ -328,7 +330,7 @@ class Properties {
     params.push_back({ "LIB", kLibParamValue });
     if (target_sdk_version_ != 0) {
       char buf[16];
-      __libc_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
+      async_safe_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
       params.push_back({ "SDK_VER", buf });
     }
 
