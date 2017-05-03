@@ -48,6 +48,10 @@ struct android_namespace_link_t {
     return linked_namespace_;
   }
 
+  const std::unordered_set<std::string>& shared_lib_sonames() const {
+    return shared_lib_sonames_;
+  }
+
   bool is_accessible(const char* soname) const {
     return shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
   }

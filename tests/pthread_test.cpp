@@ -1963,8 +1963,9 @@ static void BarrierTestHelper(BarrierTestHelperArg* arg) {
     } else {
       ASSERT_EQ(0, result);
     }
-    arg->data->finished_mask |= (1 << arg->id);
-    if (arg->data->finished_mask == ((1 << arg->data->thread_count) - 1)) {
+    int mask = arg->data->finished_mask.fetch_or(1 << arg->id);
+    mask |= 1 << arg->id;
+    if (mask == ((1 << arg->data->thread_count) - 1)) {
       ASSERT_EQ(1, arg->data->serial_thread_count);
       arg->data->finished_iteration_count++;
       arg->data->finished_mask = 0;
