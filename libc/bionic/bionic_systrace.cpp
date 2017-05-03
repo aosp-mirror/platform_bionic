@@ -23,7 +23,6 @@
 #include "private/bionic_lock.h"
 #include "private/bionic_systrace.h"
 #include "private/CachedProperty.h"
-#include "private/libc_logging.h"
 
 #include <cutils/trace.h> // For ATRACE_TAG_BIONIC.
 

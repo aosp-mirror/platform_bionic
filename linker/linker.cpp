@@ -46,6 +46,8 @@
 
 #include <android-base/scopeguard.h>
 
+#include <async_safe/log.h>
+
 // Private C library headers.
 
 #include "linker.h"
@@ -344,7 +346,7 @@ static void parse_LD_LIBRARY_PATH(const char* path) {
 
 static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
-  __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
+  async_safe_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
     PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
@@ -493,7 +495,7 @@ ProtectedDataGuard::ProtectedDataGuard() {
   }
 
   if (ref_count_ == 0) { // overflow
-    __libc_fatal("Too many nested calls to dlopen()");
+    async_safe_fatal("Too many nested calls to dlopen()");
   }
 }
 
@@ -992,7 +994,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
 }
 
 static bool format_path(char* buf, size_t buf_size, const char* path, const char* name) {
-  int n = __libc_format_buffer(buf, buf_size, "%s/%s", path, name);
+  int n = async_safe_format_buffer(buf, buf_size, "%s/%s", path, name);
   if (n < 0 || n >= static_cast<int>(buf_size)) {
     PRINT("Warning: ignoring very long library path: %s/%s", path, name);
     return false;
@@ -1781,7 +1783,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
       }
     } else {
 #if !defined(__work_around_b_24465209__)
-      __libc_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
+      async_safe_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
 #else
       PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
       for_each_dt_needed(si, [&] (const char* library_name) {
@@ -1855,8 +1857,8 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   }
 
   if (buffer_size < required_size) {
-    __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
-                 "buffer len %zu, required len %zu", buffer_size, required_size);
+    async_safe_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
+                     "buffer len %zu, required len %zu", buffer_size, required_size);
   }
 
   char* end = buffer;

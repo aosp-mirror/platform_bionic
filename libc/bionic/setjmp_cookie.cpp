@@ -34,9 +34,10 @@
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_arc4random.h"
 #include "private/bionic_globals.h"
-#include "private/libc_logging.h"
 #include "private/KernelArgumentBlock.h"
 
 void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
@@ -49,7 +50,7 @@ void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args)
 
 extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_get(long sigflag) {
   if (sigflag & ~1) {
-    __libc_fatal("unexpected sigflag value: %ld", sigflag);
+    async_safe_fatal("unexpected sigflag value: %ld", sigflag);
   }
 
   return __libc_globals->setjmp_cookie | sigflag;
@@ -58,12 +59,12 @@ extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_get(long sigflag) {
 // Aborts if cookie doesn't match, returns the signal flag otherwise.
 extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_cookie_check(long cookie) {
   if (__libc_globals->setjmp_cookie != (cookie & ~1)) {
-    __libc_fatal("setjmp cookie mismatch");
+    async_safe_fatal("setjmp cookie mismatch");
   }
 
   return cookie & 1;
 }
 
 extern "C" __LIBC_HIDDEN__ long __bionic_setjmp_checksum_mismatch() {
-  __libc_fatal("setjmp checksum mismatch");
+  async_safe_fatal("setjmp checksum mismatch");
 }
