@@ -1,6 +1,7 @@
 // Define the common source files for all the libc instances
 // =========================================================
 libc_common_src_files = [
+    "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/fts.c",
@@ -58,7 +59,10 @@ cc_defaults {
     asflags: libc_common_flags,
     conlyflags: ["-std=gnu99"],
     cppflags: [],
-    include_dirs: ["external/jemalloc/include"],
+    include_dirs: [
+        "bionic/libc/async_safe/include",
+        "external/jemalloc/include",
+    ],
 
     stl: "none",
     system_shared_libs: [],
@@ -1346,7 +1350,6 @@ cc_library_static {
         "bionic/__libc_current_sigrtmax.cpp",
         "bionic/__libc_current_sigrtmin.cpp",
         "bionic/libc_init_common.cpp",
-        "bionic/libc_logging.cpp",
         "bionic/libgen.cpp",
         "bionic/link.cpp",
         "bionic/locale.cpp",
@@ -1705,7 +1708,7 @@ cc_library {
             "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
-        whole_static_libs: ["libc_init_static", "libjemalloc"],
+        whole_static_libs: ["libc_init_static"],
     },
     shared: {
         srcs: [
@@ -1717,7 +1720,6 @@ cc_library {
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
-        whole_static_libs: ["libjemalloc"],
     },
 
     required: ["tzdata"],
@@ -1740,7 +1742,7 @@ cc_library {
     // you wanted!
 
     shared_libs: ["libdl"],
-    whole_static_libs: ["libc_common"],
+    whole_static_libs: ["libc_common", "libjemalloc"],
 
     nocrt: true,
 
@@ -1793,19 +1795,6 @@ cc_library {
 }
 
 // ========================================================
-// libc_logging.a
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-
-    srcs: [
-        "bionic/libc_logging.cpp",
-    ],
-
-    name: "libc_logging",
-}
-
-// ========================================================
 // libstdc++.so + libstdc++.a
 // ========================================================
 cc_library {
@@ -1818,9 +1807,7 @@ cc_library {
     ],
     name: "libstdc++",
     system_shared_libs: ["libc"],
-    shared: {
-        static_libs: ["libc_logging"],
-    },
+		static_libs: ["libasync_safe"],
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {

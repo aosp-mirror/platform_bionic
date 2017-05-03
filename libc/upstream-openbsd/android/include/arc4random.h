@@ -27,8 +27,9 @@
 #include <pthread.h>
 #include <signal.h>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
 
 // Android gets these from "thread_private.h".
 #include "thread_private.h"
@@ -47,7 +48,7 @@ extern int __register_atfork(void (*)(void), void(*)(void), void (*)(void), void
 static inline void
 _getentropy_fail(void)
 {
-	__libc_fatal("getentropy failed");
+	async_safe_fatal("getentropy failed");
 }
 
 volatile sig_atomic_t _rs_forked;

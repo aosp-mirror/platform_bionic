@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "private/libc_logging.h"
+#include "private/bionic_fortify.h"
 
 extern "C" int __openat(int, const char*, int, int);
 

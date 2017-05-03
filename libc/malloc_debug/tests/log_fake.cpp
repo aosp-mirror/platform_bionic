@@ -44,7 +44,7 @@ std::string getFakeLogPrint() {
   return g_fake_log_print;
 }
 
-extern "C" int __libc_format_log(int priority, const char* tag, const char* format, ...) {
+extern "C" int async_safe_format_log(int priority, const char* tag, const char* format, ...) {
   g_fake_log_print += std::to_string(priority) + ' ';
   g_fake_log_print += tag;
   g_fake_log_print += ' ';

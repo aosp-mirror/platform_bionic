@@ -31,8 +31,9 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include <async_safe/log.h>
+
 #include "local.h"
-#include "private/libc_logging.h"
 
 size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;
@@ -83,7 +84,7 @@ int __fsetlocking(FILE* fp, int type) {
 
   if (type != FSETLOCKING_INTERNAL && type != FSETLOCKING_BYCALLER) {
     // The API doesn't let us report an error, so blow up.
-    __libc_fatal("Bad type (%d) passed to __fsetlocking", type);
+    async_safe_fatal("Bad type (%d) passed to __fsetlocking", type);
   }
 
   _EXT(fp)->_caller_handles_locking = (type == FSETLOCKING_BYCALLER);
