@@ -47,7 +47,7 @@
 #include "resolv_netid.h"
 #include "res_private.h"
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
@@ -155,7 +155,7 @@
 
 #define XLOG(...) ({ \
     if (DEBUG) { \
-        __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__); \
+        async_safe_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__); \
     } else { \
         ((void)0); \
     } \

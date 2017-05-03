@@ -37,8 +37,9 @@
 
 #include <vector>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;
@@ -92,7 +93,7 @@ class linker_vector_allocator {
     if (ptr == MAP_FAILED) {
       // Spec says we need to throw std::bad_alloc here but because our
       // code does not support exception handling anyways - we are going to abort.
-      __libc_fatal("mmap failed");
+      async_safe_fatal("mmap failed");
     }
 
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ptr, size, "linker_alloc_vector");
