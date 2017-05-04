@@ -41,6 +41,7 @@
 
 #include <llvm/ADT/StringRef.h>
 
+#include <android-base/file.h>
 #include <android-base/macros.h>
 #include <android-base/parseint.h>
 
@@ -576,8 +577,9 @@ int main(int argc, char** argv) {
       platform_dir = versioner_dir + "/platforms";
     }
   } else {
-    // Intentional leak.
-    header_dir = realpath(argv[optind], nullptr);
+    if (!android::base::Realpath(argv[optind], &header_dir)) {
+      err(1, "failed to get realpath for path '%s'", argv[optind]);
+    }
 
     if (argc - optind == 2) {
       dependency_dir = argv[optind + 1];
