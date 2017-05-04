@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "239271eb_b367031f",
+        "filename": "libc/arch-arm64/generic/bionic/strrchr.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-04T15:34:41Z",
+      "side": 1,
+      "message": "can you stop putting these in the same comment as the copyright notice to reduce NOTICE bloat?\n\n(or send us a patch to make our NOTICE file generator smarter.)",
+      "revId": "fbe0c1a937d4c62d7d1bf64abd28940db8474832",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
