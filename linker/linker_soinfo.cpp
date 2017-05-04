@@ -34,6 +34,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "linker_logger.h"
@@ -636,7 +638,7 @@ ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
 
 const char* soinfo::get_string(ElfW(Word) index) const {
   if (has_min_version(1) && (index >= strtab_size_)) {
-    __libc_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
+    async_safe_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
         get_realpath(), strtab_size_, index);
   }
 

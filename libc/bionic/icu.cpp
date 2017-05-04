@@ -33,7 +33,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 // Allowed icu4c version numbers are in the range [44, 999].
 // Gingerbread's icu4c 4.4 is the minimum supported ICU version.
@@ -68,7 +68,7 @@ static bool __find_icu() {
   free(namelist);
 
   if (max_version == -1 || max_version < ICUDATA_VERSION_MIN) {
-    __libc_write_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find an ICU .dat file");
+    async_safe_write_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find an ICU .dat file");
     return false;
   }
 
@@ -76,7 +76,8 @@ static bool __find_icu() {
 
   g_libicuuc_handle = dlopen("libicuuc.so", RTLD_LOCAL);
   if (g_libicuuc_handle == nullptr) {
-    __libc_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libicuuc.so: %s", dlerror());
+    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libicuuc.so: %s",
+                          dlerror());
     return false;
   }
 
@@ -93,7 +94,8 @@ void* __find_icu_symbol(const char* symbol_name) {
 
   void* symbol = dlsym(g_libicuuc_handle, versioned_symbol_name);
   if (symbol == nullptr) {
-    __libc_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find %s", versioned_symbol_name);
+    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find %s",
+                          versioned_symbol_name);
   }
   return symbol;
 }

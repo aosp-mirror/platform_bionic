@@ -37,6 +37,8 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_prctl.h"
 
 //
@@ -149,7 +151,7 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
   ssize_t offset = reinterpret_cast<uintptr_t>(ptr) - sizeof(page_info);
 
   if (offset % block_size_ != 0) {
-    __libc_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
+    async_safe_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
   }
 
   memset(ptr, 0, block_size_);
@@ -180,7 +182,7 @@ linker_vector_t::iterator LinkerSmallObjectAllocator::find_page_record(void* ptr
 
   if (it == page_records_.end() || it->page_addr != addr) {
     // not found...
-    __libc_fatal("page record for %p was not found (block_size=%zd)", ptr, block_size_);
+    async_safe_fatal("page record for %p was not found (block_size=%zd)", ptr, block_size_);
   }
 
   return it;
@@ -203,7 +205,7 @@ void LinkerSmallObjectAllocator::alloc_page() {
   void* map_ptr = mmap(nullptr, PAGE_SIZE,
       PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
   if (map_ptr == MAP_FAILED) {
-    __libc_fatal("mmap failed");
+    async_safe_fatal("mmap failed");
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, "linker_alloc_small_objects");
@@ -248,7 +250,7 @@ void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
       PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
 
   if (map_ptr == MAP_FAILED) {
-    __libc_fatal("mmap failed");
+    async_safe_fatal("mmap failed");
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, allocated_size, "linker_alloc_lob");
@@ -283,7 +285,7 @@ void* LinkerMemoryAllocator::alloc(size_t size) {
 page_info* LinkerMemoryAllocator::get_page_info(void* ptr) {
   page_info* info = reinterpret_cast<page_info*>(PAGE_START(reinterpret_cast<size_t>(ptr)));
   if (memcmp(info->signature, kSignature, sizeof(kSignature)) != 0) {
-    __libc_fatal("invalid pointer %p (page signature mismatch)", ptr);
+    async_safe_fatal("invalid pointer %p (page signature mismatch)", ptr);
   }
 
   return info;
@@ -308,7 +310,7 @@ void* LinkerMemoryAllocator::realloc(void* ptr, size_t size) {
   } else {
     LinkerSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
     if (allocator != info->allocator_addr) {
-      __libc_fatal("invalid pointer %p (page signature mismatch)", ptr);
+      async_safe_fatal("invalid pointer %p (page signature mismatch)", ptr);
     }
 
     old_size = allocator->get_block_size();
@@ -336,7 +338,7 @@ void LinkerMemoryAllocator::free(void* ptr) {
   } else {
     LinkerSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
     if (allocator != info->allocator_addr) {
-      __libc_fatal("invalid pointer %p (invalid allocator address for the page)", ptr);
+      async_safe_fatal("invalid pointer %p (invalid allocator address for the page)", ptr);
     }
 
     allocator->free(ptr);
@@ -345,7 +347,7 @@ void LinkerMemoryAllocator::free(void* ptr) {
 
 LinkerSmallObjectAllocator* LinkerMemoryAllocator::get_small_object_allocator(uint32_t type) {
   if (type < kSmallObjectMinSizeLog2 || type > kSmallObjectMaxSizeLog2) {
-    __libc_fatal("invalid type: %u", type);
+    async_safe_fatal("invalid type: %u", type);
   }
 
   initialize_allocators();

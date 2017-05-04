@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-#include <async_safe/log.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-extern "C" void __cxa_pure_virtual() {
-  async_safe_fatal("Pure virtual function called. Are you calling virtual methods from a destructor?");
+extern "C" const char* foo;
+
+extern "C" const char* foo_library() {
+   return foo;
 }

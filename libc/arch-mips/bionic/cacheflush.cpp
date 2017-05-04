@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <sys/cachectl.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 // Linux historically defines a cacheflush(3) routine for MIPS
 // with this signature:
@@ -50,7 +50,8 @@ int cacheflush(long start, long end, long /*flags*/) {
     // It looks like this is really a MIPS-style cacheflush call.
     static bool warned = false;
     if (!warned) {
-      __libc_format_log(ANDROID_LOG_WARN, "libc", "cacheflush called with (start,len) instead of (start,end)");
+      async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                            "cacheflush called with (start,len) instead of (start,end)");
       warned = true;
     }
     end += start;
