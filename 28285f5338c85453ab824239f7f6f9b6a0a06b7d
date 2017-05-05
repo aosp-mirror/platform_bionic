@@ -22,6 +22,30 @@
       "revId": "28285f5338c85453ab824239f7f6f9b6a0a06b7d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc2cf0ec_1fc17d83",
+        "filename": "libc/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2017-05-05T05:48:18Z",
+      "side": 1,
+      "message": "Haha yeah.  I just didn\u0027t make it more consistent here since it doesn\u0027t make this NOTICE any shorter anyway :(",
+      "parentUuid": "7541fed7_53948055",
+      "range": {
+        "startLine": 40,
+        "startChar": 17,
+        "endLine": 40,
+        "endChar": 39
+      },
+      "revId": "28285f5338c85453ab824239f7f6f9b6a0a06b7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
