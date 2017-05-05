@@ -1037,7 +1037,7 @@ TEST(dlext, ns_unload_between_namespaces) {
             "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 }
 
-TEST(dlext, ns_greylist) {
+TEST(dlext, ns_greylist_enabled) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
   const std::string ns_search_path = get_testlib_root() + "/private_namespace_libs";
@@ -1046,7 +1046,7 @@ TEST(dlext, ns_greylist) {
           android_create_namespace("namespace",
                                    nullptr,
                                    ns_search_path.c_str(),
-                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED,
                                    nullptr,
                                    nullptr);
 
@@ -1071,6 +1071,31 @@ TEST(dlext, ns_greylist) {
   // An app targeting N no longer has the greylist.
   android_set_application_target_sdk_version(__ANDROID_API_N__);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
+}
+
+TEST(dlext, ns_greylist_disabled_by_default) {
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  const std::string ns_search_path = get_testlib_root() + "/private_namespace_libs";
+
+  android_namespace_t* ns =
+          android_create_namespace("namespace",
+                                   nullptr,
+                                   ns_search_path.c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_TRUE(android_link_namespaces(ns, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns;
+
+  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
 }
