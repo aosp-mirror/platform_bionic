@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71049afb_288ff46d",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-05T21:17:43Z",
+      "side": 1,
+      "message": "move these up a couple of lines and give them their own comment about deliberately avoiding cached values?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 35
+      },
+      "revId": "6a397231144298c48117298db010424152ccb970",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
