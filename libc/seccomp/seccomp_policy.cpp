@@ -51,10 +51,10 @@ static const size_t secondary_filter_size = x86_filter_size;
 #elif defined __mips__ || defined __mips64__
 
 #define DUAL_ARCH
-#define PRIMARY_ARCH AUDIT_ARCH_MIPS64
+#define PRIMARY_ARCH AUDIT_ARCH_MIPSEL64
 static const struct sock_filter* primary_filter = mips64_filter;
 static const size_t primary_filter_size = mips64_filter_size;
-#define SECONDARY_ARCH AUDIT_ARCH_MIPS
+#define SECONDARY_ARCH AUDIT_ARCH_MIPSEL
 static const struct sock_filter* secondary_filter = mips_filter;
 static const size_t secondary_filter_size = mips_filter_size;
 
