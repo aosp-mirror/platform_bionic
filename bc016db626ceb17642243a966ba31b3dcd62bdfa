@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a30da738_b5ba0e34",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-05T20:40:59Z",
+      "side": 1,
+      "message": "this partly undoes the previous change to this file by adding another \"useless\" stack frame into every abort. (and our crash clustering is still so stupid that it only looks at the first 5 frames.)",
+      "revId": "bc016db626ceb17642243a966ba31b3dcd62bdfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e1b5b8b_8d1c5603",
+        "filename": "libc/bionic/raise.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-05T20:40:59Z",
+      "side": 1,
+      "message": "include the bug number in the comment or no-one will believe this is a real possibility!",
+      "revId": "bc016db626ceb17642243a966ba31b3dcd62bdfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
