@@ -27,14 +27,14 @@
  */
 
 #include <errno.h>
-#include <pthread.h>
 #include <signal.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 
 int raise(int sig) {
-  int rc = pthread_kill(pthread_self(), sig);
-  if (rc != 0) {
-    errno = rc;
-    return -1;
-  }
-  return 0;
+  // Protect ourselves against stale cached PID/TID values by fetching them via syscall.
+  // http://b/37769298
+  pid_t pid = syscall(__NR_getpid);
+  pid_t tid = syscall(__NR_gettid);
+  return tgkill(pid, tid, sig);
 }
