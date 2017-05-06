@@ -29,9 +29,15 @@
 
 #include <signal.h>
 #include <stdlib.h>
+#include <sys/syscall.h>
 #include <unistd.h>
 
 void abort() {
+  // Protect ourselves against stale cached PID/TID values by fetching them via syscall.
+  // http://b/37769298
+  pid_t pid = syscall(__NR_getpid);
+  pid_t tid = syscall(__NR_gettid);
+
   // Don't block SIGABRT to give any signal handler a chance; we ignore
   // any errors -- X311J doesn't allow abort to return anyway.
   sigset_t mask;
@@ -39,7 +45,8 @@ void abort() {
   sigdelset(&mask, SIGABRT);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  // Use tgkill directly instead of raise, to avoid inserting spurious stack frames.
+  tgkill(pid, tid, SIGABRT);
 
   // If SIGABRT ignored, or caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
@@ -50,7 +57,7 @@ void abort() {
   sigaction(SIGABRT, &sa, &sa);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(getpid(), gettid(), SIGABRT);
+  tgkill(pid, tid, SIGABRT);
 
   // If we get this far, just exit.
   _exit(127);
