@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b1f1dcb_3bd13b62",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-07T08:46:18Z",
+      "side": 1,
+      "message": "Would not be more correct (and therefore safer) to try to define this with:\n\n    .dns_netid \u003d NETID_UNSET\n    .dns_mark \u003d MARK_UNSET\n\n?  That way we\u0027re not silently relying on those values being zero (even though changing them to something non-zero would probably be scary).",
+      "range": {
+        "startLine": 122,
+        "startChar": 59,
+        "endLine": 122,
+        "endChar": 62
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8eba0188_beb373ea",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-07T08:46:18Z",
+      "side": 1,
+      "message": "I\u0027m kind of surprised this compiled as C code (I didn\u0027t think we could do the C++ thing of declaring new variables in the middle of a function).\n\n:-)",
+      "range": {
+        "startLine": 942,
+        "startChar": 1,
+        "endLine": 942,
+        "endChar": 9
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67800445_d5cbe8f8",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1619,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-07T08:46:18Z",
+      "side": 1,
+      "message": "I\u0027m going to have to go spelunking but I actually think this needs to be the app_netid and the app_mark, since that\u0027s how it\u0027s called from within netd.\n\nnetd later takes the app_netid/mark and sets the requisite dns_netid/mark via its getNetworkContext() call.\n\nBut this stuff is can be so twisted I really need to revisit all of it.",
+      "range": {
+        "startLine": 1619,
+        "startChar": 50,
+        "endLine": 1619,
+        "endChar": 59
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
