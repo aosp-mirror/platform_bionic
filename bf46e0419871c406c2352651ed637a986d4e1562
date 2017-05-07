@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c02e1b42_e56544f3",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-07T18:14:35Z",
+      "side": 1,
+      "message": "(alternatively you could static_assert that NETID_UNSET and MARK_UNSET are 0. in \u003cassert.h\u003e since C11.)",
+      "parentUuid": "6b1f1dcb_3bd13b62",
+      "range": {
+        "startLine": 122,
+        "startChar": 59,
+        "endLine": 122,
+        "endChar": 62
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8eba0188_beb373ea",
         "filename": "libc/dns/net/gethnamaddr.c",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-07T08:46:18Z",
       "side": 1,
       "message": "I\u0027m kind of surprised this compiled as C code (I didn\u0027t think we could do the C++ thing of declaring new variables in the middle of a function).\n\n:-)",
+      "range": {
+        "startLine": 942,
+        "startChar": 1,
+        "endLine": 942,
+        "endChar": 9
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72722b2c_ab6947e3",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-07T18:14:35Z",
+      "side": 1,
+      "message": "1999 called and want their ISO C standard back :-)\n\n(only code that\u0027s explicitly asking for an older standard than C99 requires everything to be declared at the start.)",
+      "parentUuid": "8eba0188_beb373ea",
       "range": {
         "startLine": 942,
         "startChar": 1,
