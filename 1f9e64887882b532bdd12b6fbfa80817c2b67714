@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5cb3dcb_4c817573",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-05-07T20:39:12Z",
+      "side": 0,
+      "message": "It looks like your change to rename libdebuggerd_client ( https://android-review.googlesource.com/c/295742 ) got rebased around my change that moved it to target.android.static_libs ( https://android-review.googlesource.com/c/307533  ), so i just replaced libdebuggerd_client here.",
+      "range": {
+        "startLine": 144,
+        "startChar": 27,
+        "endLine": 144,
+        "endChar": 46
+      },
+      "revId": "1f9e64887882b532bdd12b6fbfa80817c2b67714",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
