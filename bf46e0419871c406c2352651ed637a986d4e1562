@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "43276165_be8aa7fa",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2017-05-08T14:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b1f1dcb_3bd13b62",
+      "range": {
+        "startLine": 122,
+        "startChar": 59,
+        "endLine": 122,
+        "endChar": 62
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8eba0188_beb373ea",
         "filename": "libc/dns/net/gethnamaddr.c",
         "patchSetId": 9
@@ -131,6 +155,30 @@
       "writtenOn": "2017-05-07T08:46:18Z",
       "side": 1,
       "message": "I\u0027m going to have to go spelunking but I actually think this needs to be the app_netid and the app_mark, since that\u0027s how it\u0027s called from within netd.\n\nnetd later takes the app_netid/mark and sets the requisite dns_netid/mark via its getNetworkContext() call.\n\nBut this stuff is can be so twisted I really need to revisit all of it.",
+      "range": {
+        "startLine": 1619,
+        "startChar": 50,
+        "endLine": 1619,
+        "endChar": 59
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdaa3474_e841af98",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1619,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2017-05-08T14:10:42Z",
+      "side": 1,
+      "message": "OK, let me know what it should be.  I was basing this version partly on the code in getaddrinfo.c:\n\nhttps://cs.corp.google.com/aosp-master/bionic/libc/dns/net/getaddrinfo.c?q\u003dgetaddrinfo\u0026sq\u003dpackage:%5Eaosp-master$\u0026l\u003d1984",
+      "parentUuid": "67800445_d5cbe8f8",
       "range": {
         "startLine": 1619,
         "startChar": 50,
