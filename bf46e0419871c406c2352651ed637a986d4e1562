@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "5459d994_e9056454",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-08T11:05:52Z",
+      "side": 1,
+      "message": "But I swear I got exactly that error on something I was trying to build not that long ago.\n\nUnfortunately, I can\u0027t remember what that was.  My mind is going, Dave.  :-(",
+      "parentUuid": "72722b2c_ab6947e3",
+      "range": {
+        "startLine": 942,
+        "startChar": 1,
+        "endLine": 942,
+        "endChar": 9
+      },
+      "revId": "bf46e0419871c406c2352651ed637a986d4e1562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67800445_d5cbe8f8",
         "filename": "libc/dns/net/gethnamaddr.c",
         "patchSetId": 9
