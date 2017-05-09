@@ -22,6 +22,30 @@
       "revId": "9ae23720aa177d8f230a4d4ee6b5b6e42ec3f549",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "526e318e_f3c60916",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-09T21:31:33Z",
+      "side": 1,
+      "message": "\"same line or brace\"\n\nhttps://google.github.io/styleguide/cppguide.html#Conditionals",
+      "parentUuid": "8c99178b_9621abe2",
+      "range": {
+        "startLine": 75,
+        "startChar": 29,
+        "endLine": 75,
+        "endChar": 57
+      },
+      "revId": "9ae23720aa177d8f230a4d4ee6b5b6e42ec3f549",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
