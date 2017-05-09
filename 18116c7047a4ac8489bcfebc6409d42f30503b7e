@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a319bdd_9cfb1407",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-09T13:22:05Z",
+      "side": 1,
+      "message": "I belive you also want:\n\n    .uid \u003d NET_CONTEXT_INVALID_UID",
+      "range": {
+        "startLine": 126,
+        "startChar": 14,
+        "endLine": 126,
+        "endChar": 25
+      },
+      "revId": "18116c7047a4ac8489bcfebc6409d42f30503b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de5f9181_a5ac5813",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-09T13:22:05Z",
+      "side": 1,
+      "message": "Technically I think we should be passing the app_netid in.",
+      "range": {
+        "startLine": 833,
+        "startChar": 66,
+        "endLine": 833,
+        "endChar": 69
+      },
+      "revId": "18116c7047a4ac8489bcfebc6409d42f30503b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e1233d3_18cf41e8",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-09T13:22:05Z",
+      "side": 1,
+      "message": "I know you\u0027re setting the dns_netid elsewhere, but technically this should be passing the app_netid in and what it gets back is the process\u0027s current default netid.  netd will later turn that into a full net_context.",
+      "range": {
+        "startLine": 947,
+        "startChar": 66,
+        "endLine": 947,
+        "endChar": 69
+      },
+      "revId": "18116c7047a4ac8489bcfebc6409d42f30503b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c0605a1_da6b7bf7",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1596,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-09T13:22:05Z",
+      "side": 1,
+      "message": "Technically, this should be app_netid and app_mark, because these are what are passed in by the user.\n\nThe DNS netid and mark are determined by netd because it knows if VPNs apply or whether to use DNS servers from a different network.",
+      "range": {
+        "startLine": 1596,
+        "startChar": 50,
+        "endLine": 1596,
+        "endChar": 53
+      },
+      "revId": "18116c7047a4ac8489bcfebc6409d42f30503b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
