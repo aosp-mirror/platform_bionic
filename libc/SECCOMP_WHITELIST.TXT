@@ -118,6 +118,11 @@ ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, 
 int mlock2(const void* addr, size_t len, int flags) all
 ssize_t preadv2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
 ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
+int io_setup(unsigned nr, aio_context_t *ctxp) all
+int io_destroy(aio_context_t ctx) all
+int io_submit(aio_context_t ctx, long nr,  struct iocb **iocbpp) all
+int io_getevents(aio_context_t ctx, long min_nr, long max_nr, struct io_event *events, struct timespec *timeout) all
+int io_cancel(aio_context_t ctx, struct iocb *, struct io_event *result) all
 
 # b/37769298
 int dup2(int oldfd, int newfd)	arm,x86,mips
