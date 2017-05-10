@@ -70,7 +70,9 @@ __attribute__((__naked__)) static void __libc_int0x80() {
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 
 __LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
-  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+  // Running under valgrind, AT_SYSINFO won't be set.
+  void* at_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+  if (at_sysinfo != nullptr) __libc_sysinfo = at_sysinfo;
 }
 
 // TODO: lose this function and just access __libc_sysinfo directly.
