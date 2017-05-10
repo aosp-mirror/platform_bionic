@@ -32,9 +32,9 @@
 
 #include <asm/ldt.h>
 
-extern "C" int __set_thread_area(struct user_desc*);
+extern "C" int __set_thread_area(user_desc*);
 
-__LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, void* base_addr) {
+__LIBC_HIDDEN__ void __init_user_desc(user_desc* result, bool allocate, void* base_addr) {
   if (allocate) {
     // Let the kernel choose.
     result->entry_number = -1;
@@ -58,7 +58,7 @@ __LIBC_HIDDEN__ void __init_user_desc(struct user_desc* result, bool allocate, v
 }
 
 extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr) {
-  struct user_desc tls_descriptor;
+  user_desc tls_descriptor = {};
   __init_user_desc(&tls_descriptor, true, ptr);
 
   int rc = __set_thread_area(&tls_descriptor);
