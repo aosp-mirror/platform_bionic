@@ -63,13 +63,16 @@ struct android_namespace_link_t {
 
 struct android_namespace_t {
  public:
-  android_namespace_t() : name_(nullptr), is_isolated_(false) {}
+  android_namespace_t() : name_(nullptr), is_isolated_(false), is_greylist_enabled_(false) {}
 
   const char* get_name() const { return name_; }
   void set_name(const char* name) { name_ = name; }
 
   bool is_isolated() const { return is_isolated_; }
   void set_isolated(bool isolated) { is_isolated_ = isolated; }
+
+  bool is_greylist_enabled() const { return is_greylist_enabled_; }
+  void set_greylist_enabled(bool enabled) { is_greylist_enabled_ = enabled; }
 
   const std::vector<std::string>& get_ld_library_paths() const {
     return ld_library_paths_;
@@ -136,6 +139,7 @@ struct android_namespace_t {
  private:
   const char* name_;
   bool is_isolated_;
+  bool is_greylist_enabled_;
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
   std::vector<std::string> permitted_paths_;
