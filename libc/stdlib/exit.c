@@ -1,4 +1,3 @@
-/*	$OpenBSD: exit.c,v 1.12 2007/09/03 14:40:16 millert Exp $ */
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -28,39 +27,13 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <stdlib.h>
 #include <unistd.h>
 
-/*
- * This variable is zero until a process has created a thread.
- * It is used to avoid calling locking functions in libc when they
- * are not required. By default, libc is intended to be(come)
- * thread-safe, but without a (significant) penalty to non-threaded
- * processes.
- */
-int     __isthreaded    = 0;
-
-/* BEGIN android-added: using __cxa_finalize and __cxa_thread_finalize */
 extern void __cxa_finalize(void* dso_handle);
 extern void __cxa_thread_finalize();
-/* END android-added */
 
-/*
- * Exit, flushing stdio buffers if necessary.
- */
-void
-exit(int status)
-{
-  /* BEGIN android-added: call thread_local d-tors */
+void exit(int status) {
   __cxa_thread_finalize();
-  /* END android-added */
-
-	/*
-	 * Call functions registered by atexit() or _cxa_atexit()
-	 * (including the stdio cleanup routine) and then _exit().
-	 */
-	__cxa_finalize(NULL);
-	_exit(status);
+  __cxa_finalize(NULL);
+  _exit(status);
 }
