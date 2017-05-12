@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed567e9b_c1633915",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-12T16:23:18Z",
+      "side": 1,
+      "message": "this is still too weak though. you\u0027ve completely removed any check that the size didn\u0027t increase.",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 3
+      },
+      "revId": "a938c2471ffbed1814068bf53dd280889a36db87",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
