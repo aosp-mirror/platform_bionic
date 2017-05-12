@@ -49,8 +49,6 @@
 void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
-extern "C" int __isthreaded;
-
 // This code is used both by each new pthread and the code that initializes the main thread.
 void __init_tls(pthread_internal_t* thread) {
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
@@ -229,9 +227,6 @@ static void* __do_nothing(void*) {
 int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;
-
-  // Inform the rest of the C library that at least one thread was created.
-  __isthreaded = 1;
 
   pthread_attr_t thread_attr;
   if (attr == NULL) {
