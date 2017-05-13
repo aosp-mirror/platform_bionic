@@ -16,6 +16,24 @@
       "revId": "cf17b487ef60aa00ff9b6873cfed50ebde7864c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c17cf43a_37b82c1b",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-13T01:31:56Z",
+      "side": 1,
+      "message": "it was handy during debugging and it seems like bad form to have a class without an operator\u003c\u003c.\n\ni\u0027m assuming we actually want to break the utilities out of here and merge the tests back into pthread_test.cpp, but since this will need to be cherrypicked i was keeping it self-contained.",
+      "parentUuid": "4ca9af7f_367e1d5a",
+      "revId": "cf17b487ef60aa00ff9b6873cfed50ebde7864c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
