@@ -81,7 +81,4 @@ __LIBC_HIDDEN__ extern const short _C_tolower_[];
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
 __LIBC_HIDDEN__ extern char* _mktemp(char*);
 
-/* TODO: hide this when android_support.a is fixed (http://b/16298580).*/
-/*__LIBC_HIDDEN__*/ extern int __isthreaded;
-
 #endif
