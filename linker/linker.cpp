@@ -884,12 +884,11 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
   }
 
   if (si == parent) {
-    DL_ERR("recursive link to \"%s\"", si->name);
     return true;
   }
 
-  return !parent->get_parents().visit([&](soinfo* grandparent) {
-    return !is_recursive(si, grandparent);
+  return !si->get_children().visit([&](soinfo* child) {
+    return !is_recursive(child, parent);
   });
 }
 
@@ -928,6 +927,7 @@ static bool find_libraries(const char* const library_names[], size_t library_nam
     soinfo* needed_by = task->get_needed_by();
 
     if (is_recursive(si, needed_by)) {
+      DL_ERR("recursive link to \"%s\"", si->name);
       return false;
     }
 
@@ -1706,7 +1706,6 @@ void soinfo::CallDestructors() {
 
 void soinfo::add_child(soinfo* child) {
   if (has_min_version(0)) {
-    child->parents.push_back(this);
     this->children.push_back(child);
   }
 }
