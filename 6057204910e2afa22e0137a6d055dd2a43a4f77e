@@ -16,6 +16,24 @@
       "revId": "6057204910e2afa22e0137a6d055dd2a43a4f77e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30731585_ff0a5b94",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2017-05-15T22:27:01Z",
+      "side": 1,
+      "message": "Duh, vendor was in part deux, https://android-review.googlesource.com/#/c/317788/",
+      "parentUuid": "ea9742e9_eeb6af96",
+      "revId": "6057204910e2afa22e0137a6d055dd2a43a4f77e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
