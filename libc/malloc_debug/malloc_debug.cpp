@@ -77,6 +77,7 @@ void* debug_memalign(size_t alignment, size_t bytes);
 void* debug_realloc(void* pointer, size_t bytes);
 void* debug_calloc(size_t nmemb, size_t bytes);
 struct mallinfo debug_mallinfo();
+int debug_mallopt(int param, int value);
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
 int debug_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
@@ -637,6 +638,10 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
 
 struct mallinfo debug_mallinfo() {
   return g_dispatch->mallinfo();
+}
+
+int debug_mallopt(int param, int value) {
+  return g_dispatch->mallopt(param, value);
 }
 
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
