@@ -500,3 +500,10 @@ TEST(malloc, verify_alignment) {
   delete[] values_64;
   delete[] values_ldouble;
 }
+
+TEST(malloc, mallopt_smoke) {
+  errno = 0;
+  ASSERT_EQ(0, mallopt(-1000, 1));
+  // mallopt doesn't set errno.
+  ASSERT_EQ(0, errno);
+}

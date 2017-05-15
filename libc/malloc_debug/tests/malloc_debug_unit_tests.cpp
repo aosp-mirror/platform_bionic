@@ -58,6 +58,7 @@ void debug_get_malloc_leak_info(uint8_t**, size_t*, size_t*, size_t*, size_t*);
 void debug_free_malloc_leak_info(uint8_t*);
 
 struct mallinfo debug_mallinfo();
+int debug_mallopt(int, int);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* debug_pvalloc(size_t);
@@ -128,6 +129,7 @@ MallocDispatch MallocDebugTest::dispatch = {
   nullptr,
   nullptr,
   nullptr,
+  mallopt,
 };
 
 void VerifyAllocCalls() {
@@ -1467,6 +1469,20 @@ TEST_F(MallocDebugTest, debug_mallinfo) {
 
   struct mallinfo mi = debug_mallinfo();
   EXPECT_NE(0U, mi.uordblks);
+
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, debug_mallopt) {
+  Init("guard");
+
+  void* pointer = debug_malloc(150);
+  ASSERT_TRUE(pointer != nullptr);
+
+  EXPECT_EQ(0, debug_mallopt(-1000, 1));
 
   debug_free(pointer);
 
