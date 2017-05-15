@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea9742e9_eeb6af96",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2017-05-15T22:25:27Z",
+      "side": 1,
+      "message": "Do you have the patches to add onto this for vendor, oem and odm?\n\nCould we pass this at build time with similar logic from fs_config/Android.mk to avoid checking things that don\u0027t exist?\n\nLikely not worth it, just thinking out loud.",
+      "revId": "6057204910e2afa22e0137a6d055dd2a43a4f77e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
