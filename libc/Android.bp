@@ -613,6 +613,13 @@ cc_library_static {
                     "upstream-openbsd/lib/libc/string/strcat.c",
                 ],
             },
+            cortex_a73: {
+                exclude_srcs: [
+                    "upstream-openbsd/lib/libc/string/memmove.c",
+                    "upstream-openbsd/lib/libc/string/stpcpy.c",
+                    "upstream-openbsd/lib/libc/string/strcat.c",
+                ],
+            },
             denver: {
                 exclude_srcs: [
                     "upstream-openbsd/lib/libc/string/memmove.c",
@@ -969,6 +976,32 @@ cc_library_static {
                     "bionic/__strcpy_chk.cpp",
                 ],
             },
+            cortex_a73: {
+                srcs: [
+                    "arch-arm/cortex-a7/bionic/memset.S",
+
+                    "arch-arm/denver/bionic/memcpy.S",
+                    "arch-arm/denver/bionic/memmove.S",
+                    "arch-arm/denver/bionic/__strcat_chk.S",
+                    "arch-arm/denver/bionic/__strcpy_chk.S",
+
+                    "arch-arm/krait/bionic/strcmp.S",
+
+                    "arch-arm/cortex-a15/bionic/stpcpy.S",
+                    "arch-arm/cortex-a15/bionic/strcat.S",
+                    "arch-arm/cortex-a15/bionic/strcpy.S",
+                    "arch-arm/cortex-a15/bionic/strlen.S",
+                ],
+                exclude_srcs: [
+                    "arch-arm/generic/bionic/memcpy.S",
+                    "arch-arm/generic/bionic/memset.S",
+                    "arch-arm/generic/bionic/strcmp.S",
+                    "arch-arm/generic/bionic/strcpy.S",
+                    "arch-arm/generic/bionic/strlen.c",
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
             denver: {
                 srcs: [
                     "arch-arm/denver/bionic/memcpy.S",
@@ -1085,6 +1118,14 @@ cc_library_static {
                 ],
             },
             cortex_a53: {
+                srcs: [
+                    "arch-arm64/cortex-a53/bionic/memmove.S",
+                ],
+                exclude_srcs: [
+                    "arch-arm64/generic/bionic/memmove.S",
+                ],
+            },
+            cortex_a73: {
                 srcs: [
                     "arch-arm64/cortex-a53/bionic/memmove.S",
                 ],
