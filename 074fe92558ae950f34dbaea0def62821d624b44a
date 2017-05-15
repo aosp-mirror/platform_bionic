@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1b68ed4_36e960cc",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1013433
+      },
+      "writtenOn": "2017-05-15T22:26:07Z",
+      "side": 1,
+      "message": "likely need part 3 and 4 or just modify this one for odm and oem.",
+      "revId": "074fe92558ae950f34dbaea0def62821d624b44a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
