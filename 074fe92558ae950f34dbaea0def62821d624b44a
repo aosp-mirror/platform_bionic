@@ -16,6 +16,24 @@
       "revId": "074fe92558ae950f34dbaea0def62821d624b44a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "402f556d_3e24080a",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-05-16T15:15:45Z",
+      "side": 1,
+      "message": "There are issues with this part of the patch, selinux violations occur from _everybody_ as these files are consulted. /vendor (oem and odm) are still neophyte.",
+      "parentUuid": "a1b68ed4_36e960cc",
+      "revId": "074fe92558ae950f34dbaea0def62821d624b44a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
