@@ -45,6 +45,7 @@ typedef void* (*MallocRealloc)(void*, size_t);
 typedef int (*MallocIterate)(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
 typedef void (*MallocMallocDisable)();
 typedef void (*MallocMallocEnable)();
+typedef int (*MallocMallopt)(int, int);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocPvalloc)(size_t);
@@ -69,6 +70,7 @@ struct MallocDispatch {
   MallocIterate iterate;
   MallocMallocDisable malloc_disable;
   MallocMallocEnable malloc_enable;
+  MallocMallopt mallopt;
 } __attribute__((aligned(32)));
 
 #endif
