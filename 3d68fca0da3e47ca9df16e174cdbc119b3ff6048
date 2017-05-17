@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fc9fc95_41517c55",
+        "filename": "tests/libs/Android.build.dlext_testzip.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-05-17T17:50:40Z",
+      "side": 1,
+      "message": "I think I was using SHARED_LIBRARIES here to have this file built for both 64 and 32 bit architectures... Is etc going to do that?",
+      "revId": "3d68fca0da3e47ca9df16e174cdbc119b3ff6048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
