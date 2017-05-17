@@ -16,6 +16,24 @@
       "revId": "3d68fca0da3e47ca9df16e174cdbc119b3ff6048",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b229f734_7cebad76",
+        "filename": "tests/libs/Android.build.dlext_testzip.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-05-17T18:24:55Z",
+      "side": 1,
+      "message": "Yeah, I figured that was the case, but I checked with ETC and it still produces both (and produces fewer warnings, since we don\u0027t try to parse it as an elf file)",
+      "parentUuid": "2fc9fc95_41517c55",
+      "revId": "3d68fca0da3e47ca9df16e174cdbc119b3ff6048",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
