@@ -41,7 +41,6 @@
 #include "private/bionic_macros.h"
 #include "private/grp_pwd.h"
 #include "private/ErrnoRestorer.h"
-#include "private/libc_logging.h"
 
 // Generated android_ids array
 #include "generated_android_ids.h"

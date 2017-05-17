@@ -219,7 +219,6 @@ TEST_F(DEATHTEST, memchr_fortified2) {
 #endif // __BIONIC__
 }
 
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcpy_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
@@ -231,7 +230,6 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
 #endif // __BIONIC__
 }
 
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, strlcat_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
@@ -407,11 +405,8 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#ifdef __clang__
-// Exists upstream, but hasn't been pulled in yet.
-#if __has_attribute(alloc_size)
-#error "Reenable this test"
-#endif
+#ifdef __clang__ && !__has_attribute(alloc_size)
+// TODO: remove this after Clang prebuilt rebase.
 #else
 // This test is disabled in clang because clang doesn't properly detect
 // this buffer overflow. TODO: Fix clang.

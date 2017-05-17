@@ -41,12 +41,13 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
 #include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
-#include "private/libc_logging.h"
 #include "private/thread_private.h"
 #include "pthread_internal.h"
 
@@ -69,7 +70,9 @@ __attribute__((__naked__)) static void __libc_int0x80() {
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 
 __LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
-  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+  // Running under valgrind, AT_SYSINFO won't be set.
+  void* at_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+  if (at_sysinfo != nullptr) __libc_sysinfo = at_sysinfo;
 }
 
 // TODO: lose this function and just access __libc_sysinfo directly.
@@ -96,8 +99,8 @@ void __libc_init_globals(KernelArgumentBlock& args) {
 #if !defined(__LP64__)
 static void __check_max_thread_id() {
   if (gettid() > 65535) {
-    __libc_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
-                 "pid <= 65535, but current pid is %d", gettid());
+    async_safe_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
+                     "pid <= 65535, but current pid is %d", gettid());
   }
 }
 #endif
@@ -303,11 +306,11 @@ static void __initialize_personality() {
 #if !defined(__LP64__)
   int old_value = personality(0xffffffff);
   if (old_value == -1) {
-    __libc_fatal("error getting old personality value: %s", strerror(errno));
+    async_safe_fatal("error getting old personality value: %s", strerror(errno));
   }
 
   if (personality((static_cast<unsigned int>(old_value) & ~PER_MASK) | PER_LINUX32) == -1) {
-    __libc_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
+    async_safe_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
   }
 #endif
 }

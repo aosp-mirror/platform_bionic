@@ -18,9 +18,10 @@
 #include <arpa/nameser.h>
 #include <string.h>
 
-#include "resolv_stats.h"
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
+
 #include "isc/eventlib.h"
+#include "resolv_stats.h"
 
 #define DBG 0
 
@@ -38,7 +39,7 @@ void
 _res_stats_set_sample(struct __res_sample* sample, time_t now, int rcode, int rtt)
 {
     if (DBG) {
-        __libc_format_log(ANDROID_LOG_INFO, "libc", "rcode = %d, sec = %d", rcode, rtt);
+        async_safe_format_log(ANDROID_LOG_INFO, "libc", "rcode = %d, sec = %d", rcode, rtt);
     }
     sample->at = now;
     sample->rcode = rcode;
@@ -128,14 +129,15 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
     if (successes >= 0 && errors >= 0 && timeouts >= 0) {
         int total = successes + errors + timeouts;
         if (DBG) {
-            __libc_format_log(ANDROID_LOG_DEBUG, "libc", "NS stats: S %d + E %d + T %d + I %d "
+            async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "NS stats: S %d + E %d + T %d + I %d "
                  "= %d, rtt = %d, min_samples = %d\n", successes, errors, timeouts, internal_errors,
                  total, rtt_avg, params->min_samples);
         }
         if (total >= params->min_samples && (errors > 0 || timeouts > 0)) {
             int success_rate = successes * 100 / total;
             if (DBG) {
-                __libc_format_log(ANDROID_LOG_DEBUG, "libc", "success rate %d%%\n", success_rate);
+                async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "success rate %d%%\n",
+                                      success_rate);
             }
             if (success_rate < params->success_threshold) {
                 // evNowTime() is used here instead of time() to stay consistent with the rest of
@@ -146,13 +148,13 @@ _res_stats_usable_server(const struct __res_params* params, struct __res_stats* 
                     // date has been reached, however the code for returning the ring buffer to its
                     // previous non-circular state would induce additional complexity.
                     if (DBG) {
-                        __libc_format_log(ANDROID_LOG_INFO, "libc",
+                        async_safe_format_log(ANDROID_LOG_INFO, "libc",
                             "samples stale, retrying server\n");
                     }
                     _res_stats_clear_samples(stats);
                 } else {
                     if (DBG) {
-                        __libc_format_log(ANDROID_LOG_INFO, "libc",
+                        async_safe_format_log(ANDROID_LOG_INFO, "libc",
                             "too many resolution errors, ignoring server\n");
                     }
                     return 0;

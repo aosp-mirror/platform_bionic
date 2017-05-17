@@ -184,6 +184,12 @@ typedef struct {
 
 #define PT_GNU_RELRO 0x6474e552
 
+#undef ELF_ST_TYPE
+#define ELF_ST_TYPE(x) ((x) & 0xf)
+#define ELF_ST_INFO(b,t) (((b) << 4) + ((t) & 0xf))
+#define ELF32_ST_INFO(b,t) ELF_ST_INFO(b,t)
+#define ELF64_ST_INFO(b,t) ELF_ST_INFO(b,t)
+
 #define STB_LOOS      10
 #define STB_HIOS      12
 #define STB_LOPROC    13

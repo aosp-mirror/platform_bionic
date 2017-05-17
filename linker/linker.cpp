@@ -46,6 +46,8 @@
 
 #include <android-base/scopeguard.h>
 
+#include <async_safe/log.h>
+
 // Private C library headers.
 
 #include "linker.h"
@@ -344,7 +346,7 @@ static void parse_LD_LIBRARY_PATH(const char* path) {
 
 static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
-  __libc_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
+  async_safe_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
     PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
     return false;
@@ -493,7 +495,7 @@ ProtectedDataGuard::ProtectedDataGuard() {
   }
 
   if (ref_count_ == 0) { // overflow
-    __libc_fatal("Too many nested calls to dlopen()");
+    async_safe_fatal("Too many nested calls to dlopen()");
   }
 }
 
@@ -992,7 +994,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
 }
 
 static bool format_path(char* buf, size_t buf_size, const char* path, const char* name) {
-  int n = __libc_format_buffer(buf, buf_size, "%s/%s", path, name);
+  int n = async_safe_format_buffer(buf, buf_size, "%s/%s", path, name);
   if (n < 0 || n >= static_cast<int>(buf_size)) {
     PRINT("Warning: ignoring very long library path: %s/%s", path, name);
     return false;
@@ -1078,7 +1080,7 @@ static int open_library(android_namespace_t* ns,
   }
 
   // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (fd == -1 && ns != &g_default_namespace && is_greylisted(ns, name, needed_by)) {
+  if (fd == -1 && ns->is_greylist_enabled() && is_greylisted(ns, name, needed_by)) {
     // try searching for it on default_namespace default_library_path
     fd = open_library_on_paths(zip_archive_cache, name, file_offset,
                                g_default_namespace.get_default_library_paths(), realpath);
@@ -1774,6 +1776,9 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
         if (local_unload_list.contains(child)) {
           continue;
         } else if (child->is_linked() && child->get_local_group_root() != root) {
+          child->get_parents().remove_if([&] (const soinfo* parent) {
+            return parent == si;
+          });
           external_unload_list.push_back(child);
         } else if (child->get_parents().empty()) {
           unload_list.push_back(child);
@@ -1781,7 +1786,7 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
       }
     } else {
 #if !defined(__work_around_b_24465209__)
-      __libc_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
+      async_safe_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
 #else
       PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
       for_each_dt_needed(si, [&] (const char* library_name) {
@@ -1855,8 +1860,8 @@ void do_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   }
 
   if (buffer_size < required_size) {
-    __libc_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
-                 "buffer len %zu, required len %zu", buffer_size, required_size);
+    async_safe_fatal("android_get_LD_LIBRARY_PATH failed, buffer too small: "
+                     "buffer len %zu, required len %zu", buffer_size, required_size);
   }
 
   char* end = buffer;
@@ -2182,17 +2187,36 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
-  ns->set_ld_library_paths(std::move(ld_library_paths));
-  ns->set_default_library_paths(std::move(default_library_paths));
-  ns->set_permitted_paths(std::move(permitted_paths));
+  ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
+    // append parent namespace paths.
+    std::copy(parent_namespace->get_ld_library_paths().begin(),
+              parent_namespace->get_ld_library_paths().end(),
+              back_inserter(ld_library_paths));
+
+    std::copy(parent_namespace->get_default_library_paths().begin(),
+              parent_namespace->get_default_library_paths().end(),
+              back_inserter(default_library_paths));
+
+    std::copy(parent_namespace->get_permitted_paths().begin(),
+              parent_namespace->get_permitted_paths().end(),
+              back_inserter(permitted_paths));
+
     // If shared - clone the parent namespace
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
+    // and copy parent namespace links
+    for (auto& link : parent_namespace->linked_namespaces()) {
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+    }
   } else {
     // If not shared - copy only the shared group
     add_soinfos_to_namespace(get_shared_group(parent_namespace), ns);
   }
+
+  ns->set_ld_library_paths(std::move(ld_library_paths));
+  ns->set_default_library_paths(std::move(default_library_paths));
+  ns->set_permitted_paths(std::move(permitted_paths));
 
   return ns;
 }

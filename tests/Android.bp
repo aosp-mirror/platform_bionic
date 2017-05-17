@@ -52,12 +52,14 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     srcs: [
         "arpa_inet_test.cpp",
+        "async_safe_test.cpp",
         "assert_test.cpp",
         "buffer_tests.cpp",
         "bug_26110743_test.cpp",
         "complex_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
+        "elf_test.cpp",
         "endian_test.cpp",
         "error_test.cpp",
         "eventfd_test.cpp",
@@ -71,7 +73,6 @@ cc_test_library {
         "inttypes_test.cpp",
         "langinfo_test.cpp",
         "leak_test.cpp",
-        "libc_logging_test.cpp",
         "libgen_basename_test.cpp",
         "libgen_test.cpp",
         "linux_swab_test.cpp",
@@ -149,6 +150,12 @@ cc_test_library {
         "bionic/libc",
         "external/tinyxml2",
     ],
+
+    target: {
+        android: {
+            whole_static_libs: ["libasync_safe"],
+        },
+    },
 
     static_libs: [
         "libtinyxml2",

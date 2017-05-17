@@ -68,6 +68,7 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
     Malloc(iterate),
     Malloc(malloc_disable),
     Malloc(malloc_enable),
+    Malloc(mallopt),
   };
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
@@ -99,6 +100,14 @@ extern "C" struct mallinfo mallinfo() {
     return _mallinfo();
   }
   return Malloc(mallinfo)();
+}
+
+extern "C" int mallopt(int param, int value) {
+  auto _mallopt = __libc_globals->malloc_dispatch.mallopt;
+  if (__predict_false(_mallopt != nullptr)) {
+    return _mallopt(param, value);
+  }
+  return Malloc(mallopt)(param, value);
 }
 
 extern "C" void* malloc(size_t bytes) {
@@ -167,7 +176,7 @@ extern "C" void* valloc(size_t bytes) {
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <private/libc_logging.h>
+#include <async_safe/log.h>
 #include <sys/system_properties.h>
 
 extern "C" int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
@@ -188,9 +197,9 @@ static ssize_t (*g_debug_malloc_backtrace_func)(void*, uintptr_t*, size_t);
 // Log functions
 // =============================================================================
 #define error_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", (format), ##__VA_ARGS__ )
 #define info_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
 // =============================================================================
 
 // =============================================================================
@@ -245,6 +254,10 @@ static bool InitMalloc(void* malloc_impl_handler, MallocDispatch* table, const c
   }
   if (!InitMallocFunction<MallocMallinfo>(malloc_impl_handler, &table->mallinfo,
                                           prefix, "mallinfo")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMallopt>(malloc_impl_handler, &table->mallopt,
+                                         prefix, "mallopt")) {
     return false;
   }
   if (!InitMallocFunction<MallocMalloc>(malloc_impl_handler, &table->malloc,

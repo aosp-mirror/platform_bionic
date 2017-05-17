@@ -26,6 +26,7 @@
 __BEGIN_DECLS
 
 struct mallinfo je_mallinfo();
+int je_mallopt(int, int);
 int je_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
 void je_malloc_disable();
 void je_malloc_enable();

@@ -18,7 +18,8 @@
 #error NetdClient.cpp should NOT be included in static libc builds.
 #endif
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
+
 #include "private/NetdClientDispatch.h"
 
 #include <dlfcn.h>
@@ -53,6 +54,6 @@ static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
 
 extern "C" __LIBC_HIDDEN__ void netdClientInit() {
     if (pthread_once(&netdClientInitOnce, netdClientInitImpl)) {
-        __libc_format_log(ANDROID_LOG_ERROR, "netdClient", "Failed to initialize netd_client");
+        async_safe_format_log(ANDROID_LOG_ERROR, "netdClient", "Failed to initialize netd_client");
     }
 }

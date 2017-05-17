@@ -41,6 +41,7 @@
 
 #include <llvm/ADT/StringRef.h>
 
+#include <android-base/file.h>
 #include <android-base/macros.h>
 #include <android-base/parseint.h>
 
@@ -445,6 +446,12 @@ static void usage(bool help = false) {
   }
 }
 
+// versioner uses a prebuilt version of clang, which is not up-to-date wrt/
+// container annotations. So disable container overflow checking. b/37775238
+extern "C" const char* __asan_default_options() {
+  return "detect_container_overflow=0";
+}
+
 int main(int argc, char** argv) {
   std::string cwd = getWorkingDir() + "/";
   bool default_args = true;
@@ -570,8 +577,9 @@ int main(int argc, char** argv) {
       platform_dir = versioner_dir + "/platforms";
     }
   } else {
-    // Intentional leak.
-    header_dir = realpath(argv[optind], nullptr);
+    if (!android::base::Realpath(argv[optind], &header_dir)) {
+      err(1, "failed to get realpath for path '%s'", argv[optind]);
+    }
 
     if (argc - optind == 2) {
       dependency_dir = argv[optind + 1];
