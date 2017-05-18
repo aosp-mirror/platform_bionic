@@ -45,6 +45,8 @@
 
 #if defined(__linux__)
 
+#include <sys/sysmacros.h>
+
 struct map_record {
   uintptr_t addr_start;
   uintptr_t addr_end;

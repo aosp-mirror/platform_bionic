@@ -8,7 +8,6 @@ if [ "$1" = glibc ]; then
         cd ${ANDROID_BUILD_TOP}
         export ANDROID_DATA=${TARGET_OUT_DATA}
         export ANDROID_ROOT=${TARGET_OUT}
-        export LD_LIBRARY_PATH=${HOST_OUT}/obj/lib/
         ${HOST_OUT}/nativetest64/bionic-unit-tests-glibc/bionic-unit-tests-glibc $@
     )
     exit 0

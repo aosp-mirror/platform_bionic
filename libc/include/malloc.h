@@ -80,7 +80,7 @@ int malloc_info(int, FILE*) __INTRODUCED_IN(23);
 /* mallopt options */
 #define M_DECAY_TIME -100
 
-int mallopt(int, int) __INTRODUCED_IN(26);
+int mallopt(int, int) __INTRODUCED_IN_FUTURE;
 
 __END_DECLS
 
