@@ -98,3 +98,19 @@ TEST(sys_sem, semtimedop_failure) {
   ASSERT_EQ(-1, semtimedop(-1, nullptr, 0, nullptr));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }
+
+TEST(sys_sem, union_semun) {
+  // https://github.com/android-ndk/ndk/issues/400
+#if defined(__BIONIC__)
+  semun arg;
+  semid_ds i1;
+  seminfo i2;
+  unsigned short a[] = { 1u, 2u };
+  arg.val = 123;
+  arg.buf = &i1;
+  arg.array = a;
+  arg.__buf = &i2;
+#else
+  // glibc already mostly removed this cruft (although it's still in <linux/sem.h>).
+#endif
+}
