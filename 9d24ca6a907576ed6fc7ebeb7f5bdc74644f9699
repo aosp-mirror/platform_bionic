@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c3684d0_0d1b5da9",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-18T13:53:39Z",
+      "side": 1,
+      "message": "Yeah, I feared something like this was what we\u0027d end up needing.",
+      "range": {
+        "startLine": 1607,
+        "startChar": 0,
+        "endLine": 1607,
+        "endChar": 1
+      },
+      "revId": "9d24ca6a907576ed6fc7ebeb7f5bdc74644f9699",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27631e22_7fb0002a",
+        "filename": "libc/dns/net/getnameinfo.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-05-18T13:53:39Z",
+      "side": 1,
+      "message": "So, I\u0027ve found some nice classical music to listen and I traced this code more and these need to be app_netid and app_mark, since these are values coming in from the apps.  Netd doesn\u0027t use getnameinfo to do anything that requires going to the network (it just uses it to bytes/string conversion).",
+      "range": {
+        "startLine": 303,
+        "startChar": 51,
+        "endLine": 303,
+        "endChar": 54
+      },
+      "revId": "9d24ca6a907576ed6fc7ebeb7f5bdc74644f9699",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
