@@ -19,7 +19,6 @@
 
 #include <inttypes.h>
 #include <sys/mman.h>
-#include <sys/sysmacros.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -45,6 +44,8 @@
 #endif
 
 #if defined(__linux__)
+
+#include <sys/sysmacros.h>
 
 struct map_record {
   uintptr_t addr_start;
