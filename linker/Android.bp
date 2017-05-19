@@ -101,6 +101,12 @@ cc_binary {
         "-Werror",
     ],
 
+    product_variables: {
+        debuggable: {
+            cppflags: ["-DUSE_LD_CONFIG_FILE"],
+        },
+    },
+
     cppflags: ["-Wold-style-cast"],
 
     // we are going to link libc++_static manually because

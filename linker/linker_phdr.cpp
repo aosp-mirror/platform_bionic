@@ -147,8 +147,9 @@ ElfReader::ElfReader()
 }
 
 bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file_size) {
-  CHECK(!did_read_);
-  CHECK(!did_load_);
+  if (did_read_) {
+    return true;
+  }
   name_ = name;
   fd_ = fd;
   file_offset_ = file_offset;
@@ -167,7 +168,9 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
 
 bool ElfReader::Load(const android_dlextinfo* extinfo) {
   CHECK(did_read_);
-  CHECK(!did_load_);
+  if (did_load_) {
+    return true;
+  }
   if (ReserveAddressSpace(extinfo) &&
       LoadSegments() &&
       FindPhdr()) {

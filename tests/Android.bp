@@ -298,7 +298,13 @@ cc_test_library {
                 "libLLVMSupport",
             ],
         }
-    }
+    },
+
+    product_variables: {
+        debuggable: {
+            cppflags: ["-DUSE_LD_CONFIG_FILE"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -591,6 +597,12 @@ cc_test_host {
 
     sanitize: {
         never: false,
+    },
+
+    product_variables: {
+        debuggable: {
+            cppflags: ["-DUSE_LD_CONFIG_FILE"],
+        },
     },
 }
 
