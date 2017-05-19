@@ -337,7 +337,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   somain = si;
 
-  init_default_namespace(executable_path);
+  std::vector<android_namespace_t*> namespaces = init_default_namespaces(executable_path);
 
   if (!si->prelink_image()) {
     async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
@@ -345,6 +345,13 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
+  // ... and add it to all other linked namespaces
+  for (auto linked_ns : namespaces) {
+    if (linked_ns != &g_default_namespace) {
+      linked_ns->add_soinfo(somain);
+      somain->add_secondary_namespace(linked_ns);
+    }
+  }
 
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
@@ -362,6 +369,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
   const char** needed_library_names = &needed_library_name_list[0];
   size_t needed_libraries_count = needed_library_name_list.size();
 
+  // readers_map is shared across recursive calls to find_libraries so that we
+  // don't need to re-load elf headers.
+  std::unordered_map<const soinfo*, ElfReader> readers_map;
   if (needed_libraries_count > 0 &&
       !find_libraries(&g_default_namespace,
                       si,
@@ -373,7 +383,9 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
                       RTLD_GLOBAL,
                       nullptr,
                       true /* add_as_children */,
-                      true /* search_linked_namespaces */)) {
+                      true /* search_linked_namespaces */,
+                      readers_map,
+                      &namespaces)) {
     async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
