@@ -52,7 +52,7 @@ struct sembuf {
   short sem_flg;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
-union semun {
+union __kernel_legacy_semun {
   int val;
   struct __kernel_legacy_semid_ds __user * buf;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

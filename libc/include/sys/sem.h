@@ -39,9 +39,17 @@
 
 #include <linux/sem.h>
 
+__BEGIN_DECLS
+
 #define semid_ds semid64_ds
 
-__BEGIN_DECLS
+union semun {
+  int val;
+  struct semid_ds* buf;
+  unsigned short* array;
+  struct seminfo* __buf;
+  void* __pad;
+};
 
 int semctl(int, int, int, ...) __INTRODUCED_IN(26);
 int semget(key_t, int, int) __INTRODUCED_IN(26);
