@@ -72,19 +72,25 @@ static int __execl(const char* name, const char* argv0, ExecVariant variant, va_
 int execl(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecL, ap);
+  int result = __execl(name, arg, kIsExecL, ap);
+  va_end(ap);
+  return result;
 }
 
 int execle(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLE, ap);
+  int result = __execl(name, arg, kIsExecLE, ap);
+  va_end(ap);
+  return result;
 }
 
 int execlp(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLP, ap);
+  int result = __execl(name, arg, kIsExecLP, ap);
+  va_end(ap);
+  return result;
 }
 
 int execv(const char* name, char* const* argv) {
