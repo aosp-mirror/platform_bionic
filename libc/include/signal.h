@@ -136,16 +136,16 @@ int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
 int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
-  __INTRODUCED_IN_FUTURE;
+  __INTRODUCED_IN(26);
 int sigignore(int)
-  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
+  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
 int sigpause(int)
-  __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN_FUTURE;
+  __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN(26);
 int sigrelse(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
-  __INTRODUCED_IN_FUTURE;
+  __INTRODUCED_IN(26);
 sighandler_t sigset(int, sighandler_t)
-  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
+  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
 
 int raise(int);
 int kill(pid_t, int);

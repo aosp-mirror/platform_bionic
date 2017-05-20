@@ -42,10 +42,10 @@ __BEGIN_DECLS
 
 typedef unsigned long shmatt_t;
 
-void* shmat(int, const void*, int) __INTRODUCED_IN_FUTURE;
-int shmctl(int, int, struct shmid_ds*) __INTRODUCED_IN_FUTURE;
-int shmdt(const void*) __INTRODUCED_IN_FUTURE;
-int shmget(key_t, size_t, int) __INTRODUCED_IN_FUTURE;
+void* shmat(int, const void*, int) __INTRODUCED_IN(26);
+int shmctl(int, int, struct shmid_ds*) __INTRODUCED_IN(26);
+int shmdt(const void*) __INTRODUCED_IN(26);
+int shmget(key_t, size_t, int) __INTRODUCED_IN(26);
 
 __END_DECLS
 

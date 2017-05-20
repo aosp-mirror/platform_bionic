@@ -326,7 +326,7 @@ __socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*,
         socklen_t*) __overloadable __RENAME_CLANG(recvfrom);
 
 extern ssize_t __sendto_chk(int, const void*, size_t, size_t, int, const struct sockaddr*,
-        socklen_t) __INTRODUCED_IN_FUTURE;
+        socklen_t) __INTRODUCED_IN(26);
 ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*,
         socklen_t*) __INTRODUCED_IN(21);
 
