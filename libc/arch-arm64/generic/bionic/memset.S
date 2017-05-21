@@ -80,7 +80,7 @@
 #define tmp1w		w5
 #define tmp2		x6
 #define tmp2w		w6
-#define zva_len		x5
+#define zva_len		x7
 #define zva_lenw	w7
 
 #define L(l) .L ## l

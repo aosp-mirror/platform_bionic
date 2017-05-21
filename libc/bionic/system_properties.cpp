@@ -1047,16 +1047,15 @@ static bool initialize_properties() {
     if (!initialize_properties_from_file("/system/etc/selinux/plat_property_contexts")) {
       return false;
     }
-    if (!initialize_properties_from_file("/vendor/etc/selinux/nonplat_property_contexts")) {
-      return false;
-    }
+    // Don't check for failure here, so we always have a sane list of properties.
+    // E.g. In case of recovery, the vendor partition will not have mounted and we
+    // still need the system / platform properties to function.
+    initialize_properties_from_file("/vendor/etc/selinux/nonplat_property_contexts");
   } else {
     if (!initialize_properties_from_file("/plat_property_contexts")) {
       return false;
     }
-    if (!initialize_properties_from_file("/nonplat_property_contexts")) {
-      return false;
-    }
+    initialize_properties_from_file("/nonplat_property_contexts");
   }
 
   return true;
