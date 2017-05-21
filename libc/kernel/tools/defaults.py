@@ -70,6 +70,8 @@ kernel_token_replacements = {
     "semid_ds": "__kernel_legacy_semid_ds",
     "shmid_ds": "__kernel_legacy_shmid_ds",
     "ipc_perm": "__kernel_legacy_ipc_perm",
+    # The kernel semun isn't usable (https://github.com/android-ndk/ndk/issues/400).
+    "semun": "__kernel_legacy_semun",
     # The kernel's _NSIG/NSIG are one less than the userspace value, so we need to move them aside.
     "_NSIG": "_KERNEL__NSIG",
     "NSIG": "_KERNEL_NSIG",
