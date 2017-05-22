@@ -37,8 +37,21 @@
 
 __BEGIN_DECLS
 
+/*
+ * Some third-party code uses the existence of IN_CLOEXEC/IN_NONBLOCK to detect
+ * the availability of inotify_init1. This is not correct, since
+ * `syscall(__NR_inotify_init1, IN_CLOEXEC)` is still valid even if the C
+ * library doesn't have that function, but for the time being we don't want to
+ * harm adoption to the unified headers. We'll avoid defining IN_CLOEXEC and
+ * IN_NONBLOCK if we don't have inotify_init1 for the time being, and maybe
+ * revisit this later.
+ *
+ * https://github.com/android-ndk/ndk/issues/394
+ */
+#if __ANDROID_API__ >= __ANDROID_API_L__
 #define IN_CLOEXEC O_CLOEXEC
 #define IN_NONBLOCK O_NONBLOCK
+#endif
 
 int inotify_init(void);
 int inotify_init1(int) __INTRODUCED_IN(21);
