@@ -86,6 +86,7 @@ int android_getaddrinfofornet(const char *, const char *, const struct addrinfo 
  * explore_fqdn() dispatch table method, with the below function only making DNS calls.
  */
 struct hostent *android_gethostbyaddrfornetcontext(const void *, socklen_t, int, const struct android_net_context *) __used_in_netd;
+struct hostent *android_gethostbynamefornetcontext(const char *, int, const struct android_net_context *) __used_in_netd;
 int android_getaddrinfofornetcontext(const char *, const char *, const struct addrinfo *,
     const struct android_net_context *, struct addrinfo **) __used_in_netd;
 
