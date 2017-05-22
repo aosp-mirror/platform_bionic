@@ -1336,6 +1336,7 @@ LIBC_PRIVATE {
     android_getaddrinfofornet;
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
+    android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
     arc4random_addrandom; # arm x86 mips
     arc4random_stir; # arm x86 mips

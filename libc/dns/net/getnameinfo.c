@@ -300,7 +300,10 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 			break;
 		}
 	} else {
-		hp = android_gethostbyaddrfornet_proxy(addr, afd->a_addrlen, afd->a_af, netid, mark);
+		// This code should only run in the app context, not inside netd, so netid is
+		// the app's netid.  netd doesn't use getnameinfo for network requests.
+		const struct android_net_context netcontext = { .app_netid = netid, .app_mark = mark };
+		hp = android_gethostbyaddrfornetcontext_proxy(addr, afd->a_addrlen, afd->a_af, &netcontext);
 		if (hp) {
 #if 0
 			/*
