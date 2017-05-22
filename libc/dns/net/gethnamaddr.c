@@ -160,7 +160,7 @@ static int _dns_gethtbyaddr(void *, void *, va_list);
 static int _dns_gethtbyname(void *, void *, va_list);
 
 static struct hostent *gethostbyname_internal(const char *, int, res_state,
-    struct hostent *, char *, size_t, int *, unsigned, unsigned);
+    struct hostent *, char *, size_t, int *, const struct android_net_context *);
 static struct hostent* android_gethostbyaddrfornetcontext_proxy_internal(const void*, socklen_t,
     int, struct hostent *, char *, size_t, int *, const struct android_net_context *);
 
@@ -529,15 +529,15 @@ gethostbyname_r(const char *name, struct hostent *hp, char *buf, size_t buflen,
 	_DIAGASSERT(name != NULL);
 
 	if (res->options & RES_USE_INET6) {
-		*result = gethostbyname_internal(name, AF_INET6, res, hp, buf, buflen, errorp, NETID_UNSET,
-		                                 MARK_UNSET);
+		*result = gethostbyname_internal(name, AF_INET6, res, hp, buf, buflen, errorp,
+		                                 &NETCONTEXT_UNSET);
 		if (*result) {
 			__res_put_state(res);
 			return 0;
 		}
 	}
-	*result = gethostbyname_internal(name, AF_INET, res, hp, buf, buflen, errorp, NETID_UNSET,
-	                                 MARK_UNSET);
+	*result = gethostbyname_internal(name, AF_INET, res, hp, buf, buflen, errorp,
+	                                 &NETCONTEXT_UNSET);
 	__res_put_state(res);
 	if (!*result && errno == ENOSPC) {
 	  errno = ERANGE;
@@ -558,8 +558,8 @@ gethostbyname2_r(const char *name, int af, struct hostent *hp, char *buf,
 		*errorp = NETDB_INTERNAL;
 		return -1;
 	}
-	*result = gethostbyname_internal(name, af, res, hp, buf, buflen, errorp, NETID_UNSET,
-	                                 MARK_UNSET);
+	*result = gethostbyname_internal(name, af, res, hp, buf, buflen, errorp,
+	                                 &NETCONTEXT_UNSET);
 	__res_put_state(res);
 	if (!*result && errno == ENOSPC) {
 		errno = ERANGE;
@@ -822,17 +822,17 @@ fake:
 // very similar in proxy-ness to android_getaddrinfo_proxy
 static struct hostent *
 gethostbyname_internal(const char *name, int af, res_state res, struct hostent *hp, char *hbuf,
-                       size_t hbuflen, int *errorp, unsigned netid, unsigned mark)
+                       size_t hbuflen, int *errorp, const struct android_net_context *netcontext)
 {
 	FILE* proxy = android_open_proxy();
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
-		res_setnetid(res, netid);
-		res_setmark(res, mark);
+		res_setnetid(res, netcontext->dns_netid);
+		res_setmark(res, netcontext->dns_mark);
 		return gethostbyname_internal_real(name, af, res, hp, hbuf, hbuflen, errorp);
 	}
 
-	netid = __netdClientDispatch.netIdForResolv(netid);
+	unsigned netid = __netdClientDispatch.netIdForResolv(netcontext->app_netid);
 
 	// This is writing to system/netd/server/DnsProxyListener.cpp and changes
 	// here need to be matched there.
@@ -1611,13 +1611,21 @@ static struct android_net_context make_context(unsigned netid, unsigned mark) {
 struct hostent *
 android_gethostbynamefornet(const char *name, int af, unsigned netid, unsigned mark)
 {
+	const struct android_net_context netcontext = make_context(netid, mark);
+	return android_gethostbynamefornetcontext(name, af, &netcontext);
+}
+
+struct hostent *
+android_gethostbynamefornetcontext(const char *name, int af,
+	const struct android_net_context *netcontext)
+{
 	struct hostent *hp;
 	res_state res = __res_get_state();
 	if (res == NULL)
 		return NULL;
 	res_static rs = __res_get_static(); /* Use res_static to provide thread-safety. */
 	hp = gethostbyname_internal(name, af, res, &rs->host, rs->hostbuf, sizeof(rs->hostbuf),
-	                            &h_errno, netid, mark);
+	                            &h_errno, netcontext);
 	__res_put_state(res);
 	return hp;
 }
