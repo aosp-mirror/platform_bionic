@@ -523,6 +523,10 @@ res_nsend(res_state statp,
 					res_nclose(statp);
 					goto next_ns;
 				case res_done:
+					if (cache_status == RESOLV_CACHE_NOTFOUND) {
+						_resolv_cache_add(statp->netid, buf, buflen,
+								ans, resplen);
+					}
 					return (resplen);
 				case res_modified:
 					/* give the hook another try */
