@@ -116,17 +116,6 @@ struct __res_state; /* forward */
 #endif
 #endif
 
-typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
-	res_sendhookact;
-
-typedef res_sendhookact (*res_send_qhook)(struct sockaddr * const *,
-					      const u_char **, int *,
-					      u_char *, int, int *);
-
-typedef res_sendhookact (*res_send_rhook)(const struct sockaddr *,
-					      const u_char *, int, u_char *,
-					      int, int *);
-
 struct res_sym {
 	int		number;	   /* Identifying number, like T_MX */
 	const char *	name;	   /* Its symbolic name, like "MX" */

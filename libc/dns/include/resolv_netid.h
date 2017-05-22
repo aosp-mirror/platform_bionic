@@ -34,6 +34,7 @@
  */
 #include <sys/cdefs.h>
 #include <netinet/in.h>
+#include "resolv_params.h"
 #include <stdio.h>
 
 /*
@@ -71,6 +72,7 @@ struct android_net_context {
     unsigned dns_netid;
     unsigned dns_mark;
     uid_t uid;
+    res_send_qhook qhook;
 };
 
 #define NET_CONTEXT_INVALID_UID ((uid_t)-1)

@@ -43,4 +43,15 @@ struct __res_params {
     uint8_t max_samples; // max # samples taken into account for statistics
 };
 
+typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
+	res_sendhookact;
+
+typedef res_sendhookact (*res_send_qhook)(struct sockaddr * const *,
+					      const u_char **, int *,
+					      u_char *, int, int *);
+
+typedef res_sendhookact (*res_send_rhook)(const struct sockaddr *,
+					      const u_char *, int, u_char *,
+					      int, int *);
+
 #endif // _RESOLV_PARAMS_H
