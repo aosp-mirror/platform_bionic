@@ -119,6 +119,14 @@ static const int DnsProxyQueryResult = 222;
 static const char AskedForGot[] =
 			  "gethostby*.getanswer: asked for \"%s\", got \"%s\"";
 
+static const struct android_net_context NETCONTEXT_UNSET = {
+	.app_mark = MARK_UNSET,
+	.app_netid = NETID_UNSET,
+	.dns_mark = MARK_UNSET,
+	.dns_netid = NETID_UNSET,
+	.uid = NET_CONTEXT_INVALID_UID
+};
+
 #define	MAXPACKET	(64*1024)
 
 typedef union {
@@ -153,8 +161,8 @@ static int _dns_gethtbyname(void *, void *, va_list);
 
 static struct hostent *gethostbyname_internal(const char *, int, res_state,
     struct hostent *, char *, size_t, int *, unsigned, unsigned);
-static struct hostent* android_gethostbyaddrfornet_proxy_internal(const void*, socklen_t,
-    int, struct hostent *, char *, size_t, int *, unsigned, unsigned);
+static struct hostent* android_gethostbyaddrfornetcontext_proxy_internal(const void*, socklen_t,
+    int, struct hostent *, char *, size_t, int *, const struct android_net_context *);
 
 static const ns_src default_dns_files[] = {
 	{ NSSRC_FILES, 	NS_SUCCESS },
@@ -850,8 +858,8 @@ gethostbyname_internal(const char *name, int af, res_state res, struct hostent *
 int gethostbyaddr_r(const void *addr, socklen_t len, int af, struct hostent *hp, char *buf,
                     size_t buflen, struct hostent **result, int *h_errnop)
 {
-	*result = android_gethostbyaddrfornet_proxy_internal(addr, len, af, hp, buf, buflen, h_errnop,
-                                                       NETID_UNSET, MARK_UNSET);
+	*result = android_gethostbyaddrfornetcontext_proxy_internal(
+		addr, len, af, hp, buf, buflen, h_errnop, &NETCONTEXT_UNSET);
 	if (!*result && errno == ENOSPC) {
 		errno = ERANGE;
 		return ERANGE;
@@ -860,8 +868,9 @@ int gethostbyaddr_r(const void *addr, socklen_t len, int af, struct hostent *hp,
 }
 
 static struct hostent *
-android_gethostbyaddrfornet_real(const void *addr, socklen_t len, int af, struct hostent *hp,
-                                 char *buf, size_t buflen, int *he, unsigned netid, unsigned mark)
+android_gethostbyaddrfornetcontext_real(const void *addr, socklen_t len, int af, struct hostent *hp,
+                                 char *buf, size_t buflen, int *he,
+				 const struct android_net_context *netcontext)
 {
 	const u_char *uaddr = (const u_char *)addr;
 	socklen_t size;
@@ -913,21 +922,21 @@ android_gethostbyaddrfornet_real(const void *addr, socklen_t len, int af, struct
 	info.he = he;
 	*he = NETDB_INTERNAL;
 	if (nsdispatch(&info, dtab, NSDB_HOSTS, "gethostbyaddr",
-	    default_dns_files, uaddr, len, af, netid, mark) != NS_SUCCESS)
+	    default_dns_files, uaddr, len, af, netcontext) != NS_SUCCESS)
 		return NULL;
 	*he = NETDB_SUCCESS;
 	return hp;
 }
 
 static struct hostent*
-android_gethostbyaddrfornet_proxy_internal(const void* addr, socklen_t len, int af,
+android_gethostbyaddrfornetcontext_proxy_internal(const void* addr, socklen_t len, int af,
                              struct hostent *hp, char *hbuf, size_t hbuflen, int *he,
-                             unsigned netid, unsigned mark)
+                             const struct android_net_context *netcontext)
 {
 	FILE* proxy = android_open_proxy();
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
-		return android_gethostbyaddrfornet_real(addr,len, af, hp, hbuf, hbuflen, he, netid, mark);
+		return android_gethostbyaddrfornetcontext_real(addr,len, af, hp, hbuf, hbuflen, he, netcontext);
 	}
 
 	char buf[INET6_ADDRSTRLEN];  //big enough for IPv4 and IPv6
@@ -937,7 +946,7 @@ android_gethostbyaddrfornet_proxy_internal(const void* addr, socklen_t len, int 
 		return NULL;
 	}
 
-	netid = __netdClientDispatch.netIdForResolv(netid);
+	unsigned netid = __netdClientDispatch.netIdForResolv(netcontext->app_netid);
 
 	if (fprintf(proxy, "gethostbyaddr %s %d %d %u",
 			addrStr, len, af, netid) < 0) {
@@ -1238,15 +1247,14 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 	char *bf;
 	size_t blen;
 	struct getnamaddr *info = rv;
-	unsigned netid, mark;
+	const struct android_net_context *netcontext;
 
 	_DIAGASSERT(rv != NULL);
 
 	uaddr = va_arg(ap, unsigned char *);
 	info->hp->h_length = va_arg(ap, int);
 	info->hp->h_addrtype = va_arg(ap, int);
-	netid = va_arg(ap, unsigned);
-	mark = va_arg(ap, unsigned);
+	netcontext = va_arg(ap, const struct android_net_context *);
 
 	switch (info->hp->h_addrtype) {
 	case AF_INET:
@@ -1288,8 +1296,8 @@ _dns_gethtbyaddr(void *rv, void	*cb_data, va_list ap)
 		free(buf);
 		return NS_NOTFOUND;
 	}
-	res_setnetid(res, netid);
-	res_setmark(res, mark);
+	res_setnetid(res, netcontext->dns_netid);
+	res_setmark(res, netcontext->dns_mark);
 	n = res_nquery(res, qbuf, C_IN, T_PTR, buf->buf, (int)sizeof(buf->buf));
 	if (n < 0) {
 		free(buf);
@@ -1585,6 +1593,21 @@ gethostbyname2(const char *name, int af)
 	return result;
 }
 
+// android_gethostby*fornet can be called in two different contexts.
+//  - In the proxy client context (proxy != NULL), |netid| is |app_netid|.
+//  - In the proxy listener context (proxy == NULL), |netid| is |dns_netid|.
+// The netcontext is constructed before checking which context we are in.
+// Therefore, we have to populate both fields, and rely on the downstream code to check whether
+// |proxy == NULL|, and use that info to query the field that matches the caller's intent.
+static struct android_net_context make_context(unsigned netid, unsigned mark) {
+	struct android_net_context netcontext = NETCONTEXT_UNSET;
+	netcontext.app_netid = netid;
+	netcontext.app_mark = mark;
+	netcontext.dns_netid = netid;
+	netcontext.dns_mark = mark;
+	return netcontext;
+}
+
 struct hostent *
 android_gethostbynamefornet(const char *name, int af, unsigned netid, unsigned mark)
 {
@@ -1602,22 +1625,30 @@ android_gethostbynamefornet(const char *name, int af, unsigned netid, unsigned m
 struct hostent *
 gethostbyaddr(const void *addr, socklen_t len, int af)
 {
-	return android_gethostbyaddrfornet_proxy(addr, len, af, NETID_UNSET, MARK_UNSET);
+	return android_gethostbyaddrfornetcontext_proxy(addr, len, af, &NETCONTEXT_UNSET);
 }
 
 struct hostent *
 android_gethostbyaddrfornet(const void *addr, socklen_t len, int af, unsigned netid, unsigned mark)
 {
-	return android_gethostbyaddrfornet_proxy(addr, len, af, netid, mark);
+	const struct android_net_context netcontext = make_context(netid, mark);
+	return android_gethostbyaddrfornetcontext(addr, len, af, &netcontext);
+}
+
+struct hostent *
+android_gethostbyaddrfornetcontext(const void *addr, socklen_t len, int af,
+	const struct android_net_context *netcontext)
+{
+	return android_gethostbyaddrfornetcontext_proxy(addr, len, af, netcontext);
 }
 
 __LIBC_HIDDEN__ struct hostent*
-android_gethostbyaddrfornet_proxy(const void* addr, socklen_t len, int af,
-                                  unsigned netid, unsigned mark)
+android_gethostbyaddrfornetcontext_proxy(const void* addr, socklen_t len, int af,
+                                  const struct android_net_context *netcontext)
 {
 	res_static rs = __res_get_static(); /* Use res_static to provide thread-safety. */
-	return android_gethostbyaddrfornet_proxy_internal(addr, len, af, &rs->host, rs->hostbuf,
-                                                    sizeof(rs->hostbuf), &h_errno, netid, mark);
+	return android_gethostbyaddrfornetcontext_proxy_internal(addr, len, af, &rs->host, rs->hostbuf,
+                                                    sizeof(rs->hostbuf), &h_errno, netcontext);
 }
 
 struct hostent *
