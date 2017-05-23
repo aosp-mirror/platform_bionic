@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2aa72dac_0fb2e246",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-05-23T22:00:19Z",
+      "side": 1,
+      "message": "Agreed. Let\u0027s leave it out in this case.",
+      "parentUuid": "561bbae4_a4638b44",
+      "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4399117d_59c44831",
         "filename": "libc/arch-common/bionic/crtbegin.c",
         "patchSetId": 2
