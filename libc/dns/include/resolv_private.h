@@ -504,8 +504,8 @@ __LIBC_HIDDEN__ void		res_setservers(res_state,
 __LIBC_HIDDEN__ int		res_getservers(res_state,
 				    union res_sockaddr_union *, int);
 
-__LIBC_HIDDEN__ void res_setnetid(res_state, unsigned);
-__LIBC_HIDDEN__ void res_setmark(res_state, unsigned);
+struct android_net_context; /* forward */
+__LIBC_HIDDEN__ void res_setnetcontext(res_state, const struct android_net_context *);
 
 // We use the OpenBSD __res_randomid...
 u_int __res_randomid(void);
