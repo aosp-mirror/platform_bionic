@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "561bbae4_a4638b44",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-23T21:52:55Z",
+      "side": 1,
+      "message": "is that bug actually relevant to this? (i genuinely don\u0027t know.) i deliberately balked at adding that bug because i feel like too many not-proven things are piling on there.",
+      "parentUuid": "b91b56d4_1f790d0e",
+      "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4399117d_59c44831",
         "filename": "libc/arch-common/bionic/crtbegin.c",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-23T21:44:03Z",
       "side": 1,
       "message": "undef PRE and POST maybe? I am not sure how complex the other included .h files here might ever become.",
+      "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca602c5b_0fc0a073",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-23T21:52:55Z",
+      "side": 1,
+      "message": "done.",
+      "parentUuid": "4399117d_59c44831",
       "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
