@@ -22,7 +22,7 @@ BIONIC_TESTS_ZIPALIGN := $(HOST_OUT_EXECUTABLES)/bionic_tests_zipalign
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_zip
@@ -44,7 +44,7 @@ $(LOCAL_BUILT_MODULE): $(my_shared_libs) $(BIONIC_TESTS_ZIPALIGN)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_runpath_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_runpath_zip
