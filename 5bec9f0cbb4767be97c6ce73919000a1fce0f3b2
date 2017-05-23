@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2c604b0_9ac2540c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1071083
+      },
+      "writtenOn": "2017-05-23T21:40:05Z",
+      "side": 1,
+      "message": "We do have a reproducible test case (e.g. building bertha and run it under a container on Chrome OS) :), but it seems like that doesn\u0027t matter with this change unless we\u0027d like to figure out what\u0027s wrong among __builtin_frame_address(0), -mstackrealign, and __attribute__((force_align_arg_pointer)). It looks more like a toolchain problem to me as I\u0027d expect __attribute__((force_align_arg_pointer)) and -mstackrealign should either play nice with each other, or yield a compiler error otherwise.",
+      "range": {
+        "startLine": 11,
+        "startChar": 35,
+        "endLine": 11,
+        "endChar": 75
+      },
+      "revId": "5bec9f0cbb4767be97c6ce73919000a1fce0f3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
