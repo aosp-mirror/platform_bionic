@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b91b56d4_1f790d0e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-05-23T21:44:03Z",
+      "side": 1,
+      "message": "http://b/31809417 ?",
+      "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4399117d_59c44831",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-05-23T21:44:03Z",
+      "side": 1,
+      "message": "undef PRE and POST maybe? I am not sure how complex the other included .h files here might ever become.",
+      "revId": "6ad41e4f1a6ddcbfc3210d7bddd160b2ff1f255b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
