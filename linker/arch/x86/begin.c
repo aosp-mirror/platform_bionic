@@ -48,9 +48,3 @@ __LIBC_HIDDEN__ void _start() {
 
   /* Unreachable */
 }
-
-/* Since linker has its own version of crtbegin (this file) it should have */
-/* own version of __stack_chk_fail_local for the case when it's built with */
-/* stack protector feature */
-
-#include "arch-x86/bionic/__stack_chk_fail_local.h"
