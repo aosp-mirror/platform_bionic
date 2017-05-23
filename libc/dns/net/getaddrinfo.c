@@ -1981,8 +1981,7 @@ _dns_getaddrinfo(void *rv, void	*cb_data, va_list ap)
 	 * fully populate the thread private data here, but if we get down there
 	 * and have a cache hit that would be wasted, so we do the rest there on miss
 	 */
-	res_setnetid(res, netcontext->dns_netid);
-	res_setmark(res, netcontext->dns_mark);
+	res_setnetcontext(res, netcontext);
 	if (res_searchN(name, &q, res) < 0) {
 		__res_put_state(res);
 		free(buf);
