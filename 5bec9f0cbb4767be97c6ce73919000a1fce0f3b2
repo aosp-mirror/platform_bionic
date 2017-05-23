@@ -22,6 +22,30 @@
       "revId": "5bec9f0cbb4767be97c6ce73919000a1fce0f3b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c7d5457_b395c3d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-23T21:44:31Z",
+      "side": 1,
+      "message": "i was looking for a unit test i could check in :-)\n\ncan you try cherrypicking this and see if it makes any difference?\n\n(there are some more follow-up CLs i\u0027d like to make. in particular this doesn\u0027t address the fact that the linker\u0027s equivalent code doesn\u0027t do any alignment.)",
+      "parentUuid": "b2c604b0_9ac2540c",
+      "range": {
+        "startLine": 11,
+        "startChar": 35,
+        "endLine": 11,
+        "endChar": 75
+      },
+      "revId": "5bec9f0cbb4767be97c6ce73919000a1fce0f3b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
