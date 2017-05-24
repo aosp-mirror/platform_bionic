@@ -30,36 +30,42 @@
 #include <stddef.h>
 #include <stdint.h>
 
-__attribute__ ((section (".preinit_array")))
+__attribute__((__section__(".preinit_array")))
 void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
 
-__attribute__ ((section (".init_array")))
+__attribute__((__section__(".init_array")))
 void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 
-__attribute__ ((section (".fini_array")))
+__attribute__((__section__(".fini_array")))
 void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 
-__LIBC_HIDDEN__
-#ifdef __i386__
-__attribute__((force_align_arg_pointer))
-#endif
-void _start() {
+static void _start_main(void* raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
   array.fini_array = &__FINI_ARRAY__;
 
-  void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
-#ifdef __x86_64__
-  // 16-byte stack alignment is required by x86_64 ABI
-  asm("andq  $~15, %rsp");
-#endif
   __libc_init(raw_args, NULL, &main, &array);
 }
+
+#define PRE ".text; .global _start; .type _start,%function; _start:"
+#define POST "; .size _start, .-_start"
+
+#if defined(__aarch64__)
+__asm__(PRE "mov x0,sp; b _start_main" POST);
+#elif defined(__arm__)
+__asm__(PRE "mov r0,sp; b _start_main" POST);
+#elif defined(__i386__)
+__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; pushl %eax; calll _start_main" POST);
+#elif defined(__x86_64__)
+__asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
+#else
+#error unsupported architecture
+#endif
+
+#undef PRE
+#undef POST
 
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif
