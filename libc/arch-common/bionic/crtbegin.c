@@ -69,6 +69,3 @@ __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif
