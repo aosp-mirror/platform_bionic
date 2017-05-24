@@ -57,6 +57,10 @@
         .thumb_func
 #endif
 
+        // To avoid warning about deprecated instructions, add an explicit
+        // arch. The code generated is exactly the same.
+        .arch armv7-a
+
 ENTRY(strcmp)
       /* Use LDRD whenever possible.  */
 
