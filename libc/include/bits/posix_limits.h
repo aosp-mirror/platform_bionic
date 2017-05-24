@@ -99,7 +99,7 @@
 #define _POSIX_THREAD_PRIORITY_SCHEDULING 200809L
 #define _POSIX_THREAD_PRIO_INHERIT -1  /* not implemented */
 #define _POSIX_THREAD_PRIO_PROTECT -1  /* not implemented */
-#define _POSIX_THREAD_PROCESS_SHARED  -1  /* not implemented */
+#define _POSIX_THREAD_PROCESS_SHARED  200809L  /* PTHREAD_PROCESS_SHARED supported. */
 #define _POSIX_THREAD_ROBUST_PRIO_INHERIT -1  /* not implemented */
 #define _POSIX_THREAD_ROBUST_PRIO_PROTECT -1  /* not implemented */
 #define _POSIX_THREAD_SAFE_FUNCTIONS 200809L
