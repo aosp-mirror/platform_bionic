@@ -20,9 +20,7 @@
 #define _XT_TCPMSS_H
 #include <linux/types.h>
 struct xt_tcpmss_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 mss;
 };
 #define XT_TCPMSS_CLAMP_PMTU 0xffff
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

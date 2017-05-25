@@ -20,7 +20,6 @@
 #define __LINUX_NSFS_H
 #include <linux/ioctl.h>
 #define NSIO 0xb7
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NS_GET_USERNS _IO(NSIO, 0x1)
 #define NS_GET_PARENT _IO(NSIO, 0x2)
 #endif

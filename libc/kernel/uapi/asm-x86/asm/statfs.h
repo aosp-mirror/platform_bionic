@@ -20,5 +20,4 @@
 #define _ASM_X86_STATFS_H
 #define ARCH_PACK_COMPAT_STATFS64 __attribute__((packed, aligned(4)))
 #include <asm-generic/statfs.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

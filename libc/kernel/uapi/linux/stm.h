@@ -20,19 +20,15 @@
 #define _UAPI_LINUX_STM_H
 #include <linux/types.h>
 struct stp_policy_id {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 size;
   __u16 master;
   __u16 channel;
   __u16 width;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 __reserved_0;
   __u32 __reserved_1;
   char id[0];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define STP_POLICY_ID_SET _IOWR('%', 0, struct stp_policy_id)
 #define STP_POLICY_ID_GET _IOR('%', 1, struct stp_policy_id)
 #define STP_SET_OPTIONS _IOW('%', 2, __u64)
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

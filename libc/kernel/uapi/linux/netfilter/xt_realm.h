@@ -20,10 +20,8 @@
 #define _XT_REALM_H
 #include <linux/types.h>
 struct xt_realm_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 id;
   __u32 mask;
   __u8 invert;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -20,4 +20,3 @@
 #define _ASM_X86_SIGCONTEXT32_H
 #include <asm/sigcontext.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
