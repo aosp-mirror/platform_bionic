@@ -20,11 +20,9 @@
 #define _XT_IDLETIMER_H
 #include <linux/types.h>
 #define MAX_IDLETIMER_LABEL_SIZE 28
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct idletimer_tg_info {
   __u32 timeout;
   char label[MAX_IDLETIMER_LABEL_SIZE];
   struct idletimer_tg * timer __attribute__((aligned(8)));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

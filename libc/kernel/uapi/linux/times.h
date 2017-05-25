@@ -20,11 +20,9 @@
 #define _LINUX_TIMES_H
 #include <linux/types.h>
 struct tms {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_clock_t tms_utime;
   __kernel_clock_t tms_stime;
   __kernel_clock_t tms_cutime;
   __kernel_clock_t tms_cstime;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

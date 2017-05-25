@@ -20,31 +20,25 @@
 #define _UAPI_LINUX_IF_EQL_H
 #define EQL_DEFAULT_SLAVE_PRIORITY 28800
 #define EQL_DEFAULT_MAX_SLAVES 4
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EQL_DEFAULT_MTU 576
 #define EQL_DEFAULT_RESCHED_IVAL HZ
 #define EQL_ENSLAVE (SIOCDEVPRIVATE)
 #define EQL_EMANCIPATE (SIOCDEVPRIVATE + 1)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EQL_GETSLAVECFG (SIOCDEVPRIVATE + 2)
 #define EQL_SETSLAVECFG (SIOCDEVPRIVATE + 3)
 #define EQL_GETMASTRCFG (SIOCDEVPRIVATE + 4)
 #define EQL_SETMASTRCFG (SIOCDEVPRIVATE + 5)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 typedef struct master_config {
   char master_name[16];
   int max_slaves;
   int min_slaves;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } master_config_t;
 typedef struct slave_config {
   char slave_name[16];
   long priority;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } slave_config_t;
 typedef struct slaving_request {
   char slave_name[16];
   long priority;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } slaving_request_t;
 #endif
