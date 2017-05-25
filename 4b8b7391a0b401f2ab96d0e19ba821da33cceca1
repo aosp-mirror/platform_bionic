@@ -22,6 +22,30 @@
       "revId": "4b8b7391a0b401f2ab96d0e19ba821da33cceca1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4d19a42_757c04e5",
+        "filename": "libc/kernel/uapi/asm-generic/ioctl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T00:57:10Z",
+      "side": 1,
+      "message": "_BIONIC_CAST does that for you.",
+      "parentUuid": "a46109ab_94afed41",
+      "range": {
+        "startLine": 52,
+        "startChar": 30,
+        "endLine": 52,
+        "endChar": 171
+      },
+      "revId": "4b8b7391a0b401f2ab96d0e19ba821da33cceca1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
