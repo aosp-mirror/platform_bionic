@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b1ab905_3a331a18",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "Oops, yes it was right before, but I like the new wording better.\n\nFixed.",
+      "parentUuid": "451b221f_6631bb46",
+      "range": {
+        "startLine": 399,
+        "startChar": 49,
+        "endLine": 399,
+        "endChar": 51
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74b73961_6c70b7f7",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "e1f4edf9_27d83c67",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "74b73961_6c70b7f7",
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcb34ab1_9d7babcf",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2017-05-25T04:58:39Z",
       "side": 1,
       "message": "p",
+      "range": {
+        "startLine": 403,
+        "startChar": 51,
+        "endLine": 403,
+        "endChar": 52
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28dac394_5901abf2",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcb34ab1_9d7babcf",
       "range": {
         "startLine": 403,
         "startChar": 51,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "299e67c8_993eb2a4",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "The original ones were libc.debug.malloc so I didn\u0027t want to change the basic structure too much.\n\nIt probably was libc because the old code was mostly in libc.\n\nFor P, I could create a new property that is debug only and leave this one for backwards compatibility.",
+      "parentUuid": "3856729f_43cbb9c7",
+      "range": {
+        "startLine": 406,
+        "startChar": 14,
+        "endLine": 406,
+        "endChar": 24
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2c454b8_eb3f3f3f",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 2
@@ -99,6 +189,30 @@
       "writtenOn": "2017-05-25T04:58:39Z",
       "side": 1,
       "message": "(i\u0027m tempted by the word \"obviously\" after \"but\" here, to make it clear we\u0027re not explaining something subtle!)",
+      "range": {
+        "startLine": 426,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 3
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34411483_866087e3",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "I added the obviously since it does make sense.",
+      "parentUuid": "b2c454b8_eb3f3f3f",
       "range": {
         "startLine": 426,
         "startChar": 0,
@@ -139,6 +253,24 @@
       "writtenOn": "2017-05-25T04:58:39Z",
       "side": 1,
       "message": "where do you mention truncation?",
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7ee9d4c_ab8e5a0a",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-25T23:20:28Z",
+      "side": 1,
+      "message": "I reworded this whole note.",
+      "parentUuid": "86c8dfbe_c494b417",
       "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
