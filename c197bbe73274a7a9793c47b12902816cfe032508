@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "451b221f_6631bb46",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "(wasn\u0027t this right before? \"double quoting ... is\" or \"double quotes ... are\"?)\n\nbut maybe even clearer as something like\n\n  The two levels of quoting in the ... are\n\n?",
+      "range": {
+        "startLine": 399,
+        "startChar": 49,
+        "endLine": 399,
+        "endChar": 51
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74b73961_6c70b7f7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "... The outer layer of quoting is for the shell on the host, to ensure that the inner layer of quoting is sent to the device, to make `backtrace guards` a single argument.\n\n(i\u0027m assuming someone had trouble understanding this, so i\u0027m wondering if we should explain _why_ to make it make some sense?)",
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcb34ab1_9d7babcf",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "p",
+      "range": {
+        "startLine": 403,
+        "startChar": 51,
+        "endLine": 403,
+        "endChar": 52
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3856729f_43cbb9c7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "off-topic, but why are these libc.debug. rather than debug.libc.? wouldn\u0027t the latter be usable by more people?",
+      "range": {
+        "startLine": 406,
+        "startChar": 14,
+        "endLine": 406,
+        "endChar": 24
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2c454b8_eb3f3f3f",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "(i\u0027m tempted by the word \"obviously\" after \"but\" here, to make it clear we\u0027re not explaining something subtle!)",
+      "range": {
+        "startLine": 426,
+        "startChar": 0,
+        "endLine": 426,
+        "endChar": 3
+      },
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a9105c_d398d1ab",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "off-topic, but all this seems like an obvious next step for the script... :-)",
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86c8dfbe_c494b417",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T04:58:39Z",
+      "side": 1,
+      "message": "where do you mention truncation?",
+      "revId": "c197bbe73274a7a9793c47b12902816cfe032508",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
