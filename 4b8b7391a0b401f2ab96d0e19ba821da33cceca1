@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a46109ab_94afed41",
+        "filename": "libc/kernel/uapi/asm-generic/ioctl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-05-25T00:29:55Z",
+      "side": 1,
+      "message": "I\u0027m having a hard time tracking all the layers of parens here, but I think the old one had outer parens because macros? Do we still need that here?",
+      "range": {
+        "startLine": 52,
+        "startChar": 30,
+        "endLine": 52,
+        "endChar": 171
+      },
+      "revId": "4b8b7391a0b401f2ab96d0e19ba821da33cceca1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
