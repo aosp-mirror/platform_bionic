@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbb271ff_a2c1178e",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T23:40:47Z",
+      "side": 1,
+      "message": "s/have// since we\u0027re talking about the future (or s/have/be/ to make that explicit if that\u0027s what you meant?)",
+      "range": {
+        "startLine": 418,
+        "startChar": 41,
+        "endLine": 418,
+        "endChar": 45
+      },
+      "revId": "73d87bc7dd65b235fe307bcae0e633e29728a8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f387bfe_776cbf74",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-25T23:40:47Z",
+      "side": 1,
+      "message": "s/, in most cases/to fit/?",
+      "range": {
+        "startLine": 453,
+        "startChar": 34,
+        "endLine": 453,
+        "endChar": 49
+      },
+      "revId": "73d87bc7dd65b235fe307bcae0e633e29728a8bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
