@@ -20,15 +20,12 @@
 #define _ASM_POSIX_TYPES_H
 #include <asm/sgidefs.h>
 typedef long __kernel_daddr_t;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define __kernel_daddr_t __kernel_daddr_t
 #if _MIPS_SZLONG == 32
 typedef struct {
   long val[2];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 } __kernel_fsid_t;
 #define __kernel_fsid_t __kernel_fsid_t
 #endif
 #include <asm-generic/posix_types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

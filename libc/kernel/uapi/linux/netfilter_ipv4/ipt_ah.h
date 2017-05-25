@@ -20,11 +20,9 @@
 #define _IPT_AH_H
 #include <linux/types.h>
 struct ipt_ah {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 spis[2];
   __u8 invflags;
 };
 #define IPT_AH_INV_SPI 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_AH_INV_MASK 0x01
 #endif

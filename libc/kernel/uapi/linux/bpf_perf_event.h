@@ -20,10 +20,8 @@
 #define _UAPI__LINUX_BPF_PERF_EVENT_H__
 #include <linux/types.h>
 #include <linux/ptrace.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct bpf_perf_event_data {
   struct pt_regs regs;
   __u64 sample_period;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -20,5 +20,4 @@
 #define __ASM_MIPS_BITSPERLONG_H
 #define __BITS_PER_LONG _MIPS_SZLONG
 #include <asm-generic/bitsperlong.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

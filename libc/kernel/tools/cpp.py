@@ -1098,33 +1098,24 @@ class Block(object):
 
         return result, indent
 
-    def writeWithWarning(self, out, warning, left_count, repeat_count, indent):
-        """Dump the current block with warnings."""
+    def write(self, out, indent):
+        """Dump the current block."""
         # removeWhiteSpace() will sometimes creates non-directive blocks
         # without any tokens. These come from blocks that only contained
         # empty lines and spaces. They should not be printed in the final
         # output, and then should not be counted for this operation.
         #
         if self.directive is None and not self.tokens:
-            return left_count, indent
+            return indent
 
         if self.directive:
             out.write(str(self) + '\n')
-            left_count -= 1
-            if left_count == 0:
-                out.write(warning)
-                left_count = repeat_count
-
         else:
             lines, indent = self.format_blocks(self.tokens, indent)
             for line in lines:
                 out.write(line + '\n')
-                left_count -= 1
-                if left_count == 0:
-                    out.write(warning)
-                    left_count = repeat_count
 
-        return left_count, indent
+        return indent
 
     def __repr__(self):
         """Generate the representation of a given block."""
@@ -1243,14 +1234,9 @@ class BlockList(object):
         return result
 
     def write(self, out):
-        out.write(str(self))
-
-    def writeWithWarning(self, out, warning, repeat_count):
-        left_count = repeat_count
         indent = 0
         for b in self.blocks:
-            left_count, indent = b.writeWithWarning(out, warning, left_count,
-                                                    repeat_count, indent)
+            indent = b.write(out, indent)
 
     def removeVarsAndFuncs(self, knownStatics=None):
         """Remove variable and function declarations.
@@ -1795,7 +1781,7 @@ def test_optimizeAll():
 #endif
 #ifndef __SIGRTMAX
 #define __SIGRTMAX 123
-#endif\
+#endif
 """
 
     out = utils.StringOutput()

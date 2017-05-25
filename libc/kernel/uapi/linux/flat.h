@@ -20,29 +20,23 @@
 #define _UAPI_LINUX_FLAT_H
 #define FLAT_VERSION 0x00000004L
 #define MAX_SHARED_LIBS (1)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct flat_hdr {
   char magic[4];
   unsigned long rev;
   unsigned long entry;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long data_start;
   unsigned long data_end;
   unsigned long bss_end;
   unsigned long stack_size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long reloc_start;
   unsigned long reloc_count;
   unsigned long flags;
   unsigned long build_date;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long filler[5];
 };
 #define FLAT_FLAG_RAM 0x0001
 #define FLAT_FLAG_GOTPIC 0x0002
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FLAT_FLAG_GZIP 0x0004
 #define FLAT_FLAG_GZDATA 0x0008
 #define FLAT_FLAG_KTRACE 0x0010
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -20,7 +20,6 @@
 #define __ASM_SIGNAL_H
 #define SA_RESTORER 0x04000000
 #define MINSIGSTKSZ 5120
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIGSTKSZ 16384
 #include <asm-generic/signal.h>
 #endif
