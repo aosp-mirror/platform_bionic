@@ -59,6 +59,10 @@
         .syntax unified
         .fpu    neon
 
+        // To avoid warning about deprecated instructions, add an explicit
+        // arch. The code generated is exactly the same.
+        .arch armv7-a
+
 ENTRY(__memcpy_chk)
         cmp r2, r3
         bls memcpy
