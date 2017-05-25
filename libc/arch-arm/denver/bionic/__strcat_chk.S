@@ -33,6 +33,10 @@
     .thumb
     .thumb_func
 
+    // To avoid warning about deprecated instructions, add an explicit
+    // arch. The code generated is exactly the same.
+    .arch armv7-a
+
 // Get the length of src string, then get the source of the dst string.
 // Check that the two lengths together don't exceed the threshold, then
 // do a memcpy of the data.
