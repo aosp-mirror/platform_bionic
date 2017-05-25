@@ -20,5 +20,4 @@
 #define __ASM_BITSPERLONG_H
 #define __BITS_PER_LONG 64
 #include <asm-generic/bitsperlong.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

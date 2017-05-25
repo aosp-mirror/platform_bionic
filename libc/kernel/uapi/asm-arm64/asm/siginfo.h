@@ -20,5 +20,4 @@
 #define __ASM_SIGINFO_H
 #define __ARCH_SI_PREAMBLE_SIZE (4 * sizeof(int))
 #include <asm-generic/siginfo.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

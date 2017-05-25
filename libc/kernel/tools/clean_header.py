@@ -122,7 +122,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
 
     out = StringOutput()
     out.write(kernel_disclaimer)
-    blocks.writeWithWarning(out, kernel_warning, 4)
+    blocks.write(out)
     return out.get()
 
 

@@ -20,55 +20,44 @@
 #define _UAPI__SOUND_USB_STREAM_H
 #define USB_STREAM_INTERFACE_VERSION 2
 #define SNDRV_USB_STREAM_IOCTL_SET_PARAMS _IOW('H', 0x90, struct usb_stream_config)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_stream_packet {
   unsigned offset;
   unsigned length;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct usb_stream_config {
   unsigned version;
   unsigned sample_rate;
   unsigned period_frames;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned frame_size;
 };
 struct usb_stream {
   struct usb_stream_config cfg;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned read_size;
   unsigned write_size;
   int period_size;
   unsigned state;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int idle_insize;
   int idle_outsize;
   int sync_packet;
   unsigned insize_done;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned periods_done;
   unsigned periods_polled;
   struct usb_stream_packet outpacket[2];
   unsigned inpackets;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned inpacket_head;
   unsigned inpacket_split;
   unsigned inpacket_split_at;
   unsigned next_inpacket_split;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned next_inpacket_split_at;
   struct usb_stream_packet inpacket[0];
 };
 enum usb_stream_state {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   usb_stream_invalid,
   usb_stream_stopped,
   usb_stream_sync0,
   usb_stream_sync1,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   usb_stream_ready,
   usb_stream_running,
   usb_stream_xrun,
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

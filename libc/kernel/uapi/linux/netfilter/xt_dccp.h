@@ -20,20 +20,16 @@
 #define _XT_DCCP_H_
 #include <linux/types.h>
 #define XT_DCCP_SRC_PORTS 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_DCCP_DEST_PORTS 0x02
 #define XT_DCCP_TYPE 0x04
 #define XT_DCCP_OPTION 0x08
 #define XT_DCCP_VALID_FLAGS 0x0f
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_dccp_info {
   __u16 dpts[2];
   __u16 spts[2];
   __u16 flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 invflags;
   __u16 typemask;
   __u8 option;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
