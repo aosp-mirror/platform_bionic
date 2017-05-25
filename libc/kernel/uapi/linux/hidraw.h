@@ -20,29 +20,23 @@
 #define _UAPI_HIDRAW_H
 #include <linux/hid.h>
 #include <linux/types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hidraw_report_descriptor {
   __u32 size;
   __u8 value[HID_MAX_DESCRIPTOR_SIZE];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct hidraw_devinfo {
   __u32 bustype;
   __s16 vendor;
   __s16 product;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define HIDIOCGRDESCSIZE _IOR('H', 0x01, int)
 #define HIDIOCGRDESC _IOR('H', 0x02, struct hidraw_report_descriptor)
 #define HIDIOCGRAWINFO _IOR('H', 0x03, struct hidraw_devinfo)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HIDIOCGRAWNAME(len) _IOC(_IOC_READ, 'H', 0x04, len)
 #define HIDIOCGRAWPHYS(len) _IOC(_IOC_READ, 'H', 0x05, len)
 #define HIDIOCSFEATURE(len) _IOC(_IOC_WRITE | _IOC_READ, 'H', 0x06, len)
 #define HIDIOCGFEATURE(len) _IOC(_IOC_WRITE | _IOC_READ, 'H', 0x07, len)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define HIDRAW_FIRST_MINOR 0
 #define HIDRAW_MAX_DEVICES 64
 #define HIDRAW_BUFFER_SIZE 64
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

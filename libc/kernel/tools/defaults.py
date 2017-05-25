@@ -176,8 +176,3 @@ kernel_disclaimer = """\
  ****************************************************************************
  ****************************************************************************/
 """
-
-# This is the warning line that will be inserted every N-th line in the output
-kernel_warning = """\
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-"""

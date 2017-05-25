@@ -20,26 +20,21 @@
 #define _XT_MULTIPORT_H
 #include <linux/types.h>
 enum xt_multiport_flags {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   XT_MULTIPORT_SOURCE,
   XT_MULTIPORT_DESTINATION,
   XT_MULTIPORT_EITHER
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_MULTI_PORTS 15
 struct xt_multiport {
   __u8 flags;
   __u8 count;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 ports[XT_MULTI_PORTS];
 };
 struct xt_multiport_v1 {
   __u8 flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 count;
   __u16 ports[XT_MULTI_PORTS];
   __u8 pflags[XT_MULTI_PORTS];
   __u8 invert;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

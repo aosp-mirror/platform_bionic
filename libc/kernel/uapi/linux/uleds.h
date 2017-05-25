@@ -20,9 +20,7 @@
 #define _UAPI__ULEDS_H_
 #define LED_MAX_NAME_SIZE 64
 struct uleds_user_dev {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char name[LED_MAX_NAME_SIZE];
   int max_brightness;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

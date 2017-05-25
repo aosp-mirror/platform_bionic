@@ -20,10 +20,8 @@
 #define _UAPI_ASM_X86_VSYSCALL_H
 enum vsyscall_num {
   __NR_vgettimeofday,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __NR_vtime,
   __NR_vgetcpu,
 };
 #define VSYSCALL_ADDR (- 10UL << 20)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
