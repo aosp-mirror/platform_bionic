@@ -20,32 +20,26 @@
 #define __WIL6210_UAPI_H__
 #define __user
 #include <linux/sockios.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define WIL_IOCTL_MEMIO (SIOCDEVPRIVATE + 2)
 #define WIL_IOCTL_MEMIO_BLOCK (SIOCDEVPRIVATE + 3)
 enum wil_memio_op {
   wil_mmio_read = 0,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   wil_mmio_write = 1,
   wil_mmio_op_mask = 0xff,
   wil_mmio_addr_linker = 0 << 8,
   wil_mmio_addr_ahb = 1 << 8,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   wil_mmio_addr_bar = 2 << 8,
   wil_mmio_addr_mask = 0xff00,
 };
 struct wil_memio {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   uint32_t op;
   uint32_t addr;
   uint32_t val;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct wil_memio_block {
   uint32_t op;
   uint32_t addr;
   uint32_t size;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   void __user * block;
 };
 #endif

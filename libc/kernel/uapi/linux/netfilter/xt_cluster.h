@@ -20,16 +20,13 @@
 #define _XT_CLUSTER_MATCH_H
 #include <linux/types.h>
 enum xt_cluster_flags {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   XT_CLUSTER_F_INV = (1 << 0)
 };
 struct xt_cluster_match_info {
   __u32 total_nodes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 node_mask;
   __u32 hash_seed;
   __u32 flags;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_CLUSTER_NODES_MAX 32
 #endif

@@ -20,4 +20,3 @@
 #define __UAPI_ASM_BITFIELD_H
 #define __BITFIELD_FIELD(field,more) more field;
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

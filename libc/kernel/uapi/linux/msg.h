@@ -20,59 +20,47 @@
 #define _UAPI_LINUX_MSG_H
 #include <linux/ipc.h>
 #define MSG_STAT 11
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSG_INFO 12
 #define MSG_NOERROR 010000
 #define MSG_EXCEPT 020000
 #define MSG_COPY 040000
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct __kernel_legacy_msqid_ds {
   struct __kernel_legacy_ipc_perm msg_perm;
   struct msg * msg_first;
   struct msg * msg_last;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_time_t msg_stime;
   __kernel_time_t msg_rtime;
   __kernel_time_t msg_ctime;
   unsigned long msg_lcbytes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long msg_lqbytes;
   unsigned short msg_cbytes;
   unsigned short msg_qnum;
   unsigned short msg_qbytes;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_ipc_pid_t msg_lspid;
   __kernel_ipc_pid_t msg_lrpid;
 };
 #include <asm/msgbuf.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct msgbuf {
   __kernel_long_t mtype;
   char mtext[1];
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct msginfo {
   int msgpool;
   int msgmap;
   int msgmax;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int msgmnb;
   int msgmni;
   int msgssz;
   int msgtql;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned short msgseg;
 };
 #define MSGMNI 32000
 #define MSGMAX 8192
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSGMNB 16384
 #define MSGPOOL (MSGMNI * MSGMNB / 1024)
 #define MSGTQL MSGMNB
 #define MSGMAP MSGMNB
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define MSGSSZ 16
 #define __MSGSEG ((MSGPOOL * 1024) / MSGSSZ)
 #define MSGSEG (__MSGSEG <= 0xffff ? __MSGSEG : 0xffff)
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -20,4 +20,3 @@
 #define _UAPI_ASM_TYPES_H
 #include <asm-generic/int-ll64.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -20,22 +20,18 @@
 #define _IPT_ECN_TARGET_H
 #include <linux/types.h>
 #include <linux/netfilter/xt_DSCP.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_ECN_IP_MASK (~XT_DSCP_MASK)
 #define IPT_ECN_OP_SET_IP 0x01
 #define IPT_ECN_OP_SET_ECE 0x10
 #define IPT_ECN_OP_SET_CWR 0x20
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IPT_ECN_OP_MASK 0xce
 struct ipt_ECN_info {
   __u8 operation;
   __u8 ip_ect;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union {
     struct {
       __u8 ece : 1, cwr : 1;
     } tcp;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   } proto;
 };
 #endif

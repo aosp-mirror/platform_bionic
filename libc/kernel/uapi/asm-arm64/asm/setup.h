@@ -20,5 +20,4 @@
 #define __ASM_SETUP_H
 #include <linux/types.h>
 #define COMMAND_LINE_SIZE 2048
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
