@@ -28,13 +28,14 @@ TEST(sys_sysinfo, smoke) {
   ASSERT_GE(nprocs_conf, nprocs);
   ASSERT_EQ(sysconf(_SC_NPROCESSORS_CONF), nprocs_conf);
 
-  long avail_phys_pages = get_avphys_pages();
-  ASSERT_GT(avail_phys_pages, 0);
-  ASSERT_EQ(sysconf(_SC_AVPHYS_PAGES), avail_phys_pages);
-
   long phys_pages = get_phys_pages();
+  long avail_phys_pages = get_avphys_pages();
+
   ASSERT_GE(phys_pages, avail_phys_pages);
   ASSERT_EQ(sysconf(_SC_PHYS_PAGES), phys_pages);
+
+  ASSERT_GT(avail_phys_pages, 0);
+  ASSERT_GE(phys_pages, sysconf(_SC_AVPHYS_PAGES));
 }
 
 TEST(sys_sysinfo, sysinfo) {
