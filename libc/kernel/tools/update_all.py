@@ -95,6 +95,6 @@ updater = BatchFileUpdater()
 processFiles(updater, original_dir, modified_dir, "uapi", "uapi"),
 
 # Now process the special files.
-processFiles(updater, original_dir, modified_dir, "scsi", os.path.join("android", "scsi"))
+processFiles(updater, original_dir, modified_dir, "scsi", os.path.join("android", "scsi", "scsi"))
 
 updater.updateGitFiles()
