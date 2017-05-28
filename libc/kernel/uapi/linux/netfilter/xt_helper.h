@@ -20,7 +20,6 @@
 #define _XT_HELPER_H
 struct xt_helper_info {
   int invert;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char name[30];
 };
 #endif

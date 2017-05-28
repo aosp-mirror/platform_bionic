@@ -20,4 +20,3 @@
 #define _XT_CONNMARK_H_target
 #include <linux/netfilter/xt_connmark.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

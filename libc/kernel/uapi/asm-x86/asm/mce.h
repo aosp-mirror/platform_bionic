@@ -20,40 +20,32 @@
 #define _UAPI_ASM_X86_MCE_H
 #include <linux/types.h>
 #include <linux/ioctl.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mce {
   __u64 status;
   __u64 misc;
   __u64 addr;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 mcgstatus;
   __u64 ip;
   __u64 tsc;
   __u64 time;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 cpuvendor;
   __u8 inject_flags;
   __u8 severity;
   __u8 pad;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 cpuid;
   __u8 cs;
   __u8 bank;
   __u8 cpu;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 finished;
   __u32 extcpu;
   __u32 socketid;
   __u32 apicid;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u64 mcgcap;
   __u64 synd;
   __u64 ipid;
   __u64 ppin;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define MCE_GET_RECORD_LEN _IOR('M', 1, int)
 #define MCE_GET_LOG_LEN _IOR('M', 2, int)
 #define MCE_GETCLEAR_FLAGS _IOR('M', 3, int)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

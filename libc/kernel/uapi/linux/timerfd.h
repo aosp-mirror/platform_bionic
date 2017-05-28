@@ -20,12 +20,10 @@
 #define _UAPI_LINUX_TIMERFD_H
 #include <linux/types.h>
 #include <linux/fcntl.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/ioctl.h>
 #define TFD_TIMER_ABSTIME (1 << 0)
 #define TFD_TIMER_CANCEL_ON_SET (1 << 1)
 #define TFD_CLOEXEC O_CLOEXEC
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define TFD_NONBLOCK O_NONBLOCK
 #define TFD_IOC_SET_TICKS _IOW('T', 0, __u64)
 #endif

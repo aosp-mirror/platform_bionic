@@ -20,12 +20,10 @@
 #define _XT_SECMARK_H_target
 #include <linux/types.h>
 #define SECMARK_MODE_SEL 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SECMARK_SECCTX_MAX 256
 struct xt_secmark_target_info {
   __u8 mode;
   __u32 secid;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char secctx[SECMARK_SECCTX_MAX];
 };
 #endif

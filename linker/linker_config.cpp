@@ -371,6 +371,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
                                       bool is_asan,
                                       const Config** config,
                                       std::string* error_msg) {
+  // TODO(b/38114603) Currently, multiple namespaces does not support ASAN mode
+  // where some symbols should be intercepted via LD_PRELOAD; LD_PRELOADed libs
+  // are not being preloaded into the linked namespaces other than the default
+  // namespace. Until we fix the problem, we temporarily disable ld.config.txt
+  // in ASAN mode.
+  if (is_asan) {
+    return false;
+  }
+
   g_config.clear();
 
   std::unordered_map<std::string, PropertyValue> property_map;

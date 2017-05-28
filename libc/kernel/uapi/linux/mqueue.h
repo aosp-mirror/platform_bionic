@@ -20,19 +20,15 @@
 #define _LINUX_MQUEUE_H
 #define MQ_PRIO_MAX 32768
 #define MQ_BYTES_MAX 819200
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct mq_attr {
   __kernel_long_t mq_flags;
   __kernel_long_t mq_maxmsg;
   __kernel_long_t mq_msgsize;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_long_t mq_curmsgs;
   __kernel_long_t __reserved[4];
 };
 #define NOTIFY_NONE 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NOTIFY_WOKENUP 1
 #define NOTIFY_REMOVED 2
 #define NOTIFY_COOKIE_LEN 32
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

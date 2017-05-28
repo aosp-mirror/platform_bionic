@@ -2097,7 +2097,7 @@ ndk_headers {
 
 ndk_headers {
     name: "libc_kernel_android_scsi",
-    from: "kernel/android/scsi",
+    from: "kernel/android/scsi/scsi",
     to: "scsi",
     srcs: ["kernel/android/scsi/**/*.h"],
     license: "NOTICE",
