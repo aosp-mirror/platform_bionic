@@ -20,19 +20,15 @@
 #define _LINUX_NETFILTER_XT_IPRANGE_H 1
 #include <linux/types.h>
 #include <linux/netfilter.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum {
   IPRANGE_SRC = 1 << 0,
   IPRANGE_DST = 1 << 1,
   IPRANGE_SRC_INV = 1 << 4,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   IPRANGE_DST_INV = 1 << 5,
 };
 struct xt_iprange_mtinfo {
   union nf_inet_addr src_min, src_max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union nf_inet_addr dst_min, dst_max;
   __u8 flags;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

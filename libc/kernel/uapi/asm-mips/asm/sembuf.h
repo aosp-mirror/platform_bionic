@@ -20,12 +20,10 @@
 #define _ASM_SEMBUF_H
 struct semid64_ds {
   struct ipc64_perm sem_perm;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_time_t sem_otime;
   __kernel_time_t sem_ctime;
   unsigned long sem_nsems;
   unsigned long __unused1;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long __unused2;
 };
 #endif
