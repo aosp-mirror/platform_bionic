@@ -22,6 +22,30 @@
       "revId": "6bc8a4ec46f46205335f0ff2affe3273e1c0f244",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe7e7f7b_1b45dba7",
+        "filename": "libc/include/bits/ioctl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-05-30T22:23:24Z",
+      "side": 1,
+      "message": "Yeah, this is a -Wundefined-macro (or whatever the warning is) for GCC.",
+      "parentUuid": "155bf119_f3eb0d2a",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 13
+      },
+      "revId": "6bc8a4ec46f46205335f0ff2affe3273e1c0f244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
