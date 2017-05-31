@@ -16,6 +16,24 @@
       "revId": "ca84fe3be70666d015a7c069db2f16e57259ce85",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "625bad5c_dd7f8bee",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1582,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-05-31T17:40:27Z",
+      "side": 1,
+      "message": "This is in O.",
+      "parentUuid": "750aae87_477d3ad0",
+      "revId": "ca84fe3be70666d015a7c069db2f16e57259ce85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
