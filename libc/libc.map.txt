@@ -1579,4 +1579,5 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
+    mallopt;
 } LIBC_O;
