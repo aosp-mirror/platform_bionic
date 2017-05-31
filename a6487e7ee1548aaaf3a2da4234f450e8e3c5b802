@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c09819a8_dbfa3c6f",
+        "filename": "libc/SECCOMP_WHITELIST.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-05-31T23:20:27Z",
+      "side": 1,
+      "message": "why not arm,x86,mips?\n\ndid you check the arm version of this app?",
+      "revId": "a6487e7ee1548aaaf3a2da4234f450e8e3c5b802",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
