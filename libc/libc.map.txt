@@ -1304,6 +1304,7 @@ LIBC_O {
     getsubopt; # introduced=26
     hasmntopt; # introduced=26
     lutimes; # introduced=26
+    mallopt; # introduced=26
     mblen; # introduced=26
     msgctl; # introduced=26
     msgget; # introduced=26
@@ -1579,5 +1580,4 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
-    mallopt;
 } LIBC_O;
