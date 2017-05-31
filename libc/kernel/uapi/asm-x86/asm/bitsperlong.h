@@ -20,10 +20,8 @@
 #define __ASM_X86_BITSPERLONG_H
 #if defined(__x86_64__) && !defined(__ILP32__)
 #define __BITS_PER_LONG 64
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #else
 #define __BITS_PER_LONG 32
 #endif
 #include <asm-generic/bitsperlong.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

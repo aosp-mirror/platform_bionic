@@ -57,6 +57,3 @@ void __on_dlclose() {
 # include "atexit.h"
 #endif
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif

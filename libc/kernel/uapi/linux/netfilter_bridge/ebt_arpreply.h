@@ -20,10 +20,8 @@
 #define __LINUX_BRIDGE_EBT_ARPREPLY_H
 #include <linux/if_ether.h>
 struct ebt_arpreply_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned char mac[ETH_ALEN];
   int target;
 };
 #define EBT_ARPREPLY_TARGET "arpreply"
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
