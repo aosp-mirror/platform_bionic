@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a93a902_daeb03a2",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-05-31T00:27:35Z",
+      "side": 1,
+      "message": "This isn\u0027t my proudest code.  I\u0027m was thinking perhaps we can encapsulate these into a class and use a copy constructor, but since we\u0027re already not C++ and have raw pointers and C strings, that doesn\u0027t really buy us much.  I\u0027m open to ideas on making this saner.",
+      "revId": "2aa542a9b3cb20c1c2d5c5e56ce6401518d970c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa7a68f8_24f103e2",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1575,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-05-31T00:27:35Z",
+      "side": 1,
+      "message": "I really want to hide this for tests only.  Is there a more private way?  I tried the LIBC_PRIVATE above, but it hid it from the tests.",
+      "revId": "2aa542a9b3cb20c1c2d5c5e56ce6401518d970c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
