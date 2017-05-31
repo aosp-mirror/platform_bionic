@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "750aae87_477d3ad0",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1582,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-05-31T05:37:31Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in LIBC_P section?",
+      "revId": "ca84fe3be70666d015a7c069db2f16e57259ce85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
