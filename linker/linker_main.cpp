@@ -163,11 +163,11 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
  * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
  * Note that the linker shouldn't be on the soinfo list.
  */
-static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
-  static link_map linker_link_map_for_gdb;
+static link_map linker_link_map;
 
-  linker_link_map_for_gdb.l_addr = linker_base;
-  linker_link_map_for_gdb.l_name = linker_path;
+static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
+  linker_link_map.l_addr = linker_base;
+  linker_link_map.l_name = linker_path;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
@@ -178,9 +178,8 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_link_map_for_gdb.l_ld, nullptr);
+                                 &linker_link_map.l_ld, nullptr);
 
-  insert_link_map_into_debug_map(&linker_link_map_for_gdb);
 }
 
 extern "C" int __system_properties_init(void);
@@ -210,7 +209,7 @@ static char kLinkerPath[] = "/system/bin/linker";
  * fixed it's own GOT. It is safe to make references to externs
  * and other non-local data at this point.
  */
-static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(Addr) linker_base) {
+static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
   ProtectedDataGuard guard;
 
 #if TIMING
@@ -288,7 +287,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   map->l_addr = 0;
   map->l_name = const_cast<char*>(executable_path);
   insert_link_map_into_debug_map(map);
-  init_linker_info_for_gdb(linker_base, kLinkerPath);
+  insert_link_map_into_debug_map(&linker_link_map);
 
   // Extract information passed from the kernel.
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
@@ -554,16 +553,18 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     exit(0);
   }
 
+  init_linker_info_for_gdb(linker_addr, kLinkerPath);
+
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = get_libdl_info(kLinkerPath);
+  sonext = solist = get_libdl_info(kLinkerPath, linker_link_map);
   g_default_namespace.add_soinfo(solist);
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
+  ElfW(Addr) start_address = __linker_init_post_relocation(args);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 

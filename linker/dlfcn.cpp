@@ -322,7 +322,7 @@ static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
-soinfo* get_libdl_info(const char* linker_path) {
+soinfo* get_libdl_info(const char* linker_path, const link_map& linker_map) {
   if (__libdl_info == nullptr) {
     __libdl_info = new (__libdl_info_buf) soinfo(&g_default_namespace, linker_path, nullptr, 0, 0);
     __libdl_info->flags_ |= FLAG_LINKED;
@@ -338,6 +338,9 @@ soinfo* get_libdl_info(const char* linker_path) {
     __libdl_info->soname_ = "ld-android.so";
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
     __libdl_info->generate_handle();
+    __libdl_info->link_map_head.l_addr = linker_map.l_addr;
+    __libdl_info->link_map_head.l_name = linker_map.l_name;
+    __libdl_info->link_map_head.l_ld = linker_map.l_ld;
 #if defined(__work_around_b_24465209__)
     strlcpy(__libdl_info->old_name_, __libdl_info->soname_, sizeof(__libdl_info->old_name_));
 #endif
