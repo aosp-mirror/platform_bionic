@@ -100,7 +100,7 @@ enum RelocationKind {
 
 void count_relocation(RelocationKind kind);
 
-soinfo* get_libdl_info(const char* linker_path);
+soinfo* get_libdl_info(const char* linker_path, const link_map& linker_map);
 
 soinfo* find_containing_library(const void* p);
 
