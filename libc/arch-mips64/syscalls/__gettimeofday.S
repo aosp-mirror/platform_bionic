@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_gettime)
+ENTRY(__gettimeofday)
     .set push
     .set noreorder
-    li v0, __NR_clock_gettime
+    li v0, __NR_gettimeofday
     syscall
     bnez a3, 1f
     move a0, v0
@@ -22,4 +22,5 @@ ENTRY(clock_gettime)
     j t9
     move ra, t0
     .set pop
-END(clock_gettime)
+END(__gettimeofday)
+.hidden __gettimeofday

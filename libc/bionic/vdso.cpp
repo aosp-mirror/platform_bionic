@@ -17,8 +17,6 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_vdso.h"
 
-#if defined(__aarch64__) || defined(__arm__) || defined(__i386__) || defined(__x86_64__)
-
 #include <limits.h>
 #include <link.h>
 #include <string.h>
@@ -112,10 +110,3 @@ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
     }
   }
 }
-
-#else
-
-void __libc_init_vdso(libc_globals*, KernelArgumentBlock&) {
-}
-
-#endif
