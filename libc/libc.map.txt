@@ -1304,6 +1304,7 @@ LIBC_O {
     getsubopt; # introduced=26
     hasmntopt; # introduced=26
     lutimes; # introduced=26
+    mallopt; # introduced=26
     mblen; # introduced=26
     msgctl; # introduced=26
     msgget; # introduced=26
