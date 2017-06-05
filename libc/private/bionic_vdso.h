@@ -34,7 +34,7 @@
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
-#elif defined(__arm__) || defined(__i386__) || defined(__x86_64__)
+#else
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
 #endif

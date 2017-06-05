@@ -2,10 +2,10 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(gettimeofday)
+ENTRY(__clock_gettime)
     .set noreorder
     .cpload t9
-    li v0, __NR_gettimeofday
+    li v0, __NR_clock_gettime
     syscall
     bnez a3, 1f
     move a0, v0
@@ -16,4 +16,4 @@ ENTRY(gettimeofday)
     j t9
     nop
     .set reorder
-END(gettimeofday)
+END(__clock_gettime)

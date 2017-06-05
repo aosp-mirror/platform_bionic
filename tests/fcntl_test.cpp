@@ -20,12 +20,14 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/utsname.h>
+#include <sys/vfs.h>
 
 #include "TemporaryFile.h"
 
 // Glibc v2.19 doesn't include these in fcntl.h so host builds will fail without.
 #if !defined(FALLOC_FL_PUNCH_HOLE) || !defined(FALLOC_FL_KEEP_SIZE)
 #include <linux/falloc.h>
+#include <linux/magic.h>
 #endif
 
 TEST(fcntl, fcntl_smoke) {
@@ -287,7 +289,11 @@ TEST(fcntl, falloc_punch) {
 
   if (major < 4 || (major == 4 && minor < 1)) {
     TemporaryFile tf;
-    ASSERT_EQ(-1, fallocate(tf.fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 0, 1));
-    ASSERT_EQ(errno, EOPNOTSUPP);
+    struct statfs sfs;
+    ASSERT_EQ(0, fstatfs(tf.fd, &sfs));
+    if (sfs.f_type == EXT4_SUPER_MAGIC) {
+      ASSERT_EQ(-1, fallocate(tf.fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 0, 1));
+      ASSERT_EQ(errno, EOPNOTSUPP);
+    }
   }
 }

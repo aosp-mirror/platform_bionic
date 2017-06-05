@@ -46,9 +46,6 @@ TEST(link, dl_iterate_phdr) {
     void DoChecks(dl_phdr_info* info, size_t s) {
       ASSERT_EQ(sizeof(dl_phdr_info), s);
 
-      // TODO: why does the entry for the main executable have a null dlpi_addr and no name anyway?
-      if (++count == 1 && info->dlpi_addr == 0) return;
-
       ASSERT_TRUE(info->dlpi_name != nullptr);
 
       // Find the first PT_LOAD program header so we can find the ELF header.
