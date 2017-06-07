@@ -58,19 +58,42 @@ static void BM_string_memcpy(benchmark::State& state) {
 }
 BENCHMARK(BM_string_memcpy)->AT_COMMON_SIZES;
 
-static void BM_string_memmove(benchmark::State& state) {
+static void BM_string_memmove_non_overlapping(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* buf = new char[nbytes + 64];
-  memset(buf, 'x', nbytes + 64);
+  std::vector<char> src(nbytes, 'x');
+  std::vector<char> dst(nbytes, 'x');
 
   while (state.KeepRunning()) {
-    memmove(buf, buf + 1, nbytes); // Worst-case overlap.
+    memmove(dst.data(), src.data(), nbytes);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] buf;
 }
-BENCHMARK(BM_string_memmove)->AT_COMMON_SIZES;
+BENCHMARK(BM_string_memmove_non_overlapping)->AT_COMMON_SIZES;
+
+static void BM_string_memmove_overlap_dst_before_src(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> buf(nbytes + 1, 'x');
+
+  while (state.KeepRunning()) {
+    memmove(buf.data(), buf.data() + 1, nbytes); // Worst-case overlap.
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_memmove_overlap_dst_before_src)->AT_COMMON_SIZES;
+
+static void BM_string_memmove_overlap_src_before_dst(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> buf(nbytes + 1, 'x');
+
+  while (state.KeepRunning()) {
+    memmove(buf.data() + 1, buf.data(), nbytes); // Worst-case overlap.
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_memmove_overlap_src_before_dst)->AT_COMMON_SIZES;
 
 static void BM_string_memset(benchmark::State& state) {
   const size_t nbytes = state.range(0);
