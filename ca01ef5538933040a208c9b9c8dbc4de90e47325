@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4dd01d87_9910e3fc",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-07T22:51:43Z",
+      "side": 1,
+      "message": "(yeah, IIRC, there are intel memcpys that do it backwards by default)",
+      "parentUuid": "32facff2_9921a47e",
+      "range": {
+        "startLine": 61,
+        "startChar": 30,
+        "endLine": 61,
+        "endChar": 37
+      },
+      "revId": "ca01ef5538933040a208c9b9c8dbc4de90e47325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "36b2874d_89050026",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 1
@@ -107,6 +131,30 @@
       "side": 1,
       "message": "Ah, but you don\u0027t. You just have to allocate enough to guarantee being able to get a particular alignment.\n\nBut that would be true of anything, even memalign/posix_memalign don\u0027t do what micro_bench does, they only guarantee at least an alignment of at least, not forcing an exact alignment.",
       "parentUuid": "4e197a06_e448305e",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 32
+      },
+      "revId": "ca01ef5538933040a208c9b9c8dbc4de90e47325",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cf50379_a34563a5",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-07T22:51:43Z",
+      "side": 1,
+      "message": "(and even if you can\u0027t use vector, you should use std::unique_ptr\u003cchar[]\u003e instead)",
+      "parentUuid": "81e91d34_2e1df23a",
       "range": {
         "startLine": 63,
         "startChar": 2,
