@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "aed08217_d338d326",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-08T20:41:50Z",
+      "side": 1,
+      "message": "Agreed.",
+      "parentUuid": "17c7924b_460e17fa",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 24
+      },
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d438ac4_6a5b6f2f",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 4
@@ -59,6 +83,24 @@
       "writtenOn": "2017-06-08T02:29:36Z",
       "side": 1,
       "message": "Is it worth testing both directions of overlap, to make sure they\u0027re not wildly different?",
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d52695b4_92be0872",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-08T20:41:50Z",
+      "side": 1,
+      "message": "From a quick test, switching the +1 makes the overlapping test a good bit slower (~115% in the 64k case) on a bullhead.\nGiven that memmove has a pretty big use case for overlaps, I think it\u0027d be useful.",
+      "parentUuid": "2d438ac4_6a5b6f2f",
       "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
