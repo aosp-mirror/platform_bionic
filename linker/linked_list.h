@@ -127,7 +127,13 @@ class LinkedList {
         } else {
           p->next = next;
         }
+
+        if (tail_ == e) {
+          tail_ = p;
+        }
+
         Allocator::free(e);
+
         e = next;
       } else {
         p = e;
