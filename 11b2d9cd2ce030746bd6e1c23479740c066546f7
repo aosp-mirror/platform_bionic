@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7dc3d4d0_e076a431",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-08T02:29:36Z",
+      "side": 1,
+      "message": "overlapping and non-overlapping",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 58
+      },
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c7924b_460e17fa",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-08T02:29:36Z",
+      "side": 1,
+      "message": "IMO it\u0027s cleaner to use just dst.data() here (and throughout), it\u0027s fewer characters and you don\u0027t need the address-of.",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 24
+      },
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d438ac4_6a5b6f2f",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-08T02:29:36Z",
+      "side": 1,
+      "message": "Is it worth testing both directions of overlap, to make sure they\u0027re not wildly different?",
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
