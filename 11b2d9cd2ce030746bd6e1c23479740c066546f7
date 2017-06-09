@@ -122,6 +122,24 @@
       "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "520d26e0_58c338e1",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-09T18:42:57Z",
+      "side": 1,
+      "message": "memcpy\u0027s behaviour is typically undefined on overlapping buffers, isn\u0027t it?\nI\u0027d imagine we\u0027d see a lot more memmoves on overlaps than memcpy\u0027s and that we\u0027d want to stick with memmove to test the most common use, but if you\u0027re confident that a memcpy test would be a clearer indicator of the runtime I\u0027d yield.",
+      "parentUuid": "0dc8333c_b6e92a6b",
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
