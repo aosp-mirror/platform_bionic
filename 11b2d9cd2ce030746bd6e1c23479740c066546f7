@@ -104,6 +104,24 @@
       "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dc8333c_b6e92a6b",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-09T17:22:06Z",
+      "side": 1,
+      "message": "At some point in the future we will be adding the ability to modify the src dst alignments, so we should get the same or similar numbers by changing the alignment on the non-overlapping code.\n\nIn fact, really doing an overlapping memcpy benchmark might make more sense, because a memmove that is not going backwards and is overlapping uses the mempcpy implementation.",
+      "parentUuid": "d52695b4_92be0872",
+      "revId": "11b2d9cd2ce030746bd6e1c23479740c066546f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
