@@ -279,9 +279,10 @@ static bool parse_kernel_release(long* const major, long* const minor) {
 }
 
 /*
- * Kernels less than 4.1 are affected.
- * Devices that fail this test should include change id from Nexus:
- * Commit: 9b431291a1fadbdbcca1485711b5bab145112293
+ * b/28760453:
+ * Kernels older than 4.1 should have ext4 FALLOC_FL_PUNCH_HOLE disabled due to CVE-2015-8839.
+ * Devices that fail this test should cherry-pick the following commit:
+ * https://android.googlesource.com/kernel/msm/+/bdba352e898cbf57c8620ad68c8abf749c784d1f
  */
 TEST(fcntl, falloc_punch) {
   long major = 0, minor = 0;
