@@ -22,6 +22,29 @@
       "revId": "969c1e473d572b3cc9c9a75521b426d245d75ae8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e3fd575_3c5ba2d9",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-12T19:51:18Z",
+      "side": 1,
+      "message": "In fact, memread is really not a very useful benchmark. It\u0027s more of a compiler benchmark that is so artificial that it\u0027s better not to keep it around.\n\nIt has failed in interesting ways in the past, but none of which are real problems.",
+      "range": {
+        "startLine": 111,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 29
+      },
+      "revId": "969c1e473d572b3cc9c9a75521b426d245d75ae8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
