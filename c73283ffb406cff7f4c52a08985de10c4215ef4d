@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c176b32_1b0079b8",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-12T23:15:48Z",
+      "side": 1,
+      "message": "i think this comment is mildly harmful (seeming to legitimize a deprecated API and mentioning an API that\u0027s _not_ the one you should be using).\n\neither say nothing or \"Equivalent to pthread_mutex_timedlock, but available before API 21\" instead?",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 3
+      },
+      "revId": "c73283ffb406cff7f4c52a08985de10c4215ef4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
