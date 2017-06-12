@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7014d3f6_ab2656fd",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-12T19:44:26Z",
+      "side": 1,
+      "message": "just use an english description of what this benchmark is actually testing like sequential_array_access (since memread isn\u0027t a function)",
+      "range": {
+        "startLine": 111,
+        "startChar": 22,
+        "endLine": 111,
+        "endChar": 29
+      },
+      "revId": "969c1e473d572b3cc9c9a75521b426d245d75ae8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
