@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e891881e_30267eb4",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:15:29Z",
+      "side": 1,
+      "message": "Maybe something like only_copy instead of copy?",
+      "range": {
+        "startLine": 127,
+        "startChar": 29,
+        "endLine": 127,
+        "endChar": 33
+      },
+      "revId": "7ac390ec76067d60ebda8ef2a5ecdf04dfde85c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23a15e37_ed6cb954",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:15:29Z",
+      "side": 1,
+      "message": "It might be better to make this a 2 byte array to bypass any checks for a dst empty string. Two bytes to make this not the worst alignment for the copy.",
+      "range": {
+        "startLine": 132,
+        "startChar": 2,
+        "endLine": 132,
+        "endChar": 16
+      },
+      "revId": "7ac390ec76067d60ebda8ef2a5ecdf04dfde85c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d96ad037_7d898523",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:15:29Z",
+      "side": 1,
+      "message": "Same as above, might be better to use two bytes to avoid any special case implementations.",
+      "range": {
+        "startLine": 145,
+        "startChar": 24,
+        "endLine": 145,
+        "endChar": 31
+      },
+      "revId": "7ac390ec76067d60ebda8ef2a5ecdf04dfde85c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfcd23f9_9052ebc2",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:15:29Z",
+      "side": 1,
+      "message": "Also, I think one other variation would be useful, strcat_half_copy_half_seek.",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 49
+      },
+      "revId": "7ac390ec76067d60ebda8ef2a5ecdf04dfde85c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
