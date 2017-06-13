@@ -37,9 +37,9 @@
 
 __BEGIN_DECLS
 
-sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
-
 #if __ANDROID_API__ < __ANDROID_API_L__
+
+sighandler_t bsd_signal(int signum, sighandler_t handler) __REMOVED_IN(21);
 
 /* These weren't introduced until L. */
 int __libc_current_sigrtmax() __attribute__((__weak__)) __VERSIONER_NO_GUARD;
