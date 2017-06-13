@@ -88,6 +88,7 @@ cc_test_library {
         "nl_types_test.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
+        "qsort_test.cpp",
         "regex_test.cpp",
         "resolv_test.cpp",
         "sched_test.cpp",
