@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abd7b8aa_4bffc5ef",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:07:58Z",
+      "side": 1,
+      "message": "Why is nbytes divided by 2?",
+      "range": {
+        "startLine": 159,
+        "startChar": 24,
+        "endLine": 159,
+        "endChar": 34
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "895acbb1_2faa91b6",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-13T19:07:58Z",
+      "side": 1,
+      "message": "Same as above, why divide by 2?",
+      "range": {
+        "startLine": 173,
+        "startChar": 23,
+        "endLine": 173,
+        "endChar": 33
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
