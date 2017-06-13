@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dd84bde1_6d7c1683",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-13T20:08:55Z",
+      "side": 1,
+      "message": "To keep convention. If read nbytes/2 characters and write nybtes/2 characters, we\u0027ve processed nbytes bytes. The test for memcpy isn\u0027t doing this, so it\u0027d need to be changed if this isn\u0027t wrong.",
+      "parentUuid": "abd7b8aa_4bffc5ef",
+      "range": {
+        "startLine": 159,
+        "startChar": 24,
+        "endLine": 159,
+        "endChar": 34
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "895acbb1_2faa91b6",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-06-13T19:07:58Z",
       "side": 1,
       "message": "Same as above, why divide by 2?",
+      "range": {
+        "startLine": 173,
+        "startChar": 23,
+        "endLine": 173,
+        "endChar": 33
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c99badad_25270a7d",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-13T20:08:55Z",
+      "side": 1,
+      "message": "Same as above here. Comparisons of the full buffers would be processing 2 * nbytes characters.",
+      "parentUuid": "895acbb1_2faa91b6",
       "range": {
         "startLine": 173,
         "startChar": 23,
