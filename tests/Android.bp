@@ -61,6 +61,7 @@ cc_test_library {
         "dirent_test.cpp",
         "elf_test.cpp",
         "endian_test.cpp",
+        "errno_test.cpp",
         "error_test.cpp",
         "eventfd_test.cpp",
         "fcntl_test.cpp",
