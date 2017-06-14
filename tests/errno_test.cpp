@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,9 @@
  * SUCH DAMAGE.
  */
 
+#include <gtest/gtest.h>
+
 #include <errno.h>
-#include <stdint.h>
 
-#include "private/bionic_tls.h"
-
-int*  __errno() {
-  return reinterpret_cast<int*>(&(__get_tls()[TLS_SLOT_ERRNO]));
-}
+// Some GNU source likes to declare errno itself for some reason.
+extern "C" int errno;
