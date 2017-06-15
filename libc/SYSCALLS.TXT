@@ -143,7 +143,7 @@ int ___faccessat:faccessat(int, const char*, int)  all
 int ___fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86
-int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,mips64,x86_64
+int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
@@ -187,7 +187,7 @@ int __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
 int __statfs:statfs(const char*, struct statfs*)  arm64,mips64,x86_64
 
 int     fstat64|fstat:fstat64(int, struct stat*)    arm,mips,x86
-int     fstat64|fstat:fstat(int, struct stat*)    arm64,mips64,x86_64
+int     fstat64|fstat:fstat(int, struct stat*)    arm64,x86_64
 
 # file system
 int     chdir(const char*)              all
@@ -343,7 +343,7 @@ int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # MIPS-specific
-int     _flush_cache:cacheflush(char* addr, const int nbytes, const int op) mips,mips64
+int     _flush_cache:cacheflush(char* addr, const int nbytes, const int op) mips
 int     __set_tls:set_thread_area(void*) mips,mips64
 
 # x86-specific
