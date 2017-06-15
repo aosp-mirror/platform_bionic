@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "92a066c0_3722c46e",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-06-15T00:49:20Z",
+      "side": 1,
+      "message": "Actually though, given that everything else isn\u0027t following this convention (including the tests I just merged), I\u0027ll add these with nbytes instead of nbytes/2 and deal with this in an independent CL if it\u0027s even something to be dealt with.",
+      "parentUuid": "dd84bde1_6d7c1683",
+      "range": {
+        "startLine": 159,
+        "startChar": 24,
+        "endLine": 159,
+        "endChar": 34
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "895acbb1_2faa91b6",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 2
