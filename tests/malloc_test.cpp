@@ -100,16 +100,6 @@ TEST(malloc, memalign_non_power2) {
   }
 }
 
-TEST(malloc, posix_memalign_non_power2) {
-  void* ptr;
-  ASSERT_EQ(EINVAL, posix_memalign(&ptr, 17, 1024));
-}
-
-TEST(malloc, posix_memalign_overflow) {
-  void* ptr;
-  ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
-}
-
 TEST(malloc, memalign_realloc) {
   // Memalign and then realloc the pointer a couple of times.
   for (size_t alignment = 1; alignment <= 4096; alignment <<= 1) {
