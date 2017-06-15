@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "264fff95_39a531e8",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-15T00:52:15Z",
+      "side": 1,
+      "message": "It\u0027s really only copied nbytes, we don\u0027t consider reading the bytes as processing them. So don\u0027t do the divide by 2 since it\u0027s going to be unexpected.",
+      "parentUuid": "dd84bde1_6d7c1683",
+      "range": {
+        "startLine": 159,
+        "startChar": 24,
+        "endLine": 159,
+        "endChar": 34
+      },
+      "revId": "b17cbad97ec9b352a91990097ec68b67672f9636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "895acbb1_2faa91b6",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 2
