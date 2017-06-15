@@ -36,6 +36,23 @@
 
 #include "private/icu.h"
 
+enum {
+  WC_TYPE_INVALID = 0,
+  WC_TYPE_ALNUM,
+  WC_TYPE_ALPHA,
+  WC_TYPE_BLANK,
+  WC_TYPE_CNTRL,
+  WC_TYPE_DIGIT,
+  WC_TYPE_GRAPH,
+  WC_TYPE_LOWER,
+  WC_TYPE_PRINT,
+  WC_TYPE_PUNCT,
+  WC_TYPE_SPACE,
+  WC_TYPE_UPPER,
+  WC_TYPE_XDIGIT,
+  WC_TYPE_MAX
+};
+
 static bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
   typedef UBool (*FnT)(UChar32, UProperty);
   static auto u_hasBinaryProperty = reinterpret_cast<FnT>(__find_icu_symbol("u_hasBinaryProperty"));
