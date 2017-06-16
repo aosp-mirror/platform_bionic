@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdc37678_e64475d2",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-06-16T06:41:10Z",
+      "side": 1,
+      "message": "Instead of hard-coding the fact that /vendor is a symlink to /system/vendor, we can also change this as follows:\n\nconst std::vector\u003cstd::string\u003e kExpectedDefaultSearchPath;\nresolve_paths((is_asan ?\n        std::vector\u003cstd::string\u003e({ \"/data\", \"/vendor/lib64\"}) :\n        std::vector\u003cstd::string\u003e({ \"/vendor/lib64\" })), kExpectedDefaultSearchPath);\n\nresolve_paths() uses realpath() to convert the symlink to the real path.",
+      "range": {
+        "startLine": 76,
+        "startChar": 62,
+        "endLine": 78,
+        "endChar": 54
+      },
+      "revId": "8530b5cde00f17cbb80d9d98082f65f1f7f7ac96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
