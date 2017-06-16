@@ -33,6 +33,7 @@
 #include <gtest/gtest.h>
 
 #include "../linker_config.h"
+#include "../linker_utils.h"
 
 #include <unistd.h>
 
@@ -41,6 +42,11 @@
 #include <android-base/file.h>
 #include <android-base/test_utils.h>
 
+#if defined(__LP64__)
+#define ARCH_SUFFIX "64"
+#else
+#define ARCH_SUFFIX ""
+#endif
 
 static const char* config_str =
   "# comment \n"
@@ -70,40 +76,28 @@ static bool write_version(const std::string& path, uint32_t version) {
   return android::base::WriteStringToFile(content, path);
 }
 
+static std::vector<std::string> resolve_paths(std::vector<std::string> paths) {
+  std::vector<std::string> resolved_paths;
+  resolve_paths(paths, &resolved_paths);
+  return resolved_paths;
+}
+
 static void run_linker_config_smoke_test(bool is_asan) {
-#if defined(__LP64__)
-  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor/lib64"}) :
-        std::vector<std::string>({ "/vendor/lib64" });
+  const std::vector<std::string> kExpectedDefaultSearchPath =
+      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/vendor/lib" ARCH_SUFFIX }) :
+                              std::vector<std::string>({ "/vendor/lib" ARCH_SUFFIX }));
 
-  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor" }) :
-        std::vector<std::string>({ "/vendor/lib64" });
+  const std::vector<std::string> kExpectedDefaultPermittedPath =
+      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/vendor" }) :
+                              std::vector<std::string>({ "/vendor/lib" ARCH_SUFFIX }));
 
-  const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/system/lib64" }) :
-        std::vector<std::string>({ "/system/lib64" });
+  const std::vector<std::string> kExpectedSystemSearchPath =
+      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system/lib" ARCH_SUFFIX }) :
+                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX }));
 
-  const std::vector<std::string> kExpectedSystemPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/system" }) :
-        std::vector<std::string>({ "/system/lib64" });
-#else
-  const std::vector<std::string> kExpectedDefaultSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor/lib"}) :
-        std::vector<std::string>({ "/vendor/lib" });
-
-  const std::vector<std::string> kExpectedDefaultPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/vendor" }) :
-        std::vector<std::string>({ "/vendor/lib" });
-
-  const std::vector<std::string> kExpectedSystemSearchPath = is_asan ?
-        std::vector<std::string>({ "/data", "/system/lib" }) :
-        std::vector<std::string>({ "/system/lib" });
-
-  const std::vector<std::string> kExpectedSystemPermittedPath = is_asan ?
-        std::vector<std::string>({ "/data", "/system" }) :
-        std::vector<std::string>({ "/system/lib" });
-#endif
+  const std::vector<std::string> kExpectedSystemPermittedPath =
+      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system" }) :
+                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX }));
 
   TemporaryFile tmp_file;
   close(tmp_file.fd);
