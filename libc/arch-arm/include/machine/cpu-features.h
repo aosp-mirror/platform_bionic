@@ -28,6 +28,9 @@
 #ifndef _ARM_MACHINE_CPU_FEATURES_H
 #define _ARM_MACHINE_CPU_FEATURES_H
 
+// cpu-features.h is deprecated, so warn if it is included //
+#warning cpu-features.h is deprecated
+
 /* __ARM_ARCH__ is a number corresponding to the ARM revision
  * we're going to support. Our toolchain doesn't define __ARM_ARCH__
  * so try to guess it.
