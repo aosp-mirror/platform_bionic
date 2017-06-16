@@ -22,6 +22,30 @@
       "revId": "8530b5cde00f17cbb80d9d98082f65f1f7f7ac96",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd50640_9363c6dc",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1090538
+      },
+      "writtenOn": "2017-06-16T07:43:30Z",
+      "side": 1,
+      "message": "It looks more better than my approach. Thanks!",
+      "parentUuid": "cdc37678_e64475d2",
+      "range": {
+        "startLine": 76,
+        "startChar": 62,
+        "endLine": 78,
+        "endChar": 54
+      },
+      "revId": "8530b5cde00f17cbb80d9d98082f65f1f7f7ac96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
