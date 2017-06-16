@@ -1271,6 +1271,22 @@ TEST(dlfcn, dt_runpath_smoke) {
   dlclose(handle);
 }
 
+TEST(dlfcn, RTLD_macros) {
+#if !defined(RTLD_LOCAL)
+#error no RTLD_LOCAL
+#elif !defined(RTLD_LAZY)
+#error no RTLD_LAZY
+#elif !defined(RTLD_NOW)
+#error no RTLD_NOW
+#elif !defined(RTLD_NOLOAD)
+#error no RTLD_NOLOAD
+#elif !defined(RTLD_GLOBAL)
+#error no RTLD_GLOBAL
+#elif !defined(RTLD_NODELETE)
+#error no RTLD_NODELETE
+#endif
+}
+
 // Bionic specific tests
 #if defined(__BIONIC__)
 
