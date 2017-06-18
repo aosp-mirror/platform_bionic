@@ -123,3 +123,83 @@ static void BM_string_strlen(benchmark::State& state) {
   delete[] s;
 }
 BENCHMARK(BM_string_strlen)->AT_COMMON_SIZES;
+
+static void BM_string_strcat_copy_only(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(nbytes, 'x');
+  std::vector<char> dst(nbytes + 2);
+  src[nbytes - 1] = '\0';
+  dst[0] = 'y';
+  dst[1] = 'y';
+  dst[2] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst.data(), src.data());
+    dst[2] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcat_copy_only)->AT_COMMON_SIZES;
+
+static void BM_string_strcat_seek_only(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(3, 'x');
+  std::vector<char> dst(nbytes + 2, 'y');
+  src[2] = '\0';
+  dst[nbytes - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst.data(), src.data());
+    dst[nbytes - 1] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcat_seek_only)->AT_COMMON_SIZES;
+
+static void BM_string_strcat_half_copy_half_seek(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(nbytes / 2, 'x');
+  std::vector<char> dst(nbytes / 2, 'y');
+  src[nbytes / 2 - 1] = '\0';
+  dst[nbytes / 2 - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst.data(), src.data());
+    dst[nbytes / 2 - 1] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcat_half_copy_half_seek)->AT_COMMON_SIZES;
+
+static void BM_string_strcpy(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> src(nbytes, 'x');
+  std::vector<char> dst(nbytes);
+  src[nbytes - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcpy(dst.data(), src.data());
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcpy)->AT_COMMON_SIZES;
+
+static void BM_string_strcmp(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  std::vector<char> s1(nbytes, 'x');
+  std::vector<char> s2(nbytes, 'x');
+  s1[nbytes - 1] = '\0';
+  s2[nbytes - 1] = '\0';
+
+  volatile int c __attribute__((unused));
+  while (state.KeepRunning()) {
+    c = strcmp(s1.data(), s2.data());
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BENCHMARK(BM_string_strcmp)->AT_COMMON_SIZES;

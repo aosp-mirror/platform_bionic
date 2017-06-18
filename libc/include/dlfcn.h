@@ -57,23 +57,20 @@ void* dlsym(void* handle, const char* _Nonnull symbol);
 void* dlvsym(void* handle, const char* _Nonnull symbol, const char* _Nonnull version) __INTRODUCED_IN(24);
 int dladdr(const void* addr, Dl_info* _Nonnull info);
 
-enum {
-#if defined(__LP64__)
-  RTLD_NOW  = 2,
-#else
-  RTLD_NOW  = 0,
-#endif
-  RTLD_LAZY = 1,
+#define RTLD_LOCAL    0
+#define RTLD_LAZY     0x00001
+#define RTLD_NOW      0x00002
+#define RTLD_NOLOAD   0x00004
+#define RTLD_GLOBAL   0x00100
+#define RTLD_NODELETE 0x01000
 
-  RTLD_LOCAL  = 0,
-#if defined(__LP64__)
-  RTLD_GLOBAL = 0x00100,
-#else
-  RTLD_GLOBAL = 2,
+#if !defined(__LP64__)
+/* LP32 is broken for historical reasons. */
+#undef RTLD_NOW
+#define RTLD_NOW      0x00000
+#undef RTLD_GLOBAL
+#define RTLD_GLOBAL   0x00002
 #endif
-  RTLD_NOLOAD = 4,
-  RTLD_NODELETE = 0x01000,
-};
 
 #if defined (__LP64__)
 #define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0)

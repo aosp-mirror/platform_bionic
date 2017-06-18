@@ -43,11 +43,11 @@ struct kernel_stat {
   unsigned int st_pad1[3];
   __kernel_off_t st_size;
   unsigned int _st_atime;
-  unsigned int st_atime_nsec;
+  unsigned int _st_atime_nsec;
   unsigned int _st_mtime;
-  unsigned int st_mtime_nsec;
+  unsigned int _st_mtime_nsec;
   unsigned int _st_ctime;
-  unsigned int st_ctime_nsec;
+  unsigned int _st_ctime_nsec;
   unsigned int st_blksize;
   unsigned int st_pad2;
   unsigned long st_blocks;
@@ -65,11 +65,11 @@ static void copy_stat(struct stat* st, struct kernel_stat* s) {
   st->st_blksize = static_cast<int>(s->st_blksize);
   st->st_blocks = static_cast<long>(s->st_blocks);
   st->st_atim.tv_sec = static_cast<time_t>(s->_st_atime);
-  st->st_atim.tv_nsec = static_cast<long>(s->st_atime_nsec);
+  st->st_atim.tv_nsec = static_cast<long>(s->_st_atime_nsec);
   st->st_mtim.tv_sec = static_cast<time_t>(s->_st_mtime);
-  st->st_mtim.tv_nsec = static_cast<long>(s->st_mtime_nsec);
+  st->st_mtim.tv_nsec = static_cast<long>(s->_st_mtime_nsec);
   st->st_ctim.tv_sec = static_cast<time_t>(s->_st_ctime);
-  st->st_ctim.tv_nsec = static_cast<long>(s->st_ctime_nsec);
+  st->st_ctim.tv_nsec = static_cast<long>(s->_st_ctime_nsec);
 }
 
 int fstat(int fp, struct stat* st) {
