@@ -32,7 +32,6 @@
 #include <stdatomic.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
-#include <syscall.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
