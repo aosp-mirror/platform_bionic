@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de3d7b_2eb7f5fe",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-20T21:34:24Z",
+      "side": 1,
+      "message": "since we\u0027re the implementation of abort, i don\u0027t need to worry about errno, which is the \"hard\" part of making a system call.",
+      "revId": "012873a5e8a013e18b511d096afe07748af2ef2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
