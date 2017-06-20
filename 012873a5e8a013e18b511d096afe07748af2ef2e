@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ed5b8e01_b2fc77eb",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-20T22:44:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ab68948_6478b658",
+      "revId": "012873a5e8a013e18b511d096afe07748af2ef2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c10082d1_f38c776f",
         "filename": "libc/bionic/abort.cpp",
         "patchSetId": 1
@@ -48,6 +66,30 @@
       "writtenOn": "2017-06-20T21:56:26Z",
       "side": 1,
       "message": "Is there a reason to di this, and not use the constraint list directly?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 46
+      },
+      "revId": "012873a5e8a013e18b511d096afe07748af2ef2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c8311b_fad3d5c1",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-20T22:44:27Z",
+      "side": 1,
+      "message": "(clarified offline that neither of us knows how to request a specific register in the constraint list.)",
+      "parentUuid": "c10082d1_f38c776f",
       "range": {
         "startLine": 39,
         "startChar": 0,
