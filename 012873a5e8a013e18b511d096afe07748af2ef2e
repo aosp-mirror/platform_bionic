@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "bf960a46_20f1a796",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-20T21:44:10Z",
+      "side": 1,
+      "message": "Maybe sprinkle in an __attribute__((always_inline))?",
+      "revId": "012873a5e8a013e18b511d096afe07748af2ef2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7de3d7b_2eb7f5fe",
         "filename": "libc/bionic/abort.cpp",
         "patchSetId": 1
