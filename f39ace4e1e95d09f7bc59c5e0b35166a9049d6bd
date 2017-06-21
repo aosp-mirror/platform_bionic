@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c208d06_da06b107",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-21T22:37:53Z",
+      "side": 1,
+      "message": "+compiler/stack-protector folks: is this a bug? or is it just too late by the time LTO does this inlining to not emit instructions for stack checking?",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 12,
+        "endChar": 30
+      },
+      "revId": "f39ace4e1e95d09f7bc59c5e0b35166a9049d6bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
