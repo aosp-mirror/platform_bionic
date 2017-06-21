@@ -27,6 +27,7 @@
  */
 
 #include <unistd.h>
+#include <sys/syscall.h>
 
 #include "pthread_internal.h"
 

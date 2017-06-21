@@ -32,6 +32,26 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+// We call tgkill(2) directly instead of raise (or even the libc tgkill wrapper), to reduce the
+// number of uninteresting stack frames at the top of a crash.
+static inline __always_inline void inline_tgkill(pid_t pid, pid_t tid, int sig) {
+#if defined(__arm__)
+  register int r0 __asm__("r0") = pid;
+  register int r1 __asm__("r1") = tid;
+  register int r2 __asm__("r2") = sig;
+  register int r7 __asm__("r7") = __NR_tgkill;
+  __asm__("swi #0" : "=r"(r0) : "r"(r0), "r"(r1), "r"(r2), "r"(r7) : "memory");
+#elif defined(__aarch64__)
+  register long x0 __asm__("x0") = pid;
+  register long x1 __asm__("x1") = tid;
+  register long x2 __asm__("x2") = sig;
+  register long x8 __asm__("x8") = __NR_tgkill;
+  __asm__("svc #0" : "=r"(x0) : "r"(x0), "r"(x1), "r"(x2), "r"(x8) : "memory");
+#else
+  syscall(__NR_tgkill, pid, tid, sig);
+#endif
+}
+
 void abort() {
   // Protect ourselves against stale cached PID/TID values by fetching them via syscall.
   // http://b/37769298
@@ -45,8 +65,7 @@ void abort() {
   sigdelset(&mask, SIGABRT);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  // Use tgkill directly instead of raise, to avoid inserting spurious stack frames.
-  tgkill(pid, tid, SIGABRT);
+  inline_tgkill(pid, tid, SIGABRT);
 
   // If SIGABRT ignored, or caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
@@ -57,7 +76,7 @@ void abort() {
   sigaction(SIGABRT, &sa, &sa);
   sigprocmask(SIG_SETMASK, &mask, NULL);
 
-  tgkill(pid, tid, SIGABRT);
+  inline_tgkill(pid, tid, SIGABRT);
 
   // If we get this far, just exit.
   _exit(127);
