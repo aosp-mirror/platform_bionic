@@ -33,6 +33,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 // These functions do not allocate memory to send data to the log.
 
@@ -65,9 +66,19 @@ enum {
 };
 
 // Formats a message to the log (priority 'fatal'), then aborts.
-__noreturn void async_safe_fatal(const char* _Nonnull fmt, ...) __printflike(1, 2);
+// Implemented as a macro so that async_safe_fatal isn't on the stack when we crash:
+// we appear to go straight from the caller to abort, saving an uninteresting stack
+// frame.
+#define async_safe_fatal(...) \
+  do { \
+    async_safe_fatal_no_abort(__VA_ARGS__); \
+    abort(); \
+  } while (0) \
 
-// This function does return, so callers that want to abort, must do so themselves.
+
+// These functions do return, so callers that want to abort, must do so themselves,
+// or use the macro above.
+void async_safe_fatal_no_abort(const char* _Nonnull fmt, ...) __printflike(1, 2);
 #if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
 void async_safe_fatal_va_list(
     const char* _Nullable prefix, const char* _Nonnull fmt, va_list);
