@@ -567,10 +567,9 @@ void async_safe_fatal_va_list(const char* prefix, const char* format, va_list ar
   android_set_abort_message(msg);
 }
 
-void async_safe_fatal(const char* fmt, ...) {
+void async_safe_fatal_no_abort(const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
   async_safe_fatal_va_list(nullptr, fmt, args);
   va_end(args);
-  abort();
 }
