@@ -30,6 +30,7 @@
 #include <sched.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <sys/syscall.h>
 
 #include "pthread_internal.h"
 

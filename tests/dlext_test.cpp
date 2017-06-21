@@ -30,6 +30,7 @@
 
 #include <linux/memfd.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <sys/wait.h>
