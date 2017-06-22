@@ -162,14 +162,22 @@ int pthread_mutex_unlock(pthread_mutex_t* _Nonnull);
 
 #if defined(__LP32__) && __ANDROID_API__ < 21
 /*
- * Cruft for supporting old API levels. Pre-L we didn't have
- * pthread_mutex_timedlock, instead we had pthread_mutex_lock_timeout_np. NDK
- * users targeting pre-L still need this, but anyone targeting L or newer (or
- * LP64 code) should just use pthread_mutex_timedlock.
+ * Cruft for supporting old API levels. Pre-L we didn't have the proper POSIX
+ * APIs for things, but instead had some locally grown, artisan equivalents.
+ * Keep exposing the old prototypes on old API levels so we don't regress
+ * functionality.
  *
- * https://github.com/android-ndk/ndk/issues/420
+ * See the following bugs:
+ *  * https://github.com/android-ndk/ndk/issues/420
+ *  * https://github.com/android-ndk/ndk/issues/423
+ *  * https://stackoverflow.com/q/44580542/632035
  */
+
 int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex, unsigned msecs);
+int pthread_cond_timeout_np(pthread_cond_t* cond, pthread_mutex_t* mutex, unsigned msecs);
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t*, pthread_mutex_t*, const struct timespec*);
+int pthread_cond_timedwait_relative_np(pthread_cond_t* cond, pthread_mutex_t* mutex,
+                                       const struct timespec* reltime);
 #endif
 
 int pthread_once(pthread_once_t* _Nonnull, void (* _Nonnull init_routine)(void));
