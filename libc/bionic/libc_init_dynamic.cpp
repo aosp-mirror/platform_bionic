@@ -61,6 +61,21 @@ extern "C" {
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
 
+// We need a helper function for __libc_preinit because compiling with LTO may
+// inline functions requiring a stack protector check, but __stack_chk_guard is
+// not initialized at the start of __libc_preinit. __libc_preinit_impl will run
+// after __stack_chk_guard is initialized and therefore can safely have a stack
+// protector.
+__attribute__((noinline))
+static void __libc_preinit_impl(KernelArgumentBlock& args) {
+  __libc_init_globals(args);
+  __libc_init_common(args);
+
+  // Hooks for various libraries to let them know that we're starting up.
+  __libc_globals.mutate(__libc_init_malloc);
+  netdClientInit();
+}
+
 // We flag the __libc_preinit function as a constructor to ensure
 // that its address is listed in libc.so's .init_array section.
 // This ensures that the function is called by the dynamic linker
@@ -79,12 +94,7 @@ __attribute__((constructor)) static void __libc_preinit() {
   // thread's TLS slot with that value. Initialize the local global stack guard with its value.
   __stack_chk_guard = reinterpret_cast<uintptr_t>(tls[TLS_SLOT_STACK_GUARD]);
 
-  __libc_init_globals(*args);
-  __libc_init_common(*args);
-
-  // Hooks for various libraries to let them know that we're starting up.
-  __libc_globals.mutate(__libc_init_malloc);
-  netdClientInit();
+  __libc_preinit_impl(*args);
 }
 
 // This function is called from the executable's _start entry point
