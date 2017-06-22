@@ -123,6 +123,12 @@ cc_library_static {
     cflags: ["-fno-stack-protector"],
 }
 
+cc_library_static {
+    name: "libc_init_dynamic",
+    defaults: ["libc_defaults"],
+    srcs: ["bionic/libc_init_dynamic.cpp"],
+    cflags: ["-fno-stack-protector"],
+}
 
 // ========================================================
 // libc_tzcode.a - upstream 'tzcode' code
@@ -1757,10 +1763,10 @@ cc_library {
             "arch-common/bionic/crtbrand.S",
             "bionic/icu.cpp",
             "bionic/malloc_common.cpp",
-            "bionic/libc_init_dynamic.cpp",
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
+        whole_static_libs: ["libc_init_dynamic"],
     },
 
     required: ["tzdata"],
