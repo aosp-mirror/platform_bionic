@@ -121,3 +121,6 @@ ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int 
 
 # b/37769298
 int dup2(int oldfd, int newfd)	arm,x86,mips
+
+# b/62779795
+int compat_select:_newselect(int n, unsigned long* inp, unsigned long* outp, unsigned long* exp, struct timeval* timeout) arm,x86,mips
