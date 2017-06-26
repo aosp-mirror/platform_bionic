@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "694fc345_87b0ef86",
+        "filename": "tests/benchmark_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-26T21:51:46Z",
+      "side": 1,
+      "message": "Did you mean \u003c\u003d? I think this test doesn\u0027t wind up doing anything.",
+      "range": {
+        "startLine": 25,
+        "startChar": 39,
+        "endLine": 25,
+        "endChar": 41
+      },
+      "revId": "360f93be095f11bc64fae116448d38060fc4d7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160c10a0_68040b38",
+        "filename": "tests/benchmark_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-26T21:51:46Z",
+      "side": 1,
+      "message": "uintptr_t is what you should use.",
+      "range": {
+        "startLine": 27,
+        "startChar": 46,
+        "endLine": 27,
+        "endChar": 54
+      },
+      "revId": "360f93be095f11bc64fae116448d38060fc4d7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
