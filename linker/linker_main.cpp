@@ -87,6 +87,7 @@ bool solist_remove_soinfo(soinfo* si) {
 
   // prev will never be null, because the first entry in solist is
   // always the static libdl_info.
+  CHECK(prev != nullptr);
   prev->next = si->next;
   if (si == sonext) {
     sonext = prev;
@@ -307,6 +308,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
       break;
     }
   }
+
+  if (si->base == 0) {
+    async_safe_fatal("Could not find a PHDR: broken executable?");
+  }
+
   si->dynamic = nullptr;
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
@@ -487,6 +493,15 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // are run is an offset and this can be used to calculate AT_BASE.
   static uintptr_t linktime_addr = reinterpret_cast<uintptr_t>(&linktime_addr);
   ElfW(Addr) linker_addr = reinterpret_cast<uintptr_t>(&linktime_addr) - linktime_addr;
+
+#if defined(__clang_analyzer__)
+  // The analyzer assumes that linker_addr will always be null. Make it an
+  // unknown value so we don't have to mark N places with NOLINTs.
+  //
+  // (`+=`, rather than `=`, allows us to sidestep a potential "unused store"
+  // complaint)
+  linker_addr += reinterpret_cast<uintptr_t>(raw_args);
+#endif
 
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
