@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "555abcc6_23930139",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2017-06-27T17:19:23Z",
+      "side": 1,
+      "message": "This is going to need a bigger change.  Devices may be configured in any combination of (armv7-a-neon|armv8-a)x(cortex_a53|cortex_a57|denver|...)\n\nBoth the arch variant and cpu variant sections will apply.  So the cpu flags in cortex_a53 for example need to apply on top of either the armv7-a-neon or armv8-a arch flags.\n\nMaybe we should override TARGET_ARCH_VARIANT if TARGET_CPU_VARIANT is specified?  It seems like CPU variant cortex_a53 should imply arch variant armv8-a, even though every existing product specifies armv7-a-neon.",
+      "revId": "f8969b2924e4036a3f6f14c86c4877454b3ddd51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
