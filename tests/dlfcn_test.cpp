@@ -1271,6 +1271,21 @@ TEST(dlfcn, dt_runpath_smoke) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dt_runpath_absolute_path) {
+  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef void *(* dlopen_b_fn)();
+  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  void *p = fn();
+  ASSERT_TRUE(p != nullptr);
+
+  dlclose(handle);
+}
+
 TEST(dlfcn, RTLD_macros) {
 #if !defined(RTLD_LOCAL)
 #error no RTLD_LOCAL
@@ -1367,21 +1382,6 @@ TEST(dlext, compat_elf_hash_and_relocation_tables) {
 }
 
 #endif //  defined(__arm__)
-
-TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
-  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-
-  typedef void *(* dlopen_b_fn)();
-  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
-  ASSERT_TRUE(fn != nullptr) << dlerror();
-
-  void *p = fn();
-  ASSERT_TRUE(p != nullptr);
-
-  dlclose(handle);
-}
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   const std::string libpath = get_testlib_root() +
