@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea39fb22_f83992cd",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-28T01:44:09Z",
+      "side": 1,
+      "message": "I think it might be better to have a single value hear, and then split it in the getAlignedMemory function.\n\nFor example, an alignment of 2 means alignment of 2 or mask of 2.",
+      "range": {
+        "startLine": 35,
+        "startChar": 15,
+        "endLine": 35,
+        "endChar": 73
+      },
+      "revId": "9a85b9a9efead4118504f0de22836af3f8489639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aac4fcd2_0c091ef4",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-28T01:44:09Z",
+      "side": 1,
+      "message": "This function should probably be in its own utility file.",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "9a85b9a9efead4118504f0de22836af3f8489639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58dfdf94_0b12e815",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-28T01:44:09Z",
+      "side": 1,
+      "message": "I think it\u0027s fine to abort in this case, since this indicates that someone made a mistake. If we simply print an error, it\u0027s easy for the error to be ignored.",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "9a85b9a9efead4118504f0de22836af3f8489639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e8372c4_bd9546e1",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-28T01:44:09Z",
+      "side": 1,
+      "message": "Same comment as above.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 11
+      },
+      "revId": "9a85b9a9efead4118504f0de22836af3f8489639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acc66326_712088d6",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-06-28T01:44:09Z",
+      "side": 1,
+      "message": "I think that you should create a helper function that works like so:\n\nsrc_aligned \u003d GetAlignedPtr(src, src_alignment, nbytes);\n\nThen GetAlignedPtr would look something like this:\n\nchar* GetAlignedPtr(vector, alignment, bytes) {\n  vector.resize(size computation, \u0027x\u0027);\n  return getAlignedMemory(vector.data(), alignment, alignment);\n}",
+      "range": {
+        "startLine": 84,
+        "startChar": 22,
+        "endLine": 84,
+        "endChar": 38
+      },
+      "revId": "9a85b9a9efead4118504f0de22836af3f8489639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
