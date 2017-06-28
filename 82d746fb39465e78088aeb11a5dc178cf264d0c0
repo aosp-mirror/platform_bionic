@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc0e477e_043c788b",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T22:08:15Z",
+      "side": 0,
+      "message": "i was wondering whether we should add static asserts using the constant known sizes and alignments, but i guess we\u0027re assuming the new VINTF tools will keep us from screwing up there?",
+      "range": {
+        "startLine": 858,
+        "startChar": 0,
+        "endLine": 861,
+        "endChar": 92
+      },
+      "revId": "82d746fb39465e78088aeb11a5dc178cf264d0c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

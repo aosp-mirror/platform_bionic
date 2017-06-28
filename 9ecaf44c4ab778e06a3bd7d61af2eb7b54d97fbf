@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e462ae1c_9402ba75",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T22:08:15Z",
+      "side": 1,
+      "message": "well, no. but it\u0027s a necessary piece of the puzzle :-)",
+      "range": {
+        "startLine": 19,
+        "startChar": 5,
+        "endLine": 19,
+        "endChar": 44
+      },
+      "revId": "9ecaf44c4ab778e06a3bd7d61af2eb7b54d97fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "255bc92d_689dbb36",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T22:08:15Z",
+      "side": 1,
+      "message": "remove?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 15
+      },
+      "revId": "9ecaf44c4ab778e06a3bd7d61af2eb7b54d97fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac4a9382_8ec090ab",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T22:08:15Z",
+      "side": 1,
+      "message": "remove?\n\n(or replace with \u003cstdio.h\u003e?)",
+      "revId": "9ecaf44c4ab778e06a3bd7d61af2eb7b54d97fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
