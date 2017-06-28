@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b8617e1_d377ce57",
+        "filename": "libc/stdio/bits/struct_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T21:37:47Z",
+      "side": 1,
+      "message": "personally including the \"bits\" here seems more confusing than helpful? (certainly at the #include site it makes it seem like it might possibly be public.)\n\nah... reading the checkin comment last, i understand that you\u0027re doing this on purpose. yuck. definitely worth a code comment at the least.\n\nshould we just move this back into the real \u003cbits/struct_file.h\u003e? that gets us most of the way back to building able to build gnulib again. (we\u0027ll still need to get some changes upstream because _offset and __SOFF are in old Androids but not new ones.)",
+      "range": {
+        "startLine": 35,
+        "startChar": 21,
+        "endLine": 35,
+        "endChar": 26
+      },
+      "revId": "f52d48d5673a5323a17dfc7ee4331b284e058ee3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba89fa16_569c15ef",
+        "filename": "libc/stdio/bits/struct_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T21:37:47Z",
+      "side": 1,
+      "message": "as this says, it would be years -- if ever -- before we could actually change anything here.\n\n(also, tabs :-) )",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 35
+      },
+      "revId": "f52d48d5673a5323a17dfc7ee4331b284e058ee3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00f4a985_17a7f904",
+        "filename": "libc/stdio/glue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T21:37:47Z",
+      "side": 1,
+      "message": "?",
+      "revId": "f52d48d5673a5323a17dfc7ee4331b284e058ee3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb56f822_7c6a49a2",
+        "filename": "libc/stdio/glue.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T21:37:47Z",
+      "side": 1,
+      "message": "blank line between end of comment and first real line",
+      "revId": "f52d48d5673a5323a17dfc7ee4331b284e058ee3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14986d54_7735a13a",
+        "filename": "libc/stdio/printf_impl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T21:37:47Z",
+      "side": 1,
+      "message": "blank line between end of comment and first real line",
+      "revId": "f52d48d5673a5323a17dfc7ee4331b284e058ee3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
