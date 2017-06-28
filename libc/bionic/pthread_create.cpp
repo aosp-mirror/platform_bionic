@@ -55,15 +55,16 @@ void __init_tls(pthread_internal_t* thread) {
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
 
-  // Add a guard page before and after.
-  size_t allocation_size = BIONIC_TLS_SIZE + 2 * PAGE_SIZE;
+  // Add a guard before and after.
+  size_t allocation_size = BIONIC_TLS_SIZE + (2 * PTHREAD_GUARD_SIZE);
   void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (allocation == MAP_FAILED) {
     async_safe_fatal("failed to allocate TLS");
   }
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard page");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard");
 
-  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) + PAGE_SIZE);
+  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
+                                                     PTHREAD_GUARD_SIZE);
   if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
     async_safe_fatal("failed to mprotect TLS");
   }
@@ -79,15 +80,14 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   void* stack_base = mmap(NULL, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
-
-    // Create a guard page to catch stack overflows in signal handlers.
-    if (mprotect(stack_base, PAGE_SIZE, PROT_NONE) == -1) {
+    // Create a guard to catch stack overflows in signal handlers.
+    if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
       munmap(stack_base, SIGNAL_STACK_SIZE);
       return;
     }
     stack_t ss;
-    ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PAGE_SIZE;
-    ss.ss_size = SIGNAL_STACK_SIZE - PAGE_SIZE;
+    ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PTHREAD_GUARD_SIZE;
+    ss.ss_size = SIGNAL_STACK_SIZE - PTHREAD_GUARD_SIZE;
     ss.ss_flags = 0;
     sigaltstack(&ss, NULL);
     thread->alternate_signal_stack = stack_base;
@@ -95,7 +95,7 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PAGE_SIZE, "thread signal stack guard page");
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PTHREAD_GUARD_SIZE, "thread signal stack guard");
   }
 }
 
@@ -149,7 +149,7 @@ static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_s
     munmap(space, mmap_size);
     return NULL;
   }
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, space, stack_guard_size, "thread stack guard page");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, space, stack_guard_size, "thread stack guard");
 
   return space;
 }
@@ -161,7 +161,9 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   if (attr->stack_base == NULL) {
     // The caller didn't provide a stack, so allocate one.
     // Make sure the stack size and guard size are multiples of PAGE_SIZE.
-    mmap_size = BIONIC_ALIGN(attr->stack_size + sizeof(pthread_internal_t), PAGE_SIZE);
+    if (__builtin_add_overflow(attr->stack_size, attr->guard_size, &mmap_size)) return EAGAIN;
+    if (__builtin_add_overflow(mmap_size, sizeof(pthread_internal_t), &mmap_size)) return EAGAIN;
+    mmap_size = BIONIC_ALIGN(mmap_size, PAGE_SIZE);
     attr->guard_size = BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
     attr->stack_base = __create_thread_mapped_space(mmap_size, attr->guard_size);
     if (attr->stack_base == NULL) {
@@ -176,7 +178,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
 
   // Mapped space(or user allocated stack) is used for:
   //   pthread_internal_t
-  //   thread stack (including guard page)
+  //   thread stack (including guard)
 
   // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
   stack_top = reinterpret_cast<uint8_t*>(
