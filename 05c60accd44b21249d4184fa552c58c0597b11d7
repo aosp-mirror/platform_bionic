@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9d3a2459_50421c9f",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-06-28T21:53:04Z",
+      "side": 1,
+      "message": "Static also works. Looking at other benchmarks in this file (e.g. BM_pthread_mutex_lock), it looks like we have a similar pattern of repeatedly running threading-related functions on a single, automatic, non-escaping local.\n\nI\u0027m happy to make them all static if the goal of these benchmarks is to have N threads contending for these things at once, but this code reads to me like the goal was to just run `pthread_once` over and over in one thread.\n\nYour call ¯\\_(ツ)_/¯",
+      "parentUuid": "a4326f6b_cf904da2",
+      "revId": "05c60accd44b21249d4184fa552c58c0597b11d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2cb52139_81c27246",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2017-06-28T20:24:59Z",
       "side": 1,
       "message": "why? can\u0027t we fix the tool instead?",
+      "range": {
+        "startLine": 498,
+        "startChar": 5,
+        "endLine": 498,
+        "endChar": 62
+      },
+      "revId": "05c60accd44b21249d4184fa552c58c0597b11d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e31cac0_cb5b7c3e",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-06-28T21:53:04Z",
+      "side": 1,
+      "message": "My impression, which I\u0027m not hugely confident in, is that there\u0027s some deep magic going on with this particular `static` variable that should never apply in regular programs.\n\nIn particular, the comment above it reads like the linker hasn\u0027t yet completely initialized the value of `linktime_addr` when we\u0027re executing `linker_addr \u003d reinterpret_cast ...`. If this is correct, I don\u0027t know how accepting upstream would be of us making the analyzer more conservative because it may be analyzing code that\u0027s run before the world gets properly linked.",
+      "parentUuid": "2cb52139_81c27246",
       "range": {
         "startLine": 498,
         "startChar": 5,
