@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4326f6b_cf904da2",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T20:24:59Z",
+      "side": 1,
+      "message": "would it be happier if it was static? that it\u0027s not seems like a legit bug?",
+      "revId": "05c60accd44b21249d4184fa552c58c0597b11d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cb52139_81c27246",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T20:24:59Z",
+      "side": 1,
+      "message": "why? can\u0027t we fix the tool instead?",
+      "range": {
+        "startLine": 498,
+        "startChar": 5,
+        "endLine": 498,
+        "endChar": 62
+      },
+      "revId": "05c60accd44b21249d4184fa552c58c0597b11d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
