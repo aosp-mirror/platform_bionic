@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6893f173_a15c83b6",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-06-28T22:28:29Z",
+      "side": 1,
+      "message": "remove?",
+      "revId": "069ea2d7035afea5aed28a3f4df74137a9e3399d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
