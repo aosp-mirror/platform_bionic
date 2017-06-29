@@ -56,7 +56,7 @@ static void DummyPthreadOnceInitFunction() {
 }
 
 static void BM_pthread_once(benchmark::State& state) {
-  pthread_once_t once = PTHREAD_ONCE_INIT;
+  static pthread_once_t once = PTHREAD_ONCE_INIT;
   pthread_once(&once, DummyPthreadOnceInitFunction);
 
   while (state.KeepRunning()) {
