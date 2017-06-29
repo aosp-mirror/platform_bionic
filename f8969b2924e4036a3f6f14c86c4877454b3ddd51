@@ -16,6 +16,24 @@
       "revId": "f8969b2924e4036a3f6f14c86c4877454b3ddd51",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bac49f2_7853a8f4",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2017-06-29T11:50:28Z",
+      "side": 1,
+      "message": "Cortex-a53/a57/a73, denvor, and kryo are all armv8-a, while Cortex-a7/a8/a9/a15 and krait are all armv7-a. IOW, TARGET_CPU_VARIANT does determine TARGET_ARCH_VARIANT (to some degree). NEON are usually (but not necessarily) included in almost all processors above these days, but it\u0027s outside the scope/purpose of this CL.\nThis block is here because the generic code (in arch-arm/generic/strlen.c) uses assembly instruction, ldreq, deprecated in armv8, which will cause warnings and error because of -Werror. So we won\u0027t even build for 32-bit armv8 if this is not fixed.\nThe same implementation from cortex_a73 is used below (line 846 - 862) since it builds cleanly for generic armv8 and a73 is going to be very a common/popular armv8 core going forward.",
+      "parentUuid": "555abcc6_23930139",
+      "revId": "f8969b2924e4036a3f6f14c86c4877454b3ddd51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
