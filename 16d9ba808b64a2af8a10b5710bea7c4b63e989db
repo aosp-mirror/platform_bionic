@@ -22,6 +22,30 @@
       "revId": "16d9ba808b64a2af8a10b5710bea7c4b63e989db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea9901b9_3d240753",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-06-30T20:30:47Z",
+      "side": 1,
+      "message": "I\u0027m implementing that part now.",
+      "parentUuid": "0d234a66_2dba988d",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 21
+      },
+      "revId": "16d9ba808b64a2af8a10b5710bea7c4b63e989db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
