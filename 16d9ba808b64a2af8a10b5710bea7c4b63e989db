@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d234a66_2dba988d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-06-30T20:29:29Z",
+      "side": 1,
+      "message": "What\u0027s the plan then? Should you just add header guards as part of this patch?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 21
+      },
+      "revId": "16d9ba808b64a2af8a10b5710bea7c4b63e989db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
