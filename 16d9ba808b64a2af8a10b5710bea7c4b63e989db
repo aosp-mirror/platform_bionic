@@ -46,6 +46,30 @@
       "revId": "16d9ba808b64a2af8a10b5710bea7c4b63e989db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbc29d2f_bcdaf245",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-06-30T20:46:22Z",
+      "side": 1,
+      "message": "Gotcha.",
+      "parentUuid": "ea9901b9_3d240753",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 21
+      },
+      "revId": "16d9ba808b64a2af8a10b5710bea7c4b63e989db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
