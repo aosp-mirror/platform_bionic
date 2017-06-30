@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c88b63f_5e0d94ac",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-06-30T19:44:26Z",
+      "side": 1,
+      "message": "also it is too late for O... new things should go to P from now on.",
+      "revId": "09bd84ad43e845908e7cc03c7e5f5994dd696d0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
