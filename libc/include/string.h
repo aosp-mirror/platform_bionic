@@ -67,8 +67,8 @@ char* strchr(const char* _Nonnull, int) __attribute_pure__ __overloadable
 char* __strchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__;
-extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__;
+extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 #else
 char* strchrnul(const char* _Nonnull, int) __attribute_pure__ __INTRODUCED_IN(24);
 #endif
@@ -142,8 +142,8 @@ size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, loca
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename);
-extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename);
+extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #else
 char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
