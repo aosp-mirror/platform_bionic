@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7464d7c9_7fd43e18",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-02T16:38:01Z",
+      "side": 1,
+      "message": "note that this code used to be incorrect: we\u0027d take the space for the guard from the total. the existing tests catch this when you make the guard large enough that we sometimes allocate stacks smaller than their guards :-)\n\ni\u0027ll make a note of this in the checkin comment.",
+      "revId": "fe4717ef0c0d9b4619138a80177686c66ea24ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1a8beae_20645094",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-02T16:38:01Z",
+      "side": 1,
+      "message": "i don\u0027t plan on submitting this until we\u0027ve come to a decision about media extractor on the bug, at which point i\u0027ll come back to this.",
+      "range": {
+        "startLine": 146,
+        "startChar": 27,
+        "endLine": 147,
+        "endChar": 20
+      },
+      "revId": "fe4717ef0c0d9b4619138a80177686c66ea24ad7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
