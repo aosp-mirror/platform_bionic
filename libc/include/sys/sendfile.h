@@ -34,9 +34,8 @@
 
 __BEGIN_DECLS
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
-ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) __RENAME(sendfile64)
-  __INTRODUCED_IN(21);
+#if defined(__USE_FILE_OFFSET64)
+ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) __RENAME(sendfile64) __INTRODUCED_IN(21);
 #else
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count);
 #endif
