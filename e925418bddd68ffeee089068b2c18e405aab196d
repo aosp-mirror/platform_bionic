@@ -16,6 +16,24 @@
       "revId": "e925418bddd68ffeee089068b2c18e405aab196d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7fab0d27_981203a8",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1115178
+      },
+      "writtenOn": "2017-07-06T22:36:41Z",
+      "side": 1,
+      "message": "Evgenii changed this from \"never: true\" in an earlier CL as part of a cleanup and may be able to provide more info.",
+      "parentUuid": "03ad20ca_783f54df",
+      "revId": "e925418bddd68ffeee089068b2c18e405aab196d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
