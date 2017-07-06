@@ -22,6 +22,30 @@
       "revId": "02a3fe9fc6b5197f5b57487f1f735fb7136347ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adb784b0_8652eb07",
+        "filename": "libc/include/arpa/telnet.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-06T21:20:04Z",
+      "side": 1,
+      "message": "glibc has nullptr here too, as do all three BSDs. glibc and openbsd are missing the \"SRA\", but the other two BSDs have it.\n\nseems to correspond to the AUTHTYPE_CNT constant that was removed above.\n\n(no idea why they have NULL for this but 0 for the final entry.)",
+      "parentUuid": "8654b1a9_e64b4cf7",
+      "range": {
+        "startLine": 292,
+        "startChar": 54,
+        "endLine": 292,
+        "endChar": 58
+      },
+      "revId": "02a3fe9fc6b5197f5b57487f1f735fb7136347ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
