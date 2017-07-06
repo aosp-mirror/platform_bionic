@@ -288,6 +288,7 @@ cc_test_library {
             ],
             static_libs: [
                 "libpagemap",
+                "libziparchive",
                 "libLLVMObject",
                 "libLLVMBitReader",
                 "libLLVMMC",
