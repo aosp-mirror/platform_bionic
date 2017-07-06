@@ -138,9 +138,9 @@
 
 #define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
 
-#define  _POSIX_VERSION             200809L   /* Posix C language bindings version */
-#define  _POSIX2_VERSION            -1        /* we don't support Posix command-line tools */
-#define  _XOPEN_VERSION             700       /* by Posix definition */
+#define _POSIX_VERSION 200809L
+#define _POSIX2_VERSION _POSIX_VERSION
+#define _XOPEN_VERSION 700       /* by Posix definition */
 
 /* >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS */
 #define PTHREAD_DESTRUCTOR_ITERATIONS 4
