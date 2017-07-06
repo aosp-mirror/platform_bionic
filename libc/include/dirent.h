@@ -31,6 +31,7 @@
 
 #include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
 
@@ -46,17 +47,24 @@ __BEGIN_DECLS
 #define DT_WHT 14
 #endif
 
+#if defined(__LP64__)
+#define __DIRENT64_INO_T ino_t
+#else
+#define __DIRENT64_INO_T uint64_t /* Historical accident. */
+#endif
+
 #define __DIRENT64_BODY \
-    uint64_t         d_ino; \
-    int64_t          d_off; \
-    unsigned short   d_reclen; \
-    unsigned char    d_type; \
-    char             d_name[256]; \
+    __DIRENT64_INO_T d_ino; \
+    off64_t d_off; \
+    unsigned short d_reclen; \
+    unsigned char d_type; \
+    char d_name[256]; \
 
 struct dirent { __DIRENT64_BODY };
 struct dirent64 { __DIRENT64_BODY };
 
 #undef __DIRENT64_BODY
+#undef __DIRENT64_INO_T
 
 /* glibc compatibility. */
 #undef _DIRENT_HAVE_D_NAMLEN /* Linux doesn't have a d_namlen field. */
