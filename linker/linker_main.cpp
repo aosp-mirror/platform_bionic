@@ -138,8 +138,7 @@ static void parse_LD_PRELOAD(const char* path) {
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
-static void add_vdso(KernelArgumentBlock& args __unused) {
-#if defined(AT_SYSINFO_EHDR)
+static void add_vdso(KernelArgumentBlock& args) {
   ElfW(Ehdr)* ehdr_vdso = reinterpret_cast<ElfW(Ehdr)*>(args.getauxval(AT_SYSINFO_EHDR));
   if (ehdr_vdso == nullptr) {
     return;
@@ -155,7 +154,6 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 
   si->prelink_image();
   si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr);
-#endif
 }
 
 /* gdb expects the linker to be in the debug shared object list.
