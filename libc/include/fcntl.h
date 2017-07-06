@@ -56,14 +56,18 @@ __BEGIN_DECLS
 #define O_ASYNC FASYNC
 #define O_RSYNC O_SYNC
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 #define SPLICE_F_MOVE 1
 #define SPLICE_F_NONBLOCK 2
 #define SPLICE_F_MORE 4
 #define SPLICE_F_GIFT 8
+#endif
 
+#if __ANDROID_API__ >= __ANDROID_API_O__
 #define SYNC_FILE_RANGE_WAIT_BEFORE 1
 #define SYNC_FILE_RANGE_WRITE 2
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
+#endif
 
 int creat(const char*, mode_t);
 int creat64(const char*, mode_t) __INTRODUCED_IN(21);
