@@ -48,7 +48,7 @@
  * Defaults on "first" open.
  */
 #define	TTYDEF_IFLAG	(BRKINT | ICRNL | IMAXBEL | IXON | IXANY)
-#define TTYDEF_OFLAG	(OPOST | ONLCR | OXTABS)
+#define TTYDEF_OFLAG	(OPOST | ONLCR | XTABS)
 #define TTYDEF_LFLAG	(ECHO | ICANON | ISIG | IEXTEN | ECHOE|ECHOKE|ECHOCTL)
 #define TTYDEF_CFLAG	(CREAD | CS8 | HUPCL)
 #define TTYDEF_SPEED	(B9600)
@@ -58,7 +58,7 @@
  */
 #define CTRL(x)	(x&037)
 #define	CEOF		CTRL('d')
-#define	CEOL		((unsigned char)'\377')	/* XXX avoid _POSIX_VDISABLE */
+#define	CEOL		'\0'	/* XXX avoid _POSIX_VDISABLE */
 #define	CERASE		0177
 #define	CINTR		CTRL('c')
 #define	CSTATUS		CTRL('t')
@@ -80,34 +80,4 @@
 #define CRPRNT		CREPRINT
 #define	CFLUSH		CDISCARD
 
-/* PROTECTED INCLUSION ENDS HERE */
 #endif /* !_SYS_TTYDEFAULTS_H_ */
-
-/*
- * #define TTYDEFCHARS to include an array of default control characters.
- */
-#ifdef TTYDEFCHARS
-const cc_t ttydefchars[NCCS] = {
-	[VEOF] = CEOF,
-	[VEOL] = CEOL,
-	[VEOL2] = CEOL,
-	[VERASE] = CERASE,
-	[VWERASE] = CWERASE,
-	[VKILL] = CKILL,
-	[VREPRINT] = CREPRINT,
-	[7] = _POSIX_VDISABLE,	/* spare */
-	[VINTR] = CINTR,
-	[VQUIT] = CQUIT,
-	[VSUSP] = CSUSP,
-	[VDSUSP] = CDSUSP,
-	[VSTART] = CSTART,
-	[VSTOP] = CSTOP,
-	[VLNEXT] = CLNEXT,
-	[VDISCARD] = CDISCARD,
-	[VMIN] = CMIN,
-	[VTIME] = CTIME,
-	[VSTATUS] = CSTATUS,
-	[19] = _POSIX_VDISABLE,	/* spare */
-};
-#undef TTYDEFCHARS
-#endif
