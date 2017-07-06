@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8654b1a9_e64b4cf7",
+        "filename": "libc/include/arpa/telnet.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-06T18:21:34Z",
+      "side": 1,
+      "message": "Is this supposed to be \"NULL\"?",
+      "range": {
+        "startLine": 292,
+        "startChar": 54,
+        "endLine": 292,
+        "endChar": 58
+      },
+      "revId": "02a3fe9fc6b5197f5b57487f1f735fb7136347ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
