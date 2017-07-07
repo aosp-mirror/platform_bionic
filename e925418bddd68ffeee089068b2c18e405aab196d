@@ -34,6 +34,24 @@
       "revId": "e925418bddd68ffeee089068b2c18e405aab196d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad50a21d_7b60fb43",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-07-07T18:25:39Z",
+      "side": 1,
+      "message": "that\u0027s because we don\u0027t want to disable things like CFI and SafeStack on libc/libm.",
+      "parentUuid": "7fab0d27_981203a8",
+      "revId": "e925418bddd68ffeee089068b2c18e405aab196d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
