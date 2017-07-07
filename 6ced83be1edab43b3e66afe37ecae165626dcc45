@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f77167fa_f6ce0b2b",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-07T14:55:57Z",
+      "side": 1,
+      "message": "using\n\n  if (feature \u003d\u003d HwFeature::Watchpoint \u0026\u0026 wp_count \u003d\u003d 0) {\n\nwould be a lot less noisy than this switch.",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 26
+      },
+      "revId": "6ced83be1edab43b3e66afe37ecae165626dcc45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
