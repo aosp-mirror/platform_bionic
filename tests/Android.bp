@@ -134,6 +134,7 @@ cc_test_library {
         "sys_sysmacros_test.cpp",
         "sys_time_test.cpp",
         "sys_timex_test.cpp",
+        "sys_ttydefaults_test.cpp",
         "sys_types_test.cpp",
         "sys_uio_test.cpp",
         "sys_vfs_test.cpp",
@@ -288,6 +289,7 @@ cc_test_library {
             ],
             static_libs: [
                 "libpagemap",
+                "libziparchive",
                 "libLLVMObject",
                 "libLLVMBitReader",
                 "libLLVMMC",

@@ -1,13 +1,6 @@
-/*	$NetBSD: ttydefaults.h,v 1.16 2008/05/24 14:06:39 yamt Exp $	*/
-
-/*-
- * Copyright (c) 1982, 1986, 1993
+/*
+ * Copyright (c) 1983, 1993
  *	The Regents of the University of California.  All rights reserved.
- * (c) UNIX System Laboratories, Inc.
- * All or some portions of this file are derived from material licensed
- * to the University of California by American Telephone and Telegraph
- * Co. or Unix System Laboratories, Inc. and are reproduced herein with
- * the permission of UNIX System Laboratories, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,51 +26,56 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)ttydefaults.h	8.4 (Berkeley) 1/21/94
+ *	@(#)tftp.h	8.1 (Berkeley) 6/2/93
+ * $FreeBSD$
  */
 
-/*
- * System wide defaults for terminal state.
- */
-#ifndef _SYS_TTYDEFAULTS_H_
-#define	_SYS_TTYDEFAULTS_H_
+#ifndef _ARPA_TFTP_H_
+#define	_ARPA_TFTP_H_
 
 #include <sys/cdefs.h>
 
 /*
- * Defaults on "first" open.
+ * Trivial File Transfer Protocol (IEN-133)
  */
-#define	TTYDEF_IFLAG	(BRKINT | ICRNL | IMAXBEL | IXON | IXANY)
-#define TTYDEF_OFLAG	(OPOST | ONLCR | XTABS)
-#define TTYDEF_LFLAG	(ECHO | ICANON | ISIG | IEXTEN | ECHOE|ECHOKE|ECHOCTL)
-#define TTYDEF_CFLAG	(CREAD | CS8 | HUPCL)
-#define TTYDEF_SPEED	(B9600)
+#define	SEGSIZE		512		/* data segment size */
 
 /*
- * Control Character Defaults
+ * Packet types.
  */
-#define CTRL(x)	(x&037)
-#define	CEOF		CTRL('d')
-#define	CEOL		'\0'	/* XXX avoid _POSIX_VDISABLE */
-#define	CERASE		0177
-#define	CINTR		CTRL('c')
-#define	CSTATUS		CTRL('t')
-#define	CKILL		CTRL('u')
-#define	CMIN		1
-#define	CQUIT		034		/* FS, ^\ */
-#define	CSUSP		CTRL('z')
-#define	CTIME		0
-#define	CDSUSP		CTRL('y')
-#define	CSTART		CTRL('q')
-#define	CSTOP		CTRL('s')
-#define	CLNEXT		CTRL('v')
-#define	CDISCARD 	CTRL('o')
-#define	CWERASE 	CTRL('w')
-#define	CREPRINT 	CTRL('r')
-#define	CEOT		CEOF
-/* compat */
-#define	CBRK		CEOL
-#define CRPRNT		CREPRINT
-#define	CFLUSH		CDISCARD
+#define	RRQ	01			/* read request */
+#define	WRQ	02			/* write request */
+#define	DATA	03			/* data packet */
+#define	ACK	04			/* acknowledgement */
+#define	ERROR	05			/* error code */
+#define	OACK	06			/* option acknowledgement */
 
-#endif /* !_SYS_TTYDEFAULTS_H_ */
+struct tftphdr {
+	unsigned short	th_opcode;		/* packet type */
+	union {
+		unsigned short	tu_block;	/* block # */
+		unsigned short	tu_code;	/* error code */
+		char	tu_stuff[1];	/* request packet stuff */
+	} __packed th_u;
+	char	th_data[1];		/* data or error string */
+} __packed;
+
+#define	th_block	th_u.tu_block
+#define	th_code		th_u.tu_code
+#define	th_stuff	th_u.tu_stuff
+#define	th_msg		th_data
+
+/*
+ * Error codes.
+ */
+#define	EUNDEF		0		/* not defined */
+#define	ENOTFOUND	1		/* file not found */
+#define	EACCESS		2		/* access violation */
+#define	ENOSPACE	3		/* disk full or allocation exceeded */
+#define	EBADOP		4		/* illegal TFTP operation */
+#define	EBADID		5		/* unknown transfer ID */
+#define	EEXISTS		6		/* file already exists */
+#define	ENOUSER		7		/* no such user */
+#define	EOPTNEG		8		/* option negotiation failed */
+
+#endif /* !_TFTP_H_ */

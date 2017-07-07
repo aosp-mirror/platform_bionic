@@ -49,6 +49,14 @@ typedef elf_fpregset_t prfpregset_t;
 typedef pid_t lwpid_t;
 typedef void* psaddr_t;
 
+struct elf_siginfo {
+  int si_signo;
+  int si_code;
+  int si_errno;
+};
+
+#define ELF_PRARGSZ 80
+
 __END_DECLS
 
 #endif /* _SYS_PROCFS_H_ */
