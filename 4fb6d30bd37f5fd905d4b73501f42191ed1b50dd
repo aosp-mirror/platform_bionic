@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7fa1897_fd573364",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-07T19:29:14Z",
+      "side": 1,
+      "message": "Add a util.h, and then create a library of this function. Do the same in your test.",
+      "range": {
+        "startLine": 21,
+        "startChar": 10,
+        "endLine": 21,
+        "endChar": 18
+      },
+      "revId": "4fb6d30bd37f5fd905d4b73501f42191ed1b50dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
