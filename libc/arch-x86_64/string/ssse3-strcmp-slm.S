@@ -1879,16 +1879,37 @@ L(less32bytes):
 	.p2align 4
 L(ret):
 L(less16bytes):
-	bsf	%rdx, %rdx		/* find and store bit index in %rdx */
+	test     $0xff, %dl
+	jz      L(byte8_15)
+	and     $0x00ff, %rdx
+	lea     L(bitpos)(%rip), %r8
+	movzbq  (%r8, %rdx, 1), %rdx
 
 #ifdef USE_AS_STRNCMP
-	sub	%rdx, %r11
-	jbe	L(strcmp_exitz)
+	sub     %rdx, %r11
+	jbe     L(strcmp_exitz)
 #endif
-	movzbl	(%rsi, %rdx), %ecx
-	movzbl	(%rdi, %rdx), %eax
 
-	sub	%ecx, %eax
+	mov     (%rdi, %rdx, 1), %cl
+	sub     (%rsi, %rdx, 1), %cl
+	movsbq  %cl, %rax
+	ret
+
+L(byte8_15):
+	mov     %dh, %dl
+	and     $0x00ff, %rdx
+	lea     L(bitpos)(%rip), %r8
+	movzbq  (%r8, %rdx, 1), %rdx
+	add     $0x8, %rdx
+
+#ifdef USE_AS_STRNCMP
+	sub     %rdx, %r11
+	jbe     L(strcmp_exitz)
+#endif
+
+	mov     (%rdi, %rdx, 1), %cl
+	sub     (%rsi, %rdx, 1), %cl
+	movsbq  %cl, %rax
 	ret
 
 L(strcmp_exitz):
@@ -1923,3 +1944,262 @@ L(unaligned_table):
 	.int	L(ashr_14) - L(unaligned_table)
 	.int	L(ashr_15) - L(unaligned_table)
 	.int	L(ashr_0) - L(unaligned_table)
+
+	.p2align 3
+L(bitpos):
+        .byte   0
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   5
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   6
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   5
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   7
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   5
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   6
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   5
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   4
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   3
+        .byte   0
+        .byte   1
+        .byte   0
+        .byte   2
+        .byte   0
+        .byte   1
+        .byte   0
