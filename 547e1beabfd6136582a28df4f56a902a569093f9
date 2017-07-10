@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e01f6e56_5d7e79f9",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-07-10T21:48:54Z",
+      "side": 1,
+      "message": "Per discussion with Dan, I think this needs to say \"versioned\u003d26\"?",
+      "revId": "547e1beabfd6136582a28df4f56a902a569093f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
