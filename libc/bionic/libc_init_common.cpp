@@ -59,9 +59,6 @@ __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
-// Declared in <unistd.h>.
-char** environ;
-
 #if defined(__i386__)
 __attribute__((__naked__)) static void __libc_int0x80() {
   __asm__ volatile("int $0x80; ret");
