@@ -176,17 +176,17 @@ int renameat(int, const char*, int, const char*);
 int fseek(FILE*, long, int);
 long ftell(FILE*);
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_N__
-int fgetpos(FILE*, fpos_t*) __RENAME(fgetpos64);
-int fsetpos(FILE*, const fpos_t*) __RENAME(fsetpos64);
-int fseeko(FILE*, off_t, int) __RENAME(fseeko64);
-off_t ftello(FILE*) __RENAME(ftello64);
+#if defined(__USE_FILE_OFFSET64)
+int fgetpos(FILE*, fpos_t*) __RENAME(fgetpos64) __INTRODUCED_IN(24);
+int fsetpos(FILE*, const fpos_t*) __RENAME(fsetpos64) __INTRODUCED_IN(24);
+int fseeko(FILE*, off_t, int) __RENAME(fseeko64) __INTRODUCED_IN(24);
+off_t ftello(FILE*) __RENAME(ftello64) __INTRODUCED_IN(24);
 #  if defined(__USE_BSD)
 FILE* funopen(const void*,
               int (*)(void*, char*, int),
               int (*)(void*, const char*, int),
               fpos_t (*)(void*, fpos_t, int),
-              int (*)(void*)) __RENAME(funopen64);
+              int (*)(void*)) __RENAME(funopen64) __INTRODUCED_IN(24);
 #  endif
 #else
 int fgetpos(FILE*, fpos_t*);
