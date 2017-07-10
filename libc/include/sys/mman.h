@@ -43,7 +43,7 @@ __BEGIN_DECLS
 #define MREMAP_MAYMOVE  1
 #define MREMAP_FIXED    2
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
+#if defined(__USE_FILE_OFFSET64)
 void* mmap(void*, size_t, int, int, int, off_t) __RENAME(mmap64) __INTRODUCED_IN(21);
 #else
 void* mmap(void*, size_t, int, int, int, off_t);
@@ -71,7 +71,7 @@ int madvise(void*, size_t, int);
  * Some third-party code uses the existence of POSIX_MADV_NORMAL to detect the
  * availability of posix_madvise. This is not correct, since having up-to-date
  * UAPI headers says nothing about the C library, but for the time being we
- * don't want to harm adoption to the unified headers.
+ * don't want to harm adoption of the unified headers.
  *
  * https://github.com/android-ndk/ndk/issues/395
  */

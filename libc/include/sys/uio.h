@@ -39,8 +39,8 @@ ssize_t writev(int, const struct iovec*, int);
 
 #if defined(__USE_GNU)
 #if defined(__USE_FILE_OFFSET64)
-ssize_t preadv(int, const struct iovec*, int, off_t) __RENAME(preadv64);
-ssize_t pwritev(int, const struct iovec*, int, off_t) __RENAME(pwritev64);
+ssize_t preadv(int, const struct iovec*, int, off_t) __RENAME(preadv64) __INTRODUCED_IN(24);
+ssize_t pwritev(int, const struct iovec*, int, off_t) __RENAME(pwritev64) __INTRODUCED_IN(24);
 #else
 ssize_t preadv(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
 ssize_t pwritev(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
