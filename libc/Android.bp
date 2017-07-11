@@ -385,7 +385,6 @@ cc_library_static {
     name: "libc_openbsd_ndk",
     defaults: ["libc_defaults"],
     srcs: [
-        "upstream-openbsd/lib/libc/compat-43/killpg.c",
         "upstream-openbsd/lib/libc/gen/alarm.c",
         "upstream-openbsd/lib/libc/gen/ctype_.c",
         "upstream-openbsd/lib/libc/gen/daemon.c",
@@ -1392,6 +1391,7 @@ cc_library_static {
         "bionic/ifaddrs.cpp",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
+        "bionic/killpg.cpp",
         "bionic/langinfo.cpp",
         "bionic/lchown.cpp",
         "bionic/lfs64_support.cpp",
