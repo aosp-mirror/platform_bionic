@@ -34,6 +34,24 @@
       "revId": "547e1beabfd6136582a28df4f56a902a569093f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea838c01_674a7303",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2017-07-11T16:51:58Z",
+      "side": 1,
+      "message": "I think so. This change won\u0027t be cherry-picked into 26, so effectively.\n\nIf this is resolved, are there any other problems for getting +2?",
+      "parentUuid": "6d5229e6_39746909",
+      "revId": "547e1beabfd6136582a28df4f56a902a569093f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
