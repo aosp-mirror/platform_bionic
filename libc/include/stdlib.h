@@ -225,12 +225,12 @@ long double strtold_l(const char*, char**, locale_t) __INTRODUCED_IN(21);
 // Implemented as static inlines before 21.
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+#if __ANDROID_API__ >= __ANDROID_API_O__
 double strtod_l(const char*, char**, locale_t) __INTRODUCED_IN(26);
 float strtof_l(const char*, char**, locale_t) __INTRODUCED_IN(26);
 long strtol_l(const char*, char**, int, locale_t) __INTRODUCED_IN(26);
 #else
-// Implemented as static inlines.
+// Implemented as static inlines before 26.
 #endif
 
 __END_DECLS
