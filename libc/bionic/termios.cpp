@@ -26,93 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
 #include <termios.h>
 #include <unistd.h>
 
-static speed_t cfgetspeed(const termios* s) {
-  return (s->c_cflag & CBAUD);
-}
+// Most of termios was missing in the platform until L, but available as inlines in the NDK.
+// We share definitions with the NDK to avoid bugs (https://github.com/android-ndk/ndk/issues/441).
+#define __BIONIC_TERMIOS_INLINE /* Out of line. */
+#include <bits/termios_inlines.h>
 
-speed_t cfgetispeed(const termios* s) {
-  return cfgetspeed(s);
-}
-
-speed_t cfgetospeed(const termios* s) {
-  return cfgetspeed(s);
-}
-
-void cfmakeraw(termios* s) {
-  s->c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL|IXON);
-  s->c_oflag &= ~OPOST;
-  s->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
-  s->c_cflag &= ~(CSIZE|PARENB);
-  s->c_cflag |= CS8;
-}
-
-int cfsetispeed(termios* s, speed_t speed) {
-  return cfsetspeed(s, speed);
-}
-
-int cfsetospeed(termios* s, speed_t speed) {
-  return cfsetspeed(s, speed);
-}
-
-int cfsetspeed(termios* s, speed_t speed) {
-  // TODO: check 'speed' is valid.
-  s->c_cflag = (s->c_cflag & ~CBAUD) | (speed & CBAUD);
-  return 0;
-}
-
-int tcdrain(int fd) {
-  // A non-zero argument to TCSBRK means "don't send a break".
-  // The drain is a side-effect of the ioctl!
-  return ioctl(fd, TCSBRK, static_cast<unsigned long>(1));
-}
-
-int tcflow(int fd, int action) {
-  return ioctl(fd, TCXONC, static_cast<unsigned long>(action));
-}
-
-int tcflush(int fd, int queue) {
-  return ioctl(fd, TCFLSH, static_cast<unsigned long>(queue));
-}
-
-int tcgetattr(int fd, termios* s) {
-  return ioctl(fd, TCGETS, s);
-}
-
-pid_t tcgetsid(int fd) {
-  pid_t sid;
-  if (ioctl(fd, TIOCGSID, &sid) == -1) {
-    return -1;
-  }
-  return sid;
-}
-
-int tcsendbreak(int fd, int duration) {
-  return ioctl(fd, TCSBRKP, static_cast<unsigned long>(duration));
-}
-
-int tcsetattr(int fd, int optional_actions, const termios* s) {
-  int cmd;
-  switch (optional_actions) {
-    case TCSANOW: cmd = TCSETS; break;
-    case TCSADRAIN: cmd = TCSETSW; break;
-    case TCSAFLUSH: cmd = TCSETSF; break;
-    default: errno = EINVAL; return -1;
-  }
-  return ioctl(fd, cmd, s);
-}
-
+// Actually declared in <unistd.h>, present on all API levels.
 pid_t tcgetpgrp(int fd) {
   pid_t pid;
-  if (ioctl(fd, TIOCGPGRP, &pid) == -1) {
-    return -1;
-  }
-  return pid;
+  return (ioctl(fd, TIOCGPGRP, &pid) == -1) ? -1 : pid;
 }
 
+// Actually declared in <unistd.h>, present on all API levels.
 int tcsetpgrp(int fd, pid_t pid) {
   return ioctl(fd, TIOCSPGRP, &pid);
 }

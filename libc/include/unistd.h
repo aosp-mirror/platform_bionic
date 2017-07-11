@@ -173,7 +173,7 @@ off_t lseek(int __fd, off_t __offset, int __whence);
 
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
+#if defined(__USE_FILE_OFFSET64)
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
 ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
   __overloadable __RENAME(pread64) __INTRODUCED_IN(12);
