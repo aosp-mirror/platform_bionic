@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "7d60da12_5a41f453",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-07-11T02:52:06Z",
+      "side": 1,
+      "message": "This lib and the include in util.h are vestiges of the interface CL that\u0027s coming up. Including them here was my mistake and I\u0027m taking them out, but if you have any more critique on this it\u0027ll be coming back in my next CL.",
+      "parentUuid": "034ae01d_f8996ba2",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 47
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97211fc2_7238a9da",
         "filename": "benchmarks/util.cpp",
         "patchSetId": 7
@@ -59,6 +83,30 @@
       "writtenOn": "2017-07-11T01:34:20Z",
       "side": 1,
       "message": "Another nit, we tend to organize the headers with the C headers first, the C++ headers next, then all of the local headers. The headers should also be in alpha order in each group.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32d43d0c_8b3b1bfb",
+        "filename": "benchmarks/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-07-11T02:52:06Z",
+      "side": 1,
+      "message": "To be clear, the only thing wrong with this is the order of vector and cstdlib, right? util.h is local, but the style guide makes it out like a source file\u0027s corresponding header goes on top.",
+      "parentUuid": "97211fc2_7238a9da",
       "range": {
         "startLine": 19,
         "startChar": 0,
