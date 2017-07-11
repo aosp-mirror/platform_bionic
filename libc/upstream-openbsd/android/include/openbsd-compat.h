@@ -22,6 +22,11 @@
 #include <sys/cdefs.h>
 #include <stddef.h> // For size_t.
 
+#define __BEGIN_HIDDEN_DECLS _Pragma("GCC visibility push(hidden)")
+#define __END_HIDDEN_DECLS _Pragma("GCC visibility pop")
+
+extern const char* __progname;
+
 /* Redirect internal C library calls to the public function. */
 #define _err err
 #define _errx errx
