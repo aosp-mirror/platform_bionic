@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8022e129_bf2c0c5a",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T19:26:35Z",
+      "side": 1,
+      "message": "You only really need this if you plan to allow this library to be exported and used outside of this directory. If that happens then we would create a directory for the header files.",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 31
+      },
+      "revId": "2e6a340c5b742860c2eae8d7a938f1be5c32ab9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5878143_b5f9c7ac",
+        "filename": "benchmarks/util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T19:26:35Z",
+      "side": 1,
+      "message": "Sorry, I saw this before, but I forget to mention it. There is a mix of indentation style in this file, can you make it all the same? Namely, 2 space indentation. It\u0027s here and in LockToCpu.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 33
+      },
+      "revId": "2e6a340c5b742860c2eae8d7a938f1be5c32ab9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09897f8a_226268ac",
+        "filename": "tests/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T19:26:35Z",
+      "side": 1,
+      "message": "I don\u0027t think you should put this here. This is really for bionic unit tests, and will be running on CTS. I would suggest moving this into benchmarks/tests, and then don\u0027t bother with a benchmarks/tests/Android.bp, just put the test creation in benchmarks/Android.bp.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 28
+      },
+      "revId": "2e6a340c5b742860c2eae8d7a938f1be5c32ab9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
