@@ -1,4 +1,4 @@
-/*	$OpenBSD: memchr.c,v 1.7 2005/08/08 08:05:37 espie Exp $ */
+/*	$OpenBSD: memchr.c,v 1.8 2015/08/31 02:53:57 guenther Exp $ */
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -34,7 +34,8 @@
 #include <string.h>
 
 void *
-memchr(const void *s, int c, size_t n) __overloadable {
+memchr(const void *s, int c, size_t n) __overloadable
+{
 	if (n != 0) {
 		const unsigned char *p = s;
 
@@ -45,3 +46,4 @@ memchr(const void *s, int c, size_t n) __overloadable {
 	}
 	return (NULL);
 }
+DEF_STRONG(memchr);

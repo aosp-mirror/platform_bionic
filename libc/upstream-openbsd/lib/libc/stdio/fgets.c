@@ -1,4 +1,4 @@
-/*	$OpenBSD: fgets.c,v 1.14 2009/11/09 00:18:27 kurt Exp $ */
+/*	$OpenBSD: fgets.c,v 1.16 2016/09/21 04:38:56 guenther Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -83,19 +83,19 @@ fgets(char *buf, int n, FILE *fp) __overloadable
 		 */
 		if (len > n)
 			len = n;
-		t = memchr((void *)p, '\n', len);
+		t = memchr(p, '\n', len);
 		if (t != NULL) {
 			len = ++t - p;
 			fp->_r -= len;
 			fp->_p = t;
-			(void)memcpy((void *)s, (void *)p, len);
+			(void)memcpy(s, p, len);
 			s[len] = '\0';
 			FUNLOCKFILE(fp);
 			return (buf);
 		}
 		fp->_r -= len;
 		fp->_p += len;
-		(void)memcpy((void *)s, (void *)p, len);
+		(void)memcpy(s, p, len);
 		s += len;
 		n -= len;
 	}
@@ -103,3 +103,4 @@ fgets(char *buf, int n, FILE *fp) __overloadable
 	FUNLOCKFILE(fp);
 	return (buf);
 }
+DEF_STRONG(fgets);
