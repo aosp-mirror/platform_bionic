@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "778c062f_692fb70d",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "Maybe a better name for this would be libBionicBenchmarkUtils.",
+      "range": {
+        "startLine": 68,
+        "startChar": 11,
+        "endLine": 68,
+        "endChar": 30
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "034ae01d_f8996ba2",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "I don\u0027t think you need this, the utilities themselves aren\u0027t using any google benchmark code.",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 47
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97211fc2_7238a9da",
+        "filename": "benchmarks/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "Another nit, we tend to organize the headers with the C headers first, the C++ headers next, then all of the local headers. The headers should also be in alpha order in each group.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 18
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85c8ecb3_2e55b82d",
+        "filename": "benchmarks/util.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "Need a #include \u003cvector\u003e",
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d1f02d9_e33ecfdc",
+        "filename": "benchmarks/util.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "We tend to only include header files used in this file.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 32
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "563061a4_4677f59a",
+        "filename": "benchmarks/util.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-11T01:34:20Z",
+      "side": 1,
+      "message": "Small nit, we use // in all new code instead.",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 10
+      },
+      "revId": "f35eeca84eea1489d7bccd4998e61ccf36dc81e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
