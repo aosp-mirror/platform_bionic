@@ -35,6 +35,17 @@ cc_defaults {
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
     ],
+    static_libs: ["libBionicBenchmarksUtils"],
+}
+
+cc_defaults {
+    name: "bionic-benchmarks-extras-defaults",
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wunused",
+    ],
 }
 
 // Build benchmarks for the device (with bionic's .so). Run with:
@@ -62,4 +73,20 @@ cc_benchmark_host {
             enabled: false,
         },
     },
+}
+
+cc_library_static {
+    name: "libBionicBenchmarksUtils",
+    defaults: ["bionic-benchmarks-extras-defaults"],
+    srcs: ["util.cpp"],
+    host_supported: true,
+}
+
+cc_test {
+    name: "bionic-benchmarks-tests",
+    defaults: ["bionic-benchmarks-extras-defaults"],
+    srcs: [
+        "tests/benchmark_test.cpp",
+    ],
+    static_libs: ["libBionicBenchmarksUtils"],
 }
