@@ -22,6 +22,30 @@
       "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6820007d_82d97c2c",
+        "filename": "libdl/libdl.arm.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-12T14:43:30Z",
+      "side": 1,
+      "message": "or should they be unmarked in LIBC_O and then versioned\u003d27 in LIBC_MR1?\n\n(i think the \"obviously correct\" easy thing to do is to just say LIBC_MR1, but i thought there was a way to retcon these, since they were in LIBC_PLATFORM which means they weren\u0027t hidden in 26, they just weren\u0027t versioned.)",
+      "parentUuid": "5e8ed6fa_b54ec500",
+      "range": {
+        "startLine": 39,
+        "startChar": 22,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
