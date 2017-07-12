@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1e9fe7e_fffe415c",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-12T01:59:27Z",
+      "side": 1,
+      "message": "Add a cflags section and add the -W options that are in cc_defaults.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 17
+      },
+      "revId": "eb622991ab799287b2a642259839c3a2986f6fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77066f0c_3e6dccac",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-12T01:59:27Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need these, the cc_test should include them by default.",
+      "range": {
+        "startLine": 81,
+        "startChar": 1,
+        "endLine": 82,
+        "endChar": 24
+      },
+      "revId": "eb622991ab799287b2a642259839c3a2986f6fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccbef401_b6d73809",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-12T01:59:27Z",
+      "side": 1,
+      "message": "I\u0027d leave this as \"util.h\". That indicates that the header file can be found locally.",
+      "range": {
+        "startLine": 20,
+        "startChar": 10,
+        "endLine": 20,
+        "endChar": 14
+      },
+      "revId": "eb622991ab799287b2a642259839c3a2986f6fe0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
