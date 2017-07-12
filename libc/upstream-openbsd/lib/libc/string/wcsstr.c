@@ -1,4 +1,4 @@
-/*	$OpenBSD: wcsstr.c,v 1.3 2005/08/08 08:05:37 espie Exp $	*/
+/*	$OpenBSD: wcsstr.c,v 1.5 2015/10/01 02:32:07 guenther Exp $	*/
 /*	$NetBSD: wcsstr.c,v 1.3 2003/03/05 20:18:17 tshiozak Exp $	*/
 
 /*-
@@ -43,7 +43,6 @@ wcsstr(const wchar_t *big, const wchar_t *little)
 	const wchar_t *r;
 
 	if (!*little) {
-		/* LINTED interface specification */
 		return (wchar_t *)big;
 	}
 	if (wcslen(big) < wcslen(little))
@@ -61,10 +60,12 @@ wcsstr(const wchar_t *big, const wchar_t *little)
 			r++;
 		}
 		if (!*q) {
-			/* LINTED interface specification */
 			return (wchar_t *)p;
 		}
 		p++;
 	}
 	return NULL;
 }
+#ifndef WCSWCS
+DEF_STRONG(wcsstr);
+#endif
