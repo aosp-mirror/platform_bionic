@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54a45f31_e9ae8344",
+        "filename": "benchmarks/Android.bp",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-12T19:09:35Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t notice this before, but can you add the cflags in here too?\n\nI\u0027d recommend creating a default for the -Wall... and have everyone use the same default tag.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 17
+      },
+      "revId": "c47c611b8770c4b081f83e403345f3f272a1b4f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
