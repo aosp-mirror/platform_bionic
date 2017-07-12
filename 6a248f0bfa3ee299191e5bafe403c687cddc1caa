@@ -70,6 +70,30 @@
       "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe33ef28_648bb7a1",
+        "filename": "libdl/libdl.arm.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-12T15:19:54Z",
+      "side": 1,
+      "message": "they\u0027re not in the NDK stub, but we can fix that. the question is what they look like in the real libc in O.\n\n(_PLATFORM is just a way for us to say \"it\u0027s in the real library, but when we generate the NDK stubs, don\u0027t expose it there\". we can\u0027t really enforce that it\u0027s genuinely only used by the platform.)",
+      "parentUuid": "df750a51_0ef78906",
+      "range": {
+        "startLine": 39,
+        "startChar": 22,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
