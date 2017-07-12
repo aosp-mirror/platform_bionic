@@ -94,6 +94,30 @@
       "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8e3eec7_5d5129c8",
+        "filename": "libdl/libdl.arm.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-12T16:01:49Z",
+      "side": 1,
+      "message": "In the real libdl (not libc), it (a symbol in LIBC_PLATFORM section) exists and is associated with the version name LIBC_PLATFORM.\n\n\u003e _PLATFORM is just a way for us to say \"it\u0027s in the real library, but when we generate the NDK stubs, don\u0027t expose it there\". we can\u0027t really enforce that it\u0027s genuinely only used by the platform.\n\nRight and this is true for _PRIVATE, IIUC.",
+      "parentUuid": "fe33ef28_648bb7a1",
+      "range": {
+        "startLine": 39,
+        "startChar": 22,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
