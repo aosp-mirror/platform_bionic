@@ -46,6 +46,30 @@
       "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df750a51_0ef78906",
+        "filename": "libdl/libdl.arm.map",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-12T15:16:44Z",
+      "side": 1,
+      "message": "AFAIK, version name is not interpreted anywhere (other than *_PRIVATE and *_PLATFORM when making the stub lib); it just serves as an id and no order is defined for two different ids, so both LIBC_O and LIBC_O_MR1 will work. If you look at libc.map.txt, many symbols for different API versions have the same version name LIBC. But if you really prefer LIBC_O_MR1, I will switch to it.\n\n_PRIVATE and _PLATFORM have been being treated the same (see gen_stub_libs.py), though I don\u0027t know why.\n\nSee that android_* symbols (except for android_dlopen_ext, which is already public) are not shown in the ndk stub.\n$ readelf -a ./target/product/taimen/obj/SHARED_LIBRARIES/libdl.ndk.26_intermediates/libdl.so |grep android_\n    11: 0000000000000490     4 FUNC    GLOBAL DEFAULT    7 android_dlopen_ext@@LIBC",
+      "parentUuid": "6820007d_82d97c2c",
+      "range": {
+        "startLine": 39,
+        "startChar": 22,
+        "endLine": 39,
+        "endChar": 28
+      },
+      "revId": "6a248f0bfa3ee299191e5bafe403c687cddc1caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
