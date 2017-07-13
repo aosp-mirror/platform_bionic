@@ -37,7 +37,15 @@
 
 #include "private/bionic_macros.h"
 
+#if defined(__BIONIC_BUILD_FOR_ANDROID_SUPPORT)
+#define USE_TLS_SLOT 0
+#else
+#define USE_TLS_SLOT 1
+#endif
+
+#if USE_TLS_SLOT
 #include "bionic/pthread_internal.h"
+#endif
 
 // We only support two locales, the "C" locale (also known as "POSIX"),
 // and the "C.UTF-8" locale (also known as "en_US.UTF-8").
@@ -69,6 +77,10 @@ size_t __ctype_get_mb_cur_max() {
     return l->mb_cur_max;
   }
 }
+
+#if !USE_TLS_SLOT
+static thread_local locale_t g_current_locale;
+#endif
 
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
@@ -163,9 +175,16 @@ char* setlocale(int category, const char* locale_name) {
   return const_cast<char*>(__bionic_current_locale_is_utf8 ? "C.UTF-8" : "C");
 }
 
+static locale_t* get_current_locale_ptr() {
+#if USE_TLS_SLOT
+  return &__get_bionic_tls().locale;
+#else
+  return &g_current_locale;
+#endif
+}
+
 locale_t uselocale(locale_t new_locale) {
-  locale_t* locale_storage = &__get_bionic_tls().locale;
-  locale_t old_locale = *locale_storage;
+  locale_t old_locale = *get_current_locale_ptr();
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
   if (old_locale == NULL) {
@@ -173,64 +192,8 @@ locale_t uselocale(locale_t new_locale) {
   }
 
   if (new_locale != NULL) {
-    *locale_storage = new_locale;
+    *get_current_locale_ptr() = new_locale;
   }
 
   return old_locale;
-}
-
-int strcasecmp_l(const char* s1, const char* s2, locale_t) {
-  return strcasecmp(s1, s2);
-}
-
-int strcoll_l(const char* s1, const char* s2, locale_t) {
-  return strcoll(s1, s2);
-}
-
-char* strerror_l(int error, locale_t) {
-  return strerror(error);
-}
-
-int strncasecmp_l(const char* s1, const char* s2, size_t n, locale_t) {
-  return strncasecmp(s1, s2, n);
-}
-
-double strtod_l(const char* s, char** end_ptr, locale_t) {
-  return strtod(s, end_ptr);
-}
-
-float strtof_l(const char* s, char** end_ptr, locale_t) {
-  return strtof(s, end_ptr);
-}
-
-long strtol_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtol(s, end_ptr, base);
-}
-
-long double strtold_l(const char* s, char** end_ptr, locale_t) {
-  return strtold(s, end_ptr);
-}
-
-long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoll(s, end_ptr, base);
-}
-
-unsigned long strtoul_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoul(s, end_ptr, base);
-}
-
-unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoull(s, end_ptr, base);
-}
-
-size_t strxfrm_l(char* dst, const char* src, size_t n, locale_t) {
-  return strxfrm(dst, src, n);
-}
-
-int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
-  return wcscasecmp(ws1, ws2);
-}
-
-int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
-  return wcsncasecmp(ws1, ws2, n);
 }
