@@ -1,6 +1,3 @@
-/*	$OpenBSD: wcsstr.c,v 1.5 2015/10/01 02:32:07 guenther Exp $	*/
-/*	$NetBSD: wcsstr.c,v 1.3 2003/03/05 20:18:17 tshiozak Exp $	*/
-
 /*-
  * Copyright (c)1999 Citrus Project,
  * All rights reserved.
@@ -26,46 +23,22 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	citrus Id: wcsstr.c,v 1.2 2000/12/21 05:07:25 itojun Exp
+ *	citrus Id: wmemcpy.c,v 1.2 2000/12/20 14:08:31 itojun Exp
  */
 
+#include <sys/cdefs.h>
+#if 0
+#if defined(LIBC_SCCS) && !defined(lint)
+__RCSID("$NetBSD: wmemcpy.c,v 1.1 2000/12/23 23:14:37 itojun Exp $");
+#endif /* LIBC_SCCS and not lint */
+#endif
+__FBSDID("$FreeBSD$");
+
+#include <string.h>
 #include <wchar.h>
 
 wchar_t *
-#ifdef WCSWCS
-wcswcs(const wchar_t *big, const wchar_t *little)
-#else
-wcsstr(const wchar_t *big, const wchar_t *little)
-#endif
+wmemcpy(wchar_t * __restrict d, const wchar_t * __restrict s, size_t n)
 {
-	const wchar_t *p;
-	const wchar_t *q;
-	const wchar_t *r;
-
-	if (!*little) {
-		return (wchar_t *)big;
-	}
-	if (wcslen(big) < wcslen(little))
-		return NULL;
-
-	p = big;
-	q = little;
-	while (*p) {
-		q = little;
-		r = p;
-		while (*q) {
-			if (*r != *q)
-				break;
-			q++;
-			r++;
-		}
-		if (!*q) {
-			return (wchar_t *)p;
-		}
-		p++;
-	}
-	return NULL;
+	return (wchar_t *)memcpy(d, s, n * sizeof(wchar_t));
 }
-#ifndef WCSWCS
-DEF_STRONG(wcsstr);
-#endif
