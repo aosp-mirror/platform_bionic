@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7c9202c_f10e0d67",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-13T10:28:28Z",
+      "side": 1,
+      "message": "the build system was fixed to address this issue - please recompile.",
+      "range": {
+        "startLine": 12,
+        "startChar": 50,
+        "endLine": 14,
+        "endChar": 62
+      },
+      "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
