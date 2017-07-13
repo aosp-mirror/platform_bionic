@@ -55,6 +55,15 @@ char *GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbyte
   return buf_aligned;
 }
 
+#if defined(__APPLE_)
+
+// Darwin doesn't support this, so do nothing.
+bool LockToCPU(int) {
+  return false;
+}
+
+#else
+
 bool LockToCPU(int cpu_to_lock) {
   cpu_set_t cpuset;
 
@@ -90,3 +99,5 @@ bool LockToCPU(int cpu_to_lock) {
 
   return true;
 }
+
+#endif
