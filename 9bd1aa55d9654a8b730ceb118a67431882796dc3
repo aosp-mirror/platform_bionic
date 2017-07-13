@@ -22,6 +22,30 @@
       "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5160ab52_73603fd4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-13T10:51:32Z",
+      "side": 1,
+      "message": "Yeah, we re-synced and recompiled and there was some progress, but we still has some cases that aren\u0027t handled - problem persists. Please see my comment in the bug.",
+      "parentUuid": "c7c9202c_f10e0d67",
+      "range": {
+        "startLine": 12,
+        "startChar": 50,
+        "endLine": 14,
+        "endChar": 62
+      },
+      "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
