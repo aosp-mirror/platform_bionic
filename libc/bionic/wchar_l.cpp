@@ -36,3 +36,25 @@ int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
 int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
   return wcsncasecmp(ws1, ws2, n);
 }
+
+int wcscoll_l(const wchar_t *ws1, const wchar_t *ws2, locale_t) {
+  return wcscoll(ws1, ws2);
+}
+
+size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t) {
+  return wcsxfrm(dest, src, n);
+}
+
+long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base,
+                    locale_t) {
+  return wcstoll(nptr, endptr, base);
+}
+
+unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr,
+                              int base, locale_t) {
+  return wcstoull(nptr, endptr, base);
+}
+
+long double wcstold_l(const wchar_t *nptr, wchar_t **endptr, locale_t) {
+  return wcstold(nptr, endptr);
+}
