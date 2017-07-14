@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f6ea524_054056ac",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T19:40:49Z",
+      "side": 1,
+      "message": "Most of the file uses \"",
+      "range": {
+        "startLine": 106,
+        "startChar": 29,
+        "endLine": 106,
+        "endChar": 30
+      },
+      "revId": "c9bfc405095484fc17b2decf9b475dcde606e2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88eadec7_2400b4b2",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T19:40:49Z",
+      "side": 1,
+      "message": "with open(path, \u0027r\u0027) as the_file:\n    try:\n        content \u003d the_file.read().decode(\u0027utf-8\u0027)\n    except SPECIFICERROR:\n        content \u003d the_file.read().decode(\u0027iso-8859-1\u0027)\n\nIf the file doesn\u0027t exist, yours will print a confusing message about it being bad UTF-8 :)",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 61
+      },
+      "revId": "c9bfc405095484fc17b2decf9b475dcde606e2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70d69361_a1d3c3d4",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T19:40:49Z",
+      "side": 1,
+      "message": "Remove the commented out stuff?",
+      "revId": "c9bfc405095484fc17b2decf9b475dcde606e2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8940e3f8_49440715",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T19:40:49Z",
+      "side": 1,
+      "message": "long line",
+      "revId": "c9bfc405095484fc17b2decf9b475dcde606e2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b92fe50_72dfa3de",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T19:40:49Z",
+      "side": 1,
+      "message": "for i, line in enumerate(lines):",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 25
+      },
+      "revId": "c9bfc405095484fc17b2decf9b475dcde606e2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
