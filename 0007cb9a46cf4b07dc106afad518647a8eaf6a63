@@ -16,6 +16,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "462e9639_798da0e6",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-14T13:38:54Z",
+      "side": 1,
+      "message": "\u0027setting up the sphal namespace programmatically\u0027 is a different issue. Even if we do that, this problem persists.\n\nsphal namespace only exists in /system/bin/* processes, and this issue is for /vendor/bin/* processes, where we will have two namespaces: default ns (for somain and vendor/lib/*) and system ns (for selected libs in /system/lib).\n\nLet\u0027s assume that vendor bin uses a lib in system (e.g. libhardware) to dynamically load a vendor lib (typically an HAL). Since libhardware is loaded in system ns, simple dlopen will load the vendor lib in system ns, which is wrong; it should be loaded in the default namespace.",
+      "parentUuid": "3137232b_cce2a309",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
