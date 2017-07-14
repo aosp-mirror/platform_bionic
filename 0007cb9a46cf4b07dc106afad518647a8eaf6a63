@@ -88,6 +88,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e15ac25c_dd57c3b7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-14T14:30:04Z",
+      "side": 1,
+      "message": "Yes, it has to be different. In framework case, vendor libs are always loaded in the sphal namespace and never in the default namespace.\n\nHowever, in vendor process, if we have separate namespace for HALs, the same vendor lib can be double loaded in the default namespace (from the somain) and in the separate namespace (from the HAL). Dual loading of a random vendor lib must be avoided.",
+      "parentUuid": "c5d1f1db_c4cb640e",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
