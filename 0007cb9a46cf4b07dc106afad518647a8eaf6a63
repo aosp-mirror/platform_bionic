@@ -52,6 +52,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "424809f9_2ce1d128",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-07-14T13:45:49Z",
+      "side": 1,
+      "message": "Do you mean to define a new namespace \"sphal\" for vendor process as well?",
+      "parentUuid": "3137232b_cce2a309",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
