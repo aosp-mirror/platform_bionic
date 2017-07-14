@@ -28,7 +28,12 @@
 
 #define __warn_references(sym,msg) /* ignored */
 
-/* digittoint is in BSD's <ctype.h>. */
+// digittoint is in BSD's <ctype.h>, but not ours, so we have a secret
+// implementation in libm. We reuse parts of libm in the NDK's
+// libandroid_support, where it's a static library, so we want all our
+// "hidden" functions start with a double underscore --- being HIDDEN
+// in the ELF sense is not sufficient.
+#define digittoint __libm_digittoint
 int digittoint(char ch);
 
 #endif
