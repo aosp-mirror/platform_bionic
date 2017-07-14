@@ -70,6 +70,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5d1f1db_c4cb640e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-14T13:59:00Z",
+      "side": 1,
+      "message": "yes - it does not have to be any different from the one used for framework, is it?",
+      "parentUuid": "424809f9_2ce1d128",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
