@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3137232b_cce2a309",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-14T13:15:40Z",
+      "side": 1,
+      "message": "In my opinion we should move in opposite way of removing visible flag from the config completely and setting up sphal namespace from a library using programmatic interface.\n\nAlso this is precisely what I wanted to avoid -\u003e making default namespace accessible from other namespaces.\n\nI did not understand from the bug why can\u0027t you use sphal namespace for this?",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
