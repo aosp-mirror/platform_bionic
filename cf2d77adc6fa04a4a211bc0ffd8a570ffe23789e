@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2f053e9_d28785ce",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-14T22:22:25Z",
+      "side": 1,
+      "message": "Long line. Maybe:\n\n    ignored_extensions \u003d [\n        \".bp\",\n        ...\n    ]\n    if os.path.splitext(path)[1] in ignored_extensions:\n        return False\n\n?",
+      "revId": "cf2d77adc6fa04a4a211bc0ffd8a570ffe23789e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
