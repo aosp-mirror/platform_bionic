@@ -70,6 +70,30 @@
       "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f9bc51_44470aa1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-07-14T08:54:40Z",
+      "side": 1,
+      "message": "If we don\u0027t need to care for prebuilt vendor libs, this CL can be addressed in build system.",
+      "parentUuid": "0a073a6e_bf88bf65",
+      "range": {
+        "startLine": 12,
+        "startChar": 50,
+        "endLine": 14,
+        "endChar": 62
+      },
+      "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
