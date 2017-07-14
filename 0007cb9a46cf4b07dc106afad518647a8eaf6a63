@@ -34,6 +34,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77680d07_04a702f7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-07-14T13:44:05Z",
+      "side": 1,
+      "message": "\u003e Also this is precisely what I wanted to avoid -\u003e making default namespace accessible from other namespaces.\n\nWe can still control the visibility using the .visible property. Default namespace for system/bin/* processes will never be invisible because namespace.default.visible is not set for [system] section. Only the default namespace for vendor/bin/* will be visible.",
+      "parentUuid": "462e9639_798da0e6",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
