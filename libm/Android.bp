@@ -63,7 +63,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_sinhf.c",
         "upstream-freebsd/lib/msun/src/e_sqrt.c",
         "upstream-freebsd/lib/msun/src/e_sqrtf.c",
-        "upstream-freebsd/lib/msun/src/imprecise.c",
         "upstream-freebsd/lib/msun/src/k_cos.c",
         "upstream-freebsd/lib/msun/src/k_cosf.c",
         "upstream-freebsd/lib/msun/src/k_exp.c",
@@ -209,6 +208,7 @@ cc_library {
         // Functionality not in the BSDs.
         "significandl.c",
         "sincos.c",
+        "fake_long_double.c",
 
         // Modified versions of BSD code.
         "signbit.c",
@@ -218,10 +218,6 @@ cc_library {
     ],
 
     multilib: {
-        lib32: {
-            srcs: ["fake_long_double.c"],
-        },
-
         lib64: {
             srcs: [
                 "upstream-freebsd/lib/msun/src/e_acosl.c",
