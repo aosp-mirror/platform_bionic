@@ -34,11 +34,15 @@ LIBC_N {
     dlvsym; # introduced=24
 } LIBC;
 
+LIBC_OMR1 { # future
+  global:
+    __cfi_slowpath; # future
+    __cfi_slowpath_diag; # future
+} LIBC_N;
+
 LIBC_PLATFORM {
   global:
     __cfi_init;
-    __cfi_slowpath;
-    __cfi_slowpath_diag;
     android_dlwarning;
     android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
@@ -48,4 +52,4 @@ LIBC_PLATFORM {
     android_create_namespace;
     android_link_namespaces;
     android_get_exported_namespace;
-} LIBC_N;
+} LIBC_OMR1;
