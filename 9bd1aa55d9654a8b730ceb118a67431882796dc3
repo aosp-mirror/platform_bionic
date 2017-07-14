@@ -94,6 +94,30 @@
       "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bb4cd0d_0a8a4631",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-14T15:57:23Z",
+      "side": 1,
+      "message": "yeah, vendors should rebuild with a fixed build system.",
+      "parentUuid": "10f9bc51_44470aa1",
+      "range": {
+        "startLine": 12,
+        "startChar": 50,
+        "endLine": 14,
+        "endChar": 62
+      },
+      "revId": "9bd1aa55d9654a8b730ceb118a67431882796dc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
