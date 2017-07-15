@@ -38,7 +38,7 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
 
   if (s == NULL) {
     // Equivalent to c32rtomb(buf, U'\0', ps).
-    return reset_and_return(1, state);
+    return mbstate_reset_and_return(1, state);
   }
 
   // POSIX states that if char32_t is a null wide character, a null byte shall
@@ -47,11 +47,11 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
   // stored.
   if (c32 == U'\0') {
     *s = '\0';
-    reset_and_return(1, state);
+    return mbstate_reset_and_return(1, state);
   }
 
   if (!mbsinit(state)) {
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
   if ((c32 & ~0x7f) == 0) {
