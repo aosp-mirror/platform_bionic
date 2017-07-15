@@ -280,7 +280,10 @@ TEST(uchar, c32rtomb) {
 
   char bytes[MB_LEN_MAX];
 
+  memset(bytes, 1, sizeof(bytes));
   EXPECT_EQ(1U, c32rtomb(bytes, L'\0', NULL));
+  EXPECT_EQ('\0', bytes[0]);
+  EXPECT_EQ('\x01', bytes[1]);
 
   memset(bytes, 0, sizeof(bytes));
   EXPECT_EQ(1U, c32rtomb(bytes, L'h', NULL));
@@ -408,4 +411,3 @@ TEST(uchar, mbrtoc32_incomplete) {
   GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
 #endif
 }
-
