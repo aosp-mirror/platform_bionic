@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4edfbd55_b0a49f27",
+        "filename": "libc/tools/generate-NOTICE.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-15T00:15:26Z",
+      "side": 1,
+      "message": "Did you retest this? Now that I\u0027m looking at it idr if the \".\" gets included with splitext.",
+      "range": {
+        "startLine": 29,
+        "startChar": 9,
+        "endLine": 29,
+        "endChar": 10
+      },
+      "revId": "aac7c3affa4bbe19e079e724968b4e72913d3a3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
