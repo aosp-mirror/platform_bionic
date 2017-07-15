@@ -445,6 +445,18 @@ TEST(wchar, mbsnrtowcs) {
   ASSERT_EQ(L'e', dst[1]);
   ASSERT_EQ(L'l', dst[2]);
   ASSERT_EQ(&s[3], src);
+
+  memset(dst, 0, sizeof(dst));
+  const char* incomplete = "\xc2"; // Incomplete UTF-8 sequence.
+  src = incomplete;
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(-1), mbsnrtowcs(dst, &src, SIZE_MAX, 3, nullptr));
+  ASSERT_EQ(EILSEQ, errno);
+
+  src = incomplete;
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(-1), mbsnrtowcs(nullptr, &src, SIZE_MAX, 3, nullptr));
+  ASSERT_EQ(EILSEQ, errno);
 }
 
 TEST(wchar, wcsftime) {
