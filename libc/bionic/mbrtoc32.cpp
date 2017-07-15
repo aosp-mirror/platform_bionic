@@ -41,7 +41,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   // Full state verification is done when decoding the sequence (after we have
   // all the bytes).
   if (mbstate_get_byte(state, 3) != 0) {
-    return reset_and_return_illegal(EINVAL, state);
+    return mbstate_reset_and_return_illegal(EINVAL, state);
   }
 
   if (s == NULL) {
@@ -98,7 +98,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     lower_bound = 0x10000;
   } else {
     // Malformed input; input is not UTF-8. See RFC 3629.
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
   // Fill in the state.
@@ -107,7 +107,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   for (i = 0; i < MIN(bytes_wanted, n); i++) {
     if (!mbsinit(state) && ((*s & 0xc0) != 0x80)) {
       // Malformed input; bad characters in the middle of a character.
-      return reset_and_return_illegal(EILSEQ, state);
+      return mbstate_reset_and_return_illegal(EILSEQ, state);
     }
     mbstate_set_byte(state, bytes_so_far + i, *s++);
   }
@@ -125,14 +125,14 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
 
   if (c32 < lower_bound) {
     // Malformed input; redundant encoding.
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
   if ((c32 >= 0xd800 && c32 <= 0xdfff) || c32 == 0xfffe || c32 == 0xffff) {
     // Malformed input; invalid code points.
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
   if (pc32 != NULL) {
     *pc32 = c32;
   }
-  return reset_and_return(c32 == U'\0' ? 0 : bytes_wanted, state);
+  return mbstate_reset_and_return(c32 == U'\0' ? 0 : bytes_wanted, state);
 }

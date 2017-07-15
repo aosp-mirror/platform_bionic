@@ -1409,7 +1409,6 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
-        "bionic/mbstate.cpp",
         "bionic/memmem.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
