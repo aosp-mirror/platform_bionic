@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BIONIC_MBSTATE_H
-#define _BIONIC_MBSTATE_H
-
 #include <wchar.h>
+#include <xlocale.h>
 
-__BEGIN_DECLS
-
-/*
- * These return values are specified by POSIX for multibyte conversion
- * functions.
- */
-#define __MB_ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
-#define __MB_ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
-
-#define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || \
-                         rv == __MB_ERR_INCOMPLETE_SEQUENCE)
-
-static inline __wur size_t mbstate_bytes_so_far(const mbstate_t* ps) {
-  return
-      (ps->__seq[2] != 0) ? 3 :
-      (ps->__seq[1] != 0) ? 2 :
-      (ps->__seq[0] != 0) ? 1 : 0;
+int wcscasecmp_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
+  return wcscasecmp(ws1, ws2);
 }
 
-static inline void mbstate_set_byte(mbstate_t* ps, int i, char byte) {
-  ps->__seq[i] = static_cast<uint8_t>(byte);
+int wcsncasecmp_l(const wchar_t* ws1, const wchar_t* ws2, size_t n, locale_t) {
+  return wcsncasecmp(ws1, ws2, n);
 }
 
-static inline __wur uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
-  return ps->__seq[n];
+int wcscoll_l(const wchar_t *ws1, const wchar_t *ws2, locale_t) {
+  return wcscoll(ws1, ws2);
 }
 
-static inline __wur size_t mbstate_reset_and_return_illegal(int _errno, mbstate_t* ps) {
-  errno = _errno;
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return __MB_ERR_ILLEGAL_SEQUENCE;
+size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t) {
+  return wcsxfrm(dest, src, n);
 }
 
-static inline __wur size_t mbstate_reset_and_return(int _return, mbstate_t* ps) {
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return _return;
+long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base,
+                    locale_t) {
+  return wcstoll(nptr, endptr, base);
 }
 
-__END_DECLS
+unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr,
+                              int base, locale_t) {
+  return wcstoull(nptr, endptr, base);
+}
 
-#endif // _BIONIC_MBSTATE_H
+long double wcstold_l(const wchar_t *nptr, wchar_t **endptr, locale_t) {
+  return wcstold(nptr, endptr);
+}

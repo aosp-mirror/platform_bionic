@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BIONIC_MBSTATE_H
-#define _BIONIC_MBSTATE_H
+#include <stdlib.h>
+#include <xlocale.h>
 
-#include <wchar.h>
-
-__BEGIN_DECLS
-
-/*
- * These return values are specified by POSIX for multibyte conversion
- * functions.
- */
-#define __MB_ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
-#define __MB_ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
-
-#define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || \
-                         rv == __MB_ERR_INCOMPLETE_SEQUENCE)
-
-static inline __wur size_t mbstate_bytes_so_far(const mbstate_t* ps) {
-  return
-      (ps->__seq[2] != 0) ? 3 :
-      (ps->__seq[1] != 0) ? 2 :
-      (ps->__seq[0] != 0) ? 1 : 0;
+double strtod_l(const char* s, char** end_ptr, locale_t) {
+  return strtod(s, end_ptr);
 }
 
-static inline void mbstate_set_byte(mbstate_t* ps, int i, char byte) {
-  ps->__seq[i] = static_cast<uint8_t>(byte);
+float strtof_l(const char* s, char** end_ptr, locale_t) {
+  return strtof(s, end_ptr);
 }
 
-static inline __wur uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
-  return ps->__seq[n];
+long strtol_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtol(s, end_ptr, base);
 }
 
-static inline __wur size_t mbstate_reset_and_return_illegal(int _errno, mbstate_t* ps) {
-  errno = _errno;
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return __MB_ERR_ILLEGAL_SEQUENCE;
+long double strtold_l(const char* s, char** end_ptr, locale_t) {
+  return strtold(s, end_ptr);
 }
 
-static inline __wur size_t mbstate_reset_and_return(int _return, mbstate_t* ps) {
-  *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return _return;
+long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtoll(s, end_ptr, base);
 }
 
-__END_DECLS
+unsigned long strtoul_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtoul(s, end_ptr, base);
+}
 
-#endif // _BIONIC_MBSTATE_H
+unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
+  return strtoull(s, end_ptr, base);
+}
+
