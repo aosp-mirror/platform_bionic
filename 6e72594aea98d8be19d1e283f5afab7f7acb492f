@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc02ff79_5ffd93ce",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "files no larger than 2GiB.",
+      "range": {
+        "startLine": 333,
+        "startChar": 24,
+        "endLine": 333,
+        "endChar": 34
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c0a2d1d_6e31d5e0",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "\"... absolutely need to work with files larger than 2GiB. Note that in this mode mose file operation functions will not be available until android-21 (Lollipop).\"\n\nEven on 21+, there will be fewer surprises just not setting it (there are still a few things missing). If they really do need 64-bit off_t support though, it must be set even if they were hoping to target ICS.",
+      "range": {
+        "startLine": 335,
+        "startChar": 68,
+        "endLine": 336,
+        "endChar": 38
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f024902_e0604797",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "\"require using the `_LARGEFILE_SOURCE` macro. Functions hidden behind that macro in glibc (POSIX?) will be visible if they were available in the given API level.\"\n\n\"does not use\" seemed in contradiction with \"`_LARGEFILE_SOURCE` functions appear in API 24\" below",
+      "range": {
+        "startLine": 338,
+        "startChar": 17,
+        "endLine": 338,
+        "endChar": 20
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f73aaad9_5fbb558b",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "\"(behind which POSIX hides `fseeko` and `ftello`)\"?",
+      "range": {
+        "startLine": 338,
+        "startChar": 42,
+        "endLine": 339,
+        "endChar": 9
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "842b29fa_8bab3735",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "Lose the parens",
+      "range": {
+        "startLine": 345,
+        "startChar": 0,
+        "endLine": 345,
+        "endChar": 1
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a1c37a6_463aec80",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "and `write`, presumably",
+      "range": {
+        "startLine": 348,
+        "startChar": 27,
+        "endLine": 348,
+        "endChar": 33
+      },
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e9e481e_77fb5b82",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-17T18:34:57Z",
+      "side": 1,
+      "message": "Add a link to libc.map.txt.",
+      "revId": "6e72594aea98d8be19d1e283f5afab7f7acb492f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
