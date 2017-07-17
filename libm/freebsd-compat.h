@@ -36,4 +36,7 @@
 #define digittoint __libm_digittoint
 int digittoint(char ch);
 
+// Similarly rename _scan_nan.
+#define _scan_nan __libm_scan_nan
+
 #endif
