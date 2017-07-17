@@ -106,6 +106,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4837e78_ca02fb45",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-07-17T08:16:53Z",
+      "side": 1,
+      "message": "Making it visible, means the system libs (only \u0027system\u0027 libs can use \"android_get_exported_namespace\") can do \u0027dlopen\u0027 for a HAL installed in visible namespace.\nI cannot find any reason why we have to avoid this especially for \u0027default\u0027 namespace.",
+      "parentUuid": "e15ac25c_dd57c3b7",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
