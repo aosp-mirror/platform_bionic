@@ -774,6 +774,12 @@ TEST(UNISTD_TEST, _POSIX_macros_smoke) {
   EXPECT_GT(_XOPEN_IOV_MAX, 0);
   EXPECT_GT(_XOPEN_UNIX, 0);
 
+  // In O, the headers still have -1 (even though all the functionality has
+  // been there for a long time). This was fixed in O-DR, but there isn't a
+  // separate CTS for O-DR, so we'll accept both.
+  EXPECT_TRUE(_POSIX_THREAD_PROCESS_SHARED == -1 ||
+              _POSIX_THREAD_PROCESS_SHARED == _POSIX_VERSION);
+
 #if defined(__BIONIC__)
   // These tests only pass on bionic, as bionic and glibc has different support on these macros.
   // Macros like _POSIX_ASYNCHRONOUS_IO are not supported on bionic yet.
