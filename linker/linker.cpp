@@ -883,6 +883,11 @@ static bool is_recursive(soinfo* si, soinfo* parent) {
     return false;
   }
 
+  // Skip linked libraries - we have already checked them before.
+  if ((si->flags & FLAG_LINKED) != 0) {
+    return false;
+  }
+
   if (si == parent) {
     return true;
   }
