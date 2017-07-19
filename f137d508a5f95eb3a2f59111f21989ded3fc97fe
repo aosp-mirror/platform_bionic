@@ -16,6 +16,23 @@
       "revId": "f137d508a5f95eb3a2f59111f21989ded3fc97fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d487d59_e9b19507",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-07-19T17:44:01Z",
+      "side": 1,
+      "message": "Actually wait; why this change?  It was nbytes / 2 before the change that this is reverting.  Is this the correct now without the / 2 ?",
+      "revId": "f137d508a5f95eb3a2f59111f21989ded3fc97fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
