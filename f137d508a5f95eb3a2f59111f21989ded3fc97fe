@@ -33,6 +33,24 @@
       "revId": "f137d508a5f95eb3a2f59111f21989ded3fc97fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7f63fc0_2966759f",
+        "filename": "benchmarks/string_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-07-19T17:51:27Z",
+      "side": 1,
+      "message": "It\u0027s correct this way. strcat stores the concatenation in dst so to to avoid overflow you need enough space for both strings. If having a perfect revert is worth the segfault I can just punt the change to when I merge the alignment tests back, but this change is more correct.",
+      "parentUuid": "3d487d59_e9b19507",
+      "revId": "f137d508a5f95eb3a2f59111f21989ded3fc97fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
