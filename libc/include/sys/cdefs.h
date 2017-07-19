@@ -235,10 +235,11 @@
 #endif
 
 /* _FILE_OFFSET_BITS 64 support. */
-#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
-#if _FILE_OFFSET_BITS == 64
+#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
 #define __USE_FILE_OFFSET64 1
-#endif
+#define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
+#else
+#define __RENAME_IF_FILE_OFFSET64(func)
 #endif
 
 #define  __BIONIC__   1
