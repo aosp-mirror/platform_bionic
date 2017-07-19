@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0061abd_ee229ca3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-07-19T16:59:42Z",
+      "side": 1,
+      "message": "If anyone is awake enough, this is breaking a Darwin SDK build so I\u0027m reverting for now and would appreciate a +2/hit of the merge button ASAP.",
+      "revId": "69e8def5fffece78c52a8a6056e3316ffbe1bfc9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
