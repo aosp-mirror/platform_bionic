@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2a65261_00977dde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-07-19T17:39:49Z",
+      "side": 1,
+      "message": "Sorry, merge conflicts. Could I get another +2?",
+      "revId": "f137d508a5f95eb3a2f59111f21989ded3fc97fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
