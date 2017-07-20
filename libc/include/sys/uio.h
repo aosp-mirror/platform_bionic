@@ -38,13 +38,8 @@ ssize_t readv(int, const struct iovec*, int);
 ssize_t writev(int, const struct iovec*, int);
 
 #if defined(__USE_GNU)
-#if defined(__USE_FILE_OFFSET64)
-ssize_t preadv(int, const struct iovec*, int, off_t) __RENAME(preadv64) __INTRODUCED_IN(24);
-ssize_t pwritev(int, const struct iovec*, int, off_t) __RENAME(pwritev64) __INTRODUCED_IN(24);
-#else
-ssize_t preadv(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
-ssize_t pwritev(int, const struct iovec*, int, off_t) __INTRODUCED_IN(24);
-#endif
+ssize_t preadv(int, const struct iovec*, int, off_t) __RENAME_IF_FILE_OFFSET64(preadv64) __INTRODUCED_IN(24);
+ssize_t pwritev(int, const struct iovec*, int, off_t) __RENAME_IF_FILE_OFFSET64(pwritev64) __INTRODUCED_IN(24);
 ssize_t preadv64(int, const struct iovec*, int, off64_t) __INTRODUCED_IN(24);
 ssize_t pwritev64(int, const struct iovec*, int, off64_t) __INTRODUCED_IN(24);
 #endif
