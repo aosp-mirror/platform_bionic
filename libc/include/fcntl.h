@@ -71,8 +71,7 @@ __BEGIN_DECLS
 
 int creat(const char*, mode_t);
 int creat64(const char*, mode_t) __INTRODUCED_IN(21);
-int openat(int, const char*, int, ...) __overloadable
-        __RENAME_CLANG(openat);
+int openat(int, const char*, int, ...) __overloadable __RENAME_CLANG(openat);
 int openat64(int, const char*, int, ...) __INTRODUCED_IN(21);
 int open(const char*, int, ...) __overloadable __RENAME_CLANG(open);
 int open64(const char*, int, ...) __INTRODUCED_IN(21);
@@ -80,17 +79,11 @@ ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int) __INTRODUCED_
 ssize_t tee(int, int, size_t, unsigned int) __INTRODUCED_IN(21);
 ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) __INTRODUCED_IN(21);
 
-#if defined(__USE_FILE_OFFSET64)
-int fallocate(int, int, off_t, off_t) __RENAME(fallocate64) __INTRODUCED_IN(21);
-int posix_fadvise(int, off_t, off_t, int) __RENAME(posix_fadvise64) __INTRODUCED_IN(21);
-int posix_fallocate(int, off_t, off_t) __RENAME(posix_fallocate64) __INTRODUCED_IN(21);
-#else
-int fallocate(int, int, off_t, off_t) __INTRODUCED_IN(21);
-int posix_fadvise(int, off_t, off_t, int) __INTRODUCED_IN(21);
-int posix_fallocate(int, off_t, off_t) __INTRODUCED_IN(21);
-#endif
+int fallocate(int, int, off_t, off_t) __RENAME_IF_FILE_OFFSET64(fallocate64) __INTRODUCED_IN(21);
 int fallocate64(int, int, off64_t, off64_t) __INTRODUCED_IN(21);
+int posix_fadvise(int, off_t, off_t, int) __RENAME_IF_FILE_OFFSET64(posix_fadvise64) __INTRODUCED_IN(21);
 int posix_fadvise64(int, off64_t, off64_t, int) __INTRODUCED_IN(21);
+int posix_fallocate(int, off_t, off_t) __RENAME_IF_FILE_OFFSET64(posix_fallocate64) __INTRODUCED_IN(21);
 int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU)
