@@ -34,9 +34,13 @@
 #define PRIMARY_ARCH AUDIT_ARCH_AARCH64
 static const struct sock_filter* primary_filter = arm64_filter;
 static const size_t primary_filter_size = arm64_filter_size;
+static const struct sock_filter* primary_global_filter = arm64_global_filter;
+static const size_t primary_global_filter_size = arm64_global_filter_size;
 #define SECONDARY_ARCH AUDIT_ARCH_ARM
 static const struct sock_filter* secondary_filter = arm_filter;
 static const size_t secondary_filter_size = arm_filter_size;
+static const struct sock_filter* secondary_global_filter = arm_global_filter;
+static const size_t secondary_global_filter_size = arm_global_filter_size;
 
 #elif defined __i386__ || defined __x86_64__
 
@@ -44,9 +48,13 @@ static const size_t secondary_filter_size = arm_filter_size;
 #define PRIMARY_ARCH AUDIT_ARCH_X86_64
 static const struct sock_filter* primary_filter = x86_64_filter;
 static const size_t primary_filter_size = x86_64_filter_size;
+static const struct sock_filter* primary_global_filter = x86_64_global_filter;
+static const size_t primary_global_filter_size = x86_64_global_filter_size;
 #define SECONDARY_ARCH AUDIT_ARCH_I386
 static const struct sock_filter* secondary_filter = x86_filter;
 static const size_t secondary_filter_size = x86_filter_size;
+static const struct sock_filter* secondary_global_filter = x86_global_filter;
+static const size_t secondary_global_filter_size = x86_global_filter_size;
 
 #elif defined __mips__ || defined __mips64__
 
@@ -54,9 +62,13 @@ static const size_t secondary_filter_size = x86_filter_size;
 #define PRIMARY_ARCH AUDIT_ARCH_MIPSEL64
 static const struct sock_filter* primary_filter = mips64_filter;
 static const size_t primary_filter_size = mips64_filter_size;
+static const struct sock_filter* primary_global_filter = mips64_global_filter;
+static const size_t primary_global_filter_size = mips64_global_filter_size;
 #define SECONDARY_ARCH AUDIT_ARCH_MIPSEL
 static const struct sock_filter* secondary_filter = mips_filter;
 static const size_t secondary_filter_size = mips_filter_size;
+static const struct sock_filter* secondary_global_filter = mips_global_filter;
+static const size_t secondary_global_filter_size = mips_global_filter_size;
 
 #else
 #error No architecture was defined!
@@ -119,8 +131,22 @@ static bool install_filter(filter const& f) {
     return true;
 }
 
-bool set_seccomp_filter() {
+bool _set_seccomp_filter(bool global) {
+    const sock_filter *p, *s;
+    size_t p_size, s_size;
     filter f;
+
+    if (global) {
+        p = primary_global_filter;
+        p_size = primary_global_filter_size;
+        s = secondary_global_filter;
+        s_size = secondary_global_filter_size;
+    } else {
+        p = primary_filter;
+        p_size = primary_filter_size;
+        s = secondary_filter;
+        s_size = secondary_filter_size;
+    }
 
 #ifdef DUAL_ARCH
     // Note that for mixed 64/32 bit architectures, ValidateArchitecture inserts a
@@ -133,8 +159,8 @@ bool set_seccomp_filter() {
 
     ExamineSyscall(f);
 
-    for (size_t i = 0; i < primary_filter_size; ++i) {
-        f.push_back(primary_filter[i]);
+    for (size_t i = 0; i < p_size; ++i) {
+        f.push_back(p[i]);
     }
     Disallow(f);
 
@@ -145,13 +171,21 @@ bool set_seccomp_filter() {
 
     ExamineSyscall(f);
 
-    for (size_t i = 0; i < secondary_filter_size; ++i) {
-        f.push_back(secondary_filter[i]);
+    for (size_t i = 0; i < s_size; ++i) {
+        f.push_back(s[i]);
     }
     Disallow(f);
 #endif
 
     return install_filter(f);
+}
+
+bool set_seccomp_filter() {
+    return _set_seccomp_filter(false);
+}
+
+bool set_global_seccomp_filter() {
+    return _set_seccomp_filter(true);
 }
 
 void get_seccomp_filter(const sock_filter*& filter, size_t& filter_size) {
