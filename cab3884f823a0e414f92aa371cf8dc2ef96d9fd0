@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d96a07fc_b7a5f2ef",
+        "filename": "libc/SECCOMP_WHITELIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-21T20:54:42Z",
+      "side": 1,
+      "message": "i think it\u0027s time to stop copy \u0026 pasting this around and just refer to the copy in SYSCALLS.TXT...",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cab3884f823a0e414f92aa371cf8dc2ef96d9fd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81b373a3_f93d996e",
+        "filename": "libc/SECCOMP_WHITELIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-21T20:54:42Z",
+      "side": 1,
+      "message": "lose the tabs?",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 5
+      },
+      "revId": "cab3884f823a0e414f92aa371cf8dc2ef96d9fd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
