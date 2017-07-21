@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,26 +28,16 @@
 
 #include <private/bionic_asm.h>
 
-/*
- * This code assumes it is running on a processor that supports all arm v7
- * instructions, that supports neon instructions, and that has a 32 byte
- * cache line.
- */
+         .syntax unified
 
-        .syntax unified
-        .fpu    neon
-        .thumb
-        .thumb_func
+ENTRY(__memcpy_chk)
+        cmp         r2, r3
+        bls         memcpy
 
-ENTRY(memcpy)
-        pld     [r1, #0]
-        stmfd   sp!, {r0, lr}
-        .cfi_def_cfa_offset 8
-        .cfi_rel_offset r0, 0
-        .cfi_rel_offset lr, 4
-        pld     [r1, #64]
-END(memcpy)
+        // Preserve lr for backtrace.
+        push        {lr}
+        .cfi_def_cfa_offset 4
+        .cfi_rel_offset lr, 0
 
-#define MEMCPY_BASE         __memcpy_base
-#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
-#include "memcpy_base.S"
+        bl          __memcpy_chk_fail
+END(__memcpy_chk)

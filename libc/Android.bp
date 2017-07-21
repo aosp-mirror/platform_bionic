@@ -776,6 +776,145 @@ cc_library_static {
 }
 
 // ========================================================
+// libc_fortify.a - container for our FORITFY
+// implementation details
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/__memcpy_chk.cpp",
+        "bionic/__strcat_chk.cpp",
+        "bionic/__strcpy_chk.cpp",
+        "bionic/fortify.cpp",
+    ],
+
+    name: "libc_fortify",
+
+    // Disable FORTIFY for the compilation of these, so we don't end up having
+    // FORTIFY silently call itself.
+    cflags: ["-U_FORTIFY_SOURCE"],
+
+    arch: {
+        arm: {
+            srcs: [
+                "arch-arm/generic/bionic/__memcpy_chk.S",
+            ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+            ],
+            cortex_a7: {
+                srcs: [
+                    "arch-arm/cortex-a7/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a7/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a53: {
+                srcs: [
+                    "arch-arm/cortex-a53/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a53/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a53_a57: {
+                srcs: [
+                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a8: {
+                srcs: [
+                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a9: {
+                srcs: [
+                    "arch-arm/cortex-a9/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a9/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a15: {
+                srcs: [
+                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            cortex_a73: {
+                srcs: [
+                    "arch-arm/denver/bionic/__strcat_chk.S",
+                    "arch-arm/denver/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            denver: {
+                srcs: [
+                    "arch-arm/denver/bionic/__strcat_chk.S",
+                    "arch-arm/denver/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            krait: {
+                srcs: [
+                    "arch-arm/krait/bionic/__strcat_chk.S",
+                    "arch-arm/krait/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+            kryo: {
+                srcs: [
+                    "arch-arm/krait/bionic/__strcat_chk.S",
+                    "arch-arm/krait/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "bionic/__strcat_chk.cpp",
+                    "bionic/__strcpy_chk.cpp",
+                ],
+            },
+        },
+        arm64: {
+            srcs: [
+                "arch-arm64/generic/bionic/__memcpy_chk.S",
+            ],
+            exclude_srcs: [
+                "bionic/__memcpy_chk.cpp",
+            ],
+        },
+    },
+}
+
+// ========================================================
 // libc_bionic.a - home-grown C library code
 // ========================================================
 
@@ -804,9 +943,6 @@ cc_library_static {
         // debuggerd will look for the abort message in libc.so's copy.
         "bionic/android_set_abort_message.cpp",
 
-        "bionic/__memcpy_chk.cpp",
-        "bionic/__strcat_chk.cpp",
-        "bionic/__strcpy_chk.cpp",
         "bionic/strchr.cpp",
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
@@ -832,15 +968,10 @@ cc_library_static {
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
             ],
-            exclude_srcs: [
-                "bionic/__memcpy_chk.cpp",
-            ],
             cortex_a7: {
                 srcs: [
                     "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/cortex-a7/bionic/memcpy.S",
-                    "arch-arm/cortex-a7/bionic/__strcat_chk.S",
-                    "arch-arm/cortex-a7/bionic/__strcpy_chk.S",
 
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
@@ -856,15 +987,11 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a53: {
                 srcs: [
                     "arch-arm/cortex-a53/bionic/memcpy.S",
-                    "arch-arm/cortex-a53/bionic/__strcat_chk.S",
-                    "arch-arm/cortex-a53/bionic/__strcpy_chk.S",
 
                     "arch-arm/cortex-a7/bionic/memset.S",
 
@@ -882,8 +1009,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a53_a57: {
@@ -892,10 +1017,8 @@ cc_library_static {
                     "arch-arm/cortex-a15/bionic/memset.S",
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
-                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/strcmp.S",
                     "arch-arm/cortex-a15/bionic/strcpy.S",
-                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                     "arch-arm/cortex-a15/bionic/strlen.S",
 
                     "arch-arm/denver/bionic/memmove.S",
@@ -906,8 +1029,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a8: {
@@ -916,10 +1037,8 @@ cc_library_static {
                     "arch-arm/cortex-a15/bionic/memset.S",
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
-                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/strcmp.S",
                     "arch-arm/cortex-a15/bionic/strcpy.S",
-                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                     "arch-arm/cortex-a15/bionic/strlen.S",
 
                     "arch-arm/denver/bionic/memmove.S",
@@ -930,8 +1049,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a9: {
@@ -940,10 +1057,8 @@ cc_library_static {
                     "arch-arm/cortex-a9/bionic/memset.S",
                     "arch-arm/cortex-a9/bionic/stpcpy.S",
                     "arch-arm/cortex-a9/bionic/strcat.S",
-                    "arch-arm/cortex-a9/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a9/bionic/strcmp.S",
                     "arch-arm/cortex-a9/bionic/strcpy.S",
-                    "arch-arm/cortex-a9/bionic/__strcpy_chk.S",
                     "arch-arm/cortex-a9/bionic/strlen.S",
 
                     "arch-arm/denver/bionic/memmove.S",
@@ -954,8 +1069,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a15: {
@@ -964,10 +1077,8 @@ cc_library_static {
                     "arch-arm/cortex-a15/bionic/memset.S",
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
-                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/strcmp.S",
                     "arch-arm/cortex-a15/bionic/strcpy.S",
-                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                     "arch-arm/cortex-a15/bionic/strlen.S",
 
                     "arch-arm/denver/bionic/memmove.S",
@@ -978,8 +1089,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a73: {
@@ -988,8 +1097,6 @@ cc_library_static {
 
                     "arch-arm/denver/bionic/memcpy.S",
                     "arch-arm/denver/bionic/memmove.S",
-                    "arch-arm/denver/bionic/__strcat_chk.S",
-                    "arch-arm/denver/bionic/__strcpy_chk.S",
 
                     "arch-arm/krait/bionic/strcmp.S",
 
@@ -1004,8 +1111,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             denver: {
@@ -1013,8 +1118,6 @@ cc_library_static {
                     "arch-arm/denver/bionic/memcpy.S",
                     "arch-arm/denver/bionic/memmove.S",
                     "arch-arm/denver/bionic/memset.S",
-                    "arch-arm/denver/bionic/__strcat_chk.S",
-                    "arch-arm/denver/bionic/__strcpy_chk.S",
 
                     // Use cortex-a15 versions of strcat/strcpy/strlen.
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
@@ -1029,8 +1132,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             krait: {
@@ -1038,8 +1139,6 @@ cc_library_static {
                     "arch-arm/krait/bionic/memcpy.S",
                     "arch-arm/krait/bionic/memset.S",
                     "arch-arm/krait/bionic/strcmp.S",
-                    "arch-arm/krait/bionic/__strcat_chk.S",
-                    "arch-arm/krait/bionic/__strcpy_chk.S",
 
                     // Use cortex-a15 versions of strcat/strcpy/strlen.
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
@@ -1055,8 +1154,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             kryo: {
@@ -1064,8 +1161,6 @@ cc_library_static {
                     "arch-arm/kryo/bionic/memcpy.S",
                     "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/krait/bionic/strcmp.S",
-                    "arch-arm/krait/bionic/__strcat_chk.S",
-                    "arch-arm/krait/bionic/__strcpy_chk.S",
 
                     // Use cortex-a15 versions of strcat/strcpy/strlen.
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
@@ -1081,8 +1176,6 @@ cc_library_static {
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
                     "arch-arm/generic/bionic/strlen.c",
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
         },
@@ -1378,7 +1471,6 @@ cc_library_static {
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
         "bionic/flockfile.cpp",
-        "bionic/fortify.cpp",
         "bionic/fpclassify.cpp",
         "bionic/fsetxattr.cpp",
         "bionic/ftruncate.cpp",
@@ -1644,6 +1736,7 @@ cc_library_static {
 
     whole_static_libs: [
         "libc_bionic_ndk",
+        "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
@@ -1678,6 +1771,7 @@ cc_library_static {
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_dns",
+        "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
