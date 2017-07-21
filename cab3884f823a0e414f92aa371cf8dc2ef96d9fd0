@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c7a78f41_c43ccbee",
+        "filename": "libc/SECCOMP_WHITELIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1131915
+      },
+      "writtenOn": "2017-07-21T23:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d96a07fc_b7a5f2ef",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cab3884f823a0e414f92aa371cf8dc2ef96d9fd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81b373a3_f93d996e",
         "filename": "libc/SECCOMP_WHITELIST_GLOBAL.TXT",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-07-21T20:54:42Z",
       "side": 1,
       "message": "lose the tabs?",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 5
+      },
+      "revId": "cab3884f823a0e414f92aa371cf8dc2ef96d9fd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d6f9cce_2f525ee7",
+        "filename": "libc/SECCOMP_WHITELIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1131915
+      },
+      "writtenOn": "2017-07-21T23:54:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81b373a3_f93d996e",
       "range": {
         "startLine": 32,
         "startChar": 3,
