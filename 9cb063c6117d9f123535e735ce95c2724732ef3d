@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dee2601_42fd1f58",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-21T20:59:50Z",
+      "side": 1,
+      "message": "you can static_cast here",
+      "range": {
+        "startLine": 49,
+        "startChar": 24,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b2a1ec8_fd91024b",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-21T20:59:50Z",
+      "side": 1,
+      "message": "Should we assert that n \u003e\u003d 0? Negative n will read buf until hitting the end of the stream.",
+      "range": {
+        "startLine": 60,
+        "startChar": 57,
+        "endLine": 60,
+        "endChar": 60
+      },
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a5210d5_422d52e8",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-21T20:59:50Z",
+      "side": 1,
+      "message": "I think this check might be wrong, but I\u0027m not sure what the actual desired behavior for this API is (the manpage seems to say that null termination isn\u0027t guaranteed to happen, does the glibc implementation reflect this?)\n\nIf you\u0027re writing the string \"\\0a\" with one byte of capacity left, should this return 1 and use up the last byte for the terminator, or return -1?",
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee2f8d7d_96cd0f86",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-21T20:59:50Z",
+      "side": 1,
+      "message": "also, shouldn\u0027t this be \u003c\u003d?",
+      "range": {
+        "startLine": 74,
+        "startChar": 10,
+        "endLine": 74,
+        "endChar": 11
+      },
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddd0ea7d_d83be6de",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-21T20:59:50Z",
+      "side": 1,
+      "message": "memmove, in case the user is crazy?",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 10
+      },
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
