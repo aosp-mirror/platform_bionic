@@ -27,7 +27,6 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
 #include <string.h>
 
 char* strchr(const char* p, int ch) {

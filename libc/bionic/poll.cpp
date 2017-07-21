@@ -26,7 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
 #include <errno.h>
 #include <sys/poll.h>
 #include <sys/select.h>
