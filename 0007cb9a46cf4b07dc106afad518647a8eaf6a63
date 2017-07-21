@@ -124,6 +124,24 @@
       "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3d434e1_5a7e6fe4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-21T11:53:47Z",
+      "side": 1,
+      "message": "They may end up being loaded twice - but is this a problem? Also I kind of expect hal-implementation to be somehow self-sufficient and not rely on shared state between them and a random vendor binary...\n\nI still think this is a step in the wrong direction and we should be moving away from visible flag all together.",
+      "parentUuid": "e15ac25c_dd57c3b7",
+      "revId": "0007cb9a46cf4b07dc106afad518647a8eaf6a63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
