@@ -171,6 +171,10 @@ As mentioned above, this is currently a two-step process:
      contents for external/kernel-headers/.
   2. Run update_all.py to scrub those headers and import them into bionic.
 
+Note that if you're actually just trying to expose device-specific headers to
+build your device drivers, you shouldn't modify bionic. Instead use
+`TARGET_DEVICE_KERNEL_HEADERS` and friends described in [config.mk](https://android.googlesource.com/platform/build/+/master/core/config.mk#186).
+
 
 Updating tzdata
 ---------------
