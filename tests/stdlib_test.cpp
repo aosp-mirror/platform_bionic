@@ -555,54 +555,6 @@ TEST(stdlib, unlockpt_ENOTTY) {
   close(fd);
 }
 
-TEST(stdlib, strtol_EINVAL) {
-  errno = 0;
-  strtol("123", NULL, -1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtol("123", NULL, 1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtol("123", NULL, 37);
-  ASSERT_EQ(EINVAL, errno);
-}
-
-TEST(stdlib, strtoll_EINVAL) {
-  errno = 0;
-  strtoll("123", NULL, -1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoll("123", NULL, 1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoll("123", NULL, 37);
-  ASSERT_EQ(EINVAL, errno);
-}
-
-TEST(stdlib, strtoul_EINVAL) {
-  errno = 0;
-  strtoul("123", NULL, -1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoul("123", NULL, 1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoul("123", NULL, 37);
-  ASSERT_EQ(EINVAL, errno);
-}
-
-TEST(stdlib, strtoull_EINVAL) {
-  errno = 0;
-  strtoull("123", NULL, -1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoull("123", NULL, 1);
-  ASSERT_EQ(EINVAL, errno);
-  errno = 0;
-  strtoull("123", NULL, 37);
-  ASSERT_EQ(EINVAL, errno);
-}
-
 TEST(stdlib, getsubopt) {
   char* const tokens[] = {
     const_cast<char*>("a"),
@@ -647,4 +599,52 @@ TEST(stdlib, mblen) {
 
   // "mblen() shall ... return 0 (if s points to the null byte)".
   EXPECT_EQ(0, mblen("", 1));
+}
+
+template <typename T>
+static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
+  char* end_p;
+
+  // Negative base => invalid.
+  errno = 0;
+  ASSERT_EQ(T(0), fn("123", &end_p, -1));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Base 1 => invalid (base 0 means "please guess").
+  errno = 0;
+  ASSERT_EQ(T(0), fn("123", &end_p, 1));
+  ASSERT_EQ(EINVAL, errno);
+
+  // Base > 36 => invalid.
+  errno = 0;
+  ASSERT_EQ(T(0), fn("123", &end_p, 37));
+  ASSERT_EQ(EINVAL, errno);
+
+  // If we see "0x" *not* followed by a hex digit, we shouldn't swallow the 'x'.
+  ASSERT_EQ(T(0), fn("0xy", &end_p, 16));
+  ASSERT_EQ('x', *end_p);
+}
+
+TEST(stdlib, strtol_smoke) {
+  CheckStrToInt(strtol);
+}
+
+TEST(stdlib, strtoll_smoke) {
+  CheckStrToInt(strtoll);
+}
+
+TEST(stdlib, strtoul_smoke) {
+  CheckStrToInt(strtoul);
+}
+
+TEST(stdlib, strtoull_smoke) {
+  CheckStrToInt(strtoull);
+}
+
+TEST(stdlib, strtoimax_smoke) {
+  CheckStrToInt(strtoimax);
+}
+
+TEST(stdlib, strtoumax_smoke) {
+  CheckStrToInt(strtoumax);
 }
