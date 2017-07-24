@@ -143,7 +143,7 @@ struct __sfileext {
 #define __SALC 0x4000  // Allocate string space dynamically.
 #define __SIGN 0x8000  // Ignore this file in _fwalk.
 
-// TODO: remove remaining references to these obsolete flags.
+// TODO: remove remaining references to these obsolete flags (see above).
 #define __SNPT 0
 #define __SOPT 0
 
@@ -222,15 +222,6 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 	if (_UB(fp)._base != (fp)->_ubuf) \
 		free(_UB(fp)._base); \
 	_UB(fp)._base = NULL; \
-}
-
-/*
- * test for an fgetln() buffer.
- */
-#define	HASLB(fp) ((fp)->_lb._base != NULL)
-#define	FREELB(fp) { \
-	free((char *)(fp)->_lb._base); \
-	(fp)->_lb._base = NULL; \
 }
 
 #define FLOCKFILE(fp)   if (!_EXT(fp)->_caller_handles_locking) flockfile(fp)

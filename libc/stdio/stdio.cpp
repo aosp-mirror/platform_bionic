@@ -132,6 +132,13 @@ static glue* moreglue(int n) {
   return g;
 }
 
+static inline void free_fgetln_buffer(FILE* fp) {
+  if (__predict_false(fp->_lb._base != nullptr)) {
+    free(fp->_lb._base);
+    fp->_lb._base = nullptr;
+  }
+}
+
 /*
  * Find a free FILE for fopen et al.
  */
@@ -326,7 +333,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   if (HASUB(fp)) FREEUB(fp);
   _UB(fp)._size = 0;
   WCIO_FREE(fp);
-  if (HASLB(fp)) FREELB(fp);
+  free_fgetln_buffer(fp);
   fp->_lb._size = 0;
 
   if (fd < 0) { // Did not get it after all.
@@ -386,7 +393,7 @@ int fclose(FILE* fp) {
   }
   if (fp->_flags & __SMBF) free(fp->_bf._base);
   if (HASUB(fp)) FREEUB(fp);
-  if (HASLB(fp)) FREELB(fp);
+  free_fgetln_buffer(fp);
 
   // Poison this FILE so accesses after fclose will be obvious.
   fp->_file = -1;
