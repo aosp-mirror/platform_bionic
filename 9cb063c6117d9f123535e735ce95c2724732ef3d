@@ -222,6 +222,30 @@
       "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36983962_53e07c6e",
+        "filename": "libc/stdio/fmemopen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-24T17:23:47Z",
+      "side": 1,
+      "message": "The freebsd/darwin memcpy\u0027s *are* memmove, though, which isn\u0027t true for us:\nhttps://github.com/lattera/freebsd/blob/master/lib/libc/string/bcopy.c#L58\nhttps://github.com/ddeville/libc/blob/6aabe6b3436fa0c3b848532cd4d6ac045fba4d9f/src/secure/memcpy_chk.c#L34",
+      "parentUuid": "79f76381_07a2bfd8",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 10
+      },
+      "revId": "9cb063c6117d9f123535e735ce95c2724732ef3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
