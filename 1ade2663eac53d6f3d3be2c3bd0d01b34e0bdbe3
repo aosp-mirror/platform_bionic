@@ -22,6 +22,30 @@
       "revId": "1ade2663eac53d6f3d3be2c3bd0d01b34e0bdbe3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0474dc2c_edc4787d",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-24T17:21:32Z",
+      "side": 1,
+      "message": "yeah, this was just me being anal and not wanting to do the useless write. happy to remove it if you actually object though. i was torn myself (but fell on this side of the fence on the assumption that there\u0027s basically never an fgetln buffer --- the only use in our entire tree is in libeditline, which is only [afaik] used in lldb).",
+      "parentUuid": "b4a04c21_4ffaa58d",
+      "range": {
+        "startLine": 136,
+        "startChar": 1,
+        "endLine": 136,
+        "endChar": 33
+      },
+      "revId": "1ade2663eac53d6f3d3be2c3bd0d01b34e0bdbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
