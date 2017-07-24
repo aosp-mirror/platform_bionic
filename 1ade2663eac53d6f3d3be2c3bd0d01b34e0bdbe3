@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4a04c21_4ffaa58d",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-24T17:14:43Z",
+      "side": 1,
+      "message": "Technically, you don\u0027t need this check, correct?",
+      "range": {
+        "startLine": 136,
+        "startChar": 1,
+        "endLine": 136,
+        "endChar": 33
+      },
+      "revId": "1ade2663eac53d6f3d3be2c3bd0d01b34e0bdbe3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
