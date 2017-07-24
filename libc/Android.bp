@@ -72,7 +72,6 @@ cc_defaults {
         never: true,
     },
     native_coverage: false,
-    clang: true,
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
@@ -1979,7 +1978,6 @@ cc_defaults {
             local_include_dirs: ["arch-x86_64/include"],
         },
     },
-    clang: true,
 }
 
 cc_defaults {
