@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ae2f647_903a028b",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-24T23:56:38Z",
+      "side": 1,
+      "message": "(this is just because the wrapping bugs me every time i\u0027m in this file and i can\u0027t take it any longer!)",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 14
+      },
+      "revId": "aaa113999695c5403fde25dd47c8e95e2222b202",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
