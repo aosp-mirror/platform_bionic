@@ -787,7 +787,7 @@ cc_library_static {
 
     // Disable FORTIFY for the compilation of these, so we don't end up having
     // FORTIFY silently call itself.
-    cflags: ["-U_FORTIFY_SOURCE"],
+    cflags: ["-U_FORTIFY_SOURCE", "-D__BIONIC_DECLARE_FORTIFY_HELPERS"],
 
     arch: {
         arm: {
