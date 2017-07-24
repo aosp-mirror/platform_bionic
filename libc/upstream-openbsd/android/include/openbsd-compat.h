@@ -40,6 +40,7 @@ extern const char* __progname;
 /* Ignore all DEF_STRONG/DEF_WEAK in OpenBSD. */
 #define DEF_STRONG(sym)
 #define DEF_WEAK(sym)
+#define __weak_alias __strong_alias
 
 /* Ignore all __warn_references in OpenBSD. */
 #define __warn_references(sym,msg)
