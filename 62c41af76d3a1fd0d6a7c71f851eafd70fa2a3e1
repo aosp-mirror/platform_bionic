@@ -16,6 +16,24 @@
       "revId": "62c41af76d3a1fd0d6a7c71f851eafd70fa2a3e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0e49695_507a1012",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2017-07-25T10:26:16Z",
+      "side": 1,
+      "message": "I can\u0027t find armv7 devices that boot.\nThe emulator is the best I have. I have some confidence that the armv7 emulator is functionally very close to a real armv7 device since if I run 32-bit armv8 bionic unit test binary and it actually caught some illegal instructions (for math/floating point related tests), which are not found with armv7 binary.",
+      "parentUuid": "cd9a541c_6d3c436c",
+      "revId": "62c41af76d3a1fd0d6a7c71f851eafd70fa2a3e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
