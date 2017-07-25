@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7cd9508_dc743c08",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1916,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-07-25T18:57:55Z",
+      "side": 1,
+      "message": "Do you want this as true or to just remove it?",
+      "revId": "b348d5cda89d0f4a8306056dde1c0423887854d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
