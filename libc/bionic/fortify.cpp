@@ -55,8 +55,6 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
-
 #include <poll.h>
 #include <stdarg.h>
 #include <stddef.h>
