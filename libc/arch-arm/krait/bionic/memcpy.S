@@ -42,18 +42,6 @@
         .thumb
         .thumb_func
 
-ENTRY(__memcpy_chk)
-        cmp         r2, r3
-        bls         memcpy
-
-        // Preserve lr for backtrace.
-        push        {lr}
-        .cfi_def_cfa_offset 4
-        .cfi_rel_offset lr, 0
-
-        bl          __memcpy_chk_fail
-END(__memcpy_chk)
-
 ENTRY(memcpy)
         pld     [r1, #64]
         stmfd   sp!, {r0, lr}
