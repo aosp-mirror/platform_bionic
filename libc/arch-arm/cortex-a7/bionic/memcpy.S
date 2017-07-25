@@ -63,17 +63,6 @@
         // arch. The code generated is exactly the same.
         .arch armv7-a
 
-ENTRY(__memcpy_chk)
-        cmp r2, r3
-        bls memcpy
-
-        // Preserve lr for backtrace.
-        push        {lr}
-        .cfi_def_cfa_offset 4
-        .cfi_rel_offset lr, 0
-        bl          __memcpy_chk_fail
-END(__memcpy_chk)
-
 // Prototype: void *memcpy (void *dst, const void *src, size_t count).
 ENTRY(memcpy)
         pld     [r1, #64]
