@@ -26,8 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#undef _FORTIFY_SOURCE
-
 #include <string.h>
 
 #include "private/bionic_fortify.h"
