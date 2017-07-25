@@ -148,12 +148,16 @@ class Test {
 
   const std::string& GetName() const { return name_; }
 
-  void SetResult(TestResult result) { result_ = result; }
+  void SetResult(TestResult result) {
+    // Native xfails are inherently likely to actually be relying on undefined
+    // behavior/uninitialized memory, and thus likely to pass from time to time
+    // on CTS. Avoid that unpleasantness by just rewriting all xfail failures
+    // as successes. You'll still see the actual failure details.
+    if (GetName().find("xfail") == 0) result = TEST_SUCCESS;
+    result_ = result;
+  }
 
   TestResult GetResult() const { return result_; }
-  TestResult GetExpectedResult() const {
-    return GetName().find("xfail") == 0 ? TEST_FAILED : TEST_SUCCESS;
-  }
 
   void SetTestTime(int64_t elapsed_time_ns) { elapsed_time_ns_ = elapsed_time_ns; }
 
@@ -208,13 +212,8 @@ class TestCase {
     return test_list_[test_id].GetResult();
   }
 
-  TestResult GetExpectedTestResult(size_t test_id) const {
-    VerifyTestId(test_id);
-    return test_list_[test_id].GetExpectedResult();
-  }
-
   bool GetTestSuccess(size_t test_id) const {
-    return GetTestResult(test_id) == GetExpectedTestResult(test_id);
+    return GetTestResult(test_id) == TEST_SUCCESS;
   }
 
   void SetTestTime(size_t test_id, int64_t elapsed_time_ns) {
@@ -349,7 +348,7 @@ static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
   printf("%s", test_output.c_str());
 
   TestResult result = testcase.GetTestResult(test_id);
-  if (result == testcase.GetExpectedTestResult(test_id)) {
+  if (result == TEST_SUCCESS) {
     ColoredPrintf(COLOR_GREEN, "[       OK ] ");
   } else {
     ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
@@ -366,19 +365,10 @@ static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
 
 static void OnTestEndPrint(const TestCase& testcase, size_t test_id) {
   TestResult result = testcase.GetTestResult(test_id);
-  TestResult expected = testcase.GetExpectedTestResult(test_id);
   if (result == TEST_SUCCESS) {
-    if (expected == TEST_SUCCESS) {
-      ColoredPrintf(COLOR_GREEN, "[    OK    ] ");
-    } else if (expected == TEST_FAILED) {
-      ColoredPrintf(COLOR_RED, "[  XPASS   ] ");
-    }
+    ColoredPrintf(COLOR_GREEN, "[    OK    ] ");
   } else if (result == TEST_FAILED) {
-    if (expected == TEST_SUCCESS) {
-      ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
-    } else if (expected == TEST_FAILED) {
-      ColoredPrintf(COLOR_YELLOW, "[  XFAIL   ] ");
-    }
+    ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
   } else if (result == TEST_TIMEOUT) {
     ColoredPrintf(COLOR_RED, "[ TIMEOUT  ] ");
   }
@@ -400,7 +390,6 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
                                     int64_t elapsed_time_ns) {
 
   std::vector<std::string> fail_test_name_list;
-  std::vector<std::string> xpass_test_name_list;
   std::vector<std::pair<std::string, int64_t>> timeout_test_list;
 
   // For tests that were slow but didn't time out.
@@ -414,22 +403,14 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     test_count += testcase.TestCount();
     for (size_t i = 0; i < testcase.TestCount(); ++i) {
       TestResult result = testcase.GetTestResult(i);
-      TestResult expected = testcase.GetExpectedTestResult(i);
       if (result == TEST_TIMEOUT) {
         timeout_test_list.push_back(
             std::make_pair(testcase.GetTestName(i), testcase.GetTestTime(i)));
-      } else if (result == expected) {
-        if (result == TEST_SUCCESS) {
-          ++success_test_count;
-        } else {
-          ++expected_failure_count;
-        }
-      } else {
-        if (result == TEST_FAILED) {
+      } else if (result == TEST_SUCCESS) {
+        ++success_test_count;
+        if (testcase.GetTestName(i).find(".xfail_") != std::string::npos) ++expected_failure_count;
+      } else if (result == TEST_FAILED) {
           fail_test_name_list.push_back(testcase.GetTestName(i));
-        } else {
-          xpass_test_name_list.push_back(testcase.GetTestName(i));
-        }
       }
       if (result != TEST_TIMEOUT &&
           testcase.GetTestTime(i) / 1000000 >= GetSlowThresholdMs(testcase.GetTestName(i))) {
@@ -450,7 +431,7 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   ColoredPrintf(COLOR_GREEN,  "[   PASS   ] ");
   printf("%zu %s.", success_test_count, (success_test_count == 1) ? "test" : "tests");
   if (expected_failure_count > 0) {
-    printf(" (%zu expected failure%s)", expected_failure_count,
+    printf(" (%zu expected failure%s.)", expected_failure_count,
            (expected_failure_count == 1) ? "" : "s");
   }
   printf("\n");
@@ -490,18 +471,7 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
     }
   }
 
-  // Print tests that should have failed.
-  size_t xpass_test_count = xpass_test_name_list.size();
-  if (xpass_test_count > 0) {
-    ColoredPrintf(COLOR_RED,  "[  XPASS   ] ");
-    printf("%zu %s, listed below:\n", xpass_test_count, (xpass_test_count == 1) ? "test" : "tests");
-    for (const auto& name : xpass_test_name_list) {
-      ColoredPrintf(COLOR_RED, "[  XPASS   ] ");
-      printf("%s\n", name.c_str());
-    }
-  }
-
-  if (timeout_test_count > 0 || slow_test_count > 0 || fail_test_count > 0 || xpass_test_count > 0) {
+  if (timeout_test_count > 0 || slow_test_count > 0 || fail_test_count > 0) {
     printf("\n");
   }
 
@@ -513,9 +483,6 @@ static void OnTestIterationEndPrint(const std::vector<TestCase>& testcase_list, 
   }
   if (fail_test_count > 0) {
     printf("%2zu FAILED %s\n", fail_test_count, (fail_test_count == 1) ? "TEST" : "TESTS");
-  }
-  if (xpass_test_count > 0) {
-    printf("%2zu SHOULD HAVE FAILED %s\n", xpass_test_count, (xpass_test_count == 1) ? "TEST" : "TESTS");
   }
 
   fflush(stdout);
