@@ -37,18 +37,6 @@
 
          .syntax unified
 
-ENTRY(__memcpy_chk)
-        cmp         r2, r3
-        bls         memcpy
-
-        // Preserve lr for backtrace.
-        push        {lr}
-        .cfi_def_cfa_offset 4
-        .cfi_rel_offset lr, 0
-
-        bl          __memcpy_chk_fail
-END(__memcpy_chk)
-
 ENTRY(memcpy)
         /* The stack must always be 64-bits aligned to be compliant with the
          * ARM ABI. Since we have to save R0, we might as well save R4
