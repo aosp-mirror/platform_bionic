@@ -527,7 +527,6 @@ cc_test {
     static_libs: [
         "libm",
         "libc",
-        "libc++_static",
         "libdl",
         "libtinyxml2",
         "liblog",
@@ -537,12 +536,6 @@ cc_test {
 
     static_executable: true,
     stl: "libc++_static",
-
-    // libc and libc++ both define std::nothrow. libc's is a private symbol, but this
-    // still causes issues when linking libc.a and libc++.a, since private isn't
-    // effective until it has been linked. To fix this, just allow multiple symbol
-    // definitions for the static tests.
-    ldflags: ["-Wl,--allow-multiple-definition"],
 }
 
 // -----------------------------------------------------------------------------
