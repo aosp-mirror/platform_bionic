@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff2ce9f9_bd543c79",
+        "filename": "libc/arch-arm/generic/bionic/__memcpy_chk.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-25T15:38:41Z",
+      "side": 1,
+      "message": "2-space indent? (it was only 4 in the other places to match the surrounding code.)",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 9
+      },
+      "revId": "6cb06879323cb45440ca1c7b42a2cc754b3d50c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0f17351_39b96292",
+        "filename": "libc/bionic/__strcpy_chk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-25T15:38:41Z",
+      "side": 1,
+      "message": "if you\u0027ve removed the other copies, presumably this can go into fortify.cpp with the others now? (doesn\u0027t have to be this CL.)",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb06879323cb45440ca1c7b42a2cc754b3d50c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
