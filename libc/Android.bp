@@ -42,6 +42,7 @@ libc_common_flags = [
     "-Wextra",
     "-Wunused",
     "-Wno-deprecated-declarations",
+    "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
@@ -2006,7 +2007,7 @@ cc_defaults {
             local_include_dirs: ["arch-x86_64/include"],
         },
     },
-    clang: false,
+    clang: true,
 }
 
 cc_defaults {
