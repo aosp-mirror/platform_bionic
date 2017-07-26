@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0a094a2_18720e90",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-26T22:16:13Z",
+      "side": 1,
+      "message": "hmm... have we fucked this for ndk-cruft? or does this work as long as the NDK map doesn\u0027t have a version, because we\u0027ll just take whatever, even as the version changes?\n\n(it seems odd that all the ndk-cruft functions aren\u0027t in the same block.)",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
