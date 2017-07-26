@@ -345,6 +345,7 @@ LIBC {
     fdatasync;
     fdopen;
     fdopendir;
+    fdprintf; # arm x86 mips versioned=28
     feof;
     feof_unlocked; # introduced=23
     ferror;
@@ -1130,6 +1131,7 @@ LIBC {
     vdprintf; # introduced=21
     verr;
     verrx;
+    vfdprintf; # arm x86 mips versioned=28
     vfork;
     vfprintf;
     vfscanf;
@@ -1533,7 +1535,6 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips
     dlmalloc_trim; # arm x86 mips
     dlmalloc_usable_size; # arm x86 mips
-    fdprintf; # arm x86 mips
     free_malloc_leak_info;
     ftime; # arm x86 mips
     get_malloc_leak_info;
@@ -1555,7 +1556,6 @@ LIBC_PRIVATE {
     strtotimeval; # arm x86 mips
     sysv_signal; # arm x86 mips
     tkill; # arm x86 mips
-    vfdprintf; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
 } LIBC_O;
