@@ -46,6 +46,30 @@
       "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c17de41_5789a4b0",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-26T22:25:46Z",
+      "side": 1,
+      "message": "not versioning them (like all the other gingerbread-era stuff) seems reasonable.\n\nwhen did we start calling the ndk-cruft functions @LIBC_PRIVATE?\n\nwhat happens if you don\u0027t move this out?\n\nand what does the NDK look like? does that have no version, and match the libc function no matter what version it has?",
+      "parentUuid": "8af4969a_0e6de36f",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
