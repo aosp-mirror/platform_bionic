@@ -456,3 +456,43 @@ ssize_t __write_chk(int fd, const void* buf, size_t count, size_t buf_size) {
   __check_buffer_access("write", "read from", count, buf_size);
   return write(fd, buf, count);
 }
+
+#if !defined(NO___STRCAT_CHK)
+// Runtime implementation of __builtin____strcat_chk (used directly by compiler, not in headers).
+extern "C" char* __strcat_chk(char* __restrict dst, const char* __restrict src,
+                              size_t dst_buf_size) {
+  char* save = dst;
+  size_t dst_len = __strlen_chk(dst, dst_buf_size);
+
+  dst += dst_len;
+  dst_buf_size -= dst_len;
+
+  while ((*dst++ = *src++) != '\0') {
+    dst_buf_size--;
+    if (__predict_false(dst_buf_size == 0)) {
+      __fortify_fatal("strcat: prevented write past end of %zu-byte buffer", dst_buf_size);
+    }
+  }
+
+  return save;
+}
+#endif // NO___STRCAT_CHK
+
+#if !defined(NO___STRCPY_CHK)
+// Runtime implementation of __builtin____strcpy_chk (used directly by compiler, not in headers).
+extern "C" char* __strcpy_chk(char* dst, const char* src, size_t dst_len) {
+  // TODO: optimize so we don't scan src twice.
+  size_t src_len = strlen(src) + 1;
+  __check_buffer_access("strcpy", "write into", src_len, dst_len);
+  return strcpy(dst, src);
+}
+#endif // NO___STRCPY_CHK
+
+#if !defined(NO___MEMCPY_CHK)
+// Runtime implementation of __memcpy_chk (used directly by compiler, not in headers).
+extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
+  __check_count("memcpy", "count", count);
+  __check_buffer_access("memcpy", "write into", count, dst_len);
+  return memcpy(dst, src, count);
+}
+#endif // NO___MEMCPY_CHK
