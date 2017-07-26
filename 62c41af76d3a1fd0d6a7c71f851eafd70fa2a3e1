@@ -34,6 +34,24 @@
       "revId": "62c41af76d3a1fd0d6a7c71f851eafd70fa2a3e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ca5f86b_528f52e6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2017-07-26T12:00:23Z",
+      "side": 1,
+      "message": "I found a Nexus 4 and an armv7 test binary passed all strlen related tests.\nThe debuggerd client of OC is not compatible with the debuggerd on Nexus 4, so I disabled it to pass 2 Fortify death tests.",
+      "parentUuid": "b0e49695_507a1012",
+      "revId": "62c41af76d3a1fd0d6a7c71f851eafd70fa2a3e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
