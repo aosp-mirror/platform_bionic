@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e11c02fc_d784efdf",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-26T23:23:26Z",
+      "side": 1,
+      "message": "s/\\n/ /",
+      "range": {
+        "startLine": 46,
+        "startChar": 3,
+        "endLine": 47,
+        "endChar": 2
+      },
+      "revId": "7d4c3b558e18c8b924bdbf49824bd878c870c6e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
