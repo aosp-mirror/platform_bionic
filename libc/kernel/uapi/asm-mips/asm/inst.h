@@ -315,6 +315,7 @@ enum cop0_coi_func {
   rfe_op = 0x10,
   eret_op = 0x18,
   wait_op = 0x20,
+  hypcall_op = 0x28
 };
 enum cop0_com_func {
   tlbr1_op = 0x01,

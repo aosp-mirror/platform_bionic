@@ -87,27 +87,12 @@ enum machine_type {
 #ifndef N_TXTADDR
 #define N_TXTADDR(x) (N_MAGIC(x) == QMAGIC ? PAGE_SIZE : 0)
 #endif
-#if defined(vax) || defined(hp300) || defined(pyr)
-#define SEGMENT_SIZE page_size
-#endif
-#ifdef sony
-#define SEGMENT_SIZE 0x2000
-#endif
-#ifdef is68k
-#define SEGMENT_SIZE 0x20000
-#endif
-#if defined(m68k) && defined(PORTAR)
-#define PAGE_SIZE 0x400
-#define SEGMENT_SIZE PAGE_SIZE
-#endif
-#ifdef linux
 #include <unistd.h>
 #if defined(__i386__) || defined(__mc68000__)
 #define SEGMENT_SIZE 1024
 #else
 #ifndef SEGMENT_SIZE
 #define SEGMENT_SIZE getpagesize()
-#endif
 #endif
 #endif
 #define _N_SEGMENT_ROUND(x) ALIGN(x, SEGMENT_SIZE)
@@ -171,13 +156,7 @@ struct relocation_info {
   unsigned int r_pcrel : 1;
   unsigned int r_length : 2;
   unsigned int r_extern : 1;
-#ifdef NS32K
-  unsigned r_bsr : 1;
-  unsigned r_disp : 1;
-  unsigned r_pad : 2;
-#else
   unsigned int r_pad : 4;
-#endif
 };
 #endif
 #endif

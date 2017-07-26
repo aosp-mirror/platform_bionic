@@ -77,6 +77,8 @@
 #define DRM_MODE_DIRTY_OFF 0
 #define DRM_MODE_DIRTY_ON 1
 #define DRM_MODE_DIRTY_ANNOTATE 2
+#define DRM_MODE_LINK_STATUS_GOOD 0
+#define DRM_MODE_LINK_STATUS_BAD 1
 struct drm_mode_modeinfo {
   __u32 clock;
   __u16 hdisplay;

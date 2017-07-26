@@ -96,7 +96,6 @@
 #define __NR_pipe2 59
 #define __NR_quotactl 60
 #define __NR_getdents64 61
-#define __ARCH_WANT_COMPAT_SYS_GETDENTS64
 #define __NR3264_lseek 62
 #define __NR_read 63
 #define __NR_write 64
@@ -317,8 +316,9 @@
 #define __NR_pkey_mprotect 288
 #define __NR_pkey_alloc 289
 #define __NR_pkey_free 290
+#define __NR_statx 291
 #undef __NR_syscalls
-#define __NR_syscalls 291
+#define __NR_syscalls 292
 #ifdef __ARCH_WANT_SYSCALL_NO_AT
 #define __NR_open 1024
 #define __NR_link 1025

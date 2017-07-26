@@ -20,6 +20,7 @@
 #define __LINUX_CH11_H
 #include <linux/types.h>
 #define USB_MAXCHILDREN 31
+#define USB_SS_MAXPORTS 15
 #define USB_RT_HUB (USB_TYPE_CLASS | USB_RECIP_DEVICE)
 #define USB_RT_PORT (USB_TYPE_CLASS | USB_RECIP_OTHER)
 #define HUB_PORT_STATUS 0

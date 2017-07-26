@@ -54,7 +54,6 @@
 #define EM_TILEGX 191
 #define EM_BPF 247
 #define EM_FRV 0x5441
-#define EM_AVR32 0x18ad
 #define EM_ALPHA 0x9026
 #define EM_CYGNUS_M32R 0x9041
 #define EM_S390_OLD 0xA390

@@ -153,6 +153,7 @@ enum {
 enum {
   ND_ARS_VOLATILE = 1,
   ND_ARS_PERSISTENT = 2,
+  ND_CONFIG_LOCKED = 1,
 };
 #define ND_IOCTL 'N'
 #define ND_IOCTL_SMART _IOWR(ND_IOCTL, ND_CMD_SMART, struct nd_cmd_smart)

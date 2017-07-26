@@ -50,6 +50,7 @@ enum iio_chan_type {
   IIO_ELECTRICALCONDUCTIVITY,
   IIO_COUNT,
   IIO_INDEX,
+  IIO_GRAVITY,
 };
 enum iio_modifier {
   IIO_NO_MOD,
