@@ -781,12 +781,7 @@ cc_library_static {
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/__memcpy_chk.cpp",
-        "bionic/__strcat_chk.cpp",
-        "bionic/__strcpy_chk.cpp",
-        "bionic/fortify.cpp",
-    ],
+    srcs: ["bionic/fortify.cpp"],
 
     name: "libc_fortify",
 
@@ -796,119 +791,85 @@ cc_library_static {
 
     arch: {
         arm: {
+            cflags: ["-DNO___MEMCPY_CHK"],
             srcs: [
                 "arch-arm/generic/bionic/__memcpy_chk.S",
             ],
-            exclude_srcs: [
-                "bionic/__memcpy_chk.cpp",
-            ],
             cortex_a7: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a7/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a7/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             cortex_a53: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a53/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a53/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             cortex_a53_a57: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
-                ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             cortex_a8: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             cortex_a9: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a9/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a9/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             cortex_a15: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/cortex-a15/bionic/__strcat_chk.S",
                     "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             cortex_a73: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/denver/bionic/__strcat_chk.S",
                     "arch-arm/denver/bionic/__strcpy_chk.S",
-                ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             denver: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/denver/bionic/__strcat_chk.S",
                     "arch-arm/denver/bionic/__strcpy_chk.S",
                 ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
-                ],
             },
             krait: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/krait/bionic/__strcat_chk.S",
                     "arch-arm/krait/bionic/__strcpy_chk.S",
-                ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
             kryo: {
+                cflags: ["-DNO___STRCAT_CHK", "-DNO___STRCPY_CHK"],
                 srcs: [
                     "arch-arm/krait/bionic/__strcat_chk.S",
                     "arch-arm/krait/bionic/__strcpy_chk.S",
-                ],
-                exclude_srcs: [
-                    "bionic/__strcat_chk.cpp",
-                    "bionic/__strcpy_chk.cpp",
                 ],
             },
         },
         arm64: {
+            cflags: ["-DNO___MEMCPY_CHK"],
             srcs: [
                 "arch-arm64/generic/bionic/__memcpy_chk.S",
-            ],
-            exclude_srcs: [
-                "bionic/__memcpy_chk.cpp",
             ],
         },
     },
