@@ -46,6 +46,30 @@
       "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78c671df_e6e42126",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-26T22:31:15Z",
+      "side": 1,
+      "message": "i assumed you\u0027d added \u003cfloat.h\u003e to get it from there. (which is where it\u0027s actually defined for us, by the compiler.)",
+      "parentUuid": "c602ee9b_5588997a",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
