@@ -22,6 +22,30 @@
       "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8af4969a_0e6de36f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-26T22:18:24Z",
+      "side": 1,
+      "message": "Do I just need to duplicate the symbol? I don\u0027t think any apps could have linked against fdprintf@LIBC_PRIVATE though, so maybe I don\u0027t need to duplicate them?\n\nAlternatively, I can just unversion them and get away from the mess.",
+      "parentUuid": "b0a094a2_18720e90",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
