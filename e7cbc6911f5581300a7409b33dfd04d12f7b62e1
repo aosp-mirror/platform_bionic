@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "505a2901_5fb160c5",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-26T22:21:06Z",
+      "side": 1,
+      "message": "use FLT_MAX and FLT_MIN instead so we can avoid the math.h transitive include at least?",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
