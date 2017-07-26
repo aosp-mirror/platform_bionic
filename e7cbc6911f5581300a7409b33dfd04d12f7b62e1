@@ -70,6 +70,30 @@
       "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1c30776_797e709b",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-26T23:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78c671df_e6e42126",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
