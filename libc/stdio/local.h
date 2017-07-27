@@ -134,7 +134,7 @@ struct __sfileext {
 #define __SEOF 0x0020  // Found EOF.
 #define __SERR 0x0040  // Found error.
 #define __SMBF 0x0080  // `_buf` is from malloc.
-#define __SAPP 0x0100  // fdopen()ed in append mode.
+// #define __SAPP 0x0100 --- historical (fdopen()ed in append mode).
 #define __SSTR 0x0200  // This is an sprintf/snprintf string.
 // #define __SOPT 0x0400 --- historical (do fseek() optimization).
 // #define __SNPT 0x0800 --- historical (do not do fseek() optimization).
