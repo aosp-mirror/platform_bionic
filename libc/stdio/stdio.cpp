@@ -68,14 +68,8 @@
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
-// TODO: when we no longer have to support both clang and GCC, we can simplify all this.
-#define SBUF_INIT {0,0}
-#if defined(__LP64__)
-#define MBSTATE_T_INIT {{0},{0}}
-#else
-#define MBSTATE_T_INIT {{0}}
-#endif
-#define WCHAR_IO_DATA_INIT {MBSTATE_T_INIT,MBSTATE_T_INIT,{0},0,0}
+#define SBUF_INIT {}
+#define WCHAR_IO_DATA_INIT {}
 
 static struct __sfileext __sFext[3] = {
   { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
@@ -212,11 +206,11 @@ static FILE* __fopen(int fd, int flags) {
 }
 
 FILE* fopen(const char* file, const char* mode) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) return nullptr;
 
-  int fd = open(file, oflags, DEFFILEMODE);
+  int fd = open(file, mode_flags, DEFFILEMODE);
   if (fd == -1) {
     return nullptr;
   }
@@ -228,41 +222,34 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  // When opening in append mode, even though we use O_APPEND,
-  // we need to seek to the end so that ftell() gets the right
-  // answer.  If the user then alters the seek pointer, or
-  // the file extends, this will fail, but there is not much
-  // we can do about this.  (We could set __SAPP and check in
-  // fseek and ftell.)
-  // TODO: check in __sseek instead.
-  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
-
+  // For append mode, even though we use O_APPEND, we need to seek to the end now.
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
 __strong_alias(fopen64, fopen);
 
 FILE* fdopen(int fd, const char* mode) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) return nullptr;
 
   // Make sure the mode the user wants is a subset of the actual mode.
-  int fdflags = fcntl(fd, F_GETFL, 0);
-  if (fdflags < 0) return nullptr;
-  int tmp = fdflags & O_ACCMODE;
-  if (tmp != O_RDWR && (tmp != (oflags & O_ACCMODE))) {
+  int fd_flags = fcntl(fd, F_GETFL, 0);
+  if (fd_flags == -1) return nullptr;
+  int tmp = fd_flags & O_ACCMODE;
+  if (tmp != O_RDWR && (tmp != (mode_flags & O_ACCMODE))) {
     errno = EINVAL;
     return nullptr;
   }
 
-  // If opened for appending, but underlying descriptor does not have
-  // O_APPEND bit set, assert __SAPP so that __swrite() will lseek to
-  // end before each write.
-  // TODO: use fcntl(2) to set O_APPEND instead.
-  if ((oflags & O_APPEND) && !(fdflags & O_APPEND)) flags |= __SAPP;
+  // Make sure O_APPEND is set on the underlying fd if our mode has 'a'.
+  // POSIX says we just take the current offset of the underlying fd.
+  if ((mode_flags & O_APPEND) && !(fd_flags & O_APPEND)) {
+    if (fcntl(fd, F_SETFL, fd_flags | O_APPEND) == -1) return nullptr;
+  }
 
-  // If close-on-exec was requested, then turn it on if not already.
-  if ((oflags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
+  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'x'.
+  if ((mode_flags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
@@ -274,8 +261,8 @@ FILE* fdopen(int fd, const char* mode) {
 // all possible, no matter what.
 // TODO: rewrite this mess completely.
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) {
     fclose(fp);
     return nullptr;
@@ -307,13 +294,13 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   }
 
   // Get a new descriptor to refer to the new file.
-  int fd = open(file, oflags, DEFFILEMODE);
+  int fd = open(file, mode_flags, DEFFILEMODE);
   if (fd < 0 && isopen) {
     // If out of fd's close the old one and try again.
     if (errno == ENFILE || errno == EMFILE) {
       (*fp->_close)(fp->_cookie);
       isopen = 0;
-      fd = open(file, oflags, DEFFILEMODE);
+      fd = open(file, mode_flags, DEFFILEMODE);
     }
   }
 
@@ -346,7 +333,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   // to maintain the descriptor.  Various C library routines (perror)
   // assume stderr is always fd STDERR_FILENO, even if being freopen'd.
   if (wantfd >= 0 && fd != wantfd) {
-    if (dup3(fd, wantfd, oflags & O_CLOEXEC) >= 0) {
+    if (dup3(fd, wantfd, mode_flags & O_CLOEXEC) >= 0) {
       close(fd);
       fd = wantfd;
     }
@@ -367,13 +354,8 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   fp->_close = __sclose;
   _EXT(fp)->_seek64 = __sseek64;
 
-  // When opening in append mode, even though we use O_APPEND,
-  // we need to seek to the end so that ftell() gets the right
-  // answer.  If the user then alters the seek pointer, or
-  // the file extends, this will fail, but there is not much
-  // we can do about this.  (We could set __SAPP and check in
-  // fseek and ftell.)
-  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
+  // For append mode, even though we use O_APPEND, we need to seek to the end now.
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
 __strong_alias(freopen64, freopen);
@@ -452,12 +434,6 @@ int __sread(void* cookie, char* buf, int n) {
 
 int __swrite(void* cookie, const char* buf, int n) {
   FILE* fp = reinterpret_cast<FILE*>(cookie);
-  if (fp->_flags & __SAPP) {
-    // The FILE* is in append mode, but the underlying fd doesn't have O_APPEND set.
-    // We need to seek manually.
-    // TODO: use fcntl(2) to set O_APPEND in fdopen(3) instead?
-    TEMP_FAILURE_RETRY(lseek64(fp->_file, 0, SEEK_END));
-  }
   return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
@@ -496,6 +472,7 @@ static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
 static off64_t __ftello64_unlocked(FILE* fp) {
   // Find offset of underlying I/O object, then adjust for buffered bytes.
   __sflush(fp);  // May adjust seek offset on append stream.
+
   off64_t result = __seek_unlocked(fp, 0, SEEK_CUR);
   if (result == -1) {
     return -1;
