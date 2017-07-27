@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a7dbc254_28cc323f",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-27T15:22:47Z",
+      "side": 1,
+      "message": "correct. but fdprintf and vfdprintf were there _until_ 21, and moved to LP32 ndk-cruft in 21.",
+      "parentUuid": "4f3f1b50_cf59b4f3",
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0a094a2_18720e90",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
@@ -126,6 +144,30 @@
       "side": 1,
       "message": "yes.. looks like versioned\u003dP is the way to solve this. In which case maybe move them out of ndk-cruft?",
       "parentUuid": "0f1adf19_b275f0bd",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "350025ec_f4e186b4",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-27T15:22:47Z",
+      "side": 1,
+      "message": "they\u0027re still 32-bit only cruft. and we only want folks targeting \u003c 21 to use them.",
+      "parentUuid": "e133360a_2d90690b",
       "range": {
         "startLine": 1564,
         "startChar": 0,
