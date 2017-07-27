@@ -177,6 +177,30 @@
       "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1292a139_4cee8e0c",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-27T15:26:46Z",
+      "side": 1,
+      "message": "I do not think we have a mechanism for that atm. Maybe add new tag unversioned,removed\u003d21?\n\nIf the goal is to have them in stubs for \u003c21 and remove them from 21 and up...",
+      "parentUuid": "350025ec_f4e186b4",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
