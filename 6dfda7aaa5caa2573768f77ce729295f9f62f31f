@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf94373d_c45879f1",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-07-27T22:55:07Z",
+      "side": 1,
+      "message": "Should this be a path prefix instead of an explicit list of every file in bits/fortify? (You\u0027re not going to add new freestanding fortify headers, right?)",
+      "revId": "6dfda7aaa5caa2573768f77ce729295f9f62f31f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
