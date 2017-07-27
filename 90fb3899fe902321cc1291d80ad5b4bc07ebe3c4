@@ -22,6 +22,30 @@
       "revId": "90fb3899fe902321cc1291d80ad5b4bc07ebe3c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d3626d3_69060e05",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-07-27T02:12:30Z",
+      "side": 1,
+      "message": "Yup! I plan to fix that in a more targeted CL, since this one\u0027s meant to be a nop from a user\u0027s perspective.",
+      "parentUuid": "14f1a198_9deb2f0a",
+      "range": {
+        "startLine": 312,
+        "startChar": 41,
+        "endLine": 312,
+        "endChar": 77
+      },
+      "revId": "90fb3899fe902321cc1291d80ad5b4bc07ebe3c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
