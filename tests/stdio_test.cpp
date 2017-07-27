@@ -47,6 +47,24 @@ using namespace std::string_literals;
 class stdio_DeathTest : public BionicDeathTest {};
 class stdio_nofortify_DeathTest : public BionicDeathTest {};
 
+static void SetFileTo(const char* path, const char* content) {
+  FILE* fp;
+  ASSERT_NE(nullptr, fp = fopen(path, "w"));
+  ASSERT_NE(EOF, fputs(content, fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+static void AssertFileIs(const char* path, const char* expected) {
+  FILE* fp;
+  ASSERT_NE(nullptr, fp = fopen(path, "r"));
+  char* line = nullptr;
+  size_t length;
+  ASSERT_NE(EOF, getline(&line, &length, fp));
+  ASSERT_EQ(0, fclose(fp));
+  ASSERT_STREQ(expected, line);
+  free(line);
+}
+
 static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = false) {
   rewind(fp);
 
@@ -1845,4 +1863,58 @@ TEST(STDIO_TEST, sprintf_30445072) {
   std::string buf = "world";
   sprintf(&buf[0], "hello");
   ASSERT_EQ(buf, "hello");
+}
+
+TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
+  TemporaryFile tf;
+  SetFileTo(tf.filename, "0123456789");
+  FILE* fp = fopen(tf.filename, "a");
+  EXPECT_EQ(10, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
+  EXPECT_EQ(2, ftell(fp));
+  ASSERT_NE(EOF, fputs("xxx", fp));
+  ASSERT_EQ(0, fflush(fp));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fclose(fp));
+  AssertFileIs(tf.filename, "0123456789xxx");
+}
+
+TEST(STDIO_TEST, fdopen_append_mode_and_ftell) {
+  TemporaryFile tf;
+  SetFileTo(tf.filename, "0123456789");
+  int fd = open(tf.filename, O_RDWR);
+  ASSERT_NE(-1, fd);
+  // POSIX: "The file position indicator associated with the new stream is set to the position
+  // indicated by the file offset associated with the file descriptor."
+  ASSERT_EQ(4, lseek(fd, 4, SEEK_SET));
+  FILE* fp = fdopen(fd, "a");
+  EXPECT_EQ(4, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
+  EXPECT_EQ(2, ftell(fp));
+  ASSERT_NE(EOF, fputs("xxx", fp));
+  ASSERT_EQ(0, fflush(fp));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fclose(fp));
+  AssertFileIs(tf.filename, "0123456789xxx");
+}
+
+TEST(STDIO_TEST, freopen_append_mode_and_ftell) {
+  TemporaryFile tf;
+  SetFileTo(tf.filename, "0123456789");
+  FILE* other_fp = fopen("/proc/version", "r");
+  FILE* fp = freopen(tf.filename, "a", other_fp);
+  EXPECT_EQ(10, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
+  EXPECT_EQ(2, ftell(fp));
+  ASSERT_NE(EOF, fputs("xxx", fp));
+  ASSERT_EQ(0, fflush(fp));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  EXPECT_EQ(13, ftell(fp));
+  ASSERT_EQ(0, fclose(fp));
+  AssertFileIs(tf.filename, "0123456789xxx");
 }
