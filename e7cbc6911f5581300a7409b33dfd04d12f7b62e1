@@ -94,6 +94,30 @@
       "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "252f4965_4d31c6df",
+        "filename": "libc/include/android/legacy_stdlib_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-27T00:23:16Z",
+      "side": 1,
+      "message": "Ah, I remembered wrong when I was trying to explain this earlier. I needed math.h for HUGE_VALF. Still, I updated this to just use __builtin_huge_valf instead of dragging in math.h.",
+      "parentUuid": "d1c30776_797e709b",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "e7cbc6911f5581300a7409b33dfd04d12f7b62e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
