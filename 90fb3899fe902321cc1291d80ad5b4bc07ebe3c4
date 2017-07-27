@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14f1a198_9deb2f0a",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-27T01:57:55Z",
+      "side": 1,
+      "message": "wasn\u0027t that a GCC limitation?",
+      "range": {
+        "startLine": 312,
+        "startChar": 41,
+        "endLine": 312,
+        "endChar": 77
+      },
+      "revId": "90fb3899fe902321cc1291d80ad5b4bc07ebe3c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
