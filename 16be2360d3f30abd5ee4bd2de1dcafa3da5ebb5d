@@ -201,6 +201,30 @@
       "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f634d77_2dda752c",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-27T15:31:29Z",
+      "side": 1,
+      "message": "the goal is to just leave them as they are in ndk-cruft for LP32 forever, but to have callers of the new functions silently use the old ones if they\u0027re LP32 \u003c 21. (LP64 is always \u003e\u003d 21, so they always get the new functions.)",
+      "parentUuid": "1292a139_4cee8e0c",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
