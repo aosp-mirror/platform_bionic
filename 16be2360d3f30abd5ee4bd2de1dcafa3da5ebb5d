@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "4f3f1b50_cf59b4f3",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-27T08:27:33Z",
+      "side": 1,
+      "message": "I take it we did not have these prior 21?",
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0a094a2_18720e90",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
@@ -85,6 +102,30 @@
       "side": 1,
       "message": "\u003e what happens if you don\u0027t move this out?\n\nThen these two functions can\u0027t be linked in the NDK, which means your only option pre-L is using fdopen -\u003e fprintf.\n\n\u003e and what does the NDK look like? does that have no version, and match the libc function no matter what version it has?\n\nRight now, the function is not present. With this, the symbol is present as fdprintf@LIBC_DEPRECATED and may not be used with targetSdkVersion 26.\n\nActually, I don\u0027t think it\u0027s safe to put this in this block. targetSdkVersion 26 but minSdkVersion (NDK API level) 14 is perfectly valid.\n\nI think this needs to go into LIBC with versioned\u003dP, but will wait for dimitry to confirm.",
       "parentUuid": "2c17de41_5789a4b0",
+      "range": {
+        "startLine": 1564,
+        "startChar": 0,
+        "endLine": 1565,
+        "endChar": 29
+      },
+      "revId": "16be2360d3f30abd5ee4bd2de1dcafa3da5ebb5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e133360a_2d90690b",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1565,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-27T08:27:33Z",
+      "side": 1,
+      "message": "yes.. looks like versioned\u003dP is the way to solve this. In which case maybe move them out of ndk-cruft?",
+      "parentUuid": "0f1adf19_b275f0bd",
       "range": {
         "startLine": 1564,
         "startChar": 0,
