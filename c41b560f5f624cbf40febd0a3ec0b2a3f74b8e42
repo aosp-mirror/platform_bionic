@@ -22,6 +22,30 @@
       "revId": "c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1d68433_292d1aa4",
+        "filename": "libc/bionic/wcwidth.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-28T20:30:26Z",
+      "side": 1,
+      "message": "my reasoning was that the __icu_charType call above checked whether or not we have icu4c (L49). i could make fallback\u003d\u003dnullptr return false or pass a function that just returns false, but it wasn\u0027t obviously worth it.",
+      "parentUuid": "46392c93_fe070ab9",
+      "range": {
+        "startLine": 58,
+        "startChar": 70,
+        "endLine": 58,
+        "endChar": 77
+      },
+      "revId": "c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
