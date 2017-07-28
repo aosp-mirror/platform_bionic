@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,59 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_ICU_H
-#define _PRIVATE_ICU_H
+#include "private/icu.h"
 
-#include <stdint.h>
-#include <wchar.h>
+int8_t __icu_charType(wint_t wc) {
+  typedef int8_t (*u_charType_t)(UChar32);
+  static auto u_charType = reinterpret_cast<u_charType_t>(__find_icu_symbol("u_charType"));
+  return u_charType ? u_charType(wc) : -1;
+}
 
-typedef int8_t UBool;
-typedef int32_t UChar32;
+int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property) {
+  typedef int32_t (*u_getIntPropertyValue_t)(UChar32, UProperty);
+  static auto u_getIntPropertyValue =
+      reinterpret_cast<u_getIntPropertyValue_t>(__find_icu_symbol("u_getIntPropertyValue"));
+  return u_getIntPropertyValue ? u_getIntPropertyValue(wc, property) : 0;
+}
 
-enum UProperty {
-  UCHAR_ALPHABETIC = 0,
-  UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5,
-  UCHAR_LOWERCASE = 22,
-  UCHAR_POSIX_ALNUM = 44,
-  UCHAR_POSIX_BLANK = 45,
-  UCHAR_POSIX_GRAPH = 46,
-  UCHAR_POSIX_PRINT = 47,
-  UCHAR_POSIX_XDIGIT = 48,
-  UCHAR_UPPERCASE = 30,
-  UCHAR_WHITE_SPACE = 31,
-  UCHAR_EAST_ASIAN_WIDTH = 0x1004,
-  UCHAR_HANGUL_SYLLABLE_TYPE = 0x100b,
-};
-
-enum UCharCategory {
-  U_NON_SPACING_MARK = 6,
-  U_ENCLOSING_MARK = 7,
-  U_CONTROL_CHAR = 15,
-  U_FORMAT_CHAR = 16,
-};
-
-enum UEastAsianWidth {
-  U_EA_NEUTRAL,
-  U_EA_AMBIGUOUS,
-  U_EA_HALFWIDTH,
-  U_EA_FULLWIDTH,
-  U_EA_NARROW,
-  U_EA_WIDE,
-};
-
-enum UHangulSyllableType {
-  U_HST_NOT_APPLICABLE,
-  U_HST_LEADING_JAMO,
-  U_HST_VOWEL_JAMO,
-  U_HST_TRAILING_JAMO,
-  U_HST_LV_SYLLABLE,
-  U_HST_LVT_SYLLABLE,
-};
-
-int8_t __icu_charType(wint_t wc);
-int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property);
-bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int));
-
-void* __find_icu_symbol(const char* symbol_name);
-
-#endif  // _PRIVATE_ICU_H
+bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
+  typedef UBool (*u_hasBinaryProperty_t)(UChar32, UProperty);
+  static auto u_hasBinaryProperty =
+      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
+  return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
+}
