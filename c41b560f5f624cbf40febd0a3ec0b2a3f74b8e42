@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46392c93_fe070ab9",
+        "filename": "libc/bionic/wcwidth.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-28T20:18:25Z",
+      "side": 1,
+      "message": "If this hits the fallback case, it will crash. The __icu_hasBinaryProperty doesn\u0027t currently check if the fallback function is nullptr.",
+      "range": {
+        "startLine": 58,
+        "startChar": 70,
+        "endLine": 58,
+        "endChar": 77
+      },
+      "revId": "c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
