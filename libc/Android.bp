@@ -1948,6 +1948,8 @@ cc_defaults {
 
     no_default_compiler_flags: true,
 
+    cflags: ["-Wno-gcc-compat", "-Werror"],
+
     arch: {
         arm: {
             local_include_dirs: ["arch-arm/include"],
@@ -1973,6 +1975,8 @@ cc_defaults {
 
 cc_defaults {
     name: "crt_so_defaults",
+
+    cflags: ["-Wno-gcc-compat", "-Werror"],
 
     vendor_available: true,
     arch: {
