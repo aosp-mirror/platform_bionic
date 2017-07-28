@@ -1446,6 +1446,7 @@ cc_library_static {
         "bionic/getpriority.cpp",
         "bionic/gettid.cpp",
         "bionic/grp_pwd.cpp",
+        "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
@@ -1553,6 +1554,7 @@ cc_library_static {
         "bionic/wchar_l.cpp",
         "bionic/wcstod.cpp",
         "bionic/wctype.cpp",
+        "bionic/wcwidth.cpp",
         "bionic/wmempcpy.cpp",
     ],
 
