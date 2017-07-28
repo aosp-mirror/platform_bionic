@@ -16,6 +16,24 @@
       "revId": "6dfda7aaa5caa2573768f77ce729295f9f62f31f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9841ff2e_dedc0935",
+        "filename": "tools/versioner/src/versioner.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-07-28T00:09:56Z",
+      "side": 1,
+      "message": "The hope was to tightly bound this, but I\u0027ve no issue with just ignoring everything in bits/fortify.\n\n\u003e (You\u0027re not going to add new freestanding fortify headers, right?)\n\nThe hope is to not add any more FORTIFY headers at all. :) But yeah, nothing in that directory should ever be freestanding.",
+      "parentUuid": "cf94373d_c45879f1",
+      "revId": "6dfda7aaa5caa2573768f77ce729295f9f62f31f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
