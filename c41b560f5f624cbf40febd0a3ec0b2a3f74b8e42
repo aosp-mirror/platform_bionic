@@ -46,6 +46,30 @@
       "revId": "c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a91a9669_9dd93f64",
+        "filename": "libc/bionic/wcwidth.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-07-28T21:31:39Z",
+      "side": 1,
+      "message": "Leaving as is seems reasonable then.",
+      "parentUuid": "b1d68433_292d1aa4",
+      "range": {
+        "startLine": 58,
+        "startChar": 70,
+        "endLine": 58,
+        "endChar": 77
+      },
+      "revId": "c41b560f5f624cbf40febd0a3ec0b2a3f74b8e42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
