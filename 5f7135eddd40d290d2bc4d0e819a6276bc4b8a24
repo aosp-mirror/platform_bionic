@@ -16,6 +16,24 @@
       "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0ffecae_623aed47",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-28T16:44:41Z",
+      "side": 1,
+      "message": "We don\u0027t. I don\u0027t think we should remove things based on API level. In the case where you\u0027re using some static library middleware that targeted android-14, but you\u0027re targeting android-26. If they used fdprintf via dprintf, you won\u0027t be able to link if we remove this.",
+      "parentUuid": "9b424237_dfa36b46",
+      "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
