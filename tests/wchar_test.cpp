@@ -754,3 +754,80 @@ TEST(wchar, wcstof) {
 TEST(wchar, wcstold) {
   CheckWcsToFloat(wcstold);
 }
+
+static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {
+  for (wchar_t i = begin; i < end; ++i) {
+    EXPECT_EQ(expected, wcwidth(i)) << static_cast<int>(i);
+  }
+}
+
+TEST(wchar, wcwidth_NUL) {
+  // NUL is defined to return 0 rather than -1, despite being a C0 control.
+  EXPECT_EQ(0, wcwidth(0));
+}
+
+TEST(wchar, wcwidth_ascii) {
+  AssertWcwidthRange(0x20, 0x7f, 1); // Non-C0 non-DEL ASCII.
+}
+
+TEST(wchar, wcwidth_controls) {
+  AssertWcwidthRange(0x01, 0x20, -1); // C0 controls.
+  EXPECT_EQ(-1, wcwidth(0x7f)); // DEL.
+  AssertWcwidthRange(0x80, 0xa0, -1); // C1 controls.
+}
+
+TEST(wchar, wcwidth_non_spacing_and_enclosing_marks_and_format) {
+  EXPECT_EQ(0, wcwidth(0x0300)); // Combining grave.
+  EXPECT_EQ(0, wcwidth(0x20dd)); // Combining enclosing circle.
+  EXPECT_EQ(0, wcwidth(0x00ad)); // Soft hyphen (SHY).
+  EXPECT_EQ(0, wcwidth(0x200b)); // Zero width space.
+}
+
+TEST(wchar, wcwidth_cjk) {
+  EXPECT_EQ(2, wcwidth(0x4e00)); // Start of CJK unified block.
+  EXPECT_EQ(2, wcwidth(0x9fff)); // End of CJK unified block.
+  EXPECT_EQ(2, wcwidth(0x3400)); // Start of CJK extension A block.
+  EXPECT_EQ(2, wcwidth(0x4dbf)); // End of CJK extension A block.
+  EXPECT_EQ(2, wcwidth(0x20000)); // Start of CJK extension B block.
+  EXPECT_EQ(2, wcwidth(0x2a6df)); // End of CJK extension B block.
+}
+
+TEST(wchar, wcwidth_korean_combining_jamo) {
+  AssertWcwidthRange(0x1160, 0x1200, 0); // Original range.
+  EXPECT_EQ(0, wcwidth(0xd7b0)); // Newer.
+  EXPECT_EQ(0, wcwidth(0xd7cb));
+}
+
+TEST(wchar, wcwidth_korean_jeongeul_syllables) {
+  EXPECT_EQ(2, wcwidth(0xac00)); // Start of block.
+  EXPECT_EQ(2, wcwidth(0xd7a3)); // End of defined code points in Unicode 7.
+  // Undefined characters at the end of the block have width 1.
+}
+
+TEST(wchar, wcwidth_kana) {
+  // Hiragana (most, not undefined).
+  AssertWcwidthRange(0x3041, 0x3097, 2);
+  // Katakana.
+  AssertWcwidthRange(0x30a0, 0x3100, 2);
+}
+
+TEST(wchar, wcwidth_circled_two_digit_cjk) {
+  // Circled two-digit CJK "speed sign" numbers are wide,
+  // though EastAsianWidth is ambiguous.
+  AssertWcwidthRange(0x3248, 0x3250, 2);
+}
+
+TEST(wchar, wcwidth_hexagrams) {
+  // Hexagrams are wide, though EastAsianWidth is neutral.
+  AssertWcwidthRange(0x4dc0, 0x4e00, 2);
+}
+
+TEST(wchar, wcwidth_default_ignorables) {
+  AssertWcwidthRange(0xfff0, 0xfff8, 0); // Unassigned by default ignorable.
+  EXPECT_EQ(0, wcwidth(0xe0000)); // ...through 0xe0fff.
+}
+
+TEST(wchar, wcwidth_korean_common_non_syllables) {
+  EXPECT_EQ(2, wcwidth(L'ㅜ')); // Korean "crying" emoticon.
+  EXPECT_EQ(2, wcwidth(L'ㅋ')); // Korean "laughing" emoticon.
+}
