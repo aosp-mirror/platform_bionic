@@ -1238,6 +1238,11 @@ LIBC_O {
     wctrans_l; # introduced=26
 } LIBC_N;
 
+LIBC_P {
+  global:
+    getlogin_r; # future
+} LIBC_O;
+
 LIBC_PRIVATE {
   global:
     android_getaddrinfofornet;
@@ -1249,7 +1254,7 @@ LIBC_PRIVATE {
     free_malloc_leak_info;
     get_malloc_leak_info;
     gMallocLeakZygoteChild;
-} LIBC_O;
+} LIBC_P;
 
 LIBC_DEPRECATED {
   global:
@@ -1271,4 +1276,4 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
-} LIBC_O;
+} LIBC_P;
