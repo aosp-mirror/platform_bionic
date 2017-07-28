@@ -53,12 +53,6 @@ enum {
   WC_TYPE_MAX
 };
 
-static bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
-  typedef UBool (*FnT)(UChar32, UProperty);
-  static auto u_hasBinaryProperty = reinterpret_cast<FnT>(__find_icu_symbol("u_hasBinaryProperty"));
-  return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
-}
-
 int iswalnum(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_ALNUM, isalnum); }
 int iswalpha(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_ALPHABETIC, isalpha); }
 int iswblank(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_BLANK, isblank); }
@@ -153,10 +147,6 @@ wctype_t wctype(const char* property) {
 
 wctype_t wctype_l(const char* property, locale_t) {
   return wctype(property);
-}
-
-int wcwidth(wchar_t wc) {
-  return (wc > 0);
 }
 
 static wctrans_t wctrans_tolower = wctrans_t(1);
