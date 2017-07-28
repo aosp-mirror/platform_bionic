@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b424237_dfa36b46",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-28T09:29:08Z",
+      "side": 1,
+      "message": "do we have removed-in? maybe versioned\u003d42 removedin\u003d21?",
+      "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
