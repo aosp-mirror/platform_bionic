@@ -22,6 +22,7 @@
 #include <linux/types.h>
 #include <linux/socket.h>
 #include <linux/compiler.h>
+#include <sys/socket.h>
 #if __UAPI_DEF_IF_IFNAMSIZ
 #define IFNAMSIZ 16
 #endif

@@ -19,6 +19,7 @@
 #ifndef _LINUX__HFI1_USER_H
 #define _LINUX__HFI1_USER_H
 #include <linux/types.h>
+#include <rdma/rdma_user_ioctl.h>
 #define HFI1_USER_SWMAJOR 6
 #define HFI1_USER_SWMINOR 3
 #define HFI1_SWMAJOR_SHIFT 16
@@ -42,35 +43,6 @@
 #define HFI1_RCVHDR_ENTSIZE_2 (1UL << 0)
 #define HFI1_RCVHDR_ENTSIZE_16 (1UL << 1)
 #define HFI1_RCVDHR_ENTSIZE_32 (1UL << 2)
-#define HFI1_CMD_ASSIGN_CTXT 1
-#define HFI1_CMD_CTXT_INFO 2
-#define HFI1_CMD_USER_INFO 3
-#define HFI1_CMD_TID_UPDATE 4
-#define HFI1_CMD_TID_FREE 5
-#define HFI1_CMD_CREDIT_UPD 6
-#define HFI1_CMD_RECV_CTRL 8
-#define HFI1_CMD_POLL_TYPE 9
-#define HFI1_CMD_ACK_EVENT 10
-#define HFI1_CMD_SET_PKEY 11
-#define HFI1_CMD_CTXT_RESET 12
-#define HFI1_CMD_TID_INVAL_READ 13
-#define HFI1_CMD_GET_VERS 14
-#define IB_IOCTL_MAGIC 0x1b
-#define __NUM(cmd) (HFI1_CMD_ ##cmd + 0xe0)
-struct hfi1_cmd;
-#define HFI1_IOCTL_ASSIGN_CTXT _IOWR(IB_IOCTL_MAGIC, __NUM(ASSIGN_CTXT), struct hfi1_user_info)
-#define HFI1_IOCTL_CTXT_INFO _IOW(IB_IOCTL_MAGIC, __NUM(CTXT_INFO), struct hfi1_ctxt_info)
-#define HFI1_IOCTL_USER_INFO _IOW(IB_IOCTL_MAGIC, __NUM(USER_INFO), struct hfi1_base_info)
-#define HFI1_IOCTL_TID_UPDATE _IOWR(IB_IOCTL_MAGIC, __NUM(TID_UPDATE), struct hfi1_tid_info)
-#define HFI1_IOCTL_TID_FREE _IOWR(IB_IOCTL_MAGIC, __NUM(TID_FREE), struct hfi1_tid_info)
-#define HFI1_IOCTL_CREDIT_UPD _IO(IB_IOCTL_MAGIC, __NUM(CREDIT_UPD))
-#define HFI1_IOCTL_RECV_CTRL _IOW(IB_IOCTL_MAGIC, __NUM(RECV_CTRL), int)
-#define HFI1_IOCTL_POLL_TYPE _IOW(IB_IOCTL_MAGIC, __NUM(POLL_TYPE), int)
-#define HFI1_IOCTL_ACK_EVENT _IOW(IB_IOCTL_MAGIC, __NUM(ACK_EVENT), unsigned long)
-#define HFI1_IOCTL_SET_PKEY _IOW(IB_IOCTL_MAGIC, __NUM(SET_PKEY), __u16)
-#define HFI1_IOCTL_CTXT_RESET _IO(IB_IOCTL_MAGIC, __NUM(CTXT_RESET))
-#define HFI1_IOCTL_TID_INVAL_READ _IOWR(IB_IOCTL_MAGIC, __NUM(TID_INVAL_READ), struct hfi1_tid_info)
-#define HFI1_IOCTL_GET_VERS _IOR(IB_IOCTL_MAGIC, __NUM(GET_VERS), int)
 #define _HFI1_EVENT_FROZEN_BIT 0
 #define _HFI1_EVENT_LINKDOWN_BIT 1
 #define _HFI1_EVENT_LID_CHANGE_BIT 2
@@ -92,36 +64,6 @@ struct hfi1_cmd;
 #define HFI1_MAX_SHARED_CTXTS 8
 #define HFI1_POLL_TYPE_ANYRCV 0x0
 #define HFI1_POLL_TYPE_URGENT 0x1
-struct hfi1_user_info {
-  __u32 userversion;
-  __u32 pad;
-  __u16 subctxt_cnt;
-  __u16 subctxt_id;
-  __u8 uuid[16];
-};
-struct hfi1_ctxt_info {
-  __u64 runtime_flags;
-  __u32 rcvegr_size;
-  __u16 num_active;
-  __u16 unit;
-  __u16 ctxt;
-  __u16 subctxt;
-  __u16 rcvtids;
-  __u16 credits;
-  __u16 numa_node;
-  __u16 rec_cpu;
-  __u16 send_ctxt;
-  __u16 egrtids;
-  __u16 rcvhdrq_cnt;
-  __u16 rcvhdrq_entsize;
-  __u16 sdma_ring_size;
-};
-struct hfi1_tid_info {
-  __u64 vaddr;
-  __u64 tidlist;
-  __u32 tidcnt;
-  __u32 length;
-};
 enum hfi1_sdma_comp_state {
   FREE = 0,
   QUEUED,
@@ -136,26 +78,6 @@ struct hfi1_status {
   __u64 dev;
   __u64 port;
   char freezemsg[0];
-};
-struct hfi1_base_info {
-  __u32 hw_version;
-  __u32 sw_version;
-  __u16 jkey;
-  __u16 padding1;
-  __u32 bthqp;
-  __u64 sc_credits_addr;
-  __u64 pio_bufbase_sop;
-  __u64 pio_bufbase;
-  __u64 rcvhdr_bufbase;
-  __u64 rcvegr_bufbase;
-  __u64 sdma_comp_bufbase;
-  __u64 user_regbase;
-  __u64 events_bufbase;
-  __u64 status_bufbase;
-  __u64 rcvhdrtail_base;
-  __u64 subctxt_uregbase;
-  __u64 subctxt_rcvegrbuf;
-  __u64 subctxt_rcvhdrbuf;
 };
 enum sdma_req_opcode {
   EXPECTED = 0,

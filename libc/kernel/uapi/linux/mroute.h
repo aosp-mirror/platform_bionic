@@ -20,6 +20,7 @@
 #define _UAPI__LINUX_MROUTE_H
 #include <linux/sockios.h>
 #include <linux/types.h>
+#include <linux/in.h>
 #define MRT_BASE 200
 #define MRT_INIT (MRT_BASE)
 #define MRT_DONE (MRT_BASE + 1)

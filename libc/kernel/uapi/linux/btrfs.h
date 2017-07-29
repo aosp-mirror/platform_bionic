@@ -183,10 +183,10 @@ struct btrfs_ioctl_feature_flags {
 struct btrfs_balance_args {
   __u64 profiles;
   union {
-    __le64 usage;
+    __u64 usage;
     struct {
-      __le32 usage_min;
-      __le32 usage_max;
+      __u32 usage_min;
+      __u32 usage_max;
     };
   };
   __u64 devid;
@@ -203,8 +203,8 @@ struct btrfs_balance_args {
       __u32 limit_max;
     };
   };
-  __le32 stripes_min;
-  __le32 stripes_max;
+  __u32 stripes_min;
+  __u32 stripes_max;
   __u64 unused[6];
 } __attribute__((__packed__));
 struct btrfs_balance_progress {

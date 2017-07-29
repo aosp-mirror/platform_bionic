@@ -149,8 +149,10 @@ struct drm_amdgpu_gem_userptr {
 #define AMDGPU_TILING_MACRO_TILE_ASPECT_MASK 0x3
 #define AMDGPU_TILING_NUM_BANKS_SHIFT 21
 #define AMDGPU_TILING_NUM_BANKS_MASK 0x3
-#define AMDGPU_TILING_SET(field,value) (((value) & AMDGPU_TILING_ ##field ##_MASK) << AMDGPU_TILING_ ##field ##_SHIFT)
-#define AMDGPU_TILING_GET(value,field) (((value) >> AMDGPU_TILING_ ##field ##_SHIFT) & AMDGPU_TILING_ ##field ##_MASK)
+#define AMDGPU_TILING_SWIZZLE_MODE_SHIFT 0
+#define AMDGPU_TILING_SWIZZLE_MODE_MASK 0x1f
+#define AMDGPU_TILING_SET(field,value) (((__u64) (value) & AMDGPU_TILING_ ##field ##_MASK) << AMDGPU_TILING_ ##field ##_SHIFT)
+#define AMDGPU_TILING_GET(value,field) (((__u64) (value) >> AMDGPU_TILING_ ##field ##_SHIFT) & AMDGPU_TILING_ ##field ##_MASK)
 #define AMDGPU_GEM_METADATA_OP_SET_METADATA 1
 #define AMDGPU_GEM_METADATA_OP_GET_METADATA 2
 struct drm_amdgpu_gem_metadata {
@@ -232,10 +234,19 @@ struct drm_amdgpu_gem_op {
 };
 #define AMDGPU_VA_OP_MAP 1
 #define AMDGPU_VA_OP_UNMAP 2
+#define AMDGPU_VA_OP_CLEAR 3
+#define AMDGPU_VA_OP_REPLACE 4
 #define AMDGPU_VM_DELAY_UPDATE (1 << 0)
 #define AMDGPU_VM_PAGE_READABLE (1 << 1)
 #define AMDGPU_VM_PAGE_WRITEABLE (1 << 2)
 #define AMDGPU_VM_PAGE_EXECUTABLE (1 << 3)
+#define AMDGPU_VM_PAGE_PRT (1 << 4)
+#define AMDGPU_VM_MTYPE_MASK (0xf << 5)
+#define AMDGPU_VM_MTYPE_DEFAULT (0 << 5)
+#define AMDGPU_VM_MTYPE_NC (1 << 5)
+#define AMDGPU_VM_MTYPE_WC (2 << 5)
+#define AMDGPU_VM_MTYPE_CC (3 << 5)
+#define AMDGPU_VM_MTYPE_UC (4 << 5)
 struct drm_amdgpu_gem_va {
   __u32 handle;
   __u32 _pad;
@@ -250,7 +261,8 @@ struct drm_amdgpu_gem_va {
 #define AMDGPU_HW_IP_DMA 2
 #define AMDGPU_HW_IP_UVD 3
 #define AMDGPU_HW_IP_VCE 4
-#define AMDGPU_HW_IP_NUM 5
+#define AMDGPU_HW_IP_UVD_ENC 5
+#define AMDGPU_HW_IP_NUM 6
 #define AMDGPU_HW_IP_INSTANCE_MAX_COUNT 1
 #define AMDGPU_CHUNK_ID_IB 0x01
 #define AMDGPU_CHUNK_ID_FENCE 0x02
@@ -276,6 +288,7 @@ union drm_amdgpu_cs {
 };
 #define AMDGPU_IB_FLAG_CE (1 << 0)
 #define AMDGPU_IB_FLAG_PREAMBLE (1 << 1)
+#define AMDGPU_IB_FLAG_PREEMPT (1 << 2)
 struct drm_amdgpu_cs_chunk_ib {
   __u32 _pad;
   __u32 flags;
@@ -320,6 +333,8 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_GFX_MEC 0x08
 #define AMDGPU_INFO_FW_SMC 0x0a
 #define AMDGPU_INFO_FW_SDMA 0x0b
+#define AMDGPU_INFO_FW_SOS 0x0c
+#define AMDGPU_INFO_FW_ASD 0x0d
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -334,6 +349,15 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_VBIOS 0x1B
 #define AMDGPU_INFO_VBIOS_SIZE 0x1
 #define AMDGPU_INFO_VBIOS_IMAGE 0x2
+#define AMDGPU_INFO_NUM_HANDLES 0x1C
+#define AMDGPU_INFO_SENSOR 0x1D
+#define AMDGPU_INFO_SENSOR_GFX_SCLK 0x1
+#define AMDGPU_INFO_SENSOR_GFX_MCLK 0x2
+#define AMDGPU_INFO_SENSOR_GPU_TEMP 0x3
+#define AMDGPU_INFO_SENSOR_GPU_LOAD 0x4
+#define AMDGPU_INFO_SENSOR_GPU_AVG_POWER 0x5
+#define AMDGPU_INFO_SENSOR_VDDNB 0x6
+#define AMDGPU_INFO_SENSOR_VDDGFX 0x7
 #define AMDGPU_INFO_MMR_SE_INDEX_SHIFT 0
 #define AMDGPU_INFO_MMR_SE_INDEX_MASK 0xff
 #define AMDGPU_INFO_MMR_SH_INDEX_SHIFT 8
@@ -368,6 +392,9 @@ struct drm_amdgpu_info {
       __u32 type;
       __u32 offset;
     } vbios_info;
+    struct {
+      __u32 type;
+    } sensor_info;
   };
 };
 struct drm_amdgpu_info_gds {
@@ -436,6 +463,23 @@ struct drm_amdgpu_info_device {
   __u32 vram_type;
   __u32 vram_bit_width;
   __u32 vce_harvest_config;
+  __u32 gc_double_offchip_lds_buf;
+  __u64 prim_buf_gpu_addr;
+  __u64 pos_buf_gpu_addr;
+  __u64 cntl_sb_buf_gpu_addr;
+  __u64 param_buf_gpu_addr;
+  __u32 prim_buf_size;
+  __u32 pos_buf_size;
+  __u32 cntl_sb_buf_size;
+  __u32 param_buf_size;
+  __u32 wave_front_size;
+  __u32 num_shader_visible_vgprs;
+  __u32 num_cu_per_sh;
+  __u32 num_tcc_blocks;
+  __u32 gs_vgt_table_depth;
+  __u32 gs_prim_buffer_depth;
+  __u32 max_gs_waves_per_vgt;
+  __u32 _pad1;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
@@ -445,6 +489,10 @@ struct drm_amdgpu_info_hw_ip {
   __u32 ib_size_alignment;
   __u32 available_rings;
   __u32 _pad;
+};
+struct drm_amdgpu_info_num_handles {
+  __u32 uvd_max_handles;
+  __u32 uvd_used_handles;
 };
 #define AMDGPU_VCE_CLOCK_TABLE_ENTRIES 6
 struct drm_amdgpu_info_vce_clock_table_entry {
@@ -464,6 +512,7 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_KV 125
 #define AMDGPU_FAMILY_VI 130
 #define AMDGPU_FAMILY_CZ 135
+#define AMDGPU_FAMILY_AI 141
 #ifdef __cplusplus
 #endif
 #endif

@@ -113,7 +113,6 @@ typedef struct sg_req_info {
 #define SG_GET_ACCESS_COUNT 0x2289
 #define SG_SCATTER_SZ (8 * 4096)
 #define SG_DEFAULT_RETRIES 0
-#define SG_DEF_FORCE_LOW_DMA 0
 #define SG_DEF_FORCE_PACK_ID 0
 #define SG_DEF_KEEP_ORPHAN 0
 #define SG_DEF_RESERVED_SIZE SG_SCATTER_SZ
