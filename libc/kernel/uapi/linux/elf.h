@@ -345,6 +345,8 @@ typedef struct elf64_shdr {
 #define NT_S390_TDB 0x308
 #define NT_S390_VXRS_LOW 0x309
 #define NT_S390_VXRS_HIGH 0x30a
+#define NT_S390_GS_CB 0x30b
+#define NT_S390_GS_BC 0x30c
 #define NT_ARM_VFP 0x400
 #define NT_ARM_TLS 0x401
 #define NT_ARM_HW_BREAK 0x402
@@ -353,6 +355,7 @@ typedef struct elf64_shdr {
 #define NT_METAG_CBUF 0x500
 #define NT_METAG_RPIPE 0x501
 #define NT_METAG_TLS 0x502
+#define NT_ARC_V2 0x600
 typedef struct elf32_note {
   Elf32_Word n_namesz;
   Elf32_Word n_descsz;

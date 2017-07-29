@@ -84,6 +84,7 @@ enum {
 #define TCP_SAVE_SYN 27
 #define TCP_SAVED_SYN 28
 #define TCP_REPAIR_WINDOW 29
+#define TCP_FASTOPEN_CONNECT 30
 struct tcp_repair_opt {
   __u32 opt_code;
   __u32 opt_val;
@@ -172,6 +173,8 @@ enum {
   TCP_NLA_BUSY,
   TCP_NLA_RWND_LIMITED,
   TCP_NLA_SNDBUF_LIMITED,
+  TCP_NLA_DATA_SEGS_OUT,
+  TCP_NLA_TOTAL_RETRANS,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 struct tcp_md5sig {

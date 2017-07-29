@@ -25,8 +25,11 @@
 #define DRM_FORMAT_BIG_ENDIAN (1 << 31)
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
 #define DRM_FORMAT_R8 fourcc_code('R', '8', ' ', ' ')
+#define DRM_FORMAT_R16 fourcc_code('R', '1', '6', ' ')
 #define DRM_FORMAT_RG88 fourcc_code('R', 'G', '8', '8')
 #define DRM_FORMAT_GR88 fourcc_code('G', 'R', '8', '8')
+#define DRM_FORMAT_RG1616 fourcc_code('R', 'G', '3', '2')
+#define DRM_FORMAT_GR1616 fourcc_code('G', 'R', '3', '2')
 #define DRM_FORMAT_RGB332 fourcc_code('R', 'G', 'B', '8')
 #define DRM_FORMAT_BGR233 fourcc_code('B', 'G', 'R', '8')
 #define DRM_FORMAT_XRGB4444 fourcc_code('X', 'R', '1', '2')
@@ -70,6 +73,14 @@
 #define DRM_FORMAT_UYVY fourcc_code('U', 'Y', 'V', 'Y')
 #define DRM_FORMAT_VYUY fourcc_code('V', 'Y', 'U', 'Y')
 #define DRM_FORMAT_AYUV fourcc_code('A', 'Y', 'U', 'V')
+#define DRM_FORMAT_XRGB8888_A8 fourcc_code('X', 'R', 'A', '8')
+#define DRM_FORMAT_XBGR8888_A8 fourcc_code('X', 'B', 'A', '8')
+#define DRM_FORMAT_RGBX8888_A8 fourcc_code('R', 'X', 'A', '8')
+#define DRM_FORMAT_BGRX8888_A8 fourcc_code('B', 'X', 'A', '8')
+#define DRM_FORMAT_RGB888_A8 fourcc_code('R', '8', 'A', '8')
+#define DRM_FORMAT_BGR888_A8 fourcc_code('B', '8', 'A', '8')
+#define DRM_FORMAT_RGB565_A8 fourcc_code('R', '5', 'A', '8')
+#define DRM_FORMAT_BGR565_A8 fourcc_code('B', '5', 'A', '8')
 #define DRM_FORMAT_NV12 fourcc_code('N', 'V', '1', '2')
 #define DRM_FORMAT_NV21 fourcc_code('N', 'V', '2', '1')
 #define DRM_FORMAT_NV16 fourcc_code('N', 'V', '1', '6')
@@ -87,16 +98,29 @@
 #define DRM_FORMAT_YUV444 fourcc_code('Y', 'U', '2', '4')
 #define DRM_FORMAT_YVU444 fourcc_code('Y', 'V', '2', '4')
 #define DRM_FORMAT_MOD_NONE 0
+#define DRM_FORMAT_MOD_VENDOR_NONE 0
 #define DRM_FORMAT_MOD_VENDOR_INTEL 0x01
 #define DRM_FORMAT_MOD_VENDOR_AMD 0x02
 #define DRM_FORMAT_MOD_VENDOR_NV 0x03
 #define DRM_FORMAT_MOD_VENDOR_SAMSUNG 0x04
 #define DRM_FORMAT_MOD_VENDOR_QCOM 0x05
+#define DRM_FORMAT_MOD_VENDOR_VIVANTE 0x06
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | (val & 0x00ffffffffffffffULL))
+#define DRM_FORMAT_MOD_LINEAR fourcc_mod_code(NONE, 0)
 #define I915_FORMAT_MOD_X_TILED fourcc_mod_code(INTEL, 1)
 #define I915_FORMAT_MOD_Y_TILED fourcc_mod_code(INTEL, 2)
 #define I915_FORMAT_MOD_Yf_TILED fourcc_mod_code(INTEL, 3)
 #define DRM_FORMAT_MOD_SAMSUNG_64_32_TILE fourcc_mod_code(SAMSUNG, 1)
+#define DRM_FORMAT_MOD_VIVANTE_TILED fourcc_mod_code(VIVANTE, 1)
+#define DRM_FORMAT_MOD_VIVANTE_SUPER_TILED fourcc_mod_code(VIVANTE, 2)
+#define DRM_FORMAT_MOD_VIVANTE_SPLIT_TILED fourcc_mod_code(VIVANTE, 3)
+#define DRM_FORMAT_MOD_VIVANTE_SPLIT_SUPER_TILED fourcc_mod_code(VIVANTE, 4)
+#define __fourcc_mod_tegra_mode_shift 32
+#define fourcc_mod_tegra_code(val,params) fourcc_mod_code(NV, ((((__u64) val) << __fourcc_mod_tegra_mode_shift) | params))
+#define fourcc_mod_tegra_mod(m) (m & ~((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
+#define fourcc_mod_tegra_param(m) (m & ((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
+#define NV_FORMAT_MOD_TEGRA_TILED fourcc_mod_tegra_code(1, 0)
+#define NV_FORMAT_MOD_TEGRA_16BX2_BLOCK(v) fourcc_mod_tegra_code(2, v)
 #ifdef __cplusplus
 #endif
 #endif

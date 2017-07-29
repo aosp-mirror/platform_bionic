@@ -180,7 +180,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, __reserved_1 : 36;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, __reserved_1 : 35;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -265,6 +265,20 @@ struct perf_event_header {
   __u16 misc;
   __u16 size;
 };
+struct perf_ns_link_info {
+  __u64 dev;
+  __u64 ino;
+};
+enum {
+  NET_NS_INDEX = 0,
+  UTS_NS_INDEX = 1,
+  IPC_NS_INDEX = 2,
+  PID_NS_INDEX = 3,
+  USER_NS_INDEX = 4,
+  MNT_NS_INDEX = 5,
+  CGROUP_NS_INDEX = 6,
+  NR_NAMESPACES,
+};
 enum perf_event_type {
   PERF_RECORD_MMAP = 1,
   PERF_RECORD_LOST = 2,
@@ -281,6 +295,7 @@ enum perf_event_type {
   PERF_RECORD_LOST_SAMPLES = 13,
   PERF_RECORD_SWITCH = 14,
   PERF_RECORD_SWITCH_CPU_WIDE = 15,
+  PERF_RECORD_NAMESPACES = 16,
   PERF_RECORD_MAX,
 };
 #define PERF_MAX_STACK_DEPTH 127
@@ -296,16 +311,28 @@ enum perf_callchain_context {
 };
 #define PERF_AUX_FLAG_TRUNCATED 0x01
 #define PERF_AUX_FLAG_OVERWRITE 0x02
+#define PERF_AUX_FLAG_PARTIAL 0x04
 #define PERF_FLAG_FD_NO_GROUP (1UL << 0)
 #define PERF_FLAG_FD_OUTPUT (1UL << 1)
 #define PERF_FLAG_PID_CGROUP (1UL << 2)
 #define PERF_FLAG_FD_CLOEXEC (1UL << 3)
+#ifdef __LITTLE_ENDIAN_BITFIELD
 union perf_mem_data_src {
   __u64 val;
   struct {
     __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_rsvd : 31;
   };
 };
+#elif defined(__BIG_ENDIAN_BITFIELD)
+union perf_mem_data_src {
+  __u64 val;
+  struct {
+    __u64 mem_rsvd : 31, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
+  };
+};
+#else
+#error "Unknown endianness"
+#endif
 #define PERF_MEM_OP_NA 0x01
 #define PERF_MEM_OP_LOAD 0x02
 #define PERF_MEM_OP_STORE 0x04

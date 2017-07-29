@@ -1063,6 +1063,9 @@
 #if defined(__NR_statfs64)
   #define SYS_statfs64 __NR_statfs64
 #endif
+#if defined(__NR_statx)
+  #define SYS_statx __NR_statx
+#endif
 #if defined(__NR_stime)
   #define SYS_stime __NR_stime
 #endif

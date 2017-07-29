@@ -180,6 +180,8 @@ enum ovs_key_attr {
   OVS_KEY_ATTR_CT_ZONE,
   OVS_KEY_ATTR_CT_MARK,
   OVS_KEY_ATTR_CT_LABELS,
+  OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV4,
+  OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV6,
   __OVS_KEY_ATTR_MAX
 };
 #define OVS_KEY_ATTR_MAX (__OVS_KEY_ATTR_MAX - 1)
@@ -265,9 +267,13 @@ struct ovs_key_nd {
   __u8 nd_sll[ETH_ALEN];
   __u8 nd_tll[ETH_ALEN];
 };
-#define OVS_CT_LABELS_LEN 16
+#define OVS_CT_LABELS_LEN_32 4
+#define OVS_CT_LABELS_LEN (OVS_CT_LABELS_LEN_32 * sizeof(__u32))
 struct ovs_key_ct_labels {
-  __u8 ct_labels[OVS_CT_LABELS_LEN];
+  union {
+    __u8 ct_labels[OVS_CT_LABELS_LEN];
+    __u32 ct_labels_32[OVS_CT_LABELS_LEN_32];
+  };
 };
 #define OVS_CS_F_NEW 0x01
 #define OVS_CS_F_ESTABLISHED 0x02
@@ -278,6 +284,20 @@ struct ovs_key_ct_labels {
 #define OVS_CS_F_SRC_NAT 0x40
 #define OVS_CS_F_DST_NAT 0x80
 #define OVS_CS_F_NAT_MASK (OVS_CS_F_SRC_NAT | OVS_CS_F_DST_NAT)
+struct ovs_key_ct_tuple_ipv4 {
+  __be32 ipv4_src;
+  __be32 ipv4_dst;
+  __be16 src_port;
+  __be16 dst_port;
+  __u8 ipv4_proto;
+};
+struct ovs_key_ct_tuple_ipv6 {
+  __be32 ipv6_src[4];
+  __be32 ipv6_dst[4];
+  __be16 src_port;
+  __be16 dst_port;
+  __u8 ipv6_proto;
+};
 enum ovs_flow_attr {
   OVS_FLOW_ATTR_UNSPEC,
   OVS_FLOW_ATTR_KEY,
@@ -339,6 +359,8 @@ enum ovs_ct_attr {
   OVS_CT_ATTR_LABELS,
   OVS_CT_ATTR_HELPER,
   OVS_CT_ATTR_NAT,
+  OVS_CT_ATTR_FORCE_COMMIT,
+  OVS_CT_ATTR_EVENTMASK,
   __OVS_CT_ATTR_MAX
 };
 #define OVS_CT_ATTR_MAX (__OVS_CT_ATTR_MAX - 1)

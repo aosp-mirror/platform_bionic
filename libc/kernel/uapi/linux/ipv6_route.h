@@ -19,6 +19,7 @@
 #ifndef _UAPI_LINUX_IPV6_ROUTE_H
 #define _UAPI_LINUX_IPV6_ROUTE_H
 #include <linux/types.h>
+#include <linux/in6.h>
 #define RTF_DEFAULT 0x00010000
 #define RTF_ALLONLINK 0x00020000
 #define RTF_ADDRCONF 0x00040000

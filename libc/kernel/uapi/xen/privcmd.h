@@ -50,8 +50,19 @@ struct privcmd_mmapbatch_v2 {
   const xen_pfn_t __user * arr;
   int __user * err;
 };
+struct privcmd_dm_op_buf {
+  void __user * uptr;
+  size_t size;
+};
+struct privcmd_dm_op {
+  domid_t dom;
+  __u16 num;
+  const struct privcmd_dm_op_buf __user * ubufs;
+};
 #define IOCTL_PRIVCMD_HYPERCALL _IOC(_IOC_NONE, 'P', 0, sizeof(struct privcmd_hypercall))
 #define IOCTL_PRIVCMD_MMAP _IOC(_IOC_NONE, 'P', 2, sizeof(struct privcmd_mmap))
 #define IOCTL_PRIVCMD_MMAPBATCH _IOC(_IOC_NONE, 'P', 3, sizeof(struct privcmd_mmapbatch))
 #define IOCTL_PRIVCMD_MMAPBATCH_V2 _IOC(_IOC_NONE, 'P', 4, sizeof(struct privcmd_mmapbatch_v2))
+#define IOCTL_PRIVCMD_DM_OP _IOC(_IOC_NONE, 'P', 5, sizeof(struct privcmd_dm_op))
+#define IOCTL_PRIVCMD_RESTRICT _IOC(_IOC_NONE, 'P', 6, sizeof(domid_t))
 #endif

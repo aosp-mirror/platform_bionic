@@ -133,7 +133,13 @@ struct mdp_superblock_1 {
   __le64 size;
   __le32 chunksize;
   __le32 raid_disks;
-  __le32 bitmap_offset;
+  union {
+    __le32 bitmap_offset;
+    struct {
+      __le16 offset;
+      __le16 size;
+    } ppl;
+  };
   __le32 new_level;
   __le64 reshape_position;
   __le32 delta_disks;
@@ -174,7 +180,8 @@ struct mdp_superblock_1 {
 #define MD_FEATURE_RECOVERY_BITMAP 128
 #define MD_FEATURE_CLUSTERED 256
 #define MD_FEATURE_JOURNAL 512
-#define MD_FEATURE_ALL (MD_FEATURE_BITMAP_OFFSET | MD_FEATURE_RECOVERY_OFFSET | MD_FEATURE_RESHAPE_ACTIVE | MD_FEATURE_BAD_BLOCKS | MD_FEATURE_REPLACEMENT | MD_FEATURE_RESHAPE_BACKWARDS | MD_FEATURE_NEW_OFFSET | MD_FEATURE_RECOVERY_BITMAP | MD_FEATURE_CLUSTERED | MD_FEATURE_JOURNAL)
+#define MD_FEATURE_PPL 1024
+#define MD_FEATURE_ALL (MD_FEATURE_BITMAP_OFFSET | MD_FEATURE_RECOVERY_OFFSET | MD_FEATURE_RESHAPE_ACTIVE | MD_FEATURE_BAD_BLOCKS | MD_FEATURE_REPLACEMENT | MD_FEATURE_RESHAPE_BACKWARDS | MD_FEATURE_NEW_OFFSET | MD_FEATURE_RECOVERY_BITMAP | MD_FEATURE_CLUSTERED | MD_FEATURE_JOURNAL | MD_FEATURE_PPL)
 struct r5l_payload_header {
   __le16 type;
   __le16 flags;
@@ -216,4 +223,24 @@ struct r5l_meta_block {
 } __attribute__((__packed__));
 #define R5LOG_VERSION 0x1
 #define R5LOG_MAGIC 0x6433c509
+struct ppl_header_entry {
+  __le64 data_sector;
+  __le32 pp_size;
+  __le32 data_size;
+  __le32 parity_disk;
+  __le32 checksum;
+} __attribute__((__packed__));
+#define PPL_HEADER_SIZE 4096
+#define PPL_HDR_RESERVED 512
+#define PPL_HDR_ENTRY_SPACE (PPL_HEADER_SIZE - PPL_HDR_RESERVED - 4 * sizeof(__le32) - sizeof(__le64))
+#define PPL_HDR_MAX_ENTRIES (PPL_HDR_ENTRY_SPACE / sizeof(struct ppl_header_entry))
+struct ppl_header {
+  __u8 reserved[PPL_HDR_RESERVED];
+  __le32 signature;
+  __le32 padding;
+  __le64 generation;
+  __le32 entries_count;
+  __le32 checksum;
+  struct ppl_header_entry entries[PPL_HDR_MAX_ENTRIES];
+} __attribute__((__packed__));
 #endif

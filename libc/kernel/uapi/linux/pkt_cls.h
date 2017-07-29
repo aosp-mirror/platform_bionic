@@ -20,6 +20,7 @@
 #define __LINUX_PKT_CLS_H
 #include <linux/types.h>
 #include <linux/pkt_sched.h>
+#define TC_COOKIE_MAX_SIZE 16
 enum {
   TCA_ACT_UNSPEC,
   TCA_ACT_KIND,
@@ -27,6 +28,7 @@ enum {
   TCA_ACT_INDEX,
   TCA_ACT_STATS,
   TCA_ACT_PAD,
+  TCA_ACT_COOKIE,
   __TCA_ACT_MAX
 };
 #define TCA_ACT_MAX __TCA_ACT_MAX
@@ -47,7 +49,11 @@ enum {
 #define TC_ACT_QUEUED 5
 #define TC_ACT_REPEAT 6
 #define TC_ACT_REDIRECT 7
-#define TC_ACT_JUMP 0x10000000
+#define __TC_ACT_EXT_SHIFT 28
+#define __TC_ACT_EXT(local) ((local) << __TC_ACT_EXT_SHIFT)
+#define TC_ACT_EXT_VAL_MASK ((1 << __TC_ACT_EXT_SHIFT) - 1)
+#define TC_ACT_EXT_CMP(combined,opcode) (((combined) & (~TC_ACT_EXT_VAL_MASK)) == opcode)
+#define TC_ACT_JUMP __TC_ACT_EXT(1)
 enum {
   TCA_ID_UNSPEC = 0,
   TCA_ID_POLICE = 1,
@@ -97,6 +103,8 @@ enum {
 #define TCA_POLICE_MAX (__TCA_POLICE_MAX - 1)
 #define TCA_CLS_FLAGS_SKIP_HW (1 << 0)
 #define TCA_CLS_FLAGS_SKIP_SW (1 << 1)
+#define TCA_CLS_FLAGS_IN_HW (1 << 2)
+#define TCA_CLS_FLAGS_NOT_IN_HW (1 << 3)
 #define TC_U32_HTID(h) ((h) & 0xFFF00000)
 #define TC_U32_USERHTID(h) (TC_U32_HTID(h) >> 20)
 #define TC_U32_HASH(h) (((h) >> 12) & 0xFF)
@@ -344,6 +352,20 @@ enum {
   TCA_FLOWER_KEY_ICMPV6_CODE_MASK,
   TCA_FLOWER_KEY_ICMPV6_TYPE,
   TCA_FLOWER_KEY_ICMPV6_TYPE_MASK,
+  TCA_FLOWER_KEY_ARP_SIP,
+  TCA_FLOWER_KEY_ARP_SIP_MASK,
+  TCA_FLOWER_KEY_ARP_TIP,
+  TCA_FLOWER_KEY_ARP_TIP_MASK,
+  TCA_FLOWER_KEY_ARP_OP,
+  TCA_FLOWER_KEY_ARP_OP_MASK,
+  TCA_FLOWER_KEY_ARP_SHA,
+  TCA_FLOWER_KEY_ARP_SHA_MASK,
+  TCA_FLOWER_KEY_ARP_THA,
+  TCA_FLOWER_KEY_ARP_THA_MASK,
+  TCA_FLOWER_KEY_MPLS_TTL,
+  TCA_FLOWER_KEY_MPLS_BOS,
+  TCA_FLOWER_KEY_MPLS_TC,
+  TCA_FLOWER_KEY_MPLS_LABEL,
   __TCA_FLOWER_MAX,
 };
 #define TCA_FLOWER_MAX (__TCA_FLOWER_MAX - 1)

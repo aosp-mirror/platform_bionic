@@ -42,6 +42,7 @@ enum {
 #define NBD_FLAG_SEND_FLUSH (1 << 2)
 #define NBD_FLAG_SEND_TRIM (1 << 5)
 #define NBD_FLAG_CAN_MULTI_CONN (1 << 8)
+#define NBD_CFLAG_DESTROY_ON_DISCONNECT (1 << 0)
 #define NBD_REQUEST_MAGIC 0x25609513
 #define NBD_REPLY_MAGIC 0x67446698
 struct nbd_request {

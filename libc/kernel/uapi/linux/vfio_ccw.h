@@ -16,19 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_ION_TEST_H
-#define _UAPI_LINUX_ION_TEST_H
-#include <linux/ioctl.h>
+#ifndef _VFIO_CCW_H_
+#define _VFIO_CCW_H_
 #include <linux/types.h>
-struct ion_test_rw_data {
-  __u64 ptr;
-  __u64 offset;
-  __u64 size;
-  int write;
-  int __padding;
-};
-#define ION_IOC_MAGIC 'I'
-#define ION_IOC_TEST_SET_FD _IO(ION_IOC_MAGIC, 0xf0)
-#define ION_IOC_TEST_DMA_MAPPING _IOW(ION_IOC_MAGIC, 0xf1, struct ion_test_rw_data)
-#define ION_IOC_TEST_KERNEL_MAPPING _IOW(ION_IOC_MAGIC, 0xf2, struct ion_test_rw_data)
+struct ccw_io_region {
+#define ORB_AREA_SIZE 12
+  __u8 orb_area[ORB_AREA_SIZE];
+#define SCSW_AREA_SIZE 12
+  __u8 scsw_area[SCSW_AREA_SIZE];
+#define IRB_AREA_SIZE 96
+  __u8 irb_area[IRB_AREA_SIZE];
+  __u32 ret_code;
+} __packed;
 #endif

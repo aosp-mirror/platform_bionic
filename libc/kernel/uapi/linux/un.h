@@ -24,4 +24,5 @@ struct sockaddr_un {
   __kernel_sa_family_t sun_family;
   char sun_path[UNIX_PATH_MAX];
 };
+#define SIOCUNIXFILE (SIOCPROTOPRIVATE + 0)
 #endif

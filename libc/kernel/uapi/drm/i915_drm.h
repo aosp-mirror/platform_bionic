@@ -158,6 +158,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_I915_OVERLAY_PUT_IMAGE 0x27
 #define DRM_I915_OVERLAY_ATTRS 0x28
 #define DRM_I915_GEM_EXECBUFFER2 0x29
+#define DRM_I915_GEM_EXECBUFFER2_WR DRM_I915_GEM_EXECBUFFER2
 #define DRM_I915_GET_SPRITE_COLORKEY 0x2a
 #define DRM_I915_SET_SPRITE_COLORKEY 0x2b
 #define DRM_I915_GEM_WAIT 0x2c
@@ -170,6 +171,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_I915_GEM_USERPTR 0x33
 #define DRM_I915_GEM_CONTEXT_GETPARAM 0x34
 #define DRM_I915_GEM_CONTEXT_SETPARAM 0x35
+#define DRM_I915_PERF_OPEN 0x36
 #define DRM_IOCTL_I915_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
 #define DRM_IOCTL_I915_FLUSH DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLUSH)
 #define DRM_IOCTL_I915_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLIP)
@@ -190,6 +192,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_IOCTL_I915_GEM_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_INIT, struct drm_i915_gem_init)
 #define DRM_IOCTL_I915_GEM_EXECBUFFER DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_EXECBUFFER, struct drm_i915_gem_execbuffer)
 #define DRM_IOCTL_I915_GEM_EXECBUFFER2 DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_EXECBUFFER2, struct drm_i915_gem_execbuffer2)
+#define DRM_IOCTL_I915_GEM_EXECBUFFER2_WR DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_EXECBUFFER2_WR, struct drm_i915_gem_execbuffer2)
 #define DRM_IOCTL_I915_GEM_PIN DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_PIN, struct drm_i915_gem_pin)
 #define DRM_IOCTL_I915_GEM_UNPIN DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_UNPIN, struct drm_i915_gem_unpin)
 #define DRM_IOCTL_I915_GEM_BUSY DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_BUSY, struct drm_i915_gem_busy)
@@ -222,6 +225,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_IOCTL_I915_GEM_USERPTR DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_USERPTR, struct drm_i915_gem_userptr)
 #define DRM_IOCTL_I915_GEM_CONTEXT_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_GETPARAM, struct drm_i915_gem_context_param)
 #define DRM_IOCTL_I915_GEM_CONTEXT_SETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_SETPARAM, struct drm_i915_gem_context_param)
+#define DRM_IOCTL_I915_PERF_OPEN DRM_IOW(DRM_COMMAND_BASE + DRM_I915_PERF_OPEN, struct drm_i915_perf_open_param)
 typedef struct drm_i915_batchbuffer {
   int start;
   int used;
@@ -285,6 +289,9 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_MIN_EU_IN_POOL 39
 #define I915_PARAM_MMAP_GTT_VERSION 40
 #define I915_PARAM_HAS_SCHEDULER 41
+#define I915_PARAM_HUC_STATUS 42
+#define I915_PARAM_HAS_EXEC_ASYNC 43
+#define I915_PARAM_HAS_EXEC_FENCE 44
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -418,7 +425,8 @@ struct drm_i915_gem_exec_object2 {
 #define EXEC_OBJECT_SUPPORTS_48B_ADDRESS (1 << 3)
 #define EXEC_OBJECT_PINNED (1 << 4)
 #define EXEC_OBJECT_PAD_TO_SIZE (1 << 5)
-#define __EXEC_OBJECT_UNKNOWN_FLAGS - (EXEC_OBJECT_PAD_TO_SIZE << 1)
+#define EXEC_OBJECT_ASYNC (1 << 6)
+#define __EXEC_OBJECT_UNKNOWN_FLAGS - (EXEC_OBJECT_ASYNC << 1)
   __u64 flags;
   union {
     __u64 rsvd1;
@@ -460,7 +468,9 @@ struct drm_i915_gem_execbuffer2 {
 #define I915_EXEC_BSD_RING1 (1 << I915_EXEC_BSD_SHIFT)
 #define I915_EXEC_BSD_RING2 (2 << I915_EXEC_BSD_SHIFT)
 #define I915_EXEC_RESOURCE_STREAMER (1 << 15)
-#define __I915_EXEC_UNKNOWN_FLAGS - (I915_EXEC_RESOURCE_STREAMER << 1)
+#define I915_EXEC_FENCE_IN (1 << 16)
+#define I915_EXEC_FENCE_OUT (1 << 17)
+#define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_OUT << 1))
 #define I915_EXEC_CONTEXT_ID_MASK (0xffffffff)
 #define i915_execbuffer2_set_context_id(eb2,context) (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
 #define i915_execbuffer2_get_context_id(eb2) ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
@@ -629,7 +639,47 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_NO_ZEROMAP 0x2
 #define I915_CONTEXT_PARAM_GTT_SIZE 0x3
 #define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE 0x4
+#define I915_CONTEXT_PARAM_BANNABLE 0x5
   __u64 value;
+};
+enum drm_i915_oa_format {
+  I915_OA_FORMAT_A13 = 1,
+  I915_OA_FORMAT_A29,
+  I915_OA_FORMAT_A13_B8_C8,
+  I915_OA_FORMAT_B4_C8,
+  I915_OA_FORMAT_A45_B8_C8,
+  I915_OA_FORMAT_B4_C8_A16,
+  I915_OA_FORMAT_C4_B8,
+  I915_OA_FORMAT_MAX
+};
+enum drm_i915_perf_property_id {
+  DRM_I915_PERF_PROP_CTX_HANDLE = 1,
+  DRM_I915_PERF_PROP_SAMPLE_OA,
+  DRM_I915_PERF_PROP_OA_METRICS_SET,
+  DRM_I915_PERF_PROP_OA_FORMAT,
+  DRM_I915_PERF_PROP_OA_EXPONENT,
+  DRM_I915_PERF_PROP_MAX
+};
+struct drm_i915_perf_open_param {
+  __u32 flags;
+#define I915_PERF_FLAG_FD_CLOEXEC (1 << 0)
+#define I915_PERF_FLAG_FD_NONBLOCK (1 << 1)
+#define I915_PERF_FLAG_DISABLED (1 << 2)
+  __u32 num_properties;
+  __u64 properties_ptr;
+};
+#define I915_PERF_IOCTL_ENABLE _IO('i', 0x0)
+#define I915_PERF_IOCTL_DISABLE _IO('i', 0x1)
+struct drm_i915_perf_record_header {
+  __u32 type;
+  __u16 pad;
+  __u16 size;
+};
+enum drm_i915_perf_record_type {
+  DRM_I915_PERF_RECORD_SAMPLE = 1,
+  DRM_I915_PERF_RECORD_OA_REPORT_LOST = 2,
+  DRM_I915_PERF_RECORD_OA_BUFFER_LOST = 3,
+  DRM_I915_PERF_RECORD_MAX
 };
 #ifdef __cplusplus
 #endif
