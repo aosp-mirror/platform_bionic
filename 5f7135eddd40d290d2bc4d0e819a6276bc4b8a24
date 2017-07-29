@@ -34,6 +34,24 @@
       "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc09746a_a006f6b1",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-07-29T22:26:53Z",
+      "side": 1,
+      "message": "If we do not want to remove them - we should probably move them out of ndk-cruft...",
+      "parentUuid": "e0ffecae_623aed47",
+      "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
