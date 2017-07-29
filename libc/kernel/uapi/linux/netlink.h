@@ -42,6 +42,7 @@
 #define NETLINK_ECRYPTFS 19
 #define NETLINK_RDMA 20
 #define NETLINK_CRYPTO 21
+#define NETLINK_SMC 22
 #define NETLINK_INET_DIAG NETLINK_SOCK_DIAG
 #define MAX_LINKS 32
 struct sockaddr_nl {
@@ -57,12 +58,12 @@ struct nlmsghdr {
   __u32 nlmsg_seq;
   __u32 nlmsg_pid;
 };
-#define NLM_F_REQUEST 1
-#define NLM_F_MULTI 2
-#define NLM_F_ACK 4
-#define NLM_F_ECHO 8
-#define NLM_F_DUMP_INTR 16
-#define NLM_F_DUMP_FILTERED 32
+#define NLM_F_REQUEST 0x01
+#define NLM_F_MULTI 0x02
+#define NLM_F_ACK 0x04
+#define NLM_F_ECHO 0x08
+#define NLM_F_DUMP_INTR 0x10
+#define NLM_F_DUMP_FILTERED 0x20
 #define NLM_F_ROOT 0x100
 #define NLM_F_MATCH 0x200
 #define NLM_F_ATOMIC 0x400
@@ -71,6 +72,8 @@ struct nlmsghdr {
 #define NLM_F_EXCL 0x200
 #define NLM_F_CREATE 0x400
 #define NLM_F_APPEND 0x800
+#define NLM_F_CAPPED 0x100
+#define NLM_F_ACK_TLVS 0x200
 #define NLMSG_ALIGNTO 4U
 #define NLMSG_ALIGN(len) (((len) + NLMSG_ALIGNTO - 1) & ~(NLMSG_ALIGNTO - 1))
 #define NLMSG_HDRLEN ((int) NLMSG_ALIGN(sizeof(struct nlmsghdr)))
@@ -89,6 +92,14 @@ struct nlmsgerr {
   int error;
   struct nlmsghdr msg;
 };
+enum nlmsgerr_attrs {
+  NLMSGERR_ATTR_UNUSED,
+  NLMSGERR_ATTR_MSG,
+  NLMSGERR_ATTR_OFFS,
+  NLMSGERR_ATTR_COOKIE,
+  __NLMSGERR_ATTR_MAX,
+  NLMSGERR_ATTR_MAX = __NLMSGERR_ATTR_MAX - 1
+};
 #define NETLINK_ADD_MEMBERSHIP 1
 #define NETLINK_DROP_MEMBERSHIP 2
 #define NETLINK_PKTINFO 3
@@ -99,6 +110,7 @@ struct nlmsgerr {
 #define NETLINK_LISTEN_ALL_NSID 8
 #define NETLINK_LIST_MEMBERSHIPS 9
 #define NETLINK_CAP_ACK 10
+#define NETLINK_EXT_ACK 11
 struct nl_pktinfo {
   __u32 group;
 };

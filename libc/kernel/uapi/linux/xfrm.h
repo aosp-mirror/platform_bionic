@@ -257,6 +257,7 @@ enum xfrm_attr_type_t {
   XFRMA_PROTO,
   XFRMA_ADDRESS_FILTER,
   XFRMA_PAD,
+  XFRMA_OFFLOAD_DEV,
   __XFRMA_MAX
 #define XFRMA_MAX (__XFRMA_MAX - 1)
 };
@@ -418,6 +419,12 @@ struct xfrm_address_filter {
   __u8 splen;
   __u8 dplen;
 };
+struct xfrm_user_offload {
+  int ifindex;
+  __u8 flags;
+};
+#define XFRM_OFFLOAD_IPV6 1
+#define XFRM_OFFLOAD_INBOUND 2
 #define XFRMGRP_ACQUIRE 1
 #define XFRMGRP_EXPIRE 2
 #define XFRMGRP_SA 4

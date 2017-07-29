@@ -466,6 +466,12 @@ struct tc_drr_stats {
 };
 #define TC_QOPT_BITMASK 15
 #define TC_QOPT_MAX_QUEUE 16
+enum {
+  TC_MQPRIO_HW_OFFLOAD_NONE,
+  TC_MQPRIO_HW_OFFLOAD_TCS,
+  __TC_MQPRIO_HW_OFFLOAD_MAX
+};
+#define TC_MQPRIO_HW_OFFLOAD_MAX (__TC_MQPRIO_HW_OFFLOAD_MAX - 1)
 struct tc_mqprio_qopt {
   __u8 num_tc;
   __u8 prio_tc_map[TC_QOPT_BITMASK + 1];

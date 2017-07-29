@@ -47,7 +47,7 @@ enum nfqnl_vlan_attr {
   NFQA_VLAN_TCI,
   __NFQA_VLAN_MAX,
 };
-#define NFQA_VLAN_MAX (__NFQA_VLAN_MAX + 1)
+#define NFQA_VLAN_MAX (__NFQA_VLAN_MAX - 1)
 enum nfqnl_attr_type {
   NFQA_UNSPEC,
   NFQA_PACKET_HDR,

@@ -20,9 +20,10 @@
 #define _LINUX_USERFAULTFD_H
 #include <linux/types.h>
 #define UFFD_API ((__u64) 0xAA)
-#define UFFD_API_FEATURES (0)
+#define UFFD_API_FEATURES (UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM)
 #define UFFD_API_IOCTLS ((__u64) 1 << _UFFDIO_REGISTER | (__u64) 1 << _UFFDIO_UNREGISTER | (__u64) 1 << _UFFDIO_API)
 #define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE)
+#define UFFD_API_RANGE_IOCTLS_BASIC ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY)
 #define _UFFDIO_REGISTER (0x00)
 #define _UFFDIO_UNREGISTER (0x01)
 #define _UFFDIO_WAKE (0x02)
@@ -47,6 +48,18 @@ struct uffd_msg {
       __u64 address;
     } pagefault;
     struct {
+      __u32 ufd;
+    } fork;
+    struct {
+      __u64 from;
+      __u64 to;
+      __u64 len;
+    } remap;
+    struct {
+      __u64 start;
+      __u64 end;
+    } remove;
+    struct {
       __u64 reserved1;
       __u64 reserved2;
       __u64 reserved3;
@@ -54,10 +67,21 @@ struct uffd_msg {
   } arg;
 } __packed;
 #define UFFD_EVENT_PAGEFAULT 0x12
+#define UFFD_EVENT_FORK 0x13
+#define UFFD_EVENT_REMAP 0x14
+#define UFFD_EVENT_REMOVE 0x15
+#define UFFD_EVENT_UNMAP 0x16
 #define UFFD_PAGEFAULT_FLAG_WRITE (1 << 0)
 #define UFFD_PAGEFAULT_FLAG_WP (1 << 1)
 struct uffdio_api {
   __u64 api;
+#define UFFD_FEATURE_PAGEFAULT_FLAG_WP (1 << 0)
+#define UFFD_FEATURE_EVENT_FORK (1 << 1)
+#define UFFD_FEATURE_EVENT_REMAP (1 << 2)
+#define UFFD_FEATURE_EVENT_REMOVE (1 << 3)
+#define UFFD_FEATURE_MISSING_HUGETLBFS (1 << 4)
+#define UFFD_FEATURE_MISSING_SHMEM (1 << 5)
+#define UFFD_FEATURE_EVENT_UNMAP (1 << 6)
   __u64 features;
   __u64 ioctls;
 };

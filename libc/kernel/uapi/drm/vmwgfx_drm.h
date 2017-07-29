@@ -26,6 +26,7 @@
 #define DRM_VMW_GET_PARAM 0
 #define DRM_VMW_ALLOC_DMABUF 1
 #define DRM_VMW_UNREF_DMABUF 2
+#define DRM_VMW_HANDLE_CLOSE 2
 #define DRM_VMW_CURSOR_BYPASS 3
 #define DRM_VMW_CONTROL_STREAM 4
 #define DRM_VMW_CLAIM_STREAM 5
@@ -313,6 +314,10 @@ enum drm_vmw_extended_context {
 union drm_vmw_extended_context_arg {
   enum drm_vmw_extended_context req;
   struct drm_vmw_context_arg rep;
+};
+struct drm_vmw_handle_close_arg {
+  __u32 handle;
+  __u32 pad64;
 };
 #ifdef __cplusplus
 #endif
