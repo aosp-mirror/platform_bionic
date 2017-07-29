@@ -137,6 +137,8 @@
 #include <bits/posix_limits.h>
 
 #define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+#define LOGIN_NAME_MAX 256
+#define TTY_NAME_MAX 32
 
 #define _POSIX_VERSION 200809L
 #define _POSIX2_VERSION _POSIX_VERSION
