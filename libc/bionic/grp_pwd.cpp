@@ -467,7 +467,16 @@ int getgrouplist(const char* /*user*/, gid_t group, gid_t* groups, int* ngroups)
 
 char* getlogin() { // NOLINT: implementing bad function.
   passwd *pw = getpwuid(getuid()); // NOLINT: implementing bad function in terms of bad function.
-  return (pw != NULL) ? pw->pw_name : NULL;
+  return pw ? pw->pw_name : nullptr;
+}
+
+int getlogin_r(char* buf, size_t size) {
+  char* login = getlogin();
+  if (login == nullptr) return errno;
+  size_t login_length = strlen(login) + 1;
+  if (login_length > size) return ERANGE;
+  memcpy(buf, login, login_length);
+  return 0;
 }
 
 void setpwent() {

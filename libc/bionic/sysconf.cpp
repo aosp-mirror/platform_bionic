@@ -135,12 +135,12 @@ long sysconf(int name) {
     case _SC_TIMERS:            return _POSIX_TIMERS;
     case _SC_GETGR_R_SIZE_MAX:  return 1024;
     case _SC_GETPW_R_SIZE_MAX:  return 1024;
-    case _SC_LOGIN_NAME_MAX:    return 256;   // Seems default on linux.
+    case _SC_LOGIN_NAME_MAX:    return LOGIN_NAME_MAX;
     case _SC_THREAD_DESTRUCTOR_ITERATIONS: return PTHREAD_DESTRUCTOR_ITERATIONS;
     case _SC_THREAD_KEYS_MAX:   return PTHREAD_KEYS_MAX;
     case _SC_THREAD_STACK_MIN:    return PTHREAD_STACK_MIN;
     case _SC_THREAD_THREADS_MAX:  return -1; // No specific limit.
-    case _SC_TTY_NAME_MAX:        return 32; // Seems default on linux.
+    case _SC_TTY_NAME_MAX:        return TTY_NAME_MAX;
     case _SC_THREADS:             return _POSIX_THREADS;
     case _SC_THREAD_ATTR_STACKADDR:   return _POSIX_THREAD_ATTR_STACKADDR;
     case _SC_THREAD_ATTR_STACKSIZE:   return _POSIX_THREAD_ATTR_STACKSIZE;
