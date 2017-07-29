@@ -386,10 +386,11 @@
 #define __NR_pkey_mprotect (__NR_Linux + 363)
 #define __NR_pkey_alloc (__NR_Linux + 364)
 #define __NR_pkey_free (__NR_Linux + 365)
-#define __NR_Linux_syscalls 365
+#define __NR_statx (__NR_Linux + 366)
+#define __NR_Linux_syscalls 366
 #endif
 #define __NR_O32_Linux 4000
-#define __NR_O32_Linux_syscalls 365
+#define __NR_O32_Linux_syscalls 366
 #if _MIPS_SIM == _MIPS_SIM_ABI64
 #define __NR_Linux 5000
 #define __NR_read (__NR_Linux + 0)
@@ -717,10 +718,11 @@
 #define __NR_pkey_mprotect (__NR_Linux + 323)
 #define __NR_pkey_alloc (__NR_Linux + 324)
 #define __NR_pkey_free (__NR_Linux + 325)
-#define __NR_Linux_syscalls 325
+#define __NR_statx (__NR_Linux + 326)
+#define __NR_Linux_syscalls 326
 #endif
 #define __NR_64_Linux 5000
-#define __NR_64_Linux_syscalls 325
+#define __NR_64_Linux_syscalls 326
 #if _MIPS_SIM == _MIPS_SIM_NABI32
 #define __NR_Linux 6000
 #define __NR_read (__NR_Linux + 0)
@@ -1052,8 +1054,9 @@
 #define __NR_pkey_mprotect (__NR_Linux + 327)
 #define __NR_pkey_alloc (__NR_Linux + 328)
 #define __NR_pkey_free (__NR_Linux + 329)
-#define __NR_Linux_syscalls 329
+#define __NR_statx (__NR_Linux + 330)
+#define __NR_Linux_syscalls 330
 #endif
 #define __NR_N32_Linux 6000
-#define __NR_N32_Linux_syscalls 329
+#define __NR_N32_Linux_syscalls 330
 #endif

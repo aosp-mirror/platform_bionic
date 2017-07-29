@@ -21,6 +21,7 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/sockios.h>
+#include <linux/in6.h>
 #define MRT6_BASE 200
 #define MRT6_INIT (MRT6_BASE)
 #define MRT6_DONE (MRT6_BASE + 1)

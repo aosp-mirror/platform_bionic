@@ -57,6 +57,10 @@ struct bpf_insn {
   __s16 off;
   __s32 imm;
 };
+struct bpf_lpm_trie_key {
+  __u32 prefixlen;
+  __u8 data[0];
+};
 enum bpf_cmd {
   BPF_MAP_CREATE,
   BPF_MAP_LOOKUP_ELEM,
@@ -68,6 +72,7 @@ enum bpf_cmd {
   BPF_OBJ_GET,
   BPF_PROG_ATTACH,
   BPF_PROG_DETACH,
+  BPF_PROG_TEST_RUN,
 };
 enum bpf_map_type {
   BPF_MAP_TYPE_UNSPEC,
@@ -81,6 +86,9 @@ enum bpf_map_type {
   BPF_MAP_TYPE_CGROUP_ARRAY,
   BPF_MAP_TYPE_LRU_HASH,
   BPF_MAP_TYPE_LRU_PERCPU_HASH,
+  BPF_MAP_TYPE_LPM_TRIE,
+  BPF_MAP_TYPE_ARRAY_OF_MAPS,
+  BPF_MAP_TYPE_HASH_OF_MAPS,
 };
 enum bpf_prog_type {
   BPF_PROG_TYPE_UNSPEC,
@@ -105,6 +113,7 @@ enum bpf_attach_type {
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
 #define BPF_F_ALLOW_OVERRIDE (1U << 0)
+#define BPF_F_STRICT_ALIGNMENT (1U << 0)
 #define BPF_PSEUDO_MAP_FD 1
 #define BPF_ANY 0
 #define BPF_NOEXIST 1
@@ -118,6 +127,7 @@ union bpf_attr {
     __u32 value_size;
     __u32 max_entries;
     __u32 map_flags;
+    __u32 inner_map_fd;
   };
   struct {
     __u32 map_fd;
@@ -137,6 +147,7 @@ union bpf_attr {
     __u32 log_size;
     __aligned_u64 log_buf;
     __u32 kern_version;
+    __u32 prog_flags;
   };
   struct {
     __aligned_u64 pathname;
@@ -148,8 +159,18 @@ union bpf_attr {
     __u32 attach_type;
     __u32 attach_flags;
   };
+  struct {
+    __u32 prog_fd;
+    __u32 retval;
+    __u32 data_size_in;
+    __u32 data_size_out;
+    __aligned_u64 data_in;
+    __aligned_u64 data_out;
+    __u32 repeat;
+    __u32 duration;
+  } test;
 } __attribute__((aligned(8)));
-#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head),
+#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head), FN(probe_read_str), FN(get_socket_cookie), FN(get_socket_uid),
 #define __BPF_ENUM_FN(x) BPF_FUNC_ ##x
 enum bpf_func_id {
   __BPF_FUNC_MAPPER(__BPF_ENUM_FN) __BPF_FUNC_MAX_ID,
@@ -160,6 +181,7 @@ enum bpf_func_id {
 #define BPF_F_HDR_FIELD_MASK 0xfULL
 #define BPF_F_PSEUDO_HDR (1ULL << 4)
 #define BPF_F_MARK_MANGLED_0 (1ULL << 5)
+#define BPF_F_MARK_ENFORCE (1ULL << 6)
 #define BPF_F_INGRESS (1ULL << 0)
 #define BPF_F_TUNINFO_IPV6 (1ULL << 0)
 #define BPF_F_SKIP_FIELD_MASK 0xffULL
@@ -189,6 +211,7 @@ struct __sk_buff {
   __u32 tc_classid;
   __u32 data;
   __u32 data_end;
+  __u32 napi_id;
 };
 struct bpf_tunnel_key {
   __u32 tunnel_id;

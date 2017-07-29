@@ -30,7 +30,7 @@ enum ip_conntrack_info {
 };
 #define NF_CT_STATE_INVALID_BIT (1 << 0)
 #define NF_CT_STATE_BIT(ctinfo) (1 << ((ctinfo) % IP_CT_IS_REPLY + 1))
-#define NF_CT_STATE_UNTRACKED_BIT (1 << (IP_CT_NUMBER + 1))
+#define NF_CT_STATE_UNTRACKED_BIT (1 << (IP_CT_UNTRACKED + 1))
 enum ip_conntrack_status {
   IPS_EXPECTED_BIT = 0,
   IPS_EXPECTED = (1 << IPS_EXPECTED_BIT),
@@ -62,6 +62,8 @@ enum ip_conntrack_status {
   IPS_UNTRACKED = (1 << IPS_UNTRACKED_BIT),
   IPS_HELPER_BIT = 13,
   IPS_HELPER = (1 << IPS_HELPER_BIT),
+  IPS_UNCHANGEABLE_MASK = (IPS_NAT_DONE_MASK | IPS_NAT_MASK | IPS_EXPECTED | IPS_CONFIRMED | IPS_DYING | IPS_SEQ_ADJUST | IPS_TEMPLATE),
+  __IPS_MAX_BIT = 14,
 };
 enum ip_conntrack_events {
   IPCT_NEW,

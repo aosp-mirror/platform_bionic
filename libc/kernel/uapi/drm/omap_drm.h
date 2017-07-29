@@ -23,8 +23,8 @@
 #endif
 #define OMAP_PARAM_CHIPSET_ID 1
 struct drm_omap_param {
-  uint64_t param;
-  uint64_t value;
+  __u64 param;
+  __u64 value;
 };
 #define OMAP_BO_SCANOUT 0x00000001
 #define OMAP_BO_CACHE_MASK 0x00000006
@@ -37,38 +37,38 @@ struct drm_omap_param {
 #define OMAP_BO_TILED_32 0x00000300
 #define OMAP_BO_TILED (OMAP_BO_TILED_8 | OMAP_BO_TILED_16 | OMAP_BO_TILED_32)
 union omap_gem_size {
-  uint32_t bytes;
+  __u32 bytes;
   struct {
-    uint16_t width;
-    uint16_t height;
+    __u16 width;
+    __u16 height;
   } tiled;
 };
 struct drm_omap_gem_new {
   union omap_gem_size size;
-  uint32_t flags;
-  uint32_t handle;
-  uint32_t __pad;
+  __u32 flags;
+  __u32 handle;
+  __u32 __pad;
 };
 enum omap_gem_op {
   OMAP_GEM_READ = 0x01,
   OMAP_GEM_WRITE = 0x02,
 };
 struct drm_omap_gem_cpu_prep {
-  uint32_t handle;
-  uint32_t op;
+  __u32 handle;
+  __u32 op;
 };
 struct drm_omap_gem_cpu_fini {
-  uint32_t handle;
-  uint32_t op;
-  uint32_t nregions;
-  uint32_t __pad;
+  __u32 handle;
+  __u32 op;
+  __u32 nregions;
+  __u32 __pad;
 };
 struct drm_omap_gem_info {
-  uint32_t handle;
-  uint32_t pad;
-  uint64_t offset;
-  uint32_t size;
-  uint32_t __pad;
+  __u32 handle;
+  __u32 pad;
+  __u64 offset;
+  __u32 size;
+  __u32 __pad;
 };
 #define DRM_OMAP_GET_PARAM 0x00
 #define DRM_OMAP_SET_PARAM 0x01

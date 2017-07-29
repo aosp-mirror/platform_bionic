@@ -57,6 +57,7 @@ enum v4l2_buf_type {
   V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE = 10,
   V4L2_BUF_TYPE_SDR_CAPTURE = 11,
   V4L2_BUF_TYPE_SDR_OUTPUT = 12,
+  V4L2_BUF_TYPE_META_CAPTURE = 13,
   V4L2_BUF_TYPE_PRIVATE = 0x80,
 };
 #define V4L2_TYPE_IS_MULTIPLANAR(type) ((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
@@ -123,7 +124,7 @@ enum v4l2_quantization {
   V4L2_QUANTIZATION_FULL_RANGE = 1,
   V4L2_QUANTIZATION_LIM_RANGE = 2,
 };
-#define V4L2_MAP_QUANTIZATION_DEFAULT(is_rgb_or_hsv,colsp,ycbcr_enc) (((is_rgb_or_hsv) && (colsp) == V4L2_COLORSPACE_BT2020) ? V4L2_QUANTIZATION_LIM_RANGE : (((is_rgb_or_hsv) || (ycbcr_enc) == V4L2_YCBCR_ENC_XV601 || (ycbcr_enc) == V4L2_YCBCR_ENC_XV709 || (colsp) == V4L2_COLORSPACE_JPEG) ? V4L2_QUANTIZATION_FULL_RANGE : V4L2_QUANTIZATION_LIM_RANGE))
+#define V4L2_MAP_QUANTIZATION_DEFAULT(is_rgb_or_hsv,colsp,ycbcr_enc) (((is_rgb_or_hsv) && (colsp) == V4L2_COLORSPACE_BT2020) ? V4L2_QUANTIZATION_LIM_RANGE : (((is_rgb_or_hsv) || (colsp) == V4L2_COLORSPACE_JPEG) ? V4L2_QUANTIZATION_FULL_RANGE : V4L2_QUANTIZATION_LIM_RANGE))
 enum v4l2_priority {
   V4L2_PRIORITY_UNSET = 0,
   V4L2_PRIORITY_BACKGROUND = 1,
@@ -172,6 +173,7 @@ struct v4l2_capability {
 #define V4L2_CAP_SDR_CAPTURE 0x00100000
 #define V4L2_CAP_EXT_PIX_FORMAT 0x00200000
 #define V4L2_CAP_SDR_OUTPUT 0x00400000
+#define V4L2_CAP_META_CAPTURE 0x00800000
 #define V4L2_CAP_READWRITE 0x01000000
 #define V4L2_CAP_ASYNCIO 0x02000000
 #define V4L2_CAP_STREAMING 0x04000000
@@ -338,6 +340,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Y12I v4l2_fourcc('Y', '1', '2', 'I')
 #define V4L2_PIX_FMT_Z16 v4l2_fourcc('Z', '1', '6', ' ')
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
+#define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
 #define V4L2_SDR_FMT_CU8 v4l2_fourcc('C', 'U', '0', '8')
 #define V4L2_SDR_FMT_CU16LE v4l2_fourcc('C', 'U', '1', '6')
 #define V4L2_SDR_FMT_CS8 v4l2_fourcc('C', 'S', '0', '8')
@@ -347,6 +350,8 @@ struct v4l2_pix_format {
 #define V4L2_TCH_FMT_DELTA_TD08 v4l2_fourcc('T', 'D', '0', '8')
 #define V4L2_TCH_FMT_TU16 v4l2_fourcc('T', 'U', '1', '6')
 #define V4L2_TCH_FMT_TU08 v4l2_fourcc('T', 'U', '0', '8')
+#define V4L2_META_FMT_VSP1_HGO v4l2_fourcc('V', 'S', 'P', 'H')
+#define V4L2_META_FMT_VSP1_HGT v4l2_fourcc('V', 'S', 'P', 'T')
 #define V4L2_PIX_FMT_PRIV_MAGIC 0xfeedcafe
 #define V4L2_PIX_FMT_FLAG_PREMUL_ALPHA 0x00000001
 struct v4l2_fmtdesc {
@@ -865,6 +870,7 @@ struct v4l2_querymenu {
 #define V4L2_CTRL_FLAG_VOLATILE 0x0080
 #define V4L2_CTRL_FLAG_HAS_PAYLOAD 0x0100
 #define V4L2_CTRL_FLAG_EXECUTE_ON_WRITE 0x0200
+#define V4L2_CTRL_FLAG_MODIFY_LAYOUT 0x0400
 #define V4L2_CTRL_FLAG_NEXT_CTRL 0x80000000
 #define V4L2_CTRL_FLAG_NEXT_COMPOUND 0x40000000
 #define V4L2_CID_MAX_CTRLS 1024
@@ -1128,6 +1134,10 @@ struct v4l2_sdr_format {
   __u32 buffersize;
   __u8 reserved[24];
 } __attribute__((packed));
+struct v4l2_meta_format {
+  __u32 dataformat;
+  __u32 buffersize;
+} __attribute__((packed));
 struct v4l2_format {
   __u32 type;
   union {
@@ -1137,6 +1147,7 @@ struct v4l2_format {
     struct v4l2_vbi_format vbi;
     struct v4l2_sliced_vbi_format sliced;
     struct v4l2_sdr_format sdr;
+    struct v4l2_meta_format meta;
     __u8 raw_data[200];
   } fmt;
 };

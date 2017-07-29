@@ -50,7 +50,8 @@
 #define PORT_ALTR_16550_F128 28
 #define PORT_RT2880 29
 #define PORT_16550A_FSL64 30
-#define PORT_MAX_8250 30
+#define PORT_DA830 31
+#define PORT_MAX_8250 31
 #define PORT_PXA 31
 #define PORT_AMBA 32
 #define PORT_CLPS711X 33

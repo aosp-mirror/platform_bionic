@@ -37,6 +37,7 @@ struct drm_msm_timespec {
 #define MSM_PARAM_CHIP_ID 0x03
 #define MSM_PARAM_MAX_FREQ 0x04
 #define MSM_PARAM_TIMESTAMP 0x05
+#define MSM_PARAM_GMEM_BASE 0x06
 struct drm_msm_param {
   __u32 pipe;
   __u32 param;
