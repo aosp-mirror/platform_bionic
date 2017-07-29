@@ -56,6 +56,7 @@ struct vfio_device_info {
 #define VFIO_DEVICE_FLAGS_PCI (1 << 1)
 #define VFIO_DEVICE_FLAGS_PLATFORM (1 << 2)
 #define VFIO_DEVICE_FLAGS_AMBA (1 << 3)
+#define VFIO_DEVICE_FLAGS_CCW (1 << 4)
   __u32 num_regions;
   __u32 num_irqs;
 };
@@ -63,6 +64,7 @@ struct vfio_device_info {
 #define VFIO_DEVICE_API_PCI_STRING "vfio-pci"
 #define VFIO_DEVICE_API_PLATFORM_STRING "vfio-platform"
 #define VFIO_DEVICE_API_AMBA_STRING "vfio-amba"
+#define VFIO_DEVICE_API_CCW_STRING "vfio-ccw"
 struct vfio_region_info {
   __u32 argsz;
   __u32 flags;
@@ -146,6 +148,14 @@ enum {
   VFIO_PCI_ERR_IRQ_INDEX,
   VFIO_PCI_REQ_IRQ_INDEX,
   VFIO_PCI_NUM_IRQS
+};
+enum {
+  VFIO_CCW_CONFIG_REGION_INDEX,
+  VFIO_CCW_NUM_REGIONS
+};
+enum {
+  VFIO_CCW_IO_IRQ_INDEX,
+  VFIO_CCW_NUM_IRQS
 };
 struct vfio_pci_dependent_device {
   __u32 group_id;

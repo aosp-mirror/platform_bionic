@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _LINUX_MQUEUE_H
 #define _LINUX_MQUEUE_H
+#include <linux/types.h>
 #define MQ_PRIO_MAX 32768
 #define MQ_BYTES_MAX 819200
 struct mq_attr {

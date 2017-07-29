@@ -20,9 +20,10 @@
 #define _UAPI_SERIO_H
 #include <linux/ioctl.h>
 #define SPIOCSTYPE _IOW('q', 0x01, unsigned long)
-#define SERIO_TIMEOUT 1
-#define SERIO_PARITY 2
-#define SERIO_FRAME 4
+#define SERIO_TIMEOUT BIT(0)
+#define SERIO_PARITY BIT(1)
+#define SERIO_FRAME BIT(2)
+#define SERIO_OOB_DATA BIT(3)
 #define SERIO_XT 0x00
 #define SERIO_8042 0x01
 #define SERIO_RS232 0x02
@@ -74,4 +75,5 @@
 #define SERIO_WACOM_IV 0x3e
 #define SERIO_EGALAX 0x3f
 #define SERIO_PULSE8_CEC 0x40
+#define SERIO_RAINSHADOW_CEC 0x41
 #endif

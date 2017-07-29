@@ -22,4 +22,6 @@
 #define NSIO 0xb7
 #define NS_GET_USERNS _IO(NSIO, 0x1)
 #define NS_GET_PARENT _IO(NSIO, 0x2)
+#define NS_GET_NSTYPE _IO(NSIO, 0x3)
+#define NS_GET_OWNER_UID _IO(NSIO, 0x4)
 #endif
