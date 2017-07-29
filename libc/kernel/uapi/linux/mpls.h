@@ -40,4 +40,21 @@ struct mpls_label {
 #define MPLS_LABEL_OAMALERT 14
 #define MPLS_LABEL_EXTENSION 15
 #define MPLS_LABEL_FIRST_UNRESERVED 16
+enum {
+  MPLS_STATS_UNSPEC,
+  MPLS_STATS_LINK,
+  __MPLS_STATS_MAX,
+};
+#define MPLS_STATS_MAX (__MPLS_STATS_MAX - 1)
+struct mpls_link_stats {
+  __u64 rx_packets;
+  __u64 tx_packets;
+  __u64 rx_bytes;
+  __u64 tx_bytes;
+  __u64 rx_errors;
+  __u64 tx_errors;
+  __u64 rx_dropped;
+  __u64 tx_dropped;
+  __u64 rx_noroute;
+};
 #endif

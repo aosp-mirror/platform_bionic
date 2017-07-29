@@ -42,7 +42,6 @@
 #include <linux/screen_info.h>
 #include <linux/apm_bios.h>
 #include <linux/edd.h>
-#include <asm/e820.h>
 #include <asm/ist.h>
 #include <video/edid.h>
 struct setup_data {
@@ -63,7 +62,7 @@ struct setup_header {
   __u32 header;
   __u16 version;
   __u32 realmode_swtch;
-  __u16 start_sys;
+  __u16 start_sys_seg;
   __u16 kernel_version;
   __u8 type_of_loader;
   __u8 loadflags;
@@ -111,6 +110,12 @@ struct efi_info {
   __u32 efi_systab_hi;
   __u32 efi_memmap_hi;
 };
+#define E820_MAX_ENTRIES_ZEROPAGE 128
+struct boot_e820_entry {
+  __u64 addr;
+  __u64 size;
+  __u32 type;
+} __attribute__((packed));
 struct boot_params {
   struct screen_info screen_info;
   struct apm_bios_info apm_bios_info;
@@ -134,13 +139,14 @@ struct boot_params {
   __u8 eddbuf_entries;
   __u8 edd_mbr_sig_buf_entries;
   __u8 kbd_status;
-  __u8 _pad5[3];
+  __u8 secure_boot;
+  __u8 _pad5[2];
   __u8 sentinel;
   __u8 _pad6[1];
   struct setup_header hdr;
   __u8 _pad7[0x290 - 0x1f1 - sizeof(struct setup_header)];
   __u32 edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];
-  struct e820entry e820_map[E820MAX];
+  struct boot_e820_entry e820_table[E820_MAX_ENTRIES_ZEROPAGE];
   __u8 _pad8[48];
   struct edd_info eddbuf[EDDMAXNR];
   __u8 _pad9[276];

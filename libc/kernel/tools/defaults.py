@@ -84,6 +84,8 @@ kernel_token_replacements = {
     "epoll_event": "__kernel_uapi_epoll_event",
     # This causes problems when trying to export the headers for the ndk.
     "__attribute_const__": "__attribute__((__const__))",
+    # There is a mismatch between upstream and our kernels for this structure.
+    "binder_fd_array_object": "__kernel_binder_fd_array_object",
     }
 
 # This is the set of known static inline functions that we want to keep

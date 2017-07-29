@@ -47,6 +47,14 @@ struct kvm_steal_time {
   __u8 u8_pad[3];
   __u32 pad[11];
 };
+#define KVM_CLOCK_PAIRING_WALLCLOCK 0
+struct kvm_clock_pairing {
+  __s64 sec;
+  __s64 nsec;
+  __u64 tsc;
+  __u32 flags;
+  __u32 pad[9];
+};
 #define KVM_STEAL_ALIGNMENT_BITS 5
 #define KVM_STEAL_VALID_BITS ((- 1ULL << (KVM_STEAL_ALIGNMENT_BITS + 1)))
 #define KVM_STEAL_RESERVED_MASK (((1 << KVM_STEAL_ALIGNMENT_BITS) - 1) << 1)
