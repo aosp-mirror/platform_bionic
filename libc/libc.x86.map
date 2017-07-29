@@ -1298,6 +1298,11 @@ LIBC_O {
     wctrans_l; # introduced=26
 } LIBC_N;
 
+LIBC_P {
+  global:
+    getlogin_r; # future
+} LIBC_O;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86 mips
@@ -1372,7 +1377,7 @@ LIBC_PRIVATE {
     vfdprintf; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
-} LIBC_O;
+} LIBC_P;
 
 LIBC_DEPRECATED {
   global:
@@ -1394,4 +1399,4 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
-} LIBC_O;
+} LIBC_P;
