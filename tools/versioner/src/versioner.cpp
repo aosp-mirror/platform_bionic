@@ -18,6 +18,7 @@
 #include <err.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -189,6 +190,21 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
       jobs.emplace_back(type, header);
     }
   }
+
+  // Dup an empty file to stdin, so that we can use `clang -include a.h -` instead of `clang a.h`,
+  // since some warnings don't get generated in files that are compiled directly.
+  FILE* empty_file = tmpfile();
+  if (!empty_file) {
+    err(1, "failed to create temporary file");
+  }
+
+  int empty_file_fd = fileno(empty_file);
+  if (empty_file_fd == -1) {
+    errx(1, "fileno failed on tmpfile");
+  }
+
+  dup2(empty_file_fd, STDIN_FILENO);
+  fclose(empty_file);
 
   thread_count = std::min(thread_count, jobs.size());
 

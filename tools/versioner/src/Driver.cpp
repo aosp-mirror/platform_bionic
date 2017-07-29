@@ -100,11 +100,12 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSyst
   std::vector<std::string> cmd = { "versioner" };
   cmd.push_back("-std=c11");
   cmd.push_back("-x");
-  cmd.push_back("c-header");
+  cmd.push_back("c");
   cmd.push_back("-fsyntax-only");
 
   cmd.push_back("-Wall");
   cmd.push_back("-Wextra");
+  cmd.push_back("-Weverything");
   cmd.push_back("-Werror");
   cmd.push_back("-Wundef");
   cmd.push_back("-Wno-unused-macros");
@@ -134,7 +135,9 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSyst
     cmd.push_back(dir);
   }
 
+  cmd.push_back("-include");
   cmd.push_back(filename_placeholder);
+  cmd.push_back("-");
 
   auto diags = constructDiags();
   driver::Driver driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags, vfs);

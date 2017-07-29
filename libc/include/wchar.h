@@ -42,6 +42,11 @@
 
 __BEGIN_DECLS
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+#endif
+
 wint_t            btowc(int);
 int               fwprintf(FILE *, const wchar_t *, ...);
 int               fwscanf(FILE *, const wchar_t *, ...);
@@ -133,6 +138,10 @@ size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
 FILE* open_wmemstream(wchar_t**, size_t*) __INTRODUCED_IN(23);
 wchar_t* wcsdup(const wchar_t*);
 size_t wcsnlen(const wchar_t*, size_t);
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 __END_DECLS
 
