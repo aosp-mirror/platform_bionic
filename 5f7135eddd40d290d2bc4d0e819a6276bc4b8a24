@@ -52,6 +52,24 @@
       "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0f7e686_464a6271",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-07-31T15:56:48Z",
+      "side": 1,
+      "message": "ndk-cruft seems like the right place for stuff that doesn\u0027t exist in the present or future, but can\u0027t be removed because we\u0027re trying to keep old code running.",
+      "parentUuid": "dc09746a_a006f6b1",
+      "revId": "5f7135eddd40d290d2bc4d0e819a6276bc4b8a24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
