@@ -185,11 +185,16 @@
 #  define __warnattr(msg) __attribute__((deprecated(msg)))
 #  define __warnattr_real(msg) __attribute__((deprecated(msg)))
 #  define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
+#  define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
+#  define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
 #else
 #  define __errorattr(msg) __attribute__((__error__(msg)))
 #  define __warnattr(msg) __attribute__((__warning__(msg)))
 #  define __warnattr_real __warnattr
 /* enable_if doesn't exist on other compilers; give an error if it's used. */
+/* diagnose_if doesn't exist either, but it's often tagged on non-clang-specific functions */
+#  define __clang_error_if(cond, msg)
+#  define __clang_warning_if(cond, msg)
 
 /* errordecls really don't work as well in clang as they do in GCC. */
 #  define __errordecl(name, msg) extern void name(void) __errorattr(msg)
