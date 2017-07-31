@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bca485c8_f0b042e0",
+        "filename": "libc/include/wchar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-07-31T21:38:09Z",
+      "side": 1,
+      "message": "oops",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 7
+      },
+      "revId": "446a7d97a580a8f21fc99855be84971970928791",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
