@@ -151,8 +151,20 @@ int	 ungetc(int, FILE *);
 int	 vfprintf(FILE * __restrict, const char * __restrict _Nonnull, __va_list) __printflike(2, 0);
 int	 vprintf(const char * __restrict _Nonnull, __va_list) __printflike(1, 0);
 
+#if __ANDROID_API__ >= 21
 int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
 int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+#else
+/*
+ * Old versions of Android called these fdprintf and vfdprintf out of fears that the glibc names
+ * would collide with user debug printfs.
+ *
+ * Allow users to just use dprintf and vfdprintf on any version by renaming those calls to their
+ * legacy equivalents if needed.
+ */
+int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __RENAME(fdprintf);
+int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __RENAME(vfdprintf);
+#endif
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
