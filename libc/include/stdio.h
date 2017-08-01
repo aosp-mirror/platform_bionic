@@ -121,39 +121,39 @@ int	 feof(FILE *);
 int	 ferror(FILE *);
 int	 fflush(FILE *);
 int	 fgetc(FILE *);
-char	*fgets(char * __restrict, int, FILE * __restrict) __overloadable
+char	*fgets(char *, int, FILE *) __overloadable
   __RENAME_CLANG(fgets);
-int	 fprintf(FILE * __restrict , const char * __restrict _Nonnull, ...) __printflike(2, 3);
+int	 fprintf(FILE * , const char * _Nonnull, ...) __printflike(2, 3);
 int	 fputc(int, FILE *);
-int	 fputs(const char * __restrict, FILE * __restrict);
-size_t	 fread(void * __restrict, size_t, size_t, FILE * __restrict)
+int	 fputs(const char *, FILE *);
+size_t	 fread(void *, size_t, size_t, FILE *)
       __overloadable __RENAME_CLANG(fread);
-int	 fscanf(FILE * __restrict, const char * __restrict _Nonnull, ...) __scanflike(2, 3);
-size_t	 fwrite(const void * __restrict, size_t, size_t, FILE * __restrict)
+int	 fscanf(FILE *, const char * _Nonnull, ...) __scanflike(2, 3);
+size_t	 fwrite(const void *, size_t, size_t, FILE *)
     __overloadable __RENAME_CLANG(fwrite);
 int	 getc(FILE *);
 int	 getchar(void);
-ssize_t getdelim(char** __restrict, size_t* __restrict, int, FILE* __restrict) __INTRODUCED_IN(18);
-ssize_t getline(char** __restrict, size_t* __restrict, FILE* __restrict) __INTRODUCED_IN(18);
+ssize_t getdelim(char**, size_t*, int, FILE*) __INTRODUCED_IN(18);
+ssize_t getline(char**, size_t*, FILE*) __INTRODUCED_IN(18);
 
 void	 perror(const char *);
-int	 printf(const char * __restrict _Nonnull, ...) __printflike(1, 2);
+int	 printf(const char * _Nonnull, ...) __printflike(1, 2);
 int	 putc(int, FILE *);
 int	 putchar(int);
 int	 puts(const char *);
 int	 remove(const char *);
 void	 rewind(FILE *);
-int	 scanf(const char * __restrict _Nonnull, ...) __scanflike(1, 2);
-void	 setbuf(FILE * __restrict, char * __restrict);
-int	 setvbuf(FILE * __restrict, char * __restrict, int, size_t);
-int	 sscanf(const char * __restrict, const char * __restrict _Nonnull, ...) __scanflike(2, 3);
+int	 scanf(const char * _Nonnull, ...) __scanflike(1, 2);
+void	 setbuf(FILE *, char *);
+int	 setvbuf(FILE *, char *, int, size_t);
+int	 sscanf(const char *, const char * _Nonnull, ...) __scanflike(2, 3);
 int	 ungetc(int, FILE *);
-int	 vfprintf(FILE * __restrict, const char * __restrict _Nonnull, __va_list) __printflike(2, 0);
-int	 vprintf(const char * __restrict _Nonnull, __va_list) __printflike(1, 0);
+int	 vfprintf(FILE *, const char * _Nonnull, __va_list) __printflike(2, 0);
+int	 vprintf(const char * _Nonnull, __va_list) __printflike(1, 0);
 
 #if __ANDROID_API__ >= 21
-int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int, const char* _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
+int vdprintf(int, const char* _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 #else
 /*
  * Old versions of Android called these fdprintf and vfdprintf out of fears that the glibc names
@@ -162,18 +162,18 @@ int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0)
  * Allow users to just use dprintf and vfdprintf on any version by renaming those calls to their
  * legacy equivalents if needed.
  */
-int dprintf(int, const char* __restrict _Nonnull, ...) __printflike(2, 3) __RENAME(fdprintf);
-int vdprintf(int, const char* __restrict _Nonnull, __va_list) __printflike(2, 0) __RENAME(vfdprintf);
+int dprintf(int, const char* _Nonnull, ...) __printflike(2, 3) __RENAME(fdprintf);
+int vdprintf(int, const char* _Nonnull, __va_list) __printflike(2, 0) __RENAME(vfdprintf);
 #endif
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
 char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* __restrict, const char* __restrict _Nonnull, ...)
+int sprintf(char*, const char* _Nonnull, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf")
     __overloadable __RENAME_CLANG(sprintf);
-int vsprintf(char* __restrict, const char* __restrict _Nonnull, __va_list)
+int vsprintf(char*, const char* _Nonnull, __va_list)
     __overloadable __printflike(2, 0) __RENAME_CLANG(vsprintf)
     __warnattr_strict("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char*)
@@ -222,21 +222,21 @@ FILE* funopen64(const void*, int (*)(void*, char*, int), int (*)(void*, const ch
                 fpos64_t (*)(void*, fpos64_t, int), int (*)(void*)) __INTRODUCED_IN(24);
 #endif
 
-FILE* fopen(const char* __restrict, const char* __restrict);
-FILE* fopen64(const char* __restrict, const char* __restrict) __INTRODUCED_IN(24);
-FILE* freopen(const char* __restrict, const char* __restrict, FILE* __restrict);
-FILE* freopen64(const char* __restrict, const char* __restrict, FILE* __restrict)
+FILE* fopen(const char*, const char*);
+FILE* fopen64(const char*, const char*) __INTRODUCED_IN(24);
+FILE* freopen(const char*, const char*, FILE*);
+FILE* freopen64(const char*, const char*, FILE*)
   __INTRODUCED_IN(24);
 FILE* tmpfile(void);
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* __restrict, size_t, const char* __restrict _Nonnull, ...)
+int snprintf(char*, size_t, const char* _Nonnull, ...)
     __printflike(3, 4) __overloadable __RENAME_CLANG(snprintf);
-int vfscanf(FILE* __restrict, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
+int vfscanf(FILE*, const char* _Nonnull, __va_list) __scanflike(2, 0);
 int vscanf(const char* _Nonnull , __va_list) __scanflike(1, 0);
-int vsnprintf(char* __restrict, size_t, const char* __restrict _Nonnull, __va_list)
+int vsnprintf(char*, size_t, const char* _Nonnull, __va_list)
     __printflike(3, 0) __overloadable __RENAME_CLANG(vsnprintf);
-int vsscanf(const char* __restrict _Nonnull, const char* __restrict _Nonnull, __va_list) __scanflike(2, 0);
+int vsscanf(const char* _Nonnull, const char* _Nonnull, __va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
 char* ctermid(char*) __INTRODUCED_IN(26);
@@ -257,12 +257,12 @@ FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
 FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
-int  asprintf(char** __restrict, const char* __restrict _Nonnull, ...) __printflike(2, 3);
-char* fgetln(FILE* __restrict, size_t* __restrict);
+int  asprintf(char**, const char* _Nonnull, ...) __printflike(2, 3);
+char* fgetln(FILE*, size_t*);
 int fpurge(FILE*);
 void setbuffer(FILE*, char*, int);
 int setlinebuf(FILE*);
-int vasprintf(char** __restrict, const char* __restrict _Nonnull, __va_list) __printflike(2, 0);
+int vasprintf(char**, const char* _Nonnull, __va_list) __printflike(2, 0);
 void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
 int feof_unlocked(FILE*) __INTRODUCED_IN(23);
 int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
