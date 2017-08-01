@@ -59,10 +59,10 @@ struct statvfs64 { __STATVFS64_BODY };
 #define ST_NODIRATIME  0x0800
 #define ST_RELATIME    0x1000
 
-int statvfs(const char* _Nonnull, struct statvfs* _Nonnull) __INTRODUCED_IN(19);
-int statvfs64(const char* _Nonnull, struct statvfs64* _Nonnull) __INTRODUCED_IN(21);
-int fstatvfs(int, struct statvfs* _Nonnull) __INTRODUCED_IN(19);
-int fstatvfs64(int, struct statvfs64* _Nonnull) __INTRODUCED_IN(21);
+int statvfs(const char*, struct statvfs*) __INTRODUCED_IN(19);
+int statvfs64(const char*, struct statvfs64*) __INTRODUCED_IN(21);
+int fstatvfs(int, struct statvfs*) __INTRODUCED_IN(19);
+int fstatvfs64(int, struct statvfs64*) __INTRODUCED_IN(21);
 
 __END_DECLS
 
