@@ -22,12 +22,14 @@
 #include <unistd.h>
 
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <llvm/ADT/StringRef.h>
 
 std::string getWorkingDir();
-std::vector<std::string> collectHeaders(const std::string& directory);
+std::vector<std::string> collectHeaders(const std::string& directory,
+                                        const std::unordered_set<std::string>& ignored_directories);
 
 static inline std::string dirname(const std::string& path) {
   std::unique_ptr<char, decltype(&free)> path_copy(strdup(path.c_str()), free);
