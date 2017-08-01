@@ -1918,3 +1918,8 @@ TEST(STDIO_TEST, freopen_append_mode_and_ftell) {
   ASSERT_EQ(0, fclose(fp));
   AssertFileIs(tf.filename, "0123456789xxx");
 }
+
+TEST(STDIO_TEST, constants) {
+  ASSERT_LE(FILENAME_MAX, PATH_MAX);
+  ASSERT_EQ(L_tmpnam, PATH_MAX);
+}
