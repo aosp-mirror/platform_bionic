@@ -169,12 +169,12 @@ void test_fgets() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fgets_too_small_error' declared with attribute error: fgets called with size less than zero
-  // CLANG: error: call to unavailable function 'fgets': size is negative
+  // CLANG: error: in call to 'fgets', size should not be negative
   fgets(buf, -1, stdin);
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fgets_too_big_error' declared with attribute error: fgets called with size bigger than buffer
-  // CLANG: error: call to unavailable function 'fgets': size is larger than the destination buffer
+  // CLANG: error: in call to 'fgets', size is larger than the destination buffer
   fgets(buf, 6, stdin);
 }
 
@@ -236,7 +236,7 @@ void test_fread_overflow() {
   char buf[4];
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fread_overflow' declared with attribute error: fread called with overflowing size * count
-  // CLANG: error: call to unavailable function 'fread': size * count overflows
+  // CLANG: error: in call to 'fread', size * count overflows
   fread(buf, 2, (size_t)-1, stdin);
 }
 
@@ -244,7 +244,8 @@ void test_fread_too_big() {
   char buf[4];
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fread_too_big_error' declared with attribute error: fread called with size * count bigger than buffer
-  // CLANG: error: call to unavailable function 'fread': size * count is too large
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // CLANG: error: in call to 'fread', size * count is too large for the given buffer
   fread(buf, 1, 5, stdin);
 }
 
@@ -252,7 +253,7 @@ void test_fwrite_overflow() {
   char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fwrite_overflow' declared with attribute error: fwrite called with overflowing size * count
-  // CLANG: error: call to unavailable function 'fwrite': size * count overflows
+  // CLANG: error: in call to 'fwrite', size * count overflows
   fwrite(buf, 2, (size_t)-1, stdout);
 }
 
@@ -260,7 +261,8 @@ void test_fwrite_too_big() {
   char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__fwrite_too_big_error' declared with attribute error: fwrite called with size * count bigger than buffer
-  // CLANG: error: call to unavailable function 'fwrite': size * count is too large
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // CLANG: error: in call to 'fwrite', size * count is too large for the given buffer
   fwrite(buf, 1, 5, stdout);
 }
 
