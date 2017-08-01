@@ -35,6 +35,7 @@
 #ifndef _ERR_H_
 #define _ERR_H_
 
+#include <stdarg.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
@@ -45,13 +46,13 @@ __BEGIN_DECLS
 #define __errlike(x, y) __attribute__((__format__(printf, x, y)))
 
 __noreturn void err(int, const char *, ...) __errlike(2, 3);
-__noreturn void verr(int, const char *, __va_list) __errlike(2, 0);
+__noreturn void verr(int, const char *, va_list) __errlike(2, 0);
 __noreturn void errx(int, const char *, ...) __errlike(2, 3);
-__noreturn void verrx(int, const char *, __va_list) __errlike(2, 0);
+__noreturn void verrx(int, const char *, va_list) __errlike(2, 0);
 void warn(const char *, ...) __errlike(1, 2);
-void vwarn(const char *, __va_list) __errlike(1, 0);
+void vwarn(const char *, va_list) __errlike(1, 0);
 void warnx(const char *, ...) __errlike(1, 2);
-void vwarnx(const char *, __va_list) __errlike(1, 0);
+void vwarnx(const char *, va_list) __errlike(1, 0);
 
 __END_DECLS
 
