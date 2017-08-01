@@ -165,46 +165,9 @@ size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX 1
 #endif
 
-#if defined(__BIONIC_FORTIFY)
-#define __realpath_buf_too_small_str \
-    "realpath output parameter must be NULL or a >= PATH_MAX bytes buffer"
-
-/* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
-#define __PATH_MAX 4096
-
-#if defined(__clang__)
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-char* realpath(const char* path, char* resolved) __overloadable
-    __enable_if(__bos(resolved) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                __bos(resolved) < __PATH_MAX, __realpath_buf_too_small_str)
-    __errorattr(__realpath_buf_too_small_str);
-
-/* No need for a FORTIFY version; the only things we can catch are at
- * compile-time.
- */
-
-#else /* defined(__clang__) */
-
-char* __realpath_real(const char*, char*) __RENAME(realpath);
-__errordecl(__realpath_size_error, __realpath_buf_too_small_str);
-
-__BIONIC_FORTIFY_INLINE
-char* realpath(const char* path, char* resolved) {
-    size_t bos = __bos(resolved);
-
-    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE && bos < __PATH_MAX) {
-        __realpath_size_error();
-    }
-
-    return __realpath_real(path, resolved);
-}
-
-#endif /* defined(__clang__) */
-
-#undef __PATH_MAX
-#undef __realpath_buf_too_small_str
-#endif /* defined(__BIONIC_FORTIFY) */
+#if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
+#include <bits/fortify/stdlib.h>
+#endif
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 float strtof(const char*, char**) __INTRODUCED_IN(21);
