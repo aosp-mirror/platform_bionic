@@ -71,7 +71,7 @@ void test_memcpy() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: warning: call to void* __builtin___memcpy_chk(void*, const void*, {{(long )?}}unsigned int, {{(long )?}}unsigned int) will always overflow destination buffer
-  // CLANG: error: call to unavailable function 'memcpy': memcpy called with size bigger than buffer
+  // CLANG: error: 'memcpy' called with size bigger than buffer
   memcpy(buf, "foobar", sizeof("foobar") + 100);
 }
 
@@ -80,7 +80,7 @@ void test_memmove() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: warning: call to void* __builtin___memmove_chk(void*, const void*, {{(long )?}}unsigned int, {{(long )?}}unsigned int) will always overflow destination buffer
-  // CLANG: error: call to unavailable function 'memmove': memmove called with size bigger than buffer
+  // CLANG: error: 'memmove' called with size bigger than buffer
   memmove(buf, "foobar", sizeof("foobar"));
 }
 
@@ -89,7 +89,7 @@ void test_memset() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: warning: call to void* __builtin___memset_chk(void*, int, {{(long )?}}unsigned int, {{(long )?}}unsigned int) will always overflow destination buffer
-  // CLANG: error: call to unavailable function 'memset': memset called with size bigger than buffer
+  // CLANG: error: 'memset' called with size bigger than buffer
   memset(buf, 0, 6);
 }
 
@@ -98,8 +98,13 @@ void test_strcpy() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: warning: call to {{(char\* __builtin___strcpy_chk\(char\*, const char\*, unsigned int\))|(void\* __builtin___memcpy_chk\(void\*, const void\*, (long )?unsigned int, (long )?unsigned int\))}} will always overflow destination buffer
-  // CLANG: error: call to unavailable function 'strcpy': strcpy called with string bigger than buffer
+  // CLANG: error: 'strcpy' called with string bigger than buffer
   strcpy(buf, "foobar");  // NOLINT(runtime/printf)
+
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: warning: call to {{(char\* __builtin___strcpy_chk\(char\*, const char\*, unsigned int\))|(void\* __builtin___memcpy_chk\(void\*, const void\*, (long )?unsigned int, (long )?unsigned int\))}} will always overflow destination buffer
+  // CLANG: error: 'strcpy' called with string bigger than buffer
+  strcpy(buf, "quux");
 }
 
 void test_stpcpy() {
@@ -107,8 +112,13 @@ void test_stpcpy() {
 
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: warning: call to char* __builtin___stpcpy_chk(char*, const char*, {{(long )?}}unsigned int) will always overflow destination buffer
-  // CLANG: error: call to unavailable function 'stpcpy': stpcpy called with string bigger than buffer
+  // CLANG: error: 'stpcpy' called with string bigger than buffer
   stpcpy(buf, "foobar");
+
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: warning: call to char* __builtin___stpcpy_chk(char*, const char*, {{(long )?}}unsigned int) will always overflow destination buffer
+  // CLANG: error: 'stpcpy' called with string bigger than buffer
+  stpcpy(buf, "quux");
 }
 
 void test_strncpy() {
@@ -307,7 +317,7 @@ void test_write_size() {
 void test_memset_args_flipped() {
   char from[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
-  // CLANG: 'memset' is deprecated: will set 0 bytes; maybe the arguments got flipped? (Add __bionic_zero_size_is_okay as a fourth argument to silence this.)
+  // CLANG: 'memset' will set 0 bytes; maybe the arguments got flipped?
   memset(from, sizeof(from), 0);
 }
 
