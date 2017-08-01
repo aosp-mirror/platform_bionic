@@ -34,6 +34,29 @@
       "revId": "3f66e74b903905e763e104396aff52a81718cfde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db581c5d_62fe3392",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-01T22:40:07Z",
+      "side": 1,
+      "message": "This one looks weird too. I skimmed through the rest and didn\u0027t see any others, but I probably missed some as well. We should probably just wait until a tool can do all of these for us, though.",
+      "range": {
+        "startLine": 47,
+        "startChar": 17,
+        "endLine": 47,
+        "endChar": 19
+      },
+      "revId": "3f66e74b903905e763e104396aff52a81718cfde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
