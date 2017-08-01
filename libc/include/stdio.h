@@ -44,9 +44,6 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#define __need_NULL
-#include <stddef.h>
-
 #include <bits/seek_constants.h>
 
 #if __ANDROID_API__ < __ANDROID_API_N__
@@ -147,12 +144,12 @@ void	 setbuf(FILE *, char *);
 int	 setvbuf(FILE *, char *, int, size_t);
 int	 sscanf(const char *, const char * _Nonnull, ...) __scanflike(2, 3);
 int	 ungetc(int, FILE *);
-int	 vfprintf(FILE *, const char * _Nonnull, __va_list) __printflike(2, 0);
-int	 vprintf(const char * _Nonnull, __va_list) __printflike(1, 0);
+int	 vfprintf(FILE *, const char * _Nonnull, va_list) __printflike(2, 0);
+int	 vprintf(const char * _Nonnull, va_list) __printflike(1, 0);
 
 #if __ANDROID_API__ >= 21
 int dprintf(int, const char* _Nonnull, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int, const char* _Nonnull, __va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+int vdprintf(int, const char* _Nonnull, va_list) __printflike(2, 0) __INTRODUCED_IN(21);
 #else
 /*
  * Old versions of Android called these fdprintf and vfdprintf out of fears that the glibc names
@@ -162,7 +159,7 @@ int vdprintf(int, const char* _Nonnull, __va_list) __printflike(2, 0) __INTRODUC
  * legacy equivalents if needed.
  */
 int dprintf(int, const char* _Nonnull, ...) __printflike(2, 3) __RENAME(fdprintf);
-int vdprintf(int, const char* _Nonnull, __va_list) __printflike(2, 0) __RENAME(vfdprintf);
+int vdprintf(int, const char* _Nonnull, va_list) __printflike(2, 0) __RENAME(vfdprintf);
 #endif
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
@@ -172,7 +169,7 @@ char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")
 int sprintf(char*, const char* _Nonnull, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf")
     __overloadable __RENAME_CLANG(sprintf);
-int vsprintf(char*, const char* _Nonnull, __va_list)
+int vsprintf(char*, const char* _Nonnull, va_list)
     __overloadable __printflike(2, 0) __RENAME_CLANG(vsprintf)
     __warnattr_strict("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char*)
@@ -231,11 +228,11 @@ FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
 int snprintf(char*, size_t, const char* _Nonnull, ...)
     __printflike(3, 4) __overloadable __RENAME_CLANG(snprintf);
-int vfscanf(FILE*, const char* _Nonnull, __va_list) __scanflike(2, 0);
-int vscanf(const char* _Nonnull , __va_list) __scanflike(1, 0);
-int vsnprintf(char*, size_t, const char* _Nonnull, __va_list)
+int vfscanf(FILE*, const char* _Nonnull, va_list) __scanflike(2, 0);
+int vscanf(const char* _Nonnull , va_list) __scanflike(1, 0);
+int vsnprintf(char*, size_t, const char* _Nonnull, va_list)
     __printflike(3, 0) __overloadable __RENAME_CLANG(vsnprintf);
-int vsscanf(const char* _Nonnull, const char* _Nonnull, __va_list) __scanflike(2, 0);
+int vsscanf(const char* _Nonnull, const char* _Nonnull, va_list) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
 char* ctermid(char*) __INTRODUCED_IN(26);
@@ -261,7 +258,7 @@ char* fgetln(FILE*, size_t*);
 int fpurge(FILE*);
 void setbuffer(FILE*, char*, int);
 int setlinebuf(FILE*);
-int vasprintf(char**, const char* _Nonnull, __va_list) __printflike(2, 0);
+int vasprintf(char**, const char* _Nonnull, va_list) __printflike(2, 0);
 void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
 int feof_unlocked(FILE*) __INTRODUCED_IN(23);
 int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
