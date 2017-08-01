@@ -60,34 +60,21 @@ ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTROD
 #endif
 
 #if defined(__clang__)
-#define __error_if_overflows_ssizet(what) \
-    __enable_if(what > SSIZE_MAX, #what " must be <= SSIZE_MAX") \
-    __errorattr(#what " must be <= SSIZE_MAX")
+#define __error_if_overflows_ssizet(what, fn) \
+    __clang_error_if((what) > SSIZE_MAX, "in call to '" #fn "', '" #what "' must be <= SSIZE_MAX")
 
-#define __enable_if_no_overflow_ssizet(what) \
-    __enable_if((what) <= SSIZE_MAX, "enabled if " #what " <= SSIZE_MAX")
-
-#define __error_if_overflows_objectsize(what, objsize) \
-    __enable_if((objsize) != __BIONIC_FORTIFY_UNKNOWN_SIZE && \
-                    (what) > (objsize), \
-                "'" #what "' bytes overflows the given object") \
-    __errorattr("'" #what "' bytes overflows the given object")
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-char* getcwd(char* buf, size_t size) __overloadable
-        __error_if_overflows_objectsize(size, __bos(buf));
+#define __error_if_overflows_objectsize(what, objsize, fn) \
+    __clang_error_if((objsize) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (what) > (objsize), \
+                     "in call to '" #fn "', '" #what "' bytes overflows the given object")
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
-char* getcwd(char* const __pass_object_size buf, size_t size) __overloadable {
+char* getcwd(char* const __pass_object_size buf, size_t size)
+        __overloadable
+        __error_if_overflows_objectsize(size, __bos(buf), getcwd) {
     size_t bos = __bos(buf);
 
-    /*
-     * Clang responds bos==0 if buf==NULL
-     * (https://llvm.org/bugs/show_bug.cgi?id=23277). Given that NULL is a valid
-     * value, we need to handle that.
-     */
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE || buf == NULL) {
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __call_bypassing_fortify(getcwd)(buf, size);
     }
 
@@ -96,18 +83,11 @@ char* getcwd(char* const __pass_object_size buf, size_t size) __overloadable {
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pread(int fd, void* buf, size_t count, off_t offset) __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pread(int fd, void* buf, size_t count, off_t offset) __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count,
-              off_t offset) __overloadable {
+ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count, off_t offset)
+        __overloadable
+        __error_if_overflows_ssizet(count, pread)
+        __error_if_overflows_objectsize(count, __bos0(buf), pread) {
     size_t bos = __bos0(buf);
 
     if (count == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -117,18 +97,11 @@ ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count,
     return __PREAD_PREFIX(chk)(fd, buf, count, offset, bos);
 }
 
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count,
-                off64_t offset) __overloadable {
+ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count, off64_t offset)
+        __overloadable
+        __error_if_overflows_ssizet(count, pread64)
+        __error_if_overflows_objectsize(count, __bos0(buf), pread64) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -140,20 +113,11 @@ ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count,
 #endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset)
-        __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset)
-        __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count,
-               off_t offset) __overloadable {
+ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count, off_t offset)
+        __overloadable
+        __error_if_overflows_ssizet(count, pwrite)
+        __error_if_overflows_objectsize(count, __bos0(buf), pwrite) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -163,20 +127,11 @@ ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count,
     return __PWRITE_PREFIX(chk)(fd, buf, count, offset, bos);
 }
 
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset)
-        __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset)
-        __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf,
-                 size_t count, off64_t offset) __overloadable {
+ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf, size_t count, off64_t offset)
+        __overloadable
+        __error_if_overflows_ssizet(count, pwrite64)
+        __error_if_overflows_objectsize(count, __bos0(buf), pwrite64) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -188,18 +143,11 @@ ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf,
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t read(int fd, void* buf, size_t count) __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t read(int fd, void* buf, size_t count) __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
 ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
-        __overloadable {
+        __overloadable
+        __error_if_overflows_ssizet(count, read)
+        __error_if_overflows_objectsize(count, __bos0(buf), read) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -211,18 +159,11 @@ ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
 #endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t write(int fd, const void* buf, size_t count) __overloadable
-        __error_if_overflows_ssizet(count);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t write(int fd, const void* buf, size_t count) __overloadable
-        __enable_if_no_overflow_ssizet(count)
-        __error_if_overflows_objectsize(count, __bos0(buf));
-
 __BIONIC_FORTIFY_INLINE
 ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
-        __overloadable {
+        __overloadable
+        __error_if_overflows_ssizet(count, write)
+        __error_if_overflows_objectsize(count, __bos0(buf), write) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -234,18 +175,11 @@ ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t readlink(const char* path, char* buf, size_t size) __overloadable
-        __error_if_overflows_ssizet(size);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t readlink(const char* path, char* buf, size_t size) __overloadable
-        __enable_if_no_overflow_ssizet(size)
-        __error_if_overflows_objectsize(size, __bos(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t readlink(const char* path, char* const __pass_object_size buf,
-                 size_t size) __overloadable {
+ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t size)
+        __overloadable
+        __error_if_overflows_ssizet(size, readlink)
+        __error_if_overflows_objectsize(size, __bos(buf), readlink) {
     size_t bos = __bos(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -255,21 +189,11 @@ ssize_t readlink(const char* path, char* const __pass_object_size buf,
     return __readlink_chk(path, buf, size, bos);
 }
 
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size)
-        __overloadable
-        __error_if_overflows_ssizet(size);
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size)
-        __overloadable
-        __enable_if_no_overflow_ssizet(size)
-        __error_if_overflows_objectsize(size, __bos(buf));
-
 __BIONIC_FORTIFY_INLINE
-ssize_t readlinkat(int dirfd, const char* path,
-                   char* const __pass_object_size buf, size_t size)
-        __overloadable {
+ssize_t readlinkat(int dirfd, const char* path, char* const __pass_object_size buf, size_t size)
+        __overloadable
+        __error_if_overflows_ssizet(size, readlinkat)
+        __error_if_overflows_objectsize(size, __bos(buf), readlinkat) {
     size_t bos = __bos(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
