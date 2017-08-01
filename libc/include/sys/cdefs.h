@@ -309,6 +309,11 @@
 #define __pass_object_size __pass_object_size_n(__bos_level)
 #define __pass_object_size0 __pass_object_size_n(0)
 
+/* FIXME: This should be __BIONIC_FORTIFY, but we don't enable FORTIFY in -O0. */
+#if (defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
+#  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
+#endif
+
 /*
  * Used to support clangisms with FORTIFY. Because these change how symbols are
  * emitted, we need to ensure that bionic itself is built fortified. But lots
