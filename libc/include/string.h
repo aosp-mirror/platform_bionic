@@ -37,64 +37,52 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 #if defined(__USE_BSD)
 #include <strings.h>
 #endif
 
-void* memccpy(void* _Nonnull, const void* _Nonnull, int, size_t);
-void* memchr(const void* _Nonnull, int, size_t) __attribute_pure__ __overloadable
-        __RENAME_CLANG(memchr);
-void* memrchr(const void* _Nonnull, int, size_t) __attribute_pure__ __overloadable
-        __RENAME_CLANG(memrchr);
-int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __attribute_pure__;
-void* memcpy(void* _Nonnull, const void* _Nonnull, size_t)
+void* memccpy(void*, const void*, int, size_t);
+void* memchr(const void*, int, size_t) __attribute_pure__ __overloadable __RENAME_CLANG(memchr);
+void* memrchr(const void*, int, size_t) __attribute_pure__ __overloadable __RENAME_CLANG(memrchr);
+int memcmp(const void*, const void*, size_t) __attribute_pure__;
+void* memcpy(void*, const void*, size_t)
         __overloadable __RENAME_CLANG(memcpy);
 #if defined(__USE_GNU)
-void* mempcpy(void* _Nonnull, const void* _Nonnull, size_t) __INTRODUCED_IN(23);
+void* mempcpy(void*, const void*, size_t) __INTRODUCED_IN(23);
 #endif
-void* memmove(void* _Nonnull, const void* _Nonnull, size_t) __overloadable
-        __RENAME_CLANG(memmove);
-void* memset(void* _Nonnull, int, size_t) __overloadable __RENAME_CLANG(memset);
-void* memmem(const void* _Nonnull, size_t, const void* _Nonnull, size_t) __attribute_pure__;
+void* memmove(void*, const void*, size_t) __overloadable __RENAME_CLANG(memmove);
+void* memset(void*, int, size_t) __overloadable __RENAME_CLANG(memset);
+void* memmem(const void*, size_t, const void*, size_t) __attribute_pure__;
 
-char* strchr(const char* _Nonnull, int) __attribute_pure__ __overloadable
-        __RENAME_CLANG(strchr);
-char* __strchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
+char* strchr(const char*, int) __attribute_pure__ __overloadable __RENAME_CLANG(strchr);
+char* __strchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
-extern "C++" const char* strchrnul(const char* _Nonnull, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" char* strchrnul(char*, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" const char* strchrnul(const char*, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 #else
-char* strchrnul(const char* _Nonnull, int) __attribute_pure__ __INTRODUCED_IN(24);
+char* strchrnul(const char*, int) __attribute_pure__ __INTRODUCED_IN(24);
 #endif
 #endif
 
-char* strrchr(const char* _Nonnull, int) __attribute_pure__ __overloadable
-        __RENAME_CLANG(strrchr);
-char* __strrchr_chk(const char* _Nonnull, int, size_t) __INTRODUCED_IN(18);
+char* strrchr(const char*, int) __attribute_pure__ __overloadable __RENAME_CLANG(strrchr);
+char* __strrchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
 
-size_t strlen(const char* _Nonnull) __attribute_pure__ __overloadable
+size_t strlen(const char*) __attribute_pure__ __overloadable
         __RENAME_CLANG(strlen);
-size_t __strlen_chk(const char* _Nonnull, size_t) __INTRODUCED_IN(17);
+size_t __strlen_chk(const char*, size_t) __INTRODUCED_IN(17);
 
-int strcmp(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* stpcpy(char* _Nonnull, const char* _Nonnull)
-        __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
-char* strcpy(char* _Nonnull, const char* _Nonnull)
+int strcmp(const char*, const char*) __attribute_pure__;
+char* stpcpy(char*, const char*) __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
+char* strcpy(char*, const char*)
         __overloadable __RENAME_CLANG(strcpy);
-char* strcat(char* _Nonnull, const char* _Nonnull)
-        __overloadable __RENAME_CLANG(strcat);
-char* strdup(const char* _Nonnull);
+char* strcat(char*, const char*) __overloadable __RENAME_CLANG(strcat);
+char* strdup(const char*);
 
-char* strstr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strcasestr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strtok(char*, const char* _Nonnull);
-char* strtok_r(char*, const char* _Nonnull, char** _Nonnull);
+char* strstr(const char*, const char*) __attribute_pure__;
+char* strcasestr(const char*, const char*) __attribute_pure__;
+char* strtok(char*, const char*);
+char* strtok_r(char*, const char*, char**);
 
 char* strerror(int);
 char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
@@ -104,34 +92,29 @@ char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(
 int strerror_r(int, char*, size_t);
 #endif
 
-size_t strnlen(const char* _Nonnull, size_t) __attribute_pure__;
-char* strncat(char* _Nonnull, const char* _Nonnull, size_t)
-        __overloadable __RENAME_CLANG(strncat);
-char* strndup(const char* _Nonnull, size_t);
-int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __attribute_pure__;
-char* stpncpy(char* _Nonnull, const char* _Nonnull, size_t)
-        __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
-char* strncpy(char* _Nonnull, const char* _Nonnull, size_t)
-        __overloadable __RENAME_CLANG(strncpy);
+size_t strnlen(const char*, size_t) __attribute_pure__;
+char* strncat(char*, const char*, size_t) __overloadable __RENAME_CLANG(strncat);
+char* strndup(const char*, size_t);
+int strncmp(const char*, const char*, size_t) __attribute_pure__;
+char* stpncpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
+char* strncpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(strncpy);
 
-size_t strlcat(char* _Nonnull, const char* _Nonnull, size_t)
-        __overloadable __RENAME_CLANG(strlcat);
-size_t strlcpy(char* _Nonnull, const char* _Nonnull, size_t)
-        __overloadable __RENAME_CLANG(strlcpy);
+size_t strlcat(char*, const char*, size_t) __overloadable __RENAME_CLANG(strlcat);
+size_t strlcpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(strlcpy);
 
-size_t strcspn(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strpbrk(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strsep(char** _Nonnull, const char* _Nonnull);
-size_t strspn(const char* _Nonnull, const char* _Nonnull);
+size_t strcspn(const char*, const char*) __attribute_pure__;
+char* strpbrk(const char*, const char*) __attribute_pure__;
+char* strsep(char**, const char*);
+size_t strspn(const char*, const char*);
 
 char* strsignal(int);
 
-int strcoll(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-size_t strxfrm(char*, const char* _Nonnull, size_t);
+int strcoll(const char*, const char*) __attribute_pure__;
+size_t strxfrm(char*, const char*, size_t);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __attribute_pure__ __INTRODUCED_IN(21);
-size_t strxfrm_l(char*, const char* _Nonnull, size_t, locale_t) __INTRODUCED_IN(21);
+int strcoll_l(const char*, const char*, locale_t) __attribute_pure__ __INTRODUCED_IN(21);
+size_t strxfrm_l(char*, const char*, size_t, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
@@ -142,10 +125,10 @@ size_t strxfrm_l(char*, const char* _Nonnull, size_t, locale_t) __INTRODUCED_IN(
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-extern "C++" char* basename(char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-extern "C++" const char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" char* basename(char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #else
-char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+char* basename(const char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 #endif
 
@@ -162,85 +145,81 @@ char* basename(const char* _Nonnull) __RENAME(__gnu_basename) __INTRODUCED_IN(23
 #define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
 extern "C++" {
 inline __always_inline
-void* __bionic_memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n) {
+void* __bionic_memchr(const void* const s __pass_object_size, int c, size_t n) {
     return memchr(s, c, n);
 }
 
 inline __always_inline
-const void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
+const void* memchr(const void* const s __pass_object_size, int c, size_t n)
         __prefer_this_overload {
     return __bionic_memchr(s, c, n);
 }
 
 inline __always_inline
-void* memchr(void* const _Nonnull s __pass_object_size, int c, size_t n) __prefer_this_overload {
+void* memchr(void* const s __pass_object_size, int c, size_t n) __prefer_this_overload {
     return __bionic_memchr(s, c, n);
 }
 
 inline __always_inline
-char* __bionic_strchr(const char* const _Nonnull s __pass_object_size, int c) {
+char* __bionic_strchr(const char* const s __pass_object_size, int c) {
     return strchr(s, c);
 }
 
 inline __always_inline
-const char* strchr(const char* const _Nonnull s __pass_object_size, int c)
+const char* strchr(const char* const s __pass_object_size, int c)
         __prefer_this_overload {
     return __bionic_strchr(s, c);
 }
 
 inline __always_inline
-char* strchr(char* const _Nonnull s __pass_object_size, int c)
+char* strchr(char* const s __pass_object_size, int c)
         __prefer_this_overload {
     return __bionic_strchr(s, c);
 }
 
 inline __always_inline
-char* __bionic_strrchr(const char* const _Nonnull s __pass_object_size, int c) {
+char* __bionic_strrchr(const char* const s __pass_object_size, int c) {
     return strrchr(s, c);
 }
 
 inline __always_inline
-const char* strrchr(const char* const _Nonnull s __pass_object_size, int c) __prefer_this_overload {
+const char* strrchr(const char* const s __pass_object_size, int c) __prefer_this_overload {
     return __bionic_strrchr(s, c);
 }
 
 inline __always_inline
-char* strrchr(char* const _Nonnull s __pass_object_size, int c) __prefer_this_overload {
+char* strrchr(char* const s __pass_object_size, int c) __prefer_this_overload {
     return __bionic_strrchr(s, c);
 }
 
 /* Functions with no FORTIFY counterpart. */
 inline __always_inline
-char* __bionic_strstr(const char* _Nonnull h, const char* _Nonnull n) { return strstr(h, n); }
+char* __bionic_strstr(const char* h, const char* n) { return strstr(h, n); }
 
 inline __always_inline
-const char* strstr(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+const char* strstr(const char* h, const char* n) __prefer_this_overload {
     return __bionic_strstr(h, n);
 }
 
 inline __always_inline
-char* strstr(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+char* strstr(char* h, const char* n) __prefer_this_overload {
     return __bionic_strstr(h, n);
 }
 
 inline __always_inline
-char* __bionic_strpbrk(const char* _Nonnull h, const char* _Nonnull n) { return strpbrk(h, n); }
+char* __bionic_strpbrk(const char* h, const char* n) { return strpbrk(h, n); }
 
 inline __always_inline
-char* strpbrk(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+char* strpbrk(char* h, const char* n) __prefer_this_overload {
     return __bionic_strpbrk(h, n);
 }
 
 inline __always_inline
-const char* strpbrk(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
+const char* strpbrk(const char* h, const char* n) __prefer_this_overload {
     return __bionic_strpbrk(h, n);
 }
 }
 #undef __prefer_this_overload
-#endif
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
 #endif
 
 __END_DECLS

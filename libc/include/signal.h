@@ -54,11 +54,6 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 typedef int sig_atomic_t;
 
 /* The arm and x86 kernel header files don't define _NSIG. */
@@ -129,10 +124,10 @@ int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
 // Implemented as static inlines before 21.
 #endif
 
-int sigpending(sigset_t* _Nonnull);
+int sigpending(sigset_t*);
 int sigprocmask(int, const sigset_t*, sigset_t*);
-int sigsuspend(const sigset_t* _Nonnull);
-int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
+int sigsuspend(const sigset_t*);
+int sigwait(const sigset_t*, int*);
 
 int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
@@ -161,12 +156,8 @@ int pthread_kill(pthread_t, int);
 int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
 int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
-int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
-int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
+int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t*, siginfo_t*) __INTRODUCED_IN(23);
 
 __END_DECLS
 
