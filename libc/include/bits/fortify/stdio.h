@@ -39,13 +39,12 @@ size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
 int vsnprintf(char *const __pass_object_size dest, size_t size,
-              const char *_Nonnull format, va_list ap) __overloadable {
+              const char * format, va_list ap) __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE __printflike(2, 0)
-int vsprintf(char *const __pass_object_size dest, const char *_Nonnull format,
-             va_list ap) __overloadable {
+int vsprintf(char *const __pass_object_size dest, const char* format, va_list ap) __overloadable {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -184,15 +183,13 @@ __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE __printflike(3, 4)
-int snprintf(char* dest, size_t size, const char* _Nonnull format, ...) {
-    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format,
-                                    __builtin_va_arg_pack());
+int snprintf(char* dest, size_t size, const char* format, ...) {
+    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 
 __BIONIC_FORTIFY_INLINE __printflike(2, 3)
-int sprintf(char* dest, const char* _Nonnull format, ...) {
-    return __builtin___sprintf_chk(dest, 0, __bos(dest), format,
-                                   __builtin_va_arg_pack());
+int sprintf(char* dest, const char* format, ...) {
+    return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 

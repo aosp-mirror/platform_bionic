@@ -33,12 +33,12 @@
 
 __BEGIN_DECLS
 
-extern void (* _Nullable error_print_progname)(void) __INTRODUCED_IN(23);
+extern void (*error_print_progname)(void) __INTRODUCED_IN(23);
 extern unsigned int error_message_count __INTRODUCED_IN(23);
 extern int error_one_per_line __INTRODUCED_IN(23);
 
-void error(int, int, const char* _Nonnull, ...) __printflike(3, 4) __INTRODUCED_IN(23);
-void error_at_line(int, int, const char* _Nullable, unsigned int, const char* _Nonnull, ...)
+void error(int, int, const char*, ...) __printflike(3, 4) __INTRODUCED_IN(23);
+void error_at_line(int, int, const char*, unsigned int, const char*, ...)
     __printflike(5, 6) __INTRODUCED_IN(23);
 
 __END_DECLS
