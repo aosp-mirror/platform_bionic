@@ -33,23 +33,17 @@
 mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
 
 #if defined(__BIONIC_FORTIFY)
-#define __umask_invalid_mode_str "umask called with invalid mode"
+#define __umask_invalid_mode_str "'umask' called with invalid mode"
 
 #if defined(__clang__)
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-/*
- * Abuse enable_if to make these be seen as overloads of umask, rather than
- * definitions.
- */
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-mode_t umask(mode_t mode) __overloadable
-        __enable_if(1, "")
-        __enable_if(mode & ~0777, __umask_invalid_mode_str)
-        __errorattr(__umask_invalid_mode_str);
-
+/* Abuse enable_if to make this an overload of umask. */
 __BIONIC_FORTIFY_INLINE
-mode_t umask(mode_t mode) __enable_if(1, "") __overloadable {
+mode_t umask(mode_t mode)
+    __overloadable
+    __enable_if(1, "")
+    __clang_error_if(mode & ~0777, __umask_invalid_mode_str) {
   return __umask_chk(mode);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */

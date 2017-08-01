@@ -190,8 +190,8 @@ void test_recvfrom() {
 
 void test_umask() {
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: error: call to '__umask_invalid_mode' declared with attribute error: umask called with invalid mode
-  // CLANG: error: call to unavailable function 'umask': umask called with invalid mode
+  // GCC: error: call to '__umask_invalid_mode' declared with attribute error: 'umask' called with invalid mode
+  // CLANG: error: 'umask' called with invalid mode
   umask(01777);
 }
 
@@ -219,7 +219,7 @@ void test_poll() {
   pollfd fds[1];
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__poll_too_small_error' declared with attribute error: poll: pollfd array smaller than fd count
-  // CLANG: error: call to unavailable function 'poll': too many fds specified
+  // CLANG: error: in call to 'poll', fd_count is larger than the given buffer
   poll(fds, 2, 0);
 }
 
@@ -228,7 +228,7 @@ void test_ppoll() {
   timespec timeout;
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__ppoll_too_small_error' declared with attribute error: ppoll: pollfd array smaller than fd count
-  // CLANG: error: call to unavailable function 'ppoll': too many fds specified
+  // CLANG: error: in call to 'ppoll', fd_count is larger than the given buffer
   ppoll(fds, 2, &timeout, NULL);
 }
 
