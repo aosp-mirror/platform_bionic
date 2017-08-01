@@ -63,7 +63,7 @@ int	pipe:pipe(int pipefd[2])	arm,x86,mips
 
 # b/34651972
 int	access:access(const char *pathname, int mode)	arm,x86,mips
-int	stat64:stat64(const char *restrict path, struct stat64 *restrict buf)	arm,x86,mips
+int	stat64:stat64(const char*, struct stat64*)	arm,x86,mips
 
 # b/34813887
 int	open:open(const char *path, int oflag, ... ) arm,x86,mips
@@ -88,7 +88,7 @@ int	creat:creat(const char *pathname, mode_t mode)	arm,x86,mips
 int	unlink:unlink(const char *pathname)	arm,x86,mips
 
 # b/35059702
-int	lstat64:lstat64(const char *restrict path, struct stat64 *restrict buf)	arm,x86,mips
+int	lstat64:lstat64(const char*, struct stat64*)	arm,x86,mips
 
 # b/35217603
 int	fcntl:fcntl(int fd, int cmd, ... /* arg */ )	arm,x86,mips
