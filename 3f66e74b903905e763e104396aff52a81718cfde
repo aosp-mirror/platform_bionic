@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fccab809_cbb7f4dd",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-01T20:40:21Z",
+      "side": 1,
+      "message": "Nit: this \" * \" looks awkward.\n\nIf this is the only piece of feedback, though, feel free to push this in as-is; I\u0027m happy to tweak my (coming soon) stdio FORTIFY patch to fix it.",
+      "revId": "3f66e74b903905e763e104396aff52a81718cfde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
