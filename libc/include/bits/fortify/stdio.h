@@ -31,10 +31,8 @@
 #endif
 
 char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
-size_t __fread_chk(void* __restrict, size_t, size_t, FILE* __restrict, size_t)
-    __INTRODUCED_IN(24);
-size_t __fwrite_chk(const void* __restrict, size_t, size_t, FILE* __restrict, size_t)
-    __INTRODUCED_IN(24);
+size_t __fread_chk(void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(24);
+size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(24);
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
@@ -59,7 +57,7 @@ int vsprintf(char *const __pass_object_size dest, const char *_Nonnull format,
  * its length to the length of `dest`
  */
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-int snprintf(char *__restrict dest, size_t size, const char *__restrict format)
+int snprintf(char* dest, size_t size, const char* format)
     __overloadable
     __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                 __bos(dest) < __builtin_strlen(format),
@@ -68,8 +66,8 @@ int snprintf(char *__restrict dest, size_t size, const char *__restrict format)
 
 __BIONIC_FORTIFY_INLINE
 __printflike(3, 4)
-int snprintf(char *__restrict const __pass_object_size dest,
-             size_t size, const char *__restrict format, ...) __overloadable {
+int snprintf(char* const __pass_object_size dest,
+             size_t size, const char* format, ...) __overloadable {
     va_list va;
     va_start(va, format);
     int result = __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, va);
@@ -78,7 +76,7 @@ int snprintf(char *__restrict const __pass_object_size dest,
 }
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-int sprintf(char *__restrict dest, const char *__restrict format) __overloadable
+int sprintf(char* dest, const char* format) __overloadable
     __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                 __bos(dest) < __builtin_strlen(format),
                 "format string will always overflow destination buffer")
@@ -86,8 +84,7 @@ int sprintf(char *__restrict dest, const char *__restrict format) __overloadable
 
 __BIONIC_FORTIFY_INLINE
 __printflike(2, 3)
-int sprintf(char *__restrict const __pass_object_size dest,
-        const char *__restrict format, ...) __overloadable {
+int sprintf(char* const __pass_object_size dest, const char* format, ...) __overloadable {
     va_list va;
     va_start(va, format);
     int result = __builtin___vsprintf_chk(dest, 0, __bos(dest), format, va);
@@ -98,22 +95,21 @@ int sprintf(char *__restrict const __pass_object_size dest,
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
-size_t fread(void *__restrict buf, size_t size, size_t count,
-             FILE *__restrict stream) __overloadable
+size_t fread(void* buf, size_t size, size_t count,
+             FILE* stream) __overloadable
         __enable_if(__unsafe_check_mul_overflow(size, count), "size * count overflows")
         __errorattr("size * count overflows");
 
 __BIONIC_FORTIFY_INLINE
-size_t fread(void *__restrict buf, size_t size, size_t count,
-             FILE *__restrict stream) __overloadable
+size_t fread(void* buf, size_t size, size_t count, FILE* stream) __overloadable
     __enable_if(!__unsafe_check_mul_overflow(size, count), "no overflow")
     __enable_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                 size * count > __bos(buf), "size * count is too large")
     __errorattr("size * count is too large");
 
 __BIONIC_FORTIFY_INLINE
-size_t fread(void *__restrict const __pass_object_size0 buf, size_t size,
-             size_t count, FILE *__restrict stream) __overloadable {
+size_t fread(void* const __pass_object_size0 buf, size_t size,
+             size_t count, FILE* stream) __overloadable {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -123,22 +119,19 @@ size_t fread(void *__restrict const __pass_object_size0 buf, size_t size,
     return __fread_chk(buf, size, count, stream, bos);
 }
 
-size_t fwrite(const void * __restrict buf, size_t size,
-              size_t count, FILE * __restrict stream) __overloadable
+size_t fwrite(const void* buf, size_t size, size_t count, FILE* stream) __overloadable
     __enable_if(__unsafe_check_mul_overflow(size, count),
                 "size * count overflows")
     __errorattr("size * count overflows");
 
-size_t fwrite(const void * __restrict buf, size_t size,
-              size_t count, FILE * __restrict stream) __overloadable
+size_t fwrite(const void* buf, size_t size, size_t count, FILE* stream) __overloadable
     __enable_if(!__unsafe_check_mul_overflow(size, count), "no overflow")
     __enable_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                 size * count > __bos(buf), "size * count is too large")
     __errorattr("size * count is too large");
 
 __BIONIC_FORTIFY_INLINE
-size_t fwrite(const void * __restrict const __pass_object_size0 buf,
-              size_t size, size_t count, FILE * __restrict stream)
+size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t count, FILE* stream)
         __overloadable {
     size_t bos = __bos0(buf);
 
@@ -152,7 +145,7 @@ size_t fwrite(const void * __restrict const __pass_object_size0 buf,
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-char *fgets(char* __restrict dest, int size, FILE* stream) __overloadable
+char *fgets(char* dest, int size, FILE* stream) __overloadable
     __enable_if(size < 0, "size is negative")
     __errorattr("size is negative");
 
@@ -163,8 +156,7 @@ char *fgets(char* dest, int size, FILE* stream) __overloadable
     __errorattr("size is larger than the destination buffer");
 
 __BIONIC_FORTIFY_INLINE
-char *fgets(char* __restrict const __pass_object_size dest,
-        int size, FILE* stream) __overloadable {
+char *fgets(char* const __pass_object_size dest, int size, FILE* stream) __overloadable {
     size_t bos = __bos(dest);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -177,7 +169,7 @@ char *fgets(char* __restrict const __pass_object_size dest,
 
 #else /* defined(__clang__) */
 
-size_t __fread_real(void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fread);
+size_t __fread_real(void*, size_t, size_t, FILE*) __RENAME(fread);
 __errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
 __errordecl(__fread_overflow, "fread called with overflowing size * count");
 
@@ -185,21 +177,20 @@ char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
 __errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
 __errordecl(__fgets_too_small_error, "fgets called with size less than zero");
 
-size_t __fwrite_real(const void * __restrict, size_t, size_t, FILE * __restrict) __RENAME(fwrite);
+size_t __fwrite_real(const void*, size_t, size_t, FILE*) __RENAME(fwrite);
 __errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
 __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE __printflike(3, 4)
-int snprintf(char *__restrict dest, size_t size, const char* _Nonnull format, ...)
-{
+int snprintf(char* dest, size_t size, const char* _Nonnull format, ...) {
     return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format,
                                     __builtin_va_arg_pack());
 }
 
 __BIONIC_FORTIFY_INLINE __printflike(2, 3)
-int sprintf(char *__restrict dest, const char* _Nonnull format, ...) {
+int sprintf(char* dest, const char* _Nonnull format, ...) {
     return __builtin___sprintf_chk(dest, 0, __bos(dest), format,
                                    __builtin_va_arg_pack());
 }
@@ -207,7 +198,7 @@ int sprintf(char *__restrict dest, const char* _Nonnull format, ...) {
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
-size_t fread(void *__restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+size_t fread(void* buf, size_t size, size_t count, FILE* stream) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -231,7 +222,7 @@ size_t fread(void *__restrict buf, size_t size, size_t count, FILE * __restrict 
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t fwrite(const void * __restrict buf, size_t size, size_t count, FILE * __restrict stream) {
+size_t fwrite(const void* buf, size_t size, size_t count, FILE* stream) {
     size_t bos = __bos0(buf);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {

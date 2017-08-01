@@ -37,7 +37,7 @@ void* lfind(const void*, const void*, size_t*, size_t, int (*)(const void*, cons
 void* lsearch(const void*, void*, size_t*, size_t, int (*)(const void*, const void*))
   __INTRODUCED_IN(21);
 
-void* tdelete(const void* __restrict, void** __restrict, int (*)(const void*, const void*))
+void* tdelete(const void*, void**, int (*)(const void*, const void*))
   __INTRODUCED_IN(16);
 void tdestroy(void*, void (*)(void*)) __INTRODUCED_IN(16);
 void* tfind(const void*, void* const*, int (*)(const void*, const void*)) __INTRODUCED_IN(16);

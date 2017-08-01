@@ -202,9 +202,9 @@ int	__swhatbuf(FILE *, size_t *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
 int	__vfprintf(FILE *, const char *, __va_list);
-int	__svfscanf(FILE * __restrict, const char * __restrict, __va_list);
-int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
-int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
+int	__svfscanf(FILE *, const char *, __va_list);
+int	__vfwprintf(FILE *, const wchar_t *, __va_list);
+int	__vfwscanf(FILE *, const wchar_t *, __va_list);
 
 /*
  * Return true if the given FILE cannot be written now.
