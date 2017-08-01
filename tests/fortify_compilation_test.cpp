@@ -199,7 +199,7 @@ void test_read() {
   char buf[4];
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__read_dest_size_error' declared with attribute error: read called with size bigger than destination
-  // CLANG: error: call to unavailable function 'read': 'count' bytes overflows the given object
+  // CLANG: error: in call to 'read', 'count' bytes overflows the given object
   read(0, buf, 6);
 }
 
@@ -268,7 +268,7 @@ void test_getcwd() {
   char buf[4];
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__getcwd_dest_size_error' declared with attribute error: getcwd called with size bigger than destination
-  // CLANG: error: call to unavailable function 'getcwd': 'size' bytes overflows the given object
+  // CLANG: error: in call to 'getcwd', 'size' bytes overflows the given object
   getcwd(buf, 5);
 }
 
@@ -276,7 +276,7 @@ void test_pwrite64_size() {
   char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__pwrite64_dest_size_error' declared with attribute error: pwrite64 called with size bigger than destination
-  // CLANG: error: call to unavailable function 'pwrite64': 'count' bytes overflows the given object
+  // CLANG: error: in call to 'pwrite64', 'count' bytes overflows the given object
   pwrite64(STDOUT_FILENO, buf, 5, 0);
 }
 
@@ -292,7 +292,7 @@ void test_pwrite64_too_big() {
   char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__pwrite64_count_toobig_error' declared with attribute error: pwrite64 called with count > SSIZE_MAX
-  // CLANG: error: call to unavailable function 'pwrite64': count must be <= SSIZE_MAX
+  // CLANG: error: in call to 'pwrite64', 'count' must be <= SSIZE_MAX
   pwrite64(STDOUT_FILENO, buf, SIZE_MAX, 0);
 }
 
@@ -300,7 +300,7 @@ void test_write_size() {
   char buf[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__write_dest_size_error' declared with attribute error: write called with size bigger than destination
-  // CLANG: error: call to unavailable function 'write': 'count' bytes overflows the given object
+  // CLANG: error: in call to 'write', 'count' bytes overflows the given object
   write(STDOUT_FILENO, buf, 5);
 }
 
