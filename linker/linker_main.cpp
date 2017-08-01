@@ -203,6 +203,10 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
+static void __linker_cannot_link(const char* argv0) {
+  async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
@@ -317,17 +321,17 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   // We haven't supported non-PIE since Lollipop for security reasons.
   if (elf_hdr->e_type != ET_DYN) {
-    // We don't use __libc_fatal here because we don't want a tombstone: it's
-    // been several years now but we still find ourselves on app compatibility
+    // We don't use async_safe_fatal here because we don't want a tombstone:
+    // even after several years we still find ourselves on app compatibility
     // investigations because some app's trying to launch an executable that
     // hasn't worked in at least three years, and we've "helpfully" dropped a
     // tombstone for them. The tombstone never provided any detail relevant to
     // fixing the problem anyway, and the utility of drawing extra attention
     // to the problem is non-existent at this late date.
     async_safe_format_fd(STDERR_FILENO,
-                     "\"%s\": error: Android 5.0 and later only support "
-                     "position-independent executables (-fPIE).\n",
-                     g_argv[0]);
+                         "\"%s\": error: Android 5.0 and later only support "
+                         "position-independent executables (-fPIE).\n",
+                         g_argv[0]);
     exit(EXIT_FAILURE);
   }
 
@@ -339,9 +343,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   init_default_namespace(executable_path);
 
-  if (!si->prelink_image()) {
-    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
-  }
+  if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
@@ -374,19 +376,17 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
                       nullptr,
                       true /* add_as_children */,
                       true /* search_linked_namespaces */)) {
-    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+    __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
-      async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+      __linker_cannot_link(g_argv[0]);
     }
     si->increment_ref_count();
   }
 
   add_vdso(args);
 
-  if (!get_cfi_shadow()->InitialLinkDone(solist)) {
-    async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
-  }
+  if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
   si->call_pre_init_constructors();
 
@@ -466,10 +466,6 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
     }
   }
   return 0;
-}
-
-static void __linker_cannot_link(const char* argv0) {
-  async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
 }
 
 /*
