@@ -30,14 +30,12 @@
 #error "Never include this file directly; instead, include <string.h>"
 #endif
 
-void* __memchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
-void* __memrchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
-char* __stpncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t)
-  __INTRODUCED_IN(21);
-char* __strncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t)
-  __INTRODUCED_IN(21);
-size_t __strlcpy_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t) __INTRODUCED_IN(17);
-size_t __strlcat_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t) __INTRODUCED_IN(17);
+void* __memchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
+void* __memrchr_chk(const void*, int, size_t, size_t) __INTRODUCED_IN(23);
+char* __stpncpy_chk2(char*, const char*, size_t, size_t, size_t) __INTRODUCED_IN(21);
+char* __strncpy_chk2(char*, const char*, size_t, size_t, size_t) __INTRODUCED_IN(21);
+size_t __strlcpy_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
+size_t __strlcat_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 
 /* Only used with FORTIFY, but some headers that need it undef FORTIFY, so we
  * have the definition out here.
@@ -49,47 +47,42 @@ struct __bionic_zero_size_is_okay_t {};
 // trickery...
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-void* memcpy(void* _Nonnull const dst __pass_object_size0, const void* _Nonnull  src, size_t copy_amount)
+void* memcpy(void* const dst __pass_object_size0, const void*  src, size_t copy_amount)
         __overloadable {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memmove(void* const _Nonnull dst __pass_object_size0, const void* _Nonnull src, size_t len)
-        __overloadable {
+void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) __overloadable {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
-char* stpcpy(char* _Nonnull const dst __pass_object_size, const char* _Nonnull src)
-        __overloadable {
+char* stpcpy(char* const dst __pass_object_size, const char* src) __overloadable {
     return __builtin___stpcpy_chk(dst, src, __bos(dst));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-char* strcpy(char* _Nonnull const dst __pass_object_size, const char* _Nonnull src)
-        __overloadable {
+char* strcpy(char* const dst __pass_object_size, const char* src) __overloadable {
     return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strcat(char* _Nonnull const dst __pass_object_size, const char* _Nonnull src)
-        __overloadable {
+char* strcat(char* const dst __pass_object_size, const char* src) __overloadable {
     return __builtin___strcat_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strncat(char* const _Nonnull dst __pass_object_size, const char* _Nonnull src, size_t n)
-        __overloadable {
+char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __overloadable {
     return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n) __overloadable {
+void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -102,10 +95,6 @@ void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n) __over
                 __bos0(dst) < (n), "selected when the buffer is too small") \
     __errorattr(#name " called with " what " bigger than buffer")
 
-/*
- * N.B. _Nonnull isn't necessary on params, since these functions just emit
- * errors.
- */
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 void* memcpy(void* dst, const void* src, size_t copy_amount) __overloadable
         __error_if_overflows_dst(memcpy, dst, copy_amount, "size");
@@ -128,7 +117,7 @@ char* strcpy(char* dst, const char* src) __overloadable
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
-void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
+void* memchr(const void* const s __pass_object_size, int c, size_t n)
         __overloadable {
     size_t bos = __bos(s);
 
@@ -140,7 +129,7 @@ void* memchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memrchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
+void* memrchr(const void* const s __pass_object_size, int c, size_t n)
         __overloadable {
     size_t bos = __bos(s);
 
@@ -154,7 +143,7 @@ void* memrchr(const void* const _Nonnull s __pass_object_size, int c, size_t n)
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
-char* stpncpy(char* const _Nonnull dst __pass_object_size, const char* const _Nonnull src __pass_object_size, size_t n)
+char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
         __overloadable {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
@@ -168,7 +157,7 @@ char* stpncpy(char* const _Nonnull dst __pass_object_size, const char* const _No
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strncpy(char* const _Nonnull dst __pass_object_size, const char* const _Nonnull src __pass_object_size, size_t n)
+char* strncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
         __overloadable {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
@@ -184,7 +173,7 @@ char* strncpy(char* const _Nonnull dst __pass_object_size, const char* const _No
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char* const _Nonnull dst __pass_object_size, const char *_Nonnull src, size_t size)
+size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
         __overloadable {
     size_t bos = __bos(dst);
 
@@ -196,7 +185,7 @@ size_t strlcpy(char* const _Nonnull dst __pass_object_size, const char *_Nonnull
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char* const _Nonnull dst __pass_object_size, const char* _Nonnull src, size_t size)
+size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
         __overloadable {
     size_t bos = __bos(dst);
 
@@ -214,14 +203,14 @@ size_t strlcat(char* const _Nonnull dst __pass_object_size, const char* _Nonnull
  * because it's large.
  */
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char* const _Nonnull s __pass_object_size)
+size_t strlen(const char* const s __pass_object_size)
         __overloadable __enable_if(__builtin_strlen(s) != -1ULL,
                                    "enabled if s is a known good string.") {
     return __builtin_strlen(s);
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char* const _Nonnull s __pass_object_size0)
+size_t strlen(const char* const s __pass_object_size0)
         __overloadable {
     size_t bos = __bos0(s);
 
@@ -236,8 +225,7 @@ size_t strlen(const char* const _Nonnull s __pass_object_size0)
 
 #if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
 __BIONIC_FORTIFY_INLINE
-char* strchr(const char* const _Nonnull s __pass_object_size, int c)
-        __overloadable {
+char* strchr(const char* const s __pass_object_size, int c) __overloadable {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -248,8 +236,7 @@ char* strchr(const char* const _Nonnull s __pass_object_size, int c)
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
-        __overloadable {
+char* strrchr(const char* const s __pass_object_size, int c) __overloadable {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -267,12 +254,12 @@ char* strrchr(const char* const _Nonnull s __pass_object_size, int c)
  * but we should also provide a FORTIFY'ed escape hatch.
  */
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memset(void* _Nonnull s, int c, size_t n, struct __bionic_zero_size_is_okay_t ok)
+void* memset(void* s, int c, size_t n, struct __bionic_zero_size_is_okay_t ok)
         __overloadable
         __error_if_overflows_dst(memset, s, n, "size");
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void* const _Nonnull s __pass_object_size0, int c, size_t n, struct __bionic_zero_size_is_okay_t ok __attribute__((unused)))
+void* memset(void* const s __pass_object_size0, int c, size_t n, struct __bionic_zero_size_is_okay_t ok __attribute__((unused)))
         __overloadable {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
@@ -282,7 +269,7 @@ extern struct __bionic_zero_size_is_okay_t __bionic_zero_size_is_okay;
  * flipping size + count will do nothing.
  */
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memset(void* _Nonnull s, int c, size_t n) __overloadable
+void* memset(void* s, int c, size_t n) __overloadable
         __enable_if(c && !n, "selected when we'll set zero bytes")
         __RENAME_CLANG(memset)
         __warnattr_real("will set 0 bytes; maybe the arguments got flipped? "
@@ -305,7 +292,7 @@ __errordecl(__memrchr_buf_size_error, "memrchr called with size bigger than buff
 
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
-void* memchr(const void *_Nonnull s __pass_object_size, int c, size_t n) {
+void* memchr(const void* s __pass_object_size, int c, size_t n) {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -345,7 +332,7 @@ void* memrchr(const void* s, int c, size_t n) {
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
-char* stpncpy(char* _Nonnull dst, const char* _Nonnull src, size_t n) {
+char* stpncpy(char* dst, const char* src, size_t n) {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
@@ -366,7 +353,7 @@ char* stpncpy(char* _Nonnull dst, const char* _Nonnull src, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strncpy(char* _Nonnull dst, const char* _Nonnull src, size_t n) {
+char* strncpy(char* dst, const char* src, size_t n) {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
@@ -389,7 +376,7 @@ char* strncpy(char* _Nonnull dst, const char* _Nonnull src, size_t n) {
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char* _Nonnull dst __pass_object_size, const char* _Nonnull src, size_t size) {
+size_t strlcpy(char* dst __pass_object_size, const char* src, size_t size) {
     size_t bos = __bos(dst);
 
     // Compiler doesn't know destination size. Don't call __strlcpy_chk
@@ -407,7 +394,7 @@ size_t strlcpy(char* _Nonnull dst __pass_object_size, const char* _Nonnull src, 
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char* _Nonnull dst, const char* _Nonnull src, size_t size) {
+size_t strlcat(char* dst, const char* src, size_t size) {
     size_t bos = __bos(dst);
 
     // Compiler doesn't know destination size. Don't call __strlcat_chk
@@ -425,7 +412,7 @@ size_t strlcat(char* _Nonnull dst, const char* _Nonnull src, size_t size) {
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char* _Nonnull s) __overloadable {
+size_t strlen(const char* s) __overloadable {
     size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strlen_chk
@@ -444,7 +431,7 @@ size_t strlen(const char* _Nonnull s) __overloadable {
 
 #if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
 __BIONIC_FORTIFY_INLINE
-char* strchr(const char* _Nonnull s, int c) {
+char* strchr(const char* s, int c) {
     size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strchr_chk
@@ -461,7 +448,7 @@ char* strchr(const char* _Nonnull s, int c) {
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strrchr(const char* _Nonnull s, int c) {
+char* strrchr(const char* s, int c) {
     size_t bos = __bos(s);
 
     // Compiler doesn't know destination size. Don't call __strrchr_chk
