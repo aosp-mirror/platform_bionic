@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3589dc3e_2e261fb2",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-01T00:45:45Z",
+      "side": 1,
+      "message": "It\u0027s unclear to me what this even means for pointers to pointers. My interpretation is that this means the void** you pass in must point to a nonnull void*, which isn\u0027t true.",
+      "range": {
+        "startLine": 94,
+        "startChar": 64,
+        "endLine": 94,
+        "endChar": 72
+      },
+      "revId": "b9dd66a5231b7a0ebd46272d8045aeb0f49bd58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
