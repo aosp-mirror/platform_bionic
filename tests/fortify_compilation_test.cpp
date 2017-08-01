@@ -183,9 +183,18 @@ void test_recvfrom() {
   sockaddr_in addr;
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: error: call to '__recvfrom_error' declared with attribute error: recvfrom called with size bigger than buffer
-  // CLANG: error: call to unavailable function 'recvfrom': recvfrom called with size bigger than buffer
+  // GCC: error: call to '__recvfrom_error' declared with attribute error: 'recvfrom' called with size bigger than buffer
+  // CLANG: error: 'recvfrom' called with size bigger than buffer
   recvfrom(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), NULL);
+}
+
+void test_recv() {
+  char buf[4] = {0};
+
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__recvfrom_error' declared with attribute error: 'recvfrom' called with size bigger than buffer
+  // CLANG: error: 'recv' called with size bigger than buffer
+  recv(0, buf, 6, 0);
 }
 
 void test_umask() {
@@ -316,8 +325,8 @@ void test_sendto() {
   sockaddr_in addr;
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: error: call to '__sendto_error' declared with attribute error: sendto called with size bigger than buffer
-  // CLANG: error: call to unavailable function 'sendto': sendto called with size bigger than buffer
+  // GCC: error: call to '__sendto_error' declared with attribute error: 'sendto' called with size bigger than buffer
+  // CLANG: error: 'sendto' called with size bigger than buffer
   sendto(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), sizeof(sockaddr_in));
 }
 
@@ -325,7 +334,22 @@ void test_send() {
   char buf[4] = {0};
 
   // NOLINTNEXTLINE(whitespace/line_length)
-  // GCC: error: call to '__sendto_error' declared with attribute error: sendto called with size bigger than buffer
-  // CLANG: error: call to unavailable function 'send': send called with size bigger than buffer
+  // GCC: error: call to '__sendto_error' declared with attribute error: 'sendto' called with size bigger than buffer
+  // CLANG: error: 'send' called with size bigger than buffer
   send(0, buf, 6, 0);
+}
+
+void test_realpath() {
+  char buf[4] = {0};
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // GCC: error: call to '__realpath_size_error' declared with attribute error: 'realpath' output parameter must be NULL or a pointer to a buffer with >= PATH_MAX bytes
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // CLANG: error: 'realpath' output parameter must be NULL or a pointer to a buffer with >= PATH_MAX bytes
+  realpath(".", buf);
+
+  // This is fine.
+  realpath(".", NULL);
+
+  // FIXME: But we should warn on this.
+  realpath(NULL, buf);
 }
