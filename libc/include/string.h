@@ -46,16 +46,16 @@ __BEGIN_DECLS
 #include <strings.h>
 #endif
 
-void* memccpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, int, size_t);
+void* memccpy(void* _Nonnull, const void* _Nonnull, int, size_t);
 void* memchr(const void* _Nonnull, int, size_t) __attribute_pure__ __overloadable
         __RENAME_CLANG(memchr);
 void* memrchr(const void* _Nonnull, int, size_t) __attribute_pure__ __overloadable
         __RENAME_CLANG(memrchr);
 int memcmp(const void* _Nonnull, const void* _Nonnull, size_t) __attribute_pure__;
-void* memcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t)
+void* memcpy(void* _Nonnull, const void* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(memcpy);
 #if defined(__USE_GNU)
-void* mempcpy(void* _Nonnull __restrict, const void* _Nonnull __restrict, size_t) __INTRODUCED_IN(23);
+void* mempcpy(void* _Nonnull, const void* _Nonnull, size_t) __INTRODUCED_IN(23);
 #endif
 void* memmove(void* _Nonnull, const void* _Nonnull, size_t) __overloadable
         __RENAME_CLANG(memmove);
@@ -83,18 +83,18 @@ size_t strlen(const char* _Nonnull) __attribute_pure__ __overloadable
 size_t __strlen_chk(const char* _Nonnull, size_t) __INTRODUCED_IN(17);
 
 int strcmp(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* stpcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict)
+char* stpcpy(char* _Nonnull, const char* _Nonnull)
         __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
-char* strcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict)
+char* strcpy(char* _Nonnull, const char* _Nonnull)
         __overloadable __RENAME_CLANG(strcpy);
-char* strcat(char* _Nonnull __restrict, const char* _Nonnull __restrict)
+char* strcat(char* _Nonnull, const char* _Nonnull)
         __overloadable __RENAME_CLANG(strcat);
 char* strdup(const char* _Nonnull);
 
 char* strstr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 char* strcasestr(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strtok(char* __restrict, const char* _Nonnull __restrict);
-char* strtok_r(char* __restrict, const char* _Nonnull __restrict, char** _Nonnull __restrict);
+char* strtok(char*, const char* _Nonnull);
+char* strtok_r(char*, const char* _Nonnull, char** _Nonnull);
 
 char* strerror(int);
 char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
@@ -105,33 +105,33 @@ int strerror_r(int, char*, size_t);
 #endif
 
 size_t strnlen(const char* _Nonnull, size_t) __attribute_pure__;
-char* strncat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t)
+char* strncat(char* _Nonnull, const char* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(strncat);
 char* strndup(const char* _Nonnull, size_t);
 int strncmp(const char* _Nonnull, const char* _Nonnull, size_t) __attribute_pure__;
-char* stpncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t)
+char* stpncpy(char* _Nonnull, const char* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
-char* strncpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t)
+char* strncpy(char* _Nonnull, const char* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(strncpy);
 
-size_t strlcat(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t)
+size_t strlcat(char* _Nonnull, const char* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(strlcat);
-size_t strlcpy(char* _Nonnull __restrict, const char* _Nonnull __restrict, size_t)
+size_t strlcpy(char* _Nonnull, const char* _Nonnull, size_t)
         __overloadable __RENAME_CLANG(strlcpy);
 
 size_t strcspn(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
 char* strpbrk(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-char* strsep(char** _Nonnull __restrict, const char* _Nonnull __restrict);
+char* strsep(char** _Nonnull, const char* _Nonnull);
 size_t strspn(const char* _Nonnull, const char* _Nonnull);
 
 char* strsignal(int);
 
 int strcoll(const char* _Nonnull, const char* _Nonnull) __attribute_pure__;
-size_t strxfrm(char* __restrict, const char* _Nonnull __restrict, size_t);
+size_t strxfrm(char*, const char* _Nonnull, size_t);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 int strcoll_l(const char* _Nonnull, const char* _Nonnull, locale_t) __attribute_pure__ __INTRODUCED_IN(21);
-size_t strxfrm_l(char* __restrict, const char* _Nonnull __restrict, size_t, locale_t) __INTRODUCED_IN(21);
+size_t strxfrm_l(char*, const char* _Nonnull, size_t, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
