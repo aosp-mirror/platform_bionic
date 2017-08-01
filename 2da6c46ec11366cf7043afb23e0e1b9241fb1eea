@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f1d6eb5_96f05369",
+        "filename": "libc/include/syslog.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-01T00:26:12Z",
+      "side": 1,
+      "message": "This might be a bit confusing if it shows up in an error message. Maybe phrase it as va_list __BIONIC_VA_LIST_NONNULL?",
+      "range": {
+        "startLine": 92,
+        "startChar": 40,
+        "endLine": 92,
+        "endChar": 56
+      },
+      "revId": "2da6c46ec11366cf7043afb23e0e1b9241fb1eea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
