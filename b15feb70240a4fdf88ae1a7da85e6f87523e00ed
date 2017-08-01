@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d46964d9_e3a3e6a6",
+        "filename": "libc/include/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-01T00:44:24Z",
+      "side": 1,
+      "message": "(our PATH_MAX is 4096.)",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 21
+      },
+      "revId": "b15feb70240a4fdf88ae1a7da85e6f87523e00ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
