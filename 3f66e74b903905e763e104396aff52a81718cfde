@@ -16,6 +16,24 @@
       "revId": "3f66e74b903905e763e104396aff52a81718cfde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0647e010_46e500bd",
+        "filename": "libc/include/bits/fortify/stdio.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-01T20:52:19Z",
+      "side": 1,
+      "message": "yeah, i\u0027ve done the ones i\u0027ve noticed, but doubtless missed a bunch. at some point i\u0027d like to clang-format the headers, but we should talk to you about fixing clang\u0027s diagnostics first: at the moment we\u0027re actually moving towards not wrapping declarations so that clang spits out the whole declaration (because it only shows the first line, which may or may not be relevant if you\u0027ve actually wrapped the declaration across multiple lines).",
+      "parentUuid": "fccab809_cbb7f4dd",
+      "revId": "3f66e74b903905e763e104396aff52a81718cfde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
