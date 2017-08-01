@@ -105,12 +105,11 @@ extern FILE __sF[] __REMOVED_IN(23);
  * stdio can provide without attempting to allocate further resources
  * (which could fail).  Do not use this for anything.
  */
+#define FOPEN_MAX 20
+#define FILENAME_MAX 4096
 
-#define	FOPEN_MAX	20	/* must be <= OPEN_MAX <sys/syslimits.h> */
-#define	FILENAME_MAX	1024	/* must be <= PATH_MAX <sys/syslimits.h> */
-
-#define	L_tmpnam	1024	/* XXX must be == PATH_MAX */
-#define	TMP_MAX		308915776
+#define L_tmpnam 4096
+#define TMP_MAX 308915776
 
 /*
  * Functions defined in ANSI C standard.
