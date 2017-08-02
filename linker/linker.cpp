@@ -1146,6 +1146,27 @@ static bool find_loaded_library_by_inode(android_namespace_t* ns,
   return *candidate != nullptr;
 }
 
+static bool find_loaded_library_by_realpath(android_namespace_t* ns, const char* realpath,
+                                            bool search_linked_namespaces, soinfo** candidate) {
+  auto predicate = [&](soinfo* si) { return strcmp(realpath, si->get_realpath()) == 0; };
+
+  *candidate = ns->soinfo_list().find_if(predicate);
+
+  if (*candidate == nullptr && search_linked_namespaces) {
+    for (auto& link : ns->linked_namespaces()) {
+      android_namespace_t* linked_ns = link.linked_namespace();
+      soinfo* si = linked_ns->soinfo_list().find_if(predicate);
+
+      if (si != nullptr && link.is_accessible(si->get_soname())) {
+        *candidate = si;
+        return true;
+      }
+    }
+  }
+
+  return *candidate != nullptr;
+}
+
 static bool load_library(android_namespace_t* ns,
                          LoadTask* task,
                          LoadTaskList* load_tasks,
@@ -1956,12 +1977,18 @@ void* do_dlopen(const char* name, int flags,
 
   const char* translated_name = name;
   if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
-    char translated_path[PATH_MAX];
-    if (realpath(translated_name, translated_path) != nullptr) {
-      asan_name_holder = std::string(kAsanLibDirPrefix) + translated_path;
+    char original_path[PATH_MAX];
+    if (realpath(name, original_path) != nullptr) {
+      asan_name_holder = std::string(kAsanLibDirPrefix) + original_path;
       if (file_exists(asan_name_holder.c_str())) {
-        translated_name = asan_name_holder.c_str();
-        PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+        soinfo* si = nullptr;
+        if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
+          PRINT("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
+                asan_name_holder.c_str());
+        } else {
+          PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          translated_name = asan_name_holder.c_str();
+        }
       }
     }
   }
