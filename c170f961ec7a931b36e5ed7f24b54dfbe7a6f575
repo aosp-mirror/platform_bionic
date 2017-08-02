@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "15a16ae2_0247803b",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-02T16:01:28Z",
+      "side": 1,
+      "message": "done.\n\n(these things are always borderline when we\u0027re just passing through the system call and not actually doing anything ourselves, but \u003cshrug\u003e.)",
+      "parentUuid": "616d0c03_33a70265",
+      "range": {
+        "startLine": 283,
+        "startChar": 30,
+        "endLine": 283,
+        "endChar": 59
+      },
+      "revId": "c170f961ec7a931b36e5ed7f24b54dfbe7a6f575",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "148dbdcb_97f3c989",
         "filename": "tests/sched_test.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-02T15:47:47Z",
       "side": 1,
       "message": "Any chance that running as non-root will cause this to fail? I don\u0027t know if selinux or anything else will cause this to fail.",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 76
+      },
+      "revId": "c170f961ec7a931b36e5ed7f24b54dfbe7a6f575",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a9dcf6f_f5d98181",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-02T16:01:28Z",
+      "side": 1,
+      "message": "works for me after \"adb unroot\" atm.",
+      "parentUuid": "148dbdcb_97f3c989",
       "range": {
         "startLine": 292,
         "startChar": 0,
