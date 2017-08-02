@@ -215,7 +215,7 @@ void test_read() {
 void test_open() {
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__creat_missing_mode' declared with attribute error: called with O_CREAT, but missing mode
-  // CLANG: error: call to unavailable function 'open': called with O_CREAT, but missing mode
+  // CLANG: error: 'open' called with O_CREAT, but missing mode
   open("/dev/null", O_CREAT);
 
   // NOLINTNEXTLINE(whitespace/line_length)

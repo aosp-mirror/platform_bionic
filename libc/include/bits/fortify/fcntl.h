@@ -48,11 +48,6 @@ __BIONIC_ERROR_FUNCTION_VISIBILITY
 int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
         __errorattr(__open_too_many_args_error);
 
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-int open(const char* pathname, int flags) __overloadable
-        __enable_if(flags & O_CREAT, __open_too_few_args_error)
-        __errorattr(__open_too_few_args_error);
-
 /*
  * pass_object_size serves two purposes here, neither of which involve __bos: it
  * disqualifies this function from having its address taken (so &open works),
@@ -60,21 +55,16 @@ int open(const char* pathname, int flags) __overloadable
  * open(const char *, int, ...).
  */
 __BIONIC_FORTIFY_INLINE
-int open(const char* const __pass_object_size pathname,
-         int flags) __overloadable {
+int open(const char* const __pass_object_size pathname, int flags)
+        __overloadable
+        __clang_error_if(flags & O_CREAT, "'open' " __open_too_few_args_error) {
     return __open_2(pathname, flags);
 }
 
 __BIONIC_FORTIFY_INLINE
-int open(const char* const __pass_object_size pathname, int flags, mode_t modes)
-        __overloadable {
+int open(const char* const __pass_object_size pathname, int flags, mode_t modes) __overloadable {
     return __open_real(pathname, flags, modes);
 }
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-int openat(int dirfd, const char* pathname, int flags) __overloadable
-        __enable_if(flags & O_CREAT, __open_too_few_args_error)
-        __errorattr(__open_too_few_args_error);
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
@@ -83,7 +73,9 @@ int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
 
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname,
-           int flags) __overloadable {
+           int flags)
+        __overloadable
+        __clang_error_if(flags & O_CREAT, "'openat' " __open_too_few_args_error) {
     return __openat_2(dirfd, pathname, flags);
 }
 
