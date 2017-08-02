@@ -32,22 +32,16 @@
 
 #if defined(__BIONIC_FORTIFY)
 #define __realpath_buf_too_small_str \
-    "realpath output parameter must be NULL or a >= PATH_MAX bytes buffer"
+    "'realpath' output parameter must be NULL or a pointer to a buffer with >= PATH_MAX bytes"
 
 /* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
 #define __PATH_MAX 4096
 
 #if defined(__clang__)
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-char* realpath(const char* path, char* resolved) __overloadable
-    __enable_if(__bos(resolved) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                __bos(resolved) < __PATH_MAX, __realpath_buf_too_small_str)
-    __errorattr(__realpath_buf_too_small_str);
-
-/* No need for a FORTIFY version; the only things we can catch are at
- * compile-time.
- */
+char* realpath(const char* path, char* resolved)
+        __clang_error_if(__bos(resolved) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                         __bos(resolved) < __PATH_MAX, __realpath_buf_too_small_str);
+/* No need for a definition; the only issues we can catch are at compile-time. */
 
 #else /* defined(__clang__) */
 
