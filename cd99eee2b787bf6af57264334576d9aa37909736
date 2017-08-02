@@ -16,6 +16,24 @@
       "revId": "cd99eee2b787bf6af57264334576d9aa37909736",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac79f90e_0f5fc141",
+        "filename": "tests/fortify_compilation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-02T05:33:33Z",
+      "side": 1,
+      "message": "Yeah, good catch. :)\n\nI\u0027ll submit a patch for that new diag shortly.",
+      "parentUuid": "b6ba4dca_cadce965",
+      "revId": "cd99eee2b787bf6af57264334576d9aa37909736",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
