@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "616d0c03_33a70265",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-02T15:47:47Z",
+      "side": 1,
+      "message": "Is it worth adding a test for sched_getscheduler(0) that it equals sched_getscheduler(getpid())? Assuming I\u0027m reading the documentation correctly.",
+      "range": {
+        "startLine": 283,
+        "startChar": 30,
+        "endLine": 283,
+        "endChar": 59
+      },
+      "revId": "c170f961ec7a931b36e5ed7f24b54dfbe7a6f575",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "148dbdcb_97f3c989",
+        "filename": "tests/sched_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-02T15:47:47Z",
+      "side": 1,
+      "message": "Any chance that running as non-root will cause this to fail? I don\u0027t know if selinux or anything else will cause this to fail.",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 76
+      },
+      "revId": "c170f961ec7a931b36e5ed7f24b54dfbe7a6f575",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
