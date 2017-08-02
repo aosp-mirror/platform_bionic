@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SCHED_H_
 #define _SCHED_H_
 
@@ -41,22 +42,22 @@ struct sched_param {
   int sched_priority;
 };
 
-int sched_setscheduler(pid_t, int, const struct sched_param*);
-int sched_getscheduler(pid_t);
+int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param);
+int sched_getscheduler(pid_t pid);
 int sched_yield(void);
-int sched_get_priority_max(int);
-int sched_get_priority_min(int);
-int sched_setparam(pid_t, const struct sched_param*);
-int sched_getparam(pid_t, struct sched_param*);
-int sched_rr_get_interval(pid_t, struct timespec*);
+int sched_get_priority_max(int policy);
+int sched_get_priority_min(int policy);
+int sched_setparam(pid_t pid, const struct sched_param* param);
+int sched_getparam(pid_t pid, struct sched_param* param);
+int sched_rr_get_interval(pid_t pid, struct timespec* quantum);
 
 #if defined(__USE_GNU)
 
-int clone(int (*)(void*), void*, int, void*, ...) __INTRODUCED_IN_ARM(9)
-    __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
-int unshare(int) __INTRODUCED_IN(17);
+int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...)
+    __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
+int unshare(int flags) __INTRODUCED_IN(17);
 int sched_getcpu(void) __INTRODUCED_IN(12);
-int setns(int, int) __INTRODUCED_IN(21);
+int setns(int fd, int ns_type) __INTRODUCED_IN(21);
 
 #ifdef __LP64__
 #define CPU_SETSIZE 1024
