@@ -83,8 +83,7 @@ int atoi(const char*) __attribute_pure__;
 long atol(const char*) __attribute_pure__;
 long long atoll(const char*) __attribute_pure__;
 
-char * realpath(const char *path, char *resolved) __overloadable
-        __RENAME_CLANG(realpath);
+char* realpath(const char* path, char* resolved);
 int system(const char *string);
 
 void* bsearch(const void* key, const void* base0, size_t nmemb, size_t size,
