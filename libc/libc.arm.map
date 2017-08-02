@@ -1320,6 +1320,8 @@ LIBC_O {
 
 LIBC_P {
   global:
+    __freading; # future
+    __fwriting; # future
     getlogin_r; # future
 } LIBC_O;
 

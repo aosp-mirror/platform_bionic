@@ -127,10 +127,11 @@ struct __sfileext {
 // Values for `__sFILE::_flags`.
 #define __SLBF 0x0001  // Line buffered.
 #define __SNBF 0x0002  // Unbuffered.
-// RD and WR are never simultaneously asserted: use _SRW instead.
-#define __SRD  0x0004  // OK to read.
-#define __SWR  0x0008  // OK to write.
-#define __SRW  0x0010  // Open for reading & writing.
+// __SRD and __SWR are mutually exclusive because they indicate what we did last.
+// If you want to know whether we were opened read-write, check __SRW instead.
+#define __SRD  0x0004  // Last operation was read.
+#define __SWR  0x0008  // Last operation was write.
+#define __SRW  0x0010  // Was opened for reading & writing.
 #define __SEOF 0x0020  // Found EOF.
 #define __SERR 0x0040  // Found error.
 #define __SMBF 0x0080  // `_buf` is from malloc.
