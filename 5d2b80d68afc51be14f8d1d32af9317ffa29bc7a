@@ -22,6 +22,30 @@
       "revId": "5d2b80d68afc51be14f8d1d32af9317ffa29bc7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c3e7c54_f8dbc874",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-08-02T16:10:31Z",
+      "side": 1,
+      "message": "This double loading is no longer a problem. Since this ElfReader object is now shared across recursive calls to find_libraries, Read() and Load() can be called multiple times.",
+      "parentUuid": "315cf988_eb09822a",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 3
+      },
+      "revId": "5d2b80d68afc51be14f8d1d32af9317ffa29bc7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
