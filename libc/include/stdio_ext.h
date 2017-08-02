@@ -40,7 +40,9 @@ __BEGIN_DECLS
 
 size_t __fbufsize(FILE*) __INTRODUCED_IN(23);
 int __freadable(FILE*) __INTRODUCED_IN(23);
+int __freading(FILE*) __INTRODUCED_IN_FUTURE;
 int __fwritable(FILE*) __INTRODUCED_IN(23);
+int __fwriting(FILE*) __INTRODUCED_IN_FUTURE;
 int __flbf(FILE*) __INTRODUCED_IN(23);
 void __fpurge(FILE*) __INTRODUCED_IN(23);
 size_t __fpending(FILE*) __INTRODUCED_IN(23);
