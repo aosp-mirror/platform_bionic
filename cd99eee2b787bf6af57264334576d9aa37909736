@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6ba4dca_cadce965",
+        "filename": "tests/fortify_compilation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-02T05:16:54Z",
+      "side": 1,
+      "message": "really? did you mean to test (\".\", NULL) instead?\n\n(i know we\u0027ll return EINVAL here so strictly speaking this is one of those \"since i won\u0027t use the buffer anyway, it doesn\u0027t really matter that it\u0027s too small\", but since it seems like the most likely way we\u0027ll run into this case is because someone actually gets the `path` and `buf` arguments the wrong way round, a diagnostic seems like it would be preferable to accepting that this is technically \"correct\"?)",
+      "revId": "cd99eee2b787bf6af57264334576d9aa37909736",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
