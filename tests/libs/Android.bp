@@ -617,3 +617,59 @@ cc_test {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["preinit_syscall_test_helper.cpp"],
 }
+
+cc_test {
+    name: "ld_preload_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper.cpp"],
+    shared_libs: ["ld_preload_test_helper_lib1"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test_library {
+    name: "ld_preload_test_helper_lib1",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper_lib1.cpp"],
+}
+
+cc_test_library {
+    name: "ld_preload_test_helper_lib2",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper_lib2.cpp"],
+}
+
+cc_test {
+    name: "ld_config_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper.cpp"],
+    shared_libs: ["ld_config_test_helper_lib1"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib1",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib1.cpp"],
+    shared_libs: ["ld_config_test_helper_lib2"],
+    relative_install_path: "/ns2",
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib2",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib2.cpp"],
+    relative_install_path: "/ns2",
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib3",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib3.cpp"],
+}
