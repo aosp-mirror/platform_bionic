@@ -22,6 +22,30 @@
       "revId": "2d03ba5918665cdf004b3ac3d7bb5fb917706db4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1dbc66d_37186e56",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2017-08-03T21:10:47Z",
+      "side": 1,
+      "message": "I think the userspace on x86-64 is normally 47 bits. But I agree, lets just use the 48-bit limit on all LP64 platforms to avoid such problems in the future.",
+      "parentUuid": "43a953cd_150a118d",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "2d03ba5918665cdf004b3ac3d7bb5fb917706db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
