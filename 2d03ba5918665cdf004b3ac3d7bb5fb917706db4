@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43a953cd_150a118d",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-03T21:07:40Z",
+      "side": 1,
+      "message": "should this just be __LP64__? isn\u0027t x86-64 48 bits too?",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "2d03ba5918665cdf004b3ac3d7bb5fb917706db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
