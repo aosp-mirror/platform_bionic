@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e54870ff_cccc4af8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1617,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-08-03T01:56:22Z",
+      "side": 1,
+      "message": "As I replied in the previous comment, they are added in linker_main.cpp before calling find_libraries().",
+      "parentUuid": "2fa24d4e_04cb1cc0",
+      "revId": "02586a2a34e6acfccf359b94db840f422b6c0231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a4ef53c_21139a8a",
         "filename": "tests/dl_test.cpp",
         "patchSetId": 2
