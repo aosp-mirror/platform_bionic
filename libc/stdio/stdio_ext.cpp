@@ -39,17 +39,13 @@ size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;
 }
 
-/* For a _SRW stream, we don't know whether we last read or wrote.
 int __freading(FILE* fp) {
-  return (fp->_flags & _SRD) != 0 || ...;
+  return (fp->_flags & __SRD) != 0;
 }
-*/
 
-/* For a _SRW stream, we don't know whether we last read or wrote.
-int __fwriting(FILE*) {
-  return (fp->_flags & _SWR) != 0 || ...;
+int __fwriting(FILE* fp) {
+  return (fp->_flags & __SWR) != 0;
 }
-*/
 
 int __freadable(FILE* fp) {
   return (fp->_flags & (__SRD|__SRW)) != 0;

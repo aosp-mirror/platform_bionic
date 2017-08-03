@@ -127,10 +127,11 @@ struct __sfileext {
 // Values for `__sFILE::_flags`.
 #define __SLBF 0x0001  // Line buffered.
 #define __SNBF 0x0002  // Unbuffered.
-// RD and WR are never simultaneously asserted: use _SRW instead.
-#define __SRD  0x0004  // OK to read.
-#define __SWR  0x0008  // OK to write.
-#define __SRW  0x0010  // Open for reading & writing.
+// __SRD and __SWR are mutually exclusive because they indicate what we did last.
+// If you want to know whether we were opened read-write, check __SRW instead.
+#define __SRD  0x0004  // Last operation was read.
+#define __SWR  0x0008  // Last operation was write.
+#define __SRW  0x0010  // Was opened for reading & writing.
 #define __SEOF 0x0020  // Found EOF.
 #define __SERR 0x0040  // Found error.
 #define __SMBF 0x0080  // `_buf` is from malloc.
@@ -201,10 +202,10 @@ int	__sflush_locked(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
-int	__vfprintf(FILE *, const char *, __va_list);
-int	__svfscanf(FILE * __restrict, const char * __restrict, __va_list);
-int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
-int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
+int	__vfprintf(FILE *, const char *, va_list);
+int	__svfscanf(FILE *, const char *, va_list);
+int	__vfwprintf(FILE *, const wchar_t *, va_list);
+int	__vfwscanf(FILE *, const wchar_t *, va_list);
 
 /*
  * Return true if the given FILE cannot be written now.

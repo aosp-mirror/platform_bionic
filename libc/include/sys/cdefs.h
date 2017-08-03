@@ -111,39 +111,6 @@
 #define __unused __attribute__((__unused__))
 #define __used __attribute__((__used__))
 
-/*
- * _Nonnull is similar to the nonnull attribute in that it will instruct
- * compilers to warn the user if it can prove that a null argument is being
- * passed. Unlike the nonnull attribute, this annotation indicated that a value
- * *should not* be null, not that it *cannot* be null, or even that the behavior
- * is undefined. The important distinction is that the optimizer will perform
- * surprising optimizations like the following:
- *
- *     void foo(void*) __attribute__(nonnull, 1);
- *
- *     int bar(int* p) {
- *       foo(p);
- *
- *       // The following null check will be elided because nonnull attribute
- *       // means that, since we call foo with p, p can be assumed to not be
- *       // null. Thus this will crash if we are called with a null pointer.
- *       if (p != NULL) {
- *         return *p;
- *       }
- *       return 0;
- *     }
- *
- *     int main() {
- *       return bar(NULL);
- *     }
- *
- * http://clang.llvm.org/docs/AttributeReference.html#nonnull
- */
-#if !(defined(__clang__) && __has_feature(nullability))
-#define _Nonnull
-#define _Nullable
-#endif
-
 #define __printflike(x, y) __attribute__((__format__(printf, x, y)))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
 
@@ -185,11 +152,16 @@
 #  define __warnattr(msg) __attribute__((deprecated(msg)))
 #  define __warnattr_real(msg) __attribute__((deprecated(msg)))
 #  define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
+#  define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
+#  define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
 #else
 #  define __errorattr(msg) __attribute__((__error__(msg)))
 #  define __warnattr(msg) __attribute__((__warning__(msg)))
 #  define __warnattr_real __warnattr
 /* enable_if doesn't exist on other compilers; give an error if it's used. */
+/* diagnose_if doesn't exist either, but it's often tagged on non-clang-specific functions */
+#  define __clang_error_if(cond, msg)
+#  define __clang_warning_if(cond, msg)
 
 /* errordecls really don't work as well in clang as they do in GCC. */
 #  define __errordecl(name, msg) extern void name(void) __errorattr(msg)
@@ -308,6 +280,11 @@
 #endif
 #define __pass_object_size __pass_object_size_n(__bos_level)
 #define __pass_object_size0 __pass_object_size_n(0)
+
+/* FIXME: This should be __BIONIC_FORTIFY, but we don't enable FORTIFY in -O0. */
+#if (defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
+#  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
+#endif
 
 /*
  * Used to support clangisms with FORTIFY. Because these change how symbols are
