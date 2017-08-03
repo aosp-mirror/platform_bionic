@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d41770fe_e229d3a2",
+        "filename": "libc/include/dlfcn.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-03T05:05:21Z",
+      "side": 1,
+      "message": "no, we don\u0027t want this in the \u003cdlfcn.h\u003e header. just extern \"C\" it in the one place it\u0027s used?",
+      "revId": "b8adc412d71a57cb4bc41db895a56e9bf9f51806",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
