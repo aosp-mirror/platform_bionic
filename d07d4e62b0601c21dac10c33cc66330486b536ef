@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5e0b88a_a44e6e02",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "Make this static. Also we tend to name our globals g_str_to_func so that it\u0027s obvious this is a global variable.\n\nSame for the other globals you are using (and the static comment too).",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 52
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab09687a_b4dadb95",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "You mix function name style a bit in this file, I\u0027d stick with no underscores and CapitolNames format same as SanitizeOpts.",
+      "range": {
+        "startLine": 45,
+        "startChar": 5,
+        "endLine": 45,
+        "endChar": 10
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0878962_ba56947f",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "Our style is to put this on the same line as the if, or put braces on it.",
+      "range": {
+        "startLine": 165,
+        "startChar": 2,
+        "endLine": 165,
+        "endChar": 27
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39645380_2747db64",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "This function exists in android::base.\n\nYou can find it in android-base/strings.h (where base is system/core/base).",
+      "range": {
+        "startLine": 227,
+        "startChar": 4,
+        "endLine": 227,
+        "endChar": 8
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cce34242_f68423e8",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "commented out",
+      "range": {
+        "startLine": 123,
+        "startChar": 11,
+        "endLine": 123,
+        "endChar": 20
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "feeb5074_0eaf1e00",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t apply to this code.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 14
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a22960e3_ebcb934c",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-03T22:14:36Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s necessary to split out these three functions. The RunTest and Verify functions are so small that adding them into this function and renaming it Verify is probably better. I did it because I called all of the functions separately.",
+      "range": {
+        "startLine": 103,
+        "startChar": 18,
+        "endLine": 103,
+        "endChar": 32
+      },
+      "revId": "d07d4e62b0601c21dac10c33cc66330486b536ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
