@@ -31,6 +31,9 @@
 
 #include <android/dlext.h>
 
+#include <unordered_map>
+#include <vector>
+
 #include "linker_namespaces.h"
 #include "linker_soinfo.h"
 
@@ -44,7 +47,9 @@ class ProtectedDataGuard {
   static size_t ref_count_;
 };
 
-void init_default_namespace(const char* executable_path);
+class ElfReader;
+
+std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path);
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
                      struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags);
@@ -59,7 +64,9 @@ bool find_libraries(android_namespace_t* ns,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
-                    bool search_linked_namespaces);
+                    bool search_linked_namespaces,
+                    std::unordered_map<const soinfo*, ElfReader>& readers_map,
+                    std::vector<android_namespace_t*>* namespaces = nullptr);
 
 void solist_add_soinfo(soinfo* si);
 bool solist_remove_soinfo(soinfo* si);
