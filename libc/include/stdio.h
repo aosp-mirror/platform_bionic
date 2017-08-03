@@ -153,8 +153,8 @@ int vdprintf(int, const char*, va_list) __printflike(2, 0) __INTRODUCED_IN(21);
  * Allow users to just use dprintf and vfdprintf on any version by renaming those calls to their
  * legacy equivalents if needed.
  */
-int dprintf(int, const char*, ...) __printflike(2, 3) __RENAME(fdprintf);
-int vdprintf(int, const char*, va_list) __printflike(2, 0) __RENAME(vfdprintf);
+int dprintf(int, const char*, ...) __RENAME(fdprintf) __printflike(2, 3);
+int vdprintf(int, const char*, va_list) __RENAME(vfdprintf) __printflike(2, 0);
 #endif
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
