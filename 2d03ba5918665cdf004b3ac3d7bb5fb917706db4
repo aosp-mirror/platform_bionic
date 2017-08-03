@@ -46,6 +46,30 @@
       "revId": "2d03ba5918665cdf004b3ac3d7bb5fb917706db4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "260cbd31_99ed455a",
+        "filename": "libc/private/CFIShadow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-03T21:12:39Z",
+      "side": 1,
+      "message": "yeah, looks like x86-64 is more like 47: \"In addition, the AMD specification requires that the most significant 16 bits of any virtual address, bits 48 through 63, must be copies of bit 47 (in a manner akin to sign extension). If this requirement is not met, the processor will raise an exception.[11](p131) Addresses complying with this rule are referred to as \"canonical form.\"[11](p130) Canonical form addresses run from 0 through 00007FFF\u0027FFFFFFFF, and from FFFF8000\u002700000000 through FFFFFFFF\u0027FFFFFFFF, for a total of 256 TB of usable virtual address space. This is still 65,536 times larger than the virtual 4 GB address space of 32-bit machines.\" from https://en.wikipedia.org/wiki/X86-64",
+      "parentUuid": "c1dbc66d_37186e56",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 23
+      },
+      "revId": "2d03ba5918665cdf004b3ac3d7bb5fb917706db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
