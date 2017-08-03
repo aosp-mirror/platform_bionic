@@ -37,37 +37,45 @@ char* __strncpy_chk2(char*, const char*, size_t, size_t, size_t) __INTRODUCED_IN
 size_t __strlcpy_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 size_t __strlcat_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 
-/* Only used with FORTIFY, but some headers that need it undef FORTIFY, so we
- * have the definition out here.
- */
-struct __bionic_zero_size_is_okay_t {};
-
 #if defined(__BIONIC_FORTIFY)
 // These can share their implementation between gcc and clang with minimal
 // trickery...
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-void* memcpy(void* const dst __pass_object_size0, const void*  src, size_t copy_amount)
-        __overloadable {
+void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
+        __overloadable
+        __clang_error_if(__bos0(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(dst) < copy_amount,
+                         "'memcpy' called with size bigger than buffer") {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) __overloadable {
+void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
+        __overloadable
+        __clang_error_if(__bos0(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(dst) < len,
+                         "'memmove' called with size bigger than buffer") {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
-char* stpcpy(char* const dst __pass_object_size, const char* src) __overloadable {
+char* stpcpy(char* const dst __pass_object_size, const char* src)
+        __overloadable
+        __clang_error_if(__bos(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                             __bos(dst) <= __builtin_strlen(src),
+                         "'stpcpy' called with string bigger than buffer") {
     return __builtin___stpcpy_chk(dst, src, __bos(dst));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-char* strcpy(char* const dst __pass_object_size, const char* src) __overloadable {
+char* strcpy(char* const dst __pass_object_size, const char* src)
+        __overloadable
+        __clang_error_if(__bos(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
+                             __bos(dst) <= __builtin_strlen(src),
+                         "'strcpy' called with string bigger than buffer") {
     return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
 
@@ -82,7 +90,12 @@ char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __o
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable {
+void* memset(void* const s __pass_object_size0, int c, size_t n)
+        __overloadable
+        __clang_error_if(__bos0(s) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(s) < n,
+                         "'memset' called with size bigger than buffer")
+        /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
+        __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
     return __builtin___memset_chk(s, c, n, __bos0(s));
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -90,35 +103,9 @@ void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable 
 
 #if defined(__clang__)
 
-#define __error_if_overflows_dst(name, dst, n, what) \
-    __enable_if(__bos0(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE && \
-                __bos0(dst) < (n), "selected when the buffer is too small") \
-    __errorattr(#name " called with " what " bigger than buffer")
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memcpy(void* dst, const void* src, size_t copy_amount) __overloadable
-        __error_if_overflows_dst(memcpy, dst, copy_amount, "size");
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memmove(void *dst, const void* src, size_t len) __overloadable
-        __error_if_overflows_dst(memmove, dst, len, "size");
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memset(void* s, int c, size_t n) __overloadable
-        __error_if_overflows_dst(memset, s, n, "size");
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-char* stpcpy(char* dst, const char* src) __overloadable
-        __error_if_overflows_dst(stpcpy, dst, __builtin_strlen(src), "string");
-
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-char* strcpy(char* dst, const char* src) __overloadable
-        __error_if_overflows_dst(strcpy, dst, __builtin_strlen(src), "string");
-
 #if __ANDROID_API__ >= __ANDROID_API_M__
 __BIONIC_FORTIFY_INLINE
-void* memchr(const void* const s __pass_object_size, int c, size_t n)
-        __overloadable {
+void* memchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -129,8 +116,7 @@ void* memchr(const void* const s __pass_object_size, int c, size_t n)
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memrchr(const void* const s __pass_object_size, int c, size_t n)
-        __overloadable {
+void* memrchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -173,8 +159,7 @@ char* strncpy(char* const dst __pass_object_size, const char* const src __pass_o
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
-        __overloadable {
+size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size) __overloadable {
     size_t bos = __bos(dst);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -185,8 +170,7 @@ size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
-        __overloadable {
+size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size) __overloadable {
     size_t bos = __bos(dst);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -210,15 +194,13 @@ size_t strlen(const char* const s __pass_object_size)
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlen(const char* const s __pass_object_size0)
-        __overloadable {
+size_t strlen(const char* const s __pass_object_size0) __overloadable {
     size_t bos = __bos0(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __builtin_strlen(s);
     }
 
-    // return __builtin_strlen(s);
     return __strlen_chk(s, bos);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -247,38 +229,6 @@ char* strrchr(const char* const s __pass_object_size, int c) __overloadable {
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
-/* In *many* cases, memset(foo, sizeof(foo), 0) is a mistake where the user has
- * flipped the size + value arguments. However, there may be cases (e.g. with
- * macros) where it's okay for the size to fold to zero. We should warn on this,
- * but we should also provide a FORTIFY'ed escape hatch.
- */
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memset(void* s, int c, size_t n, struct __bionic_zero_size_is_okay_t ok)
-        __overloadable
-        __error_if_overflows_dst(memset, s, n, "size");
-
-__BIONIC_FORTIFY_INLINE
-void* memset(void* const s __pass_object_size0, int c, size_t n, struct __bionic_zero_size_is_okay_t ok __attribute__((unused)))
-        __overloadable {
-    return __builtin___memset_chk(s, c, n, __bos0(s));
-}
-
-extern struct __bionic_zero_size_is_okay_t __bionic_zero_size_is_okay;
-/* We verify that `c` is non-zero, because as pointless as memset(foo, 0, 0) is,
- * flipping size + count will do nothing.
- */
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-void* memset(void* s, int c, size_t n) __overloadable
-        __enable_if(c && !n, "selected when we'll set zero bytes")
-        __RENAME_CLANG(memset)
-        __warnattr_real("will set 0 bytes; maybe the arguments got flipped? "
-                        "(Add __bionic_zero_size_is_okay as a fourth argument "
-                        "to silence this.)");
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
-
-#undef __error_zero_size
-#undef __error_if_overflows_dst
 #else // defined(__clang__)
 extern char* __strncpy_real(char*, const char*, size_t) __RENAME(strncpy);
 extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
