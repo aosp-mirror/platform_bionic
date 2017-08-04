@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bceeef92_ed523cbf",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T23:00:29Z",
+      "side": 1,
+      "message": "I can improve this now that I have platform_version() (I wrote this weeks ago)",
+      "revId": "143f30a76cdfd19c556125c90fcc84d09f03a527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
