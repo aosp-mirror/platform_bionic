@@ -22,6 +22,30 @@
       "revId": "db174f114cada2fc1222123d91128bba911aca1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d027fe35_703883ff",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T22:52:13Z",
+      "side": 1,
+      "message": "No libbase in the NDK.",
+      "parentUuid": "52d74b95_e5c3781e",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 39
+      },
+      "revId": "db174f114cada2fc1222123d91128bba911aca1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
