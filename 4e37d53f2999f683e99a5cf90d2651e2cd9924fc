@@ -16,6 +16,24 @@
       "revId": "4e37d53f2999f683e99a5cf90d2651e2cd9924fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d3ce854_5be4b936",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-04T05:56:07Z",
+      "side": 1,
+      "message": "Yeah. If no one\u0027s complained about \"my mode isn\u0027t being set when I\u0027m using this linkat trick\" so far, I\u0027d imagine that it\u0027s incredibly rare; I\u0027m happy to just suggest the overwhelmingly common case.",
+      "parentUuid": "f85a9f0b_68e06014",
+      "revId": "4e37d53f2999f683e99a5cf90d2651e2cd9924fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

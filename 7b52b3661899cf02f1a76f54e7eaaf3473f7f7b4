@@ -70,6 +70,30 @@
       "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "635a2032_d92a932c",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-04T05:56:07Z",
+      "side": 1,
+      "message": "\u003e i suspect it\u0027s likely to be more usual to _not_ then link the fd to a name, keeping the existing behavior of only warning if O_CREAT is missing a mode probably makes most sense?\n\nAgreed. If people come to us begging for warnings, we can trivially add\n\n#ifdef __BIONIC_STRICT_OPEN_WARNINGS\n  __clang_warning_if(..., \"\u0027open\u0027 has O_TMPFILE but no mode\")\n#endif\n\nand declare victory. I\u0027d rather not until someone asks, though (because I doubt anyone will ever care ;) )",
+      "parentUuid": "34de371b_f59429de",
+      "range": {
+        "startLine": 44,
+        "startChar": 81,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
