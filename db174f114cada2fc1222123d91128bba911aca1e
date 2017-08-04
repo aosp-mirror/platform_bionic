@@ -46,6 +46,30 @@
       "revId": "db174f114cada2fc1222123d91128bba911aca1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "991e9203_ae78b963",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T22:54:32Z",
+      "side": 1,
+      "message": "removing libbase from all the bionic tests is going to suck. can\u0027t we just link against a copy?",
+      "parentUuid": "d027fe35_703883ff",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 39
+      },
+      "revId": "db174f114cada2fc1222123d91128bba911aca1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
