@@ -70,6 +70,30 @@
       "revId": "db174f114cada2fc1222123d91128bba911aca1e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1f250f3_ee65c4e6",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T22:58:01Z",
+      "side": 1,
+      "message": "It\u0027s fewer tests than you\u0027d think. Right now I\u0027ve just disabled any tests that depend on libbase when building with the NDK. It\u0027s not a good long term solution.\n\nlibbase will need to move into its own git project if we\u0027re going to use it in the NDK manifest. I don\u0027t want to be pulling in system/core...",
+      "parentUuid": "991e9203_ae78b963",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 39
+      },
+      "revId": "db174f114cada2fc1222123d91128bba911aca1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
