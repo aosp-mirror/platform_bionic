@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aeff334a_29c63470",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T22:53:27Z",
+      "side": 1,
+      "message": "Oops. Screwed up while splitting all the changes out.",
+      "revId": "c08195098d2320dad5a6d6523bd82a726ab974e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
