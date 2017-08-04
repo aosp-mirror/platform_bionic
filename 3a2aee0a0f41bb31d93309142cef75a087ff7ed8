@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02ba6c68_3a50f3d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T01:48:47Z",
+      "side": 1,
+      "message": "we do:\n\n  int open(const char* pathname, int flags, ...) {\n    mode_t mode \u003d 0;\n\n    if ((flags \u0026 O_CREAT) !\u003d 0) {\n\nplus the man page (http://man7.org/linux/man-pages/man2/open.2.html) seems to encourage O_TMPFILE with no mode.",
+      "revId": "3a2aee0a0f41bb31d93309142cef75a087ff7ed8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
