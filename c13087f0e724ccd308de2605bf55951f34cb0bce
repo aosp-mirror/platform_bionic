@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "680a24ed_c7b5b6ca",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T23:22:38Z",
+      "side": 1,
+      "message": "remove the DOUBLE_s here",
+      "range": {
+        "startLine": 453,
+        "startChar": 11,
+        "endLine": 453,
+        "endChar": 18
+      },
+      "revId": "c13087f0e724ccd308de2605bf55951f34cb0bce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
