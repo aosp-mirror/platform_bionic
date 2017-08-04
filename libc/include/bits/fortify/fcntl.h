@@ -41,6 +41,9 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 #if defined(__BIONIC_FORTIFY)
 #define __open_too_many_args_error "too many arguments"
 #define __open_too_few_args_error "called with O_CREAT, but missing mode"
+#define __open_useless_modes_warning "has superfluous mode bits; missing O_CREAT?"
+/* O_TMPFILE shares bits with O_DIRECTORY. */
+#define __open_modes_useful(flags) (((flags) & O_CREAT) || ((flags) & O_TMPFILE) == O_TMPFILE)
 #if defined(__clang__)
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
@@ -62,7 +65,10 @@ int open(const char* const __pass_object_size pathname, int flags)
 }
 
 __BIONIC_FORTIFY_INLINE
-int open(const char* const __pass_object_size pathname, int flags, mode_t modes) __overloadable {
+int open(const char* const __pass_object_size pathname, int flags, mode_t modes)
+        __overloadable
+        __clang_warning_if(!__open_modes_useful(flags) && modes,
+                           "'open' " __open_useless_modes_warning) {
     return __open_real(pathname, flags, modes);
 }
 
@@ -72,16 +78,17 @@ int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
         __errorattr(__open_too_many_args_error);
 
 __BIONIC_FORTIFY_INLINE
-int openat(int dirfd, const char* const __pass_object_size pathname,
-           int flags)
+int openat(int dirfd, const char* const __pass_object_size pathname, int flags)
         __overloadable
         __clang_error_if(flags & O_CREAT, "'openat' " __open_too_few_args_error) {
     return __openat_2(dirfd, pathname, flags);
 }
 
 __BIONIC_FORTIFY_INLINE
-int openat(int dirfd, const char* const __pass_object_size pathname, int flags,
-           mode_t modes) __overloadable {
+int openat(int dirfd, const char* const __pass_object_size pathname, int flags, mode_t modes)
+        __overloadable
+        __clang_warning_if(!__open_modes_useful(flags) && modes,
+                           "'openat' " __open_useless_modes_warning) {
     return __openat_real(dirfd, pathname, flags, modes);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
@@ -134,4 +141,6 @@ int openat(int dirfd, const char* pathname, int flags, ...) {
 
 #undef __open_too_many_args_error
 #undef __open_too_few_args_error
+#undef __open_useless_modes_warning
+#undef __open_modes_useful
 #endif /* defined(__BIONIC_FORTIFY) */
