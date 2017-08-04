@@ -22,6 +22,30 @@
       "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9089f55_d2096618",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-04T05:13:10Z",
+      "side": 1,
+      "message": "I read something about O_TMPFILE being used with linkat to create reachable/\"atomically updated\" files at some point, so I thought the mode was useful in some cases. Could be misremembering/misunderstanding, though.\n\nSince it looks like we just drop the mode bits anyway, yeah, good point.",
+      "parentUuid": "2bf76b70_53ef23b4",
+      "range": {
+        "startLine": 44,
+        "startChar": 81,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
