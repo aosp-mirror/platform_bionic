@@ -16,6 +16,24 @@
       "revId": "392b2936c716fcb6d2dc974e39bc535cef190c18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25bd66f3_6293bd81",
+        "filename": "libc/bionic/open.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T17:22:50Z",
+      "side": 1,
+      "message": "(but removed both as probably useless in the final ps.)",
+      "parentUuid": "905270e1_0bd72632",
+      "revId": "392b2936c716fcb6d2dc974e39bc535cef190c18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
