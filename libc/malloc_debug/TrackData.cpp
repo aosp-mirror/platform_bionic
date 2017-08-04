@@ -59,6 +59,49 @@ void TrackData::GetList(std::vector<const Header*>* list) {
   });
 }
 
+void TrackData::GetListBySizeThenBacktrace(std::vector<const Header*>* list, size_t* total_memory) {
+  if (!(debug_->config().options() & BACKTRACE)) {
+    return;
+  }
+
+  *total_memory = 0;
+  for (const auto& header : headers_) {
+    list->push_back(header);
+    *total_memory += header->real_size();
+  }
+
+  // Put all zygote allocations first by size and backtrace.
+  // Then all zygote child allocation by size and backtrace.
+  std::sort(list->begin(), list->end(), [&](const Header* a, const Header* b) {
+    if (a->zygote_child_alloc() && !b->zygote_child_alloc()) {
+      return false;
+    } else if (!a->zygote_child_alloc() && b->zygote_child_alloc()) {
+      return true;
+    }
+    if (a->real_size() != b->real_size()) return a->real_size() < b->real_size();
+    // If the size is the same, compare backtrace elements.
+    BacktraceHeader* a_back = debug_->GetAllocBacktrace(a);
+    BacktraceHeader* b_back = debug_->GetAllocBacktrace(b);
+    for (size_t i = 0; i < a_back->num_frames; i++) {
+      if (i > b_back->num_frames) {
+        // All frames equal up to this point, but a has more frames available.
+        return false;
+      }
+      if (a_back->frames[i] < b_back->frames[i]) {
+        return false;
+      } else if (a_back->frames[i] > b_back->frames[i]) {
+        return true;
+      }
+    }
+    if (a_back->num_frames < b_back->num_frames) {
+      // All frames equal up to this point, but b has more frames available.
+      return true;
+    }
+    return false;
+  });
+
+}
+
 void TrackData::Add(const Header* header, bool backtrace_found) {
   pthread_mutex_lock(&mutex_);
   if (backtrace_found) {

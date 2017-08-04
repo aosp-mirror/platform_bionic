@@ -56,6 +56,7 @@ static constexpr size_t MAX_GUARD_BYTES = 16384;
 
 static constexpr size_t DEFAULT_BACKTRACE_FRAMES = 16;
 static constexpr size_t MAX_BACKTRACE_FRAMES = 256;
+static constexpr const char DEFAULT_BACKTRACE_DUMP_PREFIX[] = "/data/local/tmp/backtrace_heap";
 
 static constexpr size_t DEFAULT_EXPAND_BYTES = 16;
 static constexpr size_t MAX_EXPAND_BYTES = 16384;
@@ -83,6 +84,13 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     },
     {"backtrace_enable_on_signal",
       {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
+    },
+
+    {"backtrace_dump_on_exit",
+      {0, &Config::SetBacktraceDumpOnExit},
+    },
+    {"backtrace_dump_prefix",
+      {0, &Config::SetBacktraceDumpPrefix},
     },
 
     {"fill",
@@ -236,6 +244,24 @@ bool Config::SetBacktraceEnableOnSignal(const std::string& option, const std::st
                     &backtrace_frames_);
 }
 
+bool Config::SetBacktraceDumpOnExit(const std::string& option, const std::string& value) {
+  if (Config::VerifyValueEmpty(option, value)) {
+    backtrace_dump_on_exit_ = true;
+    return true;
+  }
+  return false;
+}
+
+bool Config::SetBacktraceDumpPrefix(const std::string&, const std::string& value) {
+  if (value.empty()) {
+    backtrace_dump_prefix_ = DEFAULT_BACKTRACE_DUMP_PREFIX;
+  } else {
+    backtrace_dump_prefix_ = value;
+  }
+  return true;
+}
+
+
 bool Config::SetExpandAlloc(const std::string& option, const std::string& value) {
   return ParseValue(option, value, DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, &expand_alloc_bytes_);
 }
@@ -309,6 +335,9 @@ void Config::LogUsage() const {
   error_log("  backtrace[=XX]");
   error_log("    Enable capturing the backtrace at the point of allocation.");
   error_log("    If XX is set it sets the number of backtrace frames.");
+  error_log("    This option also enables dumping the backtrace heap data");
+  error_log("    when a signal is received. The data is dumped to the file");
+  error_log("    backtrace_dump_prefix.<PID>.txt.");
   error_log("    The default is %zu frames, the max number of frames is %zu.",
             DEFAULT_BACKTRACE_FRAMES, MAX_BACKTRACE_FRAMES);
   error_log("");
@@ -318,6 +347,19 @@ void Config::LogUsage() const {
   error_log("    receives a signal. If XX is set it sets the number of backtrace");
   error_log("    frames. The default is %zu frames, the max number of frames is %zu.",
             DEFAULT_BACKTRACE_FRAMES, MAX_BACKTRACE_FRAMES);
+  error_log("");
+  error_log("  backtrace_dump_prefix[=FILE]");
+  error_log("    This option only has meaning if the backtrace option has been specified.");
+  error_log("    This is the prefix of the name of the file to which backtrace heap");
+  error_log("    data will be dumped. The file will be named backtrace_dump_prefix.<PID>.txt.");
+  error_log("    The default is %s.", DEFAULT_BACKTRACE_DUMP_PREFIX);
+
+  error_log("");
+  error_log("  backtrace_dump_on_exit");
+  error_log("    This option only has meaning if the backtrace option has been specified.");
+  error_log("    This will cause all live allocations to be dumped to the file");
+  error_log("    backtrace_dump_prefix.<PID>.final.txt.");
+  error_log("    The default is false.");
   error_log("");
   error_log("  fill_on_alloc[=XX]");
   error_log("    On first allocation, fill with the value 0x%02x.", DEFAULT_FILL_ALLOC_VALUE);
@@ -426,12 +468,15 @@ bool Config::Init(const char* options_str) {
   front_guard_value_ = DEFAULT_FRONT_GUARD_VALUE;
   rear_guard_value_ = DEFAULT_REAR_GUARD_VALUE;
   backtrace_signal_ = SIGRTMAX - 19;
+  backtrace_dump_signal_ = SIGRTMAX - 17;
   record_allocs_signal_ = SIGRTMAX - 18;
   free_track_backtrace_num_frames_ = 0;
   record_allocs_file_.clear();
   fill_on_free_bytes_ = 0;
   backtrace_enable_on_signal_ = false;
   backtrace_enabled_ = false;
+  backtrace_dump_on_exit_ = false;
+  backtrace_dump_prefix_ = DEFAULT_BACKTRACE_DUMP_PREFIX;
 
   // Process each option name we can find.
   std::string option;
