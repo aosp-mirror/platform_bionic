@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3e131019_93209aab",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T23:07:23Z",
+      "side": 1,
+      "message": "This is just going to become a platform_version() check instead (I\u0027ve moved this to WIP; sorry for the churn)",
+      "parentUuid": "4f022b87_ef29690d",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 29
+      },
+      "revId": "941e37caeff84fcd9fcb331c01be564979536e0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bff2c63d_4047536b",
         "filename": "tests/wctype_test.cpp",
         "patchSetId": 3
