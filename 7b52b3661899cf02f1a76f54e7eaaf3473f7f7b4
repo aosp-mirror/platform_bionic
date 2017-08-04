@@ -46,6 +46,30 @@
       "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34de371b_f59429de",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T05:23:24Z",
+      "side": 1,
+      "message": "with that linkat bombshell you\u0027re convincing me back the other way though :-)\n\nlooking at the kernel, you\u0027re right that the kernel will use the mode bits with O_TMPFILE:\n\n\tif (flags \u0026 (O_CREAT | __O_TMPFILE))\n\t\top-\u003emode \u003d (mode \u0026 S_IALLUGO) | S_IFREG;\n\nso probably the code in open.cpp should be updated to pass those bits through, and we should add a test for this (presumably using linkat as a way to actually see the mode).\n\nif that sounds like fun, feel free, otherwise i\u0027ll do that part in the morning and then this CL\u0027s ps2 looks right?\n\n(that does then leave the O_TMPFILE-with-no-mode case with a question mark hanging over it, but since i suspect it\u0027s likely to be more usual to _not_ then link the fd to a name, keeping the existing behavior of only warning if O_CREAT is missing a mode probably makes most sense?)",
+      "parentUuid": "e9089f55_d2096618",
+      "range": {
+        "startLine": 44,
+        "startChar": 81,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
