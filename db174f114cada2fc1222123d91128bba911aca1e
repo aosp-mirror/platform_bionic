@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52d74b95_e5c3781e",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T22:36:21Z",
+      "side": 1,
+      "message": "or\n\n  std::string actual;\n  ASSERT_TRUE(android::base::ReadFileToString(path, \u0026actual));\n  ASSERT_EQ(expected, actual);\n\n?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 39
+      },
+      "revId": "db174f114cada2fc1222123d91128bba911aca1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
