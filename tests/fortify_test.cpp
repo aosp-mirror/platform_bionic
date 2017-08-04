@@ -985,3 +985,15 @@ TEST_F(DEATHTEST, ppoll_fortified) {
   timeout.tv_sec = timeout.tv_nsec = 0;
   ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, NULL));
 }
+
+TEST_F(DEATHTEST, open_O_CREAT_without_mode_fortified) {
+  int flags = O_CREAT; // Fool the compiler.
+  ASSERT_FORTIFY(open("", flags));
+}
+
+TEST_F(DEATHTEST, open_O_TMPFILE_without_mode_fortified) {
+#if __BIONIC__ // Our glibc is too old for O_TMPFILE.
+  int flags = O_TMPFILE; // Fool the compiler.
+  ASSERT_FORTIFY(open("", flags));
+#endif
+}

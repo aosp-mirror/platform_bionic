@@ -23,6 +23,8 @@
 
 #include "TemporaryFile.h"
 
+#include <android-base/stringprintf.h>
+
 // Glibc v2.19 doesn't include these in fcntl.h so host builds will fail without.
 #if !defined(FALLOC_FL_PUNCH_HOLE) || !defined(FALLOC_FL_KEEP_SIZE)
 #include <linux/falloc.h>
@@ -291,4 +293,44 @@ TEST(fcntl, falloc_punch) {
     ASSERT_EQ(-1, fallocate(tf.fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 0, 1));
     ASSERT_EQ(errno, EOPNOTSUPP);
   }
+}
+
+TEST(fcntl, open_O_TMPFILE_mode) {
+#if __BIONIC__ // Our glibc is too old for O_TMPFILE.
+  TemporaryDir dir;
+  // Without O_EXCL, we're allowed to give this a name later.
+  // (This is unrelated to the O_CREAT interaction with O_EXCL.)
+  const mode_t perms = S_IRUSR | S_IWUSR;
+  int fd = open(dir.dirname, O_TMPFILE | O_RDWR, perms);
+
+  // Ignore kernels without O_TMPFILE support (< 3.11).
+  if (fd == -1 && (errno == EISDIR || errno == EINVAL || errno == EOPNOTSUPP)) return;
+
+  ASSERT_TRUE(fd != -1) << strerror(errno);
+
+  // Does the fd claim to have the mode we set?
+  struct stat sb = {};
+  ASSERT_EQ(0, fstat(fd, &sb));
+  ASSERT_EQ(perms, (sb.st_mode & ~S_IFMT));
+
+  std::string final_path = android::base::StringPrintf("%s/named_now", dir.dirname);
+  ASSERT_EQ(0, linkat(AT_FDCWD, android::base::StringPrintf("/proc/self/fd/%d", fd).c_str(),
+                      AT_FDCWD, final_path.c_str(),
+                      AT_SYMLINK_FOLLOW));
+  ASSERT_EQ(0, close(fd));
+
+  // Does the resulting file claim to have the mode we set?
+  ASSERT_EQ(0, stat(final_path.c_str(), &sb));
+  ASSERT_EQ(perms, (sb.st_mode & ~S_IFMT));
+
+  // With O_EXCL, you're not allowed to add a name later.
+  fd = open(dir.dirname, O_TMPFILE | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+  ASSERT_TRUE(fd != -1) << strerror(errno);
+  errno = 0;
+  ASSERT_EQ(-1, linkat(AT_FDCWD, android::base::StringPrintf("/proc/self/fd/%d", fd).c_str(),
+                       AT_FDCWD, android::base::StringPrintf("%s/no_chance", dir.dirname).c_str(),
+                       AT_SYMLINK_FOLLOW));
+  ASSERT_EQ(ENOENT, errno);
+  ASSERT_EQ(0, close(fd));
+#endif
 }
