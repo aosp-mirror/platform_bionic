@@ -824,7 +824,7 @@ TEST(dlext, dlopen_ext_use_o_tmpfile_fd) {
   const std::string lib_path = get_testlib_root() + "/libtest_simple.so";
 
   int tmpfd = TEMP_FAILURE_RETRY(
-        open(get_testlib_root().c_str(), O_TMPFILE | O_CLOEXEC | O_RDWR | O_EXCL));
+        open(get_testlib_root().c_str(), O_TMPFILE | O_CLOEXEC | O_RDWR | O_EXCL, 0));
 
   // Ignore kernels without O_TMPFILE flag support
   if (tmpfd == -1 && (errno == EISDIR || errno == EINVAL || errno == EOPNOTSUPP)) {
