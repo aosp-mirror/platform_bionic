@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bf76b70_53ef23b4",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T04:48:08Z",
+      "side": 1,
+      "message": "do we actually want to _suggest_ O_TMPFILE, given that it\u0027s not idiomatic to provide a (useless) mode to O_TMPFILE?",
+      "range": {
+        "startLine": 44,
+        "startChar": 81,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "7b52b3661899cf02f1a76f54e7eaaf3473f7f7b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
