@@ -168,7 +168,6 @@ TEST(linker_config, smoke) {
   run_linker_config_smoke_test(false);
 }
 
-// TODO(b/38114603) revive this test when ld.config.txt is enabled for ASAN mode
-//TEST(linker_config, asan_smoke) {
-//  run_linker_config_smoke_test(true);
-//}
+TEST(linker_config, asan_smoke) {
+  run_linker_config_smoke_test(true);
+}
