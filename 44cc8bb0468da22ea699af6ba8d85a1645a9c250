@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "82d100c5_25f4e8b9",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T22:51:09Z",
+      "side": 1,
+      "message": "Wow, I was not paying much attention when I added this fixup before uploading...",
+      "parentUuid": "c5defda9_58acb4ac",
+      "range": {
+        "startLine": 49,
+        "startChar": 11,
+        "endLine": 49,
+        "endChar": 12
+      },
+      "revId": "44cc8bb0468da22ea699af6ba8d85a1645a9c250",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9697e38_5e20b66f",
         "filename": "tests/TemporaryFile.h",
         "patchSetId": 3
@@ -59,6 +83,24 @@
       "writtenOn": "2017-08-04T22:47:03Z",
       "side": 1,
       "message": "would it make more sense to have the fdopen explicit in the callers? it\u0027s going to be awkward to catch non-stdio users who\u0027re calling close manually --- though i guess they\u0027re already incorrect and should be fixed anyway.\n\nor add a TemporaryFILE subclass that hides the fd and filename and only exposes the FILE*?",
+      "revId": "44cc8bb0468da22ea699af6ba8d85a1645a9c250",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56ba08ef_0194d1fa",
+        "filename": "tests/TemporaryFile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-04T22:51:09Z",
+      "side": 1,
+      "message": "A good number of tests actually used both.",
+      "parentUuid": "e9697e38_5e20b66f",
       "revId": "44cc8bb0468da22ea699af6ba8d85a1645a9c250",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
