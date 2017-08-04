@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f85a9f0b_68e06014",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T05:24:50Z",
+      "side": 1,
+      "message": "actually, yeah, even when we fix bionic and add the test, it still probably doesn\u0027t make sense to see a mode and suggest O_TMPFILE.",
+      "revId": "4e37d53f2999f683e99a5cf90d2651e2cd9924fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
