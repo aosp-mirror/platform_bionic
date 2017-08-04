@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27df67a8_162cc424",
+        "filename": "tests/PlatformVersion.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T22:53:17Z",
+      "side": 1,
+      "message": "android::base::GetIntProperty?",
+      "range": {
+        "startLine": 24,
+        "startChar": 33,
+        "endLine": 32,
+        "endChar": 3
+      },
+      "revId": "941e37caeff84fcd9fcb331c01be564979536e0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f022b87_ef29690d",
+        "filename": "tests/locale_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T22:53:17Z",
+      "side": 1,
+      "message": "didn\u0027t you add an __NDK__ define?",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 29
+      },
+      "revId": "941e37caeff84fcd9fcb331c01be564979536e0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff2c63d_4047536b",
+        "filename": "tests/wctype_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-04T22:53:17Z",
+      "side": 1,
+      "message": "this shouldn\u0027t have anything to do with whether you\u0027re built by the NDK: it\u0027s just a matter of what release you\u0027re running on.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 1
+      },
+      "revId": "941e37caeff84fcd9fcb331c01be564979536e0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
