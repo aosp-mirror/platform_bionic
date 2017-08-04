@@ -40,7 +40,7 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 
 #if defined(__BIONIC_FORTIFY)
 #define __open_too_many_args_error "too many arguments"
-#define __open_too_few_args_error "called with O_CREAT, but missing mode"
+#define __open_too_few_args_error "called with O_CREAT or O_TMPFILE, but missing mode"
 #define __open_useless_modes_warning "has superfluous mode bits; missing O_CREAT?"
 /* O_TMPFILE shares bits with O_DIRECTORY. */
 #define __open_modes_useful(flags) (((flags) & O_CREAT) || ((flags) & O_TMPFILE) == O_TMPFILE)
@@ -60,7 +60,7 @@ int open(const char* pathname, int flags, mode_t modes, ...) __overloadable
 __BIONIC_FORTIFY_INLINE
 int open(const char* const __pass_object_size pathname, int flags)
         __overloadable
-        __clang_error_if(flags & O_CREAT, "'open' " __open_too_few_args_error) {
+        __clang_error_if(__open_modes_useful(flags), "'open' " __open_too_few_args_error) {
     return __open_2(pathname, flags);
 }
 
@@ -80,7 +80,7 @@ int openat(int dirfd, const char* pathname, int flags, mode_t modes, ...)
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* const __pass_object_size pathname, int flags)
         __overloadable
-        __clang_error_if(flags & O_CREAT, "'openat' " __open_too_few_args_error) {
+        __clang_error_if(__open_modes_useful(flags), "'openat' " __open_too_few_args_error) {
     return __openat_2(dirfd, pathname, flags);
 }
 
@@ -101,7 +101,7 @@ __errordecl(__creat_too_many_args, __open_too_many_args_error);
 __BIONIC_FORTIFY_INLINE
 int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
-        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+        if (__open_modes_useful(flags) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  /* Compile time error. */
         }
     }
@@ -120,7 +120,7 @@ int open(const char* pathname, int flags, ...) {
 __BIONIC_FORTIFY_INLINE
 int openat(int dirfd, const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
-        if ((flags & O_CREAT) && __builtin_va_arg_pack_len() == 0) {
+        if (__open_modes_useful(flags) && __builtin_va_arg_pack_len() == 0) {
             __creat_missing_mode();  /* Compile time error. */
         }
     }
