@@ -439,6 +439,30 @@
     },
     {
       "key": {
+        "uuid": "e6ccb18f_319a727a",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-08-05T01:57:35Z",
+      "side": 1,
+      "message": "Yup, we pass it in to RegisterGoogleBenchmarks.",
+      "parentUuid": "aef31f6f_b6717a2e",
+      "range": {
+        "startLine": 273,
+        "startChar": 4,
+        "endLine": 273,
+        "endChar": 15
+      },
+      "revId": "0a1a76b19af7aadb44554ac31555dbf33e185fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c03cf60b_71be26e6",
         "filename": "benchmarks/bionic_benchmarks.cpp",
         "patchSetId": 4
@@ -496,6 +520,30 @@
       "writtenOn": "2017-08-04T21:12:35Z",
       "side": 1,
       "message": "Should there be an option for this?",
+      "range": {
+        "startLine": 345,
+        "startChar": 2,
+        "endLine": 345,
+        "endChar": 42
+      },
+      "revId": "0a1a76b19af7aadb44554ac31555dbf33e185fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b05d5271_adc058f8",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-08-05T01:57:35Z",
+      "side": 1,
+      "message": "Up to you. Microbench just did it without asking.",
+      "parentUuid": "c06fa816_014c6ee0",
       "range": {
         "startLine": 345,
         "startChar": 2,
