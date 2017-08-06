@@ -136,6 +136,9 @@ struct android_namespace_t {
   // or one of it's parent soinfos belongs to this namespace.
   bool is_accessible(soinfo* si);
 
+  soinfo_list_t get_global_group();
+  soinfo_list_t get_shared_group();
+
  private:
   const char* name_;
   bool is_isolated_;
