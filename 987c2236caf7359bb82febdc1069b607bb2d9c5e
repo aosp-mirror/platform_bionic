@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40ad2e18_ae144b5e",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-07T18:24:53Z",
+      "side": 1,
+      "message": "I think it would be better if this is a vector, then no need to have new_argc hanging around.\n\nAt the call to initialize, you can do int new_argc \u003d vec.size().",
+      "range": {
+        "startLine": 64,
+        "startChar": 40,
+        "endLine": 64,
+        "endChar": 71
+      },
+      "revId": "987c2236caf7359bb82febdc1069b607bb2d9c5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46ca9abd_d66440be",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-07T18:24:53Z",
+      "side": 1,
+      "message": "I think a small comment above this function might help describe how you are sanitizing the opts. It\u0027s not obvious by looking at the code exactly what you are doing.",
+      "range": {
+        "startLine": 64,
+        "startChar": 5,
+        "endLine": 64,
+        "endChar": 17
+      },
+      "revId": "987c2236caf7359bb82febdc1069b607bb2d9c5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb2c8f61_3dbf11c7",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-07T18:24:53Z",
+      "side": 1,
+      "message": "Another nit, use GetShorthand.",
+      "range": {
+        "startLine": 304,
+        "startChar": 37,
+        "endLine": 304,
+        "endChar": 50
+      },
+      "revId": "987c2236caf7359bb82febdc1069b607bb2d9c5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
