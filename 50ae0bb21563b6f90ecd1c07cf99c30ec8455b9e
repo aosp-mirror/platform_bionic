@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21f6048d_37ba14e3",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-07T19:47:51Z",
+      "side": 1,
+      "message": "Put this right next to the usage instead of way up here.",
+      "range": {
+        "startLine": 369,
+        "startChar": 2,
+        "endLine": 369,
+        "endChar": 33
+      },
+      "revId": "50ae0bb21563b6f90ecd1c07cf99c30ec8455b9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
