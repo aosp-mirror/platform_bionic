@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a03b56c_d2407b4a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-07T20:26:44Z",
+      "side": 1,
+      "message": "the code is fine now, but this name no longer matches what the patch does.",
+      "revId": "419441964328bd74df8c255780baa441ee7c9206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
