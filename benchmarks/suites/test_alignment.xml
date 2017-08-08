@@ -1,0 +1,50 @@
+<fn>
+  <name>BM_string_memcmp</name>
+  <iterations>1</iterations>
+  <args>AT_2_ALIGN_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <iterations>1</iterations>
+  <args>AT_4_ALIGN_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <iterations>1</iterations>
+  <args>AT_16_ALIGN_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <iterations>1</iterations>
+  <args>AT_512_ALIGN_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <iterations>1</iterations>
+  <args>AT_2048_ALIGN_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_2_ALIGN_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_4_ALIGN_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_16_ALIGN_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_512_ALIGN_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_2048_ALIGN_ONEBUF</args>
+</fn>
