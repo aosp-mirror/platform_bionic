@@ -18,27 +18,7 @@
 #include <string.h>
 
 #include <benchmark/benchmark.h>
-#include "util.h"
-
-constexpr auto KB = 1024;
-
-// NOTE: these constants are temporary replacements for AT_COMMON_SIZES until
-// the new interface for Bionic benchmarks is implemented.
-
-// Set all four to 0 to test normal alignment.
-#define AT_SRC_ALIGN 0
-#define AT_DST_ALIGN 0
-
-#define AT_ALIGNED_TWOBUF \
-    Args({(8), AT_SRC_ALIGN, AT_DST_ALIGN})->Args({(64), AT_SRC_ALIGN, AT_DST_ALIGN})-> \
-    Args({(512), AT_SRC_ALIGN, AT_DST_ALIGN})->Args({(1*KB), AT_SRC_ALIGN, AT_DST_ALIGN})-> \
-    Args({(8*KB), AT_SRC_ALIGN, AT_DST_ALIGN})->Args({(16*KB), AT_SRC_ALIGN, AT_DST_ALIGN})-> \
-    Args({(32*KB), AT_SRC_ALIGN, AT_DST_ALIGN})->Args({(64*KB), AT_SRC_ALIGN, AT_DST_ALIGN})
-
-#define AT_ALIGNED_ONEBUF \
-    Args({(8), AT_SRC_ALIGN})->Args({(64), AT_SRC_ALIGN})->Args({(512), AT_SRC_ALIGN})-> \
-    Args({(1*KB), AT_SRC_ALIGN})->Args({(8*KB), AT_SRC_ALIGN})->Args({(16*KB), AT_SRC_ALIGN})-> \
-    Args({(32*KB), AT_SRC_ALIGN})->Args({(64*KB), AT_SRC_ALIGN})
+#include <util.h>
 
 static void BM_string_memcmp(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -57,7 +37,7 @@ static void BM_string_memcmp(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memcmp)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_memcmp);
 
 static void BM_string_memcpy(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -75,7 +55,7 @@ static void BM_string_memcpy(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memcpy)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_memcpy);
 
 static void BM_string_memmove_non_overlapping(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -93,7 +73,7 @@ static void BM_string_memmove_non_overlapping(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memmove_non_overlapping)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_memmove_non_overlapping);
 
 static void BM_string_memmove_overlap_dst_before_src(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -108,7 +88,7 @@ static void BM_string_memmove_overlap_dst_before_src(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memmove_overlap_dst_before_src)->AT_ALIGNED_ONEBUF;
+BIONIC_BENCHMARK(BM_string_memmove_overlap_dst_before_src);
 
 static void BM_string_memmove_overlap_src_before_dst(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -123,7 +103,7 @@ static void BM_string_memmove_overlap_src_before_dst(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memmove_overlap_src_before_dst)->AT_ALIGNED_ONEBUF;
+BIONIC_BENCHMARK(BM_string_memmove_overlap_src_before_dst);
 
 static void BM_string_memset(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -138,7 +118,7 @@ static void BM_string_memset(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_memset)->AT_ALIGNED_ONEBUF;
+BIONIC_BENCHMARK(BM_string_memset);
 
 static void BM_string_strlen(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -155,7 +135,7 @@ static void BM_string_strlen(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strlen)->AT_ALIGNED_ONEBUF;
+BIONIC_BENCHMARK(BM_string_strlen);
 
 static void BM_string_strcat_copy_only(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -178,7 +158,7 @@ static void BM_string_strcat_copy_only(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strcat_copy_only)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_strcat_copy_only);
 
 static void BM_string_strcat_seek_only(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -199,7 +179,7 @@ static void BM_string_strcat_seek_only(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strcat_seek_only)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_strcat_seek_only);
 
 static void BM_string_strcat_half_copy_half_seek(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -220,7 +200,7 @@ static void BM_string_strcat_half_copy_half_seek(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strcat_half_copy_half_seek)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_strcat_half_copy_half_seek);
 
 static void BM_string_strcpy(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -239,7 +219,7 @@ static void BM_string_strcpy(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strcpy)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_strcpy);
 
 static void BM_string_strcmp(benchmark::State& state) {
   const size_t nbytes = state.range(0);
@@ -260,4 +240,4 @@ static void BM_string_strcmp(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BENCHMARK(BM_string_strcmp)->AT_ALIGNED_TWOBUF;
+BIONIC_BENCHMARK(BM_string_strcmp);
