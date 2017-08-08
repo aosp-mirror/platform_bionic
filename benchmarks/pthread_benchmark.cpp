@@ -17,6 +17,7 @@
 #include <pthread.h>
 
 #include <benchmark/benchmark.h>
+#include "util.h"
 
 // Stop GCC optimizing out our pure function.
 /* Must not be static! */ pthread_t (*pthread_self_fp)() = pthread_self;
@@ -26,7 +27,7 @@ static void BM_pthread_self(benchmark::State& state) {
     pthread_self_fp();
   }
 }
-BENCHMARK(BM_pthread_self);
+BIONIC_BENCHMARK(BM_pthread_self);
 
 static void BM_pthread_getspecific(benchmark::State& state) {
   pthread_key_t key;
@@ -38,7 +39,7 @@ static void BM_pthread_getspecific(benchmark::State& state) {
 
   pthread_key_delete(key);
 }
-BENCHMARK(BM_pthread_getspecific);
+BIONIC_BENCHMARK(BM_pthread_getspecific);
 
 static void BM_pthread_setspecific(benchmark::State& state) {
   pthread_key_t key;
@@ -50,7 +51,7 @@ static void BM_pthread_setspecific(benchmark::State& state) {
 
   pthread_key_delete(key);
 }
-BENCHMARK(BM_pthread_setspecific);
+BIONIC_BENCHMARK(BM_pthread_setspecific);
 
 static void DummyPthreadOnceInitFunction() {
 }
@@ -63,7 +64,7 @@ static void BM_pthread_once(benchmark::State& state) {
     pthread_once(&once, DummyPthreadOnceInitFunction);
   }
 }
-BENCHMARK(BM_pthread_once);
+BIONIC_BENCHMARK(BM_pthread_once);
 
 static void BM_pthread_mutex_lock(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -73,7 +74,7 @@ static void BM_pthread_mutex_lock(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock);
+BIONIC_BENCHMARK(BM_pthread_mutex_lock);
 
 static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
@@ -83,7 +84,7 @@ static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
+BIONIC_BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
 
 static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
@@ -93,7 +94,7 @@ static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
     pthread_mutex_unlock(&mutex);
   }
 }
-BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
+BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
 static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
@@ -106,7 +107,7 @@ static void BM_pthread_rwlock_read(benchmark::State& state) {
 
   pthread_rwlock_destroy(&lock);
 }
-BENCHMARK(BM_pthread_rwlock_read);
+BIONIC_BENCHMARK(BM_pthread_rwlock_read);
 
 static void BM_pthread_rwlock_write(benchmark::State& state) {
   pthread_rwlock_t lock;
@@ -119,7 +120,7 @@ static void BM_pthread_rwlock_write(benchmark::State& state) {
 
   pthread_rwlock_destroy(&lock);
 }
-BENCHMARK(BM_pthread_rwlock_write);
+BIONIC_BENCHMARK(BM_pthread_rwlock_write);
 
 static void* IdleThread(void*) {
   return NULL;
@@ -134,7 +135,7 @@ static void BM_pthread_create(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_create);
+BIONIC_BENCHMARK(BM_pthread_create);
 
 static void* RunThread(void* arg) {
   benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
@@ -150,7 +151,7 @@ static void BM_pthread_create_and_run(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_create_and_run);
+BIONIC_BENCHMARK(BM_pthread_create_and_run);
 
 static void* ExitThread(void* arg) {
   benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
@@ -166,7 +167,7 @@ static void BM_pthread_exit_and_join(benchmark::State& state) {
     pthread_join(thread, NULL);
   }
 }
-BENCHMARK(BM_pthread_exit_and_join);
+BIONIC_BENCHMARK(BM_pthread_exit_and_join);
 
 static void BM_pthread_key_create(benchmark::State& state) {
   while (state.KeepRunning()) {
@@ -178,7 +179,7 @@ static void BM_pthread_key_create(benchmark::State& state) {
     state.ResumeTiming();
   }
 }
-BENCHMARK(BM_pthread_key_create);
+BIONIC_BENCHMARK(BM_pthread_key_create);
 
 static void BM_pthread_key_delete(benchmark::State& state) {
   while (state.KeepRunning()) {
@@ -190,4 +191,4 @@ static void BM_pthread_key_delete(benchmark::State& state) {
     pthread_key_delete(key);
   }
 }
-BENCHMARK(BM_pthread_key_delete);
+BIONIC_BENCHMARK(BM_pthread_key_delete);
