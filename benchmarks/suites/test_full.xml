@@ -1,0 +1,261 @@
+<fn>
+  <name>BM_empty</name>
+</fn>
+<fn>
+  <name>BM_load_relaxed</name>
+</fn>
+<fn>
+  <name>BM_load_acquire</name>
+</fn>
+<fn>
+  <name>BM_store_release</name>
+</fn>
+<fn>
+  <name>BM_store_seq_cst</name>
+</fn>
+<fn>
+  <name>BM_fetch_add_relaxed</name>
+</fn>
+<fn>
+  <name>BM_fetch_add_seq_cst</name>
+</fn>
+<fn>
+  <name>BM_acquire_fence</name>
+</fn>
+<fn>
+  <name>BM_seq_cst_fence</name>
+</fn>
+<fn>
+  <name>BM_fetch_add_cs</name>
+</fn>
+<fn>
+  <name>BM_math_sqrt</name>
+</fn>
+<fn>
+  <name>BM_math_log10</name>
+</fn>
+<fn>
+  <name>BM_math_logb</name>
+</fn>
+<fn>
+  <name>BM_math_isfinite_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isfinite</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isinf_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isinf</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isnan_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isnan</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isnormal_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_isnormal</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_sin_fast</name>
+</fn>
+<fn>
+  <name>BM_math_sin_feupdateenv</name>
+</fn>
+<fn>
+  <name>BM_math_sin_fesetenv</name>
+</fn>
+<fn>
+  <name>BM_math_fpclassify</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_signbit_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_signbit</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_fabs_macro</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_math_fabs</name>
+  <args>0</args>
+</fn>
+<fn>
+  <name>BM_property_get</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_find</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_read</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_serial</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_pthread_self</name>
+</fn>
+<fn>
+  <name>BM_pthread_getspecific</name>
+</fn>
+<fn>
+  <name>BM_pthread_setspecific</name>
+</fn>
+<fn>
+  <name>BM_pthread_once</name>
+</fn>
+<fn>
+  <name>BM_pthread_mutex_lock</name>
+</fn>
+<fn>
+  <name>BM_pthread_mutex_lock_ERRORCHECK</name>
+</fn>
+<fn>
+  <name>BM_pthread_mutex_lock_RECURSIVE</name>
+</fn>
+<fn>
+  <name>BM_pthread_rwlock_read</name>
+</fn>
+<fn>
+  <name>BM_pthread_rwlock_write</name>
+</fn>
+<fn>
+  <name>BM_pthread_create</name>
+</fn>
+<fn>
+  <name>BM_pthread_create_and_run</name>
+</fn>
+<fn>
+  <name>BM_pthread_exit_and_join</name>
+</fn>
+<fn>
+  <name>BM_pthread_key_create</name>
+</fn>
+<fn>
+  <name>BM_pthread_key_delete</name>
+</fn>
+<fn>
+  <name>BM_semaphore_sem_getvalue</name>
+</fn>
+<fn>
+  <name>BM_semaphore_sem_wait_sem_post</name>
+</fn>
+<fn>
+  <name>BM_stdio_fread</name>
+  <args>AT_COMMON_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fwrite</name>
+  <args>AT_COMMON_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fread_unbuffered</name>
+  <args>AT_COMMON_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fwrite_unbuffered</name>
+  <args>AT_COMMON_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_fgets_fclose_locking</name>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_fgets_fclose_no_locking</name>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_non_overlapping</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_overlap_dst_before_src</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_overlap_src_before_dst</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memset</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_copy_only</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_seek_only</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_half_copy_half_seek</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcpy</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcmp</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_syscall</name>
+</fn>
+<fn>
+  <name>BM_time_gettimeofday</name>
+</fn>
+<fn>
+  <name>BM_time_gettimeofday_syscall</name>
+</fn>
+<fn>
+  <name>BM_time_time</name>
+</fn>
+<fn>
+  <name>BM_unistd_getpid</name>
+</fn>
+<fn>
+  <name>BM_unistd_getpid_syscall</name>
+</fn>
+<fn>
+  <name>BM_unistd_gettid</name>
+</fn>
+<fn>
+  <name>BM_unistd_gettid_syscall</name>
+</fn>
