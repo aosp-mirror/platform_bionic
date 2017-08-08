@@ -18,11 +18,11 @@
 #include <math.h>
 
 #include <benchmark/benchmark.h>
+#include "util.h"
 
 static const double values[] = { 1234.0, nan(""), HUGE_VAL, 0.0 };
 static const char* names[] = { "1234.0", "nan", "HUGE_VAL", "0.0" };
 
-#define BENCHMARK_COMMON_VALS(name) BENCHMARK(name)->Arg(0)->Arg(1)->Arg(2)->Arg(3)
 
 static void SetLabel(benchmark::State& state) {
   state.SetLabel(names[state.range(0)]);
@@ -39,7 +39,7 @@ static void BM_math_sqrt(benchmark::State& state) {
     d += sqrt(v);
   }
 }
-BENCHMARK(BM_math_sqrt);
+BIONIC_BENCHMARK(BM_math_sqrt);
 
 static void BM_math_log10(benchmark::State& state) {
   d = 0.0;
@@ -48,7 +48,7 @@ static void BM_math_log10(benchmark::State& state) {
     d += log10(v);
   }
 }
-BENCHMARK(BM_math_log10);
+BIONIC_BENCHMARK(BM_math_log10);
 
 static void BM_math_logb(benchmark::State& state) {
   d = 0.0;
@@ -57,7 +57,7 @@ static void BM_math_logb(benchmark::State& state) {
     d += logb(v);
   }
 }
-BENCHMARK(BM_math_logb);
+BIONIC_BENCHMARK(BM_math_logb);
 
 static void BM_math_isfinite_macro(benchmark::State& state) {
   d = 0.0;
@@ -67,7 +67,7 @@ static void BM_math_isfinite_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isfinite_macro);
+BIONIC_BENCHMARK(BM_math_isfinite_macro);
 
 #if defined(__BIONIC__)
 #define test_isfinite __isfinite
@@ -82,7 +82,7 @@ static void BM_math_isfinite(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isfinite);
+BIONIC_BENCHMARK(BM_math_isfinite);
 
 static void BM_math_isinf_macro(benchmark::State& state) {
   d = 0.0;
@@ -92,7 +92,7 @@ static void BM_math_isinf_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isinf_macro);
+BIONIC_BENCHMARK(BM_math_isinf_macro);
 
 static void BM_math_isinf(benchmark::State& state) {
   d = 0.0;
@@ -102,7 +102,7 @@ static void BM_math_isinf(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isinf);
+BIONIC_BENCHMARK(BM_math_isinf);
 
 static void BM_math_isnan_macro(benchmark::State& state) {
   d = 0.0;
@@ -112,7 +112,7 @@ static void BM_math_isnan_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isnan_macro);
+BIONIC_BENCHMARK(BM_math_isnan_macro);
 
 static void BM_math_isnan(benchmark::State& state) {
   d = 0.0;
@@ -122,7 +122,7 @@ static void BM_math_isnan(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isnan);
+BIONIC_BENCHMARK(BM_math_isnan);
 
 static void BM_math_isnormal_macro(benchmark::State& state) {
   d = 0.0;
@@ -132,7 +132,7 @@ static void BM_math_isnormal_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isnormal_macro);
+BIONIC_BENCHMARK(BM_math_isnormal_macro);
 
 #if defined(__BIONIC__)
 static void BM_math_isnormal(benchmark::State& state) {
@@ -143,7 +143,7 @@ static void BM_math_isnormal(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_isnormal);
+BIONIC_BENCHMARK(BM_math_isnormal);
 #endif
 
 static void BM_math_sin_fast(benchmark::State& state) {
@@ -152,7 +152,7 @@ static void BM_math_sin_fast(benchmark::State& state) {
     d += sin(d);
   }
 }
-BENCHMARK(BM_math_sin_fast);
+BIONIC_BENCHMARK(BM_math_sin_fast);
 
 static void BM_math_sin_feupdateenv(benchmark::State& state) {
   d = 1.0;
@@ -164,7 +164,7 @@ static void BM_math_sin_feupdateenv(benchmark::State& state) {
     feupdateenv(&__libc_save_rm);
   }
 }
-BENCHMARK(BM_math_sin_feupdateenv);
+BIONIC_BENCHMARK(BM_math_sin_feupdateenv);
 
 static void BM_math_sin_fesetenv(benchmark::State& state) {
   d = 1.0;
@@ -176,7 +176,7 @@ static void BM_math_sin_fesetenv(benchmark::State& state) {
     fesetenv(&__libc_save_rm);
   }
 }
-BENCHMARK(BM_math_sin_fesetenv);
+BIONIC_BENCHMARK(BM_math_sin_fesetenv);
 
 static void BM_math_fpclassify(benchmark::State& state) {
   d = 0.0;
@@ -186,7 +186,7 @@ static void BM_math_fpclassify(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_fpclassify);
+BIONIC_BENCHMARK(BM_math_fpclassify);
 
 static void BM_math_signbit_macro(benchmark::State& state) {
   d = 0.0;
@@ -196,7 +196,7 @@ static void BM_math_signbit_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_signbit_macro);
+BIONIC_BENCHMARK(BM_math_signbit_macro);
 
 static void BM_math_signbit(benchmark::State& state) {
   d = 0.0;
@@ -206,7 +206,7 @@ static void BM_math_signbit(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_signbit);
+BIONIC_BENCHMARK(BM_math_signbit);
 
 static void BM_math_fabs_macro(benchmark::State& state) {
   d = 0.0;
@@ -216,7 +216,7 @@ static void BM_math_fabs_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_fabs_macro);
+BIONIC_BENCHMARK(BM_math_fabs_macro);
 
 static void BM_math_fabs(benchmark::State& state) {
   d = 0.0;
@@ -226,4 +226,4 @@ static void BM_math_fabs(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BENCHMARK_COMMON_VALS(BM_math_fabs);
+BIONIC_BENCHMARK(BM_math_fabs);

@@ -19,12 +19,7 @@
 #include <stdlib.h>
 
 #include <benchmark/benchmark.h>
-
-constexpr auto KB = 1024;
-
-#define AT_COMMON_SIZES \
-    Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(8)->Arg(16)->Arg(32)->Arg(64)->Arg(512)-> \
-    Arg(1*KB)->Arg(4*KB)->Arg(8*KB)->Arg(16*KB)->Arg(64*KB)
+#include "util.h"
 
 template <typename Fn>
 void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
@@ -50,22 +45,22 @@ void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
 void BM_stdio_fread(benchmark::State& state) {
   ReadWriteTest(state, fread, true);
 }
-BENCHMARK(BM_stdio_fread)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_stdio_fread);
 
 void BM_stdio_fwrite(benchmark::State& state) {
   ReadWriteTest(state, fwrite, true);
 }
-BENCHMARK(BM_stdio_fwrite)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_stdio_fwrite);
 
 void BM_stdio_fread_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fread, false);
 }
-BENCHMARK(BM_stdio_fread_unbuffered)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_stdio_fread_unbuffered);
 
 void BM_stdio_fwrite_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fwrite, false);
 }
-BENCHMARK(BM_stdio_fwrite_unbuffered)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_stdio_fwrite_unbuffered);
 
 static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
   char buf[1024];
@@ -80,9 +75,9 @@ static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
 static void BM_stdio_fopen_fgets_fclose_locking(benchmark::State& state) {
   FopenFgetsFclose(state, false);
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
+BIONIC_BENCHMARK(BM_stdio_fopen_fgets_fclose_locking);
 
 void BM_stdio_fopen_fgets_fclose_no_locking(benchmark::State& state) {
   FopenFgetsFclose(state, true);
 }
-BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
+BIONIC_BENCHMARK(BM_stdio_fopen_fgets_fclose_no_locking);
