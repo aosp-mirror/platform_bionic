@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3383a6f9_e1cdc2bb",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-09T18:50:58Z",
+      "side": 1,
+      "message": "These failure cases probably shouldn\u0027t be aborts, it\u0027ll trigger stack dumping on android (and core dumps on desktop linux). I\u0027m a fan of the err family of functions for this (e.g. `errx(1, \"args %s ..., optarg)`) but exit(1) also works.",
+      "range": {
+        "startLine": 117,
+        "startChar": 12,
+        "endLine": 117,
+        "endChar": 17
+      },
+      "revId": "a7b0f8899790198cd9e72950f481679fe31e1a92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2f1dce1_7e1ef6e5",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-09T18:50:58Z",
+      "side": 1,
+      "message": "might want to assert that this is \u003e 0? it\u0027ll get promoted to a size_t eventually, which will lead to badness if you pass -1 to iterations, for example.",
+      "revId": "a7b0f8899790198cd9e72950f481679fe31e1a92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
