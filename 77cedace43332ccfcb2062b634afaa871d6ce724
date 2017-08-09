@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f59aed9f_38e4612f",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-08-09T21:24:37Z",
+      "side": 1,
+      "message": "If you\u0027d like consistency on the type of chars, I should be able to. The same read happens in FopenFgetsFclose, so I\u0027ll change that too.",
+      "parentUuid": "069dc1be_92c807d0",
+      "range": {
+        "startLine": 87,
+        "startChar": 21,
+        "endLine": 87,
+        "endChar": 37
+      },
+      "revId": "77cedace43332ccfcb2062b634afaa871d6ce724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edfad2eb_09fff3c9",
         "filename": "benchmarks/string_benchmark.cpp",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2017-08-09T16:56:36Z",
       "side": 1,
       "message": "These aren\u0027t in the CL, did you forget to upload a change?",
+      "range": {
+        "startLine": 283,
+        "startChar": 8,
+        "endLine": 283,
+        "endChar": 29
+      },
+      "revId": "77cedace43332ccfcb2062b634afaa871d6ce724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d38743d_6f37958f",
+        "filename": "benchmarks/suites/full.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-08-09T21:24:37Z",
+      "side": 1,
+      "message": "Gah, looks like I\u0027m overeager on trusting add -p.",
+      "parentUuid": "e00f8dd2_0c56bfbb",
       "range": {
         "startLine": 283,
         "startChar": 8,
@@ -106,6 +154,30 @@
       "side": 1,
       "message": "(wchar_t isn\u0027t 1 byte. iirc it\u0027s 4 like wint_t. but it\u0027s at least 2.)",
       "parentUuid": "fc45abfc_3525673f",
+      "range": {
+        "startLine": 53,
+        "startChar": 14,
+        "endLine": 53,
+        "endChar": 36
+      },
+      "revId": "77cedace43332ccfcb2062b634afaa871d6ce724",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dd233f3_2b9b362a",
+        "filename": "benchmarks/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1170604
+      },
+      "writtenOn": "2017-08-09T21:24:37Z",
+      "side": 1,
+      "message": "This overallocates, but I think it would be best to treat nbytes as \"the number of elements I want the array to be able to hold.\" I\u0027m updating the argument name to something less misleading.",
+      "parentUuid": "b33d8117_e79a6be8",
       "range": {
         "startLine": 53,
         "startChar": 14,
