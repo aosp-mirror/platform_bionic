@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10edf67d_d0ea6fd1",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-09T22:06:19Z",
+      "side": 1,
+      "message": "/dev/zero will never complete, so this would run forever. It might be useful to have a size parameter passed to the benchmark.\n\nSame with the one down below.\n\nI\u0027m not sure if this is better or worse though. You might run a bit of this and see if there is any difference between different sizes.",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 35
+      },
+      "revId": "b3a4400e949de9700e4a9e4e1701728a440a4c34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
