@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <err.h>
 #include <getopt.h>
 #include <math.h>
 #include <sys/resource.h>
@@ -49,7 +50,7 @@ void Usage() {
   printf("Usage:\n");
   printf("bionic_benchmarks [--bionic_cpu=<cpu_to_isolate>] [--bionic_xml=<path_to_xml>]\n");
   printf("                  [--bionic_iterations=<num_iter>]\n");
-  printf("                  [--bionic_extra=\"<fn_name> <arg1> <arg 2> ... \n]");
+  printf("                  [--bionic_extra=\"<fn_name> <arg1> <arg 2> ... ]\n");
   printf("                  [<Google benchmark flags>]\n");
   printf("Google benchmark flags:\n");
 
@@ -58,7 +59,7 @@ void Usage() {
   char argv1[] = "--help";
   char* fake_argv[3] {argv0, argv1, NULL};
   benchmark::Initialize(&fake_argc, fake_argv);
-  abort();
+  exit(1);
 }
 
 // This function removes any bionic benchmarks command line arguments by checking them
@@ -113,8 +114,7 @@ bench_opts_t ParseOpts(int argc, char** argv) {
           char* check_null;
           opts.cpu_to_lock = strtol(optarg, &check_null, 10);
           if (*check_null) {
-            printf("ERROR: Args %s is not a valid integer.\n", optarg);
-            abort();
+            errx(1, "ERROR: Args %s is not a valid integer.", optarg);
           }
         } else {
           printf("ERROR: no argument specified for bionic_cpu\n");
@@ -141,9 +141,8 @@ bench_opts_t ParseOpts(int argc, char** argv) {
         if (*optarg){
           char* check_null;
           opts.num_iterations = strtol(optarg, &check_null, 10);
-          if (*check_null != '\0') {
-            printf("ERROR: Args %s is not a valid integer.\n", optarg);
-            abort();
+          if (*check_null != '\0' or opts.num_iterations < 0) {
+            errx(1, "ERROR: Args %s is not a valid number of iterations.", optarg);
           }
         } else {
           printf("ERROR: no argument specified for bionic_iterations\n");
@@ -156,7 +155,7 @@ bench_opts_t ParseOpts(int argc, char** argv) {
       case '?':
         break;
       default:
-        abort();
+        exit(1);
     }
   }
   return opts;
@@ -184,8 +183,7 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
     char* check_null;
     int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
     if (*check_null) {
-      printf("ERROR: Args str %s contains an invalid macro or int.\n", args.c_str());
-      abort();
+      errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
     }
     (*to_populate)[0].push_back(converted);
   }
@@ -195,8 +193,7 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
                          std::string fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
-    printf("ERROR:No benchmark for function %s\n", fn_name.c_str());
-    abort();
+    errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
                                                          secondary_opts.num_iterations;
@@ -263,13 +260,11 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
   while (fn) {
     auto fn_elem = fn->FirstChildElement("name");
     if (!fn_elem) {
-      printf("Error: Malformed XML entry: missing name element.\n");
-      abort();
+      errx(1, "ERROR: Malformed XML entry: missing name element.");
     }
     std::string fn_name = fn_elem->GetText();
     if (fn_name.empty()) {
-      printf("Error: Malformed XML entry: error parsing name text.");
-      abort();
+      errx(1, "ERROR: Malformed XML entry: error parsing name text.");
     }
     auto* xml_args = fn->FirstChildElement("args");
     run_args = ResolveArgs(run_args, xml_args ? android::base::Trim(xml_args->GetText()) : "",
