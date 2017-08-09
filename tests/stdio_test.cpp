@@ -556,6 +556,45 @@ TEST(STDIO_TEST, swprintf_swscanf_inf_nan) {
               L"[-NAN]", L"[NAN]", L"[+NAN]");
 }
 
+TEST(STDIO_TEST, swprintf) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  ASSERT_EQ(2, swprintf(buf, nchars, L"ab")) << strerror(errno);
+  ASSERT_EQ(std::wstring(L"ab"), buf);
+  ASSERT_EQ(5, swprintf(buf, nchars, L"%s", "abcde"));
+  ASSERT_EQ(std::wstring(L"abcde"), buf);
+
+  // Unlike swprintf(), swprintf() returns -1 in case of truncation
+  // and doesn't necessarily zero-terminate the output!
+  ASSERT_EQ(-1, swprintf(buf, 4, L"%s", "abcde"));
+
+  const char kString[] = "Hello, World";
+  ASSERT_EQ(12, swprintf(buf, nchars, L"%s", kString));
+  ASSERT_EQ(std::wstring(L"Hello, World"), buf);
+  ASSERT_EQ(12, swprintf(buf, 13, L"%s", kString));
+  ASSERT_EQ(std::wstring(L"Hello, World"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_a) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  ASSERT_EQ(20, swprintf(buf, nchars, L"%a", 3.1415926535));
+  ASSERT_EQ(std::wstring(L"0x1.921fb54411744p+1"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_ls) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  static const wchar_t kWideString[] = L"Hello\uff41 World";
+  ASSERT_EQ(12, swprintf(buf, nchars, L"%ls", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+  ASSERT_EQ(12, swprintf(buf, 13, L"%ls", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+}
+
 TEST(STDIO_TEST, snprintf_d_INT_MAX) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%d", INT_MAX);
