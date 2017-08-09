@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <errno.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <locale.h>
 #include <stdint.h>
@@ -406,20 +407,98 @@ TEST(wchar, mbsrtowcs) {
   ASSERT_EQ('\x20', *invalid);
 }
 
-TEST(wchar, wcstol) {
-  ASSERT_EQ(123L, wcstol(L"123", NULL, 0));
+template <typename T>
+using WcsToIntFn = T (*)(const wchar_t*, wchar_t**, int);
+
+template <typename T>
+void TestSingleWcsToInt(WcsToIntFn<T> fn, const wchar_t* str, int base,
+                        T expected_value, ptrdiff_t expected_len) {
+  wchar_t* p;
+  ASSERT_EQ(expected_value, fn(str, &p, base));
+  ASSERT_EQ(expected_len, p - str) << str;
 }
 
-TEST(wchar, wcstoll) {
-  ASSERT_EQ(123LL, wcstol(L"123", NULL, 0));
+template <typename T>
+void TestWcsToInt(WcsToIntFn<T> fn) {
+  TestSingleWcsToInt(fn, L"123", 10, static_cast<T>(123), 3);
+  TestSingleWcsToInt(fn, L"123", 0, static_cast<T>(123), 3);
+  TestSingleWcsToInt(fn, L"123#", 10, static_cast<T>(123), 3);
+  TestSingleWcsToInt(fn, L"01000", 8, static_cast<T>(512), 5);
+  TestSingleWcsToInt(fn, L"01000", 0, static_cast<T>(512), 5);
+  TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
+  TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
+  TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
+}
+
+template <typename T>
+void TestWcsToIntLimits(WcsToIntFn<T> fn, const wchar_t* min_str,
+                        const wchar_t* max_str) {
+  if (std::is_signed<T>::value) {
+    ASSERT_EQ(std::numeric_limits<T>::min(), fn(min_str, nullptr, 0)) << min_str;
+  } else {
+    // If the subject sequence begins with a <hyphen-minus>, the value resulting
+    // from the conversion shall be negated.
+    // http://pubs.opengroup.org/onlinepubs/9699919799/functions/strtoul.html
+    ASSERT_EQ(std::numeric_limits<T>::max(), fn(min_str, nullptr, 0)) << min_str;
+  }
+  ASSERT_EQ(std::numeric_limits<T>::max(), fn(max_str, nullptr, 0)) << max_str;
+}
+
+TEST(wchar, wcstol) {
+  TestWcsToInt(wcstol);
+}
+
+TEST(wchar, wcstol_limits) {
+  if (sizeof(long) == 8) {
+    TestWcsToIntLimits(wcstol, L"-9223372036854775809", L"9223372036854775808");
+  } else {
+    TestWcsToIntLimits(wcstol, L"-2147483649", L"2147483648");
+  }
 }
 
 TEST(wchar, wcstoul) {
-  ASSERT_EQ(123UL, wcstoul(L"123", NULL, 0));
+  TestWcsToInt(wcstoul);
+}
+
+TEST(wchar, wcstoul_limits) {
+  if (sizeof(long) == 8) {
+    TestWcsToIntLimits(wcstoul, L"-1", L"18446744073709551616");
+  } else {
+    TestWcsToIntLimits(wcstoul, L"-1", L"4294967296");
+  }
+}
+
+TEST(wchar, wcstoll) {
+  TestWcsToInt(wcstoll);
+}
+
+TEST(wchar, wcstoll_limits) {
+  TestWcsToIntLimits(wcstoll, L"-9223372036854775809", L"9223372036854775808");
 }
 
 TEST(wchar, wcstoull) {
-  ASSERT_EQ(123ULL, wcstoul(L"123", NULL, 0));
+  TestWcsToInt(wcstoull);
+}
+
+TEST(wchar, wcstoull_limits) {
+  TestWcsToIntLimits(wcstoull, L"-1", L"18446744073709551616");
+}
+
+TEST(wchar, wcstoimax) {
+  TestWcsToInt(wcstoimax);
+}
+
+TEST(wchar, wcstoimax_limits) {
+  TestWcsToIntLimits(wcstoimax, L"-9223372036854775809",
+                     L"9223372036854775808");
+}
+
+TEST(wchar, wcstoumax) {
+  TestWcsToInt(wcstoumax);
+}
+
+TEST(wchar, wcstoumax_limits) {
+  TestWcsToIntLimits(wcstoumax, L"-1", L"18446744073709551616");
 }
 
 TEST(wchar, mbsnrtowcs) {
@@ -691,68 +770,111 @@ TEST(wchar, wmempcpy) {
 }
 
 template <typename T>
-static void CheckWcsToFloat(T fn(const wchar_t* s, wchar_t** end)) {
-  FpUlpEq<0, T> pred;
+using WcsToFloatFn = T (*)(const wchar_t*, wchar_t**);
 
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"9.0", nullptr));
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0.9e1", nullptr));
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn(L"0x1.2p3", nullptr));
-
-  const wchar_t* s = L" \t\v\f\r\n9.0";
+template <typename T>
+void TestSingleWcsToFloat(WcsToFloatFn<T> fn, const wchar_t* str,
+                          T expected_value, ptrdiff_t expected_len) {
   wchar_t* p;
-  EXPECT_PRED_FORMAT2(pred, 9.0, fn(s, &p));
-  EXPECT_EQ(s + wcslen(s), p);
-
-  EXPECT_TRUE(isnan(fn(L"+nan", nullptr)));
-  EXPECT_TRUE(isnan(fn(L"nan", nullptr)));
-  EXPECT_TRUE(isnan(fn(L"-nan", nullptr)));
-
-  EXPECT_TRUE(isnan(fn(L"+nan(0xff)", nullptr)));
-  EXPECT_TRUE(isnan(fn(L"nan(0xff)", nullptr)));
-  EXPECT_TRUE(isnan(fn(L"-nan(0xff)", nullptr)));
-
-  EXPECT_TRUE(isnan(fn(L"+nanny", &p)));
-  EXPECT_STREQ(L"ny", p);
-  EXPECT_TRUE(isnan(fn(L"nanny", &p)));
-  EXPECT_STREQ(L"ny", p);
-  EXPECT_TRUE(isnan(fn(L"-nanny", &p)));
-  EXPECT_STREQ(L"ny", p);
-
-  EXPECT_EQ(0, fn(L"muppet", &p));
-  EXPECT_STREQ(L"muppet", p);
-  EXPECT_EQ(0, fn(L"  muppet", &p));
-  EXPECT_STREQ(L"  muppet", p);
-
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+inf", nullptr));
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"inf", nullptr));
-  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-inf", nullptr));
-
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinity", nullptr));
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinity", nullptr));
-  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinity", nullptr));
-
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinitude", &p));
-  EXPECT_STREQ(L"initude", p);
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinitude", &p));
-  EXPECT_STREQ(L"initude", p);
-  EXPECT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinitude", &p));
-  EXPECT_STREQ(L"initude", p);
-
-  // Check case-insensitivity.
-  EXPECT_EQ(std::numeric_limits<T>::infinity(), fn(L"InFiNiTy", nullptr));
-  EXPECT_TRUE(isnan(fn(L"NaN", nullptr)));
+  ASSERT_EQ(expected_value, fn(str, &p));
+  ASSERT_EQ(expected_len, p - str);
 }
 
-TEST(wchar, wcstod) {
-  CheckWcsToFloat(wcstod);
+template <typename T>
+void TestWcsToFloat(WcsToFloatFn<T> fn) {
+  TestSingleWcsToFloat(fn, L"123", static_cast<T>(123.0), 3);
+  TestSingleWcsToFloat(fn, L"123#", static_cast<T>(123.0), 3);
+  TestSingleWcsToFloat(fn, L"   123 45", static_cast<T>(123.0), 6);
+  TestSingleWcsToFloat(fn, L"9.0", static_cast<T>(9.0), 3);
+  TestSingleWcsToFloat(fn, L"-9.0", static_cast<T>(-9.0), 4);
+  TestSingleWcsToFloat(fn, L" \t\v\f\r\n9.0", static_cast<T>(9.0), 9);
+}
+
+template <typename T>
+void TestWcsToFloatHexFloats(WcsToFloatFn<T> fn) {
+  TestSingleWcsToFloat(fn, L"0.9e1", static_cast<T>(9.0), 5);
+  TestSingleWcsToFloat(fn, L"0x1.2p3", static_cast<T>(9.0), 7);
+  TestSingleWcsToFloat(fn, L"+1e+100", static_cast<T>(1e100), 7);
+  TestSingleWcsToFloat(fn, L"0x10000.80", static_cast<T>(65536.50), 10);
+}
+
+template <typename T>
+void TestWcsToFloatInfNan(WcsToFloatFn<T> fn) {
+  ASSERT_TRUE(isnan(fn(L"+nan", nullptr)));
+  ASSERT_TRUE(isnan(fn(L"nan", nullptr)));
+  ASSERT_TRUE(isnan(fn(L"-nan", nullptr)));
+
+  ASSERT_TRUE(isnan(fn(L"+nan(0xff)", nullptr)));
+  ASSERT_TRUE(isnan(fn(L"nan(0xff)", nullptr)));
+  ASSERT_TRUE(isnan(fn(L"-nan(0xff)", nullptr)));
+
+  wchar_t* p;
+  ASSERT_TRUE(isnan(fn(L"+nanny", &p)));
+  ASSERT_STREQ(L"ny", p);
+  ASSERT_TRUE(isnan(fn(L"nanny", &p)));
+  ASSERT_STREQ(L"ny", p);
+  ASSERT_TRUE(isnan(fn(L"-nanny", &p)));
+  ASSERT_STREQ(L"ny", p);
+
+  ASSERT_EQ(0, fn(L"muppet", &p));
+  ASSERT_STREQ(L"muppet", p);
+  ASSERT_EQ(0, fn(L"  muppet", &p));
+  ASSERT_STREQ(L"  muppet", p);
+
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"+inf", nullptr));
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"inf", nullptr));
+  ASSERT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-inf", nullptr));
+
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinity", nullptr));
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinity", nullptr));
+  ASSERT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinity", nullptr));
+
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"+infinitude", &p));
+  ASSERT_STREQ(L"initude", p);
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"infinitude", &p));
+  ASSERT_STREQ(L"initude", p);
+  ASSERT_EQ(-std::numeric_limits<T>::infinity(), fn(L"-infinitude", &p));
+  ASSERT_STREQ(L"initude", p);
+
+  // Check case-insensitivity.
+  ASSERT_EQ(std::numeric_limits<T>::infinity(), fn(L"InFiNiTy", nullptr));
+  ASSERT_TRUE(isnan(fn(L"NaN", nullptr)));
 }
 
 TEST(wchar, wcstof) {
-  CheckWcsToFloat(wcstof);
+  TestWcsToFloat(wcstof);
+}
+
+TEST(wchar, wcstof_hex_floats) {
+  TestWcsToFloatHexFloats(wcstof);
+}
+
+TEST(wchar, wcstof_hex_inf_nan) {
+  TestWcsToFloatInfNan(wcstof);
+}
+
+TEST(wchar, wcstod) {
+  TestWcsToFloat(wcstod);
+}
+
+TEST(wchar, wcstod_hex_floats) {
+  TestWcsToFloatHexFloats(wcstod);
+}
+
+TEST(wchar, wcstod_hex_inf_nan) {
+  TestWcsToFloatInfNan(wcstod);
 }
 
 TEST(wchar, wcstold) {
-  CheckWcsToFloat(wcstold);
+  TestWcsToFloat(wcstold);
+}
+
+TEST(wchar, wcstold_hex_floats) {
+  TestWcsToFloatHexFloats(wcstold);
+}
+
+TEST(wchar, wcstold_hex_inf_nan) {
+  TestWcsToFloatInfNan(wcstold);
 }
 
 static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {
