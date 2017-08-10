@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bb3cbd9_aa5f1ddf",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-10T16:59:25Z",
+      "side": 1,
+      "message": "this conflicts with the memrchr fortification, which doesn\u0027t use __builtin_ (which is why i think the other such cases get away with it).\n\n  bionic/libc/include/bits/fortify/string.h:123:16: error: cannot initialize return object of type \u0027void *\u0027 with an rvalue of type \u0027const void *\u0027\n        return __call_bypassing_fortify(memrchr)(s, c, n);\n               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n  bionic/libc/include/sys/cdefs.h:259:42: note: expanded from macro \u0027__call_bypassing_fortify\u0027\n  #    define __call_bypassing_fortify(fn) (\u0026fn)\n                                         ^",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 96
+      },
+      "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
