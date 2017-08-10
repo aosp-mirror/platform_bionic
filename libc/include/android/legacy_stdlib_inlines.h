@@ -38,6 +38,8 @@
 
 __BEGIN_DECLS
 
+__noreturn void _Exit(int) __RENAME(_exit);
+
 static __inline float strtof(const char* nptr, char** endptr) {
   double d = strtod(nptr, endptr);
   if (d > FLT_MAX) {
