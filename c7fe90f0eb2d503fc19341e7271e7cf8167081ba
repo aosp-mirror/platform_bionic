@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "24d0f975_28c511d4",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-10T17:43:53Z",
+      "side": 1,
+      "message": "FWIW, overload resolution will prefer this over the FORTIFY\u0027ed memrchr in some cases. If you want to add a FORTIFY\u0027ed function to fix this, feel free. Otherwise, I\u0027m happy to do it after this goes in.",
+      "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bb3cbd9_aa5f1ddf",
         "filename": "libc/include/string.h",
         "patchSetId": 1
@@ -13,6 +30,30 @@
       "writtenOn": "2017-08-10T16:59:25Z",
       "side": 1,
       "message": "this conflicts with the memrchr fortification, which doesn\u0027t use __builtin_ (which is why i think the other such cases get away with it).\n\n  bionic/libc/include/bits/fortify/string.h:123:16: error: cannot initialize return object of type \u0027void *\u0027 with an rvalue of type \u0027const void *\u0027\n        return __call_bypassing_fortify(memrchr)(s, c, n);\n               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n  bionic/libc/include/sys/cdefs.h:259:42: note: expanded from macro \u0027__call_bypassing_fortify\u0027\n  #    define __call_bypassing_fortify(fn) (\u0026fn)\n                                         ^",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 96
+      },
+      "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03137553_65dc4dac",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-10T17:43:53Z",
+      "side": 1,
+      "message": "\u003e which is why i think the other such cases get away with it\n\nYup.\n\nLooks like we can either hoist GCC\u0027s __memrchr_real up to be declared for both clang and gcc + use that in the FORTIFY\u0027ed function, or we can say `return (void *)__call_bypassing_fortify...`. Pick your favorite. :)",
+      "parentUuid": "9bb3cbd9_aa5f1ddf",
       "range": {
         "startLine": 47,
         "startChar": 0,
