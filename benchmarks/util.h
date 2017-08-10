@@ -52,6 +52,8 @@ char* GetAlignedMemory(char* orig_ptr, size_t alignment, size_t or_mask);
 
 char* GetAlignedPtr(std::vector<char>* buf, size_t alignment, size_t nbytes);
 
+wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbytes);
+
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte);
 
 bool LockToCPU(long cpu_to_lock);

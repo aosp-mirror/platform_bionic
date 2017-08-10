@@ -180,9 +180,19 @@
 </fn>
 <fn>
   <name>BM_stdio_fopen_fgets_fclose_locking</name>
+  <args>1024</args>
 </fn>
 <fn>
   <name>BM_stdio_fopen_fgets_fclose_no_locking</name>
+  <args>1024</args>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_fgetc_fclose_locking</name>
+  <args>1024</args>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_fgetc_fclose_no_locking</name>
+  <args>1024</args>
 </fn>
 <fn>
   <name>BM_string_memcmp</name>
@@ -233,6 +243,14 @@
   <args>AT_ALIGNED_TWOBUF</args>
 </fn>
 <fn>
+  <name>BM_string_strstr</name>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strchr</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
   <name>BM_time_clock_gettime</name>
 </fn>
 <fn>
@@ -258,4 +276,16 @@
 </fn>
 <fn>
   <name>BM_unistd_gettid_syscall</name>
+</fn>
+<fn>
+  <name>BM_stdlib_malloc_free</name>
+  <args>AT_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_stdlib_mbstowcs</name>
+  <args>0 0</args>
+</fn>
+<fn>
+  <name>BM_stdlib_mbrtowc</name>
+  <args>0</args>
 </fn>
