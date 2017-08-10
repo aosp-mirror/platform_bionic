@@ -251,7 +251,7 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
   // - - Element "args"       Whitespace-separated list of per-function integer arguments, or
   //                          one of the macros defined in util.h.
   tinyxml2::XMLDocument doc;
-  if (doc.LoadFile(cmdline_opts.xmlpath.c_str()) != tinyxml2::XML_NO_ERROR) {
+  if (doc.LoadFile(cmdline_opts.xmlpath.c_str()) != tinyxml2::XML_SUCCESS) {
     doc.PrintError();
     return doc.ErrorID();
   }
