@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e13c489_d9916119",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-10T00:17:12Z",
+      "side": 1,
+      "message": "nit: space here",
+      "range": {
+        "startLine": 196,
+        "startChar": 18,
+        "endLine": 196,
+        "endChar": 20
+      },
+      "revId": "fc576700690ded2a2cbaaa9e11dbd351000ec579",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
