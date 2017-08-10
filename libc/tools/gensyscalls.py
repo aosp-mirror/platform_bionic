@@ -568,7 +568,7 @@ class State:
 
         # Collect the set of all syscalls for all architectures.
         syscalls = set()
-        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z]\S+)')
+        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
         for unistd_h in ["kernel/uapi/asm-generic/unistd.h",
                          "kernel/uapi/asm-arm/asm/unistd.h",
                          "kernel/uapi/asm-arm/asm/unistd-common.h",
