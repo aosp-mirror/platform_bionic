@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <err.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -68,7 +69,9 @@ static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
   while (state.KeepRunning()) {
     FILE* fp = fopen("/dev/zero", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
-    if (fgets(buf, sizeof(buf), fp) == nullptr) abort();
+    if (fgets(buf, sizeof(buf), fp) == nullptr) {
+      errx(1, "ERROR:  fgets of %zu bytes failed.", nbytes);
+    }
     fclose(fp);
   }
 }

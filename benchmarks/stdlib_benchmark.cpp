@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <err.h>
 #include <langinfo.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -47,7 +48,9 @@ static void BM_stdlib_mbstowcs(benchmark::State& state) {
   || setlocale(LC_CTYPE, "en.UTF-8")
   || setlocale(LC_CTYPE, "de_DE-8")
   || setlocale(LC_CTYPE, "fr_FR-8");
-  if (strcmp(nl_langinfo(CODESET), "UTF-8")) abort();
+  if (strcmp(nl_langinfo(CODESET), "UTF-8")) {
+    errx(1, "ERROR: unable to set locale in BM_stdlib_mbstowcs");
+  }
 
   char* buf_aligned = GetAlignedPtr(&buf, buf_alignment, 500000);
   wchar_t* widebuf_aligned = GetAlignedPtr(&widebuf, widebuf_alignment, 500000);
@@ -86,7 +89,9 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
   || setlocale(LC_CTYPE, "en.UTF-8")
   || setlocale(LC_CTYPE, "de_DE-8")
   || setlocale(LC_CTYPE, "fr_FR-8");
-  if (strcmp(nl_langinfo(CODESET), "UTF-8")) abort();
+  if (strcmp(nl_langinfo(CODESET), "UTF-8")) {
+    errx(1, "ERROR: unable to set locale in BM_stdlib_mbrtowc");
+  }
 
   char* buf_aligned = GetAlignedPtr(&buf, buf_alignment, 500000);
   size_t i, j, k, l;
