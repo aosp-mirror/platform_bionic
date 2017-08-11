@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 
+#include <android-base/file.h>
 #include <gtest/gtest.h>
 
 class SystemTests : public ::testing::Test {
@@ -48,6 +49,10 @@ class SystemTests : public ::testing::Test {
   pid_t pid_;
   int fd_;
 };
+
+static std::string GetBionicXmlArg(const char* xml_file) {
+  return "--bionic_xml=" + android::base::GetExecutableDirectory() + "/suites/" + xml_file;
+}
 
 void SystemTests::SanitizeOutput() {
   // Cut off anything after the arguments, since that varies with time.
@@ -377,16 +382,17 @@ TEST_F(SystemTests, full_suite) {
     "BM_stdlib_malloc_free/65536/0/iterations:1\n"
     "BM_stdlib_mbstowcs/0/0/iterations:1\n"
     "BM_stdlib_mbrtowc/0/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_full.xml",
+  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_full.xml").c_str(),
                                                 "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, small) {
   std::string expected =
-    "BM_string_memcmp/8/8/8\n"
-    "BM_math_sqrt\n"
-    "BM_property_get/1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_small.xml"});
+    "BM_string_memcmp/8/8/8/iterations:1\n"
+    "BM_math_sqrt/iterations:1\n"
+    "BM_property_get/1/iterations:1\n";
+  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_small.xml").c_str(),
+                                                "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, medium) {
@@ -402,7 +408,7 @@ TEST_F(SystemTests, medium) {
     "BM_math_sqrt/iterations:1\n"
     "BM_string_memcpy/512/4/4/iterations:25\n"
     "BM_property_get/1/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_medium.xml",
+  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_medium.xml").c_str(),
                                                 "--bionic_iterations=1"});
 }
 
@@ -417,7 +423,7 @@ TEST_F(SystemTests, from_each) {
     "BM_string_memcpy/512/4/4/iterations:1\n"
     "BM_time_clock_gettime/iterations:1\n"
     "BM_unistd_getpid/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_from_each.xml",
+  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_from_each.xml").c_str(),
                                                 "--bionic_iterations=1"});
 }
 
@@ -462,8 +468,8 @@ TEST_F(SystemTests, xml_and_args) {
     "BM_math_log10/iterations:1\n";
   Verify(expected, 0, std::vector<const char *>{"--bionic_extra=BM_string_memcpy AT_ALIGNED_TWOBUF",
                                                 "--bionic_extra=BM_math_log10",
-                                                "--bionic_cpu -1",
-                                                "--bionic_xml=suites/test_medium.xml",
+                                                "--bionic_cpu=0",
+                                                GetBionicXmlArg("test_medium.xml").c_str(),
                                                 "--bionic_iterations=1"});
 }
 
@@ -549,6 +555,6 @@ TEST_F(SystemTests, alignment) {
     "BM_string_strlen/16384/2048/iterations:1\n"
     "BM_string_strlen/32768/2048/iterations:1\n"
     "BM_string_strlen/65536/2048/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_xml=suites/test_alignment.xml",
-                                                "--bionic_iterations=100"});
+  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_alignment.xml").c_str(),
+                                                "--bionic_iterations=1"});
 }
