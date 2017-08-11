@@ -16,6 +16,7 @@
 
 #include "util.h"
 
+#include <err.h>
 #include <math.h>
 #include <sched.h>
 #include <stdio.h>
@@ -27,12 +28,10 @@
 // This function returns a pointer less than 2 * alignment + or_mask bytes into the array.
 char* GetAlignedMemory(char* orig_ptr, size_t alignment, size_t or_mask) {
   if ((alignment & (alignment - 1)) != 0) {
-    fprintf(stderr, "warning: alignment passed into GetAlignedMemory is not a power of two.\n");
-    std::abort();
+    errx(1, "warning: alignment passed into GetAlignedMemory is not a power of two.");
   }
   if (or_mask > alignment) {
-    fprintf(stderr, "warning: or_mask passed into GetAlignedMemory is too high.\n");
-    std::abort();
+    errx(1, "warning: or_mask passed into GetAlignedMemory is too high.");
   }
   uintptr_t ptr = reinterpret_cast<uintptr_t>(orig_ptr);
   if (alignment > 0) {
