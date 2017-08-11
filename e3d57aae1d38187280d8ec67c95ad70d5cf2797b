@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69df4fd8_28f235bc",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-11T23:04:36Z",
+      "side": 1,
+      "message": "Instead of hard-coding this, I\u0027d suggest doing something similar to what I did in system/core/libunwindstack/tests/ElfTestUtils.cpp\n\nLook for the function GetTestFileDirectory(), that should find the directory under which the tests are found.",
+      "range": {
+        "startLine": 352,
+        "startChar": 62,
+        "endLine": 352,
+        "endChar": 97
+      },
+      "revId": "e3d57aae1d38187280d8ec67c95ad70d5cf2797b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
