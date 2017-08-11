@@ -63,6 +63,30 @@
       "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56e2853e_74460c32",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-11T22:11:11Z",
+      "side": 1,
+      "message": "__memrchr_real doesn\u0027t help does it? don\u0027t i just have the same problem there and need the const-cast?\n\ni also don\u0027t understand how this works with the ones libc++ provides (such as https://cs.corp.google.com/android/external/libcxx/include/string.h?q\u003dfile:string.h+file:libcxx\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d78).",
+      "parentUuid": "03137553_65dc4dac",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 96
+      },
+      "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
