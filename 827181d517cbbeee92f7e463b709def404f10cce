@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "905ddda7_69aa8945",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-11T16:11:37Z",
+      "side": 1,
+      "message": "is it time to add something to libbase for this #if chain?\n\nhttps://cs.corp.google.com/search/?q\u003d__x86_64__+arm64+file:system/\u0026m\u003d100\u0026sort\u003d1\u0026sq\u003dpackage:%5Eandroid$\u0026type\u003dcs\n\nthen this could be something like\n\n  static const char* const kLdConfigArchFilePath \u003d \"/system/etc/ld.config.\" ABI_STRING \".txt\";",
+      "revId": "827181d517cbbeee92f7e463b709def404f10cce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
