@@ -241,3 +241,49 @@ static void BM_string_strcmp(benchmark::State& state) {
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
 BIONIC_BENCHMARK(BM_string_strcmp);
+
+static void BM_string_strstr(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t haystack_alignment = state.range(1);
+  const size_t needle_alignment = state.range(2);
+
+  std::vector<char> haystack;
+  std::vector<char> needle;
+  char* haystack_aligned = GetAlignedPtrFilled(&haystack, haystack_alignment, nbytes, 'x');
+  char* needle_aligned = GetAlignedPtrFilled(&needle, needle_alignment,
+                                             std::min(nbytes, static_cast<size_t>(5)), 'x');
+
+  if (nbytes / 4 > 2) {
+    for (size_t i = 0; nbytes / 4 >= 2 && i < nbytes / 4 - 2; i++) {
+      haystack_aligned[4 * i + 3] = 'y';
+    }
+  }
+  haystack_aligned[nbytes - 1] = '\0';
+  needle_aligned[needle.size() - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    if (strstr(haystack_aligned, needle_aligned) == nullptr) {
+      abort();
+    }
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strstr);
+
+static void BM_string_strchr(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t haystack_alignment = state.range(1);
+
+  std::vector<char> haystack;
+  char* haystack_aligned = GetAlignedPtrFilled(&haystack, haystack_alignment, nbytes, 'x');
+
+  while (state.KeepRunning()) {
+    if (strchr(haystack_aligned, 'y') != nullptr) {
+      abort();
+    }
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strchr);
