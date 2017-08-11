@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <err.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -263,7 +264,7 @@ static void BM_string_strstr(benchmark::State& state) {
 
   while (state.KeepRunning()) {
     if (strstr(haystack_aligned, needle_aligned) == nullptr) {
-      abort();
+      errx(1, "ERROR: strstr failed to find valid substring.");
     }
   }
 
@@ -277,10 +278,11 @@ static void BM_string_strchr(benchmark::State& state) {
 
   std::vector<char> haystack;
   char* haystack_aligned = GetAlignedPtrFilled(&haystack, haystack_alignment, nbytes, 'x');
+  haystack_aligned[nbytes-1] = '\0';
 
   while (state.KeepRunning()) {
     if (strchr(haystack_aligned, 'y') != nullptr) {
-      abort();
+      errx(1, "ERROR: strchr found a chr where it should have failed.");
     }
   }
 
