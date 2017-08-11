@@ -87,6 +87,30 @@
       "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68d4316c_639c6e72",
+        "filename": "libc/include/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-11T22:22:44Z",
+      "side": 1,
+      "message": "\u003e __memrchr_real doesn\u0027t help does it? don\u0027t i just have the same problem there and need the const-cast?\n\nThe problem this introduces is one of overload resolution: since the FORTIFY\u0027ed memrchr passes (const void *, int, size_t), C++ now picks the `const void *` memrchr. __memrchr_real isn\u0027t overloaded, so clang shouldn\u0027t complain about it.\n\n(Moreover, this whole __asm__ trick is mostly transparent to clang\u0027s C++ bits: it\u0027s primarily when we lower to LLVM IR that __asm__(\"foo\") becomes relevant)\n\n\u003e i also don\u0027t understand how this works with the ones libc++ provides\n\nSorry, can you clarify? There are subtle clang-specific points to both how libc++ makes this work, and how our FORTIFY bits make this work with libc++.",
+      "parentUuid": "56e2853e_74460c32",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 96
+      },
+      "revId": "c7fe90f0eb2d503fc19341e7271e7cf8167081ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
