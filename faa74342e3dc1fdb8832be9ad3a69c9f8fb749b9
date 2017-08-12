@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "745c721a_6a4216e9",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-12T05:39:27Z",
+      "side": 1,
+      "message": "really `__flags` but this seemed helpful?",
+      "range": {
+        "startLine": 78,
+        "startChar": 20,
+        "endLine": 78,
+        "endChar": 34
+      },
+      "revId": "faa74342e3dc1fdb8832be9ad3a69c9f8fb749b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "beaa20be_3f45e65c",
+        "filename": "libc/include/stdio_ext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-12T05:39:27Z",
+      "side": 1,
+      "message": "(at some point we may actually want to enable something like the stuff Studio has for Java where it knows what constants correspond to a given int, and whether it\u0027s an \"enum\" or a bitfield. obviously that would be getting ahead of ourselves.)",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 62
+      },
+      "revId": "faa74342e3dc1fdb8832be9ad3a69c9f8fb749b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d3c7271_4d424802",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-12T05:39:27Z",
+      "side": 1,
+      "message": "i think __fd and __fp are traditional enough names that anyone that doesn\u0027t already know them will greatly benefit from being introduced to them, but since no-one uses the locale stuff i don\u0027t think there\u0027s much of a tradition here. i also didn\u0027t feel like there was anything useful to say, so defaulted to using the fewest characters.",
+      "range": {
+        "startLine": 182,
+        "startChar": 76,
+        "endLine": 182,
+        "endChar": 79
+      },
+      "revId": "faa74342e3dc1fdb8832be9ad3a69c9f8fb749b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
