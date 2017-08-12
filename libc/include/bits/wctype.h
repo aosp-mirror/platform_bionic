@@ -37,29 +37,29 @@ typedef __WINT_TYPE__ wint_t;
 
 #define WEOF __BIONIC_CAST(static_cast, wint_t, -1)
 
-int iswalnum(wint_t);
-int iswalpha(wint_t);
-int iswblank(wint_t) __INTRODUCED_IN(21);
-int iswcntrl(wint_t);
-int iswdigit(wint_t);
-int iswgraph(wint_t);
-int iswlower(wint_t);
-int iswprint(wint_t);
-int iswpunct(wint_t);
-int iswspace(wint_t);
-int iswupper(wint_t);
-int iswxdigit(wint_t);
+int iswalnum(wint_t __wc);
+int iswalpha(wint_t __wc);
+int iswblank(wint_t __wc) __INTRODUCED_IN(21);
+int iswcntrl(wint_t __wc);
+int iswdigit(wint_t __wc);
+int iswgraph(wint_t __wc);
+int iswlower(wint_t __wc);
+int iswprint(wint_t __wc);
+int iswpunct(wint_t __wc);
+int iswspace(wint_t __wc);
+int iswupper(wint_t __wc);
+int iswxdigit(wint_t __wc);
 
-wint_t towlower(wint_t);
-wint_t towupper(wint_t);
+wint_t towlower(wint_t __wc);
+wint_t towupper(wint_t __wc);
 
 typedef long wctype_t;
-wctype_t wctype(const char*);
-int iswctype(wint_t, wctype_t);
+wctype_t wctype(const char* __name);
+int iswctype(wint_t __wc, wctype_t __type);
 
 typedef const void* wctrans_t;
-wint_t towctrans(wint_t, wctrans_t) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
-wctrans_t wctrans(const char*) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+wint_t towctrans(wint_t __wc, wctrans_t __transform) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+wctrans_t wctrans(const char* __name) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
 
 __END_DECLS
 
