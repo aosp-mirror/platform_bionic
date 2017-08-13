@@ -16,21 +16,22 @@
 
 #include "util.h"
 
+#include <err.h>
+#include <math.h>
 #include <sched.h>
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 
 #include <cstdlib>
 
 // This function returns a pointer less than 2 * alignment + or_mask bytes into the array.
 char* GetAlignedMemory(char* orig_ptr, size_t alignment, size_t or_mask) {
   if ((alignment & (alignment - 1)) != 0) {
-    fprintf(stderr, "warning: alignment passed into GetAlignedMemory is not a power of two.\n");
-    std::abort();
+    errx(1, "warning: alignment passed into GetAlignedMemory is not a power of two.");
   }
   if (or_mask > alignment) {
-    fprintf(stderr, "warning: or_mask passed into GetAlignedMemory is too high.\n");
-    std::abort();
+    errx(1, "warning: or_mask passed into GetAlignedMemory is too high.");
   }
   uintptr_t ptr = reinterpret_cast<uintptr_t>(orig_ptr);
   if (alignment > 0) {
@@ -47,6 +48,12 @@ char* GetAlignedMemory(char* orig_ptr, size_t alignment, size_t or_mask) {
 char* GetAlignedPtr(std::vector<char>* buf, size_t alignment, size_t nbytes) {
   buf->resize(nbytes + 3 * alignment);
   return GetAlignedMemory(buf->data(), alignment, 0);
+}
+
+wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nchars) {
+  buf->resize(nchars + ceil((3 * alignment) / sizeof(wchar_t)));
+  return reinterpret_cast<wchar_t*>(GetAlignedMemory(reinterpret_cast<char*>(buf->data()),
+                                                     alignment, 0));
 }
 
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte) {
