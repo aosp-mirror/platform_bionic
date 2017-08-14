@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aeba49f_58850fc7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-08-14T05:04:24Z",
+      "side": 1,
+      "message": "This explanation doesn\u0027t make sense here as this is only a single instruction after \"it\", unless for some reason it is converting it to add a \"false\" instruction immediately afterwards to correspond to the \"bne\", but honestly that seems crazy. Is this really the error message produced? PC-relative ldr/str is also deprecated in an \"it\" block, so perhaps that is what is happening here (although I don\u0027t see how it would happen, but these inline assembly constraints are also very complex).",
+      "revId": "55ca03b644bb9ffc159042e64b317f76d3b92110",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3715c78_ae6437ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-08-14T05:04:24Z",
+      "side": 1,
+      "message": "test",
+      "range": {
+        "startLine": 33,
+        "startChar": 27,
+        "endLine": 33,
+        "endChar": 32
+      },
+      "revId": "55ca03b644bb9ffc159042e64b317f76d3b92110",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
