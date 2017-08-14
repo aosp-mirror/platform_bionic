@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "87e6681c_e1364a24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2017-08-14T06:25:46Z",
+      "side": 1,
+      "message": "There is indeed only a single instruction in this \"it\" block, but it\u0027s not a 16-bit instruction!\n$ arm-linux-androideabi-objdump -d strlen.o\n...\n  46:   bf08            it      eq\n  48:   f85c 3b04       ldreq.w r3, [ip], #4\n  4c:   d0f4            beq.n   38 \u003cstrlen+0x38\u003e\n...\nNo PC-relative addressing here. [ip] means something like \"Inter-Procedure\", not Instruction Pointer.",
+      "parentUuid": "9aeba49f_58850fc7",
+      "revId": "55ca03b644bb9ffc159042e64b317f76d3b92110",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3715c78_ae6437ce",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2017-08-14T05:04:24Z",
       "side": 1,
       "message": "test",
+      "range": {
+        "startLine": 33,
+        "startChar": 27,
+        "endLine": 33,
+        "endChar": 32
+      },
+      "revId": "55ca03b644bb9ffc159042e64b317f76d3b92110",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91819dd2_792d7d6d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2017-08-14T06:25:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3715c78_ae6437ce",
       "range": {
         "startLine": 33,
         "startChar": 27,
