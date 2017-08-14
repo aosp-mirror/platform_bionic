@@ -376,6 +376,7 @@ void test_realpath() {
   // This is fine.
   realpath(".", NULL);
 
-  // FIXME: But we should warn on this.
-  realpath(NULL, buf);
+  char bigbuf[PATH_MAX];
+  // CLANG: error: 'realpath': NULL path is never correct; flipped arguments?
+  realpath(NULL, bigbuf);
 }
