@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41d3fcb9_f229fc47",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-15T20:30:23Z",
+      "side": 1,
+      "message": "trying to avoid abbreviations as usual. kill(1) -- which has no limitations on what names it can use -- says \"signal\".",
+      "parentUuid": "c88a36a8_bb47610d",
+      "range": {
+        "startLine": 42,
+        "startChar": 28,
+        "endLine": 42,
+        "endChar": 36
+      },
+      "revId": "faa74342e3dc1fdb8832be9ad3a69c9f8fb749b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "745c721a_6a4216e9",
         "filename": "libc/include/malloc.h",
         "patchSetId": 2
