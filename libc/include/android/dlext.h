@@ -129,7 +129,7 @@ typedef struct {
   struct android_namespace_t* library_namespace;
 } android_dlextinfo;
 
-void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo)
+void* android_dlopen_ext(const char* __filename, int __flags, const android_dlextinfo* __info)
   __INTRODUCED_IN(21);
 
 __END_DECLS

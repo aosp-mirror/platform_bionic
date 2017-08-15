@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-int fcntl(int, int, ...);
+int fcntl(int __fd, int __cmd, ...);
 
 __END_DECLS
 
