@@ -22,6 +22,30 @@
       "revId": "25c6a5b4bad4d301848ef4a9286376b0940c35f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80703243_ad1a9892",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-15T18:05:28Z",
+      "side": 1,
+      "message": "That\u0027s much nicer, changed.",
+      "parentUuid": "6c1b1202_a2346dac",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 44
+      },
+      "revId": "25c6a5b4bad4d301848ef4a9286376b0940c35f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
