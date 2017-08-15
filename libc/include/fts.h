@@ -115,12 +115,13 @@ typedef struct _ftsent {
 } FTSENT;
 
 __BEGIN_DECLS
-FTSENT	*fts_children(FTS *, int);
-int	 fts_close(FTS *);
-FTS	*fts_open(char * const *, int,
-	    int (*)(const FTSENT **, const FTSENT **));
-FTSENT	*fts_read(FTS *);
-int	 fts_set(FTS *, FTSENT *, int);
+
+FTSENT* fts_children(FTS* __fts, int __options);
+int fts_close(FTS* __fts);
+FTS* fts_open(char* const* __path, int __options, int (*__comparator)(const FTSENT** __lhs, const FTSENT** __rhs));
+FTSENT* fts_read(FTS* __fts);
+int fts_set(FTS* __fts, FTSENT* __entry, int __options);
+
 __END_DECLS
 
 #endif /* !_FTS_H_ */

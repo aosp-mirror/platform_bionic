@@ -33,7 +33,7 @@
 
 __BEGIN_DECLS
 
-int ioctl(int, int, ...);
+int ioctl(int __fd, int __request, ...);
 
 __END_DECLS
 

@@ -42,22 +42,22 @@ struct sched_param {
   int sched_priority;
 };
 
-int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param);
-int sched_getscheduler(pid_t pid);
+int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* __param);
+int sched_getscheduler(pid_t __pid);
 int sched_yield(void);
-int sched_get_priority_max(int policy);
-int sched_get_priority_min(int policy);
-int sched_setparam(pid_t pid, const struct sched_param* param);
-int sched_getparam(pid_t pid, struct sched_param* param);
-int sched_rr_get_interval(pid_t pid, struct timespec* quantum);
+int sched_get_priority_max(int __policy);
+int sched_get_priority_min(int __policy);
+int sched_setparam(pid_t __pid, const struct sched_param* __param);
+int sched_getparam(pid_t __pid, struct sched_param* __param);
+int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
 
 #if defined(__USE_GNU)
 
-int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...)
+int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...)
     __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
-int unshare(int flags) __INTRODUCED_IN(17);
+int unshare(int __flags) __INTRODUCED_IN(17);
 int sched_getcpu(void) __INTRODUCED_IN(12);
-int setns(int fd, int ns_type) __INTRODUCED_IN(21);
+int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);
 
 #ifdef __LP64__
 #define CPU_SETSIZE 1024
@@ -74,8 +74,8 @@ typedef struct {
   __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
 } cpu_set_t;
 
-int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) __INTRODUCED_IN(12);
-int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
+int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* __set) __INTRODUCED_IN(12);
+int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set) __INTRODUCED_IN(12);
 
 #define CPU_ZERO(set)          CPU_ZERO_S(sizeof(cpu_set_t), set)
 #define CPU_SET(cpu, set)      CPU_SET_S(cpu, sizeof(cpu_set_t), set)
@@ -98,8 +98,8 @@ int sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set) __INTRODUCED_IN
 #define CPU_ALLOC(count)  __sched_cpualloc((count))
 #define CPU_FREE(set)     __sched_cpufree((set))
 
-cpu_set_t* __sched_cpualloc(size_t count) __INTRODUCED_IN(12);
-void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(12);
+cpu_set_t* __sched_cpualloc(size_t __count) __INTRODUCED_IN(12);
+void __sched_cpufree(cpu_set_t* __set) __INTRODUCED_IN(12);
 
 #define CPU_ZERO_S(setsize, set)  __builtin_memset(set, 0, setsize)
 
@@ -143,7 +143,7 @@ void __sched_cpufree(cpu_set_t* set) __INTRODUCED_IN(12);
 
 #define CPU_COUNT_S(setsize, set)  __sched_cpucount((setsize), (set))
 
-int __sched_cpucount(size_t setsize, cpu_set_t* set) __INTRODUCED_IN(12);
+int __sched_cpucount(size_t __set_size, cpu_set_t* __set) __INTRODUCED_IN(12);
 
 #endif /* __USE_GNU */
 

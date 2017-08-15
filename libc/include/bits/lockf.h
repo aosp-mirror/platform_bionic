@@ -39,8 +39,8 @@
 
 __BEGIN_DECLS
 
-int lockf(int, int, off_t) __RENAME_IF_FILE_OFFSET64(lockf64) __INTRODUCED_IN(24);
-int lockf64(int, int, off64_t) __INTRODUCED_IN(24);
+int lockf(int __fd, int __cmd, off_t __length) __RENAME_IF_FILE_OFFSET64(lockf64) __INTRODUCED_IN(24);
+int lockf64(int __fd, int __cmd, off64_t __length) __INTRODUCED_IN(24);
 
 __END_DECLS
 
