@@ -34,10 +34,10 @@
 
 __BEGIN_DECLS
 
-char* ether_ntoa(const struct ether_addr*) __INTRODUCED_IN(11);
-char* ether_ntoa_r(const struct ether_addr*, char*) __INTRODUCED_IN(11);
-struct ether_addr* ether_aton(const char*) __INTRODUCED_IN(11);
-struct ether_addr* ether_aton_r(const char*, struct ether_addr*) __INTRODUCED_IN(11);
+char* ether_ntoa(const struct ether_addr* __addr) __INTRODUCED_IN(11);
+char* ether_ntoa_r(const struct ether_addr* __addr, char* __buf) __INTRODUCED_IN(11);
+struct ether_addr* ether_aton(const char* __ascii) __INTRODUCED_IN(11);
+struct ether_addr* ether_aton_r(const char* __ascii, struct ether_addr* __addr) __INTRODUCED_IN(11);
 
 __END_DECLS
 

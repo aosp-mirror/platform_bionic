@@ -33,9 +33,9 @@
 
 __BEGIN_DECLS
 
-int	 getopt(int, char * const [], const char *);
+int getopt(int __argc, char* const __argv[], const char* __options);
 
-extern char *optarg;			/* getopt(3) external variables */
+extern char* optarg;
 extern int optind, opterr, optopt;
 
 __END_DECLS
