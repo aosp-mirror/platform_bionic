@@ -35,10 +35,10 @@
 
 __BEGIN_DECLS
 
-int strcasecmp(const char*, const char*) __attribute_pure__;
-int strcasecmp_l(const char*, const char*, locale_t) __attribute_pure__ __INTRODUCED_IN(23);
-int strncasecmp(const char*, const char*, size_t) __attribute_pure__;
-int strncasecmp_l(const char*, const char*, size_t, locale_t) __attribute_pure__ __INTRODUCED_IN(23);
+int strcasecmp(const char* __s1, const char* __s2) __attribute_pure__;
+int strcasecmp_l(const char* __s1, const char* __s2, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
+int strncasecmp(const char* __s1, const char* __s2, size_t __n) __attribute_pure__;
+int strncasecmp_l(const char* __s1, const char* __s2, size_t __n, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
 
 __END_DECLS
 

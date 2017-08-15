@@ -109,55 +109,55 @@ struct sigaction {
 
 #endif
 
-int sigaction(int, const struct sigaction*, struct sigaction*);
+int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
 
-int siginterrupt(int, int);
+int siginterrupt(int __signal, int __flag);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
-int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
-int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
-int sigemptyset(sigset_t*) __INTRODUCED_IN(21);
-int sigfillset(sigset_t*) __INTRODUCED_IN(21);
-int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
+sighandler_t signal(int __signal, sighandler_t __handler) __INTRODUCED_IN(21);
+int sigaddset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigdelset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigemptyset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigfillset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigismember(const sigset_t* __set, int __signal) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
 
-int sigpending(sigset_t*);
-int sigprocmask(int, const sigset_t*, sigset_t*);
-int sigsuspend(const sigset_t*);
-int sigwait(const sigset_t*, int*);
+int sigpending(sigset_t* __set);
+int sigprocmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int sigsuspend(const sigset_t* __mask);
+int sigwait(const sigset_t* __set, int* __signal);
 
-int sighold(int)
+int sighold(int __signal)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
-int sigignore(int)
+int sigignore(int __signal)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
-int sigpause(int)
+int sigpause(int __signal)
   __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN(26);
-int sigrelse(int)
+int sigrelse(int __signal)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
-sighandler_t sigset(int, sighandler_t)
+sighandler_t sigset(int __signal, sighandler_t __handler)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
 
-int raise(int);
-int kill(pid_t, int);
-int killpg(int, int);
-int tgkill(int tgid, int tid, int sig) __INTRODUCED_IN_32(16);
+int raise(int __signal);
+int kill(pid_t __pid, int __signal);
+int killpg(int __pgrp, int __signal);
+int tgkill(int __tgid, int __tid, int __signal) __INTRODUCED_IN_32(16);
 
-int sigaltstack(const stack_t*, stack_t*);
+int sigaltstack(const stack_t* __new_signal_stack, stack_t* __old_signal_stack);
 
-void psiginfo(const siginfo_t*, const char*) __INTRODUCED_IN(17);
-void psignal(int, const char*) __INTRODUCED_IN(17);
+void psiginfo(const siginfo_t* __info, const char* __msg) __INTRODUCED_IN(17);
+void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
 
-int pthread_kill(pthread_t, int);
-int pthread_sigmask(int, const sigset_t*, sigset_t*);
+int pthread_kill(pthread_t __pthread, int __signal);
+int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
 
-int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
-int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
-int sigwaitinfo(const sigset_t*, siginfo_t*) __INTRODUCED_IN(23);
+int sigqueue(pid_t __pid, int __signal, const union sigval __value) __INTRODUCED_IN(23);
+int sigtimedwait(const sigset_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t* __set, siginfo_t* __info) __INTRODUCED_IN(23);
 
 __END_DECLS
 
