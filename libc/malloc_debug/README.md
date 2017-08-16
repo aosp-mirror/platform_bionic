@@ -371,6 +371,9 @@ function that was called with the bad pointer.
 
 Examples
 ========
+
+### For platform developers
+
 Enable backtrace tracking of all allocation for all processes:
 
     adb shell stop
@@ -427,17 +430,7 @@ It is possible to use the backtrace\_enable\_on\_signal option as well,
 but, obviously, it must be enabled through the signal before the file will
 contain any data.
 
-To analyze the data produced by the dumpheap command, run this script:
-
-    development/scripts/native_heapdump_viewer.py
-
-In order for the script to properly symbolize the stacks in the file,
-make sure the script is executed from the tree that built the image.
-Below is an example of how to execute the script using the dump created by the
-above command:
-
-    adb shell pull /data/local/tmp/heap.txt .
-    development/scripts/native_heapdump_viewer.py heap.txt > heap_info.txt
+### For app developers
 
 Enable malloc debug for a specific program/application (Android O or later):
 
@@ -453,3 +446,40 @@ of 32. This meant that to create a wrap property with the name of the app, it
 was necessary to truncate the name to fit. On O, property names can be
 an order of magnitude larger, so there should be no need to truncate the name
 at all.
+
+To detect leaks while an app is running:
+
+    adb shell dumpsys meminfo --unreachable <PID_OF_APP>
+
+Without also enabling malloc debug, this command will only tell
+you whether it can detect leaked memory, not where those leaks are
+occurring. If you enable malloc debug with the backtrace option for your
+app before running the dumpsys command, you'll get backtraces showing
+where the memory was allocated.
+
+For backtraces from your app to be useful, you'll want to keep the
+symbols in your app's shared libraries rather than stripping them. That
+way you'll see the location of the leak directly without having to use
+something like the <code>ndk-stack</code> tool.
+
+### Analyzing heap dumps
+
+To analyze the data produced by the dumpheap command, run this script:
+
+    development/scripts/native_heapdump_viewer.py
+
+In order for the script to properly symbolize the stacks in the file,
+make sure the script is executed from the tree that built the image.
+
+To collect, transfer, and analyze a dump:
+
+    adb shell am dumpheap -n <PID_TO_DUMP> /data/local/tmp/heap.txt
+    adb shell pull /data/local/tmp/heap.txt .
+    python development/scripts/native_heapdump_viewer.py --symbols /some/path/to/symbols/ heap.txt > heap_info.txt
+
+At the moment, the script will look for symbols in the given directory,
+using the path the .so file would have on the device. So if your .so file
+is at `/data/app/.../lib/arm/libx.so` on the device, it will need to be at
+`/some/path/to/symbols/data/app/.../lib/arm/libx.so` locally given the
+command line above. That is: you need to mirror the directory structure
+for the app in the symbols directory.
