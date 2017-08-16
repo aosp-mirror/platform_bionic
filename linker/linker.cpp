@@ -3506,6 +3506,9 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   g_default_namespace.set_permitted_paths(default_ns_config->permitted_paths());
 
   namespaces[default_ns_config->name()] = &g_default_namespace;
+  if (default_ns_config->visible()) {
+    g_exported_namespaces[default_ns_config->name()] = &g_default_namespace;
+  }
 
   // 2. Initialize other namespaces
 
