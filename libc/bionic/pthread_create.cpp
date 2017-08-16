@@ -278,7 +278,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
       munmap(thread->attr.stack_base, thread->mmap_size);
     }
     async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s",
-                          strerror(errno));
+                          strerror(clone_errno));
     return clone_errno;
   }
 
