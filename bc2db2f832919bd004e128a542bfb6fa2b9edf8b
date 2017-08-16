@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8ae7fac_e6e7befd",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-16T22:32:59Z",
+      "side": 1,
+      "message": "maybe we need to add a check_timespec() here as in L175, otherwise the tests about invalid waitting timespec in pthread_test.cpp may fail.",
+      "range": {
+        "startLine": 216,
+        "startChar": 34,
+        "endLine": 216,
+        "endChar": 35
+      },
+      "revId": "bc2db2f832919bd004e128a542bfb6fa2b9edf8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b119392_1c053585",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-16T22:32:59Z",
+      "side": 1,
+      "message": "why omit the negative part, shouldn\u0027t we --sec and tv_nsec +\u003d 1000000000?",
+      "range": {
+        "startLine": 228,
+        "startChar": 32,
+        "endLine": 228,
+        "endChar": 36
+      },
+      "revId": "bc2db2f832919bd004e128a542bfb6fa2b9edf8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
