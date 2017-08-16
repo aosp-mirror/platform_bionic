@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c3cf292_9266dfb2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000451
+      },
+      "writtenOn": "2017-08-16T05:35:38Z",
+      "side": 1,
+      "message": "I\u0027m not 100% sure, but I\u0027ve always thought these needed to be separate Bug: lines.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 1
+      },
+      "revId": "f2a1e3bd04dac986c4b32fe5195beade7c303615",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
