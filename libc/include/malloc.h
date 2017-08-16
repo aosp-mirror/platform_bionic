@@ -30,13 +30,13 @@ __BEGIN_DECLS
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
 #endif
 
-void* malloc(size_t byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
-void* calloc(size_t item_count, size_t item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
-void* realloc(void* p, size_t byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
-void free(void* p);
+void* malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
+void free(void* __ptr);
 
-void* memalign(size_t alignment, size_t byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
-size_t malloc_usable_size(const void* p) __INTRODUCED_IN(17);
+void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
 
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
@@ -75,12 +75,11 @@ struct mallinfo mallinfo(void);
  *   <!-- more heaps -->
  * </malloc>
  */
-int malloc_info(int, FILE*) __INTRODUCED_IN(23);
+int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 
 /* mallopt options */
 #define M_DECAY_TIME -100
-
-int mallopt(int, int) __INTRODUCED_IN(26);
+int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 
 __END_DECLS
 
