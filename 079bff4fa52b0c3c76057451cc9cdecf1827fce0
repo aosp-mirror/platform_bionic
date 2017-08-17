@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15b767b8_c5a3c432",
+        "filename": "libc/include/sys/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-17T14:47:01Z",
+      "side": 1,
+      "message": "switched from the less intention-revealing `*`.",
+      "range": {
+        "startLine": 47,
+        "startChar": 59,
+        "endLine": 47,
+        "endChar": 62
+      },
+      "revId": "079bff4fa52b0c3c76057451cc9cdecf1827fce0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f022a665_f7ae8b4b",
+        "filename": "libc/include/time.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-17T14:47:01Z",
+      "side": 1,
+      "message": "switched from the less intention-revealing `int`.",
+      "range": {
+        "startLine": 100,
+        "startChar": 17,
+        "endLine": 100,
+        "endChar": 26
+      },
+      "revId": "079bff4fa52b0c3c76057451cc9cdecf1827fce0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
