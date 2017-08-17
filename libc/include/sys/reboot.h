@@ -42,8 +42,8 @@ __BEGIN_DECLS
 #define RB_DISABLE_CAD  LINUX_REBOOT_CMD_CAD_OFF
 #define RB_POWER_OFF    LINUX_REBOOT_CMD_POWER_OFF
 
-int reboot(int __cmd);
+int reboot(int reboot_type);
 
 __END_DECLS
 
-#endif
+#endif /* _SYS_REBOOT_H_ */

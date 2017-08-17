@@ -32,6 +32,7 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+
 __BEGIN_DECLS
 
 /*
@@ -41,19 +42,19 @@ __BEGIN_DECLS
  * Note that this has the wrong argument cv-qualifiers, but doesn't modify its
  * input and uses thread-local storage for the result if necessary.
  */
-char* __posix_basename(const char* __path) __RENAME(basename);
+char* __posix_basename(const char*) __RENAME(basename);
 
 #define basename __posix_basename
 
 /* This has the wrong argument cv-qualifiers, but doesn't modify its input and uses thread-local storage for the result if necessary. */
-char* dirname(const char* __path);
+char* dirname(const char*);
 
 #if !defined(__LP64__)
 /* These non-standard functions are not needed on Android; basename and dirname use thread-local storage. */
-int dirname_r(const char* __path, char* __buf, size_t __n);
-int basename_r(const char* __path, char* __buf, size_t __n);
+int dirname_r(const char*, char*, size_t);
+int basename_r(const char*, char*, size_t);
 #endif
 
 __END_DECLS
 
-#endif
+#endif /* _LIBGEN_H */
