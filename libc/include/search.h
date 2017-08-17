@@ -29,21 +29,20 @@ typedef struct node {
 
 __BEGIN_DECLS
 
-void insque(void*, void*) __INTRODUCED_IN(21);
-void remque(void*) __INTRODUCED_IN(21);
+void insque(void* __element, void* __previous) __INTRODUCED_IN(21);
+void remque(void* __element) __INTRODUCED_IN(21);
 
-void* lfind(const void*, const void*, size_t*, size_t, int (*)(const void*, const void*))
+void* lfind(const void* __key, const void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
   __INTRODUCED_IN(21);
-void* lsearch(const void*, void*, size_t*, size_t, int (*)(const void*, const void*))
+void* lsearch(const void* __key, void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
   __INTRODUCED_IN(21);
 
-void* tdelete(const void*, void**, int (*)(const void*, const void*))
-  __INTRODUCED_IN(16);
-void tdestroy(void*, void (*)(void*)) __INTRODUCED_IN(16);
-void* tfind(const void*, void* const*, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
-void* tsearch(const void*, void**, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
-void twalk(const void*, void (*)(const void*, VISIT, int)) __INTRODUCED_IN(21);
+void* tdelete(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void tdestroy(void* __root, void (*__free_fn)(void*)) __INTRODUCED_IN(16);
+void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int)) __INTRODUCED_IN(21);
 
 __END_DECLS
 
-#endif /* !_SEARCH_H_ */
+#endif

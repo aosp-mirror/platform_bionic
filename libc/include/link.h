@@ -50,9 +50,9 @@ struct dl_phdr_info {
 };
 
 #if defined(__arm__)
-int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*) __INTRODUCED_IN(21);
+int dl_iterate_phdr(int (*__callback)(struct dl_phdr_info*, size_t, void*), void* __data) __INTRODUCED_IN(21);
 #else
-int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*);
+int dl_iterate_phdr(int (*__callback)(struct dl_phdr_info*, size_t, void*), void* __data);
 #endif
 
 #ifdef __arm__
@@ -84,4 +84,4 @@ struct r_debug {
 
 __END_DECLS
 
-#endif /* _LINK_H_ */
+#endif
