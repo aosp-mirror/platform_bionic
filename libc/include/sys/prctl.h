@@ -35,8 +35,8 @@
 
 __BEGIN_DECLS
 
-int prctl(int option, ...);
+int prctl(int __option, ...);
 
 __END_DECLS
 
-#endif /* _SYS_PRCTL_H */
+#endif

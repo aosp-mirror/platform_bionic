@@ -34,4 +34,4 @@
 #include <asm/cachectl.h>
 #endif
 
-#endif /* sys/cachectl.h */
+#endif
