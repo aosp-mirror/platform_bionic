@@ -25,7 +25,6 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
 #ifndef _SYS_IOCTL_H_
 #define _SYS_IOCTL_H_
 
@@ -42,4 +41,4 @@
 
 #include <bits/ioctl.h>
 
-#endif
+#endif /* _SYS_IOCTL_H_ */
