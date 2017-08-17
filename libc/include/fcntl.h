@@ -69,26 +69,26 @@ __BEGIN_DECLS
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
 #endif
 
-int creat(const char*, mode_t);
-int creat64(const char*, mode_t) __INTRODUCED_IN(21);
-int openat(int, const char*, int, ...) __overloadable __RENAME_CLANG(openat);
-int openat64(int, const char*, int, ...) __INTRODUCED_IN(21);
-int open(const char*, int, ...) __overloadable __RENAME_CLANG(open);
-int open64(const char*, int, ...) __INTRODUCED_IN(21);
-ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int) __INTRODUCED_IN(21);
-ssize_t tee(int, int, size_t, unsigned int) __INTRODUCED_IN(21);
-ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) __INTRODUCED_IN(21);
+int creat(const char* __path, mode_t __mode);
+int creat64(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
+int openat(int __dir_fd, const char* __path, int __flags, ...) __overloadable __RENAME_CLANG(openat);
+int openat64(int __dir_fd, const char* __path, int __flags, ...) __INTRODUCED_IN(21);
+int open(const char* __path, int __flags, ...) __overloadable __RENAME_CLANG(open);
+int open64(const char* __path, int __flags, ...) __INTRODUCED_IN(21);
+ssize_t splice(int __in_fd, off64_t* __in_offset, int __out_fd, off64_t* __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t vmsplice(int __fd, const struct iovec* __iov, size_t __count, unsigned int __flags) __INTRODUCED_IN(21);
 
-int fallocate(int, int, off_t, off_t) __RENAME_IF_FILE_OFFSET64(fallocate64) __INTRODUCED_IN(21);
-int fallocate64(int, int, off64_t, off64_t) __INTRODUCED_IN(21);
-int posix_fadvise(int, off_t, off_t, int) __RENAME_IF_FILE_OFFSET64(posix_fadvise64) __INTRODUCED_IN(21);
-int posix_fadvise64(int, off64_t, off64_t, int) __INTRODUCED_IN(21);
-int posix_fallocate(int, off_t, off_t) __RENAME_IF_FILE_OFFSET64(posix_fallocate64) __INTRODUCED_IN(21);
-int posix_fallocate64(int, off64_t, off64_t) __INTRODUCED_IN(21);
+int fallocate(int __fd, int __mode, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(fallocate64) __INTRODUCED_IN(21);
+int fallocate64(int __fd, int __mode, off64_t __offset, off64_t __length) __INTRODUCED_IN(21);
+int posix_fadvise(int __fd, off_t __offset, off_t __length, int __advice) __RENAME_IF_FILE_OFFSET64(posix_fadvise64) __INTRODUCED_IN(21);
+int posix_fadvise64(int __fd, off64_t __offset, off64_t __length, int __advice) __INTRODUCED_IN(21);
+int posix_fallocate(int __fd, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(posix_fallocate64) __INTRODUCED_IN(21);
+int posix_fallocate64(int __fd, off64_t __offset, off64_t __length) __INTRODUCED_IN(21);
 
 #if defined(__USE_GNU)
-ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(16);
-int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN(26);
+ssize_t readahead(int __fd, off64_t __offset, size_t __length) __INTRODUCED_IN(16);
+int sync_file_range(int __fd, off64_t __offset, off64_t __length, unsigned int __flags) __INTRODUCED_IN(26);
 #endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
@@ -97,4 +97,4 @@ int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN(26);
 
 __END_DECLS
 
-#endif /* _FCNTL_H */
+#endif

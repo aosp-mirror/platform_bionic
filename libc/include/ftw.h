@@ -55,12 +55,12 @@ struct FTW {
 };
 
 __BEGIN_DECLS
-int ftw(const char*, int (*)(const char*, const struct stat*, int), int) __INTRODUCED_IN(17);
-int nftw(const char*, int (*)(const char*, const struct stat*, int, struct FTW*), int, int)
+int ftw(const char* __dir_path, int (*__callback)(const char*, const struct stat*, int), int __max_fd_count) __INTRODUCED_IN(17);
+int nftw(const char* __dir_path, int (*__callback)(const char*, const struct stat*, int, struct FTW*), int __max_fd_count, int __flags)
   __INTRODUCED_IN(17);
-int ftw64(const char*, int (*)(const char*, const struct stat64*, int), int) __INTRODUCED_IN(21);
-int nftw64(const char*, int (*)(const char*, const struct stat64*, int, struct FTW*), int, int)
+int ftw64(const char* __dir_path, int (*__callback)(const char*, const struct stat64*, int), int __max_fd_count) __INTRODUCED_IN(21);
+int nftw64(const char* __dir_path, int (*__callback)(const char*, const struct stat64*, int, struct FTW*), int __max_fd_count, int __flags)
   __INTRODUCED_IN(21);
 __END_DECLS
 
-#endif	/* !_FTW_H */
+#endif

@@ -61,14 +61,14 @@ __BEGIN_DECLS
 ** Map the property area from the specified filename.  This
 ** method is for testing only.
 */
-int __system_property_set_filename(const char *filename);
+int __system_property_set_filename(const char* __filename);
 
 /*
 ** Initialize the area to be used to store properties.  Can
 ** only be done by a single process that has write access to
 ** the property area.
 */
-int __system_property_area_init();
+int __system_property_area_init(void);
 
 /* Read the global serial number of the system properties
 **
@@ -92,7 +92,7 @@ int __system_property_area_init();
 **
 ** Returns the serial number on success, -1 on error.
 */
-uint32_t __system_property_area_serial();
+uint32_t __system_property_area_serial(void);
 
 /* Add a new system property.  Can only be done by a single
 ** process that has write access to the property area, and
@@ -102,7 +102,7 @@ uint32_t __system_property_area_serial();
 **
 ** Returns 0 on success, -1 if the property area is full.
 */
-int __system_property_add(const char *name, unsigned int namelen, const char *value, unsigned int valuelen);
+int __system_property_add(const char* __name, unsigned int __name_length, const char* __value, unsigned int __value_length);
 
 /* Update the value of a system property returned by
 ** __system_property_find.  Can only be done by a single process
@@ -112,14 +112,14 @@ int __system_property_add(const char *name, unsigned int namelen, const char *va
 **
 ** Returns 0 on success, -1 if the parameters are incorrect.
 */
-int __system_property_update(prop_info *pi, const char *value, unsigned int len);
+int __system_property_update(prop_info* __pi, const char* __value, unsigned int __value_length);
 
 /* Read the serial number of a system property returned by
 ** __system_property_find.
 **
 ** Returns the serial number on success, -1 on error.
 */
-uint32_t __system_property_serial(const prop_info* pi);
+uint32_t __system_property_serial(const prop_info* __pi);
 
 /* Initialize the system properties area in read only mode.
  * Should be done by all processes that need to read system
@@ -127,10 +127,10 @@ uint32_t __system_property_serial(const prop_info* pi);
  *
  * Returns 0 on success, -1 otherwise.
  */
-int __system_properties_init();
+int __system_properties_init(void);
 
 /* Deprecated: use __system_property_wait instead. */
-uint32_t __system_property_wait_any(uint32_t old_serial);
+uint32_t __system_property_wait_any(uint32_t __old_serial);
 
 __END_DECLS
 
