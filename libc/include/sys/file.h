@@ -36,8 +36,8 @@
 
 __BEGIN_DECLS
 
-int flock(int __fd, int __op);
+int flock(int, int);
 
 __END_DECLS
 
-#endif
+#endif /* _SYS_FILE_H_ */
