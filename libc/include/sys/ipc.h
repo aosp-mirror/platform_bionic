@@ -42,8 +42,8 @@
 
 __BEGIN_DECLS
 
-key_t ftok(const char* __path, int __id);
+key_t ftok(const char* path, int id);
 
 __END_DECLS
 
-#endif
+#endif /* _SYS_IPC_H */
