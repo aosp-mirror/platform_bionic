@@ -25,7 +25,6 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
 #ifndef _SYS_PTRACE_H_
 #define _SYS_PTRACE_H_
 
@@ -59,8 +58,8 @@ __BEGIN_DECLS
 #define PT_GETSIGINFO PTRACE_GETSIGINFO
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
 
-long ptrace(int __request, ...);
+long ptrace(int, ...);
 
 __END_DECLS
 
-#endif
+#endif /* _SYS_PTRACE_H_ */
