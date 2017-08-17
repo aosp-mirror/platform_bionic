@@ -61,10 +61,8 @@ class CFIShadow {
   // Alignment of __cfi_check.
   static constexpr uintptr_t kCfiCheckAlign = 1UL << kCfiCheckGranularity;  // 4K
 
-#if defined(__aarch64__)
-  static constexpr uintptr_t kMaxTargetAddr = 0x7fffffffff;
-#elif defined (__LP64__)
-  static constexpr uintptr_t kMaxTargetAddr = 0x7fffffffffff;
+#if defined (__LP64__)
+  static constexpr uintptr_t kMaxTargetAddr = 0xffffffffffff;
 #else
   static constexpr uintptr_t kMaxTargetAddr = 0xffffffff;
 #endif
