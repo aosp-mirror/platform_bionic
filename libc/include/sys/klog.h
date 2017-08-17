@@ -46,8 +46,8 @@ __BEGIN_DECLS
 #define KLOG_SIZE_UNREAD   9
 #define KLOG_SIZE_BUFFER   10
 
-int klogctl(int __type, char* __buf, int __buf_size);
+int klogctl(int, char *, int);
 
 __END_DECLS
 
-#endif
+#endif /* _SYS_KLOG_H_ */
