@@ -36,6 +36,7 @@ LIBC_N {
 
 LIBC_OMR1 { # future
   global:
+    __cfi_shadow_size; # future
     __cfi_slowpath; # future
     __cfi_slowpath_diag; # future
 } LIBC_N;
