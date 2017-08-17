@@ -59,8 +59,10 @@ struct option {
 };
 
 __BEGIN_DECLS
-int getopt_long(int __argc, char* const* __argv, const char* __options, const struct option* __long_options, int* __long_index);
-int getopt_long_only(int __argc, char* const* __argv, const char* __options, const struct option* __long_options, int* __long_index);
+int	getopt_long(int, char * const *, const char *,
+	const struct option *, int *);
+int	getopt_long_only(int, char * const *, const char *,
+	const struct option *, int *);
 
 #ifndef _OPTRESET_DECLARED
 #define	_OPTRESET_DECLARED
@@ -68,4 +70,4 @@ extern int optreset;			/* getopt(3) external variable */
 #endif
 __END_DECLS
  
-#endif
+#endif /* !_GETOPT_H_ */

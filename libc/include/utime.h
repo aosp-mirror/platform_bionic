@@ -35,8 +35,8 @@
 
 __BEGIN_DECLS
 
-int utime(const char* __filename, const struct utimbuf* __times);
+int utime(const char*, const struct utimbuf*);
 
 __END_DECLS
 
-#endif
+#endif /* _UTIME_H_ */
