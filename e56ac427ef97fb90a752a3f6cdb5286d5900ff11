@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ab25a113_5ffc64f7",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef04a2ed_1772a71c",
+      "range": {
+        "startLine": 224,
+        "startChar": 34,
+        "endLine": 224,
+        "endChar": 35
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c1f8ed9_d23368ad",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-17T17:31:40Z",
       "side": 1,
       "message": "Maybe we can move L225-L240 to a separate function like realtime_to_monotonic_time() in bionic_time_conversions.h, especially if you want to change other wait functions like pthread_mutex_timedlock()?",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 225,
+        "endChar": 10
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1a6dd4d_6bb80973",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c1f8ed9_d23368ad",
       "range": {
         "startLine": 225,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "57e7d498_0988030b",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99bc9993_1858b1b1",
+      "range": {
+        "startLine": 232,
+        "startChar": 34,
+        "endLine": 232,
+        "endChar": 35
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1704139a_e53302a4",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "4314eedc_faa3d930",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1704139a_e53302a4",
+      "range": {
+        "startLine": 233,
+        "startChar": 35,
+        "endLine": 233,
+        "endChar": 45
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0abc84e_d2b0d2e4",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2017-08-17T17:31:40Z",
       "side": 1,
       "message": "no need to check here, __pthread_cond_timedwait() has a check_timespec().",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 243,
+        "endChar": 5
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c845fa9c_00b2c4ea",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0abc84e_d2b0d2e4",
       "range": {
         "startLine": 241,
         "startChar": 0,

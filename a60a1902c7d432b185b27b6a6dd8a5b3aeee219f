@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7950539_99ac20bd",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "I kept the same format (using a reference instead of pointer) as the rest of this file.  Don\u0027t know if we want to do that for consistency or just return the timespec.",
+      "revId": "a60a1902c7d432b185b27b6a6dd8a5b3aeee219f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "220549c9_575145a1",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T18:27:56Z",
+      "side": 1,
+      "message": "clang-format isn\u0027t in the repo hook apparently?  This is after having run it.",
+      "revId": "a60a1902c7d432b185b27b6a6dd8a5b3aeee219f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
