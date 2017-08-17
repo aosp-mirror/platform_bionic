@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "75e6e935_d099ca49",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T19:24:52Z",
+      "side": 1,
+      "message": "I think current way is better, just for consistency.",
+      "parentUuid": "b7950539_99ac20bd",
+      "revId": "a60a1902c7d432b185b27b6a6dd8a5b3aeee219f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "220549c9_575145a1",
         "filename": "libc/bionic/pthread_cond.cpp",
         "patchSetId": 3
