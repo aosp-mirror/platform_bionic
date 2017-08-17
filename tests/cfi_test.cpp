@@ -26,6 +26,7 @@
 extern "C" {
 void __cfi_slowpath(uint64_t CallSiteTypeId, void* Ptr);
 void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData);
+size_t __cfi_shadow_size();
 }
 
 static void f() {}
@@ -35,6 +36,8 @@ TEST(cfi_test, basic) {
   void* handle;
   handle = dlopen("libcfi-test.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  EXPECT_NE(0U, __cfi_shadow_size());
 
 #define SYM(type, name) auto name = reinterpret_cast<type>(dlsym(handle, #name))
   SYM(int (*)(), get_count);
