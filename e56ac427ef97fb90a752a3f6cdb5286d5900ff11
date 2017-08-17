@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef04a2ed_1772a71c",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T17:31:40Z",
+      "side": 1,
+      "message": "move check_timespec() in L213 inside the brace, because we don\u0027t need to check it twice (one is L213, the other is L175) for monotonic clock?",
+      "range": {
+        "startLine": 224,
+        "startChar": 34,
+        "endLine": 224,
+        "endChar": 35
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c1f8ed9_d23368ad",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T17:31:40Z",
+      "side": 1,
+      "message": "Maybe we can move L225-L240 to a separate function like realtime_to_monotonic_time() in bionic_time_conversions.h, especially if you want to change other wait functions like pthread_mutex_timedlock()?",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 225,
+        "endChar": 10
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99bc9993_1858b1b1",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T17:31:40Z",
+      "side": 1,
+      "message": "\u003e\u003d",
+      "range": {
+        "startLine": 232,
+        "startChar": 34,
+        "endLine": 232,
+        "endChar": 35
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1704139a_e53302a4",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T17:31:40Z",
+      "side": 1,
+      "message": "NS_PER_S?",
+      "range": {
+        "startLine": 233,
+        "startChar": 35,
+        "endLine": 233,
+        "endChar": 45
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0abc84e_d2b0d2e4",
+        "filename": "libc/bionic/pthread_cond.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-08-17T17:31:40Z",
+      "side": 1,
+      "message": "no need to check here, __pthread_cond_timedwait() has a check_timespec().",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 243,
+        "endChar": 5
+      },
+      "revId": "e56ac427ef97fb90a752a3f6cdb5286d5900ff11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
