@@ -97,10 +97,10 @@ typedef struct {
 #define	REG_BACKR	02000	/* force use of backref code */
 
 __BEGIN_DECLS
-int	regcomp(regex_t *, const char *, int);
-size_t	regerror(int, const regex_t *, char *, size_t);
-int	regexec(const regex_t *, const char *, size_t, regmatch_t [], int);
-void	regfree(regex_t *);
+int regcomp(regex_t* __re, const char* __regex, int __flags);
+size_t regerror(int __error_code, const regex_t* __re, char* __buf, size_t __n);
+int regexec(const regex_t* __re, const char* __s, size_t __match_count, regmatch_t __matches[], int __flags);
+void regfree(regex_t* __re);
 __END_DECLS
 
-#endif /* !_REGEX_H_ */
+#endif

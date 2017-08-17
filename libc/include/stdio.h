@@ -103,48 +103,42 @@ extern FILE __sF[] __REMOVED_IN(23);
 #define L_tmpnam 4096
 #define TMP_MAX 308915776
 
-/*
- * Functions defined in ANSI C standard.
- */
-void	 clearerr(FILE *);
-int	 fclose(FILE *);
-int	 feof(FILE *);
-int	 ferror(FILE *);
-int	 fflush(FILE *);
-int	 fgetc(FILE *);
-char	*fgets(char *, int, FILE *) __overloadable
-  __RENAME_CLANG(fgets);
-int	 fprintf(FILE * , const char *, ...) __printflike(2, 3);
-int	 fputc(int, FILE *);
-int	 fputs(const char *, FILE *);
-size_t	 fread(void *, size_t, size_t, FILE *)
-      __overloadable __RENAME_CLANG(fread);
-int	 fscanf(FILE *, const char *, ...) __scanflike(2, 3);
-size_t	 fwrite(const void *, size_t, size_t, FILE *)
-    __overloadable __RENAME_CLANG(fwrite);
-int	 getc(FILE *);
-int	 getchar(void);
-ssize_t getdelim(char**, size_t*, int, FILE*) __INTRODUCED_IN(18);
-ssize_t getline(char**, size_t*, FILE*) __INTRODUCED_IN(18);
+void clearerr(FILE* __fp);
+int fclose(FILE* __fp);
+int feof(FILE* __fp);
+int ferror(FILE* __fp);
+int fflush(FILE* __fp);
+int fgetc(FILE* __fp);
+char* fgets(char* __buf, int __size, FILE* __fp) __overloadable __RENAME_CLANG(fgets);
+int fprintf(FILE* __fp , const char* __fmt, ...) __printflike(2, 3);
+int fputc(int __ch, FILE* __fp);
+int fputs(const char* __s, FILE* __fp);
+size_t fread(void* __buf, size_t __size, size_t __count, FILE* __fp) __overloadable __RENAME_CLANG(fread);
+int fscanf(FILE* __fp, const char* __fmt, ...) __scanflike(2, 3);
+size_t fwrite(const void* __buf, size_t __size, size_t __count, FILE* __fp) __overloadable __RENAME_CLANG(fwrite);
+int getc(FILE* __fp);
+int getchar(void);
+ssize_t getdelim(char** __line_ptr, size_t* __line_length_ptr, int __delimiter, FILE* __fp) __INTRODUCED_IN(18);
+ssize_t getline(char** __line_ptr, size_t* __line_length_ptr, FILE* __fp) __INTRODUCED_IN(18);
 
-void	 perror(const char *);
-int	 printf(const char *, ...) __printflike(1, 2);
-int	 putc(int, FILE *);
-int	 putchar(int);
-int	 puts(const char *);
-int	 remove(const char *);
-void	 rewind(FILE *);
-int	 scanf(const char *, ...) __scanflike(1, 2);
-void	 setbuf(FILE *, char *);
-int	 setvbuf(FILE *, char *, int, size_t);
-int	 sscanf(const char *, const char *, ...) __scanflike(2, 3);
-int	 ungetc(int, FILE *);
-int	 vfprintf(FILE *, const char *, va_list) __printflike(2, 0);
-int	 vprintf(const char *, va_list) __printflike(1, 0);
+void perror(const char* __msg);
+int printf(const char* __fmt, ...) __printflike(1, 2);
+int putc(int __ch, FILE* __fp);
+int putchar(int __ch);
+int puts(const char* __s);
+int remove(const char* __path);
+void rewind(FILE* __fp);
+int scanf(const char* __fmt, ...) __scanflike(1, 2);
+void setbuf(FILE* __fp, char* __buf);
+int setvbuf(FILE* __fp, char* __buf, int __mode, size_t __size);
+int sscanf(const char* __s, const char* __fmt, ...) __scanflike(2, 3);
+int ungetc(int __ch, FILE* __fp);
+int vfprintf(FILE* __fp, const char* __fmt, va_list __args) __printflike(2, 0);
+int vprintf(const char* __fp, va_list __args) __printflike(1, 0);
 
 #if __ANDROID_API__ >= 21
-int dprintf(int, const char*, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int, const char*, va_list) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int __fd, const char* __fmt, ...) __printflike(2, 3) __INTRODUCED_IN(21);
+int vdprintf(int __fd, const char* __fmt, va_list __args) __printflike(2, 0) __INTRODUCED_IN(21);
 #else
 /*
  * Old versions of Android called these fdprintf and vfdprintf out of fears that the glibc names
@@ -153,111 +147,113 @@ int vdprintf(int, const char*, va_list) __printflike(2, 0) __INTRODUCED_IN(21);
  * Allow users to just use dprintf and vfdprintf on any version by renaming those calls to their
  * legacy equivalents if needed.
  */
-int dprintf(int, const char*, ...) __RENAME(fdprintf) __printflike(2, 3);
-int vdprintf(int, const char*, va_list) __RENAME(vfdprintf) __printflike(2, 0);
+int dprintf(int __fd, const char* __fmt, ...) __RENAME(fdprintf) __printflike(2, 3);
+int vdprintf(int __fd, const char* __fmt, va_list __args) __RENAME(vfdprintf) __printflike(2, 0);
 #endif
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
-char* gets(char*) __attribute__((deprecated("gets is unsafe, use fgets instead")));
+char* gets(char* __buf) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char*, const char*, ...)
+int sprintf(char* __s, const char* __fmt, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf")
     __overloadable __RENAME_CLANG(sprintf);
-int vsprintf(char*, const char*, va_list)
+int vsprintf(char* __s, const char* __fmt, va_list __args)
     __overloadable __printflike(2, 0) __RENAME_CLANG(vsprintf)
     __warnattr_strict("vsprintf is often misused; please use vsnprintf");
-char* tmpnam(char*)
+char* tmpnam(char* __s)
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 #define P_tmpdir "/tmp/" /* deprecated */
-char* tempnam(const char*, const char*)
+char* tempnam(const char* __dir, const char* __prefix)
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 
-int rename(const char*, const char*);
-int renameat(int, const char*, int, const char*);
+int rename(const char* __old_path, const char* __new_path);
+int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path);
 
-int fseek(FILE*, long, int);
-long ftell(FILE*);
+int fseek(FILE* __fp, long __offset, int __whence);
+long ftell(FILE* __fp);
 
 #if defined(__USE_FILE_OFFSET64)
-int fgetpos(FILE*, fpos_t*) __RENAME(fgetpos64) __INTRODUCED_IN(24);
-int fsetpos(FILE*, const fpos_t*) __RENAME(fsetpos64) __INTRODUCED_IN(24);
-int fseeko(FILE*, off_t, int) __RENAME(fseeko64) __INTRODUCED_IN(24);
-off_t ftello(FILE*) __RENAME(ftello64) __INTRODUCED_IN(24);
+int fgetpos(FILE* __fp, fpos_t* __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
+int fsetpos(FILE* __fp, const fpos_t* __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);
+int fseeko(FILE* __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
+off_t ftello(FILE* __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
 #  if defined(__USE_BSD)
-FILE* funopen(const void*,
-              int (*)(void*, char*, int),
-              int (*)(void*, const char*, int),
-              fpos_t (*)(void*, fpos_t, int),
-              int (*)(void*)) __RENAME(funopen64) __INTRODUCED_IN(24);
+FILE* funopen(const void* __cookie,
+              int (*__read_fn)(void*, char*, int),
+              int (*__write_fn)(void*, const char*, int),
+              fpos_t (*__seek_fn)(void*, fpos_t, int),
+              int (*__close_fn)(void*)) __RENAME(funopen64) __INTRODUCED_IN(24);
 #  endif
 #else
-int fgetpos(FILE*, fpos_t*);
-int fsetpos(FILE*, const fpos_t*);
-int fseeko(FILE*, off_t, int);
-off_t ftello(FILE*);
+int fgetpos(FILE* __fp, fpos_t* __pos);
+int fsetpos(FILE* __fp, const fpos_t* __pos);
+int fseeko(FILE* __fp, off_t __offset, int __whence);
+off_t ftello(FILE* __fp);
 #  if defined(__USE_BSD)
-FILE* funopen(const void*,
-              int (*)(void*, char*, int),
-              int (*)(void*, const char*, int),
-              fpos_t (*)(void*, fpos_t, int),
-              int (*)(void*));
+FILE* funopen(const void* __cookie,
+              int (*__read_fn)(void*, char*, int),
+              int (*__write_fn)(void*, const char*, int),
+              fpos_t (*__seek_fn)(void*, fpos_t, int),
+              int (*__close_fn)(void*));
 #  endif
 #endif
-int fgetpos64(FILE*, fpos64_t*) __INTRODUCED_IN(24);
-int fsetpos64(FILE*, const fpos64_t*) __INTRODUCED_IN(24);
-int fseeko64(FILE*, off64_t, int) __INTRODUCED_IN(24);
-off64_t ftello64(FILE*) __INTRODUCED_IN(24);
+int fgetpos64(FILE* __fp, fpos64_t* __pos) __INTRODUCED_IN(24);
+int fsetpos64(FILE* __fp, const fpos64_t* __pos) __INTRODUCED_IN(24);
+int fseeko64(FILE* __fp, off64_t __offset, int __whence) __INTRODUCED_IN(24);
+off64_t ftello64(FILE* __fp) __INTRODUCED_IN(24);
 #if defined(__USE_BSD)
-FILE* funopen64(const void*, int (*)(void*, char*, int), int (*)(void*, const char*, int),
-                fpos64_t (*)(void*, fpos64_t, int), int (*)(void*)) __INTRODUCED_IN(24);
+FILE* funopen64(const void* __cookie,
+                int (*__read_fn)(void*, char*, int),
+                int (*__write_fn)(void*, const char*, int),
+                fpos64_t (*__seek_fn)(void*, fpos64_t, int),
+                int (*__close_fn)(void*)) __INTRODUCED_IN(24);
 #endif
 
-FILE* fopen(const char*, const char*);
-FILE* fopen64(const char*, const char*) __INTRODUCED_IN(24);
-FILE* freopen(const char*, const char*, FILE*);
-FILE* freopen64(const char*, const char*, FILE*)
-  __INTRODUCED_IN(24);
+FILE* fopen(const char* __path, const char* __mode);
+FILE* fopen64(const char* __path, const char* __mode) __INTRODUCED_IN(24);
+FILE* freopen(const char* __path, const char* __mode, FILE* __fp);
+FILE* freopen64(const char* __path, const char* __mode, FILE* __fp) __INTRODUCED_IN(24);
 FILE* tmpfile(void);
 FILE* tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char*, size_t, const char*, ...)
+int snprintf(char* __buf, size_t __size, const char* __fmt, ...)
     __printflike(3, 4) __overloadable __RENAME_CLANG(snprintf);
-int vfscanf(FILE*, const char*, va_list) __scanflike(2, 0);
-int vscanf(const char* , va_list) __scanflike(1, 0);
-int vsnprintf(char*, size_t, const char*, va_list)
+int vfscanf(FILE* __fp, const char* __fmt, va_list __args) __scanflike(2, 0);
+int vscanf(const char* __fmt , va_list __args) __scanflike(1, 0);
+int vsnprintf(char* __buf, size_t __size, const char* __fmt, va_list __args)
     __printflike(3, 0) __overloadable __RENAME_CLANG(vsnprintf);
-int vsscanf(const char*, const char*, va_list) __scanflike(2, 0);
+int vsscanf(const char* __s, const char* __fmt, va_list __args) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
-char* ctermid(char*) __INTRODUCED_IN(26);
+char* ctermid(char* __buf) __INTRODUCED_IN(26);
 
-FILE* fdopen(int, const char*);
-int fileno(FILE*);
-int pclose(FILE*);
-FILE* popen(const char*, const char*);
-void flockfile(FILE*);
-int ftrylockfile(FILE*);
-void funlockfile(FILE*);
-int getc_unlocked(FILE*);
+FILE* fdopen(int __fd, const char* __mode);
+int fileno(FILE* __fp);
+int pclose(FILE* __fp);
+FILE* popen(const char* __command, const char* __mode);
+void flockfile(FILE* __fp);
+int ftrylockfile(FILE* __fp);
+void funlockfile(FILE* __fp);
+int getc_unlocked(FILE* __fp);
 int getchar_unlocked(void);
-int putc_unlocked(int, FILE*);
-int putchar_unlocked(int);
+int putc_unlocked(int __ch, FILE* __fp);
+int putchar_unlocked(int __ch);
 
-FILE* fmemopen(void*, size_t, const char*) __INTRODUCED_IN(23);
-FILE* open_memstream(char**, size_t*) __INTRODUCED_IN(23);
+FILE* fmemopen(void* __buf, size_t __size, const char* __mode) __INTRODUCED_IN(23);
+FILE* open_memstream(char** __ptr, size_t* __size_ptr) __INTRODUCED_IN(23);
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
-int  asprintf(char**, const char*, ...) __printflike(2, 3);
-char* fgetln(FILE*, size_t*);
-int fpurge(FILE*);
-void setbuffer(FILE*, char*, int);
-int setlinebuf(FILE*);
-int vasprintf(char**, const char*, va_list) __printflike(2, 0);
-void clearerr_unlocked(FILE*) __INTRODUCED_IN(23);
-int feof_unlocked(FILE*) __INTRODUCED_IN(23);
-int ferror_unlocked(FILE*) __INTRODUCED_IN(23);
-int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
+int  asprintf(char** __s_ptr, const char* __fmt, ...) __printflike(2, 3);
+char* fgetln(FILE* __fp, size_t* __length_ptr);
+int fpurge(FILE* __fp);
+void setbuffer(FILE* __fp, char* __buf, int __size);
+int setlinebuf(FILE* __fp);
+int vasprintf(char** __s_ptr, const char* __fmt, va_list __args) __printflike(2, 0);
+void clearerr_unlocked(FILE* __fp) __INTRODUCED_IN(23);
+int feof_unlocked(FILE* __fp) __INTRODUCED_IN(23);
+int ferror_unlocked(FILE* __fp) __INTRODUCED_IN(23);
+int fileno_unlocked(FILE* __fp) __INTRODUCED_IN(24);
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif /* __USE_BSD */
@@ -268,4 +264,4 @@ int fileno_unlocked(FILE*) __INTRODUCED_IN(24);
 
 __END_DECLS
 
-#endif /* _STDIO_H_ */
+#endif

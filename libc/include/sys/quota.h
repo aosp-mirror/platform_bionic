@@ -40,7 +40,7 @@
 
 __BEGIN_DECLS
 
-int quotactl(int, const char*, int, char*) __INTRODUCED_IN(26);
+int quotactl(int __cmd, const char* __special, int __id, char* __addr) __INTRODUCED_IN(26);
 
 __END_DECLS
 
