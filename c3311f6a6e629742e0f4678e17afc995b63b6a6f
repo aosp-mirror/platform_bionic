@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "656e4c38_306b99c2",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T21:43:09Z",
+      "side": 1,
+      "message": "Done.  I had thought that they\u0027d be equivalent, but you\u0027re right; they\u0027re not.",
+      "parentUuid": "8ed7d639_972cbeca",
+      "revId": "c3311f6a6e629742e0f4678e17afc995b63b6a6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32e9d962_ef9706d3",
         "filename": "libc/bionic/bionic_futex.cpp",
         "patchSetId": 1
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "175b5192_243aa52a",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T21:43:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32e9d962_ef9706d3",
+      "range": {
+        "startLine": 36,
+        "startChar": 26,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "c3311f6a6e629742e0f4678e17afc995b63b6a6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24a83ac4_a62237f0",
         "filename": "libc/private/bionic_futex.h",
         "patchSetId": 1
@@ -71,6 +113,30 @@
       "writtenOn": "2017-08-17T21:27:10Z",
       "side": 1,
       "message": "It seems we now don\u0027t have c files using this header file, remove c stuff like struct, __BEGIN_DECLS, __END_DECLS?\n\nAnd as searched by https://cs.corp.google.com/search/?q\u003d__futex_wait_ex+p:android+f:bionic\u0026m\u003d100\u0026sort\u003d1\u0026type\u003dcs, many callers don\u0027t need timeout, we can keep two versions of __futex_wait_ex(), one doesn\u0027t support timeout, one supports timeout. And we can at least inline the version doesn\u0027t support timeout.",
+      "range": {
+        "startLine": 69,
+        "startChar": 67,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "c3311f6a6e629742e0f4678e17afc995b63b6a6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad6f10e7_f8daa2a4",
+        "filename": "libc/private/bionic_futex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T21:43:09Z",
+      "side": 1,
+      "message": "Done.  I didn\u0027t touch the other callers to not touch more than needed in this change though.",
+      "parentUuid": "24a83ac4_a62237f0",
       "range": {
         "startLine": 69,
         "startChar": 67,
