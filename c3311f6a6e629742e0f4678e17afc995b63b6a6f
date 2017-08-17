@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14441b79_c991143c",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-17T20:50:52Z",
+      "side": 1,
+      "message": "__futex_wait() is sufficient and otherwise we\u0027d need to link in bionic_futex.cpp.",
+      "revId": "c3311f6a6e629742e0f4678e17afc995b63b6a6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
