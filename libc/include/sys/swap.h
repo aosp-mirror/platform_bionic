@@ -38,9 +38,9 @@ __BEGIN_DECLS
 #define SWAP_FLAG_PRIO_MASK 0x7fff
 #define SWAP_FLAG_PRIO_SHIFT 0
 
-int swapon(const char*, int) __INTRODUCED_IN(19);
-int swapoff(const char*) __INTRODUCED_IN(19);
+int swapon(const char* __path,  int __flags) __INTRODUCED_IN(19);
+int swapoff(const char* __path) __INTRODUCED_IN(19);
 
 __END_DECLS
 
-#endif /* _SYS_SWAP_H_ */
+#endif
