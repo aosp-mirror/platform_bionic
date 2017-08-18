@@ -37,8 +37,8 @@ extern void (*error_print_progname)(void) __INTRODUCED_IN(23);
 extern unsigned int error_message_count __INTRODUCED_IN(23);
 extern int error_one_per_line __INTRODUCED_IN(23);
 
-void error(int, int, const char*, ...) __printflike(3, 4) __INTRODUCED_IN(23);
-void error_at_line(int, int, const char*, unsigned int, const char*, ...)
+void error(int __status, int __errno, const char* __fmt, ...) __printflike(3, 4) __INTRODUCED_IN(23);
+void error_at_line(int __status, int __errno, const char* __filename, unsigned int __line_number, const char* __fmt, ...)
     __printflike(5, 6) __INTRODUCED_IN(23);
 
 __END_DECLS
