@@ -300,7 +300,7 @@ static void mergeGuards(std::deque<std::string>& file_lines, GuardMap& guard_map
     };
 
     auto nextCol = [&file_lines, &current_location, &nextLine]() {
-      if (current_location.column == file_lines[current_location.column - 1].length()) {
+      if (current_location.column == file_lines[current_location.line - 1].length()) {
         nextLine();
       } else {
         ++current_location.column;
