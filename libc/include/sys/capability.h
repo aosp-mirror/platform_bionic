@@ -34,9 +34,9 @@
 
 __BEGIN_DECLS
 
-int capget(cap_user_header_t hdrp, cap_user_data_t datap);
-int capset(cap_user_header_t hdrp, const cap_user_data_t datap);
+int capget(cap_user_header_t __hdr_ptr, cap_user_data_t __data_ptr);
+int capset(cap_user_header_t __hdr_ptr, const cap_user_data_t __data_ptr);
 
 __END_DECLS
 
-#endif /* _BIONIC_SYS_CAPABILITY_H */
+#endif
