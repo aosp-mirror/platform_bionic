@@ -41,11 +41,11 @@ __BEGIN_DECLS
 typedef __kernel_ulong_t msgqnum_t;
 typedef __kernel_ulong_t msglen_t;
 
-int msgctl(int, int, struct msqid_ds*) __INTRODUCED_IN(26);
-int msgget(key_t, int) __INTRODUCED_IN(26);
-ssize_t msgrcv(int, void*, size_t, long, int) __INTRODUCED_IN(26);
-int msgsnd(int, const void*, size_t, int) __INTRODUCED_IN(26);
+int msgctl(int __msg_id, int __cmd, struct msqid_ds* __buf) __INTRODUCED_IN(26);
+int msgget(key_t __key, int __flags) __INTRODUCED_IN(26);
+ssize_t msgrcv(int __msg_id, void* __msgbuf_ptr, size_t __size, long __type, int __flags) __INTRODUCED_IN(26);
+int msgsnd(int __msg_id, const void* __msgbuf_ptr, size_t __size, int __flags) __INTRODUCED_IN(26);
 
 __END_DECLS
 
-#endif /* _SYS_MSG_H_ */
+#endif

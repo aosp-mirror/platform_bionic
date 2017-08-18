@@ -80,8 +80,8 @@ struct passwd {
   char* pw_shell;
 };
 
-struct passwd* getpwnam(const char*);
-struct passwd* getpwuid(uid_t);
+struct passwd* getpwnam(const char* __name);
+struct passwd* getpwuid(uid_t __uid);
 
 /* Note: Android has thousands and thousands of ids to iterate through */
 struct passwd* getpwent(void) __INTRODUCED_IN(26);
@@ -89,8 +89,8 @@ struct passwd* getpwent(void) __INTRODUCED_IN(26);
 void setpwent(void) __INTRODUCED_IN(26);
 void endpwent(void) __INTRODUCED_IN(26);
 
-int getpwnam_r(const char*, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
-int getpwuid_r(uid_t, struct passwd*, char*, size_t, struct passwd**) __INTRODUCED_IN(12);
+int getpwnam_r(const char* __name, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result) __INTRODUCED_IN(12);
+int getpwuid_r(uid_t __uid, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result) __INTRODUCED_IN(12);
 
 __END_DECLS
 

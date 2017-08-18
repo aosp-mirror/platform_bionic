@@ -38,21 +38,21 @@
 
 __BEGIN_DECLS
 
-int gettimeofday(struct timeval*, struct timezone*);
-int settimeofday(const struct timeval*, const struct timezone*);
+int gettimeofday(struct timeval* __tv, struct timezone* __tz);
+int settimeofday(const struct timeval* __tv, const struct timezone* __tz);
 
-int getitimer(int, struct itimerval*);
-int setitimer(int, const struct itimerval*, struct itimerval*);
+int getitimer(int __which, struct itimerval* __current_value);
+int setitimer(int __which, const struct itimerval* __new_value, struct itimerval* __old_value);
 
-int utimes(const char*, const struct timeval*);
+int utimes(const char* __path, const struct timeval __times[2]);
 
 #if defined(__USE_BSD)
-int futimes(int, const struct timeval[2]) __INTRODUCED_IN(26);
-int lutimes(const char*, const struct timeval[2]) __INTRODUCED_IN(26);
+int futimes(int __fd, const struct timeval __times[2]) __INTRODUCED_IN(26);
+int lutimes(const char* __path, const struct timeval __times[2]) __INTRODUCED_IN(26);
 #endif
 
 #if defined(__USE_GNU)
-int futimesat(int, const char*, const struct timeval[2]) __INTRODUCED_IN(26);
+int futimesat(int __dir_fd, const char* __path, const struct timeval __times[2]) __INTRODUCED_IN(26);
 #endif
 
 #define timerclear(a)   \
@@ -97,4 +97,4 @@ int futimesat(int, const char*, const struct timeval[2]) __INTRODUCED_IN(26);
 
 __END_DECLS
 
-#endif /* _SYS_TIME_H_ */
+#endif
