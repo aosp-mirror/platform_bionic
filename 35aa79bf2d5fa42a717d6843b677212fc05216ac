@@ -22,6 +22,30 @@
       "revId": "35aa79bf2d5fa42a717d6843b677212fc05216ac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f4c7cef_1d8a6508",
+        "filename": "libc/bionic/bionic_time_conversions.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-08-18T16:12:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29a67163_2167c06a",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 58,
+        "endChar": 8
+      },
+      "revId": "35aa79bf2d5fa42a717d6843b677212fc05216ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
