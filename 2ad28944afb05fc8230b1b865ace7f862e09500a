@@ -16,6 +16,24 @@
       "revId": "2ad28944afb05fc8230b1b865ace7f862e09500a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4240d341_6c9a1b59",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-18T05:43:46Z",
+      "side": 1,
+      "message": "yeah, i think compilation tests are on the to-do list for the new build system, but there\u0027s nothing yet.",
+      "parentUuid": "0d59aa79_8e9aee40",
+      "revId": "2ad28944afb05fc8230b1b865ace7f862e09500a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
