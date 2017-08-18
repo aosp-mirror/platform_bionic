@@ -57,11 +57,11 @@ struct mntent {
 
 __BEGIN_DECLS
 
-int endmntent(FILE*) __INTRODUCED_IN(21);
-struct mntent* getmntent(FILE*);
-struct mntent* getmntent_r(FILE*, struct mntent*, char*, int) __INTRODUCED_IN(21);
-FILE* setmntent(const char*, const char*) __INTRODUCED_IN(21);
-char* hasmntopt(const struct mntent*, const char*) __INTRODUCED_IN(26);
+int endmntent(FILE* __fp) __INTRODUCED_IN(21);
+struct mntent* getmntent(FILE* __fp);
+struct mntent* getmntent_r(FILE* __fp, struct mntent* __entry, char* __buf, int __size) __INTRODUCED_IN(21);
+FILE* setmntent(const char* __filename, const char* __type) __INTRODUCED_IN(21);
+char* hasmntopt(const struct mntent* __entry, const char* __option) __INTRODUCED_IN(26);
 
 __END_DECLS
 
