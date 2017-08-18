@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d59aa79_8e9aee40",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-08-18T03:27:36Z",
+      "side": 1,
+      "message": "Less terrible ways of saying \"just build this file\" are appreciated.\n\nI\u0027m assuming we don\u0027t want to expand the Android.mk file, and this is the best I could think of.",
+      "revId": "2ad28944afb05fc8230b1b865ace7f862e09500a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
