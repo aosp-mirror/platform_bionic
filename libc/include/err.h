@@ -41,18 +41,14 @@
 
 __BEGIN_DECLS
 
-/* printf's format string isn't nullable; the err family's one is,
- * so we can't use __errlike here. */
-#define __errlike(x, y) __attribute__((__format__(printf, x, y)))
-
-__noreturn void err(int, const char *, ...) __errlike(2, 3);
-__noreturn void verr(int, const char *, va_list) __errlike(2, 0);
-__noreturn void errx(int, const char *, ...) __errlike(2, 3);
-__noreturn void verrx(int, const char *, va_list) __errlike(2, 0);
-void warn(const char *, ...) __errlike(1, 2);
-void vwarn(const char *, va_list) __errlike(1, 0);
-void warnx(const char *, ...) __errlike(1, 2);
-void vwarnx(const char *, va_list) __errlike(1, 0);
+__noreturn void err(int __status, const char* __fmt, ...) __printflike(2, 3);
+__noreturn void verr(int __status, const char* __fmt, va_list __args) __printflike(2, 0);
+__noreturn void errx(int __status, const char* __fmt, ...) __printflike(2, 3);
+__noreturn void verrx(int __status, const char* __fmt, va_list __args) __printflike(2, 0);
+void warn(const char* __fmt, ...) __printflike(1, 2);
+void vwarn(const char* __fmt, va_list __args) __printflike(1, 0);
+void warnx(const char* __fmt, ...) __printflike(1, 2);
+void vwarnx(const char* __fmt, va_list __args) __printflike(1, 0);
 
 __END_DECLS
 

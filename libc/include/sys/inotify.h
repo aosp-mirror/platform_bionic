@@ -54,10 +54,10 @@ __BEGIN_DECLS
 #endif
 
 int inotify_init(void);
-int inotify_init1(int) __INTRODUCED_IN(21);
-int inotify_add_watch(int, const char*, uint32_t);
-int inotify_rm_watch(int, uint32_t);
+int inotify_init1(int __flags) __INTRODUCED_IN(21);
+int inotify_add_watch(int __fd, const char* __path, uint32_t __mask);
+int inotify_rm_watch(int __fd, uint32_t __watch_descriptor);
 
 __END_DECLS
 
-#endif /* _SYS_INOTIFY_H_ */
+#endif
