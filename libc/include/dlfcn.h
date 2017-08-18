@@ -45,12 +45,12 @@ typedef struct {
   void* dli_saddr;
 } Dl_info;
 
-void* dlopen(const char* filename, int flag);
-int dlclose(void* handle);
+void* dlopen(const char* __filename, int __flag);
+int dlclose(void* __handle);
 char* dlerror(void);
-void* dlsym(void* handle, const char* symbol);
-void* dlvsym(void* handle, const char* symbol, const char* version) __INTRODUCED_IN(24);
-int dladdr(const void* addr, Dl_info* info);
+void* dlsym(void* __handle, const char* __symbol);
+void* dlvsym(void* __handle, const char* __symbol, const char* __version) __INTRODUCED_IN(24);
+int dladdr(const void* __addr, Dl_info* __info);
 
 #define RTLD_LOCAL    0
 #define RTLD_LAZY     0x00001
@@ -77,4 +77,4 @@ int dladdr(const void* addr, Dl_info* info);
 
 __END_DECLS
 
-#endif /* __DLFCN_H */
+#endif

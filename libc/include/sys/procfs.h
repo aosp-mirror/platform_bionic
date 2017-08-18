@@ -59,4 +59,4 @@ struct elf_siginfo {
 
 __END_DECLS
 
-#endif /* _SYS_PROCFS_H_ */
+#endif
