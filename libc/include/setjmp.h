@@ -48,17 +48,17 @@ typedef long jmp_buf[_JBLEN];
 
 __BEGIN_DECLS
 
-int     _setjmp(jmp_buf);
-void    _longjmp(jmp_buf, int);
+int _setjmp(jmp_buf __env);
+void _longjmp(jmp_buf __env, int __value);
 
-int     setjmp(jmp_buf);
-void    longjmp(jmp_buf, int);
+int setjmp(jmp_buf __env);
+void longjmp(jmp_buf __env, int __value);
 
-int sigsetjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
-    __INTRODUCED_IN_X86(12);
-void siglongjmp(sigjmp_buf, int) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12)
-    __INTRODUCED_IN_X86(12);
+int sigsetjmp(sigjmp_buf __env, int __save_signal_mask)
+    __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(12);
+void siglongjmp(sigjmp_buf __env, int __value)
+    __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(12);
 
 __END_DECLS
 
-#endif /* !_SETJMP_H_ */
+#endif

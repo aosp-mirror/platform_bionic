@@ -35,9 +35,9 @@
 
 __BEGIN_DECLS
 
-int adjtimex(struct timex*) __INTRODUCED_IN(24);
-int clock_adjtime(clockid_t, struct timex*) __INTRODUCED_IN(24);
+int adjtimex(struct timex* __buf) __INTRODUCED_IN(24);
+int clock_adjtime(clockid_t __clock, struct timex* __tx) __INTRODUCED_IN(24);
 
 __END_DECLS
 
-#endif /* _SYS_TIMEX_H_ */
+#endif

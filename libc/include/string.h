@@ -41,80 +41,81 @@ __BEGIN_DECLS
 #include <strings.h>
 #endif
 
-void* memccpy(void*, const void*, int, size_t);
-void* memchr(const void*, int, size_t) __attribute_pure__ __overloadable __RENAME_CLANG(memchr);
-void* memrchr(const void*, int, size_t) __attribute_pure__ __overloadable __RENAME_CLANG(memrchr);
-int memcmp(const void*, const void*, size_t) __attribute_pure__;
+void* memccpy(void* __dst, const void* __src, int __stop_char, size_t __n);
+void* memchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memchr);
+void* memrchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memrchr);
+int memcmp(const void* __lhs, const void* __rhs, size_t __n) __attribute_pure__;
 void* memcpy(void*, const void*, size_t)
         __overloadable __RENAME_CLANG(memcpy);
 #if defined(__USE_GNU)
-void* mempcpy(void*, const void*, size_t) __INTRODUCED_IN(23);
+void* mempcpy(void* __dst, const void* __src, size_t __n) __INTRODUCED_IN(23);
 #endif
-void* memmove(void*, const void*, size_t) __overloadable __RENAME_CLANG(memmove);
-void* memset(void*, int, size_t) __overloadable __RENAME_CLANG(memset);
-void* memmem(const void*, size_t, const void*, size_t) __attribute_pure__;
+void* memmove(void* __dst, const void* __src, size_t __n) __overloadable __RENAME_CLANG(memmove);
+void* memset(void* __dst, int __ch, size_t __n) __overloadable __RENAME_CLANG(memset);
+void* memmem(const void* __haystack, size_t __haystack_size, const void* __needle, size_t __needle_size) __attribute_pure__;
 
-char* strchr(const char*, int) __attribute_pure__ __overloadable __RENAME_CLANG(strchr);
-char* __strchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
+char* strchr(const char* __s, int __ch) __attribute_pure__ __overloadable __RENAME_CLANG(strchr);
+char* __strchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char*, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
-extern "C++" const char* strchrnul(const char*, int) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+/* The versioner doesn't handle C++ blocks yet, so manually guarded. */
+#if __ANDROID_API__ >= 24
+extern "C++" char* strchrnul(char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" const char* strchrnul(const char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+#endif  /* __ANDROID_API__ >= 24 */
 #else
-char* strchrnul(const char*, int) __attribute_pure__ __INTRODUCED_IN(24);
+char* strchrnul(const char* __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24);
 #endif
 #endif
 
-char* strrchr(const char*, int) __attribute_pure__ __overloadable __RENAME_CLANG(strrchr);
-char* __strrchr_chk(const char*, int, size_t) __INTRODUCED_IN(18);
+char* strrchr(const char* __s, int __ch) __attribute_pure__ __overloadable __RENAME_CLANG(strrchr);
+char* __strrchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 
-size_t strlen(const char*) __attribute_pure__ __overloadable
-        __RENAME_CLANG(strlen);
-size_t __strlen_chk(const char*, size_t) __INTRODUCED_IN(17);
+size_t strlen(const char* __s) __attribute_pure__ __overloadable __RENAME_CLANG(strlen);
+size_t __strlen_chk(const char* __s, size_t __n) __INTRODUCED_IN(17);
 
-int strcmp(const char*, const char*) __attribute_pure__;
-char* stpcpy(char*, const char*) __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
-char* strcpy(char*, const char*)
-        __overloadable __RENAME_CLANG(strcpy);
-char* strcat(char*, const char*) __overloadable __RENAME_CLANG(strcat);
-char* strdup(const char*);
+int strcmp(const char* __lhs, const char* __rhs) __attribute_pure__;
+char* stpcpy(char* __dst, const char* __src) __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
+char* strcpy(char* __dst, const char* __src) __overloadable __RENAME_CLANG(strcpy);
+char* strcat(char* __dst, const char* __src) __overloadable __RENAME_CLANG(strcat);
+char* strdup(const char* __s);
 
-char* strstr(const char*, const char*) __attribute_pure__;
-char* strcasestr(const char*, const char*) __attribute_pure__;
-char* strtok(char*, const char*);
-char* strtok_r(char*, const char*, char**);
+char* strstr(const char* __haystack, const char* __needle) __attribute_pure__;
+char* strcasestr(const char* __haystack, const char* __needle) __attribute_pure__;
+char* strtok(char* __s, const char* __delimiter);
+char* strtok_r(char* __s, const char* __delimiter, char** __pos_ptr);
 
-char* strerror(int);
-char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
+char* strerror(int __errno_value);
+char* strerror_l(int __errno_value, locale_t __l) __INTRODUCED_IN(23);
 #if defined(__USE_GNU) && __ANDROID_API__ >= 23
-char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
+char* strerror_r(int __errno_value, char* __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
-int strerror_r(int, char*, size_t);
+int strerror_r(int __errno_value, char* __buf, size_t __n);
 #endif
 
-size_t strnlen(const char*, size_t) __attribute_pure__;
-char* strncat(char*, const char*, size_t) __overloadable __RENAME_CLANG(strncat);
-char* strndup(const char*, size_t);
-int strncmp(const char*, const char*, size_t) __attribute_pure__;
-char* stpncpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
-char* strncpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(strncpy);
+size_t strnlen(const char* __s, size_t __n) __attribute_pure__;
+char* strncat(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strncat);
+char* strndup(const char* __s, size_t __n);
+int strncmp(const char* __lhs, const char* __rhs, size_t __n) __attribute_pure__;
+char* stpncpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
+char* strncpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strncpy);
 
-size_t strlcat(char*, const char*, size_t) __overloadable __RENAME_CLANG(strlcat);
-size_t strlcpy(char*, const char*, size_t) __overloadable __RENAME_CLANG(strlcpy);
+size_t strlcat(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strlcat);
+size_t strlcpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strlcpy);
 
-size_t strcspn(const char*, const char*) __attribute_pure__;
-char* strpbrk(const char*, const char*) __attribute_pure__;
-char* strsep(char**, const char*);
-size_t strspn(const char*, const char*);
+size_t strcspn(const char* __s, const char* __reject) __attribute_pure__;
+char* strpbrk(const char* __s, const char* __accept) __attribute_pure__;
+char* strsep(char** __s_ptr, const char* __delimiter);
+size_t strspn(const char* __s, const char* __accept);
 
-char* strsignal(int);
+char* strsignal(int __signal);
 
-int strcoll(const char*, const char*) __attribute_pure__;
-size_t strxfrm(char*, const char*, size_t);
+int strcoll(const char* __lhs, const char* __rhs) __attribute_pure__;
+size_t strxfrm(char* __dst, const char* __src, size_t __n);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-int strcoll_l(const char*, const char*, locale_t) __attribute_pure__ __INTRODUCED_IN(21);
-size_t strxfrm_l(char*, const char*, size_t, locale_t) __INTRODUCED_IN(21);
+int strcoll_l(const char* __lhs, const char* __rhs, locale_t __l) __attribute_pure__ __INTRODUCED_IN(21);
+size_t strxfrm_l(char* __dst, const char* __src, size_t __n, locale_t __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
@@ -125,10 +126,13 @@ size_t strxfrm_l(char*, const char*, size_t, locale_t) __INTRODUCED_IN(21);
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-extern "C++" char* basename(char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-extern "C++" const char* basename(const char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+/* The versioner doesn't handle C++ blocks yet, so manually guarded. */
+#if __ANDROID_API__ >= 23
+extern "C++" char* basename(char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" const char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+#endif  /* __ANDROID_API__ >= 23 */
 #else
-char* basename(const char*) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 #endif
 
@@ -224,4 +228,4 @@ const char* strpbrk(const char* h, const char* n) __prefer_this_overload {
 
 __END_DECLS
 
-#endif /* _STRING_H */
+#endif

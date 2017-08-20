@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _WCHAR_H_
 #define _WCHAR_H_
 
@@ -42,98 +43,98 @@
 
 __BEGIN_DECLS
 
-wint_t            btowc(int);
-int               fwprintf(FILE *, const wchar_t *, ...);
-int               fwscanf(FILE *, const wchar_t *, ...);
-wint_t            fgetwc(FILE *);
-wchar_t          *fgetws(wchar_t *, int, FILE *);
-wint_t            fputwc(wchar_t, FILE *);
-int               fputws(const wchar_t *, FILE *);
-int               fwide(FILE *, int);
-wint_t            getwc(FILE *);
-wint_t            getwchar(void);
-int               mbsinit(const mbstate_t *);
-size_t            mbrlen(const char *, size_t, mbstate_t *);
-size_t            mbrtowc(wchar_t *, const char *, size_t, mbstate_t *);
-size_t mbsrtowcs(wchar_t*, const char**, size_t, mbstate_t*);
-size_t mbsnrtowcs(wchar_t*, const char**, size_t, size_t, mbstate_t*) __INTRODUCED_IN(21);
-wint_t            putwc(wchar_t, FILE *);
-wint_t            putwchar(wchar_t);
-int               swprintf(wchar_t *, size_t, const wchar_t *, ...);
-int               swscanf(const wchar_t *, const wchar_t *, ...);
-wint_t            ungetwc(wint_t, FILE *);
-int vfwprintf(FILE*, const wchar_t*, va_list);
-int vfwscanf(FILE*, const wchar_t*, va_list) __INTRODUCED_IN(21);
-int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
-int vswscanf(const wchar_t*, const wchar_t*, va_list) __INTRODUCED_IN(21);
-int vwprintf(const wchar_t*, va_list);
-int vwscanf(const wchar_t*, va_list) __INTRODUCED_IN(21);
-wchar_t* wcpcpy (wchar_t*, const wchar_t *);
-wchar_t* wcpncpy (wchar_t*, const wchar_t *, size_t);
-size_t            wcrtomb(char *, wchar_t, mbstate_t *);
-int               wcscasecmp(const wchar_t *, const wchar_t *);
-int wcscasecmp_l(const wchar_t*, const wchar_t*, locale_t) __INTRODUCED_IN(23);
-wchar_t          *wcscat(wchar_t *, const wchar_t *);
-wchar_t          *wcschr(const wchar_t *, wchar_t);
-int               wcscmp(const wchar_t *, const wchar_t *);
-int               wcscoll(const wchar_t *, const wchar_t *);
-wchar_t          *wcscpy(wchar_t *, const wchar_t *);
-size_t            wcscspn(const wchar_t *, const wchar_t *);
-size_t            wcsftime(wchar_t *, size_t, const wchar_t *, const struct tm *);
-size_t            wcslen(const wchar_t *);
-int               wcsncasecmp(const wchar_t *, const wchar_t *, size_t);
-int wcsncasecmp_l(const wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(23);
-wchar_t          *wcsncat(wchar_t *, const wchar_t *, size_t);
-int               wcsncmp(const wchar_t *, const wchar_t *, size_t);
-wchar_t          *wcsncpy(wchar_t *, const wchar_t *, size_t);
-size_t wcsnrtombs(char*, const wchar_t**, size_t, size_t, mbstate_t*) __INTRODUCED_IN(21);
-wchar_t          *wcspbrk(const wchar_t *, const wchar_t *);
-wchar_t          *wcsrchr(const wchar_t *, wchar_t);
-size_t wcsrtombs(char*, const wchar_t**, size_t, mbstate_t*);
-size_t            wcsspn(const wchar_t *, const wchar_t *);
-wchar_t          *wcsstr(const wchar_t *, const wchar_t *);
-double wcstod(const wchar_t*, wchar_t**);
-float wcstof(const wchar_t*, wchar_t**) __INTRODUCED_IN(21);
-wchar_t* wcstok(wchar_t*, const wchar_t*, wchar_t**);
-long wcstol(const wchar_t*, wchar_t**, int);
-long long wcstoll(const wchar_t*, wchar_t**, int) __INTRODUCED_IN(21);
-long double wcstold(const wchar_t*, wchar_t**) __INTRODUCED_IN(21);
-unsigned long wcstoul(const wchar_t*, wchar_t**, int);
-unsigned long long wcstoull(const wchar_t*, wchar_t**, int) __INTRODUCED_IN(21);
-int               wcswidth(const wchar_t *, size_t);
-size_t            wcsxfrm(wchar_t *, const wchar_t *, size_t);
-int               wctob(wint_t);
-int               wcwidth(wchar_t);
-wchar_t          *wmemchr(const wchar_t *, wchar_t, size_t);
-int               wmemcmp(const wchar_t *, const wchar_t *, size_t);
-wchar_t          *wmemcpy(wchar_t *, const wchar_t *, size_t);
+wint_t btowc(int __ch);
+int fwprintf(FILE* __fp, const wchar_t* __fmt, ...);
+int fwscanf(FILE* __fp, const wchar_t* __fmt, ...);
+wint_t fgetwc(FILE* __fp);
+wchar_t* fgetws(wchar_t* __buf, int __size, FILE* __fp);
+wint_t fputwc(wchar_t __wc, FILE* __fp);
+int fputws(const wchar_t* __s, FILE* __fp);
+int fwide(FILE* __fp, int __mode);
+wint_t getwc(FILE* __fp);
+wint_t getwchar(void);
+int mbsinit(const mbstate_t* __ps);
+size_t mbrlen(const char* __s, size_t __n, mbstate_t* __ps);
+size_t mbrtowc(wchar_t* __buf, const char* __s, size_t __n, mbstate_t* __ps);
+size_t mbsrtowcs(wchar_t* __dst, const char** __src, size_t __dst_n, mbstate_t* __ps);
+size_t mbsnrtowcs(wchar_t* __dst, const char** __src, size_t __src_n, size_t __dst_n, mbstate_t* __ps) __INTRODUCED_IN(21);
+wint_t putwc(wchar_t __wc, FILE* __fp);
+wint_t putwchar(wchar_t __wc);
+int swprintf(wchar_t* __buf, size_t __n, const wchar_t* __fmt, ...);
+int swscanf(const wchar_t* __s, const wchar_t* __fmt, ...);
+wint_t ungetwc(wint_t __wc, FILE* __fp);
+int vfwprintf(FILE* __fp, const wchar_t* __fmt, va_list __args);
+int vfwscanf(FILE* __fp, const wchar_t* __fmt, va_list __args) __INTRODUCED_IN(21);
+int vswprintf(wchar_t* __buf, size_t __n, const wchar_t* __fmt, va_list __args);
+int vswscanf(const wchar_t* __s, const wchar_t* __fmt, va_list __args) __INTRODUCED_IN(21);
+int vwprintf(const wchar_t* __fmt, va_list __args);
+int vwscanf(const wchar_t* __fmt, va_list __args) __INTRODUCED_IN(21);
+wchar_t* wcpcpy(wchar_t* __dst, const wchar_t* __src);
+wchar_t* wcpncpy(wchar_t* __dst, const wchar_t* __src, size_t __n);
+size_t wcrtomb(char* __buf, wchar_t __wc, mbstate_t* __ps);
+int wcscasecmp(const wchar_t* __lhs, const wchar_t* __rhs);
+int wcscasecmp_l(const wchar_t* __lhs, const wchar_t* __rhs, locale_t __l) __INTRODUCED_IN(23);
+wchar_t* wcscat(wchar_t* __dst, const wchar_t* __src);
+wchar_t* wcschr(const wchar_t* __s, wchar_t __wc);
+int wcscmp(const wchar_t* __lhs, const wchar_t* __rhs);
+int wcscoll(const wchar_t* __lhs, const wchar_t* __rhs);
+wchar_t* wcscpy(wchar_t* __dst, const wchar_t* __src);
+size_t wcscspn(const wchar_t* __s, const wchar_t* __accept);
+size_t wcsftime(wchar_t* __buf, size_t __n, const wchar_t* __fmt, const struct tm* __tm);
+size_t wcslen(const wchar_t* __s);
+int wcsncasecmp(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
+int wcsncasecmp_l(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n, locale_t __l) __INTRODUCED_IN(23);
+wchar_t* wcsncat(wchar_t* __dst, const wchar_t* __src, size_t __n);
+int wcsncmp(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
+wchar_t* wcsncpy(wchar_t* __dst, const wchar_t* __src, size_t __n);
+size_t wcsnrtombs(char* __dst, const wchar_t** __src, size_t __src_n, size_t __dst_n, mbstate_t* __ps) __INTRODUCED_IN(21);
+wchar_t* wcspbrk(const wchar_t* __s, const wchar_t* __accept);
+wchar_t* wcsrchr(const wchar_t* __s, wchar_t __wc);
+size_t wcsrtombs(char* __dst, const wchar_t** __src, size_t __dst_n, mbstate_t* __ps);
+size_t wcsspn(const wchar_t* __s, const wchar_t* __accept);
+wchar_t* wcsstr(const wchar_t* __haystack, const wchar_t* __needle);
+double wcstod(const wchar_t* __s, wchar_t** __end_ptr);
+float wcstof(const wchar_t* __s, wchar_t** __end_ptr) __INTRODUCED_IN(21);
+wchar_t* wcstok(wchar_t* __s, const wchar_t* __delimiter, wchar_t** __ptr);
+long wcstol(const wchar_t* __s, wchar_t** __end_ptr, int __base);
+long long wcstoll(const wchar_t* __s, wchar_t** __end_ptr, int __base) __INTRODUCED_IN(21);
+long double wcstold(const wchar_t* __s, wchar_t** __end_ptr) __INTRODUCED_IN(21);
+unsigned long wcstoul(const wchar_t* __s, wchar_t** __end_ptr, int __base);
+unsigned long long wcstoull(const wchar_t* __s, wchar_t** __end_ptr, int __base) __INTRODUCED_IN(21);
+int wcswidth(const wchar_t* __s, size_t __n);
+size_t wcsxfrm(wchar_t* __dst, const wchar_t* __src, size_t __n);
+int wctob(wint_t __wc);
+int wcwidth(wchar_t __wc);
+wchar_t* wmemchr(const wchar_t* __src, wchar_t __wc, size_t __n);
+int wmemcmp(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
+wchar_t* wmemcpy(wchar_t* __dst, const wchar_t* __src, size_t __n);
 #if defined(__USE_GNU)
-wchar_t* wmempcpy(wchar_t*, const wchar_t*, size_t) __INTRODUCED_IN(23);
+wchar_t* wmempcpy(wchar_t* __dst, const wchar_t* __src, size_t __n) __INTRODUCED_IN(23);
 #endif
-wchar_t          *wmemmove(wchar_t *, const wchar_t *, size_t);
-wchar_t          *wmemset(wchar_t *, wchar_t, size_t);
-int               wprintf(const wchar_t *, ...);
-int               wscanf(const wchar_t *, ...);
+wchar_t* wmemmove(wchar_t* __dst, const wchar_t* __src, size_t __n);
+wchar_t* wmemset(wchar_t* __dst, wchar_t __wc, size_t __n);
+int wprintf(const wchar_t* __fmt, ...);
+int wscanf(const wchar_t* __fmt, ...);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-long long wcstoll_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
-unsigned long long wcstoull_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
-long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);
+long long wcstoll_l(const wchar_t* __s, wchar_t** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
+unsigned long long wcstoull_l(const wchar_t* __s, wchar_t** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
+long double wcstold_l(const wchar_t* __s, wchar_t** __end_ptr, locale_t __l) __INTRODUCED_IN(21);
 
-int wcscoll_l(const wchar_t*, const wchar_t*, locale_t) __attribute_pure__
+int wcscoll_l(const wchar_t* __lhs, const wchar_t* __rhs, locale_t __l) __attribute_pure__
     __INTRODUCED_IN(21);
-size_t wcsxfrm_l(wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(21);
+size_t wcsxfrm_l(wchar_t* __dst, const wchar_t* __src, size_t __n, locale_t __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
 
-size_t wcslcat(wchar_t*, const wchar_t*, size_t);
-size_t wcslcpy(wchar_t*, const wchar_t*, size_t);
+size_t wcslcat(wchar_t* __dst, const wchar_t* __src, size_t __n);
+size_t wcslcpy(wchar_t* __dst, const wchar_t* __src, size_t __n);
 
-FILE* open_wmemstream(wchar_t**, size_t*) __INTRODUCED_IN(23);
-wchar_t* wcsdup(const wchar_t*);
-size_t wcsnlen(const wchar_t*, size_t);
+FILE* open_wmemstream(wchar_t** __ptr, size_t* __size_ptr) __INTRODUCED_IN(23);
+wchar_t* wcsdup(const wchar_t* __s);
+size_t wcsnlen(const wchar_t* __s, size_t __n);
 
 __END_DECLS
 
-#endif /* _WCHAR_H_ */
+#endif

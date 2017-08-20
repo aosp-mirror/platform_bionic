@@ -239,8 +239,18 @@
 
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
-#  define __BIONIC_FORTIFY 1
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0
+#  if defined(__clang__)
+/* FORTIFY's _chk functions effectively disable ASAN's stdlib interceptors. */
+#    if !__has_feature(address_sanitizer)
+#      define __BIONIC_FORTIFY 1
+#    endif
+#  elif defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
+#    define __BIONIC_FORTIFY 1
+#  endif
+#endif
+
+#if defined(__BIONIC_FORTIFY)
 #  if _FORTIFY_SOURCE == 2
 #    define __bos_level 1
 #  else
@@ -281,8 +291,7 @@
 #define __pass_object_size __pass_object_size_n(__bos_level)
 #define __pass_object_size0 __pass_object_size_n(0)
 
-/* FIXME: This should be __BIONIC_FORTIFY, but we don't enable FORTIFY in -O0. */
-#if (defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
+#if defined(__BIONIC_FORTIFY) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
 

@@ -83,4 +83,4 @@
 
 #endif
 
-#endif /* _SYS_REG_H_ */
+#endif

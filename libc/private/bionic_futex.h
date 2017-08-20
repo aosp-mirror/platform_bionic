@@ -36,13 +36,10 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-__BEGIN_DECLS
-
 struct timespec;
 
 static inline __always_inline int __futex(volatile void* ftx, int op, int value,
-                                          const struct timespec* timeout,
-                                          int bitset) {
+                                          const timespec* timeout, int bitset) {
   // Our generated syscall assembler sets errno, but our callers (pthread functions) don't want to.
   int saved_errno = errno;
   int result = syscall(__NR_futex, ftx, op, value, timeout, NULL, bitset);
@@ -61,17 +58,16 @@ static inline int __futex_wake_ex(volatile void* ftx, bool shared, int count) {
   return __futex(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, NULL, 0);
 }
 
-static inline int __futex_wait(volatile void* ftx, int value, const struct timespec* timeout) {
+static inline int __futex_wait(volatile void* ftx, int value, const timespec* timeout) {
   return __futex(ftx, FUTEX_WAIT, value, timeout, 0);
 }
 
-static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value,
-                                  bool use_realtime_clock, const struct timespec* abs_timeout) {
-  return __futex(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE) |
-                 (use_realtime_clock ? FUTEX_CLOCK_REALTIME : 0), value, abs_timeout,
+static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value) {
+  return __futex(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE), value, nullptr,
                  FUTEX_BITSET_MATCH_ANY);
 }
 
-__END_DECLS
+__LIBC_HIDDEN__ int __futex_wait_ex(volatile void* ftx, bool shared, int value,
+                                    bool use_realtime_clock, const timespec* abs_timeout);
 
 #endif /* _BIONIC_FUTEX_H */
