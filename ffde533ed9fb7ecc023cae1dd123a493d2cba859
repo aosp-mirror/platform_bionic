@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4eba1efe_951f9ccc",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-08-21T23:31:56Z",
+      "side": 1,
+      "message": "There\u0027s presumably a better name than this, but I have no idea what.",
+      "range": {
+        "startLine": 583,
+        "startChar": 32,
+        "endLine": 583,
+        "endChar": 41
+      },
+      "revId": "ffde533ed9fb7ecc023cae1dd123a493d2cba859",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
