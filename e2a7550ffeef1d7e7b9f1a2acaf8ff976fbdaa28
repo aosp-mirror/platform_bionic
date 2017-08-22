@@ -22,6 +22,30 @@
       "revId": "e2a7550ffeef1d7e7b9f1a2acaf8ff976fbdaa28",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26ea5184_5297dd4e",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-22T20:17:40Z",
+      "side": 1,
+      "message": "Since this is acting on a fd passed in, I thought that there was a chance it could happen and be a problem. However, I think if the fd is non-blocking, this could result in an incorrect early return. I\u0027ll change this to only fail on error.",
+      "parentUuid": "044a272b_c5441302",
+      "range": {
+        "startLine": 107,
+        "startChar": 16,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "e2a7550ffeef1d7e7b9f1a2acaf8ff976fbdaa28",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
