@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00e46a77_9dd44f4e",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-22T22:01:16Z",
+      "side": 1,
+      "message": "is there no default?",
+      "range": {
+        "startLine": 310,
+        "startChar": 21,
+        "endLine": 310,
+        "endChar": 71
+      },
+      "revId": "9ce2269e91cdf8275c66e613e0d5c195cca533ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
