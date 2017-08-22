@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a33f696b_f5631f24",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-22T21:48:13Z",
+      "side": 1,
+      "message": "given this, i do feel like \u003ciconv.h\u003e is pretty borderline. it\u0027s not like \u003cmonetary.h\u003e where it\u0027s clearly useless nonsense, but i am open to \"even though we\u0027ve implemented \u003ciconv.h\u003e now, we shouldn\u0027t ship it\" arguments...",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 92
+      },
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
