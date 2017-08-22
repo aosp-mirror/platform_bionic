@@ -22,6 +22,30 @@
       "revId": "ffde533ed9fb7ecc023cae1dd123a493d2cba859",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "694931a5_66376bac",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-22T00:00:48Z",
+      "side": 1,
+      "message": "yeah, i gave up too. yagni.",
+      "parentUuid": "4eba1efe_951f9ccc",
+      "range": {
+        "startLine": 583,
+        "startChar": 32,
+        "endLine": 583,
+        "endChar": 41
+      },
+      "revId": "ffde533ed9fb7ecc023cae1dd123a493d2cba859",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
