@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5001224c_b1438600",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-23T17:53:42Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be better to create a file for this? I worry because /proc/self/maps might not be the same on every run.",
+      "range": {
+        "startLine": 71,
+        "startChar": 22,
+        "endLine": 71,
+        "endChar": 37
+      },
+      "revId": "cdca3dbf85a510bf183414b9b9faeca5d911ebfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
