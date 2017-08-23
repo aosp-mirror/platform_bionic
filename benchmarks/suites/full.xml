@@ -179,12 +179,16 @@
   <args>AT_COMMON_SIZES</args>
 </fn>
 <fn>
+  <name>BM_stdio_fopen_fgetln_fclose_locking</name>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_fgetln_fclose_no_locking</name>
+</fn>
+<fn>
   <name>BM_stdio_fopen_fgets_fclose_locking</name>
-  <args>1024</args>
 </fn>
 <fn>
   <name>BM_stdio_fopen_fgets_fclose_no_locking</name>
-  <args>1024</args>
 </fn>
 <fn>
   <name>BM_stdio_fopen_fgetc_fclose_locking</name>
@@ -193,6 +197,12 @@
 <fn>
   <name>BM_stdio_fopen_fgetc_fclose_no_locking</name>
   <args>1024</args>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_getline_fclose_locking</name>
+</fn>
+<fn>
+  <name>BM_stdio_fopen_getline_fclose_no_locking</name>
 </fn>
 <fn>
   <name>BM_string_memcmp</name>
