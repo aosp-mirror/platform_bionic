@@ -39,7 +39,3 @@ void __assert(const char* file, int line, const char* failed_expression) {
 void __assert2(const char* file, int line, const char* function, const char* failed_expression) {
   async_safe_fatal("%s:%d: %s: assertion \"%s\" failed", file, line, function, failed_expression);
 }
-
-extern "C" __LIBC_HIDDEN__ void longjmperror() {
-  async_safe_fatal("longjmp botch");
-}
