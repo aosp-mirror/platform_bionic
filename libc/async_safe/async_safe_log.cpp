@@ -60,43 +60,36 @@ enum AndroidEventLogType {
 
 struct BufferOutputStream {
  public:
-  BufferOutputStream(char* buffer, size_t size) : total(0) {
-    buffer_ = buffer;
-    end_ = buffer + size - 1;
-    pos_ = buffer_;
-    pos_[0] = '\0';
+  BufferOutputStream(char* buffer, size_t size) : total(0), pos_(buffer), avail_(size) {
+    if (avail_ > 0) pos_[0] = '\0';
   }
-
-  ~BufferOutputStream() {}
+  ~BufferOutputStream() = default;
 
   void Send(const char* data, int len) {
     if (len < 0) {
       len = strlen(data);
     }
-
     total += len;
 
-    while (len > 0) {
-      int avail = end_ - pos_;
-      if (avail == 0) {
-        return;
-      }
-      if (avail > len) {
-        avail = len;
-      }
-      memcpy(pos_, data, avail);
-      pos_ += avail;
-      pos_[0] = '\0';
-      len -= avail;
+    if (avail_ <= 1) {
+      // No space to put anything else.
+      return;
     }
+
+    if (static_cast<size_t>(len) >= avail_) {
+      len = avail_ - 1;
+    }
+    memcpy(pos_, data, len);
+    pos_ += len;
+    pos_[0] = '\0';
+    avail_ -= len;
   }
 
   size_t total;
 
  private:
-  char* buffer_;
   char* pos_;
-  char* end_;
+  size_t avail_;
 };
 
 struct FdOutputStream {
@@ -107,16 +100,15 @@ struct FdOutputStream {
     if (len < 0) {
       len = strlen(data);
     }
-
     total += len;
 
     while (len > 0) {
-      int rc = TEMP_FAILURE_RETRY(write(fd_, data, len));
-      if (rc == -1) {
+      ssize_t bytes = TEMP_FAILURE_RETRY(write(fd_, data, len));
+      if (bytes == -1) {
         return;
       }
-      data += rc;
-      len -= rc;
+      data += bytes;
+      len -= bytes;
     }
   }
 
@@ -409,20 +401,19 @@ static void out_vformat(Out& o, const char* format, va_list args) {
   }
 }
 
-int async_safe_format_buffer(char* buffer, size_t buffer_size, const char* format, ...) {
-  BufferOutputStream os(buffer, buffer_size);
-  va_list args;
-  va_start(args, format);
-  out_vformat(os, format, args);
-  va_end(args);
-  return os.total;
-}
-
 int async_safe_format_buffer_va_list(char* buffer, size_t buffer_size, const char* format,
                                      va_list args) {
   BufferOutputStream os(buffer, buffer_size);
   out_vformat(os, format, args);
   return os.total;
+}
+
+int async_safe_format_buffer(char* buffer, size_t buffer_size, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  int buffer_len = async_safe_format_buffer_va_list(buffer, buffer_size, format, args);
+  va_end(args);
+  return buffer_len;
 }
 
 int async_safe_format_fd(int fd, const char* format, ...) {

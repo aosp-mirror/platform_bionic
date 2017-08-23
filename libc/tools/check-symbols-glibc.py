@@ -186,14 +186,17 @@ known = set([
 # being implemented (fattach).
 in_posix_and_glibc_but_actually_dead = set([
   'a64l',
+  'confstr',
   'fattach',
   'fdetach',
+  'gethostid',
   'getmsg',
   'getpmsg',
   'isastream',
   'l64a',
   'putmsg',
   'putpmsg',
+  'ulimit',
 ])
 
 posix = posix - in_posix_and_glibc_but_actually_dead
