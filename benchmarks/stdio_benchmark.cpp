@@ -26,7 +26,7 @@ template <typename Fn>
 void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
   size_t chunk_size = state.range(0);
 
-  FILE* fp = fopen("/dev/zero", "rw");
+  FILE* fp = fopen("/dev/zero", "r+e");
   __fsetlocking(fp, FSETLOCKING_BYCALLER);
   char* buf = new char[chunk_size];
 
@@ -35,7 +35,9 @@ void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
   }
 
   while (state.KeepRunning()) {
-    f(buf, chunk_size, 1, fp);
+    if (f(buf, chunk_size, 1, fp) != 1) {
+      errx(1, "ERROR: op of %zu bytes failed.", chunk_size);
+    }
   }
 
   state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(chunk_size));
@@ -70,7 +72,7 @@ static void FopenFgetsFclose(benchmark::State& state, bool no_locking) {
     FILE* fp = fopen("/dev/zero", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
     if (fgets(buf, sizeof(buf), fp) == nullptr) {
-      errx(1, "ERROR:  fgets of %zu bytes failed.", nbytes);
+      errx(1, "ERROR: fgets of %zu bytes failed.", nbytes);
     }
     fclose(fp);
   }
@@ -108,4 +110,3 @@ void BM_stdio_fopen_fgetc_fclose_no_locking(benchmark::State& state) {
   FopenFgetcFclose(state, true);
 }
 BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_no_locking);
-
