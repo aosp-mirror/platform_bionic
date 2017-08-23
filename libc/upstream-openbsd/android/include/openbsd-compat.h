@@ -70,6 +70,10 @@ extern const char* __progname;
  */
 #define _PATH_TMP "/data/local/tmp/"
 
+/* Use appropriate shell depending on process's executable. */
+__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
+#define _PATH_BSHELL __bionic_get_shell_path()
+
 /* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
 __LIBC_HIDDEN__ extern int getentropy(void*, size_t);
 

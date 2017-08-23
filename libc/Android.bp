@@ -1331,6 +1331,7 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "bionic/NetdClientDispatch.cpp",
+        "bionic/__bionic_get_shell_path.cpp",
         "bionic/__cmsg_nxthdr.cpp",
         "bionic/__errno.cpp",
         "bionic/__gnu_basename.cpp",
