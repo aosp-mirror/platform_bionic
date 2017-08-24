@@ -14,6 +14,22 @@
  * limitations under the License.
  */
 
+/*
+ * If this test fails, you can see the compiler's output by erasing a few args from the failing
+ * command. Specifically, delete everything before the path/to/the/compiler, then delete the first
+ * arg after the path/to/the/compiler. For example, given the following command:
+ *
+ * bionic/tests/file-check-cxx out/host/linux-x86/bin/FileCheck \
+ * prebuilts/clang/host/linux-x86/clang-4053586/bin/clang++ CLANG    -I bionic/tests -I ...
+ *
+ * If you delete everything before clang++ and delete "CLANG" (or "GCC" if gcc is failing), then
+ * you'll end up with:
+ *
+ * prebuilts/clang/host/linux-x86/clang-4053586/bin/clang++ -I bionic/tests -I ...
+ *
+ * Which is the command that FileCheck executes.
+ */
+
 #undef _FORTIFY_SOURCE
 #define _FORTIFY_SOURCE 2
 #include <fcntl.h>
