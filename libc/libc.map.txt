@@ -1345,9 +1345,10 @@ LIBC_O {
 
 LIBC_P {
   global:
-    __freading; # future
-    __fwriting; # future
-    getlogin_r; # future
+    __freading; # introduced=P
+    __fwriting; # introduced=P
+    getlogin_r; # introduced=P
+    syncfs; # introduced=P
 } LIBC_O;
 
 LIBC_PRIVATE {
