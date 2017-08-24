@@ -22,6 +22,63 @@
       "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c854d1_e77b8e63",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-24T18:48:30Z",
+      "side": 1,
+      "message": "Did clang-format do it this way?\n Style guide says case should be two spaces: https://google.github.io/styleguide/cppguide.html#Loops_and_Switch_Statements",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 5
+      },
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94963254_7ca3081b",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-24T18:48:30Z",
+      "side": 1,
+      "message": "Style guide also puts this on the same line as the case",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c047dac1_7175b4e6",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-24T18:48:30Z",
+      "side": 1,
+      "message": "So transliterate doesn\u0027t cause it to fail with EILSEQ, but ignore does? I didn\u0027t see it defined either way in the man page.",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
