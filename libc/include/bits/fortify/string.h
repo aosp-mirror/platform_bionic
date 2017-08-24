@@ -38,6 +38,8 @@ size_t __strlcpy_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 size_t __strlcat_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 
 #if defined(__BIONIC_FORTIFY)
+extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
+
 // These can share their implementation between gcc and clang with minimal
 // trickery...
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
@@ -116,11 +118,11 @@ void* memchr(const void* const s __pass_object_size, int c, size_t n) __overload
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memrchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
+void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __call_bypassing_fortify(memrchr)(s, c, n);
+        return __memrchr_real(s, c, n);
     }
 
     return __memrchr_chk(s, c, n, bos);
@@ -231,7 +233,6 @@ char* strrchr(const char* const s __pass_object_size, int c) __overloadable {
 
 #else // defined(__clang__)
 extern char* __strncpy_real(char*, const char*, size_t) __RENAME(strncpy);
-extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 extern size_t __strlcpy_real(char*, const char*, size_t)
     __RENAME(strlcpy);
 extern size_t __strlcat_real(char*, const char*, size_t)
@@ -261,7 +262,7 @@ void* memchr(const void* s __pass_object_size, int c, size_t n) {
 }
 
 __BIONIC_FORTIFY_INLINE
-void* memrchr(const void* s, int c, size_t n) {
+void* __memrchr_fortify(const void* s, int c, size_t n) {
     size_t bos = __bos(s);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -415,4 +416,26 @@ char* strrchr(const char* s, int c) {
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
 #endif /* defined(__clang__) */
+
+#if __ANDROID_API__ >= __ANDROID_API_M__
+#if defined(__cplusplus)
+extern "C++" {
+__BIONIC_FORTIFY_INLINE
+void* memrchr(void* const __pass_object_size s, int c, size_t n) {
+    return __memrchr_fortify(s, c, n);
+}
+
+__BIONIC_FORTIFY_INLINE
+const void* memrchr(const void* const __pass_object_size s, int c, size_t n) {
+    return __memrchr_fortify(s, c, n);
+}
+}
+#else
+__BIONIC_FORTIFY_INLINE
+void* memrchr(const void* const __pass_object_size s, int c, size_t n) __overloadable {
+    return __memrchr_fortify(s, c, n);
+}
+#endif
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+
 #endif /* defined(__BIONIC_FORTIFY) */

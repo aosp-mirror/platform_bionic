@@ -43,7 +43,12 @@ __BEGIN_DECLS
 
 void* memccpy(void* __dst, const void* __src, int __stop_char, size_t __n);
 void* memchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memchr);
+#if defined(__cplusplus)
+extern "C++" void* memrchr(void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
+extern "C++" const void* memrchr(const void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
+#else
 void* memrchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memrchr);
+#endif
 int memcmp(const void* __lhs, const void* __rhs, size_t __n) __attribute_pure__;
 void* memcpy(void*, const void*, size_t)
         __overloadable __RENAME_CLANG(memcpy);
@@ -81,7 +86,12 @@ char* strcat(char* __dst, const char* __src) __overloadable __RENAME_CLANG(strca
 char* strdup(const char* __s);
 
 char* strstr(const char* __haystack, const char* __needle) __attribute_pure__;
+#if defined(__cplusplus)
+extern "C++" char* strcasestr(char*, const char*) __RENAME(strcasestr) __attribute_pure__;
+extern "C++" const char* strcasestr(const char*, const char*) __RENAME(strcasestr) __attribute_pure__;
+#else
 char* strcasestr(const char* __haystack, const char* __needle) __attribute_pure__;
+#endif
 char* strtok(char* __s, const char* __delimiter);
 char* strtok_r(char* __s, const char* __delimiter, char** __pos_ptr);
 
