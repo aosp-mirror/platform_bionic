@@ -79,6 +79,23 @@
       "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba535b9_b12efd43",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-24T18:49:53Z",
+      "side": 1,
+      "message": "I think I made `introduced\u003dP` work now.",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
