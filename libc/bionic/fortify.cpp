@@ -147,7 +147,7 @@ extern "C" void* __memcpy_chk_fail(void* /*dst*/, const void* /*src*/, size_t co
 
 void* __memrchr_chk(const void* s, int c, size_t n, size_t actual_size) {
   __check_buffer_access("memrchr", "read from", n, actual_size);
-  return memrchr(s, c, n);
+  return memrchr(const_cast<void *>(s), c, n);
 }
 
 // memset is performance-critical enough that we have assembler __memset_chk implementations.
