@@ -99,22 +99,6 @@
   <args>MATH_COMMON</args>
 </fn>
 <fn>
-  <name>BM_property_get</name>
-  <args>NUM_PROPS</args>
-</fn>
-<fn>
-  <name>BM_property_find</name>
-  <args>NUM_PROPS</args>
-</fn>
-<fn>
-  <name>BM_property_read</name>
-  <args>NUM_PROPS</args>
-</fn>
-<fn>
-  <name>BM_property_serial</name>
-  <args>NUM_PROPS</args>
-</fn>
-<fn>
   <name>BM_pthread_self</name>
 </fn>
 <fn>
@@ -304,4 +288,24 @@
 <fn>
   <name>BM_stdlib_mbrtowc</name>
   <args>0</args>
+</fn>
+<!--
+ Put the property tests at the end since they might cause segfaults in
+ tests running afterwards (b/62197783).
+-->
+<fn>
+  <name>BM_property_get</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_find</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_read</name>
+  <args>NUM_PROPS</args>
+</fn>
+<fn>
+  <name>BM_property_serial</name>
+  <args>NUM_PROPS</args>
 </fn>

@@ -38,10 +38,9 @@ class SystemTests : public ::testing::Test {
   void SanitizeOutput();
 
   void Exec(std::vector<const char*> args);
-  void ExecAndCapture(std::vector<const char*> args);
   void RunTest(std::vector<const char*> extra_args = {});
   void Verify(const std::string& expected_output, int expected_exitcode,
-              std::vector<const char*> extra_args = {});
+              std::vector<const char*> extra_args = {}, bool sanitize = true);
 
   std::string raw_output_;
   std::string sanitized_output_;
@@ -51,7 +50,7 @@ class SystemTests : public ::testing::Test {
 };
 
 static std::string GetBionicXmlArg(const char* xml_file) {
-  return "--bionic_xml=" + android::base::GetExecutableDirectory() + "/suites/" + xml_file;
+  return "--bionic_xml=" + android::base::GetExecutableDirectory() + "/test_suites/" + xml_file;
 }
 
 void SystemTests::SanitizeOutput() {
@@ -104,7 +103,7 @@ void SystemTests::Exec(std::vector<const char*> args) {
 }
 
 void SystemTests::Verify(const std::string& expected_output,
-                         int expected_exitcode, std::vector<const char*> extra_args) {
+                         int expected_exitcode, std::vector<const char*> extra_args, bool sanitize) {
   std::vector<const char*> args;
   for (const auto& arg : extra_args) {
     args.push_back(arg);
@@ -131,13 +130,37 @@ void SystemTests::Verify(const std::string& expected_output,
   int status;
   ASSERT_EQ(pid_, TEMP_FAILURE_RETRY(waitpid(pid_, &status, 0))) << "Test output:\n" << raw_output_;
   exitcode_ = WEXITSTATUS(status);
-  SanitizeOutput();
-
   ASSERT_EQ(expected_exitcode, exitcode_) << "Test output:\n" << raw_output_;
-  if (!expected_output.empty()) {
-    ASSERT_EQ(expected_output, sanitized_output_);
-  }
 
+  if (sanitize) {
+    SanitizeOutput();
+    ASSERT_EQ(expected_output, sanitized_output_);
+  } else {
+    ASSERT_EQ(expected_output, raw_output_);
+  }
+}
+
+TEST_F(SystemTests, help) {
+  std::string expected =
+    "Usage:\n"
+    "bionic_benchmarks [--bionic_cpu=<cpu_to_isolate>]\n"
+    "                  [--bionic_xml=<path_to_xml>]\n"
+    "                  [--bionic_iterations=<num_iter>]\n"
+    "                  [--bionic_extra=\"<fn_name> <arg1> <arg 2> ...\"]\n"
+    "                  [<Google benchmark flags>]\n"
+    "Google benchmark flags:\n"
+    "benchmark [--benchmark_list_tests={true|false}]\n"
+    "          [--benchmark_filter=<regex>]\n"
+    "          [--benchmark_min_time=<min_time>]\n"
+    "          [--benchmark_repetitions=<num_repetitions>]\n"
+    "          [--benchmark_report_aggregates_only={true|false}\n"
+    "          [--benchmark_format=<console|json|csv>]\n"
+    "          [--benchmark_out=<filename>]\n"
+    "          [--benchmark_out_format=<json|console|csv>]\n"
+    "          [--benchmark_color={auto|true|false}]\n"
+    "          [--benchmark_counters_tabular={true|false}]\n"
+    "          [--v=<verbosity>]\n";
+  Verify(expected, 0, std::vector<const char*>{"--help"}, false);
 }
 
 TEST_F(SystemTests, full_suite) {
@@ -156,49 +179,60 @@ TEST_F(SystemTests, full_suite) {
     "BM_math_log10/iterations:1\n"
     "BM_math_logb/iterations:1\n"
     "BM_math_isfinite_macro/0/iterations:1\n"
+    "BM_math_isfinite_macro/1/iterations:1\n"
+    "BM_math_isfinite_macro/2/iterations:1\n"
+    "BM_math_isfinite_macro/3/iterations:1\n"
     "BM_math_isfinite/0/iterations:1\n"
+    "BM_math_isfinite/1/iterations:1\n"
+    "BM_math_isfinite/2/iterations:1\n"
+    "BM_math_isfinite/3/iterations:1\n"
     "BM_math_isinf_macro/0/iterations:1\n"
+    "BM_math_isinf_macro/1/iterations:1\n"
+    "BM_math_isinf_macro/2/iterations:1\n"
+    "BM_math_isinf_macro/3/iterations:1\n"
     "BM_math_isinf/0/iterations:1\n"
+    "BM_math_isinf/1/iterations:1\n"
+    "BM_math_isinf/2/iterations:1\n"
+    "BM_math_isinf/3/iterations:1\n"
     "BM_math_isnan_macro/0/iterations:1\n"
+    "BM_math_isnan_macro/1/iterations:1\n"
+    "BM_math_isnan_macro/2/iterations:1\n"
+    "BM_math_isnan_macro/3/iterations:1\n"
     "BM_math_isnan/0/iterations:1\n"
+    "BM_math_isnan/1/iterations:1\n"
+    "BM_math_isnan/2/iterations:1\n"
+    "BM_math_isnan/3/iterations:1\n"
     "BM_math_isnormal_macro/0/iterations:1\n"
+    "BM_math_isnormal_macro/1/iterations:1\n"
+    "BM_math_isnormal_macro/2/iterations:1\n"
+    "BM_math_isnormal_macro/3/iterations:1\n"
     "BM_math_isnormal/0/iterations:1\n"
+    "BM_math_isnormal/1/iterations:1\n"
+    "BM_math_isnormal/2/iterations:1\n"
+    "BM_math_isnormal/3/iterations:1\n"
     "BM_math_sin_fast/iterations:1\n"
     "BM_math_sin_feupdateenv/iterations:1\n"
     "BM_math_sin_fesetenv/iterations:1\n"
     "BM_math_fpclassify/0/iterations:1\n"
+    "BM_math_fpclassify/1/iterations:1\n"
+    "BM_math_fpclassify/2/iterations:1\n"
+    "BM_math_fpclassify/3/iterations:1\n"
     "BM_math_signbit_macro/0/iterations:1\n"
+    "BM_math_signbit_macro/1/iterations:1\n"
+    "BM_math_signbit_macro/2/iterations:1\n"
+    "BM_math_signbit_macro/3/iterations:1\n"
     "BM_math_signbit/0/iterations:1\n"
+    "BM_math_signbit/1/iterations:1\n"
+    "BM_math_signbit/2/iterations:1\n"
+    "BM_math_signbit/3/iterations:1\n"
     "BM_math_fabs_macro/0/iterations:1\n"
+    "BM_math_fabs_macro/1/iterations:1\n"
+    "BM_math_fabs_macro/2/iterations:1\n"
+    "BM_math_fabs_macro/3/iterations:1\n"
     "BM_math_fabs/0/iterations:1\n"
-    "BM_property_get/1/iterations:1\n"
-    "BM_property_get/4/iterations:1\n"
-    "BM_property_get/16/iterations:1\n"
-    "BM_property_get/64/iterations:1\n"
-    "BM_property_get/128/iterations:1\n"
-    "BM_property_get/256/iterations:1\n"
-    "BM_property_get/512/iterations:1\n"
-    "BM_property_find/1/iterations:1\n"
-    "BM_property_find/4/iterations:1\n"
-    "BM_property_find/16/iterations:1\n"
-    "BM_property_find/64/iterations:1\n"
-    "BM_property_find/128/iterations:1\n"
-    "BM_property_find/256/iterations:1\n"
-    "BM_property_find/512/iterations:1\n"
-    "BM_property_read/1/iterations:1\n"
-    "BM_property_read/4/iterations:1\n"
-    "BM_property_read/16/iterations:1\n"
-    "BM_property_read/64/iterations:1\n"
-    "BM_property_read/128/iterations:1\n"
-    "BM_property_read/256/iterations:1\n"
-    "BM_property_read/512/iterations:1\n"
-    "BM_property_serial/1/iterations:1\n"
-    "BM_property_serial/4/iterations:1\n"
-    "BM_property_serial/16/iterations:1\n"
-    "BM_property_serial/64/iterations:1\n"
-    "BM_property_serial/128/iterations:1\n"
-    "BM_property_serial/256/iterations:1\n"
-    "BM_property_serial/512/iterations:1\n"
+    "BM_math_fabs/1/iterations:1\n"
+    "BM_math_fabs/2/iterations:1\n"
+    "BM_math_fabs/3/iterations:1\n"
     "BM_pthread_self/iterations:1\n"
     "BM_pthread_getspecific/iterations:1\n"
     "BM_pthread_setspecific/iterations:1\n"
@@ -247,10 +281,14 @@ TEST_F(SystemTests, full_suite) {
     "BM_stdio_fwrite_unbuffered/16384/iterations:1\n"
     "BM_stdio_fwrite_unbuffered/32768/iterations:1\n"
     "BM_stdio_fwrite_unbuffered/65536/iterations:1\n"
-    "BM_stdio_fopen_fgets_fclose_locking/1024/iterations:1\n"
-    "BM_stdio_fopen_fgets_fclose_no_locking/1024/iterations:1\n"
+    "BM_stdio_fopen_fgetln_fclose_locking/iterations:1\n"
+    "BM_stdio_fopen_fgetln_fclose_no_locking/iterations:1\n"
+    "BM_stdio_fopen_fgets_fclose_locking/iterations:1\n"
+    "BM_stdio_fopen_fgets_fclose_no_locking/iterations:1\n"
     "BM_stdio_fopen_fgetc_fclose_locking/1024/iterations:1\n"
     "BM_stdio_fopen_fgetc_fclose_no_locking/1024/iterations:1\n"
+    "BM_stdio_fopen_getline_fclose_locking/iterations:1\n"
+    "BM_stdio_fopen_getline_fclose_no_locking/iterations:1\n"
     "BM_string_memcmp/8/0/0/iterations:1\n"
     "BM_string_memcmp/64/0/0/iterations:1\n"
     "BM_string_memcmp/512/0/0/iterations:1\n"
@@ -267,14 +305,14 @@ TEST_F(SystemTests, full_suite) {
     "BM_string_memcpy/16384/0/0/iterations:1\n"
     "BM_string_memcpy/32768/0/0/iterations:1\n"
     "BM_string_memcpy/65536/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/8/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/64/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/512/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/1024/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/8192/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/16384/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/32768/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/65536/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/8/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/64/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/512/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/1024/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/8192/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/16384/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/32768/0/0/iterations:1\n"
+    "BM_string_memmove_non_overlapping/65536/0/0/iterations:1\n"
     "BM_string_memmove_overlap_dst_before_src/8/0/iterations:1\n"
     "BM_string_memmove_overlap_dst_before_src/64/0/iterations:1\n"
     "BM_string_memmove_overlap_dst_before_src/512/0/iterations:1\n"
@@ -368,6 +406,8 @@ TEST_F(SystemTests, full_suite) {
     "BM_time_gettimeofday/iterations:1\n"
     "BM_time_gettimeofday_syscall/iterations:1\n"
     "BM_time_time/iterations:1\n"
+    "BM_time_localtime/iterations:1\n"
+    "BM_time_localtime_r/iterations:1\n"
     "BM_unistd_getpid/iterations:1\n"
     "BM_unistd_getpid_syscall/iterations:1\n"
     "BM_unistd_gettid/iterations:1\n"
@@ -381,9 +421,39 @@ TEST_F(SystemTests, full_suite) {
     "BM_stdlib_malloc_free/32768/0/iterations:1\n"
     "BM_stdlib_malloc_free/65536/0/iterations:1\n"
     "BM_stdlib_mbstowcs/0/0/iterations:1\n"
-    "BM_stdlib_mbrtowc/0/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_full.xml").c_str(),
-                                                "--bionic_iterations=1"});
+    "BM_stdlib_mbrtowc/0/iterations:1\n"
+    "BM_property_get/1/iterations:1\n"
+    "BM_property_get/4/iterations:1\n"
+    "BM_property_get/16/iterations:1\n"
+    "BM_property_get/64/iterations:1\n"
+    "BM_property_get/128/iterations:1\n"
+    "BM_property_get/256/iterations:1\n"
+    "BM_property_get/512/iterations:1\n"
+    "BM_property_find/1/iterations:1\n"
+    "BM_property_find/4/iterations:1\n"
+    "BM_property_find/16/iterations:1\n"
+    "BM_property_find/64/iterations:1\n"
+    "BM_property_find/128/iterations:1\n"
+    "BM_property_find/256/iterations:1\n"
+    "BM_property_find/512/iterations:1\n"
+    "BM_property_read/1/iterations:1\n"
+    "BM_property_read/4/iterations:1\n"
+    "BM_property_read/16/iterations:1\n"
+    "BM_property_read/64/iterations:1\n"
+    "BM_property_read/128/iterations:1\n"
+    "BM_property_read/256/iterations:1\n"
+    "BM_property_read/512/iterations:1\n"
+    "BM_property_serial/1/iterations:1\n"
+    "BM_property_serial/4/iterations:1\n"
+    "BM_property_serial/16/iterations:1\n"
+    "BM_property_serial/64/iterations:1\n"
+    "BM_property_serial/128/iterations:1\n"
+    "BM_property_serial/256/iterations:1\n"
+    "BM_property_serial/512/iterations:1\n";
+  Verify(expected, 0, std::vector<const char*>{"--bionic_iterations=1"});
+
+  // Make sure that the test suite can be found in the suites directory.
+  Verify(expected, 0, std::vector<const char*>{"--bionic_iterations=1", "--bionic_xml=full.xml"});
 }
 
 TEST_F(SystemTests, small) {
@@ -391,8 +461,8 @@ TEST_F(SystemTests, small) {
     "BM_string_memcmp/8/8/8/iterations:1\n"
     "BM_math_sqrt/iterations:1\n"
     "BM_property_get/1/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_small.xml").c_str(),
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{GetBionicXmlArg("test_small.xml").c_str(),
+                                               "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, medium) {
@@ -408,8 +478,8 @@ TEST_F(SystemTests, medium) {
     "BM_math_sqrt/iterations:1\n"
     "BM_string_memcpy/512/4/4/iterations:25\n"
     "BM_property_get/1/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_medium.xml").c_str(),
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{GetBionicXmlArg("test_medium.xml").c_str(),
+                                               "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, from_each) {
@@ -423,25 +493,25 @@ TEST_F(SystemTests, from_each) {
     "BM_string_memcpy/512/4/4/iterations:1\n"
     "BM_time_clock_gettime/iterations:1\n"
     "BM_unistd_getpid/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_from_each.xml").c_str(),
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{GetBionicXmlArg("test_from_each.xml").c_str(),
+                                               "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, cmd_args) {
   std::string expected =
     "BM_string_memcpy/8/8/8/iterations:1\n"
     "BM_math_log10/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_extra=BM_string_memcpy 8 8 8",
-                                                "--bionic_extra=BM_math_log10",
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8 8 8",
+                                               "--bionic_extra=BM_math_log10",
+                                               "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, cmd_args_no_iter) {
   std::string expected =
     "BM_string_memcpy/8/8/8\n"
     "BM_math_log10\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_extra=BM_string_memcpy 8 8 8",
-                                                "--bionic_extra=BM_math_log10"});
+  Verify(expected, 0, std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8 8 8",
+                                               "--bionic_extra=BM_math_log10"});
 }
 
 TEST_F(SystemTests, xml_and_args) {
@@ -466,11 +536,11 @@ TEST_F(SystemTests, xml_and_args) {
     "BM_string_memcpy/32768/0/0/iterations:1\n"
     "BM_string_memcpy/65536/0/0/iterations:1\n"
     "BM_math_log10/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{"--bionic_extra=BM_string_memcpy AT_ALIGNED_TWOBUF",
-                                                "--bionic_extra=BM_math_log10",
-                                                "--bionic_cpu=0",
-                                                GetBionicXmlArg("test_medium.xml").c_str(),
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{"--bionic_extra=BM_string_memcpy AT_ALIGNED_TWOBUF",
+                                               "--bionic_extra=BM_math_log10",
+                                               "--bionic_cpu=0",
+                                               GetBionicXmlArg("test_medium.xml").c_str(),
+                                               "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, alignment) {
@@ -555,6 +625,6 @@ TEST_F(SystemTests, alignment) {
     "BM_string_strlen/16384/2048/iterations:1\n"
     "BM_string_strlen/32768/2048/iterations:1\n"
     "BM_string_strlen/65536/2048/iterations:1\n";
-  Verify(expected, 0, std::vector<const char *>{GetBionicXmlArg("test_alignment.xml").c_str(),
-                                                "--bionic_iterations=1"});
+  Verify(expected, 0, std::vector<const char*>{GetBionicXmlArg("test_alignment.xml").c_str(),
+                                               "--bionic_iterations=1"});
 }
