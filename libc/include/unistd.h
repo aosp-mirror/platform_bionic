@@ -152,6 +152,9 @@ int lchown(const char* __path, uid_t __owner, gid_t __group);
 char* getcwd(char* __buf, size_t __size) __overloadable __RENAME_CLANG(getcwd);
 
 void sync(void);
+#if defined(__USE_GNU)
+int syncfs(int __fd) __INTRODUCED_IN_FUTURE;
+#endif
 
 int close(int __fd);
 
