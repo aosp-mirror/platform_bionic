@@ -100,6 +100,24 @@
     },
     {
       "key": {
+        "uuid": "c26b34e0_45d16c91",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-25T16:53:23Z",
+      "side": 1,
+      "message": "If this matches glibc\u0027s behavior then that\u0027s good enough for me.",
+      "parentUuid": "6bd059e7_8179d828",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ba535b9_b12efd43",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
