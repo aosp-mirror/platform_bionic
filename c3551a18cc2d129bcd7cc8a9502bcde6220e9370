@@ -118,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "ff1fa556_bbe4c619",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-25T17:00:56Z",
+      "side": 1,
+      "message": "this part does, though our TRANSLIT behavior isn\u0027t quite like glibc\u0027s. it seems that glibc actually has some kind of database, so the Euro sign, for example, gets replaced with \"EURO\" rather than just a replacement character.",
+      "parentUuid": "c26b34e0_45d16c91",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ba535b9_b12efd43",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
