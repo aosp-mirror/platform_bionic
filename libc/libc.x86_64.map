@@ -1243,6 +1243,9 @@ LIBC_P {
     __freading; # future
     __fwriting; # future
     getlogin_r; # future
+    iconv; # future
+    iconv_close; # future
+    iconv_open; # future
     syncfs; # future
 } LIBC_O;
 
