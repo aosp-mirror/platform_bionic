@@ -70,6 +70,7 @@ cc_test_library {
         "getauxval_test.cpp",
         "getcwd_test.cpp",
         "grp_pwd_test.cpp",
+        "iconv_test.cpp",
         "ifaddrs_test.cpp",
         "inttypes_test.cpp",
         "langinfo_test.cpp",
