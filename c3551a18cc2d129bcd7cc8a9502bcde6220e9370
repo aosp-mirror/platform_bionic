@@ -136,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "c4be17fd_fdf66e42",
+        "filename": "libc/bionic/iconv.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-25T17:11:51Z",
+      "side": 1,
+      "message": "Close enough. That\u0027s easier to fix later if we choose to.",
+      "parentUuid": "ff1fa556_bbe4c619",
+      "revId": "c3551a18cc2d129bcd7cc8a9502bcde6220e9370",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ba535b9_b12efd43",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
