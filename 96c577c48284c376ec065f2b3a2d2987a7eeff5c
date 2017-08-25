@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "504e75b5_ca6b565b",
+        "filename": "libc/SECCOMP_WHITELIST.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-25T01:11:36Z",
+      "side": 0,
+      "message": "Why are you removing this from the whitelist? Isn\u0027t there some app using this still?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 29
+      },
+      "revId": "96c577c48284c376ec065f2b3a2d2987a7eeff5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
