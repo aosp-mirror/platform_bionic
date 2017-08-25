@@ -79,11 +79,11 @@ int get_nprocs() {
 long get_phys_pages() {
   struct sysinfo si;
   sysinfo(&si);
-  return (si.totalram * si.mem_unit) / sysconf(_SC_PAGE_SIZE);
+  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / PAGE_SIZE;
 }
 
 long get_avphys_pages() {
   struct sysinfo si;
   sysinfo(&si);
-  return ((si.freeram + si.bufferram) * si.mem_unit) / sysconf(_SC_PAGE_SIZE);
+  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / PAGE_SIZE;
 }
