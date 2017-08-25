@@ -12,7 +12,7 @@ if [ "$1" = glibc ]; then
     )
     exit 0
 elif [ "$1" != 32 -a "$1" != 64 ]; then
-    echo "Usage: $0 [ 32 | 64 | glibc ] [gtest flags]"
+    echo "Usage: $0 [ 32 | 64 | glibc ] [benchmark flags]"
     exit 1
 fi
 
