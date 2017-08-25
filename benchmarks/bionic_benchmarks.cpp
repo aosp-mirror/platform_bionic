@@ -25,10 +25,17 @@
 #include <string>
 #include <vector>
 
-#include "android-base/strings.h"
+#include <android-base/file.h>
+#include <android-base/strings.h>
 #include <benchmark/benchmark.h>
 #include <tinyxml2.h>
 #include "util.h"
+
+#if defined(__ANDROID__)
+static constexpr const char* kDefaultSuite="full.xml";
+#else
+static constexpr const char* kDefaultSuite="host.xml";
+#endif
 
 std::map<std::string, benchmark_func_t> g_str_to_func;
 
@@ -48,9 +55,10 @@ typedef std::vector<std::vector<int>> args_vector_t;
 
 void Usage() {
   printf("Usage:\n");
-  printf("bionic_benchmarks [--bionic_cpu=<cpu_to_isolate>] [--bionic_xml=<path_to_xml>]\n");
+  printf("bionic_benchmarks [--bionic_cpu=<cpu_to_isolate>]\n");
+  printf("                  [--bionic_xml=<path_to_xml>]\n");
   printf("                  [--bionic_iterations=<num_iter>]\n");
-  printf("                  [--bionic_extra=\"<fn_name> <arg1> <arg 2> ... ]\n");
+  printf("                  [--bionic_extra=\"<fn_name> <arg1> <arg 2> ...\"]\n");
   printf("                  [<Google benchmark flags>]\n");
   printf("Google benchmark flags:\n");
 
@@ -255,9 +263,13 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
 
   // Read and register the functions.
   tinyxml2::XMLNode* fn = doc.FirstChildElement("fn");
-  args_vector_t arg_vector;
-  args_vector_t* run_args = &arg_vector;
   while (fn) {
+    if (fn == fn->ToComment()) {
+      // Skip comments.
+      fn = fn->NextSibling();
+      continue;
+    }
+
     auto fn_elem = fn->FirstChildElement("name");
     if (!fn_elem) {
       errx(1, "ERROR: Malformed XML entry: missing name element.");
@@ -267,8 +279,10 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
       errx(1, "ERROR: Malformed XML entry: error parsing name text.");
     }
     auto* xml_args = fn->FirstChildElement("args");
-    run_args = ResolveArgs(run_args, xml_args ? android::base::Trim(xml_args->GetText()) : "",
-                           args_shorthand);
+    args_vector_t arg_vector;
+    args_vector_t* run_args = ResolveArgs(&arg_vector,
+                                          xml_args ? android::base::Trim(xml_args->GetText()) : "",
+                                          args_shorthand);
 
     // XML values for CPU and iterations take precedence over those passed in via CLI.
     bench_opts_t xml_opts{};
@@ -292,8 +306,6 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
     RegisterGoogleBenchmarks(xml_opts, cmdline_opts, fn_name, run_args);
 
     fn = fn->NextSibling();
-    run_args = &arg_vector;
-    arg_vector.clear();
   }
   return 0;
 }
@@ -355,12 +367,36 @@ std::map<std::string, args_vector_t> GetShorthand() {
   return args_shorthand;
 }
 
+static bool FileExists(const std::string& file) {
+  struct stat st;
+  return stat(file.c_str(), &st) != -1 && S_ISREG(st.st_mode);
+}
 
 int main(int argc, char** argv) {
   std::map<std::string, args_vector_t> args_shorthand = GetShorthand();
   bench_opts_t opts = ParseOpts(argc, argv);
   std::vector<char*> new_argv(argc);
   SanitizeOpts(argc, argv, &new_argv);
+
+  if (opts.xmlpath.empty()) {
+    // Don't add the default xml file if a user is specifying the tests to run.
+    if (opts.extra_benchmarks.empty()) {
+      // Try and use the default.
+      opts.xmlpath = android::base::GetExecutableDirectory() + "/suites/" + kDefaultSuite;
+      if (!FileExists(opts.xmlpath)) {
+        printf("Cannot find default xml file %s\n", kDefaultSuite);
+        return 1;
+      }
+    }
+  } else if (!FileExists(opts.xmlpath)) {
+    // See if this is a file in the suites directory.
+    std::string file(android::base::GetExecutableDirectory() + "/suites/" + opts.xmlpath);
+    if (opts.xmlpath[0] == '/' || !FileExists(file)) {
+      printf("Cannot find xml file %s: does not exist or is not a file.\n", opts.xmlpath.c_str());
+      return 1;
+    }
+    opts.xmlpath = file;
+  }
 
   if (!opts.xmlpath.empty()) {
     if (int err = RegisterXmlBenchmarks(opts, args_shorthand)) {
