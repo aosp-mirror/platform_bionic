@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,62 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_ICU_H
-#define _PRIVATE_ICU_H
+#ifndef _ICONV_H_
+#define _ICONV_H_
 
-#include <stdint.h>
-#include <wchar.h>
+#include <sys/cdefs.h>
+#include <sys/types.h>
 
-typedef int8_t UBool;
-#define FALSE 0
-#define TRUE 1
+__BEGIN_DECLS
 
-typedef int32_t UChar32;
+struct __iconv_t;
+typedef struct __iconv_t* iconv_t;
 
-enum UProperty {
-  UCHAR_ALPHABETIC = 0,
-  UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5,
-  UCHAR_LOWERCASE = 22,
-  UCHAR_POSIX_ALNUM = 44,
-  UCHAR_POSIX_BLANK = 45,
-  UCHAR_POSIX_GRAPH = 46,
-  UCHAR_POSIX_PRINT = 47,
-  UCHAR_POSIX_XDIGIT = 48,
-  UCHAR_UPPERCASE = 30,
-  UCHAR_WHITE_SPACE = 31,
-  UCHAR_EAST_ASIAN_WIDTH = 0x1004,
-  UCHAR_HANGUL_SYLLABLE_TYPE = 0x100b,
-};
+iconv_t iconv_open(const char* __src_encoding, const char* __dst_encoding) __INTRODUCED_IN_FUTURE;
+size_t iconv(iconv_t __converter, char** __src_buf, size_t* __src_bytes_left, char** __dst_buf, size_t* __dst_bytes_left) __INTRODUCED_IN_FUTURE;
+int iconv_close(iconv_t __converter) __INTRODUCED_IN_FUTURE;
 
-enum UCharCategory {
-  U_NON_SPACING_MARK = 6,
-  U_ENCLOSING_MARK = 7,
-  U_CONTROL_CHAR = 15,
-  U_FORMAT_CHAR = 16,
-};
+__END_DECLS
 
-enum UEastAsianWidth {
-  U_EA_NEUTRAL,
-  U_EA_AMBIGUOUS,
-  U_EA_HALFWIDTH,
-  U_EA_FULLWIDTH,
-  U_EA_NARROW,
-  U_EA_WIDE,
-};
-
-enum UHangulSyllableType {
-  U_HST_NOT_APPLICABLE,
-  U_HST_LEADING_JAMO,
-  U_HST_VOWEL_JAMO,
-  U_HST_TRAILING_JAMO,
-  U_HST_LV_SYLLABLE,
-  U_HST_LVT_SYLLABLE,
-};
-
-int8_t __icu_charType(wint_t wc);
-int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property);
-bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int));
-
-void* __find_icu_symbol(const char* symbol_name);
-
-#endif  // _PRIVATE_ICU_H
+#endif
