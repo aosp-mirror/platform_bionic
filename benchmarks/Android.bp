@@ -80,6 +80,7 @@ cc_benchmark_host {
             enabled: false,
         },
     },
+    data: ["suites/*"],
 }
 
 cc_library_static {
@@ -100,5 +101,5 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: ["suites/test_*.xml"],
+    data: ["suites/*", "test_suites/*"],
 }
