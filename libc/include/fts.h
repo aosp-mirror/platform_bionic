@@ -116,11 +116,16 @@ typedef struct _ftsent {
 
 __BEGIN_DECLS
 
-FTSENT* fts_children(FTS* __fts, int __options);
-int fts_close(FTS* __fts);
-FTS* fts_open(char* const* __path, int __options, int (*__comparator)(const FTSENT** __lhs, const FTSENT** __rhs));
-FTSENT* fts_read(FTS* __fts);
-int fts_set(FTS* __fts, FTSENT* __entry, int __options);
+/*
+ * Strictly these functions were available before Lollipop/21, but there was an accidental ABI
+ * breakage in 21 that means you can't write code that runs on current devices and pre-21 devices,
+ * so we break the tie in favor of current and future devices.
+ */
+FTSENT* fts_children(FTS* __fts, int __options) __INTRODUCED_IN(21);
+int fts_close(FTS* __fts) __INTRODUCED_IN(21);
+FTS* fts_open(char* const* __path, int __options, int (*__comparator)(const FTSENT** __lhs, const FTSENT** __rhs)) __INTRODUCED_IN(21);
+FTSENT* fts_read(FTS* __fts) __INTRODUCED_IN(21);
+int fts_set(FTS* __fts, FTSENT* __entry, int __options) __INTRODUCED_IN(21);
 
 __END_DECLS
 
