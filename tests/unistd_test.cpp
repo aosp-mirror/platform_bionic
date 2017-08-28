@@ -375,7 +375,7 @@ TEST(UNISTD_TEST, clearenv) {
   EXPECT_EQ(0, unsetenv("test-variable"));
 }
 
-static void TestFsyncFunction(int (*fn)(int)) {
+static void TestSyncFunction(int (*fn)(int)) {
   int fd;
 
   // Can't sync an invalid fd.
@@ -401,10 +401,15 @@ static void TestFsyncFunction(int (*fn)(int)) {
   ASSERT_NE(-1, fd = open("/data/local/tmp", O_RDONLY));
   EXPECT_EQ(0, fn(fd));
   close(fd);
+}
 
-  // But some file systems may choose to be fussy...
+static void TestFsyncFunction(int (*fn)(int)) {
+  TestSyncFunction(fn);
+
+  // But some file systems are fussy about fsync/fdatasync...
   errno = 0;
-  ASSERT_NE(-1, fd = open("/proc/version", O_RDONLY));
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_NE(-1, fd);
   EXPECT_EQ(-1, fn(fd));
   EXPECT_EQ(EINVAL, errno);
   close(fd);
@@ -416,6 +421,10 @@ TEST(UNISTD_TEST, fdatasync) {
 
 TEST(UNISTD_TEST, fsync) {
   TestFsyncFunction(fsync);
+}
+
+TEST(UNISTD_TEST, syncfs) {
+  TestSyncFunction(syncfs);
 }
 
 static void AssertGetPidCorrect() {

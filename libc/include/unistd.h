@@ -125,33 +125,34 @@ long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
 int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
-int link(const char* __oldpath, const char* __newpath);
-int linkat(int __olddirfd, const char* __oldpath, int __newdirfd,
-           const char* __newpath, int __flags) __INTRODUCED_IN(21);
+int link(const char* __old_path, const char* __new_path);
+int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
 int unlink(const char* __path);
 int unlinkat(int __dirfd, const char* __path, int __flags);
 int chdir(const char* __path);
 int fchdir(int __fd);
 int rmdir(const char* __path);
-int pipe(int* __pipefd);
+int pipe(int __fds[2]);
 #if defined(__USE_GNU)
-int pipe2(int* __pipefd, int __flags) __INTRODUCED_IN(9);
+int pipe2(int __fds[2], int __flags) __INTRODUCED_IN(9);
 #endif
 int chroot(const char* __path);
-int symlink(const char* __oldpath, const char* __newpath);
-int symlinkat(const char* __oldpath, int __newdirfd, const char* __newpath) __INTRODUCED_IN(21);
-ssize_t readlink(const char* __path, char* __buf, size_t __bufsiz)
+int symlink(const char* __old_path, const char* __new_path);
+int symlinkat(const char* __old_path, int __new_dir_fd, const char* __new_path) __INTRODUCED_IN(21);
+ssize_t readlink(const char* __path, char* __buf, size_t __buf_size)
     __overloadable __RENAME_CLANG(readlink);
-ssize_t readlinkat(int __dirfd, const char* __path, char* __buf,
-                   size_t __bufsiz)
+ssize_t readlinkat(int __dir_fd, const char* __path, char* __buf, size_t __buf_size)
     __INTRODUCED_IN(21) __overloadable __RENAME_CLANG(readlinkat);
 int chown(const char* __path, uid_t __owner, gid_t __group);
 int fchown(int __fd, uid_t __owner, gid_t __group);
-int fchownat(int __dirfd, const char* __path, uid_t __owner, gid_t __group, int __flags);
+int fchownat(int __dir_fd, const char* __path, uid_t __owner, gid_t __group, int __flags);
 int lchown(const char* __path, uid_t __owner, gid_t __group);
 char* getcwd(char* __buf, size_t __size) __overloadable __RENAME_CLANG(getcwd);
 
 void sync(void);
+#if defined(__USE_GNU)
+int syncfs(int __fd) __INTRODUCED_IN_FUTURE;
+#endif
 
 int close(int __fd);
 
@@ -160,9 +161,9 @@ ssize_t read(int __fd, void* __buf, size_t __count) __overloadable
 ssize_t write(int __fd, const void* __buf, size_t __count) __overloadable
     __RENAME_CLANG(write);
 
-int dup(int __oldfd);
-int dup2(int __oldfd, int __newfd);
-int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
+int dup(int __old_fd);
+int dup2(int __old_fd, int __new_fd);
+int dup3(int __old_fd, int __new_fd, int __flags) __INTRODUCED_IN(21);
 int fsync(int __fd);
 int fdatasync(int __fd) __INTRODUCED_IN(9);
 
@@ -200,19 +201,19 @@ int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(12);
 int pause(void);
 unsigned int alarm(unsigned int __seconds);
 unsigned int sleep(unsigned int __seconds);
-int usleep(useconds_t __usec);
+int usleep(useconds_t __microseconds);
 
-int gethostname(char* __name, size_t __len);
-int sethostname(const char* __name, size_t __len) __INTRODUCED_IN(23);
+int gethostname(char* __buf, size_t __buf_size);
+int sethostname(const char* __name, size_t __n) __INTRODUCED_IN(23);
 
 int brk(void* __addr);
 void* sbrk(ptrdiff_t __increment);
 
 int isatty(int __fd);
 char* ttyname(int __fd);
-int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
+int ttyname_r(int __fd, char* __buf, size_t __buf_size) __INTRODUCED_IN(8);
 
-int acct(const char* __filepath);
+int acct(const char* __path);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 int getpagesize(void) __INTRODUCED_IN(21);
@@ -224,7 +225,7 @@ static __inline__ int getpagesize(void) {
 
 long syscall(long __number, ...);
 
-int daemon(int __nochdir, int __noclose);
+int daemon(int __no_chdir, int __no_close);
 
 #if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
 int cacheflush(long __addr, long __nbytes, long __cache);
@@ -242,8 +243,8 @@ int tcsetpgrp(int __fd, pid_t __pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
-int getdomainname(char*, size_t) __INTRODUCED_IN(26);
-int setdomainname(const char*, size_t) __INTRODUCED_IN(26);
+int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
+int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/unistd.h>
