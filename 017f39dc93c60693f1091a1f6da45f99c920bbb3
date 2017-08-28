@@ -69,6 +69,30 @@
       "revId": "017f39dc93c60693f1091a1f6da45f99c920bbb3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea74cbfc_b61a9d21",
+        "filename": "docs/status.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-28T23:36:23Z",
+      "side": 1,
+      "message": "Yeah, a link to lib(c|m|dl).map.txt seems more useful (with maybe some explanation here about how to read it).",
+      "parentUuid": "1527e99f_a3a767b4",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 12
+      },
+      "revId": "017f39dc93c60693f1091a1f6da45f99c920bbb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
