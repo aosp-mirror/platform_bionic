@@ -22,6 +22,53 @@
       "revId": "017f39dc93c60693f1091a1f6da45f99c920bbb3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a190677_3904af48",
+        "filename": "docs/status.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-28T23:28:30Z",
+      "side": 1,
+      "message": "P isn\u0027t finished yet, so the top section is a running changelog, and this will be filled in when we ship.",
+      "parentUuid": "633a6ce6_72dca5c2",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 8
+      },
+      "revId": "017f39dc93c60693f1091a1f6da45f99c920bbb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1527e99f_a3a767b4",
+        "filename": "docs/status.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-28T23:28:30Z",
+      "side": 1,
+      "message": "this isn\u0027t actually something i was planning on including in this change; i added it because i was talking to kshih and danalbert about it. i think we might want to do something like this, but i think we probably want to just auto-generate it from versioner instead. (this only includes POSIX functions.)",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 12
+      },
+      "revId": "017f39dc93c60693f1091a1f6da45f99c920bbb3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
