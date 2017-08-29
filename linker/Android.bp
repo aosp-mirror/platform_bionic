@@ -39,7 +39,10 @@ cc_binary {
 
     arch: {
         arm: {
-            srcs: ["arch/arm/begin.S"],
+            srcs: [
+                "arch/arm/begin.S",
+                "linker_exidx_static.c",
+            ],
 
             cflags: ["-D__work_around_b_24465209__"],
         },
