@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "81621311_2afcef92",
+        "filename": "linker/linker_exidx_static.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-08-29T16:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c81ac39d_a43c6e8c",
+      "range": {
+        "startLine": 41,
+        "startChar": 51,
+        "endLine": 41,
+        "endChar": 74
+      },
+      "revId": "fc79d37a74bc1b153a6e36b8582fcbf411f1f9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0b539b2_c2e15d8a",
         "filename": "linker/linker_exidx_static.c",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "92fdb9cb_f26b4f13",
+        "filename": "linker/linker_exidx_static.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-08-29T16:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0b539b2_c2e15d8a",
+      "range": {
+        "startLine": 42,
+        "startChar": 36,
+        "endLine": 42,
+        "endChar": 41
+      },
+      "revId": "fc79d37a74bc1b153a6e36b8582fcbf411f1f9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be171226_6a95c9e3",
         "filename": "linker/linker_exidx_static.c",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2017-08-29T14:47:57Z",
       "side": 1,
       "message": "since this is .c, don\u0027t you get this cast for free?",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "fc79d37a74bc1b153a6e36b8582fcbf411f1f9af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02321813_b362054f",
+        "filename": "linker/linker_exidx_static.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-08-29T16:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be171226_6a95c9e3",
       "range": {
         "startLine": 45,
         "startChar": 9,
