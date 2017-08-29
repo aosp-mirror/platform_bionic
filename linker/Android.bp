@@ -39,32 +39,41 @@ cc_binary {
 
     arch: {
         arm: {
-            srcs: ["arch/arm/begin.S"],
+            srcs: [
+                "arch/arm/begin.S",
+                "linker_exidx_static.c",
+            ],
 
             cflags: ["-D__work_around_b_24465209__"],
+            version_script: "linker.arm.map",
         },
         arm64: {
             srcs: ["arch/arm64/begin.S"],
+            version_script: "linker.generic.map",
         },
         x86: {
             srcs: ["arch/x86/begin.c"],
 
             cflags: ["-D__work_around_b_24465209__"],
+            version_script: "linker.generic.map",
         },
         x86_64: {
             srcs: ["arch/x86_64/begin.S"],
+            version_script: "linker.generic.map",
         },
         mips: {
             srcs: [
                 "arch/mips/begin.S",
                 "linker_mips.cpp",
             ],
+            version_script: "linker.generic.map",
         },
         mips64: {
             srcs: [
                 "arch/mips64/begin.S",
                 "linker_mips.cpp",
             ],
+            version_script: "linker.generic.map",
         },
     },
 
