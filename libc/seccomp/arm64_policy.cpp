@@ -5,12 +5,12 @@
 
 #include "seccomp_bpfs.h"
 const sock_filter arm64_filter[] = {
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5, 0, 32),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 32),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 220, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 101, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 43, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 19, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 18, 27, 26), //setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|getcwd
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 18, 27, 26), //io_setup|io_destroy|io_submit|io_cancel|io_getevents|setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|getcwd
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 42, 26, 25), //eventfd2|epoll_create1|epoll_ctl|epoll_pwait|dup|dup3|fcntl|inotify_init1|inotify_add_watch|inotify_rm_watch|ioctl|ioprio_set|ioprio_get|flock|mknodat|mkdirat|unlinkat|symlinkat|linkat|renameat|umount2|mount|pivot_root
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 59, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 58, 24, 23), //statfs|fstatfs|truncate|ftruncate|fallocate|faccessat|chdir|fchdir|chroot|fchmod|fchmodat|fchownat|fchown|openat|close
