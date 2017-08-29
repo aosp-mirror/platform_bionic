@@ -56,11 +56,11 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5168, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5167, 36, 35), //reboot|sethostname|setdomainname
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5170, 35, 34), //init_module|delete_module
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5173, 34, 33), //quotactl
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5205, 3, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5200, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5194, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5193, 31, 30), //gettid|readahead|setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|tkill
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5198, 30, 29), //futex|sched_setaffinity|sched_getaffinity|cacheflush
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5206, 29, 28), //exit_group
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5206, 29, 28), //io_setup|io_destroy|io_getevents|io_submit|io_cancel|exit_group
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5237, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5215, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5211, 1, 0),
