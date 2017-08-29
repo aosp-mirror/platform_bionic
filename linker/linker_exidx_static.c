@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#include <async_safe/log.h>
+#include <link.h>
 
-void* __find_icu_symbol(const char* symbol_name __attribute__((__unused__))) {
-  async_safe_fatal("__find_icu_symbol should not be called in the linker");
-}
+/* Find the .ARM.exidx section (which in the case of a static executable
+ * can be identified through its start and end symbols), and return its
+ * beginning and numbe of entries to the caller.  Note that for static
+ * executables we do not need to use the value of the PC to find the
+ * EXIDX section.
+ */
 
-extern "C" int __cxa_type_match() {
-  async_safe_fatal("__cxa_type_match is not implemented in the linker");
+extern unsigned __exidx_end;
+extern unsigned __exidx_start;
+
+_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __unused,
+                                    int* pcount)
+{
+  *pcount = (__exidx_end-__exidx_start)/8;
+  return __exidx_start;
 }
