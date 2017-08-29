@@ -579,7 +579,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = get_libdl_info(kLinkerPath, linker_link_map);
+  sonext = solist = get_libdl_info(kLinkerPath, linker_so, linker_link_map);
   g_default_namespace.add_soinfo(solist);
 
   // We have successfully fixed our own relocations. It's safe to run
