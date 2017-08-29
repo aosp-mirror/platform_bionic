@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69a090c3_8d27d9d2",
+        "filename": "libm/libm.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-08-29T18:34:51Z",
+      "side": 1,
+      "message": "introduced\u003d26 can go here (and should be able to be introduced\u003dO)",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 8
+      },
+      "revId": "d9b72ac9ce4570ffeca440ca8567e3c69711f27e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
