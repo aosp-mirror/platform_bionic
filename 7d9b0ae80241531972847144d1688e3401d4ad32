@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e985d3df_29934f63",
+        "filename": "docs/status.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-29T15:22:18Z",
+      "side": 1,
+      "message": "i\u0027ve updated these from the NDK using the command on L54, and it looks like there\u0027s something wrong with the libm.so files in the NDK. the libc.so files looked fine (i\u0027ve updated those numbers too, and they changed only slightly, and inspection by eye -- to the extent you can trust a human eye over 1.2k items -- makes me happy to take the new wc-counted numbers over the old hand-counted numbers).\n\nis the NDK generation tripping up because we don\u0027t have # introduced\u003d26 on the LIBM_O symbols?",
+      "range": {
+        "startLine": 142,
+        "startChar": 44,
+        "endLine": 142,
+        "endChar": 63
+      },
+      "revId": "7d9b0ae80241531972847144d1688e3401d4ad32",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
