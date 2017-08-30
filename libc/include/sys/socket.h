@@ -44,8 +44,6 @@
 
 __BEGIN_DECLS
 
-#define sockaddr_storage __kernel_sockaddr_storage
-
 struct timespec;
 
 #ifdef __mips__

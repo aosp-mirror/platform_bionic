@@ -94,11 +94,9 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
 
     # Extract the architecture if found.
     arch = None
-    statics = kernel_known_generic_statics
     m = re.search(r"(^|/)asm-([\w\d_\+\.\-]+)/.*", rel_path)
     if m and m.group(2) != 'generic':
         arch = m.group(2)
-        statics = statics.union(kernel_known_statics.get(arch, set()))
 
     # Now, let's parse the file.
     parser = cpp.BlockParser()
@@ -116,9 +114,8 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
 
     blocks.optimizeMacros(macros)
     blocks.optimizeIf01()
-    blocks.removeVarsAndFuncs(statics)
+    blocks.removeVarsAndFuncs(kernel_known_generic_statics)
     blocks.replaceTokens(kernel_token_replacements)
-    blocks.removeMacroDefines(kernel_ignored_macros)
 
     out = StringOutput()
     out.write(kernel_disclaimer)

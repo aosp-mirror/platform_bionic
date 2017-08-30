@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,34 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _NETINET_IN_H_
-#define _NETINET_IN_H_
+#ifndef _BITS_IP_MREQ_SOURCE_H_
+#define _BITS_IP_MREQ_SOURCE_H_
 
-#include <endian.h>
-#include <netinet/in6.h>
 #include <sys/cdefs.h>
-#include <sys/socket.h>
+#include <bits/in_addr.h>
 
-#include <linux/in.h>
-#include <linux/in6.h>
-#include <linux/ipv6.h>
-
-__BEGIN_DECLS
-
-#define INET_ADDRSTRLEN 16
-
-typedef uint16_t in_port_t;
-
-int bindresvport(int __fd, struct sockaddr_in* __sin);
-
-#if __ANDROID_API__ >= __ANDROID_API_N__
-extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
-extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
-#else
-static const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
-static const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-__END_DECLS
+struct ip_mreq_source {
+  struct in_addr imr_multiaddr;
+  struct in_addr imr_interface;
+  struct in_addr imr_sourceaddr;
+};
 
 #endif
