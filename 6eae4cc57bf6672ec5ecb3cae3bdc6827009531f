@@ -22,6 +22,30 @@
       "revId": "6eae4cc57bf6672ec5ecb3cae3bdc6827009531f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf022c7c_9818f20d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-08-30T16:14:24Z",
+      "side": 1,
+      "message": "I think it is better to warn people that we do not support it.",
+      "parentUuid": "0a3bbfbc_fcaf71c1",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "6eae4cc57bf6672ec5ecb3cae3bdc6827009531f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
