@@ -20,10 +20,11 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <locale.h>
+#include <math.h>
 #include <stdint.h>
 #include <wchar.h>
 
-#include "math_data_test.h"
+#include "utils.h"
 
 #define NUM_WCHARS(num_bytes) ((num_bytes)/sizeof(wchar_t))
 
@@ -899,6 +900,8 @@ TEST(wchar, wcwidth_controls) {
 }
 
 TEST(wchar, wcwidth_non_spacing_and_enclosing_marks_and_format) {
+  if (!have_dl()) return;
+
   EXPECT_EQ(0, wcwidth(0x0300)); // Combining grave.
   EXPECT_EQ(0, wcwidth(0x20dd)); // Combining enclosing circle.
   EXPECT_EQ(0, wcwidth(0x00ad)); // Soft hyphen (SHY).
@@ -906,6 +909,8 @@ TEST(wchar, wcwidth_non_spacing_and_enclosing_marks_and_format) {
 }
 
 TEST(wchar, wcwidth_cjk) {
+  if (!have_dl()) return;
+
   EXPECT_EQ(2, wcwidth(0x4e00)); // Start of CJK unified block.
   EXPECT_EQ(2, wcwidth(0x9fff)); // End of CJK unified block.
   EXPECT_EQ(2, wcwidth(0x3400)); // Start of CJK extension A block.
@@ -915,18 +920,24 @@ TEST(wchar, wcwidth_cjk) {
 }
 
 TEST(wchar, wcwidth_korean_combining_jamo) {
+  if (!have_dl()) return;
+
   AssertWcwidthRange(0x1160, 0x1200, 0); // Original range.
   EXPECT_EQ(0, wcwidth(0xd7b0)); // Newer.
   EXPECT_EQ(0, wcwidth(0xd7cb));
 }
 
 TEST(wchar, wcwidth_korean_jeongeul_syllables) {
+  if (!have_dl()) return;
+
   EXPECT_EQ(2, wcwidth(0xac00)); // Start of block.
   EXPECT_EQ(2, wcwidth(0xd7a3)); // End of defined code points in Unicode 7.
   // Undefined characters at the end of the block have width 1.
 }
 
 TEST(wchar, wcwidth_kana) {
+  if (!have_dl()) return;
+
   // Hiragana (most, not undefined).
   AssertWcwidthRange(0x3041, 0x3097, 2);
   // Katakana.
@@ -934,22 +945,30 @@ TEST(wchar, wcwidth_kana) {
 }
 
 TEST(wchar, wcwidth_circled_two_digit_cjk) {
+  if (!have_dl()) return;
+
   // Circled two-digit CJK "speed sign" numbers are wide,
   // though EastAsianWidth is ambiguous.
   AssertWcwidthRange(0x3248, 0x3250, 2);
 }
 
 TEST(wchar, wcwidth_hexagrams) {
+  if (!have_dl()) return;
+
   // Hexagrams are wide, though EastAsianWidth is neutral.
   AssertWcwidthRange(0x4dc0, 0x4e00, 2);
 }
 
 TEST(wchar, wcwidth_default_ignorables) {
+  if (!have_dl()) return;
+
   AssertWcwidthRange(0xfff0, 0xfff8, 0); // Unassigned by default ignorable.
   EXPECT_EQ(0, wcwidth(0xe0000)); // ...through 0xe0fff.
 }
 
 TEST(wchar, wcwidth_korean_common_non_syllables) {
+  if (!have_dl()) return;
+
   EXPECT_EQ(2, wcwidth(L'ㅜ')); // Korean "crying" emoticon.
   EXPECT_EQ(2, wcwidth(L'ㅋ')); // Korean "laughing" emoticon.
 }
