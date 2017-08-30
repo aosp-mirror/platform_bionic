@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a3bbfbc_fcaf71c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-08-30T16:07:27Z",
+      "side": 1,
+      "message": "happy to do this instead if you think that\u0027s a better idea...",
+      "range": {
+        "startLine": 10,
+        "startChar": 9,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "6eae4cc57bf6672ec5ecb3cae3bdc6827009531f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
