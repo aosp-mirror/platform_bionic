@@ -1,3 +1,8 @@
+Using bionic
+============
+
+See the [additional documentation](docs/).
+
 Working on bionic
 =================
 
@@ -43,7 +48,7 @@ publicly-exported header file.
 
 #### benchmarks/ --- benchmarks
 
-The `benchmarks/` directory contains benchmarks.
+The `benchmarks/` directory contains benchmarks, with its own [documentation](benchmarks/README.md).
 
 
 What's in libc/?
@@ -298,35 +303,6 @@ First, build and run the host tests as usual (see above).
 The coverage report is now available at `covreport/index.html`.
 
 
-Running the benchmarks
-----------------------
-
-### Device benchmarks
-
-    $ mma
-    $ adb remount
-    $ adb sync
-    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
-    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
-
-When operated without specifying an xml file, the default is to use the xml
-file called full.xml found in the directory `suites/` bound in the same directory
-as the bionic-benchmarks executable.
-
-To use a different xml file, use the `--bionic_xml=FILE.XML` option. By default, this
-option searches for the xml file in the `suites/` directory. If it doesn't exist
-in that directory then the file will be found as relative to the current
-directory. If the option specifies the full path to an xml file such as
-`/data/nativetest/suites/example.xml`, it will be used as is.
-
-You can use `--benchmark_filter=getpid` to just run benchmarks with "getpid"
-in their name.
-
-### Host benchmarks
-
-See the "Host tests" section of "Running the tests" above. The default for
-host tests is to use the `host.xml` file in the suites directory instead of `full.xml`.
-
 Attaching GDB to the tests
 --------------------------
 
@@ -341,54 +317,4 @@ each test from being forked, run the tests with the flag `--no-isolate`.
 32-bit ABI bugs
 ---------------
 
-### `off_t` is 32-bit.
-
-On 32-bit Android, `off_t` is a signed 32-bit integer. This limits functions
-that use `off_t` to working on files no larger than 2GiB.
-
-Android does not require the `_LARGEFILE_SOURCE` macro to be used to make
-`fseeko` and `ftello` available. Instead they're always available from API
-level 24 where they were introduced, and never available before then.
-
-Android also does not require the `_LARGEFILE64_SOURCE` macro to be used
-to make `off64_t` and corresponding functions such as `ftruncate64` available.
-Instead, whatever subset of those functions was available at your target API
-level will be visible.
-
-There are a couple of exceptions to note. Firstly, `off64_t` and the single
-function `lseek64` were available right from the beginning in API 3. Secondly,
-Android has always silently inserted `O_LARGEFILE` into any open call, so if
-all you need are functions like `read` that don't take/return `off_t`, large
-files have always worked.
-
-Android support for `_FILE_OFFSET_BITS=64` (which turns `off_t` into `off64_t`
-and replaces each `off_t` function with its `off64_t` counterpart, such as
-`lseek` in the source becoming `lseek64` at runtime) was added late. Even when
-it became available for the platform, it wasn't available from the NDK until
-r15. Before NDK r15, `_FILE_OFFSET_BITS=64` silently did nothing: all code
-compiled with that was actually using a 32-bit `off_t`. With a new enough NDK,
-the situation becomes complicated. If you're targeting an API before 21, almost
-all functions that take an `off_t` become unavailable. You've asked for their
-64-bit equivalents, and none of them (except `lseek`/`lseek64`) exist. As you
-increase your target API level, you'll have more and more of the functions
-available. API 12 adds some of the `<unistd.h>` functions, API 21 adds `mmap`,
-and by API 24 you have everything including `<stdio.h>`. See the
-[linker map](libc/libc.map.txt) for full details.
-
-In the 64-bit ABI, `off_t` is always 64-bit.
-
-### `sigset_t` is too small for real-time signals.
-
-On 32-bit Android, `sigset_t` is too small for ARM and x86 (but correct for
-MIPS). This means that there is no support for real-time signals in 32-bit
-code.
-
-In the 64-bit ABI, `sigset_t` is the correct size for every architecture.
-
-### `time_t` is 32-bit.
-
-On 32-bit Android, `time_t` is 32-bit. The header `<time64.h>` and type
-`time64_t` exist as a workaround, but the kernel interfaces exposed on 32-bit
-Android all use the 32-bit `time_t`.
-
-In the 64-bit ABI, `time_t` is 64-bit.
+See [32-bit ABI bugs](docs/32-bit-abi.md).

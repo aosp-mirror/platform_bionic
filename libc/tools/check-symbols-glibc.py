@@ -100,6 +100,7 @@ FORTIFY_stuff = set([
   '__memrchr_chk',
   '__pwrite64_chk',
   '__pwrite_chk',
+  '__sendto_chk',
   '__stack_chk_guard',
   '__stpncpy_chk2',
   '__strchr_chk',
@@ -184,23 +185,42 @@ known = set([
 # POSIX has some stuff that's too stupid for words (a64l) or not actually
 # implemented in glibc unless you count always failing with ENOSYS as
 # being implemented (fattach).
-in_posix_and_glibc_but_actually_dead = set([
-  'a64l',
-  'confstr',
-  'fattach',
-  'fdetach',
-  'gethostid',
-  'getmsg',
-  'getpmsg',
-  'isastream',
-  'l64a',
-  'putmsg',
-  'putpmsg',
-  'ulimit',
+in_posix_and_glibc_but_dead_or_useless = set([
+  'a64l', # obsolete
+  'confstr', # obsolete
+  'fattach', # obsolete
+  'fdetach', # obsolete
+  'gethostid', # obsolete
+  'getmsg', # obsolete
+  'getpmsg', # obsolete
+  'getutxent', # no utmp on Android
+  'getutxid', # no utmp on Android
+  'getutxline', # no utmp on Android
+  'isastream', # obsolete
+  'l64a', # obsolete
+  'mq_close', # disallowed by SELinux
+  'mq_getattr', # disallowed by SELinux
+  'mq_notify', # disallowed by SELinux
+  'mq_open', # disallowed by SELinux
+  'mq_receive', # disallowed by SELinux
+  'mq_send', # disallowed by SELinux
+  'mq_setattr', # disallowed by SELinux
+  'mq_timedreceive', # disallowed by SELinux
+  'mq_timedsend', # disallowed by SELinux
+  'mq_unlink', # disallowed by SELinux
+  'putmsg', # obsolete
+  'putpmsg', # obsolete
+  'pututxline', # no utmp on Android
+  'shm_open', # disallowed by SELinux
+  'shm_unlink', # disallowed by SELinux
+  'setutxent', # no utmp on Android
+  'strfmon', # icu4c
+  'strfmon_l', # icu4c
+  'ulimit', # obsolete
 ])
 
-posix = posix - in_posix_and_glibc_but_actually_dead
-glibc = glibc - in_posix_and_glibc_but_actually_dead
+posix = posix - in_posix_and_glibc_but_dead_or_useless
+glibc = glibc - in_posix_and_glibc_but_dead_or_useless
 
 if not only_unwanted:
   #print 'glibc:'
