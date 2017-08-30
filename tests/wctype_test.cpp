@@ -20,18 +20,14 @@
 
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 class UtfLocale {
  public:
   UtfLocale() : l(newlocale(LC_ALL, "C.UTF-8", 0)) {}
   ~UtfLocale() { freelocale(l); }
   locale_t l;
 };
-
-// bionic's dlsym doesn't work in static binaries, so we can't access icu,
-// so any unicode test case will fail.
-static bool have_dl() {
-  return (dlopen("libc.so", 0) != nullptr);
-}
 
 static void TestIsWideFn(int fn(wint_t),
                          int fn_l(wint_t, locale_t),
