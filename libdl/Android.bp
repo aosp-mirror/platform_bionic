@@ -44,7 +44,12 @@ cc_library {
             version_script: "libdl.x86_64.map",
         },
     },
-    srcs: ["libdl.c", "libdl_cfi.cpp"],
+    shared: {
+        srcs: ["libdl.c", "libdl_cfi.cpp"],
+    },
+    static: {
+        srcs: [ "libdl_static.c" ],
+    },
     cflags: [
         "-Wall",
         "-Wextra",
