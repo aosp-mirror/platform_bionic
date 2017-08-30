@@ -16,6 +16,10 @@
 
 #include <gtest/gtest.h>
 
+#if defined(__BIONIC__)
+#include <android-base/properties.h>
+#endif
+
 #include <dlfcn.h>
 #include <libgen.h>
 #include <limits.h>
@@ -226,6 +230,12 @@ TEST(dl, disable_ld_config_file) {
     // This test is only for CTS.
     return;
   }
+  std::string build_type = android::base::GetProperty("ro.build.type", "user");
+  if (build_type == "userdebug" || build_type == "eng") {
+    // Skip the test for non production devices
+    return;
+  }
+
   std::string error_message = "CANNOT LINK EXECUTABLE \"" + get_testlib_root() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
