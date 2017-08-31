@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7af8760_5b2aed76",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-31T20:24:34Z",
+      "side": 1,
+      "message": "Do need a made_change \u003d True here since you are modifying b? It\u0027s not clear to how b.expr is being used, so I\u0027m not positive of this.",
+      "revId": "5fddafbe87354cf66d0547b939dc3bef49a604a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53a427d3_42c26459",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-31T20:24:34Z",
+      "side": 1,
+      "message": "Can you add a small description of how this works? The fact that it will add an include is only clear when looking at how the set is used.",
+      "revId": "5fddafbe87354cf66d0547b939dc3bef49a604a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3690ed62_aa8720bc",
+        "filename": "tests/netinet_in_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-31T20:24:34Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 82,
+        "startChar": 22,
+        "endLine": 82,
+        "endChar": 23
+      },
+      "revId": "5fddafbe87354cf66d0547b939dc3bef49a604a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b4d8ffa_272dae54",
+        "filename": "tests/netinet_in_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-31T20:24:34Z",
+      "side": 1,
+      "message": "Extra space.",
+      "range": {
+        "startLine": 83,
+        "startChar": 48,
+        "endLine": 83,
+        "endChar": 49
+      },
+      "revId": "5fddafbe87354cf66d0547b939dc3bef49a604a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
