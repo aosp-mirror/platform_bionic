@@ -3238,8 +3238,23 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
-          DL_WARN("\"%s\" unused DT entry: type %p arg %p", get_realpath(),
-              reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+          const char* tag_name;
+          if (d->d_tag == DT_RPATH) {
+            tag_name = "DT_RPATH";
+          } else if (d->d_tag == DT_ENCODING) {
+            tag_name = "DT_ENCODING";
+          } else if (d->d_tag >= DT_LOOS && d->d_tag <= DT_HIOS) {
+            tag_name = "unknown OS-specific";
+          } else if (d->d_tag >= DT_LOPROC && d->d_tag <= DT_HIPROC) {
+            tag_name = "unknown processor-specific";
+          } else {
+            tag_name = "unknown";
+          }
+          DL_WARN("\"%s\" unused DT entry: %s (type %p arg %p)",
+                  get_realpath(),
+                  tag_name,
+                  reinterpret_cast<void*>(d->d_tag),
+                  reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
     }

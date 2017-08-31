@@ -17,6 +17,7 @@
 #ifndef __TEST_UTILS_H
 #define __TEST_UTILS_H
 
+#include <dlfcn.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -42,6 +43,12 @@
 #else
 #define KNOWN_FAILURE_ON_BIONIC(x) x
 #endif
+
+// bionic's dlsym doesn't work in static binaries, so we can't access icu,
+// so any unicode test case will fail.
+static inline bool have_dl() {
+  return (dlopen("libc.so", 0) != nullptr);
+}
 
 #if defined(__linux__)
 
