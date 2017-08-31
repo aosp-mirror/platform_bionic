@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "970c054f_9225e0b2",
+        "filename": "tests/iconv_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-08-31T20:41:56Z",
+      "side": 1,
+      "message": "Is this supposed to be nullptr?",
+      "range": {
+        "startLine": 450,
+        "startChar": 45,
+        "endLine": 450,
+        "endChar": 48
+      },
+      "revId": "c220d79fc89d5e996bd32d63b343054cbc7ad843",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
