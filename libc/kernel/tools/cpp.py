@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """A glorified C pre-processor parser."""
 
 import ctypes
