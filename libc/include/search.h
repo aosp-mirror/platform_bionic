@@ -13,24 +13,42 @@
 #include <sys/types.h>
 
 typedef enum {
+  FIND,
+  ENTER
+} ACTION;
+
+typedef struct entry {
+  char* key;
+  void* data;
+} ENTRY;
+
+typedef enum {
   preorder,
   postorder,
   endorder,
   leaf
 } VISIT;
 
-#ifdef _SEARCH_PRIVATE
-typedef struct node {
-  char* key;
-  struct node* llink;
-  struct node* rlink;
-} node_t;
+#if defined(__USE_BSD) || defined(__USE_GNU)
+struct hsearch_data {
+  struct __hsearch* __hsearch;
+};
 #endif
 
 __BEGIN_DECLS
 
 void insque(void* __element, void* __previous) __INTRODUCED_IN(21);
 void remque(void* __element) __INTRODUCED_IN(21);
+
+int hcreate(size_t) __INTRODUCED_IN_FUTURE;
+void hdestroy(void) __INTRODUCED_IN_FUTURE;
+ENTRY* hsearch(ENTRY, ACTION) __INTRODUCED_IN_FUTURE;
+
+#if defined(__USE_BSD) || defined(__USE_GNU)
+int hcreate_r(size_t, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+void hdestroy_r(struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+int hsearch_r(ENTRY, ACTION, ENTRY**, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+#endif
 
 void* lfind(const void* __key, const void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
   __INTRODUCED_IN(21);
