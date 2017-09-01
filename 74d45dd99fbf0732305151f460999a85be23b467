@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34f4ca11_6d1291ec",
+        "filename": "libc/malloc_debug/BacktraceData.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-09-01T21:27:16Z",
+      "side": 1,
+      "message": "This function can use http://en.cppreference.com/w/cpp/atomic/atomic/fetch_xor?",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 24
+      },
+      "revId": "74d45dd99fbf0732305151f460999a85be23b467",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "417a7726_bb5d31f2",
+        "filename": "libc/malloc_debug/BacktraceData.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-09-01T21:27:16Z",
+      "side": 1,
+      "message": "The name seems can\u0027t show the side effect, change to something like CheckAndResetDumping?",
+      "range": {
+        "startLine": 56,
+        "startChar": 7,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "74d45dd99fbf0732305151f460999a85be23b467",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
