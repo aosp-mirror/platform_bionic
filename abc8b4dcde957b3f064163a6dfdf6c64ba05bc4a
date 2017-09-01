@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea5eb3d2_7c52df71",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-01T20:59:56Z",
+      "side": 1,
+      "message": "You are correct. It\u0027s not completely harmful if multiple threads wind up in the debug_dump_heap function, but it\u0027s better to avoid this because you\u0027ll possibly dump multiple times.",
+      "parentUuid": "79132820_d100e1cc",
+      "range": {
+        "startLine": 302,
+        "startChar": 71,
+        "endLine": 302,
+        "endChar": 75
+      },
+      "revId": "abc8b4dcde957b3f064163a6dfdf6c64ba05bc4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d144622_85083306",
         "filename": "libc/malloc_debug/malloc_debug.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-01T19:54:29Z",
       "side": 1,
       "message": "This has been called by all callers?",
+      "range": {
+        "startLine": 792,
+        "startChar": 2,
+        "endLine": 792,
+        "endChar": 25
+      },
+      "revId": "abc8b4dcde957b3f064163a6dfdf6c64ba05bc4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "547d81c5_0732a1e0",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-01T20:59:56Z",
+      "side": 1,
+      "message": "I\u0027m going to expose this to outside callers, so I won\u0027t always known the context of all callers.",
+      "parentUuid": "8d144622_85083306",
       "range": {
         "startLine": 792,
         "startChar": 2,
