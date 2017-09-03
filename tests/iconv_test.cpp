@@ -427,3 +427,29 @@ TEST(iconv, iconv_EINVAL_utf32be_short) {
 TEST(iconv, iconv_EINVAL_utf32le_short) {
   Check(EINVAL, "utf32le", "\x24\x00\x00", 3); // Missing final byte.
 }
+
+TEST(iconv, iconv_initial_shift_state) {
+  // POSIX: "For state-dependent encodings, the conversion descriptor
+  // cd is placed into its initial shift state by a call for which inbuf
+  // is a null pointer, or for which inbuf points to a null pointer."
+  iconv_t c = iconv_open("utf8", "utf8");
+  char* in = nullptr;
+  size_t in_bytes = 0;
+  wchar_t out_buf[16];
+  size_t out_bytes = sizeof(out_buf);
+  char* out = reinterpret_cast<char*>(out_buf);
+
+  // Points to a null pointer...
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(0), iconv(c, &in, &in_bytes, &out, &out_bytes));
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(sizeof(out_buf), out_bytes);
+
+  // Is a null pointer...
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(0), iconv(c, nullptr, &in_bytes, &out, &out_bytes));
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(sizeof(out_buf), out_bytes);
+
+  EXPECT_EQ(0, iconv_close(c));
+}
