@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f29c61f3_2a37f612",
+        "filename": "libc/malloc_debug/BacktraceData.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-05T22:57:26Z",
+      "side": 1,
+      "message": "I changed it to use fetch_xor, so I changed the underlying type of enable_ though to make this possible.",
+      "parentUuid": "34f4ca11_6d1291ec",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 24
+      },
+      "revId": "74d45dd99fbf0732305151f460999a85be23b467",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "417a7726_bb5d31f2",
         "filename": "libc/malloc_debug/BacktraceData.h",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-01T21:27:16Z",
       "side": 1,
       "message": "The name seems can\u0027t show the side effect, change to something like CheckAndResetDumping?",
+      "range": {
+        "startLine": 56,
+        "startChar": 7,
+        "endLine": 56,
+        "endChar": 17
+      },
+      "revId": "74d45dd99fbf0732305151f460999a85be23b467",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62f5e4b7_8921de9f",
+        "filename": "libc/malloc_debug/BacktraceData.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-05T22:57:26Z",
+      "side": 1,
+      "message": "I changed this to ShouldDumpAndReset().",
+      "parentUuid": "417a7726_bb5d31f2",
       "range": {
         "startLine": 56,
         "startChar": 7,
