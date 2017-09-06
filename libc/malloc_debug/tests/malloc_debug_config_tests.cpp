@@ -60,6 +60,9 @@ std::string usage_string(
   "6 malloc_debug   backtrace[=XX]\n"
   "6 malloc_debug     Enable capturing the backtrace at the point of allocation.\n"
   "6 malloc_debug     If XX is set it sets the number of backtrace frames.\n"
+  "6 malloc_debug     This option also enables dumping the backtrace heap data\n"
+  "6 malloc_debug     when a signal is received. The data is dumped to the file\n"
+  "6 malloc_debug     backtrace_dump_prefix.<PID>.txt.\n"
   "6 malloc_debug     The default is 16 frames, the max number of frames is 256.\n"
   "6 malloc_debug \n"
   "6 malloc_debug   backtrace_enable_on_signal[=XX]\n"
@@ -67,6 +70,18 @@ std::string usage_string(
   "6 malloc_debug     The backtrace capture is not enabled until the process\n"
   "6 malloc_debug     receives a signal. If XX is set it sets the number of backtrace\n"
   "6 malloc_debug     frames. The default is 16 frames, the max number of frames is 256.\n"
+  "6 malloc_debug \n"
+  "6 malloc_debug   backtrace_dump_prefix[=FILE]\n"
+  "6 malloc_debug     This option only has meaning if the backtrace option has been specified.\n"
+  "6 malloc_debug     This is the prefix of the name of the file to which backtrace heap\n"
+  "6 malloc_debug     data will be dumped. The file will be named backtrace_dump_prefix.<PID>.txt.\n"
+  "6 malloc_debug     The default is /data/local/tmp/backtrace_heap.\n"
+  "6 malloc_debug \n"
+  "6 malloc_debug   backtrace_dump_on_exit\n"
+  "6 malloc_debug     This option only has meaning if the backtrace option has been specified.\n"
+  "6 malloc_debug     This will cause all live allocations to be dumped to the file\n"
+  "6 malloc_debug     backtrace_dump_prefix.<PID>.final.txt.\n"
+  "6 malloc_debug     The default is false.\n"
   "6 malloc_debug \n"
   "6 malloc_debug   fill_on_alloc[=XX]\n"
   "6 malloc_debug     On first allocation, fill with the value 0xeb.\n"
@@ -292,12 +307,14 @@ TEST_F(MallocDebugConfigTest, backtrace) {
   ASSERT_EQ(64U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
   ASSERT_FALSE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_TRUE(InitConfig("backtrace")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
   ASSERT_FALSE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
@@ -309,12 +326,14 @@ TEST_F(MallocDebugConfigTest, backtrace_enable_on_signal) {
   ASSERT_EQ(64U, config->backtrace_frames());
   ASSERT_FALSE(config->backtrace_enabled());
   ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_TRUE(InitConfig("backtrace_enable_on_signal")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_FALSE(config->backtrace_enabled());
   ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
@@ -326,12 +345,14 @@ TEST_F(MallocDebugConfigTest, backtrace_enable_on_signal_init) {
   ASSERT_EQ(64U, config->backtrace_frames());
   ASSERT_FALSE(config->backtrace_enabled());
   ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_TRUE(InitConfig("backtrace")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
   ASSERT_FALSE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
@@ -343,12 +364,46 @@ TEST_F(MallocDebugConfigTest, backtrace_enable_and_backtrace) {
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
   ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
 
   ASSERT_TRUE(InitConfig("backtrace backtrace_enable_on_signal")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
   ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_dump_on_exit) {
+  ASSERT_TRUE(InitConfig("backtrace_dump_on_exit")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_TRUE(config->backtrace_dump_on_exit());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_dump_on_exit_error) {
+  ASSERT_FALSE(InitConfig("backtrace_dump_on_exit=something")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'backtrace_dump_on_exit' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_dump_prefix) {
+  ASSERT_TRUE(InitConfig("backtrace_dump_prefix")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_EQ("/data/local/tmp/backtrace_heap", config->backtrace_dump_prefix());
+
+  ASSERT_TRUE(InitConfig("backtrace_dump_prefix=/fake/location")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_EQ("/fake/location", config->backtrace_dump_prefix());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
