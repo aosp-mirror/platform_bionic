@@ -65,9 +65,12 @@ class Config {
   uint64_t options() const { return options_; }
 
   int backtrace_signal() const { return backtrace_signal_; }
+  int backtrace_dump_signal() const { return backtrace_dump_signal_; }
   size_t backtrace_frames() const { return backtrace_frames_; }
   size_t backtrace_enabled() const { return backtrace_enabled_; }
   size_t backtrace_enable_on_signal() const { return backtrace_enable_on_signal_; }
+  bool backtrace_dump_on_exit() const { return backtrace_dump_on_exit_; }
+  const std::string& backtrace_dump_prefix() const { return backtrace_dump_prefix_; }
 
   size_t front_guard_bytes() const { return front_guard_bytes_; }
   size_t rear_guard_bytes() const { return rear_guard_bytes_; }
@@ -110,6 +113,8 @@ class Config {
 
   bool SetBacktrace(const std::string& option, const std::string& value);
   bool SetBacktraceEnableOnSignal(const std::string& option, const std::string& value);
+  bool SetBacktraceDumpOnExit(const std::string& option, const std::string& value);
+  bool SetBacktraceDumpPrefix(const std::string& option, const std::string& value);
 
   bool SetExpandAlloc(const std::string& option, const std::string& value);
 
@@ -130,8 +135,11 @@ class Config {
 
   bool backtrace_enable_on_signal_ = false;
   int backtrace_signal_ = 0;
+  int backtrace_dump_signal_ = 0;
   bool backtrace_enabled_ = false;
   size_t backtrace_frames_ = 0;
+  bool backtrace_dump_on_exit_ = false;
+  std::string backtrace_dump_prefix_;
 
   size_t fill_on_alloc_bytes_ = 0;
   size_t fill_on_free_bytes_ = 0;

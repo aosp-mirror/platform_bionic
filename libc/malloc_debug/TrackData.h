@@ -51,6 +51,8 @@ class TrackData : public OptionData {
 
   void GetList(std::vector<const Header*>* list);
 
+  void GetListBySizeThenBacktrace(std::vector<const Header*>* list, size_t* total_memory);
+
   void Add(const Header* header, bool backtrace_found);
 
   void Remove(const Header* header, bool backtrace_found);
