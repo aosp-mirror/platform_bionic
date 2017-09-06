@@ -34,8 +34,11 @@
 #include <sys/param.h>
 #include <unistd.h>
 
+#include <mutex>
 #include <vector>
 
+#include <android-base/file.h>
+#include <android-base/stringprintf.h>
 #include <private/bionic_malloc_dispatch.h>
 
 #include "backtrace.h"
@@ -65,6 +68,7 @@ __BEGIN_DECLS
 bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
     const char* options);
 void debug_finalize();
+bool debug_dump_heap(const char* file_name);
 void debug_get_malloc_leak_info(
     uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
     size_t* backtrace_size);
@@ -138,7 +142,7 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   header->orig_pointer = orig_pointer;
   header->size = size;
   if (*g_malloc_zygote_child) {
-    header->set_zygote();
+    header->set_zygote_child_alloc();
   }
   header->usable_size = g_dispatch->malloc_usable_size(orig_pointer);
   if (header->usable_size == 0) {
@@ -164,7 +168,7 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   bool backtrace_found = false;
   if (g_debug->config().options() & BACKTRACE) {
     BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
-    if (g_debug->backtrace->enabled()) {
+    if (g_debug->backtrace->ShouldBacktrace()) {
       back_header->num_frames = backtrace_get(
           &back_header->frames[0], g_debug->config().backtrace_frames());
       backtrace_found = back_header->num_frames > 0;
@@ -222,6 +226,13 @@ void debug_finalize() {
 
   if (g_debug->config().options() & LEAK_TRACK) {
     g_debug->track->DisplayLeaks();
+  }
+
+  if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
+    ScopedDisableDebugCalls disable;
+    debug_dump_heap(
+        android::base::StringPrintf("%s.%d.exit.txt",
+                                    g_debug->config().backtrace_dump_prefix().c_str(),                              getpid()).c_str());
   }
 
   DebugDisableSet(true);
@@ -288,6 +299,13 @@ size_t debug_malloc_usable_size(void* pointer) {
 }
 
 static void *internal_malloc(size_t size) {
+  if ((g_debug->config().options() & BACKTRACE) && g_debug->backtrace->ShouldDumpAndReset()) {
+    debug_dump_heap(
+        android::base::StringPrintf("%s.%d.txt",
+                                    g_debug->config().backtrace_dump_prefix().c_str(),
+                                    getpid()).c_str());
+  }
+
   if (size == 0) {
     size = 1;
   }
@@ -341,6 +359,13 @@ void* debug_malloc(size_t size) {
 }
 
 static void internal_free(void* pointer) {
+  if ((g_debug->config().options() & BACKTRACE) && g_debug->backtrace->ShouldDumpAndReset()) {
+    debug_dump_heap(
+        android::base::StringPrintf("%s.%d.txt",
+                                    g_debug->config().backtrace_dump_prefix().c_str(),
+                                    getpid()).c_str());
+  }
+
   void* free_pointer = pointer;
   size_t bytes;
   Header* header;
@@ -538,7 +563,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
     if (real_size < header->usable_size) {
       header->size = real_size;
       if (*g_malloc_zygote_child) {
-        header->set_zygote();
+        header->set_zygote_child_alloc();
       }
       if (g_debug->config().options() & REAR_GUARD) {
         // Don't bother allocating a smaller pointer in this case, simply
@@ -758,3 +783,65 @@ void* debug_valloc(size_t size) {
   return debug_memalign(getpagesize(), size);
 }
 #endif
+
+static std::mutex g_dump_lock;
+
+bool debug_dump_heap(const char* file_name) {
+  ScopedDisableDebugCalls disable;
+
+  std::lock_guard<std::mutex> guard(g_dump_lock);
+
+  FILE* fp = fopen(file_name, "w+e");
+  if (fp == nullptr) {
+    error_log("Unable to create file: %s", file_name);
+    return false;
+  }
+  error_log("Dumping to file: %s\n", file_name);
+
+  if (!(g_debug->config().options() & BACKTRACE)) {
+    fprintf(fp, "Native heap dump not available. To enable, run these commands (requires root):\n");
+    fprintf(fp, "# adb shell stop\n");
+    fprintf(fp, "# adb shell setprop libc.debug.malloc.options backtrace\n");
+    fprintf(fp, "# adb shell start\n");
+    fclose(fp);
+    return false;
+  }
+
+  fprintf(fp, "Android Native Heap Dump v1.0\n\n");
+
+  std::vector<const Header*> list;
+  size_t total_memory;
+  g_debug->track->GetListBySizeThenBacktrace(&list, &total_memory);
+  fprintf(fp, "Total memory: %zu\n", total_memory);
+  fprintf(fp, "Allocation records: %zd\n", list.size());
+  fprintf(fp, "Backtrace size: %zu\n", g_debug->config().backtrace_frames());
+  fprintf(fp, "\n");
+
+  for (const auto& header : list) {
+    const BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
+    fprintf(fp, "z %d  sz %8zu  num    1  bt", (header->zygote_child_alloc()) ? 1 : 0,
+            header->real_size());
+    for (size_t i = 0; i < back_header->num_frames; i++) {
+      if (back_header->frames[i] == 0) {
+        break;
+      }
+#ifdef __LP64__
+      fprintf(fp, " %016" PRIxPTR, back_header->frames[i]);
+#else
+      fprintf(fp, " %08" PRIxPTR, back_header->frames[i]);
+#endif
+    }
+    fprintf(fp, "\n");
+  }
+
+  fprintf(fp, "MAPS\n");
+  std::string content;
+  if (!android::base::ReadFileToString("/proc/self/maps", &content)) {
+    fprintf(fp, "Could not open /proc/self/maps\n");
+  } else {
+    fprintf(fp, "%s", content.c_str());
+  }
+  fprintf(fp, "END\n");
+  fclose(fp);
+  return true;
+}
