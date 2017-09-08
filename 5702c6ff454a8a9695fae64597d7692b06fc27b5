@@ -22,6 +22,30 @@
       "revId": "5702c6ff454a8a9695fae64597d7692b06fc27b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fae6ff83_9494b3e9",
+        "filename": "libc/include/search.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-08T21:54:55Z",
+      "side": 1,
+      "message": "you\u0027re allowed pointers to incomplete structs. we use them (these days) for struct FILE too. it\u0027s a great way to say \"keep out\": pointers are fine, but don\u0027t assume anything about the struct, even its size.\n\nthe nice thing about this style is that you can then just define struct __hsearch internally and not need any reinterpret_cast.",
+      "parentUuid": "1ab37c28_b105f12f",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "5702c6ff454a8a9695fae64597d7692b06fc27b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
