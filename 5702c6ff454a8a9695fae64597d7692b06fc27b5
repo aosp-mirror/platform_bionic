@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ab37c28_b105f12f",
+        "filename": "libc/include/search.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-08T21:10:56Z",
+      "side": 1,
+      "message": "I\u0027m surprised this doesn\u0027t trigger an error/warning because struct __hsearch is not defined in any public header files. It seems like you would need a struct __hsearch; before this for it to work properly.",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "5702c6ff454a8a9695fae64597d7692b06fc27b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
