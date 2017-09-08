@@ -650,3 +650,18 @@ TEST(stdlib, strtoimax_smoke) {
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
 }
+
+TEST(stdlib, abs) {
+  ASSERT_EQ(INT_MAX, abs(-INT_MAX));
+  ASSERT_EQ(INT_MAX, abs(INT_MAX));
+}
+
+TEST(stdlib, labs) {
+  ASSERT_EQ(LONG_MAX, labs(-LONG_MAX));
+  ASSERT_EQ(LONG_MAX, labs(LONG_MAX));
+}
+
+TEST(stdlib, llabs) {
+  ASSERT_EQ(LLONG_MAX, llabs(-LLONG_MAX));
+  ASSERT_EQ(LLONG_MAX, llabs(LLONG_MAX));
+}
