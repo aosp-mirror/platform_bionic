@@ -46,6 +46,30 @@
       "revId": "5702c6ff454a8a9695fae64597d7692b06fc27b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61e7ef98_0a949ace",
+        "filename": "libc/include/search.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-08T22:07:39Z",
+      "side": 1,
+      "message": "I just assumed you needed a forward decl, but the compilers are smart enough to figure it out on their own.",
+      "parentUuid": "fae6ff83_9494b3e9",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "5702c6ff454a8a9695fae64597d7692b06fc27b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
