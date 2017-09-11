@@ -45,7 +45,7 @@
 
 #define __swap16 __builtin_bswap16
 #define __swap32 __builtin_bswap32
-#define __swap64 __builtin_bswap64
+#define __swap64(x) __BIONIC_CAST(static_cast,uint64_t,__builtin_bswap64(x))
 
 /* glibc compatibility. */
 __BEGIN_DECLS
@@ -70,17 +70,17 @@ __END_DECLS
 #define PDP_ENDIAN _PDP_ENDIAN
 #define BYTE_ORDER _BYTE_ORDER
 
-#define	NTOHL(x) (x) = ntohl((u_int32_t)(x))
-#define	NTOHS(x) (x) = ntohs((u_int16_t)(x))
-#define	HTONL(x) (x) = htonl((u_int32_t)(x))
-#define	HTONS(x) (x) = htons((u_int16_t)(x))
+#define	NTOHL(x) (x) = ntohl(__BIONIC_CAST(static_cast,u_int32_t,(x)))
+#define	NTOHS(x) (x) = ntohs(__BIONIC_CAST(static_cast,u_int16_t,(x)))
+#define	HTONL(x) (x) = htonl(__BIONIC_CAST(static_cast,u_int32_t,(x)))
+#define	HTONS(x) (x) = htons(__BIONIC_CAST(static_cast,u_int16_t,(x)))
 
-#define htobe16 __swap16
-#define htobe32 __swap32
-#define htobe64 __swap64
-#define betoh16 __swap16
-#define betoh32 __swap32
-#define betoh64 __swap64
+#define htobe16(x) __swap16(x)
+#define htobe32(x) __swap32(x)
+#define htobe64(x) __swap64(x)
+#define betoh16(x) __swap16(x)
+#define betoh32(x) __swap32(x)
+#define betoh64(x) __swap64(x)
 
 #define htole16(x) (x)
 #define htole32(x) (x)
@@ -101,6 +101,7 @@ __END_DECLS
 #define le16toh(x) htole16(x)
 #define le32toh(x) htole32(x)
 #define le64toh(x) htole64(x)
-#endif /* __USE_BSD */
+
+#endif
 
 #endif
