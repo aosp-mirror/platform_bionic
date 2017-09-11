@@ -1567,7 +1567,11 @@ cc_library_static {
             srcs: ["bionic/mmap.cpp"],
         },
     },
-
+    product_variables: {
+        treble: {
+            cflags: ["-D__ANDROID_TREBLE__"],
+        },
+    },
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
