@@ -1323,6 +1323,12 @@ LIBC_P {
     __freading; # future
     __fwriting; # future
     getlogin_r; # future
+    hcreate; # future
+    hcreate_r; # future
+    hdestroy; # future
+    hdestroy_r; # future
+    hsearch; # future
+    hsearch_r; # future
     iconv; # future
     iconv_close; # future
     iconv_open; # future
