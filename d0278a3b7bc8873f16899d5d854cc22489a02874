@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60c6731b_77090dee",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-09-11T20:11:03Z",
+      "side": 1,
+      "message": "It seems like the rest of these comments are outdated based on the rationale I gave on the actual bug here. Making these two types interchangeable is not going to happen, and is not a bug.",
+      "revId": "d0278a3b7bc8873f16899d5d854cc22489a02874",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b8b3eca_7a83a732",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-09-11T20:11:03Z",
+      "side": 1,
+      "message": "This is a bug, but will require time to upstream reasonable fixes for Clang.",
+      "revId": "d0278a3b7bc8873f16899d5d854cc22489a02874",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
