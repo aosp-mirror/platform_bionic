@@ -46,6 +46,30 @@
       "revId": "4687cc56188131ae5b86bf84f4b8dbff09924642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "518cf654_f6e64df0",
+        "filename": "libc/arch-arm/bionic/kuser_helper_disable_opt_in.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1100093
+      },
+      "writtenOn": "2017-09-12T23:21:23Z",
+      "side": 1,
+      "message": "Based on discussion offline, it sounds like it is best to wait until we land the kernel portion upstream first.",
+      "parentUuid": "54eb805a_a0bd623c",
+      "range": {
+        "startLine": 28,
+        "startChar": 15,
+        "endLine": 28,
+        "endChar": 16
+      },
+      "revId": "4687cc56188131ae5b86bf84f4b8dbff09924642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
