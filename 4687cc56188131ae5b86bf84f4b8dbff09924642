@@ -22,6 +22,30 @@
       "revId": "4687cc56188131ae5b86bf84f4b8dbff09924642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54eb805a_a0bd623c",
+        "filename": "libc/arch-arm/bionic/kuser_helper_disable_opt_in.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1100093
+      },
+      "writtenOn": "2017-09-12T22:40:33Z",
+      "side": 1,
+      "message": "Because the idea is we want to push this to upstream on top of Mark Salyzyn patches.  For upstream to take this, it can\u0027t have Android in the name.",
+      "parentUuid": "90f6eb03_5bc1dc8d",
+      "range": {
+        "startLine": 28,
+        "startChar": 15,
+        "endLine": 28,
+        "endChar": 16
+      },
+      "revId": "4687cc56188131ae5b86bf84f4b8dbff09924642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
