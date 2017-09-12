@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90f6eb03_5bc1dc8d",
+        "filename": "libc/arch-arm/bionic/kuser_helper_disable_opt_in.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-12T22:38:58Z",
+      "side": 1,
+      "message": "why no \"android\" in the name?",
+      "range": {
+        "startLine": 28,
+        "startChar": 15,
+        "endLine": 28,
+        "endChar": 16
+      },
+      "revId": "4687cc56188131ae5b86bf84f4b8dbff09924642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
