@@ -72,7 +72,6 @@ cc_defaults {
         never: true,
     },
     native_coverage: false,
-    clang: true,
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
@@ -218,6 +217,10 @@ cc_library_static {
         "upstream-freebsd/lib/libc/gen/sleep.c",
         "upstream-freebsd/lib/libc/gen/usleep.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
+        "upstream-freebsd/lib/libc/stdlib/hcreate.c",
+        "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
+        "upstream-freebsd/lib/libc/stdlib/hdestroy_r.c",
+        "upstream-freebsd/lib/libc/stdlib/hsearch_r.c",
         "upstream-freebsd/lib/libc/stdlib/qsort.c",
         "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
         "upstream-freebsd/lib/libc/string/wcpcpy.c",
@@ -282,6 +285,7 @@ cc_library_static {
     cflags: [
         "-Wno-sign-compare",
         "-Wno-uninitialized",
+        "-Wno-unused-parameter",
         "-include freebsd-compat.h",
     ],
 
@@ -1979,7 +1983,6 @@ cc_defaults {
             local_include_dirs: ["arch-x86_64/include"],
         },
     },
-    clang: true,
 }
 
 cc_defaults {
