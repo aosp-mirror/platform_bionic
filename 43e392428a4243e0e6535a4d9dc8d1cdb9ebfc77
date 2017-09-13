@@ -16,6 +16,24 @@
       "revId": "43e392428a4243e0e6535a4d9dc8d1cdb9ebfc77",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a2fdd7b_513005cf",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1093255
+      },
+      "writtenOn": "2017-09-13T22:11:02Z",
+      "side": 1,
+      "message": "As far as I know, it is still LLVM policy that floating-point status register dependencies are not tracked, so this isn\u0027t getting fixed anytime soon, at least for the general case. I verified that this is a problem on ARM64 where an rint() library call is lowered to the frintx instruction and reordered above the inlined fegetenv() in libm/upstream-freebsd/lib/msun/src/s_nearbyint.c because the FPSR register is not modeled as a dependency.\n\nI agree on -fno-inline being more intrusive than ideal, but I don\u0027t have a better suggestion on how to prevent fegetenv(), fesetenv(), etc. from getting reordered after inlining when we build with LTO. For arm64 at least, -fno-inline is not so bad for fenv.c. Without LTO, these functions cannot be inlined anyway since their uses are in other translation units. For ARM this is a bit more complicated. Many of the functions in arm/fenv.c call feget/setenv() which could normally be inlined in the same translation unit when not building with LTO.",
+      "parentUuid": "afa24092_b5533b63",
+      "revId": "43e392428a4243e0e6535a4d9dc8d1cdb9ebfc77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
