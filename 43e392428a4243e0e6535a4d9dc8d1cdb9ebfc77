@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afa24092_b5533b63",
+        "filename": "libm/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-09-13T21:20:29Z",
+      "side": 1,
+      "message": "This is quite an old bug, which I am not sure if there has been any progress independent of the bug tracker here. I also am pretty concerned about -fno-inline as a big hammer to prevent this.",
+      "revId": "43e392428a4243e0e6535a4d9dc8d1cdb9ebfc77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
