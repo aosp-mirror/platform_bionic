@@ -283,7 +283,7 @@ cc_library {
             srcs: [
                 "arm/fenv.c",
             ],
-            armv7_a_neon: {
+            neon: {
                 srcs: [
                     "arm/sqrt.S",
                     "arm/floor.S",
