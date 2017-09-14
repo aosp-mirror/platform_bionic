@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d3efe45_27c8066e",
+        "filename": "libc/include/complex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-14T22:57:07Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 126,
+        "startChar": 89,
+        "endLine": 126,
+        "endChar": 109
+      },
+      "revId": "f3dca8118d5356a59a9ddbe64c2bc7a959837355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95c2edf1_164b4f32",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-14T22:57:07Z",
+      "side": 1,
+      "message": "This name made more sense when it couldn\u0027t be disabled by __BIONIC_LP32_USE_LONG_DOUBLE. I\u0027m worried that it might be used in a case for something that isn\u0027t a long double and then things might get weird. Maybe __RENAME_LDBL or __BIONIC_LP32_NO_RENAME32?",
+      "range": {
+        "startLine": 237,
+        "startChar": 8,
+        "endLine": 237,
+        "endChar": 18
+      },
+      "revId": "f3dca8118d5356a59a9ddbe64c2bc7a959837355",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
