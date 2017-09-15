@@ -235,7 +235,7 @@ TEST(sys_mman, mremap_PTRDIFF_MAX) {
 
 TEST(sys_mman, mmap_bug_27265969) {
   char* base = reinterpret_cast<char*>(mmap(nullptr, PAGE_SIZE * 2, PROT_EXEC | PROT_READ,
-                                            MAP_ANONYMOUS | MAP_PRIVATE, 0, 0));
+                                            MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
   // Some kernels had bugs that would cause segfaults here...
   __builtin___clear_cache(base, base + (PAGE_SIZE * 2));
 }

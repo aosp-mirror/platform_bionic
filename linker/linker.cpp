@@ -286,8 +286,7 @@ soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
                      struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags) {
   if (strlen(name) >= PATH_MAX) {
-    DL_ERR("library name \"%s\" too long", name);
-    return nullptr;
+    async_safe_fatal("library name \"%s\" too long", name);
   }
 
   TRACE("name %s: allocating soinfo for ns=%p", name, ns);

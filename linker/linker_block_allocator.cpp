@@ -117,7 +117,7 @@ void LinkerBlockAllocator::create_new_page() {
                 "Invalid sizeof(LinkerBlockAllocatorPage)");
 
   LinkerBlockAllocatorPage* page = reinterpret_cast<LinkerBlockAllocatorPage*>(
-      mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0));
+      mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0));
 
   if (page == MAP_FAILED) {
     abort(); // oom
