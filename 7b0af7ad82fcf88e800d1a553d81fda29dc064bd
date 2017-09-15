@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d263af70_67cf295f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-15T23:26:33Z",
+      "side": 1,
+      "message": "with this, soinfo_alloc never returns null.",
+      "revId": "7b0af7ad82fcf88e800d1a553d81fda29dc064bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
