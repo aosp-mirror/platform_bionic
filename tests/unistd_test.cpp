@@ -773,6 +773,12 @@ TEST(UNISTD_TEST, _POSIX_macros_smoke) {
   EXPECT_GT(_XOPEN_IOV_MAX, 0);
   EXPECT_GT(_XOPEN_UNIX, 0);
 
+  // In O, the headers still have -1 (even though all the functionality has
+  // been there for a long time). This was fixed in O-DR, but there isn't a
+  // separate CTS for O-DR, so we'll accept both.
+  EXPECT_TRUE(_POSIX_THREAD_PROCESS_SHARED == -1 ||
+              _POSIX_THREAD_PROCESS_SHARED == _POSIX_VERSION);
+
 #if defined(__BIONIC__)
   // These tests only pass on bionic, as bionic and glibc has different support on these macros.
   // Macros like _POSIX_ASYNCHRONOUS_IO are not supported on bionic yet.
@@ -781,7 +787,6 @@ TEST(UNISTD_TEST, _POSIX_macros_smoke) {
   EXPECT_EQ(-1, _POSIX_PRIORITIZED_IO);
   EXPECT_EQ(-1, _POSIX_SHARED_MEMORY_OBJECTS);
   EXPECT_EQ(-1, _POSIX_SPAWN);
-  EXPECT_EQ(-1, _POSIX_THREAD_PROCESS_SHARED);
   EXPECT_EQ(-1, _POSIX_THREAD_ROBUST_PRIO_INHERIT);
 
   EXPECT_EQ(-1, _POSIX2_VERSION);
@@ -944,7 +949,6 @@ TEST(UNISTD_TEST, sysconf) {
   VERIFY_SYSCONF_UNSUPPORTED(_SC_PRIORITIZED_IO);
   VERIFY_SYSCONF_UNSUPPORTED(_SC_SHARED_MEMORY_OBJECTS);
   VERIFY_SYSCONF_UNSUPPORTED(_SC_SPAWN);
-  VERIFY_SYSCONF_UNSUPPORTED(_SC_THREAD_PROCESS_SHARED);
   VERIFY_SYSCONF_UNSUPPORTED(_SC_THREAD_ROBUST_PRIO_INHERIT);
   VERIFY_SYSCONF_UNSUPPORTED(_SC_THREAD_ROBUST_PRIO_PROTECT);
 
