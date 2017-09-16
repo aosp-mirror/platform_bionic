@@ -52,7 +52,10 @@ static uint16_t shadow_load(void* p) {
 
 static uintptr_t cfi_check_addr(uint16_t v, void* Ptr) {
   uintptr_t addr = reinterpret_cast<uintptr_t>(Ptr);
-  uintptr_t aligned_addr = align_up(addr, CFIShadow::kShadowAlign);
+  // The aligned range of [0, kShadowAlign) uses a single shadow element, therefore all pointers in
+  // this range must get the same aligned_addr below. This matches CFIShadowWriter::Add; not the
+  // same as align_up().
+  uintptr_t aligned_addr = align_down(addr, CFIShadow::kShadowAlign) + CFIShadow::kShadowAlign;
   uintptr_t p = aligned_addr - (static_cast<uintptr_t>(v - CFIShadow::kRegularShadowMin)
                                 << CFIShadow::kCfiCheckGranularity);
 #ifdef __arm__
