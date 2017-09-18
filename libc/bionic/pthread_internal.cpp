@@ -104,9 +104,13 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
   // Check if we're looking for ourselves before acquiring the lock.
   if (thread == __get_thread()) return thread;
 
-  ScopedReadLock locker(&g_thread_list_lock);
-  for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
-    if (t == thread) return thread;
+  {
+    // Make sure to release the lock before the abort below. Otherwise,
+    // some apps might deadlock in their own crash handlers (see b/6565627).
+    ScopedReadLock locker(&g_thread_list_lock);
+    for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
+      if (t == thread) return thread;
+    }
   }
 
   // Historically we'd return null, but
