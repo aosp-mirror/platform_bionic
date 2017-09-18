@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae8b2e2a_b1e3767c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-09-18T21:50:55Z",
+      "side": 1,
+      "message": "Should you have a GetActualGuardSize() check here too?\n\nSame below, or is it too hard to calculate?",
+      "revId": "1e33d7a52d69bd4067127dfd27c502d283454bad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
