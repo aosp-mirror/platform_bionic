@@ -16,6 +16,24 @@
       "revId": "1e33d7a52d69bd4067127dfd27c502d283454bad",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f240762_3116e5fa",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-18T21:58:25Z",
+      "side": 1,
+      "message": "yeah, that would probably be better than what i have on L704-706. if only i could remember i\u0027d written that helper...\n\n(it doesn\u0027t make much difference, because GetActualGuardSize still only queries the attributes: it\u0027s \"actual\" only in the sense of \"the attributes the thread thinks it has\". but, yeah, still better than what i have here.)\n\ndone.",
+      "parentUuid": "ae8b2e2a_b1e3767c",
+      "revId": "1e33d7a52d69bd4067127dfd27c502d283454bad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
