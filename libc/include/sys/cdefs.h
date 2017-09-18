@@ -37,6 +37,11 @@
 #ifndef	_SYS_CDEFS_H_
 #define	_SYS_CDEFS_H_
 
+#include <android/api-level.h>
+#include <android/versioning.h>
+
+#define __BIONIC__ 1
+
 /*
  * Testing against Clang-specific extensions.
  */
@@ -219,8 +224,21 @@
 #define __RENAME_IF_FILE_OFFSET64(func)
 #endif
 
-#define  __BIONIC__   1
-#include <android/api-level.h>
+/*
+ * For LP32, `long double` == `double`. Historically many `long double` functions were incorrect
+ * on x86, missing on most architectures, and even if they are present and correct, linking to
+ * them just bloats your ELF file by adding extra relocations. The __BIONIC_LP32_USE_LONG_DOUBLE
+ * macro lets us test the headers both ways (and adds an escape valve).
+ *
+ * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
+ * use __RENAME_LDBL it would actually cause the function to be introduced later because the
+ * `long double` variant appeared before the `double` variant.
+ */
+#if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
+#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
+#else
+#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
+#endif
 
 /* glibc compatibility. */
 #if defined(__LP64__)
@@ -333,8 +351,6 @@
 
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
-
-#include <android/versioning.h>
 
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if defined(__LP64__)

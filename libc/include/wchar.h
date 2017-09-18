@@ -98,7 +98,7 @@ float wcstof(const wchar_t* __s, wchar_t** __end_ptr) __INTRODUCED_IN(21);
 wchar_t* wcstok(wchar_t* __s, const wchar_t* __delimiter, wchar_t** __ptr);
 long wcstol(const wchar_t* __s, wchar_t** __end_ptr, int __base);
 long long wcstoll(const wchar_t* __s, wchar_t** __end_ptr, int __base) __INTRODUCED_IN(21);
-long double wcstold(const wchar_t* __s, wchar_t** __end_ptr) __INTRODUCED_IN(21);
+long double wcstold(const wchar_t* __s, wchar_t** __end_ptr) __RENAME_LDBL(wcstod, 3, 21);
 unsigned long wcstoul(const wchar_t* __s, wchar_t** __end_ptr, int __base);
 unsigned long long wcstoull(const wchar_t* __s, wchar_t** __end_ptr, int __base) __INTRODUCED_IN(21);
 int wcswidth(const wchar_t* __s, size_t __n);

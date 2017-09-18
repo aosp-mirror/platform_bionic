@@ -75,7 +75,7 @@ unsigned long long strtoull(const char* __s, char** __end_ptr, int __base);
 int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(16);
 
 double strtod(const char* __s, char** __end_ptr);
-long double strtold(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
+long double strtold(const char* __s, char** __end_ptr) __RENAME_LDBL(strtod, 3, 21);
 
 unsigned long strtoul_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(26);
 
