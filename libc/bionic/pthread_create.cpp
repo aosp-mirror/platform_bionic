@@ -59,13 +59,13 @@ void __init_tls(pthread_internal_t* thread) {
   size_t allocation_size = BIONIC_TLS_SIZE + 2 * PAGE_SIZE;
   void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (allocation == MAP_FAILED) {
-    async_safe_fatal("failed to allocate TLS");
+    async_safe_fatal("failed to allocate TLS: %s", strerror(errno));
   }
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard page");
 
   thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) + PAGE_SIZE);
   if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
-    async_safe_fatal("failed to mprotect TLS");
+    async_safe_fatal("failed to mprotect TLS: %s", strerror(errno));
   }
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->bionic_tls, BIONIC_TLS_SIZE, "bionic TLS");
 }

@@ -200,12 +200,10 @@ void LinkerSmallObjectAllocator::create_page_record(void* page_addr, size_t free
 }
 
 void LinkerSmallObjectAllocator::alloc_page() {
-  static_assert(sizeof(page_info) % 16 == 0,
-                "sizeof(page_info) is not multiple of 16");
-  void* map_ptr = mmap(nullptr, PAGE_SIZE,
-      PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+  static_assert(sizeof(page_info) % 16 == 0, "sizeof(page_info) is not multiple of 16");
+  void* map_ptr = mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (map_ptr == MAP_FAILED) {
-    async_safe_fatal("mmap failed");
+    async_safe_fatal("mmap failed: %s", strerror(errno));
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, "linker_alloc_small_objects");
@@ -246,11 +244,11 @@ void LinkerMemoryAllocator::initialize_allocators() {
 
 void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
   size_t allocated_size = PAGE_END(size + sizeof(page_info));
-  void* map_ptr = mmap(nullptr, allocated_size,
-      PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
+  void* map_ptr = mmap(nullptr, allocated_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
+                       -1, 0);
 
   if (map_ptr == MAP_FAILED) {
-    async_safe_fatal("mmap failed");
+    async_safe_fatal("mmap failed: %s", strerror(errno));
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, allocated_size, "linker_alloc_lob");
