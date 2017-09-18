@@ -164,7 +164,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   // Hunt for the region that contains that address.
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
-    async_safe_fatal("couldn't open /proc/self/maps");
+    async_safe_fatal("couldn't open /proc/self/maps: %s", strerror(errno));
   }
   char line[BUFSIZ];
   while (fgets(line, sizeof(line), fp) != NULL) {

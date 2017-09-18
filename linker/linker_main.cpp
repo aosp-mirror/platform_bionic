@@ -276,11 +276,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   const char* executable_path = get_executable_path();
   soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
-  if (si == nullptr) {
-    async_safe_fatal("Couldn't allocate soinfo: out of memory?");
-  }
 
-  /* bootstrap the link map, the main exe always needs to be first */
+  // Bootstrap the link map, the main exe always needs to be first.
   si->set_main_executable();
   link_map* map = &(si->link_map_head);
 
