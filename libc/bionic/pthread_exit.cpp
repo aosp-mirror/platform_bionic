@@ -93,8 +93,8 @@ void pthread_exit(void* return_value) {
   }
 
   // Unmap the bionic TLS, including guard pages.
-  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PAGE_SIZE;
-  munmap(allocation, BIONIC_TLS_SIZE + 2 * PAGE_SIZE);
+  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PTHREAD_GUARD_SIZE;
+  munmap(allocation, BIONIC_TLS_SIZE + 2 * PTHREAD_GUARD_SIZE);
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
   while (old_state == THREAD_NOT_JOINED &&
