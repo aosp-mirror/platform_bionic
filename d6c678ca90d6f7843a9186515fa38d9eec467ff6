@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8d4f71c_1f392cc4",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T17:57:50Z",
+      "side": 1,
+      "message": "doesn\u0027t matter here.",
+      "parentUuid": "804c8e5f_4d044778",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 30
+      },
+      "revId": "d6c678ca90d6f7843a9186515fa38d9eec467ff6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b5719e8_469fdae0",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-19T17:55:08Z",
       "side": 1,
       "message": "is this already defined to a different value for LP64 then?",
+      "range": {
+        "startLine": 148,
+        "startChar": 8,
+        "endLine": 148,
+        "endChar": 26
+      },
+      "revId": "d6c678ca90d6f7843a9186515fa38d9eec467ff6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0b3760a_308088b7",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T17:57:50Z",
+      "side": 1,
+      "message": "no. this change doesn\u0027t use larger guards; it enables the use of larger guards. (and, more importantly, fixes a long-standing bug where if you used the POSIX API to choose your thread\u0027s guard size, it would be *subtracted* from your stack rather than be added to it.)",
+      "parentUuid": "3b5719e8_469fdae0",
       "range": {
         "startLine": 148,
         "startChar": 8,
