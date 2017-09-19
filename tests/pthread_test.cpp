@@ -660,13 +660,9 @@ static size_t GetActualStackSize(const pthread_attr_t& attributes) {
   return result;
 }
 
-TEST(pthread, pthread_attr_setguardsize) {
+TEST(pthread, pthread_attr_setguardsize_tiny) {
   pthread_attr_t attributes;
   ASSERT_EQ(0, pthread_attr_init(&attributes));
-
-  // Get the default guard size.
-  size_t default_guard_size;
-  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &default_guard_size));
 
   // No such thing as too small: will be rounded up to one page by pthread_create.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 128));
@@ -674,16 +670,44 @@ TEST(pthread, pthread_attr_setguardsize) {
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(128U, guard_size);
   ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+}
+
+TEST(pthread, pthread_attr_setguardsize_reasonable) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
 
   // Large enough and a multiple of the page size.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024));
+  size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U, guard_size);
+  ASSERT_EQ(32*1024U, GetActualGuardSize(attributes));
+}
 
-  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
+TEST(pthread, pthread_attr_setguardsize_needs_rounding) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Large enough but not a multiple of the page size.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024 + 1));
+  size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U + 1, guard_size);
+  ASSERT_EQ(36*1024U, GetActualGuardSize(attributes));
+}
+
+TEST(pthread, pthread_attr_setguardsize_enormous) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Larger than the stack itself. (Historically we mistakenly carved
+  // the guard out of the stack itself, rather than adding it after the
+  // end.)
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024*1024));
+  size_t guard_size;
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(32*1024*1024U, guard_size);
+  ASSERT_EQ(32*1024*1024U, GetActualGuardSize(attributes));
 }
 
 TEST(pthread, pthread_attr_setstacksize) {

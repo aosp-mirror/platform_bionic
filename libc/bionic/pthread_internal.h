@@ -141,25 +141,29 @@ static inline __always_inline bionic_tls& __get_bionic_tls() {
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
-// SIGSTKSZ (8kB) is not big enough.
-// snprintf to a stack buffer of size PATH_MAX consumes ~7kB of stack.
-// Also, on 64-bit, logging uses more than 8kB by itself:
-// https://code.google.com/p/android/issues/detail?id=187064
-#define SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE (16 * 1024)
+// Address space is precious on LP32, so use the minimum unit: one page.
+// On LP64, we could use more but there's no obvious advantage to doing
+// so, and the various media processes use RLIMIT_AS as a way to limit
+// the amount of allocation they'll do.
+#define PTHREAD_GUARD_SIZE PAGE_SIZE
 
-/*
- * Traditionally we gave threads a 1MiB stack. When we started
- * allocating per-thread alternate signal stacks to ease debugging of
- * stack overflows, we subtracted the same amount we were using there
- * from the default thread stack size. This should keep memory usage
- * roughly constant.
- */
-#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE)
+// SIGSTKSZ (8KiB) is not big enough.
+// An snprintf to a stack buffer of size PATH_MAX consumes ~7KiB of stack.
+// Also, on 64-bit, logging uses more than 8KiB by itself:
+// https://code.google.com/p/android/issues/detail?id=187064
+#define SIGNAL_STACK_SIZE_WITHOUT_GUARD (16 * 1024)
+
+// Traditionally we gave threads a 1MiB stack. When we started
+// allocating per-thread alternate signal stacks to ease debugging of
+// stack overflows, we subtracted the same amount we were using there
+// from the default thread stack size. This should keep memory usage
+// roughly constant.
+#define PTHREAD_STACK_SIZE_DEFAULT ((1 * 1024 * 1024) - SIGNAL_STACK_SIZE_WITHOUT_GUARD)
 
 // Leave room for a guard page in the internally created signal stacks.
-#define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD_PAGE + PAGE_SIZE)
+#define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD + PTHREAD_GUARD_SIZE)
 
-/* Needed by fork. */
+// Needed by fork.
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
