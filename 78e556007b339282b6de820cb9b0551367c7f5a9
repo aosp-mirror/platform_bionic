@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d37162e_abe88338",
+        "filename": "tests/libs/cfi_test_lib.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T16:50:54Z",
+      "side": 1,
+      "message": "static_assert in case kLibraryAlignment changes?",
+      "revId": "78e556007b339282b6de820cb9b0551367c7f5a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
