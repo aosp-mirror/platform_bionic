@@ -43,7 +43,12 @@ __BEGIN_DECLS
 
 __noreturn void abort(void);
 __noreturn void exit(int __status);
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
+#else
+__noreturn void _Exit(int) __RENAME(_exit);
+#endif
+
 int atexit(void (*__fn)(void));
 
 int at_quick_exit(void (*__fn)(void)) __INTRODUCED_IN(21);
