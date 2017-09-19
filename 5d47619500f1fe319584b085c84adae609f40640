@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "756d10b6_3cbf9539",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3350,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-19T10:20:50Z",
+      "side": 1,
+      "message": "since you are using header - you don\u0027t really need DT_ANDROID_COMPRESSED_RELA/DT_ANDROID_COMPRESSED_RELASZ...",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c61b3e1a_241b4b5c",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-19T10:20:50Z",
+      "side": 1,
+      "message": "isn\u0027t this header?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8624f42f_773b48ec",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-19T10:20:50Z",
+      "side": 1,
+      "message": "DL_ERR here and elsewehere? Or DL_ERR_AND_LOG?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
