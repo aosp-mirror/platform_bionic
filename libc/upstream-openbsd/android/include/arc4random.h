@@ -45,10 +45,8 @@ extern int __register_atfork(void (*)(void), void(*)(void), void (*)(void), void
 #define _ARC4_ATFORK(f) pthread_atfork(NULL, NULL, (f))
 #endif
 
-static inline void
-_getentropy_fail(void)
-{
-	async_safe_fatal("getentropy failed");
+static inline void _getentropy_fail(void) {
+    async_safe_fatal("getentropy failed: %s", strerror(errno));
 }
 
 volatile sig_atomic_t _rs_forked;

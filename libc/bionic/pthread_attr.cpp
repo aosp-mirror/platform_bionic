@@ -43,7 +43,7 @@ int pthread_attr_init(pthread_attr_t* attr) {
   attr->flags = 0;
   attr->stack_base = NULL;
   attr->stack_size = PTHREAD_STACK_SIZE_DEFAULT;
-  attr->guard_size = PAGE_SIZE;
+  attr->guard_size = PTHREAD_GUARD_SIZE;
   attr->sched_policy = SCHED_NORMAL;
   attr->sched_priority = 0;
   return 0;
@@ -164,7 +164,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   // Hunt for the region that contains that address.
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
-    async_safe_fatal("couldn't open /proc/self/maps");
+    async_safe_fatal("couldn't open /proc/self/maps: %s", strerror(errno));
   }
   char line[BUFSIZ];
   while (fgets(line, sizeof(line), fp) != NULL) {
