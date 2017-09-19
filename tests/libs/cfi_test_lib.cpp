@@ -22,12 +22,15 @@
 // present. But it is only used in the bionic loader tests.
 extern "C" __attribute__((weak)) void __cfi_slowpath(uint64_t, void*);
 
-static int g_count;
+static size_t g_count;
 static uint64_t g_last_type_id;
 static void* g_last_address;
 static void* g_last_diag;
 
 extern "C" {
+
+// Make sure the library crosses at least one kLibraryAlignment(=256KB) boundary.
+char bss[1024 * 1024];
 
 // Mock a CFI-enabled library without relying on the compiler.
 __attribute__((aligned(4096))) void __cfi_check(uint64_t CallSiteTypeId, void* TargetAddr,
@@ -38,7 +41,7 @@ __attribute__((aligned(4096))) void __cfi_check(uint64_t CallSiteTypeId, void* T
   g_last_diag = Diag;
 }
 
-int get_count() {
+size_t get_count() {
   return g_count;
 }
 
