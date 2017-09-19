@@ -145,7 +145,7 @@ long double frexpl(long double __x, int* __exponent) __RENAME_LDBL(frexp, 3, 21)
 
 int ilogb(double __x) __attribute_const__;
 int ilogbf(float __x) __attribute_const__;
-int ilogbl(long double __x) __attribute_const__ __RENAME_LDBL(ilogb, 3, 3);
+int ilogbl(long double __x) __RENAME_LDBL(ilogb, 3, 3) __attribute_const__;
 
 double ldexp(double __x, int __exponent);
 float ldexpf(float __x, int __exponent);
@@ -190,7 +190,7 @@ long double cbrtl(long double __x) __RENAME_LDBL(cbrt, 3, 21);
 
 double fabs(double __x) __attribute_const__;
 float fabsf(float __x) __attribute_const__;
-long double fabsl(long double __x) __attribute_const__ __RENAME_LDBL(fabs, 3, 3);
+long double fabsl(long double __x) __RENAME_LDBL(fabs, 3, 3) __attribute_const__;
 
 double hypot(double __x, double __y);
 float hypotf(float __x, float __y);
@@ -274,11 +274,11 @@ long double remquol(long double __x, long double __y, int* __quotient_bits) __RE
 
 double copysign(double __value, double __sign) __attribute_const__;
 float copysignf(float __value, float __sign) __attribute_const__;
-long double copysignl(long double __value, long double __sign) __attribute_const__ __RENAME_LDBL(copysign, 3, 3);
+long double copysignl(long double __value, long double __sign) __RENAME_LDBL(copysign, 3, 3) __attribute_const__;
 
 double nan(const char* __kind) __attribute_const__ __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13) __INTRODUCED_IN_X86(9);
 float nanf(const char* __kind) __attribute_const__ __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_MIPS(13) __INTRODUCED_IN_X86(9);
-long double nanl(const char* __kind) __attribute_const__ __RENAME_LDBL(nan, 13, 13);
+long double nanl(const char* __kind) __RENAME_LDBL(nan, 13, 13) __attribute_const__;
 
 double nextafter(double __x, double __y);
 float nextafterf(float __x, float __y);
@@ -294,11 +294,11 @@ long double fdiml(long double __x, long double __y) __RENAME_LDBL(fdim, 3, 3);
 
 double fmax(double __x, double __y) __attribute_const__;
 float fmaxf(float __x, float __y) __attribute_const__;
-long double fmaxl(long double __x, long double __y) __attribute_const__ __RENAME_LDBL(fmax, 3, 3);
+long double fmaxl(long double __x, long double __y) __RENAME_LDBL(fmax, 3, 3) __attribute_const__;
 
 double fmin(double __x, double __y) __attribute_const__;
 float fminf(float __x, float __y) __attribute_const__;
-long double fminl(long double __x, long double __y) __attribute_const__ __RENAME_LDBL(fmin, 3, 3);
+long double fminl(long double __x, long double __y) __RENAME_LDBL(fmin, 3, 3) __attribute_const__;
 
 double fma(double __x, double __y, double __z);
 float fmaf(float __x, float __y, float __z);
