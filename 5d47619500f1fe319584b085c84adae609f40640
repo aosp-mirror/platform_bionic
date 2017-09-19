@@ -53,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "805bc3a9_9d655ee8",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T22:57:27Z",
+      "side": 1,
+      "message": "does saying \u003czlib.h\u003e instead of \"zlib.h\" help?\n\nalso, it\u0027s inflateInit.\n\nalso, should this be inflateInit2? (the recovery image uses that to skip the zlib headers.)",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8624f42f_773b48ec",
         "filename": "linker/linker_compressed_sleb128.cpp",
         "patchSetId": 2
@@ -64,6 +81,52 @@
       "writtenOn": "2017-09-19T10:20:50Z",
       "side": 1,
       "message": "DL_ERR here and elsewehere? Or DL_ERR_AND_LOG?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa82e48_7981b2e8",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T22:57:27Z",
+      "side": 1,
+      "message": "deflate",
+      "range": {
+        "startLine": 173,
+        "startChar": 18,
+        "endLine": 173,
+        "endChar": 24
+      },
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b919a162_1268cb14",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-19T22:57:27Z",
+      "side": 1,
+      "message": "(every time i see this i wonder if we shouldn\u0027t keep the A for Android and clobber the S or 2, both of which look like Z anyway...)",
+      "range": {
+        "startLine": 180,
+        "startChar": 35,
+        "endLine": 180,
+        "endChar": 47
+      },
       "revId": "5d47619500f1fe319584b085c84adae609f40640",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
