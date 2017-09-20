@@ -70,7 +70,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // set up before we call any function that might get a stack check inserted.
   // TLS also needs to be set up before errno (and therefore syscalls) can be used.
   __set_tls(main_thread.tls);
-  __init_tls(&main_thread);
+  if (!__init_tls(&main_thread)) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
