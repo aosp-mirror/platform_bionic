@@ -87,6 +87,23 @@
     },
     {
       "key": {
+        "uuid": "27949928_d8dcb1ac",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-20T09:41:29Z",
+      "side": 1,
+      "message": "how does using sleb128 here affect size the compressed relocation segment? Can we just compress raw relocation table and have same performance/size savings?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3aa82e48_7981b2e8",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 2
