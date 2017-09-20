@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4fa670b7_79cdd906",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3350,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "True. Using the new constant allows the compression to be surfaced via readelf -S though. I don\u0027t feel super strongly about it though.",
+      "parentUuid": "756d10b6_3cbf9539",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c61b3e1a_241b4b5c",
         "filename": "linker/linker_compressed_sleb128.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-19T10:20:50Z",
       "side": 1,
       "message": "isn\u0027t this header?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "660f8017_c2798016",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "no. The header is already skipped at this point.",
+      "parentUuid": "c61b3e1a_241b4b5c",
       "revId": "5d47619500f1fe319584b085c84adae609f40640",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "558b3f61_6b310559",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "in the destructor. Changed to to mmap.",
+      "parentUuid": "9e91595d_360ae5d1",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "805bc3a9_9d655ee8",
         "filename": "linker/linker_compressed_sleb128.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2017-09-19T22:57:27Z",
       "side": 1,
       "message": "does saying \u003czlib.h\u003e instead of \"zlib.h\" help?\n\nalso, it\u0027s inflateInit.\n\nalso, should this be inflateInit2? (the recovery image uses that to skip the zlib headers.)",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "725fe4d5_c78fd938",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "Switched to lz4 (had mentioned this intention, but think it got overlooked. See https://bugs.chromium.org/p/chromium/issues/detail?id\u003d681933 for rationale.",
+      "parentUuid": "805bc3a9_9d655ee8",
       "revId": "5d47619500f1fe319584b085c84adae609f40640",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "74143748_6b88a3c8",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8624f42f_773b48ec",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27949928_d8dcb1ac",
         "filename": "linker/linker_compressed_sleb128.cpp",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2017-09-20T09:41:29Z",
       "side": 1,
       "message": "how does using sleb128 here affect size the compressed relocation segment? Can we just compress raw relocation table and have same performance/size savings?",
+      "revId": "5d47619500f1fe319584b085c84adae609f40640",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3b08b47_f927c8ef",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-09-20T19:37:31Z",
+      "side": 1,
+      "message": "Great idea! Tested this out and reported here:\nhttps://bugs.chromium.org/p/chromium/issues/detail?id\u003d681933#c12\n\nMy take on it is that it still helps enough to keep it in.",
+      "parentUuid": "27949928_d8dcb1ac",
       "revId": "5d47619500f1fe319584b085c84adae609f40640",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
