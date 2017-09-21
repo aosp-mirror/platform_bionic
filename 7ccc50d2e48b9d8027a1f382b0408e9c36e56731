@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55d1cd90_e896297b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-21T08:23:26Z",
+      "side": 1,
+      "message": "not sure I understand how this part is done... Is bionic linker statically linked into every bionic host binary?\n\nDo they have 4 load segments to account for linker + executable?",
+      "revId": "7ccc50d2e48b9d8027a1f382b0408e9c36e56731",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
