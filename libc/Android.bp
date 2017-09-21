@@ -2130,6 +2130,14 @@ cc_object {
         "crtbegin_dynamic1",
         "crtbrand",
     ],
+    target: {
+        linux_bionic: {
+            generated_sources: ["host_bionic_linker_asm"],
+            objs: [
+                "linker_wrapper",
+            ],
+        },
+    },
     defaults: ["crt_defaults"],
 }
 
