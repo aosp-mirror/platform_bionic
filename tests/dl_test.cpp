@@ -180,12 +180,24 @@ static void create_ld_config_file(std::string& config_file) {
 }
 #endif
 
-#ifdef USE_LD_CONFIG_FILE
+#if defined(__BIONIC__)
+static bool is_user_build() {
+  std::string build_type = android::base::GetProperty("ro.build.type", "user");
+  if (build_type == "userdebug" || build_type == "eng") {
+    return false;
+  }
+  return true;
+}
+#endif
 
 // _lib1.so and _lib2.so are now searchable by having another namespace 'ns2'
 // whose search paths include the 'ns2/' subdir.
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
+  if (is_user_build()) {
+    // LD_CONFIG_FILE is not supported on user build
+    return;
+  }
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
   std::string config_file = get_testlib_root() + "/ld.config.txt";
@@ -204,6 +216,10 @@ TEST(dl, exec_with_ld_config_file) {
 // additional namespaces other than the default namespace.
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
+  if (is_user_build()) {
+    // LD_CONFIG_FILE is not supported on user build
+    return;
+  }
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
   std::string config_file = get_testlib_root() + "/ld.config.txt";
@@ -218,8 +234,6 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #endif
 }
 
-#endif // USE_LD_CONFIG_FILE
-
 // ensures that LD_CONFIG_FILE env var does not work for production builds.
 // The test input is the same as exec_with_ld_config_file, but it must fail in
 // this case.
@@ -230,8 +244,7 @@ TEST(dl, disable_ld_config_file) {
     // This test is only for CTS.
     return;
   }
-  std::string build_type = android::base::GetProperty("ro.build.type", "user");
-  if (build_type == "userdebug" || build_type == "eng") {
+  if (!is_user_build()) {
     // Skip the test for non production devices
     return;
   }
