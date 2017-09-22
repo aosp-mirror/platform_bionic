@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5607a52e_12acbf58",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-09-22T00:04:55Z",
+      "side": 1,
+      "message": "This is one of the cases where we\u0027ve talked about adding a target: bionic:",
+      "range": {
+        "startLine": 173,
+        "startChar": 8,
+        "endLine": 173,
+        "endChar": 23
+      },
+      "revId": "17bad74177a380dd39cccb559fd6c63f8c112f8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
