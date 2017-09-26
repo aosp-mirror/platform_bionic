@@ -245,6 +245,12 @@ TEST(dlfcn, dlopen_by_soname) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlopen_vdso) {
+  void* handle = dlopen("linux-vdso.so.1", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+}
+
 // mips doesn't support ifuncs
 #if !defined(__mips__)
 TEST(dlfcn, ifunc_variable) {
