@@ -154,6 +154,10 @@ static void add_vdso(KernelArgumentBlock& args) {
 
   si->prelink_image();
   si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr);
+  // prevents accidental unloads...
+  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
+  si->set_linked();
+  si->call_constructors();
 }
 
 /* gdb expects the linker to be in the debug shared object list.
@@ -352,6 +356,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
     }
   }
 
+  add_vdso(args);
+
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
   size_t ld_preloads_count = 0;
@@ -392,8 +398,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
     }
     si->increment_ref_count();
   }
-
-  add_vdso(args);
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
