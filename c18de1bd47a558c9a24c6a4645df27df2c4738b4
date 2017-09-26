@@ -16,6 +16,41 @@
       "revId": "c18de1bd47a558c9a24c6a4645df27df2c4738b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d9dd2e1_050393b0",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-26T14:53:14Z",
+      "side": 1,
+      "message": "presumably this is so we can call vdso functions in ELF constructors in DT_NEEDED or LD_PRELOAD libraries? sgtm, but worth a comment. (especially if that\u0027s not the reason :-) )",
+      "parentUuid": "4264abd3_0ffe0745",
+      "revId": "c18de1bd47a558c9a24c6a4645df27df2c4738b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2f1a688_6274a892",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-26T14:53:14Z",
+      "side": 1,
+      "message": "this test didn\u0027t fail before, right? this is just something else you thought we ought to have a test for?",
+      "revId": "c18de1bd47a558c9a24c6a4645df27df2c4738b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
