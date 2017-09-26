@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
   // We need to detect elf class in order to create
   // correct implementation
   uint8_t e_ident[EI_NIDENT];
-  if (TEMP_FAILURE_RETRY(read(fd.get(), e_ident, EI_NIDENT) != EI_NIDENT)) {
+  if (TEMP_FAILURE_RETRY(read(fd.get(), e_ident, EI_NIDENT)) != EI_NIDENT) {
     LOG(ERROR) << file << ": failed to read elf header:" << strerror(errno);
     return 1;
   }
