@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fd58b38_4b6606d6",
+        "filename": "libc/upstream-freebsd/lib/libc/gen/glob.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-09-27T01:01:17Z",
+      "side": 1,
+      "message": "__BIONIC__",
+      "range": {
+        "startLine": 914,
+        "startChar": 13,
+        "endLine": 914,
+        "endChar": 24
+      },
+      "revId": "b3d8f8fe0b134d6dabefce3ee89ba3e17ea9325c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1ba6815_bdf99426",
+        "filename": "libc/upstream-freebsd/lib/libc/gen/glob.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-09-27T01:01:17Z",
+      "side": 1,
+      "message": "__BIONIC__",
+      "range": {
+        "startLine": 947,
+        "startChar": 12,
+        "endLine": 947,
+        "endChar": 23
+      },
+      "revId": "b3d8f8fe0b134d6dabefce3ee89ba3e17ea9325c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
