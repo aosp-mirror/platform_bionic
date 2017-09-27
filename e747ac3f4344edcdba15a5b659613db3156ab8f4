@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a3a2aac_095178e1",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-27T16:05:33Z",
+      "side": 1,
+      "message": "no longer needed here either?",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 69
+      },
+      "revId": "e747ac3f4344edcdba15a5b659613db3156ab8f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
