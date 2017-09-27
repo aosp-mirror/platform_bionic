@@ -131,6 +131,7 @@ cc_test_library {
         "sys_procfs_test.cpp",
         "sys_ptrace_test.cpp",
         "sys_quota_test.cpp",
+        "sys_random_test.cpp",
         "sys_resource_test.cpp",
         "sys_select_test.cpp",
         "sys_sem_test.cpp",
