@@ -71,6 +71,7 @@ cc_test_library {
         "ftw_test.cpp",
         "getauxval_test.cpp",
         "getcwd_test.cpp",
+        "glob_test.cpp",
         "grp_pwd_test.cpp",
         "iconv_test.cpp",
         "ifaddrs_test.cpp",
