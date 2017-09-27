@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b54d9036_e21c5b3a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2993,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-27T10:52:48Z",
+      "side": 1,
+      "message": "I still think we do not need this - there is no functional dependency on this..\n\nNote that readelf -x can be used to read see the content and figure out if compression was used for the .rel(a)* sections.",
+      "revId": "a79d52c44e185df8e0141937fff8a7a65ce58db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
