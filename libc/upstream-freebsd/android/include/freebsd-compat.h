@@ -18,6 +18,10 @@
 #define _BIONIC_FREEBSD_COMPAT_H_included
 
 #define _BSD_SOURCE
+
+#include <sys/cdefs.h>
+#include <stddef.h> // For size_t.
+
 #define REPLACE_GETOPT
 
 /*
@@ -39,5 +43,13 @@
 
 /* Redirect internal C library calls to the public function. */
 #define _nanosleep nanosleep
+
+/* FreeBSD has this as API, but we just use it internally. */
+void* reallocarray(void*, size_t, size_t);
+
+/* FreeBSD has this, but we can't really implement it correctly on Linux. */
+#define issetugid() 0
+
+#define ARG_MAX sysconf(_SC_ARG_MAX)
 
 #endif
