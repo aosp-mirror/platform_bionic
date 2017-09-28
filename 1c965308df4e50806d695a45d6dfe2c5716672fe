@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d2e3130_159d45b2",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-28T18:44:37Z",
+      "side": 1,
+      "message": "Do we have __INTRODUCED_IN_P yet? Should add it if not.",
+      "range": {
+        "startLine": 39,
+        "startChar": 59,
+        "endLine": 39,
+        "endChar": 81
+      },
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ff81022_26f2bc54",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-28T18:44:37Z",
+      "side": 1,
+      "message": "Can use `introduced\u003dP` now. Don\u0027t have to do it on every symbol either, fwiw. Can remove all the future tags here and add introduced\u003dP to the LIBC_P line.",
+      "range": {
+        "startLine": 1350,
+        "startChar": 18,
+        "endLine": 1350,
+        "endChar": 24
+      },
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9da0a2fc_f2fef357",
+        "filename": "libm/libm.arm.map",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-28T18:44:37Z",
+      "side": 1,
+      "message": "Oops :(",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9e0f6f2_7c288199",
+        "filename": "tests/sys_random_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-28T18:44:37Z",
+      "side": 1,
+      "message": "Similar check for getentropy?",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88cc5fe5_bc69ed1f",
+        "filename": "tests/sys_random_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-28T18:44:37Z",
+      "side": 1,
+      "message": "EFAULT for getrandom?\nMaybe EINVAL",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
