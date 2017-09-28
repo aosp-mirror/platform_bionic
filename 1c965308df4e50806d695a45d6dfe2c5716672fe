@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3d199bc3_eb2d9c18",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-28T21:30:29Z",
+      "side": 1,
+      "message": "i\u0027ll go through all the current __INTRODUCED_IN_FUTUREs in another change. killing __INTRODUCED_IN_FUTURE sgtm (and will prevent me from doing this again in future).",
+      "parentUuid": "2d2e3130_159d45b2",
+      "range": {
+        "startLine": 39,
+        "startChar": 59,
+        "endLine": 39,
+        "endChar": 81
+      },
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6ff81022_26f2bc54",
         "filename": "libc/libc.map.txt",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-28T18:44:37Z",
       "side": 1,
       "message": "Can use `introduced\u003dP` now. Don\u0027t have to do it on every symbol either, fwiw. Can remove all the future tags here and add introduced\u003dP to the LIBC_P line.",
+      "range": {
+        "startLine": 1350,
+        "startChar": 18,
+        "endLine": 1350,
+        "endChar": 24
+      },
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08bf9b9c_4d3e0a86",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-28T21:30:29Z",
+      "side": 1,
+      "message": "will do this in a later patch. (and check the other libraries too.)",
+      "parentUuid": "6ff81022_26f2bc54",
       "range": {
         "startLine": 1350,
         "startChar": 18,
@@ -82,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "db59c95e_a7a8b300",
+        "filename": "tests/sys_random_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-28T21:30:29Z",
+      "side": 1,
+      "message": "no, the whole point of getentropy is that it\u0027s supposed to work regardless.\n\ni actually want to come back immediately after this is submitted and *remove* this --- i want to flush out any remaining devices without getrandom and have them failing CTS immediately so we\u0027ve got a whole release cycle to kick their asses. (so i can do the next phase of this stuff, which is to clean up all the places where we currently can\u0027t assume we have getrandom(2).)",
+      "parentUuid": "b9e0f6f2_7c288199",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88cc5fe5_bc69ed1f",
         "filename": "tests/sys_random_test.cpp",
         "patchSetId": 2
@@ -93,6 +159,24 @@
       "writtenOn": "2017-09-28T18:44:37Z",
       "side": 1,
       "message": "EFAULT for getrandom?\nMaybe EINVAL",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ff1dfc3_b85a0306",
+        "filename": "tests/sys_random_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-28T21:30:29Z",
+      "side": 1,
+      "message": "they\u0027re both there: L87-L93.\n\nwhen i remove the ENOSYS check, i\u0027ll break these out into their own tests. i just didn\u0027t want to copy and paste what i\u0027m going to delete later today.",
+      "parentUuid": "88cc5fe5_bc69ed1f",
       "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
