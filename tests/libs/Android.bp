@@ -282,15 +282,6 @@ cc_test_library {
             enabled: false,
         },
     },
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 cc_test_library {
@@ -307,15 +298,6 @@ cc_test_library {
             enabled: false,
         },
     },
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 cc_test_library {
@@ -329,15 +311,6 @@ cc_test_library {
         },
         mips64: {
             enabled: false,
-        },
-    },
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
         },
     },
 }
@@ -416,15 +389,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_symbol.cpp"],
     shared_libs: ["libtest_dlsym_from_this_child"],
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -433,14 +397,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_functions.cpp"],
     shared_libs: ["libtest_dlsym_from_this_grandchild"],
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -475,15 +431,6 @@ cc_test_library {
     name: "libtest_check_rtld_next_from_library",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["check_rtld_next_from_library.cpp"],
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -493,14 +440,6 @@ cc_test_library {
     name: "libtest_dlopen_from_ctor",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_dlopen_from_ctor.cpp"],
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
