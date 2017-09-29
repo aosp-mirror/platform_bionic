@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc8b94ec_9a8e68fb",
+        "filename": "PREUPLOAD.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-29T06:22:14Z",
+      "side": 1,
+      "message": "Huh. I thought I\u0027d added this a while ago.",
+      "revId": "96510935697c2934427f0c14d0b153244e8cfb2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
