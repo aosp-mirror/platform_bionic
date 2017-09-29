@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba50512e_39c63a01",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-09-29T19:23:05Z",
+      "side": 1,
+      "message": "/data/asan/odm/lib64 is also needed for asan builds",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 58
+      },
+      "revId": "176e88eda73afdfcb0f7f7558956fd4181b1075b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11f8132e_51c83d0d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-09-29T19:23:05Z",
+      "side": 1,
+      "message": "here as well",
+      "revId": "176e88eda73afdfcb0f7f7558956fd4181b1075b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
