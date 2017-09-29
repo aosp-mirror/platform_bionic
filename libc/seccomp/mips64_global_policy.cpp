@@ -59,9 +59,9 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5170, 36, 35), //init_module|delete_module
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5173, 35, 34), //quotactl
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5193, 34, 33), //gettid|readahead|setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|tkill
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5208, 3, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5205, 1, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5200, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5198, 31, 30), //futex|sched_setaffinity|sched_getaffinity|cacheflush
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5206, 30, 29), //exit_group
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5206, 30, 29), //io_setup|io_destroy|io_getevents|io_submit|io_cancel|exit_group
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5209, 29, 28), //epoll_ctl
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5239, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5237, 3, 0),

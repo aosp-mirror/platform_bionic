@@ -1304,6 +1304,8 @@ LIBC_P {
   global:
     __freading; # future
     __fwriting; # future
+    getentropy; # future
+    getrandom; # future
     getlogin_r; # future
     glob; # future
     globfree; # future
