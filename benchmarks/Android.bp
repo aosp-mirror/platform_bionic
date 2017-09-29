@@ -73,7 +73,6 @@ cc_benchmark {
 cc_benchmark_host {
     name: "bionic-benchmarks-glibc",
     defaults: ["bionic-benchmarks-defaults"],
-    host_ldlibs: ["-lrt"],
     target: {
         darwin: {
             // Only supported on linux systems.

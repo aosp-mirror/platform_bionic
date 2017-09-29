@@ -178,7 +178,6 @@ cc_test_library {
         "liblog",
         "libbase",
     ],
-    host_ldlibs: ["-lrt"],
     shared: {
         enabled: false,
     },
@@ -605,8 +604,6 @@ cc_test_host {
 
     host_ldlibs: [
         "-lresolv",
-        "-lrt",
-        "-ldl",
         "-lutil",
     ],
 
