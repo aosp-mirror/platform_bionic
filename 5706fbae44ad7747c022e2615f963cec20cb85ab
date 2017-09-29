@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f3a35572_ecc81efa",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-29T17:48:22Z",
+      "side": 1,
+      "message": "I think we should be ok...atexit handlers are set by constructors.. but I replaced it anyways...",
+      "parentUuid": "871003fa_09099fa8",
+      "range": {
+        "startLine": 221,
+        "startChar": 2,
+        "endLine": 221,
+        "endChar": 6
+      },
+      "revId": "5706fbae44ad7747c022e2615f963cec20cb85ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d60a229_a68df036",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-29T15:09:27Z",
       "side": 1,
       "message": "should this go back to __linker_cannot_link now?",
+      "range": {
+        "startLine": 582,
+        "startChar": 4,
+        "endLine": 585,
+        "endChar": 12
+      },
+      "revId": "5706fbae44ad7747c022e2615f963cec20cb85ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8193a0b7_c668d976",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-09-29T17:48:22Z",
+      "side": 1,
+      "message": "__linker_cannot_link reads error message from linker_get_error_buffer...",
+      "parentUuid": "8d60a229_a68df036",
       "range": {
         "startLine": 582,
         "startChar": 4,
