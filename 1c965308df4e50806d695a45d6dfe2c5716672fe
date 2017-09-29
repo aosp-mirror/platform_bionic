@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6320fbb7_05a3062c",
+        "filename": "libc/include/sys/random.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-29T01:19:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3d199bc3_eb2d9c18",
+      "range": {
+        "startLine": 39,
+        "startChar": 59,
+        "endLine": 39,
+        "endChar": 81
+      },
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ff81022_26f2bc54",
         "filename": "libc/libc.map.txt",
         "patchSetId": 2
@@ -145,6 +169,24 @@
       "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e584044_03cf8a51",
+        "filename": "tests/sys_random_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-09-29T01:19:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db59c95e_a7a8b300",
+      "revId": "1c965308df4e50806d695a45d6dfe2c5716672fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
