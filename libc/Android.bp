@@ -299,13 +299,14 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
+        "upstream-freebsd/lib/libc/gen/glob.c",
         "upstream-freebsd/lib/libc/stdlib/realpath.c",
     ],
 
     cflags: [
         "-Wno-sign-compare",
         "-include freebsd-compat.h",
-        "-Wframe-larger-than=15000",
+        "-Wframe-larger-than=66000",
     ],
 
     local_include_dirs: [

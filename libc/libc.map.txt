@@ -1348,6 +1348,8 @@ LIBC_P {
     __freading; # future
     __fwriting; # future
     getlogin_r; # future
+    glob; # future
+    globfree; # future
     hcreate; # future
     hcreate_r; # future
     hdestroy; # future
