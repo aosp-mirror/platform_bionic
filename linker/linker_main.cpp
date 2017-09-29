@@ -208,7 +208,17 @@ static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
 static void __linker_cannot_link(const char* argv0) {
-  async_safe_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
+  async_safe_format_fd(STDERR_FILENO,
+                       "CANNOT LINK EXECUTABLE \"%s\": %s\n",
+                       argv0,
+                       linker_get_error_buffer());
+
+  async_safe_format_log(ANDROID_LOG_FATAL,
+                        "linker",
+                        "CANNOT LINK EXECUTABLE \"%s\": %s",
+                        argv0,
+                        linker_get_error_buffer());
+  _exit(EXIT_FAILURE);
 }
 
 /*

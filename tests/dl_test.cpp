@@ -162,7 +162,7 @@ TEST(dl, exec_without_ld_config_file) {
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, -6, error_message.c_str());
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
 
