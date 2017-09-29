@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "871003fa_09099fa8",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-09-29T15:08:18Z",
+      "side": 1,
+      "message": "would _exit be safer? not sure whether we can have any atexit handlers set up before our last possible call to __linker_cannot_link...",
+      "range": {
+        "startLine": 221,
+        "startChar": 2,
+        "endLine": 221,
+        "endChar": 6
+      },
+      "revId": "5706fbae44ad7747c022e2615f963cec20cb85ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
