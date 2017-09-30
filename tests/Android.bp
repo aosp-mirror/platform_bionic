@@ -132,6 +132,7 @@ cc_test_library {
         "sys_procfs_test.cpp",
         "sys_ptrace_test.cpp",
         "sys_quota_test.cpp",
+        "sys_random_test.cpp",
         "sys_resource_test.cpp",
         "sys_select_test.cpp",
         "sys_sem_test.cpp",
@@ -178,7 +179,6 @@ cc_test_library {
         "liblog",
         "libbase",
     ],
-    host_ldlibs: ["-lrt"],
     shared: {
         enabled: false,
     },
@@ -605,8 +605,6 @@ cc_test_host {
 
     host_ldlibs: [
         "-lresolv",
-        "-lrt",
-        "-ldl",
         "-lutil",
     ],
 
