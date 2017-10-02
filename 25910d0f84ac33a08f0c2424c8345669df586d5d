@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "084767b7_90b0fe8d",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-10-02T17:48:25Z",
+      "side": 1,
+      "message": "The size affects compression ratio. I did a few comparisions here:\nhttps://bugs.chromium.org/p/chromium/issues/detail?id\u003d681933#c12\n\nI didn\u0027t really have a good grasp on how much memory is significant at this level though, so just picked 64kb figuring it would be small enough to not matter.\n\nBased on your question, guessing it matters :P. So changed it to 32kb. Let me know what you think.",
+      "parentUuid": "5233f2a9_4590076c",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5dc60f2d_79af59ab",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 10
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "46a7956c_ecad8fae",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-10-02T17:48:25Z",
+      "side": 1,
+      "message": "Excellent point. Changed.",
+      "parentUuid": "5dc60f2d_79af59ab",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29356724_746fd0a0",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 10
@@ -47,6 +83,30 @@
       "writtenOn": "2017-10-02T10:45:25Z",
       "side": 1,
       "message": "maybe use uint64_t here?",
+      "range": {
+        "startLine": 142,
+        "startChar": 42,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f839f49b_c432257f",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-10-02T17:48:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29356724_746fd0a0",
       "range": {
         "startLine": 142,
         "startChar": 42,
