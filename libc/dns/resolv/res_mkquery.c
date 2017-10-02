@@ -145,6 +145,7 @@ res_nmkquery(res_state statp,
 	hp->id = htons(res_randomid());
 	hp->opcode = op;
 	hp->rd = (statp->options & RES_RECURSE) != 0U;
+	hp->ad = (statp->options & RES_USE_DNSSEC) != 0U;
 	hp->rcode = NOERROR;
 	cp = buf + HFIXEDSZ;
 	ep = buf + buflen;
@@ -253,7 +254,9 @@ res_nopt(res_state statp,
 
 	ns_put16(T_OPT, cp);	/* TYPE */
 	cp += INT16SZ;
-	ns_put16(anslen & 0xffff, cp);	/* CLASS = UDP payload size */
+	if (anslen > 0xffff)
+		anslen = 0xffff;
+	ns_put16(anslen, cp);			/* CLASS = UDP payload size */
 	cp += INT16SZ;
 	*cp++ = NOERROR;	/* extended RCODE */
 	*cp++ = 0;		/* EDNS version */
