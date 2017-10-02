@@ -1300,25 +1300,25 @@ LIBC_O {
     wctrans_l; # introduced=26
 } LIBC_N;
 
-LIBC_P {
+LIBC_P { # introduced=P
   global:
-    __freading; # future
-    __fwriting; # future
-    getentropy; # future
-    getrandom; # future
-    getlogin_r; # future
-    glob; # future
-    globfree; # future
-    hcreate; # future
-    hcreate_r; # future
-    hdestroy; # future
-    hdestroy_r; # future
-    hsearch; # future
-    hsearch_r; # future
-    iconv; # future
-    iconv_close; # future
-    iconv_open; # future
-    syncfs; # future
+    __freading;
+    __fwriting;
+    getentropy;
+    getrandom;
+    getlogin_r;
+    glob;
+    globfree;
+    hcreate;
+    hcreate_r;
+    hdestroy;
+    hdestroy_r;
+    hsearch;
+    hsearch_r;
+    iconv;
+    iconv_close;
+    iconv_open;
+    syncfs;
 } LIBC_O;
 
 LIBC_PRIVATE {
