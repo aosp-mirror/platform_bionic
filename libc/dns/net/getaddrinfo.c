@@ -2171,8 +2171,12 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 		int class, type;
 		u_char *answer;
 		int anslen;
+		u_int oflags;
 
 		hp = (HEADER *)(void *)t->answer;
+		oflags = res->_flags;
+
+again:
 		hp->rcode = NOERROR;	/* default */
 
 		/* make it easier... */
@@ -2188,7 +2192,8 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 		n = res_nmkquery(res, QUERY, name, class, type, NULL, 0, NULL,
 		    buf, sizeof(buf));
 #ifdef RES_USE_EDNS0
-		if (n > 0 && (res->options & RES_USE_EDNS0) != 0)
+		if (n > 0 && (res->_flags & RES_F_EDNS0ERR) == 0 &&
+		    (res->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 			n = res_nopt(res, n, buf, sizeof(buf), anslen);
 #endif
 		if (n <= 0) {
@@ -2213,6 +2218,18 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 
 		if (n < 0 || hp->rcode != NOERROR || ntohs(hp->ancount) == 0) {
 			rcode = hp->rcode;	/* record most recent error */
+#ifdef RES_USE_EDNS0
+			/* if the query choked with EDNS0, retry without EDNS0 */
+			if ((res->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0 &&
+			    ((oflags ^ res->_flags) & RES_F_EDNS0ERR) != 0) {
+				res->_flags |= RES_F_EDNS0ERR;
+#ifdef DEBUG
+				if (res->options & RES_DEBUG)
+					printf(";; res_nquery: retry without EDNS0\n");
+#endif
+				goto again;
+			}
+#endif
 #ifdef DEBUG
 			if (res->options & RES_DEBUG)
 				printf(";; rcode = %u, ancount=%u\n", hp->rcode,
