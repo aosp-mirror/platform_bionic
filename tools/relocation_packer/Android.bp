@@ -16,11 +16,13 @@
 
 cc_defaults {
     name: "relocation_packer_flags",
-    cppflags: [
+    cflags: [
         "-Wall",
+        "-Werror",
+    ],
+    cppflags: [
         "-Wextra",
         "-Wunused",
-        "-Werror",
         "-Wold-style-cast",
     ],
 
