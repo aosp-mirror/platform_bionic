@@ -17,6 +17,10 @@
 cc_defaults {
     name: "bionic_testlib_defaults",
     host_supported: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
     ldflags: [
         "-Wl,--rpath,${ORIGIN}",
         "-Wl,--enable-new-dtags",
