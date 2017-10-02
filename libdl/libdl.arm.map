@@ -36,9 +36,9 @@ LIBC_N {
 
 LIBC_OMR1 { # introduced=27
   global:
-    __cfi_shadow_size; # introduced=27
-    __cfi_slowpath; # introduced=27
-    __cfi_slowpath_diag; # introduced=27
+    __cfi_shadow_size;
+    __cfi_slowpath;
+    __cfi_slowpath_diag;
 } LIBC_N;
 
 LIBC_PLATFORM {
