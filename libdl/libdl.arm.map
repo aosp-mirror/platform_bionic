@@ -34,11 +34,11 @@ LIBC_N {
     dlvsym; # introduced=24
 } LIBC;
 
-LIBC_OMR1 { # future
+LIBC_OMR1 { # introduced=27
   global:
-    __cfi_shadow_size; # future
-    __cfi_slowpath; # future
-    __cfi_slowpath_diag; # future
+    __cfi_shadow_size; # introduced=27
+    __cfi_slowpath; # introduced=27
+    __cfi_slowpath_diag; # introduced=27
 } LIBC_N;
 
 LIBC_PLATFORM {
