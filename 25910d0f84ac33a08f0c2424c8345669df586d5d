@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d6af7917_e862398c",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-02T18:29:54Z",
+      "side": 1,
+      "message": "how it affects other libraries like say libart.so/libandroid_runtime.so? I am not familiar with the way lz4 works...",
+      "parentUuid": "084767b7_90b0fe8d",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5dc60f2d_79af59ab",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 10
