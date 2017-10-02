@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5233f2a9_4590076c",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-02T10:45:25Z",
+      "side": 1,
+      "message": "64k seems like a lot for an average relocation section. should this be smaller?",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dc60f2d_79af59ab",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-02T10:45:25Z",
+      "side": 1,
+      "message": "since relocation packer aligns everything to PAGE_SIZE, this number needs to be expressed in number of pages... saving anything less than a page result in 0 actual saving after moving segments around.",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29356724_746fd0a0",
+        "filename": "tools/relocation_packer/src/elf_file.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-02T10:45:25Z",
+      "side": 1,
+      "message": "maybe use uint64_t here?",
+      "range": {
+        "startLine": 142,
+        "startChar": 42,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
