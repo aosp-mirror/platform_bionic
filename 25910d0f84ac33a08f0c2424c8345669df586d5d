@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "7c95204c_8e26719b",
+        "filename": "linker/linker_compressed_sleb128.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1230912
+      },
+      "writtenOn": "2017-10-02T18:43:55Z",
+      "side": 1,
+      "message": "libart.so:\nINFO: Unpacked                   : 60056 bytes\nINFO: Packed         (no padding): 9913 bytes\nINFO: Packed \u0026 compressed (no padding): 2931 bytes\n\nlibandroid_runtime.so:\nINFO: Unpacked                   : 85992 bytes\nINFO: Packed         (no padding): 16392 bytes\nINFO: Packed \u0026 compressed (no padding): 7021 bytes\n\nThey are both \u003c 32kb once packed, so 64 vs 32 doesn\u0027t affect them at all (either way it\u0027s just one chunk).\n\nIn terms of how lz4 works (at least how I\u0027m using it) - it compresses a chunk at a time, and does so completely independently. There is a mode where you can have it compress using the current and previous chunk as reference, but then you need to keep the previous chunk around in memory for it to use.\n\nPerhaps based on these numbers we should set the chunk size to 16kb? The compression for chrome gets ~1kb larger again, but still somewhat negligible compared with the 340kb it still saves.",
+      "parentUuid": "d6af7917_e862398c",
+      "revId": "25910d0f84ac33a08f0c2424c8345669df586d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5dc60f2d_79af59ab",
         "filename": "tools/relocation_packer/src/elf_file.cc",
         "patchSetId": 10
