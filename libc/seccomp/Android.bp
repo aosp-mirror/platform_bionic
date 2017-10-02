@@ -16,6 +16,7 @@ cc_library {
         "mips64_global_policy.cpp",
     ],
     export_include_dirs: ["include"],
+    cflags: ["-Wall", "-Werror"],
     shared: {
         shared_libs: ["libbase"],
     },
