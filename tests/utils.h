@@ -71,15 +71,13 @@ struct map_record {
 class Maps {
  public:
   static bool parse_maps(std::vector<map_record>* maps) {
-    FILE* fp = fopen("/proc/self/maps", "re");
-    if (fp == nullptr) {
-      return false;
-    }
+    maps->clear();
 
-    auto fp_guard = android::base::make_scope_guard([&]() { fclose(fp); });
+    std::unique_ptr<FILE, decltype(&fclose)> fp(fopen("/proc/self/maps", "re"), fclose);
+    if (!fp) return false;
 
     char line[BUFSIZ];
-    while (fgets(line, sizeof(line), fp) != nullptr) {
+    while (fgets(line, sizeof(line), fp.get()) != nullptr) {
       map_record record;
       uint32_t dev_major, dev_minor;
       int path_offset;
