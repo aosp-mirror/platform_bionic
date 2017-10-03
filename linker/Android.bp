@@ -27,7 +27,7 @@ cc_object {
     device_supported: false,
     target: {
         linux_bionic: { enabled: true },
-        linux: { enabled: false },
+        linux_glibc: { enabled: false },
         darwin: { enabled: false },
     },
 
