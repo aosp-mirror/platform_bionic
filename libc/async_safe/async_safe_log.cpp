@@ -477,19 +477,6 @@ static int open_log_socket() {
   return log_fd;
 }
 
-static clockid_t log_clockid() {
-  static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-  ScopedPthreadMutexLocker locker(&mutex);
-
-  static CachedProperty ro_logd_timestamp("ro.logd.timestamp");
-  static CachedProperty persist_logd_timestamp("persist.logd.timestamp");
-
-  char ch = persist_logd_timestamp.Get()[0];
-  if (ch == '\0') ch = ro_logd_timestamp.Get()[0];
-
-  return (tolower(ch) == 'm') ? CLOCK_MONOTONIC : CLOCK_REALTIME;
-}
-
 struct log_time {  // Wire format
   uint32_t tv_sec;
   uint32_t tv_nsec;
@@ -510,7 +497,7 @@ int async_safe_write_log(int priority, const char* tag, const char* msg) {
   vec[1].iov_base = &tid;
   vec[1].iov_len = sizeof(tid);
   timespec ts;
-  clock_gettime(log_clockid(), &ts);
+  clock_gettime(CLOCK_REALTIME, &ts);
   log_time realtime_ts;
   realtime_ts.tv_sec = ts.tv_sec;
   realtime_ts.tv_nsec = ts.tv_nsec;
