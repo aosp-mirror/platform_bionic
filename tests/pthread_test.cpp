@@ -2117,8 +2117,9 @@ TEST(pthread, pthread_create__mmap_failures) {
 
   const auto kPageSize = sysconf(_SC_PAGE_SIZE);
 
-  // Use up all the VMAs. By default this is 64Ki.
+  // Use up all the VMAs. By default this is 64Ki (though some will already be in use).
   std::vector<void*> pages;
+  pages.reserve(64 * 1024);
   int prot = PROT_NONE;
   while (true) {
     void* page = mmap(nullptr, kPageSize, prot, MAP_ANON|MAP_PRIVATE, -1, 0);
