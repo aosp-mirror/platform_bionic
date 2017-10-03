@@ -22,6 +22,30 @@
       "revId": "74baf50b0d9f1831d10acf7db0eea59791f5ad11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f62204d3_5ea888b2",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-03T20:51:52Z",
+      "side": 1,
+      "message": "d\u0027oh x2.\n\n(this one doesn\u0027t matter in practice, because the first thing we\u0027ll do is call clear, so that\u0027s why i survived 10k runs even with this mistake.)",
+      "parentUuid": "2cd0c2fc_3987b9b7",
+      "range": {
+        "startLine": 61,
+        "startChar": 10,
+        "endLine": 61,
+        "endChar": 16
+      },
+      "revId": "74baf50b0d9f1831d10acf7db0eea59791f5ad11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
