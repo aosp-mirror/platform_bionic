@@ -169,7 +169,7 @@ cc_test_library {
     ],
 
     target: {
-        android: {
+        bionic: {
             whole_static_libs: ["libasync_safe"],
         },
     },
@@ -617,6 +617,12 @@ cc_test_host {
 
     sanitize: {
         never: false,
+    },
+
+    target: {
+        linux_bionic: {
+            enabled: false,
+        },
     },
 }
 
