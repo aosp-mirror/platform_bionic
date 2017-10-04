@@ -35,20 +35,6 @@
 
 using namespace std::chrono_literals;
 
-static size_t GetMappingSize() {
-  std::vector<map_record> maps;
-  if (!Maps::parse_maps(&maps)) {
-    err(1, "failed to parse maps");
-  }
-
-  size_t result = 0;
-  for (const map_record& map : maps) {
-    result += map.addr_end - map.addr_start;
-  }
-
-  return result;
-}
-
 static void WaitUntilAllExited(pid_t* pids, size_t pid_count) {
   // Wait until all children have exited.
   bool alive = true;
@@ -70,6 +56,9 @@ static void WaitUntilAllExited(pid_t* pids, size_t pid_count) {
 class LeakChecker {
  public:
   LeakChecker() {
+    // Avoid resizing and using memory later.
+    // 64Ki is the default limit on VMAs per process.
+    maps_.reserve(64*1024);
     Reset();
   }
 
@@ -87,12 +76,26 @@ class LeakChecker {
 
  private:
   size_t previous_size_;
+  std::vector<map_record> maps_;
 
   void Check() {
     auto current_size = GetMappingSize();
     if (current_size > previous_size_) {
       FAIL() << "increase in process map size: " << previous_size_ << " -> " << current_size;
     }
+  }
+
+  size_t GetMappingSize() {
+    if (!Maps::parse_maps(&maps_)) {
+      err(1, "failed to parse maps");
+    }
+
+    size_t result = 0;
+    for (const map_record& map : maps_) {
+      result += map.addr_end - map.addr_start;
+    }
+
+    return result;
   }
 };
 
@@ -116,27 +119,24 @@ TEST(pthread_leak, detach) {
   LeakChecker lc;
 
   for (size_t pass = 0; pass < 2; ++pass) {
+    constexpr int kThreadCount = 100;
+    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[kThreadCount] = {};
+
     pthread_barrier_t barrier;
-    constexpr int thread_count = 100;
-    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
+    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, kThreadCount + 1), 0);
 
     // Start child threads.
-    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; };
-    pid_t tids[thread_count];
-    for (int i = 0; i < thread_count; ++i) {
-      thread_data* td = new thread_data{&barrier, &tids[i]};
+    pid_t tids[kThreadCount];
+    for (int i = 0; i < kThreadCount; ++i) {
+      threads[i] = {&barrier, &tids[i]};
       const auto thread_function = +[](void* ptr) -> void* {
         thread_data* data = static_cast<thread_data*>(ptr);
         *data->tid = gettid();
         pthread_barrier_wait(data->barrier);
-        // Doing this delete allocates new VMAs for jemalloc bookkeeping,
-        // but the two-pass nature of this test means we can check that
-        // it's a pool rather than an unbounded leak.
-        delete data;
         return nullptr;
       };
       pthread_t thread;
-      ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, td));
+      ASSERT_EQ(0, pthread_create(&thread, nullptr, thread_function, &threads[i]));
       ASSERT_EQ(0, pthread_detach(thread));
     }
 
