@@ -31,7 +31,11 @@
 
 #include <sys/cdefs.h>
 
-#define __BIONIC_POSIX_FEATURE_SINCE(level) (((__ANDROID_API__) >= level) ? 200809L : -1)
+#define _POSIX_VERSION 200809L
+#define _POSIX2_VERSION _POSIX_VERSION
+#define _XOPEN_VERSION 700
+
+#define __BIONIC_POSIX_FEATURE_SINCE(level) (((__ANDROID_API__) >= level) ? _POSIX_VERSION : -1)
 
 /* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
 /* Keep this list sorted by name. */
@@ -43,8 +47,8 @@
 #define _POSIX_BARRIERS __BIONIC_POSIX_FEATURE_SINCE(24)
 #define _POSIX_CHILD_MAX            25
 #define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
-#define _POSIX_CLOCK_SELECTION      200809L
-#define _POSIX_CPUTIME              0  /* Use sysconf to detect support at runtime. */
+#define _POSIX_CLOCK_SELECTION __BIONIC_POSIX_FEATURE_SINCE(21) /* clock_nanosleep/pthread_condattr_getclock/pthread_condattr_setclock. */
+#define _POSIX_CPUTIME _POSIX_VERSION /* CLOCK_PROCESS_CPUTIME_ID. */
 #define _POSIX_DELAYTIMER_MAX       32
 #define _POSIX_FSYNC 200809L
 #define _POSIX_HOST_NAME_MAX        255
@@ -59,7 +63,7 @@
 #define _POSIX_MEMLOCK_RANGE        200809L /* mlock. */
 #define _POSIX_MEMORY_PROTECTION    200809L
 #define _POSIX_MESSAGE_PASSING      -1  /* not implemented */
-#define _POSIX_MONOTONIC_CLOCK      0  /* the monotonic clock may be available; ask sysconf */
+#define _POSIX_MONOTONIC_CLOCK _POSIX_VERSION /* CLOCK_MONOTONIC. */
 #define _POSIX_MQ_OPEN_MAX          8
 #define _POSIX_MQ_PRIO_MAX          32
 #define _POSIX_NAME_MAX             14
@@ -93,7 +97,7 @@
 #define _POSIX_THREADS              200809L  /* we support threads */
 #define _POSIX_THREAD_ATTR_STACKADDR  200809L
 #define _POSIX_THREAD_ATTR_STACKSIZE  200809L
-#define _POSIX_THREAD_CPUTIME       0  /* Use sysconf to detect support at runtime. */
+#define _POSIX_THREAD_CPUTIME _POSIX_VERSION /* CLOCK_THREAD_CPUTIME_ID. */
 #define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
 #define _POSIX_THREAD_KEYS_MAX      128
 #define _POSIX_THREAD_PRIORITY_SCHEDULING 200809L
