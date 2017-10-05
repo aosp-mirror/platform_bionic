@@ -66,4 +66,17 @@ static inline T* align_up(T* p, size_t align) {
   return reinterpret_cast<T*>(align_up(reinterpret_cast<uintptr_t>(p), align));
 }
 
+#if defined(__arm__)
+// Do not emit anything for arm, clang does not allow emiting an arm unwind
+// directive.
+// #define BIONIC_STOP_UNWIND asm volatile(".cantunwind")
+#define BIONIC_STOP_UNWIND
+#elif defined(__aarch64__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined x30")
+#elif defined(__i386__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%eip")
+#elif defined(__x86_64__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%rip")
+#endif
+
 #endif // _BIONIC_MACROS_H_
