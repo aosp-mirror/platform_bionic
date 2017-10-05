@@ -40,9 +40,6 @@
   TypeName() = delete;                           \
   DISALLOW_COPY_AND_ASSIGN(TypeName)
 
-#define BIONIC_ALIGN(value, alignment) \
-  (((value) + (alignment) - 1) & ~((alignment) - 1))
-
 #define BIONIC_ROUND_UP_POWER_OF_2(value) \
   ((sizeof(value) == 8) \
     ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
