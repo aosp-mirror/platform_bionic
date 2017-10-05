@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e56454ab_6bf205f3",
+        "filename": "libc/include/android/legacy_sys_mman_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-05T23:54:32Z",
+      "side": 1,
+      "message": "no, it needs to look more like this:\n\nhttps://cs.corp.google.com/android/bionic/libc/bionic/mmap.cpp?q\u003dfile:mmap.cpp\u0026sq\u003dpackage:%5Eandroid$\u0026l\u003d44",
+      "revId": "329c836597aaa6b0d2fd00148fc25fd6806f0156",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
