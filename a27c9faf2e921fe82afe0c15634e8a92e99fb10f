@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67b6ad85_5652eaef",
+        "filename": "libc/include/bits/posix_limits.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-05T22:53:27Z",
+      "side": 1,
+      "message": "Would it be better to use __BIONIX_POSIX_FEATURE_MISSING instead of -1? It makes the macro longer, but makes it clear what this means.",
+      "range": {
+        "startLine": 38,
+        "startChar": 93,
+        "endLine": 38,
+        "endChar": 95
+      },
+      "revId": "a27c9faf2e921fe82afe0c15634e8a92e99fb10f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
