@@ -43,6 +43,8 @@
 size_t
 fread(void *buf, size_t size, size_t count, FILE *fp) __overloadable
 {
+	CHECK_FP(fp);
+
 	/*
 	 * Extension:  Catch integer overflow.
 	 */

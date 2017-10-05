@@ -38,6 +38,9 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <wchar.h>
+
+#include <async_safe/log.h>
+
 #include "wcio.h"
 
 /*
@@ -251,5 +254,14 @@ size_t parsefloat(FILE*, char*, char*);
 size_t wparsefloat(FILE*, wchar_t*, wchar_t*);
 
 __END_DECLS
+
+// Sanity check a FILE* for nullptr, so we can emit a message while crashing
+// instead of doing a blind null-dereference.
+#define CHECK_FP(fp)                                                       \
+  do {                                                                     \
+    if (__predict_false(fp == 0)) {                                        \
+      async_safe_fatal("invalid FILE* %p passed to %s", fp, __FUNCTION__); \
+    }                                                                      \
+  } while (0)
 
 #endif
