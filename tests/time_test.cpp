@@ -574,6 +574,31 @@ TEST(time, clock_gettime) {
   ASSERT_LT(ts2.tv_nsec, 1000000);
 }
 
+TEST(time, clock_gettime_CLOCK_REALTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_MONOTONIC) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_PROCESS_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_THREAD_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_BOOTTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_BOOTTIME, &ts));
+}
+
 TEST(time, clock) {
   // clock(3) is hard to test, but a 1s sleep should cost less than 1ms.
   clock_t t0 = clock();
