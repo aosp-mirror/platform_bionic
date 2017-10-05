@@ -1,6 +1,28 @@
 //
 // libdl
 //
+cc_library_static {
+    name: "libdl_static",
+
+    srcs: ["libdl.c", "libdl_cfi.cpp"],
+
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // For private/CFIShadow.h.
+    include_dirs: ["bionic/libc"],
+
+    stl: "none",
+
+    sanitize: {
+        never: true,
+    },
+}
+
 cc_library {
     name: "libdl",
 
@@ -45,7 +67,7 @@ cc_library {
         },
     },
     shared: {
-        srcs: ["libdl.c", "libdl_cfi.cpp"],
+        whole_static_libs: ["libdl_static"],
     },
     static: {
         srcs: [ "libdl_static.c" ],
@@ -65,9 +87,6 @@ cc_library {
     // LOCAL_ALLOW_UNDEFINED_SYMBOLS to remove --no-undefined from the linker flags.
     allow_undefined_symbols: true,
     system_shared_libs: [],
-
-    // For private/CFIShadow.h.
-    include_dirs: ["bionic/libc"],
 
     // This is placeholder library the actual implementation is (currently)
     // provided by the linker.
