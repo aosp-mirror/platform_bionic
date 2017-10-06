@@ -580,7 +580,7 @@ static int getgroup_r(bool by_name, const char* name, gid_t gid, struct group* g
   ErrnoRestorer errno_restorer;
   *result = NULL;
   char* p = reinterpret_cast<char*>(
-      BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
+      __BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
   if (p + sizeof(group_state_t) > buf + buflen) {
     return ERANGE;
   }

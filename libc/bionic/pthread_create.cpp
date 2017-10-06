@@ -172,8 +172,8 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
     // Make sure the stack size and guard size are multiples of PAGE_SIZE.
     if (__builtin_add_overflow(attr->stack_size, attr->guard_size, &mmap_size)) return EAGAIN;
     if (__builtin_add_overflow(mmap_size, sizeof(pthread_internal_t), &mmap_size)) return EAGAIN;
-    mmap_size = BIONIC_ALIGN(mmap_size, PAGE_SIZE);
-    attr->guard_size = BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
+    mmap_size = __BIONIC_ALIGN(mmap_size, PAGE_SIZE);
+    attr->guard_size = __BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
     attr->stack_base = __create_thread_mapped_space(mmap_size, attr->guard_size);
     if (attr->stack_base == NULL) {
       return EAGAIN;

@@ -74,9 +74,10 @@ constexpr char DIVIDER[] =
 constexpr uint32_t BACKTRACE_HEADER = 0x1;
 
 static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
-  size_t offset = BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
+  size_t offset = __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
   if (flags & BACKTRACE_HEADER) {
-    offset += BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames, MINIMUM_ALIGNMENT_BYTES);
+    offset += __BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames,
+                             MINIMUM_ALIGNMENT_BYTES);
   }
   return offset;
 }
