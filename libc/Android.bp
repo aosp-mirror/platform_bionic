@@ -1826,7 +1826,6 @@ cc_library {
             "bionic/dl_iterate_phdr_static.cpp",
             "bionic/icu_static.cpp",
             "bionic/malloc_common.cpp",
-            "bionic/libc_init_static.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: ["libc_init_static"],
