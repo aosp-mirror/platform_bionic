@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd39f29e_a2e67710",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-06T01:04:10Z",
+      "side": 1,
+      "message": "Does this work? Aren\u0027t you returning a pointer to memory that gets freed, and might be invalid if used later on? Wouldn\u0027t it be safer to return std::string?\n\nAlso, this is saved in map-\u003el_name in __linker_init_post_relocation, which seems wrong. I think it should be saving a strdup of the pointer, or make that value std::string.",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 21
+      },
+      "revId": "89eee58d83027ba01093db621651e328e2801d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
