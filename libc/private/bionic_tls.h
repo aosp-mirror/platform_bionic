@@ -102,7 +102,7 @@ struct bionic_tls {
   passwd_state_t passwd;
 };
 
-#define BIONIC_TLS_SIZE (BIONIC_ALIGN(sizeof(bionic_tls), PAGE_SIZE))
+#define BIONIC_TLS_SIZE (__BIONIC_ALIGN(sizeof(bionic_tls), PAGE_SIZE))
 
 /*
  * Bionic uses some pthread keys internally. All pthread keys used internally
