@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58b1e04b_e48d90ae",
+        "filename": "libc/include/android/legacy_sys_mman_inlines.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-06T16:07:32Z",
+      "side": 1,
+      "message": "does this work in both C and C++ contexts?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 40
+      },
+      "revId": "a613d0df5c682617380728a7d151483de05a4f92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
