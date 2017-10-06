@@ -191,7 +191,7 @@ bool Config::SetGuard(const std::string& option, const std::string& value) {
 
   // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
   // make sure that the header is aligned properly.
-  front_guard_bytes_ = BIONIC_ALIGN(rear_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
+  front_guard_bytes_ = __BIONIC_ALIGN(rear_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
   return true;
 }
 
@@ -201,7 +201,7 @@ bool Config::SetFrontGuard(const std::string& option, const std::string& value) 
   }
   // It's necessary to align the front guard to MINIMUM_ALIGNMENT_BYTES to
   // make sure that the header is aligned properly.
-  front_guard_bytes_ = BIONIC_ALIGN(front_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
+  front_guard_bytes_ = __BIONIC_ALIGN(front_guard_bytes_, MINIMUM_ALIGNMENT_BYTES);
   return true;
 }
 

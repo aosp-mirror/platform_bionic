@@ -79,6 +79,8 @@
 #define __BIONIC_CAST(_k,_t,_v) ((_t) (_v))
 #endif
 
+#define __BIONIC_ALIGN(__value, __alignment) (((__value) + (__alignment)-1) & ~((__alignment)-1))
+
 /*
  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.
  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.

@@ -45,12 +45,19 @@ __BEGIN_DECLS
 #define MREMAP_FIXED    2
 
 #if defined(__USE_FILE_OFFSET64)
-void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset) __RENAME(mmap64) __INTRODUCED_IN(21);
+/*
+ * mmap64 wasn't really around until L, but we added an inline for it since it
+ * allows a lot more code to compile with _FILE_OFFSET_BITS=64.
+ */
+void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset)
+    __RENAME(mmap64);
 #else
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
+#endif
 
 int munmap(void* __addr, size_t __size);
 int msync(void* __addr, size_t __size, int __flags);
@@ -85,5 +92,7 @@ int madvise(void* __addr, size_t __size, int __advice);
 int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 
 __END_DECLS
+
+#include <android/legacy_sys_mman_inlines.h>
 
 #endif
