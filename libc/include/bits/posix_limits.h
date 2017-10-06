@@ -31,93 +31,67 @@
 
 #include <sys/cdefs.h>
 
-#define __BIONIC_POSIX_FEATURE_SINCE(level) (((__ANDROID_API__) >= level) ? 200809L : -1)
+#define _POSIX_VERSION 200809L
+#define _POSIX2_VERSION _POSIX_VERSION
+#define _XOPEN_VERSION 700
 
-/* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
+#define __BIONIC_POSIX_FEATURE_MISSING (-1)
+#define __BIONIC_POSIX_FEATURE_SINCE(level) \
+    (((__ANDROID_API__) >= level) ? _POSIX_VERSION : __BIONIC_POSIX_FEATURE_MISSING)
+
+/* Availability macros. */
+/* See http://man7.org/linux/man-pages/man7/posixoptions.7.html for documentation. */
 /* Keep this list sorted by name. */
 #define _POSIX_ADVISORY_INFO __BIONIC_POSIX_FEATURE_SINCE(23) /* posix_memadvise arrived late. */
-#define _POSIX_AIO_LISTIO_MAX       2
-#define _POSIX_AIO_MAX              1
-#define _POSIX_ARG_MAX              4096
-#define _POSIX_ASYNCHRONOUS_IO      -1  /* not implemented */
+#define _POSIX_ASYNCHRONOUS_IO __BIONIC_POSIX_FEATURE_MISSING
 #define _POSIX_BARRIERS __BIONIC_POSIX_FEATURE_SINCE(24)
-#define _POSIX_CHILD_MAX            25
-#define _POSIX_CHOWN_RESTRICTED     1  /* yes, chown requires appropriate privileges */
-#define _POSIX_CLOCK_SELECTION      200809L
-#define _POSIX_CPUTIME              0  /* Use sysconf to detect support at runtime. */
-#define _POSIX_DELAYTIMER_MAX       32
-#define _POSIX_FSYNC 200809L
-#define _POSIX_HOST_NAME_MAX        255
-#define _POSIX_IPV6                 200809L
-#define _POSIX_JOB_CONTROL          1  /* job control is a Linux feature */
-#define _POSIX_LINK_MAX             8
-#define _POSIX_LOGIN_NAME_MAX       9  /* includes trailing NUL */
-#define _POSIX_MAPPED_FILES         200809L  /* mmap-ed files supported */
-#define _POSIX_MAX_CANON            255
-#define _POSIX_MAX_INPUT            255
-#define _POSIX_MEMLOCK __BIONIC_POSIX_FEATURE_SINCE(17) /* mlockall. */
-#define _POSIX_MEMLOCK_RANGE        200809L /* mlock. */
-#define _POSIX_MEMORY_PROTECTION    200809L
-#define _POSIX_MESSAGE_PASSING      -1  /* not implemented */
-#define _POSIX_MONOTONIC_CLOCK      0  /* the monotonic clock may be available; ask sysconf */
-#define _POSIX_MQ_OPEN_MAX          8
-#define _POSIX_MQ_PRIO_MAX          32
-#define _POSIX_NAME_MAX             14
-#define _POSIX_NGROUPS_MAX          8
-#define _POSIX_NO_TRUNC             1  /* very long pathnames generate an error */
-#define _POSIX_OPEN_MAX             20
-#define _POSIX_PATH_MAX             256
-#define _POSIX_PIPE_BUF             512
-#define _POSIX_PRIORITY_SCHEDULING  200809L  /* priority scheduling is a Linux feature */
-#define _POSIX_PRIORITIZED_IO       -1  /* not implemented */
-#define _POSIX_RAW_SOCKETS          200809L
-#define _POSIX_READER_WRITER_LOCKS  200809L
-#define _POSIX_REALTIME_SIGNALS     200809L
-#define _POSIX_REGEXP               1
-#define _POSIX_RE_DUP_MAX           255
-#define _POSIX_SAVED_IDS            1  /* saved user ids is a Linux feature */
-#define _POSIX_SEMAPHORES           200809L
-#define _POSIX_SEM_NSEMS_MAX        256
-#define _POSIX_SEM_VALUE_MAX        32767
-#define _POSIX_SHARED_MEMORY_OBJECTS  -1  /* shm_open()/shm_unlink() not implemented */
-#define _POSIX_SHELL                1   /* system() supported */
-#define _POSIX_SIGQUEUE_MAX         32
-#define _POSIX_SPAWN                -1  /* not implemented */
-#define _POSIX_SPIN_LOCKS __BIONIC_POSIX_FEATURE_SINCE(24)
-#define _POSIX_SPORADIC_SERVER      -1  /* not implemented */
-#define _POSIX_SSIZE_MAX            32767
-#define _POSIX_STREAM_MAX           8
-#define _POSIX_SYMLINK_MAX          255
-#define _POSIX_SYMLOOP_MAX          8
-#define _POSIX_SYNCHRONIZED_IO      200809L  /* synchronized i/o supported */
-#define _POSIX_THREADS              200809L  /* we support threads */
-#define _POSIX_THREAD_ATTR_STACKADDR  200809L
-#define _POSIX_THREAD_ATTR_STACKSIZE  200809L
-#define _POSIX_THREAD_CPUTIME       0  /* Use sysconf to detect support at runtime. */
-#define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
-#define _POSIX_THREAD_KEYS_MAX      128
-#define _POSIX_THREAD_PRIORITY_SCHEDULING 200809L
-#define _POSIX_THREAD_PRIO_INHERIT -1  /* not implemented */
-#define _POSIX_THREAD_PRIO_PROTECT -1  /* not implemented */
-#define _POSIX_THREAD_PROCESS_SHARED  200809L  /* PTHREAD_PROCESS_SHARED supported. */
-#define _POSIX_THREAD_ROBUST_PRIO_INHERIT -1  /* not implemented */
-#define _POSIX_THREAD_ROBUST_PRIO_PROTECT -1  /* not implemented */
-#define _POSIX_THREAD_SAFE_FUNCTIONS 200809L
-#define _POSIX_THREAD_SPORADIC_SERVER -1  /* not implemented */
-#define _POSIX_THREAD_THREADS_MAX   64
+#define _POSIX_CHOWN_RESTRICTED 1 /* chown/fchown require appropriate privileges. */
+#define _POSIX_CLOCK_SELECTION __BIONIC_POSIX_FEATURE_SINCE(21) /* clock_nanosleep/pthread_condattr_getclock/pthread_condattr_setclock. */
+#define _POSIX_CPUTIME _POSIX_VERSION /* CLOCK_PROCESS_CPUTIME_ID. */
+#define _POSIX_FSYNC _POSIX_VERSION /* fsync. */
+#define _POSIX_IPV6 _POSIX_VERSION
+#define _POSIX_JOB_CONTROL __BIONIC_POSIX_FEATURE_SINCE(21) /* setpgid/tcdrain/tcflush/tcgetpgrp/tcsendbreak/tcsetattr/tcsetpgrp. */
+#define _POSIX_MAPPED_FILES _POSIX_VERSION /* mmap/msync/munmap. */
+#define _POSIX_MEMLOCK __BIONIC_POSIX_FEATURE_SINCE(17) /* mlockall/munlockall. */
+#define _POSIX_MEMLOCK_RANGE _POSIX_VERSION /* mlock/munlock. */
+#define _POSIX_MEMORY_PROTECTION _POSIX_VERSION /* mprotect. */
+#define _POSIX_MESSAGE_PASSING __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_MONOTONIC_CLOCK _POSIX_VERSION /* CLOCK_MONOTONIC. */
+#define _POSIX_NO_TRUNC 1 /* Over-long pathnames return errors. */
+#define _POSIX_PRIORITIZED_IO __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_PRIORITY_SCHEDULING _POSIX_VERSION /* sched_*. */
+#define _POSIX_RAW_SOCKETS _POSIX_VERSION
+#define _POSIX_READER_WRITER_LOCKS _POSIX_VERSION /* pthread_rwlock*. */
+#define _POSIX_REALTIME_SIGNALS __BIONIC_POSIX_FEATURE_SINCE(23) /* sigqueue/sigtimedwait/sigwaitinfo. */
+#define _POSIX_REGEXP 1
+#define _POSIX_SAVED_IDS 1
+#define _POSIX_SEMAPHORES _POSIX_VERSION /* sem_*. */
+#define _POSIX_SHARED_MEMORY_OBJECTS __BIONIC_POSIX_FEATURE_MISSING /* mmap/munmap are implemented, but shm_open/shm_unlink are not. */
+#define _POSIX_SHELL 1 /* system. */
+#define _POSIX_SPAWN __BIONIC_POSIX_FEATURE_MISSING /* <spawn.h> */
+#define _POSIX_SPIN_LOCKS __BIONIC_POSIX_FEATURE_SINCE(24) /* pthread_spin_*. */
+#define _POSIX_SPORADIC_SERVER _POSIX_VERSION /* sched_setparam/sched_setscheduler. */
+#define _POSIX_SYNCHRONIZED_IO _POSIX_VERSION
+#define _POSIX_THREAD_ATTR_STACKADDR _POSIX_VERSION /* Strictly, we're missing the deprecated pthread_attr_getstackaddr/pthread_attr_setstackaddr, but we do have pthread_attr_getstack/pthread_attr_setstack. */
+#define _POSIX_THREAD_ATTR_STACKSIZE _POSIX_VERSION /* pthread_attr_getstack/pthread_attr_getstacksize/pthread_attr_setstack/pthread_attr_setstacksize. */
+#define _POSIX_THREAD_CPUTIME _POSIX_VERSION /* CLOCK_THREAD_CPUTIME_ID. */
+#define _POSIX_THREAD_PRIO_INHERIT __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_THREAD_PRIO_PROTECT __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_THREAD_PRIORITY_SCHEDULING _POSIX_VERSION /* Strictly, pthread_attr_getinheritsched/pthread_attr_setinheritsched are missing. */
+#define _POSIX_THREAD_PROCESS_SHARED _POSIX_VERSION
+#define _POSIX_THREAD_ROBUST_PRIO_INHERIT __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_THREAD_ROBUST_PRIO_PROTECT __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_THREAD_SAFE_FUNCTIONS _POSIX_VERSION
+#define _POSIX_THREAD_SPORADIC_SERVER _POSIX_VERSION /* sched_setparam/sched_setscheduler. */
+#define _POSIX_THREADS _POSIX_VERSION /* Strictly, pthread_cancel/pthread_testcancel are missing. */
 #define _POSIX_TIMEOUTS __BIONIC_POSIX_FEATURE_SINCE(21) /* pthread_mutex_timedlock arrived late. */
-#define _POSIX_TIMERS               200809L  /* Posix timers are supported */
-#define _POSIX_TIMER_MAX            32
-#define _POSIX_TRACE                -1  /* not implemented */
-#define _POSIX_TRACE_EVENT_FILTER   -1  /* not implemented */
-#define _POSIX_TRACE_INHERIT        -1  /* not implemented */
-#define _POSIX_TRACE_LOG            -1  /* not implemented */
-#define _POSIX_TRACE_NAME_MAX       8
-#define _POSIX_TRACE_SYS_MAX        8
-#define _POSIX_TRACE_USER_EVENT_MAX 32
-#define _POSIX_TTY_NAME_MAX         9  /* includes trailing NUL */
-#define _POSIX_TYPED_MEMORY_OBJECTS -1  /* not implemented */
-#define _POSIX_TZNAME_MAX           6
+#define _POSIX_TIMERS _POSIX_VERSION /* clock_getres/clock_gettime/clock_settime/nanosleep/timer_create/timer_delete/timer_gettime/timer_getoverrun/timer_settime. */
+#define _POSIX_TRACE __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_TRACE_EVENT_FILTER __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_TRACE_INHERIT __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_TRACE_LOG __BIONIC_POSIX_FEATURE_MISSING
+#define _POSIX_TYPED_MEMORY_OBJECTS __BIONIC_POSIX_FEATURE_MISSING
+
 #define _POSIX_VDISABLE             '\0'
 
 #if defined(__LP64__)
@@ -132,6 +106,42 @@
 #define _POSIX_V7_LPBIG_OFFBIG      -1
 #endif
 
+/* Minimum values for other maxima. These numbers are simply lower bounds mandated by POSIX. */
+/* Any constant values here other than -1 or 200809L are explicitly specified by POSIX.1-2008. */
+#define _POSIX_AIO_LISTIO_MAX       2
+#define _POSIX_AIO_MAX              1
+#define _POSIX_ARG_MAX              4096
+#define _POSIX_CHILD_MAX            25
+#define _POSIX_DELAYTIMER_MAX       32
+#define _POSIX_HOST_NAME_MAX        255
+#define _POSIX_LINK_MAX             8
+#define _POSIX_LOGIN_NAME_MAX       9  /* includes trailing NUL */
+#define _POSIX_MAX_CANON            255
+#define _POSIX_MAX_INPUT            255
+#define _POSIX_MQ_OPEN_MAX          8
+#define _POSIX_MQ_PRIO_MAX          32
+#define _POSIX_NAME_MAX             14
+#define _POSIX_NGROUPS_MAX          8
+#define _POSIX_OPEN_MAX             20
+#define _POSIX_PATH_MAX             256
+#define _POSIX_PIPE_BUF             512
+#define _POSIX_RE_DUP_MAX           255
+#define _POSIX_SEM_NSEMS_MAX        256
+#define _POSIX_SEM_VALUE_MAX        32767
+#define _POSIX_SIGQUEUE_MAX         32
+#define _POSIX_SSIZE_MAX            32767
+#define _POSIX_STREAM_MAX           8
+#define _POSIX_SYMLINK_MAX          255
+#define _POSIX_SYMLOOP_MAX          8
+#define _POSIX_THREAD_DESTRUCTOR_ITERATIONS 4
+#define _POSIX_THREAD_KEYS_MAX      128
+#define _POSIX_THREAD_THREADS_MAX   64
+#define _POSIX_TIMER_MAX            32
+#define _POSIX_TRACE_NAME_MAX       8
+#define _POSIX_TRACE_SYS_MAX        8
+#define _POSIX_TRACE_USER_EVENT_MAX 32
+#define _POSIX_TTY_NAME_MAX         9  /* includes trailing NUL */
+#define _POSIX_TZNAME_MAX           6
 #define _POSIX2_BC_BASE_MAX         99
 #define _POSIX2_BC_DIM_MAX          2048
 #define _POSIX2_BC_SCALE_MAX        99

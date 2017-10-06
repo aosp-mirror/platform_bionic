@@ -98,34 +98,41 @@ __attribute__((__weak__, visibility("default")))
 struct android_namespace_t* __loader_android_get_exported_namespace(const char* name);
 
 // Proxy calls to bionic loader
+__attribute__((__weak__))
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
   return __loader_dlopen(filename, flag, caller_addr);
 }
 
+__attribute__((__weak__))
 char* dlerror() {
   return __loader_dlerror();
 }
 
+__attribute__((__weak__))
 void* dlsym(void* handle, const char* symbol) {
   const void* caller_addr = __builtin_return_address(0);
   return __loader_dlsym(handle, symbol, caller_addr);
 }
 
+__attribute__((__weak__))
 void* dlvsym(void* handle, const char* symbol, const char* version) {
   const void* caller_addr = __builtin_return_address(0);
   return __loader_dlvsym(handle, symbol, version, caller_addr);
 }
 
+__attribute__((__weak__))
 int dladdr(const void* addr, Dl_info* info) {
   return __loader_dladdr(addr, info);
 }
 
+__attribute__((__weak__))
 int dlclose(void* handle) {
   return __loader_dlclose(handle);
 }
 
 #if defined(__arm__)
+__attribute__((__weak__))
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
   return __loader_dl_unwind_find_exidx(pc, pcount);
 }
@@ -140,31 +147,39 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   return __loader_dl_iterate_phdr(cb, data);
 }
 
+__attribute__((__weak__))
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
   __loader_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
 }
 
+__attribute__((__weak__))
 void android_update_LD_LIBRARY_PATH(const char* ld_library_path) {
   __loader_android_update_LD_LIBRARY_PATH(ld_library_path);
 }
 
+__attribute__((__weak__))
 void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo* extinfo) {
   const void* caller_addr = __builtin_return_address(0);
   return __loader_android_dlopen_ext(filename, flag, extinfo, caller_addr);
 }
 
+__attribute__((__weak__))
 void android_set_application_target_sdk_version(uint32_t target) {
   __loader_android_set_application_target_sdk_version(target);
 }
+
+__attribute__((__weak__))
 uint32_t android_get_application_target_sdk_version() {
   return __loader_android_get_application_target_sdk_version();
 }
 
+__attribute__((__weak__))
 bool android_init_anonymous_namespace(const char* shared_libs_sonames,
                                       const char* library_search_path) {
   return __loader_android_init_anonymous_namespace(shared_libs_sonames, library_search_path);
 }
 
+__attribute__((__weak__))
 struct android_namespace_t* android_create_namespace(const char* name,
                                                      const char* ld_library_path,
                                                      const char* default_library_path,
@@ -181,16 +196,19 @@ struct android_namespace_t* android_create_namespace(const char* name,
                                            caller_addr);
 }
 
+__attribute__((__weak__))
 bool android_link_namespaces(struct android_namespace_t* namespace_from,
                              struct android_namespace_t* namespace_to,
                              const char* shared_libs_sonames) {
   return __loader_android_link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
 }
 
+__attribute__((__weak__))
 void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
   __loader_android_dlwarning(obj, f);
 }
 
+__attribute__((__weak__))
 struct android_namespace_t* android_get_exported_namespace(const char* name) {
   return __loader_android_get_exported_namespace(name);
 }
