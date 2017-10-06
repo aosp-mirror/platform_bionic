@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "234c4759_92944953",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-06T19:43:08Z",
+      "side": 1,
+      "message": "I don\u0027t think you need these. A better way to do this would be to put one comment above the neon section indicating the cortex-cpus that use it.\n\nAlthough, I think a better comment would be above the neon that indicates it\u0027s the default if no specific cpu is specified.",
+      "range": {
+        "startLine": 914,
+        "startChar": 1,
+        "endLine": 915,
+        "endChar": 16
+      },
+      "revId": "86bfc768c4bacf4ad5961433b311f855071875ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
