@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,52 +26,43 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <stdint.h>
+#pragma once
+
+#include <sys/cdefs.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
-#include "private/ErrnoRestorer.h"
+#if __ANDROID_API__ < __ANDROID_API_L__
 
-// mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
+__BEGIN_DECLS
 
-#define MMAP2_SHIFT 12 // 2**12 == 4096
-
-static bool kernel_has_MADV_MERGEABLE = true;
-
-void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
+/*
+ * While this was never an inline, this function alone has caused most of the
+ * bug reports related to _FILE_OFFSET_BITS=64. Providing an inline for it
+ * should allow a lot more code to build with _FILE_OFFSET_BITS=64 when
+ * targeting pre-L.
+ */
+static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
+                             off64_t __offset) {
+  const int __mmap2_shift = 12; // 2**12 == 4096
+  if (__offset < 0 || (__offset & ((1UL << __mmap2_shift) - 1)) != 0) {
     errno = EINVAL;
     return MAP_FAILED;
   }
 
   // prevent allocations large enough for `end - start` to overflow
-  size_t rounded = __BIONIC_ALIGN(size, PAGE_SIZE);
-  if (rounded < size || rounded > PTRDIFF_MAX) {
+  size_t __rounded = __BIONIC_ALIGN(__size, PAGE_SIZE);
+  if (__rounded < __size || __rounded > PTRDIFF_MAX) {
     errno = ENOMEM;
     return MAP_FAILED;
   }
 
-  bool is_private_anonymous =
-      (flags & (MAP_PRIVATE | MAP_ANONYMOUS)) == (MAP_PRIVATE | MAP_ANONYMOUS);
-  bool is_stack_or_grows_down = (flags & (MAP_STACK | MAP_GROWSDOWN)) != 0;
-
-  void* result = __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-
-  if (result != MAP_FAILED && kernel_has_MADV_MERGEABLE &&
-      is_private_anonymous && !is_stack_or_grows_down) {
-    ErrnoRestorer errno_restorer;
-    int rc = madvise(result, size, MADV_MERGEABLE);
-    if (rc == -1 && errno == EINVAL) {
-      kernel_has_MADV_MERGEABLE = false;
-    }
-  }
-
-  return result;
+  extern void* __mmap2(void* __addr, size_t __size, int __prot, int __flags, int __fd,
+                       size_t __offset);
+  return __mmap2(__addr, __size, __prot, __flags, __fd, __offset >> __mmap2_shift);
 }
 
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
-}
+__END_DECLS
+
+#endif  /* __ANDROID_API__ < __ANDROID_API_L__ */
