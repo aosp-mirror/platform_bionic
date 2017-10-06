@@ -46,6 +46,30 @@
       "revId": "89eee58d83027ba01093db621651e328e2801d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f9cf03a_8c4f06a8",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-06T02:43:30Z",
+      "side": 1,
+      "message": "Oops, didn\u0027t notice the static part of the declaration.\n\nI do think this function feels inherently dangerous, since it should only ever be called once.",
+      "parentUuid": "5747193a_31326846",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 21
+      },
+      "revId": "89eee58d83027ba01093db621651e328e2801d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
