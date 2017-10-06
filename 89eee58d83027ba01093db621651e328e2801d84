@@ -70,6 +70,29 @@
       "revId": "89eee58d83027ba01093db621651e328e2801d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "498a6903_27c6eeb5",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-06T11:58:41Z",
+      "side": 1,
+      "message": "this this the part I am worried about. Note that init_default_namespace uses path to figure out which namespace config to apply (from ld.config.txt file).",
+      "range": {
+        "startLine": 356,
+        "startChar": 73,
+        "endLine": 356,
+        "endChar": 88
+      },
+      "revId": "89eee58d83027ba01093db621651e328e2801d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
