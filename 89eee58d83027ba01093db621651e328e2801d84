@@ -93,6 +93,30 @@
       "revId": "89eee58d83027ba01093db621651e328e2801d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a18a58e_0cbbec54",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-06T11:59:48Z",
+      "side": 1,
+      "message": "I am kind of surprised we do not have test for this, do we?",
+      "parentUuid": "498a6903_27c6eeb5",
+      "range": {
+        "startLine": 356,
+        "startChar": 73,
+        "endLine": 356,
+        "endChar": 88
+      },
+      "revId": "89eee58d83027ba01093db621651e328e2801d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
