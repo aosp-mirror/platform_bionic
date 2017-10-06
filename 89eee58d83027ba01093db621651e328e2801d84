@@ -22,6 +22,30 @@
       "revId": "89eee58d83027ba01093db621651e328e2801d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5747193a_31326846",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-06T02:22:20Z",
+      "side": 1,
+      "message": "note that this is actually the same as before; i renamed the string to `holder` to try to make it clearer (because i thought the same as you) that this is a _static_ std::string specifically to ensure that this char* lasts forever.",
+      "parentUuid": "bd39f29e_a2e67710",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 21
+      },
+      "revId": "89eee58d83027ba01093db621651e328e2801d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
