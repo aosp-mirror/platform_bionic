@@ -40,6 +40,7 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_globals.h"
+#include "private/bionic_macros.h"
 #include "private/bionic_page.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -82,6 +83,8 @@ __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
+  BIONIC_STOP_UNWIND;
+
   KernelArgumentBlock args(raw_args);
   __libc_init_main_thread(args);
 
