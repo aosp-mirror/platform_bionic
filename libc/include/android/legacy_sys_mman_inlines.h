@@ -44,6 +44,8 @@ __BEGIN_DECLS
  * targeting pre-L.
  */
 static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
+                             off64_t __offset) __RENAME(mmap64);
+static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
                              off64_t __offset) {
   const int __mmap2_shift = 12; // 2**12 == 4096
   if (__offset < 0 || (__offset & ((1UL << __mmap2_shift) - 1)) != 0) {
