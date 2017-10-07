@@ -48,12 +48,23 @@ __BEGIN_DECLS
 /*
  * mmap64 wasn't really around until L, but we added an inline for it since it
  * allows a lot more code to compile with _FILE_OFFSET_BITS=64.
+ *
+ * GCC removes the static inline unless it is explicitly used. We can get around
+ * this with __attribute__((used)), but that needlessly adds a definition of
+ * mmap64 to every translation unit that includes this header. Instead, just
+ * preserve the old behavior for GCC and emit a useful diagnostic.
  */
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset)
+#if !defined(__clang__) && __ANDROID_API__ < __ANDROID_API_L__
+    __attribute__((error("mmap is not available with _FILE_OFFSET_BITS=64 when using GCC until "
+                         "android-21. Either raise your minSdkVersion, disable "
+                         "_FILE_OFFSET_BITS=64, or switch to Clang.")));
+#else
     __RENAME(mmap64);
+#endif  /* defined(__clang__) */
 #else
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
-#endif
+#endif  /* defined(__USE_FILE_OFFSET64) */
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
