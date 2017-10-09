@@ -2076,3 +2076,49 @@ TEST(pthread, pthread_spinlock_smoke) {
   ASSERT_EQ(0, pthread_spin_unlock(&lock));
   ASSERT_EQ(0, pthread_spin_destroy(&lock));
 }
+
+TEST(pthread, pthread_attr_setdetachstate) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
+  ASSERT_EQ(EINVAL, pthread_attr_setdetachstate(&attr, 123));
+}
+
+TEST(pthread, pthread_create__mmap_failures) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
+
+  const auto kPageSize = sysconf(_SC_PAGE_SIZE);
+
+  // Use up all the VMAs. By default this is 64Ki.
+  std::vector<void*> pages;
+  int prot = PROT_NONE;
+  while (true) {
+    void* page = mmap(nullptr, kPageSize, prot, MAP_ANON|MAP_PRIVATE, -1, 0);
+    if (page == MAP_FAILED) break;
+    pages.push_back(page);
+    prot = (prot == PROT_NONE) ? PROT_READ : PROT_NONE;
+  }
+
+  // Try creating threads, freeing up a page each time we fail.
+  size_t EAGAIN_count = 0;
+  size_t i = 0;
+  for (; i < pages.size(); ++i) {
+    pthread_t t;
+    int status = pthread_create(&t, &attr, IdFn, nullptr);
+    if (status != EAGAIN) break;
+    ++EAGAIN_count;
+    ASSERT_EQ(0, munmap(pages[i], kPageSize));
+  }
+
+  // Creating a thread uses at least six VMAs: the stack, the TLS, and a guard each side of both.
+  // So we should have seen at least six failures.
+  ASSERT_GE(EAGAIN_count, 6U);
+
+  for (; i < pages.size(); ++i) {
+    ASSERT_EQ(0, munmap(pages[i], kPageSize));
+  }
+}
