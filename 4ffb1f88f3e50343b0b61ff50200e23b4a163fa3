@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a30a3476_6b3a6762",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-09T21:34:49Z",
+      "side": 1,
+      "message": "This is clearly gorgeous, but as the comment explains, it\u0027s probably the best way to do this.",
+      "revId": "4ffb1f88f3e50343b0b61ff50200e23b4a163fa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
