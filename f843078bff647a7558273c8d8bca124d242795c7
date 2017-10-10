@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "fa1f14c0_93ee7b8b",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T22:11:10Z",
+      "side": 1,
+      "message": "don\u0027t tell me, tell posterity...",
+      "parentUuid": "756a85d2_091a51ae",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 96
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda6b6e3_0dfc71ec",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 4
@@ -101,6 +125,30 @@
       "side": 1,
       "message": "I\u0027m not sure that\u0027s better.  I worry \u0027property length\u0027 could be ambiguous between name and value, since we also had property name restrictions in the past.\n\n\"Your buffer\" I worry could be confusing too since naive users may just try increasing the buffer size they pass to __system_property_read(), and be confused why they still get the error (obviously ignoring the instruction of the new function to use).\n\nPerhaps something like \"The property \\\"%s\\\" has a value with length %d that is too large for __system_property_get()/__system_property_read(); use __system_property_read_callback() instead.\"",
       "parentUuid": "eda6b6e3_0dfc71ec",
+      "range": {
+        "startLine": 1257,
+        "startChar": 31,
+        "endLine": 1259,
+        "endChar": 84
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c04925d_7f78fb94",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T22:11:10Z",
+      "side": 1,
+      "message": "sgtm.",
+      "parentUuid": "c0328952_db53e970",
       "range": {
         "startLine": 1257,
         "startChar": 31,
