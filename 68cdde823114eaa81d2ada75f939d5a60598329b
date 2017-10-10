@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78f99b12_e939906b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T15:52:05Z",
+      "side": 1,
+      "message": "x86 doesn\u0027t though. why does it work on x86? (since there is no MIPS Kindle app, you don\u0027t need this workaround.)",
+      "range": {
+        "startLine": 51,
+        "startChar": 18,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "68cdde823114eaa81d2ada75f939d5a60598329b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
