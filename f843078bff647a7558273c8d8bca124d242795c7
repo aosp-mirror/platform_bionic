@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "eeaa6420_486e3b84",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-10T22:54:11Z",
+      "side": 1,
+      "message": "Right; done.",
+      "parentUuid": "fa1f14c0_93ee7b8b",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 96
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda6b6e3_0dfc71ec",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 4
@@ -149,6 +173,30 @@
       "side": 1,
       "message": "sgtm.",
       "parentUuid": "c0328952_db53e970",
+      "range": {
+        "startLine": 1257,
+        "startChar": 31,
+        "endLine": 1259,
+        "endChar": 84
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b292672_e69f426a",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-10T22:54:11Z",
+      "side": 1,
+      "message": "So I don\u0027t actually need to store the length for other reasons, so to get the length for the error message, I use strlen() in the latest patch set.\n\nI could preemptively add a field for length.  It isn\u0027t strictly needed for read-only properties only, but would be if we ever decided to do read/write properties, since trying to find the \u0027\\0\u0027 would race with updates.",
+      "parentUuid": "6c04925d_7f78fb94",
       "range": {
         "startLine": 1257,
         "startChar": 31,
