@@ -207,7 +207,7 @@ TEST(fcntl, vmsplice) {
 }
 
 TEST(fcntl, tee) {
-  char expected[256];
+  char expected[BUFSIZ];
   FILE* expected_fp = fopen("/proc/version", "r");
   ASSERT_TRUE(expected_fp != NULL);
   ASSERT_TRUE(fgets(expected, sizeof(expected), expected_fp) != NULL);
