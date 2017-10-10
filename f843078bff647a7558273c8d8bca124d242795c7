@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcd97372_9b47fd3c",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T21:05:09Z",
+      "side": 1,
+      "message": "say what they _should_ use instead?",
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48de9abf_5769d9fd",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T21:05:09Z",
+      "side": 1,
+      "message": "why?",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 96
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eda6b6e3_0dfc71ec",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-10T21:05:09Z",
+      "side": 1,
+      "message": "\"Property \\\"%s\\\" has length %d which is too large for your buffer. Use __system_property_read_callback instead.\" seems slightly more to the point?",
+      "range": {
+        "startLine": 1257,
+        "startChar": 31,
+        "endLine": 1259,
+        "endChar": 84
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
