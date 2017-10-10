@@ -43,6 +43,9 @@
 #include <string>
 #include <unordered_map>
 
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
+
 class ConfigParser {
  public:
   enum {
@@ -275,6 +278,15 @@ static bool parse_config_file(const char* ld_config_file_path,
   return true;
 }
 
+static std::string getVndkVersionString() {
+  char vndk_version_str[1 + PROP_VALUE_MAX] = {};
+  __system_property_get("ro.vndk.version", vndk_version_str + 1);
+  if (strlen(vndk_version_str + 1) != 0 && strcmp(vndk_version_str + 1, "current") != 0) {
+    vndk_version_str[0] = '-';
+  }
+  return vndk_version_str;
+}
+
 static Config g_config;
 
 static constexpr const char* kDefaultConfigName = "default";
@@ -333,6 +345,9 @@ class Properties {
       async_safe_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
       params.push_back({ "SDK_VER", buf });
     }
+
+    static std::string vndk = getVndkVersionString();
+    params.push_back({ "VNDK_VER", vndk });
 
     for (auto&& path : paths) {
       format_string(&path, params);
