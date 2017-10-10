@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "756a85d2_091a51ae",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-10T21:24:04Z",
+      "side": 1,
+      "message": "I\u0027m putting this in a union with the existing 92 length value field.  I don\u0027t want to burn through the entire 92 characters, as I need at least the offset and would like some reserved space left over in case we need to expand on this in the future.",
+      "parentUuid": "48de9abf_5769d9fd",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 96
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eda6b6e3_0dfc71ec",
         "filename": "libc/bionic/system_properties.cpp",
         "patchSetId": 4
@@ -53,6 +77,30 @@
       "writtenOn": "2017-10-10T21:05:09Z",
       "side": 1,
       "message": "\"Property \\\"%s\\\" has length %d which is too large for your buffer. Use __system_property_read_callback instead.\" seems slightly more to the point?",
+      "range": {
+        "startLine": 1257,
+        "startChar": 31,
+        "endLine": 1259,
+        "endChar": 84
+      },
+      "revId": "f843078bff647a7558273c8d8bca124d242795c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0328952_db53e970",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-10T21:24:04Z",
+      "side": 1,
+      "message": "I\u0027m not sure that\u0027s better.  I worry \u0027property length\u0027 could be ambiguous between name and value, since we also had property name restrictions in the past.\n\n\"Your buffer\" I worry could be confusing too since naive users may just try increasing the buffer size they pass to __system_property_read(), and be confused why they still get the error (obviously ignoring the instruction of the new function to use).\n\nPerhaps something like \"The property \\\"%s\\\" has a value with length %d that is too large for __system_property_get()/__system_property_read(); use __system_property_read_callback() instead.\"",
+      "parentUuid": "eda6b6e3_0dfc71ec",
       "range": {
         "startLine": 1257,
         "startChar": 31,
