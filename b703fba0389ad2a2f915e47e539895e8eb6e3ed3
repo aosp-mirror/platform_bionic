@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17c782df_e667446c",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-10-11T21:08:00Z",
+      "side": 1,
+      "message": "Isn\u0027t this true regardless of whether we use fork or vfork?",
+      "range": {
+        "startLine": 142,
+        "startChar": 27,
+        "endLine": 142,
+        "endChar": 68
+      },
+      "revId": "b703fba0389ad2a2f915e47e539895e8eb6e3ed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "628b6f45_736f6467",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-10-11T21:08:00Z",
+      "side": 1,
+      "message": "Maybe switch head to a unique_ptr-equivalent? It\u0027d increase the stack usage of this, though.",
+      "revId": "b703fba0389ad2a2f915e47e539895e8eb6e3ed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07650f63_cf36f0c6",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-10-11T21:08:00Z",
+      "side": 1,
+      "message": "This should be delete. Also, shouldn\u0027t you be freeing action-\u003epath?",
+      "revId": "b703fba0389ad2a2f915e47e539895e8eb6e3ed3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
