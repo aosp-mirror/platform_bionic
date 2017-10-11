@@ -29,6 +29,7 @@
 #ifndef __LINKER_ALLOCATOR_H
 #define __LINKER_ALLOCATOR_H
 
+#include <errno.h>
 #include <stdlib.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
