@@ -31,6 +31,7 @@
 #include <wchar.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "local.h"
 
