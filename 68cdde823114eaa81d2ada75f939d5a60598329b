@@ -46,6 +46,30 @@
       "revId": "68cdde823114eaa81d2ada75f939d5a60598329b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c851947f_3cf4605e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1050647
+      },
+      "writtenOn": "2017-10-11T14:41:03Z",
+      "side": 1,
+      "message": "I take back my statement. After further investigations we found that __work_around_b_24465209__ is actually not needed, and the only necessary changes are the ones in linker_mips.cpp.\n\nWe will update the patch accordingly.",
+      "parentUuid": "9963edef_f94a8d0d",
+      "range": {
+        "startLine": 51,
+        "startChar": 18,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "68cdde823114eaa81d2ada75f939d5a60598329b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
