@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#if __has_include(<sys/auxv.h>)
+#include <sys/auxv.h>
+#endif
 
 #include <string>
 #include <thread>
@@ -246,6 +249,12 @@ TEST(dlfcn, dlopen_by_soname) {
 }
 
 TEST(dlfcn, dlopen_vdso) {
+#if __has_include(<sys/auxv.h>)
+  if (getauxval(AT_SYSINFO_EHDR) == 0) {
+    GTEST_LOG_(INFO) << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test.";
+    return;
+  }
+#endif
   void* handle = dlopen("linux-vdso.so.1", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
