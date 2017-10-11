@@ -29,6 +29,7 @@
 #include <android/set_abort_message.h>
 
 #include <pthread.h>
+#include <string.h>
 #include <sys/mman.h>
 
 #include "private/ScopedPthreadMutexLocker.h"
