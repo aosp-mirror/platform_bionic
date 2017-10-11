@@ -22,6 +22,30 @@
       "revId": "68cdde823114eaa81d2ada75f939d5a60598329b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9963edef_f94a8d0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1050647
+      },
+      "writtenOn": "2017-10-11T08:17:19Z",
+      "side": 1,
+      "message": "Actually, x86 does have this workaround also defined:\n\n        x86: {\n            srcs: [\"arch/x86/begin.c\"],\n\n            cflags: [\"-D__work_around_b_24465209__\"],\n            version_script: \"linker.generic.map\",\n        },\n\nIt\u0027s just a couple of lines above mips node in Android.bp.\nWe do not have access to view the details of the 24465209 bug, but it seems the issue is common to 32bit architectures, which we confirmed experimentally.\n\nIf we undefine __work_around_b_24465209__ for ARM or x86 the mentioned test will fail.\n\nWe will update the commit message to include x86 case as well, and delete the topic name to remove dependency on the kernel patches which got +2.",
+      "parentUuid": "78f99b12_e939906b",
+      "range": {
+        "startLine": 51,
+        "startChar": 18,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "68cdde823114eaa81d2ada75f939d5a60598329b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
