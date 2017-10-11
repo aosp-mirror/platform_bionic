@@ -22,10 +22,10 @@
  * Stub functions for portability.
  */
 
-#include <sys/mman.h>
-
+#include <errno.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/mman.h>
 
 #include <async_safe/log.h>
 

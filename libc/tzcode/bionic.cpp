@@ -27,6 +27,7 @@
  */
 
 #include <arpa/inet.h> // For ntohl(3).
+#include <errno.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdlib.h>
