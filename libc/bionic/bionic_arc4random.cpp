@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <stdatomic.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/auxv.h>
 #include <unistd.h>
 
