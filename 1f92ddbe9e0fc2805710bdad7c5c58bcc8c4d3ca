@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "160b0e6f_83958b98",
+        "filename": "libc/include/setjmp.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-12T20:20:11Z",
+      "side": 1,
+      "message": "fixed alphabetical order.",
+      "parentUuid": "0058f4d3_0a416db6",
+      "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dcbf7e88_ea8cfaba",
         "filename": "libc/private/bionic_asm_arm.h",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2017-10-12T20:07:31Z",
       "side": 1,
       "message": "Is there a reason you are using this? I thought there were enough drawbacks that it\u0027s not a good idea to use this.",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 12
+      },
+      "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a6eb0c5_b1de8f47",
+        "filename": "libc/private/bionic_asm_arm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-12T20:20:11Z",
+      "side": 1,
+      "message": "i plan on redoing all the internal headers with #pragma once in a later change.\n\ni\u0027m still not sold on changing the *public* headers, but that\u0027s a question for another day.",
+      "parentUuid": "dcbf7e88_ea8cfaba",
       "range": {
         "startLine": 38,
         "startChar": 0,
