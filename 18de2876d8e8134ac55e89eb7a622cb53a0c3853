@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "06f00a60_e9bba5d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-12T13:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2df7885_78947045",
+      "range": {
+        "startLine": 7,
+        "startChar": 36,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "18de2876d8e8134ac55e89eb7a622cb53a0c3853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa4db278_f8e638e9",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "f5fdfc6e_3514da3c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-12T13:05:12Z",
+      "side": 1,
+      "message": "explained in comment",
+      "parentUuid": "fa4db278_f8e638e9",
+      "revId": "18de2876d8e8134ac55e89eb7a622cb53a0c3853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10f80875_887ffebb",
         "filename": "tests/dlext_test.cpp",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2017-10-11T15:28:09Z",
       "side": 1,
       "message": "(this is probably the best place to answer my second question.)",
+      "range": {
+        "startLine": 1661,
+        "startChar": 42,
+        "endLine": 1662,
+        "endChar": 22
+      },
+      "revId": "18de2876d8e8134ac55e89eb7a622cb53a0c3853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "324fac14_384351e6",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-12T13:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10f80875_887ffebb",
       "range": {
         "startLine": 1661,
         "startChar": 42,
