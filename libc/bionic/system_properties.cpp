@@ -71,8 +71,26 @@ static constexpr size_t PA_SIZE = 128 * 1024;
 #define SERIAL_DIRTY(serial) ((serial)&1)
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
 
+constexpr static const char kLongLegacyError[] = "Must use __system_property_read_callback() to read";
+
+// The error message fits in part of a union with the previous 92 char property value so there must
+// be room left over after the error message for the offset to the new longer property value and
+// future expansion fields if needed.
+// Note that this value cannot ever increase.  The offset to the new longer property value appears
+// immediately after it, so an increase of this size will break compatibility.
+constexpr size_t kLongLegacyErrorBufferSize = 56;
+static_assert(sizeof(kLongLegacyError) < kLongLegacyErrorBufferSize,
+              "Error message for long properties read by legacy libc must fit within 56 chars");
+
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
+
+// The C11 standard doesn't allow atomic loads from const fields,
+// though C++11 does.  Fudge it until standards get straightened out.
+static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s, memory_order mo) {
+  atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
+  return atomic_load_explicit(non_const_s, mo);
+}
 
 /*
  * Properties are stored in a hybrid trie/binary tree structure.
@@ -182,11 +200,33 @@ class prop_area {
 };
 
 struct prop_info {
+  // Read only properties will not set anything but the bottom most bit of serial and the top byte.
+  // We borrow the 2nd from the top byte for extra flags, and use the bottom most bit of that for
+  // our first user, kLongFlag.
+  constexpr static uint32_t kLongFlag = 1 << 16;
   atomic_uint_least32_t serial;
   // we need to keep this buffer around because the property
   // value can be modified whereas name is constant.
-  char value[PROP_VALUE_MAX];
+  union {
+    char value[PROP_VALUE_MAX];
+    struct {
+      char error_message[kLongLegacyErrorBufferSize];
+      uint32_t offset;
+    } long_property;
+  };
   char name[0];
+
+  bool is_long() const {
+    return (load_const_atomic(&serial, memory_order_relaxed) & kLongFlag) != 0;
+  }
+
+  const char* long_value() const {
+    // We can't store pointers here since this is shared memory that will have different absolute
+    // pointers in different processes.  We don't have data_ from prop_area, but since we know
+    // `this` is data_ + some offset and long_value is data_ + some other offset, we calculate the
+    // offset from `this` to long_value and store it as long_property.offset.
+    return reinterpret_cast<const char*>(this) + long_property.offset;
+  }
 
   prop_info(const char* name, uint32_t namelen, const char* value, uint32_t valuelen) {
     memcpy(this->name, name, namelen);
@@ -196,9 +236,22 @@ struct prop_info {
     this->value[valuelen] = '\0';
   }
 
+  prop_info(const char* name, uint32_t namelen, uint32_t long_offset) {
+    memcpy(this->name, name, namelen);
+    this->name[namelen] = '\0';
+
+    auto error_value_len = sizeof(kLongLegacyError) - 1;
+    atomic_init(&this->serial, error_value_len << 24 | kLongFlag);
+    memcpy(this->long_property.error_message, kLongLegacyError, sizeof(kLongLegacyError));
+
+    this->long_property.offset = long_offset;
+  }
+
  private:
   DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
+
+static_assert(sizeof(prop_info) == 96, "size of struct prop_info must be 96 bytes");
 
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
 prop_area* __system_property_area__ = nullptr;
@@ -330,13 +383,28 @@ prop_info* prop_area::new_prop_info(const char* name, uint32_t namelen, const ch
                                     uint32_t valuelen, uint_least32_t* const off) {
   uint_least32_t new_offset;
   void* const p = allocate_obj(sizeof(prop_info) + namelen + 1, &new_offset);
-  if (p != nullptr) {
-    prop_info* info = new (p) prop_info(name, namelen, value, valuelen);
-    *off = new_offset;
-    return info;
-  }
+  if (p == nullptr) return nullptr;
 
-  return nullptr;
+  prop_info* info;
+  if (valuelen >= PROP_VALUE_MAX) {
+    uint32_t long_value_offset = 0;
+    char* long_location = reinterpret_cast<char*>(allocate_obj(valuelen + 1, &long_value_offset));
+    if (!long_location) return nullptr;
+
+    memcpy(long_location, value, valuelen);
+    long_location[valuelen] = '\0';
+
+    // Both new_offset and long_value_offset are offsets based off of data_, however prop_info
+    // does not know what data_ is, so we change this offset to be an offset from the prop_info
+    // pointer that contains it.
+    long_value_offset -= new_offset;
+
+    info = new (p) prop_info(name, namelen, long_value_offset);
+  } else {
+    info = new (p) prop_info(name, namelen, value, valuelen);
+  }
+  *off = new_offset;
+  return info;
 }
 
 void* prop_area::to_prop_obj(uint_least32_t off) {
@@ -1161,11 +1229,8 @@ const prop_info* __system_property_find(const char* name) {
   return pa->find(name);
 }
 
-// The C11 standard doesn't allow atomic loads from const fields,
-// though C++11 does.  Fudge it until standards get straightened out.
-static inline uint_least32_t load_const_atomic(const atomic_uint_least32_t* s, memory_order mo) {
-  atomic_uint_least32_t* non_const_s = const_cast<atomic_uint_least32_t*>(s);
-  return atomic_load_explicit(non_const_s, mo);
+static bool is_read_only(const char* name) {
+  return strncmp(name, "ro.", 3) == 0;
 }
 
 int __system_property_read(const prop_info* pi, char* name, char* value) {
@@ -1193,6 +1258,13 @@ int __system_property_read(const prop_info* pi, char* name, char* value) {
                                 pi->name, PROP_NAME_MAX - 1, name);
         }
       }
+      if (is_read_only(pi->name) && pi->is_long()) {
+        async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                              "The property \"%s\" has a value with length %zu that is too large for"
+                              " __system_property_get()/__system_property_read(); use"
+                              " __system_property_read_callback() instead.",
+                              pi->name, strlen(pi->long_value()));
+      }
       return len;
     }
   }
@@ -1204,6 +1276,18 @@ void __system_property_read_callback(const prop_info* pi,
                                                       const char* value,
                                                       uint32_t serial),
                                      void* cookie) {
+  // Read only properties don't need to copy the value to a temporary buffer, since it can never
+  // change.
+  if (is_read_only(pi->name)) {
+    uint32_t serial = __system_property_serial(pi);
+    if (pi->is_long()) {
+      callback(cookie, pi->name, pi->long_value(), serial);
+    } else {
+      callback(cookie, pi->name, pi->value, serial);
+    }
+    return;
+  }
+
   while (true) {
     uint32_t serial = __system_property_serial(pi);  // acquire semantics
     size_t len = SERIAL_VALUE_LEN(serial);
@@ -1260,15 +1344,15 @@ static void detect_protocol_version() {
 int __system_property_set(const char* key, const char* value) {
   if (key == nullptr) return -1;
   if (value == nullptr) value = "";
-  if (strlen(value) >= PROP_VALUE_MAX) return -1;
 
   if (g_propservice_protocol_version == 0) {
     detect_protocol_version();
   }
 
   if (g_propservice_protocol_version == kProtocolVersion1) {
-    // Old protocol does not support long names
+    // Old protocol does not support long names or values
     if (strlen(key) >= PROP_NAME_MAX) return -1;
+    if (strlen(value) >= PROP_VALUE_MAX) return -1;
 
     prop_msg msg;
     memset(&msg, 0, sizeof msg);
@@ -1278,6 +1362,8 @@ int __system_property_set(const char* key, const char* value) {
 
     return send_prop_msg(&msg);
   } else {
+    // New protocol only allows long values for ro. properties only.
+    if (strlen(value) >= PROP_VALUE_MAX && !is_read_only(key)) return -1;
     // Use proper protocol
     PropertyServiceConnection connection;
     if (!connection.IsValid()) {
@@ -1364,7 +1450,7 @@ int __system_property_update(prop_info* pi, const char* value, unsigned int len)
 
 int __system_property_add(const char* name, unsigned int namelen, const char* value,
                           unsigned int valuelen) {
-  if (valuelen >= PROP_VALUE_MAX) {
+  if (valuelen >= PROP_VALUE_MAX && !is_read_only(name)) {
     return -1;
   }
 
