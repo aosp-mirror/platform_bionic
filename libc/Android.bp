@@ -21,7 +21,6 @@ libc_common_src_files = [
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.c",
     "stdio/vfwscanf.c",
-    "stdlib/atexit.c",
     "stdlib/exit.c",
 ]
 
@@ -887,11 +886,6 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // The following implementations depend on pthread data, so we can't
-        // include them in libc_ndk.a.
-        "bionic/__cxa_thread_atexit_impl.cpp",
-        "bionic/fork.cpp",
-
         // The data that backs getauxval is initialized in the libc init
         // functions which are invoked by the linker. If this file is included
         // in libc_ndk.a, only one of the copies of the global data will be
@@ -1396,7 +1390,6 @@ cc_library_static {
         "bionic/__gnu_basename.cpp",
         "bionic/__libc_current_sigrtmax.cpp",
         "bionic/__libc_current_sigrtmin.cpp",
-        "bionic/__set_errno.cpp",
         "bionic/abort.cpp",
         "bionic/accept.cpp",
         "bionic/accept4.cpp",
@@ -1565,6 +1558,10 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wcwidth.cpp",
         "bionic/wmempcpy.cpp",
+
+        // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
+        // which will be overridden by the actual one in libc.so.
+        "bionic/icu_static.cpp",
     ],
 
     multilib: {
@@ -1619,6 +1616,12 @@ cc_library_static {
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_sigmask.cpp",
         "bionic/pthread_spinlock.cpp",
+
+        // The following implementations depend on pthread data or implementation,
+        // so we can't include them in libc_ndk.a.
+        "bionic/__cxa_thread_atexit_impl.cpp",
+        "stdlib/atexit.c",
+        "bionic/fork.cpp",
     ],
 
     cppflags: ["-Wold-style-cast"],
@@ -1632,6 +1635,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
             srcs: ["arch-arm/syscalls/**/*.S"],
@@ -1731,9 +1735,8 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_common.a
+// libc_nopthread.a
 // ========================================================
-
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: libc_common_src_files,
@@ -1742,7 +1745,7 @@ cc_library_static {
             srcs: libc_common_src_files_32,
         },
     },
-    name: "libc_common",
+    name: "libc_nopthread",
 
     whole_static_libs: [
         "libc_bionic",
@@ -1757,7 +1760,6 @@ cc_library_static {
         "libc_openbsd",
         "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
-        "libc_pthread",
         "libc_stack_protector",
         "libc_syscalls",
         "libc_tzcode",
@@ -1769,6 +1771,20 @@ cc_library_static {
             whole_static_libs: ["libc_aeabi"],
         },
     },
+}
+
+// ========================================================
+// libc_common.a
+// ========================================================
+
+cc_library_static {
+    defaults: ["libc_defaults"],
+    name: "libc_common",
+
+    whole_static_libs: [
+        "libc_nopthread",
+        "libc_pthread",
+    ],
 }
 
 // ========================================================
@@ -1825,7 +1841,6 @@ cc_library {
     static: {
         srcs: [
             "bionic/dl_iterate_phdr_static.cpp",
-            "bionic/icu_static.cpp",
             "bionic/malloc_common.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
