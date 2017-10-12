@@ -22,6 +22,30 @@
       "revId": "977c6312e485c7fb8faf098b3782070df14db535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cca954c0_5f9bea58",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-10-12T20:53:04Z",
+      "side": 1,
+      "message": "The rationale was to catch null pointer dereferences of a containing struct, which upon reflection will only happen if someone copies the private FILE struct definition into their code. There are definitely people poking at fields, it\u0027s probably worth doing this check for that anyway, since this doesn\u0027t cost us anything.",
+      "parentUuid": "1a9fd9b3_dfde7196",
+      "range": {
+        "startLine": 78,
+        "startChar": 24,
+        "endLine": 78,
+        "endChar": 63
+      },
+      "revId": "977c6312e485c7fb8faf098b3782070df14db535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
