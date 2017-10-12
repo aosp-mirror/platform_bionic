@@ -4,16 +4,16 @@
 
 ENTRY(timerfd_settime)
     .set noreorder
-    .cpload t9
-    li v0, __NR_timerfd_settime
+    .cpload $t9
+    li $v0, __NR_timerfd_settime
     syscall
-    bnez a3, 1f
-    move a0, v0
-    j ra
+    bnez $a3, 1f
+    move $a0, $v0
+    j $ra
     nop
 1:
-    la t9,__set_errno_internal
-    j t9
+    la $t9,__set_errno_internal
+    j $t9
     nop
     .set reorder
 END(timerfd_settime)

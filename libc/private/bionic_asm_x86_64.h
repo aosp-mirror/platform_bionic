@@ -1,7 +1,6 @@
-/*	$OpenBSD: asm.h,v 1.1 2004/02/01 05:09:49 drahn Exp $	*/
-/*	$NetBSD: asm.h,v 1.4 2001/07/16 05:43:32 matt Exp $	*/
+/*	$NetBSD: asm.h,v 1.18 2013/09/12 15:36:17 joerg Exp $	*/
 
-/*
+/*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
  *
@@ -32,15 +31,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	from: @(#)asm.h	5.5 (Berkeley) 5/7/91
+ *	@(#)asm.h	5.5 (Berkeley) 5/7/91
  */
 
-#ifndef _AARCH64_ASM_H_
-#define _AARCH64_ASM_H_
+#pragma once
 
-#define __bionic_asm_align 0
+#define PIC_PLT(x)	x@PLT
+#define PIC_GOT(x)	x@GOTPCREL(%rip)
 
-#undef __bionic_asm_function_type
-#define __bionic_asm_function_type %function
-
-#endif /* _AARCH64_ASM_H_ */
+#define __bionic_asm_align 16
