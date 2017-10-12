@@ -36,26 +36,26 @@
 
 ENTRY(syscall)
     .set noreorder
-    .cpload t9
-    move    v0, a0
-    move    a0, a1
-    move    a1, a2
-    move    a2, a3
-    lw      a3, 16(sp)
-    lw      t0, 20(sp)
-    lw      t1, 24(sp)
-    subu    sp, STACKSIZE
-    sw      t0, 16(sp)
-    sw      t1, 20(sp)
+    .cpload $t9
+    move    $v0, $a0
+    move    $a0, $a1
+    move    $a1, $a2
+    move    $a2, $a3
+    lw      $a3, 16($sp)
+    lw      $t0, 20($sp)
+    lw      $t1, 24($sp)
+    subu    $sp, STACKSIZE
+    sw      $t0, 16($sp)
+    sw      $t1, 20($sp)
     syscall
-    addu    sp, STACKSIZE
-    bnez    a3, 1f
-    move    a0, v0
-    j       ra
+    addu    $sp, STACKSIZE
+    bnez    $a3, 1f
+    move    $a0, $v0
+    j       $ra
     nop
 1:
-    la      t9,__set_errno_internal
-    j       t9
+    la      $t9, __set_errno_internal
+    j       $t9
     nop
     .set reorder
 END(syscall)

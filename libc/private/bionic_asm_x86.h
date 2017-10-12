@@ -34,8 +34,7 @@
  *	@(#)asm.h	5.5 (Berkeley) 5/7/91
  */
 
-#ifndef _I386_ASM_H_
-#define _I386_ASM_H_
+#pragma once
 
 #define PIC_PROLOGUE	\
 	pushl	%ebx;	\
@@ -50,5 +49,3 @@
 #define PIC_GOTOFF(x)	x@GOTOFF(%ebx)
 
 #define __bionic_asm_align 16
-
-#endif /* !_I386_ASM_H_ */
