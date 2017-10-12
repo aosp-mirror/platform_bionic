@@ -1530,6 +1530,7 @@ cc_library_static {
         "bionic/sigwait.cpp",
         "bionic/sigwaitinfo.cpp",
         "bionic/socket.cpp",
+        "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/statvfs.cpp",
         "bionic/stdlib_l.cpp",
