@@ -119,7 +119,6 @@
  */
 
 #include <private/bionic_asm.h>
-#include <machine/setjmp.h>
 
 /* jmpbuf is declared to users as an array of longs, which is only
  * 4-byte aligned in 32-bit builds.  The Mips jmpbuf begins with a
@@ -161,10 +160,6 @@
 #define	SC_TOTAL_BYTES	(SC_FPREGS_OFFSET + SC_FPREGS_BYTES)
 #define	SC_TOTAL_LONGS	(SC_TOTAL_BYTES/REGSZ)
 
-#if SC_TOTAL_LONGS > _JBLEN
-#error _JBLEN is too small
-#endif
-
 #define USE_CHECKSUM 1
 
 .macro m_mangle_reg_and_store reg, cookie, temp, offset
@@ -203,138 +198,138 @@ A0OFF= FRAMESZ-3*REGSZ
 GPOFF= FRAMESZ-2*REGSZ
 RAOFF= FRAMESZ-1*REGSZ
 
-NON_LEAF(sigsetjmp, FRAMESZ, ra)
+NON_LEAF(sigsetjmp, FRAMESZ, $ra)
 	.mask	0x80000000, RAOFF
-	PTR_SUBU sp, FRAMESZ			# allocate stack frame
+	PTR_SUBU $sp, FRAMESZ			# allocate stack frame
 	SETUP_GP64(GPOFF, sigsetjmp)
 	SAVE_GP(GPOFF)
 	.set	reorder
 
 setjmp_common:
 #ifndef __LP64__
-	li	t0, ~7
-	and	a0, t0				# round jmpbuf addr DOWN to 8-byte boundary
+	li	$t0, ~7
+	and	$a0, $t0				# round jmpbuf addr DOWN to 8-byte boundary
 #endif
-	REG_S	ra, RAOFF(sp)			# spill state
-	REG_S	a0, A0OFF(sp)
+	REG_S	$ra, RAOFF($sp)			# spill state
+	REG_S	$a0, A0OFF($sp)
 
 	# get the cookie and store it along with the signal flag.
-	move	a0, a1
+	move	$a0, $a1
 	jal	__bionic_setjmp_cookie_get
-	REG_L	a0, A0OFF(sp)
+	REG_L	$a0, A0OFF($sp)
 
-	REG_S	v0, SC_FLAG_OFFSET(a0)		# save cookie and savesigs flag
-	andi	t0, v0, 1			# extract savesigs flag
+	REG_S	$v0, SC_FLAG_OFFSET($a0)		# save cookie and savesigs flag
+	andi	$t0, $v0, 1			# extract savesigs flag
 
-	beqz	t0, 1f				# do saving of signal mask?
+	beqz	$t0, 1f				# do saving of signal mask?
 
 	# call sigprocmask(int how ignored, sigset_t* null, sigset_t* SC_MASK(a0)):
-	LA	a2, SC_MASK_OFFSET(a0)		# gets current signal mask
-	li	a0, 0				# how; ignored when new mask is null
-	li	a1, 0				# null new mask
+	LA	$a2, SC_MASK_OFFSET($a0)		# gets current signal mask
+	li	$a0, 0				# how; ignored when new mask is null
+	li	$a1, 0				# null new mask
 	jal	sigprocmask			# get current signal mask
-	REG_L	a0, A0OFF(sp)
+	REG_L	$a0, A0OFF($sp)
 1:
-	REG_L	gp, GPOFF(sp)			# restore spills
-	REG_L	ra, RAOFF(sp)
-	REG_L	t0, SC_FLAG_OFFSET(a0)		# move cookie to temp reg
+	REG_L	$gp, GPOFF($sp)			# restore spills
+	REG_L	$ra, RAOFF($sp)
+	REG_L	$t0, SC_FLAG_OFFSET($a0)		# move cookie to temp reg
 
 	# callee-saved long-sized regs:
-	PTR_ADDU v1, sp, FRAMESZ		# save orig sp
+	PTR_ADDU $v1, $sp, FRAMESZ		# save orig sp
 
 	# m_mangle_reg_and_store reg, cookie, temp, offset
-	m_mangle_reg_and_store	ra, t0, t1, SC_REGS+0*REGSZ(a0)
-	m_mangle_reg_and_store	s0, t0, t2, SC_REGS+1*REGSZ(a0)
-	m_mangle_reg_and_store	s1, t0, t3, SC_REGS+2*REGSZ(a0)
-	m_mangle_reg_and_store	s2, t0, t1, SC_REGS+3*REGSZ(a0)
-	m_mangle_reg_and_store	s3, t0, t2, SC_REGS+4*REGSZ(a0)
-	m_mangle_reg_and_store	s4, t0, t3, SC_REGS+5*REGSZ(a0)
-	m_mangle_reg_and_store	s5, t0, t1, SC_REGS+6*REGSZ(a0)
-	m_mangle_reg_and_store	s6, t0, t2, SC_REGS+7*REGSZ(a0)
-	m_mangle_reg_and_store	s7, t0, t3, SC_REGS+8*REGSZ(a0)
-	m_mangle_reg_and_store	s8, t0, t1, SC_REGS+9*REGSZ(a0)
-	m_mangle_reg_and_store	gp, t0, t2, SC_REGS+10*REGSZ(a0)
-	m_mangle_reg_and_store	v1, t0, t3, SC_REGS+11*REGSZ(a0)
+	m_mangle_reg_and_store	$ra, $t0, $t1, SC_REGS+0*REGSZ($a0)
+	m_mangle_reg_and_store	$s0, $t0, $t2, SC_REGS+1*REGSZ($a0)
+	m_mangle_reg_and_store	$s1, $t0, $t3, SC_REGS+2*REGSZ($a0)
+	m_mangle_reg_and_store	$s2, $t0, $t1, SC_REGS+3*REGSZ($a0)
+	m_mangle_reg_and_store	$s3, $t0, $t2, SC_REGS+4*REGSZ($a0)
+	m_mangle_reg_and_store	$s4, $t0, $t3, SC_REGS+5*REGSZ($a0)
+	m_mangle_reg_and_store	$s5, $t0, $t1, SC_REGS+6*REGSZ($a0)
+	m_mangle_reg_and_store	$s6, $t0, $t2, SC_REGS+7*REGSZ($a0)
+	m_mangle_reg_and_store	$s7, $t0, $t3, SC_REGS+8*REGSZ($a0)
+	m_mangle_reg_and_store	$s8, $t0, $t1, SC_REGS+9*REGSZ($a0)
+	m_mangle_reg_and_store	$gp, $t0, $t2, SC_REGS+10*REGSZ($a0)
+	m_mangle_reg_and_store	$v1, $t0, $t3, SC_REGS+11*REGSZ($a0)
 
-	cfc1	v0, $31
+	cfc1	$v0, $31
 
 #ifdef __LP64__
 	# callee-saved fp regs on mips n64 ABI are $f24..$f31
-	s.d	$f24, SC_FPREGS+0*REGSZ_FP(a0)
-	s.d	$f25, SC_FPREGS+1*REGSZ_FP(a0)
-	s.d	$f26, SC_FPREGS+2*REGSZ_FP(a0)
-	s.d	$f27, SC_FPREGS+3*REGSZ_FP(a0)
-	s.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
-	s.d	$f29, SC_FPREGS+5*REGSZ_FP(a0)
-	s.d	$f30, SC_FPREGS+6*REGSZ_FP(a0)
-	s.d	$f31, SC_FPREGS+7*REGSZ_FP(a0)
+	s.d	$f24, SC_FPREGS+0*REGSZ_FP($a0)
+	s.d	$f25, SC_FPREGS+1*REGSZ_FP($a0)
+	s.d	$f26, SC_FPREGS+2*REGSZ_FP($a0)
+	s.d	$f27, SC_FPREGS+3*REGSZ_FP($a0)
+	s.d	$f28, SC_FPREGS+4*REGSZ_FP($a0)
+	s.d	$f29, SC_FPREGS+5*REGSZ_FP($a0)
+	s.d	$f30, SC_FPREGS+6*REGSZ_FP($a0)
+	s.d	$f31, SC_FPREGS+7*REGSZ_FP($a0)
 #else
 	# callee-saved fp regs on mips o32 ABI are
 	#   the even-numbered double fp regs $f20,$f22,...$f30
-	s.d	$f20, SC_FPREGS+0*REGSZ_FP(a0)
-	s.d	$f22, SC_FPREGS+1*REGSZ_FP(a0)
-	s.d	$f24, SC_FPREGS+2*REGSZ_FP(a0)
-	s.d	$f26, SC_FPREGS+3*REGSZ_FP(a0)
-	s.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
-	s.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
+	s.d	$f20, SC_FPREGS+0*REGSZ_FP($a0)
+	s.d	$f22, SC_FPREGS+1*REGSZ_FP($a0)
+	s.d	$f24, SC_FPREGS+2*REGSZ_FP($a0)
+	s.d	$f26, SC_FPREGS+3*REGSZ_FP($a0)
+	s.d	$f28, SC_FPREGS+4*REGSZ_FP($a0)
+	s.d	$f30, SC_FPREGS+5*REGSZ_FP($a0)
 #endif
-	sw	v0, SC_FPSR_OFFSET(a0)
+	sw	$v0, SC_FPSR_OFFSET($a0)
 #if USE_CHECKSUM
-	m_calculate_checksum t0, a0, t1
-	REG_S t0, SC_CKSUM_OFFSET(a0)
+	m_calculate_checksum $t0, $a0, $t1
+	REG_S $t0, SC_CKSUM_OFFSET($a0)
 #endif
-	move	v0, zero
+	move	$v0, $zero
 	RESTORE_GP64
-	PTR_ADDU sp, FRAMESZ
-	j	ra
+	PTR_ADDU $sp, FRAMESZ
+	j	$ra
 END(sigsetjmp)
 
 
 # Alternate entry points:
 
-NON_LEAF(setjmp, FRAMESZ, ra)
+NON_LEAF(setjmp, FRAMESZ, $ra)
 	.mask	0x80000000, RAOFF
-	PTR_SUBU sp, FRAMESZ
+	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, setjmp)		# can't share sigsetjmp's gp code
 	SAVE_GP(GPOFF)
 	.set	reorder
 
-	li	a1, 1				# save/restore signals state
+	li	$a1, 1				# save/restore signals state
 	b	setjmp_common			# tail call
 END(setjmp)
 
 
-NON_LEAF(_setjmp, FRAMESZ, ra)
+NON_LEAF(_setjmp, FRAMESZ, $ra)
 	.mask	0x80000000, RAOFF
-	PTR_SUBU sp, FRAMESZ
+	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, _setjmp)		# can't share sigsetjmp's gp code
 	SAVE_GP(GPOFF)
 	.set	reorder
 
-	li	a1, 0				# don't save/restore signals
+	li	$a1, 0				# don't save/restore signals
 	b	setjmp_common			# tail call
 END(_setjmp)
 
 
-NON_LEAF(siglongjmp, FRAMESZ, ra)
+NON_LEAF(siglongjmp, FRAMESZ, $ra)
 	.mask	0x80000000, RAOFF
-	PTR_SUBU sp, FRAMESZ
+	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, siglongjmp)
 	SAVE_GP(GPOFF)
 	.set	reorder
 
 #ifndef __LP64__
-	li	t0, ~7
-	and	a0, t0				# round jmpbuf addr DOWN to 8-byte boundary
+	li	$t0, ~7
+	and	$a0, $t0				# round jmpbuf addr DOWN to 8-byte boundary
 #endif
 
-	move	s1, a1				# temp spill
-	move	s0, a0
+	move	$s1, $a1				# temp spill
+	move	$s0, $a0
 
 #if USE_CHECKSUM
-	m_calculate_checksum t0, s0, s2
-	REG_L	s2, SC_CKSUM_OFFSET(s0)
-	beq	t0, s2, 0f
+	m_calculate_checksum $t0, $s0, $s2
+	REG_L	$s2, SC_CKSUM_OFFSET($s0)
+	beq	$t0, $s2, 0f
 	nop
 	jal	__bionic_setjmp_checksum_mismatch
 	nop
@@ -342,75 +337,75 @@ NON_LEAF(siglongjmp, FRAMESZ, ra)
 #endif
 
 	# extract savesigs flag
-	REG_L	s2, SC_FLAG_OFFSET(s0)
-	andi	t0, s2, 1
-	beqz	t0, 1f				# restore signal mask?
+	REG_L	$s2, SC_FLAG_OFFSET($s0)
+	andi	$t0, $s2, 1
+	beqz	$t0, 1f				# restore signal mask?
 
 	# call sigprocmask(int how SIG_SETMASK, sigset_t* SC_MASK(a0), sigset_t* null):
-	LA	a1, SC_MASK_OFFSET(s0)		# signals being restored
-	li	a0, 3				# mips SIG_SETMASK
-	li	a2, 0				# null
+	LA	$a1, SC_MASK_OFFSET($s0)		# signals being restored
+	li	$a0, 3				# mips SIG_SETMASK
+	li	$a2, 0				# null
 	jal	sigprocmask			# restore signal mask
 1:
-	move	t0, s2				# get cookie to temp reg
-	move	a1, s1
-	move	a0, s0
+	move	$t0, $s2				# get cookie to temp reg
+	move	$a1, $s1
+	move	$a0, $s0
 
 	# callee-saved long-sized regs:
 
 	# m_unmangle_reg_and_load reg, cookie, temp, offset
 	# don't restore gp yet, old value is needed for cookie_check call
-	m_unmangle_reg_and_load ra, t0, t1, SC_REGS+0*REGSZ(a0)
-	m_unmangle_reg_and_load s0, t0, t2, SC_REGS+1*REGSZ(a0)
-	m_unmangle_reg_and_load s1, t0, t3, SC_REGS+2*REGSZ(a0)
-	m_unmangle_reg_and_load s2, t0, t1, SC_REGS+3*REGSZ(a0)
-	m_unmangle_reg_and_load s3, t0, t2, SC_REGS+4*REGSZ(a0)
-	m_unmangle_reg_and_load s4, t0, t3, SC_REGS+5*REGSZ(a0)
-	m_unmangle_reg_and_load s5, t0, t1, SC_REGS+6*REGSZ(a0)
-	m_unmangle_reg_and_load s6, t0, t2, SC_REGS+7*REGSZ(a0)
-	m_unmangle_reg_and_load s7, t0, t3, SC_REGS+8*REGSZ(a0)
-	m_unmangle_reg_and_load s8, t0, t1, SC_REGS+9*REGSZ(a0)
-	m_unmangle_reg_and_load v1, t0, t2, SC_REGS+10*REGSZ(a0)
-	m_unmangle_reg_and_load sp, t0, t3, SC_REGS+11*REGSZ(a0)
+	m_unmangle_reg_and_load $ra, $t0, $t1, SC_REGS+0*REGSZ($a0)
+	m_unmangle_reg_and_load $s0, $t0, $t2, SC_REGS+1*REGSZ($a0)
+	m_unmangle_reg_and_load $s1, $t0, $t3, SC_REGS+2*REGSZ($a0)
+	m_unmangle_reg_and_load $s2, $t0, $t1, SC_REGS+3*REGSZ($a0)
+	m_unmangle_reg_and_load $s3, $t0, $t2, SC_REGS+4*REGSZ($a0)
+	m_unmangle_reg_and_load $s4, $t0, $t3, SC_REGS+5*REGSZ($a0)
+	m_unmangle_reg_and_load $s5, $t0, $t1, SC_REGS+6*REGSZ($a0)
+	m_unmangle_reg_and_load $s6, $t0, $t2, SC_REGS+7*REGSZ($a0)
+	m_unmangle_reg_and_load $s7, $t0, $t3, SC_REGS+8*REGSZ($a0)
+	m_unmangle_reg_and_load $s8, $t0, $t1, SC_REGS+9*REGSZ($a0)
+	m_unmangle_reg_and_load $v1, $t0, $t2, SC_REGS+10*REGSZ($a0)
+	m_unmangle_reg_and_load $sp, $t0, $t3, SC_REGS+11*REGSZ($a0)
 
-	lw	v0, SC_FPSR_OFFSET(a0)
-	ctc1	v0, $31			# restore old fr mode before fp values
+	lw	$v0, SC_FPSR_OFFSET($a0)
+	ctc1	$v0, $31			# restore old fr mode before fp values
 #ifdef __LP64__
 	# callee-saved fp regs on mips n64 ABI are $f24..$f31
-	l.d	$f24, SC_FPREGS+0*REGSZ_FP(a0)
-	l.d	$f25, SC_FPREGS+1*REGSZ_FP(a0)
-	l.d	$f26, SC_FPREGS+2*REGSZ_FP(a0)
-	l.d	$f27, SC_FPREGS+3*REGSZ_FP(a0)
-	l.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
-	l.d	$f29, SC_FPREGS+5*REGSZ_FP(a0)
-	l.d	$f30, SC_FPREGS+6*REGSZ_FP(a0)
-	l.d	$f31, SC_FPREGS+7*REGSZ_FP(a0)
+	l.d	$f24, SC_FPREGS+0*REGSZ_FP($a0)
+	l.d	$f25, SC_FPREGS+1*REGSZ_FP($a0)
+	l.d	$f26, SC_FPREGS+2*REGSZ_FP($a0)
+	l.d	$f27, SC_FPREGS+3*REGSZ_FP($a0)
+	l.d	$f28, SC_FPREGS+4*REGSZ_FP($a0)
+	l.d	$f29, SC_FPREGS+5*REGSZ_FP($a0)
+	l.d	$f30, SC_FPREGS+6*REGSZ_FP($a0)
+	l.d	$f31, SC_FPREGS+7*REGSZ_FP($a0)
 #else
 	# callee-saved fp regs on mips o32 ABI are
 	#   the even-numbered double fp regs $f20,$f22,...$f30
-	l.d	$f20, SC_FPREGS+0*REGSZ_FP(a0)
-	l.d	$f22, SC_FPREGS+1*REGSZ_FP(a0)
-	l.d	$f24, SC_FPREGS+2*REGSZ_FP(a0)
-	l.d	$f26, SC_FPREGS+3*REGSZ_FP(a0)
-	l.d	$f28, SC_FPREGS+4*REGSZ_FP(a0)
-	l.d	$f30, SC_FPREGS+5*REGSZ_FP(a0)
+	l.d	$f20, SC_FPREGS+0*REGSZ_FP($a0)
+	l.d	$f22, SC_FPREGS+1*REGSZ_FP($a0)
+	l.d	$f24, SC_FPREGS+2*REGSZ_FP($a0)
+	l.d	$f26, SC_FPREGS+3*REGSZ_FP($a0)
+	l.d	$f28, SC_FPREGS+4*REGSZ_FP($a0)
+	l.d	$f30, SC_FPREGS+5*REGSZ_FP($a0)
 #endif
 
 	# check cookie
-	PTR_SUBU sp, FRAMESZ
-	REG_S	v1, GPOFF(sp)
-	REG_S	ra, RAOFF(sp)
-	REG_S	a1, A1OFF(sp)
-	move	a0, t0
+	PTR_SUBU $sp, FRAMESZ
+	REG_S	$v1, GPOFF($sp)
+	REG_S	$ra, RAOFF($sp)
+	REG_S	$a1, A1OFF($sp)
+	move	$a0, $t0
 	jal	__bionic_setjmp_cookie_check
-	REG_L	gp, GPOFF(sp)
-	REG_L	ra, RAOFF(sp)
-	REG_L	a1, A1OFF(sp)
-	PTR_ADDU sp, FRAMESZ
+	REG_L	$gp, GPOFF($sp)
+	REG_L	$ra, RAOFF($sp)
+	REG_L	$a1, A1OFF($sp)
+	PTR_ADDU $sp, FRAMESZ
 
-	sltiu	t0, a1, 1		# never return 0!
-	xor	v0, a1, t0
-	j	ra			# return to setjmp call site
+	sltiu	$t0, $a1, 1		# never return 0!
+	xor	$v0, $a1, $t0
+	j	$ra			# return to setjmp call site
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)

@@ -118,16 +118,16 @@ END(%(func)s)
 
 mips_call = syscall_stub_header + """\
     .set noreorder
-    .cpload t9
-    li v0, %(__NR_name)s
+    .cpload $t9
+    li $v0, %(__NR_name)s
     syscall
-    bnez a3, 1f
-    move a0, v0
-    j ra
+    bnez $a3, 1f
+    move $a0, $v0
+    j $ra
     nop
 1:
-    la t9,__set_errno_internal
-    j t9
+    la $t9,__set_errno_internal
+    j $t9
     nop
     .set reorder
 END(%(func)s)

@@ -27,8 +27,6 @@
 
 /* Assumes neon instructions and a cache line size of 64 bytes. */
 
-#include <machine/asm.h>
-
 #define PLDOFFS	(10)
 #define PLDTHRESH (PLDOFFS)
 #define BBTHRESH (4096/64)

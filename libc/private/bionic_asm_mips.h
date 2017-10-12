@@ -25,8 +25,8 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef _MIPS64_ASM_H
-#define _MIPS64_ASM_H
+
+#pragma once
 
 #define __bionic_asm_align 16
 
@@ -34,8 +34,6 @@
 #undef __bionic_asm_custom_end
 #define __bionic_asm_custom_entry(f) .ent f
 #define __bionic_asm_custom_end(f) .end f
-
-#include <machine/regdef.h>
 
 #define	_MIPS_ISA_MIPS1	1	/* R2000/R3000 */
 #define	_MIPS_ISA_MIPS2	2	/* R4000/R6000 */
@@ -75,7 +73,7 @@
 
 #define	SETUP_GP		\
 	.set	noreorder;	\
-	.cpload	t9;		\
+	.cpload	$t9;		\
 	.set	reorder;
 
 #define	SAVE_GP(x)		\
@@ -91,7 +89,7 @@
 #define	SETUP_GP
 #define	SAVE_GP(x)
 #define	SETUP_GP64(gpoff, name)	\
-	.cpsetup t9, gpoff, name
+	.cpsetup $t9, gpoff, name
 #define	RESTORE_GP64		\
 	.cpreturn
 #endif
@@ -171,7 +169,7 @@
 	.ent x, 0;		\
 x: ;				\
 	.cfi_startproc; \
-	.frame sp, fsize, ra;	\
+	.frame $sp, fsize, $ra;	\
 	SETUP_GP		\
 
 /*
@@ -185,7 +183,5 @@ x: ;				\
 	.ent x, 0;		\
 x: ;				\
 	.cfi_startproc; \
-	.frame sp, fsize, retpc; \
+	.frame $sp, fsize, retpc; \
 	SETUP_GP		\
-
-#endif /* !_MIPS_ASM_H */
