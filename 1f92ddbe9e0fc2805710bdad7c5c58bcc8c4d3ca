@@ -105,6 +105,30 @@
       "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ab93fa1_a903f586",
+        "filename": "libc/private/bionic_asm_arm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-12T22:03:37Z",
+      "side": 1,
+      "message": "The only one that could be a problem is if someone winds up including the same file twice, but from two different locations. Through a symlink or a copy, would be one way to do that.\n\nHowever, I can\u0027t think of a way you would do this that isn\u0027t some kind of build environment bug that you should fix.",
+      "parentUuid": "0c268379_6c73f4e5",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 12
+      },
+      "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
