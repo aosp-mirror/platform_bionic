@@ -8,8 +8,12 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 
 New libc functions in P:
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
+  * `getentropy`/`getrandom` (adding <sys/random.h>)
   * `getlogin_r`
+  * `glob`/`globfree` (adding <glob.h>)
+  * `hcreate`/hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
+  * <spawn.h>
   * `syncfs`
 
 New libc functions in O:
@@ -56,7 +60,7 @@ ndk-r17$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do ech
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic. Currently
-(2017-09):
+(2017-10):
 ```
 aio_cancel
 aio_error
@@ -75,33 +79,7 @@ getdate
 getdate_err
 getnetent
 getprotoent
-glob
-globfree
-hcreate
-hdestroy
-hsearch
 lio_listio
-posix_spawn
-posix_spawn_file_actions_addclose
-posix_spawn_file_actions_adddup2
-posix_spawn_file_actions_addopen
-posix_spawn_file_actions_destroy
-posix_spawn_file_actions_init
-posix_spawnattr_destroy
-posix_spawnattr_getflags
-posix_spawnattr_getpgroup
-posix_spawnattr_getschedparam
-posix_spawnattr_getschedpolicy
-posix_spawnattr_getsigdefault
-posix_spawnattr_getsigmask
-posix_spawnattr_init
-posix_spawnattr_setflags
-posix_spawnattr_setpgroup
-posix_spawnattr_setschedparam
-posix_spawnattr_setschedpolicy
-posix_spawnattr_setsigdefault
-posix_spawnattr_setsigmask
-posix_spawnp
 pthread_attr_getinheritsched
 pthread_attr_setinheritsched
 pthread_cancel
