@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c92a297e_fea2c6a8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1628,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-12T22:46:51Z",
+      "side": 1,
+      "message": "(am i the only one who thinks `name` should come first in all of these?)",
+      "revId": "860df376ebdac333848c7dd3c4015ec322dd81e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
