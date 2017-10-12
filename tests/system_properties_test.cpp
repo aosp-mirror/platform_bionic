@@ -24,6 +24,8 @@
 #include <string>
 #include <thread>
 
+using namespace std::literals;
+
 #if defined(__BIONIC__)
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
@@ -451,4 +453,90 @@ TEST_F(properties_DeathTest, read_only) {
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
 #endif // __BIONIC__
+}
+
+TEST(properties, __system_property_extra_long_read_only) {
+#if defined(__BIONIC__)
+  LocalPropertyTestState pa;
+  ASSERT_TRUE(pa.valid);
+
+  std::vector<std::pair<std::string, std::string>> short_properties = {
+    { "ro.0char", std::string() },
+    { "ro.50char", std::string(50, 'x') },
+    { "ro.91char", std::string(91, 'x') },
+  };
+
+  std::vector<std::pair<std::string, std::string>> long_properties = {
+    { "ro.92char", std::string(92, 'x') },
+    { "ro.93char", std::string(93, 'x') },
+    { "ro.1000char", std::string(1000, 'x') },
+  };
+
+  for (const auto& property : short_properties) {
+    const std::string& name = property.first;
+    const std::string& value = property.second;
+    ASSERT_EQ(0, __system_property_add(name.c_str(), name.size(), value.c_str(), value.size()));
+  }
+
+  for (const auto& property : long_properties) {
+    const std::string& name = property.first;
+    const std::string& value = property.second;
+    ASSERT_EQ(0, __system_property_add(name.c_str(), name.size(), value.c_str(), value.size()));
+  }
+
+  auto check_with_legacy_read = [](const std::string& name, const std::string& expected_value) {
+    char value[PROP_VALUE_MAX];
+    EXPECT_EQ(static_cast<int>(expected_value.size()), __system_property_get(name.c_str(), value))
+        << name;
+    EXPECT_EQ(expected_value, value) << name;
+  };
+
+  auto check_with_read_callback = [](const std::string& name, const std::string& expected_value) {
+    const prop_info* pi = __system_property_find(name.c_str());
+    ASSERT_NE(nullptr, pi);
+    std::string value;
+    __system_property_read_callback(pi,
+                                    [](void* cookie, const char*, const char* value, uint32_t) {
+                                      std::string* out_value =
+                                          reinterpret_cast<std::string*>(cookie);
+                                      *out_value = value;
+                                    },
+                                    &value);
+    EXPECT_EQ(expected_value, value) << name;
+  };
+
+  for (const auto& property : short_properties) {
+    const std::string& name = property.first;
+    const std::string& value = property.second;
+    check_with_legacy_read(name, value);
+    check_with_read_callback(name, value);
+  }
+
+  constexpr static const char* kExtraLongLegacyError =
+      "Must use __system_property_read_callback() to read";
+  for (const auto& property : long_properties) {
+    const std::string& name = property.first;
+    const std::string& value = property.second;
+    check_with_legacy_read(name, kExtraLongLegacyError);
+    check_with_read_callback(name, value);
+  }
+
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
+}
+
+// pa_size is 128 * 1024 currently, if a property is longer then we expect it to fail gracefully.
+TEST(properties, __system_property_extra_long_read_only_too_long) {
+#if defined(__BIONIC__)
+  LocalPropertyTestState pa;
+  ASSERT_TRUE(pa.valid);
+
+  auto name = "ro.super_long_property"s;
+  auto value = std::string(128 * 1024 + 1, 'x');
+  ASSERT_NE(0, __system_property_add(name.c_str(), name.size(), value.c_str(), value.size()));
+
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
 }
