@@ -38,6 +38,12 @@
 #define PATH_TO_SYSTEM_LIB "/system/lib/"
 #endif
 
+#if defined(__GLIBC__)
+#define BIN_DIR "/bin/"
+#else
+#define BIN_DIR "/system/bin/"
+#endif
+
 #if defined(__BIONIC__)
 #define KNOWN_FAILURE_ON_BIONIC(x) xfail_ ## x
 #else
@@ -158,6 +164,9 @@ class ExecTestHelper {
  public:
   char** GetArgs() {
     return const_cast<char**>(args_.data());
+  }
+  const char* GetArg0() {
+    return args_[0];
   }
   char** GetEnv() {
     return const_cast<char**>(env_.data());
