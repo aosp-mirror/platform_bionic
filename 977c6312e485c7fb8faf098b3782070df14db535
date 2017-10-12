@@ -46,6 +46,30 @@
       "revId": "977c6312e485c7fb8faf098b3782070df14db535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d1f27e7_580d43b4",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-12T21:13:30Z",
+      "side": 1,
+      "message": "but that would only happen if they were poking into a struct that _contains_ a FILE*. except for res_static, deep in the bowels of the DNS resolver, we don\u0027t have any such structs.\n\ni\u0027d like to see at least one instance of such a crash first.",
+      "parentUuid": "cca954c0_5f9bea58",
+      "range": {
+        "startLine": 78,
+        "startChar": 24,
+        "endLine": 78,
+        "endChar": 63
+      },
+      "revId": "977c6312e485c7fb8faf098b3782070df14db535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
