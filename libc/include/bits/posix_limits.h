@@ -68,7 +68,7 @@
 #define _POSIX_SEMAPHORES _POSIX_VERSION /* sem_*. */
 #define _POSIX_SHARED_MEMORY_OBJECTS __BIONIC_POSIX_FEATURE_MISSING /* mmap/munmap are implemented, but shm_open/shm_unlink are not. */
 #define _POSIX_SHELL 1 /* system. */
-#define _POSIX_SPAWN __BIONIC_POSIX_FEATURE_MISSING /* <spawn.h> */
+#define _POSIX_SPAWN __BIONIC_POSIX_FEATURE_SINCE(28) /* <spawn.h> */
 #define _POSIX_SPIN_LOCKS __BIONIC_POSIX_FEATURE_SINCE(24) /* pthread_spin_*. */
 #define _POSIX_SPORADIC_SERVER _POSIX_VERSION /* sched_setparam/sched_setscheduler. */
 #define _POSIX_SYNCHRONIZED_IO _POSIX_VERSION

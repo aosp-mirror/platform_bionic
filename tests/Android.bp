@@ -105,6 +105,7 @@ cc_test_library {
         "semaphore_test.cpp",
         "setjmp_test.cpp",
         "signal_test.cpp",
+        "spawn_test.cpp",
         "stack_protector_test.cpp",
         "stack_protector_test_helper.cpp",
         "stack_unwinding_test.cpp",
