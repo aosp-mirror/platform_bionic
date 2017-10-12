@@ -35,32 +35,32 @@
 
 ENTRY(vfork)
 	.set	noreorder
-	.cpload	t9
+	.cpload	$t9
 
 	// __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
 	.set	push
 	.set	mips32r2
-	rdhwr	v0, $29			// v0 = tls; kernel trap on mips32r1
+	rdhwr	$v0, $29			// v0 = tls; kernel trap on mips32r1
 	.set	pop
-	lw	v0, REGSZ*1(v0)		// v0 = v0[TLS_SLOT_THREAD_ID ie 1]
-	sw	$0, REGSZ*2+4(v0)	// v0->cached_pid_ = 0
+	lw	$v0, REGSZ*1($v0)		// v0 = v0[TLS_SLOT_THREAD_ID ie 1]
+	sw	$0, REGSZ*2+4($v0)	// v0->cached_pid_ = 0
 
-	li	a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
-	li	a1, 0
-	li	a2, 0
-	li	a3, 0
-	subu	sp, 8
-	sw	$0, 16(sp)
-	li	v0, __NR_clone
+	li	$a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+	li	$a1, 0
+	li	$a2, 0
+	li	$a3, 0
+	subu	$sp, 8
+	sw	$0, 16($sp)
+	li	$v0, __NR_clone
 	syscall
-	addu	sp, 8
-	bnez	a3, 1f
-	 move	a0, v0
+	addu	$sp, 8
+	bnez	$a3, 1f
+	 move	$a0, $v0
 
-	j	ra
+	j	$ra
 	 nop
 1:
-	la	t9, __set_errno_internal
-	j	t9
+	la	$t9, __set_errno_internal
+	j	$t9
 	 nop
 END(vfork)

@@ -1963,27 +1963,6 @@ cc_defaults {
     no_default_compiler_flags: true,
 
     cflags: ["-Wno-gcc-compat", "-Werror"],
-
-    arch: {
-        arm: {
-            local_include_dirs: ["arch-arm/include"],
-        },
-        arm64: {
-            local_include_dirs: ["arch-arm64/include"],
-        },
-        mips: {
-            local_include_dirs: ["arch-mips/include"],
-        },
-        mips64: {
-            local_include_dirs: ["arch-mips64/include"],
-        },
-        x86: {
-            local_include_dirs: ["arch-x86/include"],
-        },
-        x86_64: {
-            local_include_dirs: ["arch-x86_64/include"],
-        },
-    },
 }
 
 cc_defaults {
@@ -2242,54 +2221,6 @@ ndk_headers {
     license: "NOTICE",
 }
 
-ndk_headers {
-    name: "libc_machine_arm",
-    from: "arch-arm/include",
-    to: "arm-linux-androideabi",
-    srcs: ["arch-arm/include/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_machine_arm64",
-    from: "arch-arm64/include",
-    to: "aarch64-linux-android",
-    srcs: ["arch-arm64/include/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_machine_mips",
-    from: "arch-mips/include",
-    to: "mipsel-linux-android",
-    srcs: ["arch-mips/include/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_machine_mips64",
-    from: "arch-mips/include",
-    to: "mips64el-linux-android",
-    srcs: ["arch-mips/include/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_machine_x86",
-    from: "arch-x86/include",
-    to: "i686-linux-android",
-    srcs: ["arch-x86/include/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_machine_x86_64",
-    from: "arch-x86_64/include",
-    to: "x86_64-linux-android",
-    srcs: ["arch-x86_64/include/**/*.h"],
-    license: "NOTICE",
-}
-
 ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
@@ -2304,7 +2235,6 @@ llndk_library {
     arch: {
         arm: {
             export_include_dirs: [
-                "arch-arm/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-arm",
                 "kernel/android/uapi",
@@ -2312,7 +2242,6 @@ llndk_library {
         },
         arm64: {
             export_include_dirs: [
-                "arch-arm64/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-arm64",
                 "kernel/android/uapi",
@@ -2320,7 +2249,6 @@ llndk_library {
         },
         mips: {
             export_include_dirs: [
-                "arch-mips/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-mips",
                 "kernel/android/uapi",
@@ -2328,7 +2256,6 @@ llndk_library {
         },
         mips64: {
             export_include_dirs: [
-                "arch-mips64/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-mips",
                 "kernel/android/uapi",
@@ -2336,7 +2263,6 @@ llndk_library {
         },
         x86: {
             export_include_dirs: [
-                "arch-x86/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-x86",
                 "kernel/android/uapi",
@@ -2344,7 +2270,6 @@ llndk_library {
         },
         x86_64: {
             export_include_dirs: [
-                "arch-x86_64/include",
                 "kernel/uapi",
                 "kernel/uapi/asm-x86",
                 "kernel/android/uapi",

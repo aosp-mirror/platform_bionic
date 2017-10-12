@@ -35,8 +35,7 @@
  *	from: @(#)asm.h	5.5 (Berkeley) 5/7/91
  */
 
-#ifndef _ARM32_ASM_H_
-#define _ARM32_ASM_H_
+#pragma once
 
 #define __bionic_asm_align 0
 
@@ -47,5 +46,3 @@
 
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type #function
-
-#endif /* !_ARM_ASM_H_ */

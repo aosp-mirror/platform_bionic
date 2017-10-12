@@ -24,8 +24,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _AMD64_FENV_H_
-#define _AMD64_FENV_H_
+#ifndef _BITS_FENV_X86_64_H_
+#define _BITS_FENV_X86_64_H_
 
 #include <sys/types.h>
 
@@ -92,4 +92,4 @@ typedef __uint32_t fexcept_t;
 
 __END_DECLS
 
-#endif /* !_AMD64_FENV_H_ */
+#endif
