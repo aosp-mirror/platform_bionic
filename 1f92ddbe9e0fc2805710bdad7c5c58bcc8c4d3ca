@@ -81,6 +81,30 @@
       "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c268379_6c73f4e5",
+        "filename": "libc/private/bionic_asm_arm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-10-12T21:52:03Z",
+      "side": 1,
+      "message": "I\u0027ve already added one to one of the legacy inline headers.\n\nWhat are the drawbacks? This works on all the compilers that we care about and even some that we don\u0027t (clang, gcc, msvc).",
+      "parentUuid": "2a6eb0c5_b1de8f47",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 12
+      },
+      "revId": "1f92ddbe9e0fc2805710bdad7c5c58bcc8c4d3ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
