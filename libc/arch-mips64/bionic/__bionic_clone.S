@@ -43,59 +43,59 @@ FRAME_FN	=	FRAMESZ-3*REGSZ
 
 // pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
 LEAF(__bionic_clone, FRAMESZ)
-	PTR_SUBU sp, FRAMESZ			# allocate stack frame
+	PTR_SUBU $sp, FRAMESZ			# allocate stack frame
 	SETUP_GP64(FRAME_GP,__bionic_clone)
 	SAVE_GP(FRAME_GP)
 
 	# set up child stack
-	PTR_SUBU a1,FRAMESZ
+	PTR_SUBU $a1,FRAMESZ
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
-	PTR_L	t0,FRAMESZ+5*REGSZ(sp)	# fn
-	PRL_L	t1,FRAMESZ+6*REGSZ(sp)	# arg
-	PTR_S	t0,FRAME_FN(a1)		# fn
-	PTR_S	t1,FRAME_ARG(a1)	# arg
+	PTR_L	$t0,FRAMESZ+5*REGSZ($sp)	# fn
+	PRL_L	$t1,FRAMESZ+6*REGSZ($sp)	# arg
+	PTR_S	$t0,FRAME_FN($a1)		# fn
+	PTR_S	$t1,FRAME_ARG($a1)	# arg
 #else
-	PTR_L	t0,FRAME_GP(sp)		# copy gp to child stack
-	PTR_S	t0,FRAME_GP(a1)
-	PTR_S	a5,FRAME_FN(a1)		# fn
-	PTR_S	a6,FRAME_ARG(a1)	# arg
+	PTR_L	$t0,FRAME_GP($sp)		# copy gp to child stack
+	PTR_S	$t0,FRAME_GP($a1)
+	PTR_S	$a5,FRAME_FN($a1)		# fn
+	PTR_S	$a6,FRAME_ARG($a1)	# arg
 # endif
 
 	# remainder of arguments are correct for clone system call
-	LI	v0,__NR_clone
+	LI	$v0,__NR_clone
 	syscall
 
-	move    a0,v0
-	bnez	a3,.L__error_bc
+	move    $a0,$v0
+	bnez	$a3,.L__error_bc
 
-	beqz	v0,.L__thread_start_bc
+	beqz	$v0,.L__thread_start_bc
 
 	RESTORE_GP64
-	PTR_ADDU sp,FRAMESZ
-	j	ra
+	PTR_ADDU $sp,FRAMESZ
+	j	$ra
 
 .L__thread_start_bc:
 	# Clear return address in child so we don't unwind further.
-	li	ra,0
+	li	$ra,0
 
 	# void __start_thread(int (*func)(void*), void *arg)
-	PTR_L	a0,FRAME_FN(sp)		#  fn
-	PTR_L	a1,FRAME_ARG(sp)	#  arg
-	LA	t9,__start_thread
+	PTR_L	$a0,FRAME_FN($sp)		#  fn
+	PTR_L	$a1,FRAME_ARG($sp)	#  arg
+	LA	$t9,__start_thread
 	RESTORE_GP64
 	/*
 	 * For O32 etc the child stack must have space for a0..a3 to be stored
 	 * For N64 etc, the child stack can be restored to the original value
 	 */
 #if !((_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32))
-	PTR_ADDU sp,FRAMESZ
+	PTR_ADDU $sp,FRAMESZ
 #endif
-	j	t9
+	j	$t9
 
 .L__error_bc:
-	LA	t9,__set_errno_internal
+	LA	$t9,__set_errno_internal
 	RESTORE_GP64
-	PTR_ADDU sp,FRAMESZ
-	j	t9
+	PTR_ADDU $sp,FRAMESZ
+	j	$t9
 	END(__bionic_clone)
 .hidden __bionic_clone
