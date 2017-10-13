@@ -41,10 +41,27 @@
 #define _SETJMP_H_
 
 #include <sys/cdefs.h>
-#include <machine/setjmp.h>
+
+#if defined(__aarch64__)
+#define _JBLEN 32
+#elif defined(__arm__)
+#define _JBLEN 64
+#elif defined(__i386__)
+#define _JBLEN 10
+#elif defined(__mips__)
+  #if defined(__LP64__)
+  #define _JBLEN 25
+  #else
+  #define _JBLEN 157
+  #endif
+#elif defined(__x86_64__)
+#define _JBLEN 11
+#endif
 
 typedef long sigjmp_buf[_JBLEN + 1];
 typedef long jmp_buf[_JBLEN];
+
+#undef _JBLEN
 
 __BEGIN_DECLS
 
