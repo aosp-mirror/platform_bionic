@@ -188,6 +188,7 @@ known = set([
 in_posix_and_glibc_but_dead_or_useless = set([
   'a64l', # obsolete
   'confstr', # obsolete
+  'endutxent', # no utmp on Android
   'fattach', # obsolete
   'fdetach', # obsolete
   'gethostid', # obsolete
