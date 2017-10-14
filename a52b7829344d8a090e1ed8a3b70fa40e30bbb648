@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba97226c_3257fdc8",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-14T00:57:31Z",
+      "side": 1,
+      "message": "this is why these tests had me banging my head against the table...",
+      "range": {
+        "startLine": 236,
+        "startChar": 34,
+        "endLine": 236,
+        "endChar": 57
+      },
+      "revId": "a52b7829344d8a090e1ed8a3b70fa40e30bbb648",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

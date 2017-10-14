@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e947c9a7_e1057fa8",
+        "filename": "libc/dns/net/getservbyport.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-14T00:57:31Z",
+      "side": 0,
+      "message": "the meaningful change is to support `proto` being nullptr, meaning \"any\", spotted when i added the tests.\n\nthe reformatting brings this code in line with getservbyname.",
+      "revId": "a27bfd4131441a24fcfe6b5b3cf1cf9469be6719",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
