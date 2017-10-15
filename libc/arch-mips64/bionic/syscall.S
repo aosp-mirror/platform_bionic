@@ -36,33 +36,33 @@ FRAME_GP	=	FRAMESZ-1*REGSZ
 #endif
 
 LEAF(syscall,FRAMESZ)
-	PTR_SUBU sp, FRAMESZ	# allocate stack frame
+	PTR_SUBU $sp, FRAMESZ	# allocate stack frame
 	SETUP_GP64(FRAME_GP,syscall)
 	SAVE_GP(FRAME_GP)
-	move	v0, a0		# syscall number to v0
-	move	a0, a1		# shift args down
-	move	a1, a2
-	move	a2, a3
+	move	$v0, $a0		# syscall number to v0
+	move	$a0, $a1		# shift args down
+	move	$a1, $a2
+	move	$a2, $a3
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
-	REG_L	a3, FRAMESZ+4*REGSZ(sp)
-	REG_L	t0, FRAMESZ+5*REGSZ(sp)
-	REG_L	t1, FRAMESZ+6*REGSZ(sp)
-	REG_S	t0, 4*REGSZ(sp)
-	REG_S	t1, 5*REGSZ(sp)
+	REG_L	$a3, FRAMESZ+4*REGSZ($sp)
+	REG_L	$t0, FRAMESZ+5*REGSZ($sp)
+	REG_L	$t1, FRAMESZ+6*REGSZ($sp)
+	REG_S	$t0, 4*REGSZ($sp)
+	REG_S	$t1, 5*REGSZ($sp)
 #else
-	move	a3, a4
-	move	a4, a5
-	move	a5, a6
+	move	$a3, $a4
+	move	$a4, $a5
+	move	$a5, $a6
 #endif
 	syscall
-	move	a0, v0
-	bnez	a3, 1f
+	move	$a0, $v0
+	bnez	$a3, 1f
 	RESTORE_GP64
-	PTR_ADDU sp, FRAMESZ
-	j	ra
+	PTR_ADDU $sp, FRAMESZ
+	j	$ra
 1:
-	LA	t9,__set_errno_internal
+	LA	$t9,__set_errno_internal
 	RESTORE_GP64
-	PTR_ADDU sp, FRAMESZ
-	j	t9
+	PTR_ADDU $sp, FRAMESZ
+	j	$t9
 	END(syscall)

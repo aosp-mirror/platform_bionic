@@ -54,38 +54,38 @@ _start:
      nop
 1:
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
-    .cpload	ra
+    .cpload	$ra
 #else
-    .cpsetup	ra, $0, 1b
+    .cpsetup	$ra, $0, 1b
 #endif
     .set	reorder
 
     /* Discover the load address */
-    LA		t0, 1b
-    PTR_SUBU	t0, ra, t0
+    LA		$t0, 1b
+    PTR_SUBU	$t0, $ra, $t0
 
 #define DT_PLTGOT 3
 #define DT_MIPS_LOCAL_GOTNO 0x7000000a
 
     /* Search dynamic table for DT_MIPS_LOCAL_GOTNO and DT_PLTGOT values */
-    LA		t1, _DYNAMIC
-    PTR_ADDU	t1, t0
-    LI		t3, DT_PLTGOT
-    LI		ta0, DT_MIPS_LOCAL_GOTNO
+    LA		$t1, _DYNAMIC
+    PTR_ADDU	$t1, $t0
+    LI		$t3, DT_PLTGOT
+    LI		$ta0, DT_MIPS_LOCAL_GOTNO
 0:
-    REG_L	t2, ELF_DYN_TAG(t1)
-    beqz	t2, .Lrelocate_local_got
+    REG_L	$t2, ELF_DYN_TAG($t1)
+    beqz	$t2, .Lrelocate_local_got
 
-    bne		t2, t3, 1f	/* DT_PLTGOT? */
-    REG_L	s0, ELF_DYN_VAL(t1)
-    PTR_ADDU	s0, t0
+    bne		$t2, $t3, 1f	/* DT_PLTGOT? */
+    REG_L	$s0, ELF_DYN_VAL($t1)
+    PTR_ADDU	$s0, $t0
     b		2f
 
 1:
-    bne		t2, ta0, 2f    /* DT_MIPS_LOCAL_GOTNO? */
-    REG_L	s1, ELF_DYN_VAL(t1)
+    bne		$t2, $ta0, 2f    /* DT_MIPS_LOCAL_GOTNO? */
+    REG_L	$s1, ELF_DYN_VAL($t1)
 
-2:  PTR_ADDU    t1, ELF_DYNSZ
+2:  PTR_ADDU    $t1, ELF_DYNSZ
     b		0b
 
 .Lrelocate_local_got:
@@ -95,30 +95,30 @@ _start:
      * got[1] may be used for a GNU extension
      */
 
-    PTR_ADDU	s0, GOTENT_SZ
-    SUBU	s1, 1
-    PTR_L	t1, (s0)
-    bgez	t1, 9f
-    PTR_ADDU	s0, GOTENT_SZ
-    SUBU	s1, 1
+    PTR_ADDU	$s0, GOTENT_SZ
+    SUBU	$s1, 1
+    PTR_L	$t1, ($s0)
+    bgez	$t1, 9f
+    PTR_ADDU	$s0, GOTENT_SZ
+    SUBU	$s1, 1
     b		9f
 
-1:  PTR_L	t1, (s0)
-    PTR_ADDU	t1, t0
-    PTR_S	t1, (s0)
-    PTR_ADDU	s0, GOTENT_SZ
-9:  SUBU	s1, 1
-    bgez	s1, 1b
+1:  PTR_L	$t1, ($s0)
+    PTR_ADDU	$t1, $t0
+    PTR_S	$t1, ($s0)
+    PTR_ADDU	$s0, GOTENT_SZ
+9:  SUBU	$s1, 1
+    bgez	$s1, 1b
 
     /* call linker_init */
-    move	a0, sp
+    move	$a0, $sp
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
-    PTR_SUBU	sp, 4*REGSZ       /* space for arg saves in linker_init */
+    PTR_SUBU	$sp, 4*REGSZ       /* space for arg saves in linker_init */
 #endif
     jal		__linker_init
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
-    PTR_ADDU	sp, 4*REGSZ        /* restore sp */
+    PTR_ADDU	$sp, 4*REGSZ        /* restore sp */
 #endif
-    move	t9, v0
-    j		t9
+    move	$t9, $v0
+    j		$t9
     .end    __start
