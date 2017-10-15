@@ -43,35 +43,35 @@ FRAMESZ		=	MKFSIZ(0,0)
 
 LEAF(vfork,FRAMESZ)
 #if FRAMESZ!=0
-	PTR_SUBU sp, FRAMESZ
+	PTR_SUBU $sp, FRAMESZ
 #endif
-	SETUP_GP64(a5, vfork)
+	SETUP_GP64($a5, vfork)
 
 	// __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-	rdhwr	v0, $29			// v0 = tls
-	REG_L	v0, REGSZ*1(v0)		// v0 = v0[TLS_SLOT_THREAD_ID ie 1]
-	sw	$0, REGSZ*2+4(v0)	// v0->cached_pid_ = 0
+	rdhwr	$v0, $29			// v0 = tls
+	REG_L	$v0, REGSZ*1($v0)		// v0 = v0[TLS_SLOT_THREAD_ID ie 1]
+	sw	$0, REGSZ*2+4($v0)	// v0->cached_pid_ = 0
 
-	LI	a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
-	move	a1, $0
-	move	a2, $0
-	move	a3, $0
+	LI	$a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+	move	$a1, $0
+	move	$a2, $0
+	move	$a3, $0
 #if (_MIPS_SIM == _ABIO32) || (_MIPS_SIM == _ABI32)
 	REG_S	$0, 4*REGSZ(sp)
 #else
-	move	a4, $0
+	move	$a4, $0
 #endif
-	LI	v0, __NR_clone
+	LI	$v0, __NR_clone
 	syscall
 #if FRAMESZ!=0
-	PTR_ADDU sp,FRAMESZ
+	PTR_ADDU $sp,FRAMESZ
 #endif
-	move	a0, v0
-	bnez	a3, 1f
+	move	$a0, $v0
+	bnez	$a3, 1f
 	RESTORE_GP64
-	j	ra
+	j	$ra
 1:
-	LA	t9,__set_errno_internal
+	LA	$t9,__set_errno_internal
 	RESTORE_GP64
-	j	t9
+	j	$t9
 	END(vfork)

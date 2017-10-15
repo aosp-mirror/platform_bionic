@@ -72,7 +72,6 @@ aio_write
 endhostent
 endnetent
 endprotoent
-endutxent
 fexecve
 fmtmsg
 getdate
@@ -83,7 +82,6 @@ lio_listio
 pthread_attr_getinheritsched
 pthread_attr_setinheritsched
 pthread_cancel
-pthread_getconcurrency
 pthread_mutex_consistent
 pthread_mutex_getprioceiling
 pthread_mutex_setprioceiling
@@ -95,7 +93,6 @@ pthread_mutexattr_setprotocol
 pthread_mutexattr_setrobust
 pthread_setcancelstate
 pthread_setcanceltype
-pthread_setconcurrency
 pthread_setschedprio
 pthread_testcancel
 sethostent
