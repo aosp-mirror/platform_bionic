@@ -28,9 +28,11 @@
 
 #include <spawn.h>
 
+#include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "private/ScopedSignalBlocker.h"
