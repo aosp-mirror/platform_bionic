@@ -72,7 +72,6 @@ aio_write
 endhostent
 endnetent
 endprotoent
-endutxent
 fexecve
 fmtmsg
 getdate
