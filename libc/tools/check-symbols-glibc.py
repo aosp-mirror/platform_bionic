@@ -209,6 +209,8 @@ in_posix_and_glibc_but_dead_or_useless = set([
   'mq_timedreceive', # disallowed by SELinux
   'mq_timedsend', # disallowed by SELinux
   'mq_unlink', # disallowed by SELinux
+  'pthread_getconcurrency', # marked obsolescent
+  'pthread_setconcurrency', # marked obsolescent
   'putmsg', # obsolete
   'putpmsg', # obsolete
   'pututxline', # no utmp on Android
