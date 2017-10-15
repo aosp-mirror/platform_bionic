@@ -142,13 +142,12 @@ bool soinfo::mips_relocate_got(const VersionTracker& version_tracker,
 
   // got[0] is the address of the lazy resolver function.
   // got[1] may be used for a GNU extension.
-  // Set it to a recognizable address in case someone calls it (should be _rtld_bind_start).
   // FIXME: maybe this should be in a separate routine?
   if ((flags_ & FLAG_LINKER) == 0) {
-    size_t g = 0;
-    got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadbeef);
+    size_t g = 1;
+    // Check for the high bit to determine whether to skip got[1]
     if (reinterpret_cast<intptr_t>(got[g]) < 0) {
-      got[g++] = reinterpret_cast<ElfW(Addr)*>(0xdeadfeed);
+      g++;
     }
     // Relocate the local GOT entries.
     for (; g < mips_local_gotno_; g++) {
@@ -231,6 +230,7 @@ struct mips_elf_abiflags_v0 {
 #define MIPS_AFL_FLAGS1_ODDSPREG 1  // Uses odd-numbered single-prec fp regs
 
 // Some values of fp_abi:        via compiler flag:
+#define MIPS_ABI_FP_ANY    0  // Not tagged or not using any ABIs affected by the differences.
 #define MIPS_ABI_FP_DOUBLE 1  // -mdouble-float
 #define MIPS_ABI_FP_XX     5  // -mfpxx
 #define MIPS_ABI_FP_64A    7  // -mips32r* -mfp64 -mno-odd-spreg
@@ -277,6 +277,7 @@ bool soinfo::mips_check_and_adjust_fp_modes() {
 #if __mips_isa_rev >= 5
         mips_fpabi == MIPS_ABI_FP_64A    ||
 #endif
+        mips_fpabi == MIPS_ABI_FP_ANY    ||
         mips_fpabi == MIPS_ABI_FP_XX       )) {
     DL_ERR("Unsupported MIPS32 FloatPt ABI %d found in \"%s\"",
            mips_fpabi, get_realpath());
