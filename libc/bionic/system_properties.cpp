@@ -278,6 +278,7 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
     return nullptr;
   }
 
+#if !defined(ANDROID_CONTAINER)
   if (context) {
     if (fsetxattr(fd, XATTR_NAME_SELINUX, context, strlen(context) + 1, 0) != 0) {
       async_safe_format_log(ANDROID_LOG_ERROR, "libc",
@@ -296,6 +297,9 @@ static prop_area* map_prop_area_rw(const char* filename, const char* context,
       }
     }
   }
+#else
+  (void) context;
+#endif
 
   if (ftruncate(fd, PA_SIZE) < 0) {
     close(fd);
