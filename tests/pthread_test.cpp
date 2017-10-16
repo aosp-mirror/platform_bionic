@@ -566,6 +566,18 @@ TEST_F(pthread_DeathTest, pthread_setschedparam__null_thread) {
   EXPECT_EQ(ESRCH, pthread_setschedparam(null_thread, policy, &param));
 }
 
+TEST_F(pthread_DeathTest, pthread_setschedprio__no_such_thread) {
+  pthread_t dead_thread;
+  MakeDeadThread(dead_thread);
+
+  EXPECT_DEATH(pthread_setschedprio(dead_thread, 123), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_setschedprio__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_setschedprio(null_thread, 123));
+}
+
 TEST_F(pthread_DeathTest, pthread_join__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
@@ -2146,4 +2158,13 @@ TEST(pthread, pthread_create__mmap_failures) {
   for (; i < pages.size(); ++i) {
     ASSERT_EQ(0, munmap(pages[i], kPageSize));
   }
+}
+
+TEST(pthread, pthread_setschedparam) {
+  sched_param p = { .sched_priority = INT_MIN };
+  ASSERT_EQ(EINVAL, pthread_setschedparam(pthread_self(), INT_MIN, &p));
+}
+
+TEST(pthread, pthread_setschedprio) {
+  ASSERT_EQ(EINVAL, pthread_setschedprio(pthread_self(), INT_MIN));
 }
