@@ -377,6 +377,26 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library with DF_1_GLOBAL which will be dlopened
+// (note: libdl_test_df_1_global above will be included in DT_NEEDED)
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_dlopen_df_1_global",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_df_1_global_dummy.cpp"],
+    ldflags: ["-Wl,-z,global"],
+
+    target: {
+        host: {
+            // TODO (dimitry): host ld.gold does not yet support -z global
+            // remove this line once it is updated.
+            ldflags: ["-fuse-ld=bfd"],
+        },
+    },
+}
+
+
+// -----------------------------------------------------------------------------
 // Library with weak function
 // -----------------------------------------------------------------------------
 cc_test_library {

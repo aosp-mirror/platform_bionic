@@ -1496,4 +1496,9 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_df_1_global) {
+  void* handle = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+}
+
 #endif
