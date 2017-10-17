@@ -64,13 +64,26 @@ void	res_close(void);
 
 static struct hostent *_hf_gethtbyname2(const char *, int, struct getnamaddr *);
 
-static const char *_h_hosts = _PATH_HOSTS;
+void
+/*ARGSUSED*/
+sethostent(int stayopen)
+{
+	res_static rs = __res_get_static();
+	if (rs) sethostent_r(&rs->hostf);
+}
+
+void
+endhostent(void)
+{
+	res_static rs = __res_get_static();
+	if (rs) endhostent_r(&rs->hostf);
+}
 
 void
 sethostent_r(FILE **hf)
 {
 	if (!*hf)
-		*hf = fopen(_h_hosts, "re");
+		*hf = fopen(_PATH_HOSTS, "re");
 	else
 		rewind(*hf);
 }
@@ -116,15 +129,13 @@ _hf_gethtbyname(void *rv, void *cb_data, va_list ap)
 	hp = _hf_gethtbyname2(name, af, info);
 #endif
 	if (hp == NULL) {
-		if (*info->he == NETDB_INTERNAL && errno == ENOSPC) {
-			return NS_UNAVAIL;
-		}
+		*info->he = HOST_NOT_FOUND;
 		return NS_NOTFOUND;
 	}
 	return NS_SUCCESS;
 }
 
-static struct hostent *
+struct hostent *
 _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 {
 	struct hostent *hp, hent;
@@ -145,7 +156,6 @@ _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 	}
 
 	if ((ptr = buf = malloc(len = info->buflen)) == NULL) {
-		endhostent_r(&hf);
 		*info->he = NETDB_INTERNAL;
 		return NULL;
 	}
@@ -161,12 +171,8 @@ _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 
 		hp = netbsd_gethostent_r(hf, info->hp, info->buf, info->buflen,
 		    info->he);
-		if (hp == NULL) {
-			if (*info->he == NETDB_INTERNAL && errno == ENOSPC) {
-				goto nospc;
-			}
+		if (hp == NULL)
 			break;
-		}
 
 		if (strcasecmp(hp->h_name, name) != 0) {
 			char **cp;
@@ -230,7 +236,6 @@ _hf_gethtbyname2(const char *name, int af, struct getnamaddr *info)
 	free(buf);
 	return hp;
 nospc:
-	endhostent_r(&hf);
 	*info->he = NETDB_INTERNAL;
 	free(buf);
 	errno = ENOSPC;
@@ -265,9 +270,6 @@ _hf_gethtbyaddr(void *rv, void *cb_data, va_list ap)
 	endhostent_r(&hf);
 
 	if (hp == NULL) {
-		if (errno == ENOSPC) {
-			return NS_UNAVAIL;
-		}
 		*info->he = HOST_NOT_FOUND;
 		return NS_NOTFOUND;
 	}
