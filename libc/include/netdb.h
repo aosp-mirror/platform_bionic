@@ -196,31 +196,47 @@ struct addrinfo {
 
 __BEGIN_DECLS
 
+int getaddrinfo(const char* __node, const char* __service, const struct addrinfo* __hints, struct addrinfo** __result);
+void freeaddrinfo(struct addrinfo* __ptr);
+
+/* Android ABI error: POSIX getnameinfo(3) uses socklen_t rather than size_t. */
+int getnameinfo(const struct sockaddr* __sa, socklen_t __sa_length, char* __host, size_t __host_length, char* __service, size_t __service_length, int __flags);
+const char* gai_strerror(int __error);
+
+/* These functions are obsolete. Use getaddrinfo/getnameinfo instead. */
 #define h_errno (*__get_h_errno())
 int* __get_h_errno(void);
-void endservent(void);
+void herror(const char* __s);
+const char* hstrerror(int __error);
 struct hostent* gethostbyaddr(const void* __addr, socklen_t __length, int __type);
 int gethostbyaddr_r(const void* __addr, socklen_t __length, int __type, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr) __INTRODUCED_IN(23);
 struct hostent* gethostbyname(const char* __name);
 int gethostbyname_r(const char* __name, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr);
 struct hostent* gethostbyname2(const char* __name, int __af);
 int gethostbyname2_r(const char* __name, int __af, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr) __INTRODUCED_IN(23);
+void endhostent(void) __INTRODUCED_IN_FUTURE;
 struct hostent* gethostent(void);
+void sethostent(int __stay_open) __INTRODUCED_IN_FUTURE;
+
+/* These functions are obsolete. None of these functions return anything but nullptr. */
+void endnetent(void) __INTRODUCED_IN_FUTURE;
 struct netent* getnetbyaddr(uint32_t __net, int __type);
 struct netent* getnetbyname(const char* __name);
+struct netent* getnetent(void) __INTRODUCED_IN_FUTURE;
+void setnetent(int __stay_open) __INTRODUCED_IN_FUTURE;
+
+/* None of these functions return anything but nullptr. */
+void endprotoent(void) __INTRODUCED_IN_FUTURE;
 struct protoent* getprotobyname(const char* __name);
 struct protoent* getprotobynumber(int __proto);
-struct servent* getservbyname(const char* __name, const char* __proto);
-struct servent* getservbyport(int __port, const char* __proto);
-struct servent* getservent(void);
-void herror(const char* __s);
-const char* hstrerror(int __error);
+struct protoent* getprotoent(void) __INTRODUCED_IN_FUTURE;
+void setprotoent(int __stay_open) __INTRODUCED_IN_FUTURE;
 
-int getaddrinfo(const char* __node, const char* __service, const struct addrinfo* __hints, struct addrinfo** __result);
-/* POSIX getnameinfo uses socklen_t, not size_t, but LP64 sizeof(socklen_t) != sizeof(size_t). */
-int getnameinfo(const struct sockaddr* __sa, socklen_t __sa_length, char* __host, size_t __host_length, char* __service, size_t __service_length, int __flags);
-void freeaddrinfo(struct addrinfo* __ptr);
-const char* gai_strerror(int __error);
+/* These functions return entries from a built-in database. */
+void endservent(void);
+struct servent* getservbyname(const char* __name, const char* __proto);
+struct servent* getservbyport(int __port_in_network_order, const char* __proto);
+struct servent* getservent(void);
 void setservent(int __stay_open);
 
 __END_DECLS

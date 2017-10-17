@@ -298,24 +298,152 @@ TEST(netdb, gethostbyaddr_r_ERANGE) {
 
 TEST(netdb, getservbyname) {
   // smtp is TCP-only, so we know we'll get 25/tcp back.
-  servent* s = getservbyname("smtp", NULL);
-  ASSERT_TRUE(s != NULL);
+  servent* s = getservbyname("smtp", nullptr);
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("smtp", s->s_name);
   ASSERT_EQ(25, ntohs(s->s_port));
   ASSERT_STREQ("tcp", s->s_proto);
 
   // We get the same result by explicitly asking for tcp.
   s = getservbyname("smtp", "tcp");
-  ASSERT_TRUE(s != NULL);
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("smtp", s->s_name);
   ASSERT_EQ(25, ntohs(s->s_port));
   ASSERT_STREQ("tcp", s->s_proto);
 
   // And we get a failure if we explicitly ask for udp.
   s = getservbyname("smtp", "udp");
-  ASSERT_TRUE(s == NULL);
+  ASSERT_TRUE(s == nullptr);
 
   // But there are actually udp services.
   s = getservbyname("echo", "udp");
-  ASSERT_TRUE(s != NULL);
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("echo", s->s_name);
   ASSERT_EQ(7, ntohs(s->s_port));
   ASSERT_STREQ("udp", s->s_proto);
+}
+
+TEST(netdb, getservbyport) {
+  // smtp is TCP-only, so we know we'll get 25/tcp back.
+  servent* s = getservbyport(htons(25), nullptr);
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("smtp", s->s_name);
+  ASSERT_EQ(25, ntohs(s->s_port));
+  ASSERT_STREQ("tcp", s->s_proto);
+
+  // We get the same result by explicitly asking for tcp.
+  s = getservbyport(htons(25), "tcp");
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("smtp", s->s_name);
+  ASSERT_EQ(25, ntohs(s->s_port));
+  ASSERT_STREQ("tcp", s->s_proto);
+
+  // And we get a failure if we explicitly ask for udp.
+  s = getservbyport(htons(25), "udp");
+  ASSERT_TRUE(s == nullptr);
+
+  // But there are actually udp services.
+  s = getservbyport(htons(7), "udp");
+  ASSERT_TRUE(s != nullptr);
+  ASSERT_STREQ("echo", s->s_name);
+  ASSERT_EQ(7, ntohs(s->s_port));
+  ASSERT_STREQ("udp", s->s_proto);
+}
+
+TEST(netdb, endnetent_getnetent_setnetent) {
+  setnetent(0);
+  setnetent(1);
+  endnetent();
+  while (getnetent() != nullptr) {
+  }
+}
+
+TEST(netdb, getnetbyaddr) {
+  getnetbyaddr(0, 0);
+}
+
+TEST(netdb, getnetbyname) {
+  getnetbyname("x");
+}
+
+TEST(netdb, endprotoent_getprotoent_setprotoent) {
+  setprotoent(0);
+  setprotoent(1);
+  endprotoent();
+  while (getprotoent() != nullptr) {
+  }
+}
+
+TEST(netdb, getprotobyname) {
+  getprotobyname("tcp");
+}
+
+TEST(netdb, getprotobynumber) {
+  getprotobynumber(6);
+}
+
+TEST(netdb, endservent_getservent_setservent) {
+  setservent(0);
+  setservent(1);
+  endservent();
+  size_t service_count = 0;
+  while (getservent() != nullptr) {
+    ++service_count;
+  }
+  ASSERT_GT(service_count, 0U);
+}
+
+TEST(netdb, getservbyname_getservent_conflicts) {
+  // Calling getservbyname shouldn't affect getservent's iteration order.
+  endservent();
+  while (getservent() != nullptr) {
+    ASSERT_TRUE(getservbyname("smtp", "tcp") != nullptr);
+  }
+}
+
+TEST(netdb, getservbyport_getservent_conflicts) {
+  // Calling getservbyport shouldn't affect getservent's iteration order.
+  endservent();
+  while (getservent() != nullptr) {
+    ASSERT_TRUE(getservbyport(htons(25), "tcp") != nullptr);
+  }
+}
+
+TEST(netdb, endservent_resets) {
+  endservent();
+  std::string first_service(getservent()->s_name);
+  endservent();
+  ASSERT_EQ(first_service, std::string(getservent()->s_name));
+}
+
+TEST(netdb, setservent_resets) {
+  endservent();
+  std::string first_service(getservent()->s_name);
+  setservent(0);
+  ASSERT_EQ(first_service, std::string(getservent()->s_name));
+}
+
+TEST(netdb, endhostent_gethostent_sethostent) {
+  sethostent(0);
+  sethostent(1);
+  endhostent();
+  size_t host_count = 0;
+  while (gethostent() != nullptr) {
+    ++host_count;
+  }
+  ASSERT_GT(host_count, 0U);
+}
+
+TEST(netdb, endhostent_resets) {
+  endhostent();
+  std::string first_host(gethostent()->h_name);
+  endhostent();
+  ASSERT_EQ(first_host, std::string(gethostent()->h_name));
+}
+
+TEST(netdb, sethostent_resets) {
+  endhostent();
+  std::string first_host(gethostent()->h_name);
+  sethostent(0);
+  ASSERT_EQ(first_host, std::string(gethostent()->h_name));
 }
