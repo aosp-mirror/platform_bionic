@@ -32,6 +32,9 @@
 extern unsigned __linker_init(void* raw_args);
 
 __LIBC_HIDDEN__ void _start() {
+  // Force unwinds to end in this function.
+  asm volatile(".cfi_undefined \%eip");
+
   void (*start)(void);
 
   void* raw_args = (void*) ((uintptr_t) __builtin_frame_address(0) + sizeof(void*));
