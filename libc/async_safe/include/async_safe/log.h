@@ -92,7 +92,7 @@ int async_safe_format_buffer_va_list(char* buffer, size_t buffer_size, const cha
 
 int async_safe_format_fd(int fd, const char* format , ...) __printflike(2, 3);
 int async_safe_format_log(int pri, const char* tag, const char* fmt, ...) __printflike(3, 4);
-int async_safe_format_log_va_list( int pri, const char* tag, const char* fmt, va_list ap);
+int async_safe_format_log_va_list(int pri, const char* tag, const char* fmt, va_list ap);
 int async_safe_write_log(int pri, const char* tag, const char* msg);
 
 #define CHECK(predicate) \
