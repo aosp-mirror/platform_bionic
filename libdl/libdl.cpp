@@ -23,11 +23,13 @@
 // These functions are exported by the loader
 // TODO(dimitry): replace these with reference to libc.so
 
+extern "C" {
+
 __attribute__((__weak__, visibility("default")))
 void* __loader_dlopen(const char* filename, int flags, const void* caller_addr);
 
 __attribute__((__weak__, visibility("default")))
-void* __loader_dlerror();
+char* __loader_dlerror();
 
 __attribute__((__weak__, visibility("default")))
 void* __loader_dlsym(void* handle, const char* symbol, const void* caller_addr);
@@ -212,3 +214,5 @@ __attribute__((__weak__))
 struct android_namespace_t* android_get_exported_namespace(const char* name) {
   return __loader_android_get_exported_namespace(name);
 }
+
+} // extern "C"
