@@ -47,6 +47,7 @@
 #include <async_safe/log.h>
 
 #include "private/CachedProperty.h"
+#include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
 // Must be kept in sync with frameworks/base/core/java/android/util/EventLog.java.
@@ -508,6 +509,7 @@ int async_safe_write_log(int priority, const char* tag, const char* msg) {
 }
 
 int async_safe_format_log_va_list(int priority, const char* tag, const char* format, va_list args) {
+  ErrnoRestorer errno_restorer;
   char buffer[1024];
   BufferOutputStream os(buffer, sizeof(buffer));
   out_vformat(os, format, args);
