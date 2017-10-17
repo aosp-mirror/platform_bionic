@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df4f05a9_23e23e84",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1695,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-17T20:15:13Z",
+      "side": 1,
+      "message": "This seems to fundamentally change this library. Before it contained a malloc implmentation and now it doesn\u0027t.\n\nIs this going to cause a problem for the ndk?",
+      "range": {
+        "startLine": 1695,
+        "startChar": 10,
+        "endLine": 1695,
+        "endChar": 31
+      },
+      "revId": "124a220241e5d22d280b883306638eea31363aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1bb3953_18355fe1",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1818,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-17T20:15:13Z",
+      "side": 1,
+      "message": "This comment should be moved down in front of libc_malloc. And maybe add a comment about why libc_malloc_wrapper exists.",
+      "range": {
+        "startLine": 1818,
+        "startChar": 3,
+        "endLine": 1818,
+        "endChar": 14
+      },
+      "revId": "124a220241e5d22d280b883306638eea31363aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac1bffa2_f50c08d2",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-17T20:15:13Z",
+      "side": 1,
+      "message": "It\u0027s not clear why this library exists. Is it only to build this file with a specific set of options?\n\nDoes -fvisibility\u003dhidden mean anything for a static library?",
+      "range": {
+        "startLine": 1825,
+        "startChar": 11,
+        "endLine": 1825,
+        "endChar": 30
+      },
+      "revId": "124a220241e5d22d280b883306638eea31363aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
