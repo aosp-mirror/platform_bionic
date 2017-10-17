@@ -29,12 +29,11 @@
 #pragma once
 
 #include <sys/cdefs.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__
-
-#include <errno.h>
-#include <sys/mman.h>
-#include <unistd.h>
 
 __BEGIN_DECLS
 
