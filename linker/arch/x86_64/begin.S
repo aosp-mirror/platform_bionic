@@ -29,6 +29,9 @@
 #include <private/bionic_asm.h>
 
 ENTRY(_start)
+  // Force unwinds to end in this function.
+  .cfi_undefined %rip
+
   mov %rsp, %rdi
   call __linker_init
 
