@@ -27,9 +27,10 @@
  */
 
 #include <errno.h>
+#include <pthread.h>
+#include <sched.h>
 
 #include "private/ErrnoRestorer.h"
-#include "pthread_internal.h"
 
 int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
   ErrnoRestorer errno_restorer;
@@ -38,4 +39,14 @@ int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
   if (tid == -1) return ESRCH;
 
   return (sched_setscheduler(tid, policy, param) == -1) ? errno : 0;
+}
+
+int pthread_setschedprio(pthread_t t, int priority) {
+  ErrnoRestorer errno_restorer;
+
+  pid_t tid = pthread_gettid_np(t);
+  if (tid == -1) return ESRCH;
+
+  sched_param param = { .sched_priority = priority };
+  return (sched_setparam(tid, &param) == -1) ? errno : 0;
 }
