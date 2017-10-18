@@ -98,6 +98,7 @@ int execl(const char* __path, const char* __arg0, ...) __attribute__((__sentinel
 int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentinel__));
 int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
+int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN_FUTURE;
 
 int nice(int __incr);
 

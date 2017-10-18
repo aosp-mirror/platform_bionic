@@ -1376,6 +1376,41 @@ TEST(UNISTD_TEST, exec_argv0_null) {
               "<unknown>: usage: run-as");
 }
 
+TEST(UNISTD_TEST, fexecve_failure) {
+  ExecTestHelper eth;
+  errno = 0;
+  int fd = open("/", O_RDONLY);
+  ASSERT_NE(-1, fd);
+  ASSERT_EQ(-1, fexecve(fd, eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(EACCES, errno);
+  close(fd);
+}
+
+TEST(UNISTD_TEST, fexecve_bad_fd) {
+  ExecTestHelper eth;
+  errno = 0;
+  ASSERT_EQ(-1, fexecve(-1, eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(EBADF, errno);
+}
+
+TEST(UNISTD_TEST, fexecve_args) {
+  // Test basic argument passing.
+  int echo_fd = open(BIN_DIR "echo", O_RDONLY | O_CLOEXEC);
+  ASSERT_NE(-1, echo_fd);
+  ExecTestHelper eth;
+  eth.SetArgs({"echo", "hello", "world", nullptr});
+  eth.Run([&]() { fexecve(echo_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "hello world\n");
+  close(echo_fd);
+
+  // Test environment variable setting too.
+  int printenv_fd = open(BIN_DIR "printenv", O_RDONLY | O_CLOEXEC);
+  ASSERT_NE(-1, printenv_fd);
+  eth.SetArgs({"printenv", nullptr});
+  eth.SetEnv({"A=B", nullptr});
+  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+  close(printenv_fd);
+}
+
 TEST(UNISTD_TEST, getlogin_r) {
   char buf[LOGIN_NAME_MAX] = {};
   EXPECT_EQ(ERANGE, getlogin_r(buf, 0));
