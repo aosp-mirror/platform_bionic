@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bdae20d3_f014a127",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-18T19:45:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a18391b_bd3441e6",
+      "range": {
+        "startLine": 112,
+        "startChar": 26,
+        "endLine": 112,
+        "endChar": 30
+      },
+      "revId": "a6dd05bd3dd37ce88763d729c9197131ec0385d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78834ad0_31e5544d",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2017-10-17T23:00:02Z",
       "side": 1,
       "message": "These tests run in a single process, right?  At least, there\u0027s a test configuration that does that (and I think it\u0027s the default)?\n\nWe\u0027d want to reset this back to the original scheduler, right?  Same above.",
+      "revId": "a6dd05bd3dd37ce88763d729c9197131ec0385d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa023221_84653bc2",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2265,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-18T19:45:06Z",
+      "side": 1,
+      "message": "no, because of exactly this problem we run each test \"isolated\" in its own process. there\u0027s just too much global state when testing the C library...",
+      "parentUuid": "78834ad0_31e5544d",
       "revId": "a6dd05bd3dd37ce88763d729c9197131ec0385d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
