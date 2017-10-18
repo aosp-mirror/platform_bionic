@@ -1382,3 +1382,46 @@ TEST(UNISTD_TEST, getlogin_r) {
   EXPECT_EQ(0, getlogin_r(buf, sizeof(buf)));
   EXPECT_STREQ(getlogin(), buf);
 }
+
+TEST(UNISTD_TEST, swab) {
+  // POSIX: "The swab() function shall copy nbytes bytes, which are pointed to by src,
+  // to the object pointed to by dest, exchanging adjacent bytes."
+  char buf[BUFSIZ];
+  memset(buf, 'x', sizeof(buf));
+  swab("ehll oowlr\0d", buf, 12);
+  ASSERT_STREQ("hello world", buf);
+}
+
+TEST(UNISTD_TEST, swab_odd_byte_count) {
+  // POSIX: "If nbytes is odd, swab() copies and exchanges nbytes-1 bytes and the disposition
+  // of the last byte is unspecified."
+  // ...but it seems unreasonable to not just leave the last byte alone.
+  char buf[BUFSIZ];
+  memset(buf, 'x', sizeof(buf));
+  swab("012345", buf, 3);
+  ASSERT_EQ('1', buf[0]);
+  ASSERT_EQ('0', buf[1]);
+  ASSERT_EQ('x', buf[2]);
+}
+
+TEST(UNISTD_TEST, swab_overlap) {
+  // POSIX: "If copying takes place between objects that overlap, the behavior is undefined."
+  // ...but it seems unreasonable to not just do the right thing.
+  char buf[] = "012345";
+  swab(buf, buf, 4);
+  ASSERT_EQ('1', buf[0]);
+  ASSERT_EQ('0', buf[1]);
+  ASSERT_EQ('3', buf[2]);
+  ASSERT_EQ('2', buf[3]);
+  ASSERT_EQ('4', buf[4]);
+  ASSERT_EQ('5', buf[5]);
+  ASSERT_EQ(0, buf[6]);
+}
+
+TEST(UNISTD_TEST, swab_negative_byte_count) {
+  // POSIX: "If nbytes is negative, swab() does nothing."
+  char buf[BUFSIZ];
+  memset(buf, 'x', sizeof(buf));
+  swab("hello", buf, -1);
+  ASSERT_EQ('x', buf[0]);
+}

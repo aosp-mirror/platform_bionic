@@ -16,6 +16,7 @@ New libc functions in P:
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
   * `pthread_setschedprio`
   * <spawn.h>
+  * `swab`
   * `syncfs`
 
 New libc functions in O:
@@ -92,7 +93,6 @@ pthread_setcancelstate
 pthread_setcanceltype
 pthread_testcancel
 sockatmark
-swab
 wordexp
 wordfree
 ```
