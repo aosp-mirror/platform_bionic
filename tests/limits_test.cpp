@@ -19,9 +19,9 @@
 #include <limits.h>
 
 TEST(limits, macros) {
-#if CHAR_BIT != 8
-#error Insane CHAR_BIT
-#endif
+  ASSERT_EQ(8, CHAR_BIT);
+  ASSERT_EQ(static_cast<int>(sizeof(int)), WORD_BIT);
+  ASSERT_EQ(20, NZERO);
 #if !defined(MB_LEN_MAX)
 #error MB_LEN_MAX
 #endif
