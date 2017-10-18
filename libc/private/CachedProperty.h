@@ -42,7 +42,9 @@ class CachedProperty {
     : property_name_(property_name),
       prop_info_(nullptr),
       cached_area_serial_(0),
-      cached_property_serial_(0) {
+      cached_property_serial_(0),
+      is_read_only_(strncmp(property_name, "ro.", 3) == 0),
+      read_only_property_(nullptr) {
     cached_value_[0] = '\0';
   }
 
@@ -76,7 +78,9 @@ class CachedProperty {
         __system_property_read_callback(prop_info_, &CachedProperty::Callback, this);
       }
     }
-
+    if (is_read_only_ && read_only_property_ != nullptr) {
+      return read_only_property_;
+    }
     return cached_value_;
   }
 
@@ -86,10 +90,18 @@ class CachedProperty {
   uint32_t cached_area_serial_;
   uint32_t cached_property_serial_;
   char cached_value_[PROP_VALUE_MAX];
+  bool is_read_only_;
+  const char* read_only_property_;
 
   static void Callback(void* data, const char*, const char* value, uint32_t serial) {
     CachedProperty* instance = reinterpret_cast<CachedProperty*>(data);
     instance->cached_property_serial_ = serial;
-    strcpy(instance->cached_value_, value);
+    // Read only properties can be larger than PROP_VALUE_MAX, but also never change value or
+    // location, thus we return the pointer from the shared memory directly.
+    if (instance->is_read_only_) {
+      instance->read_only_property_ = value;
+    } else {
+      strlcpy(instance->cached_value_, value, PROP_VALUE_MAX);
+    }
   }
 };
