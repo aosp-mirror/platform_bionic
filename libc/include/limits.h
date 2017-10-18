@@ -61,6 +61,7 @@
 #else
 # define LONG_BIT 32
 #endif
+#define WORD_BIT 32
 
 #define	SCHAR_MAX	0x7f		/* max value for a signed char */
 #define SCHAR_MIN	(-0x7f-1)	/* min value for a signed char */
@@ -129,6 +130,8 @@
 #endif
 
 #define MB_LEN_MAX 4
+
+#define NZERO 20
 
 #define IOV_MAX 1024
 #define SEM_VALUE_MAX 0x3fffffff
