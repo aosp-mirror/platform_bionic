@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5576099_a1d65f1f",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-18T21:53:22Z",
+      "side": 1,
+      "message": "worth a code comment?\n\nare we likely to need to do this for other functions too? (in which case i\u0027d suggest a macro like __BIONIC_WEAK_FOR_BINARY_TRANSLATION so we don\u0027t have to repeat the comment.)",
+      "revId": "c423e5a1ad3911318d8358aa3237e4eabff9c407",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
