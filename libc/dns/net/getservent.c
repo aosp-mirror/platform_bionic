@@ -25,32 +25,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <endian.h>
-#include <malloc.h>
+
 #include <netdb.h>
-#include "servent.h"
+
+#include <endian.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "resolv_static.h"
 #include "services.h"
 
-void
-setservent(int f)
-{
-    res_static  rs = __res_get_static();
-    if (rs) {
-        rs->servent_ptr = NULL;
-    }
-}
-
-void
-endservent(void)
-{
-    /* nothing to do */
-}
-
-struct servent *
-getservent_r( res_static  rs )
-{
+struct servent* getservent_r(res_static rs) {
     const char*  p;
     const char*  q;
     int          namelen;
@@ -119,12 +104,48 @@ getservent_r( res_static  rs )
     return &rs->servent;
 }
 
-struct servent *
-getservent(void)
-{
-    res_static   rs = __res_get_static();
+void setservent(int stayopen) {
+  endservent();
+}
 
-    if (rs == NULL) return NULL;
+void endservent(void) {
+  res_static rs = __res_get_static();
+  if (rs) rs->servent_ptr = NULL;
+}
 
-    return getservent_r(rs);
+struct servent* getservent(void) {
+  res_static rs = __res_get_static();
+  return rs ? getservent_r(rs) : NULL;
+}
+
+struct servent* getservbyname(const char* name, const char* proto) {
+  res_static rs = __res_get_static();
+  if (rs == NULL) return NULL;
+
+  const char* old_servent_ptr = rs->servent_ptr;
+  rs->servent_ptr = NULL;
+  struct servent* s;
+  while ((s = getservent_r(rs)) != NULL) {
+    if (strcmp(s->s_name, name) == 0 && (proto == NULL || strcmp(s->s_proto, proto) == 0)) {
+      break;
+    }
+  }
+  rs->servent_ptr = old_servent_ptr;
+  return s;
+}
+
+struct servent* getservbyport(int port, const char* proto) {
+  res_static rs = __res_get_static();
+  if (rs == NULL) return NULL;
+
+  const char* old_servent_ptr = rs->servent_ptr;
+  rs->servent_ptr = NULL;
+  struct servent* s;
+  while ((s = getservent_r(rs)) != NULL) {
+    if (s->s_port == port && (proto == NULL || strcmp(s->s_proto, proto) == 0)) {
+      break;
+    }
+  }
+  rs->servent_ptr = old_servent_ptr;
+  return s;
 }

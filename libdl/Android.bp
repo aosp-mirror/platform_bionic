@@ -4,7 +4,7 @@
 cc_library_static {
     name: "libdl_static",
 
-    srcs: ["libdl.c", "libdl_cfi.cpp"],
+    srcs: ["libdl.cpp", "libdl_cfi.cpp"],
 
     cflags: [
         "-Wall",

@@ -1304,7 +1304,12 @@ LIBC_P { # introduced=P
   global:
     __freading;
     __fwriting;
+    endhostent;
+    endnetent;
+    endprotoent;
     getentropy;
+    getnetent;
+    getprotoent;
     getrandom;
     getlogin_r;
     glob;
@@ -1339,6 +1344,10 @@ LIBC_P { # introduced=P
     posix_spawn_file_actions_destroy;
     posix_spawn_file_actions_init;
     posix_spawnp;
+    pthread_setschedprio;
+    sethostent;
+    setnetent;
+    setprotoent;
     syncfs;
 } LIBC_O;
 

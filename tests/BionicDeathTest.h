@@ -17,25 +17,29 @@
 #ifndef BIONIC_TESTS_BIONIC_DEATH_TEST_H_
 #define BIONIC_TESTS_BIONIC_DEATH_TEST_H_
 
-#include <gtest/gtest.h>
+#include <signal.h>
 
-#include <sys/prctl.h>
+#include <gtest/gtest.h>
 
 class BionicDeathTest : public testing::Test {
  protected:
   virtual void SetUp() {
     // Suppress debuggerd stack traces. Too slow.
-    old_dumpable_ = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
-    prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+    for (int signo : { SIGABRT, SIGBUS, SIGSEGV, SIGSYS }) {
+      struct sigaction action = {};
+      action.sa_handler = SIG_DFL;
+      sigaction(signo, &action, &previous_);
+    }
   }
 
   virtual void TearDown() {
-    prctl(PR_SET_DUMPABLE, old_dumpable_, 0, 0, 0, 0);
+    for (int signo : { SIGABRT, SIGBUS, SIGSEGV, SIGSYS }) {
+      sigaction(signo, &previous_, nullptr);
+    }
   }
 
  private:
-  int old_dumpable_;
+  struct sigaction previous_;
 };
 
 #endif // BIONIC_TESTS_BIONIC_DEATH_TEST_H_
