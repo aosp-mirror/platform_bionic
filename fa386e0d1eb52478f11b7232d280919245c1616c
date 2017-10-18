@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "278a9bd8_a993f958",
+        "filename": "tests/unistd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1395,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-18T20:59:52Z",
+      "side": 1,
+      "message": "Does glibc have this same behavior?",
+      "range": {
+        "startLine": 1395,
+        "startChar": 18,
+        "endLine": 1395,
+        "endChar": 37
+      },
+      "revId": "fa386e0d1eb52478f11b7232d280919245c1616c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
