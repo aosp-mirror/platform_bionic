@@ -9,6 +9,7 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 New libc functions in P:
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
   * `endhostent`/endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
+  * `fexecve`
   * `getentropy`/`getrandom` (adding <sys/random.h>)
   * `getlogin_r`
   * `glob`/`globfree` (adding <glob.h>)
@@ -71,7 +72,6 @@ aio_read
 aio_return
 aio_suspend
 aio_write
-fexecve
 lio_listio
 pthread_attr_getinheritsched
 pthread_attr_setinheritsched
