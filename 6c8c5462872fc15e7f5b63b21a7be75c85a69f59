@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b8a0b9a_5ec4a666",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-19T21:28:44Z",
+      "side": 1,
+      "message": "maybe use LD_PRELOAD_\u003cARCH\u003e here? as in LD_PRELOAD_ARM/ARM64/X86/X86_64?",
+      "revId": "6c8c5462872fc15e7f5b63b21a7be75c85a69f59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
