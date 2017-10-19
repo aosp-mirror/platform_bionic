@@ -184,13 +184,17 @@ known = set([
 ])
 # POSIX has some stuff that's too stupid for words (a64l) or not actually
 # implemented in glibc unless you count always failing with ENOSYS as
-# being implemented (fattach).
+# being implemented (fattach). Other stuff (fmtmsg) isn't used in any
+# codebase I have access to, internal or external.
 in_posix_and_glibc_but_dead_or_useless = set([
   'a64l', # obsolete
   'confstr', # obsolete
   'endutxent', # no utmp on Android
   'fattach', # obsolete
   'fdetach', # obsolete
+  'fmtmsg', # unused
+  'getdate', # unused
+  'getdate_err', # unused
   'gethostid', # obsolete
   'getmsg', # obsolete
   'getpmsg', # obsolete
