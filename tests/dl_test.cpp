@@ -181,12 +181,8 @@ static void create_ld_config_file(std::string& config_file) {
 #endif
 
 #if defined(__BIONIC__)
-static bool is_user_build() {
-  std::string build_type = android::base::GetProperty("ro.build.type", "user");
-  if (build_type == "userdebug" || build_type == "eng") {
-    return false;
-  }
-  return true;
+static bool is_debuggable_build() {
+  return android::base::GetBoolProperty("ro.debuggable", false);
 }
 #endif
 
@@ -194,7 +190,7 @@ static bool is_user_build() {
 // whose search paths include the 'ns2/' subdir.
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
-  if (is_user_build()) {
+  if (!is_debuggable_build()) {
     // LD_CONFIG_FILE is not supported on user build
     return;
   }
@@ -216,7 +212,7 @@ TEST(dl, exec_with_ld_config_file) {
 // additional namespaces other than the default namespace.
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
-  if (is_user_build()) {
+  if (!is_debuggable_build()) {
     // LD_CONFIG_FILE is not supported on user build
     return;
   }
@@ -244,7 +240,7 @@ TEST(dl, disable_ld_config_file) {
     // This test is only for CTS.
     return;
   }
-  if (!is_user_build()) {
+  if (is_debuggable_build()) {
     // Skip the test for non production devices
     return;
   }
