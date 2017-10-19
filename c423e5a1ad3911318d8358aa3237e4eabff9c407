@@ -34,6 +34,24 @@
       "revId": "c423e5a1ad3911318d8358aa3237e4eabff9c407",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af9c9323_f81b4000",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-19T13:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2256577d_f2c5db57",
+      "revId": "c423e5a1ad3911318d8358aa3237e4eabff9c407",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
