@@ -22,6 +22,30 @@
       "revId": "5b5f76c8b459b08f3e175314d40ef1d0870018cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "760dc246_918606c5",
+        "filename": "libc/private/bionic_defs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-19T16:19:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2c89b9_e7cce275",
+      "range": {
+        "startLine": 36,
+        "startChar": 55,
+        "endLine": 36,
+        "endChar": 63
+      },
+      "revId": "5b5f76c8b459b08f3e175314d40ef1d0870018cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
