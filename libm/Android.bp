@@ -210,11 +210,9 @@ cc_library {
         "sincos.c",
         "fake_long_double.c",
 
-        // Modified versions of BSD code.
-        "signbit.c",
-
         // Home-grown stuff.
         "fabs.cpp",
+        "signbit.cpp",
     ],
 
     multilib: {

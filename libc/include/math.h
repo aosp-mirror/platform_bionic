@@ -352,30 +352,6 @@ double yn(int __n, double __x);
 
 #define MAXFLOAT	((float)3.40282346638528860e+38)
 
-/* Legacy cruft from before we had builtin implementations of the standard macros. */
-
-int __fpclassifyd(double __x) __attribute_const__;
-int __fpclassifyf(float __x) __attribute_const__;
-int __fpclassifyl(long double __x) __attribute_const__;
-
-int __isfinitef(float __x) __attribute_const__;
-int __isfinite(double __x) __attribute_const__;
-int __isfinitel(long double __x) __attribute_const__;
-
-int __isinff(float __x) __attribute_const__;
-int __isinfl(long double __x) __attribute_const__;
-
-int __isnanf(float __x) __attribute_const__ __INTRODUCED_IN(21);
-int __isnanl(long double __x) __attribute_const__;
-
-int __isnormal(double __x) __attribute_const__;
-int __isnormalf(float __x) __attribute_const__;
-int __isnormall(long double __x) __attribute_const__;
-
-int __signbit(double __x) __attribute_const__;
-int __signbitf(float __x) __attribute_const__;
-int __signbitl(long double __x) __attribute_const__;
-
 /* BSD extensions. */
 
 #if defined(__USE_BSD)
