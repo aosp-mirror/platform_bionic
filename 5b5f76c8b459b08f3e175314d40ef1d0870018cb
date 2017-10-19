@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b2c89b9_e7cce275",
+        "filename": "libc/private/bionic_defs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2017-10-19T16:13:22Z",
+      "side": 1,
+      "message": "Please make it __weak__,__noinline__\n\nOtherwise functions which call that symbol could STILL inline it - which would defeat the purpose.\n\nOf course this would mean that such declaraton could affect speed of libc implementation negatively - but this would just mean that we shouldn\u0027t use them in symbols which are performance-critical.",
+      "range": {
+        "startLine": 36,
+        "startChar": 55,
+        "endLine": 36,
+        "endChar": 63
+      },
+      "revId": "5b5f76c8b459b08f3e175314d40ef1d0870018cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
