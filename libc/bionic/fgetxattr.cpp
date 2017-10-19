@@ -33,13 +33,15 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "private/FdPath.h"
+
 extern "C" ssize_t ___fgetxattr(int, const char*, void*, size_t);
 
 ssize_t fgetxattr(int fd, const char *name, void *value, size_t size) {
   int saved_errno = errno;
   ssize_t result = ___fgetxattr(fd, name, value, size);
 
-  if ((result != -1) || (errno != EBADF)) {
+  if (result != -1 || errno != EBADF) {
     return result;
   }
 
@@ -47,13 +49,11 @@ ssize_t fgetxattr(int fd, const char *name, void *value, size_t size) {
   // may not directly support fgetxattr() on such a file descriptor.
   // Use /proc/self/fd instead to emulate this support.
   int fd_flag = fcntl(fd, F_GETFL);
-  if ((fd_flag == -1) || ((fd_flag & O_PATH) == 0)) {
+  if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {
     errno = EBADF;
     return -1;
   }
 
-  char buf[40];
-  snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
   errno = saved_errno;
-  return getxattr(buf, name, value, size);
+  return getxattr(FdPath(fd).c_str(), name, value, size);
 }

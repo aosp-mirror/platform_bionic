@@ -37,6 +37,7 @@
 #include <utmp.h>
 
 #include "bionic/pthread_internal.h"
+#include "private/FdPath.h"
 
 int getpt() {
   return posix_openpt(O_RDWR|O_NOCTTY);
@@ -94,10 +95,7 @@ int ttyname_r(int fd, char* buf, size_t len) {
     return errno;
   }
 
-  char path[64];
-  snprintf(path, sizeof(path), "/proc/self/fd/%d", fd);
-
-  ssize_t count = readlink(path, buf, len);
+  ssize_t count = readlink(FdPath(fd).c_str(), buf, len);
   if (count == -1) {
     return errno;
   }

@@ -39,6 +39,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "private/FdPath.h"
+
 extern "C" char** environ;
 
 enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
@@ -168,5 +170,12 @@ int execvpe(const char* name, char* const* argv, char* const* envp) {
     }
   }
   if (saw_EACCES) errno = EACCES;
+  return -1;
+}
+
+int fexecve(int fd, char* const* argv, char* const* envp) {
+  // execveat with AT_EMPTY_PATH (>= 3.19) seems to offer no advantages.
+  execve(FdPath(fd).c_str(), argv, envp);
+  if (errno == ENOENT) errno = EBADF;
   return -1;
 }
