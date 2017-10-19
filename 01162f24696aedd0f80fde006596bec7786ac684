@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59d70b45_218bb873",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-19T15:42:22Z",
+      "side": 1,
+      "message": "is there a reason for inverting the nesting of these two loops?",
+      "range": {
+        "startLine": 1625,
+        "startChar": 0,
+        "endLine": 1626,
+        "endChar": 48
+      },
+      "revId": "01162f24696aedd0f80fde006596bec7786ac684",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
