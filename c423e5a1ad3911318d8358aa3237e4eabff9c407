@@ -16,6 +16,24 @@
       "revId": "c423e5a1ad3911318d8358aa3237e4eabff9c407",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2256577d_f2c5db57",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2017-10-19T13:02:29Z",
+      "side": 1,
+      "message": "I\u0027d suggest __BIONIC_WEAK_FOR_NATIVE_BRIDGE\n\nCompared to binary translation in general, native bridge is specific in the following sense - it is about a process that runs on _both_ host and guest architectures at the same time. If there are any true singletons, then in native bridge case you simply cannot have their host instances duplicated for guest. This is the reason why libraries compiled for native bridge guest case need certain code to be replaced - so we mark it.\n\nIf binary translation deals with the whole process (or the whole OS)), then there are no such issues - singletons remain singletons.",
+      "parentUuid": "a5576099_a1d65f1f",
+      "revId": "c423e5a1ad3911318d8358aa3237e4eabff9c407",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
