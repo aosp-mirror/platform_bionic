@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e70c14d7_e5b98910",
+        "filename": "libc/stdio/fread.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-19T21:24:15Z",
+      "side": 1,
+      "message": "missed this one.\n\nadd the macro to \"local.h\" and reuse it here too?",
+      "revId": "a840e14db65deea49ec7040b778a0b07b7108f4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
