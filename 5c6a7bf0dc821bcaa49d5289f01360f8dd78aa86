@@ -22,6 +22,30 @@
       "revId": "5c6a7bf0dc821bcaa49d5289f01360f8dd78aa86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "342cecfd_add06fed",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-19T21:44:32Z",
+      "side": 1,
+      "message": "luckily the linker version scripts have the added benefit of performing that check for us.\n\nbut, yeah, as soon as samlin@\u0027s \"poor man\u0027s coverage\" is working i want to go through and plug all these test coverage gaps...",
+      "parentUuid": "de154276_536883c9",
+      "range": {
+        "startLine": 155,
+        "startChar": 16,
+        "endLine": 155,
+        "endChar": 24
+      },
+      "revId": "5c6a7bf0dc821bcaa49d5289f01360f8dd78aa86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
