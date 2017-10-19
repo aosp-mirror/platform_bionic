@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de154276_536883c9",
+        "filename": "tests/math_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-19T21:41:17Z",
+      "side": 1,
+      "message": "There is no real test that we are exporting the function for this since it has becomes a macro. It would probably be useful to add some math tests that verify the macros that have corresponding functions are still present.\n\nBut maybe not in this cl though.",
+      "range": {
+        "startLine": 155,
+        "startChar": 16,
+        "endLine": 155,
+        "endChar": 24
+      },
+      "revId": "5c6a7bf0dc821bcaa49d5289f01360f8dd78aa86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
