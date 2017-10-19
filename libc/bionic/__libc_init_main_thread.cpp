@@ -31,6 +31,7 @@
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_auxv.h"
+#include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
@@ -58,6 +59,7 @@ void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
 // -fno-stack-protector because it's responsible for setting up the main
 // thread's TLS (which stack protector relies on).
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_main_thread(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 #if defined(__i386__)
