@@ -33,13 +33,14 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "private/FdPath.h"
+
 extern "C" int ___fsetxattr(int, const char*, const void*, size_t, int);
 
 int fsetxattr(int fd, const char* name, const void* value, size_t size, int flags) {
   int saved_errno = errno;
   int result = ___fsetxattr(fd, name, value, size, flags);
-
-  if ((result == 0) || (errno != EBADF)) {
+  if (result == 0 || errno != EBADF) {
     return result;
   }
 
@@ -47,13 +48,11 @@ int fsetxattr(int fd, const char* name, const void* value, size_t size, int flag
   // may not directly support fsetxattr() on such a file descriptor.
   // Use /proc/self/fd instead to emulate this support.
   int fd_flag = fcntl(fd, F_GETFL);
-  if ((fd_flag == -1) || ((fd_flag & O_PATH) == 0)) {
+  if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {
     errno = EBADF;
     return -1;
   }
 
-  char buf[40];
-  snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
   errno = saved_errno;
-  return setxattr(buf, name, value, size, flags);
+  return setxattr(FdPath(fd).c_str(), name, value, size, flags);
 }
