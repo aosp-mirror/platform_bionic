@@ -21,7 +21,7 @@
 // This test makes sure that references to all of the kernel swab
 // macros/inline functions that are exported work properly.
 // Verifies that any kernel header updates do not break these macros.
-TEST(swab, fswa) {
+TEST(linux_swab, smoke) {
   EXPECT_EQ(0x3412U, __swab16(0x1234));
   EXPECT_EQ(0x78563412U, __swab32(0x12345678U));
   EXPECT_EQ(0xbaefcdab78563412ULL, __swab64(0x12345678abcdefbaULL));
