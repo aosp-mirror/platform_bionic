@@ -72,9 +72,6 @@ aio_return
 aio_suspend
 aio_write
 fexecve
-fmtmsg
-getdate
-getdate_err
 lio_listio
 pthread_attr_getinheritsched
 pthread_attr_setinheritsched
