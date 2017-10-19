@@ -1367,6 +1367,7 @@ LIBC_P { # introduced=P
     sethostent;
     setnetent;
     setprotoent;
+    swab;
     syncfs;
 } LIBC_O;
 
