@@ -221,6 +221,7 @@ in_posix_and_glibc_but_dead_or_useless = set([
   'shm_open', # disallowed by SELinux
   'shm_unlink', # disallowed by SELinux
   'setutxent', # no utmp on Android
+  'sockatmark', # obsolete (https://tools.ietf.org/html/rfc6093)
   'strfmon', # icu4c
   'strfmon_l', # icu4c
   'ulimit', # obsolete
