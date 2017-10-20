@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb410f22_38f90883",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-20T02:47:48Z",
+      "side": 1,
+      "message": "!vndk.empty() ?",
+      "range": {
+        "startLine": 341,
+        "startChar": 8,
+        "endLine": 341,
+        "endChar": 24
+      },
+      "revId": "bdd8634a7481e71a2f3bb31997ce9b44045901c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55983c03_e2ed1683",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-20T02:47:48Z",
+      "side": 1,
+      "message": "vndk !\u003d \"current\" ?",
+      "range": {
+        "startLine": 342,
+        "startChar": 9,
+        "endLine": 342,
+        "endChar": 37
+      },
+      "revId": "bdd8634a7481e71a2f3bb31997ce9b44045901c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4adb38c_d066f597",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-20T02:47:48Z",
+      "side": 1,
+      "message": "the string \u0027vndk\u0027 is allocated two times for each call to get_paths. Why don\u0027t you extract 339-347 as a static function?",
+      "range": {
+        "startLine": 340,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 5
+      },
+      "revId": "bdd8634a7481e71a2f3bb31997ce9b44045901c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
