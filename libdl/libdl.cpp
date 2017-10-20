@@ -17,7 +17,6 @@
 #include <dlfcn.h>
 #include <link.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <android/dlext.h>
 
 // These functions are exported by the loader
