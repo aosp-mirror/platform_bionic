@@ -22,6 +22,30 @@
       "revId": "01162f24696aedd0f80fde006596bec7786ac684",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b895fe1_b9d25d86",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-20T01:00:28Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t answer to this before merging this.\n\nI just wanted to avoid looping over new_global_group_members when namespaces \u003d\u003d nullptr and wanted to have \u0027if\u0027 and \u0027for\u0027 for \u0027namespaces\u0027 in proximity.",
+      "parentUuid": "59d70b45_218bb873",
+      "range": {
+        "startLine": 1625,
+        "startChar": 0,
+        "endLine": 1626,
+        "endChar": 48
+      },
+      "revId": "01162f24696aedd0f80fde006596bec7786ac684",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
