@@ -98,6 +98,7 @@ int execl(const char* __path, const char* __arg0, ...) __attribute__((__sentinel
 int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentinel__));
 int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
+int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN_FUTURE;
 
 int nice(int __incr);
 
@@ -245,6 +246,8 @@ int tcsetpgrp(int __fd, pid_t __pid);
 
 int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
 int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
+
+void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN_FUTURE;
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/unistd.h>

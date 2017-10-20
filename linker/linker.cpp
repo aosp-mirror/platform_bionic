@@ -1642,11 +1642,13 @@ bool find_libraries(android_namespace_t* ns,
   }
 
   // Step 4-3: Add the new global group members to all the linked namespaces
-  for (auto si : new_global_group_members) {
+  if (namespaces != nullptr) {
     for (auto linked_ns : *namespaces) {
-      if (si->get_primary_namespace() != linked_ns) {
-        linked_ns->add_soinfo(si);
-        si->add_secondary_namespace(linked_ns);
+      for (auto si : new_global_group_members) {
+        if (si->get_primary_namespace() != linked_ns) {
+          linked_ns->add_soinfo(si);
+          si->add_secondary_namespace(linked_ns);
+        }
       }
     }
   }

@@ -1307,6 +1307,7 @@ LIBC_P { # introduced=P
     endhostent;
     endnetent;
     endprotoent;
+    fexecve;
     getentropy;
     getnetent;
     getprotoent;
@@ -1348,6 +1349,7 @@ LIBC_P { # introduced=P
     sethostent;
     setnetent;
     setprotoent;
+    swab;
     syncfs;
 } LIBC_O;
 

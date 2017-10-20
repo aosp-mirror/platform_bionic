@@ -1534,6 +1534,7 @@ cc_library_static {
         "bionic/strings_l.cpp",
         "bionic/strsignal.cpp",
         "bionic/strtold.cpp",
+        "bionic/swab.cpp",
         "bionic/symlink.cpp",
         "bionic/sync_file_range.cpp",
         "bionic/sys_msg.cpp",
