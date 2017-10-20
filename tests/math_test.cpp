@@ -176,6 +176,11 @@ TEST(MATH_TEST, signbit) {
   ASSERT_NE(0, test_capture_signbit(-1.0L));
 }
 
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __fpclassifyd(double);
+extern "C" int __fpclassifyf(float);
+extern "C" int __fpclassifyl(long double);
+
 TEST(MATH_TEST, __fpclassifyd) {
 #if defined(__GLIBC__)
 #define __fpclassifyd __fpclassify
@@ -207,6 +212,11 @@ TEST(MATH_TEST, finitef) {
   ASSERT_TRUE(finitef(123.0f));
   ASSERT_FALSE(finitef(HUGE_VALF));
 }
+
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isfinite(double);
+extern "C" int __isfinitef(float);
+extern "C" int __isfinitel(long double);
 
 TEST(MATH_TEST, __isfinite) {
 #if defined(__GLIBC__)
@@ -243,6 +253,10 @@ TEST(MATH_TEST, isinf_function) {
   ASSERT_TRUE((isinf)(HUGE_VAL));
 }
 
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isinff(float);
+extern "C" int __isinfl(long double);
+
 TEST(MATH_TEST, __isinff) {
   ASSERT_FALSE(__isinff(123.0f));
   ASSERT_TRUE(__isinff(HUGE_VALF));
@@ -259,6 +273,10 @@ TEST(MATH_TEST, isnan_function) {
   ASSERT_TRUE((isnan)(nan("")));
 }
 
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isnanf(float);
+extern "C" int __isnanl(long double);
+
 TEST(MATH_TEST, __isnanf) {
   ASSERT_FALSE(__isnanf(123.0f));
   ASSERT_TRUE(__isnanf(nanf("")));
@@ -273,6 +291,11 @@ TEST(MATH_TEST, isnanf) {
   ASSERT_FALSE(isnanf(123.0f));
   ASSERT_TRUE(isnanf(nanf("")));
 }
+
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isnormal(double);
+extern "C" int __isnormalf(float);
+extern "C" int __isnormall(long double);
 
 TEST(MATH_TEST, __isnormal) {
 #if defined(__BIONIC__)
@@ -300,6 +323,11 @@ TEST(MATH_TEST, __isnormall) {
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
 #endif // __BIONIC__
 }
+
+// Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __signbit(double);
+extern "C" int __signbitf(float);
+extern "C" int __signbitl(long double);
 
 TEST(MATH_TEST, __signbit) {
   ASSERT_EQ(0, __signbit(0.0));
