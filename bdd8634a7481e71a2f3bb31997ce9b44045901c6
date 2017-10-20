@@ -68,6 +68,30 @@
       "revId": "bdd8634a7481e71a2f3bb31997ce9b44045901c6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2acd207d_4ae36215",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1187124
+      },
+      "writtenOn": "2017-10-20T04:42:37Z",
+      "side": 1,
+      "message": "I made a static function.",
+      "parentUuid": "c4adb38c_d066f597",
+      "range": {
+        "startLine": 340,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 5
+      },
+      "revId": "bdd8634a7481e71a2f3bb31997ce9b44045901c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
