@@ -69,16 +69,11 @@ static void BM_math_isfinite_macro(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_isfinite_macro);
 
-#if defined(__BIONIC__)
-#define test_isfinite __isfinite
-#else
-#define test_isfinite __finite
-#endif
 static void BM_math_isfinite(benchmark::State& state) {
   d = 0.0;
   v = values[state.range(0)];
   while (state.KeepRunning()) {
-    d += test_isfinite(v);
+    d += isfinite(v);
   }
   SetLabel(state);
 }
@@ -134,17 +129,15 @@ static void BM_math_isnormal_macro(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_isnormal_macro);
 
-#if defined(__BIONIC__)
 static void BM_math_isnormal(benchmark::State& state) {
   d = 0.0;
   v = values[state.range(0)];
   while (state.KeepRunning()) {
-    d += (__isnormal)(v);
+    d += isnormal(v);
   }
   SetLabel(state);
 }
 BIONIC_BENCHMARK(BM_math_isnormal);
-#endif
 
 static void BM_math_sin_fast(benchmark::State& state) {
   d = 1.0;
@@ -202,7 +195,7 @@ static void BM_math_signbit(benchmark::State& state) {
   d = 0.0;
   v = values[state.range(0)];
   while (state.KeepRunning()) {
-    d += (__signbit)(v);
+    d += signbit(v);
   }
   SetLabel(state);
 }
