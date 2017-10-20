@@ -89,7 +89,6 @@ pthread_mutexattr_setrobust
 pthread_setcancelstate
 pthread_setcanceltype
 pthread_testcancel
-sockatmark
 wordexp
 wordfree
 ```
