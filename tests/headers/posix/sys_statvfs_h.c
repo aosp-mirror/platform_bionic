@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <sys/statvfs.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void sys_statvfs_h() {
+  TYPE(struct statvfs);
+  STRUCT_MEMBER(struct statvfs, unsigned long, f_bsize);
+  STRUCT_MEMBER(struct statvfs, unsigned long, f_frsize);
+  STRUCT_MEMBER(struct statvfs, fsblkcnt_t, f_blocks);
+  STRUCT_MEMBER(struct statvfs, fsblkcnt_t, f_bfree);
+  STRUCT_MEMBER(struct statvfs, fsblkcnt_t, f_bavail);
+  STRUCT_MEMBER(struct statvfs, fsfilcnt_t, f_files);
+  STRUCT_MEMBER(struct statvfs, fsfilcnt_t, f_ffree);
+  STRUCT_MEMBER(struct statvfs, fsfilcnt_t, f_favail);
+  STRUCT_MEMBER(struct statvfs, unsigned long, f_fsid);
+  STRUCT_MEMBER(struct statvfs, unsigned long, f_flag);
+  STRUCT_MEMBER(struct statvfs, unsigned long, f_namemax);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  TYPE(fsblkcnt_t);
+  TYPE(fsfilcnt_t);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  MACRO(ST_RDONLY);
+  MACRO(ST_NOSUID);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(fstatvfs, int (*f)(int, struct statvfs*));
+  FUNCTION(statvfs, int (*f)(const char*, struct statvfs*));
+}

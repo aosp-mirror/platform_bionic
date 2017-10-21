@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <float.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void float_h() {
+  int flt_rounds = FLT_ROUNDS;
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  MACRO(FLT_EVAL_METHOD);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  MACRO(FLT_RADIX);
+  MACRO(FLT_MANT_DIG);
+  MACRO(DBL_MANT_DIG);
+  MACRO(LDBL_MANT_DIG);
+  MACRO(DECIMAL_DIG);
+  MACRO(FLT_DIG);
+  MACRO(DBL_DIG);
+  MACRO(LDBL_DIG);
+  MACRO(FLT_MIN_EXP);
+  MACRO(DBL_MIN_EXP);
+  MACRO(LDBL_MIN_EXP);
+  MACRO(FLT_MIN_10_EXP);
+  MACRO(DBL_MIN_10_EXP);
+  MACRO(LDBL_MIN_10_EXP);
+  MACRO(FLT_MAX_EXP);
+  MACRO(DBL_MAX_EXP);
+  MACRO(LDBL_MAX_EXP);
+  MACRO(FLT_MAX_10_EXP);
+  MACRO(DBL_MAX_10_EXP);
+  MACRO(LDBL_MAX_10_EXP);
+  MACRO(FLT_MAX);
+  MACRO(DBL_MAX);
+  MACRO(LDBL_MAX);
+  MACRO(FLT_EPSILON);
+  MACRO(DBL_EPSILON);
+  MACRO(LDBL_EPSILON);
+  MACRO(FLT_MIN);
+  MACRO(DBL_MIN);
+  MACRO(LDBL_MIN);
+}
