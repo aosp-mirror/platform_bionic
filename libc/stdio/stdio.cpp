@@ -44,6 +44,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "local.h"
 #include "glue.h"
 #include "private/bionic_fortify.h"
@@ -261,6 +263,7 @@ FILE* fdopen(int fd, const char* mode) {
 // all possible, no matter what.
 // TODO: rewrite this mess completely.
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
+  CHECK_FP(fp);
   int mode_flags;
   int flags = __sflags(mode, &mode_flags);
   if (flags == 0) {
@@ -361,6 +364,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
 __strong_alias(freopen64, freopen);
 
 int fclose(FILE* fp) {
+  CHECK_FP(fp);
   if (fp->_flags == 0) {
     // Already freed!
     errno = EBADF;
@@ -387,6 +391,7 @@ int fclose(FILE* fp) {
 }
 
 int fileno_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   int fd = fp->_file;
   if (fd == -1) {
     errno = EBADF;
@@ -396,6 +401,7 @@ int fileno_unlocked(FILE* fp) {
 }
 
 int fileno(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return fileno_unlocked(fp);
 }
@@ -405,24 +411,29 @@ void clearerr_unlocked(FILE* fp) {
 }
 
 void clearerr(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   clearerr_unlocked(fp);
 }
 
 int feof_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return ((fp->_flags & __SEOF) != 0);
 }
 
 int feof(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return feof_unlocked(fp);
 }
 
 int ferror_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return __sferror(fp);
 }
 
 int ferror(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return ferror_unlocked(fp);
 }
@@ -533,24 +544,29 @@ int __fseeko64(FILE* fp, off64_t offset, int whence, int off_t_bits) {
 }
 
 int fseeko(FILE* fp, off_t offset, int whence) {
+  CHECK_FP(fp);
   static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
   return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
 }
 __strong_alias(fseek, fseeko);
 
 int fseeko64(FILE* fp, off64_t offset, int whence) {
+  CHECK_FP(fp);
   return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
 }
 
 int fsetpos(FILE* fp, const fpos_t* pos) {
+  CHECK_FP(fp);
   return fseeko(fp, *pos, SEEK_SET);
 }
 
 int fsetpos64(FILE* fp, const fpos64_t* pos) {
+  CHECK_FP(fp);
   return fseeko64(fp, *pos, SEEK_SET);
 }
 
 off_t ftello(FILE* fp) {
+  CHECK_FP(fp);
   static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
   off64_t result = ftello64(fp);
   if (result > LONG_MAX) {
@@ -562,16 +578,19 @@ off_t ftello(FILE* fp) {
 __strong_alias(ftell, ftello);
 
 off64_t ftello64(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return __ftello64_unlocked(fp);
 }
 
 int fgetpos(FILE* fp, fpos_t* pos) {
+  CHECK_FP(fp);
   *pos = ftello(fp);
   return (*pos == -1) ? -1 : 0;
 }
 
 int fgetpos64(FILE* fp, fpos64_t* pos) {
+  CHECK_FP(fp);
   *pos = ftello64(fp);
   return (*pos == -1) ? -1 : 0;
 }
@@ -642,35 +661,43 @@ int dprintf(int fd, const char* fmt, ...) {
 }
 
 int fprintf(FILE* fp, const char* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfprintf(fp, fmt, ap));
 }
 
 int fgetc(FILE* fp) {
+  CHECK_FP(fp);
   return getc(fp);
 }
 
 int fputc(int c, FILE* fp) {
+  CHECK_FP(fp);
   return putc(c, fp);
 }
 
 int fscanf(FILE* fp, const char* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfscanf(fp, fmt, ap));
 }
 
 int fwprintf(FILE* fp, const wchar_t* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfwprintf(fp, fmt, ap));
 }
 
 int fwscanf(FILE* fp, const wchar_t* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfwscanf(fp, fmt, ap));
 }
 
 int getc(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return getc_unlocked(fp);
 }
 
 int getc_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return __sgetc(fp);
 }
 
@@ -683,10 +710,12 @@ int getchar() {
 }
 
 ssize_t getline(char** buf, size_t* len, FILE* fp) {
+  CHECK_FP(fp);
   return getdelim(buf, len, '\n', fp);
 }
 
 wint_t getwc(FILE* fp) {
+  CHECK_FP(fp);
   return fgetwc(fp);
 }
 
@@ -699,11 +728,13 @@ int printf(const char* fmt, ...) {
 }
 
 int putc(int c, FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return putc_unlocked(c, fp);
 }
 
 int putc_unlocked(int c, FILE* fp) {
+  CHECK_FP(fp);
   if (cantwrite(fp)) {
     errno = EBADF;
     return EOF;
@@ -724,6 +755,7 @@ int putchar_unlocked(int c) {
 }
 
 wint_t putwc(wchar_t wc, FILE* fp) {
+  CHECK_FP(fp);
   return fputwc(wc, fp);
 }
 
@@ -738,6 +770,7 @@ int remove(const char* path) {
 }
 
 void rewind(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   fseek(fp, 0, SEEK_SET);
   clearerr_unlocked(fp);
@@ -748,14 +781,17 @@ int scanf(const char* fmt, ...) {
 }
 
 void setbuf(FILE* fp, char* buf) {
+  CHECK_FP(fp);
   setbuffer(fp, buf, BUFSIZ);
 }
 
 void setbuffer(FILE* fp, char* buf, int size) {
+  CHECK_FP(fp);
   setvbuf(fp, buf, buf ? _IOFBF : _IONBF, size);
 }
 
 int setlinebuf(FILE* fp) {
+  CHECK_FP(fp);
   return setvbuf(fp, nullptr, _IOLBF, 0);
 }
 
