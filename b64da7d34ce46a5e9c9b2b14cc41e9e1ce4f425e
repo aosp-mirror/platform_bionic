@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0616144_4b33093a",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2017-10-23T07:29:56Z",
+      "side": 1,
+      "message": "(was looking at this for other reasons, but does this need to be guarded with __LP64__ too?)",
+      "range": {
+        "startLine": 132,
+        "startChar": 15,
+        "endLine": 132,
+        "endChar": 20
+      },
+      "revId": "b64da7d34ce46a5e9c9b2b14cc41e9e1ce4f425e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
