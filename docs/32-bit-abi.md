@@ -57,3 +57,14 @@ On 32-bit Android, `time_t` is 32-bit. The header `<time64.h>` and type
 Android all use the 32-bit `time_t`.
 
 In the 64-bit ABI, `time_t` is 64-bit.
+
+`pthread_mutex_t` is too small for large pids
+---------------------------------------------
+
+This doesn't generally affect Android devices, because on devices
+`/proc/sys/kernel/pid_max` is usually too small to hit the 16-bit limit,
+but 32-bit bionic's `pthread_mutex` is a total of 32 bits, leaving just
+16 bits for the owner thread id. This means bionic isn't able to support
+mutexes for tids that don't fit in 16 bits. This typically manifests as
+a hang in `pthread_mutex_lock` if the libc startup code doesn't detect
+this condition and abort.
