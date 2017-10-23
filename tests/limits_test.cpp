@@ -20,7 +20,7 @@
 
 TEST(limits, macros) {
   ASSERT_EQ(8, CHAR_BIT);
-  ASSERT_EQ(static_cast<int>(sizeof(int)), WORD_BIT);
+  ASSERT_EQ(8 * static_cast<int>(sizeof(int)), WORD_BIT);
   ASSERT_EQ(20, NZERO);
 #if !defined(MB_LEN_MAX)
 #error MB_LEN_MAX
