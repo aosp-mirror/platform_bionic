@@ -46,6 +46,30 @@
       "revId": "6f12bfece5dcc01325e0abba56a46b1bcf991c69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8aab1d9_35e5d3c2",
+        "filename": "libc/dns/net/gethnamaddr.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-24T21:35:11Z",
+      "side": 0,
+      "message": "I don\u0027t think it\u0027s worth re-adding since its a complete nop. I only wondered if a comment would help if we ever have to merge a newer version of the code.\n\nI\u0027ll leave it up to you what you want to do.",
+      "parentUuid": "6bb03a26_c049435c",
+      "range": {
+        "startLine": 541,
+        "startChar": 1,
+        "endLine": 541,
+        "endChar": 22
+      },
+      "revId": "6f12bfece5dcc01325e0abba56a46b1bcf991c69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
