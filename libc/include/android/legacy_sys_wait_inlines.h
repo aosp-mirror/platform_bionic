@@ -30,11 +30,12 @@
 #define _ANDROID_LEGACY_SYS_WAIT_INLINES_H_
 
 #include <sys/cdefs.h>
+
+#if __ANDROID_API__ < __ANDROID_API_J_MR2__
+
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <unistd.h>
-
-#if __ANDROID_API__ < __ANDROID_API_J_MR2__
 
 __BEGIN_DECLS
 
