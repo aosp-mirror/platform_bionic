@@ -29,9 +29,11 @@
 #ifndef ANDROID_LEGACY_FENV_INLINES_MIPS_H
 #define ANDROID_LEGACY_FENV_INLINES_MIPS_H
 
-#include <fenv.h>
+#include <sys/cdefs.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__ && (defined(__mips__) && !defined(__LP64__))
+
+#include <fenv.h>
 
 __BEGIN_DECLS
 
