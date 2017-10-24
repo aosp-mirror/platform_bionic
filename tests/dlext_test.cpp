@@ -1608,6 +1608,54 @@ TEST(dlext, ns_isolated_rtld_global) {
   ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
 }
 
+TEST(dlext, ns_inaccessible_error_message) {
+  // We set up 2 namespaces (a and b) and link a->b with a shared library
+  // libtestshared.so. Then try to dlopen different library with the same
+  // name from in namespace a. Note that library should not be accessible
+  // in either namespace but since it's soname is in the list of shared libs
+  // the linker will attempt to find it in linked namespace.
+  //
+  // Check the error message and make sure it mentions correct namespace name.
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  android_namespace_t* ns_a =
+          android_create_namespace("ns_a",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns_a != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_a, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_namespace_t* ns_b =
+          android_create_namespace("ns_b",
+                                   nullptr,
+                                   get_testlib_root().c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns_b != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_b, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  ASSERT_TRUE(android_link_namespaces(ns_a, ns_b, "libtestshared.so")) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_a;
+
+  std::string library_path = get_testlib_root() + "/inaccessible_libs/libtestshared.so";
+
+  void* handle = android_dlopen_ext(library_path.c_str(), RTLD_NOW, &extinfo);
+  ASSERT_TRUE(handle == nullptr);
+  std::string expected_dlerror =
+      android::base::StringPrintf("dlopen failed: library \"%s\" needed or dlopened by \"%s\""
+                                  " is not accessible for the namespace \"ns_a\"",
+                                  library_path.c_str(),
+                                  get_executable_path().c_str());
+  ASSERT_EQ(expected_dlerror, dlerror());
+}
+
 TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string shared_libs = g_core_shared_libs + ":" + g_public_lib;
