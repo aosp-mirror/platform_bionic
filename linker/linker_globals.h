@@ -32,6 +32,7 @@
 #include <link.h>
 #include <stddef.h>
 
+#include <string>
 #include <unordered_map>
 
 #include <async_safe/log.h>
@@ -39,7 +40,6 @@
 #define DL_ERR(fmt, x...) \
     do { \
       async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
-      /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
     } while (false)
 
 #define DL_WARN(fmt, x...) \
@@ -74,5 +74,17 @@ extern std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
 // Error buffer "variable"
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
+
+class DlErrorRestorer {
+ public:
+  DlErrorRestorer() {
+    saved_error_msg_ = linker_get_error_buffer();
+  }
+  ~DlErrorRestorer() {
+    strlcpy(linker_get_error_buffer(), saved_error_msg_.c_str(), linker_get_error_buffer_size());
+  }
+ private:
+  std::string saved_error_msg_;
+};
 
 #endif  /* __LINKER_GLOBALS_H */

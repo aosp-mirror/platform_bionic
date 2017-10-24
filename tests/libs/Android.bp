@@ -440,6 +440,16 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library for inaccessible shared library test
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtestshared",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "/inaccessible_libs",
+}
+
+// -----------------------------------------------------------------------------
 // Library with weak undefined function
 // -----------------------------------------------------------------------------
 cc_test_library {
