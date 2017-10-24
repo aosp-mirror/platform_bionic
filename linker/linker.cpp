@@ -1454,6 +1454,8 @@ static bool find_library_internal(android_namespace_t* ns,
 
   if (search_linked_namespaces) {
     // if a library was not found - look into linked namespaces
+    // preserve current dlerror in the case it fails.
+    DlErrorRestorer dlerror_restorer;
     for (auto& linked_namespace : ns->linked_namespaces()) {
       if (find_library_in_linked_namespace(linked_namespace,
                                            task)) {
