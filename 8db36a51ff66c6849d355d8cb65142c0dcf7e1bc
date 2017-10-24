@@ -46,6 +46,30 @@
       "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dc2b8f0_e595046f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-24T16:12:33Z",
+      "side": 1,
+      "message": "this is also true without this change... If library is found the dlerror() \u003d\u003d nullptr\n\nOn the other hand without this change these error message might get suppressed by dlerror for linked namespace search... it is a good thing it doesn\u0027t now.",
+      "parentUuid": "9086c3c1_929829d1",
+      "range": {
+        "startLine": 1169,
+        "startChar": 1,
+        "endLine": 1187,
+        "endChar": 3
+      },
+      "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
