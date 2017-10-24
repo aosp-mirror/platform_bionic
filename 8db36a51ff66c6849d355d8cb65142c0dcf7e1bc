@@ -22,6 +22,30 @@
       "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68a4131c_01680026",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-24T15:41:27Z",
+      "side": 1,
+      "message": "one of these days i\u0027m going to just unconditionally log every linker failure as it happens... too much calling code just ignores the result of dlerror/swallows the UnsatisfiedLinkError anyway!",
+      "parentUuid": "9086c3c1_929829d1",
+      "range": {
+        "startLine": 1169,
+        "startChar": 1,
+        "endLine": 1187,
+        "endChar": 3
+      },
+      "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
