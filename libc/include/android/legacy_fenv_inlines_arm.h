@@ -29,9 +29,11 @@
 #ifndef ANDROID_LEGACY_FENV_INLINES_ARM_H
 #define ANDROID_LEGACY_FENV_INLINES_ARM_H
 
-#include <fenv.h>
+#include <sys/cdefs.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__ && defined(__arm__)
+
+#include <fenv.h>
 
 __BEGIN_DECLS
 
