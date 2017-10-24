@@ -29,13 +29,12 @@
 #ifndef _ANDROID_LEGACY_STDLIB_INLINES_H_
 #define _ANDROID_LEGACY_STDLIB_INLINES_H_
 
-#include <sys/cdefs.h>
-
-#if __ANDROID_API__ < __ANDROID_API_L__
-
 #include <errno.h>
 #include <float.h>
 #include <stdlib.h>
+#include <sys/cdefs.h>
+
+#if __ANDROID_API__ < __ANDROID_API_L__
 
 __BEGIN_DECLS
 
