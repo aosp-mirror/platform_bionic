@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9086c3c1_929829d1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-24T13:27:23Z",
+      "side": 1,
+      "message": "I am a little bit concerned about the fact that these error messages - which sometimes could tell the real cause of a problem - will be suppressed when the lib is found in one of the linked namespaces.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 1,
+        "endLine": 1187,
+        "endChar": 3
+      },
+      "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
