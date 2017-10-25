@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "790938d7_3b8b91ed",
+        "filename": "libc/arch-common/bionic/__dso_handle.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-25T08:46:13Z",
+      "side": 1,
+      "message": "do we really need this part? seems like it does not mater which section this variable belongs to..",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "f7a3310c0e19ae012529f3bcd38b557e39f7f4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50edfe9f_90cfd563",
+        "filename": "libc/arch-common/bionic/__dso_handle_so.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-25T08:46:13Z",
+      "side": 1,
+      "message": "same here...",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "f7a3310c0e19ae012529f3bcd38b557e39f7f4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
