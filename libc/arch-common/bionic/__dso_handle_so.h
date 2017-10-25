@@ -26,11 +26,4 @@
  * SUCH DAMAGE.
  */
 
-
-__attribute__ ((visibility ("hidden")))
-__attribute__ ((section (".data")))
-#ifdef __aarch64__
-void *__dso_handle = (void *) 0;
-#else
-void *__dso_handle = &__dso_handle;
-#endif
+__attribute__((__visibility__("hidden"))) void* __dso_handle = &__dso_handle;
