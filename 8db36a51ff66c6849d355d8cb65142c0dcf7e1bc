@@ -70,6 +70,30 @@
       "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7e41a65_4dbae678",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-10-25T01:22:08Z",
+      "side": 1,
+      "message": "Ok I understand.",
+      "parentUuid": "6dc2b8f0_e595046f",
+      "range": {
+        "startLine": 1169,
+        "startChar": 1,
+        "endLine": 1187,
+        "endChar": 3
+      },
+      "revId": "8db36a51ff66c6849d355d8cb65142c0dcf7e1bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
