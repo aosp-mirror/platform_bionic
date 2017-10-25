@@ -37,6 +37,7 @@
 
 #include <async_safe/log.h>
 
+#include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
@@ -258,6 +259,8 @@ static void* __do_nothing(void*) {
   return NULL;
 }
 
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;

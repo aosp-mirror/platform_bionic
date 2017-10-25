@@ -15,6 +15,8 @@
  */
 #include <sys/cdefs.h>
 
+#include <private/bionic_defs.h>
+
 #include "pthread_internal.h"
 
 class thread_local_dtor {
@@ -25,7 +27,10 @@ class thread_local_dtor {
   thread_local_dtor* next;
 };
 
-extern "C" int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle) {
+extern "C" int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle);
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+int __cxa_thread_atexit_impl(void (*func) (void *), void *arg, void *dso_handle) {
   thread_local_dtor* dtor = new thread_local_dtor();
 
   dtor->func = func;
