@@ -33,6 +33,23 @@
       "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "899abf52_693621e7",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-25T18:21:47Z",
+      "side": 1,
+      "message": "since this is the only new part, can\u0027t we just keep using ENTRY and have\n\n  #define __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(f) .weak f\n\n? the downside is repeating the name, but otherwise seems better all round.",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
