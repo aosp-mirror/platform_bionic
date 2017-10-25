@@ -22,6 +22,30 @@
       "revId": "b64da7d34ce46a5e9c9b2b14cc41e9e1ce4f425e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9d5b79d_97db45cf",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-25T21:45:12Z",
+      "side": 1,
+      "message": "no, because prior to P there\u0027s no way to get here (the guard on L124 is only true if you\u0027ve called the new-in-P API).",
+      "parentUuid": "e0616144_4b33093a",
+      "range": {
+        "startLine": 132,
+        "startChar": 15,
+        "endLine": 132,
+        "endChar": 20
+      },
+      "revId": "b64da7d34ce46a5e9c9b2b14cc41e9e1ce4f425e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
