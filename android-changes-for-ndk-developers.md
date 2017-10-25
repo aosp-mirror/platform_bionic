@@ -376,3 +376,22 @@ adb shell setprop debug.ld.all dlerror,dlopen
 ```
 
 enables logging of all errors and dlopen calls
+
+## dlclose interacts badly with thread local variables with non-trivial destructors
+
+Android allows `dlclose` to unload a library even if there are still
+thread-local variables with non-trivial destructors. This leads to
+crashes when a thread exits and attempts to call the destructor, the
+code for which has been unloaded (as in [issue 360]).
+
+[issue 360]: https://github.com/android-ndk/ndk/issues/360
+
+Not calling `dlclose` or ensuring that your library has `RTLD_NODELETE`
+set (so that calls to `dlclose` don't actually unload the library)
+are possible workarounds.
+
+|                   | Pre-M                      | M+      |
+| ----------------- | -------------------------- | ------- |
+| No workaround     | Works for static STL       | Broken  |
+| `-Wl,-z,nodelete` | Works for static STL       | Works   |
+| No `dlclose`      | Works                      | Works   |
