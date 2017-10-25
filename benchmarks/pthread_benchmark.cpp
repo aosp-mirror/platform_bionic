@@ -137,9 +137,7 @@ static void BM_pthread_create(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_pthread_create);
 
-static void* RunThread(void* arg) {
-  benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
-  state.PauseTiming();
+static void* RunThread(void*) {
   return NULL;
 }
 
@@ -148,22 +146,18 @@ static void BM_pthread_create_and_run(benchmark::State& state) {
     pthread_t thread;
     pthread_create(&thread, NULL, RunThread, &state);
     pthread_join(thread, NULL);
-    state.ResumeTiming();
   }
 }
 BIONIC_BENCHMARK(BM_pthread_create_and_run);
 
-static void* ExitThread(void* arg) {
-  benchmark::State& state = *reinterpret_cast<benchmark::State*>(arg);
-  state.ResumeTiming();
+static void* ExitThread(void*) {
   pthread_exit(NULL);
 }
 
 static void BM_pthread_exit_and_join(benchmark::State& state) {
   while (state.KeepRunning()) {
-    state.PauseTiming();
     pthread_t thread;
-    pthread_create(&thread, NULL, ExitThread, &state);
+    pthread_create(&thread, NULL, ExitThread, nullptr);
     pthread_join(thread, NULL);
   }
 }
