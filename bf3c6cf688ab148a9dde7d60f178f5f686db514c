@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5ca6adc_ec36fc44",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2017-10-25T15:10:48Z",
+      "side": 1,
+      "message": "Looks like we need something similar to __BIONIC_WEAK_FOR_NATIVE_BRIDGE in asm, otherwise it is not clear why these symbols are weak...",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94d8369b_e621c13d",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2017-10-25T15:10:48Z",
+      "side": 1,
+      "message": "and for variables as well",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
