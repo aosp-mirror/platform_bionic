@@ -54,17 +54,19 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       }
     }
 
-    if (mangler->shouldMangleDeclName(decl)) {
-      std::string mangled;
-      llvm::raw_string_ostream ss(mangled);
-      mangler->mangleName(decl, ss);
-      return mangled;
-    }
-
+    // The decl might not have a name (e.g. bitfields).
     if (auto identifier = decl->getIdentifier()) {
+      if (mangler->shouldMangleDeclName(decl)) {
+        std::string mangled;
+        llvm::raw_string_ostream ss(mangled);
+        mangler->mangleName(decl, ss);
+        return mangled;
+      }
+
       return identifier->getName();
     }
-    return "<error>";
+
+    return "<unnamed>";
   }
 
   bool VisitDecl(Decl* decl) {
