@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2d73938_b43bfb24",
+        "filename": "tests/headers/posix/pthread_h.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-26T22:37:02Z",
+      "side": 1,
+      "message": "Don\u0027t you have a sched.h and time.h test?",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 19
+      },
+      "revId": "608c949261863433279a7b0f3ad700a5e600dc0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84d03992_61095ce0",
+        "filename": "tests/headers/posix/sys_mman_h.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-26T22:37:02Z",
+      "side": 1,
+      "message": "Any reason to use this instead of defined(HAVE_TYM)?",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "608c949261863433279a7b0f3ad700a5e600dc0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
