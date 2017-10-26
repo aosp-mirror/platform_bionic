@@ -1527,7 +1527,7 @@ TEST(pthread, pthread_attr_getstack_18908062) {
   ASSERT_EQ(0, pthread_create(&t, NULL,
             reinterpret_cast<void* (*)(void*)>(pthread_attr_getstack_18908062_helper),
             NULL));
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
 }
 
 #if defined(__BIONIC__)
@@ -1559,7 +1559,7 @@ TEST(pthread, pthread_gettid_np) {
 
   // Release the other thread and wait for it to exit.
   pthread_mutex_unlock(&pthread_gettid_np_mutex);
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
 
   ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
 #else
@@ -1600,7 +1600,7 @@ static void* PthreadCleanupStartRoutine(void*) {
 TEST(pthread, pthread_cleanup_push__pthread_cleanup_pop) {
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, NULL, PthreadCleanupStartRoutine, NULL));
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
   ASSERT_EQ(2U, cleanup_counter);
 }
 
@@ -2113,13 +2113,22 @@ TEST(pthread, pthread_spinlock_smoke) {
   ASSERT_EQ(0, pthread_spin_destroy(&lock));
 }
 
-TEST(pthread, pthread_attr_setdetachstate) {
+TEST(pthread, pthread_attr_getdetachstate__pthread_attr_setdetachstate) {
   pthread_attr_t attr;
   ASSERT_EQ(0, pthread_attr_init(&attr));
 
+  int state;
   ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_DETACHED, state);
+
   ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_JOINABLE, state);
+
   ASSERT_EQ(EINVAL, pthread_attr_setdetachstate(&attr, 123));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_JOINABLE, state);
 }
 
 TEST(pthread, pthread_create__mmap_failures) {
@@ -2167,4 +2176,108 @@ TEST(pthread, pthread_setschedparam) {
 
 TEST(pthread, pthread_setschedprio) {
   ASSERT_EQ(EINVAL, pthread_setschedprio(pthread_self(), INT_MIN));
+}
+
+TEST(pthread, pthread_attr_getinheritsched__pthread_attr_setinheritsched) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  int state;
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_INHERIT_SCHED, state);
+
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_EXPLICIT_SCHED, state);
+
+  ASSERT_EQ(EINVAL, pthread_attr_setinheritsched(&attr, 123));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_EXPLICIT_SCHED, state);
+}
+
+TEST(pthread, pthread_attr_setinheritsched__PTHREAD_INHERIT_SCHED__PTHREAD_EXPLICIT_SCHED) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  // If we set invalid scheduling attributes but choose to inherit, everything's fine...
+  sched_param param = { .sched_priority = sched_get_priority_max(SCHED_FIFO) + 1 };
+  ASSERT_EQ(0, pthread_attr_setschedparam(&attr, &param));
+  ASSERT_EQ(0, pthread_attr_setschedpolicy(&attr, SCHED_FIFO));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+
+  // If we ask to use them, though...
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(EINVAL, pthread_create(&t, &attr, IdFn, nullptr));
+}
+
+TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_FIFO, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+TEST(pthread, pthread_attr_setinheritsched_PTHREAD_EXPLICIT_SCHED_takes_effect) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_setschedpolicy(&attr, SCHED_OTHER));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_OTHER, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_FORK) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO | SCHED_RESET_ON_FORK, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_FIFO  | SCHED_RESET_ON_FORK, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
 }
