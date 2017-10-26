@@ -85,9 +85,14 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // thread's stack rather than on the heap.
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
   main_thread.mmap_size = 0;
+
   pthread_attr_init(&main_thread.attr);
-  main_thread.attr.guard_size = 0; // The main thread has no guard page.
-  main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
+  // We don't want to explicitly set the main thread's scheduler attributes (http://b/68328561).
+  pthread_attr_setinheritsched(&main_thread.attr, PTHREAD_INHERIT_SCHED);
+  // The main thread has no guard page.
+  pthread_attr_setguardsize(&main_thread.attr, 0);
+  // User code should never see this; we'll compute it when asked.
+  pthread_attr_setstacksize(&main_thread.attr, 0);
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
