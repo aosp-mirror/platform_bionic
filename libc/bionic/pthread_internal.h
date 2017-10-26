@@ -34,11 +34,14 @@
 #include "private/bionic_lock.h"
 #include "private/bionic_tls.h"
 
-/* Has the thread been detached by a pthread_join or pthread_detach call? */
+// Has the thread been detached by a pthread_join or pthread_detach call?
 #define PTHREAD_ATTR_FLAG_DETACHED 0x00000001
 
-/* Has the thread been joined by another thread? */
+// Has the thread been joined by another thread?
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000002
+
+// Should we inherit scheduling attributes from the parent on pthread_create?
+#define PTHREAD_ATTR_FLAG_INHERIT 0x00000004
 
 class pthread_key_data_t {
  public:
