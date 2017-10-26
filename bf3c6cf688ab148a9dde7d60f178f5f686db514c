@@ -86,6 +86,24 @@
       "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be9d7327_5f0b11ce",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-26T15:35:27Z",
+      "side": 1,
+      "message": "i meant after though...\n\n  ENTRY(blah)\n  __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(blah)\n    code\n    code\n  END(blah)",
+      "parentUuid": "c0793f2d_40c96853",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
