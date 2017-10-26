@@ -88,7 +88,6 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   pthread_attr_init(&main_thread.attr);
   main_thread.attr.guard_size = 0; // The main thread has no guard page.
   main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
-  // TODO: the main thread's sched_policy and sched_priority need to be queried.
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global

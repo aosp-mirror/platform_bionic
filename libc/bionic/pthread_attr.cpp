@@ -54,6 +54,23 @@ int pthread_attr_destroy(pthread_attr_t* attr) {
   return 0;
 }
 
+int pthread_attr_setinheritsched(pthread_attr_t* attr, int flag) {
+  if (flag == PTHREAD_EXPLICIT_SCHED) {
+    attr->flags &= ~PTHREAD_ATTR_FLAG_INHERIT;
+  } else if (flag == PTHREAD_INHERIT_SCHED) {
+    attr->flags |= PTHREAD_ATTR_FLAG_INHERIT;
+  } else {
+    return EINVAL;
+  }
+  return 0;
+}
+
+int pthread_attr_getinheritsched(const pthread_attr_t* attr, int* flag) {
+  *flag = (attr->flags & PTHREAD_ATTR_FLAG_INHERIT) ? PTHREAD_INHERIT_SCHED
+                                                    : PTHREAD_EXPLICIT_SCHED;
+  return 0;
+}
+
 int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
   if (state == PTHREAD_CREATE_DETACHED) {
     attr->flags |= PTHREAD_ATTR_FLAG_DETACHED;

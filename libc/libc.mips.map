@@ -1347,6 +1347,8 @@ LIBC_P { # introduced=P
     posix_spawn_file_actions_destroy;
     posix_spawn_file_actions_init;
     posix_spawnp;
+    pthread_attr_getinheritsched;
+    pthread_attr_setinheritsched;
     pthread_setschedprio;
     sethostent;
     setnetent;
