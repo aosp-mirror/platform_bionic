@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32d4c57a_3e0230ac",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-10-26T22:58:43Z",
+      "side": 1,
+      "message": "defined?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "18484f23550aec8710a684b686056c455e087977",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
