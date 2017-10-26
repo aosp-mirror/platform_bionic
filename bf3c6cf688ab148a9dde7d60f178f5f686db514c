@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "22dd74ce_1f1313ab",
+        "filename": "libc/bionic/system_properties.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-26T12:24:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94d8369b_e621c13d",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "899abf52_693621e7",
         "filename": "libc/private/bionic_asm.h",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2017-10-25T18:21:47Z",
       "side": 1,
       "message": "since this is the only new part, can\u0027t we just keep using ENTRY and have\n\n  #define __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(f) .weak f\n\n? the downside is repeating the name, but otherwise seems better all round.",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0793f2d_40c96853",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-26T12:24:39Z",
+      "side": 1,
+      "message": "The true downside is that for some reason doing .weak f; before ENTRY does not work:\n\ndimitry@shadanakar: /ssd/aosp/master/bionic/libc$ readelf --dyn-syms ../../out/target/product/angler/system/lib64/libc.so | grep vfork\n  1227: 000000000001df00    56 FUNC    GLOBAL DEFAULT   12 vfork@@LIBC",
+      "parentUuid": "899abf52_693621e7",
       "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
