@@ -189,6 +189,15 @@
   <name>BM_stdio_fopen_getline_fclose_no_locking</name>
 </fn>
 <fn>
+  <name>BM_stdio_printf_literal</name>
+</fn>
+<fn>
+  <name>BM_stdio_printf_s</name>
+</fn>
+<fn>
+  <name>BM_stdio_printf_d</name>
+</fn>
+<fn>
   <name>BM_string_memcmp</name>
   <args>AT_ALIGNED_TWOBUF</args>
 </fn>
