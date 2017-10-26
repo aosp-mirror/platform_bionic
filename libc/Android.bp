@@ -14,7 +14,7 @@ libc_common_src_files = [
     "bionic/siginterrupt.c",
     "bionic/sigsetmask.c",
     "stdio/fmemopen.cpp",
-    "stdio/fread.c",
+    "stdio/fread.cpp",
     "stdio/parsefloat.c",
     "stdio/refill.c",
     "stdio/stdio.cpp",
