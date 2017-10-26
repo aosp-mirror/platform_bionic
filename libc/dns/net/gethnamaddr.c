@@ -170,6 +170,15 @@ static const ns_src default_dns_files[] = {
 	{ 0, 0 }
 };
 
+static int h_errno_to_result(int* herrno_p) {
+  // glibc considers ERANGE a special case (and BSD uses ENOSPC instead).
+  if (*herrno_p == NETDB_INTERNAL && errno == ENOSPC) {
+    errno = ERANGE;
+    return errno;
+  }
+  // glibc considers HOST_NOT_FOUND not an error for the _r functions' return value.
+  return (*herrno_p != HOST_NOT_FOUND) ? *herrno_p : 0;
+}
 
 #ifdef DEBUG
 static void
@@ -519,9 +528,8 @@ gethostbyname_r(const char *name, struct hostent *hp, char *buf, size_t buflen,
     struct hostent **result, int *errorp)
 {
 	res_state res = __res_get_state();
-
 	if (res == NULL) {
-	  *result = NULL;
+		*result = NULL;
 		*errorp = NETDB_INTERNAL;
 		return -1;
 	}
@@ -538,12 +546,7 @@ gethostbyname_r(const char *name, struct hostent *hp, char *buf, size_t buflen,
 	}
 	*result = gethostbyname_internal(name, AF_INET, res, hp, buf, buflen, errorp,
 	                                 &NETCONTEXT_UNSET);
-	__res_put_state(res);
-	if (!*result && errno == ENOSPC) {
-	  errno = ERANGE;
-	  return ERANGE; /* Return error as in linux manual page. */
-	}
-	return (*result) ? 0 : -1;
+	return h_errno_to_result(errorp);
 }
 
 /* The prototype of gethostbyname2_r is from glibc, not that in netbsd. */
@@ -552,7 +555,6 @@ gethostbyname2_r(const char *name, int af, struct hostent *hp, char *buf,
     size_t buflen, struct hostent **result, int *errorp)
 {
 	res_state res = __res_get_state();
-
 	if (res == NULL) {
 		*result = NULL;
 		*errorp = NETDB_INTERNAL;
@@ -560,12 +562,7 @@ gethostbyname2_r(const char *name, int af, struct hostent *hp, char *buf,
 	}
 	*result = gethostbyname_internal(name, af, res, hp, buf, buflen, errorp,
 	                                 &NETCONTEXT_UNSET);
-	__res_put_state(res);
-	if (!*result && errno == ENOSPC) {
-		errno = ERANGE;
-		return ERANGE;
-	}
-	return (*result) ? 0 : -1;
+	return h_errno_to_result(errorp);
 }
 
 __LIBC_HIDDEN__ FILE* android_open_proxy() {
@@ -859,11 +856,7 @@ int gethostbyaddr_r(const void *addr, socklen_t len, int af, struct hostent *hp,
 {
 	*result = android_gethostbyaddrfornetcontext_proxy_internal(
 		addr, len, af, hp, buf, buflen, h_errnop, &NETCONTEXT_UNSET);
-	if (!*result && errno == ENOSPC) {
-		errno = ERANGE;
-		return ERANGE;
-	}
-	return (*result) ? 0 : -1;
+	return h_errno_to_result(h_errnop);
 }
 
 static struct hostent *
