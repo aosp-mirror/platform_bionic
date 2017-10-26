@@ -70,11 +70,6 @@ static std::string readPlatformFile(const CompilationType& type, llvm::StringRef
   int api_level = type.api_level;
   std::ifstream stream;
   while (api_level >= arch_min_api[type.arch]) {
-    if (supported_levels.count(api_level) == 0) {
-      --api_level;
-      continue;
-    }
-
     std::string path = std::string(platform_dir) + "/android-" + std::to_string(api_level) +
                        "/arch-" + to_string(type.arch) + "/symbols/" + filename;
 
