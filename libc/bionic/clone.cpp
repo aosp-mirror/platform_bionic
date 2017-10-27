@@ -34,6 +34,7 @@
 
 #include "pthread_internal.h"
 
+#include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
 
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
@@ -52,10 +53,11 @@ extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
   __exit(status);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
-  int* parent_tid = NULL;
-  void* new_tls = NULL;
-  int* child_tid = NULL;
+  int* parent_tid = nullptr;
+  void* new_tls = nullptr;
+  int* child_tid = nullptr;
 
   if (fn != nullptr && child_stack == nullptr) {
     errno = EINVAL;

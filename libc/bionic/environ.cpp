@@ -28,6 +28,8 @@
 
 #include <unistd.h>
 
+#include "private/bionic_defs.h"
 // Keep that variable in separate .o file to make sure programs which define
 // their own "environ" are compileable.
+__BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 char** environ;
