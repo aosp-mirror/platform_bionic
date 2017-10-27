@@ -171,3 +171,28 @@ void BM_stdio_fopen_fgetc_fclose_no_locking(benchmark::State& state) {
   FopenFgetcFclose(state, true);
 }
 BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_no_locking);
+
+static void BM_stdio_printf_literal(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    char buf[BUFSIZ];
+    snprintf(buf, sizeof(buf), "this is just a literal string with no format specifiers");
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_printf_literal);
+
+static void BM_stdio_printf_s(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    char buf[BUFSIZ];
+    snprintf(buf, sizeof(buf), "this is a more typical error message with detail: %s",
+             "No such file or directory");
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_printf_s);
+
+static void BM_stdio_printf_d(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    char buf[BUFSIZ];
+    snprintf(buf, sizeof(buf), "this is a more typical error message with detail: %d", 123456);
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_printf_d);
