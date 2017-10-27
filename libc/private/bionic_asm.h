@@ -78,6 +78,9 @@
     ENTRY_NO_DWARF(f); \
     .hidden f \
 
+#define __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(f) \
+    .weak f; \
+
 #define ALIAS_SYMBOL(alias, original) \
     .globl alias; \
     .equ alias, original

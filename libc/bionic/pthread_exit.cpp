@@ -33,6 +33,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -44,6 +45,7 @@ extern "C" void __cxa_thread_finalize();
  *         and thread cancelation
  */
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t routine, void* arg) {
   pthread_internal_t* thread = __get_thread();
   c->__cleanup_routine = routine;
@@ -52,6 +54,7 @@ void __pthread_cleanup_push(__pthread_cleanup_t* c, __pthread_cleanup_func_t rou
   thread->cleanup_stack = c;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   pthread_internal_t* thread = __get_thread();
   thread->cleanup_stack = c->__cleanup_prev;
@@ -60,6 +63,7 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void pthread_exit(void* return_value) {
   // Call dtors for thread_local objects first.
   __cxa_thread_finalize();

@@ -34,5 +34,6 @@
  * by native bridge implementation.
  */
 #define __BIONIC_WEAK_FOR_NATIVE_BRIDGE __attribute__((__weak__, __noinline__))
+#define __BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE __attribute__((__weak__))
 
 #endif /* __BIONIC_PRIVATE_BIONIC_DEFS_H_ */

@@ -99,17 +99,20 @@
 .endm
 
 ENTRY(setjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
   mov w1, #1
   b sigsetjmp
 END(setjmp)
 
 ENTRY(_setjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
   mov w1, #0
   b sigsetjmp
 END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   stp x0, x30, [sp, #-16]!
   .cfi_def_cfa_offset 16
   .cfi_rel_offset x0, 0
@@ -178,6 +181,7 @@ END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
 #if USE_CHECKSUM
   // Check the checksum before doing anything.
   m_calculate_checksum x12, x0, x2
@@ -256,4 +260,6 @@ ENTRY(siglongjmp)
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
 ALIAS_SYMBOL(_longjmp, siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)
