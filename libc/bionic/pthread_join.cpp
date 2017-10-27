@@ -28,9 +28,11 @@
 
 #include <errno.h>
 
+#include "private/bionic_defs.h"
 #include "private/bionic_futex.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_join(pthread_t t, void** return_value) {
   if (t == pthread_self()) {
     return EDEADLK;

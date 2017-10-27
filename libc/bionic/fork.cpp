@@ -28,8 +28,10 @@
 
 #include <unistd.h>
 
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int fork() {
   __bionic_atfork_run_prepare();
 

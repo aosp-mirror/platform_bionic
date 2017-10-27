@@ -35,10 +35,12 @@
 
 #include <async_safe/log.h>
 
+#include "private/bionic_defs.h"
 #include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_init(pthread_attr_t* attr) {
   attr->flags = 0;
   attr->stack_base = NULL;
@@ -49,11 +51,13 @@ int pthread_attr_init(pthread_attr_t* attr) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_destroy(pthread_attr_t* attr) {
   memset(attr, 0x42, sizeof(pthread_attr_t));
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setinheritsched(pthread_attr_t* attr, int flag) {
   if (flag == PTHREAD_EXPLICIT_SCHED) {
     attr->flags &= ~PTHREAD_ATTR_FLAG_INHERIT;
@@ -65,12 +69,14 @@ int pthread_attr_setinheritsched(pthread_attr_t* attr, int flag) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getinheritsched(const pthread_attr_t* attr, int* flag) {
   *flag = (attr->flags & PTHREAD_ATTR_FLAG_INHERIT) ? PTHREAD_INHERIT_SCHED
                                                     : PTHREAD_EXPLICIT_SCHED;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
   if (state == PTHREAD_CREATE_DETACHED) {
     attr->flags |= PTHREAD_ATTR_FLAG_DETACHED;
@@ -82,31 +88,37 @@ int pthread_attr_setdetachstate(pthread_attr_t* attr, int state) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getdetachstate(const pthread_attr_t* attr, int* state) {
   *state = (attr->flags & PTHREAD_ATTR_FLAG_DETACHED) ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setschedpolicy(pthread_attr_t* attr, int policy) {
   attr->sched_policy = policy;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getschedpolicy(const pthread_attr_t* attr, int* policy) {
   *policy = attr->sched_policy;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setschedparam(pthread_attr_t* attr, const sched_param* param) {
   attr->sched_priority = param->sched_priority;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getschedparam(const pthread_attr_t* attr, sched_param* param) {
   param->sched_priority = attr->sched_priority;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setstacksize(pthread_attr_t* attr, size_t stack_size) {
   if (stack_size < PTHREAD_STACK_MIN) {
     return EINVAL;
@@ -115,11 +127,13 @@ int pthread_attr_setstacksize(pthread_attr_t* attr, size_t stack_size) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getstacksize(const pthread_attr_t* attr, size_t* stack_size) {
   void* unused;
   return pthread_attr_getstack(attr, &unused, stack_size);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_size) {
   if ((stack_size & (PAGE_SIZE - 1) || stack_size < PTHREAD_STACK_MIN)) {
     return EINVAL;
@@ -198,22 +212,26 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   async_safe_fatal("Stack not found in /proc/self/maps");
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getstack(const pthread_attr_t* attr, void** stack_base, size_t* stack_size) {
   *stack_base = attr->stack_base;
   *stack_size = attr->stack_size;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setguardsize(pthread_attr_t* attr, size_t guard_size) {
   attr->guard_size = guard_size;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getguardsize(const pthread_attr_t* attr, size_t* guard_size) {
   *guard_size = attr->guard_size;
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_getattr_np(pthread_t t, pthread_attr_t* attr) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(t);
   *attr = thread->attr;
@@ -230,6 +248,7 @@ int pthread_getattr_np(pthread_t t, pthread_attr_t* attr) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setscope(pthread_attr_t*, int scope) {
   if (scope == PTHREAD_SCOPE_SYSTEM) {
     return 0;
@@ -240,6 +259,7 @@ int pthread_attr_setscope(pthread_attr_t*, int scope) {
   return EINVAL;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getscope(const pthread_attr_t*, int* scope) {
   *scope = PTHREAD_SCOPE_SYSTEM;
   return 0;

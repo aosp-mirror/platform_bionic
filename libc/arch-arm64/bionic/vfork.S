@@ -31,6 +31,7 @@
 #include <linux/sched.h>
 
 ENTRY(vfork)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
     mrs     x0, tpidr_el0
     ldr     x0, [x0, #8]

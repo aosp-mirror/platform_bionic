@@ -34,6 +34,7 @@
 #define SIGCHLD 18
 
 ENTRY(vfork)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
 	.set	noreorder
 	.cpload	$t9
 
