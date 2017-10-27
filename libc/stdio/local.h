@@ -39,7 +39,9 @@
 #include <stdbool.h>
 #include <wchar.h>
 
-#include <async_safe/log.h>
+#if defined(__cplusplus) // Until we fork all of stdio...
+#include "private/bionic_fortify.h"
+#endif
 
 #include "wcio.h"
 
@@ -257,11 +259,6 @@ __END_DECLS
 
 // Sanity check a FILE* for nullptr, so we can emit a message while crashing
 // instead of doing a blind null-dereference.
-#define CHECK_FP(fp)                                                       \
-  do {                                                                     \
-    if (__predict_false(fp == 0)) {                                        \
-      async_safe_fatal("invalid FILE* %p passed to %s", fp, __FUNCTION__); \
-    }                                                                      \
-  } while (0)
+#define CHECK_FP(fp) if (fp == nullptr) __fortify_fatal("%s: null FILE*", __FUNCTION__)
 
 #endif
