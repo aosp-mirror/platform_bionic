@@ -1727,15 +1727,23 @@ static soinfo* find_library(android_namespace_t* ns,
   return si;
 }
 
-static void soinfo_unload(soinfo* root) {
-  if (root->is_linked()) {
-    root = root->get_local_group_root();
-  }
+static void soinfo_unload(soinfo* si) {
+  soinfo* root = si->is_linked() ? si->get_local_group_root() : si;
+
+  LD_LOG(kLogDlopen,
+         "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
+         si->get_realpath(),
+         si,
+         root->get_realpath(),
+         root);
 
   ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
 
   if (!root->can_unload()) {
-    TRACE("not unloading \"%s\" - the binary is flagged with NODELETE", root->get_realpath());
+    LD_LOG(kLogDlopen,
+           "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
+           root->get_realpath(),
+           root);
     return;
   }
 
@@ -1762,11 +1770,17 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
       if (ref_count == 0) {
         unload_list.push_back(si);
       } else {
-        TRACE("not unloading '%s' group, decrementing ref_count to %zd",
-            si->get_realpath(), ref_count);
+        LD_LOG(kLogDlopen,
+               "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
+               si->get_realpath(),
+               si,
+               ref_count);
       }
     } else {
-      TRACE("not unloading '%s' - the binary is flagged with NODELETE", si->get_realpath());
+      LD_LOG(kLogDlopen,
+             "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
+             si->get_realpath(),
+             si);
       return;
     }
   }
@@ -1837,16 +1851,32 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
   }
 
   local_unload_list.for_each([](soinfo* si) {
+    LD_LOG(kLogDlopen,
+           "... dlclose: calling destructors for \"%s\"@%p ... ",
+           si->get_realpath(),
+           si);
     si->call_destructors();
+    LD_LOG(kLogDlopen,
+           "... dlclose: calling destructors for \"%s\"@%p ... done",
+           si->get_realpath(),
+           si);
   });
 
   while ((si = local_unload_list.pop_front()) != nullptr) {
+    LD_LOG(kLogDlopen,
+           "... dlclose: unloading \"%s\"@%p ...",
+           si->get_realpath(),
+           si);
     notify_gdb_of_unload(si);
     get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
 
   while ((si = external_unload_list.pop_front()) != nullptr) {
+    LD_LOG(kLogDlopen,
+           "... dlclose: unloading external reference \"%s\"@%p ...",
+           si->get_realpath(),
+           si);
     soinfo_unload(si);
   }
 }
@@ -2132,7 +2162,15 @@ int do_dlclose(void* handle) {
     return -1;
   }
 
+  LD_LOG(kLogDlopen,
+         "dlclose(handle=%p, realpath=\"%s\"@%p) ...",
+         handle,
+         si->get_realpath(),
+         si);
   soinfo_unload(si);
+  LD_LOG(kLogDlopen,
+         "dlclose(handle=%p) ... done",
+         handle);
   return 0;
 }
 
