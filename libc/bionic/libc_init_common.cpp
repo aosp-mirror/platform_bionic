@@ -261,6 +261,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
     "LD_PROFILE",
     "LD_SHOW_AUXV",
     "LD_USE_LOAD_BIAS",
+    "LIBC_DEBUG_MALLOC_OPTIONS",
     "LOCALDOMAIN",
     "LOCPATH",
     "MALLOC_CHECK_",
