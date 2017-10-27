@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
@@ -56,6 +57,8 @@ struct DIR {
   long current_pos_;
 };
 
+#define CHECK_DIR(d) if (d == nullptr) __fortify_fatal("%s: null DIR*", __FUNCTION__)
+
 static DIR* __allocate_DIR(int fd) {
   DIR* d = reinterpret_cast<DIR*>(malloc(sizeof(DIR)));
   if (d == NULL) {
@@ -69,8 +72,9 @@ static DIR* __allocate_DIR(int fd) {
   return d;
 }
 
-int dirfd(DIR* dirp) {
-  return dirp->fd_;
+int dirfd(DIR* d) {
+  CHECK_DIR(d);
+  return d->fd_;
 }
 
 DIR* fdopendir(int fd) {
@@ -93,6 +97,7 @@ DIR* opendir(const char* path) {
 }
 
 static bool __fill_DIR(DIR* d) {
+  CHECK_DIR(d);
   int rc = TEMP_FAILURE_RETRY(__getdents64(d->fd_, d->buff_, sizeof(d->buff_)));
   if (rc <= 0) {
     return false;
@@ -117,12 +122,15 @@ static dirent* __readdir_locked(DIR* d) {
 }
 
 dirent* readdir(DIR* d) {
+  CHECK_DIR(d);
   ScopedPthreadMutexLocker locker(&d->mutex_);
   return __readdir_locked(d);
 }
 __strong_alias(readdir64, readdir);
 
 int readdir_r(DIR* d, dirent* entry, dirent** result) {
+  CHECK_DIR(d);
+
   ErrnoRestorer errno_restorer;
 
   *result = NULL;
@@ -156,6 +164,8 @@ int closedir(DIR* d) {
 }
 
 void rewinddir(DIR* d) {
+  CHECK_DIR(d);
+
   ScopedPthreadMutexLocker locker(&d->mutex_);
   lseek(d->fd_, 0, SEEK_SET);
   d->available_bytes_ = 0;
@@ -163,6 +173,8 @@ void rewinddir(DIR* d) {
 }
 
 void seekdir(DIR* d, long offset) {
+  CHECK_DIR(d);
+
   ScopedPthreadMutexLocker locker(&d->mutex_);
   off_t ret = lseek(d->fd_, offset, SEEK_SET);
   if (ret != -1L) {
@@ -172,6 +184,8 @@ void seekdir(DIR* d, long offset) {
 }
 
 long telldir(DIR* d) {
+  CHECK_DIR(d);
+
   return d->current_pos_;
 }
 
