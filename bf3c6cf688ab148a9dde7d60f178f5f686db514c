@@ -104,6 +104,24 @@
       "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ab230e5_9f02ab26",
+        "filename": "libc/private/bionic_asm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-10-27T08:15:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be9d7327_5f0b11ce",
+      "revId": "bf3c6cf688ab148a9dde7d60f178f5f686db514c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
