@@ -45,6 +45,30 @@
       "revId": "608c949261863433279a7b0f3ad700a5e600dc0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f624613d_aed25630",
+        "filename": "tests/headers/posix/sys_mman_h.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-27T19:54:16Z",
+      "side": 1,
+      "message": "i went a different direction with the other guards in the end. i\u0027ve changed this to !defined(__linux__).",
+      "parentUuid": "84d03992_61095ce0",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "608c949261863433279a7b0f3ad700a5e600dc0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
