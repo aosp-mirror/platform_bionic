@@ -199,6 +199,7 @@ GPOFF= FRAMESZ-2*REGSZ
 RAOFF= FRAMESZ-1*REGSZ
 
 NON_LEAF(sigsetjmp, FRAMESZ, $ra)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU $sp, FRAMESZ			# allocate stack frame
 	SETUP_GP64(GPOFF, sigsetjmp)
@@ -288,6 +289,7 @@ END(sigsetjmp)
 # Alternate entry points:
 
 NON_LEAF(setjmp, FRAMESZ, $ra)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, setjmp)		# can't share sigsetjmp's gp code
@@ -300,6 +302,7 @@ END(setjmp)
 
 
 NON_LEAF(_setjmp, FRAMESZ, $ra)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, _setjmp)		# can't share sigsetjmp's gp code
@@ -312,6 +315,7 @@ END(_setjmp)
 
 
 NON_LEAF(siglongjmp, FRAMESZ, $ra)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
 	.mask	0x80000000, RAOFF
 	PTR_SUBU $sp, FRAMESZ
 	SETUP_GP64(GPOFF, siglongjmp)
@@ -409,4 +413,6 @@ NON_LEAF(siglongjmp, FRAMESZ, $ra)
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
 ALIAS_SYMBOL(_longjmp, siglongjmp)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)

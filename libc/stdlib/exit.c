@@ -29,9 +29,12 @@
 
 #include <unistd.h>
 
+#include "private/bionic_defs.h"
+
 extern void __cxa_finalize(void* dso_handle);
 extern void __cxa_thread_finalize();
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void exit(int status) {
   __cxa_thread_finalize();
   __cxa_finalize(NULL);
