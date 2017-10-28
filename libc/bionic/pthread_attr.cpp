@@ -61,8 +61,10 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_setinheritsched(pthread_attr_t* attr, int flag) {
   if (flag == PTHREAD_EXPLICIT_SCHED) {
     attr->flags &= ~PTHREAD_ATTR_FLAG_INHERIT;
+    attr->flags |= PTHREAD_ATTR_FLAG_EXPLICIT;
   } else if (flag == PTHREAD_INHERIT_SCHED) {
     attr->flags |= PTHREAD_ATTR_FLAG_INHERIT;
+    attr->flags &= ~PTHREAD_ATTR_FLAG_EXPLICIT;
   } else {
     return EINVAL;
   }
@@ -71,8 +73,14 @@ int pthread_attr_setinheritsched(pthread_attr_t* attr, int flag) {
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_getinheritsched(const pthread_attr_t* attr, int* flag) {
-  *flag = (attr->flags & PTHREAD_ATTR_FLAG_INHERIT) ? PTHREAD_INHERIT_SCHED
-                                                    : PTHREAD_EXPLICIT_SCHED;
+  if ((attr->flags & PTHREAD_ATTR_FLAG_INHERIT) != 0) {
+    *flag = PTHREAD_INHERIT_SCHED;
+  } else if ((attr->flags & PTHREAD_ATTR_FLAG_EXPLICIT) != 0) {
+    *flag = PTHREAD_EXPLICIT_SCHED;
+  } else {
+    // Historical behavior before P, when pthread_attr_setinheritsched was added.
+    *flag = (attr->sched_policy != SCHED_NORMAL) ? PTHREAD_EXPLICIT_SCHED : PTHREAD_INHERIT_SCHED;
+  }
   return 0;
 }
 

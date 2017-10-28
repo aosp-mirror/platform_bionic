@@ -122,7 +122,7 @@ int __init_thread(pthread_internal_t* thread) {
   bool need_set = true;
   int policy;
   sched_param param;
-  if (thread->attr.flags & PTHREAD_ATTR_FLAG_INHERIT) {
+  if ((thread->attr.flags & PTHREAD_ATTR_FLAG_INHERIT) != 0) {
     // Unless the parent has SCHED_RESET_ON_FORK set, we've already inherited from the parent.
     policy = sched_getscheduler(0);
     need_set = ((policy & SCHED_RESET_ON_FORK) != 0);
@@ -141,6 +141,11 @@ int __init_thread(pthread_internal_t* thread) {
   } else {
     policy = thread->attr.sched_policy;
     param.sched_priority = thread->attr.sched_priority;
+  }
+  // Backwards compatibility: before P, Android didn't have pthread_attr_setinheritsched,
+  // and our behavior was neither of the POSIX behaviors.
+  if ((thread->attr.flags & (PTHREAD_ATTR_FLAG_INHERIT|PTHREAD_ATTR_FLAG_EXPLICIT)) == 0) {
+    need_set = (thread->attr.sched_policy != SCHED_NORMAL);
   }
   if (need_set) {
     if (sched_setscheduler(thread->tid, policy, &param) == -1) {
