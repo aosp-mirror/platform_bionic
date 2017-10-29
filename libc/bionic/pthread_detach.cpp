@@ -29,8 +29,10 @@
 #include <errno.h>
 #include <pthread.h>
 
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_detach(pthread_t t) {
   pthread_internal_t* thread = __pthread_internal_find(t);
   if (thread == NULL) {

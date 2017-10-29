@@ -15,7 +15,7 @@ New libc functions in P:
   * `glob`/`globfree` (adding <glob.h>)
   * `hcreate`/hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
-  * `pthread_setschedprio`
+  * `pthread_attr_getinheritsched`/`pthread_attr_setinheritsched`/`pthread_setschedprio`
   * <spawn.h>
   * `swab`
   * `syncfs`
@@ -74,8 +74,6 @@ aio_return
 aio_suspend
 aio_write
 lio_listio
-pthread_attr_getinheritsched
-pthread_attr_setinheritsched
 pthread_cancel
 pthread_mutex_consistent
 pthread_mutex_getprioceiling

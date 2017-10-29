@@ -271,8 +271,9 @@ TEST(netdb, gethostbyname_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
-  ASSERT_EQ(ERANGE, result);
-  ASSERT_EQ(NULL, hp);
+  EXPECT_EQ(NETDB_INTERNAL, err);
+  EXPECT_EQ(ERANGE, result);
+  EXPECT_EQ(NULL, hp);
 }
 
 TEST(netdb, gethostbyname2_r_ERANGE) {
@@ -281,8 +282,9 @@ TEST(netdb, gethostbyname2_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
-  ASSERT_EQ(ERANGE, result);
-  ASSERT_EQ(NULL, hp);
+  EXPECT_EQ(NETDB_INTERNAL, err);
+  EXPECT_EQ(ERANGE, result);
+  EXPECT_EQ(NULL, hp);
 }
 
 TEST(netdb, gethostbyaddr_r_ERANGE) {
@@ -292,8 +294,43 @@ TEST(netdb, gethostbyaddr_r_ERANGE) {
   char buf[4]; // Use too small buffer.
   int err;
   int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
-  ASSERT_EQ(ERANGE, result);
-  ASSERT_EQ(NULL, hp);
+  EXPECT_EQ(NETDB_INTERNAL, err);
+  EXPECT_EQ(ERANGE, result);
+  EXPECT_EQ(NULL, hp);
+}
+
+TEST(netdb, gethostbyname_r_HOST_NOT_FOUND) {
+  hostent hent;
+  hostent *hp;
+  char buf[BUFSIZ];
+  int err;
+  int result = gethostbyname_r("does.not.exist.google.com", &hent, buf, sizeof(buf), &hp, &err);
+  EXPECT_EQ(HOST_NOT_FOUND, err);
+  EXPECT_EQ(0, result);
+  EXPECT_EQ(NULL, hp);
+}
+
+TEST(netdb, gethostbyname2_r_HOST_NOT_FOUND) {
+  hostent hent;
+  hostent *hp;
+  char buf[BUFSIZ];
+  int err;
+  int result = gethostbyname2_r("does.not.exist.google.com", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  EXPECT_EQ(HOST_NOT_FOUND, err);
+  EXPECT_EQ(0, result);
+  EXPECT_EQ(NULL, hp);
+}
+
+TEST(netdb, gethostbyaddr_r_HOST_NOT_FOUND) {
+  in_addr addr = { htonl(0xffffffff) };
+  hostent hent;
+  hostent *hp;
+  char buf[BUFSIZ];
+  int err;
+  int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
+  EXPECT_EQ(HOST_NOT_FOUND, err);
+  EXPECT_EQ(0, result);
+  EXPECT_EQ(NULL, hp);
 }
 
 TEST(netdb, getservbyname) {

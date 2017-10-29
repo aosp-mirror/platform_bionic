@@ -451,7 +451,7 @@ static void usage(bool help = false) {
     fprintf(stderr, "\n");
     fprintf(stderr, "Target specification (defaults to all):\n");
     fprintf(stderr, "  -a API_LEVEL\tbuild with specified API level (can be repeated)\n");
-    fprintf(stderr, "    \t\tvalid levels are %s\n", Join(supported_levels).c_str());
+    fprintf(stderr, "    \t\tdefaults to %s\n", Join(default_levels).c_str());
     fprintf(stderr, "  -r ARCH\tbuild with specified architecture (can be repeated)\n");
     fprintf(stderr, "    \t\tvalid architectures are %s\n", Join(supported_archs).c_str());
     fprintf(stderr, "\n");
@@ -499,10 +499,6 @@ int main(int argc, char** argv) {
         int api_level = strtol(optarg, &end, 10);
         if (end == optarg || strlen(end) > 0) {
           usage();
-        }
-
-        if (supported_levels.count(api_level) == 0) {
-          errx(1, "unsupported API level %d", api_level);
         }
 
         selected_levels.insert(api_level);
@@ -629,7 +625,7 @@ int main(int argc, char** argv) {
   }
 
   if (selected_levels.empty()) {
-    selected_levels = supported_levels;
+    selected_levels = default_levels;
   }
 
   if (selected_architectures.empty()) {

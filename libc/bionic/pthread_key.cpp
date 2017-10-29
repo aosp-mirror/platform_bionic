@@ -30,6 +30,7 @@
 #include <pthread.h>
 #include <stdatomic.h>
 
+#include "private/bionic_defs.h"
 #include "private/bionic_tls.h"
 #include "pthread_internal.h"
 
@@ -115,6 +116,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
   for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
     uintptr_t seq = atomic_load_explicit(&key_map[i].seq, memory_order_relaxed);
@@ -133,6 +135,7 @@ int pthread_key_create(pthread_key_t* key, void (*key_destructor)(void*)) {
 // not call the destructors for non-NULL key values. Instead, it is the
 // responsibility of the caller to properly dispose of the corresponding data
 // and resources, using any means it finds suitable.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_key_delete(pthread_key_t key) {
   if (__predict_false(!KeyInValidRange(key))) {
     return EINVAL;
@@ -148,6 +151,7 @@ int pthread_key_delete(pthread_key_t key) {
   return EINVAL;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void* pthread_getspecific(pthread_key_t key) {
   if (__predict_false(!KeyInValidRange(key))) {
     return NULL;
@@ -166,6 +170,7 @@ void* pthread_getspecific(pthread_key_t key) {
   return NULL;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_setspecific(pthread_key_t key, const void* ptr) {
   if (__predict_false(!KeyInValidRange(key))) {
     return EINVAL;

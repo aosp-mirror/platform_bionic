@@ -42,6 +42,7 @@ FRAMESZ		=	MKFSIZ(0,0)
 #endif
 
 LEAF(vfork,FRAMESZ)
+__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
 #if FRAMESZ!=0
 	PTR_SUBU $sp, FRAMESZ
 #endif

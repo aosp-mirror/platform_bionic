@@ -37,6 +37,7 @@
 
 #include <async_safe/log.h>
 
+#include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
@@ -109,7 +110,7 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
 }
 
 int __init_thread(pthread_internal_t* thread) {
-  int error = 0;
+  thread->cleanup_stack = nullptr;
 
   if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
     atomic_init(&thread->join_state, THREAD_NOT_JOINED);
@@ -117,23 +118,43 @@ int __init_thread(pthread_internal_t* thread) {
     atomic_init(&thread->join_state, THREAD_DETACHED);
   }
 
-  // Set the scheduling policy/priority of the thread.
-  if (thread->attr.sched_policy != SCHED_NORMAL) {
-    sched_param param;
+  // Set the scheduling policy/priority of the thread if necessary.
+  bool need_set = true;
+  int policy;
+  sched_param param;
+  if (thread->attr.flags & PTHREAD_ATTR_FLAG_INHERIT) {
+    // Unless the parent has SCHED_RESET_ON_FORK set, we've already inherited from the parent.
+    policy = sched_getscheduler(0);
+    need_set = ((policy & SCHED_RESET_ON_FORK) != 0);
+    if (need_set) {
+      if (policy == -1) {
+        async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                              "pthread_create sched_getscheduler failed: %s", strerror(errno));
+        return errno;
+      }
+      if (sched_getparam(0, &param) == -1) {
+        async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                              "pthread_create sched_getparam failed: %s", strerror(errno));
+        return errno;
+      }
+    }
+  } else {
+    policy = thread->attr.sched_policy;
     param.sched_priority = thread->attr.sched_priority;
-    if (sched_setscheduler(thread->tid, thread->attr.sched_policy, &param) == -1) {
+  }
+  if (need_set) {
+    if (sched_setscheduler(thread->tid, policy, &param) == -1) {
+      async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                            "pthread_create sched_setscheduler(%d, {%d}) call failed: %s", policy,
+                            param.sched_priority, strerror(errno));
 #if defined(__LP64__)
       // For backwards compatibility reasons, we only report failures on 64-bit devices.
-      error = errno;
+      return errno;
 #endif
-      async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "pthread_create sched_setscheduler call failed: %s", strerror(errno));
     }
   }
 
-  thread->cleanup_stack = NULL;
-
-  return error;
+  return 0;
 }
 
 static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_size) {
@@ -238,6 +259,8 @@ static void* __do_nothing(void*) {
   return NULL;
 }
 
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
                    void* (*start_routine)(void*), void* arg) {
   ErrnoRestorer errno_restorer;

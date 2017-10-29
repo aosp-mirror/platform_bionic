@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#pragma once
+
 #include <poll.h> // For struct pollfd.
 #include <stdarg.h>
 #include <stdlib.h>

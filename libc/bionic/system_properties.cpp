@@ -56,6 +56,7 @@
 #include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
+#include "private/bionic_defs.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_macros.h"
@@ -254,6 +255,7 @@ struct prop_info {
 static_assert(sizeof(prop_info) == 96, "size of struct prop_info must be 96 bytes");
 
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
+__BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 prop_area* __system_property_area__ = nullptr;
 
 static char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
@@ -1149,6 +1151,7 @@ static void free_and_unmap_contexts() {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_properties_init() {
   // This is called from __libc_init_common, and should leave errno at 0 (http://b/37248982).
   ErrnoRestorer errno_restorer;
@@ -1177,6 +1180,7 @@ int __system_properties_init() {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set_filename(const char* filename) {
   size_t len = strlen(filename);
   if (len >= sizeof(property_filename)) return -1;
@@ -1185,6 +1189,7 @@ int __system_property_set_filename(const char* filename) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_area_init() {
   free_and_unmap_contexts();
   mkdir(property_filename, S_IRWXU | S_IXGRP | S_IXOTH);
@@ -1206,6 +1211,7 @@ int __system_property_area_init() {
   return fsetxattr_failed ? -2 : 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 uint32_t __system_property_area_serial() {
   prop_area* pa = __system_property_area__;
   if (!pa) {
@@ -1215,6 +1221,7 @@ uint32_t __system_property_area_serial() {
   return atomic_load_explicit(pa->serial(), memory_order_acquire);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 const prop_info* __system_property_find(const char* name) {
   if (!__system_property_area__) {
     return nullptr;
@@ -1233,6 +1240,7 @@ static bool is_read_only(const char* name) {
   return strncmp(name, "ro.", 3) == 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_read(const prop_info* pi, char* name, char* value) {
   while (true) {
     uint32_t serial = __system_property_serial(pi);  // acquire semantics
@@ -1270,6 +1278,7 @@ int __system_property_read(const prop_info* pi, char* name, char* value) {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __system_property_read_callback(const prop_info* pi,
                                      void (*callback)(void* cookie,
                                                       const char* name,
@@ -1305,6 +1314,7 @@ void __system_property_read_callback(const prop_info* pi,
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_get(const char* name, char* value) {
   const prop_info* pi = __system_property_find(name);
 
@@ -1341,6 +1351,7 @@ static void detect_protocol_version() {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set(const char* key, const char* value) {
   if (key == nullptr) return -1;
   if (value == nullptr) value = "";
@@ -1418,6 +1429,7 @@ int __system_property_set(const char* key, const char* value) {
   }
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_update(prop_info* pi, const char* value, unsigned int len) {
   if (len >= PROP_VALUE_MAX) {
     return -1;
@@ -1448,6 +1460,7 @@ int __system_property_update(prop_info* pi, const char* value, unsigned int len)
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_add(const char* name, unsigned int namelen, const char* value,
                           unsigned int valuelen) {
   if (valuelen >= PROP_VALUE_MAX && !is_read_only(name)) {
@@ -1485,6 +1498,7 @@ int __system_property_add(const char* name, unsigned int namelen, const char* va
 }
 
 // Wait for non-locked serial, and retrieve it with acquire semantics.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 uint32_t __system_property_serial(const prop_info* pi) {
   uint32_t serial = load_const_atomic(&pi->serial, memory_order_acquire);
   while (SERIAL_DIRTY(serial)) {
@@ -1494,12 +1508,14 @@ uint32_t __system_property_serial(const prop_info* pi) {
   return serial;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 uint32_t __system_property_wait_any(uint32_t old_serial) {
   uint32_t new_serial;
   __system_property_wait(nullptr, old_serial, &new_serial, nullptr);
   return new_serial;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 bool __system_property_wait(const prop_info* pi,
                             uint32_t old_serial,
                             uint32_t* new_serial_ptr,
@@ -1526,6 +1542,7 @@ bool __system_property_wait(const prop_info* pi,
   return true;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 const prop_info* __system_property_find_nth(unsigned n) {
   struct find_nth {
     const uint32_t sought;
@@ -1542,6 +1559,7 @@ const prop_info* __system_property_find_nth(unsigned n) {
   return state.result;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) {
   if (!__system_property_area__) {
     return -1;

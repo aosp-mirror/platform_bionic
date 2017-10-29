@@ -79,7 +79,7 @@ fread(void *buf, size_t size, size_t count, FILE *fp) __overloadable
 		__smakebuf(fp);
 	}
 
-	char* dst = buf;
+	char* dst = static_cast<char*>(buf);
 
 	while (total > 0) {
 		/*
