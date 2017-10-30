@@ -54,6 +54,11 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       }
     }
 
+    // <math.h> maps fool onto foo on 32-bit, since long double is the same as double.
+    if (auto asm_attr = decl->getAttr<AsmLabelAttr>()) {
+      return asm_attr->getLabel();
+    }
+
     // The decl might not have a name (e.g. bitfields).
     if (auto identifier = decl->getIdentifier()) {
       if (mangler->shouldMangleDeclName(decl)) {
