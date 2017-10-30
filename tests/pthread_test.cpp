@@ -2210,9 +2210,14 @@ TEST(pthread, pthread_attr_setinheritsched__PTHREAD_INHERIT_SCHED__PTHREAD_EXPLI
   ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
   ASSERT_EQ(0, pthread_join(t, nullptr));
 
-  // If we ask to use them, though...
+#if defined(__LP64__)
+  // If we ask to use them, though, we'll see a failure...
   ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
   ASSERT_EQ(EINVAL, pthread_create(&t, &attr, IdFn, nullptr));
+#else
+  // For backwards compatibility with broken apps, we just ignore failures
+  // to set scheduler attributes on LP32.
+#endif
 }
 
 TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
