@@ -145,11 +145,12 @@ struct __sfileext {
 // #define __SOPT 0x0400 --- historical (do fseek() optimization).
 // #define __SNPT 0x0800 --- historical (do not do fseek() optimization).
 // #define __SOFF 0x1000 --- historical (set iff _offset is in fact correct).
-#define __SMOD 0x2000  // true => fgetln modified _p text.
+// #define __SMOD 0x2000 --- historical (set iff fgetln modified _p text).
 #define __SALC 0x4000  // Allocate string space dynamically.
 #define __SIGN 0x8000  // Ignore this file in _fwalk.
 
 // TODO: remove remaining references to these obsolete flags (see above).
+#define __SMOD 0
 #define __SNPT 0
 #define __SOPT 0
 
@@ -243,10 +244,18 @@ int	__vfwscanf(FILE *, const wchar_t *, va_list);
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
 #define __sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
 
-/* OpenBSD declares these in fvwrite.h but we want to ensure they're hidden. */
-struct __suio;
-extern int __sfvwrite(FILE *, struct __suio *);
-wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+/* OpenBSD declares these in fvwrite.h, but we share them with C++ parts of the implementation. */
+struct __siov {
+  void* iov_base;
+  size_t iov_len;
+};
+struct __suio {
+  struct __siov* uio_iov;
+  int uio_iovcnt;
+  size_t uio_resid;
+};
+int __sfvwrite(FILE*, struct __suio*);
+wint_t __fputwc_unlock(wchar_t wc, FILE* fp);
 
 /* Remove the if (!__sdidinit) __sinit() idiom from untouched upstream stdio code. */
 extern void __sinit(void); // Not actually implemented.
