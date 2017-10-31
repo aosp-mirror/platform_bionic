@@ -531,8 +531,8 @@ cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
     srcs: [
-        "upstream-openbsd/lib/libc/stdio/vfprintf.c",
-        "upstream-openbsd/lib/libc/stdio/vfwprintf.c",
+        "stdio/vfprintf.c",
+        "stdio/vfwprintf.c",
     ],
     cflags: [
         "-include openbsd-compat.h",
@@ -541,10 +541,10 @@ cc_library_static {
     ],
 
     local_include_dirs: [
-        "stdio",
-        "upstream-openbsd/android/include",
-        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/android/include/",
+        "upstream-openbsd/lib/libc/include/",
         "upstream-openbsd/lib/libc/gdtoa/",
+        "upstream-openbsd/lib/libc/stdio/",
     ],
 }
 
