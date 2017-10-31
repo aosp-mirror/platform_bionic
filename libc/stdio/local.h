@@ -233,9 +233,6 @@ int	__vfwscanf(FILE *, const wchar_t *, va_list);
 #define FLOCKFILE(fp)   if (!_EXT(fp)->_caller_handles_locking) flockfile(fp)
 #define FUNLOCKFILE(fp) if (!_EXT(fp)->_caller_handles_locking) funlockfile(fp)
 
-#define FLOATING_POINT
-#define PRINTF_WIDE_CHAR
-#define SCANF_WIDE_CHAR
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */

@@ -41,9 +41,7 @@
 #include <string.h>
 #include "local.h"
 
-#ifdef FLOATING_POINT
 #include "floatio.h"
-#endif
 
 #define	BUF		513	/* Maximum length of numeric string. */
 
@@ -110,11 +108,9 @@ __svfscanf(FILE *fp, const char *fmt0, __va_list ap)
 	int base;		/* base argument to strtoimax/strtouimax */
 	char ccltab[256];	/* character class table for %[...] */
 	char buf[BUF];		/* buffer for numeric conversions */
-#ifdef SCANF_WIDE_CHAR
 	wchar_t *wcp;		/* handy wide character pointer */
 	size_t nconv;		/* length of multibyte sequence converted */
 	mbstate_t mbs;
-#endif
 
 	/* `basefix' is used to avoid `if' tests in the integer scanner */
 	static short basefix[17] =
@@ -238,14 +234,12 @@ literal:
 			base = 16;
 			break;
 
-#ifdef FLOATING_POINT
 		case 'e': case 'E':
 		case 'f': case 'F':
 		case 'g': case 'G':
 		case 'a': case 'A':
 			c = CT_FLOAT;
 			break;
-#endif
 
 		case 's':
 			c = CT_STRING;
@@ -338,7 +332,6 @@ literal:
 			/* scan arbitrary characters (sets NOSKIP) */
 			if (width == 0)
 				width = 1;
-#ifdef SCANF_WIDE_CHAR
 			if (flags & LONG) {
 				if ((flags & SUPPRESS) == 0)
 					wcp = va_arg(ap, wchar_t *);
@@ -378,9 +371,7 @@ literal:
 				}
 				if (!(flags & SUPPRESS))
 					nassigned++;
-			} else
-#endif /* SCANF_WIDE_CHAR */
-			if (flags & SUPPRESS) {
+			} else if (flags & SUPPRESS) {
 				size_t sum = 0;
 				for (;;) {
 					if ((n = fp->_r) < (int)width) {
@@ -415,7 +406,6 @@ literal:
 			/* scan a (nonempty) character class (sets NOSKIP) */
 			if (width == 0)
 				width = (size_t)~0;	/* `infinity' */
-#ifdef SCANF_WIDE_CHAR
 			/* take only those things in the class */
 			if (flags & LONG) {
 				wchar_t twc;
@@ -480,7 +470,6 @@ literal:
 					nassigned++;
 				}
 			} else
-#endif /* SCANF_WIDE_CHAR */
 			/* take only those things in the class */
 			if (flags & SUPPRESS) {
 				n = 0;
@@ -522,7 +511,6 @@ literal:
 			/* like CCL, but zero-length string OK, & no NOSKIP */
 			if (width == 0)
 				width = (size_t)~0;
-#ifdef SCANF_WIDE_CHAR
 			if (flags & LONG) {
 				wchar_t twc;
 
@@ -574,9 +562,7 @@ literal:
 					*wcp = L'\0';
 					nassigned++;
 				}
-			} else
-#endif /* SCANF_WIDE_CHAR */
-			if (flags & SUPPRESS) {
+			} else if (flags & SUPPRESS) {
 				n = 0;
 				while (!isspace(*fp->_p)) {
 					n++, fp->_r--, fp->_p++;
@@ -757,7 +743,6 @@ literal:
 			nread += p - buf;
 			break;
 
-#ifdef FLOATING_POINT
 		case CT_FLOAT:
 			/* scan a floating point number as if by strtod */
 			if (width == 0 || width > sizeof(buf) - 1)
@@ -780,7 +765,6 @@ literal:
 			}
 			nread += width;
 			break;
-#endif /* FLOATING_POINT */
 		}
 	}
 input_failure:

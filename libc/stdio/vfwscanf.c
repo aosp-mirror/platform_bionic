@@ -42,9 +42,7 @@
 #include <wctype.h>
 #include "local.h"
 
-#ifdef FLOATING_POINT
 #include "floatio.h"
-#endif
 
 #define	BUF		513	/* Maximum length of numeric string. */
 
@@ -252,14 +250,12 @@ literal:
 			base = 16;
 			break;
 
-#ifdef FLOATING_POINT
 		case 'e': case 'E':
 		case 'f': case 'F':
 		case 'g': case 'G':
 		case 'a': case 'A':
 			c = CT_FLOAT;
 			break;
-#endif
 
 		case 's':
 			c = CT_STRING;
@@ -680,7 +676,6 @@ literal:
 			nconversions++;
 			break;
 
-#ifdef FLOATING_POINT
 		case CT_FLOAT:
 			/* scan a floating point number as if by strtod */
 			if (width == 0 || width > sizeof(buf) /
@@ -705,7 +700,6 @@ literal:
 			nread += width;
 			nconversions++;
 			break;
-#endif /* FLOATING_POINT */
 		}
 	}
 input_failure:
