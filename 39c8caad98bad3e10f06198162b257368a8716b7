@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "77a949e2_5867f70d",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T20:23:49Z",
+      "side": 1,
+      "message": "done (and all existing NULLs in this file).",
+      "parentUuid": "d988bc8e_50b5814e",
+      "range": {
+        "startLine": 735,
+        "startChar": 30,
+        "endLine": 735,
+        "endChar": 34
+      },
+      "revId": "39c8caad98bad3e10f06198162b257368a8716b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e884117e_9982b375",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 4
@@ -82,6 +106,30 @@
       "writtenOn": "2017-10-31T20:10:09Z",
       "side": 1,
       "message": "Change to static_cast\u003c\u003e?",
+      "range": {
+        "startLine": 1043,
+        "startChar": 32,
+        "endLine": 1043,
+        "endChar": 40
+      },
+      "revId": "39c8caad98bad3e10f06198162b257368a8716b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b86308e4_1f5b3a04",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T20:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69038e17_fc09ee60",
       "range": {
         "startLine": 1043,
         "startChar": 32,
