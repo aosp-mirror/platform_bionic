@@ -40,8 +40,10 @@
 // Has the thread been joined by another thread?
 #define PTHREAD_ATTR_FLAG_JOINED 0x00000002
 
-// Should we inherit scheduling attributes from the parent on pthread_create?
+// Used for pthread_attr_setinheritsched. We need two flags for this apparent
+// boolean because our historical behavior matches neither of the POSIX choices.
 #define PTHREAD_ATTR_FLAG_INHERIT 0x00000004
+#define PTHREAD_ATTR_FLAG_EXPLICIT 0x00000008
 
 class pthread_key_data_t {
  public:
