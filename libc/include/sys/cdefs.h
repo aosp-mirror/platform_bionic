@@ -261,8 +261,13 @@
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0
 #  if defined(__clang__)
-/* FORTIFY's _chk functions effectively disable ASAN's stdlib interceptors. */
-#    if !__has_feature(address_sanitizer)
+/*
+ * FORTIFY's _chk functions effectively disable ASAN's stdlib interceptors.
+ * Additionally, the static analyzer/clang-tidy try to pattern match some
+ * standard library functions, and FORTIFY sometimes interferes with this. So,
+ * we turn FORTIFY off in both cases.
+ */
+#    if !__has_feature(address_sanitizer) && !defined(__clang_analyzer__)
 #      define __BIONIC_FORTIFY 1
 #    endif
 #  elif defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
