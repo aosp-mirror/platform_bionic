@@ -77,14 +77,10 @@ union arg {
 	ptrdiff_t		*pptrdiffarg;
 	ssize_t			*pssizearg;
 	intmax_t		*pintmaxarg;
-#ifdef FLOATING_POINT
 	double			doublearg;
 	long double		longdoublearg;
-#endif
-#ifdef PRINTF_WIDE_CHAR
 	wint_t			wintarg;
 	wchar_t			*pwchararg;
-#endif
 };
 
 static int __find_arguments(const char *fmt0, va_list ap, union arg **argtable,
@@ -144,7 +140,6 @@ __sbprintf(FILE *fp, const char *fmt, va_list ap)
 	return (ret);
 }
 
-#ifdef PRINTF_WIDE_CHAR
 /*
  * Convert a wide character string argument for the %ls format to a multibyte
  * string representation. If not -1, prec specifies the maximum number of
@@ -204,9 +199,7 @@ __wcsconv(wchar_t *wcsarg, int prec)
 	convbuf[nbytes] = '\0';
 	return (convbuf);
 }
-#endif
 
-#ifdef FLOATING_POINT
 #include <float.h>
 #include <locale.h>
 #include <math.h>
@@ -216,7 +209,6 @@ __wcsconv(wchar_t *wcsarg, int prec)
 #define	DEFPREC		6
 
 static int exponent(char *, int, int);
-#endif /* FLOATING_POINT */
 
 /*
  * The size of the buffer we use as scratch space for integer
@@ -280,7 +272,6 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	char sign;		/* sign prefix (' ', '+', '-', or \0) */
 	wchar_t wc;
 	mbstate_t ps;
-#ifdef FLOATING_POINT
 	/*
 	 * We can decompose the printed representation of floating
 	 * point numbers into several parts, some of which may be empty:
@@ -309,7 +300,6 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	int ndig;		/* actual number of digits returned by dtoa */
 	char expstr[MAXEXPDIG+2];	/* buffer for exponent string: e+ZZZ */
 	char *dtoaresult = NULL;
-#endif
 
 	uintmax_t _umax;	/* integer arguments %[diouxX] */
 	enum { OCT, DEC, HEX } base;	/* base for %[diouxX] conversion */
@@ -327,9 +317,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	size_t argtablesiz;
 	int nextarg;		/* 1-based argument index */
 	va_list orgap;		/* original argument pointer */
-#ifdef PRINTF_WIDE_CHAR
 	char *convbuf;		/* buffer for wide to multi-byte conversion */
-#endif
 
 	/*
 	 * Choose PADSIZE to trade efficiency vs. size.  If larger printf
@@ -476,9 +464,7 @@ __vfprintf(FILE *fp, const char *fmt0, __va_list ap)
 	uio.uio_resid = 0;
 	uio.uio_iovcnt = 0;
 	ret = 0;
-#ifdef PRINTF_WIDE_CHAR
 	convbuf = NULL;
-#endif
 
 	memset(&ps, 0, sizeof(ps));
 	/*
@@ -606,11 +592,9 @@ reswitch:	switch (ch) {
 			}
 			width = n;
 			goto reswitch;
-#ifdef FLOATING_POINT
 		case 'L':
 			flags |= LONGDBL;
 			goto rflag;
-#endif
 		case 'h':
 			if (*fmt == 'h') {
 				fmt++;
@@ -640,7 +624,6 @@ reswitch:	switch (ch) {
 			flags |= SIZEINT;
 			goto rflag;
 		case 'c':
-#ifdef PRINTF_WIDE_CHAR
 			if (flags & LONGINT) {
 				mbstate_t mbs;
 				size_t mbseqlen;
@@ -655,12 +638,9 @@ reswitch:	switch (ch) {
 				cp = buf;
 				size = (int)mbseqlen;
 			} else {
-#endif
 				*(cp = buf) = GETARG(int);
 				size = 1;
-#ifdef PRINTF_WIDE_CHAR
 			}
-#endif
 			sign = '\0';
 			break;
 		case 'D':
@@ -675,7 +655,6 @@ reswitch:	switch (ch) {
 			}
 			base = DEC;
 			goto number;
-#ifdef FLOATING_POINT
 		case 'a':
 		case 'A':
 			if (ch == 'a') {
@@ -808,7 +787,6 @@ fp_common:
 				lead = expt;
 			}
 			break;
-#endif /* FLOATING_POINT */
 #ifndef NO_PRINTF_PERCENT_N
 		case 'n':
 			if (flags & LLONGINT)
@@ -850,7 +828,6 @@ fp_common:
 			ox[1] = 'x';
 			goto nosign;
 		case 's':
-#ifdef PRINTF_WIDE_CHAR
 			if (flags & LONGINT) {
 				wchar_t *wcp;
 
@@ -867,7 +844,6 @@ fp_common:
 					cp = convbuf;
 				}
 			} else
-#endif /* PRINTF_WIDE_CHAR */
 			if ((cp = GETARG(char *)) == NULL)
 				cp = "(null)";
 			if (prec >= 0) {
@@ -1017,7 +993,6 @@ number:			if ((dprec = prec) >= 0)
 		PAD(dprec - size, zeroes);
 
 		/* the string or number proper */
-#ifdef FLOATING_POINT
 		if ((flags & FPT) == 0) {
 			PRINT(cp, size);
 		} else {	/* glue together f_p fragments */
@@ -1051,9 +1026,6 @@ number:			if ((dprec = prec) >= 0)
 				PRINT(expstr, expsize);
 			}
 		}
-#else
-		PRINT(cp, size);
-#endif
 		/* left-adjusting padding (always blank) */
 		if (flags & LADJUST)
 			PAD(width - realsz, blanks);
@@ -1080,13 +1052,9 @@ overflow:
 	ret = -1;
 
 finish:
-#ifdef PRINTF_WIDE_CHAR
 	free(convbuf);
-#endif
-#ifdef FLOATING_POINT
 	if (dtoaresult)
 		__freedtoa(dtoaresult);
-#endif
 	if (argtable != NULL && argtable != statargtable) {
 		munmap(argtable, argtablesiz);
 		argtable = NULL;
@@ -1262,11 +1230,9 @@ reswitch:	switch (ch) {
 				goto rflag;
 			}
 			goto reswitch;
-#ifdef FLOATING_POINT
 		case 'L':
 			flags |= LONGDBL;
 			goto rflag;
-#endif
 		case 'h':
 			if (*fmt == 'h') {
 				fmt++;
@@ -1296,11 +1262,9 @@ reswitch:	switch (ch) {
 			flags |= SIZEINT;
 			goto rflag;
 		case 'c':
-#ifdef PRINTF_WIDE_CHAR
 			if (flags & LONGINT)
 				ADDTYPE(T_WINT);
 			else
-#endif
 				ADDTYPE(T_INT);
 			break;
 		case 'D':
@@ -1310,7 +1274,6 @@ reswitch:	switch (ch) {
 		case 'i':
 			ADDSARG();
 			break;
-#ifdef FLOATING_POINT
 		case 'a':
 		case 'A':
 		case 'e':
@@ -1324,7 +1287,6 @@ reswitch:	switch (ch) {
 			else
 				ADDTYPE(T_DOUBLE);
 			break;
-#endif /* FLOATING_POINT */
 #ifndef NO_PRINTF_PERCENT_N
 		case 'n':
 			if (flags & LLONGINT)
@@ -1353,11 +1315,9 @@ reswitch:	switch (ch) {
 			ADDTYPE(TP_VOID);
 			break;
 		case 's':
-#ifdef PRINTF_WIDE_CHAR
 			if (flags & LONGINT)
 				ADDTYPE(TP_WCHAR);
 			else
-#endif
 				ADDTYPE(TP_CHAR);
 			break;
 		case 'U':
@@ -1427,14 +1387,12 @@ done:
 		case TP_LLONG:
 			(*argtable)[n].plonglongarg = va_arg(ap, long long *);
 			break;
-#ifdef FLOATING_POINT
 		case T_DOUBLE:
 			(*argtable)[n].doublearg = va_arg(ap, double);
 			break;
 		case T_LONG_DOUBLE:
 			(*argtable)[n].longdoublearg = va_arg(ap, long double);
 			break;
-#endif
 		case TP_CHAR:
 			(*argtable)[n].pchararg = va_arg(ap, char *);
 			break;
@@ -1465,14 +1423,12 @@ done:
 		case TP_MAXINT:
 			(*argtable)[n].pintmaxarg = va_arg(ap, intmax_t *);
 			break;
-#ifdef PRINTF_WIDE_CHAR
 		case T_WINT:
 			(*argtable)[n].wintarg = va_arg(ap, wint_t);
 			break;
 		case TP_WCHAR:
 			(*argtable)[n].pwchararg = va_arg(ap, wchar_t *);
 			break;
-#endif
 		}
 	}
 	goto finish;
@@ -1523,7 +1479,6 @@ __grow_type_table(unsigned char **typetable, int *tablesize)
 }
 
  
-#ifdef FLOATING_POINT
 static int
 exponent(char *p0, int exp, int fmtch)
 {
@@ -1558,4 +1513,3 @@ exponent(char *p0, int exp, int fmtch)
 	}
 	return (p - p0);
 }
-#endif /* FLOATING_POINT */
