@@ -16,6 +16,40 @@
       "revId": "d9a7de1b77d41aa197a849bb9c97acaebf1c1c83",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de363087_4eb570a9",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-31T17:05:43Z",
+      "side": 1,
+      "message": "Fix this whitespace too if you\u0027re changing the line next to it?  It stuck out on the original review.",
+      "revId": "d9a7de1b77d41aa197a849bb9c97acaebf1c1c83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f2d548_d275c313",
+        "filename": "libc/stdio/vfwprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1452,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-10-31T17:05:43Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "d9a7de1b77d41aa197a849bb9c97acaebf1c1c83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
