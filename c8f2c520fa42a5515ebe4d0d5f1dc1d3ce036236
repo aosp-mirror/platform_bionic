@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73f6e2a3_d16cb133",
+        "filename": "libc/stdio/vfwprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T20:10:42Z",
+      "side": 1,
+      "message": "(this is actually a manual addition... with \"fvwrite.h\" and \"local.h\" sorted, this file no longer compiles because of this missing include [that\u0027s actually in the non-w file!].)",
+      "revId": "c8f2c520fa42a5515ebe4d0d5f1dc1d3ce036236",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
