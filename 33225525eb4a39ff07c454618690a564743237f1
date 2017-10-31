@@ -16,6 +16,24 @@
       "revId": "33225525eb4a39ff07c454618690a564743237f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23b2cbe2_2c681e09",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-10-31T05:31:52Z",
+      "side": 1,
+      "message": "In a way similar to the test above, but point taken; good catch. :)",
+      "parentUuid": "21d6fe73_219fd0c1",
+      "revId": "33225525eb4a39ff07c454618690a564743237f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
