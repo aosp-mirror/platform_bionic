@@ -76,10 +76,8 @@ union arg {
 	ptrdiff_t		*pptrdiffarg;
 	ssize_t			*pssizearg;
 	intmax_t		*pintmaxarg;
-#ifdef FLOATING_POINT
 	double			doublearg;
 	long double		longdoublearg;
-#endif
 	wint_t			wintarg;
 	wchar_t			*pwchararg;
 };
@@ -228,7 +226,6 @@ __mbsconv(char *mbsarg, int prec)
 	return (convbuf);
 }
 
-#ifdef FLOATING_POINT
 #include <float.h>
 #include <locale.h>
 #include <math.h>
@@ -238,7 +235,6 @@ __mbsconv(char *mbsarg, int prec)
 #define	DEFPREC		6
 
 static int exponent(wchar_t *, int, int);
-#endif /* FLOATING_POINT */
 
 /*
  * The size of the buffer we use as scratch space for integer
@@ -287,7 +283,6 @@ __vfwprintf(FILE * __restrict fp, const wchar_t * __restrict fmt0, __va_list ap)
 	int width;		/* width from format (%8d), or 0 */
 	int prec;		/* precision from format; <0 for N/A */
 	wchar_t sign;		/* sign prefix (' ', '+', '-', or \0) */
-#ifdef FLOATING_POINT
 	/*
 	 * We can decompose the printed representation of floating
 	 * point numbers into several parts, some of which may be empty:
@@ -316,7 +311,6 @@ __vfwprintf(FILE * __restrict fp, const wchar_t * __restrict fmt0, __va_list ap)
 	int ndig;		/* actual number of digits returned by dtoa */
 	wchar_t expstr[MAXEXPDIG+2];	/* buffer for exponent string: e+ZZZ */
 	char *dtoaresult = NULL;
-#endif
 
 	uintmax_t _umax;	/* integer arguments %[diouxX] */
 	enum { OCT, DEC, HEX } base;	/* base for %[diouxX] conversion */
@@ -572,11 +566,9 @@ reswitch:	switch (ch) {
 			}
 			width = n;
 			goto reswitch;
-#ifdef FLOATING_POINT
 		case 'L':
 			flags |= LONGDBL;
 			goto rflag;
-#endif
 		case 'h':
 			if (*fmt == 'h') {
 				fmt++;
@@ -628,7 +620,6 @@ reswitch:	switch (ch) {
 			}
 			base = DEC;
 			goto number;
-#ifdef FLOATING_POINT
 		case 'a':
 		case 'A':
 			if (ch == 'a') {
@@ -770,7 +761,6 @@ fp_common:
 				lead = expt;
 			}
 			break;
-#endif /* FLOATING_POINT */
 #ifndef NO_PRINTF_PERCENT_N
 		case 'n':
 			if (flags & LLONGINT)
@@ -977,7 +967,6 @@ number:			if ((dprec = prec) >= 0)
 		PAD(dprec - size, zeroes);
 
 		/* the string or number proper */
-#ifdef FLOATING_POINT
 		if ((flags & FPT) == 0) {
 			PRINT(cp, size);
 		} else {	/* glue together f_p fragments */
@@ -1012,9 +1001,6 @@ number:			if ((dprec = prec) >= 0)
 				PRINT(expstr, expsize);
 			}
 		}
-#else
-		PRINT(cp, size);
-#endif
 		/* left-adjusting padding (always blank) */
 		if (flags & LADJUST)
 			PAD(width - realsz, blanks);
@@ -1039,10 +1025,8 @@ overflow:
 
 finish:
 	free(convbuf);
-#ifdef FLOATING_POINT
 	if (dtoaresult)
 		__freedtoa(dtoaresult);
-#endif
 	if (argtable != NULL && argtable != statargtable) {
 		munmap(argtable, argtablesiz);
 		argtable = NULL;
@@ -1220,11 +1204,9 @@ reswitch:	switch (ch) {
 				goto rflag;
 			}
 			goto reswitch;
-#ifdef FLOATING_POINT
 		case 'L':
 			flags |= LONGDBL;
 			goto rflag;
-#endif
 		case 'h':
 			if (*fmt == 'h') {
 				fmt++;
@@ -1266,7 +1248,6 @@ reswitch:	switch (ch) {
 		case 'i':
 			ADDSARG();
 			break;
-#ifdef FLOATING_POINT
 		case 'a':
 		case 'A':
 		case 'e':
@@ -1280,7 +1261,6 @@ reswitch:	switch (ch) {
 			else
 				ADDTYPE(T_DOUBLE);
 			break;
-#endif /* FLOATING_POINT */
 #ifndef NO_PRINTF_PERCENT_N
 		case 'n':
 			if (flags & LLONGINT)
@@ -1384,14 +1364,12 @@ done:
 		case TP_LLONG:
 			(*argtable)[n].plonglongarg = va_arg(ap, long long *);
 			break;
-#ifdef FLOATING_POINT
 		case T_DOUBLE:
 			(*argtable)[n].doublearg = va_arg(ap, double);
 			break;
 		case T_LONG_DOUBLE:
 			(*argtable)[n].longdoublearg = va_arg(ap, long double);
 			break;
-#endif
 		case TP_CHAR:
 			(*argtable)[n].pchararg = va_arg(ap, char *);
 			break;
@@ -1472,7 +1450,6 @@ __grow_type_table(unsigned char **typetable, int *tablesize)
 }
 
  
-#ifdef FLOATING_POINT
 static int
 exponent(wchar_t *p0, int exp, int fmtch)
 {
@@ -1507,4 +1484,3 @@ exponent(wchar_t *p0, int exp, int fmtch)
 	}
 	return (p - p0);
 }
-#endif /* FLOATING_POINT */
