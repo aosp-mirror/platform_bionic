@@ -111,7 +111,6 @@ __srefill(FILE *fp)
 	}
 	fp->_p = fp->_bf._base;
 	fp->_r = (*fp->_read)(fp->_cookie, (char *)fp->_p, fp->_bf._size);
-	fp->_flags &= ~__SMOD;	/* buffer contents are again pristine */
 	if (fp->_r <= 0) {
 		if (fp->_r == 0)
 			fp->_flags |= __SEOF;

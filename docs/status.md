@@ -10,6 +10,7 @@ New libc functions in P:
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
   * `endhostent`/endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
   * `fexecve`
+  * `fflush_unlocked`/`fgetc_unlocked`/`fgets_unlocked`/`fputc_unlocked`/`fputs_unlocked`/`fread_unlocked`/`fwrite_unlocked`
   * `getentropy`/`getrandom` (adding <sys/random.h>)
   * `getlogin_r`
   * `glob`/`globfree` (adding <glob.h>)
