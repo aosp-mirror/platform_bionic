@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21d6fe73_219fd0c1",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T05:17:07Z",
+      "side": 1,
+      "message": "how does this test that? it tests that we can build with -D_FORTIFY_SOURCE\u003d2 and -D__clang_analyzer__, but how does it tell us which won?",
+      "revId": "33225525eb4a39ff07c454618690a564743237f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
