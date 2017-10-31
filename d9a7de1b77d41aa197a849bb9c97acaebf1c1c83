@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "6b94058f_8f909780",
+        "filename": "libc/stdio/vfprintf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T19:38:23Z",
+      "side": 1,
+      "message": "i\u0027ll clang-format all these. probably sooner rather than later (though i\u0027m a bit nervous it\u0027ll make the diff between the copy \u0026 pastes even larger if they have trivial differences that will upset the matches --- i\u0027ll check first).",
+      "parentUuid": "de363087_4eb570a9",
+      "revId": "d9a7de1b77d41aa197a849bb9c97acaebf1c1c83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68f2d548_d275c313",
         "filename": "libc/stdio/vfwprintf.c",
         "patchSetId": 1
