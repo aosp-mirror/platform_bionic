@@ -224,6 +224,20 @@ cc_test_library {
     srcs: ["fortify_compilation_test.cpp"],
 }
 
+// Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
+// it can confuse these tools pretty easily. If this builds successfully, then
+// __clang_analyzer__ overrode FORTIFY. Otherwise, FORTIFY was incorrectly
+// enabled. The library that results from building this is meant to be unused.
+cc_test_library {
+    name: "fortify_disabled_for_tidy",
+    cflags: [
+        "-Werror",
+        "-D_FORTIFY_SOURCE=2",
+        "-D__clang_analyzer__",
+    ],
+    srcs: ["fortify_compilation_test.cpp"],
+}
+
 cc_test_library {
     name: "libfortify1-tests-clang",
     defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
