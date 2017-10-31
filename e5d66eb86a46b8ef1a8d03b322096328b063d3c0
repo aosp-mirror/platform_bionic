@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a43c6009_7a6bf97e",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-10-31T14:59:43Z",
+      "side": 1,
+      "message": "maybe i\u0027d be less confused if this had a better name that made it clear that it\u0027s not supposed to compile, and is normally used with file-check to check that we see compile-time errors? i\u0027m struggling to think of the right name, though.",
+      "range": {
+        "startLine": 238,
+        "startChar": 12,
+        "endLine": 238,
+        "endChar": 40
+      },
+      "revId": "e5d66eb86a46b8ef1a8d03b322096328b063d3c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
