@@ -198,6 +198,8 @@ typedef struct {
 #define SHT_LOOS    0x60000000
 #define SHT_HIOS    0x6fffffff
 
+#define STN_UNDEF     0
+
 #define STT_GNU_IFUNC 10
 #define STT_LOOS      10
 #define STT_HIOS      12
