@@ -221,7 +221,7 @@ cc_test_library {
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
-    srcs: ["fortify_compilation_test.cpp"],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }
 
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
@@ -235,7 +235,7 @@ cc_test_library {
         "-D_FORTIFY_SOURCE=2",
         "-D__clang_analyzer__",
     ],
-    srcs: ["fortify_compilation_test.cpp"],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }
 
 cc_test_library {
