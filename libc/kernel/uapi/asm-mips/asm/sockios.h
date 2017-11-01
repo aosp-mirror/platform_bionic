@@ -20,12 +20,10 @@
 #define _ASM_SOCKIOS_H
 #include <asm/ioctl.h>
 #define FIOGETOWN _IOR('f', 123, int)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define FIOSETOWN _IOW('f', 124, int)
 #define SIOCATMARK _IOR('s', 7, int)
 #define SIOCSPGRP _IOW('s', 8, pid_t)
 #define SIOCGPGRP _IOR('s', 9, pid_t)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIOCGSTAMP 0x8906
 #define SIOCGSTAMPNS 0x8907
 #endif

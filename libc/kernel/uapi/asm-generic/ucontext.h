@@ -20,11 +20,9 @@
 #define __ASM_GENERIC_UCONTEXT_H
 struct ucontext {
   unsigned long uc_flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct ucontext * uc_link;
   stack_t uc_stack;
   struct sigcontext uc_mcontext;
   sigset_t uc_sigmask;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

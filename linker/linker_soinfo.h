@@ -263,6 +263,7 @@ struct soinfo {
   const std::vector<std::string>& get_dt_runpath() const;
   android_namespace_t* get_primary_namespace();
   void add_secondary_namespace(android_namespace_t* secondary_ns);
+  android_namespace_list_t& get_secondary_namespaces();
 
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;
@@ -336,7 +337,9 @@ struct soinfo {
   android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
-  friend soinfo* get_libdl_info(const char* linker_path);
+  friend soinfo* get_libdl_info(const char* linker_path,
+                                const soinfo& linker_si,
+                                const link_map& linker_map);
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

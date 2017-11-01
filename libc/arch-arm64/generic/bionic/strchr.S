@@ -1,6 +1,5 @@
 /*
-   strchr - find a character in a string
-
+ *
    Copyright (c) 2014, ARM Limited
    All rights Reserved.
    Copyright (c) 2014, Linaro Ltd.

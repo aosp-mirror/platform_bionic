@@ -26,8 +26,11 @@
  * SUCH DAMAGE.
  */
 
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 pid_t pthread_gettid_np(pthread_t t) {
-  return reinterpret_cast<pthread_internal_t*>(t)->tid;
+  pthread_internal_t* thread = __pthread_internal_find(t);
+  return thread ? thread->tid : -1;
 }

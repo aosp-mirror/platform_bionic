@@ -59,54 +59,54 @@ struct tm {
 
 #define TM_ZONE tm_zone
 
-time_t time(time_t*);
-int nanosleep(const struct timespec*, struct timespec*);
+time_t time(time_t* __t);
+int nanosleep(const struct timespec* __request, struct timespec* __remainder);
 
-char* asctime(const struct tm*);
-char* asctime_r(const struct tm*, char*);
+char* asctime(const struct tm* __tm);
+char* asctime_r(const struct tm* __tm, char* __buf);
 
-double difftime(time_t, time_t);
-time_t mktime(struct tm*);
+double difftime(time_t __lhs, time_t __rhs);
+time_t mktime(struct tm* __tm);
 
-struct tm* localtime(const time_t*);
-struct tm* localtime_r(const time_t*, struct tm*);
+struct tm* localtime(const time_t* __t);
+struct tm* localtime_r(const time_t* __t, struct tm* __tm);
 
-struct tm* gmtime(const time_t*);
-struct tm* gmtime_r(const time_t*, struct tm*);
+struct tm* gmtime(const time_t* __t);
+struct tm* gmtime_r(const time_t* __t, struct tm* __tm);
 
-char* strptime(const char*, const char*, struct tm*);
-size_t strftime(char*, size_t, const char*, const struct tm*);
+char* strptime(const char* __s, const char* __fmt, struct tm* __tm);
+size_t strftime(char* __buf, size_t __n, const char* __fmt, const struct tm* __tm);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-size_t strftime_l(char*, size_t, const char*, const struct tm*, locale_t) __INTRODUCED_IN(21);
+size_t strftime_l(char* __buf, size_t __n, const char* __fmt, const struct tm* __tm, locale_t __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inline before 21.
 #endif
 
-char* ctime(const time_t*);
-char* ctime_r(const time_t*, char*);
+char* ctime(const time_t* __t);
+char* ctime_r(const time_t* __t, char* __buf);
 
 void tzset(void);
 
 clock_t clock(void);
 
-int clock_getcpuclockid(pid_t, clockid_t*) __INTRODUCED_IN(23);
+int clock_getcpuclockid(pid_t __pid, clockid_t* __clock) __INTRODUCED_IN(23);
 
-int clock_getres(clockid_t, struct timespec*);
-int clock_gettime(clockid_t, struct timespec*);
-int clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*);
-int clock_settime(clockid_t, const struct timespec*);
+int clock_getres(clockid_t __clock, struct timespec* __resolution);
+int clock_gettime(clockid_t __clock, struct timespec* __ts);
+int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* __request, struct timespec* __remainder);
+int clock_settime(clockid_t __clock, const struct timespec* __ts);
 
-int timer_create(int, struct sigevent*, timer_t*);
-int timer_delete(timer_t);
-int timer_settime(timer_t, int, const struct itimerspec*, struct itimerspec*);
-int timer_gettime(timer_t, struct itimerspec*);
-int timer_getoverrun(timer_t);
+int timer_create(clockid_t __clock, struct sigevent* __event, timer_t* __timer_ptr);
+int timer_delete(timer_t __timer);
+int timer_settime(timer_t __timer, int __flags, const struct itimerspec* __new_value, struct itimerspec* __old_value);
+int timer_gettime(timer_t __timer, struct itimerspec* __ts);
+int timer_getoverrun(timer_t __timer);
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-time_t timelocal(struct tm*) __INTRODUCED_IN(12);
-time_t timegm(struct tm*) __INTRODUCED_IN(12);
+time_t timelocal(struct tm* __tm) __INTRODUCED_IN(12);
+time_t timegm(struct tm* __tm) __INTRODUCED_IN(12);
 
 __END_DECLS
 
-#endif /* _TIME_H_ */
+#endif

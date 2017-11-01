@@ -20,9 +20,7 @@
 #define _XT_CPU_H
 #include <linux/types.h>
 struct xt_cpu_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 cpu;
   __u32 invert;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

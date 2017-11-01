@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 /*
  * This source file should only be included by libc.so, its purpose is
@@ -53,7 +53,7 @@ atexit(void (*func)(void))
      */
     static char const warning[] = "WARNING: generic atexit() called from legacy shared library\n";
 
-    __libc_format_log(ANDROID_LOG_WARN, "libc", warning);
+    async_safe_format_log(ANDROID_LOG_WARN, "libc", warning);
     fprintf(stderr, warning);
 
     return (__cxa_atexit((void (*)(void *))func, NULL, NULL));

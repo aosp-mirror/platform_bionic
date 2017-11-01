@@ -20,19 +20,15 @@
 #define __ASM_GENERIC_IPCBUF_H
 struct ipc64_perm {
   __kernel_key_t key;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_uid32_t uid;
   __kernel_gid32_t gid;
   __kernel_uid32_t cuid;
   __kernel_gid32_t cgid;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_mode_t mode;
   unsigned char __pad1[4 - sizeof(__kernel_mode_t)];
   unsigned short seq;
   unsigned short __pad2;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __kernel_ulong_t __unused1;
   __kernel_ulong_t __unused2;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

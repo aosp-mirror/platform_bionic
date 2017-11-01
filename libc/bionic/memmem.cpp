@@ -35,7 +35,7 @@ void* memmem(const void* void_haystack, size_t n, const void* void_needle, size_
   if (n < m) return nullptr;
 
   if (m == 0) return const_cast<void*>(void_haystack);
-  if (m == 1) return memchr(haystack, needle[0], n);
+  if (m == 1) return const_cast<void*>(memchr(haystack, needle[0], n));
 
   // This uses the "Not So Naive" algorithm, a very simple but usually effective algorithm.
   // http://www-igm.univ-mlv.fr/~lecroq/string/

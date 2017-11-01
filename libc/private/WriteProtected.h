@@ -23,9 +23,10 @@
 #include <sys/mman.h>
 #include <sys/user.h>
 
+#include <async_safe/log.h>
+
 #include "private/bionic_macros.h"
 #include "private/bionic_prctl.h"
-#include "private/libc_logging.h"
 
 template <typename T>
 union WriteProtectedContents {
@@ -57,7 +58,7 @@ class WriteProtected {
     memset(&contents, 0, sizeof(contents));
 
     if (mprotect(&contents, PAGE_SIZE, PROT_READ)) {
-      __libc_fatal("failed to make WriteProtected nonwritable in initialize");
+      async_safe_fatal("failed to make WriteProtected nonwritable in initialize");
     }
   }
 
@@ -72,13 +73,13 @@ class WriteProtected {
   template <typename Mutator>
   void mutate(Mutator mutator) {
     if (mprotect(&contents, PAGE_SIZE, PROT_READ | PROT_WRITE) != 0) {
-      __libc_fatal("failed to make WriteProtected writable in mutate: %s",
-                   strerror(errno));
+      async_safe_fatal("failed to make WriteProtected writable in mutate: %s",
+                       strerror(errno));
     }
     mutator(&contents.value);
     if (mprotect(&contents, PAGE_SIZE, PROT_READ) != 0) {
-      __libc_fatal("failed to make WriteProtected nonwritable in mutate: %s",
-                   strerror(errno));
+      async_safe_fatal("failed to make WriteProtected nonwritable in mutate: %s",
+                       strerror(errno));
     }
   }
 };

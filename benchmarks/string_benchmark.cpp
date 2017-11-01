@@ -14,89 +14,278 @@
  * limitations under the License.
  */
 
+#include <err.h>
 #include <stdint.h>
 #include <string.h>
 
 #include <benchmark/benchmark.h>
-
-constexpr auto KB = 1024;
-
-#define AT_COMMON_SIZES \
-    Arg(8)->Arg(64)->Arg(512)->Arg(1*KB)->Arg(8*KB)->Arg(16*KB)->Arg(32*KB)->Arg(64*KB)
-
-// TODO: test unaligned operation too? (currently everything will be 8-byte aligned by malloc.)
+#include <util.h>
 
 static void BM_string_memcmp(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* src = new char[nbytes]; char* dst = new char[nbytes];
-  memset(src, 'x', nbytes);
-  memset(dst, 'x', nbytes);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
+  char* dst_aligned = GetAlignedPtrFilled(&dst, dst_alignment, nbytes, 'x');
 
   volatile int c __attribute__((unused)) = 0;
   while (state.KeepRunning()) {
-    c += memcmp(dst, src, nbytes);
+    c += memcmp(dst_aligned, src_aligned, nbytes);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] src;
-  delete[] dst;
 }
-BENCHMARK(BM_string_memcmp)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_string_memcmp);
 
 static void BM_string_memcpy(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* src = new char[nbytes]; char* dst = new char[nbytes];
-  memset(src, 'x', nbytes);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
+  char* dst_aligned = GetAlignedPtr(&dst, dst_alignment, nbytes);
 
   while (state.KeepRunning()) {
-    memcpy(dst, src, nbytes);
+    memcpy(dst_aligned, src_aligned, nbytes);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] src;
-  delete[] dst;
 }
-BENCHMARK(BM_string_memcpy)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_string_memcpy);
 
-static void BM_string_memmove(benchmark::State& state) {
+static void BM_string_memmove_non_overlapping(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* buf = new char[nbytes + 64];
-  memset(buf, 'x', nbytes + 64);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
+  char* dst_aligned = GetAlignedPtrFilled(&dst, dst_alignment, nbytes, 'y');
 
   while (state.KeepRunning()) {
-    memmove(buf, buf + 1, nbytes); // Worst-case overlap.
+    memmove(dst_aligned, src_aligned, nbytes);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] buf;
 }
-BENCHMARK(BM_string_memmove)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_string_memmove_non_overlapping);
+
+static void BM_string_memmove_overlap_dst_before_src(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t alignment = state.range(1);
+
+  std::vector<char> buf(3 * alignment + nbytes + 1, 'x');
+  char* buf_aligned = GetAlignedPtrFilled(&buf, alignment, nbytes + 1, 'x');
+
+  while (state.KeepRunning()) {
+    memmove(buf_aligned, buf_aligned + 1, nbytes);  // Worst-case overlap.
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_memmove_overlap_dst_before_src);
+
+static void BM_string_memmove_overlap_src_before_dst(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t alignment = state.range(1);
+
+  std::vector<char> buf;
+  char* buf_aligned = GetAlignedPtrFilled(&buf, alignment, nbytes + 1, 'x');
+
+  while (state.KeepRunning()) {
+    memmove(buf_aligned + 1, buf_aligned, nbytes);  // Worst-case overlap.
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_memmove_overlap_src_before_dst);
 
 static void BM_string_memset(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* dst = new char[nbytes];
+  const size_t alignment = state.range(1);
+
+  std::vector<char> buf;
+  char* buf_aligned = GetAlignedPtr(&buf, alignment, nbytes + 1);
 
   while (state.KeepRunning()) {
-    memset(dst, 0, nbytes);
+    memset(buf_aligned, 0, nbytes);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] dst;
 }
-BENCHMARK(BM_string_memset)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_string_memset);
 
 static void BM_string_strlen(benchmark::State& state) {
   const size_t nbytes = state.range(0);
-  char* s = new char[nbytes];
-  memset(s, 'x', nbytes);
-  s[nbytes - 1] = 0;
+  const size_t alignment = state.range(1);
+
+  std::vector<char> buf;
+  char* buf_aligned = GetAlignedPtrFilled(&buf, alignment, nbytes + 1, 'x');
+  buf_aligned[nbytes - 1] = '\0';
 
   volatile int c __attribute__((unused)) = 0;
   while (state.KeepRunning()) {
-    c += strlen(s);
+    c += strlen(buf_aligned);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
-  delete[] s;
 }
-BENCHMARK(BM_string_strlen)->AT_COMMON_SIZES;
+BIONIC_BENCHMARK(BM_string_strlen);
+
+static void BM_string_strcat_copy_only(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
+  char* dst_aligned = GetAlignedPtr(&dst, dst_alignment, nbytes + 2);
+  src_aligned[nbytes - 1] = '\0';
+  dst_aligned[0] = 'y';
+  dst_aligned[1] = 'y';
+  dst_aligned[2] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst_aligned, src_aligned);
+    dst_aligned[2] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strcat_copy_only);
+
+static void BM_string_strcat_seek_only(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, 3, 'x');
+  char* dst_aligned = GetAlignedPtrFilled(&dst, dst_alignment, nbytes + 2, 'y');
+  src_aligned[2] = '\0';
+  dst_aligned[nbytes - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst_aligned, src_aligned);
+    dst_aligned[nbytes - 1] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strcat_seek_only);
+
+static void BM_string_strcat_half_copy_half_seek(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes / 2, 'x');
+  char* dst_aligned = GetAlignedPtrFilled(&dst, dst_alignment, nbytes, 'y');
+  src_aligned[nbytes / 2 - 1] = '\0';
+  dst_aligned[nbytes / 2 - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcat(dst_aligned, src_aligned);
+    dst_aligned[nbytes / 2 - 1] = '\0';
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strcat_half_copy_half_seek);
+
+static void BM_string_strcpy(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t src_alignment = state.range(1);
+  const size_t dst_alignment = state.range(2);
+
+  std::vector<char> src;
+  std::vector<char> dst;
+  char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
+  char* dst_aligned = GetAlignedPtr(&dst, dst_alignment, nbytes);
+  src_aligned[nbytes - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    strcpy(dst_aligned, src_aligned);
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strcpy);
+
+static void BM_string_strcmp(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t s1_alignment = state.range(1);
+  const size_t s2_alignment = state.range(2);
+
+  std::vector<char> s1;
+  std::vector<char> s2;
+  char* s1_aligned = GetAlignedPtrFilled(&s1, s1_alignment, nbytes, 'x');
+  char* s2_aligned = GetAlignedPtrFilled(&s2, s2_alignment, nbytes, 'x');
+  s1_aligned[nbytes - 1] = '\0';
+  s2_aligned[nbytes - 1] = '\0';
+
+  volatile int c __attribute__((unused));
+  while (state.KeepRunning()) {
+    c = strcmp(s1_aligned, s2_aligned);
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strcmp);
+
+static void BM_string_strstr(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t haystack_alignment = state.range(1);
+  const size_t needle_alignment = state.range(2);
+
+  std::vector<char> haystack;
+  std::vector<char> needle;
+  char* haystack_aligned = GetAlignedPtrFilled(&haystack, haystack_alignment, nbytes, 'x');
+  char* needle_aligned = GetAlignedPtrFilled(&needle, needle_alignment,
+                                             std::min(nbytes, static_cast<size_t>(5)), 'x');
+
+  if (nbytes / 4 > 2) {
+    for (size_t i = 0; nbytes / 4 >= 2 && i < nbytes / 4 - 2; i++) {
+      haystack_aligned[4 * i + 3] = 'y';
+    }
+  }
+  haystack_aligned[nbytes - 1] = '\0';
+  needle_aligned[needle.size() - 1] = '\0';
+
+  while (state.KeepRunning()) {
+    if (strstr(haystack_aligned, needle_aligned) == nullptr) {
+      errx(1, "ERROR: strstr failed to find valid substring.");
+    }
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strstr);
+
+static void BM_string_strchr(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t haystack_alignment = state.range(1);
+
+  std::vector<char> haystack;
+  char* haystack_aligned = GetAlignedPtrFilled(&haystack, haystack_alignment, nbytes, 'x');
+  haystack_aligned[nbytes-1] = '\0';
+
+  while (state.KeepRunning()) {
+    if (strchr(haystack_aligned, 'y') != nullptr) {
+      errx(1, "ERROR: strchr found a chr where it should have failed.");
+    }
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK(BM_string_strchr);

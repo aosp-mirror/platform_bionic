@@ -28,8 +28,13 @@ class __LIBC_HIDDEN__ ScopedTrace {
   explicit ScopedTrace(const char* message);
   ~ScopedTrace();
 
+  void End();
  private:
+  bool called_end_;
   DISALLOW_COPY_AND_ASSIGN(ScopedTrace);
 };
+
+void bionic_trace_begin(const char* message);
+void bionic_trace_end();
 
 #endif

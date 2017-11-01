@@ -1,3 +1,7 @@
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 int always_available();
 
 int also_always_available() __INTRODUCED_IN(9);
@@ -74,3 +78,7 @@ int group_lp32() __INTRODUCED_IN_ARM(12) __INTRODUCED_IN_X86(12) __INTRODUCED_IN
 int future() __INTRODUCED_IN_FUTURE;
 #endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
+
+#if defined(__cplusplus)
+}
+#endif

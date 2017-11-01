@@ -1,0 +1,11 @@
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>8 8 8</args>
+</fn>
+<fn>
+  <name>BM_math_sqrt</name>
+</fn>
+<fn>
+  <name>BM_property_get</name>
+  <args>1</args>
+</fn>

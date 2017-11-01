@@ -29,9 +29,12 @@
 #include <private/bionic_asm.h>
 
 ENTRY(_start)
+  // Force unwinds to end in this function.
+  .cfi_undefined r14
+
   mov r0, sp
   bl __linker_init
 
   /* linker init returns the _entry address in the main image */
-  mov pc, r0
+  bx r0
 END(_start)

@@ -13,37 +13,54 @@
 #include <sys/types.h>
 
 typedef enum {
+  FIND,
+  ENTER
+} ACTION;
+
+typedef struct entry {
+  char* key;
+  void* data;
+} ENTRY;
+
+typedef enum {
   preorder,
   postorder,
   endorder,
   leaf
 } VISIT;
 
-#ifdef _SEARCH_PRIVATE
-typedef struct node {
-  char* key;
-  struct node* llink;
-  struct node* rlink;
-} node_t;
+#if defined(__USE_BSD) || defined(__USE_GNU)
+struct hsearch_data {
+  struct __hsearch* __hsearch;
+};
 #endif
 
 __BEGIN_DECLS
 
-void insque(void*, void*) __INTRODUCED_IN(21);
-void remque(void*) __INTRODUCED_IN(21);
+void insque(void* __element, void* __previous) __INTRODUCED_IN(21);
+void remque(void* __element) __INTRODUCED_IN(21);
 
-void* lfind(const void*, const void*, size_t*, size_t, int (*)(const void*, const void*))
+int hcreate(size_t) __INTRODUCED_IN_FUTURE;
+void hdestroy(void) __INTRODUCED_IN_FUTURE;
+ENTRY* hsearch(ENTRY, ACTION) __INTRODUCED_IN_FUTURE;
+
+#if defined(__USE_BSD) || defined(__USE_GNU)
+int hcreate_r(size_t, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+void hdestroy_r(struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+int hsearch_r(ENTRY, ACTION, ENTRY**, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+#endif
+
+void* lfind(const void* __key, const void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
   __INTRODUCED_IN(21);
-void* lsearch(const void*, void*, size_t*, size_t, int (*)(const void*, const void*))
+void* lsearch(const void* __key, void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
   __INTRODUCED_IN(21);
 
-void* tdelete(const void* __restrict, void** __restrict, int (*)(const void*, const void*))
-  __INTRODUCED_IN(16);
-void tdestroy(void*, void (*)(void*)) __INTRODUCED_IN(16);
-void* tfind(const void*, void* const*, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
-void* tsearch(const void*, void**, int (*)(const void*, const void*)) __INTRODUCED_IN(16);
-void twalk(const void*, void (*)(const void*, VISIT, int)) __INTRODUCED_IN(21);
+void* tdelete(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void tdestroy(void* __root, void (*__free_fn)(void*)) __INTRODUCED_IN(16);
+void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(16);
+void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int)) __INTRODUCED_IN(21);
 
 __END_DECLS
 
-#endif /* !_SEARCH_H_ */
+#endif

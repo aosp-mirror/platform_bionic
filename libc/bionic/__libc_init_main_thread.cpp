@@ -31,6 +31,7 @@
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_auxv.h"
+#include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
@@ -58,6 +59,7 @@ void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
 // -fno-stack-protector because it's responsible for setting up the main
 // thread's TLS (which stack protector relies on).
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_main_thread(KernelArgumentBlock& args) {
   __libc_auxv = args.auxv;
 #if defined(__i386__)
@@ -70,7 +72,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // set up before we call any function that might get a stack check inserted.
   // TLS also needs to be set up before errno (and therefore syscalls) can be used.
   __set_tls(main_thread.tls);
-  __init_tls(&main_thread);
+  if (!__init_tls(&main_thread)) async_safe_fatal("failed to initialize TLS: %s", strerror(errno));
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
   // As a side-effect, this tells us our pid (which is the same as the main thread's tid).
@@ -83,10 +85,14 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // thread's stack rather than on the heap.
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
   main_thread.mmap_size = 0;
+
   pthread_attr_init(&main_thread.attr);
-  main_thread.attr.guard_size = 0; // The main thread has no guard page.
-  main_thread.attr.stack_size = 0; // User code should never see this; we'll compute it when asked.
-  // TODO: the main thread's sched_policy and sched_priority need to be queried.
+  // We don't want to explicitly set the main thread's scheduler attributes (http://b/68328561).
+  pthread_attr_setinheritsched(&main_thread.attr, PTHREAD_INHERIT_SCHED);
+  // The main thread has no guard page.
+  pthread_attr_setguardsize(&main_thread.attr, 0);
+  // User code should never see this; we'll compute it when asked.
+  pthread_attr_setstacksize(&main_thread.attr, 0);
 
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global

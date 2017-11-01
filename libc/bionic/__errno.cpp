@@ -31,6 +31,6 @@
 
 #include "private/bionic_tls.h"
 
-volatile int*  __errno() {
+int*  __errno() {
   return reinterpret_cast<int*>(&(__get_tls()[TLS_SLOT_ERRNO]));
 }

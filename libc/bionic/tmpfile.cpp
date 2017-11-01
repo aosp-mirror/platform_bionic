@@ -39,22 +39,7 @@
 #include <unistd.h>
 
 #include "private/ErrnoRestorer.h"
-
-class ScopedSignalBlocker {
- public:
-  ScopedSignalBlocker() {
-    sigset_t set;
-    sigfillset(&set);
-    sigprocmask(SIG_BLOCK, &set, &old_set_);
-  }
-
-  ~ScopedSignalBlocker() {
-    sigprocmask(SIG_SETMASK, &old_set_, NULL);
-  }
-
- private:
-  sigset_t old_set_;
-};
+#include "private/ScopedSignalBlocker.h"
 
 static FILE* __tmpfile_dir(const char* tmp_dir) {
   char* path = NULL;

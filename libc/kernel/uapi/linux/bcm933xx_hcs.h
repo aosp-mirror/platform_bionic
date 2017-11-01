@@ -20,20 +20,16 @@
 #define __BCM933XX_HCS_H
 #include <linux/types.h>
 struct bcm_hcs {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 magic;
   __u16 control;
   __u16 rev_maj;
   __u16 rev_min;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u32 build_date;
   __u32 filelen;
   __u32 ldaddress;
   char filename[64];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 hcs;
   __u16 her_znaet_chto;
   __u32 crc;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

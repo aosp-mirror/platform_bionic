@@ -20,5 +20,4 @@
 #define __ASM_PARAM_H
 #define EXEC_PAGESIZE 65536
 #include <asm-generic/param.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

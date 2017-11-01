@@ -1,4 +1,4 @@
-/*	$OpenBSD: fvwrite.h,v 1.6 2013/11/12 07:04:35 deraadt Exp $	*/
+/*	$OpenBSD: fvwrite.h,v 1.7 2015/08/27 04:37:09 guenther Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993
@@ -32,18 +32,4 @@
  * SUCH DAMAGE.
  */
 
-/*
- * I/O descriptors for __sfvwrite().
- */
-struct __siov {
-	void	*iov_base;
-	size_t	iov_len;
-};
-struct __suio {
-	struct	__siov *uio_iov;
-	int	uio_iovcnt;
-	int	uio_resid;
-};
-
-extern int __sfvwrite(FILE *, struct __suio *);
-wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+/* Moved to "local.h". */

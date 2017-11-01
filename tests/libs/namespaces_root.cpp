@@ -20,6 +20,14 @@ static const char* g_local_string = "This string is local to root library";
 extern "C" const char* g_private_extern_string;
 extern "C" const char* g_public_extern_string;
 
+// This is resolved only if public library is in the same namespace as
+// the root one. It should remain unresolved if looking up for public library
+// crosses namespace boundary.
+//
+// Defined in libnstest_public_internal.so on which libnstest_public.so
+// depends on
+extern "C" const char* __attribute__((weak)) internal_extern_string();
+
 bool g_dlopened = false;
 
 extern "C" const char* ns_get_local_string() {
@@ -32,6 +40,14 @@ extern "C" const char* ns_get_private_extern_string() {
 
 extern "C" const char* ns_get_public_extern_string() {
   return g_public_extern_string;
+}
+
+extern "C" const char* ns_get_internal_extern_string() {
+  if (internal_extern_string != nullptr) {
+    return internal_extern_string();
+  } else {
+    return nullptr;
+  }
 }
 
 extern "C" const char* ns_get_dlopened_string() {

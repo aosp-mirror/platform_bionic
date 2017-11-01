@@ -34,6 +34,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "linker_logger.h"
@@ -81,29 +83,9 @@ void soinfo::set_dt_runpath(const char* path) {
 
   std::string origin = dirname(get_realpath());
   // FIXME: add $LIB and $PLATFORM.
-  std::pair<std::string, std::string> substs[] = {{"ORIGIN", origin}};
+  std::vector<std::pair<std::string, std::string>> params = {{"ORIGIN", origin}};
   for (auto&& s : runpaths) {
-    size_t pos = 0;
-    while (pos < s.size()) {
-      pos = s.find("$", pos);
-      if (pos == std::string::npos) break;
-      for (const auto& subst : substs) {
-        const std::string& token = subst.first;
-        const std::string& replacement = subst.second;
-        if (s.substr(pos + 1, token.size()) == token) {
-          s.replace(pos, token.size() + 1, replacement);
-          // -1 to compensate for the ++pos below.
-          pos += replacement.size() - 1;
-          break;
-        } else if (s.substr(pos + 1, token.size() + 2) == "{" + token + "}") {
-          s.replace(pos, token.size() + 3, replacement);
-          pos += replacement.size() - 1;
-          break;
-        }
-      }
-      // Skip $ in case it did not match any of the known substitutions.
-      ++pos;
-    }
+    format_string(&s, params);
   }
 
   resolve_paths(runpaths, &dt_runpath_);
@@ -429,18 +411,25 @@ void soinfo::call_constructors() {
     si->call_constructors();
   });
 
-  TRACE("\"%s\": calling constructors", get_realpath());
+  if (!is_linker()) {
+    bionic_trace_begin((std::string("calling constructors: ") + get_realpath()).c_str());
+  }
 
   // DT_INIT should be called before DT_INIT_ARRAY if both are present.
   call_function("DT_INIT", init_func_, get_realpath());
   call_array("DT_INIT_ARRAY", init_array_, init_array_count_, false, get_realpath());
+
+  if (!is_linker()) {
+    bionic_trace_end();
+  }
 }
 
 void soinfo::call_destructors() {
   if (!constructors_called) {
     return;
   }
-  TRACE("\"%s\": calling destructors", get_realpath());
+
+  ScopedTrace trace((std::string("calling destructors: ") + get_realpath()).c_str());
 
   // DT_FINI_ARRAY must be parsed in reverse order.
   call_array("DT_FINI_ARRAY", fini_array_, fini_array_count_, true, get_realpath());
@@ -634,6 +623,11 @@ void soinfo::add_secondary_namespace(android_namespace_t* secondary_ns) {
   secondary_namespaces_.push_back(secondary_ns);
 }
 
+android_namespace_list_t& soinfo::get_secondary_namespaces() {
+  CHECK(has_min_version(3));
+  return secondary_namespaces_;
+}
+
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);
@@ -644,7 +638,7 @@ ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
 
 const char* soinfo::get_string(ElfW(Word) index) const {
   if (has_min_version(1) && (index >= strtab_size_)) {
-    __libc_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
+    async_safe_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
         get_realpath(), strtab_size_, index);
   }
 
@@ -694,7 +688,6 @@ size_t soinfo::decrement_ref_count() {
 soinfo* soinfo::get_local_group_root() const {
   return local_group_root_;
 }
-
 
 void soinfo::set_mapped_by_caller(bool mapped_by_caller) {
   if (mapped_by_caller) {

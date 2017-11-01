@@ -234,24 +234,22 @@ bool ElfFile<ELF>::Load() {
   }
 
   // Loading failed if we did not find the required special sections.
-  if (!found_relocations_section) {
-    LOG(ERROR) << "Missing or empty .rel.dyn or .rela.dyn section";
-    return false;
-  }
   if (!found_dynamic_section) {
     LOG(ERROR) << "Missing .dynamic section";
     return false;
   }
 
-  // Loading failed if we could not identify the relocations type.
-  if (!has_rel_relocations && !has_rela_relocations) {
-    LOG(ERROR) << "No relocations sections found";
-    return false;
-  }
-  if (has_rel_relocations && has_rela_relocations) {
-    LOG(ERROR) << "Multiple relocations sections with different types found, "
-               << "not currently supported";
-    return false;
+  if (found_relocations_section != nullptr) {
+    // Loading failed if we could not identify the relocations type.
+    if (!has_rel_relocations && !has_rela_relocations) {
+      LOG(ERROR) << "No relocations sections found";
+      return false;
+    }
+    if (has_rel_relocations && has_rela_relocations) {
+      LOG(ERROR) << "Multiple relocations sections with different types found, "
+                 << "not currently supported";
+      return false;
+    }
   }
 
   elf_ = elf;
@@ -682,6 +680,11 @@ bool ElfFile<ELF>::PackRelocations() {
     return false;
   }
 
+  if (relocations_section_ == nullptr) {
+    // There is nothing to do
+    return true;
+  }
+
   // Retrieve the current dynamic relocations section data.
   Elf_Data* data = GetSectionData(relocations_section_);
   // we always pack rela, because packed format is pretty much the same
@@ -829,6 +832,11 @@ bool ElfFile<ELF>::UnpackRelocations() {
   if (!Load()) {
     LOG(ERROR) << "Failed to load as ELF";
     return false;
+  }
+
+  if (relocations_section_ == nullptr) {
+    // There is nothing to do
+    return true;
   }
 
   typename ELF::Shdr* section_header = ELF::getshdr(relocations_section_);

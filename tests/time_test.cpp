@@ -509,14 +509,14 @@ TEST(time, timer_delete_terminates) {
 
 struct TimerDeleteData {
   timer_t timer_id;
-  pthread_t thread_id;
+  pid_t tid;
   volatile bool complete;
 };
 
 static void TimerDeleteCallback(sigval_t value) {
   TimerDeleteData* tdd = reinterpret_cast<TimerDeleteData*>(value.sival_ptr);
 
-  tdd->thread_id = pthread_self();
+  tdd->tid = gettid();
   timer_delete(tdd->timer_id);
   tdd->complete = true;
 }
@@ -548,8 +548,9 @@ TEST(time, timer_delete_from_timer_thread) {
   // Since bionic timers are implemented by creating a thread to handle the
   // callback, verify that the thread actually completes.
   cur_time = time(NULL);
-  while (pthread_detach(tdd.thread_id) != ESRCH && (time(NULL) - cur_time) < 5);
-  ASSERT_EQ(ESRCH, pthread_detach(tdd.thread_id));
+  while ((kill(tdd.tid, 0) != -1 || errno != ESRCH) && (time(NULL) - cur_time) < 5);
+  ASSERT_EQ(-1, kill(tdd.tid, 0));
+  ASSERT_EQ(ESRCH, errno);
 #endif
 }
 
@@ -571,6 +572,31 @@ TEST(time, clock_gettime) {
   // Should be less than (a very generous, to try to avoid flakiness) 1000000ns.
   ASSERT_EQ(0, ts2.tv_sec);
   ASSERT_LT(ts2.tv_nsec, 1000000);
+}
+
+TEST(time, clock_gettime_CLOCK_REALTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_MONOTONIC) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_PROCESS_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_THREAD_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_gettime_CLOCK_BOOTTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_BOOTTIME, &ts));
 }
 
 TEST(time, clock) {
@@ -673,4 +699,40 @@ TEST(time, bug_31938693) {
   tzset();
   ASSERT_TRUE(localtime_r(&t, &tm) != nullptr);
   EXPECT_EQ(9, tm.tm_hour);
+}
+
+TEST(time, bug_31339449) {
+  // POSIX says localtime acts as if it calls tzset.
+  // tzset does two things:
+  //  1. it sets the time zone ctime/localtime/mktime/strftime will use.
+  //  2. it sets the global `tzname`.
+  // POSIX says localtime_r need not set `tzname` (2).
+  // Q: should localtime_r set the time zone (1)?
+  // Upstream tzcode (and glibc) answer "no", everyone else answers "yes".
+
+  // Pick a time, any time...
+  time_t t = 1475619727;
+
+  // Call tzset with a specific timezone.
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+  // If we change the timezone and call localtime, localtime should use the new timezone.
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm* tm_p = localtime(&t);
+  EXPECT_EQ(15, tm_p->tm_hour);
+
+  // Reset the timezone back.
+  setenv("TZ", "America/Atka", 1);
+  tzset();
+
+#if defined(__BIONIC__)
+  // If we change the timezone again and call localtime_r, localtime_r should use the new timezone.
+  setenv("TZ", "America/Los_Angeles", 1);
+  struct tm tm = {};
+  localtime_r(&t, &tm);
+  EXPECT_EQ(15, tm.tm_hour);
+#else
+  // The BSDs agree with us, but glibc gets this wrong.
+#endif
 }

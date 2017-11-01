@@ -20,14 +20,11 @@
 #define _LINUX_IF_PLIP_H
 #include <linux/sockios.h>
 #define SIOCDEVPLIP SIOCDEVPRIVATE
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct plipconf {
   unsigned short pcmd;
   unsigned long nibble;
   unsigned long trigger;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define PLIP_GET_TIMEOUT 0x1
 #define PLIP_SET_TIMEOUT 0x2
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

@@ -26,7 +26,7 @@ In order to free the buffer allocated by the function, call:
 
 ### Format of info Buffer
     size_t size_of_original_allocation
-    size_t num_backtrace_frames
+    size_t num_allocations
     uintptr_t pc1
     uintptr_t pc2
     uintptr_t pc3
@@ -38,8 +38,12 @@ The number of *uintptr\_t* values is determined by the value
 *backtrace\_size* as returned by the original call to
 *get\_malloc\_leak\_info*. This value is not variable, it is the same
 for all the returned data. The value
-*num\_backtrace\_frames* contains the real number of frames found. The
-extra frames are set to zero. Each *uintptr\_t* is a pc of the callstack.
+*num\_allocations* contains the total number of allocations with the same
+backtrace and size as this allocation. On Android Nougat, this value was
+incorrectly set to the number of frames in the backtrace.
+Each *uintptr\_t* is a pc of the callstack. If the total number
+of backtrace entries is less than *backtrace\_size*, the rest of the
+entries are zero.
 The calls from within the malloc debug library are automatically removed.
 
 For 32 bit systems, *size\_t* and *uintptr\_t* are both 4 byte values.

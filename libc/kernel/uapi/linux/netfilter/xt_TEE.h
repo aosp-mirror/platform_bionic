@@ -20,10 +20,8 @@
 #define _XT_TEE_TARGET_H
 #include <linux/netfilter.h>
 struct xt_tee_tginfo {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   union nf_inet_addr gw;
   char oif[16];
   struct xt_tee_priv * priv __attribute__((aligned(8)));
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

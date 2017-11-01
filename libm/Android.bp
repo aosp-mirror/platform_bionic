@@ -63,7 +63,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_sinhf.c",
         "upstream-freebsd/lib/msun/src/e_sqrt.c",
         "upstream-freebsd/lib/msun/src/e_sqrtf.c",
-        "upstream-freebsd/lib/msun/src/imprecise.c",
         "upstream-freebsd/lib/msun/src/k_cos.c",
         "upstream-freebsd/lib/msun/src/k_cosf.c",
         "upstream-freebsd/lib/msun/src/k_exp.c",
@@ -209,19 +208,14 @@ cc_library {
         // Functionality not in the BSDs.
         "significandl.c",
         "sincos.c",
-
-        // Modified versions of BSD code.
-        "signbit.c",
+        "fake_long_double.c",
 
         // Home-grown stuff.
         "fabs.cpp",
+        "signbit.cpp",
     ],
 
     multilib: {
-        lib32: {
-            srcs: ["fake_long_double.c"],
-        },
-
         lib64: {
             srcs: [
                 "upstream-freebsd/lib/msun/src/e_acosl.c",
@@ -287,7 +281,7 @@ cc_library {
             srcs: [
                 "arm/fenv.c",
             ],
-            armv7_a_neon: {
+            neon: {
                 srcs: [
                     "arm/sqrt.S",
                     "arm/floor.S",
@@ -510,6 +504,7 @@ cc_library {
     ],
 
     cflags: [
+        "-D__BIONIC_LP32_USE_LONG_DOUBLE",
         "-D__BIONIC_NO_MATH_INLINES",
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
@@ -529,12 +524,18 @@ cc_library {
     sanitize: {
         address: false,
         coverage: false,
+        integer_overflow: false,
     },
     stl: "none",
 }
 
 ndk_library {
-    name: "libm.ndk",
+    name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
+}
+
+llndk_library {
+    name: "libm",
+    symbol_file: "libm.map.txt",
 }

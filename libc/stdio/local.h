@@ -38,6 +38,11 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <wchar.h>
+
+#if defined(__cplusplus) // Until we fork all of stdio...
+#include "private/bionic_fortify.h"
+#endif
+
 #include "wcio.h"
 
 /*
@@ -127,23 +132,25 @@ struct __sfileext {
 // Values for `__sFILE::_flags`.
 #define __SLBF 0x0001  // Line buffered.
 #define __SNBF 0x0002  // Unbuffered.
-// RD and WR are never simultaneously asserted: use _SRW instead.
-#define __SRD  0x0004  // OK to read.
-#define __SWR  0x0008  // OK to write.
-#define __SRW  0x0010  // Open for reading & writing.
+// __SRD and __SWR are mutually exclusive because they indicate what we did last.
+// If you want to know whether we were opened read-write, check __SRW instead.
+#define __SRD  0x0004  // Last operation was read.
+#define __SWR  0x0008  // Last operation was write.
+#define __SRW  0x0010  // Was opened for reading & writing.
 #define __SEOF 0x0020  // Found EOF.
 #define __SERR 0x0040  // Found error.
 #define __SMBF 0x0080  // `_buf` is from malloc.
-#define __SAPP 0x0100  // fdopen()ed in append mode.
+// #define __SAPP 0x0100 --- historical (fdopen()ed in append mode).
 #define __SSTR 0x0200  // This is an sprintf/snprintf string.
 // #define __SOPT 0x0400 --- historical (do fseek() optimization).
 // #define __SNPT 0x0800 --- historical (do not do fseek() optimization).
 // #define __SOFF 0x1000 --- historical (set iff _offset is in fact correct).
-#define __SMOD 0x2000  // true => fgetln modified _p text.
+// #define __SMOD 0x2000 --- historical (set iff fgetln modified _p text).
 #define __SALC 0x4000  // Allocate string space dynamically.
 #define __SIGN 0x8000  // Ignore this file in _fwalk.
 
-// TODO: remove remaining references to these obsolete flags.
+// TODO: remove remaining references to these obsolete flags (see above).
+#define __SMOD 0
 #define __SNPT 0
 #define __SOPT 0
 
@@ -201,10 +208,10 @@ int	__sflush_locked(FILE *);
 int	__swhatbuf(FILE *, size_t *, int *);
 wint_t __fgetwc_unlock(FILE *);
 wint_t	__ungetwc(wint_t, FILE *);
-int	__vfprintf(FILE *, const char *, __va_list);
-int	__svfscanf(FILE * __restrict, const char * __restrict, __va_list);
-int	__vfwprintf(FILE * __restrict, const wchar_t * __restrict, __va_list);
-int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
+int	__vfprintf(FILE *, const char *, va_list);
+int	__svfscanf(FILE *, const char *, va_list);
+int	__vfwprintf(FILE *, const wchar_t *, va_list);
+int	__vfwscanf(FILE *, const wchar_t *, va_list);
 
 /*
  * Return true if the given FILE cannot be written now.
@@ -224,21 +231,9 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 	_UB(fp)._base = NULL; \
 }
 
-/*
- * test for an fgetln() buffer.
- */
-#define	HASLB(fp) ((fp)->_lb._base != NULL)
-#define	FREELB(fp) { \
-	free((char *)(fp)->_lb._base); \
-	(fp)->_lb._base = NULL; \
-}
-
 #define FLOCKFILE(fp)   if (!_EXT(fp)->_caller_handles_locking) flockfile(fp)
 #define FUNLOCKFILE(fp) if (!_EXT(fp)->_caller_handles_locking) funlockfile(fp)
 
-#define FLOATING_POINT
-#define PRINTF_WIDE_CHAR
-#define SCANF_WIDE_CHAR
 #define NO_PRINTF_PERCENT_N
 
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
@@ -246,10 +241,18 @@ int	__vfwscanf(FILE * __restrict, const wchar_t * __restrict, __va_list);
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR|__SEOF)))
 #define __sgetc(p) (--(p)->_r < 0 ? __srget(p) : (int)(*(p)->_p++))
 
-/* OpenBSD declares these in fvwrite.h but we want to ensure they're hidden. */
-struct __suio;
-extern int __sfvwrite(FILE *, struct __suio *);
-wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
+/* OpenBSD declares these in fvwrite.h, but we share them with C++ parts of the implementation. */
+struct __siov {
+  void* iov_base;
+  size_t iov_len;
+};
+struct __suio {
+  struct __siov* uio_iov;
+  int uio_iovcnt;
+  size_t uio_resid;
+};
+int __sfvwrite(FILE*, struct __suio*);
+wint_t __fputwc_unlock(wchar_t wc, FILE* fp);
 
 /* Remove the if (!__sdidinit) __sinit() idiom from untouched upstream stdio code. */
 extern void __sinit(void); // Not actually implemented.
@@ -259,5 +262,9 @@ size_t parsefloat(FILE*, char*, char*);
 size_t wparsefloat(FILE*, wchar_t*, wchar_t*);
 
 __END_DECLS
+
+// Sanity check a FILE* for nullptr, so we can emit a message while crashing
+// instead of doing a blind null-dereference.
+#define CHECK_FP(fp) if (fp == nullptr) __fortify_fatal("%s: null FILE*", __FUNCTION__)
 
 #endif

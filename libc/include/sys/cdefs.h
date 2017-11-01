@@ -37,6 +37,11 @@
 #ifndef	_SYS_CDEFS_H_
 #define	_SYS_CDEFS_H_
 
+#include <android/api-level.h>
+#include <android/versioning.h>
+
+#define __BIONIC__ 1
+
 /*
  * Testing against Clang-specific extensions.
  */
@@ -73,6 +78,8 @@
 #else
 #define __BIONIC_CAST(_k,_t,_v) ((_t) (_v))
 #endif
+
+#define __BIONIC_ALIGN(__value, __alignment) (((__value) + (__alignment)-1) & ~((__alignment)-1))
 
 /*
  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.
@@ -111,39 +118,6 @@
 #define __unused __attribute__((__unused__))
 #define __used __attribute__((__used__))
 
-/*
- * _Nonnull is similar to the nonnull attribute in that it will instruct
- * compilers to warn the user if it can prove that a null argument is being
- * passed. Unlike the nonnull attribute, this annotation indicated that a value
- * *should not* be null, not that it *cannot* be null, or even that the behavior
- * is undefined. The important distinction is that the optimizer will perform
- * surprising optimizations like the following:
- *
- *     void foo(void*) __attribute__(nonnull, 1);
- *
- *     int bar(int* p) {
- *       foo(p);
- *
- *       // The following null check will be elided because nonnull attribute
- *       // means that, since we call foo with p, p can be assumed to not be
- *       // null. Thus this will crash if we are called with a null pointer.
- *       if (p != NULL) {
- *         return *p;
- *       }
- *       return 0;
- *     }
- *
- *     int main() {
- *       return bar(NULL);
- *     }
- *
- * http://clang.llvm.org/docs/AttributeReference.html#nonnull
- */
-#if !(defined(__clang__) && __has_feature(nullability))
-#define _Nonnull
-#define _Nullable
-#endif
-
 #define __printflike(x, y) __attribute__((__format__(printf, x, y)))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
 
@@ -181,12 +155,34 @@
 #define __wur __attribute__((__warn_unused_result__))
 
 #ifdef __clang__
-#define __errorattr(msg) __attribute__((unavailable(msg)))
+#  define __errorattr(msg) __attribute__((unavailable(msg)))
+#  define __warnattr(msg) __attribute__((deprecated(msg)))
+#  define __warnattr_real(msg) __attribute__((deprecated(msg)))
+#  define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
+#  define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
+#  define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
 #else
-#define __errorattr(msg) __attribute__((__error__(msg)))
+#  define __errorattr(msg) __attribute__((__error__(msg)))
+#  define __warnattr(msg) __attribute__((__warning__(msg)))
+#  define __warnattr_real __warnattr
+/* enable_if doesn't exist on other compilers; give an error if it's used. */
+/* diagnose_if doesn't exist either, but it's often tagged on non-clang-specific functions */
+#  define __clang_error_if(cond, msg)
+#  define __clang_warning_if(cond, msg)
+
+/* errordecls really don't work as well in clang as they do in GCC. */
+#  define __errordecl(name, msg) extern void name(void) __errorattr(msg)
 #endif
 
-#define __errordecl(name, msg) extern void name(void) __errorattr(msg)
+#if defined(ANDROID_STRICT)
+/*
+ * For things that are sketchy, but not necessarily an error. FIXME: Enable
+ * this.
+ */
+#  define __warnattr_strict(msg) /* __warnattr(msg) */
+#else
+#  define __warnattr_strict(msg)
+#endif
 
 /*
  * Some BSD source needs these macros.
@@ -218,14 +214,33 @@
 #endif
 
 /* _FILE_OFFSET_BITS 64 support. */
-#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS)
-#if _FILE_OFFSET_BITS == 64
+#if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
 #define __USE_FILE_OFFSET64 1
-#endif
+/*
+ * Note that __RENAME_IF_FILE_OFFSET64 is only valid if the off_t and off64_t
+ * functions were both added at the same API level because if you use this,
+ * you only have one declaration to attach __INTRODUCED_IN to.
+ */
+#define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
+#else
+#define __RENAME_IF_FILE_OFFSET64(func)
 #endif
 
-#define  __BIONIC__   1
-#include <android/api-level.h>
+/*
+ * For LP32, `long double` == `double`. Historically many `long double` functions were incorrect
+ * on x86, missing on most architectures, and even if they are present and correct, linking to
+ * them just bloats your ELF file by adding extra relocations. The __BIONIC_LP32_USE_LONG_DOUBLE
+ * macro lets us test the headers both ways (and adds an escape valve).
+ *
+ * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
+ * use __RENAME_LDBL it would actually cause the function to be introduced later because the
+ * `long double` variant appeared before the `double` variant.
+ */
+#if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
+#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
+#else
+#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
+#endif
 
 /* glibc compatibility. */
 #if defined(__LP64__)
@@ -239,24 +254,94 @@
  * added to commonly used libc functions. If a buffer overrun is
  * detected, the program is safely aborted.
  *
- * See
- * http://gcc.gnu.org/onlinedocs/gcc/Object-Size-Checking.html for details.
+ * https://android-developers.googleblog.com/2017/04/fortify-in-android.html
  */
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0 && defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
-#  define __BIONIC_FORTIFY 1
-#  if _FORTIFY_SOURCE == 2
-#    define __bos(s) __builtin_object_size((s), 1)
-#  else
-#    define __bos(s) __builtin_object_size((s), 0)
-#  endif
-#  define __bos0(s) __builtin_object_size((s), 0)
+
+#define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
+
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0
 #  if defined(__clang__)
-#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline))
-#  else
-#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+/*
+ * FORTIFY's _chk functions effectively disable ASAN's stdlib interceptors.
+ * Additionally, the static analyzer/clang-tidy try to pattern match some
+ * standard library functions, and FORTIFY sometimes interferes with this. So,
+ * we turn FORTIFY off in both cases.
+ */
+#    if !__has_feature(address_sanitizer) && !defined(__clang_analyzer__)
+#      define __BIONIC_FORTIFY 1
+#    endif
+#  elif defined(__OPTIMIZE__) && __OPTIMIZE__ > 0
+#    define __BIONIC_FORTIFY 1
 #  endif
 #endif
-#define __BIONIC_FORTIFY_UNKNOWN_SIZE __BIONIC_CAST(static_cast, size_t, -1)
+
+#if defined(__BIONIC_FORTIFY)
+#  if _FORTIFY_SOURCE == 2
+#    define __bos_level 1
+#  else
+#    define __bos_level 0
+#  endif
+#  define __bosn(s, n) __builtin_object_size((s), (n))
+#  define __bos(s) __bosn((s), __bos_level)
+#  define __bos0(s) __bosn((s), 0)
+#  if defined(__clang__)
+#    define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
+/*
+ * FORTIFY'ed functions all have either enable_if or pass_object_size, which
+ * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
+ * therefore call the unFORTIFYed version of read.
+ */
+#    define __call_bypassing_fortify(fn) (&fn)
+/*
+ * Because clang-FORTIFY uses overloads, we can't mark functions as `extern
+ * inline` without making them available externally.
+ */
+#    define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline
+/* Error functions don't have bodies, so they can just be static. */
+#    define __BIONIC_ERROR_FUNCTION_VISIBILITY static
+#  else
+/*
+ * Where they can, GCC and clang-style FORTIFY share implementations.
+ * So, make these nops in GCC.
+ */
+#    define __pass_object_size_n(n)
+#    define __call_bypassing_fortify(fn) (fn)
+/* __BIONIC_FORTIFY_NONSTATIC_INLINE is pointless in GCC's FORTIFY */
+#    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+#  endif
+#else
+/* Further increase sharing for some inline functions */
+#  define __pass_object_size_n(n)
+#endif
+#define __pass_object_size __pass_object_size_n(__bos_level)
+#define __pass_object_size0 __pass_object_size_n(0)
+
+#if defined(__BIONIC_FORTIFY) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
+#  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
+#endif
+
+/*
+ * Used to support clangisms with FORTIFY. Because these change how symbols are
+ * emitted, we need to ensure that bionic itself is built fortified. But lots
+ * of external code (especially stuff using configure) likes to declare
+ * functions directly, and they can't know that the overloadable attribute
+ * exists. This leads to errors like:
+ *
+ * dcigettext.c:151:7: error: redeclaration of 'getcwd' must have the 'overloadable' attribute
+ * char *getcwd ();
+ *       ^
+ *
+ * To avoid this and keep such software building, don't use overloadable if
+ * we're not using fortify.
+ */
+#if defined(__clang__) && defined(__BIONIC_FORTIFY)
+#  define __overloadable __attribute__((overloadable))
+/* We don't use __RENAME directly because on gcc this could result in unnecessary renames. */
+#  define __RENAME_CLANG(x) __RENAME(x)
+#else
+#  define __overloadable
+#  define __RENAME_CLANG(x)
+#endif
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
@@ -274,8 +359,6 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#include <android/versioning.h>
-
 #if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
 #if defined(__LP64__)
 #define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
@@ -291,17 +374,15 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
 }
 #endif
 
+#if defined(__clang__)
 /*
- * TODO(danalbert): Remove this once we've moved entirely off prebuilts/ndk.
- *
- * The NDK used to have a __NDK_FPABI__ that was defined to empty for most cases
- * but `__attribute__((pcs("aapcs")))` for the now defunct armeabi-v7a-hard ABI.
- *
- * During the transition from prebuilts/ndk to ndk_headers, we'll have some
- * headers that still use __NDK_FPABI__ while the libc headers have stopped
- * defining it. In the interim, just provide an empty definition to keep the
- * build working.
+ * Used when we need to check for overflow when multiplying x and y. This
+ * should only be used where __size_mul_overflow can not work, because it makes
+ * assumptions that __size_mul_overflow doesn't (x and y are positive, ...),
+ * *and* doesn't make use of compiler intrinsics, so it's probably slower than
+ * __size_mul_overflow.
  */
-#define __NDK_FPABI__
+#define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
+#endif
 
 #endif /* !_SYS_CDEFS_H_ */

@@ -44,6 +44,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
+
 #include "local.h"
 #include "glue.h"
 #include "private/bionic_fortify.h"
@@ -68,14 +70,8 @@
 
 _THREAD_PRIVATE_MUTEX(__sfp_mutex);
 
-// TODO: when we no longer have to support both clang and GCC, we can simplify all this.
-#define SBUF_INIT {0,0}
-#if defined(__LP64__)
-#define MBSTATE_T_INIT {{0},{0}}
-#else
-#define MBSTATE_T_INIT {{0}}
-#endif
-#define WCHAR_IO_DATA_INIT {MBSTATE_T_INIT,MBSTATE_T_INIT,{0},0,0}
+#define SBUF_INIT {}
+#define WCHAR_IO_DATA_INIT {}
 
 static struct __sfileext __sFext[3] = {
   { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
@@ -95,7 +91,7 @@ FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
 
-struct glue __sglue = { NULL, 3, __sF };
+struct glue __sglue = { nullptr, 3, __sF };
 static struct glue* lastglue = &__sglue;
 
 class ScopedFileLock {
@@ -120,7 +116,7 @@ static glue* moreglue(int n) {
   glue* g = reinterpret_cast<glue*>(data);
   FILE* p = reinterpret_cast<FILE*>(ALIGN(data + sizeof(*g)));
   __sfileext* pext = reinterpret_cast<__sfileext*>(ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
-  g->next = NULL;
+  g->next = nullptr;
   g->niobs = n;
   g->iobs = p;
   while (--n >= 0) {
@@ -132,6 +128,13 @@ static glue* moreglue(int n) {
   return g;
 }
 
+static inline void free_fgetln_buffer(FILE* fp) {
+  if (__predict_false(fp->_lb._base != nullptr)) {
+    free(fp->_lb._base);
+    fp->_lb._base = nullptr;
+  }
+}
+
 /*
  * Find a free FILE for fopen et al.
  */
@@ -141,7 +144,7 @@ FILE* __sfp(void) {
 	struct glue *g;
 
 	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
-	for (g = &__sglue; g != NULL; g = g->next) {
+	for (g = &__sglue; g != nullptr; g = g->next) {
 		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
 			if (fp->_flags == 0)
 				goto found;
@@ -149,8 +152,7 @@ FILE* __sfp(void) {
 
 	/* release lock while mallocing */
 	_THREAD_PRIVATE_MUTEX_UNLOCK(__sfp_mutex);
-	if ((g = moreglue(NDYNAMIC)) == NULL)
-		return (NULL);
+	if ((g = moreglue(NDYNAMIC)) == nullptr) return nullptr;
 	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
 	lastglue->next = g;
 	lastglue = g;
@@ -158,15 +160,15 @@ FILE* __sfp(void) {
 found:
 	fp->_flags = 1;		/* reserve this slot; caller sets real flags */
 	_THREAD_PRIVATE_MUTEX_UNLOCK(__sfp_mutex);
-	fp->_p = NULL;		/* no current pointer */
+	fp->_p = nullptr;		/* no current pointer */
 	fp->_w = 0;		/* nothing to read or write */
 	fp->_r = 0;
-	fp->_bf._base = NULL;	/* no buffer */
+	fp->_bf._base = nullptr;	/* no buffer */
 	fp->_bf._size = 0;
 	fp->_lbfsize = 0;	/* not line buffered */
 	fp->_file = -1;		/* no file */
 
-	fp->_lb._base = NULL;	/* no line buffer */
+	fp->_lb._base = nullptr;	/* no line buffer */
 	fp->_lb._size = 0;
 	_FILEEXT_INIT(fp);
 
@@ -205,11 +207,11 @@ static FILE* __fopen(int fd, int flags) {
 }
 
 FILE* fopen(const char* file, const char* mode) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) return nullptr;
 
-  int fd = open(file, oflags, DEFFILEMODE);
+  int fd = open(file, mode_flags, DEFFILEMODE);
   if (fd == -1) {
     return nullptr;
   }
@@ -221,41 +223,34 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  // When opening in append mode, even though we use O_APPEND,
-  // we need to seek to the end so that ftell() gets the right
-  // answer.  If the user then alters the seek pointer, or
-  // the file extends, this will fail, but there is not much
-  // we can do about this.  (We could set __SAPP and check in
-  // fseek and ftell.)
-  // TODO: check in __sseek instead.
-  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
-
+  // For append mode, even though we use O_APPEND, we need to seek to the end now.
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
 __strong_alias(fopen64, fopen);
 
 FILE* fdopen(int fd, const char* mode) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) return nullptr;
 
   // Make sure the mode the user wants is a subset of the actual mode.
-  int fdflags = fcntl(fd, F_GETFL, 0);
-  if (fdflags < 0) return nullptr;
-  int tmp = fdflags & O_ACCMODE;
-  if (tmp != O_RDWR && (tmp != (oflags & O_ACCMODE))) {
+  int fd_flags = fcntl(fd, F_GETFL, 0);
+  if (fd_flags == -1) return nullptr;
+  int tmp = fd_flags & O_ACCMODE;
+  if (tmp != O_RDWR && (tmp != (mode_flags & O_ACCMODE))) {
     errno = EINVAL;
     return nullptr;
   }
 
-  // If opened for appending, but underlying descriptor does not have
-  // O_APPEND bit set, assert __SAPP so that __swrite() will lseek to
-  // end before each write.
-  // TODO: use fcntl(2) to set O_APPEND instead.
-  if ((oflags & O_APPEND) && !(fdflags & O_APPEND)) flags |= __SAPP;
+  // Make sure O_APPEND is set on the underlying fd if our mode has 'a'.
+  // POSIX says we just take the current offset of the underlying fd.
+  if ((mode_flags & O_APPEND) && !(fd_flags & O_APPEND)) {
+    if (fcntl(fd, F_SETFL, fd_flags | O_APPEND) == -1) return nullptr;
+  }
 
-  // If close-on-exec was requested, then turn it on if not already.
-  if ((oflags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
+  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'x'.
+  if ((mode_flags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
@@ -267,8 +262,9 @@ FILE* fdopen(int fd, const char* mode) {
 // all possible, no matter what.
 // TODO: rewrite this mess completely.
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
-  int oflags;
-  int flags = __sflags(mode, &oflags);
+  CHECK_FP(fp);
+  int mode_flags;
+  int flags = __sflags(mode, &mode_flags);
   if (flags == 0) {
     fclose(fp);
     return nullptr;
@@ -291,8 +287,8 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
     // Flush the stream; ANSI doesn't require this.
     if (fp->_flags & __SWR) __sflush(fp);
 
-    // If close is NULL, closing is a no-op, hence pointless.
-    isopen = fp->_close != NULL;
+    // If close is null, closing is a no-op, hence pointless.
+    isopen = (fp->_close != nullptr);
     if ((wantfd = fp->_file) < 0 && isopen) {
         (*fp->_close)(fp->_cookie);
         isopen = 0;
@@ -300,13 +296,13 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   }
 
   // Get a new descriptor to refer to the new file.
-  int fd = open(file, oflags, DEFFILEMODE);
+  int fd = open(file, mode_flags, DEFFILEMODE);
   if (fd < 0 && isopen) {
     // If out of fd's close the old one and try again.
     if (errno == ENFILE || errno == EMFILE) {
       (*fp->_close)(fp->_cookie);
       isopen = 0;
-      fd = open(file, oflags, DEFFILEMODE);
+      fd = open(file, mode_flags, DEFFILEMODE);
     }
   }
 
@@ -319,14 +315,14 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   if (fp->_flags & __SMBF) free(fp->_bf._base);
   fp->_w = 0;
   fp->_r = 0;
-  fp->_p = NULL;
-  fp->_bf._base = NULL;
+  fp->_p = nullptr;
+  fp->_bf._base = nullptr;
   fp->_bf._size = 0;
   fp->_lbfsize = 0;
   if (HASUB(fp)) FREEUB(fp);
   _UB(fp)._size = 0;
   WCIO_FREE(fp);
-  if (HASLB(fp)) FREELB(fp);
+  free_fgetln_buffer(fp);
   fp->_lb._size = 0;
 
   if (fd < 0) { // Did not get it after all.
@@ -339,7 +335,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   // to maintain the descriptor.  Various C library routines (perror)
   // assume stderr is always fd STDERR_FILENO, even if being freopen'd.
   if (wantfd >= 0 && fd != wantfd) {
-    if (dup3(fd, wantfd, oflags & O_CLOEXEC) >= 0) {
+    if (dup3(fd, wantfd, mode_flags & O_CLOEXEC) >= 0) {
       close(fd);
       fd = wantfd;
     }
@@ -360,18 +356,14 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   fp->_close = __sclose;
   _EXT(fp)->_seek64 = __sseek64;
 
-  // When opening in append mode, even though we use O_APPEND,
-  // we need to seek to the end so that ftell() gets the right
-  // answer.  If the user then alters the seek pointer, or
-  // the file extends, this will fail, but there is not much
-  // we can do about this.  (We could set __SAPP and check in
-  // fseek and ftell.)
-  if (oflags & O_APPEND) __sseek64(fp, 0, SEEK_END);
+  // For append mode, even though we use O_APPEND, we need to seek to the end now.
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
 __strong_alias(freopen64, freopen);
 
 int fclose(FILE* fp) {
+  CHECK_FP(fp);
   if (fp->_flags == 0) {
     // Already freed!
     errno = EBADF;
@@ -381,12 +373,12 @@ int fclose(FILE* fp) {
   ScopedFileLock sfl(fp);
   WCIO_FREE(fp);
   int r = fp->_flags & __SWR ? __sflush(fp) : 0;
-  if (fp->_close != NULL && (*fp->_close)(fp->_cookie) < 0) {
+  if (fp->_close != nullptr && (*fp->_close)(fp->_cookie) < 0) {
     r = EOF;
   }
   if (fp->_flags & __SMBF) free(fp->_bf._base);
   if (HASUB(fp)) FREEUB(fp);
-  if (HASLB(fp)) FREELB(fp);
+  free_fgetln_buffer(fp);
 
   // Poison this FILE so accesses after fclose will be obvious.
   fp->_file = -1;
@@ -398,6 +390,7 @@ int fclose(FILE* fp) {
 }
 
 int fileno_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   int fd = fp->_file;
   if (fd == -1) {
     errno = EBADF;
@@ -407,6 +400,7 @@ int fileno_unlocked(FILE* fp) {
 }
 
 int fileno(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return fileno_unlocked(fp);
 }
@@ -416,26 +410,61 @@ void clearerr_unlocked(FILE* fp) {
 }
 
 void clearerr(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   clearerr_unlocked(fp);
 }
 
 int feof_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return ((fp->_flags & __SEOF) != 0);
 }
 
 int feof(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return feof_unlocked(fp);
 }
 
 int ferror_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return __sferror(fp);
 }
 
 int ferror(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return ferror_unlocked(fp);
+}
+
+int __sflush(FILE* fp) {
+  // Flushing a read-only file is a no-op.
+  if ((fp->_flags & __SWR) == 0) return 0;
+
+  // Flushing a file without a buffer is a no-op.
+  unsigned char* p = fp->_bf._base;
+  if (p == nullptr) return 0;
+
+  // Set these immediately to avoid problems with longjmp and to allow
+  // exchange buffering (via setvbuf) in user write function.
+  int n = fp->_p - p;
+  fp->_p = p;
+  fp->_w = (fp->_flags & (__SLBF|__SNBF)) ? 0 : fp->_bf._size;
+
+  while (n > 0) {
+    int written = (*fp->_write)(fp->_cookie, reinterpret_cast<char*>(p), n);
+    if (written <= 0) {
+      fp->_flags |= __SERR;
+      return EOF;
+    }
+    n -= written, p += written;
+  }
+  return 0;
+}
+
+int __sflush_locked(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return __sflush(fp);
 }
 
 int __sread(void* cookie, char* buf, int n) {
@@ -445,12 +474,6 @@ int __sread(void* cookie, char* buf, int n) {
 
 int __swrite(void* cookie, const char* buf, int n) {
   FILE* fp = reinterpret_cast<FILE*>(cookie);
-  if (fp->_flags & __SAPP) {
-    // The FILE* is in append mode, but the underlying fd doesn't have O_APPEND set.
-    // We need to seek manually.
-    // TODO: use fcntl(2) to set O_APPEND in fdopen(3) instead?
-    TEMP_FAILURE_RETRY(lseek64(fp->_file, 0, SEEK_END));
-  }
   return TEMP_FAILURE_RETRY(write(fp->_file, buf, n));
 }
 
@@ -489,6 +512,7 @@ static off64_t __seek_unlocked(FILE* fp, off64_t offset, int whence) {
 static off64_t __ftello64_unlocked(FILE* fp) {
   // Find offset of underlying I/O object, then adjust for buffered bytes.
   __sflush(fp);  // May adjust seek offset on append stream.
+
   off64_t result = __seek_unlocked(fp, 0, SEEK_CUR);
   if (result == -1) {
     return -1;
@@ -500,7 +524,7 @@ static off64_t __ftello64_unlocked(FILE* fp) {
     // smaller than that in the underlying object.
     result -= fp->_r;
     if (HASUB(fp)) result -= fp->_ur;
-  } else if (fp->_flags & __SWR && fp->_p != NULL) {
+  } else if (fp->_flags & __SWR && fp->_p != nullptr) {
     // Writing.  Any buffered characters cause the
     // position to be greater than that in the
     // underlying object.
@@ -532,7 +556,7 @@ int __fseeko64(FILE* fp, off64_t offset, int whence, int off_t_bits) {
     return -1;
   }
 
-  if (fp->_bf._base == NULL) __smakebuf(fp);
+  if (fp->_bf._base == nullptr) __smakebuf(fp);
 
   // Flush unwritten data and attempt the seek.
   if (__sflush(fp) || __seek_unlocked(fp, offset, whence) == -1) {
@@ -549,24 +573,29 @@ int __fseeko64(FILE* fp, off64_t offset, int whence, int off_t_bits) {
 }
 
 int fseeko(FILE* fp, off_t offset, int whence) {
+  CHECK_FP(fp);
   static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
   return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
 }
 __strong_alias(fseek, fseeko);
 
 int fseeko64(FILE* fp, off64_t offset, int whence) {
+  CHECK_FP(fp);
   return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
 }
 
 int fsetpos(FILE* fp, const fpos_t* pos) {
+  CHECK_FP(fp);
   return fseeko(fp, *pos, SEEK_SET);
 }
 
 int fsetpos64(FILE* fp, const fpos64_t* pos) {
+  CHECK_FP(fp);
   return fseeko64(fp, *pos, SEEK_SET);
 }
 
 off_t ftello(FILE* fp) {
+  CHECK_FP(fp);
   static_assert(sizeof(off_t) == sizeof(long), "sizeof(off_t) != sizeof(long)");
   off64_t result = ftello64(fp);
   if (result > LONG_MAX) {
@@ -578,16 +607,19 @@ off_t ftello(FILE* fp) {
 __strong_alias(ftell, ftello);
 
 off64_t ftello64(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return __ftello64_unlocked(fp);
 }
 
 int fgetpos(FILE* fp, fpos_t* pos) {
+  CHECK_FP(fp);
   *pos = ftello(fp);
   return (*pos == -1) ? -1 : 0;
 }
 
 int fgetpos64(FILE* fp, fpos64_t* pos) {
+  CHECK_FP(fp);
   *pos = ftello64(fp);
   return (*pos == -1) ? -1 : 0;
 }
@@ -658,35 +690,122 @@ int dprintf(int fd, const char* fmt, ...) {
 }
 
 int fprintf(FILE* fp, const char* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfprintf(fp, fmt, ap));
 }
 
 int fgetc(FILE* fp) {
+  CHECK_FP(fp);
   return getc(fp);
 }
 
+int fgetc_unlocked(FILE* fp) {
+  CHECK_FP(fp);
+  return getc_unlocked(fp);
+}
+
+/*
+ * Read at most n-1 characters from the given file.
+ * Stop when a newline has been read, or the count runs out.
+ * Return first argument, or NULL if no characters were read.
+ * Do not return NULL if n == 1.
+ */
+char* fgets(char* buf, int n, FILE* fp) __overloadable {
+  CHECK_FP(fp);
+  ScopedFileLock sfl(fp);
+  return fgets_unlocked(buf, n, fp);
+}
+
+char* fgets_unlocked(char* buf, int n, FILE* fp) {
+  if (n <= 0) {
+    errno = EINVAL;
+    return nullptr;
+  }
+
+  _SET_ORIENTATION(fp, -1);
+
+  char* s = buf;
+  n--; // Leave space for NUL.
+  while (n != 0) {
+    // If the buffer is empty, refill it.
+    if (fp->_r <= 0) {
+      if (__srefill(fp)) {
+        // EOF/error: stop with partial or no line.
+        if (s == buf) return nullptr;
+        break;
+      }
+    }
+    size_t len = fp->_r;
+    unsigned char* p = fp->_p;
+
+    // Scan through at most n bytes of the current buffer,
+    // looking for '\n'.  If found, copy up to and including
+    // newline, and stop.  Otherwise, copy entire chunk and loop.
+    if (len > static_cast<size_t>(n)) len = n;
+    unsigned char* t = static_cast<unsigned char*>(memchr(p, '\n', len));
+    if (t != nullptr) {
+      len = ++t - p;
+      fp->_r -= len;
+      fp->_p = t;
+      memcpy(s, p, len);
+      s[len] = '\0';
+      return buf;
+    }
+    fp->_r -= len;
+    fp->_p += len;
+    memcpy(s, p, len);
+    s += len;
+    n -= len;
+  }
+  *s = '\0';
+  return buf;
+}
+
 int fputc(int c, FILE* fp) {
+  CHECK_FP(fp);
   return putc(c, fp);
 }
 
+int fputc_unlocked(int c, FILE* fp) {
+  CHECK_FP(fp);
+  return putc_unlocked(c, fp);
+}
+
+int fputs(const char* s, FILE* fp) {
+  CHECK_FP(fp);
+  ScopedFileLock sfl(fp);
+  return fputs_unlocked(s, fp);
+}
+
+int fputs_unlocked(const char* s, FILE* fp) {
+  CHECK_FP(fp);
+  size_t length = strlen(s);
+  return (fwrite_unlocked(s, 1, length, fp) == length) ? 0 : EOF;
+}
+
 int fscanf(FILE* fp, const char* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfscanf(fp, fmt, ap));
 }
 
 int fwprintf(FILE* fp, const wchar_t* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfwprintf(fp, fmt, ap));
 }
 
 int fwscanf(FILE* fp, const wchar_t* fmt, ...) {
+  CHECK_FP(fp);
   PRINTF_IMPL(vfwscanf(fp, fmt, ap));
 }
 
 int getc(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return getc_unlocked(fp);
 }
 
 int getc_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return __sgetc(fp);
 }
 
@@ -699,10 +818,12 @@ int getchar() {
 }
 
 ssize_t getline(char** buf, size_t* len, FILE* fp) {
+  CHECK_FP(fp);
   return getdelim(buf, len, '\n', fp);
 }
 
 wint_t getwc(FILE* fp) {
+  CHECK_FP(fp);
   return fgetwc(fp);
 }
 
@@ -710,16 +831,23 @@ wint_t getwchar() {
   return fgetwc(stdin);
 }
 
+void perror(const char* msg) {
+  if (msg == nullptr) msg = "";
+  fprintf(stderr, "%s%s%s\n", msg, (*msg == '\0') ? "" : ": ", strerror(errno));
+}
+
 int printf(const char* fmt, ...) {
   PRINTF_IMPL(vfprintf(stdout, fmt, ap));
 }
 
 int putc(int c, FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return putc_unlocked(c, fp);
 }
 
 int putc_unlocked(int c, FILE* fp) {
+  CHECK_FP(fp);
   if (cantwrite(fp)) {
     errno = EBADF;
     return EOF;
@@ -739,7 +867,15 @@ int putchar_unlocked(int c) {
   return putc_unlocked(c, stdout);
 }
 
+int puts(const char* s) {
+  size_t length = strlen(s);
+  ScopedFileLock sfl(stdout);
+  return (fwrite_unlocked(s, 1, length, stdout) == length &&
+          putc_unlocked('\n', stdout) != EOF) ? 0 : EOF;
+}
+
 wint_t putwc(wchar_t wc, FILE* fp) {
+  CHECK_FP(fp);
   return fputwc(wc, fp);
 }
 
@@ -754,6 +890,7 @@ int remove(const char* path) {
 }
 
 void rewind(FILE* fp) {
+  CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   fseek(fp, 0, SEEK_SET);
   clearerr_unlocked(fp);
@@ -764,14 +901,17 @@ int scanf(const char* fmt, ...) {
 }
 
 void setbuf(FILE* fp, char* buf) {
+  CHECK_FP(fp);
   setbuffer(fp, buf, BUFSIZ);
 }
 
 void setbuffer(FILE* fp, char* buf, int size) {
+  CHECK_FP(fp);
   setvbuf(fp, buf, buf ? _IOFBF : _IONBF, size);
 }
 
 int setlinebuf(FILE* fp) {
+  CHECK_FP(fp);
   return setvbuf(fp, nullptr, _IOLBF, 0);
 }
 
@@ -847,6 +987,116 @@ int wprintf(const wchar_t* fmt, ...) {
 
 int wscanf(const wchar_t* fmt, ...) {
   PRINTF_IMPL(vfwscanf(stdin, fmt, ap));
+}
+
+static int fflush_all() {
+  return _fwalk(__sflush_locked);
+}
+
+int fflush(FILE* fp) {
+  if (fp == nullptr) return fflush_all();
+  ScopedFileLock sfl(fp);
+  return fflush_unlocked(fp);
+}
+
+int fflush_unlocked(FILE* fp) {
+  if (fp == nullptr) return fflush_all();
+  if ((fp->_flags & (__SWR | __SRW)) == 0) {
+    errno = EBADF;
+    return EOF;
+  }
+  return __sflush(fp);
+}
+
+size_t fread(void* buf, size_t size, size_t count, FILE* fp) __overloadable {
+  CHECK_FP(fp);
+  ScopedFileLock sfl(fp);
+  return fread_unlocked(buf, size, count, fp);
+}
+
+size_t fread_unlocked(void* buf, size_t size, size_t count, FILE* fp) {
+  CHECK_FP(fp);
+
+  size_t desired_total;
+  if (__builtin_mul_overflow(size, count, &desired_total)) {
+    errno = EOVERFLOW;
+    fp->_flags |= __SERR;
+    return 0;
+  }
+
+  size_t total = desired_total;
+  if (total == 0) return 0;
+
+  _SET_ORIENTATION(fp, -1);
+
+  // TODO: how can this ever happen?!
+  if (fp->_r < 0) fp->_r = 0;
+
+  // Ensure _bf._size is valid.
+  if (fp->_bf._base == nullptr) __smakebuf(fp);
+
+  char* dst = static_cast<char*>(buf);
+
+  while (total > 0) {
+    // Copy data out of the buffer.
+    size_t buffered_bytes = MIN(static_cast<size_t>(fp->_r), total);
+    memcpy(dst, fp->_p, buffered_bytes);
+    fp->_p += buffered_bytes;
+    fp->_r -= buffered_bytes;
+    dst += buffered_bytes;
+    total -= buffered_bytes;
+
+    // Are we done?
+    if (total == 0) goto out;
+
+    // Do we have so much more to read that we should avoid copying it through the buffer?
+    if (total > static_cast<size_t>(fp->_bf._size)) break;
+
+    // Less than a buffer to go, so refill the buffer and go around the loop again.
+    if (__srefill(fp)) goto out;
+  }
+
+  // Read directly into the caller's buffer.
+  while (total > 0) {
+    ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, total);
+    if (bytes_read <= 0) {
+      fp->_flags |= (bytes_read == 0) ? __SEOF : __SERR;
+      break;
+    }
+    dst += bytes_read;
+    total -= bytes_read;
+  }
+
+out:
+  return ((desired_total - total) / size);
+}
+
+size_t fwrite(const void* buf, size_t size, size_t count, FILE* fp) {
+  CHECK_FP(fp);
+  ScopedFileLock sfl(fp);
+  return fwrite_unlocked(buf, size, count, fp);
+}
+
+size_t fwrite_unlocked(const void* buf, size_t size, size_t count, FILE* fp) {
+  CHECK_FP(fp);
+
+  size_t n;
+  if (__builtin_mul_overflow(size, count, &n)) {
+    errno = EOVERFLOW;
+    fp->_flags |= __SERR;
+    return 0;
+  }
+
+  if (n == 0) return 0;
+
+  __siov iov = { .iov_base = const_cast<void*>(buf), .iov_len = n };
+  __suio uio = { .uio_iov = &iov, .uio_iovcnt = 1, .uio_resid = n };
+
+  _SET_ORIENTATION(fp, -1);
+
+  // The usual case is success (__sfvwrite returns 0); skip the divide if this happens,
+  // since divides are generally slow.
+  return (__sfvwrite(fp, &uio) == 0) ? count : ((n - uio.uio_resid) / size);
 }
 
 namespace {

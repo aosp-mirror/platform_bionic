@@ -100,6 +100,7 @@ FORTIFY_stuff = set([
   '__memrchr_chk',
   '__pwrite64_chk',
   '__pwrite_chk',
+  '__sendto_chk',
   '__stack_chk_guard',
   '__stpncpy_chk2',
   '__strchr_chk',
@@ -183,21 +184,51 @@ known = set([
 ])
 # POSIX has some stuff that's too stupid for words (a64l) or not actually
 # implemented in glibc unless you count always failing with ENOSYS as
-# being implemented (fattach).
-in_posix_and_glibc_but_actually_dead = set([
-  'a64l',
-  'fattach',
-  'fdetach',
-  'getmsg',
-  'getpmsg',
-  'isastream',
-  'l64a',
-  'putmsg',
-  'putpmsg',
+# being implemented (fattach). Other stuff (fmtmsg) isn't used in any
+# codebase I have access to, internal or external.
+in_posix_and_glibc_but_dead_or_useless = set([
+  'a64l', # obsolete
+  'confstr', # obsolete
+  'endutxent', # no utmp on Android
+  'fattach', # <stropts.h> marked obsolescent
+  'fdetach', # <stropts.h> marked obsolescent
+  'fmtmsg', # unused
+  'getdate', # unused
+  'getdate_err', # unused
+  'gethostid', # obsolete
+  'getmsg', # <stropts.h> marked obsolescent
+  'getpmsg', # <stropts.h> marked obsolescent
+  'getutxent', # no utmp on Android
+  'getutxid', # no utmp on Android
+  'getutxline', # no utmp on Android
+  'isastream', # <stropts.h> marked obsolescent
+  'l64a', # obsolete
+  'mq_close', # disallowed by SELinux
+  'mq_getattr', # disallowed by SELinux
+  'mq_notify', # disallowed by SELinux
+  'mq_open', # disallowed by SELinux
+  'mq_receive', # disallowed by SELinux
+  'mq_send', # disallowed by SELinux
+  'mq_setattr', # disallowed by SELinux
+  'mq_timedreceive', # disallowed by SELinux
+  'mq_timedsend', # disallowed by SELinux
+  'mq_unlink', # disallowed by SELinux
+  'pthread_getconcurrency', # marked obsolescent
+  'pthread_setconcurrency', # marked obsolescent
+  'putmsg', # <stropts.h> marked obsolescent
+  'putpmsg', # <stropts.h> marked obsolescent
+  'pututxline', # no utmp on Android
+  'shm_open', # disallowed by SELinux
+  'shm_unlink', # disallowed by SELinux
+  'setutxent', # no utmp on Android
+  'sockatmark', # obsolete (https://tools.ietf.org/html/rfc6093)
+  'strfmon', # icu4c
+  'strfmon_l', # icu4c
+  'ulimit', # <ulimit.h> marked obsolescent
 ])
 
-posix = posix - in_posix_and_glibc_but_actually_dead
-glibc = glibc - in_posix_and_glibc_but_actually_dead
+posix = posix - in_posix_and_glibc_but_dead_or_useless
+glibc = glibc - in_posix_and_glibc_but_dead_or_useless
 
 if not only_unwanted:
   #print 'glibc:'

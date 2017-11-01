@@ -18,20 +18,21 @@
 #include <unistd.h>
 
 #include <benchmark/benchmark.h>
+#include "util.h"
 
 static void BM_unistd_getpid(benchmark::State& state) {
   while (state.KeepRunning()) {
     getpid();
   }
 }
-BENCHMARK(BM_unistd_getpid);
+BIONIC_BENCHMARK(BM_unistd_getpid);
 
 static void BM_unistd_getpid_syscall(benchmark::State& state) {
   while (state.KeepRunning()) {
     syscall(__NR_getpid);
   }
 }
-BENCHMARK(BM_unistd_getpid_syscall);
+BIONIC_BENCHMARK(BM_unistd_getpid_syscall);
 
 #if defined(__BIONIC__)
 
@@ -43,7 +44,7 @@ static void BM_unistd_gettid(benchmark::State& state) {
     gettid_fp();
   }
 }
-BENCHMARK(BM_unistd_gettid);
+BIONIC_BENCHMARK(BM_unistd_gettid);
 
 #endif
 
@@ -52,6 +53,4 @@ void BM_unistd_gettid_syscall(benchmark::State& state) {
     syscall(__NR_gettid);
   }
 }
-BENCHMARK(BM_unistd_gettid_syscall);
-
-BENCHMARK_MAIN()
+BIONIC_BENCHMARK(BM_unistd_gettid_syscall);

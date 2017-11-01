@@ -33,9 +33,10 @@
 #include <atomic>
 #include <vector>
 
+#include <android-base/scopeguard.h>
+
 #include "private/bionic_constants.h"
 #include "private/bionic_macros.h"
-#include "private/ScopeGuard.h"
 #include "BionicDeathTest.h"
 #include "ScopedSignalHandler.h"
 #include "utils.h"
@@ -64,7 +65,7 @@ TEST(pthread, pthread_key_many_distinct) {
   int nkeys = PTHREAD_KEYS_MAX / 2;
   std::vector<pthread_key_t> keys;
 
-  auto scope_guard = make_scope_guard([&keys]{
+  auto scope_guard = android::base::make_scope_guard([&keys] {
     for (const auto& key : keys) {
       EXPECT_EQ(0, pthread_key_delete(key));
     }
@@ -443,14 +444,31 @@ TEST(pthread, pthread_setname_np__pthread_getname_np__other_PR_SET_DUMPABLE) {
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
-TEST(pthread, pthread_setname_np__pthread_getname_np__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_setname_np__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  // Call pthread_getname_np and pthread_setname_np after the thread has already exited.
-  ASSERT_EQ(ENOENT, pthread_setname_np(dead_thread, "short 3"));
+  EXPECT_DEATH(pthread_setname_np(dead_thread, "short 3"), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_setname_np__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ENOENT, pthread_setname_np(null_thread, "short 3"));
+}
+
+TEST_F(pthread_DeathTest, pthread_getname_np__no_such_thread) {
+  pthread_t dead_thread;
+  MakeDeadThread(dead_thread);
+
   char name[64];
-  ASSERT_EQ(ENOENT, pthread_getname_np(dead_thread, name, sizeof(name)));
+  EXPECT_DEATH(pthread_getname_np(dead_thread, name, sizeof(name)), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_getname_np__null_thread) {
+  pthread_t null_thread = 0;
+
+  char name[64];
+  EXPECT_EQ(ENOENT, pthread_getname_np(null_thread, name, sizeof(name)));
 }
 
 TEST(pthread, pthread_kill__0) {
@@ -476,11 +494,16 @@ TEST(pthread, pthread_kill__in_signal_handler) {
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
 }
 
-TEST(pthread, pthread_detach__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_detach__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  ASSERT_EQ(ESRCH, pthread_detach(dead_thread));
+  EXPECT_DEATH(pthread_detach(dead_thread), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_detach__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_detach(null_thread));
 }
 
 TEST(pthread, pthread_getcpuclockid__clock_gettime) {
@@ -497,44 +520,86 @@ TEST(pthread, pthread_getcpuclockid__clock_gettime) {
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
-TEST(pthread, pthread_getcpuclockid__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_getcpuclockid__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   clockid_t c;
-  ASSERT_EQ(ESRCH, pthread_getcpuclockid(dead_thread, &c));
+  EXPECT_DEATH(pthread_getcpuclockid(dead_thread, &c), "invalid pthread_t");
 }
 
-TEST(pthread, pthread_getschedparam__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_getcpuclockid__null_thread) {
+  pthread_t null_thread = 0;
+  clockid_t c;
+  EXPECT_EQ(ESRCH, pthread_getcpuclockid(null_thread, &c));
+}
+
+TEST_F(pthread_DeathTest, pthread_getschedparam__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   int policy;
   sched_param param;
-  ASSERT_EQ(ESRCH, pthread_getschedparam(dead_thread, &policy, &param));
+  EXPECT_DEATH(pthread_getschedparam(dead_thread, &policy, &param), "invalid pthread_t");
 }
 
-TEST(pthread, pthread_setschedparam__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_getschedparam__null_thread) {
+  pthread_t null_thread = 0;
+  int policy;
+  sched_param param;
+  EXPECT_EQ(ESRCH, pthread_getschedparam(null_thread, &policy, &param));
+}
+
+TEST_F(pthread_DeathTest, pthread_setschedparam__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
   int policy = 0;
   sched_param param;
-  ASSERT_EQ(ESRCH, pthread_setschedparam(dead_thread, policy, &param));
+  EXPECT_DEATH(pthread_setschedparam(dead_thread, policy, &param), "invalid pthread_t");
 }
 
-TEST(pthread, pthread_join__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_setschedparam__null_thread) {
+  pthread_t null_thread = 0;
+  int policy = 0;
+  sched_param param;
+  EXPECT_EQ(ESRCH, pthread_setschedparam(null_thread, policy, &param));
+}
+
+TEST_F(pthread_DeathTest, pthread_setschedprio__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  ASSERT_EQ(ESRCH, pthread_join(dead_thread, NULL));
+  EXPECT_DEATH(pthread_setschedprio(dead_thread, 123), "invalid pthread_t");
 }
 
-TEST(pthread, pthread_kill__no_such_thread) {
+TEST_F(pthread_DeathTest, pthread_setschedprio__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_setschedprio(null_thread, 123));
+}
+
+TEST_F(pthread_DeathTest, pthread_join__no_such_thread) {
   pthread_t dead_thread;
   MakeDeadThread(dead_thread);
 
-  ASSERT_EQ(ESRCH, pthread_kill(dead_thread, 0));
+  EXPECT_DEATH(pthread_join(dead_thread, NULL), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_join__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_join(null_thread, NULL));
+}
+
+TEST_F(pthread_DeathTest, pthread_kill__no_such_thread) {
+  pthread_t dead_thread;
+  MakeDeadThread(dead_thread);
+
+  EXPECT_DEATH(pthread_kill(dead_thread, 0), "invalid pthread_t");
+}
+
+TEST_F(pthread_DeathTest, pthread_kill__null_thread) {
+  pthread_t null_thread = 0;
+  EXPECT_EQ(ESRCH, pthread_kill(null_thread, 0));
 }
 
 TEST(pthread, pthread_join__multijoin) {
@@ -607,13 +672,9 @@ static size_t GetActualStackSize(const pthread_attr_t& attributes) {
   return result;
 }
 
-TEST(pthread, pthread_attr_setguardsize) {
+TEST(pthread, pthread_attr_setguardsize_tiny) {
   pthread_attr_t attributes;
   ASSERT_EQ(0, pthread_attr_init(&attributes));
-
-  // Get the default guard size.
-  size_t default_guard_size;
-  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &default_guard_size));
 
   // No such thing as too small: will be rounded up to one page by pthread_create.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 128));
@@ -621,16 +682,44 @@ TEST(pthread, pthread_attr_setguardsize) {
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(128U, guard_size);
   ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+}
+
+TEST(pthread, pthread_attr_setguardsize_reasonable) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
 
   // Large enough and a multiple of the page size.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024));
+  size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U, guard_size);
+  ASSERT_EQ(32*1024U, GetActualGuardSize(attributes));
+}
 
-  // Large enough but not a multiple of the page size; will be rounded up by pthread_create.
+TEST(pthread, pthread_attr_setguardsize_needs_rounding) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Large enough but not a multiple of the page size.
   ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024 + 1));
+  size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U + 1, guard_size);
+  ASSERT_EQ(36*1024U, GetActualGuardSize(attributes));
+}
+
+TEST(pthread, pthread_attr_setguardsize_enormous) {
+  pthread_attr_t attributes;
+  ASSERT_EQ(0, pthread_attr_init(&attributes));
+
+  // Larger than the stack itself. (Historically we mistakenly carved
+  // the guard out of the stack itself, rather than adding it after the
+  // end.)
+  ASSERT_EQ(0, pthread_attr_setguardsize(&attributes, 32*1024*1024));
+  size_t guard_size;
+  ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
+  ASSERT_EQ(32*1024*1024U, guard_size);
+  ASSERT_EQ(32*1024*1024U, GetActualGuardSize(attributes));
 }
 
 TEST(pthread, pthread_attr_setstacksize) {
@@ -1310,7 +1399,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   }
   EXPECT_EQ(rl.rlim_cur, stack_size);
 
-  auto guard = make_scope_guard([&rl, original_rlim_cur]() {
+  auto guard = android::base::make_scope_guard([&rl, original_rlim_cur]() {
     rl.rlim_cur = original_rlim_cur;
     ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
   });
@@ -1438,7 +1527,7 @@ TEST(pthread, pthread_attr_getstack_18908062) {
   ASSERT_EQ(0, pthread_create(&t, NULL,
             reinterpret_cast<void* (*)(void*)>(pthread_attr_getstack_18908062_helper),
             NULL));
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
 }
 
 #if defined(__BIONIC__)
@@ -1470,7 +1559,7 @@ TEST(pthread, pthread_gettid_np) {
 
   // Release the other thread and wait for it to exit.
   pthread_mutex_unlock(&pthread_gettid_np_mutex);
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
 
   ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
 #else
@@ -1511,7 +1600,7 @@ static void* PthreadCleanupStartRoutine(void*) {
 TEST(pthread, pthread_cleanup_push__pthread_cleanup_pop) {
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, NULL, PthreadCleanupStartRoutine, NULL));
-  pthread_join(t, NULL);
+  ASSERT_EQ(0, pthread_join(t, NULL));
   ASSERT_EQ(2U, cleanup_counter);
 }
 
@@ -1834,19 +1923,37 @@ extern _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx, void* arg);
 
 static volatile bool signal_handler_on_altstack_done;
 
-static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
-  ASSERT_EQ(SIGUSR1, signo);
+__attribute__((__noinline__))
+static void signal_handler_backtrace() {
   // Check if we have enough stack space for unwinding.
   int count = 0;
   _Unwind_Backtrace(FrameCounter, &count);
   ASSERT_GT(count, 0);
+}
+
+__attribute__((__noinline__))
+static void signal_handler_logging() {
   // Check if we have enough stack space for logging.
   std::string s(2048, '*');
   GTEST_LOG_(INFO) << s;
   signal_handler_on_altstack_done = true;
 }
 
-TEST(pthread, big_enough_signal_stack_for_64bit_arch) {
+__attribute__((__noinline__))
+static void signal_handler_snprintf() {
+  // Check if we have enough stack space for snprintf to a PATH_MAX buffer, plus some extra.
+  char buf[PATH_MAX + 2048];
+  ASSERT_GT(snprintf(buf, sizeof(buf), "/proc/%d/status", getpid()), 0);
+}
+
+static void SignalHandlerOnAltStack(int signo, siginfo_t*, void*) {
+  ASSERT_EQ(SIGUSR1, signo);
+  signal_handler_backtrace();
+  signal_handler_logging();
+  signal_handler_snprintf();
+}
+
+TEST(pthread, big_enough_signal_stack) {
   signal_handler_on_altstack_done = false;
   ScopedSignalHandler handler(SIGUSR1, SignalHandlerOnAltStack, SA_SIGINFO | SA_ONSTACK);
   kill(getpid(), SIGUSR1);
@@ -1892,8 +1999,9 @@ static void BarrierTestHelper(BarrierTestHelperArg* arg) {
     } else {
       ASSERT_EQ(0, result);
     }
-    arg->data->finished_mask |= (1 << arg->id);
-    if (arg->data->finished_mask == ((1 << arg->data->thread_count) - 1)) {
+    int mask = arg->data->finished_mask.fetch_or(1 << arg->id);
+    mask |= 1 << arg->id;
+    if (mask == ((1 << arg->data->thread_count) - 1)) {
       ASSERT_EQ(1, arg->data->serial_thread_count);
       arg->data->finished_iteration_count++;
       arg->data->finished_mask = 0;
@@ -2003,4 +2111,178 @@ TEST(pthread, pthread_spinlock_smoke) {
   ASSERT_EQ(EBUSY, pthread_spin_trylock(&lock));
   ASSERT_EQ(0, pthread_spin_unlock(&lock));
   ASSERT_EQ(0, pthread_spin_destroy(&lock));
+}
+
+TEST(pthread, pthread_attr_getdetachstate__pthread_attr_setdetachstate) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  int state;
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_DETACHED, state);
+
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_JOINABLE, state);
+
+  ASSERT_EQ(EINVAL, pthread_attr_setdetachstate(&attr, 123));
+  ASSERT_EQ(0, pthread_attr_getdetachstate(&attr, &state));
+  ASSERT_EQ(PTHREAD_CREATE_JOINABLE, state);
+}
+
+TEST(pthread, pthread_create__mmap_failures) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));
+
+  const auto kPageSize = sysconf(_SC_PAGE_SIZE);
+
+  // Use up all the VMAs. By default this is 64Ki (though some will already be in use).
+  std::vector<void*> pages;
+  pages.reserve(64 * 1024);
+  int prot = PROT_NONE;
+  while (true) {
+    void* page = mmap(nullptr, kPageSize, prot, MAP_ANON|MAP_PRIVATE, -1, 0);
+    if (page == MAP_FAILED) break;
+    pages.push_back(page);
+    prot = (prot == PROT_NONE) ? PROT_READ : PROT_NONE;
+  }
+
+  // Try creating threads, freeing up a page each time we fail.
+  size_t EAGAIN_count = 0;
+  size_t i = 0;
+  for (; i < pages.size(); ++i) {
+    pthread_t t;
+    int status = pthread_create(&t, &attr, IdFn, nullptr);
+    if (status != EAGAIN) break;
+    ++EAGAIN_count;
+    ASSERT_EQ(0, munmap(pages[i], kPageSize));
+  }
+
+  // Creating a thread uses at least six VMAs: the stack, the TLS, and a guard each side of both.
+  // So we should have seen at least six failures.
+  ASSERT_GE(EAGAIN_count, 6U);
+
+  for (; i < pages.size(); ++i) {
+    ASSERT_EQ(0, munmap(pages[i], kPageSize));
+  }
+}
+
+TEST(pthread, pthread_setschedparam) {
+  sched_param p = { .sched_priority = INT_MIN };
+  ASSERT_EQ(EINVAL, pthread_setschedparam(pthread_self(), INT_MIN, &p));
+}
+
+TEST(pthread, pthread_setschedprio) {
+  ASSERT_EQ(EINVAL, pthread_setschedprio(pthread_self(), INT_MIN));
+}
+
+TEST(pthread, pthread_attr_getinheritsched__pthread_attr_setinheritsched) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  int state;
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_INHERIT_SCHED, state);
+
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_EXPLICIT_SCHED, state);
+
+  ASSERT_EQ(EINVAL, pthread_attr_setinheritsched(&attr, 123));
+  ASSERT_EQ(0, pthread_attr_getinheritsched(&attr, &state));
+  ASSERT_EQ(PTHREAD_EXPLICIT_SCHED, state);
+}
+
+TEST(pthread, pthread_attr_setinheritsched__PTHREAD_INHERIT_SCHED__PTHREAD_EXPLICIT_SCHED) {
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+
+  // If we set invalid scheduling attributes but choose to inherit, everything's fine...
+  sched_param param = { .sched_priority = sched_get_priority_max(SCHED_FIFO) + 1 };
+  ASSERT_EQ(0, pthread_attr_setschedparam(&attr, &param));
+  ASSERT_EQ(0, pthread_attr_setschedpolicy(&attr, SCHED_FIFO));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+
+#if defined(__LP64__)
+  // If we ask to use them, though, we'll see a failure...
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(EINVAL, pthread_create(&t, &attr, IdFn, nullptr));
+#else
+  // For backwards compatibility with broken apps, we just ignore failures
+  // to set scheduler attributes on LP32.
+#endif
+}
+
+TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_FIFO, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+TEST(pthread, pthread_attr_setinheritsched_PTHREAD_EXPLICIT_SCHED_takes_effect) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
+  ASSERT_EQ(0, pthread_attr_setschedpolicy(&attr, SCHED_OTHER));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_OTHER, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
+}
+
+TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_FORK) {
+  sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
+  int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO | SCHED_RESET_ON_FORK, &param);
+  if (rc == EPERM) {
+    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  int actual_policy;
+  sched_param actual_param;
+  ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
+  ASSERT_EQ(SCHED_FIFO  | SCHED_RESET_ON_FORK, actual_policy);
+  ASSERT_EQ(0, pthread_join(t, nullptr));
 }

@@ -1,0 +1,30 @@
+<fn>
+  <name>BM_empty</name>
+</fn>
+<fn>
+  <name>BM_math_sqrt</name>
+</fn>
+<fn>
+  <name>BM_property_get</name>
+  <args>1</args>
+</fn>
+<fn>
+  <name>BM_pthread_self</name>
+</fn>
+<fn>
+  <name>BM_semaphore_sem_getvalue</name>
+</fn>
+<fn>
+  <name>BM_stdio_fread</name>
+  <args>64</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <args>512 4 4</args>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime</name>
+</fn>
+<fn>
+  <name>BM_unistd_getpid</name>
+</fn>

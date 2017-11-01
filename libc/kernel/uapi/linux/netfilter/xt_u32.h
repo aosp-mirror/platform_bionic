@@ -20,36 +20,29 @@
 #define _XT_U32_H 1
 #include <linux/types.h>
 enum xt_u32_ops {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   XT_U32_AND,
   XT_U32_LEFTSH,
   XT_U32_RIGHTSH,
   XT_U32_AT,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct xt_u32_location_element {
   __u32 number;
   __u8 nextop;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct xt_u32_value_element {
   __u32 min;
   __u32 max;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define XT_U32_MAXSIZE 10
 struct xt_u32_test {
   struct xt_u32_location_element location[XT_U32_MAXSIZE + 1];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   struct xt_u32_value_element value[XT_U32_MAXSIZE + 1];
   __u8 nnums;
   __u8 nvalues;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_u32 {
   struct xt_u32_test tests[XT_U32_MAXSIZE + 1];
   __u8 ntests;
   __u8 invert;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

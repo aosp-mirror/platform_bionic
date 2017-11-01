@@ -20,40 +20,32 @@
 #define SCSI_NETLINK_H
 #include <linux/netlink.h>
 #include <linux/types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SCSI_TRANSPORT_MSG NLMSG_MIN_TYPE + 1
 #define SCSI_NL_GRP_FC_EVENTS (1 << 2)
 #define SCSI_NL_GRP_CNT 3
 struct scsi_nl_hdr {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   uint8_t version;
   uint8_t transport;
   uint16_t magic;
   uint16_t msgtype;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   uint16_t msglen;
 } __attribute__((aligned(sizeof(uint64_t))));
 #define SCSI_NL_VERSION 1
 #define SCSI_NL_MAGIC 0xA1B2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SCSI_NL_TRANSPORT 0
 #define SCSI_NL_TRANSPORT_FC 1
 #define SCSI_NL_MAX_TRANSPORTS 2
 #define SCSI_NL_SHOST_VENDOR 0x0001
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SCSI_NL_MSGALIGN(len) (((len) + 7) & ~7)
 struct scsi_nl_host_vendor_msg {
   struct scsi_nl_hdr snlh;
   uint64_t vendor_id;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   uint16_t host_no;
   uint16_t vmsg_datalen;
 } __attribute__((aligned(sizeof(uint64_t))));
 #define SCSI_NL_VID_TYPE_SHIFT 56
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SCSI_NL_VID_TYPE_MASK ((__u64) 0xFF << SCSI_NL_VID_TYPE_SHIFT)
 #define SCSI_NL_VID_TYPE_PCI ((__u64) 0x01 << SCSI_NL_VID_TYPE_SHIFT)
 #define SCSI_NL_VID_ID_MASK (~SCSI_NL_VID_TYPE_MASK)
 #define INIT_SCSI_NL_HDR(hdr,t,mtype,mlen) { (hdr)->version = SCSI_NL_VERSION; (hdr)->transport = t; (hdr)->magic = SCSI_NL_MAGIC; (hdr)->msgtype = mtype; (hdr)->msglen = mlen; }
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # This tool is used to generate the assembler system call stubs,
 # the header files listing all available system calls, and the
@@ -118,16 +118,16 @@ END(%(func)s)
 
 mips_call = syscall_stub_header + """\
     .set noreorder
-    .cpload t9
-    li v0, %(__NR_name)s
+    .cpload $t9
+    li $v0, %(__NR_name)s
     syscall
-    bnez a3, 1f
-    move a0, v0
-    j ra
+    bnez $a3, 1f
+    move $a0, $v0
+    j $ra
     nop
 1:
-    la t9,__set_errno_internal
-    j t9
+    la $t9,__set_errno_internal
+    j $t9
     nop
     .set reorder
 END(%(func)s)
@@ -141,22 +141,22 @@ END(%(func)s)
 mips64_call = syscall_stub_header + """\
     .set push
     .set noreorder
-    li v0, %(__NR_name)s
+    li $v0, %(__NR_name)s
     syscall
-    bnez a3, 1f
-    move a0, v0
-    j ra
+    bnez $a3, 1f
+    move $a0, $v0
+    j $ra
     nop
 1:
-    move t0, ra
-    bal     2f
+    move $t0, $ra
+    bal 2f
     nop
 2:
-    .cpsetup ra, t1, 2b
-    LA t9,__set_errno_internal
+    .cpsetup $ra, $t1, 2b
+    LA $t9, __set_errno_internal
     .cpreturn
-    j t9
-    move ra, t0
+    j $t9
+    move $ra, $t0
     .set pop
 END(%(func)s)
 """
@@ -500,18 +500,18 @@ class SysCallsTxtParser:
 
         logging.debug(t)
 
-
-    def parse_file(self, file_path):
-        logging.debug("parse_file: %s" % file_path)
-        fp = open(file_path)
-        for line in fp.xreadlines():
+    def parse_open_file(self, fp):
+        for line in fp:
             self.lineno += 1
             line = line.strip()
             if not line: continue
             if line[0] == '#': continue
             self.parse_line(line)
 
-        fp.close()
+    def parse_file(self, file_path):
+        logging.debug("parse_file: %s" % file_path)
+        with open(file_path) as fp:
+            self.parse_open_file(fp)
 
 
 class State:
@@ -568,9 +568,12 @@ class State:
 
         # Collect the set of all syscalls for all architectures.
         syscalls = set()
-        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z]\S+)')
+        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
         for unistd_h in ["kernel/uapi/asm-generic/unistd.h",
                          "kernel/uapi/asm-arm/asm/unistd.h",
+                         "kernel/uapi/asm-arm/asm/unistd-common.h",
+                         "kernel/uapi/asm-arm/asm/unistd-eabi.h",
+                         "kernel/uapi/asm-arm/asm/unistd-oabi.h",
                          "kernel/uapi/asm-mips/asm/unistd.h",
                          "kernel/uapi/asm-x86/asm/unistd_32.h",
                          "kernel/uapi/asm-x86/asm/unistd_64.h"]:
@@ -674,6 +677,7 @@ class State:
 
 logging.basicConfig(level=logging.INFO)
 
-state = State()
-state.process_file(os.path.join(bionic_libc_root, "SYSCALLS.TXT"))
-state.regenerate()
+if __name__ == "__main__":
+    state = State()
+    state.process_file(os.path.join(bionic_libc_root, "SYSCALLS.TXT"))
+    state.regenerate()

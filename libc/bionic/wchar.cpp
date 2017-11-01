@@ -74,7 +74,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
   // character appears as anything but the first byte of a
   // multibyte sequence. Check now to avoid doing it in the loops.
   if (nmc > 0 && mbstate_bytes_so_far(state) > 0 && static_cast<uint8_t>((*src)[0]) < 0x80) {
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
   // Measure only?
@@ -83,23 +83,23 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       if (static_cast<uint8_t>((*src)[i]) < 0x80) {
         // Fast path for plain ASCII characters.
         if ((*src)[i] == '\0') {
-          return reset_and_return(o, state);
+          return mbstate_reset_and_return(o, state);
         }
         r = 1;
       } else {
         r = mbrtowc(NULL, *src + i, nmc - i, state);
         if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
-          return reset_and_return_illegal(EILSEQ, state);
+          return mbstate_reset_and_return_illegal(EILSEQ, state);
         }
         if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
-          return reset_and_return_illegal(EILSEQ, state);
+          return mbstate_reset_and_return_illegal(EILSEQ, state);
         }
         if (r == 0) {
-          return reset_and_return(o, state);
+          return mbstate_reset_and_return(o, state);
         }
       }
     }
-    return reset_and_return(o, state);
+    return mbstate_reset_and_return(o, state);
   }
 
   // Actually convert, updating `dst` and `src`.
@@ -110,26 +110,26 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       r = 1;
       if ((*src)[i] == '\0') {
         *src = nullptr;
-        return reset_and_return(o, state);
+        return mbstate_reset_and_return(o, state);
       }
     } else {
       r = mbrtowc(dst + o, *src + i, nmc - i, state);
       if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
         *src += i;
-        return reset_and_return_illegal(EILSEQ, state);
+        return mbstate_reset_and_return_illegal(EILSEQ, state);
       }
       if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
         *src += nmc;
-        return reset_and_return(EILSEQ, state);
+        return mbstate_reset_and_return_illegal(EILSEQ, state);
       }
       if (r == 0) {
         *src = NULL;
-        return reset_and_return(o, state);
+        return mbstate_reset_and_return(o, state);
       }
     }
   }
   *src += i;
-  return reset_and_return(o, state);
+  return mbstate_reset_and_return(o, state);
 }
 
 size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
@@ -149,7 +149,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
   mbstate_t* state = (ps == NULL) ? &__private_state : ps;
 
   if (!mbsinit(state)) {
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
   char buf[MB_LEN_MAX];
@@ -209,26 +209,4 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
 
 size_t wcsrtombs(char* dst, const wchar_t** src, size_t len, mbstate_t* ps) {
   return wcsnrtombs(dst, src, SIZE_MAX, len, ps);
-}
-
-int wcscoll_l(const wchar_t *ws1, const wchar_t *ws2, locale_t) {
-  return wcscoll(ws1, ws2);
-}
-
-size_t wcsxfrm_l(wchar_t *dest, const wchar_t *src, size_t n, locale_t) {
-  return wcsxfrm(dest, src, n);
-}
-
-long long wcstoll_l(const wchar_t *nptr, wchar_t **endptr, int base,
-                    locale_t) {
-  return wcstoll(nptr, endptr, base);
-}
-
-unsigned long long wcstoull_l(const wchar_t *nptr, wchar_t **endptr,
-                              int base, locale_t) {
-  return wcstoull(nptr, endptr, base);
-}
-
-long double wcstold_l(const wchar_t *nptr, wchar_t **endptr, locale_t) {
-  return wcstold(nptr, endptr);
 }

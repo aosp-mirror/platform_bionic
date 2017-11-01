@@ -37,14 +37,13 @@ __BEGIN_DECLS
 #define EFD_CLOEXEC O_CLOEXEC
 #define EFD_NONBLOCK O_NONBLOCK
 
-/* type of event counter */
 typedef uint64_t eventfd_t;
 
-int eventfd(unsigned int initial_value, int flags);
+int eventfd(unsigned int __initial_value, int __flags);
 
-int eventfd_read(int fd, eventfd_t* value);
-int eventfd_write(int fd, eventfd_t value);
+int eventfd_read(int __fd, eventfd_t* __value);
+int eventfd_write(int __fd, eventfd_t __value);
 
 __END_DECLS
 
-#endif /* _SYS_EVENTFD_H */
+#endif

@@ -1,3 +1,7 @@
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 typedef int off_t;
 typedef int ssize_t;
 typedef unsigned size_t;
@@ -27,4 +31,8 @@ ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset);
 off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
 #else
 off_t lseek(int __fd, off_t __offset, int __whence);
+#endif
+
+#if defined(__cplusplus)
+}
 #endif

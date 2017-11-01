@@ -33,6 +33,10 @@
     .thumb
     .thumb_func
 
+    // To avoid warning about deprecated instructions, add an explicit
+    // arch. The code generated is exactly the same.
+    .arch armv7-a
+
 // Get the length of the source string first, then do a memcpy of the data
 // instead of a strcpy.
 ENTRY(__strcpy_chk)

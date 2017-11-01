@@ -35,10 +35,8 @@
 int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
-    return ESRCH;
-  }
+  pid_t tid = pthread_gettid_np(t);
+  if (tid == -1) return ESRCH;
 
-  return (tgkill(getpid(), thread->tid, sig) == -1) ? errno : 0;
+  return (tgkill(getpid(), tid, sig) == -1) ? errno : 0;
 }

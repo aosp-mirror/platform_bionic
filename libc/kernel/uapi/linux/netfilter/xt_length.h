@@ -20,9 +20,7 @@
 #define _XT_LENGTH_H
 #include <linux/types.h>
 struct xt_length_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 min, max;
   __u8 invert;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

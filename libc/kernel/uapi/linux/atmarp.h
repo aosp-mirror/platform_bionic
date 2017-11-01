@@ -20,29 +20,23 @@
 #define _LINUX_ATMARP_H
 #include <linux/types.h>
 #include <linux/atmapi.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/atmioc.h>
 #define ATMARP_RETRY_DELAY 30
 #define ATMARP_MAX_UNRES_PACKETS 5
 #define ATMARPD_CTRL _IO('a', ATMIOC_CLIP + 1)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ATMARP_MKIP _IO('a', ATMIOC_CLIP + 2)
 #define ATMARP_SETENTRY _IO('a', ATMIOC_CLIP + 3)
 #define ATMARP_ENCAP _IO('a', ATMIOC_CLIP + 5)
 enum atmarp_ctrl_type {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   act_invalid,
   act_need,
   act_up,
   act_down,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   act_change
 };
 struct atmarp_ctrl {
   enum atmarp_ctrl_type type;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int itf_num;
   __be32 ip;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

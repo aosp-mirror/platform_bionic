@@ -102,11 +102,7 @@ LOCAL_LDLIBS := \
     $($(module)_ldlibs) \
     $($(module)_ldlibs_$(build_type)) \
 
-ifeq ($(LOCAL_FORCE_STATIC_EXECUTABLE),true)
-  LOCAL_CXX_STL := libc++_static
-else
-  LOCAL_CXX_STL := libc++
-endif
+LOCAL_CXX_STL := libc++_static
 
 ifeq ($(build_type),target)
   include $(BUILD_$(build_target))

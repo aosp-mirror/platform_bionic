@@ -26,10 +26,22 @@
  * SUCH DAMAGE.
  */
 
-#include "private/libc_logging.h"
+#pragma once
 
 #include <poll.h> // For struct pollfd.
+#include <stdarg.h>
+#include <stdlib.h>
 #include <sys/select.h> // For struct fd_set.
+
+#include <async_safe/log.h>
+
+static inline __noreturn void __fortify_fatal(const char* fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  async_safe_fatal_va_list("FORTIFY", fmt, args);
+  va_end(args);
+  abort();
+}
 
 //
 // Common helpers.

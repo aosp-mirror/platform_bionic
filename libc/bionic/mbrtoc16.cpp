@@ -55,7 +55,7 @@ static size_t finish_surrogate(char16_t* pc16, mbstate_t* state) {
   char16_t trail = mbstate_get_byte(state, 1) << 8 |
                    mbstate_get_byte(state, 0);
   *pc16 = trail;
-  return reset_and_return(mbstate_get_byte(state, 3), state);
+  return mbstate_reset_and_return(mbstate_get_byte(state, 3), state);
 }
 
 size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {
@@ -76,13 +76,13 @@ size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {
   if (__MB_IS_ERR(nconv)) {
     return nconv;
   } else if (nconv == 0) {
-    return reset_and_return(nconv, state);
+    return mbstate_reset_and_return(nconv, state);
   } else if (c32 > 0x10ffff) {
     // Input cannot be encoded as UTF-16.
-    return reset_and_return_illegal(EILSEQ, state);
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   } else if (c32 < 0x10000) {
     *pc16 = static_cast<char16_t>(c32);
-    return reset_and_return(nconv, state);
+    return mbstate_reset_and_return(nconv, state);
   } else {
     return begin_surrogate(c32, pc16, nconv, state);
   }

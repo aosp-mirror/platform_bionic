@@ -768,17 +768,12 @@ res_getservers(res_state statp, union res_sockaddr_union *set, int cnt)
 }
 
 #ifdef ANDROID_CHANGES
-void res_setnetid(res_state statp, unsigned netid)
+void res_setnetcontext(res_state statp, const struct android_net_context *netcontext)
 {
 	if (statp != NULL) {
-		statp->netid = netid;
-	}
-}
-
-void res_setmark(res_state statp, unsigned mark)
-{
-	if (statp != NULL) {
-		statp->_mark = mark;
+		statp->netid = netcontext->dns_netid;
+		statp->_mark = netcontext->dns_mark;
+		statp->qhook = netcontext->qhook;
 	}
 }
 

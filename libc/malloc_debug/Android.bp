@@ -13,9 +13,10 @@ cc_library_static {
 
     stl: "libc++_static",
 
-    static_libs: ["libc_logging"],
+    whole_static_libs: ["libasync_safe", "libdemangle"],
 
     include_dirs: ["bionic/libc"],
+
     export_include_dirs: ["."],
 
     sanitize: {
@@ -29,7 +30,6 @@ cc_library_static {
         "-Werror",
         "-Wno-error=format-zero-length",
     ],
-
 }
 
 // ==============================================================
@@ -61,9 +61,9 @@ cc_library {
     },
 
     static_libs: [
+        "libasync_safe",
         "libbase",
         "libc_malloc_debug_backtrace",
-        "libc_logging",
     ],
 
     multilib: {
@@ -89,7 +89,6 @@ cc_library {
         "-fno-stack-protector",
         "-Wno-error=format-zero-length",
     ],
-
 }
 
 // ==============================================================
@@ -118,7 +117,7 @@ cc_test {
     whole_static_libs: ["libc_malloc_debug"],
 
     local_include_dirs: ["tests"],
-    include_dirs: ["bionic/libc"],
+    include_dirs: ["bionic/libc", "bionic/libc/async_safe/include"],
 
     shared_libs: ["libbase"],
 
@@ -127,5 +126,4 @@ cc_test {
         "-Werror",
         "-Wno-error=format-zero-length",
     ],
-
 }

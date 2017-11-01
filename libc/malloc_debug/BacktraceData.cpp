@@ -41,36 +41,51 @@
 #include "debug_log.h"
 #include "malloc_debug.h"
 
-static void EnableToggle(int, siginfo_t*, void*) {
-  if (g_debug->backtrace->enabled()) {
-    g_debug->backtrace->set_enabled(false);
-  } else {
-    g_debug->backtrace->set_enabled(true);
-  }
+static void ToggleBacktraceEnable(int, siginfo_t*, void*) {
+  g_debug->backtrace->ToggleBacktraceEnabled();
+}
+
+static void EnableDump(int, siginfo_t*, void*) {
+  g_debug->backtrace->EnableDumping();
 }
 
 BacktraceData::BacktraceData(DebugData* debug_data, const Config& config, size_t* offset)
     : OptionData(debug_data) {
-  size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames;
+  size_t hdr_len = sizeof(BacktraceHeader) + sizeof(uintptr_t) * config.backtrace_frames();
   alloc_offset_ = *offset;
-  *offset += BIONIC_ALIGN(hdr_len, MINIMUM_ALIGNMENT_BYTES);
+  *offset += __BIONIC_ALIGN(hdr_len, MINIMUM_ALIGNMENT_BYTES);
 }
 
 bool BacktraceData::Initialize(const Config& config) {
-  enabled_ = config.backtrace_enabled;
-  if (config.backtrace_enable_on_signal) {
+  enabled_ = config.backtrace_enabled();
+  if (config.backtrace_enable_on_signal()) {
     struct sigaction enable_act;
     memset(&enable_act, 0, sizeof(enable_act));
 
-    enable_act.sa_sigaction = EnableToggle;
+    enable_act.sa_sigaction = ToggleBacktraceEnable;
     enable_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
     sigemptyset(&enable_act.sa_mask);
-    if (sigaction(config.backtrace_signal, &enable_act, nullptr) != 0) {
+    if (sigaction(config.backtrace_signal(), &enable_act, nullptr) != 0) {
       error_log("Unable to set up backtrace signal enable function: %s", strerror(errno));
       return false;
     }
     info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
-             config.backtrace_signal, getpid());
+             config.backtrace_signal(), getpid());
   }
+
+  struct sigaction act;
+  memset(&act, 0, sizeof(act));
+
+  act.sa_sigaction = EnableDump;
+  act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  sigemptyset(&act.sa_mask);
+  if (sigaction(config.backtrace_dump_signal(), &act, nullptr) != 0) {
+    error_log("Unable to set up backtrace dump signal function: %s", strerror(errno));
+    return false;
+  }
+  info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
+           config.backtrace_dump_signal(), getpid());
+
+  dump_ = false;
   return true;
 }

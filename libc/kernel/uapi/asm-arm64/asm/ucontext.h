@@ -20,14 +20,11 @@
 #define _UAPI__ASM_UCONTEXT_H
 #include <linux/types.h>
 struct ucontext {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long uc_flags;
   struct ucontext * uc_link;
   stack_t uc_stack;
   sigset_t uc_sigmask;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 __linux_unused[1024 / 8 - sizeof(sigset_t)];
   struct sigcontext uc_mcontext;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

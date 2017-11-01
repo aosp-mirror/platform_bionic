@@ -26,9 +26,12 @@
  * SUCH DAMAGE.
  */
 
+#define __BIONIC_LP32_USE_LONG_DOUBLE
+
 #include <wchar.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "local.h"
 

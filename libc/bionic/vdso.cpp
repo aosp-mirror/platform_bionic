@@ -17,8 +17,6 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_vdso.h"
 
-#if defined(__aarch64__) || defined(__arm__) || defined(__i386__) || defined(__x86_64__)
-
 #include <limits.h>
 #include <link.h>
 #include <string.h>
@@ -27,8 +25,6 @@
 #include <time.h>
 #include <unistd.h>
 #include "private/KernelArgumentBlock.h"
-
-#define AT_SYSINFO_EHDR 33 /* until we have new enough uapi headers... */
 
 int clock_gettime(int clock_id, timespec* tp) {
   auto vdso_clock_gettime = reinterpret_cast<decltype(&clock_gettime)>(
@@ -112,10 +108,3 @@ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
     }
   }
 }
-
-#else
-
-void __libc_init_vdso(libc_globals*, KernelArgumentBlock&) {
-}
-
-#endif

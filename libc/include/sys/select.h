@@ -72,9 +72,9 @@ int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 #define FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 #endif /* defined(__BIONIC_FORTIFY) && __ANDROID_API >= 21 */
 
-int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-int pselect(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
+int select(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, struct timeval* __timeout);
+int pselect(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset_t* __mask);
 
 __END_DECLS
 
-#endif /* _SYS_SELECT_H_ */
+#endif

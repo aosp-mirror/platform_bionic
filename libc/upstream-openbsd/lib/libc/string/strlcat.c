@@ -1,4 +1,4 @@
-/*	$OpenBSD: strlcat.c,v 1.16 2015/08/31 02:53:57 guenther Exp $	*/
+/*	$OpenBSD: strlcat.c,v 1.18 2016/10/16 17:37:39 dtucker Exp $	*/
 
 /*
  * Copyright (c) 1998, 2015 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -27,7 +27,7 @@
  * If retval >= dsize, truncation occurred.
  */
 size_t
-strlcat(char *dst, const char *src, size_t dsize)
+strlcat(char *dst, const char *src, size_t dsize) __overloadable
 {
 	const char *odst = dst;
 	const char *osrc = src;

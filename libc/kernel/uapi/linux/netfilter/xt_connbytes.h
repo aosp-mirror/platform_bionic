@@ -20,26 +20,21 @@
 #define _XT_CONNBYTES_H
 #include <linux/types.h>
 enum xt_connbytes_what {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   XT_CONNBYTES_PKTS,
   XT_CONNBYTES_BYTES,
   XT_CONNBYTES_AVGPKT,
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 enum xt_connbytes_direction {
   XT_CONNBYTES_DIR_ORIGINAL,
   XT_CONNBYTES_DIR_REPLY,
   XT_CONNBYTES_DIR_BOTH,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct xt_connbytes_info {
   struct {
     __aligned_u64 from;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     __aligned_u64 to;
   } count;
   __u8 what;
   __u8 direction;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

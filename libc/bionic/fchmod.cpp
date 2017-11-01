@@ -33,13 +33,14 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#include "private/FdPath.h"
+
 extern "C" int ___fchmod(int, mode_t);
 
 int fchmod(int fd, mode_t mode) {
   int saved_errno = errno;
   int result = ___fchmod(fd, mode);
-
-  if ((result == 0) || (errno != EBADF)) {
+  if (result == 0 || errno != EBADF) {
     return result;
   }
 
@@ -52,16 +53,14 @@ int fchmod(int fd, mode_t mode) {
   // on an O_PATH file descriptor, and "man open" documents fchmod
   // on O_PATH file descriptors as returning EBADF.
   int fd_flag = fcntl(fd, F_GETFL);
-  if ((fd_flag == -1) || ((fd_flag & O_PATH) == 0)) {
+  if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {
     errno = EBADF;
     return -1;
   }
 
-  char buf[40];
-  snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
   errno = saved_errno;
-  result = chmod(buf, mode);
-  if ((result == -1) && (errno == ELOOP)) {
+  result = chmod(FdPath(fd).c_str(), mode);
+  if (result == -1 && errno == ELOOP) {
     // Linux does not support changing the mode of a symlink.
     // For fchmodat(AT_SYMLINK_NOFOLLOW), POSIX requires a return
     // value of ENOTSUP. Assume that's true here too.

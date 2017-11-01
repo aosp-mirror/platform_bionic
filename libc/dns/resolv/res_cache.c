@@ -47,7 +47,7 @@
 #include "resolv_netid.h"
 #include "res_private.h"
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 /* This code implements a small and *simple* DNS resolver cache.
  *
@@ -97,12 +97,6 @@
  *     note that RESOLV_CACHE_UNSUPPORTED is also returned if the answer buffer
  *     is too short to accomodate the cached result.
  */
-
-/* the name of an environment variable that will be checked the first time
- * this code is called if its value is "0", then the resolver cache is
- * disabled.
- */
-#define  CONFIG_ENV  "BIONIC_DNSCACHE"
 
 /* default number of entries kept in the cache. This value has been
  * determined by browsing through various sites and counting the number
@@ -161,7 +155,7 @@
 
 #define XLOG(...) ({ \
     if (DEBUG) { \
-        __libc_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__); \
+        async_safe_format_log(ANDROID_LOG_DEBUG,"libc",__VA_ARGS__); \
     } else { \
         ((void)0); \
     } \
@@ -1812,13 +1806,6 @@ static void _res_cache_clear_stats_locked(struct resolv_cache_info* cache_info);
 static void
 _res_cache_init(void)
 {
-    const char*  env = getenv(CONFIG_ENV);
-
-    if (env && atoi(env) == 0) {
-        /* the cache is disabled */
-        return;
-    }
-
     memset(&_res_cache_list, 0, sizeof(_res_cache_list));
     pthread_mutex_init(&_res_cache_list_lock, NULL);
 }

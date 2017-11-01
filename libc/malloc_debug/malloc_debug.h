@@ -54,7 +54,8 @@ struct Header {
   size_t size;
   size_t usable_size;
   size_t real_size() const { return size & ~(1U << 31); }
-  void set_zygote() { size |= 1U << 31; }
+  void set_zygote_child_alloc() { size |= 1U << 31; }
+  bool zygote_child_alloc() const { return size & (1U << 31); }
   static size_t max_size() { return (1U << 31) - 1; }
 } __attribute__((packed));
 

@@ -90,30 +90,36 @@ static void noinline UnwindSignalHandler(int) {
 }
 
 static void verify_unwind_data(const UnwindData& unwind_data) {
-  EXPECT_GT(unwind_data.handler_frame_count, unwind_data.expected_frame_count);
+  // In order to avoid a false positive, the caller must have at least 2 frames
+  // outside of the signal handler. This avoids a case where the only frame
+  // right after the signal handler winds up being garbage.
+  EXPECT_GT(unwind_data.handler_frame_count, unwind_data.expected_frame_count + 1);
+
   EXPECT_EQ(unwind_data.handler_frame_count + 1, unwind_data.handler_one_deeper_frame_count);
 }
 
-TEST(stack_unwinding, unwind_through_signal_frame) {
+static void noinline UnwindTest() {
   g_unwind_data = {};
-  ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
   _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
+  ASSERT_LE(2, g_unwind_data.expected_frame_count)
+      << "The current call must contain at least 2 frames for the test to be valid.";
 
   ASSERT_EQ(0, kill(getpid(), SIGUSR1));
   while (!g_unwind_data.signal_handler_complete) {}
 
   verify_unwind_data(g_unwind_data);
+}
+
+TEST(stack_unwinding, unwind_through_signal_frame) {
+  ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
+
+  UnwindTest();
 }
 
 // On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
 TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
-  g_unwind_data = {};
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
-  _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
-  ASSERT_EQ(0, kill(getpid(), SIGUSR1));
-  while (!g_unwind_data.signal_handler_complete) {}
-
-  verify_unwind_data(g_unwind_data);
+  UnwindTest();
 }

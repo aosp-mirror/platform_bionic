@@ -18,9 +18,19 @@
 #define _BIONIC_OPENBSD_COMPAT_H_included
 
 #define _BSD_SOURCE
-
 #include <sys/cdefs.h>
+
 #include <stddef.h> // For size_t.
+
+// TODO: libandroid_support uses this file, so we need to wait for
+// <sys/random.h> to be in the NDK headers before we can lose this declaration.
+//#include <sys/random.h> // For getentropy.
+int getentropy(void*, size_t);
+
+#define __BEGIN_HIDDEN_DECLS _Pragma("GCC visibility push(hidden)")
+#define __END_HIDDEN_DECLS _Pragma("GCC visibility pop")
+
+extern const char* __progname;
 
 /* Redirect internal C library calls to the public function. */
 #define _err err
@@ -35,6 +45,7 @@
 /* Ignore all DEF_STRONG/DEF_WEAK in OpenBSD. */
 #define DEF_STRONG(sym)
 #define DEF_WEAK(sym)
+#define __weak_alias __strong_alias
 
 /* Ignore all __warn_references in OpenBSD. */
 #define __warn_references(sym,msg)
@@ -65,8 +76,9 @@
  */
 #define _PATH_TMP "/data/local/tmp/"
 
-/* We have OpenBSD's getentropy_linux.c, but we don't mention getentropy in any header. */
-__LIBC_HIDDEN__ extern int getentropy(void*, size_t);
+/* Use appropriate shell depending on process's executable. */
+__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
+#define _PATH_BSHELL __bionic_get_shell_path()
 
 /* OpenBSD has this as API, but we just use it internally. */
 __LIBC_HIDDEN__ void* reallocarray(void*, size_t, size_t);
@@ -80,8 +92,5 @@ __LIBC_HIDDEN__ extern const short _C_toupper_[];
 __LIBC_HIDDEN__ extern const short _C_tolower_[];
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
 __LIBC_HIDDEN__ extern char* _mktemp(char*);
-
-/* TODO: hide this when android_support.a is fixed (http://b/16298580).*/
-/*__LIBC_HIDDEN__*/ extern int __isthreaded;
 
 #endif

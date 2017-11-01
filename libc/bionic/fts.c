@@ -32,6 +32,7 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 
+#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -719,7 +720,8 @@ mem1:				saved_errno = errno;
 			/* Build a file name for fts_stat to stat. */
 			if (ISSET(FTS_NOCHDIR)) {
 				p->fts_accpath = p->fts_path;
-				memmove(cp, p->fts_name, p->fts_namelen + 1);
+				assert(cp && "cp should be non-null if FTS_NOCHDIR is set");
+				memmove(cp, p->fts_name, p->fts_namelen + 1); // NOLINT
 				p->fts_info = fts_stat(sp, p, 0, dirfd(dirp));
 			} else {
 				p->fts_accpath = p->fts_name;

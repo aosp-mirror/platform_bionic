@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _SYS_WAIT_H_
 #define _SYS_WAIT_H_
 
@@ -49,10 +50,10 @@ __BEGIN_DECLS
 #define W_EXITCODE(ret, sig)    ((ret) << 8 | (sig))
 #define W_STOPCODE(sig)         ((sig) << 8 | 0x7f)
 
-pid_t wait(int*);
-pid_t waitpid(pid_t, int*, int);
+pid_t wait(int* __status);
+pid_t waitpid(pid_t __pid, int* __status, int __options);
 #if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(18);
+pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
 #else
 // Implemented as a static inline before 18.
 #endif
@@ -63,10 +64,10 @@ pid_t wait4(pid_t, int*, int, struct rusage*) __INTRODUCED_IN(18);
  */
 typedef int idtype_t;
 
-int waitid(idtype_t which, id_t id, siginfo_t* info, int options);
+int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
 
 __END_DECLS
 
 #include <android/legacy_sys_wait_inlines.h>
 
-#endif /* _SYS_WAIT_H_ */
+#endif

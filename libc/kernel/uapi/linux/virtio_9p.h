@@ -20,12 +20,10 @@
 #define _LINUX_VIRTIO_9P_H
 #include <linux/types.h>
 #include <linux/virtio_ids.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <linux/virtio_config.h>
 #define VIRTIO_9P_MOUNT_TAG 0
 struct virtio_9p_config {
   __u16 tag_len;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 tag[0];
 } __attribute__((packed));
 #endif

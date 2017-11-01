@@ -185,18 +185,14 @@ LIBC {
     __sym_ntop;
     __sym_ntos;
     __sym_ston;
-    __system_properties_init;
-    __system_property_area__; # var
-    __system_property_area_init; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_area_serial; # introduced=23
     __system_property_find;
+    __system_property_find_nth;
     __system_property_foreach; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_get;
     __system_property_read;
     __system_property_serial; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __system_property_set; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
-    __system_property_set_filename; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
-    __system_property_wait_any; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     __timer_create; # arm x86 mips
     __timer_delete; # arm x86 mips
     __timer_getoverrun; # arm x86 mips
@@ -347,6 +343,7 @@ LIBC {
     fdatasync;
     fdopen;
     fdopendir;
+    fdprintf; # arm x86 mips versioned=28
     feof;
     feof_unlocked; # introduced=23
     ferror;
@@ -402,11 +399,11 @@ LIBC {
     ftruncate;
     ftruncate64; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     ftrylockfile;
-    fts_children;
-    fts_close;
-    fts_open;
-    fts_read;
-    fts_set;
+    fts_children; # introduced=21
+    fts_close; # introduced=21
+    fts_open; # introduced=21
+    fts_read; # introduced=21
+    fts_set; # introduced=21
     ftw; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     ftw64; # introduced=21
     funlockfile;
@@ -1109,6 +1106,7 @@ LIBC {
     vdprintf; # introduced=21
     verr;
     verrx;
+    vfdprintf; # arm x86 mips versioned=28
     vfork;
     vfprintf;
     vfscanf;
@@ -1265,56 +1263,122 @@ LIBC_N { # introduced-arm64=24 introduced-mips=24 introduced-mips64=24 introduce
 
 LIBC_O {
   global:
+    __sendto_chk; # introduced=26
+    __system_property_read_callback; # introduced=26
+    __system_property_wait; # introduced=26
     bsd_signal; # arm x86 mips versioned=26
-    catclose; # future
-    catgets; # future
-    catopen; # future
-    ctermid; # future
-    endgrent; # future
-    endpwent; # future
-    futimes; # future
-    futimesat; # future
-    getdomainname; # future
-    getgrent; # future
-    getpwent; # future
-    getsubopt; # future
-    hasmntopt; # future
-    lutimes; # future
-    mblen; # future
-    msgctl; # future
-    msgget; # future
-    msgrcv; # future
-    msgsnd; # future
-    nl_langinfo; # future
-    nl_langinfo_l; # future
-    pthread_getname_np; # future
-    quotactl; # future
-    semctl; # future
-    semget; # future
-    semop; # future
-    semtimedop; # future
-    setdomainname; # future
-    setgrent; # future
-    setpwent; # future
-    shmat; # future
-    shmctl; # future
-    shmdt; # future
-    shmget; # future
-    sighold; # future
-    sigignore; # future
-    sigpause; # future
-    sigrelse; # future
-    sigset; # future
-    strtod_l; # future
-    strtof_l; # future
-    strtol_l; # future
-    strtoul_l; # future
-    sync_file_range; # future
-    towctrans; # future
-    towctrans_l; # future
-    wctrans; # future
-    wctrans_l; # future
+    catclose; # introduced=26
+    catgets; # introduced=26
+    catopen; # introduced=26
+    ctermid; # introduced=26
+    endgrent; # introduced=26
+    endpwent; # introduced=26
+    futimes; # introduced=26
+    futimesat; # introduced=26
+    getdomainname; # introduced=26
+    getgrent; # introduced=26
+    getpwent; # introduced=26
+    getsubopt; # introduced=26
+    hasmntopt; # introduced=26
+    lutimes; # introduced=26
+    mallopt; # introduced=26
+    mblen; # introduced=26
+    msgctl; # introduced=26
+    msgget; # introduced=26
+    msgrcv; # introduced=26
+    msgsnd; # introduced=26
+    nl_langinfo; # introduced=26
+    nl_langinfo_l; # introduced=26
+    pthread_getname_np; # introduced=26
+    quotactl; # introduced=26
+    semctl; # introduced=26
+    semget; # introduced=26
+    semop; # introduced=26
+    semtimedop; # introduced=26
+    setdomainname; # introduced=26
+    setgrent; # introduced=26
+    setpwent; # introduced=26
+    shmat; # introduced=26
+    shmctl; # introduced=26
+    shmdt; # introduced=26
+    shmget; # introduced=26
+    sighold; # introduced=26
+    sigignore; # introduced=26
+    sigpause; # introduced=26
+    sigrelse; # introduced=26
+    sigset; # introduced=26
+    strtod_l; # introduced=26
+    strtof_l; # introduced=26
+    strtol_l; # introduced=26
+    strtoul_l; # introduced=26
+    sync_file_range; # introduced=26
+    towctrans; # introduced=26
+    towctrans_l; # introduced=26
+    wctrans; # introduced=26
+    wctrans_l; # introduced=26
 } LIBC_N;
+
+LIBC_P { # introduced=P
+  global:
+    __freading;
+    __fwriting;
+    endhostent;
+    endnetent;
+    endprotoent;
+    fexecve;
+    fflush_unlocked;
+    fgetc_unlocked;
+    fgets_unlocked;
+    fputc_unlocked;
+    fputs_unlocked;
+    fread_unlocked;
+    fwrite_unlocked;
+    getentropy;
+    getnetent;
+    getprotoent;
+    getrandom;
+    getlogin_r;
+    glob;
+    globfree;
+    hcreate;
+    hcreate_r;
+    hdestroy;
+    hdestroy_r;
+    hsearch;
+    hsearch_r;
+    iconv;
+    iconv_close;
+    iconv_open;
+    posix_spawn;
+    posix_spawnattr_destroy;
+    posix_spawnattr_getflags;
+    posix_spawnattr_getpgroup;
+    posix_spawnattr_getschedparam;
+    posix_spawnattr_getschedpolicy;
+    posix_spawnattr_getsigdefault;
+    posix_spawnattr_getsigmask;
+    posix_spawnattr_init;
+    posix_spawnattr_setflags;
+    posix_spawnattr_setpgroup;
+    posix_spawnattr_setschedparam;
+    posix_spawnattr_setschedpolicy;
+    posix_spawnattr_setsigdefault;
+    posix_spawnattr_setsigmask;
+    posix_spawn_file_actions_addclose;
+    posix_spawn_file_actions_adddup2;
+    posix_spawn_file_actions_addopen;
+    posix_spawn_file_actions_destroy;
+    posix_spawn_file_actions_init;
+    posix_spawnp;
+    pthread_attr_getinheritsched;
+    pthread_attr_setinheritsched;
+    pthread_setschedprio;
+    sethostent;
+    setnetent;
+    setprotoent;
+    swab;
+    syncfs;
+} LIBC_O;
 
 LIBC_PRIVATE {
   global:
@@ -1495,7 +1559,9 @@ LIBC_PRIVATE {
     android_getaddrinfofornet;
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
+    android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
+    android_gethostbynamefornetcontext;
     arc4random_addrandom; # arm x86 mips
     arc4random_stir; # arm x86 mips
     atexit; # arm
@@ -1505,7 +1571,6 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips
     dlmalloc_trim; # arm x86 mips
     dlmalloc_usable_size; # arm x86 mips
-    fdprintf; # arm x86 mips
     free_malloc_leak_info;
     ftime; # arm x86 mips
     get_malloc_leak_info;
@@ -1527,19 +1592,22 @@ LIBC_PRIVATE {
     strtotimeval; # arm x86 mips
     sysv_signal; # arm x86 mips
     tkill; # arm x86 mips
-    vfdprintf; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
-} LIBC_O;
+} LIBC_P;
 
 LIBC_DEPRECATED {
   global:
-    __system_property_find_nth;
+    __system_property_wait_any;
 };
 
 LIBC_PLATFORM {
   global:
+    __system_properties_init;
+    __system_property_area__; # var
     __system_property_add;
+    __system_property_area_init;
+    __system_property_set_filename;
     __system_property_update;
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
@@ -1548,4 +1616,4 @@ LIBC_PLATFORM {
     malloc_disable;
     malloc_enable;
     malloc_iterate;
-} LIBC_O;
+} LIBC_P;

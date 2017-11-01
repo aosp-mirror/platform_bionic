@@ -27,13 +27,7 @@
 #include <sys/_system_properties.h>
 
 #include <benchmark/benchmark.h>
-
-extern void* __system_property_area__;
-
-// Do not exceed 512, that is about the largest number of properties
-// that can be created with the current property area size.
-#define TEST_NUM_PROPS \
-    Arg(1)->Arg(4)->Arg(16)->Arg(64)->Arg(128)->Arg(256)->Arg(512)
+#include "util.h"
 
 struct LocalPropertyTestState {
   explicit LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
@@ -52,9 +46,6 @@ struct LocalPropertyTestState {
              android_data, strerror(errno));
       return;
     }
-
-    old_pa = __system_property_area__;
-    __system_property_area__ = NULL;
 
     pa_dirname = dirname;
     pa_filename = pa_dirname + "/__properties__";
@@ -111,9 +102,8 @@ struct LocalPropertyTestState {
     if (!valid)
       return;
 
-    __system_property_area__ = old_pa;
-
     __system_property_set_filename(PROP_FILENAME);
+    __system_property_area_init();
     unlink(pa_filename.c_str());
     rmdir(pa_dirname.c_str());
 
@@ -138,7 +128,6 @@ struct LocalPropertyTestState {
  private:
   std::string pa_dirname;
   std::string pa_filename;
-  void* old_pa;
 };
 
 static void BM_property_get(benchmark::State& state) {
@@ -152,7 +141,7 @@ static void BM_property_get(benchmark::State& state) {
     __system_property_get(pa.names[random() % nprops], value);
   }
 }
-BENCHMARK(BM_property_get)->TEST_NUM_PROPS;
+BIONIC_BENCHMARK(BM_property_get);
 
 static void BM_property_find(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -164,7 +153,7 @@ static void BM_property_find(benchmark::State& state) {
     __system_property_find(pa.names[random() % nprops]);
   }
 }
-BENCHMARK(BM_property_find)->TEST_NUM_PROPS;
+BIONIC_BENCHMARK(BM_property_find);
 
 static void BM_property_read(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -187,7 +176,7 @@ static void BM_property_read(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BENCHMARK(BM_property_read)->TEST_NUM_PROPS;
+BIONIC_BENCHMARK(BM_property_read);
 
 static void BM_property_serial(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -208,6 +197,6 @@ static void BM_property_serial(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BENCHMARK(BM_property_serial)->TEST_NUM_PROPS;
+BIONIC_BENCHMARK(BM_property_serial);
 
 #endif  // __BIONIC__

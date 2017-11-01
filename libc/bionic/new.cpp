@@ -19,14 +19,14 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 const std::nothrow_t std::nothrow = {};
 
 void* operator new(std::size_t size) {
     void* p = malloc(size);
     if (p == NULL) {
-        __libc_fatal("new failed to allocate %zu bytes", size);
+        async_safe_fatal("new failed to allocate %zu bytes", size);
     }
     return p;
 }
@@ -34,7 +34,7 @@ void* operator new(std::size_t size) {
 void* operator new[](std::size_t size) {
     void* p = malloc(size);
     if (p == NULL) {
-        __libc_fatal("new[] failed to allocate %zu bytes", size);
+        async_safe_fatal("new[] failed to allocate %zu bytes", size);
     }
     return p;
 }

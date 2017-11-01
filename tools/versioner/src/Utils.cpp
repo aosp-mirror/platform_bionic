@@ -37,7 +37,8 @@ std::string getWorkingDir() {
   return buf;
 }
 
-std::vector<std::string> collectHeaders(const std::string& directory) {
+std::vector<std::string> collectHeaders(const std::string& directory,
+                                        const std::unordered_set<std::string>& ignored_directories) {
   std::vector<std::string> headers;
 
   char* dir_argv[2] = { const_cast<char*>(directory.c_str()), nullptr };
@@ -48,16 +49,34 @@ std::vector<std::string> collectHeaders(const std::string& directory) {
     err(1, "failed to open directory '%s'", directory.c_str());
   }
 
+  FTSENT* skipping = nullptr;
   while (FTSENT* ent = fts_read(fts.get())) {
-    if (ent->fts_info & (FTS_D | FTS_DP)) {
+    if (ent->fts_info & FTS_DP) {
+      if (ent == skipping) {
+        skipping = nullptr;
+      }
       continue;
     }
 
-    if (!android::base::EndsWith(ent->fts_path, ".h")) {
+    if (skipping != nullptr) {
       continue;
     }
 
-    headers.push_back(ent->fts_path);
+    if (ent->fts_info & FTS_D) {
+      if (ignored_directories.count(ent->fts_path) != 0) {
+        // fts_read guarantees that `ent` is valid and sane to hold on to until
+        // after it's returned with FTS_DP set.
+        skipping = ent;
+      }
+      continue;
+    }
+
+    std::string path = ent->fts_path;
+    if (!android::base::EndsWith(path, ".h")) {
+      continue;
+    }
+
+    headers.push_back(std::move(path));
   }
 
   return headers;

@@ -20,17 +20,14 @@
 #define _BAYCOM_H
 struct baycom_debug_data {
   unsigned long debug1;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long debug2;
   long debug3;
 };
 struct baycom_ioctl {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int cmd;
   union {
     struct baycom_debug_data dbg;
   } data;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #define BAYCOMCTL_GETDEBUG 0x92
 #endif

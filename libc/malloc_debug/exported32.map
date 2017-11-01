@@ -1,6 +1,7 @@
 LIBC_MALLOC_DEBUG {
   global:
     debug_calloc;
+    debug_dump_heap;
     debug_finalize;
     debug_free;
     debug_free_malloc_leak_info;
@@ -13,6 +14,7 @@ LIBC_MALLOC_DEBUG {
     debug_malloc_disable;
     debug_malloc_enable;
     debug_malloc_usable_size;
+    debug_mallopt;
     debug_memalign;
     debug_posix_memalign;
     debug_pvalloc;

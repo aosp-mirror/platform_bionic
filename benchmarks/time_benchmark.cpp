@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 #include <benchmark/benchmark.h>
+#include "util.h"
 
 static void BM_time_clock_gettime(benchmark::State& state) {
   timespec t;
@@ -27,7 +28,7 @@ static void BM_time_clock_gettime(benchmark::State& state) {
     clock_gettime(CLOCK_MONOTONIC, &t);
   }
 }
-BENCHMARK(BM_time_clock_gettime);
+BIONIC_BENCHMARK(BM_time_clock_gettime);
 
 static void BM_time_clock_gettime_syscall(benchmark::State& state) {
   timespec t;
@@ -35,27 +36,44 @@ static void BM_time_clock_gettime_syscall(benchmark::State& state) {
     syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
   }
 }
-BENCHMARK(BM_time_clock_gettime_syscall);
+BIONIC_BENCHMARK(BM_time_clock_gettime_syscall);
 
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, nullptr);
   }
 }
-BENCHMARK(BM_time_gettimeofday);
+BIONIC_BENCHMARK(BM_time_gettimeofday);
 
 void BM_time_gettimeofday_syscall(benchmark::State& state) {
   timeval tv;
   while (state.KeepRunning()) {
-    syscall(__NR_gettimeofday, &tv, NULL);
+    syscall(__NR_gettimeofday, &tv, nullptr);
   }
 }
-BENCHMARK(BM_time_gettimeofday_syscall);
+BIONIC_BENCHMARK(BM_time_gettimeofday_syscall);
 
 void BM_time_time(benchmark::State& state) {
   while (state.KeepRunning()) {
-    time(NULL);
+    time(nullptr);
   }
 }
-BENCHMARK(BM_time_time);
+BIONIC_BENCHMARK(BM_time_time);
+
+void BM_time_localtime(benchmark::State& state) {
+  time_t t = time(nullptr);
+  while (state.KeepRunning()) {
+    localtime(&t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_localtime);
+
+void BM_time_localtime_r(benchmark::State& state) {
+  time_t t = time(nullptr);
+  while (state.KeepRunning()) {
+    struct tm tm;
+    localtime_r(&t, &tm);
+  }
+}
+BIONIC_BENCHMARK(BM_time_localtime_r);

@@ -20,15 +20,12 @@
 #define __LINUX_BRIDGE_EBT_LIMIT_H
 #include <linux/types.h>
 #define EBT_LIMIT_MATCH "limit"
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EBT_LIMIT_SCALE 10000
 struct ebt_limit_info {
   __u32 avg;
   __u32 burst;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned long prev;
   __u32 credit;
   __u32 credit_cap, cost;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

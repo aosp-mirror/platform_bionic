@@ -20,4 +20,3 @@
 #define _LINUX_UNISTD_H_
 #include <asm/unistd.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

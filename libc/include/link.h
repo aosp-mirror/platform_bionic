@@ -28,6 +28,7 @@
 #ifndef _LINK_H_
 #define _LINK_H_
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
@@ -49,13 +50,13 @@ struct dl_phdr_info {
 };
 
 #if defined(__arm__)
-int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*) __INTRODUCED_IN(21);
+int dl_iterate_phdr(int (*__callback)(struct dl_phdr_info*, size_t, void*), void* __data) __INTRODUCED_IN(21);
 #else
-int dl_iterate_phdr(int (*)(struct dl_phdr_info*, size_t, void*), void*);
+int dl_iterate_phdr(int (*__callback)(struct dl_phdr_info*, size_t, void*), void* __data);
 #endif
 
 #ifdef __arm__
-typedef long unsigned int* _Unwind_Ptr;
+typedef uintptr_t _Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int*);
 #endif
 
@@ -83,4 +84,4 @@ struct r_debug {
 
 __END_DECLS
 
-#endif /* _LINK_H_ */
+#endif

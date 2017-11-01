@@ -17,6 +17,10 @@
 cc_defaults {
     name: "bionic_testlib_defaults",
     host_supported: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
     ldflags: [
         "-Wl,--rpath,${ORIGIN}",
         "-Wl,--enable-new-dtags",
@@ -24,8 +28,10 @@ cc_defaults {
     relative_install_path: "bionic-loader-test-libs",
     gtest: false,
     sanitize: {
-        never: true,
+        address: false,
+        coverage: false,
     },
+    stl: "libc++_static",
     target: {
         darwin: {
             enabled: false,
@@ -270,10 +276,39 @@ cc_test_library {
 cc_test_library {
     name: "libtest_ifunc",
     defaults: ["bionic_testlib_defaults"],
-    srcs: ["dlopen_testlib_ifunc.c"],
+    srcs: ["dlopen_testlib_ifunc.cpp"],
 
-    // TODO(dimitry): clang does not support ifunc attribute
-    clang: false,
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+}
+
+cc_test_library {
+    name: "libtest_ifunc_variable",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_ifunc_variable.cpp"],
+    shared_libs: [ "libtest_ifunc_variable_impl" ],
+
+    arch: {
+        mips: {
+            enabled: false,
+        },
+        mips64: {
+            enabled: false,
+        },
+    },
+}
+
+cc_test_library {
+    name: "libtest_ifunc_variable_impl",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_ifunc_variable_impl.cpp"],
+
     arch: {
         mips: {
             enabled: false,
@@ -342,6 +377,26 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library with DF_1_GLOBAL which will be dlopened
+// (note: libdl_test_df_1_global above will be included in DT_NEEDED)
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_dlopen_df_1_global",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dl_df_1_global_dummy.cpp"],
+    ldflags: ["-Wl,-z,global"],
+
+    target: {
+        host: {
+            // TODO (dimitry): host ld.gold does not yet support -z global
+            // remove this line once it is updated.
+            ldflags: ["-fuse-ld=bfd"],
+        },
+    },
+}
+
+
+// -----------------------------------------------------------------------------
 // Library with weak function
 // -----------------------------------------------------------------------------
 cc_test_library {
@@ -358,15 +413,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_symbol.cpp"],
     shared_libs: ["libtest_dlsym_from_this_child"],
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -375,14 +421,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlsym_from_this_functions.cpp"],
     shared_libs: ["libtest_dlsym_from_this_grandchild"],
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -402,6 +440,16 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library for inaccessible shared library test
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtestshared",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "/inaccessible_libs",
+}
+
+// -----------------------------------------------------------------------------
 // Library with weak undefined function
 // -----------------------------------------------------------------------------
 cc_test_library {
@@ -417,15 +465,6 @@ cc_test_library {
     name: "libtest_check_rtld_next_from_library",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["check_rtld_next_from_library.cpp"],
-
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -435,14 +474,42 @@ cc_test_library {
     name: "libtest_dlopen_from_ctor",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_dlopen_from_ctor.cpp"],
-    target: {
-        android: {
-            shared_libs: ["libdl"],
-        },
-        host: {
-            host_ldlibs: ["-ldl"],
-        },
-    },
+}
+
+// -----------------------------------------------------------------------------
+// Libraries used to check init/fini call order
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_init_fini_order_root",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_root.cpp"],
+    shared_libs: [
+        "libtest_init_fini_order_child",
+        "libtest_init_fini_order_grand_child",
+    ],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_root2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_root.cpp"],
+    shared_libs: [
+        "libtest_init_fini_order_grand_child",
+        "libtest_init_fini_order_child",
+    ],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_child.cpp"],
+    shared_libs: ["libtest_init_fini_order_grand_child"],
+}
+
+cc_test_library {
+    name: "libtest_init_fini_order_grand_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_init_fini_grand_child.cpp"],
 }
 
 // -----------------------------------------------------------------------------
@@ -473,4 +540,109 @@ cc_binary_host {
         "libz",
         "libutils",
     ],
+}
+
+cc_test_library {
+    name: "libcfi-test",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_lib.cpp"],
+    sanitize: {
+        cfi: false,
+    },
+}
+
+cc_test_library {
+    name: "libcfi-test-bad",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_bad_lib.cpp"],
+    sanitize: {
+        cfi: false,
+    },
+}
+
+cc_test {
+    name: "cfi_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_helper.cpp"],
+    ldflags: ["-rdynamic"],
+}
+
+cc_test {
+    name: "cfi_test_helper2",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["cfi_test_helper2.cpp"],
+    shared_libs: ["libcfi-test"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test {
+    name: "preinit_getauxval_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["preinit_getauxval_test_helper.cpp"],
+}
+
+cc_test {
+    name: "preinit_syscall_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["preinit_syscall_test_helper.cpp"],
+}
+
+cc_test {
+    name: "ld_preload_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper.cpp"],
+    shared_libs: ["ld_preload_test_helper_lib1"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test_library {
+    name: "ld_preload_test_helper_lib1",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper_lib1.cpp"],
+}
+
+cc_test_library {
+    name: "ld_preload_test_helper_lib2",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_preload_test_helper_lib2.cpp"],
+}
+
+cc_test {
+    name: "ld_config_test_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper.cpp"],
+    shared_libs: ["ld_config_test_helper_lib1"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib1",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib1.cpp"],
+    shared_libs: ["ld_config_test_helper_lib2"],
+    relative_install_path: "/ns2",
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib2",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib2.cpp"],
+    relative_install_path: "/ns2",
+}
+
+cc_test_library {
+    name: "ld_config_test_helper_lib3",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ld_config_test_helper_lib3.cpp"],
 }

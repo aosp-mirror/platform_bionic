@@ -20,4 +20,3 @@
 #define _LINUX_IOCTL_H
 #include <asm/ioctl.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
