@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44789a85_bd782c4f",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1426,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-01T21:56:00Z",
+      "side": 0,
+      "message": "can\u0027t use `new` in C++.",
+      "range": {
+        "startLine": 1426,
+        "startChar": 19,
+        "endLine": 1426,
+        "endChar": 22
+      },
+      "revId": "0cbbdaa5cfa131e33dbfc80ce9b34c9fe1523f08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

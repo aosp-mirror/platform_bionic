@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f27cccb_693d1a53",
+        "filename": "libc/stdio/vfprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-01T21:56:00Z",
+      "side": 1,
+      "message": "(this is just pulled up from the bottom of both files, and turned into a template.)",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 52
+      },
+      "revId": "800dabc2349d89090a5363ec57bcfbc89e53a1ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "842c6b9a_921c3224",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-01T21:56:00Z",
+      "side": 1,
+      "message": "POSIX disagrees that these are obsolete... i\u0027ll fix this.",
+      "range": {
+        "startLine": 305,
+        "startChar": 34,
+        "endLine": 305,
+        "endChar": 42
+      },
+      "revId": "800dabc2349d89090a5363ec57bcfbc89e53a1ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
