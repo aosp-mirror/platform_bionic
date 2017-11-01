@@ -32,20 +32,4 @@
  * SUCH DAMAGE.
  */
 
-/*
- * I/O descriptors for __sfvwrite().
- */
-struct __siov {
-	void	*iov_base;
-	size_t	iov_len;
-};
-struct __suio {
-	struct	__siov *uio_iov;
-	int	uio_iovcnt;
-	int	uio_resid;
-};
-
-__BEGIN_HIDDEN_DECLS
-extern int __sfvwrite(FILE *, struct __suio *);
-wint_t __fputwc_unlock(wchar_t wc, FILE *fp);
-__END_HIDDEN_DECLS
+/* Moved to "local.h". */
