@@ -25,12 +25,13 @@
 
 struct CompilationType {
   Arch arch;
+  bool cpp;
   int api_level;
   int file_offset_bits;
 
  private:
   auto tie() const {
-    return std::tie(arch, api_level, file_offset_bits);
+    return std::tie(arch, cpp, api_level, file_offset_bits);
   }
 
  public:
@@ -49,11 +50,13 @@ struct hash<CompilationType> {
   size_t operator()(CompilationType type) const {
     struct {
       int32_t arch : 3;
+      int32_t cpp : 1;
       int32_t api_level : 6;
       int32_t file_offset_bits : 1;
-      int32_t padding : 22;
+      int32_t padding : 21;
     } packed;
     packed.arch = static_cast<int32_t>(type.arch);
+    packed.cpp = type.cpp;
     packed.api_level = type.api_level;
     packed.file_offset_bits = (type.file_offset_bits == 64);
     packed.padding = 0;
