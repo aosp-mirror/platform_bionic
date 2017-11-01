@@ -22,6 +22,30 @@
       "revId": "a8a23f520e1728a1ede6bf1b775bc30a0f8f13f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1527438e_c0645afa",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-01T01:10:47Z",
+      "side": 1,
+      "message": "yeah, and when i find canonical references for the other types, i\u0027ll clump them together with their link too :-)",
+      "parentUuid": "008b12bb_6da68ee5",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 13
+      },
+      "revId": "a8a23f520e1728a1ede6bf1b775bc30a0f8f13f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
