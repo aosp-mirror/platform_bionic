@@ -32,21 +32,22 @@
 #include <link.h>
 #include <stddef.h>
 
+#include <string>
 #include <unordered_map>
+
+#include <async_safe/log.h>
 
 #define DL_ERR(fmt, x...) \
     do { \
-      __libc_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
-      /* If LD_DEBUG is set high enough, log every dlerror(3) message. */ \
-      LD_LOG(kLogErrors, "%s\n", linker_get_error_buffer()); \
+      async_safe_format_buffer(linker_get_error_buffer(), linker_get_error_buffer_size(), fmt, ##x); \
     } while (false)
 
 #define DL_WARN(fmt, x...) \
     do { \
-      __libc_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
-      __libc_format_fd(2, "WARNING: linker: "); \
-      __libc_format_fd(2, fmt, ##x); \
-      __libc_format_fd(2, "\n"); \
+      async_safe_format_log(ANDROID_LOG_WARN, "linker", fmt, ##x); \
+      async_safe_format_fd(2, "WARNING: linker: "); \
+      async_safe_format_fd(2, fmt, ##x); \
+      async_safe_format_fd(2, "\n"); \
     } while (false)
 
 #define DL_ERR_AND_LOG(fmt, x...) \
@@ -73,5 +74,17 @@ extern std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
 // Error buffer "variable"
 char* linker_get_error_buffer();
 size_t linker_get_error_buffer_size();
+
+class DlErrorRestorer {
+ public:
+  DlErrorRestorer() {
+    saved_error_msg_ = linker_get_error_buffer();
+  }
+  ~DlErrorRestorer() {
+    strlcpy(linker_get_error_buffer(), saved_error_msg_.c_str(), linker_get_error_buffer_size());
+  }
+ private:
+  std::string saved_error_msg_;
+};
 
 #endif  /* __LINKER_GLOBALS_H */

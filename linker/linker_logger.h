@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "private/bionic_macros.h"
+#include "private/bionic_systrace.h"
 
 #define LD_LOG(type, x...) \
   { \
@@ -56,5 +57,9 @@ class LinkerLogger {
 
 extern LinkerLogger g_linker_logger;
 extern char** g_argv;
+
+// If the system property debug.ld.greylist_disabled is true, we'll not use the greylist
+// regardless of API level.
+extern bool g_greylist_disabled;
 
 #endif /* _LINKER_LOGGER_H_ */

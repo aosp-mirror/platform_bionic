@@ -30,72 +30,69 @@
 #define _INCLUDE_SYS_SYSTEM_PROPERTIES_H
 
 #include <sys/cdefs.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
 typedef struct prop_info prop_info;
 
-#define PROP_NAME_MAX   32
 #define PROP_VALUE_MAX  92
 
-/* Look up a system property by name, copying its value and a
-** \0 terminator to the provided pointer.  The total bytes
-** copied will be no greater than PROP_VALUE_MAX.  Returns
-** the string length of the value.  A property that is not
-** defined is identical to a property with a length 0 value.
-*/
-int __system_property_get(const char *name, char *value);
+/*
+ * Sets system property `name` to `value`, creating the system property if it doesn't already exist.
+ */
+int __system_property_set(const char* __name, const char* __value) __INTRODUCED_IN(12);
 
-/* Set a system property by name.
-**/
-int __system_property_set(const char* key, const char* value) __INTRODUCED_IN(12);
+/*
+ * Returns a `prop_info` corresponding system property `name`, or nullptr if it doesn't exist.
+ * Use __system_property_read_callback to query the current value.
+ *
+ * Property lookup is expensive, so it can be useful to cache the result of this function.
+ */
+const prop_info* __system_property_find(const char* __name);
 
-/* Return a pointer to the system property named name, if it
-** exists, or NULL if there is no such property.  Use 
-** __system_property_read() to obtain the string value from
-** the returned prop_info pointer.
-**
-** It is safe to cache the prop_info pointer to avoid future
-** lookups.  These returned pointers will remain valid for
-** the lifetime of the system.
-*/
-const prop_info *__system_property_find(const char *name);
+/*
+ * Calls `callback` with a consistent trio of name, value, and serial number for property `pi`.
+ */
+void __system_property_read_callback(const prop_info* __pi,
+    void (*__callback)(void* __cookie, const char* __name, const char* __value, uint32_t __serial),
+    void* __cookie) __INTRODUCED_IN(26);
 
-/* Read the value of a system property.  Returns the length
-** of the value.  Copies the value and \0 terminator into
-** the provided value pointer.  Total length (including
-** terminator) will be no greater that PROP_VALUE_MAX.
-**
-** If name is nonzero, up to PROP_NAME_MAX bytes will be
-** copied into the provided name pointer.  The name will
-** be \0 terminated.
-*/
-int __system_property_read(const prop_info *pi, char *name, char *value);
-
-/* Return a prop_info for the nth system property, or NULL if 
-** there is no nth property.  Use __system_property_read() to
-** read the value of this property.
-**
-** Please do not call this method.  It only exists to provide
-** backwards compatibility to NDK apps.  Its implementation
-** is inefficient and order of results may change from call
-** to call.
-*/ 
-const prop_info *__system_property_find_nth(unsigned n)
-  __REMOVED_IN(26);
-
-/* Pass a prop_info for each system property to the provided
-** callback.  Use __system_property_read() to read the value
-** of this property.
-**
-** This method is for inspecting and debugging the property
-** system.  Please use __system_property_find() instead.
-**
-** Order of results may change from call to call.  This is
-** not a bug.
-*/
-int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie)
+/*
+ * Passes a `prop_info` for each system property to the provided
+ * callback.  Use __system_property_read_callback() to read the value.
+ *
+ * This method is for inspecting and debugging the property system, and not generally useful.
+ */
+int __system_property_foreach(void (*__callback)(const prop_info* __pi, void* __cookie), void* __cookie)
   __INTRODUCED_IN(19);
+
+/*
+ * Waits for the specific system property identified by `pi` to be updated
+ * past `old_serial`. Waits no longer than `relative_timeout`, or forever
+ * if `relaive_timeout` is null.
+ *
+ * If `pi` is null, waits for the global serial number instead.
+ *
+ * If you don't know the current serial, use 0.
+ *
+ * Returns true and updates `*new_serial_ptr` on success, or false if the call
+ * timed out.
+ */
+struct timespec;
+bool __system_property_wait(const prop_info* __pi, uint32_t __old_serial, uint32_t* __new_serial_ptr, const struct timespec* __relative_timeout)
+    __INTRODUCED_IN(26);
+
+/* Deprecated. In Android O and above, there's no limit on property name length. */
+#define PROP_NAME_MAX   32
+/* Deprecated. Use __system_property_read_callback instead. */
+int __system_property_read(const prop_info* __pi, char* __name, char* __value);
+/* Deprecated. Use __system_property_read_callback instead. */
+int __system_property_get(const char* __name, char* __value);
+/* Deprecated. Use __system_property_foreach instead. */
+const prop_info* __system_property_find_nth(unsigned __n);
 
 __END_DECLS
 

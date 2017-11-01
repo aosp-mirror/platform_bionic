@@ -70,13 +70,13 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
 }
 
 FrontGuardData::FrontGuardData(DebugData* debug_data, const Config& config, size_t* offset)
-   : GuardData(debug_data, config.front_guard_value, config.front_guard_bytes) {
+   : GuardData(debug_data, config.front_guard_value(), config.front_guard_bytes()) {
   // Create a buffer for fast comparisons of the front guard.
-  cmp_mem_.resize(config.front_guard_bytes);
-  memset(cmp_mem_.data(), config.front_guard_value, cmp_mem_.size());
+  cmp_mem_.resize(config.front_guard_bytes());
+  memset(cmp_mem_.data(), config.front_guard_value(), cmp_mem_.size());
   // Assumes that front_bytes is a multiple of MINIMUM_ALIGNMENT_BYTES.
   offset_ = *offset;
-  *offset += config.front_guard_bytes;
+  *offset += config.front_guard_bytes();
 }
 
 bool FrontGuardData::Valid(const Header* header) {
@@ -88,7 +88,7 @@ void FrontGuardData::LogFailure(const Header* header) {
 }
 
 RearGuardData::RearGuardData(DebugData* debug_data, const Config& config)
-    : GuardData(debug_data, config.rear_guard_value, config.rear_guard_bytes) {
+    : GuardData(debug_data, config.rear_guard_value(), config.rear_guard_bytes()) {
 }
 
 bool RearGuardData::Valid(const Header* header) {

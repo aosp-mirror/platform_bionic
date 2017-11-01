@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-#define _SEARCH_PRIVATE
 #include <search.h>
 #include <stdlib.h>
+
+struct node_t {
+  char* key;
+  struct node* llink;
+  struct node* rlink;
+};
 
 // Destroy a tree and free all allocated resources.
 // This is a GNU extension, not available from BSD.

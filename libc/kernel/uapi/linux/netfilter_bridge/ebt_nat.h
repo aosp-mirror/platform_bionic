@@ -20,12 +20,10 @@
 #define __LINUX_BRIDGE_EBT_NAT_H
 #include <linux/if_ether.h>
 #define NAT_ARP_BIT (0x00000010)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct ebt_nat_info {
   unsigned char mac[ETH_ALEN];
   int target;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define EBT_SNAT_TARGET "snat"
 #define EBT_DNAT_TARGET "dnat"
 #endif

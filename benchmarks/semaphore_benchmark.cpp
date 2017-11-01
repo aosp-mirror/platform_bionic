@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <benchmark/benchmark.h>
+#include "util.h"
 
 static void BM_semaphore_sem_getvalue(benchmark::State& state) {
   sem_t semaphore;
@@ -31,7 +32,7 @@ static void BM_semaphore_sem_getvalue(benchmark::State& state) {
     sem_getvalue(&semaphore, &dummy);
   }
 }
-BENCHMARK(BM_semaphore_sem_getvalue);
+BIONIC_BENCHMARK(BM_semaphore_sem_getvalue);
 
 static void BM_semaphore_sem_wait_sem_post(benchmark::State& state) {
   sem_t semaphore;
@@ -42,7 +43,7 @@ static void BM_semaphore_sem_wait_sem_post(benchmark::State& state) {
     sem_post(&semaphore);
   }
 }
-BENCHMARK(BM_semaphore_sem_wait_sem_post);
+BIONIC_BENCHMARK(BM_semaphore_sem_wait_sem_post);
 
 // This test reports the overhead of the underlying futex wake syscall on
 // the producer. It does not report the overhead from issuing the wake to the
@@ -119,7 +120,9 @@ class SemaphoreFixture : public benchmark::Fixture {
   bool setup = false;
 };
 
-BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
+// This is commented out because dynamic benchmark registering doesn't currently support fixtures.
+// Uncomment it and recompile to run this benchmark on every run.
+/* BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
   while (state.KeepRunning()) {
     state.PauseTiming();
 
@@ -149,4 +152,4 @@ BENCHMARK_F(SemaphoreFixture, semaphore_sem_post)(benchmark::State& state) {
     param.sched_priority = 0;
     sched_setscheduler(0, SCHED_IDLE, &param);
   }
-}
+}*/

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # This tool is used to generate the version scripts for libc and libm
 # for every architecture.

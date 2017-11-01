@@ -29,15 +29,11 @@
 #include <mntent.h>
 #include <string.h>
 
-#include "private/ThreadLocalBuffer.h"
-
-static ThreadLocalBuffer<mntent> g_getmntent_mntent_tls_buffer;
-static ThreadLocalBuffer<char, BUFSIZ> g_getmntent_strings_tls_buffer;
+#include "bionic/pthread_internal.h"
 
 mntent* getmntent(FILE* fp) {
-  return getmntent_r(fp, g_getmntent_mntent_tls_buffer.get(),
-                     g_getmntent_strings_tls_buffer.get(),
-                     g_getmntent_strings_tls_buffer.size());
+  auto& tls = __get_bionic_tls();
+  return getmntent_r(fp, &tls.mntent_buf, tls.mntent_strings, sizeof(tls.mntent_strings));
 }
 
 mntent* getmntent_r(FILE* fp, struct mntent* e, char* buf, int buf_len) {

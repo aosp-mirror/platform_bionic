@@ -39,6 +39,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "private/FdPath.h"
+
 extern "C" char** environ;
 
 enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
@@ -72,19 +74,25 @@ static int __execl(const char* name, const char* argv0, ExecVariant variant, va_
 int execl(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecL, ap);
+  int result = __execl(name, arg, kIsExecL, ap);
+  va_end(ap);
+  return result;
 }
 
 int execle(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLE, ap);
+  int result = __execl(name, arg, kIsExecLE, ap);
+  va_end(ap);
+  return result;
 }
 
 int execlp(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  return __execl(name, arg, kIsExecLP, ap);
+  int result = __execl(name, arg, kIsExecLP, ap);
+  va_end(ap);
+  return result;
 }
 
 int execv(const char* name, char* const* argv) {
@@ -162,5 +170,12 @@ int execvpe(const char* name, char* const* argv, char* const* envp) {
     }
   }
   if (saw_EACCES) errno = EACCES;
+  return -1;
+}
+
+int fexecve(int fd, char* const* argv, char* const* envp) {
+  // execveat with AT_EMPTY_PATH (>= 3.19) seems to offer no advantages.
+  execve(FdPath(fd).c_str(), argv, envp);
+  if (errno == ENOENT) errno = EBADF;
   return -1;
 }

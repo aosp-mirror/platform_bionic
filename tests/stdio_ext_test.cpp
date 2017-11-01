@@ -116,20 +116,78 @@ TEST(stdio_ext, _flushlbf) {
 }
 
 TEST(stdio_ext, __freadable__fwritable) {
-  FILE* fp = fopen("/dev/null", "r");
+  FILE* fp;
+
+  // Read-only.
+  fp = fopen("/dev/null", "r");
   ASSERT_TRUE(__freadable(fp));
   ASSERT_FALSE(__fwritable(fp));
   fclose(fp);
 
+  // Write-only.
   fp = fopen("/dev/null", "w");
   ASSERT_FALSE(__freadable(fp));
   ASSERT_TRUE(__fwritable(fp));
   fclose(fp);
 
-  fp = fopen("/dev/null", "w+");
-  ASSERT_TRUE(__freadable(fp));
+  // Append (aka write-only).
+  fp = fopen("/dev/null", "a");
+  ASSERT_FALSE(__freadable(fp));
   ASSERT_TRUE(__fwritable(fp));
   fclose(fp);
+
+  // The three read-write modes.
+  for (auto read_write_mode : {"r+", "w+", "a+"}) {
+    fp = fopen("/dev/null", read_write_mode);
+    ASSERT_TRUE(__freadable(fp));
+    ASSERT_TRUE(__fwritable(fp));
+    fclose(fp);
+  }
+}
+
+TEST(stdio_ext, __freading__fwriting) {
+  FILE* fp;
+
+  // Append (aka write-only). Never reading. Always writing.
+  fp = fopen("/dev/zero", "a");
+  ASSERT_FALSE(__freading(fp)); // Not reading initially.
+  ASSERT_TRUE(__fwriting(fp)); // Writing initially.
+  ASSERT_TRUE(fputc('x', fp) != EOF);
+  ASSERT_FALSE(__freading(fp)); // Not reading after write.
+  ASSERT_TRUE(__fwriting(fp)); // Still writing after write.
+  fclose(fp);
+
+  // Write-only. Never reading. Always writing.
+  fp = fopen("/dev/zero", "w");
+  ASSERT_FALSE(__freading(fp)); // Not reading initially.
+  ASSERT_TRUE(__fwriting(fp)); // Writing initially.
+  ASSERT_TRUE(fputc('x', fp) != EOF);
+  ASSERT_FALSE(__freading(fp)); // Not reading after write.
+  ASSERT_TRUE(__fwriting(fp)); // Still writing after write.
+  fclose(fp);
+
+  // Read-only. Always reading. Never writing.
+  fp = fopen("/dev/zero", "r");
+  ASSERT_TRUE(__freading(fp)); // Reading initially.
+  ASSERT_FALSE(__fwriting(fp)); // Not writing initially.
+  ASSERT_TRUE(fgetc(fp) == 0);
+  ASSERT_TRUE(__freading(fp)); // Still reading after read.
+  ASSERT_FALSE(__fwriting(fp)); // Still not writing after read.
+  fclose(fp);
+
+  // The three read-write modes.
+  for (auto read_write_mode : {"r+", "w+", "a+"}) {
+    fp = fopen("/dev/zero", read_write_mode);
+    ASSERT_FALSE(__freading(fp)); // Not reading initially.
+    ASSERT_FALSE(__fwriting(fp)); // Not writing initially.
+    ASSERT_TRUE(fgetc(fp) == 0);
+    ASSERT_TRUE(__freading(fp)); // Reading after read.
+    ASSERT_FALSE(__fwriting(fp)); // Not writing after read.
+    ASSERT_TRUE(fputc('x', fp) != EOF);
+    ASSERT_FALSE(__freading(fp)); // Not reading after write.
+    ASSERT_TRUE(__fwriting(fp)); // Writing after write.
+    fclose(fp);
+  }
 }
 
 TEST(stdio_ext, __fsetlocking) {

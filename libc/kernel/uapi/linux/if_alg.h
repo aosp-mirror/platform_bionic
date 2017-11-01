@@ -20,26 +20,21 @@
 #define _LINUX_IF_ALG_H
 #include <linux/types.h>
 struct sockaddr_alg {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 salg_family;
   __u8 salg_type[14];
   __u32 salg_feat;
   __u32 salg_mask;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 salg_name[64];
 };
 struct af_alg_iv {
   __u32 ivlen;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 iv[0];
 };
 #define ALG_SET_KEY 1
 #define ALG_SET_IV 2
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ALG_SET_OP 3
 #define ALG_SET_AEAD_ASSOCLEN 4
 #define ALG_SET_AEAD_AUTHSIZE 5
 #define ALG_OP_DECRYPT 0
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define ALG_OP_ENCRYPT 1
 #endif

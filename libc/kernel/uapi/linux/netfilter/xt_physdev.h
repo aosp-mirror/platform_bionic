@@ -20,22 +20,18 @@
 #define _UAPI_XT_PHYSDEV_H
 #include <linux/types.h>
 #include <linux/if.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_PHYSDEV_OP_IN 0x01
 #define XT_PHYSDEV_OP_OUT 0x02
 #define XT_PHYSDEV_OP_BRIDGED 0x04
 #define XT_PHYSDEV_OP_ISIN 0x08
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define XT_PHYSDEV_OP_ISOUT 0x10
 #define XT_PHYSDEV_OP_MASK (0x20 - 1)
 struct xt_physdev_info {
   char physindev[IFNAMSIZ];
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   char in_mask[IFNAMSIZ];
   char physoutdev[IFNAMSIZ];
   char out_mask[IFNAMSIZ];
   __u8 invert;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 bitmask;
 };
 #endif

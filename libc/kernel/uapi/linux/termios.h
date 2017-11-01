@@ -20,19 +20,15 @@
 #define _LINUX_TERMIOS_H
 #include <linux/types.h>
 #include <asm/termios.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define NFF 5
 struct termiox {
   __u16 x_hflag;
   __u16 x_cflag;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u16 x_rflag[NFF];
   __u16 x_sflag;
 };
 #define RTSXOFF 0x0001
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define CTSXON 0x0002
 #define DTRXOFF 0x0004
 #define DSRXON 0x0008
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

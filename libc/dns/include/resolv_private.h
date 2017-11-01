@@ -116,17 +116,6 @@ struct __res_state; /* forward */
 #endif
 #endif
 
-typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
-	res_sendhookact;
-
-typedef res_sendhookact (*res_send_qhook)(struct sockaddr * const *,
-					      const u_char **, int *,
-					      u_char *, int, int *);
-
-typedef res_sendhookact (*res_send_rhook)(const struct sockaddr *,
-					      const u_char *, int, u_char *,
-					      int, int *);
-
 struct res_sym {
 	int		number;	   /* Identifying number, like T_MX */
 	const char *	name;	   /* Its symbolic name, like "MX" */
@@ -515,8 +504,8 @@ __LIBC_HIDDEN__ void		res_setservers(res_state,
 __LIBC_HIDDEN__ int		res_getservers(res_state,
 				    union res_sockaddr_union *, int);
 
-__LIBC_HIDDEN__ void res_setnetid(res_state, unsigned);
-__LIBC_HIDDEN__ void res_setmark(res_state, unsigned);
+struct android_net_context; /* forward */
+__LIBC_HIDDEN__ void res_setnetcontext(res_state, const struct android_net_context *);
 
 // We use the OpenBSD __res_randomid...
 u_int __res_randomid(void);

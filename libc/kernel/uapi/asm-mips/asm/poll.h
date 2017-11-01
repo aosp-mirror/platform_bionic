@@ -20,6 +20,5 @@
 #define __ASM_POLL_H
 #define POLLWRNORM POLLOUT
 #define POLLWRBAND 0x0100
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <asm-generic/poll.h>
 #endif

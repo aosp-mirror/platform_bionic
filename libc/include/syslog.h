@@ -50,28 +50,29 @@ __BEGIN_DECLS
 #define LOG_MAKEPRI(fac, pri) ((fac) | (pri))
 
 /* Facilities are currently ignored on Android. */
-#define LOG_KERN     0000
-#define LOG_USER     0010
-#define LOG_MAIL     0020
-#define LOG_DAEMON   0030
-#define LOG_AUTH     0040
-#define LOG_SYSLOG   0050
-#define LOG_LPR      0060
-#define LOG_NEWS     0070
-#define LOG_UUCP     0100
-#define LOG_CRON     0110
-#define LOG_AUTHPRIV 0120
-#define LOG_FTP      0130
-#define LOG_LOCAL0   0200
-#define LOG_LOCAL1   0210
-#define LOG_LOCAL2   0220
-#define LOG_LOCAL3   0230
-#define LOG_LOCAL4   0240
-#define LOG_LOCAL5   0250
-#define LOG_LOCAL6   0260
-#define LOG_LOCAL7   0270
+#define LOG_KERN     (0<<3)
+#define LOG_USER     (1<<3)
+#define LOG_MAIL     (2<<3)
+#define LOG_DAEMON   (3<<3)
+#define LOG_AUTH     (4<<3)
+#define LOG_SYSLOG   (5<<3)
+#define LOG_LPR      (6<<3)
+#define LOG_NEWS     (7<<3)
+#define LOG_UUCP     (8<<3)
+#define LOG_CRON     (9<<3)
+#define LOG_AUTHPRIV (10<<3)
+#define LOG_FTP      (11<<3)
+#define LOG_LOCAL0   (16<<3)
+#define LOG_LOCAL1   (17<<3)
+#define LOG_LOCAL2   (18<<3)
+#define LOG_LOCAL3   (19<<3)
+#define LOG_LOCAL4   (20<<3)
+#define LOG_LOCAL5   (21<<3)
+#define LOG_LOCAL6   (22<<3)
+#define LOG_LOCAL7   (23<<3)
 
-#define LOG_FACMASK 01770
+#define LOG_NFACILITIES 24
+#define LOG_FACMASK 0x3f8
 #define LOG_FAC(x) (((x) >> 3) & (LOG_FACMASK >> 3))
 
 #define LOG_MASK(pri) (1 << (pri))
@@ -86,14 +87,10 @@ __BEGIN_DECLS
 #define LOG_PERROR 0x20
 
 void closelog(void);
-void openlog(const char* _Nullable, int, int);
-int setlogmask(int);
-void syslog(int, const char* _Nonnull, ...) __printflike(2, 3);
-#if defined(__arm__) || defined(__aarch64__) || defined(__x86_64__)
-void vsyslog(int, const char* _Nonnull, va_list) __printflike(2, 0);
-#else /* defined(__mips__) || defined(__i386__) */
-void vsyslog(int, const char* _Nonnull, va_list _Nonnull) __printflike(2, 0);
-#endif
+void openlog(const char* __prefix, int __option, int __facility);
+int setlogmask(int __mask);
+void syslog(int __priority, const char* __fmt, ...) __printflike(2, 3);
+void vsyslog(int __priority, const char* __fmt, va_list __args) __printflike(2, 0);
 
 __END_DECLS
 

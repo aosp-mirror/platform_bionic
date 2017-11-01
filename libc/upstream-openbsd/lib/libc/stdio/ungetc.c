@@ -1,4 +1,4 @@
-/*	$OpenBSD: ungetc.c,v 1.13 2014/10/11 04:05:10 deraadt Exp $ */
+/*	$OpenBSD: ungetc.c,v 1.15 2016/09/21 04:38:56 guenther Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -53,7 +53,7 @@ __submore(FILE *fp)
 		/*
 		 * Get a new buffer (rather than expanding the old one).
 		 */
-		if ((p = malloc((size_t)BUFSIZ)) == NULL)
+		if ((p = malloc(BUFSIZ)) == NULL)
 			return (EOF);
 		_UB(fp)._base = p;
 		_UB(fp)._size = BUFSIZ;
@@ -68,7 +68,7 @@ __submore(FILE *fp)
 	if (p == NULL)
 		return (EOF);
 	/* no overlap (hence can use memcpy) because we doubled the size */
-	(void)memcpy((void *)(p + i), (void *)p, (size_t)i);
+	(void)memcpy(p + i, p, i);
 	fp->_p = p + i;
 	_UB(fp)._base = p;
 	_UB(fp)._size = i * 2;
@@ -143,3 +143,4 @@ inc_ret:	fp->_r++;
 	FUNLOCKFILE(fp);
 	return (c);
 }
+DEF_STRONG(ungetc);

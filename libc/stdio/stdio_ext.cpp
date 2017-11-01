@@ -31,24 +31,21 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include <async_safe/log.h>
+
 #include "local.h"
-#include "private/libc_logging.h"
 
 size_t __fbufsize(FILE* fp) {
   return fp->_bf._size;
 }
 
-/* For a _SRW stream, we don't know whether we last read or wrote.
 int __freading(FILE* fp) {
-  return (fp->_flags & _SRD) != 0 || ...;
+  return (fp->_flags & __SRD) != 0;
 }
-*/
 
-/* For a _SRW stream, we don't know whether we last read or wrote.
-int __fwriting(FILE*) {
-  return (fp->_flags & _SWR) != 0 || ...;
+int __fwriting(FILE* fp) {
+  return (fp->_flags & __SWR) != 0;
 }
-*/
 
 int __freadable(FILE* fp) {
   return (fp->_flags & (__SRD|__SRW)) != 0;
@@ -83,7 +80,7 @@ int __fsetlocking(FILE* fp, int type) {
 
   if (type != FSETLOCKING_INTERNAL && type != FSETLOCKING_BYCALLER) {
     // The API doesn't let us report an error, so blow up.
-    __libc_fatal("Bad type (%d) passed to __fsetlocking", type);
+    async_safe_fatal("Bad type (%d) passed to __fsetlocking", type);
   }
 
   _EXT(fp)->_caller_handles_locking = (type == FSETLOCKING_BYCALLER);

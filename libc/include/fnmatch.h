@@ -25,6 +25,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #ifndef _FNMATCH_H
 #define _FNMATCH_H
 
@@ -44,8 +45,8 @@ __BEGIN_DECLS
 #define FNM_IGNORECASE   FNM_CASEFOLD
 #define FNM_FILE_NAME    FNM_PATHNAME
 
-int fnmatch(const char* pattern, const char* string, int flags);
+int fnmatch(const char* __pattern, const char* __string, int __flags);
 
 __END_DECLS
 
-#endif /* _FNMATCH_H */
+#endif

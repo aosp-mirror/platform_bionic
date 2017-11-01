@@ -20,27 +20,22 @@
 #define _UAPI_VGEM_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #define DRM_VGEM_FENCE_ATTACH 0x1
 #define DRM_VGEM_FENCE_SIGNAL 0x2
 #define DRM_IOCTL_VGEM_FENCE_ATTACH DRM_IOWR(DRM_COMMAND_BASE + DRM_VGEM_FENCE_ATTACH, struct drm_vgem_fence_attach)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define DRM_IOCTL_VGEM_FENCE_SIGNAL DRM_IOW(DRM_COMMAND_BASE + DRM_VGEM_FENCE_SIGNAL, struct drm_vgem_fence_signal)
 struct drm_vgem_fence_attach {
   __u32 handle;
   __u32 flags;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define VGEM_FENCE_WRITE 0x1
   __u32 out_fence;
   __u32 pad;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct drm_vgem_fence_signal {
   __u32 fence;
   __u32 flags;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifdef __cplusplus
 #endif
 #endif

@@ -60,6 +60,6 @@
 #endif
 
 __BEGIN_DECLS
-void __assert(const char*, int, const char*) __noreturn;
-void __assert2(const char*, int, const char*, const char*) __noreturn;
+void __assert(const char* __file, int __line, const char* __msg) __noreturn;
+void __assert2(const char* __file, int __line, const char* __function, const char* __msg) __noreturn;
 __END_DECLS

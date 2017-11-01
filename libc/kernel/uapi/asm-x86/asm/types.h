@@ -20,4 +20,3 @@
 #define _ASM_X86_TYPES_H
 #include <asm-generic/types.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

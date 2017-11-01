@@ -41,6 +41,8 @@
 
 #ifndef __ANDROID_API__
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
+#else
+#define __ANDROID_NDK__ 1
 #endif
 
 #define __ANDROID_API_G__ 9
@@ -55,5 +57,6 @@
 #define __ANDROID_API_N__ 24
 #define __ANDROID_API_N_MR1__ 25
 #define __ANDROID_API_O__ 26
+#define __ANDROID_API_O_MR1__ 27
 
 #endif /* ANDROID_API_LEVEL_H */

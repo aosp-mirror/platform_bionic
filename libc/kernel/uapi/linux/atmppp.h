@@ -20,12 +20,10 @@
 #define _LINUX_ATMPPP_H
 #include <linux/atm.h>
 #define PPPOATM_ENCAPS_AUTODETECT (0)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define PPPOATM_ENCAPS_VC (1)
 #define PPPOATM_ENCAPS_LLC (2)
 struct atm_backend_ppp {
   atm_backend_t backend_num;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int encaps;
 };
 #endif

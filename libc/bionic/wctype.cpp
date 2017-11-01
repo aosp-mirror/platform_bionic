@@ -36,11 +36,22 @@
 
 #include "private/icu.h"
 
-static bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
-  typedef UBool (*FnT)(UChar32, UProperty);
-  static auto u_hasBinaryProperty = reinterpret_cast<FnT>(__find_icu_symbol("u_hasBinaryProperty"));
-  return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
-}
+enum {
+  WC_TYPE_INVALID = 0,
+  WC_TYPE_ALNUM,
+  WC_TYPE_ALPHA,
+  WC_TYPE_BLANK,
+  WC_TYPE_CNTRL,
+  WC_TYPE_DIGIT,
+  WC_TYPE_GRAPH,
+  WC_TYPE_LOWER,
+  WC_TYPE_PRINT,
+  WC_TYPE_PUNCT,
+  WC_TYPE_SPACE,
+  WC_TYPE_UPPER,
+  WC_TYPE_XDIGIT,
+  WC_TYPE_MAX
+};
 
 int iswalnum(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_ALNUM, isalnum); }
 int iswalpha(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_ALPHABETIC, isalpha); }
@@ -136,10 +147,6 @@ wctype_t wctype(const char* property) {
 
 wctype_t wctype_l(const char* property, locale_t) {
   return wctype(property);
-}
-
-int wcwidth(wchar_t wc) {
-  return (wc > 0);
 }
 
 static wctrans_t wctrans_tolower = wctrans_t(1);

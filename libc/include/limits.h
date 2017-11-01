@@ -61,6 +61,7 @@
 #else
 # define LONG_BIT 32
 #endif
+#define WORD_BIT 32
 
 #define	SCHAR_MAX	0x7f		/* max value for a signed char */
 #define SCHAR_MIN	(-0x7f-1)	/* min value for a signed char */
@@ -130,6 +131,8 @@
 
 #define MB_LEN_MAX 4
 
+#define NZERO 20
+
 #define IOV_MAX 1024
 #define SEM_VALUE_MAX 0x3fffffff
 
@@ -137,10 +140,8 @@
 #include <bits/posix_limits.h>
 
 #define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
-
-#define  _POSIX_VERSION             200809L   /* Posix C language bindings version */
-#define  _POSIX2_VERSION            -1        /* we don't support Posix command-line tools */
-#define  _XOPEN_VERSION             700       /* by Posix definition */
+#define LOGIN_NAME_MAX 256
+#define TTY_NAME_MAX 32
 
 /* >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS */
 #define PTHREAD_DESTRUCTOR_ITERATIONS 4

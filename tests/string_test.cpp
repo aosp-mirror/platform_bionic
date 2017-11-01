@@ -1372,20 +1372,56 @@ TEST(STRING_TEST, memcmp_overread) {
   RunCmpBufferOverreadTest(DoMemcmpTest, DoMemcmpFailTest);
 }
 
+static void DoMemchrTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    int value = len % 128;
+    int search_value = (len % 128) + 1;
+    memset(buf, value, len);
+    // The buffer does not contain the search value.
+    ASSERT_EQ(nullptr, memchr(buf, search_value, len));
+    if (len >= 2) {
+      buf[0] = search_value;
+      // The search value is the first element in the buffer.
+      ASSERT_EQ(&buf[0], memchr(buf, search_value, len));
+
+      buf[0] = value;
+      buf[len - 1] = search_value;
+      // The search value is the last element in the buffer.
+      ASSERT_EQ(&buf[len - 1], memchr(buf, search_value, len));
+    }
+  }
+}
+
+TEST(STRING_TEST, memchr_align) {
+  RunSingleBufferAlignTest(MEDIUM, DoMemchrTest);
+}
+
+TEST(STRING_TEST, memchr_overread) {
+  RunSingleBufferOverreadTest(DoMemchrTest);
+}
+
 static void DoStrchrTest(uint8_t* buf, size_t len) {
   if (len >= 1) {
     char value = 32 + (len % 96);
     char search_value = 33 + (len % 96);
     memset(buf, value, len - 1);
-    buf[len-1] = '\0';
-    ASSERT_EQ(NULL, strchr(reinterpret_cast<char*>(buf), search_value));
-    ASSERT_EQ(reinterpret_cast<char*>(&buf[len-1]), strchr(reinterpret_cast<char*>(buf), '\0'));
+    buf[len - 1] = '\0';
+    // The buffer does not contain the search value.
+    ASSERT_EQ(nullptr, strchr(reinterpret_cast<char*>(buf), search_value));
+    // Search for the special '\0' character.
+    ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 1]), strchr(reinterpret_cast<char*>(buf), '\0'));
     if (len >= 2) {
       buf[0] = search_value;
-      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]), strchr(reinterpret_cast<char*>(buf), search_value));
+      // The search value is the first element in the buffer.
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]), strchr(reinterpret_cast<char*>(buf),
+                                                         search_value));
+
       buf[0] = value;
-      buf[len-2] = search_value;
-      ASSERT_EQ(reinterpret_cast<char*>(&buf[len-2]), strchr(reinterpret_cast<char*>(buf), search_value));
+      buf[len - 2] = search_value;
+      // The search value is the second to last element in the buffer.
+      // The last element is the '\0' character.
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 2]), strchr(reinterpret_cast<char*>(buf),
+                                                               search_value));
     }
   }
 }
@@ -1396,6 +1432,40 @@ TEST(STRING_TEST, strchr_align) {
 
 TEST(STRING_TEST, strchr_overread) {
   RunSingleBufferOverreadTest(DoStrchrTest);
+}
+
+static void DoStrrchrTest(uint8_t* buf, size_t len) {
+  if (len >= 1) {
+    char value = 32 + (len % 96);
+    char search_value = 33 + (len % 96);
+    memset(buf, value, len - 1);
+    buf[len - 1] = '\0';
+    // The buffer does not contain the search value.
+    ASSERT_EQ(nullptr, strrchr(reinterpret_cast<char*>(buf), search_value));
+    // Search for the special '\0' character.
+    ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 1]), strrchr(reinterpret_cast<char*>(buf), '\0'));
+    if (len >= 2) {
+      buf[0] = search_value;
+      // The search value is the first element in the buffer.
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[0]), strrchr(reinterpret_cast<char*>(buf),
+                                                          search_value));
+
+      buf[0] = value;
+      buf[len - 2] = search_value;
+      // The search value is the second to last element in the buffer.
+      // The last element is the '\0' character.
+      ASSERT_EQ(reinterpret_cast<char*>(&buf[len - 2]), strrchr(reinterpret_cast<char*>(buf),
+                                                                search_value));
+    }
+  }
+}
+
+TEST(STRING_TEST, strrchr_align) {
+  RunSingleBufferAlignTest(MEDIUM, DoStrrchrTest);
+}
+
+TEST(STRING_TEST, strrchr_overread) {
+  RunSingleBufferOverreadTest(DoStrrchrTest);
 }
 
 static void TestBasename(const char* in, const char* expected_out) {

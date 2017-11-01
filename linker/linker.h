@@ -38,7 +38,6 @@
 #include <unistd.h>
 
 #include "private/bionic_page.h"
-#include "private/libc_logging.h"
 #include "linked_list.h"
 #include "linker_common_types.h"
 #include "linker_logger.h"
@@ -101,7 +100,11 @@ enum RelocationKind {
 
 void count_relocation(RelocationKind kind);
 
-soinfo* get_libdl_info(const char* linker_path);
+soinfo* get_libdl_info(const char* linker_path,
+                       const soinfo& linker_si,
+                       const link_map& linker_map);
+
+soinfo* find_containing_library(const void* p);
 
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
@@ -124,6 +127,10 @@ bool do_dlsym(void* handle, const char* sym_name,
               void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
+
+// void ___cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr, void *Ret);
+// void ___cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData, void *Ret);
+void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 
 void set_application_target_sdk_version(uint32_t target);
 uint32_t get_application_target_sdk_version();
@@ -150,11 +157,17 @@ enum {
    * permitted_path from the caller's namespace.
    */
   ANDROID_NAMESPACE_TYPE_SHARED = 2,
+
+  /* This flag instructs linker to enable grey-list workaround for the namespace.
+   * See http://b/26394120 for details.
+   */
+  ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED = 0x08000000,
+
   ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,
 };
 
-bool init_namespaces(const char* public_ns_sonames, const char* anon_ns_library_path);
+bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path);
 android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* name,
                                       const char* ld_library_path,
@@ -163,7 +176,10 @@ android_namespace_t* create_namespace(const void* caller_addr,
                                       const char* permitted_when_isolated_path,
                                       android_namespace_t* parent_namespace);
 
-constexpr unsigned kLibraryAlignmentBits = 18;
-constexpr size_t kLibraryAlignment = 1UL << kLibraryAlignmentBits;
+bool link_namespaces(android_namespace_t* namespace_from,
+                     android_namespace_t* namespace_to,
+                     const char* shared_lib_sonames);
+
+android_namespace_t* get_exported_namespace(const char* name);
 
 #endif

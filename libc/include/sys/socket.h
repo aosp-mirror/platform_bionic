@@ -115,7 +115,7 @@ struct cmsghdr {
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
-struct cmsghdr* __cmsg_nxthdr(struct msghdr*, struct cmsghdr*) __INTRODUCED_IN(21);
+struct cmsghdr* __cmsg_nxthdr(struct msghdr* __msg, struct cmsghdr* __cmsg) __INTRODUCED_IN(21);
 #else
 /* TODO(danalbert): Move this into libandroid_support. */
 static inline struct cmsghdr* __cmsg_nxthdr(struct msghdr* msg, struct cmsghdr* cmsg) {
@@ -299,69 +299,37 @@ struct ucred {
 # define __socketcall extern
 #endif
 
-__socketcall int accept(int, struct sockaddr*, socklen_t*);
-__socketcall int accept4(int, struct sockaddr*, socklen_t*, int) __INTRODUCED_IN(21);
-__socketcall int bind(int, const struct sockaddr*, socklen_t);
-__socketcall int connect(int, const struct sockaddr*, socklen_t);
-__socketcall int getpeername(int, struct sockaddr*, socklen_t*);
-__socketcall int getsockname(int, struct sockaddr*, socklen_t*);
-__socketcall int getsockopt(int, int, int, void*, socklen_t*);
-__socketcall int listen(int, int);
-__socketcall int recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)
+__socketcall int accept(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
+__socketcall int accept4(int __fd, struct sockaddr* __addr, socklen_t* __addr_length, int __flags) __INTRODUCED_IN(21);
+__socketcall int bind(int __fd, const struct sockaddr* __addr, socklen_t __addr_length);
+__socketcall int connect(int __fd, const struct sockaddr* __addr, socklen_t __addr_length);
+__socketcall int getpeername(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
+__socketcall int getsockname(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
+__socketcall int getsockopt(int __fd, int __level, int __option, void* __value, socklen_t* __value_length);
+__socketcall int listen(int __fd, int __backlog);
+__socketcall int recvmmsg(int __fd, struct mmsghdr* __msgs, unsigned int __msg_count, int __flags, const struct timespec* __timeout)
   __INTRODUCED_IN(21);
-__socketcall ssize_t recvmsg(int, struct msghdr*, int);
-__socketcall int sendmmsg(int, const struct mmsghdr*, unsigned int, int) __INTRODUCED_IN(21);
-__socketcall ssize_t sendmsg(int, const struct msghdr*, int);
-__socketcall int setsockopt(int, int, int, const void*, socklen_t);
-__socketcall int shutdown(int, int);
-__socketcall int socket(int, int, int);
-__socketcall int socketpair(int, int, int, int*);
+__socketcall ssize_t recvmsg(int __fd, struct msghdr* __msg, int __flags);
+__socketcall int sendmmsg(int __fd, const struct mmsghdr* __msgs, unsigned int __msg_count, int __flags) __INTRODUCED_IN(21);
+__socketcall ssize_t sendmsg(int __fd, const struct msghdr* __msg, int __flags);
+__socketcall int setsockopt(int __fd, int __level, int __option, const void* __value, socklen_t __value_length);
+__socketcall int shutdown(int __fd, int __how);
+__socketcall int socket(int __af, int __type, int __protocol);
+__socketcall int socketpair(int __af, int __type, int __protocol, int __fds[2]);
 
-ssize_t recv(int, void*, size_t, int);
-ssize_t send(int, const void*, size_t, int);
+ssize_t recv(int __fd, void* __buf, size_t __n, int __flags) __overloadable __RENAME_CLANG(recv);
+ssize_t send(int __fd, const void* __buf, size_t __n, int __flags) __overloadable __RENAME_CLANG(send);
 
-__socketcall ssize_t sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
-__socketcall ssize_t recvfrom(int, void*, size_t, int, struct sockaddr*, socklen_t*);
+__socketcall ssize_t sendto(int __fd, const void* __buf, size_t __n, int __flags, const struct sockaddr* __dst_addr, socklen_t __dst_addr_length)
+        __overloadable __RENAME_CLANG(sendto);
+__socketcall ssize_t recvfrom(int __fd, void* __buf, size_t __n, int __flags, struct sockaddr* __src_addr, socklen_t* __src_addr_length) __overloadable __RENAME_CLANG(recvfrom);
 
-__errordecl(__recvfrom_error, "recvfrom called with size bigger than buffer");
-ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*, socklen_t*)
-  __INTRODUCED_IN(21);
-ssize_t __recvfrom_real(int, void*, size_t, int, struct sockaddr*, socklen_t*) __RENAME(recvfrom);
-
-#if defined(__BIONIC_FORTIFY)
-
-#if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_FORTIFY_INLINE
-ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len) {
-  size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-    return __recvfrom_real(fd, buf, len, flags, src_addr, addr_len);
-  }
-
-  if (__builtin_constant_p(len) && (len <= bos)) {
-    return __recvfrom_real(fd, buf, len, flags, src_addr, addr_len);
-  }
-
-  if (__builtin_constant_p(len) && (len > bos)) {
-    __recvfrom_error();
-  }
+#if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
+#include <bits/fortify/socket.h>
 #endif
-
-  return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-__BIONIC_FORTIFY_INLINE
-ssize_t recv(int socket, void* buf, size_t len, int flags) {
-  return recvfrom(socket, buf, len, flags, NULL, 0);
-}
-
-#endif /* __BIONIC_FORTIFY */
 
 #undef __socketcall
 
 __END_DECLS
 
-#endif /* _SYS_SOCKET_H */
+#endif

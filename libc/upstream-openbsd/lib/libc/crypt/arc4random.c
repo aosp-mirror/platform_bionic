@@ -1,9 +1,10 @@
-/*	$OpenBSD: arc4random.c,v 1.50 2014/07/21 18:13:12 deraadt Exp $	*/
+/*	$OpenBSD: arc4random.c,v 1.54 2015/09/13 08:31:47 guenther Exp $	*/
 
 /*
  * Copyright (c) 1996, David Mazieres <dm@uun.org>
  * Copyright (c) 2008, Damien Miller <djm@openbsd.org>
  * Copyright (c) 2013, Markus Friedl <markus@openbsd.org>
+ * Copyright (c) 2014, Theo de Raadt <deraadt@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,18 +31,18 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/param.h>
 #include <sys/time.h>
 
 #define KEYSTREAM_ONLY
 #include "chacha_private.h"
 
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#ifdef __GNUC__
+#define minimum(a, b) ((a) < (b) ? (a) : (b))
+
+#if defined(__GNUC__) || defined(_MSC_VER)
 #define inline __inline
-#else				/* !__GNUC__ */
+#else				/* __GNUC__ || _MSC_VER */
 #define inline
-#endif				/* !__GNUC__ */
+#endif				/* !__GNUC__ && !_MSC_VER */
 
 #define KEYSZ	32
 #define IVSZ	8
@@ -127,7 +128,7 @@ _rs_rekey(u_char *dat, size_t datlen)
 	if (dat) {
 		size_t i, m;
 
-		m = min(datlen, KEYSZ + IVSZ);
+		m = minimum(datlen, KEYSZ + IVSZ);
 		for (i = 0; i < m; i++)
 			rsx->rs_buf[i] ^= dat[i];
 	}
@@ -147,7 +148,7 @@ _rs_random_buf(void *_buf, size_t n)
 	_rs_stir_if_needed(n);
 	while (n > 0) {
 		if (rs->rs_have > 0) {
-			m = min(n, rs->rs_have);
+			m = minimum(n, rs->rs_have);
 			keystream = rsx->rs_buf + sizeof(rsx->rs_buf)
 			    - rs->rs_have;
 			memcpy(buf, keystream, m);
@@ -185,6 +186,7 @@ arc4random(void)
 	_ARC4_UNLOCK();
 	return val;
 }
+DEF_WEAK(arc4random);
 
 void
 arc4random_buf(void *buf, size_t n)
@@ -193,3 +195,4 @@ arc4random_buf(void *buf, size_t n)
 	_rs_random_buf(buf, n);
 	_ARC4_UNLOCK();
 }
+DEF_WEAK(arc4random_buf);

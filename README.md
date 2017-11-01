@@ -1,3 +1,8 @@
+Using bionic
+============
+
+See the [additional documentation](docs/).
+
 Working on bionic
 =================
 
@@ -43,7 +48,7 @@ publicly-exported header file.
 
 #### benchmarks/ --- benchmarks
 
-The `benchmarks/` directory contains benchmarks.
+The `benchmarks/` directory contains benchmarks, with its own [documentation](benchmarks/README.md).
 
 
 What's in libc/?
@@ -171,6 +176,10 @@ As mentioned above, this is currently a two-step process:
      contents for external/kernel-headers/.
   2. Run update_all.py to scrub those headers and import them into bionic.
 
+Note that if you're actually just trying to expose device-specific headers to
+build your device drivers, you shouldn't modify bionic. Instead use
+`TARGET_DEVICE_KERNEL_HEADERS` and friends described in [config.mk](https://android.googlesource.com/platform/build/+/master/core/config.mk#186).
+
 
 Updating tzdata
 ---------------
@@ -294,25 +303,6 @@ First, build and run the host tests as usual (see above).
 The coverage report is now available at `covreport/index.html`.
 
 
-Running the benchmarks
-----------------------
-
-### Device benchmarks
-
-    $ mma
-    $ adb remount
-    $ adb sync
-    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
-    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
-
-You can use `--benchmark_filter=getpid` to just run benchmarks with "getpid"
-in their name.
-
-### Host benchmarks
-
-See the "Host tests" section of "Running the tests" above.
-
-
 Attaching GDB to the tests
 --------------------------
 
@@ -327,19 +317,4 @@ each test from being forked, run the tests with the flag `--no-isolate`.
 32-bit ABI bugs
 ---------------
 
-This probably belongs in the NDK documentation rather than here, but these
-are the known ABI bugs in the 32-bit ABI:
-
- * `time_t` is 32-bit. <http://b/5819737>. In the 64-bit ABI, time_t is
-   64-bit.
-
- * `off_t` is 32-bit. There is `off64_t`, and in newer releases there is
-   almost-complete support for `_FILE_OFFSET_BITS`. Unfortunately our stdio
-   implementation uses 32-bit offsets and -- worse -- function pointers to
-   functions that use 32-bit offsets, so there's no good way to implement
-   the last few pieces <http://b/24807045>. In the 64-bit ABI, off_t is
-   off64_t.
-
- * `sigset_t` is too small on ARM and x86 (but correct on MIPS), so support
-   for real-time signals is broken. <http://b/5828899> In the 64-bit ABI,
-   `sigset_t` is the correct size for every architecture.
+See [32-bit ABI bugs](docs/32-bit-abi.md).

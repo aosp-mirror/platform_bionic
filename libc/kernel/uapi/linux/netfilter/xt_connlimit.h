@@ -20,26 +20,21 @@
 #define _XT_CONNLIMIT_H
 #include <linux/types.h>
 #include <linux/netfilter.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_connlimit_data;
 enum {
   XT_CONNLIMIT_INVERT = 1 << 0,
   XT_CONNLIMIT_DADDR = 1 << 1,
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 struct xt_connlimit_info {
   union {
     union nf_inet_addr mask;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
     union {
       __be32 v4_mask;
       __be32 v6_mask[4];
     };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   };
   unsigned int limit;
   __u32 flags;
   struct xt_connlimit_data * data __attribute__((aligned(8)));
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };
 #endif

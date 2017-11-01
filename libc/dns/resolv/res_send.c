@@ -114,7 +114,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 
 #include <resolv_cache.h>
 
-#include "private/libc_logging.h"
+#include <async_safe/log.h>
 
 #ifndef DE_CONST
 #define DE_CONST(c,v)   v = ((c) ? \
@@ -523,6 +523,10 @@ res_nsend(res_state statp,
 					res_nclose(statp);
 					goto next_ns;
 				case res_done:
+					if (cache_status == RESOLV_CACHE_NOTFOUND) {
+						_resolv_cache_add(statp->netid, buf, buflen,
+								ans, resplen);
+					}
 					return (resplen);
 				case res_modified:
 					/* give the hook another try */
@@ -564,7 +568,7 @@ res_nsend(res_state statp,
 			}
 
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
+				async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
 					"used send_vc %d\n", n);
 			}
 
@@ -576,7 +580,7 @@ res_nsend(res_state statp,
 		} else {
 			/* Use datagrams. */
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using send_dg\n");
+				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using send_dg\n");
 			}
 
 			n = send_dg(statp, buf, buflen, ans, anssiz, &terrno,
@@ -591,7 +595,7 @@ res_nsend(res_state statp,
 			}
 
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "used send_dg %d\n",n);
+				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "used send_dg %d\n",n);
 			}
 
 			if (n < 0)
@@ -599,7 +603,7 @@ res_nsend(res_state statp,
 			if (n == 0)
 				goto next_ns;
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc", "time=%ld\n",
+				async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "time=%ld\n",
 						  time(NULL));
 			}
 			if (v_circuit)
@@ -739,7 +743,7 @@ static int get_timeout(const res_state statp, const int ns)
 		timeout = 1;
 	}
 	if (DBG) {
-		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using timeout of %d sec\n", timeout);
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using timeout of %d sec\n", timeout);
 	}
 
 	return timeout;
@@ -764,7 +768,7 @@ send_vc(res_state statp,
 	void *tmp;
 
 	if (DBG) {
-		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "using send_vc\n");
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "using send_vc\n");
 	}
 
 	nsap = get_nsaddr(statp, (size_t)ns);
@@ -993,7 +997,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 		timeout = evConsTime((long)sec, 0L);
 		finish = evAddTime(now, timeout);
 		if (DBG) {
-			__libc_format_log(ANDROID_LOG_DEBUG, "libc", "  %d send_vc\n", sock);
+			async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d send_vc\n", sock);
 		}
 
 		res = retrying_select(sock, &rset, &wset, &finish);
@@ -1004,7 +1008,7 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 done:
 	fcntl(sock, F_SETFL, origflags);
 	if (DBG) {
-		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
 			"  %d connect_with_timeout returning %d\n", sock, res);
 	}
 	return res;
@@ -1020,7 +1024,7 @@ retrying_select(const int sock, fd_set *readset, fd_set *writeset, const struct 
 
 retry:
 	if (DBG) {
-		__libc_format_log(ANDROID_LOG_DEBUG, "libc", "  %d retrying_select\n", sock);
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d retrying_select\n", sock);
 	}
 
 	now = evNowTime();
@@ -1040,7 +1044,7 @@ retry:
 	n = pselect(sock + 1, readset, writeset, NULL, &timeout, NULL);
 	if (n == 0) {
 		if (DBG) {
-			__libc_format_log(ANDROID_LOG_DEBUG, " libc",
+			async_safe_format_log(ANDROID_LOG_DEBUG, " libc",
 				"  %d retrying_select timeout\n", sock);
 		}
 		errno = ETIMEDOUT;
@@ -1050,7 +1054,7 @@ retry:
 		if (errno == EINTR)
 			goto retry;
 		if (DBG) {
-			__libc_format_log(ANDROID_LOG_DEBUG, "libc",
+			async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
 				"  %d retrying_select got error %d\n",sock, n);
 		}
 		return n;
@@ -1060,7 +1064,7 @@ retry:
 		if (getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len) < 0 || error) {
 			errno = error;
 			if (DBG) {
-				__libc_format_log(ANDROID_LOG_DEBUG, "libc",
+				async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
 					"  %d retrying_select dot error2 %d\n", sock, errno);
 			}
 
@@ -1068,7 +1072,7 @@ retry:
 		}
 	}
 	if (DBG) {
-		__libc_format_log(ANDROID_LOG_DEBUG, "libc",
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
 			"  %d retrying_select returning %d\n",sock, n);
 	}
 

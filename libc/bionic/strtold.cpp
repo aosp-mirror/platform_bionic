@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#define __BIONIC_LP32_USE_LONG_DOUBLE
+
 #include <float.h>
 #include <stdlib.h>
 

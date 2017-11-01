@@ -45,6 +45,7 @@ int faccessat(int dirfd, const char* pathname, int mode, int flags) {
   if (flags != 0) {
     // We deliberately don't support AT_SYMLINK_NOFOLLOW, a glibc
     // only feature which is error prone and dangerous.
+    // More details at http://permalink.gmane.org/gmane.linux.lib.musl.general/6952
     //
     // AT_EACCESS isn't supported either. Android doesn't have setuid
     // programs, and never runs code with euid!=uid. It could be

@@ -20,14 +20,11 @@
 #define _XT_DSCP_TARGET_H
 #include <linux/netfilter/xt_dscp.h>
 #include <linux/types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 struct xt_DSCP_info {
   __u8 dscp;
 };
 struct xt_tos_target_info {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 tos_value;
   __u8 tos_mask;
 };
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

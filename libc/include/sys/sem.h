@@ -39,16 +39,24 @@
 
 #include <linux/sem.h>
 
-#define semid_ds semid64_ds
-
 __BEGIN_DECLS
 
-int semctl(int, int, int, ...) __INTRODUCED_IN_FUTURE;
-int semget(key_t, int, int) __INTRODUCED_IN_FUTURE;
-int semop(int, struct sembuf*, size_t) __INTRODUCED_IN_FUTURE;
+#define semid_ds semid64_ds
+
+union semun {
+  int val;
+  struct semid_ds* buf;
+  unsigned short* array;
+  struct seminfo* __buf;
+  void* __pad;
+};
+
+int semctl(int __sem_id, int __sem_num, int __cmd, ...) __INTRODUCED_IN(26);
+int semget(key_t __key, int __sem_count, int __flags) __INTRODUCED_IN(26);
+int semop(int __sem_id, struct sembuf* __ops, size_t __op_count) __INTRODUCED_IN(26);
 
 #if defined(__USE_GNU)
-int semtimedop(int, struct sembuf*, size_t, const struct timespec*) __INTRODUCED_IN_FUTURE;
+int semtimedop(int __sem_id, struct sembuf* __ops, size_t __op_count, const struct timespec* __timeout) __INTRODUCED_IN(26);
 #endif
 
 __END_DECLS

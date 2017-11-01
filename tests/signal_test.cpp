@@ -527,3 +527,11 @@ TEST(signal, sigset) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
   EXPECT_TRUE(sigismember(&set, SIGALRM));
 }
+
+TEST(signal, killpg_EINVAL) {
+  // POSIX leaves pgrp <= 1 undefined, but glibc fails with EINVAL for < 0
+  // and passes 0 through to kill(2).
+  errno = 0;
+  ASSERT_EQ(-1, killpg(-1, SIGKILL));
+  ASSERT_EQ(EINVAL, errno);
+}

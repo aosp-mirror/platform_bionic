@@ -20,12 +20,10 @@
 #define _ASM_X86_KVM_PERF_H
 #include <asm/svm.h>
 #include <asm/vmx.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #include <asm/kvm.h>
 #define DECODE_STR_LEN 20
 #define VCPU_ID "vcpu_id"
 #define KVM_ENTRY_TRACE "kvm:kvm_entry"
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define KVM_EXIT_TRACE "kvm:kvm_exit"
 #define KVM_EXIT_REASON "exit_reason"
 #endif

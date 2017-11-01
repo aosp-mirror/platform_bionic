@@ -17,12 +17,11 @@
 #include <float.h>
 #include <math.h>
 
-#ifndef __LP64__
-/*
- * The BSD "long double" functions are broken when sizeof(long double) == sizeof(double).
- * Android works around those cases by replacing the broken functions with our own trivial stubs
- * that call the regular "double" function.
- */
+#if !defined(__LP64__)
+
+// The BSD "long double" functions are broken when sizeof(long double) == sizeof(double).
+// Android works around those cases by replacing the broken functions with our own trivial stubs
+// that call the regular "double" function.
 
 long double copysignl(long double a1, long double a2) { return copysign(a1, a2); }
 long double fmaxl(long double a1, long double a2) { return fmax(a1, a2); }
@@ -40,3 +39,7 @@ float nexttowardf(float a1, long double a2) { return nextafterf(a1, (float) a2);
 long double roundl(long double a1) { return round(a1); }
 
 #endif // __LP64__
+
+// FreeBSD doesn't have ld128 implementations of powl or tgammal, so both LP32 and LP64 need these.
+long double powl(long double x, long double y) { return pow(x, y); }
+long double tgammal(long double x) { return tgamma(x); }

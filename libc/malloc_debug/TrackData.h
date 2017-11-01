@@ -41,7 +41,7 @@
 
 // Forward declarations.
 struct Header;
-struct Config;
+class Config;
 class DebugData;
 
 class TrackData : public OptionData {
@@ -50,6 +50,8 @@ class TrackData : public OptionData {
   virtual ~TrackData() = default;
 
   void GetList(std::vector<const Header*>* list);
+
+  void GetListBySizeThenBacktrace(std::vector<const Header*>* list, size_t* total_memory);
 
   void Add(const Header* header, bool backtrace_found);
 

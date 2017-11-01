@@ -29,18 +29,18 @@
 #ifndef MALLOC_DEBUG_LOG_H
 #define MALLOC_DEBUG_LOG_H
 
-#include <private/libc_logging.h>
+#include <async_safe/log.h>
 
 // =============================================================================
 // log functions
 // =============================================================================
 #define debug_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__ )
 #define error_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__ )
 #define error_log_string(str)  \
-    __libc_write_log(ANDROID_LOG_ERROR, "malloc_debug", (str))
+    async_safe_write_log(ANDROID_LOG_ERROR, "malloc_debug", (str))
 #define info_log(format, ...)  \
-    __libc_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__ )
+    async_safe_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__ )
 
 #endif  // MALLOC_DEBUG_LOG_H

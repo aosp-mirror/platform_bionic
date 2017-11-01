@@ -1,4 +1,4 @@
-/*	$OpenBSD: ldtoa.c,v 1.2 2014/08/10 02:15:18 guenther Exp $	*/
+/*	$OpenBSD: ldtoa.c,v 1.4 2016/03/09 16:28:47 deraadt Exp $	*/
 /*-
  * Copyright (c) 2003 David Schultz <das@FreeBSD.ORG>
  * All rights reserved.
@@ -26,9 +26,7 @@
  */
 
 #include <sys/types.h>
-#ifndef __vax__
 #include <machine/ieee.h>
-#endif /* !__vax__ */
 #include <float.h>
 #include <stdint.h>
 #include <limits.h>
@@ -106,6 +104,7 @@ __ldtoa(long double *ld, int mode, int ndigits, int *decpt, int *sign,
 		*decpt = INT_MAX;
 	return ret;
 }
+DEF_STRONG(__ldtoa);
 
 #else   /* (LDBL_MANT_DIG == DBL_MANT_DIG) */
 
@@ -120,5 +119,6 @@ __ldtoa(long double *ld, int mode, int ndigits, int *decpt, int *sign,
 		*decpt = INT_MAX;
 	return ret;
 }
+DEF_STRONG(__ldtoa);
 
 #endif  /* (LDBL_MANT_DIG == DBL_MANT_DIG) */

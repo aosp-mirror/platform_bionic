@@ -156,3 +156,32 @@ TEST(inttypes, wcstoumax_EINVAL) {
   wcstoumax(L"123", NULL, 37);
   ASSERT_EQ(EINVAL, errno);
 }
+
+TEST(inttypes, div) {
+  div_t r = div(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(inttypes, ldiv) {
+  ldiv_t r = ldiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(inttypes, lldiv) {
+  lldiv_t r = lldiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(inttypes, imaxdiv) {
+  imaxdiv_t r = imaxdiv(-5, 3);
+  ASSERT_EQ(-1, r.quot);
+  ASSERT_EQ(-2, r.rem);
+}
+
+TEST(inttypes, imaxabs) {
+  ASSERT_EQ(INTMAX_MAX, imaxabs(-INTMAX_MAX));
+  ASSERT_EQ(INTMAX_MAX, imaxabs(INTMAX_MAX));
+}

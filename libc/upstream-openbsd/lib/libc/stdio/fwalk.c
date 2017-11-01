@@ -1,4 +1,4 @@
-/*	$OpenBSD: fwalk.c,v 1.10 2009/11/09 00:18:27 kurt Exp $ */
+/*	$OpenBSD: fwalk.c,v 1.12 2016/05/23 00:21:48 guenther Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.

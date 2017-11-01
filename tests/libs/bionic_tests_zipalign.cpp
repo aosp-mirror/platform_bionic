@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
   if (return_value != 0) {
     CloseArchive(handle);
     fprintf(stderr, "Unable to open '%s': %s\n", argv[2], ErrorCodeString(return_value));
-    return false;
+    return 1;
   }
 
   FILE* zip_dst = fopen(argv[3], "we");

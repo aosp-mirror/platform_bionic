@@ -30,12 +30,17 @@
 #define _PRIVATE_ICU_H
 
 #include <stdint.h>
+#include <wchar.h>
 
 typedef int8_t UBool;
+#define FALSE 0
+#define TRUE 1
+
 typedef int32_t UChar32;
 
 enum UProperty {
   UCHAR_ALPHABETIC = 0,
+  UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5,
   UCHAR_LOWERCASE = 22,
   UCHAR_POSIX_ALNUM = 44,
   UCHAR_POSIX_BLANK = 45,
@@ -44,11 +49,38 @@ enum UProperty {
   UCHAR_POSIX_XDIGIT = 48,
   UCHAR_UPPERCASE = 30,
   UCHAR_WHITE_SPACE = 31,
+  UCHAR_EAST_ASIAN_WIDTH = 0x1004,
+  UCHAR_HANGUL_SYLLABLE_TYPE = 0x100b,
 };
 
 enum UCharCategory {
+  U_NON_SPACING_MARK = 6,
+  U_ENCLOSING_MARK = 7,
   U_CONTROL_CHAR = 15,
+  U_FORMAT_CHAR = 16,
 };
+
+enum UEastAsianWidth {
+  U_EA_NEUTRAL,
+  U_EA_AMBIGUOUS,
+  U_EA_HALFWIDTH,
+  U_EA_FULLWIDTH,
+  U_EA_NARROW,
+  U_EA_WIDE,
+};
+
+enum UHangulSyllableType {
+  U_HST_NOT_APPLICABLE,
+  U_HST_LEADING_JAMO,
+  U_HST_VOWEL_JAMO,
+  U_HST_TRAILING_JAMO,
+  U_HST_LV_SYLLABLE,
+  U_HST_LVT_SYLLABLE,
+};
+
+int8_t __icu_charType(wint_t wc);
+int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property);
+bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int));
 
 void* __find_icu_symbol(const char* symbol_name);
 

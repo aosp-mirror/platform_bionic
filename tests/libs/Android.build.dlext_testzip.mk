@@ -22,55 +22,47 @@ BIONIC_TESTS_ZIPALIGN := $(HOST_OUT_EXECUTABLES)/bionic_tests_zipalign
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
-LOCAL_MODULE_TAGS := tests
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
 include $(BUILD_SYSTEM)/base_rules.mk
 
 my_shared_libs := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libdlext_test_zip.so \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libatest_simple_zip.so
+  $(call intermediates-dir-for,SHARED_LIBRARIES,libdlext_test_zip,,,$(bionic_2nd_arch_prefix))/libdlext_test_zip.so \
+  $(call intermediates-dir-for,SHARED_LIBRARIES,libatest_simple_zip,,,$(bionic_2nd_arch_prefix))/libatest_simple_zip.so
 
-$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(BIONIC_TESTS_ZIPALIGN)
+$(LOCAL_BUILT_MODULE): PRIVATE_SHARED_LIBS := $(my_shared_libs)
+$(LOCAL_BUILT_MODULE): $(my_shared_libs) $(BIONIC_TESTS_ZIPALIGN)
 	@echo "Aligning zip: $@"
 	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir
-	$(hide) cp $^ $(dir $@)/libdir
+	$(hide) cp $(PRIVATE_SHARED_LIBS) $(dir $@)/libdir
 	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -qrD0 $(notdir $@).unaligned empty_file.txt libdir/*.so)
 	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_runpath_zip_zipaligned
 LOCAL_MODULE_SUFFIX := .zip
-LOCAL_MODULE_TAGS := tests
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_runpath_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
 
 include $(BUILD_SYSTEM)/base_rules.mk
-my_shared_libs := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_d_zip.so \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_b.so \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_a.so \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_c.so \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_x.so
+lib_d := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_d_zip,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_d_zip.so
+lib_a := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_a,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_a.so
+lib_b := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_b,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_b.so
+lib_c := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_c,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_c.so
+lib_x := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_x,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_x.so
 
-
-$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_D := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_d_zip.so
-$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_A := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_a.so
-$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_B := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_b.so
-$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_C := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_c.so
-$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_X := \
-  $($(bionic_2nd_arch_prefix)TARGET_OUT_INTERMEDIATE_LIBRARIES)/libtest_dt_runpath_x.so
-$(LOCAL_BUILT_MODULE) : $(my_shared_libs) | $(BIONIC_TESTS_ZIPALIGN)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_D := $(lib_d)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_A := $(lib_a)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_B := $(lib_b)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_C := $(lib_c)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_X := $(lib_x)
+$(LOCAL_BUILT_MODULE) : $(lib_d) $(lib_a) $(lib_b) $(lib_c) $(lib_x) $(BIONIC_TESTS_ZIPALIGN)
 	@echo "Aligning zip: $@"
 	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir && \
     mkdir -p $(dir $@)/libdir/dt_runpath_a && mkdir -p $(dir $@)/libdir/dt_runpath_b_c_x

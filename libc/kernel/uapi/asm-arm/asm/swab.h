@@ -20,12 +20,10 @@
 #define _UAPI__ASM_ARM_SWAB_H
 #include <linux/compiler.h>
 #include <linux/types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #ifndef __STRICT_ANSI__
 #define __SWAB_64_THRU_32__
 #endif
 #ifndef __thumb__
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif
 #define __arch_swab32 __arch_swab32
 #endif

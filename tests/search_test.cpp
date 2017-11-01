@@ -208,3 +208,80 @@ TEST(search, insque_remque) {
 
   remque(&zero);
 }
+
+static void AssertEntry(ENTRY* e, const char* expected_key, const char* expected_data) {
+  ASSERT_TRUE(e != nullptr);
+  ASSERT_STREQ(expected_key, reinterpret_cast<char*>(e->key));
+  ASSERT_STREQ(expected_data, reinterpret_cast<char*>(e->data));
+}
+
+TEST(search, hcreate_hsearch_hdestroy) {
+  ASSERT_NE(0, hcreate(13));
+
+  // Add some initial entries.
+  ENTRY* e;
+  e = hsearch(ENTRY{.key = const_cast<char*>("a"), .data = const_cast<char*>("A")}, ENTER);
+  AssertEntry(e, "a", "A");
+  e = hsearch(ENTRY{.key = const_cast<char*>("aa"), .data = const_cast<char*>("B")}, ENTER);
+  AssertEntry(e, "aa", "B");
+  e = hsearch(ENTRY{.key = const_cast<char*>("aaa"), .data = const_cast<char*>("C")}, ENTER);
+  AssertEntry(e, "aaa", "C");
+
+  // Check missing.
+  e = hsearch(ENTRY{.key = const_cast<char*>("aaaa"), .data = nullptr}, FIND);
+  ASSERT_FALSE(e != nullptr);
+
+  // Check present.
+  e = hsearch(ENTRY{.key = const_cast<char*>("aa"), .data = nullptr}, FIND);
+  AssertEntry(e, "aa", "B");
+
+  // ENTER with an existing key just returns the existing ENTRY.
+  e = hsearch(ENTRY{.key = const_cast<char*>("aa"), .data = const_cast<char*>("X")}, ENTER);
+  AssertEntry(e, "aa", "B");
+  e->data = const_cast<char*>("X");
+
+  // Check present and updated.
+  e = hsearch(ENTRY{.key = const_cast<char*>("aa"), .data = nullptr}, FIND);
+  AssertEntry(e, "aa", "X");
+  // But other entries stayed the same.
+  e = hsearch(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND);
+  AssertEntry(e, "a", "A");
+  e = hsearch(ENTRY{.key = const_cast<char*>("aaa"), .data = nullptr}, FIND);
+  AssertEntry(e, "aaa", "C");
+
+  hdestroy();
+}
+
+TEST(search, hcreate_r_hsearch_r_hdestroy_r) {
+  hsearch_data h1 = {};
+  ASSERT_EQ(1, hcreate_r(13, &h1));
+
+  hsearch_data h2 = {};
+  ASSERT_EQ(1, hcreate_r(128, &h2));
+
+  // Add some initial entries.
+  ENTRY* e;
+  ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = const_cast<char*>("A")},
+                         ENTER, &e, &h1));
+  AssertEntry(e, "a", "A");
+  ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = const_cast<char*>("B")},
+                         ENTER, &e, &h2));
+  AssertEntry(e, "a", "B");
+
+  // Check missing.
+  errno = 0;
+  ASSERT_EQ(0, hsearch_r(ENTRY{.key = const_cast<char*>("b"), .data = nullptr}, FIND, &e, &h1));
+  ASSERT_EQ(ESRCH, errno);
+
+  // Check present.
+  ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND, &e, &h1));
+  AssertEntry(e, "a", "A");
+  ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND, &e, &h2));
+  AssertEntry(e, "a", "B");
+
+  // Destroying one doesn't affect the other.
+  hdestroy_r(&h1);
+  ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND, &e, &h2));
+  AssertEntry(e, "a", "B");
+  hdestroy_r(&h2);
+}

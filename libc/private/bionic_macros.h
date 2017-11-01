@@ -40,19 +40,16 @@
   TypeName() = delete;                           \
   DISALLOW_COPY_AND_ASSIGN(TypeName)
 
-#define BIONIC_ALIGN(value, alignment) \
-  (((value) + (alignment) - 1) & ~((alignment) - 1))
-
 #define BIONIC_ROUND_UP_POWER_OF_2(value) \
   ((sizeof(value) == 8) \
     ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
     : (1UL << (32 - __builtin_clz(static_cast<unsigned int>(value)))))
 
-static inline uintptr_t align_down(uintptr_t p, size_t align) {
+static constexpr uintptr_t align_down(uintptr_t p, size_t align) {
   return p & ~(align - 1);
 }
 
-static inline uintptr_t align_up(uintptr_t p, size_t align) {
+static constexpr uintptr_t align_up(uintptr_t p, size_t align) {
   return (p + align - 1) & ~(align - 1);
 }
 
@@ -65,5 +62,20 @@ template <typename T>
 static inline T* align_up(T* p, size_t align) {
   return reinterpret_cast<T*>(align_up(reinterpret_cast<uintptr_t>(p), align));
 }
+
+#if defined(__arm__)
+// Do not emit anything for arm, clang does not allow emiting an arm unwind
+// directive.
+// #define BIONIC_STOP_UNWIND asm volatile(".cantunwind")
+#define BIONIC_STOP_UNWIND
+#elif defined(__aarch64__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined x30")
+#elif defined(__i386__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%eip")
+#elif defined(__x86_64__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%rip")
+#elif defined (__mips__)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined $ra")
+#endif
 
 #endif // _BIONIC_MACROS_H_

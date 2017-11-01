@@ -11,6 +11,26 @@ you need to have the “binutils” package installed for readelf,
 and “pax-utils” for scanelf.
 
 
+## How we manage incompatible changes
+
+Our general practice with dynamic linker behavior changes is that they
+will be tied to an app's target API level:
+
+* Below the affected API level we'll preserve the old behavior or issue
+a warning, as appropriate.
+
+* At the affected API level and above, we’ll refuse to load the library.
+
+* Warnings about any behavior change that will affect a library if you
+increase your target API level will appear in logcat when that library
+is loaded, even if you're not yet targeting that API level.
+
+* On a developer preview build, dynamic linker warnings will also show up
+as toasts. Experience has shown that many developers don’t habitually
+check logcat for warnings until their app stops functioning, so the
+toasts help bring some visibility to the issues before it's too late.
+
+
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
@@ -124,6 +144,12 @@ short term (including libandroid_runtime.so, libcutils.so, libcrypto.so,
 and libssl.so). In order to give you more time to transition, we will
 temporarily support these libraries; so if you see a warning that means
 your code will not work in a future release -- please fix it now!
+
+In O and later, the system property `debug.ld.greylist_disabled` can be
+used to deny access to the greylist even to an app that would normally
+be allowed it. This allows you to test compatibility without bumping the
+app's `targetSdkVersion`. Use `setprop debug.ld.greylist_disabled true`
+to turn this on (any other value leaves the greylist enabled).
 
 ```
 $ readelf --dynamic libBroken.so | grep NEEDED
@@ -290,6 +316,16 @@ configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
 
 
+## DT_RUNPATH support (Available in API level >= 24)
+
+If an ELF file contains a DT_RUNPATH entry, the directories listed there
+will be searched to resolve DT_NEEDED entries. The string `${ORIGIN}` will
+be rewritten at runtime to the directory containing the ELF file. This
+allows the use of relative paths. The `${LIB}` and `${PLATFORM}`
+substitutions supported on some systems are not currently implemented on
+Android.
+
+
 ## Writable and Executable Segments (Enforced for API level >= 26)
 
 Each segment in an ELF file has associated flags that tell the
@@ -340,3 +376,22 @@ adb shell setprop debug.ld.all dlerror,dlopen
 ```
 
 enables logging of all errors and dlopen calls
+
+## dlclose interacts badly with thread local variables with non-trivial destructors
+
+Android allows `dlclose` to unload a library even if there are still
+thread-local variables with non-trivial destructors. This leads to
+crashes when a thread exits and attempts to call the destructor, the
+code for which has been unloaded (as in [issue 360]).
+
+[issue 360]: https://github.com/android-ndk/ndk/issues/360
+
+Not calling `dlclose` or ensuring that your library has `RTLD_NODELETE`
+set (so that calls to `dlclose` don't actually unload the library)
+are possible workarounds.
+
+|                   | Pre-M                      | M+      |
+| ----------------- | -------------------------- | ------- |
+| No workaround     | Works for static STL       | Broken  |
+| `-Wl,-z,nodelete` | Works for static STL       | Works   |
+| No `dlclose`      | Works                      | Works   |

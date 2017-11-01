@@ -20,4 +20,3 @@
 #define _LINUX_PARAM_H
 #include <asm/param.h>
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

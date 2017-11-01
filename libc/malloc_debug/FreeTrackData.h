@@ -42,7 +42,7 @@
 
 // Forward declarations.
 struct BacktraceHeader;
-struct Config;
+class Config;
 class DebugData;
 struct Header;
 

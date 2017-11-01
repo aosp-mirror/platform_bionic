@@ -38,57 +38,13 @@ __BEGIN_DECLS
 
 typedef unsigned int nfds_t;
 
-int poll(struct pollfd*, nfds_t, int);
-int ppoll(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __INTRODUCED_IN(21);
+int poll(struct pollfd* __fds, nfds_t __count, int __timeout_ms) __overloadable __RENAME_CLANG(poll);
+int ppoll(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset_t* __mask) __overloadable __RENAME_CLANG(ppoll) __INTRODUCED_IN(21);
 
-int __poll_chk(struct pollfd*, nfds_t, int, size_t) __INTRODUCED_IN(23);
-int __poll_real(struct pollfd*, nfds_t, int) __RENAME(poll);
-__errordecl(__poll_too_small_error, "poll: pollfd array smaller than fd count");
-
-int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*, size_t)
-  __INTRODUCED_IN(23);
-int __ppoll_real(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*) __RENAME(ppoll)
-  __INTRODUCED_IN(21);
-__errordecl(__ppoll_too_small_error, "ppoll: pollfd array smaller than fd count");
-
-#if defined(__BIONIC_FORTIFY)
-
-#if __ANDROID_API__ >= __ANDROID_API_M__
-__BIONIC_FORTIFY_INLINE
-int poll(struct pollfd* fds, nfds_t fd_count, int timeout) {
-#if defined(__clang__)
-  return __poll_chk(fds, fd_count, timeout, __bos(fds));
-#else
-  if (__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-    if (!__builtin_constant_p(fd_count)) {
-      return __poll_chk(fds, fd_count, timeout, __bos(fds));
-    } else if (__bos(fds) / sizeof(*fds) < fd_count) {
-      __poll_too_small_error();
-    }
-  }
-  return __poll_real(fds, fd_count, timeout);
-#endif
-}
-
-__BIONIC_FORTIFY_INLINE
-int ppoll(struct pollfd* fds, nfds_t fd_count, const struct timespec* timeout, const sigset_t* mask) {
-#if defined(__clang__)
-  return __ppoll_chk(fds, fd_count, timeout, mask, __bos(fds));
-#else
-  if (__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-    if (!__builtin_constant_p(fd_count)) {
-      return __ppoll_chk(fds, fd_count, timeout, mask, __bos(fds));
-    } else if (__bos(fds) / sizeof(*fds) < fd_count) {
-      __ppoll_too_small_error();
-    }
-  }
-  return __ppoll_real(fds, fd_count, timeout, mask);
-#endif
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
-
+#if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
+#include <bits/fortify/poll.h>
 #endif
 
 __END_DECLS
 
-#endif /* _POLL_H_ */
+#endif

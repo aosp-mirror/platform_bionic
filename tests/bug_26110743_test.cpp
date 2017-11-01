@@ -22,7 +22,7 @@
 #include <sys/stat.h>
 #include <sys/prctl.h>
 
-#include "private/ScopeGuard.h"
+#include <android-base/scopeguard.h>
 
 extern "C" pid_t gettid();
 
@@ -56,7 +56,7 @@ TEST(bug_26110743, ProcSelfReadlink) {
 TEST(bug_26110743, ProcSelfReadlink_NotDumpable) {
   int dumpable = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
   prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-  auto guard = make_scope_guard([&]() {
+  auto guard = android::base::make_scope_guard([&]() {
     // restore dumpable
     prctl(PR_SET_DUMPABLE, dumpable, 0, 0, 0);
   });
@@ -100,7 +100,7 @@ TEST(bug_26110743, ProcTaskFdReadlink) {
 TEST(bug_26110743, ProcTaskFdReadlink_NotDumpable) {
   int dumpable = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
   prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
-  auto guard = make_scope_guard([&]() {
+  auto guard = android::base::make_scope_guard([&]() {
     // restore dumpable
     prctl(PR_SET_DUMPABLE, dumpable, 0, 0, 0);
   });

@@ -17,6 +17,7 @@
 #ifndef __TEST_UTILS_H
 #define __TEST_UTILS_H
 
+#include <dlfcn.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -28,9 +29,20 @@
 #include <regex>
 
 #include <android-base/file.h>
+#include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
 
-#include "private/ScopeGuard.h"
+#if defined(__LP64__)
+#define PATH_TO_SYSTEM_LIB "/system/lib64/"
+#else
+#define PATH_TO_SYSTEM_LIB "/system/lib/"
+#endif
+
+#if defined(__GLIBC__)
+#define BIN_DIR "/bin/"
+#else
+#define BIN_DIR "/system/bin/"
+#endif
 
 #if defined(__BIONIC__)
 #define KNOWN_FAILURE_ON_BIONIC(x) xfail_ ## x
@@ -38,7 +50,15 @@
 #define KNOWN_FAILURE_ON_BIONIC(x) x
 #endif
 
+// bionic's dlsym doesn't work in static binaries, so we can't access icu,
+// so any unicode test case will fail.
+static inline bool have_dl() {
+  return (dlopen("libc.so", 0) != nullptr);
+}
+
 #if defined(__linux__)
+
+#include <sys/sysmacros.h>
 
 struct map_record {
   uintptr_t addr_start;
@@ -57,17 +77,13 @@ struct map_record {
 class Maps {
  public:
   static bool parse_maps(std::vector<map_record>* maps) {
-    FILE* fp = fopen("/proc/self/maps", "re");
-    if (fp == nullptr) {
-      return false;
-    }
+    maps->clear();
 
-    auto fp_guard = make_scope_guard([&]() {
-      fclose(fp);
-    });
+    std::unique_ptr<FILE, decltype(&fclose)> fp(fopen("/proc/self/maps", "re"), fclose);
+    if (!fp) return false;
 
     char line[BUFSIZ];
-    while (fgets(line, sizeof(line), fp) != nullptr) {
+    while (fgets(line, sizeof(line), fp.get()) != nullptr) {
       map_record record;
       uint32_t dev_major, dev_minor;
       int path_offset;
@@ -125,21 +141,82 @@ static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
 static inline void AssertChildExited(int pid, int expected_exit_status) {
   int status;
   ASSERT_EQ(pid, waitpid(pid, &status, 0));
-  ASSERT_TRUE(WIFEXITED(status));
-  ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
+  if (expected_exit_status >= 0) {
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
+  } else {
+    ASSERT_TRUE(WIFSIGNALED(status));
+    ASSERT_EQ(-expected_exit_status, WTERMSIG(status));
+  }
 }
 
 // The absolute path to the executable
 const std::string& get_executable_path();
 
-// Get realpath
-bool get_realpath(const std::string& path, std::string* realpath);
-// Get dirname
-std::string get_dirname(const char* path);
-
 // Access to argc/argv/envp
 int get_argc();
 char** get_argv();
 char** get_envp();
+
+// ExecTestHelper is only used in bionic and glibc tests.
+#ifndef __APPLE__
+class ExecTestHelper {
+ public:
+  char** GetArgs() {
+    return const_cast<char**>(args_.data());
+  }
+  const char* GetArg0() {
+    return args_[0];
+  }
+  char** GetEnv() {
+    return const_cast<char**>(env_.data());
+  }
+
+  void SetArgs(const std::vector<const char*> args) {
+    args_ = args;
+  }
+  void SetEnv(const std::vector<const char*> env) {
+    env_ = env;
+  }
+
+  void Run(const std::function<void()>& child_fn, int expected_exit_status,
+           const char* expected_output) {
+    int fds[2];
+    ASSERT_NE(pipe(fds), -1);
+
+    pid_t pid = fork();
+    ASSERT_NE(pid, -1);
+
+    if (pid == 0) {
+      // Child.
+      close(fds[0]);
+      dup2(fds[1], STDOUT_FILENO);
+      dup2(fds[1], STDERR_FILENO);
+      if (fds[1] != STDOUT_FILENO && fds[1] != STDERR_FILENO) close(fds[1]);
+      child_fn();
+      FAIL();
+    }
+
+    // Parent.
+    close(fds[1]);
+    std::string output;
+    char buf[BUFSIZ];
+    ssize_t bytes_read;
+    while ((bytes_read = TEMP_FAILURE_RETRY(read(fds[0], buf, sizeof(buf)))) > 0) {
+      output.append(buf, bytes_read);
+    }
+    close(fds[0]);
+
+    AssertChildExited(pid, expected_exit_status);
+    if (expected_output != nullptr) {
+      ASSERT_EQ(expected_output, output);
+    }
+  }
+
+ private:
+  std::vector<const char*> args_;
+  std::vector<const char*> env_;
+};
+#endif
 
 #endif

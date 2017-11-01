@@ -98,6 +98,7 @@ int execl(const char* __path, const char* __arg0, ...) __attribute__((__sentinel
 int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentinel__));
 int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
+int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN_FUTURE;
 
 int nice(int __incr);
 
@@ -118,46 +119,52 @@ int setresgid(gid_t __rgid, gid_t __egid, gid_t __sgid);
 int getresuid(uid_t* __ruid, uid_t* __euid, uid_t* __suid);
 int getresgid(gid_t* __rgid, gid_t* __egid, gid_t* __sgid);
 char* getlogin(void);
+int getlogin_r(char* __buffer, size_t __buffer_size) __INTRODUCED_IN_FUTURE;
 
 long fpathconf(int __fd, int __name);
 long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
 int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
-int link(const char* __oldpath, const char* __newpath);
-int linkat(int __olddirfd, const char* __oldpath, int __newdirfd,
-           const char* __newpath, int __flags) __INTRODUCED_IN(21);
+int link(const char* __old_path, const char* __new_path);
+int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
 int unlink(const char* __path);
 int unlinkat(int __dirfd, const char* __path, int __flags);
 int chdir(const char* __path);
 int fchdir(int __fd);
 int rmdir(const char* __path);
-int pipe(int* __pipefd);
+int pipe(int __fds[2]);
 #if defined(__USE_GNU)
-int pipe2(int* __pipefd, int __flags) __INTRODUCED_IN(9);
+int pipe2(int __fds[2], int __flags) __INTRODUCED_IN(9);
 #endif
 int chroot(const char* __path);
-int symlink(const char* __oldpath, const char* __newpath);
-int symlinkat(const char* __oldpath, int __newdirfd, const char* __newpath) __INTRODUCED_IN(21);
-ssize_t readlink(const char* __path, char* __buf, size_t __bufsiz);
-ssize_t readlinkat(int __dirfd, const char* __path, char* __buf,
-                   size_t __bufsiz) __INTRODUCED_IN(21);
+int symlink(const char* __old_path, const char* __new_path);
+int symlinkat(const char* __old_path, int __new_dir_fd, const char* __new_path) __INTRODUCED_IN(21);
+ssize_t readlink(const char* __path, char* __buf, size_t __buf_size)
+    __overloadable __RENAME_CLANG(readlink);
+ssize_t readlinkat(int __dir_fd, const char* __path, char* __buf, size_t __buf_size)
+    __INTRODUCED_IN(21) __overloadable __RENAME_CLANG(readlinkat);
 int chown(const char* __path, uid_t __owner, gid_t __group);
 int fchown(int __fd, uid_t __owner, gid_t __group);
-int fchownat(int __dirfd, const char* __path, uid_t __owner, gid_t __group, int __flags);
+int fchownat(int __dir_fd, const char* __path, uid_t __owner, gid_t __group, int __flags);
 int lchown(const char* __path, uid_t __owner, gid_t __group);
-char* getcwd(char* __buf, size_t __size);
+char* getcwd(char* __buf, size_t __size) __overloadable __RENAME_CLANG(getcwd);
 
 void sync(void);
+#if defined(__USE_GNU)
+int syncfs(int __fd) __INTRODUCED_IN_FUTURE;
+#endif
 
 int close(int __fd);
 
-ssize_t read(int __fd, void* __buf, size_t __count);
-ssize_t write(int __fd, const void* __buf, size_t __count);
+ssize_t read(int __fd, void* __buf, size_t __count) __overloadable
+    __RENAME_CLANG(read);
+ssize_t write(int __fd, const void* __buf, size_t __count) __overloadable
+    __RENAME_CLANG(write);
 
-int dup(int __oldfd);
-int dup2(int __oldfd, int __newfd);
-int dup3(int __oldfd, int __newfd, int __flags) __INTRODUCED_IN(21);
+int dup(int __old_fd);
+int dup2(int __old_fd, int __new_fd);
+int dup3(int __old_fd, int __new_fd, int __flags) __INTRODUCED_IN(21);
 int fsync(int __fd);
 int fdatasync(int __fd) __INTRODUCED_IN(9);
 
@@ -169,42 +176,45 @@ off_t lseek(int __fd, off_t __offset, int __whence);
 
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
 
-#if defined(__USE_FILE_OFFSET64) && __ANDROID_API__ >= __ANDROID_API_L__
+#if defined(__USE_FILE_OFFSET64)
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset) __RENAME(pread64)
-  __INTRODUCED_IN(12);
+ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
+  __overloadable __RENAME(pread64) __INTRODUCED_IN(12);
 ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
-  __RENAME(pwrite64) __INTRODUCED_IN(12);
+  __overloadable __RENAME(pwrite64) __INTRODUCED_IN(12);
 int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64) __INTRODUCED_IN(12);
 #else
 int truncate(const char* __path, off_t __length);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset);
-ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset);
+ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
+    __overloadable __RENAME_CLANG(pread);
+ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
+    __overloadable __RENAME_CLANG(pwrite);
 int ftruncate(int __fd, off_t __length);
 #endif
 
 int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
-ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
+ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset)
+    __INTRODUCED_IN(12) __overloadable __RENAME_CLANG(pread64);
 ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset)
-  __INTRODUCED_IN(12);
+    __INTRODUCED_IN(12) __overloadable __RENAME_CLANG(pwrite64);
 int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(12);
 
 int pause(void);
 unsigned int alarm(unsigned int __seconds);
 unsigned int sleep(unsigned int __seconds);
-int usleep(useconds_t __usec);
+int usleep(useconds_t __microseconds);
 
-int gethostname(char* __name, size_t __len);
-int sethostname(const char* __name, size_t __len) __INTRODUCED_IN(23);
+int gethostname(char* __buf, size_t __buf_size);
+int sethostname(const char* __name, size_t __n) __INTRODUCED_IN(23);
 
 int brk(void* __addr);
 void* sbrk(ptrdiff_t __increment);
 
 int isatty(int __fd);
 char* ttyname(int __fd);
-int ttyname_r(int __fd, char* __buf, size_t __buflen) __INTRODUCED_IN(8);
+int ttyname_r(int __fd, char* __buf, size_t __buf_size) __INTRODUCED_IN(8);
 
-int acct(const char* __filepath);
+int acct(const char* __path);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 int getpagesize(void) __INTRODUCED_IN(21);
@@ -216,7 +226,7 @@ static __inline__ int getpagesize(void) {
 
 long syscall(long __number, ...);
 
-int daemon(int __nochdir, int __noclose);
+int daemon(int __no_chdir, int __no_close);
 
 #if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
 int cacheflush(long __addr, long __nbytes, long __cache);
@@ -234,314 +244,14 @@ int tcsetpgrp(int __fd, pid_t __pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
-/* TODO(unified-headers): Factor out all the FORTIFY features. */
-char* __getcwd_chk(char*, size_t, size_t) __INTRODUCED_IN(24);
-__errordecl(__getcwd_dest_size_error, "getcwd called with size bigger than destination");
-char* __getcwd_real(char*, size_t) __RENAME(getcwd);
+int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
+int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 
-ssize_t __pread_chk(int, void*, size_t, off_t, size_t) __INTRODUCED_IN(23);
-__errordecl(__pread_dest_size_error, "pread called with size bigger than destination");
-__errordecl(__pread_count_toobig_error, "pread called with count > SSIZE_MAX");
-ssize_t __pread_real(int, void*, size_t, off_t) __RENAME(pread);
+void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN_FUTURE;
 
-ssize_t __pread64_chk(int, void*, size_t, off64_t, size_t) __INTRODUCED_IN(23);
-__errordecl(__pread64_dest_size_error, "pread64 called with size bigger than destination");
-__errordecl(__pread64_count_toobig_error, "pread64 called with count > SSIZE_MAX");
-ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64) __INTRODUCED_IN(12);
-
-ssize_t __pwrite_chk(int, const void*, size_t, off_t, size_t) __INTRODUCED_IN(24);
-__errordecl(__pwrite_dest_size_error, "pwrite called with size bigger than destination");
-__errordecl(__pwrite_count_toobig_error, "pwrite called with count > SSIZE_MAX");
-ssize_t __pwrite_real(int, const void*, size_t, off_t) __RENAME(pwrite);
-
-ssize_t __pwrite64_chk(int, const void*, size_t, off64_t, size_t) __INTRODUCED_IN(24);
-__errordecl(__pwrite64_dest_size_error, "pwrite64 called with size bigger than destination");
-__errordecl(__pwrite64_count_toobig_error, "pwrite64 called with count > SSIZE_MAX");
-ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64) __INTRODUCED_IN(12);
-
-ssize_t __read_chk(int, void*, size_t, size_t) __INTRODUCED_IN(21);
-__errordecl(__read_dest_size_error, "read called with size bigger than destination");
-__errordecl(__read_count_toobig_error, "read called with count > SSIZE_MAX");
-ssize_t __read_real(int, void*, size_t) __RENAME(read);
-
-ssize_t __write_chk(int, const void*, size_t, size_t) __INTRODUCED_IN(24);
-__errordecl(__write_dest_size_error, "write called with size bigger than destination");
-__errordecl(__write_count_toobig_error, "write called with count > SSIZE_MAX");
-ssize_t __write_real(int, const void*, size_t) __RENAME(write);
-
-ssize_t __readlink_chk(const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
-__errordecl(__readlink_dest_size_error, "readlink called with size bigger than destination");
-__errordecl(__readlink_size_toobig_error, "readlink called with size > SSIZE_MAX");
-ssize_t __readlink_real(const char*, char*, size_t) __RENAME(readlink);
-
-ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
-__errordecl(__readlinkat_dest_size_error, "readlinkat called with size bigger than destination");
-__errordecl(__readlinkat_size_toobig_error, "readlinkat called with size > SSIZE_MAX");
-ssize_t __readlinkat_real(int dirfd, const char*, char*, size_t) __RENAME(readlinkat) __INTRODUCED_IN(21);
-
-int getdomainname(char*, size_t) __INTRODUCED_IN_FUTURE;
-int setdomainname(const char*, size_t) __INTRODUCED_IN_FUTURE;
-
-#if defined(__BIONIC_FORTIFY)
-
-#if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_FORTIFY_INLINE
-char* getcwd(char* buf, size_t size) {
-    size_t bos = __bos(buf);
-
-#if defined(__clang__)
-    /*
-     * Work around LLVM's incorrect __builtin_object_size implementation here
-     * to avoid needing the workaround in the __getcwd_chk ABI forever.
-     *
-     * https://llvm.org/bugs/show_bug.cgi?id=23277
-     */
-    if (buf == NULL) {
-        bos = __BIONIC_FORTIFY_UNKNOWN_SIZE;
-    }
-#else
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __getcwd_real(buf, size);
-    }
-
-    if (__builtin_constant_p(size) && (size > bos)) {
-        __getcwd_dest_size_error();
-    }
-
-    if (__builtin_constant_p(size) && (size <= bos)) {
-        return __getcwd_real(buf, size);
-    }
+#if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
+#include <bits/fortify/unistd.h>
 #endif
-
-    return __getcwd_chk(buf, size, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-#if defined(__USE_FILE_OFFSET64)
-#define __PREAD_PREFIX(x) __pread64_ ## x
-#else
-#define __PREAD_PREFIX(x) __pread_ ## x
-#endif
-
-#if __ANDROID_API__ >= __ANDROID_API_M__
-__BIONIC_FORTIFY_INLINE
-ssize_t pread(int fd, void* buf, size_t count, off_t offset) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __PREAD_PREFIX(count_toobig_error)();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __PREAD_PREFIX(real)(fd, buf, count, offset);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __PREAD_PREFIX(dest_size_error)();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __PREAD_PREFIX(real)(fd, buf, count, offset);
-    }
-#endif
-
-    return __PREAD_PREFIX(chk)(fd, buf, count, offset, bos);
-}
-
-__BIONIC_FORTIFY_INLINE
-ssize_t pread64(int fd, void* buf, size_t count, off64_t offset) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __pread64_count_toobig_error();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __pread64_real(fd, buf, count, offset);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __pread64_dest_size_error();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __pread64_real(fd, buf, count, offset);
-    }
-#endif
-
-    return __pread64_chk(fd, buf, count, offset, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
-
-#if defined(__USE_FILE_OFFSET64)
-#define __PWRITE_PREFIX(x) __pwrite64_ ## x
-#else
-#define __PWRITE_PREFIX(x) __pwrite_ ## x
-#endif
-
-#if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_FORTIFY_INLINE
-ssize_t pwrite(int fd, const void* buf, size_t count, off_t offset) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __PWRITE_PREFIX(count_toobig_error)();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __PWRITE_PREFIX(real)(fd, buf, count, offset);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __PWRITE_PREFIX(dest_size_error)();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __PWRITE_PREFIX(real)(fd, buf, count, offset);
-    }
-#endif
-
-    return __PWRITE_PREFIX(chk)(fd, buf, count, offset, bos);
-}
-
-__BIONIC_FORTIFY_INLINE
-ssize_t pwrite64(int fd, const void* buf, size_t count, off64_t offset) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __pwrite64_count_toobig_error();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __pwrite64_real(fd, buf, count, offset);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __pwrite64_dest_size_error();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __pwrite64_real(fd, buf, count, offset);
-    }
-#endif
-
-    return __pwrite64_chk(fd, buf, count, offset, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-#if __ANDROID_API__ >= __ANDROID_API_L__
-__BIONIC_FORTIFY_INLINE
-ssize_t read(int fd, void* buf, size_t count) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __read_count_toobig_error();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __read_real(fd, buf, count);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __read_dest_size_error();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __read_real(fd, buf, count);
-    }
-#endif
-
-    return __read_chk(fd, buf, count, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
-
-#if __ANDROID_API__ >= __ANDROID_API_N__
-__BIONIC_FORTIFY_INLINE
-ssize_t write(int fd, const void* buf, size_t count) {
-    size_t bos = __bos0(buf);
-
-#if !defined(__clang__)
-#if 0 /* work around a false positive due to a missed optimization */
-    if (__builtin_constant_p(count) && (count > SSIZE_MAX)) {
-        __write_count_toobig_error();
-    }
-#endif
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __write_real(fd, buf, count);
-    }
-
-    if (__builtin_constant_p(count) && (count > bos)) {
-        __write_dest_size_error();
-    }
-
-    if (__builtin_constant_p(count) && (count <= bos)) {
-        return __write_real(fd, buf, count);
-    }
-#endif
-
-    return __write_chk(fd, buf, count, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
-
-#if __ANDROID_API__ >= __ANDROID_API_M__
-__BIONIC_FORTIFY_INLINE
-ssize_t readlink(const char* path, char* buf, size_t size) {
-    size_t bos = __bos(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(size) && (size > SSIZE_MAX)) {
-        __readlink_size_toobig_error();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __readlink_real(path, buf, size);
-    }
-
-    if (__builtin_constant_p(size) && (size > bos)) {
-        __readlink_dest_size_error();
-    }
-
-    if (__builtin_constant_p(size) && (size <= bos)) {
-        return __readlink_real(path, buf, size);
-    }
-#endif
-
-    return __readlink_chk(path, buf, size, bos);
-}
-
-__BIONIC_FORTIFY_INLINE
-ssize_t readlinkat(int dirfd, const char* path, char* buf, size_t size) {
-    size_t bos = __bos(buf);
-
-#if !defined(__clang__)
-    if (__builtin_constant_p(size) && (size > SSIZE_MAX)) {
-        __readlinkat_size_toobig_error();
-    }
-
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __readlinkat_real(dirfd, path, buf, size);
-    }
-
-    if (__builtin_constant_p(size) && (size > bos)) {
-        __readlinkat_dest_size_error();
-    }
-
-    if (__builtin_constant_p(size) && (size <= bos)) {
-        return __readlinkat_real(dirfd, path, buf, size);
-    }
-#endif
-
-    return __readlinkat_chk(dirfd, path, buf, size, bos);
-}
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
-
-#endif /* defined(__BIONIC_FORTIFY) */
 
 __END_DECLS
 

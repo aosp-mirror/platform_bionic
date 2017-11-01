@@ -33,12 +33,17 @@
 #include <sys/types.h>
 #include <linux/ipc.h>
 
+#if defined(__USE_GNU)
+#define __key key
+#define __seq seq
+#endif
+
 #define ipc_perm ipc64_perm
 
 __BEGIN_DECLS
 
-key_t ftok(const char* path, int id);
+key_t ftok(const char* __path, int __id);
 
 __END_DECLS
 
-#endif /* _SYS_IPC_H */
+#endif

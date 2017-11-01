@@ -36,6 +36,8 @@
 #include <unistd.h>
 #include <unwind.h>
 
+#include <demangle.h>
+
 #include "backtrace.h"
 #include "debug_log.h"
 #include "MapData.h"
@@ -153,18 +155,23 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
     if (soname == nullptr) {
       soname = "<unknown>";
     }
+
+    char offset_buf[128];
+    if (entry != nullptr && entry->offset != 0) {
+      snprintf(offset_buf, sizeof(offset_buf), " (offset 0x%" PRIxPTR ")", entry->offset);
+    } else {
+      offset_buf[0] = '\0';
+    }
+
     char buf[1024];
     if (symbol != nullptr) {
-      char* demangled_symbol = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
-      const char* best_name = (demangled_symbol != nullptr) ? demangled_symbol : symbol;
-
-      __libc_format_buffer(buf, sizeof(buf),
-          "          #%02zd  pc %" PAD_PTR "  %s (%s+%" PRIuPTR ")\n", frame_num,
-          rel_pc, soname, best_name, frames[frame_num] - offset);
-      free(demangled_symbol);
+      async_safe_format_buffer(
+          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s (%s+%" PRIuPTR ")\n", frame_num,
+          rel_pc, soname, offset_buf, demangle(symbol).c_str(), frames[frame_num] - offset);
     } else {
-      __libc_format_buffer(buf, sizeof(buf),
-          "          #%02zd  pc %" PAD_PTR "  %s\n", frame_num, rel_pc, soname);
+      async_safe_format_buffer(
+          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s\n", frame_num, rel_pc, soname,
+          offset_buf);
     }
     str += buf;
   }

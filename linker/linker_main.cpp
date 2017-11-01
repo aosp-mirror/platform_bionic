@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include "linker_debug.h"
+#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
@@ -41,8 +42,10 @@
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
 #ifdef __ANDROID__
-#include "debuggerd/client.h"
+#include "debuggerd/handler.h"
 #endif
+
+#include <async_safe/log.h>
 
 #include <vector>
 
@@ -84,6 +87,7 @@ bool solist_remove_soinfo(soinfo* si) {
 
   // prev will never be null, because the first entry in solist is
   // always the static libdl_info.
+  CHECK(prev != nullptr);
   prev->next = si->next;
   if (si == sonext) {
     sonext = prev;
@@ -125,17 +129,16 @@ static void parse_LD_PRELOAD(const char* path) {
   if (path != nullptr) {
     // We have historically supported ':' as well as ' ' in LD_PRELOAD.
     g_ld_preload_names = android::base::Split(path, " :");
-    std::remove_if(g_ld_preload_names.begin(),
-                   g_ld_preload_names.end(),
-                   [] (const std::string& s) { return s.empty(); });
+    g_ld_preload_names.erase(std::remove_if(g_ld_preload_names.begin(), g_ld_preload_names.end(),
+                                            [](const std::string& s) { return s.empty(); }),
+                             g_ld_preload_names.end());
   }
 }
 
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
-static void add_vdso(KernelArgumentBlock& args __unused) {
-#if defined(AT_SYSINFO_EHDR)
+static void add_vdso(KernelArgumentBlock& args) {
   ElfW(Ehdr)* ehdr_vdso = reinterpret_cast<ElfW(Ehdr)*>(args.getauxval(AT_SYSINFO_EHDR));
   if (ehdr_vdso == nullptr) {
     return;
@@ -151,7 +154,10 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
 
   si->prelink_image();
   si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr);
-#endif
+  // prevents accidental unloads...
+  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
+  si->set_linked();
+  si->call_constructors();
 }
 
 /* gdb expects the linker to be in the debug shared object list.
@@ -160,11 +166,11 @@ static void add_vdso(KernelArgumentBlock& args __unused) {
  * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
  * Note that the linker shouldn't be on the soinfo list.
  */
-static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
-  static link_map linker_link_map_for_gdb;
+static link_map linker_link_map;
 
-  linker_link_map_for_gdb.l_addr = linker_base;
-  linker_link_map_for_gdb.l_name = linker_path;
+static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
+  linker_link_map.l_addr = linker_base;
+  linker_link_map.l_name = linker_path;
 
   /*
    * Set the dynamic field in the link map otherwise gdb will complain with
@@ -175,9 +181,8 @@ static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
   phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_link_map_for_gdb.l_ld, nullptr);
+                                 &linker_link_map.l_ld, nullptr);
 
-  insert_link_map_into_debug_map(&linker_link_map_for_gdb);
 }
 
 extern "C" int __system_properties_init(void);
@@ -188,7 +193,7 @@ static const char* get_executable_path() {
     char path[PATH_MAX];
     ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
     if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      __libc_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
     }
     executable_path = std::string(path, path_len);
   }
@@ -202,12 +207,28 @@ static char kLinkerPath[] = "/system/bin/linker64";
 static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
+static void __linker_cannot_link(const char* argv0) {
+  async_safe_format_fd(STDERR_FILENO,
+                       "CANNOT LINK EXECUTABLE \"%s\": %s\n",
+                       argv0,
+                       linker_get_error_buffer());
+
+  async_safe_format_log(ANDROID_LOG_FATAL,
+                        "linker",
+                        "CANNOT LINK EXECUTABLE \"%s\": %s",
+                        argv0,
+                        linker_get_error_buffer());
+  _exit(EXIT_FAILURE);
+}
+
 /*
  * This code is called after the linker has linked itself and
  * fixed it's own GOT. It is safe to make references to externs
  * and other non-local data at this point.
  */
-static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(Addr) linker_base) {
+static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
+  ProtectedDataGuard guard;
+
 #if TIMING
   struct timeval t0, t1;
   gettimeofday(&t0, 0);
@@ -264,16 +285,13 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   // the executable could be unlinked by this point and it should
   // not cause a crash (see http://b/31084669)
   if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
-    __libc_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+    async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
   }
 
   const char* executable_path = get_executable_path();
   soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
-  if (si == nullptr) {
-    __libc_fatal("Couldn't allocate soinfo: out of memory?");
-  }
 
-  /* bootstrap the link map, the main exe always needs to be first */
+  // Bootstrap the link map, the main exe always needs to be first.
   si->set_main_executable();
   link_map* map = &(si->link_map_head);
 
@@ -283,7 +301,7 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   map->l_addr = 0;
   map->l_name = const_cast<char*>(executable_path);
   insert_link_map_into_debug_map(map);
-  init_linker_info_for_gdb(linker_base, kLinkerPath);
+  insert_link_map_into_debug_map(&linker_link_map);
 
   // Extract information passed from the kernel.
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
@@ -303,24 +321,29 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
       break;
     }
   }
+
+  if (si->base == 0) {
+    async_safe_fatal("Could not find a PHDR: broken executable?");
+  }
+
   si->dynamic = nullptr;
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
 
   // We haven't supported non-PIE since Lollipop for security reasons.
   if (elf_hdr->e_type != ET_DYN) {
-    // We don't use __libc_fatal here because we don't want a tombstone: it's
-    // been several years now but we still find ourselves on app compatibility
+    // We don't use async_safe_fatal here because we don't want a tombstone:
+    // even after several years we still find ourselves on app compatibility
     // investigations because some app's trying to launch an executable that
     // hasn't worked in at least three years, and we've "helpfully" dropped a
     // tombstone for them. The tombstone never provided any detail relevant to
     // fixing the problem anyway, and the utility of drawing extra attention
     // to the problem is non-existent at this late date.
-    __libc_format_fd(STDERR_FILENO,
-                     "\"%s\": error: Android 5.0 and later only support "
-                     "position-independent executables (-fPIE).\n",
-                     g_argv[0]);
-    exit(0);
+    async_safe_format_fd(STDERR_FILENO,
+                         "\"%s\": error: Android 5.0 and later only support "
+                         "position-independent executables (-fPIE).\n",
+                         g_argv[0]);
+    exit(EXIT_FAILURE);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -329,14 +352,21 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
 
   somain = si;
 
-  init_default_namespace();
+  std::vector<android_namespace_t*> namespaces = init_default_namespaces(executable_path);
 
-  if (!si->prelink_image()) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
-  }
+  if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
   // add somain to global group
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
+  // ... and add it to all other linked namespaces
+  for (auto linked_ns : namespaces) {
+    if (linked_ns != &g_default_namespace) {
+      linked_ns->add_soinfo(somain);
+      somain->add_secondary_namespace(linked_ns);
+    }
+  }
+
+  add_vdso(args);
 
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
@@ -354,33 +384,42 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
   const char** needed_library_names = &needed_library_name_list[0];
   size_t needed_libraries_count = needed_library_name_list.size();
 
+  // readers_map is shared across recursive calls to find_libraries so that we
+  // don't need to re-load elf headers.
+  std::unordered_map<const soinfo*, ElfReader> readers_map;
   if (needed_libraries_count > 0 &&
-      !find_libraries(&g_default_namespace, si, needed_library_names, needed_libraries_count,
-                      nullptr, &g_ld_preloads, ld_preloads_count, RTLD_GLOBAL, nullptr,
-                      /* add_as_children */ true)) {
-    __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+      !find_libraries(&g_default_namespace,
+                      si,
+                      needed_library_names,
+                      needed_libraries_count,
+                      nullptr,
+                      &g_ld_preloads,
+                      ld_preloads_count,
+                      RTLD_GLOBAL,
+                      nullptr,
+                      true /* add_as_children */,
+                      true /* search_linked_namespaces */,
+                      readers_map,
+                      &namespaces)) {
+    __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
     if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
-      __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", g_argv[0], linker_get_error_buffer());
+      __linker_cannot_link(g_argv[0]);
     }
     si->increment_ref_count();
   }
 
-  add_vdso(args);
+  if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
-  {
-    ProtectedDataGuard guard;
+  si->call_pre_init_constructors();
 
-    si->call_pre_init_constructors();
-
-    /* After the prelink_image, the si->load_bias is initialized.
-     * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
-     * We need to update this value for so exe here. So Unwind_Backtrace
-     * for some arch like x86 could work correctly within so exe.
-     */
-    map->l_addr = si->load_bias;
-    si->call_constructors();
-  }
+  /* After the prelink_image, the si->load_bias is initialized.
+   * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
+   * We need to update this value for so exe here. So Unwind_Backtrace
+   * for some arch like x86 could work correctly within so exe.
+   */
+  map->l_addr = si->load_bias;
+  si->call_constructors();
 
 #if TIMING
   gettimeofday(&t1, nullptr);
@@ -452,10 +491,6 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
-static void __linker_cannot_link(const char* argv0) {
-  __libc_fatal("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
-}
-
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -468,25 +503,28 @@ static void __linker_cannot_link(const char* argv0) {
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
-  ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
+  // AT_BASE is set to 0 in the case when linker is run by iself
+  // so in order to link the linker it needs to calcuate AT_BASE
+  // using information at hand. The trick below takes advantage
+  // of the fact that the value of linktime_addr before relocations
+  // are run is an offset and this can be used to calculate AT_BASE.
+  static uintptr_t linktime_addr = reinterpret_cast<uintptr_t>(&linktime_addr);
+  ElfW(Addr) linker_addr = reinterpret_cast<uintptr_t>(&linktime_addr) - linktime_addr;
+
+#if defined(__clang_analyzer__)
+  // The analyzer assumes that linker_addr will always be null. Make it an
+  // unknown value so we don't have to mark N places with NOLINTs.
+  //
+  // (`+=`, rather than `=`, allows us to sidestep a potential "unused store"
+  // complaint)
+  linker_addr += reinterpret_cast<uintptr_t>(raw_args);
+#endif
+
   ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
   soinfo linker_so(nullptr, nullptr, nullptr, 0, 0);
-
-  // If the linker is not acting as PT_INTERP entry_point is equal to
-  // _start. Which means that the linker is running as an executable and
-  // already linked by PT_INTERP.
-  //
-  // This happens when user tries to run 'adb shell /system/bin/linker'
-  // see also https://code.google.com/p/android/issues/detail?id=63174
-  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
-    __libc_format_fd(STDOUT_FILENO,
-                     "This is %s, the helper program for shared library executables.\n",
-                     args.argv[0]);
-    exit(0);
-  }
 
   linker_so.base = linker_addr;
   linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
@@ -534,16 +572,31 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize the linker's own global variables
   linker_so.call_constructors();
 
+  // If the linker is not acting as PT_INTERP entry_point is equal to
+  // _start. Which means that the linker is running as an executable and
+  // already linked by PT_INTERP.
+  //
+  // This happens when user tries to run 'adb shell /system/bin/linker'
+  // see also https://code.google.com/p/android/issues/detail?id=63174
+  if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
+    async_safe_format_fd(STDOUT_FILENO,
+                     "This is %s, the helper program for dynamic executables.\n",
+                     args.argv[0]);
+    exit(0);
+  }
+
+  init_linker_info_for_gdb(linker_addr, kLinkerPath);
+
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = get_libdl_info(kLinkerPath);
+  sonext = solist = get_libdl_info(kLinkerPath, linker_so, linker_link_map);
   g_default_namespace.add_soinfo(solist);
 
   // We have successfully fixed our own relocations. It's safe to run
   // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);
+  ElfW(Addr) start_address = __linker_init_post_relocation(args);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 

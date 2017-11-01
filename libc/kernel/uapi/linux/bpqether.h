@@ -18,32 +18,24 @@
  ****************************************************************************/
 #ifndef __BPQETHER_H
 #define __BPQETHER_H
-#ifndef __LINUX_IF_ETHER_H
 #include <linux/if_ether.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#endif
 #define SIOCSBPQETHOPT (SIOCDEVPRIVATE + 0)
 #define SIOCSBPQETHADDR (SIOCDEVPRIVATE + 1)
 struct bpq_ethaddr {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   unsigned char destination[ETH_ALEN];
   unsigned char accept[ETH_ALEN];
 };
 #define SIOCGBPQETHPARAM 0x5000
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define SIOCSBPQETHPARAM 0x5001
 struct bpq_req {
   int cmd;
   int speed;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int clockmode;
   int txdelay;
   unsigned char persist;
   int slotime;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   int squeldelay;
   int dmachan;
   int irq;
 };
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #endif

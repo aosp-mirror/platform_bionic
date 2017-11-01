@@ -21,11 +21,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-
-#include "private/ScopeGuard.h"
+#if __has_include(<sys/auxv.h>)
+#include <sys/auxv.h>
+#endif
 
 #include <string>
 #include <thread>
+
+#include <android-base/scopeguard.h>
 
 #include "gtest_globals.h"
 #include "dlfcn_symlink_support.h"
@@ -245,8 +248,54 @@ TEST(dlfcn, dlopen_by_soname) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlopen_vdso) {
+#if __has_include(<sys/auxv.h>)
+  if (getauxval(AT_SYSINFO_EHDR) == 0) {
+    GTEST_LOG_(INFO) << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test.";
+    return;
+  }
+#endif
+  void* handle = dlopen("linux-vdso.so.1", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+}
+
 // mips doesn't support ifuncs
 #if !defined(__mips__)
+TEST(dlfcn, ifunc_variable) {
+  typedef const char* (*fn_ptr)();
+
+  // ifunc's choice depends on whether IFUNC_CHOICE has a value
+  // first check the set case
+  setenv("IFUNC_CHOICE", "set", 1);
+  // preload libtest_ifunc_variable_impl.so
+  void* handle_impl = dlopen("libtest_ifunc_variable_impl.so", RTLD_NOW);
+  void* handle = dlopen("libtest_ifunc_variable.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  const char** foo_ptr = reinterpret_cast<const char**>(dlsym(handle, "foo"));
+  fn_ptr foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
+  ASSERT_TRUE(foo_ptr != nullptr) << dlerror();
+  ASSERT_TRUE(foo_library_ptr != nullptr) << dlerror();
+  ASSERT_EQ(strncmp("set", *foo_ptr, 3), 0);
+  ASSERT_EQ(strncmp("set", foo_library_ptr(), 3), 0);
+  dlclose(handle);
+  dlclose(handle_impl);
+
+  // then check the unset case
+  unsetenv("IFUNC_CHOICE");
+  handle_impl = dlopen("libtest_ifunc_variable_impl.so", RTLD_NOW);
+  handle = dlopen("libtest_ifunc_variable.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  foo_ptr = reinterpret_cast<const char**>(dlsym(handle, "foo"));
+  foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
+  ASSERT_TRUE(foo_ptr != nullptr) << dlerror();
+  ASSERT_TRUE(foo_library_ptr != nullptr) << dlerror();
+  ASSERT_EQ(strncmp("unset", *foo_ptr, 5), 0);
+  ASSERT_EQ(strncmp("unset", foo_library_ptr(), 5), 0);
+  dlclose(handle);
+  dlclose(handle_impl);
+}
+
 TEST(dlfcn, ifunc) {
   typedef const char* (*fn_ptr)();
 
@@ -254,11 +303,11 @@ TEST(dlfcn, ifunc) {
   // first check the set case
   setenv("IFUNC_CHOICE", "set", 1);
   void* handle = dlopen("libtest_ifunc.so", RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
   fn_ptr foo_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo"));
   fn_ptr foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
-  ASSERT_TRUE(foo_ptr != nullptr);
-  ASSERT_TRUE(foo_library_ptr != nullptr);
+  ASSERT_TRUE(foo_ptr != nullptr) << dlerror();
+  ASSERT_TRUE(foo_library_ptr != nullptr) << dlerror();
   ASSERT_EQ(strncmp("set", foo_ptr(), 3), 0);
   ASSERT_EQ(strncmp("set", foo_library_ptr(), 3), 0);
   dlclose(handle);
@@ -266,13 +315,13 @@ TEST(dlfcn, ifunc) {
   // then check the unset case
   unsetenv("IFUNC_CHOICE");
   handle = dlopen("libtest_ifunc.so", RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
   foo_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo"));
   foo_library_ptr = reinterpret_cast<fn_ptr>(dlsym(handle, "foo_library"));
-  ASSERT_TRUE(foo_ptr != nullptr);
-  ASSERT_TRUE(foo_library_ptr != nullptr);
+  ASSERT_TRUE(foo_ptr != nullptr) << dlerror();
+  ASSERT_TRUE(foo_library_ptr != nullptr) << dlerror();
   ASSERT_EQ(strncmp("unset", foo_ptr(), 5), 0);
-  ASSERT_EQ(strncmp("unset", foo_library_ptr(), 3), 0);
+  ASSERT_EQ(strncmp("unset", foo_library_ptr(), 5), 0);
   dlclose(handle);
 }
 
@@ -320,9 +369,7 @@ TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // in both dt_needed libraries, the correct relocation should
   // use the function defined in libtest_relo_check_dt_needed_order_1.so
   void* handle = nullptr;
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
 
   handle = dlopen("libtest_relo_check_dt_needed_order.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -906,12 +953,25 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #endif
 }
 
+#if defined (__aarch64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
+#elif defined (__arm__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
+#elif defined (__i386__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
+#elif defined (__x86_64__)
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86_64/"
+#elif defined (__mips__)
 #if defined(__LP64__)
-#define PATH_TO_SYSTEM_LIB "/system/lib64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips64/"
 #else
-#define PATH_TO_SYSTEM_LIB "/system/lib/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
+#endif
+#else
+#error "Unknown architecture"
 #endif
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
+#define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__BIONIC__)
@@ -919,9 +979,18 @@ TEST(dlfcn, dladdr_libc) {
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
   ASSERT_TRUE(dladdr(addr, &info) != 0);
 
-  // /system/lib is symlink when this test is executed on host.
   char libc_realpath[PATH_MAX];
-  ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+
+  // Check if libc is in canonical path or in alternate path.
+  if (strncmp(ALTERNATE_PATH_TO_SYSTEM_LIB,
+              info.dli_fname,
+              sizeof(ALTERNATE_PATH_TO_SYSTEM_LIB) - 1) == 0) {
+    // Platform with emulated architecture.  Symlink on ARC++.
+    ASSERT_TRUE(realpath(ALTERNATE_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+  } else {
+    // /system/lib is symlink when this test is executed on host.
+    ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+  }
 
   ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
@@ -954,9 +1023,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("libgnu-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
@@ -977,9 +1044,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
 TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
   void* handle = dlopen("libsysv-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
-  auto guard = make_scope_guard([&]() {
-    dlclose(handle);
-  });
+  auto guard = android::base::make_scope_guard([&]() { dlclose(handle); });
   void* sym = dlsym(handle, "getRandomNumber");
   ASSERT_TRUE(sym != nullptr) << dlerror();
   int (*fn)(void);
@@ -1099,6 +1164,34 @@ TEST(dlfcn, dlopen_dlopen_from_ctor) {
 #endif
 }
 
+static std::string g_fini_call_order_str;
+
+static void register_fini_call(const char* s) {
+  g_fini_call_order_str += s;
+}
+
+static void test_init_fini_call_order_for(const char* libname) {
+  g_fini_call_order_str.clear();
+  void* handle = dlopen(libname, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  typedef int (*get_init_order_number_t)();
+  get_init_order_number_t get_init_order_number =
+          reinterpret_cast<get_init_order_number_t>(dlsym(handle, "get_init_order_number"));
+  ASSERT_EQ(321, get_init_order_number());
+
+  typedef void (*set_fini_callback_t)(void (*f)(const char*));
+  set_fini_callback_t set_fini_callback =
+          reinterpret_cast<set_fini_callback_t>(dlsym(handle, "set_fini_callback"));
+  set_fini_callback(register_fini_call);
+  dlclose(handle);
+  ASSERT_EQ("(root)(child)(grandchild)", g_fini_call_order_str);
+}
+
+TEST(dlfcn, init_fini_call_order) {
+  test_init_fini_call_order_for("libtest_init_fini_order_root.so");
+  test_init_fini_call_order_for("libtest_init_fini_order_root2.so");
+}
+
 TEST(dlfcn, symbol_versioning_use_v1) {
   void* handle = dlopen("libtest_versioned_uselibv1.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -1193,10 +1286,41 @@ TEST(dlfcn, dt_runpath_smoke) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dt_runpath_absolute_path) {
+  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  typedef void *(* dlopen_b_fn)();
+  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
+  ASSERT_TRUE(fn != nullptr) << dlerror();
+
+  void *p = fn();
+  ASSERT_TRUE(p != nullptr);
+
+  dlclose(handle);
+}
+
+TEST(dlfcn, RTLD_macros) {
+#if !defined(RTLD_LOCAL)
+#error no RTLD_LOCAL
+#elif !defined(RTLD_LAZY)
+#error no RTLD_LAZY
+#elif !defined(RTLD_NOW)
+#error no RTLD_NOW
+#elif !defined(RTLD_NOLOAD)
+#error no RTLD_NOLOAD
+#elif !defined(RTLD_GLOBAL)
+#error no RTLD_GLOBAL
+#elif !defined(RTLD_NODELETE)
+#error no RTLD_NODELETE
+#endif
+}
+
 // Bionic specific tests
 #if defined(__BIONIC__)
 
-#if defined(__arm__) || defined(__i386__)
+#if defined(__arm__)
 const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
   return reinterpret_cast<const llvm::ELF::Elf32_Dyn*>(p);
 }
@@ -1238,8 +1362,14 @@ void validate_compatibility_of_native_library(const std::string& path, ELFT* elf
 }
 
 void validate_compatibility_of_native_library(const char* soname) {
-  std::string path = std::string(PATH_TO_SYSTEM_LIB) + soname;
+  // On the systems with emulation system libraries would be of different
+  // architecture.  Try to use alternate paths first.
+  std::string path = std::string(ALTERNATE_PATH_TO_SYSTEM_LIB) + soname;
   auto binary_or_error = llvm::object::createBinary(path);
+  if (!binary_or_error) {
+    path = std::string(PATH_TO_SYSTEM_LIB) + soname;
+    binary_or_error = llvm::object::createBinary(path);
+  }
   ASSERT_FALSE(!binary_or_error);
 
   llvm::object::Binary* binary = binary_or_error.get().getBinary();
@@ -1254,7 +1384,7 @@ void validate_compatibility_of_native_library(const char* soname) {
   validate_compatibility_of_native_library(path, elf);
 }
 
-// This is a test for app compatibility workaround for arm and x86 apps
+// This is a test for app compatibility workaround for arm apps
 // affected by http://b/24465209
 TEST(dlext, compat_elf_hash_and_relocation_tables) {
   validate_compatibility_of_native_library("libc.so");
@@ -1266,22 +1396,7 @@ TEST(dlext, compat_elf_hash_and_relocation_tables) {
   validate_compatibility_of_native_library("libjnigraphics.so");
 }
 
-#endif //  defined(__arm__) || defined(__i386__)
-
-TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
-  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
-  ASSERT_TRUE(handle != nullptr) << dlerror();
-
-  typedef void *(* dlopen_b_fn)();
-  dlopen_b_fn fn = (dlopen_b_fn)dlsym(handle, "dlopen_b");
-  ASSERT_TRUE(fn != nullptr) << dlerror();
-
-  void *p = fn();
-  ASSERT_TRUE(p != nullptr);
-
-  dlclose(handle);
-}
+#endif //  defined(__arm__)
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   const std::string libpath = get_testlib_root() +
@@ -1379,6 +1494,11 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
+TEST(dlfcn, dlopen_df_1_global) {
+  void* handle = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
 }
 
 #endif

@@ -59,6 +59,49 @@ void TrackData::GetList(std::vector<const Header*>* list) {
   });
 }
 
+void TrackData::GetListBySizeThenBacktrace(std::vector<const Header*>* list, size_t* total_memory) {
+  if (!(debug_->config().options() & BACKTRACE)) {
+    return;
+  }
+
+  *total_memory = 0;
+  for (const auto& header : headers_) {
+    list->push_back(header);
+    *total_memory += header->real_size();
+  }
+
+  // Put all zygote allocations first by size and backtrace.
+  // Then all zygote child allocation by size and backtrace.
+  std::sort(list->begin(), list->end(), [&](const Header* a, const Header* b) {
+    if (a->zygote_child_alloc() && !b->zygote_child_alloc()) {
+      return false;
+    } else if (!a->zygote_child_alloc() && b->zygote_child_alloc()) {
+      return true;
+    }
+    if (a->real_size() != b->real_size()) return a->real_size() < b->real_size();
+    // If the size is the same, compare backtrace elements.
+    BacktraceHeader* a_back = debug_->GetAllocBacktrace(a);
+    BacktraceHeader* b_back = debug_->GetAllocBacktrace(b);
+    for (size_t i = 0; i < a_back->num_frames; i++) {
+      if (i > b_back->num_frames) {
+        // All frames equal up to this point, but a has more frames available.
+        return false;
+      }
+      if (a_back->frames[i] < b_back->frames[i]) {
+        return false;
+      } else if (a_back->frames[i] > b_back->frames[i]) {
+        return true;
+      }
+    }
+    if (a_back->num_frames < b_back->num_frames) {
+      // All frames equal up to this point, but b has more frames available.
+      return true;
+    }
+    return false;
+  });
+
+}
+
 void TrackData::Add(const Header* header, bool backtrace_found) {
   pthread_mutex_lock(&mutex_);
   if (backtrace_found) {
@@ -92,7 +135,7 @@ void TrackData::DisplayLeaks() {
   for (const auto& header : list) {
     error_log("+++ %s leaked block of size %zu at %p (leak %zu of %zu)", getprogname(),
               header->real_size(), debug_->GetPointer(header), ++track_count, list.size());
-    if (debug_->config().options & BACKTRACE) {
+    if (debug_->config().options() & BACKTRACE) {
       BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
       if (back_header->num_frames > 0) {
         error_log("Backtrace at time of allocation:");
@@ -111,7 +154,7 @@ void TrackData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
     return;
   }
 
-  *backtrace_size = debug_->config().backtrace_frames;
+  *backtrace_size = debug_->config().backtrace_frames();
   *info_size = sizeof(size_t) * 2 + sizeof(uintptr_t) * *backtrace_size;
   *info = reinterpret_cast<uint8_t*>(g_dispatch->calloc(*info_size, total_backtrace_allocs_));
   if (*info == nullptr) {
@@ -123,11 +166,12 @@ void TrackData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
   GetList(&list);
 
   uint8_t* data = *info;
+  size_t num_allocations = 1;
   for (const auto& header : list) {
     BacktraceHeader* back_header = debug_->GetAllocBacktrace(header);
     if (back_header->num_frames > 0) {
       memcpy(data, &header->size, sizeof(size_t));
-      memcpy(&data[sizeof(size_t)], &back_header->num_frames, sizeof(size_t));
+      memcpy(&data[sizeof(size_t)], &num_allocations, sizeof(size_t));
       memcpy(&data[2 * sizeof(size_t)], &back_header->frames[0],
             back_header->num_frames * sizeof(uintptr_t));
 

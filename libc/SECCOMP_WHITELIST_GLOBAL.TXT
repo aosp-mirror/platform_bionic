@@ -1,0 +1,18 @@
+# This file is used to populate seccomp's global whitelist policy in
+# combination with SYSCALLS.TXT, SECCOMP_BLACKLIST.TXT and
+# SECCOMP_WHITELIST.TXT.  Unlike the policy used in normal operation this
+# policy is applied globally during the early stage of init, if global seccomp
+# is enabled.
+#
+# See the description at the top of SYSCALLS.TXT for an explanation of the
+# format of the entries in this file.
+#
+# This file is processed by a python script named genseccomp.py.
+
+# syscalls needed to boot android
+int swapon(const char*, int) all
+long keyctl(int, ...) all
+key_serial_t add_key(const char*, const char*, const void*, size_t, key_serial_t) all
+
+# b/62715671
+int finit_module(int, const char*, int) all

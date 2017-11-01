@@ -28,22 +28,40 @@
 
 #include <netdb.h>
 
-// We don't have an /etc/networks, so all inputs return NULL.
-netent* getnetbyname(const char* /*name*/) {
-  return NULL;
+// We don't have an /etc/networks or /etc/protocols, so these are just dummies.
+
+void endnetent() {
 }
 
-// We don't have an /etc/networks, so all inputs return NULL.
+void endprotoent() {
+}
+
 netent* getnetbyaddr(uint32_t /*net*/, int /*type*/) {
-  return NULL;
+  return nullptr;
 }
 
-// We don't have an /etc/protocols, so all inputs return NULL.
+netent* getnetbyname(const char* /*name*/) {
+  return nullptr;
+}
+
+netent* getnetent() {
+  return nullptr;
+}
+
 protoent* getprotobyname(const char* /*name*/) {
-  return NULL;
+  return nullptr;
 }
 
-// We don't have an /etc/protocols, so all inputs return NULL.
 protoent* getprotobynumber(int /*proto*/) {
-  return NULL;
+  return nullptr;
+}
+
+protoent* getprotoent() {
+  return nullptr;
+}
+
+void setnetent(int /*stayopen*/) {
+}
+
+void setprotoent(int /*stayopen*/) {
 }

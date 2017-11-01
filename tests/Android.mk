@@ -77,8 +77,8 @@ LOCAL_CLANG := false
 LOCAL_MODULE := bionic-compile-time-tests-g++
 LOCAL_CPPFLAGS := -Wall
 # Disable color diagnostics so the warnings output matches the source
-LOCAL_CPPFLAGS +=  -fdiagnostics-color=never
-LOCAL_SRC_FILES := fortify_compilation_test.cpp
+LOCAL_CPPFLAGS += -fdiagnostics-color=never
+LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -95,11 +95,8 @@ LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests-clang++
 LOCAL_CPPFLAGS := -Wall
-# Disable color diagnostics so the warnings output matches the source
-LOCAL_CPPFLAGS += -fno-color-diagnostics
-# FileCheck will error if there aren't any CLANG: lines in the file, but there
-# don't appear to be any cases where clang _does_ emit warnings for sn?printf :(
-LOCAL_SRC_FILES :=
+LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000
+LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
 include $(BUILD_STATIC_LIBRARY)
 
 endif # linux-x86

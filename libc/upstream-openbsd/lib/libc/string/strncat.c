@@ -1,4 +1,4 @@
-/*	$OpenBSD: strncat.c,v 1.5 2005/08/08 08:05:37 espie Exp $ */
+/*	$OpenBSD: strncat.c,v 1.6 2015/08/31 02:53:57 guenther Exp $ */
 /*-
  * Copyright (c) 1990 The Regents of the University of California.
  * All rights reserved.
@@ -38,7 +38,7 @@
  * are written at dst (at most n+1 bytes being appended).  Return dst.
  */
 char *
-strncat(char *dst, const char *src, size_t n)
+strncat(char *dst, const char *src, size_t n) __overloadable
 {
 	if (n != 0) {
 		char *d = dst;
@@ -55,3 +55,4 @@ strncat(char *dst, const char *src, size_t n)
 	}
 	return (dst);
 }
+DEF_STRONG(strncat);

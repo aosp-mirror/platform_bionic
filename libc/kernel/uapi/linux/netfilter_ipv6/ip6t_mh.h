@@ -20,11 +20,9 @@
 #define _IP6T_MH_H
 #include <linux/types.h>
 struct ip6t_mh {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
   __u8 types[2];
   __u8 invflags;
 };
 #define IP6T_MH_INV_TYPE 0x01
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 #define IP6T_MH_INV_MASK 0x01
 #endif

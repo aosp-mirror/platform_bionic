@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "debuggerd/client.h"
+#include "debuggerd/handler.h"
 
 void __gtest_preinit() {
   debuggerd_init(nullptr);
