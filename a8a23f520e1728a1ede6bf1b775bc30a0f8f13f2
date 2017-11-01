@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "008b12bb_6da68ee5",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-11-01T00:44:03Z",
+      "side": 1,
+      "message": "Nit pick, this is the only structure with no empty line between the structures.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 13
+      },
+      "revId": "a8a23f520e1728a1ede6bf1b775bc30a0f8f13f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
