@@ -256,7 +256,20 @@ int ferror_unlocked(FILE* __fp) __INTRODUCED_IN(23);
 int fileno_unlocked(FILE* __fp) __INTRODUCED_IN(24);
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
-#endif /* __USE_BSD */
+#endif
+
+#if defined(__USE_BSD)
+int fflush_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int fgetc_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int fputc_unlocked(int __ch, FILE* __fp) __INTRODUCED_IN_FUTURE;
+size_t fread_unlocked(void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
+size_t fwrite_unlocked(const void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
+#endif
+
+#if defined(__USE_GNU)
+int fputs_unlocked(const char* __s, FILE* __fp) __INTRODUCED_IN_FUTURE;
+char* fgets_unlocked(char* __buf, int __size, FILE* __fp) __INTRODUCED_IN_FUTURE;
+#endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/stdio.h>

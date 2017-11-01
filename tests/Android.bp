@@ -221,7 +221,21 @@ cc_test_library {
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
-    srcs: ["fortify_compilation_test.cpp"],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
+}
+
+// Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
+// it can confuse these tools pretty easily. If this builds successfully, then
+// __clang_analyzer__ overrode FORTIFY. Otherwise, FORTIFY was incorrectly
+// enabled. The library that results from building this is meant to be unused.
+cc_test_library {
+    name: "fortify_disabled_for_tidy",
+    cflags: [
+        "-Werror",
+        "-D_FORTIFY_SOURCE=2",
+        "-D__clang_analyzer__",
+    ],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }
 
 cc_test_library {
