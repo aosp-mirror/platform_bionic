@@ -194,7 +194,6 @@ cc_test_library {
 cc_defaults {
     name: "bionic_fortify_tests_defaults",
     cflags: [
-        "-Wno-error",
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["fortify_test_main.cpp"],
