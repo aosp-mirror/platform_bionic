@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a9f6cf8_6d5df37c",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1296,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-11-02T00:44:22Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 1296,
+        "startChar": 58,
+        "endLine": 1296,
+        "endChar": 59
+      },
+      "revId": "b967547df2b2f22e89ffd279f0c2ebb3767af1d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bb700ad_c3419fe2",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1412,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-11-02T00:44:22Z",
+      "side": 1,
+      "message": "here too",
+      "range": {
+        "startLine": 1404,
+        "startChar": 42,
+        "endLine": 1412,
+        "endChar": 88
+      },
+      "revId": "b967547df2b2f22e89ffd279f0c2ebb3767af1d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
