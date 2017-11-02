@@ -35,6 +35,22 @@
 
 using namespace clang;
 
+static bool shouldMangle(MangleContext* mangler, NamedDecl* decl) {
+  // Passing a decl with static linkage to the mangler gives incorrect results.
+  // Check some things ourselves before handing it off to the mangler.
+  if (auto FD = dyn_cast<FunctionDecl>(decl)) {
+    if (FD->isExternC()) {
+      return false;
+    }
+
+    if (FD->isInExternCContext()) {
+      return false;
+    }
+  }
+
+  return mangler->shouldMangleDeclName(decl);
+}
+
 class Visitor : public RecursiveASTVisitor<Visitor> {
   HeaderDatabase& database;
   CompilationType type;
@@ -54,9 +70,14 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       }
     }
 
+    // <math.h> maps fool onto foo on 32-bit, since long double is the same as double.
+    if (auto asm_attr = decl->getAttr<AsmLabelAttr>()) {
+      return asm_attr->getLabel();
+    }
+
     // The decl might not have a name (e.g. bitfields).
     if (auto identifier = decl->getIdentifier()) {
-      if (mangler->shouldMangleDeclName(decl)) {
+      if (shouldMangle(mangler.get(), decl)) {
         std::string mangled;
         llvm::raw_string_ostream ss(mangled);
         mangler->mangleName(decl, ss);

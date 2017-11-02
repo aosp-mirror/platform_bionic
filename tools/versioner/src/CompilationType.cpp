@@ -21,6 +21,7 @@
 
 std::string to_string(const CompilationType& type) {
   std::stringstream ss;
-  ss << to_string(type.arch) << "-" << type.api_level << " [fob = " << type.file_offset_bits << "]";
+  ss << to_string(type.arch) << "-" << type.api_level << " [" << (type.cpp ? "c++" : "c")
+     << ", fob = " << type.file_offset_bits << "]";
   return ss.str();
 }
