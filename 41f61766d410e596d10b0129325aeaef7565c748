@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52e32695_f8dae09e",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-11-02T20:39:00Z",
+      "side": 1,
+      "message": "How about adding job count here?",
+      "range": {
+        "startLine": 124,
+        "startChar": 89,
+        "endLine": 124,
+        "endChar": 90
+      },
+      "revId": "41f61766d410e596d10b0129325aeaef7565c748",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
