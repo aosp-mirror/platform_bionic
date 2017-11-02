@@ -524,8 +524,8 @@ cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
     srcs: [
-        "stdio/vfprintf.c",
-        "stdio/vfwprintf.c",
+        "stdio/vfprintf.cpp",
+        "stdio/vfwprintf.cpp",
     ],
     cflags: [
         "-include openbsd-compat.h",
