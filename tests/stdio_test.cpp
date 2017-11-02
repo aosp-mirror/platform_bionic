@@ -621,6 +621,38 @@ TEST(STDIO_TEST, swprintf_C) { // Synonym for %lc.
   EXPECT_EQ(std::wstring(L"<a>"), buf);
 }
 
+TEST(STDIO_TEST, swprintf_jd_INTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%jd", INTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"9223372036854775807"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_jd_INTMAX_MIN) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%jd", INTMAX_MIN);
+  EXPECT_EQ(std::wstring(L"-9223372036854775808"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_ju_UINTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%ju", UINTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_1$ju_UINTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%1$ju", UINTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
+}
+
 TEST(STDIO_TEST, swprintf_ls) {
   constexpr size_t nchars = 32;
   wchar_t buf[nchars];
@@ -653,6 +685,30 @@ TEST(STDIO_TEST, snprintf_d_INT_MIN) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%d", INT_MIN);
   EXPECT_STREQ("-2147483648", buf);
+}
+
+TEST(STDIO_TEST, snprintf_jd_INTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%jd", INTMAX_MAX);
+  EXPECT_STREQ("9223372036854775807", buf);
+}
+
+TEST(STDIO_TEST, snprintf_jd_INTMAX_MIN) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%jd", INTMAX_MIN);
+  EXPECT_STREQ("-9223372036854775808", buf);
+}
+
+TEST(STDIO_TEST, snprintf_ju_UINTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%ju", UINTMAX_MAX);
+  EXPECT_STREQ("18446744073709551615", buf);
+}
+
+TEST(STDIO_TEST, snprintf_1$ju_UINTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%1$ju", UINTMAX_MAX);
+  EXPECT_STREQ("18446744073709551615", buf);
 }
 
 TEST(STDIO_TEST, snprintf_ld_LONG_MAX) {
