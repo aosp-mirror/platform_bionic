@@ -277,7 +277,6 @@ static int exponent(CharT* p0, int exp, int fmtch) {
 #define MAXINT 0x1000   /* largest integer size (intmax_t) */
 
 int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list ap) {
-  wchar_t* fmt;  /* format string */
   wchar_t ch;    /* character from fmt */
   int n, n2, n3; /* handy integers (short term usage) */
   wchar_t* cp;   /* handy char pointer (short term usage) */
@@ -336,10 +335,12 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
    * below longer.
    */
 #define PADSIZE 16 /* pad chunk size */
-  static wchar_t blanks[PADSIZE] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                                     ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-  static wchar_t zeroes[PADSIZE] = { '0', '0', '0', '0', '0', '0', '0', '0',
-                                     '0', '0', '0', '0', '0', '0', '0', '0' };
+  static CHAR_TYPE blanks[PADSIZE] = {
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
+  };
+  static CHAR_TYPE zeroes[PADSIZE] = {
+    '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'
+  };
 
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
@@ -421,25 +422,28 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
    * Get * arguments, including the form *nn$.  Preserve the nextarg
    * that the argument can be gotten once the type is determined.
    */
-#define GETASTER(val)                                         \
-  n2 = 0;                                                     \
-  cp = fmt;                                                   \
-  while (is_digit(*cp)) {                                     \
-    APPEND_DIGIT(n2, *cp);                                    \
-    cp++;                                                     \
-  }                                                           \
-  if (*cp == '$') {                                           \
-    int hold = nextarg;                                       \
-    if (argtable == NULL) {                                   \
-      argtable = statargtable;                                \
-      __find_arguments(fmt0, orgap, &argtable, &argtablesiz); \
-    }                                                         \
-    nextarg = n2;                                             \
-    val = GETARG(int);                                        \
-    nextarg = hold;                                           \
-    fmt = ++cp;                                               \
-  } else {                                                    \
-    val = GETARG(int);                                        \
+#define GETASTER(val)                                                     \
+  n2 = 0;                                                                 \
+  cp = fmt;                                                               \
+  while (is_digit(*cp)) {                                                 \
+    APPEND_DIGIT(n2, *cp);                                                \
+    cp++;                                                                 \
+  }                                                                       \
+  if (*cp == '$') {                                                       \
+    int hold = nextarg;                                                   \
+    if (argtable == NULL) {                                               \
+      argtable = statargtable;                                            \
+      if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) { \
+        ret = -1;                                                         \
+        goto error;                                                       \
+      }                                                                   \
+    }                                                                     \
+    nextarg = n2;                                                         \
+    val = GETARG(int);                                                    \
+    nextarg = hold;                                                       \
+    fmt = ++cp;                                                           \
+  } else {                                                                \
+    val = GETARG(int);                                                    \
   }
 
 /*
@@ -451,17 +455,19 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
   ((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : (nextarg++, va_arg(ap, type)))
 
   _SET_ORIENTATION(fp, 1);
-  /* sorry, fwprintf(read_only_file, "") returns EOF, not 0 */
+
+  // Writing "" to a read only file returns EOF, not 0.
   if (cantwrite(fp)) {
     errno = EBADF;
-    return (EOF);
+    return EOF;
   }
 
-  /* optimise fwprintf(stderr) (and other unbuffered Unix files) */
-  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0)
+  // Optimize writes to stderr and other unbuffered files).
+  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0) {
     return (__sbprintf(fp, fmt0, ap));
+  }
 
-  fmt = (wchar_t*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
   argtable = NULL;
   nextarg = 1;
   va_copy(orgap, ap);
@@ -540,7 +546,10 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
           nextarg = n;
           if (argtable == NULL) {
             argtable = statargtable;
-            __find_arguments(fmt0, orgap, &argtable, &argtablesiz);
+            if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) {
+              ret = -1;
+              goto error;
+            }
           }
           goto rflag;
         }
@@ -572,7 +581,10 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
           nextarg = n;
           if (argtable == NULL) {
             argtable = statargtable;
-            __find_arguments(fmt0, orgap, &argtable, &argtablesiz);
+            if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) {
+              ret = -1;
+              goto error;
+            }
           }
           goto rflag;
         }
@@ -1037,12 +1049,10 @@ finish:
  * used since we are attempting to make snprintf thread safe, and alloca is
  * problematic since we have nested functions..)
  */
-static int __find_arguments(const wchar_t* fmt0, va_list ap, union arg** argtable,
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable,
                             size_t* argtablesiz) {
-  wchar_t* fmt;             /* format string */
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
-  wchar_t* cp;              /* handy char pointer (short term usage) */
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -1108,7 +1118,8 @@ static int __find_arguments(const wchar_t* fmt0, va_list ap, union arg** argtabl
   } else {                 \
     ADDTYPE(T_INT);        \
   }
-  fmt = (wchar_t*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
+  CHAR_TYPE* cp;
   typetable = stattypetable;
   tablesize = STATIC_ARG_TBL_SIZE;
   tablemax = 0;

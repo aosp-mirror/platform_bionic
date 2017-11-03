@@ -198,6 +198,9 @@
   <name>BM_stdio_printf_d</name>
 </fn>
 <fn>
+  <name>BM_stdio_printf_1$s</name>
+</fn>
+<fn>
   <name>BM_string_memcmp</name>
   <args>AT_ALIGNED_TWOBUF</args>
 </fn>
