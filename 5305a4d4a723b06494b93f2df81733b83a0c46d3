@@ -22,6 +22,30 @@
       "revId": "5305a4d4a723b06494b93f2df81733b83a0c46d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3466c1a_c46c4860",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-03T21:38:44Z",
+      "side": 1,
+      "message": "no, because you have to run out of memory to hit this case. i think the behavioral change is that before you\u0027d segfault but now you\u0027ll fail cleanly. (which is what the non-wide printf family always did.)",
+      "parentUuid": "5d36ec1a_3915b90e",
+      "range": {
+        "startLine": 550,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 25
+      },
+      "revId": "5305a4d4a723b06494b93f2df81733b83a0c46d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
