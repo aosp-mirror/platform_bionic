@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d04d6c5f_a6ef34cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-03T15:35:53Z",
+      "side": 1,
+      "message": "that bug is an interesting read for anyone interested in app compatibility issues!",
+      "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7e9432d_f9c7a795",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-03T15:35:53Z",
+      "side": 1,
+      "message": "i\u0027ve never _done_ this, but wouldn\u0027t mprotect be a way to test whether it\u0027s mapped? aiui you\u0027d get an error return telling you the page isn\u0027t mapped rather than a SIGSEGV because you\u0027re trying to touch the metadata, not the missing page itself...",
+      "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
