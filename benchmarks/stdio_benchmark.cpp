@@ -196,3 +196,12 @@ static void BM_stdio_printf_d(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_stdio_printf_d);
+
+static void BM_stdio_printf_1$s(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    char buf[BUFSIZ];
+    snprintf(buf, sizeof(buf), "this is a more typical error message with detail: %1$s",
+             "No such file or directory");
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_printf_1$s);
