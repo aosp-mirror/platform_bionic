@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98a3d82d_f51bfadc",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-11-03T13:43:32Z",
+      "side": 1,
+      "message": "technically this is undefined behavior.. not sure if we want to impose requirement of SEGV here.. I am open for suggestions.",
+      "range": {
+        "startLine": 835,
+        "startChar": 14,
+        "endLine": 835,
+        "endChar": 90
+      },
+      "revId": "4e1b22188880537e834abf9db81672a760bf157b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
