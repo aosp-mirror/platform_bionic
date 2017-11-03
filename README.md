@@ -211,13 +211,13 @@ The tests are all built from the tests/ directory.
 
     $ mma # In $ANDROID_ROOT/bionic.
     $ adb root && adb remount && adb sync
-    $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+    $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
     $ adb shell \
-        /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
+        /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
     # Only for 64-bit targets
-    $ adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests64
+    $ adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests
     $ adb shell \
-        /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static64
+        /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static
 
 Note that we use our own custom gtest runner that offers a superset of the
 options documented at
@@ -286,7 +286,7 @@ For either host or target coverage, you must first:
     $ adb shell \
         GCOV_PREFIX=/data/local/tmp/gcov \
         GCOV_PREFIX_STRIP=`echo $ANDROID_BUILD_TOP | grep -o / | wc -l` \
-        /data/nativetest/bionic-unit-tests/bionic-unit-tests32
+        /data/nativetest/bionic-unit-tests/bionic-unit-tests
     $ acov
 
 `acov` will pull all coverage information from the device, push it to the right
