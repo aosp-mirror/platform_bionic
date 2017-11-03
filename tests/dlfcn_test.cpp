@@ -24,6 +24,7 @@
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>
 #endif
+#include <sys/user.h>
 
 #include <string>
 #include <thread>
@@ -822,6 +823,21 @@ TEST(dlfcn, dlopen_failure) {
 #else
   ASSERT_STREQ("/does/not/exist: cannot open shared object file: No such file or directory", dlerror());
 #endif
+}
+
+TEST(dlfcn, dlclose_unload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
+  // Making sure that the library has been unmapped as part of library unload
+  // process. Note that mprotect somewhat counter-intuitively returns ENOMEM in
+  // this case.
+  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(PAGE_SIZE - 1);
+  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), PAGE_SIZE, PROT_NONE) != 0);
+  ASSERT_EQ(ENOMEM, errno) << strerror(errno);
 }
 
 static void ConcurrentDlErrorFn(std::string& error) {
