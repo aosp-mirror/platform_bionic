@@ -33,6 +33,24 @@
       "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df2e825e_7930d98a",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2017-11-03T16:08:31Z",
+      "side": 1,
+      "message": "Another simple way to test this is with read(2) (if you want to test WRITE access) or write(2) (if you want to test READ access):\n\n#include \u003cerrno.h\u003e\n#include \u003cstdio.h\u003e\n#include \u003cstdbool.h\u003e\n#include \u003cunistd.h\u003e\n\nbool is_valid_pointer(const void* p) {\n  int fds[2];\n  pipe(fds);\n  int result \u003d write(fds[1], p, 1);\n  int write_errno \u003d errno;\n  close(fds[0]);\n  close(fds[1]);\n  return (result \u003e\u003d 0) || (errno !\u003d EFAULT);\n}\n\nint main() {\n  printf(\"is_valid_pointer(\u0026main): %d\\n\", is_valid_pointer(\u0026main));\n  printf(\"is_valid_pointer(123123123): %d\\n\", is_valid_pointer((void*)123123123));\n}",
+      "parentUuid": "c7e9432d_f9c7a795",
+      "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
