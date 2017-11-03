@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d36ec1a_3915b90e",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-11-03T21:36:07Z",
+      "side": 1,
+      "message": "Are there any tests that exercise this failure?\n\nThis does seem to be a slight behavioral change because previously you would continue on processing the rest of the string.",
+      "range": {
+        "startLine": 550,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 25
+      },
+      "revId": "5305a4d4a723b06494b93f2df81733b83a0c46d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
