@@ -251,7 +251,6 @@ static int exponent(CharT* p0, int exp, int fmtch) {
 #define MAXINT 0x1000   /* largest integer size (intmax_t) */
 
 int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
-  char* fmt;           /* format string */
   int ch;              /* character from fmt */
   int n, n2;           /* handy integers (short term usage) */
   char* cp;            /* handy char pointer (short term usage) */
@@ -261,7 +260,6 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
   int width;           /* width from format (%8d), or 0 */
   int prec;            /* precision from format; <0 for N/A */
   char sign;           /* sign prefix (' ', '+', '-', or \0) */
-  wchar_t wc;
   mbstate_t ps;
   /*
    * We can decompose the printed representation of floating
@@ -316,10 +314,12 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
    * below longer.
    */
 #define PADSIZE 16 /* pad chunk size */
-  static char blanks[PADSIZE] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                                  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-  static char zeroes[PADSIZE] = { '0', '0', '0', '0', '0', '0', '0', '0',
-                                  '0', '0', '0', '0', '0', '0', '0', '0' };
+  static CHAR_TYPE blanks[PADSIZE] = {
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
+  };
+  static CHAR_TYPE zeroes[PADSIZE] = {
+    '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'
+  };
 
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
@@ -444,17 +444,19 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
   ((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : (nextarg++, va_arg(ap, type)))
 
   _SET_ORIENTATION(fp, -1);
-  /* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
+
+  // Writing "" to a read only file returns EOF, not 0.
   if (cantwrite(fp)) {
     errno = EBADF;
-    return (EOF);
+    return EOF;
   }
 
-  /* optimise fprintf(stderr) (and other unbuffered Unix files) */
-  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0)
+  // Optimize writes to stderr and other unbuffered files).
+  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0) {
     return (__sbprintf(fp, fmt0, ap));
+  }
 
-  fmt = (char*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
   argtable = NULL;
   nextarg = 1;
   va_copy(orgap, ap);
@@ -469,25 +471,14 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
-    cp = fmt;
-    while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
-      fmt += n;
-      if (wc == '%') {
-        fmt--;
-        break;
-      }
-    }
-    if (n < 0) {
-      ret = -1;
-      goto error;
-    }
+    for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
     if (fmt != cp) {
       ptrdiff_t m = fmt - cp;
       if (m < 0 || m > INT_MAX - ret) goto overflow;
       PRINT(cp, m);
       ret += m;
     }
-    if (n == 0) goto done;
+    if (ch == '\0') goto done;
     fmt++; /* skip over '%' */
 
     flags = 0;
@@ -1062,12 +1053,10 @@ finish:
  * used since we are attempting to make snprintf thread safe, and alloca is
  * problematic since we have nested functions..)
  */
-static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable,
                             size_t* argtablesiz) {
-  char* fmt;                /* format string */
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
-  char* cp;                 /* handy char pointer (short term usage) */
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -1075,8 +1064,6 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
   int tablemax;  /* largest used index in table */
   int nextarg;   /* 1-based argument index */
   int ret = 0;   /* return value */
-  wchar_t wc;
-  mbstate_t ps;
 
   /*
    * Add an argument type to the table, expanding if necessary.
@@ -1135,28 +1122,20 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
   } else {                 \
     ADDTYPE(T_INT);        \
   }
-  fmt = (char*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
+  CHAR_TYPE* cp;
   typetable = stattypetable;
   tablesize = STATIC_ARG_TBL_SIZE;
   tablemax = 0;
   nextarg = 1;
   memset(typetable, T_UNUSED, STATIC_ARG_TBL_SIZE);
-  memset(&ps, 0, sizeof(ps));
 
   /*
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
-    cp = fmt;
-    while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
-      fmt += n;
-      if (wc == '%') {
-        fmt--;
-        break;
-      }
-    }
-    if (n < 0) return (-1);
-    if (n == 0) goto done;
+    for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
+    if (ch == '\0') goto done;
     fmt++; /* skip over '%' */
 
     flags = 0;
