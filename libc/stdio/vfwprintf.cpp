@@ -83,8 +83,7 @@ union arg {
   wchar_t* pwchararg;
 };
 
-static int __find_arguments(const wchar_t* fmt0, va_list ap, union arg** argtable,
-                            size_t* argtablesiz);
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable, size_t* argtablesiz);
 static int __grow_type_table(unsigned char** typetable, int* tablesize);
 
 /*
@@ -997,17 +996,6 @@ finish:
   return (ret);
 }
 
-int vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list ap) {
-  int r;
-
-  FLOCKFILE(fp);
-  r = __vfwprintf(fp, fmt0, ap);
-  FUNLOCKFILE(fp);
-
-  return (r);
-}
-DEF_STRONG(vfwprintf);
-
 /*
  * Type ids for argument type table.
  */
@@ -1192,6 +1180,9 @@ static int __find_arguments(const wchar_t* fmt0, va_list ap, union arg** argtabl
           flags |= SHORTINT;
         }
         goto rflag;
+      case 'j':
+        flags |= MAXINT;
+        goto rflag;
       case 'l':
         if (*fmt == 'l') {
           fmt++;
@@ -1367,8 +1358,14 @@ done:
       case TP_SSIZEINT:
         (*argtable)[n].pssizearg = va_arg(ap, ssize_t*);
         break;
-      case TP_MAXINT:
+      case T_MAXINT:
         (*argtable)[n].intmaxarg = va_arg(ap, intmax_t);
+        break;
+      case T_MAXUINT:
+        (*argtable)[n].uintmaxarg = va_arg(ap, uintmax_t);
+        break;
+      case TP_MAXINT:
+        (*argtable)[n].pintmaxarg = va_arg(ap, intmax_t*);
         break;
       case T_WINT:
         (*argtable)[n].wintarg = va_arg(ap, wint_t);

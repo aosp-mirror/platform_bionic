@@ -83,7 +83,7 @@ union arg {
   wchar_t* pwchararg;
 };
 
-static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable, size_t* argtablesiz);
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable, size_t* argtablesiz);
 static int __grow_type_table(unsigned char** typetable, int* tablesize);
 
 /*
@@ -249,16 +249,6 @@ static int exponent(CharT* p0, int exp, int fmtch) {
 #define SIZEINT 0x0400  /* (signed) size_t */
 #define CHARINT 0x0800  /* 8 bit integer */
 #define MAXINT 0x1000   /* largest integer size (intmax_t) */
-
-int vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
-  int ret;
-
-  FLOCKFILE(fp);
-  ret = __vfprintf(fp, fmt0, ap);
-  FUNLOCKFILE(fp);
-  return (ret);
-}
-DEF_STRONG(vfprintf);
 
 int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
   char* fmt;           /* format string */

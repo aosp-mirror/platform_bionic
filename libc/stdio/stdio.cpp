@@ -935,6 +935,16 @@ int swscanf(const wchar_t* s, const wchar_t* fmt, ...) {
   PRINTF_IMPL(vswscanf(s, fmt, ap));
 }
 
+int vfprintf(FILE* fp, const char* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __vfprintf(fp, fmt, ap);
+}
+
+int vfwprintf(FILE* fp, const wchar_t* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __vfwprintf(fp, fmt, ap);
+}
+
 int vprintf(const char* fmt, va_list ap) {
   return vfprintf(stdout, fmt, ap);
 }
