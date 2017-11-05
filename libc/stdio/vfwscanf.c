@@ -42,8 +42,6 @@
 #include <wctype.h>
 #include "local.h"
 
-#include "floatio.h"
-
 #define BUF 513 /* Maximum length of numeric string. */
 
 /*

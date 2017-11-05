@@ -16,6 +16,9 @@
 
 #include <gtest/gtest.h>
 
+#include "ScopedSignalHandler.h"
+#include "utils.h"
+
 #include <fenv.h>
 #include <stdint.h>
 
@@ -82,4 +85,123 @@ TEST(fenv, feclearexcept_fetestexcept) {
 
 TEST(fenv, FE_DFL_ENV_macro) {
   ASSERT_EQ(0, fesetenv(FE_DFL_ENV));
+}
+
+TEST(fenv, feraiseexcept) {
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+
+  ASSERT_EQ(0, feraiseexcept(FE_DIVBYZERO | FE_OVERFLOW));
+  ASSERT_EQ(FE_DIVBYZERO | FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
+}
+
+TEST(fenv, fegetenv_fesetenv) {
+  // Set FE_OVERFLOW only.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+  ASSERT_EQ(0, feraiseexcept(FE_OVERFLOW));
+
+  // fegetenv (unlike feholdexcept) leaves the current state untouched...
+  fenv_t state;
+  ASSERT_EQ(0, fegetenv(&state));
+  ASSERT_EQ(FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
+
+  // Dividing by zero sets the appropriate flag...
+  DivideByZero();
+  ASSERT_EQ(FE_DIVBYZERO | FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
+
+  // And fesetenv (unlike feupdateenv) clobbers that to return to where
+  // we started.
+  ASSERT_EQ(0, fesetenv(&state));
+  ASSERT_EQ(FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
+}
+
+TEST(fenv, feholdexcept_feupdateenv) {
+  // Set FE_OVERFLOW only.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+  ASSERT_EQ(0, feraiseexcept(FE_OVERFLOW));
+
+  // feholdexcept (unlike fegetenv) clears everything...
+  fenv_t state;
+  ASSERT_EQ(0, feholdexcept(&state));
+  ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+
+  // Dividing by zero sets the appropriate flag...
+  DivideByZero();
+  ASSERT_EQ(FE_DIVBYZERO, fetestexcept(FE_ALL_EXCEPT));
+
+  // And feupdateenv (unlike fesetenv) merges what we started with
+  // (FE_OVERFLOW) with what we now have (FE_DIVBYZERO).
+  ASSERT_EQ(0, feupdateenv(&state));
+  ASSERT_EQ(FE_DIVBYZERO | FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
+}
+
+TEST(fenv, fegetexceptflag_fesetexceptflag) {
+  // Set three flags.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, feraiseexcept(FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW));
+  ASSERT_EQ(FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW, fetestexcept(FE_ALL_EXCEPT));
+
+  fexcept_t all; // FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW
+  fexcept_t two; // FE_OVERFLOW | FE_UNDERFLOW
+  ASSERT_EQ(0, fegetexceptflag(&all, FE_ALL_EXCEPT));
+  ASSERT_EQ(0, fegetexceptflag(&two, FE_OVERFLOW | FE_UNDERFLOW));
+
+  // Check we can restore all.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fesetexceptflag(&all, FE_ALL_EXCEPT));
+  ASSERT_EQ(FE_DIVBYZERO | FE_OVERFLOW | FE_UNDERFLOW, fetestexcept(FE_ALL_EXCEPT));
+
+  // Check that `two` only stored a subset.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fesetexceptflag(&two, FE_ALL_EXCEPT));
+  ASSERT_EQ(FE_OVERFLOW | FE_UNDERFLOW, fetestexcept(FE_ALL_EXCEPT));
+
+  // Check that we can restore a single flag.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fesetexceptflag(&all, FE_DIVBYZERO));
+  ASSERT_EQ(FE_DIVBYZERO, fetestexcept(FE_ALL_EXCEPT));
+
+  // Check that we can restore a subset of flags.
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fesetexceptflag(&all, FE_OVERFLOW | FE_UNDERFLOW));
+  ASSERT_EQ(FE_OVERFLOW | FE_UNDERFLOW, fetestexcept(FE_ALL_EXCEPT));
+}
+
+TEST(fenv, fedisableexcept_fegetexcept) {
+  feclearexcept(FE_ALL_EXCEPT);
+  ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+
+  // No SIGFPE please...
+  ASSERT_EQ(0, fedisableexcept(FE_ALL_EXCEPT));
+  ASSERT_EQ(0, fegetexcept());
+  ASSERT_EQ(0, feraiseexcept(FE_INVALID));
+  ASSERT_EQ(FE_INVALID, fetestexcept(FE_ALL_EXCEPT));
+}
+
+TEST(fenv, feenableexcept_fegetexcept) {
+#if defined(__aarch64__) || defined(__arm__)
+  // Unsupported.
+  // arm:
+  // http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.100403_0200_00_en/lau1442504290459.html
+  // aarch64:
+  // http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0488h/way1382990760439.html
+  GTEST_LOG_(INFO) << "arm and arm64 don't support feenableexcept";
+#else
+  // We can't recover from SIGFPE, so sacrifice a child...
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  if (pid == 0) {
+    feclearexcept(FE_ALL_EXCEPT);
+    ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
+    ASSERT_EQ(0, feenableexcept(FE_INVALID));
+    ASSERT_EQ(FE_INVALID, fegetexcept());
+    ASSERT_EQ(0, feraiseexcept(FE_INVALID));
+    _exit(123);
+  }
+
+  AssertChildExited(pid, -SIGFPE);
+#endif
 }

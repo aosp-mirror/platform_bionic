@@ -524,8 +524,8 @@ cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
     srcs: [
-        "stdio/vfprintf.c",
-        "stdio/vfwprintf.c",
+        "stdio/vfprintf.cpp",
+        "stdio/vfwprintf.cpp",
     ],
     cflags: [
         "-include openbsd-compat.h",
@@ -2195,22 +2195,6 @@ ndk_headers {
     from: "kernel/uapi/asm-arm64",
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_asm_mips",
-    from: "kernel/uapi/asm-mips",
-    to: "mipsel-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
-    license: "NOTICE",
-}
-
-ndk_headers {
-    name: "libc_asm_mips64",
-    from: "kernel/uapi/asm-mips",
-    to: "mips64el-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
     license: "NOTICE",
 }
 

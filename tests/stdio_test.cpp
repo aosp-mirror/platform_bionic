@@ -302,6 +302,13 @@ TEST(STDIO_TEST, snprintf_lc) {
   EXPECT_STREQ("<a>", buf);
 }
 
+TEST(STDIO_TEST, snprintf_C) { // Synonym for %lc.
+  char buf[BUFSIZ];
+  wchar_t wc = L'a';
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%C>", wc));
+  EXPECT_STREQ("<a>", buf);
+}
+
 TEST(STDIO_TEST, snprintf_ls) {
   char buf[BUFSIZ];
   wchar_t* ws = NULL;
@@ -311,6 +318,18 @@ TEST(STDIO_TEST, snprintf_ls) {
   wchar_t chars[] = { L'h', L'i', 0 };
   ws = chars;
   EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%ls>", ws));
+  EXPECT_STREQ("<hi>", buf);
+}
+
+TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
+  char buf[BUFSIZ];
+  wchar_t* ws = NULL;
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%S>", ws));
+  EXPECT_STREQ("<(null)>", buf);
+
+  wchar_t chars[] = { L'h', L'i', 0 };
+  ws = chars;
+  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%S>", ws));
   EXPECT_STREQ("<hi>", buf);
 }
 
@@ -584,6 +603,56 @@ TEST(STDIO_TEST, swprintf_a) {
   ASSERT_EQ(std::wstring(L"0x1.921fb54411744p+1"), buf);
 }
 
+TEST(STDIO_TEST, swprintf_lc) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  wint_t wc = L'a';
+  EXPECT_EQ(3, swprintf(buf, nchars, L"<%lc>", wc));
+  EXPECT_EQ(std::wstring(L"<a>"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_C) { // Synonym for %lc.
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  wint_t wc = L'a';
+  EXPECT_EQ(3, swprintf(buf, nchars, L"<%C>", wc));
+  EXPECT_EQ(std::wstring(L"<a>"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_jd_INTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%jd", INTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"9223372036854775807"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_jd_INTMAX_MIN) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%jd", INTMAX_MIN);
+  EXPECT_EQ(std::wstring(L"-9223372036854775808"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_ju_UINTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%ju", UINTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
+}
+
+TEST(STDIO_TEST, swprintf_1$ju_UINTMAX_MAX) {
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  swprintf(buf, nchars, L"%1$ju", UINTMAX_MAX);
+  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
+}
+
 TEST(STDIO_TEST, swprintf_ls) {
   constexpr size_t nchars = 32;
   wchar_t buf[nchars];
@@ -592,6 +661,17 @@ TEST(STDIO_TEST, swprintf_ls) {
   ASSERT_EQ(12, swprintf(buf, nchars, L"%ls", kWideString));
   ASSERT_EQ(std::wstring(kWideString), buf);
   ASSERT_EQ(12, swprintf(buf, 13, L"%ls", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+}
+
+TEST(STDIO_TEST, swprintf_S) { // Synonym for %ls.
+  constexpr size_t nchars = 32;
+  wchar_t buf[nchars];
+
+  static const wchar_t kWideString[] = L"Hello\uff41 World";
+  ASSERT_EQ(12, swprintf(buf, nchars, L"%S", kWideString));
+  ASSERT_EQ(std::wstring(kWideString), buf);
+  ASSERT_EQ(12, swprintf(buf, 13, L"%S", kWideString));
   ASSERT_EQ(std::wstring(kWideString), buf);
 }
 
@@ -605,6 +685,30 @@ TEST(STDIO_TEST, snprintf_d_INT_MIN) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%d", INT_MIN);
   EXPECT_STREQ("-2147483648", buf);
+}
+
+TEST(STDIO_TEST, snprintf_jd_INTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%jd", INTMAX_MAX);
+  EXPECT_STREQ("9223372036854775807", buf);
+}
+
+TEST(STDIO_TEST, snprintf_jd_INTMAX_MIN) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%jd", INTMAX_MIN);
+  EXPECT_STREQ("-9223372036854775808", buf);
+}
+
+TEST(STDIO_TEST, snprintf_ju_UINTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%ju", UINTMAX_MAX);
+  EXPECT_STREQ("18446744073709551615", buf);
+}
+
+TEST(STDIO_TEST, snprintf_1$ju_UINTMAX_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%1$ju", UINTMAX_MAX);
+  EXPECT_STREQ("18446744073709551615", buf);
 }
 
 TEST(STDIO_TEST, snprintf_ld_LONG_MAX) {
@@ -637,6 +741,30 @@ TEST(STDIO_TEST, snprintf_lld_LLONG_MIN) {
   char buf[BUFSIZ];
   snprintf(buf, sizeof(buf), "%lld", LLONG_MIN);
   EXPECT_STREQ("-9223372036854775808", buf);
+}
+
+TEST(STDIO_TEST, snprintf_o_UINT_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%o", UINT_MAX);
+  EXPECT_STREQ("37777777777", buf);
+}
+
+TEST(STDIO_TEST, snprintf_u_UINT_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%u", UINT_MAX);
+  EXPECT_STREQ("4294967295", buf);
+}
+
+TEST(STDIO_TEST, snprintf_x_UINT_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%x", UINT_MAX);
+  EXPECT_STREQ("ffffffff", buf);
+}
+
+TEST(STDIO_TEST, snprintf_X_UINT_MAX) {
+  char buf[BUFSIZ];
+  snprintf(buf, sizeof(buf), "%X", UINT_MAX);
+  EXPECT_STREQ("FFFFFFFF", buf);
 }
 
 TEST(STDIO_TEST, snprintf_e) {

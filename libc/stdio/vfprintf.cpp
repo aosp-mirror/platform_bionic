@@ -31,18 +31,17 @@
  * SUCH DAMAGE.
  */
 
-/*
- * Actual printf innards.
- *
- * This code is large and complicated...
- */
+#define CHAR_TYPE char
 
 #include <sys/mman.h>
 #include <sys/types.h>
 
 #include <errno.h>
+#include <float.h>
 #include <langinfo.h>
 #include <limits.h>
+#include <locale.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -53,6 +52,7 @@
 #include <wchar.h>
 
 #include "fvwrite.h"
+#include "gdtoa.h"
 #include "local.h"
 
 union arg {
@@ -83,7 +83,7 @@ union arg {
   wchar_t* pwchararg;
 };
 
-static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable, size_t* argtablesiz);
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable, size_t* argtablesiz);
 static int __grow_type_table(unsigned char** typetable, int* tablesize);
 
 /*
@@ -172,7 +172,7 @@ static char* __wcsconv(wchar_t* wcsarg, int prec) {
       if (clen == (size_t)-1) return (NULL);
     }
   }
-  if ((convbuf = malloc(nbytes + 1)) == NULL) return (NULL);
+  if ((convbuf = static_cast<char*>(malloc(nbytes + 1))) == NULL) return NULL;
 
   /* Fill the output buffer. */
   p = wcsarg;
@@ -185,15 +185,43 @@ static char* __wcsconv(wchar_t* wcsarg, int prec) {
   return (convbuf);
 }
 
-#include <float.h>
-#include <locale.h>
-#include <math.h>
-#include "floatio.h"
-#include "gdtoa.h"
-
 #define DEFPREC 6
 
-static int exponent(char*, int, int);
+#define to_digit(c) ((c) - '0')
+#define is_digit(c) ((unsigned)to_digit(c) <= 9)
+#define to_char(n) ((CHAR_TYPE)((n) + '0'))
+
+template <typename CharT>
+static int exponent(CharT* p0, int exp, int fmtch) {
+  CharT* p = p0;
+  *p++ = fmtch;
+  if (exp < 0) {
+    exp = -exp;
+    *p++ = '-';
+  } else {
+    *p++ = '+';
+  }
+
+  CharT expbuf[MAXEXPDIG];
+  CharT* t = expbuf + MAXEXPDIG;
+  if (exp > 9) {
+    do {
+      *--t = to_char(exp % 10);
+    } while ((exp /= 10) > 9);
+    *--t = to_char(exp);
+    for (; t < expbuf + MAXEXPDIG; *p++ = *t++) /* nothing */;
+  } else {
+    /*
+     * Exponents for decimal floating point conversions
+     * (%[eEgG]) must be at least two characters long,
+     * whereas exponents for hexadecimal conversions can
+     * be only one character long.
+     */
+    if (fmtch == 'e' || fmtch == 'E') *p++ = '0';
+    *p++ = to_char(exp);
+  }
+  return (p - p0);
+}
 
 /*
  * The size of the buffer we use as scratch space for integer
@@ -205,13 +233,6 @@ static int exponent(char*, int, int);
 #define BUF 100
 
 #define STATIC_ARG_TBL_SIZE 8 /* Size of static argument table. */
-
-/*
- * Macros for converting digits to letters and vice versa
- */
-#define to_digit(c) ((c) - '0')
-#define is_digit(c) ((unsigned)to_digit(c) <= 9)
-#define to_char(n) ((n) + '0')
 
 /*
  * Flags used during conversion.
@@ -229,18 +250,7 @@ static int exponent(char*, int, int);
 #define CHARINT 0x0800  /* 8 bit integer */
 #define MAXINT 0x1000   /* largest integer size (intmax_t) */
 
-int vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
-  int ret;
-
-  FLOCKFILE(fp);
-  ret = __vfprintf(fp, fmt0, ap);
-  FUNLOCKFILE(fp);
-  return (ret);
-}
-DEF_STRONG(vfprintf);
-
 int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
-  char* fmt;           /* format string */
   int ch;              /* character from fmt */
   int n, n2;           /* handy integers (short term usage) */
   char* cp;            /* handy char pointer (short term usage) */
@@ -250,7 +260,6 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
   int width;           /* width from format (%8d), or 0 */
   int prec;            /* precision from format; <0 for N/A */
   char sign;           /* sign prefix (' ', '+', '-', or \0) */
-  wchar_t wc;
   mbstate_t ps;
   /*
    * We can decompose the printed representation of floating
@@ -305,13 +314,15 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
    * below longer.
    */
 #define PADSIZE 16 /* pad chunk size */
-  static char blanks[PADSIZE] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                                  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-  static char zeroes[PADSIZE] = { '0', '0', '0', '0', '0', '0', '0', '0',
-                                  '0', '0', '0', '0', '0', '0', '0', '0' };
+  static CHAR_TYPE blanks[PADSIZE] = {
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
+  };
+  static CHAR_TYPE zeroes[PADSIZE] = {
+    '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'
+  };
 
-  static const char xdigs_lower[16] = "0123456789abcdef";
-  static const char xdigs_upper[16] = "0123456789ABCDEF";
+  static const char xdigs_lower[] = "0123456789abcdef";
+  static const char xdigs_upper[] = "0123456789ABCDEF";
 
   /*
    * BEWARE, these `goto error' on error, and PAD uses `n'.
@@ -433,17 +444,19 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
   ((argtable != NULL) ? *((type*)(&argtable[nextarg++])) : (nextarg++, va_arg(ap, type)))
 
   _SET_ORIENTATION(fp, -1);
-  /* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
+
+  // Writing "" to a read only file returns EOF, not 0.
   if (cantwrite(fp)) {
     errno = EBADF;
-    return (EOF);
+    return EOF;
   }
 
-  /* optimise fprintf(stderr) (and other unbuffered Unix files) */
-  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0)
+  // Optimize writes to stderr and other unbuffered files).
+  if ((fp->_flags & (__SNBF | __SWR | __SRW)) == (__SNBF | __SWR) && fp->_file >= 0) {
     return (__sbprintf(fp, fmt0, ap));
+  }
 
-  fmt = (char*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
   argtable = NULL;
   nextarg = 1;
   va_copy(orgap, ap);
@@ -458,25 +471,14 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
-    cp = fmt;
-    while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
-      fmt += n;
-      if (wc == '%') {
-        fmt--;
-        break;
-      }
-    }
-    if (n < 0) {
-      ret = -1;
-      goto error;
-    }
+    for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
     if (fmt != cp) {
       ptrdiff_t m = fmt - cp;
       if (m < 0 || m > INT_MAX - ret) goto overflow;
       PRINT(cp, m);
       ret += m;
     }
-    if (n == 0) goto done;
+    if (ch == '\0') goto done;
     fmt++; /* skip over '%' */
 
     flags = 0;
@@ -612,6 +614,9 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
       case 'z':
         flags |= SIZEINT;
         goto rflag;
+      case 'C':
+        flags |= LONGINT;
+        /*FALLTHROUGH*/
       case 'c':
         if (flags & LONGINT) {
           mbstate_t mbs;
@@ -712,10 +717,11 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
       fp_common:
         if (signflag) sign = '-';
         if (expt == INT_MAX) { /* inf or nan */
-          if (*cp == 'N')
-            cp = (ch >= 'a') ? "nan" : "NAN";
-          else
-            cp = (ch >= 'a') ? "inf" : "INF";
+          if (*cp == 'N') {
+            cp = const_cast<char*>((ch >= 'a') ? "nan" : "NAN");
+          } else {
+            cp = const_cast<char*>((ch >= 'a') ? "inf" : "INF");
+          }
           size = 3;
           flags &= ~ZEROPAD;
           break;
@@ -794,6 +800,9 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
         xdigs = xdigs_lower;
         ox[1] = 'x';
         goto nosign;
+      case 'S':
+        flags |= LONGINT;
+        /*FALLTHROUGH*/
       case 's':
         if (flags & LONGINT) {
           wchar_t* wcp;
@@ -801,7 +810,7 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
           free(convbuf);
           convbuf = NULL;
           if ((wcp = GETARG(wchar_t*)) == NULL) {
-            cp = "(null)";
+            cp = const_cast<char*>("(null)");
           } else {
             convbuf = __wcsconv(wcp, prec);
             if (convbuf == NULL) {
@@ -810,17 +819,11 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
             }
             cp = convbuf;
           }
-        } else if ((cp = GETARG(char*)) == NULL)
-          cp = "(null)";
+        } else if ((cp = GETARG(char*)) == NULL) {
+          cp = const_cast<char*>("(null)");
+        }
         if (prec >= 0) {
-          /*
-           * can't use strlen; can only look for the
-           * NUL in the first `prec' characters, and
-           * strlen() will go further.
-           */
-          char* p = memchr(cp, 0, prec);
-
-          size = p ? (p - cp) : prec;
+          size = strnlen(cp, prec);
         } else {
           size_t len;
 
@@ -897,15 +900,11 @@ int __vfprintf(FILE* fp, const char* fmt0, __va_list ap) {
               break;
 
             default:
-              cp = "bug in vfprintf: bad base";
-              size = strlen(cp);
-              goto skipsize;
+              abort();
           }
         }
         size = buf + BUF - cp;
-        if (size > BUF) /* should never happen */
-          abort();
-      skipsize:
+        if (size > BUF) abort(); /* should never happen */
         break;
       default: /* "%?" prints ?, unless ? is NUL */
         if (ch == '\0') goto done;
@@ -1054,12 +1053,10 @@ finish:
  * used since we are attempting to make snprintf thread safe, and alloca is
  * problematic since we have nested functions..)
  */
-static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
+static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argtable,
                             size_t* argtablesiz) {
-  char* fmt;                /* format string */
   int ch;                   /* character from fmt */
   int n, n2;                /* handy integer (short term usage) */
-  char* cp;                 /* handy char pointer (short term usage) */
   int flags;                /* flags as above */
   unsigned char* typetable; /* table of types */
   unsigned char stattypetable[STATIC_ARG_TBL_SIZE];
@@ -1067,8 +1064,6 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
   int tablemax;  /* largest used index in table */
   int nextarg;   /* 1-based argument index */
   int ret = 0;   /* return value */
-  wchar_t wc;
-  mbstate_t ps;
 
   /*
    * Add an argument type to the table, expanding if necessary.
@@ -1127,28 +1122,20 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
   } else {                 \
     ADDTYPE(T_INT);        \
   }
-  fmt = (char*)fmt0;
+  CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
+  CHAR_TYPE* cp;
   typetable = stattypetable;
   tablesize = STATIC_ARG_TBL_SIZE;
   tablemax = 0;
   nextarg = 1;
   memset(typetable, T_UNUSED, STATIC_ARG_TBL_SIZE);
-  memset(&ps, 0, sizeof(ps));
 
   /*
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
-    cp = fmt;
-    while ((n = mbrtowc(&wc, fmt, MB_CUR_MAX, &ps)) > 0) {
-      fmt += n;
-      if (wc == '%') {
-        fmt--;
-        break;
-      }
-    }
-    if (n < 0) return (-1);
-    if (n == 0) goto done;
+    for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
+    if (ch == '\0') goto done;
     fmt++; /* skip over '%' */
 
     flags = 0;
@@ -1228,6 +1215,9 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
       case 'z':
         flags |= SIZEINT;
         goto rflag;
+      case 'C':
+        flags |= LONGINT;
+        /*FALLTHROUGH*/
       case 'c':
         if (flags & LONGINT)
           ADDTYPE(T_WINT);
@@ -1281,6 +1271,9 @@ static int __find_arguments(const char* fmt0, va_list ap, union arg** argtable,
       case 'p':
         ADDTYPE(TP_VOID);
         break;
+      case 'S':
+        flags |= LONGINT;
+        /*FALLTHROUGH*/
       case 's':
         if (flags & LONGINT)
           ADDTYPE(TP_WCHAR);
@@ -1306,8 +1299,10 @@ done:
    */
   if (tablemax >= STATIC_ARG_TBL_SIZE) {
     *argtablesiz = sizeof(union arg) * (tablemax + 1);
-    *argtable = mmap(NULL, *argtablesiz, PROT_WRITE | PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
-    if (*argtable == MAP_FAILED) return (-1);
+    *argtable = static_cast<arg*>(mmap(NULL, *argtablesiz,
+                                       PROT_WRITE | PROT_READ,
+                                       MAP_ANON | MAP_PRIVATE, -1, 0));
+    if (*argtable == MAP_FAILED) return -1;
   }
 
 #if 0
@@ -1413,55 +1408,28 @@ finish:
  * Increase the size of the type table.
  */
 static int __grow_type_table(unsigned char** typetable, int* tablesize) {
-  unsigned char* oldtable = *typetable;
-  int newsize = *tablesize * 2;
+  unsigned char* old_table = *typetable;
+  int new_size = *tablesize * 2;
 
-  if (newsize < getpagesize()) newsize = getpagesize();
+  if (new_size < getpagesize()) new_size = getpagesize();
 
   if (*tablesize == STATIC_ARG_TBL_SIZE) {
-    *typetable = mmap(NULL, newsize, PROT_WRITE | PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
-    if (*typetable == MAP_FAILED) return (-1);
-    bcopy(oldtable, *typetable, *tablesize);
+    *typetable = static_cast<unsigned char*>(mmap(NULL, new_size,
+                                                  PROT_WRITE | PROT_READ,
+                                                  MAP_ANON | MAP_PRIVATE, -1, 0));
+    if (*typetable == MAP_FAILED) return -1;
+    bcopy(old_table, *typetable, *tablesize);
   } else {
-    unsigned char* new = mmap(NULL, newsize, PROT_WRITE | PROT_READ, MAP_ANON | MAP_PRIVATE, -1, 0);
-    if (new == MAP_FAILED) return (-1);
-    memmove(new, *typetable, *tablesize);
+    unsigned char* new_table = static_cast<unsigned char*>(mmap(NULL, new_size,
+                                                                PROT_WRITE | PROT_READ,
+                                                                MAP_ANON | MAP_PRIVATE, -1, 0));
+    if (new_table == MAP_FAILED) return -1;
+    memmove(new_table, *typetable, *tablesize);
     munmap(*typetable, *tablesize);
-    *typetable = new;
+    *typetable = new_table;
   }
-  memset(*typetable + *tablesize, T_UNUSED, (newsize - *tablesize));
+  memset(*typetable + *tablesize, T_UNUSED, (new_size - *tablesize));
 
-  *tablesize = newsize;
-  return (0);
-}
-
-static int exponent(char* p0, int exp, int fmtch) {
-  char *p, *t;
-  char expbuf[MAXEXPDIG];
-
-  p = p0;
-  *p++ = fmtch;
-  if (exp < 0) {
-    exp = -exp;
-    *p++ = '-';
-  } else
-    *p++ = '+';
-  t = expbuf + MAXEXPDIG;
-  if (exp > 9) {
-    do {
-      *--t = to_char(exp % 10);
-    } while ((exp /= 10) > 9);
-    *--t = to_char(exp);
-    for (; t < expbuf + MAXEXPDIG; *p++ = *t++) /* nothing */;
-  } else {
-    /*
-     * Exponents for decimal floating point conversions
-     * (%[eEgG]) must be at least two characters long,
-     * whereas exponents for hexadecimal conversions can
-     * be only one character long.
-     */
-    if (fmtch == 'e' || fmtch == 'E') *p++ = '0';
-    *p++ = to_char(exp);
-  }
-  return (p - p0);
+  *tablesize = new_size;
+  return 0;
 }

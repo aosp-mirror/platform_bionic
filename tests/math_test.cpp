@@ -177,9 +177,18 @@ TEST(MATH_TEST, signbit) {
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __fpclassify(double);
 extern "C" int __fpclassifyd(double);
 extern "C" int __fpclassifyf(float);
 extern "C" int __fpclassifyl(long double);
+
+TEST(MATH_TEST, __fpclassify) {
+  ASSERT_EQ(FP_INFINITE, __fpclassify(HUGE_VAL));
+  ASSERT_EQ(FP_NAN, __fpclassify(nan("")));
+  ASSERT_EQ(FP_NORMAL, __fpclassify(1.0));
+  ASSERT_EQ(FP_SUBNORMAL, __fpclassify(double_subnormal()));
+  ASSERT_EQ(FP_ZERO, __fpclassify(0.0));
+}
 
 TEST(MATH_TEST, __fpclassifyd) {
 #if defined(__GLIBC__)
@@ -254,8 +263,14 @@ TEST(MATH_TEST, isinf_function) {
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isinf(double);
 extern "C" int __isinff(float);
 extern "C" int __isinfl(long double);
+
+TEST(MATH_TEST, __isinf) {
+  ASSERT_FALSE(__isinf(123.0));
+  ASSERT_TRUE(__isinf(HUGE_VAL));
+}
 
 TEST(MATH_TEST, __isinff) {
   ASSERT_FALSE(__isinff(123.0f));
@@ -274,8 +289,14 @@ TEST(MATH_TEST, isnan_function) {
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
+extern "C" int __isnan(double);
 extern "C" int __isnanf(float);
 extern "C" int __isnanl(long double);
+
+TEST(MATH_TEST, __isnan) {
+  ASSERT_FALSE(__isnan(123.0));
+  ASSERT_TRUE(__isnan(nan("")));
+}
 
 TEST(MATH_TEST, __isnanf) {
   ASSERT_FALSE(__isnanf(123.0f));
