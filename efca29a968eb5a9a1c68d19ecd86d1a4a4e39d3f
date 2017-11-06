@@ -51,6 +51,24 @@
       "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348a68a7_64b0e3a0",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-11-06T16:17:44Z",
+      "side": 1,
+      "message": "Interestingly this results in ENOMEM not EINVAL... which is a bit counter-intuitive.",
+      "parentUuid": "c7e9432d_f9c7a795",
+      "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
