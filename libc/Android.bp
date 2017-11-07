@@ -1969,17 +1969,13 @@ cc_defaults {
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
 
-    no_default_compiler_flags: true,
-
-    cflags: ["-Wno-gcc-compat", "-Werror"],
+    cflags: ["-Wno-gcc-compat", "-Wall", "-Werror"],
 }
 
 cc_defaults {
     name: "crt_so_defaults",
+    defaults: ["crt_defaults"],
 
-    cflags: ["-Wno-gcc-compat", "-Werror"],
-
-    vendor_available: true,
     arch: {
         mips: {
             cflags: ["-fPIC"],
@@ -2008,10 +2004,7 @@ cc_object {
     },
     srcs: ["arch-common/bionic/crtbrand.S"],
 
-    defaults: [
-        "crt_defaults",
-        "crt_so_defaults",
-    ],
+    defaults: ["crt_so_defaults"],
 }
 
 cc_object {
@@ -2019,19 +2012,13 @@ cc_object {
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
-    defaults: [
-        "crt_defaults",
-        "crt_so_defaults",
-    ],
+    defaults: ["crt_so_defaults"],
 }
 
 cc_object {
     name: "crtbegin_so",
 
-    defaults: [
-        "crt_defaults",
-        "crt_so_defaults",
-    ],
+    defaults: ["crt_so_defaults"],
     objs: [
         "crtbegin_so1",
         "crtbrand",
@@ -2043,10 +2030,7 @@ cc_object {
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtend_so.S"],
 
-    defaults: [
-        "crt_defaults",
-        "crt_so_defaults",
-    ],
+    defaults: ["crt_so_defaults"],
 }
 
 cc_object {
