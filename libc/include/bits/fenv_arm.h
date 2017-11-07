@@ -26,13 +26,6 @@
  * $FreeBSD: src/lib/msun/arm/fenv.h,v 1.5 2005/03/16 19:03:45 das Exp $
  */
 
-/*
- * Rewritten for Android.
- *
- * The ARM FPSCR is described here:
- * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0344b/Chdfafia.html
- */
-
 #ifndef _BITS_FENV_ARM_H_
 #define _BITS_FENV_ARM_H_
 
@@ -40,7 +33,28 @@
 
 __BEGIN_DECLS
 
+/*
+ * The ARM Cortex-A75 registers are described here:
+ *
+ * AArch64:
+ *  FPCR: http://infocenter.arm.com/help/topic/com.arm.doc.100403_0200_00_en/lau1442502503726.html
+ *  FPSR: http://infocenter.arm.com/help/topic/com.arm.doc.100403_0200_00_en/lau1442502526288.html
+ * AArch32:
+ *  FPSCR: http://infocenter.arm.com/help/topic/com.arm.doc.100403_0200_00_en/lau1442504290459.html
+ */
+
+#if defined(__LP64__)
+typedef struct {
+  /* FPCR, Floating-point Control Register. */
+  __uint32_t __control;
+  /* FPSR, Floating-point Status Register. */
+  __uint32_t __status;
+} fenv_t;
+
+#else
 typedef __uint32_t fenv_t;
+#endif
+
 typedef __uint32_t fexcept_t;
 
 /* Exception flags. */
@@ -49,8 +63,8 @@ typedef __uint32_t fexcept_t;
 #define FE_OVERFLOW   0x04
 #define FE_UNDERFLOW  0x08
 #define FE_INEXACT    0x10
-#define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \
-                       FE_OVERFLOW | FE_UNDERFLOW)
+#define FE_DENORMAL   0x80
+#define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW | FE_DENORMAL)
 
 /* Rounding modes. */
 #define FE_TONEAREST  0x0
