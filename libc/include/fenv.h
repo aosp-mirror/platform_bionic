@@ -32,9 +32,7 @@
 
 #include <sys/cdefs.h>
 
-#if defined(__aarch64__)
-#include <bits/fenv_arm64.h>
-#elif defined(__arm__)
+#if defined(__aarch64__) || defined(__arm__)
 #include <bits/fenv_arm.h>
 #elif defined(__i386__)
 #include <bits/fenv_x86.h>
