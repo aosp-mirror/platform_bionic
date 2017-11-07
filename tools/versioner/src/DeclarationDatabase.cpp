@@ -90,7 +90,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     return "<unnamed>";
   }
 
-  bool VisitDecl(Decl* decl) {
+  bool VisitDeclaratorDecl(DeclaratorDecl* decl, SourceRange range) {
     // Skip declarations inside of functions (function arguments, variable declarations inside of
     // inline functions, etc).
     if (decl->getParentFunctionOrMethod()) {
@@ -142,21 +142,6 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       // Skip declarations that exist only for compile-time diagnostics.
       return true;
     }
-
-    auto start_loc = src_manager.getPresumedLoc(decl->getLocStart());
-    auto end_loc = src_manager.getPresumedLoc(decl->getLocEnd());
-
-    Location location = {
-      .filename = start_loc.getFilename(),
-      .start = {
-        .line = start_loc.getLine(),
-        .column = start_loc.getColumn(),
-      },
-      .end = {
-        .line = end_loc.getLine(),
-        .column = end_loc.getColumn(),
-      }
-    };
 
     DeclarationAvailability availability;
 
@@ -215,6 +200,24 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       std::tie(symbol_it, dummy) = database.symbols.insert({ declaration_name, symbol });
     }
 
+    auto expansion_range = src_manager.getExpansionRange(range);
+    auto filename = src_manager.getFilename(expansion_range.getBegin());
+    if (filename != src_manager.getFilename(expansion_range.getEnd())) {
+      errx(1, "expansion range filenames don't match");
+    }
+
+    Location location = {
+      .filename = filename,
+      .start = {
+        .line = src_manager.getExpansionLineNumber(expansion_range.getBegin()),
+        .column = src_manager.getExpansionColumnNumber(expansion_range.getBegin()),
+      },
+      .end = {
+        .line = src_manager.getExpansionLineNumber(expansion_range.getEnd()),
+        .column = src_manager.getExpansionColumnNumber(expansion_range.getEnd()),
+      }
+    };
+
     // Find or insert an entry for the declaration.
     if (auto declaration_it = symbol_it->second.declarations.find(location);
         declaration_it != symbol_it->second.declarations.end()) {
@@ -236,6 +239,38 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       symbol_it->second.declarations.insert(std::make_pair(location, declaration));
     }
 
+    return true;
+  }
+
+  bool VisitDeclaratorDecl(DeclaratorDecl* decl) {
+    return VisitDeclaratorDecl(decl, decl->getSourceRange());
+  }
+
+  bool TraverseLinkageSpecDecl(LinkageSpecDecl* decl) {
+    // Make sure that we correctly calculate the SourceRange of a declaration that has a non-braced
+    // extern "C"/"C++".
+    if (!decl->hasBraces()) {
+      DeclaratorDecl* child = nullptr;
+      for (auto child_decl : decl->decls()) {
+        if (child != nullptr) {
+          errx(1, "LinkageSpecDecl has multiple children");
+        }
+
+        if (DeclaratorDecl* declarator_decl = dyn_cast<DeclaratorDecl>(child_decl)) {
+          child = declarator_decl;
+        } else {
+          errx(1, "child of LinkageSpecDecl is not a DeclaratorDecl");
+        }
+      }
+
+      return VisitDeclaratorDecl(child, decl->getSourceRange());
+    }
+
+    for (auto child : decl->decls()) {
+      if (!TraverseDecl(child)) {
+        return false;
+      }
+    }
     return true;
   }
 };
