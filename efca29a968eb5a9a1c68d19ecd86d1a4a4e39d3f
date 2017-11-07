@@ -69,6 +69,24 @@
       "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85cfc2e3_7b501700",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-07T06:50:36Z",
+      "side": 1,
+      "message": "seems to be POSIX\u0027s fault: http://pubs.opengroup.org/onlinepubs/9699919799/functions/mprotect.html\n\nthe BUGS section of the man7.org mprotect page implies that the Linux kernel authors agreed that EFAULT would have made more sense, but bowed to tradition.\n\nthe EACCES/EPERM mess (where they\u0027re supposed to have clear and distinct meanings, but it actually varies by system call) taught me to never read too much into the meaning of any particular \u003cerrno.h\u003e constant, beyond what POSIX guarantees. (i kind of wish strerror showed the EINVAL style names, rather than the vague hopefully-somewhat-meaningful-but-often-quite-misleading English glosses.)",
+      "parentUuid": "348a68a7_64b0e3a0",
+      "revId": "efca29a968eb5a9a1c68d19ecd86d1a4a4e39d3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
