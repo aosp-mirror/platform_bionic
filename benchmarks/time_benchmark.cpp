@@ -23,6 +23,7 @@
 #include "util.h"
 
 static void BM_time_clock_gettime(benchmark::State& state) {
+  // CLOCK_MONOTONIC is required supported in vdso
   timespec t;
   while (state.KeepRunning()) {
     clock_gettime(CLOCK_MONOTONIC, &t);
@@ -31,12 +32,58 @@ static void BM_time_clock_gettime(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_time_clock_gettime);
 
 static void BM_time_clock_gettime_syscall(benchmark::State& state) {
+  // CLOCK_MONOTONIC is required supported in vdso
   timespec t;
   while (state.KeepRunning()) {
     syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &t);
   }
 }
 BIONIC_BENCHMARK(BM_time_clock_gettime_syscall);
+
+static void BM_time_clock_gettime_MONOTONIC_COARSE(benchmark::State& state) {
+  // CLOCK_MONOTONIC_COARSE is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_MONOTONIC_COARSE, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_MONOTONIC_COARSE);
+
+static void BM_time_clock_gettime_MONOTONIC_RAW(benchmark::State& state) {
+  // CLOCK_MONOTONIC_RAW is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_MONOTONIC_RAW, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_MONOTONIC_RAW);
+
+static void BM_time_clock_gettime_REALTIME(benchmark::State& state) {
+  // CLOCK_REALTIME is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_REALTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_REALTIME);
+
+static void BM_time_clock_gettime_REALTIME_COARSE(benchmark::State& state) {
+  // CLOCK_REALTIME_COARSE is required supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_REALTIME_COARSE, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_REALTIME_COARSE);
+
+static void BM_time_clock_gettime_BOOTTIME(benchmark::State& state) {
+  // CLOCK_BOOTTIME is optionally supported in vdso
+  timespec t;
+  while (state.KeepRunning()) {
+    clock_gettime(CLOCK_BOOTTIME, &t);
+  }
+}
+BIONIC_BENCHMARK(BM_time_clock_gettime_BOOTTIME);
 
 static void BM_time_gettimeofday(benchmark::State& state) {
   timeval tv;
