@@ -16,6 +16,24 @@
       "revId": "51b286abe4b315e1ab9f9a5910665473d2177cfa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ad5de93_883a743c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-07T21:17:21Z",
+      "side": 1,
+      "message": "Put there due to convenience and a year of A/B comparison data. Intention was to port them to bionic. When I upload the split-up pieces, I will port, redo the performance tests and add them to the respective CLs. I would like to also acquire x86 performance (fugu) if I have time.\n\nToday (public):\n\nclock_getres - aarch64 vdso\ntime - x86 vdso, x86_64 vdso+vdso32\n\nPrivate branch (my today):\n\nclock getres - aarch64 vdso+vdso32, aarch32 vdso\ntime - x86 vdso, x86_64 vdso+vdso32, aarch64 vdso+vdso32, aarch32 vdso",
+      "parentUuid": "e1f31aa9_f82adeb0",
+      "revId": "51b286abe4b315e1ab9f9a5910665473d2177cfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
