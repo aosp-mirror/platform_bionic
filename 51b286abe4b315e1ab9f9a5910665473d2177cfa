@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1f31aa9_f82adeb0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-07T20:41:32Z",
+      "side": 1,
+      "message": "note that there are bionic benchmarks for the vdso...",
+      "revId": "51b286abe4b315e1ab9f9a5910665473d2177cfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
