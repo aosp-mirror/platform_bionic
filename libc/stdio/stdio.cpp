@@ -581,7 +581,7 @@ __strong_alias(fseek, fseeko);
 
 int fseeko64(FILE* fp, off64_t offset, int whence) {
   CHECK_FP(fp);
-  return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
+  return __fseeko64(fp, offset, whence, 8*sizeof(off64_t));
 }
 
 int fsetpos(FILE* fp, const fpos_t* pos) {
