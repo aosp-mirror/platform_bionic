@@ -2148,3 +2148,37 @@ TEST(STDIO_TEST, unlocked) {
 
   ASSERT_EQ(0, fclose(fp));
 }
+
+TEST(STDIO_TEST, fseek_64bit) {
+  TemporaryFile tf;
+  FILE* fp = fopen64(tf.filename, "w+");
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, fseeko64(fp, 0x2'0000'0000, SEEK_SET));
+  ASSERT_EQ(0x2'0000'0000, ftello64(fp));
+  ASSERT_EQ(0, fseeko64(fp, 0x1'0000'0000, SEEK_CUR));
+  ASSERT_EQ(0x3'0000'0000, ftello64(fp));
+  ASSERT_EQ(0, fclose(fp));
+}
+
+// POSIX requires that fseek/fseeko fail with EOVERFLOW if the new file offset
+// isn't representable in long/off_t.
+TEST(STDIO_TEST, fseek_overflow_32bit) {
+  TemporaryFile tf;
+  FILE* fp = fopen64(tf.filename, "w+");
+  ASSERT_EQ(0, ftruncate64(fileno(fp), 0x2'0000'0000));
+
+  // Bionic implements overflow checking for SEEK_CUR, but glibc doesn't.
+#if defined(__BIONIC__) && !defined(__LP64__)
+  ASSERT_EQ(0, fseek(fp, 0x7fff'ffff, SEEK_SET));
+  ASSERT_EQ(-1, fseek(fp, 1, SEEK_CUR));
+  ASSERT_EQ(EOVERFLOW, errno);
+#endif
+
+  // Neither Bionic nor glibc implement the overflow checking for SEEK_END.
+  // (Aside: FreeBSD's libc is an example of a libc that checks both SEEK_CUR
+  // and SEEK_END -- many C libraries check neither.)
+  ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
+  ASSERT_EQ(0x2'0000'0000, ftello64(fp));
+
+  fclose(fp);
+}
