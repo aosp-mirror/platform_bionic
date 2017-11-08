@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd59d856_d2e4a554",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-08T01:29:23Z",
+      "side": 1,
+      "message": "(is this how folks are using \u0027 for hex? not 0x02\u002700\u002700\u002700\u002700?)",
+      "range": {
+        "startLine": 2156,
+        "startChar": 36,
+        "endLine": 2156,
+        "endChar": 37
+      },
+      "revId": "bf54986d19a9111554a6d5bfb4214080413e18ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef8b089f_69f55ffb",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-08T01:29:23Z",
+      "side": 1,
+      "message": "(hmm. doesn\u0027t look as strange here.)",
+      "range": {
+        "startLine": 2172,
+        "startChar": 25,
+        "endLine": 2172,
+        "endChar": 36
+      },
+      "revId": "bf54986d19a9111554a6d5bfb4214080413e18ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
